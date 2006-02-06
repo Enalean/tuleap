@@ -281,5 +281,10 @@ $sys_allow_restricted_users = 0;
 // Default value is about 6 months: 3600*24*183
 $sys_session_lifetime = 3600*24*183;
 
+//
+// ID of the survey to be referenced in users personal pages ('my page')
+$sys_my_page_survey = 1;
+
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
