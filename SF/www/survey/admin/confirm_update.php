@@ -28,7 +28,7 @@ require('../survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');
 
-if ($GLOBALS['confirm']) {
+if (isset($_POST['confirm'])) {
     
     // Update the question	 
     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
@@ -46,7 +46,7 @@ if ($GLOBALS['confirm']) {
     session_redirect("/survey/admin/edit_question.php?func=browse&group_id=$group_id");
 }
 
-if ($GLOBALS['cancel']) {
+if (isset($_POST['cancel'])) {
     session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id"); 
 }
 

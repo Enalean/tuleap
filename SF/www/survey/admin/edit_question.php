@@ -58,14 +58,14 @@ switch ($func) {
      break;
          
  case 'update_radio':
-     if ($GLOBALS['update_submit']) {
-         if ($GLOBALS['choice'] == "") {
+     if (isset($_POST['update_submit'])) {
+         if ($_POST['choice'] == "") {
 	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
 	     require('./update_radio.php');
-	 } else if ($GLOBALS['ranking'] == "") {
+	 } else if ($_POST['ranking'] == "") {
 	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_rank');
 	     require('./update_radio.php');
-	 } else if (! is_numeric($GLOBALS['ranking'])) {
+	 } else if (! is_numeric($_POST['ranking'])) {
 	     $feedback .= " ".$Language->getText('survey_s_data','r_rank_int');
 	     require('./update_radio.php');
 	 } else {	 
@@ -80,12 +80,12 @@ switch ($func) {
      break;    
     
  case 'create_radio':
-    if ($GLOBALS['create_submit']) {
-        if ($GLOBALS['answer'] == "") {
+    if (isset($_POST['create_submit'])) {
+        if ($_POST['answer'] == "") {
 	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
-	} else if ($GLOBALS['rank'] == "") {
+	} else if ($_POST['rank'] == "") {
 	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_rank');
-	} else if (! is_numeric($GLOBALS['rank'])) {
+	} else if (! is_numeric($_POST['rank'])) {
 	    $feedback .= " ".$Language->getText('survey_s_data','r_rank_int');
 	} else {
 	    // achieve the creation
