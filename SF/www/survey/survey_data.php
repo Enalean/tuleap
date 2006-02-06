@@ -81,112 +81,6 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
     }
 }
 
-function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
-    
-    global $feedback,$Language;
-    
-    $update=false;
-    
-    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
-    $res1=db_query($qry1);
-    $old_text=db_result($res1,0,'radio_choice');
-    $old_rank=db_result($res1,0,'choice_rank');
-    
-    if (($old_text==$radio) && ($old_rank==$rank)) {
-        $feedback .= " ".$Language->getText('survey_s_data','upd_fail');
-    } else {
-    
-        //check if the radio button text is already existing. If so, update fails
-        if ($old_text != $radio) {
-            $qry2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
-            $res2=db_query($qry2);
-            if (db_numrows($res2)>0) {
-                $duplicata="";
-	        $i=0;
-	        while ((strcmp($duplicata,$radio) != 0) && ($i <= db_numrows($res2))) {
-	            $duplicata=db_result($res2,$i,'radio_choice');
-	            $i++;
-	        }
-	        // check for upper/lower cases : same texts with different cases (uppercase/lowercase) are allowed
-		
-		if ($i > db_numrows($res2)) {
-		    $update=true;
-		} else {
-		    $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');		    
-		}   
-            } else {
-	        $update=true;
-	    }	
-        } else {
-	    $update=true;
-	}    	
-    }
-    
-    if ($update) {
-        $sql="UPDATE survey_radio_choices SET radio_choice='$radio',choice_rank='$rank'".
-            " WHERE question_id='$question_id' AND choice_id='$choice_id'";
-        $result=db_query($sql);
-        if (db_affected_rows($result) < 1) {
-	    $feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
-        } else {
-	    $feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
-        }	   
-    }   
-}
-
-
-function survey_data_radio_create($question_id, $radio, $rank) {
-    
-    global $feedback,$Language;
-         	
-    $create=false;		
-		
-    //check if the radio button text is already existing. If so, creation fails
-    $qry="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
-    $res=db_query($qry);
-    if (db_numrows($res)>0) {
-        $duplicata="";
-	$i=0;
-	while ((strcmp($duplicata,$radio) != 0) && ($i <= db_numrows($res))) {
-	    $duplicata=db_result($res,$i,'radio_choice');
-	    $i++;
-	}
-	// check for upper/lower cases : same texts with different cases (uppercase/lowercase) are allowed
-	if ($i > db_numrows($res)) {
-	    $create=true;
-	} else {	    
-            $feedback .= " ".$Language->getText('survey_s_data','r_create_duplicate');
-	}        
-    } else {	
-        $create=true;
-    }	
-	
-    if ($create) {	
-	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
-            "VALUES ('$question_id','$radio','$rank')";
-        $result=db_query($sql);
-        if ($result) {
-	    $feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
-        } else {
-	    $feedback .= " ".$Language->getText('survey_s_data','r_create_fail',db_error());
-        }
-    }
-}
-
-function survey_data_radio_delete($question_id, $choice_id) {
-    
-    global $feedback,$Language;
-
-    $sql="DELETE FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
-    $result=db_query($sql);
-    if (db_affected_rows($result) <= 0) {
-	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));
-    } else {
-	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$choice_id);
-    }    
-    
-}   
-
 function survey_data_question_create($group_id,$question,$question_type)
 {   
     global $feedback,$Language;
@@ -232,6 +126,102 @@ function survey_data_question_update($group_id,$question_id,$question,$question_
 	} else {
 		$feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
 	}
+}
+
+function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
+    
+    global $feedback,$Language;
+        
+    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
+    $res1=db_query($qry1);
+    $old_text=db_result($res1,0,'radio_choice');
+    $old_rank=db_result($res1,0,'choice_rank');
+    
+    if (($old_text==$radio) && ($old_rank==$rank)) {
+        $feedback .= " ".$Language->getText('survey_s_data','upd_fail');
+    } else {            
+        if ($old_text != $radio) {            
+	    if (check_for_duplicata($question_id,$radio)) {
+	        $update=true;
+	    } else {
+	        $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
+	    }	    	
+        } else {
+	    $update=true;
+	}    	
+    }
+    
+    if ($update) {
+        $sql="UPDATE survey_radio_choices SET radio_choice='$radio',choice_rank='$rank'".
+            " WHERE question_id='$question_id' AND choice_id='$choice_id'";
+        $result=db_query($sql);
+        if (db_affected_rows($result) < 1) {
+	    $feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
+        } else {
+	    $feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
+        }	   
+    }   
+}
+
+
+function survey_data_radio_create($question_id, $radio, $rank) {
+    
+    global $feedback,$Language;
+         		
+    if (check_for_duplicata($question_id,$radio)) {	
+	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
+            "VALUES ('$question_id','$radio','$rank')";
+        $result=db_query($sql);
+        if ($result) {
+	    $feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
+        } else {
+	    $feedback .= " ".$Language->getText('survey_s_data','r_create_fail',db_error());
+        }
+    } else {
+        $feedback .= " ".$Language->getText('survey_s_data','r_create_duplicate');		    
+    }
+}
+
+function survey_data_radio_delete($question_id, $choice_id) {
+    
+    global $feedback,$Language;
+
+    $sql="DELETE FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
+    $result=db_query($sql);
+    if (db_affected_rows($result) <= 0) {
+	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));
+    } else {
+	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$choice_id);
+    }    
+    
+}   
+
+function check_for_duplicata($question_id, $radio) {
+
+    global $feedback,$Language;
+        
+    //check if the radio button text is already existing. If so, creation or update fails
+    $update=false;
+    $qry2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
+    $res2=db_query($qry2);
+    
+    if (db_numrows($res2)>0) {
+        $duplicata="";
+        $i=0;
+        while ((strcmp($duplicata,$radio) != 0) && ($i <= db_numrows($res2))) {
+            $duplicata=db_result($res2,$i,'radio_choice');
+            $i++;
+        }
+        // check for upper/lower cases : same texts with different cases (uppercase/lowercase) are allowed
+        if ($i > db_numrows($res2)) {
+            $update=true;
+        } 
+    } else {
+        $update=true;
+    }
+    
+    return $update;
+
 }
 
 ?>
