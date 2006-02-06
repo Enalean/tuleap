@@ -1,4 +1,3 @@
-
 if (!com) var com = {};
 if (!com.xerox) com.xerox = {};
 if (!com.xerox.codex) com.xerox.codex = {};
@@ -237,11 +236,12 @@ Object.extend(com.xerox.codex.tracker.Condition.prototype, {
 		}
 	}
 });
-var fields       = {};
-var options      = {};
-var rules        = [];
-var dependencies = {};
-var selections   = {};
+var fields            = {};
+var options           = {};
+var rules             = [];
+var rules_definitions = {};
+var dependencies      = {};
+var selections        = {};
 function addOptionsToFields() {
 	for (field in fields) {
 		for(option in options[field]) {
@@ -421,6 +421,74 @@ function buildAdminUI() {
 	$('target_field').onchange  = function() { admin_fieldHasChanged(this); }
 	$('target').onchange        = function() { admin_fieldHasChanged(this); }
 	
+	//Add behavior to edit and delete link
+	$H(rules_definitions).values().each(function(rule_definition) {
+		if (link = $('delete_link_'+rule_definition['id'])) {
+			link.onclick = function() {
+				return confirm(messages['delete_are_you_sure']);
+			};
+		}
+		if (link = $('edit_link_'+rule_definition['id'])) {
+			link.onclick = function() {
+				len = $('source_field').options.length;
+				for(var i = 0 ; i < len ; i++) {
+					if ($('source_field').options[i].value == rule_definition['source_field']) {
+						$('source_field').options[i].selected = 'selected';
+					} else {
+						$('source_field').options[i].selected = '';
+					}
+				}
+				$('source').disabled = '';
+				len = $('source').options.length;
+				for(var i = len ; i >= 0 ; i--) {
+					$('source').options[i] = null;
+				}
+				$('source').size = $H(options[rule_definition['source_field']]).values().length;
+				$H(options[rule_definition['source_field']]).values().each(function(opt) {
+						o = new Option(opt['option'].text, opt['option'].value);
+						if (rule_definition['source_value'] == opt['option'].value) {
+							o.selected = 'selected';
+						} else {
+							o.selected = '';
+						}
+						$('source').appendChild(o);
+				});
+				$('target_field').disabled = '';
+				len = $('target_field').options.length;
+				for(var i = 0 ; i < len ; i++) {
+					if ($('target_field').options[i].value == rule_definition['target_field']) {
+						$('target_field').options[i].selected = 'selected';
+					} else {
+						$('target_field').options[i].selected = '';
+					}
+				}
+				
+				$('target').disabled = '';
+				len = $('target').options.length;
+				for(var i = len ; i >= 0 ; i--) {
+					$('target').options[i] = null;
+				}
+				$('target').size = $H(options[rule_definition['target_field']]).values().length;
+				$H(options[rule_definition['target_field']]).values().each(function(opt) {
+						o = new Option(opt['option'].text, opt['option'].value);
+						if (rule_definition['target_values'].find(function(value) {
+									return value == opt['option'].value;
+						})) {
+							o.selected = 'selected';
+						} else {
+							o.selected = '';
+						}
+						$('target').appendChild(o);
+				});
+				var re = new RegExp('#.*', "g");
+				loc           = location.href.replace(re, '');
+				location.href = loc + '#edit_rule';
+				//new Effect.Highlight('edit_rule');
+				
+				return false;
+			};
+		}
+	});
 }
 
 function getOuterHTML (node) {

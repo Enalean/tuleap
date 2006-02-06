@@ -512,7 +512,7 @@ tracker_include_type	dynamic_fields	Dynamic&nbsp;Fields
 tracker_include_type	mng_dynamic_fields	Manage Dynamic Fields
 tracker_include_type	mng_dynamic_fields_title	 - Manage Dynamic Fields
 tracker_include_type	define_dynamic_fields	Manage Dynamic Fields
-tracker_include_type	edit_rule	Edit Rule
+tracker_include_type	edit_rule	Add/Edit a Rule
 tracker_include_type	existing_rules	Existing Rules
 tracker_include_type	choose_fields	Choose fields
 tracker_include_type	choose_field	-- Choose field
@@ -703,7 +703,7 @@ tracker_common_types	event_NEW_ARTIFACT_desc	A new artifact has been submitted
 #
 #
 tracker_admin_permissions	fields_no_ugroups	<div><em>No user group has access to this tracker</em></div>
-tracker_admin_permissions	fields_tracker_intro	<div></div>
+tracker_admin_permissions	fields_tracker_intro	<div></div>l
 tracker_admin_permissions	fields_tracker_toggle_field	<div>You may <a href='$1'>switch to the 'field' view</a> by clicking on a field label in the table below.</div>
 tracker_admin_permissions	fields_tracker_toggle_group	<div>You may <a href='$1'>switch to the 'user group' view</a> by clicking on a group name in the table below.</div>
 tracker_admin_permissions	ignore_g_anon_read	<p>Ignoring group '$1' because '$2' are allowed to read</p>
@@ -731,7 +731,10 @@ tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Ignoring 
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	User Group
 tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>
-
-tracker_dynamic_fields	no_dynamic_fields	<em>There is not dynamic fields yet.</em>
-tracker_dynamic_fields	add_edit	You can <a href="$1">add/edit</a> dynamic fields.
+#
+# Tracker dynamic fields
+#
+#
+tracker_dynamic_fields	no_dynamic_fields	<em>There is not rules for dynamic fields yet.</em>
 tracker_dynamic_fields	noscript	A javascript enabled browser is mandatory to add/edit dynamic fields.
+tracker_dynamic_fields	delete_are_you_sure	Are you sure that you want to delete this rule?

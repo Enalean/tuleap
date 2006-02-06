@@ -126,6 +126,12 @@ class ArtifactRuleDao extends DataAccessObject {
 				$this->da->quoteSmart($target_field_id));
         return $this->retrieve($sql);
     }
+    
+    function deleteById($id) {
+        $sql = sprintf("DELETE FROM artifact_rule WHERE id = %s",
+				$this->da->quoteSmart($id));
+        return $this->update($sql);
+    }
 }
 
 

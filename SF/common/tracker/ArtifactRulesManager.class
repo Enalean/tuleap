@@ -25,6 +25,11 @@ class ArtifactRulesManager {
         return $fact->saveRule($artifact_type, $source, $source_value, $target, $target_values);
     }
     
+    function deleteRule($rule_id) {
+        $fact =& ArtifactRuleFactory::instance();
+        return $fact->deleteRule($rule_id);
+    }
+    
     function &_getArtifactRuleFactory() {
         return ArtifactRuleFactory::instance();
     }

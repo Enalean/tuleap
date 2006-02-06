@@ -712,8 +712,17 @@ if ($group_id && (!isset($atid) || !$atid)) {
             require('./tracker_permissions.php');
             break;
     case 'dynamic_fields':
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+	
+	    if ( !user_ismember($group_id,'A') ) {
+			exit_permission_denied();
+			return;
+		}
         require_once('../include/ArtifactRulesManagerHtml.class');
-        $armh =& new ArtifactRulesManagerHtml($ath);
+        $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=dynamic_fields');
         $request =& HTTPRequest::instance();
         if ($request->exist('save')) {
             if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field')) && is_array($request->get('source')) && is_array($request->get('target'))) {
@@ -724,8 +733,11 @@ if ($group_id && (!isset($atid) || !$atid)) {
             } else {
                 $armh->badRequest();
             }
+        } else if ($request->exist('delete')) {
+            $armh->deleteRule($request->get('delete'));
+            $armh->displayRules();
         } else {
-           $armh->displayRules();
+            $armh->displayRules();
         }
         break;
 	default:    

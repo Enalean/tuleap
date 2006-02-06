@@ -9,34 +9,31 @@
 require_once('common/tracker/ArtifactRulesManager.class');
 require_once('ArtifactTypeHtml.class');
 require_once('ArtifactRuleHtml.class');
+require_once('ArtifactRuleJavascript.class');
 $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 
     var $artifact_type;
+    var $href;
     
 	/**
 	 *  ArtifactRulesManagerHtml() - constructor
 	 *
 	 *  @param $artifact_type object
 	 */
-	function ArtifactRulesManagerHtml(&$artifact_type_html) {
+	function ArtifactRulesManagerHtml(&$artifact_type_html, $href) {
 		$this->ArtifactRulesManager();
         $this->artifact_type =& $artifact_type_html;
-        
+        $this->href          = $href;
 	}
     
     function saveRule($source, $source_value, $target, $target_values) {
         parent::saveRule($this->artifact_type->getId(), $source, $source_value, $target, $target_values);
     }
     
-    function displayEditForm() {
-        echo '<noscript>'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
-        echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
-        echo '<form action="" method="post"><div id="edit_rule"></div>';
-        echo '</form>';
-        echo '<script type="text/javascript">'."\n";
-        
+    function displayRulesAsJavascript() {
+        echo "\n//------------------------------------------------------\n";
         $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
@@ -52,36 +49,64 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 }
             }
         }
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
+        if ($rules && count($rules) > 0) {
+            foreach ($rules as $key => $nop) {
+                $html =& new ArtifactRuleJavascript($rules[$key]);
+                echo 'rules_definitions['. $rules[$key]->id .'] = ';
+                $html->display();
+                echo ";\n";
+            }
+        }
         echo "\n//------------------------------------------------------\n";
-        echo 'messages = {';
-            echo "choose_field:'". $GLOBALS['Language']->getText('tracker_include_type','choose_field') ."',\n";
-            echo "if_then:'". $GLOBALS['Language']->getText('tracker_include_type','if_then') ."',\n";
-            echo "btn_save_rule:'". $GLOBALS['Language']->getText('tracker_include_type','btn_save_rule') ."'";
+    }
+    
+    function displayEditForm() {
+        echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
+        echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
+        echo '<form action="" method="post"><div id="edit_rule"></div>';
+        echo '</form>';
+        echo '<script type="text/javascript">'."\n";
+        echo "//<![CDATA[\n";
+        $this->displayRulesAsJavascript();
+        
+        echo "messages = {\n";
+            echo "choose_field:       '". $GLOBALS['Language']->getText('tracker_include_type','choose_field') ."',\n";
+            echo "if_then:            '". $GLOBALS['Language']->getText('tracker_include_type','if_then') ."',\n";
+            echo "btn_save_rule:      '". $GLOBALS['Language']->getText('tracker_include_type','btn_save_rule') ."',\n";
+            echo "delete_are_you_sure:'". $GLOBALS['Language']->getText('tracker_dynamic_fields','delete_are_you_sure') ."'";
         echo "};\n";
         echo 'buildAdminUI();';
         echo "\n//------------------------------------------------------\n";
-        echo "\n".'//--><!]]></script>';
+        echo "\n".'//]]></script>';
         echo '</fieldset>';
     }
     
     function displayRules() {
         $this->_header();
         $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
+        echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','existing_rules') .'</h3>';
         if (!$rules || count($rules) == 0) {
             echo $GLOBALS['Language']->getText('tracker_dynamic_fields','no_dynamic_fields');
         } else {
-            echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','existing_rules') .'</h3>';
-            echo '<ul>';
+            $if_then = explode('%', $GLOBALS['Language']->getText('tracker_include_type','if_then'));
+            $titles = array();
+            $titles[] = trim($if_then[0]).':&nbsp;';
+            $titles[] = trim(substr($if_then[1], 1)).':&nbsp;';
+            $titles[] = trim(substr($if_then[2], 1)).':&nbsp;';
+            $titles[] = trim(substr($if_then[3], 1)).':&nbsp;';
+            $titles[] = 'Actions';
+            echo html_build_list_table_top($titles, false, false, false);
             $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+            $i = 0;
             foreach ($rules as $key => $nop) {
-                $html =& new ArtifactRuleHtml($rules[$key], $art_field_fact);
-                echo '<li>';
+                $html =& new ArtifactRuleHtml($rules[$key], $art_field_fact, util_get_alt_row_color($i++), $this->href .'&edit=', $this->href .'&delete=');
                 $html->display();
-                echo '</li>';
             }
-            echo '</ul>';
+            echo '</table>';
         }
         $this->displayEditForm();
+        echo '<br />';
         $this->_footer();
     }
     

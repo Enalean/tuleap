@@ -88,5 +88,14 @@ class ArtifactRuleFactory {
             $this->target_values_dao->create($rule_id, $target_values);
         }
     }
+    
+    function deleteRule($rule_id) {
+        $deleted = $this->target_values_dao->deleteByRuleId($rule_id);
+        if ($deleted) {
+            $deleted = $this->rules_dao->deleteById($rule_id);
+        }
+        return $deleted;
+    }
+
 }
 ?>

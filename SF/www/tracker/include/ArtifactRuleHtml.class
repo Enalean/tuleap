@@ -12,41 +12,54 @@ $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactRuleHtml extends ArtifactRuleView {
 
-    var $art_field_fact;
+    var $_art_field_fact;
+    var $_class;
+    var $_delete_prefix;
+    var $_edit_prefix;
     
 	/**
 	 *  ArtifactRuleHtml() - constructor
 	 *
 	 *  @param $artifact_rule object
 	 */
-	function ArtifactRuleHtml(&$rule, &$art_field_fact) {
+	function ArtifactRuleHtml(&$rule, &$art_field_fact, $class, $edit_prefix, $delete_prefix) {
 		$this->ArtifactRuleView($rule);
-        $this->art_field_fact =& $art_field_fact;
+        $this->_art_field_fact =& $art_field_fact;
+        $this->_class          = $class;
+        $this->_delete_prefix  = $delete_prefix;
+        $this->_edit_prefix    = $edit_prefix;
 	}
     
     function fetch() {
-        $html = '';
-        
-        $source_field       =& $this->art_field_fact->getFieldFromId($this->rule->source_field);
+        $source_field       =& $this->_art_field_fact->getFieldFromId($this->rule->source_field);
         $source_field_label = $source_field->getLabel();
         
         $source_value       = $source_field->getFieldValue($this->rule->group_artifact_id, $this->rule->source_value);
         $source_value_label = $source_value['value'];
         
-        $target_field       =& $this->art_field_fact->getFieldFromId($this->rule->target_field);
+        $target_field       =& $this->_art_field_fact->getFieldFromId($this->rule->target_field);
         $target_field_label = $target_field->getLabel();
         $target_values      = array();
         foreach($this->rule->target_values as $value) {
             $target_value    = $target_field->getFieldValue($this->rule->group_artifact_id, $value);
             $target_values[] = $target_value['value'];
         }
-        $if_then = $GLOBALS['Language']->getText('tracker_include_type','if_then');
-        $if_then = str_replace('%1', '<strong>'. $source_field_label .'</strong>', $if_then);
-        $if_then = str_replace('%2', '`<em>'. $source_value_label .'</em>`', $if_then);
-        $if_then = str_replace('%3', '<strong>'. $target_field_label .'</strong>', $if_then);
-        $if_then = str_replace('%4', '(`<em>'. implode('</em>`, `<em>', $target_values) .'</em>`)', $if_then);
         
-        $html = '<div>'. $if_then .'</div>';
+        $html  = '<tr class="'. $this->_class .'" style="vertical-align:top;" id="rule_id_'. $this->rule->id .'">';
+        $html .= '<td>'. $source_field_label .'</td>';
+        $html .= '<td>'. $source_value_label .'</td>';
+        $html .= '<td>'. $target_field_label .'</td>';
+        $html .= '<td>'. implode('<br />', $target_values) .'</td>';
+        $html .= '<td>';
+        //{{{ actions
+        if ($this->_edit_prefix) {
+            $html .= '<a id="edit_link_'. $this->rule->id .'" href="'. $this->_edit_prefix . $this->rule->id .'">'. $GLOBALS['HTML']->getImage('ic/notes.png') .'</a>';
+        }
+        if ($this->_delete_prefix) {
+            $html .= '<a id="delete_link_'. $this->rule->id .'" href="'. $this->_delete_prefix . $this->rule->id .'">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+        }
+        //}}}
+        $html .= '</td>';
         return $html;
     }
 }

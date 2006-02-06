@@ -617,7 +617,7 @@ echo html_blankimage(5,100);
         return $output;
     }
     
-    function getImage($src,$args) {
+    function getImage($src,$args = array()) {
         GLOBAL $img_size;
         $return = '<img src="'.util_get_dir_image_theme().$src.'"';
         reset($args);
