@@ -132,16 +132,22 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     
     global $feedback,$Language;
         
-    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
+    // cast inputs
+    $_question_id = (int) $question_id;
+    $_choice_id = (int) $choice_id;
+    $_rank = (int) $rank;
+    $_radio = htmlentities($radio);
+    
+    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
     $res1=db_query($qry1);
     $old_text=db_result($res1,0,'radio_choice');
     $old_rank=db_result($res1,0,'choice_rank');
     
-    if (($old_text==$radio) && ($old_rank==$rank)) {
+    if (($old_text==$_radio) && ($old_rank==$_rank)) {
         $feedback .= " ".$Language->getText('survey_s_data','upd_fail');
     } else {            
-        if ($old_text != $radio) {            
-	    if (check_for_duplicata($question_id,$radio)) {
+        if ($old_text != $_radio) {            
+	    if (check_for_duplicata($_question_id,$_radio)) {
 	        $update=true;
 	    } else {
 	        $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
@@ -152,8 +158,8 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     }
     
     if ($update) {
-        $sql="UPDATE survey_radio_choices SET radio_choice='$radio',choice_rank='$rank'".
-            " WHERE question_id='$question_id' AND choice_id='$choice_id'";
+        $sql="UPDATE survey_radio_choices SET radio_choice='$_radio',choice_rank='$_rank'".
+            " WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
         $result=db_query($sql);
         if (db_affected_rows($result) < 1) {
 	    $feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
@@ -168,9 +174,14 @@ function survey_data_radio_create($question_id, $radio, $rank) {
     
     global $feedback,$Language;
          		
-    if (check_for_duplicata($question_id,$radio)) {	
+    // cast inputs
+    $_question_id = (int) $question_id;    
+    $_rank = (int) $rank;
+    $_radio = htmlentities($radio);
+    
+    if (check_for_duplicata($_question_id,$_radio)) {	
 	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
-            "VALUES ('$question_id','$radio','$rank')";
+            "VALUES ('$_question_id','$_radio','$_rank')";
         $result=db_query($sql);
         if ($result) {
 	    $feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
