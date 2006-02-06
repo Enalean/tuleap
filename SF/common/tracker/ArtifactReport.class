@@ -389,7 +389,7 @@ class ArtifactReport extends Error {
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
             
             //Does the user member of at least one group which has ACCESS_FULL ?
-            if (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0) {
+            if ($u->isSuperUser() || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
                 
                 $sql = "SELECT a.artifact_id ".
                        $from." ".
@@ -556,9 +556,11 @@ class ArtifactReport extends Error {
 		
 		// Final query
 		$limit = " LIMIT $offset,$chunksz";
-		$sql = $select." ".$from." ".$where." group by a.artifact_id ".$order_by.$limit;
-
-		//echo "<DBG> query=".$sql."<br>";
+		
+        //We need group by due to multi assign-to. However, the performances with big trackers are really bad.
+        $sql = $select." ".$from." ".$where." GROUP BY artifact_id ".$order_by.$limit;
+        
+        //echo "<DBG> query=".$sql."<br>";
 		
 		return $sql;
 	

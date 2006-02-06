@@ -203,7 +203,7 @@ if ($export == 'artifact') {
 				}
 
 				$col_list = array();
-				$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where);
+				$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where,$multiple_queries,$all_queries);
 				$col_list[] = 'follow_ups';
 				$col_list[] = 'is_dependent_on';
 

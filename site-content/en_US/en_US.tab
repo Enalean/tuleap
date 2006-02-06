@@ -51,7 +51,7 @@ global	activate	activate
 global	deactivate	deactivate
 global	Project	Project
 global	System	System
-global	Personal	Personel
+global	Personal	Personal
 global	default	Default
 global	mail_failed	The mail was not accepted for the delivery. Please contact <a href='mailto:$1'>$1</a>.
 global	open	Open

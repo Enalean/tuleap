@@ -291,6 +291,7 @@ if ($querytotalcount > $TROVE_BROWSELIMIT) {
 		if ($page != $i) {
 			$html_limit .= '<A href="/softwaremap/trove_list.php?form_cat='.$form_cat;
 			$html_limit .= $discrim_url.'&page='.$i;
+                        if (isset($special_cat)) $html_limit .= "&special_cat=".$special_cat;
 			$html_limit .= '">';
 		} else $html_limit .= '<B>';
 		$html_limit .= '&lt;'.$i.'&gt;';
