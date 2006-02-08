@@ -210,7 +210,7 @@ survey_s_utils	total_no	Total number of answers: $1
 survey_s_utils	create	Create
 survey_s_utils	update	Update
 survey_s_utils	text_r	Text
-survey_s_utils	add_button	Add a new button
+survey_s_utils	add_button	Add a new choice
 survey_s_utils	button_id	Button ID
 survey_s_utils	rank	Rank
 survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will loose ALL the associated radio buttons and responses in all surveys using this question.Continue?
