@@ -28,6 +28,12 @@ require('../survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');
 
+if (!user_isloggedin() || !user_ismember($group_id,'A')) {
+	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
+	survey_footer(array());
+	exit;
+}
+
 if (isset($_POST['confirm'])) {
     
     // Update the question	 
@@ -52,12 +58,6 @@ if (isset($_POST['cancel'])) {
 
 survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
-
-if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
-	survey_footer(array());
-	exit;
-}
 
 // fetch question and associated radio button from DB, and check for integrity IDs
 $qry="SELECT * FROM survey_questions WHERE question_id='$question_id'";
