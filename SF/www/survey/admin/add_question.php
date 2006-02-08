@@ -12,6 +12,14 @@ require('../survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');
 
+$is_admin_page='y';
+
+if (!user_isloggedin() || !user_ismember($group_id,'A')) {
+	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
+	survey_footer(array());
+	exit;
+}
+
 if ($post_changes) {
    survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
 
@@ -26,15 +34,9 @@ if ($post_changes) {
    }
 }
 
-$is_admin_page='y';
 survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 
-if (!user_isloggedin() || !user_ismember($group_id,'A')) {
-	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
-	survey_footer(array());
-	exit;
-}
 
 ?>
 <SCRIPT LANGUAGE="JavaScript">
