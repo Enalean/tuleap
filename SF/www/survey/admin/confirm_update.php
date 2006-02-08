@@ -65,7 +65,7 @@ $res=db_query($qry);
 if (db_numrows($res) == 0) {
     $feedback .= " Error finding question #".$question_id;
 } else {
-    echo '<H2>'.$Language->getText('survey_s_utils','warn_lose_button').'</H2>';
+    echo '<h2><font color=red>'.$Language->getText('survey_s_utils','warn_lose_button').'</font></h2>';    
     echo '    
         <P>
 	<TABLE><FORM METHOD="POST">
