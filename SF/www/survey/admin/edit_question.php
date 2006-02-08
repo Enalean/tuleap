@@ -31,8 +31,8 @@ switch ($func) {
      require('./browse_question.php');
      break;
 
- case 'update_question':
-     if ($post_changes) {	
+ case 'update_question':     
+     if(array_key_exists('post_changes', $_POST) && isset($_POST['post_changes'])) {
 	 // recuperate the old question type before update
 	 $qry = "SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_id='$question_id'";
 	 $res = db_query($qry);
@@ -58,7 +58,7 @@ switch ($func) {
      break;
          
  case 'update_radio':
-     if (isset($_POST['update_submit'])) {
+     if (array_key_exists('update_submit', $_POST) && isset($_POST['update_submit'])) {
          if ($_POST['choice'] == "") {
 	     $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
 	     require('./update_radio.php');
@@ -80,7 +80,7 @@ switch ($func) {
      break;    
     
  case 'create_radio':
-    if (isset($_POST['create_submit'])) {
+    if (array_key_exists('create_submit', $_POST) && isset($_POST['create_submit'])) {
         if ($_POST['answer'] == "") {
 	    $feedback .= " ".$Language->getText('survey_admin_update_radio','fill_r_text');
 	} else if ($_POST['rank'] == "") {

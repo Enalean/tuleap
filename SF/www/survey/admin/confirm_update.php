@@ -34,7 +34,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-if (isset($_POST['confirm'])) {
+if (array_key_exists('confirm', $_POST) && isset($_POST['confirm'])) {
     
     // Update the question	 
     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
@@ -52,7 +52,7 @@ if (isset($_POST['confirm'])) {
     session_redirect("/survey/admin/edit_question.php?func=browse&group_id=$group_id");
 }
 
-if (isset($_POST['cancel'])) {
+if (array_key_exists('cancel', $_POST) && isset($_POST['cancel'])) {
     session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id"); 
 }
 
