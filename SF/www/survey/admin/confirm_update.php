@@ -66,21 +66,27 @@ $qry="SELECT * FROM survey_questions WHERE question_id='$question_id'";
 $res=db_query($qry);
 if (db_numrows($res) == 0) {
     $feedback .= " Error finding question #".$question_id;
+    survey_footer(array());
+    exit;
 } else {
     echo '<h2><font color=red>'.$Language->getText('survey_s_utils','warn_lose_button').'</font></h2>';    
-    echo '    
-        <P>
-	<TABLE><FORM METHOD="POST">
-	<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
-	<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="'.$question_id.'"></TD>
-	<TD COLSPAN="5"></TD>
-	<TR><TD><INPUT TYPE="SUBMIT" NAME="confirm" VALUE="Continue"></TD>
-	<TD COLSPAN="5"></TD>
-	<TD><INPUT TYPE="SUBMIT" NAME="cancel" VALUE="Cancel"></TD></TR>
-	</FORM></TABLE>
-	</P>';
-
 }
+?>
+
+<P>
+<TABLE><FORM ACTION="?" METHOD="POST">
+<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $question_id ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question" VALUE="<?php echo $question ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question_type" VALUE="<?php echo $question_type ; ?>"></TD>
+<TD COLSPAN="5"></TD>
+<TR><TD><INPUT TYPE="SUBMIT" NAME="confirm" VALUE="Continue"></TD>
+<TD COLSPAN="5"></TD>
+<TD><INPUT TYPE="SUBMIT" NAME="cancel" VALUE="Cancel"></TD></TR>
+</FORM></TABLE>
+</P>
+
+<?php
 
 survey_footer(array());
 
