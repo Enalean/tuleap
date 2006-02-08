@@ -197,12 +197,16 @@ function survey_data_radio_delete($question_id, $choice_id) {
     
     global $feedback,$Language;
 
-    $sql="DELETE FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
+    // cast inputs
+    $_question_id = (int) $question_id;
+    $_choice_id = (int) $choice_id;
+    
+    $sql="DELETE FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
     $result=db_query($sql);
     if (db_affected_rows($result) <= 0) {
 	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));
     } else {
-	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$choice_id);
+	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$_choice_id);
     }    
     
 }   
