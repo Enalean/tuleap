@@ -51,7 +51,7 @@ function show_questions() {
 
 <H2><?php echo $Language->getText('survey_admin_add_question','add_q'); ?></H2>
 <P>
-<FORM METHOD="POST">
+<FORM ACTION ="<?php echo $PHP_SELF ; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="Y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <?php echo $Language->getText('survey_admin_add_question','q_allowed'); ?><BR>
