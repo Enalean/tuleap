@@ -87,8 +87,8 @@ wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à 
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class
 #
-wiki_wikiservice	acces_denied_whole	Vous n'êtes pas autaurisé à accéder à ce Wiki. Merci de contacter un <A HREF="$1">Administrateur Projet</A>.
-wiki_wikiservice	acces_denied_page	Vous n'êtes pas autaurisé à accéder à cette Page Wiki. Merci de contacter un <A HREF="$1">Administrateur Projet</A>.
+wiki_wikiservice	acces_denied_whole	Vous n'êtes pas autorisé à accéder à ce Wiki. Merci de contacter un <A HREF="$1">Administrateur Projet</A>.
+wiki_wikiservice	acces_denied_page	Vous n'êtes pas autorisé à accéder à cette Page Wiki. Merci de contacter un <A HREF="$1">Administrateur Projet</A>.
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/views/WikiServiceAdminViews.class
