@@ -15,6 +15,8 @@ $Language->loadLanguageMsg('survey/survey');
 $is_admin_page='y';
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
+	survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
