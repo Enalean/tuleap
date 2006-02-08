@@ -43,8 +43,30 @@ function show_questions() {
 
 <H2><?php echo $Language->getText('survey_admin_update_question','edit_a_q'); ?></H2>
 
-<H3><?php echo $Language->getText('survey_admin_update_question','warn'); ?></h3>
-<P>
+<H3>
+<?php
+
+// check if question is associated to an existing survey. If it is the case, display a warning.
+$sql="SELECT * FROM surveys WHERE group_id=".$group_id;
+$res=db_query($sql);
+$warn=false;
+$i=0;
+if (db_numrows($res) > 0) {
+    while (($i < db_numrows($res)) && (! $warn)) {
+        $question_list=db_result($res,$i,'survey_questions');
+        $question_array=explode(',', $question_list);
+        if (in_array($question_id,$question_array)) {
+            $warn=true;
+        }
+        $i++;
+    }
+}
+
+if ($warn) { 
+    echo $Language->getText('survey_admin_update_question','warn'); 
+} 
+
+?></H3><P>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_question">
