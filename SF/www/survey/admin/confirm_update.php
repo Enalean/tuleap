@@ -41,6 +41,7 @@ if (array_key_exists('confirm', $_POST) && isset($_POST['confirm'])) {
     // Update the question	 
     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
     
+    // delete all associated radio buttons
     $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
     $result = db_query($sql);
     $rows = db_numrows($result);
@@ -51,10 +52,12 @@ if (array_key_exists('confirm', $_POST) && isset($_POST['confirm'])) {
         }
     }
     
-    session_redirect("/survey/admin/edit_question.php?func=browse&group_id=$group_id");
+    // return to update mode
+    session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id");
 }
 
 if (array_key_exists('cancel', $_POST) && isset($_POST['cancel'])) {
+    // return to update mode
     session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id"); 
 }
 
