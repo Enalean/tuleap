@@ -10,7 +10,7 @@ require_once('common/tracker/ArtifactRuleView.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
-class ArtifactRuleHtml extends ArtifactRuleView {
+class ArtifactRuleHtml extends ArtifactRuleValueView {
 
     var $_art_field_fact;
     var $_class;
@@ -23,7 +23,7 @@ class ArtifactRuleHtml extends ArtifactRuleView {
 	 *  @param $artifact_rule object
 	 */
 	function ArtifactRuleHtml(&$rule, &$art_field_fact, $class, $edit_prefix, $delete_prefix) {
-		$this->ArtifactRuleView($rule);
+		$this->ArtifactRuleValueView($rule);
         $this->_art_field_fact =& $art_field_fact;
         $this->_class          = $class;
         $this->_delete_prefix  = $delete_prefix;
@@ -33,9 +33,11 @@ class ArtifactRuleHtml extends ArtifactRuleView {
     function fetch() {
         $source_field       =& $this->_art_field_fact->getFieldFromId($this->rule->source_field);
         $source_field_label = $source_field->getLabel();
-        
-        $source_value       = $source_field->getFieldValue($this->rule->group_artifact_id, $this->rule->source_value);
-        $source_value_label = $source_value['value'];
+        $source_values      = array();
+        foreach($this->rule->source_values as $value) {
+            $source_value    = $source_field->getFieldValue($this->rule->group_artifact_id, $value);
+            $source_values[] = $source_value['value'];
+        }
         
         $target_field       =& $this->_art_field_fact->getFieldFromId($this->rule->target_field);
         $target_field_label = $target_field->getLabel();
@@ -47,7 +49,7 @@ class ArtifactRuleHtml extends ArtifactRuleView {
         
         $html  = '<tr class="'. $this->_class .'" style="vertical-align:top;" id="rule_id_'. $this->rule->id .'">';
         $html .= '<td>'. $source_field_label .'</td>';
-        $html .= '<td>'. $source_value_label .'</td>';
+        $html .= '<td>'. implode('<br />', $source_values) .'</td>';
         $html .= '<td>'. $target_field_label .'</td>';
         $html .= '<td>'. implode('<br />', $target_values) .'</td>';
         $html .= '<td>';

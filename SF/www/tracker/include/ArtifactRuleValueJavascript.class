@@ -1,0 +1,36 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+
+require_once('common/tracker/ArtifactRuleValueView.class');
+
+$Language->loadLanguageMsg('tracker/tracker');
+
+class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
+
+    /**
+	 *  ArtifactRuleHtml() - constructor
+	 *
+	 *  @param $artifact_rule object
+	 */
+	function ArtifactRuleValueJavascript(&$rule) {
+		$this->ArtifactRuleValueView($rule);
+	}
+    
+    function fetch() {
+        $output  = '{id:'. $this->rule->id .', ';
+        $output .= 'group_artifact_id:'. $this->rule->group_artifact_id .', ';
+        $output .= 'source_field:'. $this->rule->source_field .', ';
+        $output .= 'source_value:'. $this->rule->source_value .', ';
+        $output .= 'target_field:'. $this->rule->target_field .', ';
+        $output .= 'target_value:'. $this->rule->target_value .'';
+        $output .= '}';
+        return $output;
+    }
+}
+
+?>

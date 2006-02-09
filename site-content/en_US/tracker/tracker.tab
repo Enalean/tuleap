@@ -519,7 +519,8 @@ tracker_include_type	choose_field	-- Choose field
 tracker_include_type	master_title	Master Field
 tracker_include_type	slave_title	Slave Field
 tracker_include_type	btn_save_rule	Save Rule
-tracker_include_type	if_then	If field %1 is selected to %2 then field %3 will propose %4
+#tracker_include_type	if_then	If field %1 is selected to %2 then field %3 will propose %4
+tracker_include_type	if_then	Source: %1 %2 Target: %3 %4
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class

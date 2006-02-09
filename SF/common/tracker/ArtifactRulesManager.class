@@ -20,14 +20,24 @@ class ArtifactRulesManager {
         return $fact->getAllRulesByArtifactTypeWithOrder($artifact_type);
 	}
     
-    function saveRule($artifact_type, $source, $source_value, $target, $target_values) {
+    function saveRuleValue($artifact_type, $source, $source_value, $target, $target_value) {
         $fact =& ArtifactRuleFactory::instance();
-        return $fact->saveRule($artifact_type, $source, $source_value, $target, $target_values);
+        return $fact->saveRuleValue($artifact_type, $source, $source_value, $target, $target_value);
     }
     
     function deleteRule($rule_id) {
         $fact =& ArtifactRuleFactory::instance();
         return $fact->deleteRule($rule_id);
+    }
+    
+    function deleteRuleValueBySource($artifact_type, $source, $source_value, $target) {
+        $fact =& ArtifactRuleFactory::instance();
+        return $fact->deleteRuleValueBySource($artifact_type, $source, $source_value, $target);
+    }
+    
+    function deleteRuleValueByTarget($artifact_type, $source, $target, $target_value) {
+        $fact =& ArtifactRuleFactory::instance();
+        return $fact->deleteRuleValueByTarget($artifact_type, $source, $target, $target_value);
     }
     
     function &_getArtifactRuleFactory() {

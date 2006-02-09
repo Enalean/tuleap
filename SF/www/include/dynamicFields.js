@@ -366,7 +366,484 @@ function addRule(condition, effect) {
 }
 
 
+
+var dyn_fields = {};
 function buildAdminUI() {
+
+	table = document.createElement('table');
+	table.border      = 0;
+	table.cellpadding = 2;
+	table.cellspacing = 1;
+	
+	header = document.createElement('thead');
+	header_row = document.createElement('tr');
+	header_row.className = 'boxtable';
+
+	header_source = document.createElement('td');
+	header_source.className = 'boxtitle';
+
+	header_target = document.createElement('td');
+	header_target.className = 'boxtitle';
+
+	header_row.appendChild(header_source);
+	header_row.appendChild(header_target);
+	header.appendChild(header_row);
+	table.appendChild(header);
+	
+	tbody = document.createElement('tbody');
+	table.appendChild(tbody);
+	
+	$('edit_rule').appendChild(table);
+	
+    query_params = location.href.toQueryParams();
+    preselected_source_field = query_params['source_field'] ? query_params['source_field'] : '-1';
+    preselected_target_field = query_params['target_field'] ? query_params['target_field'] : '-1';
+    preselected_source_value = query_params['source_value'];
+    preselected_target_value = query_params['target_value'];
+    
+	//{{{ build source selectbox
+	select_source = document.createElement('select');
+	select_source.id = select_source.name = 'source_field';
+	select_source.appendChild(choose = document.createElement('option'));
+	choose.value    = '-1';
+    choose.selected = (preselected_source_field == choose.value);
+	choose.appendChild(document.createTextNode(messages['choose_field']));
+	$H(fields).values().each(function(source_field) {
+			if (source_field.id != preselected_target_field) {
+                so = document.createElement('option');
+                so.value = source_field.id;
+                so.selected = (preselected_source_field == so.value);
+                so.appendChild(document.createTextNode(source_field.name));
+                if ($H(rules_definitions).values().find(function (rule_definition) {
+                            return rule_definition.source_field == source_field.id;
+                })) {
+                    so.className = 'boxitem';
+                }
+                select_source.appendChild(so);
+			}
+	});
+	//}}}
+	
+	//{{{ build target selectbox
+	select_target = document.createElement('select');
+	select_target.id = select_target.name = 'target_field';
+	select_target.appendChild(choose = document.createElement('option'));
+	choose.value = '-1';
+	choose.selected = (preselected_target_field == choose.value);
+    choose.appendChild(document.createTextNode(messages['choose_field']));
+	$H(fields).values().each(function(target_field) {
+			if (target_field.id != preselected_source_field) {
+                to = document.createElement('option');
+                to.value = target_field.id;
+                to.selected = (preselected_target_field == to.value);
+                to.appendChild(document.createTextNode(target_field.name));
+                if ($H(rules_definitions).values().find(function (rule_definition) {
+                            return rule_definition.target_field == target_field.id;
+                })) {
+                    to.className = 'boxitem';
+                }
+                select_target.appendChild(to);
+            }
+	});
+	//}}}
+	
+	$H(fields).values().each(function(source_field) {
+			$H(fields).values().each(function(target_field) {
+					if (target_field != source_field) {
+						tr = document.createElement('tr');
+						tr.id        = 'fields_'+source_field.id+'_'+target_field.id;
+						tr.className = 'boxitemalt';
+						tr.style.verticalAlign = 'top';
+						Element.hide(tr);
+                        
+						//{{{ Source
+						tr.appendChild(td_source = document.createElement('td'));
+						td_source.appendChild(inner_table = document.createElement('table'));
+						Element.setStyle(inner_table, {width:'100%'});
+						inner_table.cellPadding = 0;
+						inner_table.cellSpacing = 0;
+						inner_table.appendChild(inner_tbody = document.createElement('tbody'));
+						$H(options[source_field.id]).values().each(function(opt) {
+							txt = document.createTextNode(opt['option'].text+' ');
+							inner_tr = document.createElement('tr');
+							inner_tr.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
+							
+							td_chk = document.createElement('td');
+							Element.setStyle(td_chk, {width:'1%'});
+							chk = document.createElement('input');
+                            chk.type = 'checkbox';
+                            chk.name = chk.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
+							chk.style.visibility = 'hidden';
+							chk.onclick = function(event) {
+								admin_checked(this.id);
+							}
+							td_chk.appendChild(chk);
+							inner_tr.appendChild(td_chk);
+							
+							td_txt = document.createElement('td');
+                            td_txt.appendChild(espace_insecable = document.createElement('span'));
+                            espace_insecable.innerHTML = '&nbsp;';
+							td_txt.appendChild(label = document.createElement('label'));
+							//Does a rule exist ?
+							if ($H(rules_definitions).values().find(function (definition) {
+								return definition.source_field == source_field.id &&
+										definition.target_field == target_field.id &&
+										definition.source_value == opt['option'].value;
+							})) {
+								label.appendChild(strong = document.createElement('strong'));
+								strong.appendChild(txt);
+							} else {
+								label.appendChild(txt);
+							}
+							label.onclick = function() {
+								link = admin_getInfosFromId(this.parentNode.parentNode.id);
+								admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
+								return false;
+							}
+                            Element.setStyle(label, {cursor:'pointer'});
+							inner_tr.appendChild(td_txt);
+							
+                            inner_tr.appendChild(td_arrow = document.createElement('td'));
+                            Element.setStyle(td_arrow, {textAlign:'right'})
+                            td_arrow.appendChild(arrow = document.createElement('div'));
+                            arrow.innerHTML = '&rarr;';
+                            arrow.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
+                            Element.setStyle(arrow, {visibility:'hidden'});
+                            
+							inner_tbody.appendChild(inner_tr);
+						});
+						//}}}
+						
+						//{{{ Target
+						td_target = document.createElement('td');
+						tr.appendChild(td_target);
+						td_target.appendChild(inner_table = document.createElement('table'));
+						Element.setStyle(inner_table, {width:'100%'});
+						inner_table.cellPadding = 0;
+						inner_table.cellSpacing = 0;
+						inner_table.appendChild(inner_tbody = document.createElement('tbody'));
+						$H(options[target_field.id]).values().each(function(opt) {
+							txt = document.createTextNode(opt['option'].text+' ');
+							inner_tr = document.createElement('tr');
+							inner_tr.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
+							
+                            inner_tr.appendChild(td_arrow = document.createElement('td'));
+                            Element.setStyle(td_arrow, {textAlign:'right', width:'1%'})
+                            td_arrow.appendChild(arrow = document.createElement('div'));
+                            arrow.innerHTML = '&rarr;';
+                            arrow.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
+                            Element.setStyle(arrow, {visibility:'hidden'});
+                            
+							td_chk = document.createElement('td');
+							Element.setStyle(td_chk, {width:'1%'});
+							chk = document.createElement('input');
+							chk.type = 'checkbox';
+							chk.name = chk.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
+							chk.style.visibility = 'hidden';
+							chk.onclick = function(event) {
+								admin_checked(this.id);
+							}
+							td_chk.appendChild(chk);
+							inner_tr.appendChild(td_chk);
+							
+							td_txt = document.createElement('td');
+                            td_txt.appendChild(espace_insecable = document.createElement('span'));
+                            espace_insecable.innerHTML = '&nbsp;';
+							td_txt.appendChild(label = document.createElement('label'));
+							//Does a rule exist ?
+							if ($H(rules_definitions).values().find(function (definition) {
+								return definition.source_field == source_field.id &&
+										definition.target_field == target_field.id &&
+										definition.target_value == opt['option'].value;
+							})) {
+								label.appendChild(strong = document.createElement('strong'));
+								strong.appendChild(txt);
+							} else {
+								label.appendChild(txt);
+							}
+							label.onclick = function() {
+								link = admin_getInfosFromId(this.parentNode.parentNode.id);
+								admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
+								return false;
+							}
+                            Element.setStyle(label, {cursor:'pointer'});
+							inner_tr.appendChild(td_txt);
+
+							inner_tbody.appendChild(inner_tr);
+						});
+						//}}}
+						tbody.appendChild(tr);
+					}
+			});
+	});
+	if_then = messages['if_then'];
+	p1 = if_then.indexOf('%1');
+	p2 = if_then.indexOf('%2');
+	p3 = if_then.indexOf('%3');
+	p4 = if_then.indexOf('%4');
+	header_source.appendChild(document.createTextNode(if_then.substring(0, p1)));
+	header_source.appendChild(select_source);
+	header_source.appendChild(document.createTextNode(if_then.substring(p1+2, p2)));
+
+	header_target.appendChild(document.createTextNode(if_then.substring(p2+2, p3)));
+	header_target.appendChild(select_target);
+	header_target.appendChild(document.createTextNode(if_then.substring(p3+2, p4)));
+	
+	
+	//{{{ Save panel
+	tbody.appendChild(tr = document.createElement('tr'));
+	tr.id        = 'save_panel';
+	tr.className = 'boxitem';
+	tr.appendChild(td = document.createElement('td'));
+	td.colSpan = 2;
+	Element.setStyle(td, {textAlign:'center'});
+	
+	td.appendChild(save_btn = document.createElement('button'));
+	save_btn.appendChild(document.createTextNode(messages['btn_save_rule']));
+	save_btn.name    = 'save';
+	save_btn.onclick = function() {
+		$('direction_type').value = admin_selected_type;
+		$('value').value          = admin_selected_value;
+        this.form.submit();
+	}
+	td.appendChild(reset_btn = document.createElement('button'));
+	reset_btn.appendChild(document.createTextNode(messages['btn_reset']));
+    reset_btn.onclick = function() {
+        admin_is_in_edit_mode = false;
+		if (admin_selected_type == 'target') {
+            admin_forceTargetValue($F('source_field'), $F('target_field'), admin_selected_value);
+        } else {
+            admin_forceSourceValue($F('source_field'), $F('target_field'), admin_selected_value);
+        }
+        Element.hide('save_panel');
+        return false;
+	}
+	Element.hide('save_panel');
+	//}}} /**/
+	
+	select_target.onchange = function() {
+        admin_displayFields($F('source_field'), $F('target_field'));
+        //{{{ re-build source selectbox
+        var previous_selected = $F('source_field');
+        var len = $('source_field').options.length;
+        for(var i = len ; i >= 0 ; i--) {
+            $('source_field').options[i] = null;
+        }
+        $('source_field').appendChild(choose = document.createElement('option'));
+        choose.value = '-1';
+        choose.appendChild(document.createTextNode(messages['choose_field']));
+        $H(fields).values().each(function(source_field) {
+                if (source_field.id != $F('target_field')) {
+                    so = document.createElement('option');
+                    so.value    = source_field.id;
+                    so.selected = source_field.id == previous_selected ? 'selected' : '';
+                    so.appendChild(document.createTextNode(source_field.name));
+                    
+                    $('source_field').appendChild(so);
+                }
+        });
+        //}}}
+    }
+    select_source.onchange = function() {
+        admin_displayFields($F('source_field'), $F('target_field'));
+        //{{{ re-build target selectbox
+        var previous_selected = $F('target_field');
+        var len = $('target_field').options.length;
+        for(var i = len ; i >= 0 ; i--) {
+            $('target_field').options[i] = null;
+        }
+        $('target_field').appendChild(choose = document.createElement('option'));
+        choose.value = '-1';
+        choose.appendChild(document.createTextNode(messages['choose_field']));
+        $H(fields).values().each(function(target_field) {
+                if (target_field.id != $F('source_field')) {
+                    to = document.createElement('option');
+                    to.value    = target_field.id;
+                    to.selected = target_field.id == previous_selected ? 'selected' : '';
+                    to.appendChild(document.createTextNode(target_field.name));
+                    
+                    $('target_field').appendChild(to);
+                }
+        });
+        //}}}
+	}
+	admin_displayFields($F('source_field'), $F('target_field'));
+
+    if (preselected_source_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
+        admin_selectSourceValue(preselected_source_field, preselected_target_field, preselected_source_value);
+    } else {
+        if (preselected_target_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
+            admin_selectTargetValue(preselected_source_field, preselected_target_field, preselected_target_value);
+        }
+    }
+}
+
+function admin_getInfosFromId(id) {
+	p1 = id.indexOf('_');
+	p2 = id.substring(p1+1).indexOf('_');
+	p3 = id.substring(p1+1+p2+1).indexOf('_');
+	p4 = id.substring(p1+1+p2+1+p3+1).indexOf('_');
+	var ret = {
+		type:            id.substr(0, p1),
+		source_field_id: id.substr(p1+1, p2),
+		target_field_id: id.substr(p1+1+p2+1, p3),
+		source_value_id: admin_selected_value,
+		target_value_id: admin_selected_value
+	};
+	ret[ret.type+'_value_id'] = id.substr(p1+1+p2+1+p3+1, (p4 != -1?p4:id.length));
+	return ret;
+}
+
+var admin_is_in_edit_mode = false;
+var admin_nb_diff;
+var admin_selected_value;
+var admin_selected_type;
+
+function admin_checked(id) {
+	if (!admin_is_in_edit_mode) {
+		admin_is_in_edit_mode = true;
+		admin_nb_diff = 0;
+		Element.show('save_panel');
+	}
+	checkbox = admin_getInfosFromId(id);
+	checked = $F(id);
+    //boxitem and arrow
+    if (checked) {
+        Element.addClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxitem');
+        Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'visible'});        
+    } else {
+        Element.removeClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxitem');
+        Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'hidden'});        
+    }
+	//Does a rule exist ?
+	rule_exists = $H(rules_definitions).values().find(function (definition) {
+		return definition.source_field == checkbox.source_field_id &&
+				definition.target_field == checkbox.target_field_id &&
+				definition.source_value == checkbox.source_value_id &&
+				definition.target_values == checkbox.target_value_id;
+	});
+	if (rule_exists && checked || !rule_exists && !checked) {
+		//Bug here
+        //admin_nb_diff--;
+        admin_nb_diff++;
+	} else {
+		admin_nb_diff++;
+	}
+	if (admin_nb_diff == 0) {
+		admin_is_in_edit_mode = false;
+		Element.hide('save_panel');
+	}
+}
+
+function admin_displayFields(source, target) {
+	$H(fields).each(function(source_field) {
+		$H(fields).each(function(target_field) {
+			if (source_field.key != target_field.key) {
+                Element.hide('fields_'+source_field.key+'_'+target_field.key);
+			}
+		});
+	});
+	if ($('fields_'+source+'_'+target)) {
+		Element.show('fields_'+source+'_'+target);
+	}
+}
+
+function admin_selectTargetValue(source_field_id, target_field_id, target_value_id) {
+	if (admin_is_in_edit_mode) {
+		if (confirm('Discard changes ?')) {	
+			//We are not anymore in edit mode
+			admin_is_in_edit_mode = false;
+			Element.hide('save_panel');
+		}
+	}
+	if (!admin_is_in_edit_mode) {
+        admin_forceTargetValue(source_field_id, target_field_id, target_value_id);
+    }
+}
+function admin_forceTargetValue(source_field_id, target_field_id, target_value_id) {
+    //Select the target
+    admin_selected_value = target_value_id;
+    admin_selected_type  = 'target';
+    
+    $H(options[target_field_id]).each(function (opt) {
+        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'hidden'});
+    });
+    $H(options[target_field_id]).each(function (opt) {
+        Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+    });
+    Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id, 'boxitem');
+    Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id+'_arrow', {visibility:'visible'});
+    
+    //Select sources
+    $H(options[source_field_id]).each(function (opt) {
+        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'visible'});
+        //Does a rule exist ?
+        if ($H(rules_definitions).values().find(function (definition) {
+            return definition.source_field == source_field_id &&
+                    definition.target_field == target_field_id &&
+                    definition.target_value == target_value_id &&
+                    definition.source_value == opt.value['option'].value;
+        })) {
+            Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = 'checked';
+            Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'visible'});
+        } else {
+            Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = '';
+            Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+        }
+    });
+}
+function admin_selectSourceValue(source_field_id, target_field_id, source_value_id) {
+	if (admin_is_in_edit_mode) {
+		if (confirm('Discard changes ?')) {	
+			//We are not anymore in edit mode
+			admin_is_in_edit_mode = false;
+			Element.hide('save_panel');
+		}
+	}
+	if (!admin_is_in_edit_mode) {
+        admin_forceSourceValue(source_field_id, target_field_id, source_value_id);
+    }
+}
+function admin_forceSourceValue(source_field_id, target_field_id, source_value_id) {
+    //Select the source
+    admin_selected_value = source_value_id;
+    admin_selected_type  = 'source';
+    
+    $H(options[source_field_id]).each(function (opt) {
+        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'hidden'});
+    });
+    $H(options[source_field_id]).each(function (opt) {
+        Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+    });
+    Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id, 'boxitem');
+    Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id+'_arrow', {visibility:'visible'});
+    
+    //Select targets
+    $H(options[target_field_id]).each(function (opt) {
+        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'visible'});
+        //Does a rule exist ?
+        if ($H(rules_definitions).values().find(function (definition) {
+            return definition.source_field == source_field_id &&
+                    definition.target_field == target_field_id &&
+                    definition.source_value == source_value_id &&
+                    definition.target_value == opt.value['option'].value;
+        })) {
+            Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = 'checked';
+            Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'visible'});
+        } else {
+            Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = '';
+            Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+        }
+    });
+}
+
+function buildAdminUI1() {
 	
 	html = messages['if_then'];
 	
@@ -418,8 +895,8 @@ function buildAdminUI() {
 	
 	$('source_field').onchange = function() { admin_fieldHasChanged(this); }
 	$('source').onchange       = function() { admin_fieldHasChanged(this); }
-	$('target_field').onchange  = function() { admin_fieldHasChanged(this); }
-	$('target').onchange        = function() { admin_fieldHasChanged(this); }
+	$('target_field').onchange = function() { admin_fieldHasChanged(this); }
+	$('target').onchange       = function() { admin_fieldHasChanged(this); }
 	
 	//Add behavior to edit and delete link
 	$H(rules_definitions).values().each(function(rule_definition) {
@@ -430,6 +907,7 @@ function buildAdminUI() {
 		}
 		if (link = $('edit_link_'+rule_definition['id'])) {
 			link.onclick = function() {
+				//{{{ We pre-select source field
 				len = $('source_field').options.length;
 				for(var i = 0 ; i < len ; i++) {
 					if ($('source_field').options[i].value == rule_definition['source_field']) {
@@ -438,6 +916,9 @@ function buildAdminUI() {
 						$('source_field').options[i].selected = '';
 					}
 				}
+				//}}}
+				
+				//{{{ We pre-select source values
 				$('source').disabled = '';
 				len = $('source').options.length;
 				for(var i = len ; i >= 0 ; i--) {
@@ -446,13 +927,18 @@ function buildAdminUI() {
 				$('source').size = $H(options[rule_definition['source_field']]).values().length;
 				$H(options[rule_definition['source_field']]).values().each(function(opt) {
 						o = new Option(opt['option'].text, opt['option'].value);
-						if (rule_definition['source_value'] == opt['option'].value) {
+						if (rule_definition['source_values'].find(function(value) {
+									return value == opt['option'].value;
+						})) {
 							o.selected = 'selected';
 						} else {
 							o.selected = '';
 						}
 						$('source').appendChild(o);
 				});
+				//}}}
+				
+				//{{{ We pre-select target field
 				$('target_field').disabled = '';
 				len = $('target_field').options.length;
 				for(var i = 0 ; i < len ; i++) {
@@ -462,7 +948,9 @@ function buildAdminUI() {
 						$('target_field').options[i].selected = '';
 					}
 				}
+				//}}}
 				
+				//{{{ We pre-select target values
 				$('target').disabled = '';
 				len = $('target').options.length;
 				for(var i = len ; i >= 0 ; i--) {
@@ -480,9 +968,14 @@ function buildAdminUI() {
 						}
 						$('target').appendChild(o);
 				});
+				//}}}
+				
+				//{{{ Redirection pour pointer vers le formulaire d'édition
 				var re = new RegExp('#.*', "g");
 				loc           = location.href.replace(re, '');
 				location.href = loc + '#edit_rule';
+				//}}}
+				
 				//new Effect.Highlight('edit_rule');
 				
 				return false;
@@ -494,7 +987,7 @@ function buildAdminUI() {
 function getOuterHTML (node) {
 	var html = '';
 	switch (node.nodeType) {
-		case Node.ELEMENT_NODE:
+		case 1:
 			html += '<';
 			html += node.nodeName;
 			for (var a = 0 ; a < node.attributes.length; a++) {
@@ -505,10 +998,10 @@ function getOuterHTML (node) {
 			html += node.innerHTML;
 			html += '<\/' + node.nodeName + '>';
 			break;
-		case Node.TEXT_NODE:
+		case node.TEXT_NODE:
 			html += node.nodeValue;
 			break;
-		case Node.COMMENT_NODE:
+		case node.COMMENT_NODE:
 			html += '<!' + '--' + node.nodeValue + '--' + '>';
 			break;
 	}

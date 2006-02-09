@@ -6,16 +6,16 @@
 //
 //
 
-class ArtifactRuleView {
+class ArtifactRuleValueView {
 
     var $rule;
     
 	/**
-	 *  ArtifactRuleView() - constructor
+	 *  ArtifactRuleValueView() - constructor
 	 *
 	 *  @param $artifact_rule object
 	 */
-	function ArtifactRuleView(&$rule) {
+	function ArtifactRuleValueView(&$rule) {
 		$this->rule = $rule;
 	}
     
@@ -33,7 +33,7 @@ class ArtifactRuleView {
         $output .= ' '. $this->rule->source_field;
         $output .= '('. $this->rule->source_value .') =>';
         $output .= ' '. $this->rule->target_field;
-        $output .= '('. implode(', ', $this->rule->target_values) .')';
+        $output .= '('. $this->rule->target_value .')';
         return $output;
     }
 }

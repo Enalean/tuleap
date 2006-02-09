@@ -1,8 +1,7 @@
 <?php
 require_once('common/dao/ArtifactRuleDao.class');
-require_once('common/dao/ArtifactRuleTargetValuesDao.class');
 
-require_once('ArtifactRule.class');
+require_once('ArtifactRuleValue.class');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -14,22 +13,28 @@ require_once('ArtifactRule.class');
 class ArtifactRuleFactory {
     
     var $rules_dao;
-    var $target_values_dao;
     var $rules;
     
-    function ArtifactRuleFactory(&$rules_dao, &$target_values_dao) {
+    var $RULETYPE_HIDDEN;
+    var $RULETYPE_DISABLED;
+    var $RULETYPE_MANDATORY;
+    var $RULETYPE_VALUE;
+    
+    function ArtifactRuleFactory(&$rules_dao) {
         $this->rules_dao         =& $rules_dao;
-        $this->target_values_dao =& $target_values_dao;
-        
         $this->rules = array();
+        
+        $this->RULETYPE_HIDDEN    = 1;
+        $this->RULETYPE_DISABLED  = 2;
+        $this->RULETYPE_MANDATORY = 3;
+        $this->RULETYPE_VALUE     = 4;
     }
     
     function &instance() {
         static $_artifactrulefactory_instance;
         if (!$_artifactrulefactory_instance) {
             $rules_dao         =& new ArtifactRuleDao(CodexDataAccess::instance());
-            $target_values_dao =& new ArtifactRuleTargetValuesDao(CodexDataAccess::instance());
-            $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao, $target_values_dao);
+            $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;
     }
@@ -40,7 +45,8 @@ class ArtifactRuleFactory {
             //We retrieve rule
             $dar =& $this->rules_dao->searchById($id);
             if ($dar && ($rule_row = $dar->getRow())) {
-                $this->rules[$id] =& $this->_buildRuleInstance($rule_row['id'], $rule_row['group_artifact_id'], $rule_row['source_field_id'], $rule_row['source_value_id'], $rule_row['target_field_id']);
+                $rule_row['id'] = $id;
+                $this->rules[$id] =& $this->_buildRuleInstance($rule_row);
             }
         }
         return $this->rules[$id];
@@ -51,51 +57,65 @@ class ArtifactRuleFactory {
         $rules = array();
         while($rule_row = $dar->getRow()) {
             if (!isset($this->rules[$rule_row['id']])) {
-                $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row['id'], $artifact_type, $rule_row['source_field_id'], $rule_row['source_value_id'], $rule_row['target_field_id']);
+                $rule_row['group_artifact_id'] = $artifact_type;
+                $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row);
             }
             $rules[] =& $this->rules[$rule_row['id']];
         }
         return $rules;
     }
     
-    function &_buildRuleInstance($rule_id, $group_artifact_id, $source_field, $source_value, $target_field) {
-        $rule = false;
-        //We retrieve values for target
-        $dar =& $this->target_values_dao->searchByRuleId($rule_id);
-        if ($dar) {
-            $target_values = array();
-            while ($row =& $dar->getRow()) {
-                $target_values[] = $row['value_id'];
-            }
-            //We create Rule
-            $rule =& new ArtifactRule($rule_id, $group_artifact_id, $source_field, $source_value, $target_field, $target_values);
+    function &_buildRuleInstance($data) {
+        //We create Rule
+        switch ($data['rule_type']) {
+            case $this->RULETYPE_HIDDEN:
+                $rule =& new ArtifactRuleHidden($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
+                break;
+            case $this->RULETYPE_DISABLED:
+                $rule =& new ArtifactRuleDisabled($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
+                break;
+            case $this->RULETYPE_MANDATORY:
+                $rule =& new ArtifactRuleMandatory($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
+                break;
+            default: //RULETYPE_VALUE
+                $rule =& new ArtifactRuleValue($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
+                break;
         }
         return $rule;
     }
     
-    function saveRule($group_artifact_id, $source, $source_value, $target, $target_values) {
-        //need transaction ?
-        //Search for existing one with same parameters
-        $dar = $this->rules_dao->searchByGroupArtifactIdAndSourceAndSourceValueAndTarget($group_artifact_id, $source, $source_value, $target);
-        if ($dar && ($row = $dar->getRow())) {
-            $rule_id = $row['id'];
-            $this->target_values_dao->deleteByRuleId($rule_id);
-        } else {
-            //Create new one
-            $rule_id = $this->rules_dao->create($group_artifact_id, $source, $source_value, $target);
-        }
-        if ($rule_id) {
-            $this->target_values_dao->create($rule_id, $target_values);
-        }
+    function saveRuleValue($group_artifact_id, $source, $source_value, $target, $target_value) {
+        $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_VALUE, $target_value);
+    }
+    
+    function _saveRuleState($group_artifact_id, $source, $source_value, $target, $rule_type) {
+        $this->rules_dao->deleteRuleState($group_artifact_id, $source, $source_value, $target, array($this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY));
+        $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $rule_type);
+    }
+    function saveRuleHidden($group_artifact_id, $source, $source_value, $target) {
+        $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_HIDDEN);
+    }
+    
+    function saveRuleDisabled($group_artifact_id, $source, $source_value, $target) {
+        $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_DISABLED);
+    }
+    
+    function saveRuleMandatory($group_artifact_id, $source, $source_value, $target) {
+        $this->_saveRuleState($group_artifact_id, $source, $source_value, $target, $this->RULETYPE_MANDATORY);
     }
     
     function deleteRule($rule_id) {
-        $deleted = $this->target_values_dao->deleteByRuleId($rule_id);
-        if ($deleted) {
-            $deleted = $this->rules_dao->deleteById($rule_id);
-        }
+        $deleted = $this->rules_dao->deleteByRuleId($rule_id);
         return $deleted;
     }
 
+    function deleteRuleValueBySource($artifact_type, $source, $source_value, $target) {
+        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $this->RULETYPE_VALUE);
+        return $deleted;
+    }
+    function deleteRuleValueByTarget($artifact_type, $source, $target, $target_value) {
+        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $this->RULETYPE_VALUE);
+        return $deleted;
+    }
 }
 ?>

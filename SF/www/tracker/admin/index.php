@@ -725,10 +725,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
         $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=dynamic_fields');
         $request =& HTTPRequest::instance();
         if ($request->exist('save')) {
-            if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field')) && is_array($request->get('source')) && is_array($request->get('target'))) {
-                foreach($request->get('source') as $value) {
-                    $armh->saveRule($request->get('source_field'), $value, $request->get('target_field'), $request->get('target'));
-                }
+            if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field'))) {
+                $armh->saveFromRequest($request);
                 $armh->displayRules();
             } else {
                 $armh->badRequest();

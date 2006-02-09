@@ -526,7 +526,8 @@ tracker_include_type	choose_field	-- Choisir un champ
 tracker_include_type	master_title	Champ maître
 tracker_include_type	slave_title	Champ esclave
 tracker_include_type	btn_save_rule	Sauver la règle
-tracker_include_type	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
+#tracker_include_type	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
+tracker_include_type	if_then	Source : %1  %2 Cible : %3 %4
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
