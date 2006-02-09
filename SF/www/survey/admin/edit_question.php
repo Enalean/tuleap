@@ -41,15 +41,10 @@ switch ($func) {
 	 // Delete radio buttons if the question type changes from radio-button	to anything else different
 	 if (($old_quest_type=="6") && ($question_type != "6")) {	   
 	     session_redirect("/survey/admin/confirm_update.php?group_id=$group_id&question_id=$question_id&question=$question&question_type=$question_type");
-	 } else if (($old_quest_type != "6") && ($question_type=="6")) {	     
-	     // Update the question	 
-	     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
-	     // display the radio-buttons list and form in case type is changed to radio
-	     require('./update_question.php');
 	 } else {
 	     // Update the question	 
 	     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
-	     require('./browse_question.php');
+	     require('./update_question.php');
 	 }	 
      } else {
 	 // Show the form to update the question
