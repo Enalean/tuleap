@@ -372,7 +372,13 @@ var forbidden_targets = {};
 
 
 /**
-* http://fr.wikipedia.org/wiki/Algorithme_de_parcours_en_largeur
+* Walks through a graph and marks nodes
+* To prevent infinite loop for cyclic graphs, you have to correctly mark nodes
+* 
+* @param start is the first node to mark
+* @param cb_getChildren(node) is a callback which returns children of a node
+* @param cb_mark(node) is a callback used to mark a node
+* @param cb_is_marked(node) is a callback wich must return if a node is marked
 */
 function breadthFirstWalk(start, cb_getChildren, cb_mark, cb_is_marked) {
      var pile = [];
@@ -387,9 +393,15 @@ function breadthFirstWalk(start, cb_getChildren, cb_mark, cb_is_marked) {
              }
      }
 }
+
+/**
+* Build complete admin interface, based on rules_definitions, fields and options
+* hashs.
+* Assign handlers to inputs and build forbidden_sources and forbidden_targets hashs.
+*/
 function buildAdminUI() {
 
-    
+    //{{{ build forbidden_sources and forbidden_targets hashs
     $H(fields).values().each(function (field) {
             forbidden_sources[field.id] = [];
             forbidden_targets[field.id] = [];
@@ -430,9 +442,9 @@ function buildAdminUI() {
                 function(node){ forbidden_targets[id].push(node) }, 
                 function(node){ return forbidden_targets[id].find(function(element) { return element == node });});
     });
-	$('edit_rule').appendChild(document.createTextNode($H(forbidden_sources).inspect()));
-	$('edit_rule').appendChild(document.createElement('br'));
-    $('edit_rule').appendChild(document.createTextNode($H(forbidden_targets).inspect()));
+    //}}}
+    
+    //{{{ Build Table
 	table = document.createElement('table');
 	table.border      = 0;
 	table.cellpadding = 2;
@@ -457,12 +469,15 @@ function buildAdminUI() {
 	table.appendChild(tbody);
 	
 	$('edit_rule').appendChild(table);
-	
+    //}}}
+    
+    //{{{ Parse query to pre-select fields
     query_params = location.href.toQueryParams();
     preselected_source_field = query_params['source_field'] ? query_params['source_field'] : '-1';
     preselected_target_field = query_params['target_field'] ? query_params['target_field'] : '-1';
     preselected_source_value = query_params['source_value'];
     preselected_target_value = query_params['target_value'];
+    //}}}
     
 	//{{{ build source selectbox
 	select_source = document.createElement('select');
@@ -472,13 +487,15 @@ function buildAdminUI() {
     choose.selected = (preselected_source_field == choose.value);
 	choose.appendChild(document.createTextNode(messages['choose_field']));
 	$H(fields).values().each(function(source_field) {
-			if (preselected_target_field == '-1' || !forbidden_sources[preselected_target_field].find(function (forbidden_source) {
+			//Don't add field if it is forbidden
+            if (preselected_target_field == '-1' || !forbidden_sources[preselected_target_field].find(function (forbidden_source) {
                         return source_field.id == forbidden_source;
             })) {
                 so = document.createElement('option');
                 so.value = source_field.id;
                 so.selected = (preselected_source_field == so.value);
                 so.appendChild(document.createTextNode(source_field.name));
+                //If a rule exist for this field, highlight it
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.source_field == source_field.id;
                 })) {
@@ -497,13 +514,15 @@ function buildAdminUI() {
 	choose.selected = (preselected_target_field == choose.value);
     choose.appendChild(document.createTextNode(messages['choose_field']));
 	$H(fields).values().each(function(target_field) {
-			if (preselected_source_field == '-1' || !forbidden_targets[preselected_source_field].find(function (forbidden_target) {
+			//Don't add field if it is forbidden
+            if (preselected_source_field == '-1' || !forbidden_targets[preselected_source_field].find(function (forbidden_target) {
                         return target_field.id == forbidden_target;
             })) {
                 to = document.createElement('option');
                 to.value = target_field.id;
                 to.selected = (preselected_target_field == to.value);
                 to.appendChild(document.createTextNode(target_field.name));
+                //If a rule exist for this field, highlight it
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.target_field == target_field.id;
                 })) {
@@ -514,8 +533,10 @@ function buildAdminUI() {
 	});
 	//}}}
 	
-	$H(fields).values().each(function(source_field) {
+    //{{{ Build rows of the table
+    $H(fields).values().each(function(source_field) {
 			$H(fields).values().each(function(target_field) {
+                    //One row foreach pair (source_field, target_field)
 					if (target_field != source_field) {
 						tr = document.createElement('tr');
 						tr.id        = 'fields_'+source_field.id+'_'+target_field.id;
@@ -523,19 +544,21 @@ function buildAdminUI() {
 						tr.style.verticalAlign = 'top';
 						Element.hide(tr);
                         
-						//{{{ Source
+						//{{{ Build source cell
 						tr.appendChild(td_source = document.createElement('td'));
 						td_source.appendChild(inner_table = document.createElement('table'));
 						Element.setStyle(inner_table, {width:'100%'});
 						inner_table.cellPadding = 0;
 						inner_table.cellSpacing = 0;
 						inner_table.appendChild(inner_tbody = document.createElement('tbody'));
+                        //Foreach option build an inner row
 						$H(options[source_field.id]).values().each(function(opt) {
 							txt = document.createTextNode(opt['option'].text+' ');
 							inner_tr = document.createElement('tr');
 							inner_tr.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
 							
-							td_chk = document.createElement('td');
+							//{{{ The checkbox
+                            td_chk = document.createElement('td');
 							Element.setStyle(td_chk, {width:'1%'});
 							chk = document.createElement('input');
                             chk.type = 'checkbox';
@@ -546,12 +569,20 @@ function buildAdminUI() {
 							}
 							td_chk.appendChild(chk);
 							inner_tr.appendChild(td_chk);
-							
-							td_txt = document.createElement('td');
+                            //}}}
+                            
+							//{{{ The label of the option
+                            td_txt = document.createElement('td');
                             td_txt.appendChild(espace_insecable = document.createElement('span'));
                             espace_insecable.innerHTML = '&nbsp;';
 							td_txt.appendChild(label = document.createElement('label'));
-							//Does a rule exist ?
+							td_txt.onclick = function() {
+								link = admin_getInfosFromId(this.parentNode.id);
+								admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
+								return false;
+							}
+                            Element.setStyle(td_txt, {cursor:'pointer'});
+                            //Does a rule exist ?
 							if ($H(rules_definitions).values().find(function (definition) {
 								return definition.source_field == source_field.id &&
 										definition.target_field == target_field.id &&
@@ -562,26 +593,23 @@ function buildAdminUI() {
 							} else {
 								label.appendChild(txt);
 							}
-							label.onclick = function() {
-								link = admin_getInfosFromId(this.parentNode.parentNode.id);
-								admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
-								return false;
-							}
-                            Element.setStyle(label, {cursor:'pointer'});
 							inner_tr.appendChild(td_txt);
-							
+                            //}}}
+                            
+                            //{{{ The very beautiful arrow 
                             inner_tr.appendChild(td_arrow = document.createElement('td'));
                             Element.setStyle(td_arrow, {textAlign:'right'})
                             td_arrow.appendChild(arrow = document.createElement('div'));
                             arrow.innerHTML = '&rarr;';
                             arrow.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
                             Element.setStyle(arrow, {visibility:'hidden'});
+                            //}}}
                             
 							inner_tbody.appendChild(inner_tr);
 						});
 						//}}}
 						
-						//{{{ Target
+						//{{{ Build target cell
 						td_target = document.createElement('td');
 						tr.appendChild(td_target);
 						td_target.appendChild(inner_table = document.createElement('table'));
@@ -589,18 +617,22 @@ function buildAdminUI() {
 						inner_table.cellPadding = 0;
 						inner_table.cellSpacing = 0;
 						inner_table.appendChild(inner_tbody = document.createElement('tbody'));
+						//Foreach option build an inner row
 						$H(options[target_field.id]).values().each(function(opt) {
 							txt = document.createTextNode(opt['option'].text+' ');
 							inner_tr = document.createElement('tr');
 							inner_tr.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
 							
+                            //{{{ The very beautiful arrow 
                             inner_tr.appendChild(td_arrow = document.createElement('td'));
                             Element.setStyle(td_arrow, {textAlign:'right', width:'1%'})
                             td_arrow.appendChild(arrow = document.createElement('div'));
                             arrow.innerHTML = '&rarr;';
                             arrow.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
                             Element.setStyle(arrow, {visibility:'hidden'});
+                            //}}}
                             
+                            //{{{ The checkbox
 							td_chk = document.createElement('td');
 							Element.setStyle(td_chk, {width:'1%'});
 							chk = document.createElement('input');
@@ -612,11 +644,19 @@ function buildAdminUI() {
 							}
 							td_chk.appendChild(chk);
 							inner_tr.appendChild(td_chk);
-							
+                            //}}}
+                            
+                            //{{{ The label of the option
 							td_txt = document.createElement('td');
                             td_txt.appendChild(espace_insecable = document.createElement('span'));
                             espace_insecable.innerHTML = '&nbsp;';
 							td_txt.appendChild(label = document.createElement('label'));
+                            td_txt.onclick = function() {
+								link = admin_getInfosFromId(this.parentNode.id);
+								admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
+								return false;
+							}
+							Element.setStyle(td_txt, {cursor:'pointer'});
 							//Does a rule exist ?
 							if ($H(rules_definitions).values().find(function (definition) {
 								return definition.source_field == source_field.id &&
@@ -628,14 +668,9 @@ function buildAdminUI() {
 							} else {
 								label.appendChild(txt);
 							}
-							label.onclick = function() {
-								link = admin_getInfosFromId(this.parentNode.parentNode.id);
-								admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
-								return false;
-							}
-                            Element.setStyle(label, {cursor:'pointer'});
-							inner_tr.appendChild(td_txt);
-
+                            inner_tr.appendChild(td_txt);
+                            //}}}
+                            
 							inner_tbody.appendChild(inner_tr);
 						});
 						//}}}
@@ -643,6 +678,10 @@ function buildAdminUI() {
 					}
 			});
 	});
+    
+    //{{{ Some nice text in the header
+    // Expected sentence: If field %1 is selected to %2 then field %3 will propose %4
+    // As of 20060210, the sentence is Source: %1 %2 Target: %3 %4
 	if_then = messages['if_then'];
 	p1 = if_then.indexOf('%1');
 	p2 = if_then.indexOf('%2');
@@ -655,7 +694,7 @@ function buildAdminUI() {
 	header_target.appendChild(document.createTextNode(if_then.substring(p2+2, p3)));
 	header_target.appendChild(select_target);
 	header_target.appendChild(document.createTextNode(if_then.substring(p3+2, p4)));
-	
+    //}}}
 	
 	//{{{ Save panel
 	tbody.appendChild(tr = document.createElement('tr'));
@@ -665,16 +704,21 @@ function buildAdminUI() {
 	td.colSpan = 2;
 	Element.setStyle(td, {textAlign:'center'});
 	
+    //Save button
 	td.appendChild(save_btn = document.createElement('button'));
 	save_btn.appendChild(document.createTextNode(messages['btn_save_rule']));
-	save_btn.name    = 'save';
+	save_btn.id      = 'save_btn';
 	save_btn.onclick = function() {
+        $('save').value = 'save';
+        $('reset_btn').disabled   = this.disabled = 'disabled';
 		$('direction_type').value = admin_selected_type;
 		$('value').value          = admin_selected_value;
         this.form.submit();
 	}
+    //Reset button
 	td.appendChild(reset_btn = document.createElement('button'));
 	reset_btn.appendChild(document.createTextNode(messages['btn_reset']));
+    reset_btn.id = 'reset_btn';
     reset_btn.onclick = function() {
         admin_is_in_edit_mode = false;
 		if (admin_selected_type == 'target') {
@@ -686,8 +730,9 @@ function buildAdminUI() {
         return false;
 	}
 	Element.hide('save_panel');
-	//}}} /**/
+	//}}}
 	
+    //{{{ Handlers on select boxes (source and target fields)
 	select_target.onchange = function() {
         admin_displayFields($F('source_field'), $F('target_field'));
         //{{{ re-build source selectbox
@@ -700,6 +745,7 @@ function buildAdminUI() {
         choose.value = '-1';
         choose.appendChild(document.createTextNode(messages['choose_field']));
         $H(fields).values().each(function(source_field) {
+                //Don't add field if it is forbidden
                 if ($F('target_field') == '-1' || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
                         return source_field.id == forbidden_source;
                 })) {
@@ -707,6 +753,7 @@ function buildAdminUI() {
                     so.value    = source_field.id;
                     so.selected = source_field.id == previous_selected ? 'selected' : '';
                     so.appendChild(document.createTextNode(source_field.name));
+                    //If a rule exist for this field, highlight it
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.source_field == source_field.id;
                     })) {
@@ -730,6 +777,7 @@ function buildAdminUI() {
         choose.value = '-1';
         choose.appendChild(document.createTextNode(messages['choose_field']));
         $H(fields).values().each(function(target_field) {
+                //Don't add field if it is forbidden
                 if ($F('source_field') == '-1' || !forbidden_targets[$F('source_field')].find(function (forbidden_target) {
                         return target_field.id == forbidden_target;
                 })) {
@@ -737,6 +785,7 @@ function buildAdminUI() {
                     to.value    = target_field.id;
                     to.selected = target_field.id == previous_selected ? 'selected' : '';
                     to.appendChild(document.createTextNode(target_field.name));
+                    //If a rule exist for this field, highlight it
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.target_field == target_field.id;
                     })) {
@@ -748,17 +797,37 @@ function buildAdminUI() {
         });
         //}}}
 	}
+    //}}}
+    
+    //Display the initial row
 	admin_displayFields($F('source_field'), $F('target_field'));
 
+    //Pre-select value if needed
     if (preselected_source_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
         admin_selectSourceValue(preselected_source_field, preselected_target_field, preselected_source_value);
     } else {
+        //Pre-select target if needed
         if (preselected_target_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
             admin_selectTargetValue(preselected_source_field, preselected_target_field, preselected_target_value);
         }
     }
 }
 
+/**
+* Extract informations from an id :
+* ex: We want to retrieve informations from 
+*     id "target_<source_field>_<target_field>_<value>_chk"
+*     We know that the user has previously selected 
+*     the source value <selected_value>.
+*     The informations will be :
+*        {
+*            type:            'target',
+*            source_field_id: <source_field>,
+*            target_field_id: <target_field>,
+*            source_value_id: <selected_value>,
+*            target_value_id: <value>
+*        }
+*/
 function admin_getInfosFromId(id) {
 	p1 = id.indexOf('_');
 	p2 = id.substring(p1+1).indexOf('_');
@@ -780,15 +849,20 @@ var admin_nb_diff;
 var admin_selected_value;
 var admin_selected_type;
 
+/**
+* Callback for (un)checked checkboxes
+*/
 function admin_checked(id) {
+    //We're going to edit mode if we are not yet
 	if (!admin_is_in_edit_mode) {
 		admin_is_in_edit_mode = true;
 		admin_nb_diff = 0;
 		Element.show('save_panel');
 	}
+    
 	checkbox = admin_getInfosFromId(id);
 	checked = $F(id);
-    //boxitem and arrow
+    //boxitem and arrow follow the state of the corresponding checkbox
     if (checked) {
         Element.addClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxitem');
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'visible'});        
@@ -804,18 +878,25 @@ function admin_checked(id) {
 				definition.target_values == checkbox.target_value_id;
 	});
 	if (rule_exists && checked || !rule_exists && !checked) {
-		//Bug here
+		//Bug here!
+        // NTY 20060210: The initial behaviour was to be able to detect when a user 
+        // change rules to initial rules (click-declick) It doesn't work for now,
+        // Therefore we don't do anything interesting here.
         //admin_nb_diff--;
         admin_nb_diff++;
 	} else {
 		admin_nb_diff++;
 	}
+    //The user is leaving the edit mode
 	if (admin_nb_diff == 0) {
 		admin_is_in_edit_mode = false;
 		Element.hide('save_panel');
 	}
 }
 
+/**
+* Displays the row corresponding to the selection
+*/
 function admin_displayFields(source, target) {
 	$H(fields).each(function(source_field) {
 		$H(fields).each(function(target_field) {
@@ -829,12 +910,11 @@ function admin_displayFields(source, target) {
 	}
 }
 
+
 function admin_selectTargetValue(source_field_id, target_field_id, target_value_id) {
 	if (admin_is_in_edit_mode) {
-		if (confirm('Discard changes ?')) {	
-			//We are not anymore in edit mode
-			admin_is_in_edit_mode = false;
-			Element.hide('save_panel');
+		if (confirm('Save modifications ?')) {	
+			$('save_btn').click();
 		}
 	}
 	if (!admin_is_in_edit_mode) {
@@ -878,10 +958,8 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
 }
 function admin_selectSourceValue(source_field_id, target_field_id, source_value_id) {
 	if (admin_is_in_edit_mode) {
-		if (confirm('Discard changes ?')) {	
-			//We are not anymore in edit mode
-			admin_is_in_edit_mode = false;
-			Element.hide('save_panel');
+		if (confirm('Save modifications ?')) {	
+			$('save_btn').click();
 		}
 	}
 	if (!admin_is_in_edit_mode) {
@@ -924,287 +1002,3 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
     });
 }
 
-function buildAdminUI1() {
-	
-	html = messages['if_then'];
-	
-	ms = document.createElement('select');
-	ms.id = ms.name = 'source_field';
-	o = document.createElement('option');
-	o.value = '-1';
-	o.innerHTML = messages['choose_field'];
-	ms.appendChild(o);
-	$H(fields).values().each(function(field) {
-		o = document.createElement('option');
-		o.value = field.id;
-		o.innerHTML = field.name;
-		ms.appendChild(o);
-	});
-	html = html.replace(/%1/, getOuterHTML(ms));
-	
-	
-	msv = document.createElement('select');
-	msv.multiple            = 'multiple';
-	msv.style.verticalAlign = 'top';
-	msv.id                  = 'source';
-	msv.name                = 'source[]';
-	msv.disabled            = 'disabled';
-	html = html.replace(/%2/, getOuterHTML(msv));
-	
-	ss = ms.cloneNode(true);
-	ss.id = ss.name = 'target_field';
-	ss.disabled = 'disabled';
-	html = html.replace(/%3/, getOuterHTML(ss));
-	
-	ssv = document.createElement('select');
-	ssv.multiple            = 'multiple';
-	ssv.style.verticalAlign = 'top';
-	ssv.id                  = 'target';
-	ssv.name                = 'target[]';
-	ssv.disabled            = 'disabled';
-	html = html.replace(/%4/, getOuterHTML(ssv));
-	
-	
-	new Insertion.Top('edit_rule', html+'&nbsp;');
-	submit = document.createElement('button');
-	submit.id        = 'submit';
-	submit.name      = 'save';
-	submit.value     = 'save';
-	submit.disabled  = 'disabled';
-	submit.innerHTML = messages['btn_save_rule'];
-	$('edit_rule').appendChild(submit);
-	
-	$('source_field').onchange = function() { admin_fieldHasChanged(this); }
-	$('source').onchange       = function() { admin_fieldHasChanged(this); }
-	$('target_field').onchange = function() { admin_fieldHasChanged(this); }
-	$('target').onchange       = function() { admin_fieldHasChanged(this); }
-	
-	//Add behavior to edit and delete link
-	$H(rules_definitions).values().each(function(rule_definition) {
-		if (link = $('delete_link_'+rule_definition['id'])) {
-			link.onclick = function() {
-				return confirm(messages['delete_are_you_sure']);
-			};
-		}
-		if (link = $('edit_link_'+rule_definition['id'])) {
-			link.onclick = function() {
-				//{{{ We pre-select source field
-				len = $('source_field').options.length;
-				for(var i = 0 ; i < len ; i++) {
-					if ($('source_field').options[i].value == rule_definition['source_field']) {
-						$('source_field').options[i].selected = 'selected';
-					} else {
-						$('source_field').options[i].selected = '';
-					}
-				}
-				//}}}
-				
-				//{{{ We pre-select source values
-				$('source').disabled = '';
-				len = $('source').options.length;
-				for(var i = len ; i >= 0 ; i--) {
-					$('source').options[i] = null;
-				}
-				$('source').size = $H(options[rule_definition['source_field']]).values().length;
-				$H(options[rule_definition['source_field']]).values().each(function(opt) {
-						o = new Option(opt['option'].text, opt['option'].value);
-						if (rule_definition['source_values'].find(function(value) {
-									return value == opt['option'].value;
-						})) {
-							o.selected = 'selected';
-						} else {
-							o.selected = '';
-						}
-						$('source').appendChild(o);
-				});
-				//}}}
-				
-				//{{{ We pre-select target field
-				$('target_field').disabled = '';
-				len = $('target_field').options.length;
-				for(var i = 0 ; i < len ; i++) {
-					if ($('target_field').options[i].value == rule_definition['target_field']) {
-						$('target_field').options[i].selected = 'selected';
-					} else {
-						$('target_field').options[i].selected = '';
-					}
-				}
-				//}}}
-				
-				//{{{ We pre-select target values
-				$('target').disabled = '';
-				len = $('target').options.length;
-				for(var i = len ; i >= 0 ; i--) {
-					$('target').options[i] = null;
-				}
-				$('target').size = $H(options[rule_definition['target_field']]).values().length;
-				$H(options[rule_definition['target_field']]).values().each(function(opt) {
-						o = new Option(opt['option'].text, opt['option'].value);
-						if (rule_definition['target_values'].find(function(value) {
-									return value == opt['option'].value;
-						})) {
-							o.selected = 'selected';
-						} else {
-							o.selected = '';
-						}
-						$('target').appendChild(o);
-				});
-				//}}}
-				
-				//{{{ Redirection pour pointer vers le formulaire d'édition
-				var re = new RegExp('#.*', "g");
-				loc           = location.href.replace(re, '');
-				location.href = loc + '#edit_rule';
-				//}}}
-				
-				//new Effect.Highlight('edit_rule');
-				
-				return false;
-			};
-		}
-	});
-}
-
-function getOuterHTML (node) {
-	var html = '';
-	switch (node.nodeType) {
-		case 1:
-			html += '<';
-			html += node.nodeName;
-			for (var a = 0 ; a < node.attributes.length; a++) {
-				html += ' ' + node.attributes[a].nodeName.toUpperCase() +
-				'="' + node.attributes[a].nodeValue + '"';
-			}
-			html += '>';
-			html += node.innerHTML;
-			html += '<\/' + node.nodeName + '>';
-			break;
-		case node.TEXT_NODE:
-			html += node.nodeValue;
-			break;
-		case node.COMMENT_NODE:
-			html += '<!' + '--' + node.nodeValue + '--' + '>';
-			break;
-	}
-	return html;
-}
-
-
-function admin_fieldHasChanged(field) {
-	switch (field.id) {
-	case 'source_field':
-		//{{{ We remove options for target
-		reset = $('target_field', 'target', 'source');
-		reset.each(function (el) {
-			for(var i = el.options.length ; i >= 0 ; i--) {
-				el.options[i] = null;
-			}
-			el.size     = 0;
-			el.disabled = 'disabled';
-		});
-		//}}}
-		if ($F(field.id) != '-1') {
-			$('source').size = $H(options[$F(field.id)]).values().length;
-			$H(options[$F(field.id)]).values().each(function(opt) {
-					o = new Option(opt['option'].text, opt['option'].value);
-					o.selected = '';
-					$('source').appendChild(o);
-			});
-			//{{{ We remove source field from target field
-			$('target_field').appendChild(new Option(messages['choose_field']), '-1');
-			$H(fields).values().each(function(target_field) {
-					if (target_field.id != $F(field.id)) {
-						$('target_field').appendChild(new Option(target_field.name, target_field.id));
-					}
-			});
-			//}}}
-			$('source').disabled      = '';
-			$('target_field').disabled = '';
-		}
-		break;
-	case 'target_field':
-		//{{{ We remove target field from source field
-		el = $('source_field');
-		old = $F('source_field');
-		for(var i = el.options.length ; i >= 0 ; i--) {
-			el.options[i] = null;
-		}
-		el.appendChild(new Option(messages['choose_field']), '-1');
-		$H(fields).values().each(function(source_field) {
-			if (source_field.id != $F(field.id)) {
-				o = new Option(source_field.name, source_field.id);
-				if (old == o.value) {
-					o.selected = 'selected';
-				}
-				el.appendChild(o);
-			}
-		});
-		//}}}
-		//{{{ We remove options for target
-		el = $('target');
-		for(var i = el.options.length ; i >= 0 ; i--) {
-			el.options[i] = null;
-		}
-		//}}}
-		if ($F(field.id) != '-1') {
-			$('target').size = $H(options[$F(field.id)]).values().length;
-			$H(options[$F(field.id)]).values().each(function(opt) {
-					o = document.createElement('option');
-					o.value    = opt['option'].value;
-					o.text     = opt['option'].text;
-					o.selected = '';
-					$('target').appendChild(o);
-			});
-			$('target').disabled = '';
-		}
-		$('submit').disabled = 'disabled';
-		break;
-	case 'target':
-		//{{{ We disable submit field if needed
-		disabled = 'disabled';
-		len = field.options.length;
-		nb  = 0;
-		i   = 0;
-		while (i < len && !field.options[i].selected) {
-			i++;
-		}
-		if (i < len) {
-			len = $('source').options.length;
-			nb  = 0;
-			i   = 0;
-			while (i < len && !$('source').options[i].selected) {
-				i++;
-			}
-			if (i < len) {
-				disabled = '';
-			}
-		}
-		$('submit').disabled = disabled;
-		//}}}
-		break;
-	case 'source':
-		//{{{ We disable submit field if needed
-		disabled = 'disabled';
-		len = field.options.length;
-		nb  = 0;
-		i   = 0;
-		while (i < len && !field.options[i].selected) {
-			i++;
-		}
-		if (i < len) {
-			len = $('target').options.length;
-			nb  = 0;
-			i   = 0;
-			while (i < len && !$('target').options[i].selected) {
-				i++;
-			}
-			if (i < len) {
-				disabled = '';
-			}
-		}
-		$('submit').disabled = disabled;
-		//}}}
-	default:
-		break;
-	}
-}

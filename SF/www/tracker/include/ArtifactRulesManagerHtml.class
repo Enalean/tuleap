@@ -65,6 +65,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         //echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post"><div id="edit_rule"></div>';
+        echo '<input type="hidden" id="save"  name="save" value="no" />';
         echo '<input type="hidden" id="value" name="value" value="" />';
         echo '<input type="hidden" id="direction_type" name="direction_type" value="" />';
         echo '</form>';
