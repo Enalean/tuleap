@@ -13,11 +13,11 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		this.selectedOptions = [];
 		this.actualOptions   = [];
 	},
-	highlight: function(as) {
-		switch (as) {
+	highlight: function(mode) {
+		switch (mode) {
 			case 'previous':
 			case 'next':
-				Element.addClassName(this.id, as);
+				Element.addClassName(this.id, mode);
 				break;
 			default:
 				if (!this._highlight) {
@@ -28,11 +28,11 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 				break;
 		}
 	},
-	unhighlight: function(as) {
-		switch (as) {
+	unhighlight: function(mode) {
+		switch (mode) {
 			case 'previous':
 			case 'next':
-				Element.removeClassName(this.id, as);
+				Element.removeClassName(this.id, mode);
 				break;
 			default:
 				break;
@@ -61,7 +61,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			if (found) { //The option was previously selected
 				if (!(el.options[i].selected)) { //The option is not anymore selected
 					//We remove it
-					this.selectedOptions = this.selectedOptions.reject(function (element) { return element.value == el.options[i].value });
+					this.selectedOptions = this.selectedOptions.reject(function (element) { return element.value == el.options[i].value; });
 					has_changed = true;
 				}
 			} else { //The option was not selected...
@@ -97,7 +97,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		var changed = true;
 		el = $(this.id);
 		if (el.options.length == this.defaultOptions.length) {
-			changed = false
+			changed = false;
 		} else {
 			//clear actual options
 			this.actualOptions = [];
@@ -136,12 +136,12 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			this.selectedOptions = this.actualOptions.findAll(function(element) {
 				return selectedOptions.find(function (option) {
 					return element == option;
-				})
+				});
 			});
 		}
 		el = $(this.id);
 		if (el.options.length > 0) {
-			if (this.selectedOptions.length == 0) {
+			if (this.selectedOptions.length < 1) {
 				this.selectedOptions.push(this.actualOptions[0]);
 			}
 			for(var k = 0 ; k < el.options.length ; k++) {
@@ -245,7 +245,7 @@ var selections        = {};
 function addOptionsToFields() {
 	for (field in fields) {
 		for(option in options[field]) {
-			fields[field].addDefaultOption(options[field][option]['option'], options[field][option]['selected'])
+			fields[field].addDefaultOption(options[field][option]['option'], options[field][option]['selected']);
 		}
 		fields[field].updateSelected();
 	}
@@ -326,23 +326,29 @@ function registerFieldsEvents() {
 				for(i = 0 ; i < rules.length ; i++) {
 					rules[i].highlight(fields[this.id]);
 				}
-			}
+			};
 			el.onmouseout = function() {
 				for(i in fields) {
 					fields[i].unhighlight('previous');
 					fields[i].unhighlight('next');
 				}
-			}
+			};
 		}
 	}
 }
 
 function addRule(condition, effect) {
 	if(condition.id != effect.id && $(effect.id) && $(condition.id) && fields[condition.id] && fields[effect.id]) {
-		if (!selections[effect.id]) selections[effect.id] = {};
-		if (!selections[effect.id][condition.id]) selections[effect.id][condition.id] = [];
+		if (!selections[effect.id]) { 
+            selections[effect.id] = {}; 
+        }
+		if (!selections[effect.id][condition.id]) { 
+            selections[effect.id][condition.id] = []; 
+        }
 		
-		if (!dependencies[condition.id]) dependencies[condition.id] = [];
+		if (!dependencies[condition.id]) {
+            dependencies[condition.id] = [];
+        }
 		dependencies[condition.id].push(fields[effect.id]);
 		
 		condition_options = [];
@@ -357,11 +363,7 @@ function addRule(condition, effect) {
 		rules.push(new com.xerox.codex.tracker.Rule(
 			fields[effect.id], 
 			effect_options,
-			new com.xerox.codex.tracker.Condition(
-				fields[condition.id], 
-				condition_options
-			)
-		));
+			new com.xerox.codex.tracker.Condition(fields[condition.id], condition_options)));
 	}
 }
 
@@ -415,14 +417,14 @@ function buildAdminUI() {
                             });
                     children = [];
                     rules.each(function (rule) {
-                            if (!children.find(function(element) { return element == rule.target_field })) {
+                            if (!children.find(function(element) { return element == rule.target_field; })) {
                                 children.push(rule.target_field);
                             }
                     });
                     return children;
                 },
-                function(node){ forbidden_sources[id].push(node) }, 
-                function(node){ return forbidden_sources[id].find(function(element) { return element == node }); });
+                function(node){ forbidden_sources[id].push(node); }, 
+                function(node){ return forbidden_sources[id].find(function(element) { return element == node; }); });
     });
     $H(forbidden_targets).keys().each(function (id) {
             breadthFirstWalk(id, 
@@ -433,14 +435,14 @@ function buildAdminUI() {
                             });
                     children = [];
                     rules.each(function (rule) {
-                            if (!children.find(function(element) { return element == rule.source_field })) {
+                            if (!children.find(function(element) { return element == rule.source_field; })) {
                                 children.push(rule.source_field);
                             }
                     });
                     return children;
                 },
-                function(node){ forbidden_targets[id].push(node) }, 
-                function(node){ return forbidden_targets[id].find(function(element) { return element == node });});
+                function(node){ forbidden_targets[id].push(node); }, 
+                function(node){ return forbidden_targets[id].find(function(element) { return element == node; });});
     });
     //}}}
     
@@ -471,14 +473,6 @@ function buildAdminUI() {
 	$('edit_rule').appendChild(table);
     //}}}
     
-    //{{{ Parse query to pre-select fields
-    query_params = location.href.toQueryParams();
-    preselected_source_field = query_params['source_field'] ? query_params['source_field'] : '-1';
-    preselected_target_field = query_params['target_field'] ? query_params['target_field'] : '-1';
-    preselected_source_value = query_params['source_value'];
-    preselected_target_value = query_params['target_value'];
-    //}}}
-    
 	//{{{ build source selectbox
 	select_source = document.createElement('select');
 	select_source.id = select_source.name = 'source_field';
@@ -488,9 +482,14 @@ function buildAdminUI() {
 	choose.appendChild(document.createTextNode(messages['choose_field']));
 	$H(fields).values().each(function(source_field) {
 			//Don't add field if it is forbidden
-            if (preselected_target_field == '-1' || !forbidden_sources[preselected_target_field].find(function (forbidden_source) {
-                        return source_field.id == forbidden_source;
-            })) {
+            if (forbidden_targets[source_field.id].length != $H(fields).keys().length 
+                    && (
+                        preselected_target_field == '-1' 
+                        || !forbidden_sources[preselected_target_field].find(function (forbidden_source) {
+                                return source_field.id == forbidden_source;
+                        }) 
+                    )
+                ) {
                 so = document.createElement('option');
                 so.value = source_field.id;
                 so.selected = (preselected_source_field == so.value);
@@ -515,9 +514,14 @@ function buildAdminUI() {
     choose.appendChild(document.createTextNode(messages['choose_field']));
 	$H(fields).values().each(function(target_field) {
 			//Don't add field if it is forbidden
-            if (preselected_source_field == '-1' || !forbidden_targets[preselected_source_field].find(function (forbidden_target) {
-                        return target_field.id == forbidden_target;
-            })) {
+            if (forbidden_sources[target_field.id].length != $H(fields).keys().length
+                && (
+                    preselected_source_field == '-1' 
+                    || !forbidden_targets[preselected_source_field].find(function (forbidden_target) {
+                            return target_field.id == forbidden_target;
+                    }) 
+                )
+            ) {
                 to = document.createElement('option');
                 to.value = target_field.id;
                 to.selected = (preselected_target_field == to.value);
@@ -566,7 +570,7 @@ function buildAdminUI() {
 							chk.style.visibility = 'hidden';
 							chk.onclick = function(event) {
 								admin_checked(this.id);
-							}
+							};
 							td_chk.appendChild(chk);
 							inner_tr.appendChild(td_chk);
                             //}}}
@@ -580,7 +584,7 @@ function buildAdminUI() {
 								link = admin_getInfosFromId(this.parentNode.id);
 								admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
 								return false;
-							}
+							};
                             Element.setStyle(td_txt, {cursor:'pointer'});
                             //Does a rule exist ?
 							if ($H(rules_definitions).values().find(function (definition) {
@@ -593,12 +597,13 @@ function buildAdminUI() {
 							} else {
 								label.appendChild(txt);
 							}
-							inner_tr.appendChild(td_txt);
+                            Element.setStyle(label, {cursor:'pointer'});
+                            inner_tr.appendChild(td_txt);
                             //}}}
                             
                             //{{{ The very beautiful arrow 
                             inner_tr.appendChild(td_arrow = document.createElement('td'));
-                            Element.setStyle(td_arrow, {textAlign:'right'})
+                            Element.setStyle(td_arrow, {textAlign:'right'});
                             td_arrow.appendChild(arrow = document.createElement('div'));
                             arrow.innerHTML = '&rarr;';
                             arrow.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
@@ -625,7 +630,7 @@ function buildAdminUI() {
 							
                             //{{{ The very beautiful arrow 
                             inner_tr.appendChild(td_arrow = document.createElement('td'));
-                            Element.setStyle(td_arrow, {textAlign:'right', width:'1%'})
+                            Element.setStyle(td_arrow, {textAlign:'right', width:'1%'});
                             td_arrow.appendChild(arrow = document.createElement('div'));
                             arrow.innerHTML = '&rarr;';
                             arrow.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
@@ -641,7 +646,7 @@ function buildAdminUI() {
 							chk.style.visibility = 'hidden';
 							chk.onclick = function(event) {
 								admin_checked(this.id);
-							}
+							};
 							td_chk.appendChild(chk);
 							inner_tr.appendChild(td_chk);
                             //}}}
@@ -655,7 +660,7 @@ function buildAdminUI() {
 								link = admin_getInfosFromId(this.parentNode.id);
 								admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
 								return false;
-							}
+							};
 							Element.setStyle(td_txt, {cursor:'pointer'});
 							//Does a rule exist ?
 							if ($H(rules_definitions).values().find(function (definition) {
@@ -668,6 +673,7 @@ function buildAdminUI() {
 							} else {
 								label.appendChild(txt);
 							}
+                            Element.setStyle(label, {cursor:'pointer'});
                             inner_tr.appendChild(td_txt);
                             //}}}
                             
@@ -714,13 +720,15 @@ function buildAdminUI() {
 		$('direction_type').value = admin_selected_type;
 		$('value').value          = admin_selected_value;
         this.form.submit();
-	}
+	};
     //Reset button
 	td.appendChild(reset_btn = document.createElement('button'));
 	reset_btn.appendChild(document.createTextNode(messages['btn_reset']));
     reset_btn.id = 'reset_btn';
     reset_btn.onclick = function() {
         admin_is_in_edit_mode = false;
+        $('source_field').disabled = '';
+		$('target_field').disabled = '';
 		if (admin_selected_type == 'target') {
             admin_forceTargetValue($F('source_field'), $F('target_field'), admin_selected_value);
         } else {
@@ -728,7 +736,7 @@ function buildAdminUI() {
         }
         Element.hide('save_panel');
         return false;
-	}
+	};
 	Element.hide('save_panel');
 	//}}}
 	
@@ -746,9 +754,14 @@ function buildAdminUI() {
         choose.appendChild(document.createTextNode(messages['choose_field']));
         $H(fields).values().each(function(source_field) {
                 //Don't add field if it is forbidden
-                if ($F('target_field') == '-1' || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
-                        return source_field.id == forbidden_source;
-                })) {
+                if (forbidden_targets[source_field.id].length != $H(fields).keys().length
+                    && (
+                        $F('target_field') == '-1' 
+                        || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
+                                return source_field.id == forbidden_source;
+                        }) 
+                    )
+                ) {
                     so = document.createElement('option');
                     so.value    = source_field.id;
                     so.selected = source_field.id == previous_selected ? 'selected' : '';
@@ -764,7 +777,7 @@ function buildAdminUI() {
                 }
         });
         //}}}
-    }
+    };
     select_source.onchange = function() {
         admin_displayFields($F('source_field'), $F('target_field'));
         //{{{ re-build target selectbox
@@ -778,9 +791,14 @@ function buildAdminUI() {
         choose.appendChild(document.createTextNode(messages['choose_field']));
         $H(fields).values().each(function(target_field) {
                 //Don't add field if it is forbidden
-                if ($F('source_field') == '-1' || !forbidden_targets[$F('source_field')].find(function (forbidden_target) {
-                        return target_field.id == forbidden_target;
-                })) {
+                if (forbidden_sources[target_field.id].length != $H(fields).keys().length
+                    && (
+                        $F('source_field') == '-1' 
+                        || !forbidden_targets[$F('source_field')].find(function (forbidden_target) {
+                                return target_field.id == forbidden_target;
+                        }) 
+                    )
+                ) {
                     to = document.createElement('option');
                     to.value    = target_field.id;
                     to.selected = target_field.id == previous_selected ? 'selected' : '';
@@ -796,7 +814,7 @@ function buildAdminUI() {
                 }
         });
         //}}}
-	}
+	};
     //}}}
     
     //Display the initial row
@@ -853,14 +871,16 @@ var admin_selected_type;
 * Callback for (un)checked checkboxes
 */
 function admin_checked(id) {
-    //We're going to edit mode if we are not yet
+    checkbox = admin_getInfosFromId(id);
+	//We're going to edit mode if we are not yet
 	if (!admin_is_in_edit_mode) {
-		admin_is_in_edit_mode = true;
+        $('source_field').disabled = 'disabled';
+        $('target_field').disabled = 'disabled';
+        admin_is_in_edit_mode = true;
 		admin_nb_diff = 0;
 		Element.show('save_panel');
 	}
     
-	checkbox = admin_getInfosFromId(id);
 	checked = $F(id);
     //boxitem and arrow follow the state of the corresponding checkbox
     if (checked) {
@@ -888,7 +908,9 @@ function admin_checked(id) {
 		admin_nb_diff++;
 	}
     //The user is leaving the edit mode
-	if (admin_nb_diff == 0) {
+	if (admin_nb_diff === 0) {
+		$('source_field').disabled = '';
+		$('target_field').disabled = '';
 		admin_is_in_edit_mode = false;
 		Element.hide('save_panel');
 	}

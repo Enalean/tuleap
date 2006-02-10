@@ -61,7 +61,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n//------------------------------------------------------\n";
     }
     
-    function displayEditForm() {
+    function displayEditForm($params = array()) {
         //echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post"><div id="edit_rule"></div>';
@@ -73,6 +73,26 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "//<![CDATA[\n";
         $this->displayRulesAsJavascript();
         
+        if (isset($params['preselected_source_field'])) {
+            echo 'var preselected_source_field = '. $params['preselected_source_field'] .";\n";
+        } else {
+            echo "var preselected_source_field = '-1';\n";
+        }
+        if (isset($params['preselected_target_field'])) {
+            echo 'var preselected_target_field = '. $params['preselected_target_field'] .";\n";
+        } else {
+            echo "var preselected_target_field = '-1';\n";
+        }
+        if (isset($params['preselected_source_value'])) {
+            echo 'var preselected_source_value = '. $params['preselected_source_value'] .";\n";
+        } else {
+            echo "var preselected_source_value = undefined;\n";
+        }
+        if (isset($params['preselected_target_value'])) {
+            echo 'var preselected_target_value = '. $params['preselected_target_value'] .";\n";
+        } else {
+            echo "var preselected_target_value = undefined;\n";
+        }
         echo "messages = {\n";
             //echo "href:               '". $this->href ."',\n";
             echo "choose_field:       '". $GLOBALS['Language']->getText('tracker_include_type','choose_field') ."',\n";
@@ -86,9 +106,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n".'//]]></script>';
     }
     
-    function displayRules() {
+    function displayRules($params = array()) {
         $this->_header();
-        $this->displayEditForm();
+        $this->displayEditForm($params);
         echo '<br />';
         $this->_footer();
     }
@@ -106,7 +126,12 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row['value_id']);
                     }
                 }
-                header('Location: '. $this->href .'&source_field='. $request->get('source_field') .'&target_field=' .$request->get('target_field'). '&source_value=' .$request->get('value'));
+                $GLOBALS['feedback'] .= '<div>Successfully saved</div>';
+                $this->displayRules(array(
+                    'preselected_source_field' => $request->get('source_field'),
+                    'preselected_target_field' => $request->get('target_field'),
+                    'preselected_source_value' => $request->get('value'),
+                ));
                 break;
             case 'target': // n sources -> 1 target
                 $this->deleteRuleValueByTarget($this->artifact_type->getId(), $request->get('source_field'), $request->get('target_field'), $request->get('value'));
@@ -119,7 +144,12 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row['value_id'], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                header('Location: '. $this->href .'&source_field='. $request->get('source_field') .'&target_field=' .$request->get('target_field'). '&target_value=' .$request->get('value'));
+                $GLOBALS['feedback'] .= '<div>Successfully saved</div>';
+                $this->displayRules(array(
+                    'preselected_source_field' => $request->get('source_field'),
+                    'preselected_target_field' => $request->get('target_field'),
+                    'preselected_target_value' => $request->get('value')
+                ));
                 break;
             default:
                 $this->badRequest();

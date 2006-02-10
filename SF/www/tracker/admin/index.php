@@ -727,7 +727,6 @@ if ($group_id && (!isset($atid) || !$atid)) {
         if ($request->get('save') === 'save' ) {
             if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field'))) {
                 $armh->saveFromRequest($request);
-                $armh->displayRules();
             } else {
                 $armh->badRequest();
             }
