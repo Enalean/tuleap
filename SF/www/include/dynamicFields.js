@@ -367,9 +367,72 @@ function addRule(condition, effect) {
 
 
 
-var dyn_fields = {};
+var forbidden_sources = {};
+var forbidden_targets = {};
+
+
+/**
+* http://fr.wikipedia.org/wiki/Algorithme_de_parcours_en_largeur
+*/
+function breadthFirstWalk(start, cb_getChildren, cb_mark, cb_is_marked) {
+     var pile = [];
+     pile.push(start);
+     while (pile.length > 0) {
+             var x = pile.pop();
+             if (!cb_is_marked(x)) {
+                     cb_mark(x);
+                     cb_getChildren(x).each(function (children) {
+                             pile.push(children);
+                     });
+             }
+     }
+}
 function buildAdminUI() {
 
+    
+    $H(fields).values().each(function (field) {
+            forbidden_sources[field.id] = [];
+            forbidden_targets[field.id] = [];
+    });
+    $H(forbidden_sources).keys().each(function (id) {
+            breadthFirstWalk(id, 
+                function(node){ 
+                    rules = $H(rules_definitions).values().findAll(
+                            function (rule_definition) { 
+                                return rule_definition.source_field == node;
+                            });
+                    children = [];
+                    rules.each(function (rule) {
+                            if (!children.find(function(element) { return element == rule.target_field })) {
+                                children.push(rule.target_field);
+                            }
+                    });
+                    return children;
+                },
+                function(node){ forbidden_sources[id].push(node) }, 
+                function(node){ return forbidden_sources[id].find(function(element) { return element == node }); });
+    });
+    $H(forbidden_targets).keys().each(function (id) {
+            breadthFirstWalk(id, 
+                function(node){ 
+                    rules = $H(rules_definitions).values().findAll(
+                            function (rule_definition) { 
+                                return rule_definition.target_field == node;
+                            });
+                    children = [];
+                    rules.each(function (rule) {
+                            if (!children.find(function(element) { return element == rule.source_field })) {
+                                children.push(rule.source_field);
+                            }
+                    });
+                    return children;
+                },
+                function(node){ forbidden_targets[id].push(node) }, 
+                function(node){ return forbidden_targets[id].find(function(element) { return element == node });});
+    });
+	$('edit_rule').appendChild(document.createTextNode($H(forbidden_sources).inspect()));
+	$('edit_rule').appendChild(document.createElement('br'));
+    $('edit_rule').appendChild(document.createTextNode($H(forbidden_targets).inspect()));
 	table = document.createElement('table');
 	table.border      = 0;
 	table.cellpadding = 2;
@@ -409,7 +472,9 @@ function buildAdminUI() {
     choose.selected = (preselected_source_field == choose.value);
 	choose.appendChild(document.createTextNode(messages['choose_field']));
 	$H(fields).values().each(function(source_field) {
-			if (source_field.id != preselected_target_field) {
+			if (preselected_target_field == '-1' || !forbidden_sources[preselected_target_field].find(function (forbidden_source) {
+                        return source_field.id == forbidden_source;
+            })) {
                 so = document.createElement('option');
                 so.value = source_field.id;
                 so.selected = (preselected_source_field == so.value);
@@ -432,7 +497,9 @@ function buildAdminUI() {
 	choose.selected = (preselected_target_field == choose.value);
     choose.appendChild(document.createTextNode(messages['choose_field']));
 	$H(fields).values().each(function(target_field) {
-			if (target_field.id != preselected_source_field) {
+			if (preselected_source_field == '-1' || !forbidden_targets[preselected_source_field].find(function (forbidden_target) {
+                        return target_field.id == forbidden_target;
+            })) {
                 to = document.createElement('option');
                 to.value = target_field.id;
                 to.selected = (preselected_target_field == to.value);
@@ -633,12 +700,19 @@ function buildAdminUI() {
         choose.value = '-1';
         choose.appendChild(document.createTextNode(messages['choose_field']));
         $H(fields).values().each(function(source_field) {
-                if (source_field.id != $F('target_field')) {
+                if ($F('target_field') == '-1' || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
+                        return source_field.id == forbidden_source;
+                })) {
                     so = document.createElement('option');
                     so.value    = source_field.id;
                     so.selected = source_field.id == previous_selected ? 'selected' : '';
                     so.appendChild(document.createTextNode(source_field.name));
-                    
+                    if ($H(rules_definitions).values().find(function (rule_definition) {
+                                return rule_definition.source_field == source_field.id;
+                    })) {
+                        so.className = 'boxitem';
+                    }
+
                     $('source_field').appendChild(so);
                 }
         });
@@ -656,12 +730,19 @@ function buildAdminUI() {
         choose.value = '-1';
         choose.appendChild(document.createTextNode(messages['choose_field']));
         $H(fields).values().each(function(target_field) {
-                if (target_field.id != $F('source_field')) {
+                if ($F('source_field') == '-1' || !forbidden_targets[$F('source_field')].find(function (forbidden_target) {
+                        return target_field.id == forbidden_target;
+                })) {
                     to = document.createElement('option');
                     to.value    = target_field.id;
                     to.selected = target_field.id == previous_selected ? 'selected' : '';
                     to.appendChild(document.createTextNode(target_field.name));
-                    
+                    if ($H(rules_definitions).values().find(function (rule_definition) {
+                                return rule_definition.target_field == target_field.id;
+                    })) {
+                        to.className = 'boxitem';
+                    }
+
                     $('target_field').appendChild(to);
                 }
         });
