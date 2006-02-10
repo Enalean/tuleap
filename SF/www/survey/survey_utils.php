@@ -344,7 +344,7 @@ function  survey_utils_show_radio_list($result) {
 	     '<TD>'.db_result($result,$j,'radio_choice')."</TD>\n".
 	     '<TD>'.db_result($result,$j,'choice_rank')."</TD>\n".
 	     '<TD align=center>'.
-		"<a href=\"/survey/admin/edit_question.php?func=delete_radio&group_id=$group_id&question_id=$question_id&choice_id=$choice_id\" ".
+		"<a href=\"/survey/admin/edit_question.php?func=delete_radio&group_id=$group_id&question_id=$question_id&choice_id=$choice_id\">".
 		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('survey_s_utils','del_txt').'"></A></TD>';
 	echo "</tr>";
     }
