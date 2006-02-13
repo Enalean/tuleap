@@ -141,7 +141,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a text-area question.
 		*/
 		$return .= '
-				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft">'.($response_exists?$existing_response:"").'</textarea>';
+				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft">'.($response_exists?$existing_response:"").'</textarea><br>';
 
 	    } else if ($question_type == '3') {
 		/*
@@ -151,7 +151,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 				<b>'.$Language->getText('global','yes').'</b> <INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="1"'.($existing_response=="1"?" CHECKED ":"").'>';
 		$return .= '&nbsp;&nbsp;';
 		$return .= '
-				 <b>'.$Language->getText('global','no').'</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5"'.($existing_response=="5"?" CHECKED ":"").'>';
+				 <b>'.$Language->getText('global','no').'</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5"'.($existing_response=="5"?" CHECKED ":"").'><br>';
 
 	    } else if ($question_type == '4') {
 		/*
@@ -165,7 +165,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a text-field question.
 		*/
 		$return .= '
-				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100 '.($response_exists?" VALUE='".$existing_response."'":"").'>';
+				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100 '.($response_exists?" VALUE='".$existing_response."'":"").'><br>';
 
 	    } else if ($question_type == "6") {
 		/*
@@ -183,7 +183,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		}    
 	    }		
 	    
-	    $return .= '</TD></TR>';
+	    $return .= '<br></TD></TR>';
 
 	    $last_question_type=$question_type;
 	}
@@ -339,8 +339,7 @@ function  survey_utils_show_radio_list($result) {
 	$choice_id = db_result($result, $j, 'choice_id');
 	
 	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
-	echo "<TD><A
-	HREF=\"/survey/admin/edit_question.php?func=update_radio&group_id=$group_id&question_id=$question_id&choice_id=$choice_id\">$choice_id</A></TD>\n".
+	echo "<TD><A HREF=\"/survey/admin/edit_question.php?func=update_radio&group_id=$group_id&question_id=$question_id&choice_id=$choice_id\">$choice_id</A></TD>\n".
 	     '<TD>'.db_result($result,$j,'radio_choice')."</TD>\n".
 	     '<TD>'.db_result($result,$j,'choice_rank')."</TD>\n".
 	     '<TD align=center>'.
