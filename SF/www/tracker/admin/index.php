@@ -730,9 +730,6 @@ if ($group_id && (!isset($atid) || !$atid)) {
             } else {
                 $armh->badRequest();
             }
-        } else if ($request->exist('delete')) {
-            $armh->deleteRule($request->get('delete'));
-            $armh->displayRules();
         } else {
             $armh->displayRules();
         }

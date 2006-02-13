@@ -475,7 +475,7 @@ function buildAdminUI() {
     
 	//{{{ build source selectbox
 	select_source = document.createElement('select');
-	select_source.id = select_source.name = 'source_field';
+	select_source.id = 'source_field';
 	select_source.appendChild(choose = document.createElement('option'));
 	choose.value    = '-1';
     choose.selected = (preselected_source_field == choose.value);
@@ -507,7 +507,7 @@ function buildAdminUI() {
 	
 	//{{{ build target selectbox
 	select_target = document.createElement('select');
-	select_target.id = select_target.name = 'target_field';
+	select_target.id = 'target_field';
 	select_target.appendChild(choose = document.createElement('option'));
 	choose.value = '-1';
 	choose.selected = (preselected_target_field == choose.value);
@@ -716,9 +716,11 @@ function buildAdminUI() {
 	save_btn.id      = 'save_btn';
 	save_btn.onclick = function() {
         $('save').value = 'save';
-        $('reset_btn').disabled   = this.disabled = 'disabled';
-		$('direction_type').value = admin_selected_type;
-		$('value').value          = admin_selected_value;
+        $('reset_btn').disabled    = this.disabled = 'disabled';
+		$('direction_type').value  = admin_selected_type;
+		$('value').value           = admin_selected_value;
+        $('source_field_hidden').value = $F('source_field');
+        $('target_field_hidden').value = $F('target_field');
         this.form.submit();
 	};
     //Reset button
@@ -727,14 +729,14 @@ function buildAdminUI() {
     reset_btn.id = 'reset_btn';
     reset_btn.onclick = function() {
         admin_is_in_edit_mode = false;
-        $('source_field').disabled = '';
-		$('target_field').disabled = '';
-		if (admin_selected_type == 'target') {
+        if (admin_selected_type == 'target') {
             admin_forceTargetValue($F('source_field'), $F('target_field'), admin_selected_value);
         } else {
             admin_forceSourceValue($F('source_field'), $F('target_field'), admin_selected_value);
         }
         Element.hide('save_panel');
+        $('source_field').disabled = '';
+        $('target_field').disabled = '';
         return false;
 	};
 	Element.hide('save_panel');
@@ -902,17 +904,34 @@ function admin_checked(id) {
         // NTY 20060210: The initial behaviour was to be able to detect when a user 
         // change rules to initial rules (click-declick) It doesn't work for now,
         // Therefore we don't do anything interesting here.
-        //admin_nb_diff--;
-        admin_nb_diff++;
+        admin_nb_diff--;
+        //admin_nb_diff++;
 	} else {
 		admin_nb_diff++;
 	}
     //The user is leaving the edit mode
 	if (admin_nb_diff === 0) {
-		$('source_field').disabled = '';
-		$('target_field').disabled = '';
-		admin_is_in_edit_mode = false;
-		Element.hide('save_panel');
+        can_leave_edit_mode = true;
+        $H(rules_definitions).values().each(function (rule_definition) {
+                    var checkbox_name = checkbox.type+'_'
+                                        +rule_definition.source_field+'_'
+                                        +rule_definition.target_field+'_'
+                                        +rule_definition[checkbox.type+'_value']+'_chk';
+                    if (rule_definition.source_field                     == checkbox.source_field_id 
+                        && rule_definition.target_field                  == checkbox.target_field_id 
+                        && rule_definition[admin_selected_type+'_value'] == admin_selected_value) {
+                        if (!$F(checkbox_name)) {
+                            can_leave_edit_mode = false;
+                            throw $break;
+                        }
+                    }
+        });
+        if (can_leave_edit_mode) {
+            $('source_field').disabled = '';
+            $('target_field').disabled = '';
+            admin_is_in_edit_mode = false;
+            Element.hide('save_panel');
+        }
 	}
 }
 
