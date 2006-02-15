@@ -41,5 +41,10 @@ class HTTPRequest {
         }
         return $value;
     }
+
+    /** For debug only */
+    function dump() {
+        var_dump($_REQUEST);
+    }
 }
 ?>
