@@ -60,6 +60,18 @@
         </imageobject>
       </mediaobject>
     </figure>
+
+    <figure id="FigureTheCodeXHomePageTabTheme">
+      <title>The CodeX Home Page, with a different theme (with tabs)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_homepagetabtheme.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
   </chapter>
 <!--
 Local Variables:
