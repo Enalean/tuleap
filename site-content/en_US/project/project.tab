@@ -284,23 +284,25 @@ project_reference	system_r_create_success	Successfully Created System Reference 
 project_reference	t_r_deleted	Corresponding Reference Deleted
 project_reference	url	URL pointed by the reference
 project_reference	warning_del_r	*********** WARNING ***********  Do you want to delete the reference? This will remove this reference ($1) from ALL projects of this server. Are you SURE you want to continue ?
-## There should be a description value here for each reference name (system or project wide) that should be localised
+project_reference	extract_syntax	Parameters:\n  group_id : project where references are defined\n  text     : input text
+project_reference	insert_syntax	<p>Parameters:<br>- group_id : project where references are defined<br>- text : input text
+## Description value here for each reference name (system or project wide) that should be localised
 ## Naming rule for the key: 
 ## reference_<reference keyword>_desc_key for the reference description
-project_reference	reference_art_desc_key	Go to tracker artifact
-project_reference	reference_cvs_desc_key	Go to CVS commit detail
-project_reference	reference_svn_desc_key	Go to Subversion revision details
-project_reference	reference_wiki_desc_key	Go to Wiki page
-project_reference	reference_wikiversion_desc_key	Go to Wiki version
-project_reference	reference_file_desc_key	Go to file
-project_reference	reference_doc_desc_key	Go to document
-project_reference	reference_news_desc_key	Go to piece of news
-project_reference	reference_forum_desc_key	Go to forum
-project_reference	reference_msg_desc_key	Go to forum message
-project_reference	reference_bug_desc_key	Go to bug
-project_reference	reference_task_desc_key	Go to task
-project_reference	reference_sr_desc_key	Go to support request
-project_reference	reference_patch_desc_key	Go to patch
+project_reference	reference_art_desc_key	Tracker Artifact
+project_reference	reference_cvs_desc_key	CVS commit detail
+project_reference	reference_svn_desc_key	Subversion revision details
+project_reference	reference_wiki_desc_key	Wiki page
+project_reference	reference_wikiversion_desc_key	Wiki version
+project_reference	reference_file_desc_key	File
+project_reference	reference_doc_desc_key	Document
+project_reference	reference_news_desc_key	Piece of news
+project_reference	reference_forum_desc_key	Forum
+project_reference	reference_msg_desc_key	Forum message
+project_reference	reference_bug_desc_key	Bug
+project_reference	reference_task_desc_key	Task
+project_reference	reference_sr_desc_key	Support Request
+project_reference	reference_patch_desc_key	Patch
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php

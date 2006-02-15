@@ -117,19 +117,23 @@ class Reference {
         return $this->num_param;
     }
 
-    function setIsActive($myis_active) {
-        $this->is_active=$myis_active;
+    function setIsActive($my_is_active) {
+        $this->is_active=$my_is_active;
     }
 
-    function setGroupId($mygroup_id) {
-        $this->group_id=$mygroup_id;
+    function setGroupId($my_group_id) {
+        $this->group_id=$my_group_id;
     }
 
     function setId($my_id) {
         $this->id=$my_id;
     }
 
-    /** 
+     function setDescription($my_description) {
+        $this->description=$my_description;
+    }
+
+   /** 
      * Replace original link with arguments
      * 
      * Replacement rules

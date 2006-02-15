@@ -1,4 +1,4 @@
-# Force mime-type for PHP scipts without .php extension
+# Force mime-type for PHP scripts without .php extension
 <Files projects>
 ForceType application/x-httpd-php
 </Files>

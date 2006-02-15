@@ -21,7 +21,7 @@ if (!$request->get('group_id'))
 if ((!$request->get('key'))
     ||(!$request->get('val'))) {
     exit_error($GLOBALS['Language']->getText('global','error'),
-               $GLOBALS['Language']->getText('include', 'missing_parameter'));
+               $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
  }
 
 $keyword=$request->get('key');

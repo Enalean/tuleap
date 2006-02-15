@@ -539,6 +539,12 @@ Alias /documentation/ "/home/httpd/documentation/"
     Allow from all
 </Directory>
 
+# API scrips do not end with ".php"
+<Directory "/home/httpd/SF/www/api">
+    ForceType application/x-httpd-php
+</Directory>
+
+
 # CodeX custom themes
 Alias /custom/ "/etc/codex/themes/"
 

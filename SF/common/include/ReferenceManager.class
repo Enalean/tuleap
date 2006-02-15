@@ -10,6 +10,7 @@
 require_once('common/dao/ReferenceDao.class');
 require_once('common/dao/CodexDataAccess.class');
 require_once('common/include/Reference.class');
+require_once('common/include/ReferenceInstance.class');
 require_once('common/include/GroupFactory.class');
 
 
@@ -252,16 +253,59 @@ class ReferenceManager {
                                       $html);
     }
 
+    /**
+     * insert html links in text
+     * @param $html 
+     */
+    function extractReferences($html,$group_id) {
+
+        $references=array();
+        $count=preg_match_all('/(\w+) #(\w+:)?([\w\/]+)+/', $html, $matches,PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $ref_instance=$this->_getReferenceInstanceFromMatch($match);
+            $ref =& $ref_instance->getReference();
+
+            // Replace description key with real description if needed
+            if (strpos($ref->getDescription(),"_desc_key")!==false) {
+                $GLOBALS['Language']->loadLanguageMsg('project/project');
+                $desc=$GLOBALS['Language']->getText('project_reference',$ref->getDescription());
+            } else {
+                $desc=$ref->getDescription();
+            }
+            $ref->setDescription($desc);
+
+            $referencesInstances[]=$ref_instance;
+        }
+        return $referencesInstances;
+    }
+
 
     // callback function
-    function _insertRefCallback($matches) {
-        $not_a_ref=false;
-        // Analyse matches
-        $key=$matches[1];
-        if ($matches[2]) {
+    function _insertRefCallback($match) {
+        $ref_instance=$this->_getReferenceInstanceFromMatch($match);
+        if (!$ref_instance) return $match[1]." #".$match[2].$match[3];
+        else {
+            $ref =& $ref_instance->getReference();
+            if (strpos($ref->getDescription(),"_desc_key")!==false) {
+                $desc=$GLOBALS['Language']->getText('project_reference',$ref->getDescription());
+            } else {
+                $desc=$ref->getDescription();
+            }
+
+            return "<a href=\"".$ref_instance->getGotoLink()."\" title=\"".$desc."\">".$ref_instance->getMatch()."</a>";
+        }
+    }
+
+
+    // Get a Reference object from a matching pattern
+    // if it is not a reference (e.g. wrong keyword) return null;
+    function &_getReferenceInstanceFromMatch($match) {
+        // Analyse match
+        $key=$match[1];
+        if ($match[2]) {
             // A target project name or ID was specified
             // remove trailing colon
-            $target_project=substr($matches[2],0,strlen($matches[2])-1);
+            $target_project=substr($match[2],0,strlen($match[2])-1);
             // id or name?
             if (is_numeric($target_project)) {
                 $ref_gid = $target_project;
@@ -271,30 +315,21 @@ class ReferenceManager {
                 if (isset($this->groupIdByName[$target_project])) {
                     $ref_gid = $this->groupIdByName[$target_project];
                 } else {
-                    $not_a_ref=true;
+                    return null;
                 }
             }
         } else {
             $ref_gid=$GLOBALS['group_id']; // might not be set
         }
-        if (!$not_a_ref) {
-            $value=$matches[3];
-            if ($ref_gid) { $group_param="&group_id=$ref_gid";}
-            if ($ref_gid=="") $ref_gid=100; // use system references only
-            $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
-            $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
-            if (!$ref) $not_a_ref=true;
-        }
-        if ($not_a_ref) return $matches[1]." #".$matches[2].$matches[3];
-        else {
-            if (strpos($ref->getDescription(),"_desc_key")!==false) {
-                $desc=$GLOBALS['Language']->getText('project_reference',$ref->getDescription());
-            } else {
-                $desc=$ref->getDescription();
-            }
 
-            return "<a href=\"/goto?key=".$key."&val=".$value.$group_param."\" title=\"".$desc."\">".$matches[1]." #".$matches[2].$matches[3]."</a>";
-        }
+        $value=$match[3];
+        if ($ref_gid=="") $ref_gid=100; // use system references only
+        $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
+        $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+        if (!$ref) return null;
+        $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref);
+        $refInstance->computeGotoLink($match[1],$match[3],$ref_gid);
+        return $refInstance;
     }
 
 

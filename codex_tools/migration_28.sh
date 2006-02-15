@@ -605,3 +605,7 @@ EOF
 #
 # - copy new svn backup script
 # - convert all repositories to FSFS
+# add this in httpd.conf:
+<Directory "/home/httpd/SF/www/api">
+    ForceType application/x-httpd-php
+</Directory>

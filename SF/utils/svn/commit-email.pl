@@ -253,11 +253,7 @@ my $artifact_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=%s";
 my $no_diff = 1; # no inline diff for CodeX
 
 # arrays to store all artifact ref.
-my %artifacts;
-my %artifact_names;
-my %docs;
-my %commits;
-my %branches;
+my %references;
 
 # get the mail header and mailto address from CodeX DB
 $svnmailheader = &svnGroup_mail_header();
@@ -765,100 +761,53 @@ sub read_from_process
 sub extract_xrefs {
     my (@log) = @_;
 
-    # Compile regexp for efficiency
-    my $doc_reg = qr/doc[ ]?#([0-9]+)/i;
-    my $commit_reg = qr/commit[ ]?#([0-9]+)/i;
-    my $rev_reg = qr/rev[ ]?#([0-9]+)/i;
-    my $revision_reg = qr/revision[ ]?#([0-9]+)/i;
-    my $art_reg = qr|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|i;
+    my $ua = LWP::UserAgent->new;
+    $ua->agent('CodeX Perl Agent');
 
-    foreach $line (@log) {
-      # store the document ref
-      while ($line =~ /$doc_reg/g) {
-	$docs{$1} = $1;
-      }
+    if (!$group_id) {
+      $group_id=100;
+    }
+    $text=join("\n",@log);
+    my $req = POST "$codex_srv/api/reference/extract",
+      [ group_id => "$group_id", text => "$text" ];
 
-      # store the CVS commit ref
-      while ($line =~ /$commit_reg/g) {
-	$commits{$1} = $1;
-      }
-
-      # store the SVN revision ref
-      while ($line =~ /$rev_reg/g) {
-	$revs{$1} = $1;
-      }
-      while ($line =~ /$revision_reg/g) {
-	$revs{$1} = $1;
-      }
-
-      while ($line =~ m|$art_reg|g) {
-	next if (lc($1) eq 'commit');
-	next if (lc($1) eq 'rev');
-	next if (lc($1) eq 'revision');
-	next if (lc($1) eq 'doc');
-	$artifacts{"$1_$2"} = $2;
-	$artifact_names{"$1_$2"} = $1;
+    my $response = $ua->request($req);
+    my $response_content;
+    my %references;
+    if ($response->is_success) {
+      my $desc="";
+      my $match="";
+      my $link="";
+      foreach (split(/\n/,$response->content)) {
+        chomp;
+        if (! $_) {;} # skip empty lines
+        elsif (!$desc) {$desc=$_;}
+        elsif (!$match) {$match=$_;}
+        else {
+          $link=$_;
+          $references{"$desc"}{"$match"}=$link;
+          $desc=$match=$link=0;
+        }
       }
     }
-
+    else {
+      warn $response->status_line;
+    }
 }
 
 sub format_xref {
-	my $group_param;
-	if ($group_id) {
-		$group_param="&group_id=$group_id";
-	}
- 
-    @keys = keys %docs;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Document references:");
-        foreach $doc (keys %docs) {
-            push (@text, sprintf("Document #%s: $doc_url",$doc,$group_param,$doc));
-        }
-	if ($db_track) {
-	  &db_add_ref('document', $commit_id, $doc);
-	}
-    }
 
-    @keys = keys %commits;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "CVS Commit references:");
-        foreach $comm (keys %commits) {
-            push (@text, sprintf("commit #%s: $commit_url",$comm,$group_param,$comm));
-        }
-	if ($db_track) {
-	  &db_add_ref('commit', $commit_id, $comm);
-	}
-    }
-    @keys = keys %revs;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "SVN revision references:");
-       foreach $rev (keys %revs) {
-            push (@text, sprintf("revision #%s: $revision_url",$rev,$group_param,$rev));
-        }
-	if ($db_track) {
-	  &db_add_ref('revision', $commit_id, $comm);
-	}
-    }
+  my $desc;
+  my $match;
 
-    @keys = keys %artifacts;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Artifact references:");
-        foreach $artkey (keys %artifacts) {
-          my $art=$artifacts{$artkey};
-          my $art_name=$artifact_names{$artkey};
-          push (@text, sprintf("%s #%s: $artifact_url", $art_name,$art,$group_param,$art,$art_name));
-        }
-        if ($db_track) {
-          &db_add_ref('artifact', $commit_id, $art);
-        }
+  foreach $desc (sort(keys(%references))) {
+    push (@text, "");
+    push (@text, "$desc:");
+    foreach $match (sort(keys %{$references{"$desc"}})) {
+      push (@text,"$match: ".$references{"$desc"}{"$match"});
     }
-
-    return @text;
+  }
+  return @text;
 }
 
 # transform time stamp returned by svnlook info in epoch time
