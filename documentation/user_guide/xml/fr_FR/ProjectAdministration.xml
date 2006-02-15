@@ -20,7 +20,7 @@
 
     <para>Seuls les membres du projets ont accès aux pages
     d'administration du projet. Tous les autres utilisateurs s'en
-    verront refusé l'accès.</para>
+    verront refuser l'accès.</para>
 
     <section id="ProjectAdministrationMenu">
       <title>Menu d'administration du projet</title>
@@ -28,7 +28,7 @@
       <para>Sous le menu principal du projet que nous avons présenté
       lors du passage en revue de la page de sommaire, figure le menu
       d'administration du projet. A l'exception d'un ou deux éléments
-      ce menu d'administration et la contenu de la page d'accueil de
+      ce menu d'administration et le contenu de la page d'accueil de
       la section administration ne sont pas redondants. Ils donnent
       accès à des fonctions d'administration distinctes. Dans les
       sections qui suivent nous préciserons à côté de chaque fonction
@@ -49,12 +49,12 @@
       ne connaissez pas le nom du nouveau membre à ajouter, ouvrez une
       nouvelle fenêtre et utilisez la boîte de recherche par mots-clés
       en tapant une partie du nom ou du prénom de l'utilisateur et en
-      oubliant pas de préciser que la recherche porte sur les
+      n'oubliant pas de préciser que la recherche porte sur les
       &#34;Utilisateurs&#34;. La liste de résultat fera
       vraissemblablement apparaître le nom complet et le nom
       d'utilisateur de la personne que vous recherchez.</para>
 
-      <para>Supprimer un utilisateur des membres du projet erst encore
+      <para>Supprimer un utilisateur des membres du projet est encore
       plus simple. Il suffit de cliquer sur l'icone corbeille
       (<inlinemediaobject><imageobject><imagedata format="PNG"
       fileref="../../icons/trash.png"
@@ -63,7 +63,7 @@
       n'a absolument aucun effet sur l'historique ou l'intégrité des
       données du projet. En d'autres termes tous les artefacts des
       outils de suivi soumis par ou assignés à cette personne restent
-      présents et inchangés dans la base de données. Suel la capacité
+      présents et inchangés dans la base de données. Seul la capacité
       de cette personne à gérer le projet est affectée. Notez aussi
       que pour supprimer un administrateur de la liste des membres du
       projet, un autre administrateur doit d'abord lui ôter son statut
@@ -77,7 +77,7 @@
       d'utilisateurs figurant sur la la page d'administration sont en
       fait des liens hypertextes. Sur cette page comme sur beaucoup
       d'autres, un clic sur un nom d'utilisateur vous mène sur une
-      page d'information le concernant (y compris so lieu de trvail,
+      page d'information le concernant (y compris son lieu de travail,
       téléphone, fax... extraits de l'annuaire d'entreprise) qui vous
       permet aussi de lui envoyer un email par le biais d'un
       formulaire Web.</para></note>
@@ -101,7 +101,7 @@
 
       <para>Les administrateurs du projet ont la capacité à définir
       les permissions des membres du projets. Un membre de l'équipe de
-      rojet peut par exemple avoir tous les droits d'administration
+      projet peut par exemple avoir tous les droits d'administration
       sur l'outil de suivi des anomalies et aucun droit concernant le
       gestionnaire de document du projet.</para>
 
@@ -139,11 +139,11 @@
           actuellement toujours positionné à Oui. Tous les membres du
           projet ont les droits d'accès en écriture sur le dépôt CVS
           <footnote><para>CVS signifie Concurrent Version
-          System. C'est là des systèmes de contrôle de version offert
+          System. C'est l'un des systèmes de contrôle de version offert
           par CodeX. CVS est utilisé par des centaines de milliers de
           projets à travers le monde. Voir <ulink
           url="http://www.cvshome.org">http://www.cvshome.org</ulink>
-          pour plus d'information.</para></footnote> du projet et celà
+          pour plus d'information.</para></footnote> du projet et cela
           ne peut être modifié depuis l'interface utilisateur de
           CodeX. Nous verrons cependant comment désactiver l'accès en
           écriture au dépôt CVS dans le chapitre qui lui est consacré
@@ -167,7 +167,7 @@
               administrateurs des outils de suivi (et des autres
               services) ont tous les droits d'administration
               concernant ce service. Par exemple, il leur est possible
-              définir de nouveaux champs ou de nouvelles valeurs pour
+              de définir de nouveaux champs ou de nouvelles valeurs pour
               les champs de cet outil de suivi.</para>
             </listitem>
 
@@ -206,12 +206,12 @@
             <listitem>
               <para><emphasis
               role="underline">Administrateur</emphasis>:
-              (Gestionnaires de fichiers uniquement): un
+              (Gestionnaire de fichiers uniquement): un
               administrateur du gestionnaire de fichiers peut gérer
               les paquets et les versions de fichiers. Il peut aussi
               définir les permissions d'accès à ces fichiers pour les
               différents groupes d'utilisateurs existants. Il ne peut
-              cependant psa définir les groupes d'utilsiateurs. Seuls
+              cependant pas définir les groupes d'utilisateurs. Seuls
               les administrateurs du projet ont cette
               possibilité.</para> <para> </para>
             </listitem>
@@ -231,7 +231,7 @@
       <important>
         <title>Rappel!</title>
 
-        <para>N&#39;oublier pas de cliquer sur le bouton &#34;Mettre à
+        <para>N&#39;oubliez pas de cliquer sur le bouton &#34;Mettre à
         jour les permissions&#34; en bas de page après avoir effectuer
         des modifications dans la table des permissions.</para>
       </important>
@@ -255,7 +255,8 @@
       <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
 
       <para>C'est ici que vous pouvez définir la catégorisation de
-      votre projet. Chacun des sept critères de catégorisation utilisé
+      votre projet. Vous pouvez définir au plus trois valeurs pour
+      chacun des sept critères de catégorisation utilisé
       dans l'arbre des projets. Si vous ne trouvez pas de valeur
       correspondant à votre projet, n'hésitez pas à contacter l'équipe
       CodeX.</para>
@@ -270,9 +271,9 @@
       membres du projet. Un clic sur cet item montre une liste de
       l'ensemble des changements opérés dans le module
       d'administration du projet depuis sa création. La liste décrit
-      la nature du changement intervenu (Modification des infos
-      publiques, modification permission,...), la valeur de
-      l'information avant le changement, l'auteur la date de la
+      la nature du changement intervenu (modification des infos
+      publiques, modification des permissions,...), la valeur de
+      l'information avant le changement, l'auteur et la date de la
       modification.</para>
     </section>
 
@@ -281,7 +282,7 @@
 
       <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
 
-      <para>CodeX est particulièrement attractifs pour de nombreuses
+      <para>CodeX est particulièrement attractif pour de nombreuses
       équipes de projet car il offre une série d'outils complets pour
       le développement et la gestion de projet. Un projet peut-être
       géré quasiment intégralement depuis CodeX. Cependant il se peut
@@ -311,7 +312,7 @@
           quasiment tous les outils de bureautique ou les bases de
           données du marché. Si vous souhaitez développer votre propre
           application de reporting, la plupart des langages de
-          programmation porpose une librairie standard capable de
+          programmation propose une librairie standard capable de
           manipuler le format CSV.</para>
         </listitem>
 
@@ -319,7 +320,7 @@
           <para><emphasis role="bold">Accès direct à la base de
           données</emphasis>: à proprement parlé il ne s'agit pas
           d'exportation de données. Ce mécanisme permet en fait de se
-          connecter directement à la base données de vote projet via
+          connecter directement à la base de données de vote projet via
           un pilote ODBC ou JDBC. Si vous souhaitez manipuler les
           données de votre projet avec un outil de base de données
           (comme MS Access ou une application ODBC/JDBC) c'est sans
@@ -361,7 +362,7 @@
 
       <section id="ImportingCSVFilesinExcel">
 	<title>Chargement d'un fichier CSV dans Excel</title> <para>Un
-	clic sur un des lien d'exportation des données de la page
+	clic sur un des liens d'exportation des données de la page
 	d'exportation génère et télécharge à la volée un fichier CSV
 	que vous pouvez sauvegarder sur votre ordinateur ou ouvrir
 	directement dans Excel ou tout autre tableur de votre
@@ -372,7 +373,7 @@
       <section id="ImportingCSVFilesinMS-Access">
 	<title>Chargement de fichiers CSV dans MS-Access</title>
 
-	<para>avant de pouvoir importer les données dans MS Access,
+	<para>Avant de pouvoir importer les données dans MS Access,
 	vous devez d'abord créer une nouvelle base de
 	données. Exécutez ensuite les étapes suivantes:</para>
 
@@ -381,7 +382,7 @@
 	    <para>Sélectionnez <literal>Menu Fichier -> Accès au données externes -> Importer</literal></para>
 	  </listitem>
 	  <listitem>
-	    <para>Choisissez le fichier CSV que vou svenez juste de
+	    <para>Choisissez le fichier CSV que vous venez juste de
 	    sauvegarder puis cliquez sur le bouton
 	    <literal>Importer...</literal>. Une prévisualisation de la
 	    table importée vous est présentée pour validation.</para>
@@ -409,10 +410,10 @@
 	    <note><para><emphasis role="bold">Remarque
 	    importante</emphasis>: vous pouvez conserver les noms de
 	    champs par défaut (Champ1,....ChampN) ainsi que les types
-	    par défaut proposé par MS Access. La seule exception
+	    par défaut proposés par MS Access. La seule exception
 	    concerne les champs texte longs comme les champs
-	    commentaires ou le description originale d'un artefact
-	    dont le type doit être Memo. Si vous ne spécifiez ce type
+	    commentaires ou la description originale d'un artefact
+	    dont le type doit être Memo. Si vous ne spécifiez pas ce type
 	    spécifique, MS Access va corrompre les données
 	    importées.</para> <para>Si vous recontrez des difficultés
 	    à l'importation du fichier CSV, veuillez consulter la
@@ -420,11 +421,16 @@
 	  </listitem>
 	</itemizedlist>
 
-	<para>Once you are done with the specification of the Import,
+	<para><!--Once you are done with the specification of the Import,
 	save it by clicking on the <literal>Save As...</literal>
 	button. For future import of the same table simply click on
 	the Specs... button and reload your Import
-	specification. </para>
+	specification.-->
+        Après avoir spécifié les paramètres de l'importation, vous pouvez
+        les enregistrer en cliquant sur le bouton 
+        <literal>Sauvegarder sous...</literal>.Pour de futures importations
+        sur la même table, cliquez simplement sur le boutton Specs... et
+        rechargez vos paramètres d'importation.</para>
       </section>
 
     </section>
@@ -448,10 +454,10 @@
 
 	<para>Avant toute tentative d'accès aux données de votre
 	projet via ODBC ou JDBC vous devez d'abord générer la base de
-	données du projet. Pour se faire, rendez vous sur la page
+	données du projet. Pour ce faire, rendez vous sur la page
 	d'exportation des données et cliquez sur le lien 'Générer la
 	base de données du projet' au bas de la page. Vous devrez
-	aussi cliquez sur ce lient à chaque fois que vous voulez
+	aussi cliquer sur ce lien à chaque fois que vous voulez
 	actualiser les données de votre projet.</para>
 
 	<para>Si tout se passe comme prévu, la base de données de
@@ -463,18 +469,18 @@
 	<note><para><emphasis role="bold">Remarque</emphasis>: si la
 	base de données de votre projet contient plusieurs milliers
 	d'enregistrements (taches, bugs&hellip;) le processus de
-	gération de la base de données peut prendre plusieurs
+	génération de la base de données peut prendre plusieurs
 	minutes.</para></note>
       </section>
       
       <section id="InstallingandConfiguringtheMySQLODBCDriver">
-	<title>Installer et configurer le pilote ODB de MySQL</title>
+	<title>Installer et configurer le pilote ODBC de MySQL</title>
 
 	<procedure>
 	  <step>
 	    <para>Chargez tout d'abord le <ulink
 	    url="http://www.mysql.com/downloads/api-myodbc.html">pilote
-	    ODBC de MySQL </ulink> et decompressez l'archive dans un
+	    ODBC de MySQL </ulink> et décompressez l'archive dans un
 	    répertoire temporaire de votre choix.</para> </step>
 	  <step>
 	    <para>Lancez l'exécution du programme setup et parcourez
@@ -490,7 +496,7 @@
 
 	    <itemizedlist mark="bullet" spacing="compact">
 	      <listitem>
-		<para>utilisez votre login Windows habituel.</para>
+		<para>Utilisez votre login Windows habituel.</para>
 	      </listitem>
 	      <listitem>
 		<para>Cliquez sur <literal>menu Démarrer ->
@@ -509,18 +515,18 @@
 	      
 	      <listitem>
 		<para>Une boite de dialogue apparait vous demandant
-		les paramètre de connexion suivants:</para>
+		les paramètres de connexion suivants:</para>
 
 		<itemizedlist mark="bullet" spacing="compact">
 		  <listitem>
 		    <para><emphasis>Windows DSN Name</emphasis>:
-		    c'est le nom de votre chois pour cette
+		    c'est le nom de votre choix pour cette
 		    connexion. Vous pouvez indiquer quelque chose
 		    comme "Base de données du projet X" par
 		    exemple.</para>
 		  </listitem>
 		  <listitem>
-		    <para><emphasis>MySQL Host(IP ou nom)</emphasis>; &SYS_DEFAULT_DOMAIN;</para>
+		    <para><emphasis>MySQL Host(IP ou nom)</emphasis>: &SYS_DEFAULT_DOMAIN;</para>
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis>: le
@@ -539,7 +545,7 @@
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>Port (if not 3306)</emphasis>:
-		    utilisez le port par défaut (ulaissez le champ
+		    utilisez le port par défaut (ou laissez le champ
 		    vide).</para>
 		  </listitem>
 		  
@@ -558,7 +564,7 @@
 	<title>Installer et configurer le pilote JDBC de MySQL</title>
 
 	<para>Pour ceux d'entre vous qui utilisent une application
-	Java basé sur un driver JDBC, les instructions d'installation
+	Java basée sur un driver JDBC, les instructions d'installation
 	du pilote JDBC de MySQL sont disponibles sur la page <ulink
 	url="http://www.mysql.com/doc/en/Java.html">MySQL Java
 	Connectivity</ulink> page.</para>
@@ -640,24 +646,24 @@
 
         <listitem>
           <para><emphasis role="bold">Les services projet</emphasis>:
-          ces services peuvent être modifiés à loisir, voir même
-          supprimer par l'administrateur du projet.
+          ces services peuvent être modifiés à loisir, voire même
+          supprimés par l'administrateur du projet.
           </para>
         </listitem>
       </itemizedlist>
 
       <para>La seule exception concerne le service <emphasis
       role="bold">Site Web</emphasis>; il s'agit d'un service système
-      mais il epeut être paersonnalisé pour pointer sur l'URL de votre
+      mais il peut être personnalisé pour pointer sur l'URL de votre
       choix. Chaque projet hébergé sur CodeX possède son propre
       serveur Web virtuel sur le site CodeX. Par défaut le service
       &#34;Site Web&#34; de la barre de services pointe sur ce site
       (voir le <xref linkend="ProjectWebSite" /> pour plus de
       détails). Vous pouvez remplacer l'URL par défaut avec un
       pointeur vers votre propre site Web. Attention à ne pas
-      confondre le site webd e votre projet avec la page de
+      confondre le site web de votre projet avec la page de
       sommaire. Le site web de votre projet pointe sur un ensemble de
-      page HTML dont vous êtes l'auteur alors que la page de sommaire
+      pages HTML dont vous êtes l'auteur alors que la page de sommaire
       du projet est uniquement un point d'entrée vers les différents
       services et délivrables de votre projet.</para>
 
@@ -669,23 +675,23 @@
      <procedure>
         <step>
           <para><emphasis role="bold">Label du service</emphasis>: Il
-          s'git du nom du service tel qu'il apparaitra dans la barre
+          s'agit du nom du service tel qu'il apparaitra dans la barre
           de services. Il doit être aussi concis que possible.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Lien vers le service</emphasis>:
           il s'agit de l'URL qui mène au service en question, c'est à
-          l'URL vers lequel l'utilisateur est redirigé lorsqu'il
+          dire l'URL vers lequel l'utilisateur est redirigé lorsqu'il
           sélectionne ce service dans la barre de service. Si l'URL
           est absolu (c'est à dire qu'il commence par
-          &#34;http://&#34;), la page d'accès à ce service s'ouvira
+          &#34;http://&#34;), la page d'accès à ce service s'ouvrira
           dans une nouvelle fenêtre de votre navigateur. Dans le cas
-          contraire la page sera chargée dans le fenêtre courante.
+          contraire la page sera chargée dans la fenêtre courante.
           </para>
           <para>Quelques mots-clés particuliers peuvent être utilisés
-          dans l'URL; ils seront automatiquement remplacé par leur
-          valeur avant d'être inséré dans la barre de service:
+          dans l'URL; ils seront automatiquement remplacés par leur
+          valeur avant d'être insérés dans la barre de service:
           <itemizedlist mark="bullet">
             <listitem>
               <para><emphasis role="bold">$projectname</emphasis>:
@@ -721,7 +727,7 @@
         <step>
           <para><emphasis role="bold">Description du
           service</emphasis>: Description courte du service. Elle
-          affiché dans un bulle de texte lorsque le curseur de la
+          est affichée dans une bulle de texte lorsque le curseur de la
           souris se trouve sur le label du service dans la barre de
           services.</para>
         </step>
@@ -729,8 +735,8 @@
         <step>
           <para><emphasis role="bold">Actif</emphasis>: En cochant
           cette case, le service est activé c'est à dire qu'il est
-          utilisable et qu'il paarait dans la barre de
-          service. Décocher la case revient à désactiver le service et
+          utilisable et qu'il apparait dans la barre de
+          services. Décocher la case revient à désactiver le service et
           à le faire disparaitre de la barre de services. Il est à
           noter que la désactivation d'un service n'affecte en rien
           les données de ce dernier. En d'autres termes, la
@@ -830,8 +836,8 @@
           statique d'utilisateurs qui doivent tous être des
           utilisateurs enregistrés de CodeX. Cette liste peut être
           modifiée à tout moment par l'administrateur. Elle n'est pas
-          modifié automatiquement sauf si un utilisateur est supprimé
-          de le liste des membres du projet ou si son compte CodeX est
+          modifiée automatiquement sauf si un utilisateur est supprimé
+          de la liste des membres du projet ou si son compte CodeX est
           supprimé.
           </para>
         </step>
@@ -860,13 +866,13 @@
 
         <step>
           <para><emphasis role="bold">Créer à partir de</emphasis>:
-          c'est un moyen de préselection rapide des membres du goupe:
+          c'est un moyen de présélection rapide des membres du groupe:
           vous pouvez créer un groupe à partir de rien (Groupe vide)
           ou bien en partant de la liste des membres du projet ou des
           administrateurs du projet. Les membres de ces groupes seront
           alors automatiquement insérés dans le nouveau groupe. Dans
-          létape suivante vous pourrez ajouter ou supprimer des
-          utilisateurs de ce groupe.
+          l'étape suivante vous pourrez ajouter ou supprimer des
+          utilisateurs à ce groupe.
           </para>
         </step>
       </procedure>
@@ -905,7 +911,7 @@
       affichés.</para>
 
       <para>Une fois la sélection des utilisateurs terminée, il ne
-      vous reste qu'à cliquer sur le bouton Valider pour créer le
+      vous reste plus qu'à cliquer sur le bouton Valider pour créer le
       groupe d'utilisateurs.</para>
 
     </section>
@@ -921,7 +927,7 @@
         externes manquants. Cette solution est tout à fait acceptable
         mais elle présente l'inconvénient de ne pas mettre à jour
         automatiquement le groupe lorsque de nouveaux utilisateurs
-        quitte ou rejoigne les membres du projet. Dans ce cas vous
+        quittent ou rejoignent les membres du projet. Dans ce cas vous
         devrez effectuer les mêmes opérations manuellement pour le
         groupe défini. Il est donc préférable de créer un groupe qui
         ne contient que les utilisateurs externes et de lui accorder
@@ -932,7 +938,7 @@
     <section id="UGroupUpdate">
       <title>Modifier un groupe d'utilisateurs</title>
 
-      <para>Pour mettre à jour un groupe d'utilisateur existant, il
+      <para>Pour mettre à jour un groupe d'utilisateurs existant, il
       suffit de le sélectionner dans la liste des groupes
       d'utilisateurs. Un écran semblable à l'écran de création
       apparait alors qui vous permet de modifier la composition de ce
@@ -981,15 +987,15 @@
       d'utilisateurs (<xref linkend="FigureUserGroupEdit" />) figure
       aussi la liste de toutes les permissions dans lesquelles ce
       groupe est impliqué au niveau des différents services (par
-      exemple l'accès au paquets et versions des logiciels).</para>
+      exemple l'accès aux paquets et versions des logiciels).</para>
 
       <para>Lorsqu'un utilisateur quitte les membres du projet, il est
-      automatiquement supprimé de tous les groupes d'utilsateurs pour
+      automatiquement supprimé de tous les groupes d'utilisateurs pour
       des raisons de sécurité.</para>
 
       <para>De la même façon lorsqu'un compte utilisateur est supprimé
       par les administrateurs du site, il est automatiquement supprimé
-      de tous les groupes dont il est membre quele que soit le
+      de tous les groupes dont il est membre quel que soit le
       projet.</para>
     </section>
 
@@ -1006,15 +1012,15 @@
       susceptibles d'avoir accès au téléchargement de document, de
       code source et de fichiers.</para>
 
-      <para>Le journal d'accès fourni aux membres du projet un audit
+      <para>Le journal d'accès fournit aux membres du projet un audit
       complet des accès à ces ressources. La page du journal d'accès
       comprend les informations suivantes:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para>Les fichiers ont été téléchargés par qui et à quel
-          date. L'heure de téléchargement est indiqué en temps local
-          pour l'utilisateur qui l'a téléchargé.</para>
+          <para>Les fichiers ont été téléchargés par qui et à quelle
+          date. L'heure de téléchargement est indiquée en temps local
+          pour l'utilisateur qui les a téléchargés.</para>
         </listitem>
 
         <listitem>
@@ -1040,7 +1046,7 @@
       <para>L'affichage du journal d'accès peut être filtré pour
       présenter soit l'accès de tous les utilisateurs, soit ceux des
       membres du projet ou encore ceux des non membres (défaut). La
-      fenêtre de temps peut aussi être ajustée pour montre une portion
+      fenêtre de temps peut aussi être ajustée pour montrer une portion
       plus ou moins grande de l'historique.</para>
 
       <figure id="FigureSourceCodeAccessLogsForACodeXProject">

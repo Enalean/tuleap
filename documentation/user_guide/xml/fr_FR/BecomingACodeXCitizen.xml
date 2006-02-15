@@ -24,13 +24,13 @@
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Les utilisateurs
-	anonymes</emphasis>: il s'agit là des utilisateurs qui visite
+	anonymes</emphasis>: il s'agit là des utilisateurs qui visitent
 	CodeX pour la première fois ou qui n'ont pas pris la peine de
 	se connecter en arrivant sur la page d'accueil. Par défaut,
-	les utilisateurs anonymomes peuvent parcourir le site CodeX
+	les utilisateurs anonymes peuvent parcourir le site CodeX
 	mais de nombreux services et ressources CodeX ne leur sont pas
 	accessibles (par exemple l'accès aux logiciels eux-mêmes, les
-	fonctions de surveillance, etc&hyphen;). Nous vous conseillons
+	fonctions de surveillance, etc&hellip;). Nous vous conseillons
 	donc vivement de vous enregistrer sur CodeX si vous voulez en
 	tirer le meilleur parti.</para>
       </listitem>
@@ -46,7 +46,7 @@
 	personnelle, de la capacité à surveiller des forums et des
 	paquets logiciels et de la notification par email des mises à
 	jour des artefacts (bugs, tâches,...) dans lesquels ils sont
-	impliqués, etc&hyphen;</para>
+	impliqués, etc&hellip;</para>
       </listitem>
 
       <listitem>
@@ -54,13 +54,13 @@
 	projet</emphasis>: ce sont les utilisateurs participant aux
 	activités d'un projet hébergé sur CodeX. Pour devenir membre
 	d'un projet vous devez d'abord devenir utilisateur enregistré
-	et, ensuite, demandez à l'administrateur du projet de vous
+	et, ensuite, demander à l'administrateur du projet de vous
 	admettre parmi les membres. Les membres d'un projet sont la
 	plupart du temps membres de l'équipe de projet mais ne sont
 	pas nécessairement des développeurs. Ils peuvent être en
 	charge de l'activité de support ou de contrôle qualité, de la
 	gestion de la documentation ou de la gestion du projet
-	lui-même. Les membres d'un projet se voient souvent assigné
+	lui-même. Les membres d'un projet se voient souvent assignés
 	des droits différents par l'administrateur du projet selon
 	leur rôle (voir <xref linkend="ProjectAdministration" /> pour
 	plus de détails).</para>
@@ -68,7 +68,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Les administrateurs d'un
-	projet</emphasis>: les utilisateurs enregistrés qui crée un
+	projet</emphasis>: les utilisateurs enregistrés qui créent un
 	nouveau projet sur CodeX héritent du rôle d'administrateur de
 	ce projet.Les administrateurs d'un projet disposent des pleins
 	pouvoirs sur ce projet sauf en ce qui concerne la suppression
@@ -84,7 +84,7 @@
 	restreints</emphasis>: il s'agit là de membres ou
 	d'administrateurs de projet dont les droits d'accès sont
 	restreints: ils n'ont accès qu'aux projets dont ils sont
-	membres et ne voient pas les autres projets quelqu'ils
+	membres et ne voient pas les autres projets quels qu'ils
 	soient. Ce rôle particulier est en général activé sur les
 	sites CodeX mêlant utilisateurs internes et externes sur le
 	même serveur dans le but de cantonner les utilisateurs
@@ -126,7 +126,7 @@
 
 	  <step>
 	    <para><emphasis role="bold">Mot de passe</emphasis>: 6
-	    caractères minimum à répéter deux fois pour éviter tout
+	    caractères minimum à répéter deux fois pour éviter toute
 	    erreur de frappe.</para>
 	  </step>
 
@@ -140,8 +140,8 @@
 	    suivant la configuration du site les adresses emails
 	    considérés comme valides peuvent se limiter au domaine
 	    &SYS_ORG_NAME; ou à l'un de ses sous-domaines. Vérifiez
-	    bien que votre adress email est correcte faute de quoi
-	    vous recevriez pas la demande de confirmation de votre
+	    bien que votre adresse email est correcte faute de quoi
+	    vous ne recevriez pas la demande de confirmation de votre
 	    enregistrement.</para>
 	  </step>
 
@@ -151,20 +151,20 @@
 	    une information importante car CodeX stocke tous ses
 	    marqueurs de temps en temps universel (GMT) et s'appuie
 	    sur le fuseau horaire fourni par l'utilisateur pour
-	    présnter les dates et heures en temps local sur les
+	    présenter les dates et heures en temps local sur les
 	    différentes pages Web.</para>
 	  </step>
 
 	  <step>
 	    <para><emphasis role="bold">Annonces site</emphasis>:
-	    cochez cette case si vous souhiatez recevoir les
+	    cochez cette case si vous souhaitez recevoir les
 	    informations concernant les mises à jour du site CodeX. Le
-	    traffic est très faible et nous vous recommandons vivement
+	    trafic est très faible et nous vous recommandons vivement
 	    de cocher cette case. Les notifications reçues traitent
 	    des nouvelles fonctionnalités disponibles, des plages
 	    d'indisponibilité pour raison de maintenance, des
 	    évènements importants dans la vie du site,
-	    etc&hyphen;</para>
+	    etc&hellip;</para>
 	  </step>
 
 	  <step>
@@ -172,7 +172,7 @@
 	    supplémentaires</emphasis>: cochez cette case pour
 	    recevoir des messages moins importants concernant la vie
 	    du site. Vous pouvez cocher cette case sans crainte d'être
-	    submergé de messages car le traffic est extrêmenent
+	    submergé de messages car le trafic est extrêmement
 	    réduit.</para>
 	  </step>
 	</substeps>
@@ -186,26 +186,26 @@
 	votre nom d'utilisateur et votre mot de passe. S'ils
 	correspondent bien à ceux que vous avez initialement choisis,
 	votre compte utilisateur est définitivement validé et vous
-	êtes désormais connecté à CodeX</para>
+	êtes désormais connecté à CodeX.</para>
       </step>
     </procedure>
 
     <tip>
-      <title>Coup de pouce: serveurs CodeX relié à un annuaire d'entreprise</title>
+      <title>Coup de pouce: serveur CodeX relié à un annuaire d'entreprise</title>
 
       <para>Si votre serveur CodeX est connecté à un annuaire
       d'entreprise le processus d'enregistrement est encore plus
       simple: il vous suffit de taper votre nom d'utilisateur LDAP et
-      votre mot de passe et CodeX extraiera automatiquement le reste
+      votre mot de passe et CodeX extraira automatiquement le reste
       des informations vous concernant dans l'annuaire: adresse email,
-      nom complet, etc...</para>
+      nom complet, etc&hellip;</para>
     </tip>
 
     <para>Ce processus d'enregistrement en deux étapes a été mis en
-    place pour des raisons de sécurité. EN supposant qu'un utilisateur
+    place pour des raisons de sécurité. En supposant qu'un utilisateur
     crée un compte avec une fausse adresse email, le message ne lui
     parviendra pas et la validation du compte ne pourra se faire. Pour
-    les sites situés derrière un pare-feu celà implique aussi qu'un
+    les sites situés derrière un pare-feu cela implique aussi qu'un
     compte ne peut-être validé depuis l'extérieur.</para>
 
     <tip>
@@ -240,14 +240,14 @@
     et cliquez sur le lien &#34;Se connecter&#34;. Après vous être
     authentifié, CodeX vous présente votre Page Personnelle (<xref
     linkend="FigureThePersonalPageOfACodeXUser" />. Vous pouvez à tout
-    moment retourné sur cette Page Personnelle en sélectionnant le
+    moment retourner sur cette Page Personnelle en sélectionnant le
     lien &#34;Ma Page Personnelle&#34; dans le menu CodeX.</para>
 
     <para>Votre page personnelle est une plaque tournante à partir de
     laquelle vous pouvez rayonner vers d'autres espaces de travail et
     d'information de CodeX. Vous y trouverez les artefacts (bugs,
     tâches, etc...) qui vous sont assignés ou que vous avez
-    soumis. VOus pouvez ainsi très facilement suivre l'évolution des
+    soumis. Vous pouvez ainsi très facilement suivre l'évolution des
     artefacts dont vous êtes en charge dans vos projets ou ceux que
     vous avez soumis à d'autres projets et que vous êtes impatient de
     voir traités.</para>
@@ -263,7 +263,7 @@
       </mediaobject>
     </figure>
 
-    <para>On trouve aussi sur la page personnelle un section dediée
+    <para>On trouve aussi sur la page personnelle un section dédiée
     aux forums de discussion et aux paquets logiciels sous
     surveillance. Pour interrompre la surveillance il vous suffit de
     cliquer sur la corbeille
@@ -273,11 +273,11 @@
     concerné.</para>
 
     <para>Vient ensuite une section dédiée aux emplacements
-    favoris. Il s'agit de pointeurs sur vos pages préférés de CodeX. A
+    favoris. Il s'agit de pointeurs sur vos pages préférées de CodeX. A
     noter que ces pointeurs peuvent être très sophistiqués. Ils
     permettent par exemple de mémoriser une requête multi-critères
-    effectué sur un outil de suivi. Enfin on trouve aussi sur cette
-    page la liste des projets auxquels vous appartenez. En cliquant
+    effectuée sur un outil de suivi. Enfin on trouve aussi sur cette
+    page la liste des projets auxquels vous appartenez. Cliquer
     sur l'un de ces projets vous renvoie vers la Page de Sommaire de
     ce projet.</para>
   </section>
@@ -286,7 +286,7 @@
     <title>Gestion de compte</title>
 
     <para>Lors de la phase d'enregistrement vous avez fourni un
-    certain nombre d'information vous concernant. Ces informations
+    certain nombre d'informations vous concernant. Ces informations
     peuvent être modifiées à tout moment en sélectionnant le lien
     &#34;Mon compte&#34; dans le menu de CodeX.</para>
 

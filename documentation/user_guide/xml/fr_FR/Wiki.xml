@@ -42,9 +42,9 @@
       projet.</para>
 
       <para>Une propriété caractéristique de la technologie Wiki est
-      la facilité avec laquelle des pages peuvent être crées ou
+      la facilité avec laquelle des pages peuvent être créées ou
       modifiées. Il n'y pas de mécanisme de revue ou d'approbation des
-      modifications effectuées et les Wikis CodeX sont ouvert à tous
+      modifications effectuées et les Wikis CodeX sont ouverts à tous
       les utilisateurs enregistrés.</para>
     </section>
 
@@ -59,27 +59,27 @@
       langage de marquage simplifé.</para>
 
       <para>Le langage de marquage "wikitext" est né de la
-      constatation que HTML, avec sa longe liste de balises
+      constatation que HTML, avec sa longue liste de balises
       imbriquées, est trop complexe pour permettre l'édition simple et
       rapide de documents et empêche l'utilisateur de se concentrer
       sur le contenu de la page. Le fait que l'utilisateur ne puisse
       pas utiliser toutes les fonctionnalités de HTML, telles que
       JavaScript et les feuilles de styles est aussi bénéfique car
-      celà permet d'assurer une cohérence dans le style des pages et
+      cela permet d'assurer une cohérence dans le style des pages et
       d'éviter les failles de sécurité.</para>
     </section>
 
     <section id="WikiLinkingandCreatingPages">
       <title>Lier et créer des pages</title>
 
-      <para>Les Wikis sont de vrais document hypertextes avec une
+      <para>Les Wikis sont de vrais documents hypertextes avec une
       structure de navigation non linéaire. Chaque page contient des
       liens vers d'autres pages. Les liens sont automatiquement créés
-      en utilisant une syntaxe particulière appelé "patron de
+      en utilisant une syntaxe particulière appelée "patron de
       lien".</para>
 
       <para>Les wikis CodeX utilisent le "patron de lien" appelé
-      CasseChameau (CamelCase en anglais), qui consistent à considérer
+      CasseChameau (CamelCase en anglais), qui consiste à considérer
       comme hyperlien une série de mots collés ensemble dont la
       première lettre est une majuscule (les mots "CamelCase",
       "RéférencesBibliographiques" en sont des exemples). Le terme
@@ -88,8 +88,8 @@
 
       <para>A noter qu'il existe aussi une autre façon de créer des
       liens wikis en incluant une portion de texte entre
-      crochets. Celà permet par exemple de créer des pages dont le
-      titre doti compoter des espaces.</para>
+      crochets. Cela permet par exemple de créer des pages dont le
+      titre doit comporter des espaces.</para>
 
       <para>Dans un Wiki, une nouvelle page est créée simplement en
       tapant un lien dans une page existante. Si la page cible
@@ -103,7 +103,7 @@
     <section id="WikiSearching">
       <title>Rechercher</title>
 
-      <para>Les Wikis CodeX permet d'effectuer des recherches par
+      <para>Les Wikis CodeX permettent d'effectuer des recherches par
       mots-clés aussi bien dans le titre que dans le contenu des
       pages.</para>
     </section>
@@ -120,19 +120,19 @@
       <title>Création d'un Wiki</title>
 
       <para>Pour être utilisable, le Wiki doit d'abord être initialisé
-      par l'administrateur du projet. Pour se faire, cliquez sur le
-      lien "wiki" dans la barre des services, sélectionner la langue
+      par l'administrateur du projet. Pour ce faire, cliquez sur le
+      lien "wiki" dans la barre des services, sélectionnez la langue
       d'utilisation de votre Wiki, cliquez sur 'Créer' et attendez la
       fin du processus de création.</para>
 
       <para>Veuillez noter que la langue d'utilisation du Wiki est
       définie une fois pour toute à la création du Wiki. Le Wiki
-      s'affichera dans la langeu choisie quelles que soient les
-      préférences de langues exprimées apr chaque utilisateur.</para>
+      s'affichera dans la langue choisie quelles que soient les
+      préférences de langues exprimées par chaque utilisateur.</para>
 
       <para>La création du Wiki donne naissance à un certain nombre de
       pages très utiles: une page d'accueil, une "sandbox" où faire
-      des tests, la documentation PhpWiki, etc&hyphen;</para>
+      des tests, la documentation PhpWiki, etc&hellip;</para>
     </section>
 
     <section id="WikiPermissions">
@@ -175,11 +175,11 @@
 	</listitem>
 	<listitem>
 	  <para><emphasis role="bold">Documentation</emphasis>: un
-	  Wiki est un façon très pratique de fournir la documentation
+	  Wiki est une façon très pratique de fournir la documentation
 	  relative à un projet (guide utilisateur, guide
-	  d'administration, FAQ, etc&hyphen;). Cette documentation
-	  peut être mise à jour par les membres de l'equipes, vos
-	  partenaires, voir même vos clients s'ils ont les droits
+	  d'administration, FAQ, etc&hellip;). Cette documentation
+	  peut être mise à jour par les membres de l'équipes, vos
+	  partenaires, voire même vos clients s'ils ont les droits
 	  d'accès.</para>
 	</listitem>
       </itemizedlist>
@@ -188,11 +188,11 @@
     <section id="MoreWikiDocumentation">
       <title>En savoir plus</title>
 
-      <para>Tous les Wikis de CodeX sont initialisés avec une jeu de
+      <para>Tous les Wikis de CodeX sont initialisés avec un jeu de
       pages par défaut dont la documentation PhpWiki. Consultez la
       page PhpWikiDocumentation pour une description de toutes les
       fonctionnalités de PhpWiki: syntaxe du langage de marquage,
-      plugins, etc&hyphen;</para>
+      plugins, etc&hellip;</para>
     </section>
 
   </section>

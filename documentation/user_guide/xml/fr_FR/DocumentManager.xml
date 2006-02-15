@@ -34,8 +34,8 @@
       <para>Le gestionnaire de documents peut gérer tout type de
       documents. Cependant nous encourageons vivement les personnes en
       charge de la publication des documents à adopter des formats
-      comme HTML ou PDF afin qu'il soit facilement et rapidement
-      lisible par tous.</para>
+      comme HTML ou PDF afin qu'ils soient facilement et rapidement
+      lisibles par tous.</para>
     </listitem>
 
     <listitem>
@@ -46,7 +46,7 @@
     </listitem>
 
     <listitem>
-      <para>Les documents peuvent être édités en ligne s'ils sont au format HTML ou text.</para>
+      <para>Les documents peuvent être édités en ligne s'ils sont au format HTML ou texte.</para>
     </listitem>
 
     <listitem>
@@ -65,7 +65,7 @@
     <para>Pour accéder au gestionnaire de documents, sélectionnez
     l'entrée &#34;Documentation&#34; dans la barre des services du
     projet en haut de l'écran. La page d'accueil du gestionnaire de
-    documents présente la liste de tous les documents publiés te
+    documents présente la liste de tous les documents publiés et
     rangés par groupe (dossier).</para>
 
     <para>Pour lire un document il suffit de cliquer sur son titre.</para>
@@ -85,17 +85,17 @@
     <section id="DocumentCrossReference">
       <title>Références croisées sur les documents</title>
 
-      <para>A l'instart des artefacts (voir <xref
+      <para>A l'instar des artefacts (voir <xref
       linkend="ArtifactCrossReferencing" />), des commits CVS (<xref
       linkend="Cross-Referencing CVS Commits" />) et des numéros de
       révision Subversion (<xref
       linkend="Cross-ReferencingSubversionCommits" />), les documents
-      peuvent être référencé dans les commentaires associés aux
-      artefacts ou au message de commit. L'utilisation du patron "doc
+      peuvent être référencés dans les commentaires associés aux
+      artefacts ou aux messages de commit. L'utilisation du patron "doc
       #NNN" crée automatiquement un lien vers le document dont
-      l'identifiant est NNN. L'identifiants d'un document est visible
-      sur la page principale du gestionnaire de documents losrqu'on
-      plaçe la souris sur le titre.</para>
+      l'identifiant est NNN. L'identifiant d'un document est visible
+      sur la page principale du gestionnaire de documents lorsqu'on
+      place la souris sur le titre.</para>
 
     </section>
   </section>
@@ -141,13 +141,13 @@
     <para>Le titre et le résumé du document peuvent contenir des
     balises HTML. Vous pouvez donc utiliser différents effets
     typographiques ainsi que des pointeurs vers d'autres sites ou
-    documents, etc&hyphen;</para>
+    documents, etc&hellip;</para>
 
     <para><tip><title>Coup de pouce: référencer des documents
     externes</title> <para>Il est parfois pratique de créer des
     documents factices qui ne font que pointer vers d'autres
     emplacements tels qu'un fichier dans un autre gestionnaire de
-    document ou un autre site web. Pour se faire, il suffit d'encadrer
+    document ou un autre site web. Pour ce faire, il suffit d'encadrer
     le titre du document avec une balise HREF (hyperlien) pointant sur
     l'emplacement cible.</para>
     </tip></para>
@@ -188,7 +188,7 @@
       <title>Mise à jour d'un document</title>
 
       <para>Seuls les membres du projet ayant le rôle d'administrateur
-      sur le gestionnaire de document peut modifier un document
+      sur le gestionnaire de document peuvent modifier un document
       existant.</para>
 
       <para>Un document peut être mis à jour de plusieurs façons:</para>
@@ -219,7 +219,7 @@
       linkend="FigureASampleDocumentManagerWelcome" />). Vous verrez
       ensuite apparaître la liste de l'ensemble des documents du
       projet trié par groupe et par rang d'affichage. Choisissez le
-      document à mettre à jour en cliquant sur son titre et effectuer
+      document à mettre à jour en cliquant sur son titre et effectuez
       les modifications souhaitées sur le document lui-même, son rang
       et son groupe dans l'écran de mise à jour.</para>
 
@@ -250,7 +250,7 @@
       menu suivant.</para>
 
       <para>Pour créer un nouveau groupe, utilisez les champs &#34;Nom
-      du groupe&#34; et &#34;Rang&#34; situés en haut de l'écranpuis
+      du groupe&#34; et &#34;Rang&#34; situés en haut de l'écran puis
       cliquez sur le bouton &#34;Créer&#34;. Vous pouvez aussi mettre
       à jour un groupe existant en cliquant sur son nom dans la liste
       des groupes.</para>
@@ -315,7 +315,7 @@
           trouvent.</para>
 
           <para>Les permissions attachées à un groupe de documents
-          s'applique à tous les documents qui s'y trouvent. Mais vous
+          s'appliquent à tous les documents qui s'y trouvent. Mais vous
           avez aussi la possibilité de définir des permissions d'accès
           spécifiques pour chaque document (voir ci-dessous).</para>
         </listitem>
@@ -352,7 +352,7 @@
       <para><tip><title>Coup de pouce: mise à jour des permissions
       existantes</title> <para>Il existe un raccourci qui permet aux
       administrateurs du projet ou du gestionnaire de documents de
-      mettre rapidement à jour les permissions d'un document ou d;un
+      mettre rapidement à jour les permissions d'un document ou d'un
       groupes de documents. Ce raccourci se matérialise par une icone
       en forme de cadenas sur la page principale du gestionnaire de
       document. Un simple clic sur ce cadenas permet de modifier les

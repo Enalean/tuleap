@@ -24,7 +24,7 @@
         <surname>Raymond</surname>
       </author>
 
-      <releaseinfo>Disponible sur<ulink
+      <releaseinfo>Disponible sur <ulink
       url="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">http://www.tuxedo.org/~esr/writings/cathedral-bazaar/</ulink></releaseinfo>
     </biblioentry>
 
@@ -68,7 +68,7 @@
 
       <pubdate>Publié chez Coriolis Press 1999</pubdate>
 
-      <releaseinfo>Aussi disponible partiellement en ligne sur<ulink
+      <releaseinfo>Aussi disponible partiellement en ligne sur <ulink
       url="http://cvsbook.red-bean.com/cvsbook.html">http://cvsbook.red-bean.com/cvsbook.html</ulink>.</releaseinfo>
     </biblioentry>
 
@@ -101,7 +101,7 @@
 
       <title>Apache Server Side Include Documentation</title>
 
-      <releaseinfo>Disponible sur<ulink
+      <releaseinfo>Disponible sur <ulink
       url="http://www.apache.org/docs/howto/ssi.html ">http://www.apache.org/docs/howto/ssi.html
       </ulink></releaseinfo>
     </biblioentry>
@@ -111,7 +111,7 @@
 
       <title>La politique de réutilisation de &SYS_ORG_NAME;</title>
 
-      <releaseinfo>Available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/docs/site ">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
+      <releaseinfo>Disponible sur <ulink url="http://&SYS_DEFAULT_DOMAIN;/docs/site ">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
     </biblioentry>
 
     <biblioentry id="bib.cug.xosp">
@@ -125,7 +125,7 @@
         <surname>Julliard</surname>
       </author>
 
-      <releaseinfo>Available at <ulink
+      <releaseinfo>Disponible sur <ulink
       url="http://opensource.codex.xerox.com/xerox/resources.html">http://opensource.codex.xerox.com/xerox/resources.html</ulink></releaseinfo>
     </biblioentry>
 

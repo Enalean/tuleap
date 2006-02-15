@@ -23,12 +23,12 @@
       <listitem>
         <para>Eviter le travail et les dépenses liés à la mise en
         place et à la maintenance de votre propre infrastructure
-        (seveurs de développement, serveur de sauvegarde,
+        (serveurs de développement, serveur de sauvegarde,
         etc...)</para>
       </listitem>
 
       <listitem>
-        <para>Ne pas pyer le prix fort pour des outils commerciaux de
+        <para>Ne pas payer le prix fort pour des outils commerciaux de
         contrôle de version, de suivi d'anomalies ou de gestion des
         tâches.</para>
       </listitem>
@@ -61,13 +61,13 @@
       projet&#34; dans le menu de CodeX.</para>
 
       <para>L'enregistrement d'un projet est un processus en sept
-      étapes et ne prend moins de 10 minutes:</para>
+      étapes et prend moins de 10 minutes:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Etape 1 - Services et Conditions</emphasis></para>
 
-          <para>Il s'agit d'information à propos des services
+          <para>Il s'agit d'informations à propos des services
           CodeX. Lisez les attentivement.</para>
         </listitem>
 
@@ -76,7 +76,7 @@
 
           <para>Vous découvrirez sur cette page une liste des services
           disponibles sur CodeX. Y figure aussi certaines obligations
-          que nous vous demandons de respecter. Pour passer à l'etape
+          que nous vous demandons de respecter. Pour passer à l'étape
           suivantes cliquez sur [D'ACCORD]. Si vous sélectionnez [PAS
           D'ACCORD], prenez la peine de nous contacter et de nous
           expliquer les raisons de cette désaffection. Nous pourrons
@@ -95,7 +95,7 @@
           d'inventions ou des brevets ou bien établir la liste des
           logiciels nécessaires au bon fonctionnement de votre
           projet. Le dernier champ est libre: vous pouvez y faire
-          figurer tout information qui vous parait pertinente pour
+          figurer toute information qui vous parait pertinente pour
           votre projet et ses utilisateurs.</para>
         </listitem>
 
@@ -103,10 +103,10 @@
           <para><emphasis role="bold">Etape 4 - Nom du projet</emphasis></para>
 
           <para>Indiquez le nom court et le nom complet du
-          projet. Lisez attentivement les insitructions fournies. Le
+          projet. Lisez attentivement les instructions fournies. Le
           nom complet peut être modifié à tout moment dans la vie du
           projet mais pas le nom court.<footnote><para>En fait il peut
-          l'être mais celà nécessite l'intervention des
+          l'être mais cela nécessite l'intervention des
           administrateurs du site.</para></footnote>. Réfléchissez
           donc bien avant de choisir!</para>
         </listitem>
@@ -118,9 +118,9 @@
           projet public. Si c'est le cas, le choix par défaut est
           celui que vous devez conserver à savoir la &#34;Politique
           d'Echange de &SYS_ORG_NAME;&#34;. Comme expliqué plus haut,
-          l'équipe CodeX assisté du département légal de
+          l'équipe CodeX assistée du département légal de
           &SYS_ORG_NAME; ont créé et validé ces règles d'échange. Un
-          certain nombre de licence Open Source sont aussi
+          certain nombre de licences Open Source sont aussi
           mentionnées. Enfin vous pouvez aussi spéficier vos propres
           termes de licence.</para>
         </listitem>
@@ -141,7 +141,7 @@
           <para>Lors de cette dernière étape un récapitulatif des
           différentes informations saisies vous est présenté pour
           approbation. Mais ne vous inquiétez pas: vous pourrez encore
-          modifier ces information une fois votre projet approuvé. Si
+          modifier ces informations une fois votre projet approuvé. Si
           tout est conforme cliquez sur le lien [D'ACCORD]. Si vous
           cliquez sur [PAS D'ACCORD] le projet pré-enregistré est
           détruit de la base de données de CodeX et toutes les
@@ -156,7 +156,7 @@
       temps. Rares sont les projets rejetés donc il y a peu de crainte
       à avoir... Après approbation du projet, vous recevrez un email
       résumant les caractéristiques de votre projet ainsi qu'un
-      certain nombre de pointeurs dont un vers la &#34;Sommaire du
+      certain nombre de pointeurs dont un vers le &#34;Sommaire du
       Projet&#34;. Conservez le dans vos signets favoris.</para>
 
     </section>
@@ -164,7 +164,7 @@
     <section id="Post-RegistrationConfiguration">
       <title>Configuration post-enregistrement</title>
 
-      <para>la première chose à faire après avoir reçu confirmation de
+      <para>La première chose à faire après avoir reçu confirmation de
       l'enregistrement du projet consiste à se rendre sur le page de
       &#34;Sommaire du Projet&#34; (URL inclut dans le message de
       notification) et à achever la configuration. Il y au minimum
@@ -205,7 +205,7 @@
         valeur qui vous convient dans l'un des critères de
         catégorisation, n'hésitez pas à contacter l'équipe CodeX via
         le lien &#34;Contactez-nous&#34; situé dans la section Aide du
-        menu principal de CodeX ou en soumettant un demande dans l'un
+        menu principal de CodeX ou en soumettant une demande dans l'un
         des forums de discussion du site.</para>
       </tip>
     </section>

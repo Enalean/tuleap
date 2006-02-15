@@ -19,10 +19,10 @@
     efficaces. D'autre part, le site CodeX devrait aussi devenir très
     rapidement le canal de communication favori de tous les
     utilisateurs puisqu'une communication efficace est capitale pour
-    les équipes de projets et leur communautés.</para>
+    les équipes de projets et leurs communautés.</para>
 
-    <para>A cet fin, CodeX propose un ensemble de services de
-    communication que l'équipe de projet peut personaliser. Celà
+    <para>A cette fin, CodeX propose un ensemble de services de
+    communication que l'équipe de projet peut personaliser. Cela
     inclut les listes de diffusion, le service d'annonces (news) et
     les forums Web.</para>
 
@@ -33,7 +33,7 @@
         <title>Création</title>
         
       <para>Chaque projet peut créer autant de listes de diffusion que
-      nécessaire. Pour se faire cliquez sur le lien &#34;Listes&#34;
+      nécessaire. Pour ce faire cliquez sur le lien &#34;Listes&#34;
       dans la barre de menu principale du projet puis sur le lien
       &#34;Administration&#34; de la barre de menu du service.</para>
 
@@ -44,7 +44,7 @@
       du projet. Ainsi les autres utilisateurs ne peuvent pas s'y
       inscrire ni poster de messages.</para>
 
-      <para>Dans le but de minimiser les conflits de nom entre liste
+      <para>Dans le but de minimiser les conflits de nom entre listes
       de diffusion des différents projets, leur nom suit le patron
       suivant:</para>
 
@@ -91,7 +91,7 @@ nomprojet-nomliste@&SYS_LISTS_HOST;
         <title>Administration</title>
 
         <para>L'administration d'une liste de diffusion se fait intégralement via
-        l'interface Web. Vous pouvez accéder la page d'administration
+        l'interface Web. Vous pouvez accéder à la page d'administration
         de la liste de diffusion en utilisant l'URL que vous avez reçu lors de la
         création de la liste de diffusion. Si vous avez égaré cette URL la voici à
         nouveau:</para>
@@ -101,9 +101,9 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
 </programlisting>
 
         <para>La page d'administration vous permet de régler de
-        nombreux paramètres de la DL, de gérer les membres, les
-        administrateurs, la confidentialité, le message de bienvenu
-        aux nouveaux inscrits, etc&hyphen; GNU/Mailman, le
+        nombreux paramètres de la liste de diffusion, de gérer les membres, les
+        administrateurs, la confidentialité, le message de bienvenue
+        aux nouveaux inscrits, etc. GNU/Mailman, le
         gestionnaire de liste de diffusion utilisé par CodeX, est un logiciel très
         riche et nous vous invitons à visiter la page d'administration
         au moins une fois pour avoir une idée de l'éventail des
@@ -120,7 +120,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         <title>(Dés)Inscription, archive et préférences</title>
 
         <para>A moins qu'une liste de diffusion ne soit privée, tout utilisateur CodeX
-        peut s'y inscrire. Pour se faire il suffit de cliquer sur le
+        peut s'y inscrire. Pour ce faire il suffit de cliquer sur le
         lien &#34;Listes&#34; dans la barre de services du projet,
         puis sur le lien &#34;(Dés)Abonnement/Préférences&#34; de la
         liste de diffusion concernée. Ensuite suivez les instructions affichées à
@@ -140,9 +140,9 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
 
       <para>Le service d'annonces vient en complément du service de
       listes de diffusion. Il vous permet de publier des annonces
-      relaitves au projet. Tous les évènements survenant dans la vie
+      relatives au projet. Tous les évènements survenant dans la vie
       de votre projet peuvent faire l'objet d'une annonce: une
-      nouvelle personne dans l'équipe, une nouvell version du
+      nouvelle personne dans l'équipe, une nouvelle version du
       logiciel, des informations sur les technologies liées au projet
       et pourquoi pas l'annonce de votre mariage où l'arrivée de votre
       petit sixième :-). Ne gardez pas votre projet dans
@@ -152,7 +152,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       <para>La publication d'une annonce est chose facile. Il suffit
       de cliquer sur le lien &#34;Annonces&#34; dans la barre de
       service du projet puis sur le lien &#34;Soumettre une
-      annonce&#34; dans la barre demenu du service au sommet de la
+      annonce&#34; dans la barre de menu du service au sommet de la
       page. Ensuite tapez le titre et le contenu de l'annonce. Les
       URLs présents dans le message seront automatiquement transformés
       en hyperlien dans la version publiée.</para>
@@ -161,15 +161,15 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       sommaire du projet et sont donc visibles pour l'ensemble des
       utilisateurs qui rendent visite à votre projet. N'importe quel
       utilisateur CodeX peut attacher un commentaire à l'annonce,
-      cequi siginifie que chaque annonce est un forum de discussion en
+      ce qui siginifie que chaque annonce est un forum de discussion en
       puissance<footnote><para>En arrière plan, chaque annonce est en
-      fait gérer exactement comme un forum Web
+      fait gérée exactement comme un forum Web
       CodeX.</para></footnote>. De plus, l'équipe d'administration du
       site CodeX a une vue sur l'ensemble des annonces publiées par
-      les différents projets et peut décider de faire appraitre
+      les différents projets et peut décider de faire apparaître
       certaines d'entre elles sur la page d'accueil principale du site
       CodeX si elles présentent un intérêt pour l'ensemble des
-      utilisateurs. Une bell publicité en vérité!!</para>
+      utilisateurs. Une belle publicité en vérité!!</para>
     </section>
 
     <section id="WebForums">
@@ -195,7 +195,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       forum, ce qui lui évitera des visites répétées à la page Web du
       forum.</para>
 
-      <para>Les administrateurs de projet peuvent créerd'autres forums
+      <para>Les administrateurs de projet peuvent créer d'autres forums
       à la demande en utilisant le module d'administration des forums
       accessible via le lien &#34;Administration&#34; situé dans la
       barre de menu du service Annonces. Les administrateurs peuvent

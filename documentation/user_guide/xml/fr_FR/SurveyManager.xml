@@ -34,7 +34,7 @@
 
       <listitem>
         <para>à partir des commentaires reçus en réponse à une annonce
-        publié sur la page de sommaire de votre projet,</para>
+        publiée sur la page de sommaire de votre projet,</para>
       </listitem>
 
       <listitem>
@@ -60,7 +60,7 @@
       </listitem>
 
       <listitem>
-        <para>définir un ensemble de ronse possible pour faciliter l'analyse statistique,</para>
+        <para>définir un ensemble de réponses possibles pour faciliter l'analyse statistique,</para>
       </listitem>
 
       <listitem>
@@ -102,7 +102,7 @@
           d'accueil du gestionnaire de sondages (voir <xref
           linkend="FigureSurveyManagerWelcomeScreen" />). Tout
           utilisateur visitant la page de sommaire du projet verra
-          ausii le nombre de sondages dispnibles dans la zon publique
+          aussi le nombre de sondages disponibles dans la zone publique
           sous la rubrique sondage. En cliquant sur le lien
           &#34;Sondages&#34;, l'utilisateur pourra répondre aux
           sondages disponibles.</para>
@@ -113,7 +113,7 @@
           projet</emphasis>: lorsque vous disposez d'un nouveau
           sondage, assurez-vous de publier une annonce annonçant sa
           disponibilité, qui est supposé y répondre et le pointeur Web
-          (URL) où se trouve le sondage (voir ci-dessous). En publient
+          (URL) où se trouve le sondage (voir ci-dessous). En publiant
           une annonce vous avez aussi une chance de la voir apparaître
           sur la page d'accueil du site si l'équipe CodeX en décide
           ainsi.</para>
@@ -141,7 +141,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <para>où N est l'identifiant (ID) de votre projet et X
       l'identifiant du sondage tel qu'il est présenté sur la liste des
       sondages affichés sur la page d'accueil du gestionnaire de sondages. Votre
-      identifiant de projet est visible la page d'administration du
+      identifiant de projet est visible sur la page d'administration du
       gestionnaire de sondages (voir <xref linkend="FigureSurveyManagerWelcomeScreen"
       />).</para>
 
@@ -155,12 +155,12 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <para><tip><title>Note importante: confidentialité des
       sondages</title><para>Les informations collectées dans ces
       enquêtes sont strictement internes à &SYS_ORG_NAME;. Elles sont
-      uniquement destinées à mieux comprendre le profile du projet et
+      uniquement destinées à mieux comprendre le profil du projet et
       de la population sondée. L'identité des personnes répondant au
       sondage ne sont visibles ni pour les administrateurs du projet,
-      ni par une partie tierce et encore moins apr le public. Les
+      ni par une partie tierce et encore moins par le public. Les
       informations collectées sont uniquement présentées de façon
-      agrégée et non pas dans le but de mettre en évidence un u
+      agrégée et non pas dans le but de mettre en évidence un ou
       plusieurs utiisateurs ou développeurs.</para></tip></para>
 
       <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
@@ -200,7 +200,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <para>Pour accéder aux fonctions d'administration, rendez vous
       sur la page de sommaire de votre projet, cliquez sur le lien
       &#34;Sondages&#34; de la barre de services située en haut de
-      l'écran puis sur le lien &#34;Admininstration&#34; du menu du
+      l'écran puis sur le lien &#34;Administration&#34; du menu du
       gestionnaire de sondages (voir <xref linkend="FigureSurveyManagerWelcomeScreen"
       />). A partir de cette page vous avez accès à l'ensemble des
       fonctions d'administrations (voir <xref
@@ -220,7 +220,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <section id="SurveyStructure">
         <title>Structure d'un sondage</title>
 
-        <para>Pour maitriser le processus de création et de mise à
+        <para>Pour maîtriser le processus de création et de mise à
         jour d'un sondage, il est nécessaire de bien comprendre que le
         gestionnaire de sondages gère deux réservoirs d'entités distinctes: un réservoir de
         sondages et un réservoir de questions. En conséquence, la
@@ -231,7 +231,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           <step>
             <para>Vous devez tout d'abord créer un ensemble de
             questions avec les réponses possibles. Toutes les
-            questions de tous les sondages d'un projet sont gérés dans
+            questions de tous les sondages d'un projet sont gérées dans
             un même réservoir.</para>
           </step>
 
@@ -250,15 +250,15 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <section id="CreatingorEditingQuestions">
         <title>Créer et éditer des questions</title>
 
-        <para>En tout premier lieur vous devez définir un jeu de
+        <para>En tout premier lieu vous devez définir un jeu de
         questions et les réponses possibles pour chacune
-        d'elles. Créer un bon sondage n'est pas chose aisée et celà
+        d'elles. Créer un bon sondage n'est pas chose aisée et cela
         demande du travail et de la réflexion: la valeur ajoutée des
-        réponses reçues est directement lié à la qualité des
+        réponses reçues est directement liée à la qualité des
         questions. Quelques conseils: ne mettez pas trop de questions
         dans un sondage, les questions doivent être courtes, claires,
         sans ambiguité et non redondantes. Prenez donc du temps pour
-        penser à aux questions avec votre équipe.</para>
+        penser aux questions avec votre équipe.</para>
 
         <para>Pour créer des questions, cliquez sur le lien du même
         nom dans la barre de menu du gestionnaire de sondages ou dans la page d'accueil du
@@ -308,7 +308,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           <listitem>
             <para><emphasis role="bold">Aucun</emphasis>: choisir ce
             type de réponse pour une question revient à la
-            désactiver. La question disparait alors de tous les
+            désactiver. La question disparaît alors de tous les
             sondages qui l'utilisent. Comme souvent en pareil cas dans
             CodeX, la question n'est pas détruite et toutes les
             réponses associées émanant des divers sondages demeurent
@@ -321,17 +321,17 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         lien 'Lister les questions existantes' au bas de
         l'écran.</para>
 
-        <para>Modifier des questions est aussi possible. Pour se
+        <para>Modifier des questions est aussi possible. Pour ce
         faire, cliquez sur le lien 'Modifier les questions' dans le
         menu de la page d'administration du gestionnaire de sondages ou dans la page
         d'accueil du module d'administration. Vous verrez alors
-        s'afficher la liste des questions actuellement disponible dans
+        s'afficher la liste des questions actuellement disponibles dans
         le réservoir. En cliquant sur l'identifiant de la question
-        situé dans la colonne de gauche vous pemet de modifier les
+        situé dans la colonne de gauche, vous pouvez modifier les
         propriétés de la question.</para>
 
         <para><emphasis role="underline">Remarque</emphasis>: modifier
-        une question après que des réponses aient été collecté est une
+        une question après que des réponses aient été collectées est une
         très mauvaise idée particulièrement si vous changez le type de
         la question. Dans ce cas les réponses déjà collectées
         deviennent incohérentes avec le nouveau type de la
@@ -371,21 +371,21 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           <listitem>
             <para>Le statut d'un sondage: il peut être actif ou
             pas. Tant qu'un sondage est inactif il n'apparait pas sur
-            l'écran de bienvenu du gestionnaire de sondages et il n'est donc pas
+            l'écran de bienvenue du gestionnaire de sondages et il n'est donc pas
             accessibles aux utilisateurs.
             </para>
           </listitem>
         </itemizedlist>
 
-        <para>Au bas de la pagese trouve la liste de l'ensemble des
+        <para>Au bas de la page se trouve la liste de l'ensemble des
         sondages du projet. Vous pouvez éditer l'un d'entre eux en
         cliquant sur l'identifiant dans la colonne de gauche. La
-        modification d'un sondage peut aussi de faire en cliquant sur
+        modification d'un sondage peut aussi se faire en cliquant sur
         le lien &#34;Modifier les sondages&#34; dans la barre de menu
         du gestionnaire de sondages puis en cliquant sur le sondage concerné. Lors de
-        l'édition d'un sondage vous pouvez la liste des questions ou
+        l'édition d'un sondage vous pouvez modifier la liste des questions ou
         leur ordre sans effet sur les réponses existantes. Si vous
-        supprimer une question de la liste, vous ne pourrez plus
+        supprimez une question de la liste, vous ne pourrez plus
         consulter les réponses associées s'il y en a. Elles ne sont
         cependant pas perdues. En ré-insérant la question dans la
         liste vous pourrez consulter les réponses associées (voir la
@@ -399,10 +399,10 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
 
         <para>A n'importe quel moment dans le cycle de vie d'un
         sondage, il est possible de consulter les réponses recueillies
-        aurpès des utilisateurs qui ont déjà participé au
+        auprès des utilisateurs qui ont déjà participé au
         sondage. Pour consulter les résultats d'une enquête cliquez
-        sur le lien 'Voir les résultats' dans la barre de menu du gdm
-        puis choisissez le sondage qui vous intéresse.</para>
+        sur le lien 'Voir les résultats' dans la barre du menu d'administration
+        du gestionnaire de sondages puis choisissez le sondage qui vous intéresse.</para>
 
         <figure id="FigureSurveyResults">
           <title>Résultats d'un sondage</title>
@@ -417,7 +417,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
 
         <para>Une liste de l'ensemble des questions du sondage
         apparaît alors à l'écran. A côté de chaque question on trouve
-        une vue agrégée des de toutes les réponses. Pour les questions
+        une vue agrégée de toutes les réponses. Pour les questions
         de type 'champ texte' ou 'zone texte' vous pouvez passer en
         revue toutes les réponses. Pour les boutons radio, le
         gestionnaire de sondages calcule le nombre total de réponses,

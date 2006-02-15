@@ -74,13 +74,13 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
       <tip>
         <title>Le Sommaire du Projet n'est pas sa Page d'Accueil!</title>
 
-        <para>La page de sommaire du projet ne doit pas être confondu
+        <para>La page de sommaire du projet ne doit pas être confondue
         avec la page d'accueil. La page de sommaire donne une vue
         d'ensemble des activités et des délivrables du projet alors
-        que la page d'accueil es le point d'entrée du site Web de
+        que la page d'accueil est le point d'entrée du site Web de
         votre projet. Le site Web d'un projet peut être utilisé pour
-        accueillir vos visiteur, les informer et les orienter vers les
-        différents service de CodeX. (voir <xref
+        accueillir vos visiteurs, les informer et les orienter vers les
+        différents services de CodeX. (voir <xref
         linkend="ProjectWebSite" /> pour plus d'information sur
         l'élaboration du site Web de votre projet)</para>
       </tip>
@@ -96,7 +96,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
     <section id="ProjectSummaryPageContent">
       <title>Contenu de la page de sommaire</title>
 
-      <para>un exemple de page de sommaire d'un projet est visible sur
+      <para>Un exemple de page de sommaire d'un projet est visible sur
       la <xref linkend="FigureASampleProjectSummaryPage" />. La page
       se divise en plusieurs zones:</para>
 
@@ -107,14 +107,14 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           sous le nom du projet. Le menu principal est un
           récapitulatif de l'ensemble des services disponibles pour ce
           projet. Ce menu reste visible sur toutes les pages qui
-          concerne le projet dans lequel vous naviguez.</para>
+          concernent le projet dans lequel vous naviguez.</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Description courte et
-          catégorisation</emphasis>: ces éléments ont déjà été décrit
+          catégorisation</emphasis>: ces éléments ont déjà été décrits
           auparavant. A côté de la description courte figure un
-          pointeur vers une description plus détaillé du
+          pointeur vers une description plus détaillée du
           projet.</para>
         </listitem>
 
@@ -130,8 +130,8 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           <para><emphasis role="bold">Derniers fichiers
           publiés</emphasis>: montre la liste des versions les plus
           récentes des paquets logiciels disponibles en
-          téléchargement. L'icone Notes show
-          the(<inlinemediaobject><imageobject><imagedata format="PNG"
+          téléchargement. L'icone Notes 
+          (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/manual16c.png"
           /></imageobject></inlinemediaobject>) permet de consulter
           les notes concernant cette version ainsi qu'un résumé des
@@ -140,22 +140,22 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/mail16d.png"
           /></imageobject></inlinemediaobject>). La sélection de cette
-          icone active la surveillance automatique de ce pquet
-          logiciel par CodeX. A chque fois que l'équipe de projet
+          icone active la surveillance automatique de ce paquet
+          logiciel par CodeX. A chaque fois que l'équipe de projet
           dépose une nouvelle version du logiciel, un message de
           notification vous est envoyé. Tous les paquets sous
           surveillance se trouvent sur votre Page Personnelle et la
-          surveillance peut être désactivé depuis cette page.</para>
+          surveillance peut être désactivée depuis cette page.</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Zones publiques</emphasis>: il
           s'agit d'une liste de tous les services disponibles pour ce
-          projet assortis d'information complémentaires (comme par
+          projet assortis d'informations complémentaires (comme par
           exemple le nombre d'artifact ouvert ou fermé). Le rôle de
           cette liste est quasiment identique à celui du menu
           principal du projet situé en haut de la page à savoir
-          fournir un accès rapide à chacun des service du
+          fournir un accès rapide à chacun des services du
           projet.</para>
         </listitem>
 

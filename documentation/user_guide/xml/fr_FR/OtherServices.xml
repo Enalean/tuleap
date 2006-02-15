@@ -32,9 +32,9 @@
 				comptes Shell CodeX. Les clients SSH sont disponibles sur toutes les
 				plateformes (Windows, Linux, Unix et Mac). Ils établissent un lien
 				sécurisé avec vos répertoires personnels et vous permettent aussi de
-				disposer d'autres utilitaires comme scp pour le transfert de fichiers à
+				disposer d'autres utilitaires comme SCP pour le transfert de fichiers à
 				distance. Pour accéder à votre compte Shell, tapez la commande suivante et
-				utiliser votre nom d'utilisateur et mot de passe CodeX pour vous
+				utilisez votre nom d'utilisateur et mot de passe CodeX pour vous
 				indentifier:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -45,7 +45,7 @@ ssh -l nom_utilisateur &SYS_SHELL_HOST;
         <listitem>
 			<para><emphasis role="bold">Telnet</emphasis>: telnet est livré en
 				standard dans les environnement Windows et Unix. Pour accéder à votre
-				compte Shell, tapez la commande suivante et utiliser votre nom
+				compte Shell, tapez la commande suivante et utilisez votre nom
 				d'utilisateur et mot de passe CodeX pour vous indentifier (remarque: sur
 				certains sites CodeX il se peut que telnet soit désactivé pour des raisons
 				de sécurité):</para>
@@ -56,7 +56,7 @@ telnet &SYS_SHELL_HOST;
         </listitem>
       </itemizedlist>
 
-		<para>Que vous utilisiez SSH ou telnet, une bannière de bienvenue vous est présenté
+		<para>Que vous utilisiez SSH ou telnet, une bannière de bienvenue vous est présentée
 			une fois la connexion établie. Ce message vous indique quels sont les
 			répertoires auxquels vous avez accès. Utilisez la commande Unix &#34;cd&#34;
 			pour changer le répertoire de travail courant. Si vous êtes membre de plusieurs
@@ -77,7 +77,7 @@ newgrp nom_projet
     <section id="FTPStorageSpaces">
       <title>Espaces de stockage FTP</title>
 
-		<para>Chaque projet dispose de son propre espace de stackage FTP qui est constitué de
+		<para>Chaque projet dispose de son propre espace de stockage FTP qui est constitué de
 			deux zones distinctes: l'espace FTP anonyme et l'espace FTP de publication de
 			version.</para>
 
@@ -120,16 +120,16 @@ newgrp nom_projet
       <section id="TheFileReleaseFTPSpace">
         <title>L'espace FTP de publication de fichiers</title>
 
-		<para>C'est à cet endroit que CodeX stockeles nouvelles version de fichiers
+		<para>C'est à cet endroit que CodeX stocke les nouvelles versions de fichiers
 			récemment publiés via le service de publication de fichiers de CodeX (voir <xref
 				linkend="FileRelease"/>). L'accès est autorisé uniquement pour les
 			membres du projet au cas où ils souhaiteraient intervenir directement et
 			manuellement dans cet espace. <emphasis role="bold">Nous recommandons
 			vivement de ne pas toucher à cet espace puisqu'il est entièrement géré depuis
-			l'interface Web de CodeX.</emphasis>. Si vous avez des questions à propos de la
+			l'interface Web de CodeX.</emphasis> Si vous avez des questions à propos de la
 			publication de vos fichiers, veuillez contacter l'équipe CodeX.</para>
 
-        <para>Les membres du projet puevent accéder à cet espace FTP de la façon suivante:</para>
+        <para>Les membres du projet peuvent accéder à cet espace FTP de la façon suivante:</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -138,7 +138,7 @@ newgrp nom_projet
           </listitem>
 
           <listitem>
-            <para>Via un client ftp en se connectant à <literal>&SYS_DOWNLOAD_HOST;</literal>.</para>
+            <para>Via un client FTP en se connectant à <literal>&SYS_DOWNLOAD_HOST;</literal>.</para>
           </listitem>
         </itemizedlist>
 
@@ -176,10 +176,8 @@ cd &FTPFILES_DIR;/nom_projet
 			<listitem>
 				<para>L'espace FTP entrant où vous pouvez directement glisser-déposer
 					les fichiers à inclure dans vos publication de version au lieu
-					d'utiliser un client FTP pour le chargement. The FTP incoming space
-					where you can directly drag and drop your file releases instead of using
-					FTP upload (See <xref
-						linkend="ReleaseConfigurationandValidation"/>)</para>
+					d'utiliser un client FTP pour le chargement. (Voir 
+                                        <xref linkend="ReleaseConfigurationandValidation"/>)</para>
 			</listitem>
 		</itemizedlist>
 		
@@ -187,7 +185,7 @@ cd &FTPFILES_DIR;/nom_projet
 			fichiers, naviguez dans le Réseau Microsoft Global, ouvrez le domaine
 			&SYS_SAMBA_DOMAIN; et cliquez sur le serveur CodeX. Utilisez vos nom
 			d'utilisateur et mot de passe CodeX pour vous connecter aux ressources (ils vous
-			seront demandés uniquement s'iils ne sont pas identiques à vos nom
+			seront demandés uniquement s'ils ne sont pas identiques à vos nom
 			d'utilisateur et mot de passe Windows).</para>
 		
 		<para>Les ressources partagées peuvent aussi être accédées directement en
