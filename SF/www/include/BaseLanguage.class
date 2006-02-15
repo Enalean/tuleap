@@ -247,6 +247,12 @@ class BaseLanguage {
 	function getFont() {
 		return $this->text_array['conf']['default_font'];
 	}
+
+        /** Returns list of loaded language files (for debugging) */
+        function getLoadedLangageFiles() {
+            return array_keys($this->file_array);
+        }
+
 }
 
 function language_code_to_result($alang) {
