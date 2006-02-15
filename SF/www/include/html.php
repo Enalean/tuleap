@@ -136,7 +136,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	*/
 
 	$return = '
-		<SELECT NAME="'.$select_name.'">';
+		<SELECT NAME="'.$select_name.'" id="'.$select_name.'">';
 
 	$rows=count($vals);
 
@@ -200,10 +200,10 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 
 	if ( is_array($checked_val) ) {
 		$return .= '
-			<SELECT NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
+			<SELECT id="'.$select_name.'" NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
 	} else {
 		$return .= '
-			<SELECT NAME="'.$select_name.'">';
+			<SELECT id="'.$select_name.'" NAME="'.$select_name.'">';
 	}
 
 	/*
@@ -332,7 +332,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 	$checked_count=count($checked_array);
 //      echo '-- '.$checked_count.' --';
 	$return = '
-		<SELECT NAME="'.$name.'" MULTIPLE SIZE="'.$size.'">';
+		<SELECT NAME="'.$name.'" id="'.$name.'" MULTIPLE SIZE="'.$size.'">';
 
 	/*
 		Put in the Unchanged box

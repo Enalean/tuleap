@@ -3,11 +3,15 @@ if (!com.xerox) com.xerox = {};
 if (!com.xerox.codex) com.xerox.codex = {};
 if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
 
+
+function puts() {}
+
 com.xerox.codex.tracker.Field = Class.create();
 Object.extend(com.xerox.codex.tracker.Field.prototype, {
-	initialize: function (id, name) {
+	initialize: function (id, name, label) {
 		this.id              = id;
 		this.name            = name;
+        this.label           = label;
 		this._highlight      = null;
 		this.defaultOptions  = [];
 		this.selectedOptions = [];
@@ -15,13 +19,13 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	highlight: function(mode) {
 		switch (mode) {
-			case 'previous':
-			case 'next':
-				Element.addClassName(this.id, mode);
+			case 'source':
+			case 'target':
+				Element.addClassName(this.name, mode);
 				break;
 			default:
 				if (!this._highlight) {
-					this._highlight = new Effect.Highlight(this.id);
+					this._highlight = new Effect.Highlight(this.name);
 				} else {
 					this._highlight.start(this._highlight.options);
 				}
@@ -30,9 +34,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	unhighlight: function(mode) {
 		switch (mode) {
-			case 'previous':
-			case 'next':
-				Element.removeClassName(this.id, mode);
+			case 'source':
+			case 'target':
+				Element.removeClassName(this.name, mode);
 				break;
 			default:
 				break;
@@ -45,10 +49,16 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			this.selectedOptions.push(option);
 		}
 	},
+    /**
+    * update maps the navigator state of the field to the js representation (this class) of the field.
+    * If an option was registered as selected and it is not (or vice versa), we update the representation.
+    *
+    */
 	update: function() {
 		has_changed = false;
-		el = $(this.id);
+		el = $(this.name);
 		for(i = 0 ; i < el.options.length ; i++) {
+            //search if the option i is a selectedOption
 			j = 0;
 			found = false;
 			while(j < this.selectedOptions.length && !found) {
@@ -74,17 +84,17 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		}
 		return has_changed;
 	},
-	add: function(options) {
-		el = $(this.id);
-		
-		//fill new options
-		for (i = 0 ; i < options.length ; i++) {
-			el.options[el.options.length] = options[i];
-			this.actualOptions.push(options[i]);
-		}
+	add: function(new_option_id) {
+        puts('<< Field::add('+new_option_id+')');
+		opt = document.createElement('option');
+        opt.value = options[this.id][new_option_id].option.value;
+        opt.appendChild(document.createTextNode(options[this.id][new_option_id].option.text));
+		$(this.name).appendChild(opt);
+		this.actualOptions.push(options[this.id][new_option_id]);
+        puts('>> Field::add');
 	},
 	clear: function() {
-		el = $(this.id);
+		el = $(this.name);
 		
 		//clear actual options
 		this.actualOptions = [];
@@ -95,7 +105,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	reset: function() {
 		var changed = true;
-		el = $(this.id);
+		el = $(this.name);
 		if (el.options.length == this.defaultOptions.length) {
 			changed = false;
 		} else {
@@ -139,7 +149,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 				});
 			});
 		}
-		el = $(this.id);
+		el = $(this.name);
 		if (el.options.length > 0) {
 			if (this.selectedOptions.length < 1) {
 				this.selectedOptions.push(this.actualOptions[0]);
@@ -155,9 +165,10 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	updateSelected: function() {
 		this.selectedOptions = [];
-		el = $(this.id);
+		el = $(this.name);
 		if (el) {
-			for(var k = 0 ; k < el.options.length ; k++) {
+            var len = el.options.length;
+			for(var k = 0 ; k < len ; k++) {
 				if (el.options[k].selected) {
 					this.selectedOptions.push(this.defaultOptions.find(function (element) {
 						return el.options[k].value == element.value;
@@ -170,73 +181,65 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 
 com.xerox.codex.tracker.Rule = Class.create();
 Object.extend(com.xerox.codex.tracker.Rule.prototype, {
-	initialize: function (field, proposedOptions, condition) {
-		this.field           = field;
-		this.proposedOptions = proposedOptions;
-		this.condition       = condition;
+	initialize: function (rule_definition) {
+		this.source_field_id = rule_definition.source_field;
+		this.source_value_id = rule_definition.source_value;
+		this.target_field_id = rule_definition.target_field;
+		this.target_value_id = rule_definition.target_value;
 		this.selectedOptions = [];
 	},
-	check: function(field) {
+	process: function(source_field) {
+        puts('<< Rule::process('+source_field.label+')');
+        puts('this.source_field: '+fields[this.source_field_id].label);
 		applied = false;
-		if (this.condition.isConcerned(field)) {
-			if (this.condition.eval()) {
-				this.field.add(this.proposedOptions);
-				this.field.select(this.selectedOptions);
-				applied = this.field;
+        if (this.source_field_id == source_field.id) {
+            fields[this.source_field_id].update();
+        	if (this.can_apply()) {
+				fields[this.target_field_id].add(this.target_value_id);
+				fields[this.target_field_id].select(this.selectedOptions);
+				applied = fields[this.target_field_id];
 			}
 		}
-		return applied;
+        puts('applied: '+applied);
+        puts('>> Rule::process');
+        return applied;
 	},
 	highlight: function(field) {
-		if (this.condition.isConcerned(field)) {
-			this.field.highlight('next');
+		if (this.source_field == field.id) {
+			fields[this.source_field_id].highlight('source');
 		}
-		if (this.field == field) {
-			this.condition.field.highlight('previous');
+		if (this.target_field_id == field.id) {
+			fields[this.target_field_id].highlight('target');
 		}
 	},
-	updateSelected: function(field, condition_field) {
-		if (this.field == field) {
-			if (this.condition.isConcerned(condition_field)) {
-				if (this.condition.eval()) {
-					this.selectedOptions = field.selectedOptions;
+	updateSelected: function(target_field, source_field) {
+		if (this.target_field_id == target_field.id) {
+			if (this.source_field_id == source_field.id) {
+				if (this.can_apply()) {
+					this.selectedOptions = target_field.selectedOptions;
 				}
 			}
 		}
-	}
+	},
+    /**
+    * @return true if the current rule can be applied (rule.source_value is selected on "real" field)
+    */
+    can_apply: function() {
+        puts('<< Rule::can_apply');
+        var can_apply = false; 
+        var len = $(fields[this.source_field_id].name).options.length;
+        for (var i = 0 ; i < len && !can_apply ; i++) {
+            puts(i+': '+$(fields[this.source_field_id].name).options[i].value+' == '+this.source_value_id+' ('+$(fields[this.source_field_id].name).options[i].selected+')');
+            can_apply = $(fields[this.source_field_id].name).options[i].value == this.source_value_id 
+                        && $(fields[this.source_field_id].name).options[i].selected;
+        }
+        puts('>> Rule::can_apply == '+can_apply);
+        return can_apply;
+    }
 });
 
-com.xerox.codex.tracker.Condition = Class.create();
-Object.extend(com.xerox.codex.tracker.Condition.prototype, {
-	initialize: function (field, expectedOptions) {
-		this.field           = field;
-		this.expectedOptions = expectedOptions;
-		this.selected        = [];
-	},
-	isConcerned: function(field) {
-		return this.field == field;
-	},
-	eval: function() {
-		if (this.field.update() || true) {
-			one_do_not_match = false;
-			for (i = 0 ; i < this.expectedOptions.length && !one_do_not_match ; i++) {
-				var found = false;
-				search = this.expectedOptions[i].value;
-				this.field.selectedOptions.each(function(value) {
-					if (value.value == search) {
-						found = true;
-						throw $break;
-					}
-				});
-				one_do_not_match = !found;
-			}
-			return !one_do_not_match;
-		} else {
-			return false;
-		}
-	}
-});
 var fields            = {};
+var fields_by_name    = {};
 var options           = {};
 var rules             = [];
 var rules_definitions = {};
@@ -250,81 +253,119 @@ function addOptionsToFields() {
 		fields[field].updateSelected();
 	}
 }
-
-function applyRules(evt, id) {
-	if (id) { this.id = id; }
-				source_field = fields[this.id];
-				source_field.updateSelected();
-				//We keep history of selection to not lose them
-				if(selections[source_field.id]) {
-					$H(selections[source_field.id]).keys().each(function(key) {
-						rules.each(function(rule) {
-							rule.updateSelected(source_field, fields[key]);
-						});
-					});
-				}
-				if (dependencies[this.id]) {
-					
-					var queue = [fields[this.id]];
-					
-					var j = 0;
-					while(j < queue.length) {
-						var highlight_queue = [];
-						var original = {};
-						
-						dependencies[queue[j].id].each(function (field) {
-							field.clear();
-							if (dependencies[field.id]) {
-								queue.push(field);
-							}
-							original[field.id] = {field:field, options:[]};
-							el = $(field.id);
-							for(var k = 0 ; k < el.options.length ; k++) {
-								original[field.id].options.push(options[field.id][el.options[k].value]);
-							}
-						});
-						
-						var applied = [];
-						for(var i = 0 ; i < rules.length ; i++) {
-							applied.push(rules[i].check(queue[j]));
-						}
-						
-						
-						$H(original).keys().each(function(id) {
-							
-							el = $(id);
-							found = false;
-							for (var k = 0 ; k < el.options.length && !found ; k++) {
-								found = original[id].options.find(function (element) {
-									return element.value == el.options[i].value && el.options[i].selected == element.selected;
-								});
-							}
-							if (!found) {
-								highlight_queue.push(original[id].field);
-							}
-						});
-						
-						dependencies[queue[j].id].each(function(field) {
-							field.select();
-						});
-						
-						highlight_queue.each(function(field) {
-							field.highlight();
-						});
-						
-						j++;
-					}
-				}
+function getFieldByName(name) {
+    if (!fields_by_name[name]) {
+        fields_by_name[name] = $H(fields).values().find(function (field) { return field.name == name; });
+    }
+    return fields_by_name[name];
+}
+function applyRules(evt, name) {
+    puts('<< applyRules');
+	if (name) { this.name = name; }
+    //We apply rules starting from the field which has name == id
+    source_field = getFieldByName(this.name);
+    //Source field has been changed. We have to store those changes.
+    source_field.updateSelected();
+    //We keep history of selections to not lose them
+    puts('//We keep history of selections to not lose them');
+    if(selections[source_field.id]) {
+        $H(selections[source_field.id]).keys().each(function(key) {
+            rules.each(function(rule) {
+                //rule.updateSelected(source_field, fields[key]);
+            });
+        });
+    }
+    //Does the selected field has dependencies (targets) ?
+    puts('//Does the selected field has dependencies (targets) ?');
+    if (dependencies[source_field.id]) {
+        
+        //We add the current field to the queue
+        //This queue manage the bubble : 
+        // if A => B and B => C, 
+        // then C may be changed depending on the selected value of A
+        var queue = [source_field];
+        
+        //We process the queue, until it is empty
+        var j = 0;
+        while(j < queue.length) {
+            puts('processing queue: '+queue[j].label);
+            //Highlight queue is an array of element to highlight (those who are modified)
+            var highlight_queue = [];
+            //originals is a hash of target fields (to save their current state)
+            var originals = {};
+            
+            //For each field that are target of the current field...
+            puts('dependencies for '+queue[j].label+': '+dependencies[queue[j].id].inspect());
+            dependencies[queue[j].id].each(function (field) {
+                    //...clear it (empty options),
+                    field.clear();
+                    
+                    //...push it to the queue if it as dependencies,
+                    if (dependencies[field.id]) {
+                            queue.push(field);
+                    }
+                    
+                    //...and save its actual state.
+                    originals[field.id] = {field:field, options:[]};
+                    el = $(field.name);
+                    for(var k = 0 ; k < el.options.length ; k++) {
+                            originals[field.id].options.push(options[field.id][el.options[k].value]);
+                    }
+            });
+            
+            //We process all rules which can match the current source field
+            puts('We process all rules which can match the current source field');
+            rules.each(function (rule) {
+                    rule.process(queue[j]);
+            });
+            
+            //Now we look at original states of targets to see if there has been a change
+            puts('Now we look at original states of targets to see if there has been a change');
+            $H(originals).values().each(function(target) {
+                el = $(target.field.name);
+                found = false;
+                for (var k = 0 ; k < el.options.length && !found ; k++) {
+                    found = target.options.find(function (element) {
+                        return element.value == el.options[i].value && el.options[i].selected == element.selected;
+                    });
+                }
+                //There has benn a change: we highlight the field
+                if (!found) {
+                    highlight_queue.push(target.field);
+                }
+            });
+            
+            //for each target...
+            puts('select all targets accordingly to previous selection and current options');
+            dependencies[queue[j].id].each(function(field) {
+                    //... select the target accordingly to previous selection and current options
+                    field.select();
+            });
+            
+            //Highlight fields which need
+            puts('highlight fields');
+            highlight_queue.each(function(field) {
+                field.highlight();
+            });
+            
+            //Go one step further into the queue
+            j++;
+        }
+    }
+    puts('>> applyRules');
+	
 }
 
 function registerFieldsEvents() {
+    puts('<< registerFieldsEvents');
 	for(id in fields) {
-		el = document.getElementById(id);
+        puts(id);
+		el = document.getElementById(fields[id].name);
 		if (el) {
 			el.onchange = applyRules;
 			el.onmouseover = function() {
 				for(i = 0 ; i < rules.length ; i++) {
-					rules[i].highlight(fields[this.id]);
+					rules[i].highlight(getFieldByName(this.id));
 				}
 			};
 			el.onmouseout = function() {
@@ -335,39 +376,46 @@ function registerFieldsEvents() {
 			};
 		}
 	}
+    puts('>> registerFieldsEvents');
 }
 
-function addRule(condition, effect) {
-	if(condition.id != effect.id && $(effect.id) && $(condition.id) && fields[condition.id] && fields[effect.id]) {
-		if (!selections[effect.id]) { 
-            selections[effect.id] = {}; 
+function addRule(rule_definition) {
+	puts('<< addRule ('+$H(rule_definition).inspect()+')');
+    if (rule_definition.source_field != rule_definition.target_field 
+        && fields[rule_definition.source_field] 
+        && fields[rule_definition.target_field]
+        && $(fields[rule_definition.source_field].name) 
+        && $(fields[rule_definition.target_field].name) 
+    ) {
+        if (!selections[rule_definition.target_field]) { 
+            selections[rule_definition.target_field] = {}; 
         }
-		if (!selections[effect.id][condition.id]) { 
-            selections[effect.id][condition.id] = []; 
+		if (!selections[rule_definition.target_field][rule_definition.source_field]) { 
+            selections[rule_definition.target_field][rule_definition.source_field] = []; 
         }
 		
-		if (!dependencies[condition.id]) {
-            dependencies[condition.id] = [];
+		if (!dependencies[rule_definition.source_field]) {
+            dependencies[rule_definition.source_field] = [];
         }
-		dependencies[condition.id].push(fields[effect.id]);
+		dependencies[rule_definition.source_field].push(fields[rule_definition.target_field]);
 		
-		condition_options = [];
-		condition.options.each(function(element) {
-			condition_options.push(options[condition.id][element].option);
-		});
-
-		effect_options = [];
-		effect.options.each(function(element) {
-			effect_options.push(options[effect.id][element].option);
-		});
-		rules.push(new com.xerox.codex.tracker.Rule(
-			fields[effect.id], 
-			effect_options,
-			new com.xerox.codex.tracker.Condition(fields[condition.id], condition_options)));
+		rules.push(new com.xerox.codex.tracker.Rule(rule_definition));
+        puts('rule added');
 	}
+    puts('>> addRule');
 }
 
-
+function initDynamicFields() {
+//    logConsole.show();
+    puts('<< initDynamicFields');
+    addOptionsToFields();
+    registerFieldsEvents();
+    $H(rules_definitions).values().each(function(rule_definition) {
+            addRule(rule_definition);
+    });
+    puts('>> initDynamicFields');
+}
+//{{{ Admin part
 
 var forbidden_sources = {};
 var forbidden_targets = {};
@@ -493,7 +541,7 @@ function buildAdminUI() {
                 so = document.createElement('option');
                 so.value = source_field.id;
                 so.selected = (preselected_source_field == so.value);
-                so.appendChild(document.createTextNode(source_field.name));
+                so.appendChild(document.createTextNode(source_field.label));
                 //If a rule exist for this field, highlight it
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.source_field == source_field.id;
@@ -525,7 +573,7 @@ function buildAdminUI() {
                 to = document.createElement('option');
                 to.value = target_field.id;
                 to.selected = (preselected_target_field == to.value);
-                to.appendChild(document.createTextNode(target_field.name));
+                to.appendChild(document.createTextNode(target_field.label));
                 //If a rule exist for this field, highlight it
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.target_field == target_field.id;
@@ -684,6 +732,7 @@ function buildAdminUI() {
 					}
 			});
 	});
+    //}}}
     
     //{{{ Some nice text in the header
     // Expected sentence: If field %1 is selected to %2 then field %3 will propose %4
@@ -767,7 +816,7 @@ function buildAdminUI() {
                     so = document.createElement('option');
                     so.value    = source_field.id;
                     so.selected = source_field.id == previous_selected ? 'selected' : '';
-                    so.appendChild(document.createTextNode(source_field.name));
+                    so.appendChild(document.createTextNode(source_field.label));
                     //If a rule exist for this field, highlight it
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.source_field == source_field.id;
@@ -804,7 +853,7 @@ function buildAdminUI() {
                     to = document.createElement('option');
                     to.value    = target_field.id;
                     to.selected = target_field.id == previous_selected ? 'selected' : '';
-                    to.appendChild(document.createTextNode(target_field.name));
+                    to.appendChild(document.createTextNode(target_field.label));
                     //If a rule exist for this field, highlight it
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.target_field == target_field.id;
@@ -1043,3 +1092,4 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
     });
 }
 
+//}}}

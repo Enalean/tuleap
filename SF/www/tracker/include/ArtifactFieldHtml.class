@@ -85,14 +85,32 @@ class ArtifactFieldHtml extends ArtifactField {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
 			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
-		
+            $array_values = array();
+            while($row = db_fetch_array($result)) {
+                $array_values[]  = $row;
+            }
+            db_reset_result($result);
+            
 			if ($box_name == '') {
 			    $box_name = $this->field_name.'[]';
 			}
-			return html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
+			$output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
+            $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".$this->getLabel()."');\n";
+            $output .= $this->_getValuesAsJavascript($array_values,$checked);
+            $output .= "</script>";
+            return $output;
 	    }
 	}
 	
+    
+    function _getValuesAsJavascript($values, $default_value) {
+            $output = "options['".$this->getID()."'] = {};\n";
+            foreach ($values as $row) {
+                $output .= "options['". $this->getID() ."']['". $row['0'] ."'] = {option:new Option('". $row['1'] ."', '". $row['0'] ."'), selected:". ($row['0']==$default_value?'true':'false') ."};\n";
+            }
+            $output .= "</script>";
+            return $output;
+    }        
 	/**
      * 
 	 *  Returns a select box populated with field values for this project
@@ -116,11 +134,20 @@ class ArtifactFieldHtml extends ArtifactField {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
 			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
+            $array_values = array();
+            while($row = db_fetch_array($result)) {
+                $array_values[]  = $row;
+            }
+            db_reset_result($result);
 	
 			if ($box_name == '') {
 			    $box_name = $this->field_name;
 			}
-			return html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
+			$output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
+            $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".$this->getLabel()."');\n";
+             $output .= $this->_getValuesAsJavascript($array_values,$checked);
+            $output .= "\n</script>";
+           return $output;
 	    }
 	}
 	

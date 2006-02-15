@@ -22,7 +22,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
 	 *
 	 *  @param $artifact_type object
 	 */
-	function ArtifactRulesManagerHtml(&$artifact_type_html, $href) {
+	function ArtifactRulesManagerHtml(&$artifact_type_html, $href = '') {
 		$this->ArtifactRulesManager();
         $this->artifact_type =& $artifact_type_html;
         $this->href          = $href;
@@ -32,23 +32,28 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         parent::saveRule($this->artifact_type->getId(), $source, $source_value, $target, $target_values);
     }
     
-    function displayRulesAsJavascript() {
+    function displayFieldsAndValuesAsJavascript() {
         echo "\n//------------------------------------------------------\n";
         $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
             if ($field->isSelectBox() || $field->isSelectBox()) {
-                $values = $field->getFieldValues ($this->artifact_type->getID(),"'A','P'");
+                $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                 if (db_numrows($values) > 1) {
-                    echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getLabel()."');\n";
+                    echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getName()."', '".$field->getLabel()."');\n";
                     $default_value = $field->getDefaultValue();
                     echo "options['".$field->getID()."'] = {};\n";
                     while ($row = db_fetch_array($values)) {
-                        echo "options['". $field->getID() ."']['". $row['value_id'] ."'] = {option:new Option('". $row['value'] ."', '". $row['value_id'] ."'), selected:". ($row['value_id']==$default_value?'true':'false') ."};\n";
+                        echo "options['". $field->getID() ."']['". $row[0] ."'] = {option:new Option('". $row[1] ."', '". $row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
                     }
                 }
             }
         }
+        echo "\n//------------------------------------------------------\n";
+    }
+    
+    function displayRulesAsJavascript() {
+        echo "\n//------------------------------------------------------\n";
         $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
@@ -73,6 +78,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '</form>';
         echo '<script type="text/javascript">'."\n";
         echo "//<![CDATA[\n";
+        
+        $this->displayFieldsAndValuesAsJavascript();
+        
         $this->displayRulesAsJavascript();
         
         if (isset($params['preselected_source_field'])) {
@@ -122,10 +130,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 //get target values
                 $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
                 $target_field   =& $art_field_fact->getFieldFromId($request->get('target_field'));
-                $target_values  = $target_field->getFieldValues ($this->artifact_type->getID(),"'A','P'");
+                $target_values  = $target_field->getFieldPredefinedValues($this->artifact_type->getID());
                 while ($row = db_fetch_array($target_values)) {
-                    if ($request->exist('target_'. $request->get('source_field') .'_'. $request->get('target_field') .'_'. $row['value_id'] .'_chk')) {
-                        $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row['value_id']);
+                    if ($request->exist('target_'. $request->get('source_field') .'_'. $request->get('target_field') .'_'. $row[0] .'_chk')) {
+                        $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
                 $GLOBALS['feedback'] .= '<div>Successfully saved</div>';
@@ -140,10 +148,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 //get source values
                 $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
                 $source_field   =& $art_field_fact->getFieldFromId($request->get('source_field'));
-                $source_values  = $source_field->getFieldValues ($this->artifact_type->getID(),"'A','P'");
+                $source_values  = $source_field->getFieldPredefinedValues($this->artifact_type->getID());
                 while ($row = db_fetch_array($source_values)) {
-                    if ($request->exist('source_'. $request->get('source_field') .'_'. $request->get('target_field') .'_'. $row['value_id'] .'_chk')) {
-                        $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row['value_id'], $request->get('target_field'), $request->get('value'));
+                    if ($request->exist('source_'. $request->get('source_field') .'_'. $request->get('target_field') .'_'. $row[0] .'_chk')) {
+                        $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
                 $GLOBALS['feedback'] .= '<div>Successfully saved</div>';

@@ -37,7 +37,6 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function header($params) {
 		global $Language;
-
 		$group_id= $this->Group->getID();
 
 		//required by new site_project_header

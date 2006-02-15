@@ -17,6 +17,7 @@
 //require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
+require_once('include/ArtifactRulesManagerHtml.class');
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
@@ -34,6 +35,10 @@ if ( !isset($pv) ) {
 	if ( $pv ) $ro = true;
 }
 
+$GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/prototype.js");
+$GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/scriptaculous.js");
+$GLOBALS['HTML']->includeJavascriptFile("/include/dynamicFields.js");
+
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
@@ -46,6 +51,12 @@ $ath->header($params);
 
 // artifact object (and field values) initialized in script above (index.php)
 $ah->display($ro,$pv,user_getid());
+
+echo "<script type=\"text/javascript\">\n";
+$armh =& new ArtifactRulesManagerHtml($ath);
+$armh->displayRulesAsJavascript();
+echo "Event.observe(window, 'load', initDynamicFields, true);\n";
+echo "</script>";
 
 // Display footer page
 $ath->footer($params);

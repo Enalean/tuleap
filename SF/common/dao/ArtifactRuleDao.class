@@ -133,9 +133,9 @@ class ArtifactRuleDao extends DataAccessObject {
                        " FROM artifact_rule AS ar ".
                        "   INNER JOIN artifact_field_usage AS afu1 ON (ar.source_field_id = afu1.field_id AND ar.group_artifact_id = afu1.group_artifact_id) ".
                        "   INNER JOIN artifact_field_usage AS afu2 ON (ar.target_field_id = afu2.field_id AND ar.group_artifact_id = afu2.group_artifact_id) ".
-                       "   INNER JOIN artifact_field_value_list AS afvls ".
+                       "   LEFT JOIN artifact_field_value_list AS afvls ".
                        "      ON (ar.source_field_id = afvls.field_id AND ar.group_artifact_id = afvls.group_artifact_id AND ar.source_value_id = afvls.value_id) ".
-                       "   INNER JOIN artifact_field_value_list AS afvlt ".
+                       "   LEFT JOIN artifact_field_value_list AS afvlt ".
                        "      ON (ar.target_field_id = afvlt.field_id AND ar.group_artifact_id = afvlt.group_artifact_id AND ar.target_value_id = afvlt.value_id) ".
                        " WHERE ar.group_artifact_id = %s ".
                        " ORDER BY afu1.place, afu2.place, afvls.order_id, afvlt.order_id, ar.id",
