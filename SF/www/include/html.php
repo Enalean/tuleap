@@ -331,8 +331,9 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 
 	$checked_count=count($checked_array);
 //      echo '-- '.$checked_count.' --';
+    $id = str_replace('[]', '', $name);
 	$return = '
-		<SELECT NAME="'.$name.'" id="'.$name.'" MULTIPLE SIZE="'.$size.'">';
+		<SELECT NAME="'.$name.'" id="'.$id.'" MULTIPLE SIZE="'.$size.'">';
 
 	/*
 		Put in the Unchanged box

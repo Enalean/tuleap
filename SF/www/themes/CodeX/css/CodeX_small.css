@@ -139,3 +139,25 @@ PRE,TT { font-family: courier,sans-serif; }
 .tooltip { text-decoration:none; color: #000000}
 .tooltip:hover { text-decoration:none; color: #ff0000}
 
+
+
+/* dynamic fields */
+.codex_dynamic_fields_highlight_current {
+    border-color: #FF0000;
+}
+
+.codex_dynamic_fields_highlight_source {
+}
+
+.codex_dynamic_fields_highlight_target {
+    border-color: #F99;
+}
+
+/* Only background-color property is used        */
+/* Only full hexa are allowed                    */
+/* don't use names (purple, red, yellow)         */
+/* don't use half hexa (#FF0000 instead of #F00) */
+.codex_dynamic_fields_highlight_change {
+    /* background-color: #8b4020; */
+}
+

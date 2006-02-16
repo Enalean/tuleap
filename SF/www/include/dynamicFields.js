@@ -6,6 +6,43 @@ if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
 
 function puts() {}
 
+var HIGHLIGHT_STARTCOLOR = '#ffff99';
+
+function getStyleClass (className) {
+  var re = new RegExp("\\." + className + "$", "gi");
+  if (document.all) {
+    for (var s = 0; s < document.styleSheets.length; s++)
+      for (var r = 0; r < document.styleSheets[s].rules.length; r++)
+        if (document.styleSheets[s].rules[r].selectorText.search(re) 
+!= -1) {
+          return document.styleSheets[s].rules[r].style;
+        }
+  }
+  else if (document.getElementById) {
+    for (var s = 0; s < document.styleSheets.length; s++)
+      for (var r = 0; r < document.styleSheets[s].cssRules.length; r++)
+        if (document.styleSheets[s].cssRules[r].selectorText.search
+(re) != -1) {
+          document.styleSheets[s].cssRules[r].sheetIndex = s;
+          document.styleSheets[s].cssRules[r].ruleIndex = s;
+          return document.styleSheets[s].cssRules[r].style;
+        }
+  }
+  else if (document.layers)
+    return document.classes[className].all;
+  return null;
+}
+function getStyleClassProperty (className, propertyName) {
+  var styleClass = getStyleClass(className);
+  if (styleClass)
+    return styleClass[propertyName];
+  else 
+    return null;
+}
+
+
+
+
 com.xerox.codex.tracker.Field = Class.create();
 Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	initialize: function (id, name, label) {
@@ -18,14 +55,15 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		this.actualOptions   = [];
 	},
 	highlight: function(mode) {
-		switch (mode) {
+        switch (mode) {
+			case 'current':
 			case 'source':
 			case 'target':
-				Element.addClassName(this.name, mode);
+				Element.addClassName(this.name.replace('[]', ''), 'codex_dynamic_fields_highlight_'+mode);
 				break;
 			default:
 				if (!this._highlight) {
-					this._highlight = new Effect.Highlight(this.name);
+					this._highlight = new Effect.Highlight($(this.name), {startcolor:HIGHLIGHT_STARTCOLOR});
 				} else {
 					this._highlight.start(this._highlight.options);
 				}
@@ -34,16 +72,17 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	unhighlight: function(mode) {
 		switch (mode) {
+			case 'current':
 			case 'source':
 			case 'target':
-				Element.removeClassName(this.name, mode);
+                Element.removeClassName(this.name, 'codex_dynamic_fields_highlight_'+mode);
 				break;
 			default:
 				break;
 		}
 	},
 	addDefaultOption: function(option, selected) {
-		this.defaultOptions.push(option);
+        this.defaultOptions.push(option);
 		this.actualOptions.push(option);
 		if (selected) {
 			this.selectedOptions.push(option);
@@ -62,7 +101,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			j = 0;
 			found = false;
 			while(j < this.selectedOptions.length && !found) {
-				if (this.selectedOptions[j].value == el.options[i].value) {
+                if (this.selectedOptions[j].value == el.options[i].value) {
 					found = this.selectedOptions[j];
 				}
 				j++;
@@ -77,7 +116,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			} else { //The option was not selected...
 				if (el.options[i].selected) { //...but is now selected
 					//We add it
-					this.selectedOptions.push(el.options[i]);
+					this.selectedOptions.push(new Option(el.options[i].text, el.options[i].value));
 					has_changed = true;
 				}
 			}
@@ -186,7 +225,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 		this.source_value_id = rule_definition.source_value;
 		this.target_field_id = rule_definition.target_field;
 		this.target_value_id = rule_definition.target_value;
-		this.selectedOptions = [];
+		this.selected        = false;
 	},
 	process: function(source_field) {
         puts('<< Rule::process('+source_field.label+')');
@@ -205,10 +244,12 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
         return applied;
 	},
 	highlight: function(field) {
-		if (this.source_field == field.id) {
+		if (this.target_field_id == field.id) {
+			field.highlight('current');
 			fields[this.source_field_id].highlight('source');
 		}
-		if (this.target_field_id == field.id) {
+		if (this.source_field_id == field.id) {
+			field.highlight('current');
 			fields[this.target_field_id].highlight('target');
 		}
 	},
@@ -216,7 +257,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 		if (this.target_field_id == target_field.id) {
 			if (this.source_field_id == source_field.id) {
 				if (this.can_apply()) {
-					this.selectedOptions = target_field.selectedOptions;
+					this.selected = target_field.selectedOptions;
 				}
 			}
 		}
@@ -263,7 +304,7 @@ function applyRules(evt, name) {
     puts('<< applyRules');
 	if (name) { this.name = name; }
     //We apply rules starting from the field which has name == id
-    source_field = getFieldByName(this.name);
+    source_field = getFieldByName(this.name.replace('[]', ''));
     //Source field has been changed. We have to store those changes.
     source_field.updateSelected();
     //We keep history of selections to not lose them
@@ -369,10 +410,11 @@ function registerFieldsEvents() {
 				}
 			};
 			el.onmouseout = function() {
-				for(i in fields) {
-					fields[i].unhighlight('previous');
-					fields[i].unhighlight('next');
-				}
+                $H(fields).values().each(function (field) {
+					field.unhighlight('current');
+					field.unhighlight('source');
+					field.unhighlight('target');
+				});
 			};
 		}
 	}
@@ -413,9 +455,41 @@ function initDynamicFields() {
     $H(rules_definitions).values().each(function(rule_definition) {
             addRule(rule_definition);
     });
+    //Once rules have been loaded, we applied them an fields
+    /*$H(fields).values().each(function (field) {
+            applyRules(null, field.name);
+    });*/
+    codex_dynamic_fields_highlight_change = getStyleClassProperty('codex_dynamic_fields_highlight_change', 'backgroundColor');
+    if (codex_dynamic_fields_highlight_change && codex_dynamic_fields_highlight_change != '') {
+        HIGHLIGHT_STARTCOLOR = codex_dynamic_fields_highlight_change;
+    }
+    var hexChars = "0123456789ABCDEF";
+    function Dec2Hex (Dec) { 
+        var a = Dec % 16; 
+        var b = (Dec - a)/16; 
+        hex = "" + hexChars.charAt(b) + hexChars.charAt(a); 
+        return hex;
+    }
+    var re = new RegExp(/rgb\([^0-9]*([0-9]+)[^0-9]*([0-9]+)[^0-9]*([0-9]+)\)/); //Fx returns rgb(123, 64, 32) instead of hexa color
+    if (m = re.exec(HIGHLIGHT_STARTCOLOR)) {
+        r = m[1] || null;
+        g = m[2] || null;
+        b = m[3] || null;
+        if (r && g && b) {
+            HIGHLIGHT_STARTCOLOR = '#'+Dec2Hex(r)+Dec2Hex(g)+Dec2Hex(b);
+        }
+    }
     puts('>> initDynamicFields');
 }
-//{{{ Admin part
+
+//==============================================================================
+//==============================================================================
+
+//{{{                         Admin part
+
+//==============================================================================
+//==============================================================================
+
 
 var forbidden_sources = {};
 var forbidden_targets = {};
