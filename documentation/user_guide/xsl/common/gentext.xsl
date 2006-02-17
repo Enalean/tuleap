@@ -21,7 +21,9 @@
 <xsl:template match="chapter" mode="object.title.number.markup">
   <xsl:param name="allow-anchors" select="0"/>
   <xsl:variable name="template">
-    CHAPTER %n
+   <xsl:call-template name="gentext">
+    <xsl:with-param name="key" select="'CHAPTER'"/>
+   </xsl:call-template> %n
   </xsl:variable>
 
   <xsl:call-template name="substitute-markup">

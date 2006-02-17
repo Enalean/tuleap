@@ -67,19 +67,31 @@
             <table border="1" width="100%" summary="Revision history" cellspacing="0" cellpadding="1" BORDERCOLORLIGHT="#CCCCCC" BORDERCOLORdark="#CCCCCC">
               <tr bgcolor="#EEEEEE">
                 <th align="center" valign="top">
-                  <b>Version
+                  <b>
+			<xsl:call-template name="gentext">
+			 <xsl:with-param name="key" select="'Version'"/>
+			</xsl:call-template>
                   </b>
                 </th>
                 <th align="center" valign="top">
-                  <b>Date
+                  <b>
+			<xsl:call-template name="gentext">
+			 <xsl:with-param name="key" select="'Date'"/>
+			</xsl:call-template>
                   </b>
                 </th>
                 <th align="center" valign="top">
-                  <b>Description
+                  <b>
+			<xsl:call-template name="gentext">
+			 <xsl:with-param name="key" select="'Description'"/>
+			</xsl:call-template>
                   </b>
                 </th>
                 <th align="center" valign="top">
-                  <b>Author
+                  <b>
+			<xsl:call-template name="gentext">
+			 <xsl:with-param name="key" select="'Author'"/>
+			</xsl:call-template>
                   </b>
                 </th>
               </tr>
@@ -182,7 +194,11 @@
 <!-- CX-SBT: Add the label Authors -->
 <xsl:template match="authorgroup" mode="titlepage.mode">
   <div class="{name(.)}">
-    <p><b>Authors</b></p>
+    <p><b>
+	<xsl:call-template name="gentext">
+	 <xsl:with-param name="key" select="'Authors'"/>
+	</xsl:call-template>
+   </b></p>
     <table>
         <xsl:apply-templates mode="titlepage.mode"/>
     </table>

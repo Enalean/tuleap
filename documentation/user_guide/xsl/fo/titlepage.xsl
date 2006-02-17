@@ -78,7 +78,11 @@
         border-bottom-width="0.5pt"
         border-right-width="0.5pt"
         padding-bottom="2pt">
-          <fo:block>Version</fo:block>
+          <fo:block>
+		<xsl:call-template name="gentext">
+		 <xsl:with-param name="key" select="'Version'"/>
+		</xsl:call-template>
+	  </fo:block>
         </fo:table-cell>
 
         <fo:table-cell 
@@ -92,7 +96,11 @@
         border-bottom-width="0.5pt"
         border-right-width="0.5pt"
         padding-bottom="2pt">
-          <fo:block>Date</fo:block>
+          <fo:block>
+		<xsl:call-template name="gentext">
+		 <xsl:with-param name="key" select="'Date'"/>
+		</xsl:call-template>
+	  </fo:block>
         </fo:table-cell>
 
         <fo:table-cell 
@@ -106,7 +114,11 @@
         border-bottom-width="0.5pt"
         border-right-width="0.5pt"
         padding-bottom="2pt">
-          <fo:block>Description</fo:block>
+          <fo:block>
+		<xsl:call-template name="gentext">
+		 <xsl:with-param name="key" select="'Description'"/>
+		</xsl:call-template>
+	  </fo:block>
         </fo:table-cell>
 
         <fo:table-cell 
@@ -120,7 +132,11 @@
         border-bottom-width="0.5pt"
         border-right-width="0.5pt"
         padding-bottom="2pt">
-          <fo:block>Author</fo:block>
+          <fo:block>
+<xsl:call-template name="gentext">
+ <xsl:with-param name="key" select="'Author'"/>
+</xsl:call-template>
+	  </fo:block>
         </fo:table-cell>
       </fo:table-row>
     </fo:table-header>
@@ -227,7 +243,10 @@
   <fo:block text-decoration="underline"
     font-family="Helvetica"
     font-weight="bold" font-size="12pt"
-    space-after="6pt">Authors
+    space-after="6pt">
+	<xsl:call-template name="gentext">
+	 <xsl:with-param name="key" select="'Authors'"/>
+	</xsl:call-template>
   </fo:block>
 
   <xsl:apply-templates mode="titlepage.mode"/>

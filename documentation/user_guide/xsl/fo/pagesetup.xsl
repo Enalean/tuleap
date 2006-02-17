@@ -432,7 +432,10 @@
                 </fo:table-cell>
 
                 <fo:table-cell text-align="right" display-align="after">
-                  <fo:block font-style="italic">CodeX User Guide</fo:block>
+                  <fo:block font-style="italic">
+			<!-- Added by MN the 2006/02/16 : the book title written in the header of the pdf will depend of the language now -->
+			<xsl:value-of select="/book/title"/>
+		  </fo:block>
                 </fo:table-cell>
               </fo:table-row>
             </fo:table-body>
