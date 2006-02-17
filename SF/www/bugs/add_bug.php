@@ -36,7 +36,7 @@ echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" N
 	<TABLE cellpadding="0">
 	<TR><TD VALIGN="TOP" COLSPAN="'.(2*$fields_per_line).'">
                   <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>
-                 <script language="JavaScript" src="/include/calendar.js"></script>';
+                 <script language="JavaScript" src="/scripts/calendar.js"></script>';
 
 
 

@@ -134,7 +134,7 @@ if (($func=='edit')||($func=='do_create')) {
 .t2 { visibility:visible; }
 </style>
 <p><b>'.$Language->getText('project_admin_editugroup','select_ug_members').'</b>
-<SCRIPT src="/include/filterlist.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="/scripts/filterlist.js" type="text/javascript"></SCRIPT>
 
 <TABLE cellpadding=0 cellspacing=0>
 <TR>

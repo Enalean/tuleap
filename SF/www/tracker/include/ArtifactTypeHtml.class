@@ -39,9 +39,9 @@ class ArtifactTypeHtml extends ArtifactType {
 		global $Language;
 		$group_id= $this->Group->getID();
 
-        $GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/prototype.js");
-        $GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/scriptaculous.js");
-        $GLOBALS['HTML']->includeJavascriptFile("/include/dynamicFields.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/prototype.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/dynamicFields.js");
                 
         
 		//required by new site_project_header
@@ -165,7 +165,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		global $atf,$Language;
 		
 
-		echo "<form name=\"cal\"><script language=\"JavaScript\" src=\"/include/calendar.js\"></script>";		
+		echo "<form name=\"cal\"><script language=\"JavaScript\" src=\"/scripts/calendar.js\"></script>";		
 		// Get the artfact type list
 		$at_arr = $atf->getPendingArtifactTypes();
 		echo '<H2>'.$Language->getText('tracker_include_type','pending_removal').'</H2>';
@@ -2068,7 +2068,7 @@ EOS;
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
-		  <script language="JavaScript" src="/include/calendar.js"></script>';
+		  <script language="JavaScript" src="/scripts/calendar.js"></script>';
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			echo $Language->getText('tracker_include_type','val').': ';
@@ -2321,7 +2321,7 @@ EOS;
             	echo '
             </TR>
             <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
-            <script language="JavaScript" src="/include/calendar.js"></script>';
+            <script language="JavaScript" src="/scripts/calendar.js"></script>';
         
         
                 // Now display the variable part of the field list (depend on the project)

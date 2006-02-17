@@ -234,7 +234,7 @@ if (user_isloggedin()) {
 	echo $my_name.'</B>
 	<INPUT TYPE="HIDDEN" NAME="name" VALUE="'.$my_name.'">
     <div>
-        <script type="text/javascript" src="/include/blocks.js"></script>
+        <script type="text/javascript" src="/scripts/blocks.js"></script>
         <script type="text/javascript">
         function addCCField() {
             hideBlock("cc_link");

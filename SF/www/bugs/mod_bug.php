@@ -68,7 +68,7 @@ if (db_numrows($result) > 0) {
           <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
       </TR>
       <TR><TD COLSPAN="<?php echo 2*$fields_per_line; ?>">&nbsp</TD></TR>
-      <script language="JavaScript" src="/include/calendar.js"></script>
+      <script language="JavaScript" src="/scripts/calendar.js"></script>
 
 <?php
       // Now display the variable part of the field list (depend on the project)

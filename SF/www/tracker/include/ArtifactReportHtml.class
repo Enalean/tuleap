@@ -497,7 +497,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
 	  global $ath,$art_field_fact,$Language;
                 
-	  $html_result = "<script language=\"JavaScript\" src=\"/include/calendar.js\"></script>\n";
+	  $html_result = "<script language=\"JavaScript\" src=\"/scripts/calendar.js\"></script>\n";
 
                 // Display browse informations if any
                 if ( $ath->getBrowseInstructions() ) {

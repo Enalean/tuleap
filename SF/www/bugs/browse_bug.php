@@ -444,7 +444,7 @@ $params=array('title'=>'Bug Report '.$hdr,
 bug_header($params);
 
 if ($load_cal) {
-    echo "\n<script language=\"JavaScript\" src=\"/include/calendar.js\"></script>\n";
+    echo "\n<script language=\"JavaScript\" src=\"/scripts/calendar.js\"></script>\n";
 }
 
 echo '<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">

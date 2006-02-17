@@ -28,7 +28,7 @@ $result=db_query($sql);
 <INPUT TYPE="HIDDEN" NAME="old_group_project_id" VALUE="<?php echo $group_project_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="project_task_id" VALUE="<?php echo $project_task_id; ?>">
 <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_attachment; ?>">
-<script language="JavaScript" src="/include/calendar.js"></script>
+<script language="JavaScript" src="/scripts/calendar.js"></script>
 
 <TABLE BORDER="0" CELLPADDING="0" WIDTH="100%">
 	<TR>    
