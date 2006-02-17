@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [ $# != 2 ]
+if [ $# != 3 ]
 then
-    echo "Usage: xml2pdf <xml file> <pdf file>"
+    echo "Usage: xml2pdf <xml file> <pdf file> <language>"
     exit 2
 fi 
 
@@ -24,7 +24,7 @@ tmpfile="/tmp/docbook-cug-$$"
 
 prevdir=`pwd`;
 cd $xmldir
-$CMD_HOME/xml2fo.sh $xmlfilename $tmpfile.fo
+$CMD_HOME/xml2fo.sh $xmlfilename $tmpfile.fo $3
 if [ $? != 0 ]
 then
         echo "Failed!"

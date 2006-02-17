@@ -16,9 +16,9 @@ scriptdir=`dirname $progname`
 DOC_HOME="$scriptdir/../.."
 cd ${DOC_HOME} ; DOC_HOME=`pwd`; cd -
 
-if [ $# != 2 ]
+if [ $# != 3 ]
 then
-    echo "Usage: xml2html <xml file> <html folder>"
+    echo "Usage: xml2html <xml file> <html folder> <language>"
     exit 2
 fi 
 
@@ -27,7 +27,7 @@ CP=${SAXON_HOME}/saxon.jar
 echo Using CLASSPATH: ${CP}
 PREV_DIR=`pwd`
 cd $2
-${JAVA_HOME}/java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/user_guide/xsl/htmlhelp/htmlhelp.xsl > /dev/null
+${JAVA_HOME}/java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/user_guide/xsl/htmlhelp/htmlhelp_$3.xsl > /dev/null
 if [ $? != 0 ]
 then 
 	cd ${PREV_DIR}
