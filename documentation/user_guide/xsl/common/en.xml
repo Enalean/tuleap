@@ -23,6 +23,10 @@
    <l:gentext key="appendix" text="appendix"/>
    <l:gentext key="Article" text="Article"/>
    <l:gentext key="article" text="Article"/>
+   <l:gentext key="Author" text="Author"/>
+   <l:gentext key="author" text="Author"/>
+   <l:gentext key="Authors" text="Authors"/>
+   <l:gentext key="authors" text="Authors"/>
    <l:gentext key="Bibliography" text="Bibliography"/>
    <l:gentext key="bibliography" text="Bibliography"/>
    <l:gentext key="Book" text="Book"/>
@@ -32,12 +36,17 @@
    <l:gentext key="caution" text="Caution"/>
    <l:gentext key="Chapter" text="Chapter"/>
    <l:gentext key="chapter" text="chapter"/>
+   <l:gentext key="CHAPTER" text="CHAPTER"/>
    <l:gentext key="Colophon" text="Colophon"/>
    <l:gentext key="colophon" text="Colophon"/>
    <l:gentext key="Copyright" text="Copyright"/>
    <l:gentext key="copyright" text="Copyright"/>
+   <l:gentext key="Date" text="Date"/>
+   <l:gentext key="date" text="Date"/>
    <l:gentext key="Dedication" text="Dedication"/>
    <l:gentext key="dedication" text="Dedication"/>
+   <l:gentext key="Description" text="Description"/>
+   <l:gentext key="description" text="Description"/>
    <l:gentext key="Edition" text="Edition"/>
    <l:gentext key="edition" text="Edition"/>
    <l:gentext key="Equation" text="Equation"/>
@@ -120,6 +129,8 @@
    <l:gentext key="tip" text="Tip"/>
    <l:gentext key="TIP" text="TIP"/>
    <l:gentext key="Tip" text="Tip"/>
+   <l:gentext key="Version" text="Version"/>
+   <l:gentext key="version" text="Version"/>
    <l:gentext key="Warning" text="Warning"/>
    <l:gentext key="warning" text="Warning"/>
    <l:gentext key="WARNING" text="WARNING"/>

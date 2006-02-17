@@ -18,7 +18,7 @@
 //
 -->
 
-<xsl:import href="/usr/local/docbook-xsl/html/chunk.xsl"/>
+<xsl:import href="/home/mnazaria/CodeX/tools/docbook-xsl/html/chunk.xsl"/>
 <xsl:import href="../html/param.xsl"/>
 <xsl:import href="../common/labels.xsl"/>
 <xsl:import href="../html/admon.xsl"/>
@@ -31,5 +31,7 @@
 <xsl:import href="../html/formal.xsl"/>
 <xsl:import href="../html/table.xsl"/>
 <xsl:import href="../html/graphics.xsl"/>
+
+<xsl:param name="l10n.gentext.language" select="'en'"/>
 
 </xsl:stylesheet>

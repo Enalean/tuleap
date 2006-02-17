@@ -12,7 +12,9 @@
 -->
 <!DOCTYPE l:i18n SYSTEM "l10n.dtd" [
 <!ENTITY en SYSTEM "en.xml">
+<!ENTITY fr SYSTEM "fr.xml">
 ]>
 <l:i18n xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0">
 &en;
+&fr;
 </l:i18n>
