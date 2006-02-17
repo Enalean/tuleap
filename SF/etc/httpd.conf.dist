@@ -539,9 +539,16 @@ Alias /documentation/ "/home/httpd/documentation/"
     Allow from all
 </Directory>
 
-# API scrips do not end with ".php"
+# Don't allow access to API for anyone.
+# Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
+# For better security, you can filter on the server IP address
+SetEnvIf User-Agent ^CodeX let_me_in
 <Directory "/home/httpd/SF/www/api">
+    # API scrips do not end with ".php"
     ForceType application/x-httpd-php
+    Order Deny,Allow
+    Deny from all
+    Allow from env=let_me_in
 </Directory>
 
 

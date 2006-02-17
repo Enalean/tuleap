@@ -211,7 +211,8 @@ if ($SERVER_NAME != 'localhost' &&
     $SCRIPT_NAME != '/account/lostlogin.php' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
     $SCRIPT_NAME != '/account/pending-resend.php' &&
-    $SCRIPT_NAME != '/account/verify.php' ) {
+    $SCRIPT_NAME != '/account/verify.php' &&
+    strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0 ) {
     
     $return_to = urlencode((($REQUEST_URI === "/")?"/my/":$REQUEST_URI));
 
