@@ -30,11 +30,6 @@ if (!$ath->userCanSubmit()) {
     exit_permission_denied();
 }
 
-$GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/prototype.js");
-$GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/scriptaculous.js");
-//$GLOBALS['HTML']->includeJavascriptFile("/include/logger.js");
-$GLOBALS['HTML']->includeJavascriptFile("/include/dynamicFields.js");
-        
 // Display the menus
 $ath->header(array('title'=>$Language->getText('tracker_add', 'add_a').$ath->getCapsItemName(),'titlevals'=>array($ath->getName()),'pagename'=>'tracker_browse',
 	'atid'=>$ath->getID(),'sectionvals'=>array($group->getPublicName()),'help' => 'ArtifactSubmission.html'));

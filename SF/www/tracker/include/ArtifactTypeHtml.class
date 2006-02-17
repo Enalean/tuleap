@@ -39,6 +39,11 @@ class ArtifactTypeHtml extends ArtifactType {
 		global $Language;
 		$group_id= $this->Group->getID();
 
+        $GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/prototype.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/scriptaculous.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/include/dynamicFields.js");
+                
+        
 		//required by new site_project_header
 		$params['group']=$group_id;
 		$params['toptab']='tracker';

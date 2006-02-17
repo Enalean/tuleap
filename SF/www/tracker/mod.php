@@ -35,10 +35,6 @@ if ( !isset($pv) ) {
 	if ( $pv ) $ro = true;
 }
 
-$GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/prototype.js");
-$GLOBALS['HTML']->includeJavascriptFile("/include/scriptaculous/scriptaculous.js");
-$GLOBALS['HTML']->includeJavascriptFile("/include/dynamicFields.js");
-
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
