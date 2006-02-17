@@ -178,11 +178,11 @@
       linkend="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject"
       /> montre l'écran de publication des fichiers du projet
       DataGlyph Toolkit. Ce projet ne comporte qu'un seul paquet
-      appelé &#34;Xerox DataGlyph Toolkit&#34; comprenant 5 versions
-      de 3.0.5 à 3.1.0beta2, listées par ordre chronologique. Chaque
+      appelé &#34;Xerox DataGlyph Toolkit&#34; comprenant 7 versions
+      de 4.0.4 à 4.0.6, listées par ordre chronologique. Chaque
       version contient une archive pour le code source et une autre
       pour les binaires précompilés (byte code Java dans ce cas). A
-      partir de la version 3.0.6 un nouveau fichier a été ajouté pour
+      partir de la version 4.0.6 un nouveau fichier a été ajouté pour
       la gestion des clés de licence.</para>
 
       <para>Le second exemple provient d'un projet appelé Global
