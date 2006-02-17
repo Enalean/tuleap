@@ -17,6 +17,11 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
 "file:/usr/local/docbook-dtd/docbookx.dtd"
 [
+<!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
+<!ENTITY % ParametersLocal SYSTEM "../ParametersLocal.dtd">
+%ParametersLocal;
+%ParametersDefault;
+
 <!-- Entities for inclusion of document chapters -->
 <!ENTITY BookInfo SYSTEM "BookInfo.xml">
 <!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
@@ -46,10 +51,6 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 Remark: local redefinition must be first because once defined
 an entity cannot be redefined. Hence this particular order  -->
 
-<!ENTITY % ParametersDefault SYSTEM "ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd">
-%ParametersLocal;
-%ParametersDefault;
 ]>
 
 <book>
