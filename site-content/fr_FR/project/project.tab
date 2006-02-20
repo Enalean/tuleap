@@ -244,6 +244,70 @@ project_admin_permissions	cant_add_ug	$1 - ERREUR: Impossible d'ajouter le ugrou
 project_admin_permissions	def_val	(valeurs par défaut)
 project_admin_permissions	perm_update_success	$1 - Permissions mises à jour avec succès
 project_admin_permissions	reset_to_def	Retour aux valeurs d'origine
+#-----------------------------------------------
+# Script: SF/www/project/admin/reference.php
+#
+project_reference	create_fail	Echec lors de la création de la référence: le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	create_for_tracker_fail	Référence associée au tracker non créée: le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
+project_reference	create_s	Créer une nouvelle référence.
+project_reference	del?	Détruire?
+project_reference	del_fail	- Echec de la destruction! $1
+project_reference	del_r	Détruire cette référence ?
+project_reference	disabled	<i>Désactivé</i>
+project_reference	edit_fail	Echec lors de l'édition de la référence: le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	edit_r	Editer la référence
+project_reference	edit_reference	Edition des références
+project_reference	edit_s_for	Edition des références de <B>$1</B>
+project_reference	edit_system_s	Edition des références système
+project_reference	enabled	Activé
+project_reference	enabled_desc	Extrait automatiquement ce mot-clé?
+project_reference	fields_required	champs obligatoires
+project_reference	id	Identifiant
+project_reference	keyword	Mot Clé
+project_reference	manage_sys_r	Gestion des références système
+project_reference	manage_proj_r	Gestion des références projet
+project_reference	missing_parameter	Il manque un paramètre. Merci de revenir en arrière et de compléter le formulaire
+project_reference	new_s	Nouvelle référence
+project_reference	project	projet
+project_reference	r_create_success	Référence créée avec succès
+project_reference	r_creation	Créer une nouvelle référence
+project_reference	r_deleted	Référence détruite
+project_reference	r_desc	Description
+project_reference	r_desc_in_tooltip	La description de la référence sera affichée dans une bulle lorsque le pointeur est au dessus d'une référence extraite.
+project_reference	r_keyword	Mot clé
+project_reference	r_keyword_desc	Mot clé qui déclenche la création d'une référence
+project_reference	r_link	Lien
+project_reference	r_scope	Portée de la référence: projet seulement ou système
+project_reference	r_service	Lié au service
+project_reference	r_service_desc	Si la référence est spécifique à un service de CodeX, le spécifier ici
+project_reference	ref_scope_P	Projet
+project_reference	ref_scope_S	Système
+project_reference	scope	Portée
+project_reference	sr_deleted	Référence système détruite
+project_reference	system	système
+project_reference	system_r_create_success	Référence système créée avec succès, et ajoutée à tous les projets
+project_reference	t_r_deleted	Référence correspondante détruite
+project_reference	url	URL pointée par la référence
+project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous détruire cette référence? Cela supprimera la référence ($1) de TOUS les projets de ce serveur. Etes-vous SUR de vouloir continuer?
+project_reference	extract_syntax	Paramètres:\n  group_id : projet qui définit les références\n  text     : texte en entrée
+project_reference	insert_syntax	<p>Param&egrave;tres:<br>- group_id ou group_name : projet qui définit les références<br>- text : texte en entr&eacute;e
+## Description value here for each reference name (system or project wide) that should be localised
+## Naming rule for the key: 
+## reference_<reference keyword>_desc_key for the reference description
+project_reference	reference_art_desc_key	Artefact
+project_reference	reference_cvs_desc_key	Détail de commit CVS
+project_reference	reference_svn_desc_key	Détail de révision Subversion
+project_reference	reference_wiki_desc_key	Page Wiki
+project_reference	reference_wikiversion_desc_key	Version Wiki
+project_reference	reference_file_desc_key	Fichier
+project_reference	reference_doc_desc_key	Document
+project_reference	reference_news_desc_key	Annonce
+project_reference	reference_forum_desc_key	Forum
+project_reference	reference_msg_desc_key	Message de forum
+project_reference	reference_bug_desc_key	Bug
+project_reference	reference_task_desc_key	Tache
+project_reference	reference_sr_desc_key	Demande de support
+project_reference	reference_patch_desc_key	Patch
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php
