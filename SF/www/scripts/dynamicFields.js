@@ -129,13 +129,19 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		return has_changed;
 	},
 	add: function(new_option_id) {
-
-		opt = document.createElement('option');
-        opt.value = options[this.id][new_option_id].option.value;
-        opt.appendChild(document.createTextNode(options[this.id][new_option_id].option.text));
-		$(this.name).appendChild(opt);
-		this.actualOptions.push(options[this.id][new_option_id]);
-
+        //We search first if we have already added this option
+        var len = $(this.name).options.length;
+        var i = 0;
+        while (i < len && $(this.name).options[i].value != new_option_id) {
+            i++;
+        }
+        if (i >= len) {
+            opt = document.createElement('option');
+            opt.value = options[this.id][new_option_id].option.value;
+            opt.appendChild(document.createTextNode(options[this.id][new_option_id].option.text));
+            $(this.name).appendChild(opt);
+            this.actualOptions.push(options[this.id][new_option_id]);
+        }
 	},
 	clear: function() {
 		el = $(this.name);
