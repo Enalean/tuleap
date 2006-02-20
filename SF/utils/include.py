@@ -121,7 +121,7 @@ def get_codex_user():
         f.close
         
 #############################
-# Create hyperlinks to project artifacts
+# Create hyperlinks to project references
 # in the text extract.
 #############################
 def util_make_links(text, group_name):

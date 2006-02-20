@@ -33,10 +33,13 @@ if (!$request->get('group_id')) {
  } else $group_id=$request->get('group_id');
 
 if (!$request->get('text')) {
-    echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err');
-    echo $GLOBALS['Language']->getText('project_reference', 'insert_syntax');
+    # Empty string? return empty string...
     exit;
  }
+if (!$request->get('help')) {
+    echo $GLOBALS['Language']->getText('project_reference', 'insert_syntax');
+    exit;
+}
 $text=$request->get('text');
 $reference_manager =& ReferenceManager::instance();
 $reference_manager->insertReferences($text,$group_id);
