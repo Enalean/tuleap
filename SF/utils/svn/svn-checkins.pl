@@ -59,19 +59,6 @@ sub db_get_index {
 }
 
 
-sub db_add_ref_record {
-  my ($tracker_id,$tracker_name, $commit_id, $item_id) = @_;
-  $query = "INSERT INTO svn_tracks (group_artifact_id, tracker, artifact_id, commit_id)".
-    "VALUES ('$tracker_id', '$tracker_name', '$item_id', '$commit_id')";
-  if ($debug) {
-    print STDERR $query, "\n";
-  }
-  $sth = $dbh->prepare($query);
-  $res = $sth->execute();
-  return $res;
-}
-
-
 sub db_add_record {
   my ($type, $commit_id, $repo, $dir, $file, $added, $removed) = @_;
 

@@ -2489,13 +2489,6 @@ CREATE TABLE cvs_branches (
   UNIQUE branch (branch)  
 ); 
 
-CREATE TABLE cvs_tracks ( 
-  group_artifact_id int(11),
-  tracker varchar(64) binary DEFAULT '' NOT NULL, 
-  artifact_id int(11) NOT NULL, 
-  commit_id int(11) NOT NULL	
-);
-
 # CREATE SVN support tables
 
 CREATE TABLE svn_checkins (
@@ -2546,14 +2539,6 @@ CREATE TABLE svn_repositories (
   PRIMARY KEY (id),
   UNIQUE uniq_repository_idx (repository)
 );
-
-
-CREATE TABLE svn_tracks ( 
-  group_artifact_id int(11),
-  tracker varchar(64) binary DEFAULT '' NOT NULL, 
-  artifact_id int(11) NOT NULL, 
-  commit_id int(11) NOT NULL
-); 
 
 
 #

@@ -289,9 +289,9 @@ while ($ln = pop(@groupdump_array)) {
 	    {
 	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
               if ($use_cvsnt) {
-                system("echo \"ALL /usr/local/bin/log_accum -T $gname -C $gname -U $server_url/cvs/viewcvs.php/ -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
+                system("echo \"ALL /usr/local/bin/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
               } else {
-                system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -U $server_url/cvs/viewcvs.php/ -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
+                system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
               }	 
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");

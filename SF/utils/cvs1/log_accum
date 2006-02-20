@@ -25,7 +25,7 @@
 #       -T text         - use TEXT in temp file names.
 #       -C [reponame]   - Generate cvsweb URLS; must be run using %{sVv}
 #                         format string.
-#       -U URL          - Base URL for cvsweb if -C option (above) is used.
+# (DEPRECATED)      -U URL          - Base URL for cvsweb if -C option (above) is used.
 #       -D              - generate diffs as part of the notification mail
 
 #
@@ -39,6 +39,30 @@
 # -rwsrwxr-x  sourcefo sourcefo
 #
 
+# Use LWP for CodeX HTTP API
+use HTTP::Request::Common qw(POST);
+use LWP::UserAgent;
+
+# DB connection
+use DBI;
+
+$root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
+require $root_path."httpd/SF/utils/include.pl";
+require $root_path."httpd/SF/utils/group.pl";
+require $root_path."httpd/SF/utils/cvs1/checkins.pl";
+
+&load_local_config;
+
+my $codex_srv;
+if ($sys_force_ssl) {
+  $codex_srv="https://$sys_https_host";
+} else {
+  $codex_srv="http://$sys_default_domain";
+}
+$codex_http_srv="http://$sys_default_domain";
+
+# Base name of viewcvs specification (note: used to be cvsweb)
+$CVSWEB_URL = "$codex_srv/cvs/viewcvs.php/";
 $TMPDIR = "/var/run/log_accum";
 
 # Set this to something that takes "-s".
@@ -63,11 +87,9 @@ $STATE_ADDED   = 2;
 $STATE_REMOVED = 3;
 $STATE_LOG     = 4;
 
-# arrays to store all artifact ref.
-my %artifacts;
-my %artifact_names;
-my %docs;
-my %commits;
+# arrays to store all references.
+my %references;
+
 my %branches;
 
 
@@ -269,14 +291,6 @@ sub checkin_describe {
 
 }
 
-sub db_add_ref {
-  local($tracker_name, $commit_id, $item_id) = @_;
-  ## get the tracker_id when possible (not yet implemented, sait for meta_trackers implementation)
-  ## ($tracker_id, $tracker_name) = dbGet_tracker($tracker_name);
-  db_add_ref_record($tracker_id,$tracker_name, $commit_id, $item_id);
-}
-
-
 sub db_checkins_add {
   local($index, $commit_id, @descs) = @_;
   @checkins = &read_logfile("$DB_FILE.$index.$id", "");
@@ -352,6 +366,7 @@ sub read_line {
 }
 
 sub read_logfile {
+
     local(@text);
     local($filename, $leader) = @_;
 
@@ -359,29 +374,13 @@ sub read_logfile {
     while (<FILE>) {
 	chop;
 	$line = $leader.$_;
-
-        # store the document ref
-        while ($line =~ /doc[ ]?#([0-9]+)/gi) {
-               $docs{$1} = $1;
-        }
-        # store the commit ref
-        while ($line =~ /commit[ ]?#([0-9]+)/gi) {
-               $commits{$1} = $1;
-        }
-        while ($line =~ m|([^\s()\$&!;~\#\|{}%,\?=\+\"\.\':/<>]+)[ ]?#([0-9]+)|gi) {
-               next if (lc($1) eq 'commit');
-               next if (lc($1) eq 'doc');
-               $artifacts{"$1_$2"} = $2;
-               $artifact_names{"$1_$2"} = $1;
-        }
-
-
 	push(@text, $line);
     }
     close(FILE);
-    @text;
 
+    @text;
 }
+
 
 sub build_header {
     local($header);
@@ -571,6 +570,47 @@ sub generate_checkins {
     return @result;
 }
 
+
+# CodeX - extract all items that needs to be cross-referenced
+# in the log message
+sub extract_xrefs {
+    my (@log) = @_;
+
+    # Use CodeX HTTP API
+    my $ua = LWP::UserAgent->new;
+    $ua->agent('CodeX Perl Agent');
+
+    if (!$group_id) {
+      $group_id=100;
+    }
+    $text=join("\n",@log);
+    # HTTPS is not supported by LWP on RHEL3 -> use HTTP
+    my $req = POST "$codex_http_srv/api/reference/extract",
+      [ group_id => "$group_id", text => "$text" ];
+
+    my $response = $ua->request($req);
+    if ($response->is_success) {
+      my $desc="";
+      my $match="";
+      my $link="";
+      foreach (split(/\n/,$response->content)) {
+        chomp;
+        if (! $_) {;} # skip empty lines
+        elsif (!$desc) {$desc=$_;}
+        elsif (!$match) {$match=$_;}
+        else {
+          $link=$_;
+          $references{"$desc"}{"$match"}=$link;
+          print STDERR "Found match: $match\n" if $debug;
+          $desc=$match=$link=0;
+        }
+      }
+    }
+    else {
+      warn $response->status_line;
+    }
+}
+
 #
 #	Main Body
 #
@@ -657,8 +697,8 @@ while (@ARGV) {
 	$do_cvsweb = 1;
 	$cvsweb_name = shift @ARGV
 	    if ($#ARGV >= 0 && $ARGV[0] !~ /^-/);
-    } elsif ($arg eq '-U') {
-	$CVSWEB_URL = shift @ARGV;
+    } elsif ($arg eq '-U') { 
+	my $OLD_CVSWEB_URL = shift @ARGV; #DEPRACATED: URL is now computed
     } elsif ($arg eq '-D') {
 	$do_diffs = 2;
     } elsif ($arg =~ /^-D=(.*)$/) {
@@ -721,36 +761,19 @@ if ($debug) {
     print STDERR "id     - ", $id, "\n";
 }
 
-# DB connection
-use DBI;
-
-$root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
-require $root_path."httpd/SF/utils/include.pl";
-require $root_path."httpd/SF/utils/group.pl";
-require $root_path."httpd/SF/utils/cvs1/checkins.pl";
-
-&db_connect;
-# &cvs_db_connect; now work on sourceforge dn, no more ViewCVS
-
-if ($sys_force_ssl) {
-  $server_url="https://$sys_https_host";
-} else {
-  $server_url="http://$sys_default_domain";
-}
-# Base name of viewcvs specification.
-$CVSWEB_URL = "$server_url/cvs/viewcvs.php/";
-
-
-
-# retrieve the group_id
-($rootnull, $root, $gname) = split ('/', $cvsroot);
-$group_id = &set_group_info_from_name($gname);
-if ($debug) {
-  print STDERR "group_repo: ", $gname, "\n";
-  print STDERR "group_id: ", $group_id, "\n";
-}
 
 if ($codexdb) {
+
+  &db_connect;
+
+  # retrieve the group_id
+  ($rootnull, $root, $gname) = split ('/', $cvsroot);
+  $group_id = &set_group_info_from_name($gname);
+  if ($debug) {
+    print STDERR "group_repo: ", $gname, "\n";
+    print STDERR "group_id: ", $group_id, "\n";
+  }
+
   $cvsmailto = &cvsGroup_mailto();
 
   $cvsmailheader = &cvsGroup_mail_header();
@@ -1097,6 +1120,8 @@ for ($i = 0; ; $i++) {
 	push(@text, "Log message:");
 	push(@text, @log_txt);
 	push(@text, "");
+        # CodeX: extract references from log message
+        &extract_xrefs(@log_txt)
     }
     if ($db_track) {
       &db_checkins_add($i, $commit_id, @log_txt);
@@ -1108,50 +1133,24 @@ for ($i = 0; ; $i++) {
 	push (@text, grep (! /\/$/, @url_txt));
 	push (@text, "");
     }
-    
 
-    @keys = keys %docs;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Document references:");
-        foreach $doc (keys %docs) {
-            push (@text, "Document #$doc: $server_url/docman/display_doc.php?docid=$doc&group_id=$group_id");
-        }
-	    if ($db_track) {
-	      &db_add_ref('document', $commit_id, $doc);
-	    }
+    my $desc;
+    my $match;
+    my $initialized='';
+    foreach $desc (sort(keys(%references))) {
+      if (!$initialized) {
+        push (@text, "");
+        push (@text, "References:");
+        $initialized=1;
+      }
+
+      push (@text, "");
+      push (@text, "$desc:");
+      foreach $match (sort(keys %{$references{"$desc"}})) {
+        push (@text," $match: ".$references{"$desc"}{"$match"});
+        print STDERR "Match: ".$references{"$desc"}{"$match"} if $debug;
+      }
     }
-
-    @keys = keys %commits;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Commit references:");
-        foreach $comm (keys %commits) {
-            push (@text, "commit #$comm: $server_url/cvs/?func=detailcommit&commit_id=$comm&group_id=$group_id");
-        }
-	    if ($db_track) {
-	      &db_add_ref('commit', $commit_id, $comm);
-	    }
-    }
-
-    @keys = keys %artifacts;
-    if ( $#keys >= 0 ) {
-    	push (@text, "");
-        push (@text, "Artifact references:");
-        foreach $artkey (keys %artifacts) {
-          my $art=$artifacts{$artkey};
-          my $art_name=$artifact_names{$artkey};
-          my $group_param;
-          if ($group_id) {
-            $group_param="&group_id=$group_id";
-          }
-          push (@text, "$art_name #$art: $server_url/tracker/?func=gotoid$group_param&aid=$art&atn=$art_name");
-        }
-        if ($db_track) {
-          &db_add_ref('artifact', $commit_id, $art);
-        }
-    }
-
 
     if ($do_status || $do_diffs) {
 	local(@changed_files);

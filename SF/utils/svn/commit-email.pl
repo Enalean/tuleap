@@ -224,6 +224,9 @@ unless (-d _)
 # Connect to CodeX database and include all files needed
 #
 use DBI;
+use HTTP::Request::Common qw(POST);
+use LWP::UserAgent;
+
 
 my $root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
 require $root_path."httpd/SF/utils/include.pl";
@@ -242,17 +245,14 @@ if ($sys_force_ssl) {
 } else {
   $codex_srv="http://$sys_default_domain";
 }
+$codex_http_srv="http://$sys_default_domain";
 
 my $mod_url = $codex_srv."/svn/viewcvs.php/%s?r1=text&tr1=%s&r2=text&tr2=%s&roottype=svn&root=$gname&diff_format=h";
 my $add_url  = $codex_srv."/svn/viewcvs.php/%s?rev=$rev&view=markup&roottype=svn&root=$gname";
-my $doc_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=doc";
-my $commit_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=commit";
-my $revision_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=revision";
-my $artifact_url = $codex_srv."/tracker/?func=gotoid%s&aid=%s&atn=%s";
 
 my $no_diff = 1; # no inline diff for CodeX
 
-# arrays to store all artifact ref.
+# arrays to store all references.
 my %references;
 
 # get the mail header and mailto address from CodeX DB
@@ -409,8 +409,8 @@ foreach my $line (@svnlooklines)
   }
 
 if ($debug) {
-  print "Array of files changed: \n";
-  print @changed_files;
+  print STDERR "Array of files changed: \n";
+  print STDERR @changed_files;
 }
 
 # Get the diff from svnlook.
@@ -507,8 +507,8 @@ push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines);
 push(@body, map { "$_\n" } &format_xref(@log));
 
 if ($debug) {
-  print @head;
-  print @body;
+  print STDERR @head;
+  print STDERR @body;
 }
 
 # Go through each project and see if there are any matches for this
@@ -595,8 +595,11 @@ foreach my $project (@project_settings_list)
     # 
     # Basically: adding/tweaking the content-type is nice, but don't
     # think that is the proper solution.
-    push(@head, "Content-Type: text/plain; charset=UTF-8\n");
-    push(@head, "Content-Transfer-Encoding: 8bit\n");
+
+    # CodeX is not UTF-8 yet, so stick to iso-8859
+    #push(@head, "Content-Type: text/plain; charset=UTF-8\n");
+    #push(@head, "Content-Transfer-Encoding: 8bit\n");
+    push(@head, "Content-type: text/plain; charset=iso-8859-1");
 
     push(@head, "\n");
 
@@ -637,8 +640,8 @@ if (&isGroupSvnTracked) {
   $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$author,@log_for_db);
 
   for $file (@changed_files) {
-    print "file_path = ".$file->{'path'}."\n" if $debug;
-    print "file_state = ".$file->{'state'}."\n" if $debug;
+    print STDERR "file_path = ".$file->{'path'}."\n" if $debug;
+    print STDERR "file_state = ".$file->{'state'}."\n" if $debug;
     ($filename,$dir,$suffix) = fileparse($file->{'path'},());
     db_add_record($file->{'state'},$commit_id,$repos,$dir,$filename,0,0);
   }
@@ -761,6 +764,7 @@ sub read_from_process
 sub extract_xrefs {
     my (@log) = @_;
 
+    # Use CodeX HTTP API
     my $ua = LWP::UserAgent->new;
     $ua->agent('CodeX Perl Agent');
 
@@ -768,12 +772,11 @@ sub extract_xrefs {
       $group_id=100;
     }
     $text=join("\n",@log);
-    my $req = POST "$codex_srv/api/reference/extract",
+    # HTTPS is not supported by LWP on RHEL3 -> use HTTP
+    my $req = POST "$codex_http_srv/api/reference/extract",
       [ group_id => "$group_id", text => "$text" ];
 
     my $response = $ua->request($req);
-    my $response_content;
-    my %references;
     if ($response->is_success) {
       my $desc="";
       my $match="";
@@ -786,6 +789,7 @@ sub extract_xrefs {
         else {
           $link=$_;
           $references{"$desc"}{"$match"}=$link;
+          print STDERR "Found match: $match\n" if $debug;
           $desc=$match=$link=0;
         }
       }
@@ -799,12 +803,19 @@ sub format_xref {
 
   my $desc;
   my $match;
-
+  my $initialized='';
   foreach $desc (sort(keys(%references))) {
+    if (!$initialized) {
+      push (@text, "");
+      push (@text, "References:");
+      $initialized=1;
+    }
+      
     push (@text, "");
     push (@text, "$desc:");
     foreach $match (sort(keys %{$references{"$desc"}})) {
-      push (@text,"$match: ".$references{"$desc"}{"$match"});
+      push (@text," $match: ".$references{"$desc"}{"$match"});
+      print STDERR "Match: ".$references{"$desc"}{"$match"} if $debug;
     }
   }
   return @text;

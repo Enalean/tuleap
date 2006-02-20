@@ -609,3 +609,5 @@ EOF
 <Directory "/home/httpd/SF/www/api">
     ForceType application/x-httpd-php
 </Directory>
+# - copy commit-email and log-accum
+# drop svn_tracks and cvs_tracks tables.

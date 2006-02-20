@@ -24,6 +24,8 @@ $dummy_uid      =       "103";                  # UserID of the dummy user that 
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
 $apache_conf    =       "/etc/httpd/conf/httpd.conf"; # Apache configuration file
 
+$conf_loaded=0;
+1;
 
 ##############################
 # Local Configuration Load
@@ -32,6 +34,8 @@ $apache_conf    =       "/etc/httpd/conf/httpd.conf"; # Apache configuration fil
 sub load_local_config {
 	my ($foo, $bar);
 	
+        if ($conf_loaded) { return 1; }
+
 	# open up database include file and get the database variables
 	open(FILE, $db_include) || die "Can't open $db_include: $!\n";
 	while (<FILE>) {
@@ -40,6 +44,7 @@ sub load_local_config {
 		if ($foo) { eval $_ };
 	}
 	close(FILE);
+        $conf_loaded=1;
 }
 
 

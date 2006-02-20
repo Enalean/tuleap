@@ -21,7 +21,10 @@ $location = "";
 //}}}
 
 // Check URL for valid hostname and valid protocol
-if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhost') && (!isset($GLOBALS['sys_https_host'])||($HTTP_HOST != $GLOBALS['sys_https_host']))) {
+if (($HTTP_HOST != $GLOBALS['sys_default_domain'])
+    && ($SERVER_NAME != 'localhost')
+    && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)
+    && (!isset($GLOBALS['sys_https_host'])||($HTTP_HOST != $GLOBALS['sys_https_host']))) {
     if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
 	$location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
     } else {
@@ -29,10 +32,10 @@ if (($HTTP_HOST != $GLOBALS['sys_default_domain']) && ($SERVER_NAME != 'localhos
     }
 }
 
-// Force SSL mode if required except if request comes from localhost
+// Force SSL mode if required except if request comes from localhost, or for api scripts
 // HTTP needed by fopen calls (e.g.  in www/include/cache.php)
 
-if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost')) {
+if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost') && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)) {
     $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
 }
 
