@@ -1,0 +1,69 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: Documentation.xml 1056 2006-02-20 10:09:49Z mnazaria $
+//
+// Originally written by Marc Nazarian 2004, CodeX Team, Xerox
+//
+-->
+<chapter id="Documentation">
+  <title>Documentation</title>
+  <para></para>
+  
+  <section>
+    <title>How to add a	language?</title>
+    <para>Currently, the documentation (user guide) can be generated in two languages (english and french). 
+          In order to add a language, here are the things to do:
+    </para>
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+        <para>Create a new directory in <literal>documentation/user_guide/xml/</literal> named with the new language (en_US, fr_FR, de_DE, etc...); 
+        and translate all the XML files content into the new language.
+	</para>
+      </listitem>
+    
+      <listitem>
+        <para>Create a new file <literal>documentation/user_guide/xsl/common/&lt;new_language&gt;.xml</literal>
+        copying an existing <literal>documentation/user_guide/xsl/common/&lt;existing_language&gt;.xml</literal> file.
+	This file is to localize the generated text (like Table of content, Figure, etc...).
+	Keep the key and translate all values. A lot of languages are already available in the original DocBook distribution.
+	Just be aware of some added key for the CodeX needs (like Authors, author, Description, etc...).
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>Create a new file <literal>documentation/user_guide/xsl/htmlhelp/htmlhelp_&lt;new_language&gt;.xsl</literal>
+        copying an existing <literal>htmlhelp_&lt;existing_language&gt;.xsl</literal> file.
+	Change the line <literal>&lt;xsl:param name=&#34;l10n.gentext.language&#34; select=&#34;'en'&#34;/&gt;</literal> with the new language
+	(the language code is the short one, the same as given to the XML file just above).
+	</para>
+      </listitem>
+    
+      <listitem>
+        <para>Create a new file <literal>documentation/user_guide/xsl/fo/docbook_&lt;new_language&gt;.xsl</literal>
+        copying an existing <literal>fo/docbook_&lt;existing_language&gt;.xsl</literal> file.
+	Change the line <literal>&lt;xsl:param name=&#34;l10n.gentext.language&#34; select=&#34;'en'&#34;/&gt;</literal> with the new language
+	(the language code is the short one, the same as given to the XML file just above).
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>Edit the generate_doc.sh file and add the new language to the constant definition <literal>ALL_LANGUAGES</literal>;
+	separated by a single space (<literal>ALL_LANGUAGES="en_US fr_FR de_DE"</literal>).
+	</para>
+      </listitem>
+
+    </itemizedlist>
+  </section>
+  
+</chapter>
+
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+End:
+-->
