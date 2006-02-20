@@ -14,7 +14,8 @@ $Language->loadLanguageMsg('help/help');
 
 // Default language
 // Should be: $lang = $Language->getLanguageCode(); -> switch when documentation is available in several languages... //XXX
-$lang = 'en_US';
+//$lang = 'en_US';
+$lang = $Language->getLanguageCode();
 
 // Retrieve the user language if not guest
 // TODO
