@@ -3,9 +3,6 @@ if (!com.xerox) com.xerox = {};
 if (!com.xerox.codex) com.xerox.codex = {};
 if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
 
-
-function puts() {}
-
 var HIGHLIGHT_STARTCOLOR = '#ffff99';
 
 function getStyleClass (className) {
@@ -56,11 +53,15 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	highlight: function(mode) {
         switch (mode) {
-			case 'current':
+            //BUG Fx 1.0.7: we lose scroll for multiple selectbox    
+            /*
+            case 'current':
+                break; 
 			case 'source':
 			case 'target':
 				Element.addClassName(this.name.replace('[]', ''), 'codex_dynamic_fields_highlight_'+mode);
 				break;
+            */
 			default:
 				if (!this._highlight) {
 					this._highlight = new Effect.Highlight($(this.name), {startcolor:HIGHLIGHT_STARTCOLOR});
@@ -72,11 +73,15 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	unhighlight: function(mode) {
 		switch (mode) {
-			case 'current':
+			//BUG Fx 1.0.7: we lose scroll for multiple selectbox    
+            /*
+            case 'current':
+                break; //BUG Fx 1.0.7: we lose scroll for multiple selectbox    
 			case 'source':
 			case 'target':
                 Element.removeClassName(this.name, 'codex_dynamic_fields_highlight_'+mode);
 				break;
+            */
 			default:
 				break;
 		}
@@ -124,13 +129,13 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		return has_changed;
 	},
 	add: function(new_option_id) {
-        puts('<< Field::add('+new_option_id+')');
+
 		opt = document.createElement('option');
         opt.value = options[this.id][new_option_id].option.value;
         opt.appendChild(document.createTextNode(options[this.id][new_option_id].option.text));
 		$(this.name).appendChild(opt);
 		this.actualOptions.push(options[this.id][new_option_id]);
-        puts('>> Field::add');
+
 	},
 	clear: function() {
 		el = $(this.name);
@@ -228,8 +233,8 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 		this.selected        = false;
 	},
 	process: function(source_field) {
-        puts('<< Rule::process('+source_field.label+')');
-        puts('this.source_field: '+fields[this.source_field_id].label);
+
+
 		applied = false;
         if (this.source_field_id == source_field.id) {
             fields[this.source_field_id].update();
@@ -239,11 +244,13 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 				applied = fields[this.target_field_id];
 			}
 		}
-        puts('applied: '+applied);
-        puts('>> Rule::process');
+
+
         return applied;
 	},
-	highlight: function(field) {
+	//BUG Fx 1.0.7: we lose scroll for multiple selectbox    
+    /*
+    highlight: function(field) {
 		if (this.target_field_id == field.id) {
 			field.highlight('current');
 			fields[this.source_field_id].highlight('source');
@@ -253,6 +260,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 			fields[this.target_field_id].highlight('target');
 		}
 	},
+    */
 	updateSelected: function(target_field, source_field) {
 		if (this.target_field_id == target_field.id) {
 			if (this.source_field_id == source_field.id) {
@@ -266,15 +274,15 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
     * @return true if the current rule can be applied (rule.source_value is selected on "real" field)
     */
     can_apply: function() {
-        puts('<< Rule::can_apply');
+
         var can_apply = false; 
         var len = $(fields[this.source_field_id].name).options.length;
         for (var i = 0 ; i < len && !can_apply ; i++) {
-            puts(i+': '+$(fields[this.source_field_id].name).options[i].value+' == '+this.source_value_id+' ('+$(fields[this.source_field_id].name).options[i].selected+')');
+
             can_apply = $(fields[this.source_field_id].name).options[i].value == this.source_value_id 
                         && $(fields[this.source_field_id].name).options[i].selected;
         }
-        puts('>> Rule::can_apply == '+can_apply);
+
         return can_apply;
     }
 });
@@ -301,14 +309,14 @@ function getFieldByName(name) {
     return fields_by_name[name];
 }
 function applyRules(evt, name) {
-    puts('<< applyRules');
+
 	if (name) { this.name = name; }
     //We apply rules starting from the field which has name == id
     source_field = getFieldByName(this.name.replace('[]', ''));
     //Source field has been changed. We have to store those changes.
     source_field.updateSelected();
     //We keep history of selections to not lose them
-    puts('//We keep history of selections to not lose them');
+
     if(selections[source_field.id]) {
         $H(selections[source_field.id]).keys().each(function(key) {
             rules.each(function(rule) {
@@ -317,7 +325,7 @@ function applyRules(evt, name) {
         });
     }
     //Does the selected field has dependencies (targets) ?
-    puts('//Does the selected field has dependencies (targets) ?');
+
     if (dependencies[source_field.id]) {
         
         //We add the current field to the queue
@@ -329,14 +337,14 @@ function applyRules(evt, name) {
         //We process the queue, until it is empty
         var j = 0;
         while(j < queue.length) {
-            puts('processing queue: '+queue[j].label);
+
             //Highlight queue is an array of element to highlight (those who are modified)
             var highlight_queue = [];
             //originals is a hash of target fields (to save their current state)
             var originals = {};
             
             //For each field that are target of the current field...
-            puts('dependencies for '+queue[j].label+': '+dependencies[queue[j].id].inspect());
+
             dependencies[queue[j].id].each(function (field) {
                     //...clear it (empty options),
                     field.clear();
@@ -355,13 +363,13 @@ function applyRules(evt, name) {
             });
             
             //We process all rules which can match the current source field
-            puts('We process all rules which can match the current source field');
+
             rules.each(function (rule) {
                     rule.process(queue[j]);
             });
             
             //Now we look at original states of targets to see if there has been a change
-            puts('Now we look at original states of targets to see if there has been a change');
+
             $H(originals).values().each(function(target) {
                 el = $(target.field.name);
                 found = false;
@@ -377,14 +385,14 @@ function applyRules(evt, name) {
             });
             
             //for each target...
-            puts('select all targets accordingly to previous selection and current options');
+
             dependencies[queue[j].id].each(function(field) {
                     //... select the target accordingly to previous selection and current options
                     field.select();
             });
             
             //Highlight fields which need
-            puts('highlight fields');
+
             highlight_queue.each(function(field) {
                 field.highlight();
             });
@@ -393,18 +401,22 @@ function applyRules(evt, name) {
             j++;
         }
     }
-    puts('>> applyRules');
+
 	
 }
 
 function registerFieldsEvents() {
-    puts('<< registerFieldsEvents');
+
 	for(id in fields) {
-        puts(id);
+
 		el = document.getElementById(fields[id].name);
 		if (el) {
 			el.onchange = applyRules;
-			el.onmouseover = function() {
+			/* BUG NTY 20060220: 
+               Highlighting a field resets it and therefore the viewport (of a multiselectbox) changes
+               As it is not really user friendly, we do not highlight dynamicfields
+               
+            el.onmouseover = function() {
 				for(i = 0 ; i < rules.length ; i++) {
 					rules[i].highlight(getFieldByName(this.id));
 				}
@@ -416,13 +428,14 @@ function registerFieldsEvents() {
 					field.unhighlight('target');
 				});
 			};
+            */
 		}
 	}
-    puts('>> registerFieldsEvents');
+
 }
 
 function addRule(rule_definition) {
-	puts('<< addRule ('+$H(rule_definition).inspect()+')');
+
     if (rule_definition.source_field != rule_definition.target_field 
         && fields[rule_definition.source_field] 
         && fields[rule_definition.target_field]
@@ -442,14 +455,14 @@ function addRule(rule_definition) {
 		dependencies[rule_definition.source_field].push(fields[rule_definition.target_field]);
 		
 		rules.push(new com.xerox.codex.tracker.Rule(rule_definition));
-        puts('rule added');
+
 	}
-    puts('>> addRule');
+
 }
 
 function initDynamicFields() {
 //    logConsole.show();
-    puts('<< initDynamicFields');
+
     addOptionsToFields();
     registerFieldsEvents();
     $H(rules_definitions).values().each(function(rule_definition) {
@@ -479,7 +492,7 @@ function initDynamicFields() {
             HIGHLIGHT_STARTCOLOR = '#'+Dec2Hex(r)+Dec2Hex(g)+Dec2Hex(b);
         }
     }
-    puts('>> initDynamicFields');
+
 }
 
 //==============================================================================
