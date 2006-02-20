@@ -120,12 +120,15 @@ class ReferenceManager {
 
     function updateReference($ref) {
         $reference_dao =& $this->_getReferenceDao();
-        // Check that there is no system reference with the same keyword
+        // Check if keyword is valid [a-z0-9]
         if (!$this->_isValidKeyword($ref->getKeyword())) return false;
-        if (($this->_isSystemKeyword($ref->getKeyword()))
-            && ($ref->getGroupId()!= 100)) return false;
-        // Check list of reserved keywords 
-        if ($this->_isReservedKeyword($ref->getKeyword())) return false;
+        // Check that there is no system reference with the same keyword
+        if ($this->_isSystemKeyword($ref->getKeyword())) {
+                if ($ref->getGroupId()!= 100) return false;
+        } else {
+            // Check list of reserved keywords 
+            if ($this->_isReservedKeyword($ref->getKeyword())) return false;
+        }
         // Check list of existing keywords 
         $num_args=Reference::computeNumParam($ref->getLink());
         $refid=$this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId());

@@ -280,10 +280,7 @@ class ReferenceAdministrationViews extends Views {
             echo '</td></tr>';
             echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','r_scope').'">'.$Language->getText('project_reference','scope').':</a></td>
-<td><FONT size="-1"><SELECT name="scope">
-        <option value="S" '.($ref->getScope()=='S'?'selected':'').'>'.$Language->getText('project_reference','system').'</option>
-        <option value="P" '.($ref->getScope()=='P'?'selected':'').'>'.$Language->getText('project_reference','project').'</option>
-        </SELECT></FONT></td></tr>';
+<td><FONT size="-1">'.($ref->getScope()=='S'?$Language->getText('project_reference','system'):$Language->getText('project_reference','project')).'</FONT></td></tr>';
         }
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','enabled_desc').'">'.$Language->getText('project_reference','enabled').':</a> </td>

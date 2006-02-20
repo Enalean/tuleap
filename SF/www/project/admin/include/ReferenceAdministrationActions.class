@@ -88,13 +88,9 @@ class ReferenceAdministrationActions extends Actions {
             }
         } else {
             if (!$su) {
-                // Only a server admin may set a 'S' scope and define a service_id
-                $scope='P';
+                // Only a server admin may define a service_id
                 $service_short_name="";
             } else {
-                if ($request->get('scope') != false) {
-                    $scope=$request->get('scope');
-                } else {$scope='P';} // should not happen
                 if ($request->get('service_short_name') == 100) { // none
                     $service_short_name="";
                 } else { $service_short_name=$request->get('service_short_name');}
@@ -104,7 +100,7 @@ class ReferenceAdministrationActions extends Actions {
                                      $request->get('keyword'),
                                      $request->get('description'),
                                      $request->get('link'),
-                                     $scope,
+                                     $ref->getScope(), # Can't edit a ref scope
                                      $service_short_name,
                                      $request->get('is_used'),
                                      $request->get('group_id'));
