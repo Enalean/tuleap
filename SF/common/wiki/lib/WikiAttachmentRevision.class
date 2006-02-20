@@ -136,7 +136,7 @@ class WikiAttachmentRevision {
         if($this->exist()){
             header('Content-type: '.$this->getMimeType());
             header('Content-Length: '.$this->getSize());
-            header('Content-Disposition: filename='.$this->getFilename());
+            header('Content-Disposition: filename="'.$this->getFilename().'"');
       
             $this->getContent();
         }

@@ -164,7 +164,17 @@ class PageType_interwikimap extends PageType
         
         // Urlencode page only if it's a query arg.
         // FIXME: this is a somewhat broken heuristic.
-        $page_enc = strstr($url, '?') ? rawurlencode($page) : $page;
+        if($moniker == 'Attach' || $moniker == 'Upload') {
+            if(preg_match('/^([0-9]+)\/(.*)$/', $page, $matches)) {
+                $page_enc = $matches[1].'/'.rawurlencode($matches[2]);
+            }
+            else {
+                $page_enc = rawurlencode($page);
+            }
+        }
+        else {
+            $page_enc = strstr($url, '?') ? rawurlencode($page) : $page;
+        }
 
         if (strstr($url, '%s'))
             $url = sprintf($url, $page_enc);
