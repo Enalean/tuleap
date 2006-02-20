@@ -38,6 +38,8 @@ admin_main	pending_group	Groupes en statut <a href="$1"><B>P</B> (en attente)</A
 admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (détruit)</A>
 admin_main	header_svc	Administration des Services
 admin_main	configure_svc	Configuration des services prédéfinis
+admin_main	header_ref	Administration des Références
+admin_main	configure_ref	Configuration des références systèmes
 admin_main	header_tracker	Administration des outils de suivi
 admin_main	tracker_remove	Nettoyage des outils de suivi en attente
 admin_main	tracker_template	Configuration des modèles d'outils de suivi

@@ -314,6 +314,7 @@ project_reference	reference_patch_desc_key	Patch
 #
 project_admin_utils	edit_public_info	Editions infos publiques
 project_admin_utils	user_perms	Permissions utilisateurs
+project_admin_utils	references	Configuration des références
 project_admin_utils	ug_admin	Administration des groupes utilisateurs
 project_admin_utils	project_data_export	Exportation des données
 project_admin_utils	tracker_import	Importation outils de suivi
