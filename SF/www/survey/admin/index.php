@@ -34,7 +34,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 <h3><A HREF="/survey/admin/add_question.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('survey_admin_index','add_q'); ?></A></h3>
 <p><?php echo $Language->getText('survey_admin_index','create_q'); ?>
 
-<h3><A HREF="/survey/admin/show_questions.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('survey_admin_index','edit_existing_q'); ?></A></h3>
+<h3><A HREF="/survey/admin/edit_question.php?func=browse&group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('survey_admin_index','edit_existing_q'); ?></A></h3>
 <p><?php echo $Language->getText('survey_admin_index','mod_q'); ?>
 
 <h3><A HREF="/survey/admin/show_results.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('survey_admin_index','show_res'); ?></A></h3>
