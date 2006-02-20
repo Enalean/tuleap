@@ -24,9 +24,13 @@ $request =& HTTPRequest::instance();
 
 $GLOBALS['Language']->loadLanguageMsg('project/project');
 
-if (!$request->get('group_id'))
-    $group_id=100;
-else $group_id=$request->get('group_id');
+if (!$request->get('group_id')) {
+    if (!$request->get('group_name')) {
+        $group_id=100;
+    } else {
+        $group_id=group_getid_by_name($request->get('group_name'));
+    }
+ } else $group_id=$request->get('group_id');
 
 if (!$request->get('text')) {
     echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err');

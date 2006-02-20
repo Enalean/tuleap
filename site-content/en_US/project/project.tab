@@ -285,7 +285,7 @@ project_reference	t_r_deleted	Corresponding Reference Deleted
 project_reference	url	URL pointed by the reference
 project_reference	warning_del_r	*********** WARNING ***********  Do you want to delete the reference? This will remove this reference ($1) from ALL projects of this server. Are you SURE you want to continue ?
 project_reference	extract_syntax	Parameters:\n  group_id : project where references are defined\n  text     : input text
-project_reference	insert_syntax	<p>Parameters:<br>- group_id : project where references are defined<br>- text : input text
+project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : project where references are defined<br>- text : input text
 ## Description value here for each reference name (system or project wide) that should be localised
 ## Naming rule for the key: 
 ## reference_<reference keyword>_desc_key for the reference description

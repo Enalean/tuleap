@@ -125,7 +125,25 @@ def get_codex_user():
 # in the text extract.
 #############################
 def util_make_links(text, group_name):
-    """Create hyperlinks to project artifacts in the text extract."""
-    art_pat = re.compile("([^\s()\$\&\!\;\~\#\|\{\}\%\,\?\=\+\'\"\.\:\/\>]+)[ ]?#([0-9]+)",re.IGNORECASE)
-    new_text = re.sub(art_pat,r'<a href="/tracker/?func=gotoid&group_name='+group_name+r'&aid=\2&atn=\1">\1 #\2</a>',text)
-    return new_text
+    """Create hyperlinks to project references in the text extract."""
+
+    import httplib, urllib
+    host = sys_default_domain
+    params = urllib.urlencode({'text': text,
+                              'group_name': group_name})
+    headers = {"Content-type": "application/x-www-form-urlencoded",
+               "Accept": "text/plain",
+               'User-agent': 'CodeX Python Agent',
+               'Host': host}
+    conn = httplib.HTTPConnection(host)
+    conn.request("POST", "/api/reference/insert", params, headers)
+    response = conn.getresponse()
+    
+    if response.status == 200:  #OK
+        new_text = response.read()
+        conn.close
+        return new_text
+    else:
+        conn.close
+        return text
+    
