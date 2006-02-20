@@ -361,6 +361,14 @@ class GForgeLayout extends TabbedLayout {
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $Language->getEncoding(); ?>" />
 	<title><?php echo $params['title']; ?></title>
+    <?php
+        $em =& EventManager::instance();
+        $em->processEvent("javascript_file", null);
+        
+        foreach ($this->javascript_files as $file) {
+            echo '<script type="text/javascript" src="'. $file .'"></script>'."\n";
+        }
+    ?>
 	<script language="JavaScript" type="text/javascript">
 	<!--
 	function help_window(helpurl) {

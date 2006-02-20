@@ -101,6 +101,10 @@ class TabbedLayout extends Layout {
     <?php
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
+        
+        foreach ($this->javascript_files as $file) {
+            echo '<script type="text/javascript" src="'. $file .'"></script>'."\n";
+        }
     ?>
     <script language="JavaScript" type="text/javascript">
 	<!--

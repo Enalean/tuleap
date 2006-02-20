@@ -102,11 +102,13 @@ class ArtifactFieldHtml extends ArtifactField {
 	    }
 	}
 	
-    
+    function _isValueDefaultValue($value, $default_value) {
+        return (is_array($default_value) && in_array($value, $default_value)) || $value == $default_value;
+    }
     function _getValuesAsJavascript($values, $default_value) {
-            $output = "options['".$this->getID()."'] = {};\n";
+            $output  = "options['".$this->getID()."'] = {};\n";
             foreach ($values as $row) {
-                $output .= "options['". $this->getID() ."']['". $row['0'] ."'] = {option:new Option('". addslashes($row['1']) ."', '". $row['0'] ."'), selected:". ($row['0']==$default_value?'true':'false') ."};\n";
+                $output .= "options['". $this->getID() ."']['". $row['0'] ."'] = {option:new Option('". addslashes($row['1']) ."', '". $row['0'] ."'), selected:". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') ."};\n";
             }
             $output .= "</script>";
             return $output;

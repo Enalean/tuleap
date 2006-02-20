@@ -1,3 +1,27 @@
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+
 if (!com) var com = {};
 if (!com.xerox) com.xerox = {};
 if (!com.xerox.codex) com.xerox.codex = {};
@@ -6,28 +30,29 @@ if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
 var HIGHLIGHT_STARTCOLOR = '#ffff99';
 
 function getStyleClass (className) {
-  var re = new RegExp("\\." + className + "$", "gi");
-  if (document.all) {
-    for (var s = 0; s < document.styleSheets.length; s++)
-      for (var r = 0; r < document.styleSheets[s].rules.length; r++)
-        if (document.styleSheets[s].rules[r].selectorText.search(re) 
-!= -1) {
-          return document.styleSheets[s].rules[r].style;
+    var re = new RegExp("\\." + className + "$", "gi");
+    if (document.all) {
+        for (var s = 0; s < document.styleSheets.length; s++) {
+            for (var r = 0; r < document.styleSheets[s].rules.length; r++) {
+                if (document.styleSheets[s].rules[r].selectorText && document.styleSheets[s].rules[r].selectorText.search(re) != -1) {
+                    return document.styleSheets[s].rules[r].style;
+                }
+            }
         }
-  }
-  else if (document.getElementById) {
-    for (var s = 0; s < document.styleSheets.length; s++)
-      for (var r = 0; r < document.styleSheets[s].cssRules.length; r++)
-        if (document.styleSheets[s].cssRules[r].selectorText.search
-(re) != -1) {
-          document.styleSheets[s].cssRules[r].sheetIndex = s;
-          document.styleSheets[s].cssRules[r].ruleIndex = s;
-          return document.styleSheets[s].cssRules[r].style;
+    } else if (document.getElementById) {
+        for (var s = 0; s < document.styleSheets.length; s++) {
+            for (var r = 0; r < document.styleSheets[s].cssRules.length; r++) {
+                if (document.styleSheets[s].cssRules[r].selectorText && document.styleSheets[s].cssRules[r].selectorText.search(re) != -1) {
+                    document.styleSheets[s].cssRules[r].sheetIndex = s;
+                    document.styleSheets[s].cssRules[r].ruleIndex = s;
+                    return document.styleSheets[s].cssRules[r].style;
+                }
+            }
         }
-  }
-  else if (document.layers)
-    return document.classes[className].all;
-  return null;
+    } else if (document.layers) {
+        return document.classes[className].all;
+    }
+    return null;
 }
 function getStyleClassProperty (className, propertyName) {
   var styleClass = getStyleClass(className);
@@ -86,11 +111,11 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 				break;
 		}
 	},
-	addDefaultOption: function(option, selected) {
-        this.defaultOptions.push(option);
-		this.actualOptions.push(option);
+	addDefaultOption: function(option_id, selected) {
+        this.defaultOptions.push(option_id);
+		this.actualOptions.push(option_id);
 		if (selected) {
-			this.selectedOptions.push(option);
+			this.selectedOptions.push(option_id);
 		}
 	},
     /**
@@ -106,7 +131,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			j = 0;
 			found = false;
 			while(j < this.selectedOptions.length && !found) {
-                if (this.selectedOptions[j].value == el.options[i].value) {
+                if (this.selectedOptions[j] == el.options[i].value) {
 					found = this.selectedOptions[j];
 				}
 				j++;
@@ -115,13 +140,13 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			if (found) { //The option was previously selected
 				if (!(el.options[i].selected)) { //The option is not anymore selected
 					//We remove it
-					this.selectedOptions = this.selectedOptions.reject(function (element) { return element.value == el.options[i].value; });
+					this.selectedOptions = this.selectedOptions.reject(function (element) { return element == el.options[i].value; });
 					has_changed = true;
 				}
 			} else { //The option was not selected...
 				if (el.options[i].selected) { //...but is now selected
 					//We add it
-					this.selectedOptions.push(new Option(el.options[i].text, el.options[i].value));
+					this.selectedOptions.push(el.options[i].value);
 					has_changed = true;
 				}
 			}
@@ -140,7 +165,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             opt.value = options[this.id][new_option_id].option.value;
             opt.appendChild(document.createTextNode(options[this.id][new_option_id].option.text));
             $(this.name).appendChild(opt);
-            this.actualOptions.push(options[this.id][new_option_id]);
+            this.actualOptions.push(new_option_id);
         }
 	},
 	clear: function() {
@@ -168,7 +193,10 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 			
 			//fill new options
 			for (i = 0 ; i < this.defaultOptions.length ; i++) {
-				el.options[el.options.length] = this.defaultOptions[i];
+                opt = document.createElement('option');
+                opt.appendChild(document.createTextNode(options[this.id][this.defaultOptions[i]].option.text));
+                opt.value = options[this.id][this.defaultOptions[i]].option.value;
+				el.options[el.options.length].appendChild(opt);
 				this.actualOptions.push(this.defaultOptions[i]);
 			}
 			
@@ -178,7 +206,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 				found = false;
 				len   = el.options.length;
 				while(i < len && !found) {
-					if (el.options[i].value == option.value) {
+					if (el.options[i].value == option) {
 						el.options[i].selected = true;
 						found = true;
 					}
@@ -190,7 +218,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 	},
 	select: function() {
 		if (arguments[0]) {
-			this.selectedOptions = arguments[0];
+			this.selectedOptions = [arguments[0]];
 		} else {
 			selectedOptions = this.selectedOptions;
 			this.selectedOptions = this.actualOptions.findAll(function(element) {
@@ -205,11 +233,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 				this.selectedOptions.push(this.actualOptions[0]);
 			}
 			for(var k = 0 ; k < el.options.length ; k++) {
-				if (this.selectedOptions.find(function (element) {
-					return element.value == el.options[k].value;
-				})) {
-					el.options[k].selected = true;
-				}
+				el.options[k].selected = this.selectedOptions.find(function (element) {
+					return element == el.options[k].value;
+				});
 			}
 		}
 	},
@@ -220,8 +246,8 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             var len = el.options.length;
 			for(var k = 0 ; k < len ; k++) {
 				if (el.options[k].selected) {
-					this.selectedOptions.push(this.defaultOptions.find(function (element) {
-						return el.options[k].value == element.value;
+                    this.selectedOptions.push(this.defaultOptions.find(function (element) {
+						return el.options[k].value == element;
 					}));
 				}
 			}
@@ -246,7 +272,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
             fields[this.source_field_id].update();
         	if (this.can_apply()) {
 				fields[this.target_field_id].add(this.target_value_id);
-				fields[this.target_field_id].select(this.selectedOptions);
+				fields[this.target_field_id].select(this.selected);
 				applied = fields[this.target_field_id];
 			}
 		}
@@ -271,7 +297,14 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 		if (this.target_field_id == target_field.id) {
 			if (this.source_field_id == source_field.id) {
 				if (this.can_apply()) {
-					this.selected = target_field.selectedOptions;
+                    var len = $(fields[this.target_field_id].name).options.length;
+                    var i = 0;
+                    while (i < len && $(fields[this.target_field_id].name).options[i].value != this.target_value_id) {
+                        i++;
+                    }
+                    if (i < len && $(fields[this.target_field_id].name).options[i].selected) {
+                        this.selected = this.target_value_id;
+                    }
 				}
 			}
 		}
@@ -284,7 +317,6 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
         var can_apply = false; 
         var len = $(fields[this.source_field_id].name).options.length;
         for (var i = 0 ; i < len && !can_apply ; i++) {
-
             can_apply = $(fields[this.source_field_id].name).options[i].value == this.source_value_id 
                         && $(fields[this.source_field_id].name).options[i].selected;
         }
@@ -301,12 +333,12 @@ var rules_definitions = {};
 var dependencies      = {};
 var selections        = {};
 function addOptionsToFields() {
-	for (field in fields) {
-		for(option in options[field]) {
-			fields[field].addDefaultOption(options[field][option]['option'], options[field][option]['selected']);
-		}
-		fields[field].updateSelected();
-	}
+	$H(fields).each(function(f) {
+		$H(options[f.key]).values().each(function (opt) {
+			f.value.addDefaultOption(opt['option'].value, opt['selected']);
+		});
+		f.value.updateSelected();
+	});
 }
 function getFieldByName(name) {
     if (!fields_by_name[name]) {
@@ -322,18 +354,15 @@ function applyRules(evt, name) {
     //Source field has been changed. We have to store those changes.
     source_field.updateSelected();
     //We keep history of selections to not lose them
-
     if(selections[source_field.id]) {
         $H(selections[source_field.id]).keys().each(function(key) {
             rules.each(function(rule) {
-                //rule.updateSelected(source_field, fields[key]);
+                rule.updateSelected(source_field, fields[key]);
             });
         });
     }
     //Does the selected field has dependencies (targets) ?
-
     if (dependencies[source_field.id]) {
-        
         //We add the current field to the queue
         //This queue manage the bubble : 
         // if A => B and B => C, 
@@ -350,7 +379,6 @@ function applyRules(evt, name) {
             var originals = {};
             
             //For each field that are target of the current field...
-
             dependencies[queue[j].id].each(function (field) {
                     //...clear it (empty options),
                     field.clear();
@@ -369,13 +397,11 @@ function applyRules(evt, name) {
             });
             
             //We process all rules which can match the current source field
-
             rules.each(function (rule) {
                     rule.process(queue[j]);
             });
             
             //Now we look at original states of targets to see if there has been a change
-
             $H(originals).values().each(function(target) {
                 el = $(target.field.name);
                 found = false;
@@ -391,14 +417,12 @@ function applyRules(evt, name) {
             });
             
             //for each target...
-
             dependencies[queue[j].id].each(function(field) {
                     //... select the target accordingly to previous selection and current options
                     field.select();
             });
             
             //Highlight fields which need
-
             highlight_queue.each(function(field) {
                 field.highlight();
             });
@@ -467,17 +491,16 @@ function addRule(rule_definition) {
 }
 
 function initDynamicFields() {
-//    logConsole.show();
-
     addOptionsToFields();
     registerFieldsEvents();
     $H(rules_definitions).values().each(function(rule_definition) {
             addRule(rule_definition);
     });
     //Once rules have been loaded, we applied them an fields
-    /*$H(fields).values().each(function (field) {
+    $H(fields).values().each(function (field) {
             applyRules(null, field.name);
-    });*/
+    });
+    //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
     codex_dynamic_fields_highlight_change = getStyleClassProperty('codex_dynamic_fields_highlight_change', 'backgroundColor');
     if (codex_dynamic_fields_highlight_change && codex_dynamic_fields_highlight_change != '') {
         HIGHLIGHT_STARTCOLOR = codex_dynamic_fields_highlight_change;
@@ -498,7 +521,7 @@ function initDynamicFields() {
             HIGHLIGHT_STARTCOLOR = '#'+Dec2Hex(r)+Dec2Hex(g)+Dec2Hex(b);
         }
     }
-
+    //}}}
 }
 
 //==============================================================================
