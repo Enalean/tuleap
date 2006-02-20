@@ -84,7 +84,7 @@ stats_site_stats_utils	no_valid_data	La requête n'a retourné aucune donnée valid
 stats_site_stats_utils	stats_for_past_x_days	Statistiques pour les $1 derniers jours.
 stats_site_stats_utils	site_views	Visites site
 stats_site_stats_utils	subdomain_views	Visites sous-domaine
-stats_site_stats_utils	day	Jour (GMT)
+stats_site_stats_utils	day_gmt	Jour (GMT)
 stats_site_stats_utils	proj_not_exist	Le projet n'existait pas à cette date.
 stats_site_stats_utils	curr_agg_stats	Statistiques consolidées actuelles pour l'ensemble des jours
 stats_site_stats_utils	lifespan	Durée de vie
