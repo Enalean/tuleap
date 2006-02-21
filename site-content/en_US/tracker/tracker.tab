@@ -512,15 +512,6 @@ tracker_include_type	dynamic_fields	Dynamic&nbsp;Fields
 tracker_include_type	mng_dynamic_fields	Manage Dynamic Fields
 tracker_include_type	mng_dynamic_fields_title	 - Manage Dynamic Fields
 tracker_include_type	define_dynamic_fields	Manage Dynamic Fields
-tracker_include_type	edit_rule	Add/Edit a Rule
-tracker_include_type	existing_rules	Existing Rules
-tracker_include_type	choose_fields	Choose fields
-tracker_include_type	choose_field	-- Choose field
-tracker_include_type	master_title	Master Field
-tracker_include_type	slave_title	Slave Field
-tracker_include_type	btn_save_rule	Save Rule
-#tracker_include_type	if_then	If field %1 is selected to %2 then field %3 will propose %4
-tracker_include_type	if_then	Source: %1 %2 Target: %3 %4
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -739,3 +730,6 @@ tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that 
 tracker_dynamic_fields	no_dynamic_fields	<em>There is not rules for dynamic fields yet.</em>
 tracker_dynamic_fields	noscript	A javascript enabled browser is mandatory to add/edit dynamic fields.
 tracker_dynamic_fields	delete_are_you_sure	Are you sure that you want to delete this rule?
+tracker_dynamic_fields	choose_field	-- Choose field
+#tracker_dynamic_fields	if_then	If field %1 is selected to %2 then field %3 will propose %4
+tracker_dynamic_fields	if_then	Source: %1 %2 Target: %3 %4

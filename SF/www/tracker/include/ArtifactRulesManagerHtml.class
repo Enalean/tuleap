@@ -105,8 +105,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         echo "messages = {\n";
             //echo "href:               '". $this->href ."',\n";
-            echo "choose_field:       '". addslashes($GLOBALS['Language']->getText('tracker_include_type','choose_field')) ."',\n";
-            echo "if_then:            '". addslashes($GLOBALS['Language']->getText('tracker_include_type','if_then')) ."',\n";
+            echo "choose_field:       '". addslashes($GLOBALS['Language']->getText('tracker_dynamic_fields','choose_field')) ."',\n";
+            echo "if_then:            '". addslashes($GLOBALS['Language']->getText('tracker_dynamic_fields','if_then')) ."',\n";
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
             echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."',\n";
             

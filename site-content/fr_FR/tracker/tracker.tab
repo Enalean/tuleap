@@ -519,15 +519,6 @@ tracker_include_type	dynamic_fields	Champs&nbsp;dynamiques
 tracker_include_type	mng_dynamic_fields	Gérer les champs dynamiques
 tracker_include_type	mng_dynamic_fields_title	 - Gérer les champs dynamiques
 tracker_include_type	define_dynamic_fields	Gérer les champs dynamiques
-tracker_include_type	edit_rule	Ajouter/editer une règle
-tracker_include_type	existing_rules	Règles existantes
-tracker_include_type	choose_fields	Choisir les champs
-tracker_include_type	choose_field	-- Choisir un champ
-tracker_include_type	master_title	Champ maître
-tracker_include_type	slave_title	Champ esclave
-tracker_include_type	btn_save_rule	Sauver la règle
-#tracker_include_type	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
-tracker_include_type	if_then	Source : %1  %2 Cible : %3 %4
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -746,3 +737,6 @@ tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces g
 tracker_dynamic_fields	no_dynamic_fields	<em>Il n'y a pas encore de règles de champs dynamiques.</em>
 tracker_dynamic_fields	noscript	Un navigateur avec javascript d'activé est obligatoire pour ajouter ou éditer des champs dynamiques.
 tracker_dynamic_fields	delete_are_you_sure	Êtes-vous sûr de vouloir supprimer cette règle ?
+tracker_dynamic_fields	choose_field	-- Choisir un champ
+#tracker_dynamic_fields	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
+tracker_dynamic_fields	if_then	Source : %1  %2 Cible : %3 %4
