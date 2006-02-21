@@ -288,11 +288,8 @@ function language_code_to_result($alang) {
 			$lang_code = ereg_replace(';.*', '', $ary[$i]); // remove ;q=0.x
 			$res = db_query("select * from supported_languages where language_code = '$lang_code'");
 			if (db_numrows($res) > 0) {
-				return $res;
+			    return $res;
 			}
-			// If that didn't work, then substitute - with _ as the database
-			// uses en_US and not en-us as Mozilla and IE do
-			$lang_code = str_replace($lang_code,'-','_');
 
 			// If that didn't work:
 			// - First substitute - with _ as the database
@@ -300,8 +297,7 @@ function language_code_to_result($alang) {
 			// - Second check if we have sublanguage specifier
 			// If so, try to strip it and look for main language only
 			if (strstr($lang_code, '-')) {
-
-			    $lang_code = str_replace($lang_code,'-','_');
+			    $lang_code = str_replace('-','_',$lang_code);
 			    $res = db_query("select * from supported_languages where language_code = '$lang_code'");
 			    if (db_numrows($res) > 0) {
 				return $res;
@@ -312,6 +308,15 @@ function language_code_to_result($alang) {
 			    if (db_numrows($res) > 0) {
 				return $res;
 			    }
+			}
+			
+			// If that didn't work:
+			// Test only the two first letter of the browser language
+			// as the database uses en_US and not en alone as Mozilla and IE can do
+			$lang_code = substr($lang_code, 0, 2);
+			$res = db_query("select * from supported_languages where SUBSTRING(language_code, 1, 2) = '$lang_code'");
+			if (db_numrows($res) > 0) {
+			    return $res;
 			}
 		}
 		return db_query("select * from supported_languages where language_code='".$GLOBALS['sys_lang']."'"); // default to system default
