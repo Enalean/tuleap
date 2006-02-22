@@ -11,6 +11,13 @@
 // only the artifact id, and possibly the artifact name detected in text and a group_id.
 // It is called from function util_make_links
 
+  /********************************************************************
+   * WARNING *
+   *    Please note that this script has been replaced by SF/www/goto
+   *    We only keep it for compatibility with existing commit messages and legacy trackers
+   ********************************************************************/
+
+ 
 require('../svn/svn_data.php');
 $Language->loadLanguageMsg('tracker/tracker');
 
