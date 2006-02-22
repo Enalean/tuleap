@@ -51,7 +51,8 @@ while (list($catroot,$fullname) = each($CATROOTS)) {
 	print "\n<HR>\n<P><B>$fullname</B> ".help_button('trove_cat',$catroot)."\n";
 
 	$res_grpcat = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '
-		.'group_id='.$group_id.' AND trove_cat_root='.$catroot);
+		.'group_id='.$group_id.' AND trove_cat_root='.$catroot
+		.' ORDER BY trove_group_id');
 	for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
 		// each drop down, consisting of all cats in each root
 		$name= "root$i"."[$catroot]";
