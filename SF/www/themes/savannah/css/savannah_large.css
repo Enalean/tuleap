@@ -175,18 +175,9 @@ textarea {
 .tooltip:hover { text-decoration:none; color: #ff0000}
 
 
-/* dynamic fields */
-.codex_dynamic_fields_highlight_current {
-    border-color: #FF0000;
-}
 
-.codex_dynamic_fields_highlight_source {
-}
-
-.codex_dynamic_fields_highlight_target {
-    border-color: #F99;
-}
-
+/* dynamic fields                                */
+/*************************************************/
 /* Only background-color property is used        */
 /* Only full hexa are allowed                    */
 /* don't use names (purple, red, yellow)         */

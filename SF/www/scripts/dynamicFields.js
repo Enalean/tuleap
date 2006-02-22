@@ -94,40 +94,12 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
 		this.selectedOptions = [];
 		this.actualOptions   = [];
 	},
-	highlight: function(mode) {
-        switch (mode) {
-            //BUG Fx 1.0.7: we lose scroll for multiple selectbox    
-            /*
-            case 'current':
-                break; 
-			case 'source':
-			case 'target':
-				Element.addClassName(this.name.replace('[]', ''), 'codex_dynamic_fields_highlight_'+mode);
-				break;
-            */
-			default:
-				if (!this._highlight) {
-					this._highlight = new Effect.Highlight($(this.name), {startcolor:HIGHLIGHT_STARTCOLOR});
-				} else {
-					this._highlight.start(this._highlight.options);
-				}
-				break;
-		}
-	},
-	unhighlight: function(mode) {
-		switch (mode) {
-			//BUG Fx 1.0.7: we lose scroll for multiple selectbox    
-            /*
-            case 'current':
-                break; //BUG Fx 1.0.7: we lose scroll for multiple selectbox    
-			case 'source':
-			case 'target':
-                Element.removeClassName(this.name, 'codex_dynamic_fields_highlight_'+mode);
-				break;
-            */
-			default:
-				break;
-		}
+	highlight: function() {
+        if (!this._highlight) {
+            this._highlight = new Effect.Highlight($(this.name), {startcolor:HIGHLIGHT_STARTCOLOR});
+        } else {
+            this._highlight.start(this._highlight.options);
+        }
 	},
 	addDefaultOption: function(option_id, selected) {
         this.defaultOptions.push(option_id);
@@ -298,19 +270,6 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
 
         return applied;
 	},
-	//BUG Fx 1.0.7: we lose scroll for multiple selectbox    
-    /*
-    highlight: function(field) {
-		if (this.target_field_id == field.id) {
-			field.highlight('current');
-			fields[this.source_field_id].highlight('source');
-		}
-		if (this.source_field_id == field.id) {
-			field.highlight('current');
-			fields[this.target_field_id].highlight('target');
-		}
-	},
-    */
 	updateSelected: function(target_field, source_field) {
 		if (this.target_field_id == target_field.id) {
 			if (this.source_field_id == source_field.id) {
@@ -453,23 +412,6 @@ function registerFieldsEvents() {
 		el = document.getElementById(fields[id].name);
 		if (el) {
 			el.onchange = applyRules;
-			/* BUG NTY 20060220: 
-               Highlighting a field resets it and therefore the viewport (of a multiselectbox) changes
-               As it is not really user friendly, we do not highlight dynamicfields
-               
-            el.onmouseover = function() {
-				for(i = 0 ; i < rules.length ; i++) {
-					rules[i].highlight(getFieldByName(this.id));
-				}
-			};
-			el.onmouseout = function() {
-                $H(fields).values().each(function (field) {
-					field.unhighlight('current');
-					field.unhighlight('source');
-					field.unhighlight('target');
-				});
-			};
-            */
 		}
 	}
 
