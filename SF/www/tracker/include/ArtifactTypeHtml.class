@@ -39,7 +39,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		global $Language;
 		$group_id= $this->Group->getID();
 
-        $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/prototype.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/dynamicFields.js");
                 
@@ -94,7 +94,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		$group_id= $this->Group->getID();
 
-        $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/prototype.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/dynamicFields.js");
 
