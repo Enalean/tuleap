@@ -72,6 +72,12 @@ ALTER TABLE `plugin` CHANGE `enabled` `available` TINYINT( 4 ) DEFAULT '0' NOT N
 ajouter $sys_custompluginsroot dans local.inc
 
 ###############################################################################
+# Add approve_licence row in frs_package table
+
+ALTER TABLE frs_package ADD approve_license TINYINT(1) NOT NULL default '1';
+
+
+###############################################################################
 # DynamicFields: create tables
 #
 DROP TABLE IF EXISTS artifact_rule;
@@ -241,37 +247,38 @@ INSERT INTO reference SET \
     id='15',        \
     keyword='file', \
     description='reference_file_desc_key', \
-    link='', \
+    link='/file/confirm_download.php?group_id=$group_id&file_id=$1', \
     scope='S', \
     service_short_name='file';
 
 # Legacy references
+
 INSERT INTO reference SET \
     id='90',        \
     keyword='bug', \
     description='reference_bug_desc_key', \
-    link='/bugs/?func=detailbug&bug_id=$1&group_id=$group_id', \
+    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=bug', \
     scope='S', \
     service_short_name='bug';
 INSERT INTO reference SET \
     id='91',        \
     keyword='task', \
     description='reference_task_desc_key', \
-    link='/pm/task.php?func=detailtask&project_task_id=$a1&group_id=$group_id', \
+    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=task', \
     scope='S', \
     service_short_name='task';
 INSERT INTO reference SET \
     id='92',        \
     keyword='sr', \
     description='reference_sr_desc_key', \
-    link='/support/index.php?func=detailsupport&support_id=$1&group_id=$group_id', \
+    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=sr', \
     scope='S', \
     service_short_name='support';
 INSERT INTO reference SET \
     id='93',        \
     keyword='patch', \
     description='reference_patch_desc_key', \
-    link='/patch/?func=detailpatch&patch_id=$1&group_id=$group_id', \
+    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=patch', \
     scope='S', \
     service_short_name='patch';
 

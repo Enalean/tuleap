@@ -58,6 +58,7 @@ if (db_numrows($res)>0) {
   	 
             if ( !$release_id || $row3['package_id']==$row['package_id'] ) {
                 $res_package[$row['package_id']]=$row['name'];
+                $license_package[$row['package_id']]=$row['approve_license'];
                 $num_packages++;
             }
         }
@@ -91,7 +92,7 @@ $url = get_server_url();
 <SCRIPT language="JavaScript">
 <!--
 function showConfirmDownload(group_id,file_id,filename) {
-    url = "<?php echo $url; ?>/file/confirm_download.php?group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
+    url = "<?php echo $url; ?>/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
     wConfirm = window.open(url,"confirm","width=520,height=450,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
@@ -223,15 +224,21 @@ function download(group_id,file_id,filename) {
 					$fname = $list[sizeof($list) - 1];
 					print "\t\t" . '<TR class="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
-						. '<TD><B><A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].',\''.$file_release['filename'].'\')">'
-
-						. $fname .'</A></B></TD>'
-						. '<TD>'. $file_release['file_size'] .'</TD>'
-						. '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
-						. '<TD>'. $processor[$file_release['processor']] .'</TD>'
-						. '<TD>'. $file_type[$file_release['type']] .'</TD>'
-						. '<TD>'. format_date( "Y-m-d", $file_release['release_time'] ) .'</TD>'
-						. '</TR>' . "\n";
+                                            . '<TD><B>';
+                                        if ($license_package[$package_id]==0) {
+                                            // Allow direct download
+                                             print '<A HREF="/file/download.php/'.$group_id."/".$file_release['file_id']."/".$file_release['filename'].'" title="'.$file_release['file_id']." - ".$fname.'">'. $fname .'</A>';
+                                       } else {
+                                            // Display popup
+                                            print '<A HREF="javascript:showConfirmDownload('.$group_id.','.$file_release['file_id'].',\''.$file_release['filename'].'\')" title="'.$file_release['file_id']." - ".$fname.'">'. $fname .'</A>';
+                                        }
+                                        print '</B></TD>'
+                                            . '<TD>'. $file_release['file_size'] .'</TD>'
+                                            . '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
+                                            . '<TD>'. $processor[$file_release['processor']] .'</TD>'
+                                            . '<TD>'. $file_type[$file_release['type']] .'</TD>'
+                                            . '<TD>'. format_date( "Y-m-d", $file_release['release_time'] ) .'</TD>'
+                                            . '</TR>' . "\n";
 
 					$proj_stats['size'] += $file_release['file_size'];
 					$proj_stats['downloads'] += $file_release['downloads'];

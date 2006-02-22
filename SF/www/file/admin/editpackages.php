@@ -37,8 +37,8 @@ if ($submit) {
 	    $feedback .= ' '.$Language->getText('file_admin_editpackages','p_name_exists').' ';
 	  } else {
 		//create a new package
-		db_query("INSERT INTO frs_package (group_id,name,rank,status_id) ".
-			"VALUES ('$group_id','". htmlspecialchars($package_name)."','$rank','1')");
+		db_query("INSERT INTO frs_package (group_id,name,rank,status_id,approve_license) ".
+			"VALUES ('$group_id','". htmlspecialchars($package_name)."','$rank','1','$approve_license')");
 		$feedback .= ' '.$Language->getText('file_admin_editpackages','p_added').' ';
 	  }
 	} else if ($func=='update_package' && $package_id && $package_name && $status_id) {
@@ -55,7 +55,7 @@ if ($submit) {
 			}
 		}
 		//update an existing package
-		db_query("UPDATE frs_package SET name='". htmlspecialchars($package_name)  ."', status_id='$status_id', rank='$rank'".
+		db_query("UPDATE frs_package SET name='". htmlspecialchars($package_name)  ."', status_id='$status_id', rank='$rank', approve_license='$approve_license' ".
 			"WHERE package_id='$package_id' AND group_id='$group_id'");
 		$feedback .= ' '.$Language->getText('file_admin_editpackages','p_updated').' ';
 
@@ -92,7 +92,7 @@ echo '<H3>'.$Language->getText('file_admin_editpackages','packages').'</H3>
 // LJ status_id field was missing from the select statement
 // LJ Causing the displayed status of packages to be wrong
 // LJ $res=db_query("SELECT package_id,name AS package_name FROM frs_packag
-$res=db_query("SELECT status_id,package_id,name AS package_name,rank FROM frs_package WHERE group_id='$group_id' ORDER BY rank");
+$res=db_query("SELECT status_id,package_id,name AS package_name,rank,approve_license FROM frs_package WHERE group_id='$group_id' ORDER BY rank");
 $rows=db_numrows($res);
 if (!$res || $rows < 1) {
 	echo '<h4>'.$Language->getText('file_admin_editpackages','no_p_defined').'</h4>';
@@ -101,6 +101,7 @@ if (!$res || $rows < 1) {
 	$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
 	$title_arr[]=$Language->getText('file_admin_editpackages','rank_on_screen');
 	$title_arr[]=$Language->getText('global','status');
+	$title_arr[]=$Language->getText('file_admin_editpackages','license');
 	$title_arr[]=$Language->getText('file_admin_editpackages','update');
 	$title_arr[]=$Language->getText('file_admin_editpackages','releases');
 	$title_arr[]=$Language->getText('file_admin_editpackages','perms');
@@ -117,7 +118,13 @@ if (!$res || $rows < 1) {
 			<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="package_name" VALUE="'. 
 				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
                         <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.db_result($res,$i,'rank').'"/></TD>
-			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>
+			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>';
+                $approve_license=db_result($res,$i,'approve_license');
+                echo '<TD align="center"><FONT SIZE="-1"><SELECT name="approve_license"> '.
+                    '<OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$Language->getText('global','yes').'</OPTION>'.
+                    '<OPTION VALUE="0"'.(($approve_license == '0') ? ' SELECTED':'').'>'.$Language->getText('global','no').'</OPTION>'.
+                    '</SELECT></TD>';
+                echo '
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','update').'"></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
 				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_edit_releases').']</B></A></TD>
@@ -126,8 +133,8 @@ if (!$res || $rows < 1) {
                 if (permission_exist('PACKAGE_READ',db_result($res,$i,'package_id'))) {
                     echo $Language->getText('file_admin_editpackages','edit');
                 } else echo $Language->getText('file_admin_editpackages','define');
-                echo ' '.$Language->getText('file_admin_editpackages','perms').']</B></A></TD>
-		</TR></FORM>';
+                echo ' '.$Language->getText('file_admin_editpackages','perms').']</B></A></TD>';
+		echo '</TR></FORM>';
 	}
 	echo '</TABLE>';
 
@@ -148,6 +155,9 @@ echo '<p><hr><P>
 <table>
 <tr><th>'.$Language->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package_name" size="20" MAXLENGTH="30"></td></tr>
 <tr><th>'.$Language->getText('file_admin_editpackages','rank_on_screen').':</th>  <td><input type="text" name="rank" size="4" maxlength="4"></td></tr>
+<tr><th>'.$Language->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="approve_license">
+                    <OPTION VALUE="1" SELECTED>'.$Language->getText('global','yes').'</OPTION>
+                    <OPTION VALUE="0">'.$Language->getText('global','no').'</OPTION></SELECT></td></tr>
 <tr><td> <input type="submit" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','create_this_p').'"></td></tr></table>	
 </FORM>';
 

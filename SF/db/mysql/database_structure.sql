@@ -856,6 +856,7 @@ CREATE TABLE frs_package (
   name text,
   status_id int(11) NOT NULL default '0',
   rank int(11) NOT NULL default '0',
+  approve_license TINYINT(1) NOT NULL default '1',
   PRIMARY KEY  (package_id),
   KEY idx_package_group_id (group_id)
 ) TYPE=MyISAM;
@@ -3158,24 +3159,24 @@ CREATE TABLE wiki_link (
 
 -- Plugin tables
 -- {{{
-CREATE TABLE `priority_plugin_hook` (
-`plugin_id` INT NOT NULL,
-`hook` VARCHAR(100) NOT NULL,
-`priority` INT NOT NULL
+CREATE TABLE priority_plugin_hook (
+plugin_id INT NOT NULL,
+hook VARCHAR(100) NOT NULL,
+priority INT NOT NULL
 );
-CREATE TABLE `plugin` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL,
-  `available` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+CREATE TABLE plugin (
+  id int(11) NOT NULL auto_increment,
+  name varchar(100) NOT NULL,
+  available tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (id)
 );
-CREATE TABLE `project_plugin` (
-`project_id` INT NOT NULL ,
-`plugin_id` INT NOT NULL
+CREATE TABLE project_plugin (
+project_id INT NOT NULL ,
+plugin_id INT NOT NULL
 );
-CREATE TABLE `user_plugin` (
-`user_id` INT NOT NULL ,
-`plugin_id` INT NOT NULL
+CREATE TABLE user_plugin (
+user_id INT NOT NULL ,
+plugin_id INT NOT NULL
 );
 -- }}}
 

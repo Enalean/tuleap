@@ -38,6 +38,7 @@ file_admin_editpackages	rank_on_screen	Rank On Screen
 file_admin_editpackages	update	Update
 file_admin_editpackages	releases	Releases
 file_admin_editpackages	perms	Permissions
+file_admin_editpackages	license	License Approval
 file_admin_editpackages	add_edit_releases	Add/Edit Releases
 file_admin_editpackages	edit	Edit
 file_admin_editpackages	define	Define
@@ -172,6 +173,7 @@ file_confirm_download	download_agreement	CodeX download agreement
 file_confirm_download	download_explain	<h2>*** CodeX Download Agreement ***</h2></center> \n</div> \n<p>You are about to download software from the CodeX Site. Software re-use and sharing <b>inside</b> $1 is subject to the <a href="$2" target="_blank"><b>Code eXchange Corporate Policy</b></a>.</p> \n\n<p>By downloading this software you implicitely recognize that you have <a href="$2" target="_blank"><b>read the CodeX Policy</b></a> and agree with the terms and conditions. \n\n<p>To proceed with the file download, click on '<b>I AGREE</b>'. If you do not want to download the file click on '<b>I DECLINE</b>' and <a href="mailto:$3"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.
 file_confirm_download	agree	I AGREE
 file_confirm_download	decline	I DECLINE
+file_confirm_download	back	Back to previous page
 #
 #-----------------------------------------------
 # Script: SF/www/file/download.php

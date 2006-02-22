@@ -42,6 +42,34 @@ if (user_isloggedin()) {
             $font_size_normal = 'medium';
     
     }
+
+    if (!$filename) {
+        # Get it from DB
+        $sql="SELECT filename FROM frs_file WHERE file_id=$file_id";
+        $res = db_query( $sql );
+        if (db_numrows( $res ) > 0) {
+            $filename = db_result($res,0,'filename');
+        }
+    }
+    // Display license popup?
+    // This is useful when using a 'file #123' reference, that points to this script
+    $sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
+    $res = db_query( $sql);
+    if (db_numrows( $res ) > 0) {
+        if (db_result($res,0,'approve_license')==0) {
+            # Directly display file
+            $location = "Location: /file/download.php/$group_id/$file_id/$filename";
+            header($location);
+        }
+    }
+
+    if ($popup) {
+        $dlscript='opener.download';
+        $cancelscript='window.close()';
+    } else {
+        $dlscript='download_local';
+        $cancelscript='history.back()';
+    }
 ?>
 <html>
 <head>
@@ -51,6 +79,16 @@ if (user_isloggedin()) {
 </head>
 
 <body>
+<SCRIPT language="JavaScript">
+<!--
+
+function download_local(group_id,file_id,filename) {
+    url = "http://cxtst.xrce.xerox.com/file/download.php/" + group_id + "/" + file_id +"/"+filename;
+    self.location = url;
+    //history.back();
+}
+-->
+</SCRIPT>
 <table width="100%" height="100%" cellpadding="5" class="bg_confirmdownload">
 <tr><td>
 <span class="small">
@@ -61,12 +99,13 @@ if (user_isloggedin()) {
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:opener.download(<?php echo "$group_id,$file_id,'$filename'"; ?>);"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$dlscript($group_id,$file_id,'$filename'"; ?>);"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
     </td>
     <td> 
-      <div align="center"><a href="javascript:window.close();"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
     </td>
   </tr>
+<?php if (!$popup) echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">'.$Language->getText('file_confirm_download','back').'</a></td></tr>'; ?>
 </table>
 </span>
 </td></tr>
