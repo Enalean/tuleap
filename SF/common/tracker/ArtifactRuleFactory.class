@@ -122,5 +122,9 @@ class ArtifactRuleFactory {
         $deleted = $this->rules_dao->deleteByField($artifact_type, $field_id);
         return $deleted;
     }
+    function deleteRulesByValueId($artifact_type, $field_id, $value_id) {
+        $deleted = $this->rules_dao->deleteByFieldValue($artifact_type, $field_id, $value_id);
+        return $deleted;
+    }
 }
 ?>

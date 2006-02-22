@@ -561,6 +561,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->deleteValueList($atid,$value_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
+                require_once('common/tracker/ArtifactRulesManager.class');
+                $arm =& new ArtifactRulesManager();
+                $arm->deleteRulesByValueId($atid, $field_id, $value_id);
 				$feedback = $Language->getText('tracker_admin_index','value_deleted');
 			}
 			require('./field_values_details.php');
