@@ -613,6 +613,11 @@ if ($group_id && (!isset($atid) || !$atid)) {
 							 $empty_ok,$keep_history,$special,$use_it) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
+                if (!(isset($use_it) && $use_it)) {
+                    require_once('common/tracker/ArtifactRulesManager.class');
+                    $arm =& new ArtifactRulesManager();
+                    $arm->deleteRulesByFieldId($atid, $field_id);
+                }
 				// Reload the field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
 
@@ -642,6 +647,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->delete($atid) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
+                require_once('common/tracker/ArtifactRulesManager.class');
+                $arm =& new ArtifactRulesManager();
+                $arm->deleteRulesByFieldId($atid, $field_id);
+                
 				// Reload the field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
 				
