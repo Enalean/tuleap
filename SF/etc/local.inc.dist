@@ -286,7 +286,7 @@ $sys_session_lifetime = 3600*24*183;
 
 //
 // Adress from wich is send emails
-$sys_noreply = '"'.$sys_name.'" <noreply@xrce.xerox.com>';
+$sys_noreply = '"CodeX" <noreply@xrce.xerox.com>';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

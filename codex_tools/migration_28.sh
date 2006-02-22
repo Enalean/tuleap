@@ -611,3 +611,14 @@ EOF
 </Directory>
 # - copy commit-email and log-accum
 # drop svn_tracks and cvs_tracks tables.
+# analyze/optimize tables
+
+
+#Changelog:
+# $sys_noreply => local.inc.dist  (SR #281)
+# [plugins] name : [^a-zA-Z0-9_-]
+# [plugins] enabled => available
+# HTTPRequest => wrapper on $_GET & $_POST (To use with Dao::quoteSmart)
+# Dao => quoteSmart (To use with HTTPRequest)
+# Collection Framework => follow SPL
+
