@@ -716,6 +716,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		} else {
 		  $feedback = $Language->getText('tracker_admin_index','delete_success',$ath->getName());
 		  echo $Language->getText('tracker_admin_index','tracker_deleted',array($ath->getName(),$GLOBALS['sys_email_admin']));
+                require_once('common/tracker/ArtifactRulesManager.class');
+                $arm =& new ArtifactRulesManager();
+                $arm->deleteRulesByArtifactType($atid);
                   // Delete related reference if it exists
                   // NOTE: there is no way to know if the reference is actually related to this tracker.
                   $reference_manager =& ReferenceManager::instance();

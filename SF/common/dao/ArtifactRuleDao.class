@@ -198,6 +198,12 @@ class ArtifactRuleDao extends DataAccessObject {
         return $this->update($sql);
     }
     
+    function deleteRulesByGroupArtifactId($artifact_type) {
+        $sql = sprintf('DELETE FROM artifact_rule '.
+                       ' WHERE group_artifact_id = %s ',
+				$this->da->quoteSmart($artifact_type));
+        return $this->update($sql);
+    }
     function deleteByField($artifact_type, $field_id) {
         $sql = sprintf('DELETE FROM artifact_rule '.
                        ' WHERE group_artifact_id = %s '.

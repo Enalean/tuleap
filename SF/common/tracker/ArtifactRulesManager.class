@@ -44,6 +44,10 @@ class ArtifactRulesManager {
         return ArtifactRuleFactory::instance();
     }
     
+    function deleteRulesByArtifactType($artifact_type) {
+        $fact =& ArtifactRuleFactory::instance();
+        return $fact->deleteRulesByArtifactType($artifact_type);
+    }
     function deleteRulesByFieldId($artifact_type, $field_id) {
         $fact =& ArtifactRuleFactory::instance();
         return $fact->deleteRulesByFieldId($artifact_type, $field_id);
