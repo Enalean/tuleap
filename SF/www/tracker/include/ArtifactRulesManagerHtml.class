@@ -8,7 +8,6 @@
 
 require_once('common/tracker/ArtifactRulesManager.class');
 require_once('ArtifactTypeHtml.class');
-//require_once('ArtifactRuleHtml.class');
 require_once('ArtifactRuleValueJavascript.class');
 $Language->loadLanguageMsg('tracker/tracker');
 
