@@ -97,7 +97,7 @@ a:hover {
 .boxtitle { background-color: #E0DDD2; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; }
 .boxitem {  background-color: transparent; text-align: left; color: #333333; }
 .boxitemalt { text-align: left; background-color: #ffffff; }
-.boxhighlight { background-color: #ffe0db; text-align: left; color: #333333; }
+.boxhighlight { background-color: #e8e8e0; text-align: left; color: #333333; }
 
 .boxtop {}
 .boxtop_top {}

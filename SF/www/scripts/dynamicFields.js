@@ -858,7 +858,7 @@ function buildAdminUI() {
     //{{{ Save panel
     tbody.appendChild(tr = document.createElement('tr'));
     tr.id        = 'save_panel';
-    tr.className = 'boxitem';
+    tr.className = 'boxtitle';
     tr.appendChild(td = document.createElement('td'));
     td.colSpan = 2;
     Element.setStyle(td, {textAlign:'center'});
@@ -1049,10 +1049,10 @@ function admin_checked(id) {
     checked = $F(id);
     //boxitem and arrow follow the state of the corresponding checkbox
     if (checked) {
-        Element.addClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxitem');
+        Element.addClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxhighlight');
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'visible'});        
     } else {
-        Element.removeClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxitem');
+        Element.removeClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxhighlight');
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'hidden'});        
     }
     //Does a rule exist ?
@@ -1152,10 +1152,10 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
         Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'hidden'});
     });
     $H(options[target_field_id]).each(function (opt) {
-        Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+        Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
         Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
     });
-    Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id, 'boxitem');
+    Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id, 'boxhighlight');
     Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id+'_arrow', {visibility:'visible'});
     
     //Select sources
@@ -1168,11 +1168,11 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
                     definition.target_value == target_value_id &&
                     definition.source_value == opt.value['option'].value;
         })) {
-            Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
             $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = 'checked';
             Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'visible'});
         } else {
-            Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
             $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = '';
             Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
         }
@@ -1199,10 +1199,10 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
         Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'hidden'});
     });
     $H(options[source_field_id]).each(function (opt) {
-        Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+        Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
         Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
     });
-    Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id, 'boxitem');
+    Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id, 'boxhighlight');
     Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id+'_arrow', {visibility:'visible'});
     
     //Select targets
@@ -1215,11 +1215,11 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
                     definition.source_value == source_value_id &&
                     definition.target_value == opt.value['option'].value;
         })) {
-            Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
             $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = 'checked';
             Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'visible'});
         } else {
-            Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxitem');
+            Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
             $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = '';
             Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
         }

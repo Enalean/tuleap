@@ -107,7 +107,7 @@ textarea {
 .boxtitle { background-image: url("/themes/savannah/images/leopard.png"); background-color: #eddb5a; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; vertical-align: middle}
 .boxitem {  /*background-image: url("/themes/savannah/images/sand.png");*/ background-color: #fff5c6; text-align: left; color: #333333; }
 .boxitemalt { background-color: #ffffff; text-align: left; color: #333333; }
-.boxhighlight { bbackground-color: #ffe0db; text-align: left; color: #333333; }
+.boxhighlight { background-color: #f4d495; text-align: left; color: #333333; }
 
 /* spartan box */
 /* priority  */
