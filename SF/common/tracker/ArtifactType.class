@@ -266,6 +266,10 @@ class ArtifactType extends Error {
                 //Copy template permission
                 permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id);
                 
+                //Copy Rules
+                require_once('ArtifactRulesManager.class');
+                $arm =& new ArtifactRulesManager();
+                $arm->copyRules($atid_template, $id);
 				return $id;
 			}
 		}

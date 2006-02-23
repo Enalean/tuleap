@@ -126,5 +126,9 @@ class ArtifactRuleFactory {
         $deleted = $this->rules_dao->deleteByFieldValue($artifact_type, $field_id, $value_id);
         return $deleted;
     }
+    function copyRules($from_artifact_type, $to_artifact_type) {
+        $copied = $this->rules_dao->copyRules($from_artifact_type, $to_artifact_type);
+        return $copied;
+    }
 }
 ?>

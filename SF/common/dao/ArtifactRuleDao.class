@@ -227,6 +227,24 @@ class ArtifactRuleDao extends DataAccessObject {
 				$this->da->quoteSmart($value_id));
         return $this->update($sql);
     }
+    function copyRules($from_artifact_type, $to_artifact_type) {
+        $sql = sprintf('INSERT INTO artifact_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) '.
+                        ' SELECT %s, source_field_id, source_value_id, target_field_id, rule_type, target_value_id '.
+                        ' FROM artifact_rule '.
+                        ' WHERE group_artifact_id = %s ',
+                               $this->da->quoteSmart($to_artifact_type),
+                               $this->da->quoteSmart($from_artifact_type));
+        $inserted = $this->update($sql);
+        if ($inserted) {
+            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
+            }
+        }
+        return $inserted;
+    }
 }
 
 
