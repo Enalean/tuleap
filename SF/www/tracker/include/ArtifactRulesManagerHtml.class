@@ -37,14 +37,16 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
-            if ($field->isMultiSelectBox() || $field->isSelectBox()) {
-                $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
-                if (db_numrows($values) > 1) {
-                    echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getName()."', '".addslashes($field->getLabel())."');\n";
-                    $default_value = $field->getDefaultValue();
-                    echo "options['".$field->getID()."'] = {};\n";
-                    while ($row = db_fetch_array($values)) {
-                        echo "options['". $field->getID() ."']['". $row[0] ."'] = {option:new Option('". addslashes($row[1]) ."', '". $row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
+            if ($field->getName() != 'submitted_by') {
+                if ($field->isMultiSelectBox() || $field->isSelectBox()) {
+                    $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
+                    if (db_numrows($values) > 1) {
+                        echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getName()."', '".addslashes($field->getLabel())."');\n";
+                        $default_value = $field->getDefaultValue();
+                        echo "options['".$field->getID()."'] = {};\n";
+                        while ($row = db_fetch_array($values)) {
+                            echo "options['". $field->getID() ."']['". $row[0] ."'] = {option:new Option('". addslashes($row[1]) ."', '". $row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
+                        }
                     }
                 }
             }
