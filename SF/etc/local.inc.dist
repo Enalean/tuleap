@@ -206,6 +206,10 @@ $sys_email_admin='codex-admin@%sys_default_domain%';
 $sys_email_contact='codex-contact@%sys_default_domain%';
 
 //
+// Address from which emails are sent
+$sys_noreply = '"CodeX" <noreply@%sys_default_domain%>';
+
+//
 // Directory which hosts the site content
 $sys_incdir='/home/httpd/site-content/';
 
@@ -270,7 +274,7 @@ $sys_lf = "\n";
 $sys_is_project_public = 1;
 
 //
-// Allow restricted users on this server
+// Enable restricted users on this server
 // (restricted users only have access to the projects they belong to)
 // (0 no restricted users, 1 restricted users allowed)
 // if set to 1, $sys_user_approval should also be set to 1, 
@@ -285,8 +289,10 @@ $sys_allow_restricted_users = 0;
 $sys_session_lifetime = 3600*24*183;
 
 //
-// Adress from wich is send emails
-$sys_noreply = '"CodeX" <noreply@xrce.xerox.com>';
+// Is license approval mandatory when downloading a file from the FRS?
+// (1 is mandatory, 0 is optional)
+$sys_frs_license_mandatory = 1;
+
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

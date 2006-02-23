@@ -51,15 +51,18 @@ if (user_isloggedin()) {
             $filename = db_result($res,0,'filename');
         }
     }
-    // Display license popup?
-    // This is useful when using a 'file #123' reference, that points to this script
-    $sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
-    $res = db_query( $sql);
-    if (db_numrows( $res ) > 0) {
-        if (db_result($res,0,'approve_license')==0) {
-            # Directly display file
-            $location = "Location: /file/download.php/$group_id/$file_id/$filename";
-            header($location);
+ 
+    if (!$GLOBALS['sys_frs_license_mandatory']) {
+        // Display license popup?
+        // This is useful when using a 'file #123' reference, that points to this script
+        $sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
+        $res = db_query( $sql);
+        if (db_numrows( $res ) > 0) {
+            if (db_result($res,0,'approve_license')==0) {
+                // Directly display file
+                $location = "Location: /file/download.php/$group_id/$file_id/$filename";
+                header($location);
+            }
         }
     }
 

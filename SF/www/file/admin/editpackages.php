@@ -101,7 +101,9 @@ if (!$res || $rows < 1) {
 	$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
 	$title_arr[]=$Language->getText('file_admin_editpackages','rank_on_screen');
 	$title_arr[]=$Language->getText('global','status');
-	$title_arr[]=$Language->getText('file_admin_editpackages','license');
+        if (!$GLOBALS['sys_frs_license_mandatory']) {
+            $title_arr[]=$Language->getText('file_admin_editpackages','license');
+        }
 	$title_arr[]=$Language->getText('file_admin_editpackages','update');
 	$title_arr[]=$Language->getText('file_admin_editpackages','releases');
 	$title_arr[]=$Language->getText('file_admin_editpackages','perms');
@@ -119,11 +121,15 @@ if (!$res || $rows < 1) {
 				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
                         <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.db_result($res,$i,'rank').'"/></TD>
 			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>';
-                $approve_license=db_result($res,$i,'approve_license');
-                echo '<TD align="center"><FONT SIZE="-1"><SELECT name="approve_license"> '.
-                    '<OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$Language->getText('global','yes').'</OPTION>'.
-                    '<OPTION VALUE="0"'.(($approve_license == '0') ? ' SELECTED':'').'>'.$Language->getText('global','no').'</OPTION>'.
-                    '</SELECT></TD>';
+                if (!$GLOBALS['sys_frs_license_mandatory']) {
+                    $approve_license=db_result($res,$i,'approve_license');
+                    echo '<TD align="center"><FONT SIZE="-1"><SELECT name="approve_license"> '.
+                        '<OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$Language->getText('global','yes').'</OPTION>'.
+                        '<OPTION VALUE="0"'.(($approve_license == '0') ? ' SELECTED':'').'>'.$Language->getText('global','no').'</OPTION>'.
+                        '</SELECT></TD>';
+                } else {
+                    echo '<INPUT TYPE="HIDDEN" NAME="approve_license" VALUE="1">';
+                }
                 echo '
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','update').'"></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
@@ -154,11 +160,15 @@ echo '<p><hr><P>
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="add_package">
 <table>
 <tr><th>'.$Language->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package_name" size="20" MAXLENGTH="30"></td></tr>
-<tr><th>'.$Language->getText('file_admin_editpackages','rank_on_screen').':</th>  <td><input type="text" name="rank" size="4" maxlength="4"></td></tr>
-<tr><th>'.$Language->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="approve_license">
+<tr><th>'.$Language->getText('file_admin_editpackages','rank_on_screen').':</th>  <td><input type="text" name="rank" size="4" maxlength="4"></td></tr>';
+if (!$GLOBALS['sys_frs_license_mandatory']) {
+    echo '<tr><th>'.$Language->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="approve_license">
                     <OPTION VALUE="1" SELECTED>'.$Language->getText('global','yes').'</OPTION>
-                    <OPTION VALUE="0">'.$Language->getText('global','no').'</OPTION></SELECT></td></tr>
-<tr><td> <input type="submit" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','create_this_p').'"></td></tr></table>	
+                    <OPTION VALUE="0">'.$Language->getText('global','no').'</OPTION></SELECT></td></tr>';
+ } else {
+    echo '<INPUT TYPE="HIDDEN" NAME="approve_license" VALUE="1">';
+ }
+echo '<tr><td> <input type="submit" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','create_this_p').'"></td></tr></table>	
 </FORM>';
 
 file_utils_footer(array());

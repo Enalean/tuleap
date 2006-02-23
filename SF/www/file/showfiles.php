@@ -225,7 +225,7 @@ function download(group_id,file_id,filename) {
 					print "\t\t" . '<TR class="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
                                             . '<TD><B>';
-                                        if ($license_package[$package_id]==0) {
+                                        if (($license_package[$package_id]==0)&&(!$GLOBALS['sys_frs_license_mandatory'])) {
                                             // Allow direct download
                                              print '<A HREF="/file/download.php/'.$group_id."/".$file_release['file_id']."/".$file_release['filename'].'" title="'.$file_release['file_id']." - ".$fname.'">'. $fname .'</A>';
                                        } else {

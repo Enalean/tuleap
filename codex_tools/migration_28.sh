@@ -103,12 +103,9 @@ CREATE TABLE artifact_rule (
 # Table structure for table 'reference'
 #
 # Notes: 
-# - scope='S' means a artifact report available to all projects
+# - scope='S' means a reference available to all projects
 # (defined by CodeX Site administrators, group_id =100)
-# - scope='P' means a artifact report available to all project members
-# of project group_id (defined by project admin)
-# # (NOT USED) - scope='I' means a personal (individual) artifact report only visible 
-# # and manageable by the owner. 
+# - scope='P' means a reference available to all project pages
 #
 CREATE TABLE reference (
   id int(11) NOT NULL auto_increment,
@@ -123,10 +120,10 @@ CREATE TABLE reference (
 );
 
 CREATE TABLE reference_group (
-  id int(11) NOT NULL auto_increment, #??? not used?
+  id int(11) NOT NULL auto_increment,
   reference_id int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
-  is_active tinyint(4) NOT NULL default '0',
+  is_active tinyint NOT NULL default '0',
   PRIMARY KEY  (id),
   INDEX group_id_idx (group_id,is_active)
 );
@@ -619,7 +616,8 @@ EOF
 # - copy commit-email and log-accum
 # drop svn_tracks and cvs_tracks tables.
 # analyze/optimize tables
-
+# add $sys_frs_license_mandatory in local.inc
+# add $sys_noreply in local.inc?
 
 #Changelog:
 # $sys_noreply => local.inc.dist  (SR #281)
