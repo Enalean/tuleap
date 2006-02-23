@@ -69,7 +69,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     function displayEditForm($params = array()) {
         //echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
-        echo '<form action="'. $this->href .'" method="post"><div id="edit_rule"></div>';
+        echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule"></div>';
         echo '<input type="hidden" id="save"  name="save" value="no" />';
         echo '<input type="hidden" id="source_field_hidden" name="source_field" value="" />';
         echo '<input type="hidden" id="target_field_hidden" name="target_field" value="" />';
