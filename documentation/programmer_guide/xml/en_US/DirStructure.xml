@@ -91,7 +91,10 @@
               <para>Site level services like <emphasis role="bold"><literal>SF/www/admin</literal></emphasis> (user management, project creation scripts, etc.), <emphasis role="bold"><literal>SF/www/my</literal></emphasis> for user home pages, <emphasis role="bold"><literal>SF/www/snippet</literal></emphasis> for code snippets.</para>
             </listitem>
             <listitem>
-              <para><emphasis role="bold"><literal>SF/www/css</literal></emphasis> and <emphasis role="bold"><literal>SF/www/images</literal></emphasis> contain UI theme data: stylesheets and images</para>
+              <para><emphasis role="bold"><literal>SF/www/scripts</literal></emphasis> contains javascript files</para>
+            </listitem>
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/www/themes</literal></emphasis> contains UI theme data: stylesheets and images</para>
             </listitem>
           </itemizedlist>
 
