@@ -18,6 +18,9 @@ $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactTypeHtml extends ArtifactType {
 
+    var $FIELD_VALUE_STATUS_HIDDEN    = 'H';
+    var $FIELD_VALUE_STATUS_PERMANENT = 'P';
+    
 	/**
 	 *  ArtifactType() - constructor
 	 *
@@ -1714,15 +1717,15 @@ EOS;
 					echo '<option value="A"'.$selected.'>'.$Language->getText('tracker_include_type','active').'</option>';
 		
 					$selected = "";
-					if ( $status == "H" ) 
+					if ( $status == $this->FIELD_VALUE_STATUS_HIDDEN ) 
 						$selected = " selected";
-					echo '<option value="H"'.$selected.'>'.$Language->getText('tracker_include_type','hidden').'</option>';
+					echo '<option value="'.$this->FIELD_VALUE_STATUS_HIDDEN.'"'.$selected.'>'.$Language->getText('tracker_include_type','hidden').'</option>';
 
                                         if ($this->Group->getID() == 100 ) {
                                             $selected = "";
-                                            if ( $status == "P" ) 
+                                            if ( $status == $this->FIELD_VALUE_STATUS_PERMANENT  ) 
 						$selected = " selected";
-                                            echo '<option value="P"'.$selected.'>'.$Language->getText('tracker_include_type','permanent').'</option>';
+                                            echo '<option value="'.$this->FIELD_VALUE_STATUS_PERMANENT.'"'.$selected.'>'.$Language->getText('tracker_include_type','permanent').'</option>';
                                         }
 		
 				} else {

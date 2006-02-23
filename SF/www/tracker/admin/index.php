@@ -426,6 +426,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->updateValueFunction($atid,$value_function) ) {
 				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
+                require_once('common/tracker/ArtifactRulesManager.class');
+                $arm =& new ArtifactRulesManager();
+                $arm->deleteRulesByFieldId($atid, $field_id);
 				$feedback = $Language->getText('tracker_admin_index','values_updated');
 			}
 		}
@@ -539,6 +542,11 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->updateValueList($atid,$value_id,$value,$description,$order_id,$status) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
+                if ($status == $ath->FIELD_VALUE_STATUS_HIDDEN) {
+                    require_once('common/tracker/ArtifactRulesManager.class');
+                    $arm =& new ArtifactRulesManager();
+                    $arm->deleteRulesByValueId($atid, $field_id, $value_id);
+                }
 				$feedback = $Language->getText('tracker_admin_index','value_updated');
 			}
 			require('./field_values_details.php');
