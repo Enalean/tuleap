@@ -3199,6 +3199,35 @@ CREATE TABLE artifact_rule (
 
 -- }}}
 
+-----
+-- Table structure for table 'reference'
+--
+-- Notes: 
+--   - scope='S' means a reference available to all projects
+-- (defined by CodeX Site administrators, group_id =100)
+--   - scope='P' means a reference available to one project
+--
+CREATE TABLE reference (
+  id int(11) NOT NULL auto_increment,
+  keyword varchar(25) NOT NULL,
+  description text NOT NULL,
+  link text NOT NULL,
+  scope char(1) NOT NULL default 'P',
+  service_short_name TEXT,
+  PRIMARY KEY  (id),
+  INDEX keyword_idx (keyword),
+  INDEX scope_idx (scope)
+);
+
+CREATE TABLE reference_group (
+  id int(11) NOT NULL auto_increment,
+  reference_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  is_active tinyint NOT NULL default '0',
+  PRIMARY KEY  (id),
+  INDEX group_id_idx (group_id,is_active)
+);
+
 #
 # EOF
 #
