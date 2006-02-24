@@ -55,7 +55,18 @@ if (isset($aid) && !isset($atid)) {
         $row = db_fetch_array($result);
         $atid = $row['group_artifact_id'];
     }
- }		    
+ }
+		    
+if (isset($atid) && !isset($group_id)) {
+    // We have the artifact group id, but not the group id
+    $sql="SELECT group_id FROM artifact_group_list WHERE group_artifact_id=$atid";
+    $result = db_query($sql);
+    if (db_numrows($result)>0) {
+        $row = db_fetch_array($result);
+        $group_id = $row['group_id'];
+    }
+ }
+
 
 //define undefined variables
 if (!isset($func)) {
@@ -849,7 +860,7 @@ if ( $func == 'gotoid' ) {
         $params['group']=$group_id;
         $params['toptab']='tracker';
         $params['pagename']='trackers';
-        $params['title']=$Language->getText('tracker_index','trackers_for');
+        $params['title']=$Language->getText('tracker_index','trackers_for',$group->getPublicName());
         $params['sectionvals']=array($group->getPublicName());
         $params['help']='TrackerService.html';
         $params['pv']  = isset($pv)?$pv:'';
