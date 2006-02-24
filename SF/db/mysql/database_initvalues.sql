@@ -2186,7 +2186,7 @@ INSERT INTO reference SET \
     description='reference_bug_desc_key', \
     link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=bug', \
     scope='S', \
-    service_short_name='bug';
+    service_short_name='bugs';
 INSERT INTO reference SET \
     id='91',        \
     keyword='task', \

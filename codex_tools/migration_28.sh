@@ -256,7 +256,7 @@ INSERT INTO reference SET \
     description='reference_bug_desc_key', \
     link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=bug', \
     scope='S', \
-    service_short_name='bug';
+    service_short_name='bugs';
 INSERT INTO reference SET \
     id='91',        \
     keyword='task', \
@@ -289,7 +289,7 @@ INSERT INTO reference SET \
     service_short_name='';
 
 #
-# Temporary stuff for testing:
+# Initial referecne values for template project:
 #
 INSERT INTO reference_group SET reference_id='1', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='2', group_id='100', is_active='1';
@@ -310,21 +310,6 @@ INSERT INTO reference_group SET reference_id='90', group_id='100', is_active='0'
 INSERT INTO reference_group SET reference_id='91', group_id='100', is_active='0';
 INSERT INTO reference_group SET reference_id='92', group_id='100', is_active='0';
 INSERT INTO reference_group SET reference_id='93', group_id='100', is_active='0';
-INSERT INTO reference_group SET reference_id='1', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='2', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='3', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='4', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='5', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='6', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='7', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='8', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='9', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='10', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='11', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='12', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='13', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='14', group_id='109', is_active='1';
-INSERT INTO reference_group SET reference_id='15', group_id='109', is_active='1';
 
 
 
@@ -603,6 +588,100 @@ while ($ln = pop(@groupdump_array)) {
 
 exit;
 EOF
+
+###############################################################################
+# add project ugroup definition in CodeX default SVN Access file
+#
+
+
+$PERL <<'EOF'
+
+use DBI;
+
+require "/home/httpd/SF/utils/include.pl";  # Include all the predefined functions
+
+&db_connect;
+
+my $reference;
+my $nb_ref=0;
+my $nb_ref_tracker=0;
+
+
+sub load_references {
+  $query = "SELECT id,service_short_name FROM reference";
+  $c = $dbh->prepare($query);
+  $c->execute();
+  while (my ($id, $service) = $c->fetchrow()) {
+    $references{"$id"}=$service;
+  }
+}
+
+
+sub insert_references {
+  my ($query, $c, $q, $d, $correct_day);
+
+  $query = "SELECT group_id FROM groups WHERE group_id!=100";
+
+  $c = $dbh->prepare($query);
+  $c->execute();
+  while (my ($group_id) = $c->fetchrow()) {
+    #Get all services
+    $query2 = "SELECT short_name,is_used FROM service WHERE group_id=$group_id AND scope='system'";
+    $c2 = $dbh->prepare($query2);
+    $c2->execute();
+    my %service_is_used;
+    while (my ($short_name, $is_used) = $c2->fetchrow()) {
+      $service_is_used{"$short_name"}=$is_used;
+    }
+    foreach $service (keys %service_is_used) {
+      foreach $ref_id (keys %references) {
+        if ($references{"$ref_id"} eq $service) {
+          # Add reference in project
+          $query3 = "INSERT INTO reference_group (reference_id,group_id,is_active) VALUES ('$ref_id','$group_id','".$service_is_used{"$service"}."')";
+          $c3 = $dbh->prepare($query3);
+          $c3->execute();
+          $nb_ref++;
+        }
+      }
+    }
+  }
+}
+
+
+sub insert_tracker_references {
+  my ($query, $c, $q, $d, $correct_day);
+
+  $query = "SELECT group_id,item_name FROM artifact_group_list WHERE status='A'";
+  $c = $dbh->prepare($query);
+  $c->execute();
+  while (my ($group_id,$short_name) = $c->fetchrow()) {
+    $query2 = "INSERT INTO reference (keyword,description,link,scope) VALUES ('".lc($short_name)."','Tracker Artifact','/tracker/?func=detail&aid=\$1&group_id=$group_id','P')";
+    $c2 = $dbh->prepare($query2);
+    $c2->execute();
+    $ref_id = $c2->{'mysql_insertid'};
+
+    # Add reference in project
+    $query3 = "INSERT INTO reference_group (reference_id,group_id,is_active) VALUES ('$ref_id','$group_id','1')";
+    $c3 = $dbh->prepare($query3);
+    $c3->execute();
+    $nb_ref_tracker++;
+  }
+}
+
+
+
+
+print "** Creating references for each project\n";
+&load_references();
+print "*    References loaded\n";
+&insert_references();
+print "*    $nb_ref service references added\n";
+&insert_tracker_references();
+print "*    $nb_ref_tracker tracker references added\n";
+print "** All references created\n";
+1;
+EOF
+
 
 
 # Still To Do
