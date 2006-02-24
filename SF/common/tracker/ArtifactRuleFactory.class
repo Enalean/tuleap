@@ -1,15 +1,37 @@
 <?php
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ *
+ * Originally written by Nicolas Terray, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
 require_once('common/dao/ArtifactRuleDao.class');
 
 require_once('ArtifactRuleValue.class');
 
+
 /**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
- * 
- * $Id$
- *
- * PluginFactory
- */
+* Factory of rules
+*
+* Base class to create, retrieve, update or delete rules
+*/
 class ArtifactRuleFactory {
     
     var $rules_dao;
@@ -30,6 +52,9 @@ class ArtifactRuleFactory {
         $this->RULETYPE_VALUE     = 4;
     }
     
+    /**
+    * ArtifactRuleFactory is a singleton
+    */
     function &instance() {
         static $_artifactrulefactory_instance;
         if (!$_artifactrulefactory_instance) {
@@ -65,6 +90,9 @@ class ArtifactRuleFactory {
         return $rules;
     }
     
+    /**
+    * @return ArtifactRule
+    */
     function &_buildRuleInstance($data) {
         //We create Rule
         switch ($data['rule_type']) {
@@ -118,18 +146,30 @@ class ArtifactRuleFactory {
         return $deleted;
     }
     
+    /**
+    * Delete all rules for a tracker
+    */
     function deleteRulesByArtifactType($artifact_type) {
         $deleted = $this->rules_dao->deleteRulesByGroupArtifactId($artifact_type);
         return $deleted;
     }
+    /**
+    * Delete all rules related to a field
+    */
     function deleteRulesByFieldId($artifact_type, $field_id) {
         $deleted = $this->rules_dao->deleteByField($artifact_type, $field_id);
         return $deleted;
     }
+    /**
+    * Delete all rules related to a field value
+    */
     function deleteRulesByValueId($artifact_type, $field_id, $value_id) {
         $deleted = $this->rules_dao->deleteByFieldValue($artifact_type, $field_id, $value_id);
         return $deleted;
     }
+    /**
+    * copy rules from a tracker to another
+    */
     function copyRules($from_artifact_type, $to_artifact_type) {
         $copied = $this->rules_dao->copyRules($from_artifact_type, $to_artifact_type);
         return $copied;

@@ -1,32 +1,34 @@
 /**
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
- * Originally written by Manuel Vacelet, 2006
- *
- * This file is a part of CodeX.
- *
- * CodeX is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * CodeX is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with CodeX; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Id$
- */
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+*
+* Originally written by Nicolas Terray, 2006
+*
+* This file is a part of CodeX.
+*
+* CodeX is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* CodeX is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with CodeX; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*
+* $Id$
+*/
 
+// Define namespace to prevent clashes
 if (!com) var com = {};
 if (!com.xerox) com.xerox = {};
 if (!com.xerox.codex) com.xerox.codex = {};
 if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
 
+// Define global (berk) variables
 var fields            = {};
 var fields_by_name    = {};
 var options           = {};
@@ -69,8 +71,10 @@ function xgs_debug(msg) {
 //==============================================================================
 
 
+// The highlight color for the Yellow Fade Technique
 var HIGHLIGHT_STARTCOLOR = '#ffff99';
 
+// Search for a class in loaded stylesheets
 function getStyleClass (className) {
     var re = new RegExp("\\." + className + "$", "gi");
     if (document.all) {
@@ -96,6 +100,7 @@ function getStyleClass (className) {
     }
     return null;
 }
+// Search for a property for a class in loaded stylesheets
 function getStyleClassProperty (className, propertyName) {
   var styleClass = getStyleClass(className);
   if (styleClass)
@@ -106,7 +111,16 @@ function getStyleClassProperty (className, propertyName) {
 
 
 
-
+/**
+* Internal representation of a field
+* 
+* A field is identified by an id and has a name and a label
+* The id is used only internally as widget elements id is the name of the field.
+* The fields can propose some options
+*  - defaultOptions are all options the field can propose
+*  - actualOptions are the options which are proposed at a given time
+*  - selectedOptions are the options which are selected on corresponding widgets
+*/
 com.xerox.codex.tracker.Field = Class.create();
 Object.extend(com.xerox.codex.tracker.Field.prototype, {
     initialize: function (id, name, label) {
@@ -119,6 +133,8 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
         this.actualOptions   = [];
     },
     highlight: function() {
+        //We store the actual effect to not load a lot of new objects
+        //and also to prevent locks of the background color
         if (!this._highlight) {
             this._highlight = new Effect.Highlight($(this.name), {startcolor:HIGHLIGHT_STARTCOLOR});
         } else {
@@ -167,6 +183,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
         }
         return has_changed;
     },
+    /**
+    * add an actualOption
+    */
     add: function(new_option_id) {
         //We search first if we have already added this option
         var len = $(this.name).options.length;
@@ -180,6 +199,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             this.actualOptions.push(new_option_id);
         }
     },
+    /**
+    * remove all actual options
+    */
     clear: function() {
         el = $(this.name);
         
@@ -190,6 +212,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             el.options[i] = null;
         }
     },
+    /**
+    * reset field (map widget to defaultOptions)
+    */
     reset: function() {
         var changed = true;
         el = $(this.name);
@@ -226,7 +251,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
         }
         return changed;
     },
-    
+    /**
+    * preselect options
+    */
     select: function() {
         if (arguments[0]) {
             this.selectedOptions = [arguments[0]];
@@ -251,6 +278,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             }
         }
     },
+    /**
+    * if the user select an option, we have to store the changes
+    */
     updateSelected: function() {
         this.selectedOptions = [];
         el = $(this.name);
@@ -267,6 +297,10 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
     }
 });
 
+/**
+* A rule (representation of a php RuleValue)
+* 
+*/
 com.xerox.codex.tracker.Rule = Class.create();
 Object.extend(com.xerox.codex.tracker.Rule.prototype, {
     initialize: function (rule_definition) {
@@ -277,8 +311,6 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
         this.selected        = false;
     },
     process: function(source_field) {
-
-
         applied = false;
         if (this.source_field_id == source_field.id) {
             fields[this.source_field_id].update();
@@ -288,10 +320,11 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
                 applied = fields[this.target_field_id];
             }
         }
-
-
         return applied;
     },
+    /**
+    * we store internally the state of the target selection to not loose it when user switches between rules
+    */
     updateSelected: function(target_field, source_field) {
         if (this.target_field_id == target_field.id) {
             if (this.source_field_id == source_field.id) {

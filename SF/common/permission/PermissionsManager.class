@@ -1,15 +1,36 @@
 <?php
 
 /**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
- * 
- * $Id$
- *
- * PermissionsManager
- */
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+*
+* Originally written by Nicolas Terray, 2006
+*
+* This file is a part of CodeX.
+*
+* CodeX is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* CodeX is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with CodeX; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*
+* $Id$
+*/
+
 require_once('common/dao/PermissionsDao.class');
 require_once('common/dao/CodexDataAccess.class');
 
+/**
+* Manage permissions
+*
+*/
 class PermissionsManager {
     
     var $permission_dao;
@@ -22,6 +43,9 @@ class PermissionsManager {
         $this->_ugroups_for_user = array();
     }
     
+    /**
+    * The manager is a singleton
+    */
     function & instance() {
         static $_permissionmanager_instance;
         if (!$_permissionmanager_instance) {
@@ -31,6 +55,16 @@ class PermissionsManager {
         return $_permissionmanager_instance;
     }
     
+    /**
+    * Returns if one of the user's ugroups has permission to access the object
+    * 
+    * @access public
+    * 
+    * @param  int     $object_id       The id of the object
+    * @param  string  $permission_type The type of permission asked
+    * @param  array   $ugroups         The user's ugroups
+    * @return boolean 
+    */
     function userHasPermission($object_id, $permission_type, $ugroups) {
         if (!isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
@@ -49,8 +83,16 @@ class PermissionsManager {
         return $has_permission;
     }
     
+    /**
+    * Returns all permissions for ugroups for a given object
+    * 
+    * @access public
+    * 
+    * @param  int     $object_id  The id of the object
+    * @param  array   $ugroups    A list of ugroups we want to see in permissions
+    */
     function getPermissionsAndUgroupsByObjectid($object_id, $ugroups) {
-        $this->_retrievePermissions($object_id);
+        $this->_retrievePermissions($object_id); //Why don't we pass $ugroups ???
         $perms = array();
         if (isset($this->_permissions[$object_id])) {
             foreach($this->_permissions[$object_id] as $ugroup_id => $permissions) {
@@ -65,10 +107,25 @@ class PermissionsManager {
         return $perms;
     }
     
+    /**
+    * Returns true if user has full permissions in all cases
+    * 
+    * @access protected
+    * 
+    * @param  int     $user_id  The id of the user
+    */
     function _userHasFullPermission($user_id = 0) {
         return (user_isloggedin() && user_is_super_user());
     }
     
+    /**
+    * Store internally (in _permissions) all permissions for an object
+    * 
+    * @access protected
+    * 
+    * @param  int     $object_id  The id of the object
+    * @param  array   $ugroups    A list of ugroups we want to see in permissions
+    */
     function _retrievePermissions($object_id, $ugroups = array()) {
         $tracker_field_id = explode('#', $object_id); //An artifact field ?
         if (count($tracker_field_id) > 1) {
