@@ -138,7 +138,7 @@ survey_index	s_for	Surveys for $1
 #-----------------------------------------------
 # Script: SF/www/survey/privacy.php
 #
-survey_privacy	txt	<H1>Survey Privacy</H1> The information collected in these surveys will never be sold to third parties or used to solicit you to purchase any goods or services.<P> This information is being gathered to build a profile of the projects and developers being surveyed.<P>The ID's of those who answer surveys are suppressed and not viewable by project administrators or the public or third parties.<P> The information gathered is used only in aggregate form, not to single out specific users or developers.<P>If any changes are made to this policy, it will affect only future data that is collected and the user will of course have the ability to 'opt-out'.<P><B>The $1 Team</B><P>
+survey_privacy	txt	<H1>Survey Privacy</H1><ul><li><b>Surveys under Codex are anonymous.</b></li><li> There is no possibility to retrieve users' answers. The ID's of those who answer surveys are suppressed and not viewable by project administrators, the public or third parties.</li><li>The information gathered is used only in aggregate form, not to single out specific users or developers.</li><li>If any changes are made to this policy, it will affect only future data that is collected and the user will of course have the ability to 'opt-out'.</li></ul><B>The $1 Team</B><P>
 #
 #-----------------------------------------------
 # Script: SF/www/survey/rating_resp.php
