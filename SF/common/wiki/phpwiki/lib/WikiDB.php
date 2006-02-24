@@ -811,7 +811,7 @@ class WikiDB_Page
             if (glob_match($page,$this->_pagename)) {
                 foreach ($users as $userid => $user) {
                     if (!empty($user['verified']) and !empty($user['email'])) {
-                        $emails[]  = $user['email'];
+                        $emails[]  = user_getemail_from_unix($userid);
                         $userids[] = $userid;
                     } elseif (!empty($user['email'])) {
                         global $request;
@@ -819,7 +819,7 @@ class WikiDB_Page
                         $u = $request->getUser();
                         if ($u->UserName() == $userid) {
                             if ($request->_prefs->get('emailVerified')) {
-                                $emails[] = $user['email'];
+                                $emails[] = user_getemail_from_unix($userid);
                                 $userids[] = $userid;
                                 $notify[$page][$userid]['verified'] = 1;
                                 $request->_dbi->set('notify',$notify);
@@ -827,7 +827,7 @@ class WikiDB_Page
                         } else {
                             $u = WikiUser($userid);
                             if ($u->_prefs->get('emailVerified')) {
-                                $emails[] = $user['email'];
+                                $emails[] = user_getemail_from_unix($userid);
                                 $userids[] = $userid;
                                 $notify[$page][$userid]['verified'] = 1;
                                 $request->_dbi->set('notify',$notify);

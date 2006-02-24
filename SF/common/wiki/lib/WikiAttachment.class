@@ -146,13 +146,12 @@ vb[esx]?
 vxd
 ws[cfh]");
 
-
         if (preg_match("/(\." . join("|\.", $disallowed_extensions) . ")\$/",
                        $name)) {
             trigger_error($Language->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
             return false;
         }
-        elseif (preg_match("/[^._a-zA-Z0-9-]/", $name)) {
+        elseif (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
             trigger_error($Language->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
         }
 
@@ -213,14 +212,28 @@ ws[cfh]");
 
         if(is_numeric($uriExp[4])) {
             $rev = (int) $uriExp[4];
-      
-            $this->setFilename($uriExp[5]);
+            
+            // Take care of possible arguments (if sth like '?' or '&' CUT!)
+            if(preg_match('/([^&\?]*)(\?|&)/', $uriExp[5], $matches)){
+                $filename = $matches[1];
+            } else {
+                $filename = $uriExp[5];
+            }
+            $this->setFilename(urldecode($filename));
             $file = $this->basedir.'/'.$this->filename;
         }
         else {
-            $this->setFilename($uriExp[4]);
+            // Take care of possible arguments (if sth like '?' or '&' CUT!)
+            if(preg_match('/([^&\?]*)(\?|&)/', $uriExp[4], $matches)){
+                $filename = $matches[1];
+            } else {
+                $filename = $uriExp[4];
+            }
+            $this->setFilename(urldecode($filename));
             $file = $this->basedir.'/'.$this->filename;
       
+            // @TODO: prevent usage of '?' and '&' as behind. But with a
+            // generical functions, in utils.php for instance.
             if(is_numeric($uriExp[5])) {
                 $rev = (int) $uriExp[5];
             }
@@ -311,7 +324,7 @@ ws[cfh]");
      * @return
      */
     function createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname) {    
-        if(!$this->setFilename($userfile_name)) {
+        if(!$this->setFilename(urldecode($userfile_name))) {
             return -1;
         }
 

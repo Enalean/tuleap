@@ -178,7 +178,7 @@ ws[cfh]");
                         $current = $pagehandle->getCurrentRevision();
                         $version = $current->getVersion();
                         $text = $current->getPackedContent();
-                        $newtext = $text . "\n* Upload:$prev/$userfile_name";
+                        $newtext = $text . "\n* [Upload:$prev/$userfile_name]";
                         $meta = $current->_data;
                         $meta['summary'] = sprintf(_("uploaded %s revision %d"),$userfile_name,$prev);
                         $meta['author'] = user_getname();

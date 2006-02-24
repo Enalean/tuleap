@@ -87,7 +87,7 @@ if (isset($login) && $login && !$success) {
     if ($status == 'P') {
 	echo "<P><B>".$Language->getText('account_login', 'pending_title')."</B>";
 	echo "<P>".$Language->getText('account_login', 'pending_msg');
-	echo "<P><A href=\"pending-resend.php?form_user=$form_loginname; \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
+	echo "<P><A href=\"pending-resend.php?form_user=$form_loginname \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
     } else if ($status == 'S') {
 	echo "<P><B>".$Language->getText('account_suspended', 'title')."</B>";
 	echo "<P>".$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));

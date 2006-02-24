@@ -153,7 +153,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 		.'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
 		.'trove_group_link.trove_cat_id AND trove_group_link.group_id='
 		.$group_id.' '
-		.'ORDER BY trove_cat.fullpath');
+		.'ORDER BY trove_group_link.trove_group_id');
 
 // LJ Added a link to the categorization admin page
 // LJ in case the project is not yet categorized
