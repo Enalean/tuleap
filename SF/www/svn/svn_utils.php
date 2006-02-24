@@ -34,12 +34,14 @@ function svn_header($params) {
 	  echo ' | <A HREF="/svn/viewcvs.php/?roottype=svn&root='.$project->getUnixName().'">'.$Language->getText('svn_utils','browse_tree').'</A>';
 	}
 	
-        if (user_isloggedin()) {
-            echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('svn_utils','my_ci').'</A>';
-        }
+    if (user_isloggedin()) {
+        echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('svn_utils','my_ci').'</A>';
         echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_query').'</A>';
-        echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';	
-        if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
+    }
+    if (user_ismember($group_id, 'A')) {
+        echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';
+    }
+    if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 
 	echo '</B>';

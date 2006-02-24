@@ -269,11 +269,23 @@ function docman_header($params) {
 	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc','pv'=>$params['pv']));
 
         if (!$params['pv']) {
-            print "<p><b><a href=\"/docman/new.php?group_id=".$group_id."\">".$Language->getText('docman_doc_utils','submit_doc')."</a> | ".
-		"<a href=\"/docman/admin/index.php?group_id=".$group_id."\">".$Language->getText('docman_doc_utils','admin')."</a></b>"; 
-	
+            print "<p><b>";
+            // submit link only displayed if the user is a tech (or a project adminitrator)
+            if (user_ismember($group_id, 'D1') || user_ismember($group_id, 'A')) {
+                echo "<a href=\"/docman/new.php?group_id=".$group_id."\">".$Language->getText('docman_doc_utils','submit_doc')."</a>";
+                if (user_ismember($group_id, 'D2') || user_ismember($group_id, 'A')) {
+                    echo " | ";
+                }
+            }
+            if (user_ismember($group_id, 'D2') || user_ismember($group_id, 'A')) {
+                echo "<a href=\"/docman/admin/index.php?group_id=".$group_id."\">".$Language->getText('docman_doc_utils','admin')."</a>";
+            }
+            echo "</b>";
+            if ($params['help'] && (user_ismember($group_id, 'A')  || user_ismember($group_id, 'D1') || user_ismember($group_id, 'D2'))) {
+                echo ' | ';
+            }
             if ($params['help']) {
-                echo ' | <b>  '.help_button($params['help'],false,$Language->getText('global','help')).'</b>';
+                echo '<b>  '.help_button($params['help'],false,$Language->getText('global','help')).'</b>';
             }
         }
 }

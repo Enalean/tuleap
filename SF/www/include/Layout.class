@@ -216,6 +216,7 @@ class Layout extends Error {
                 echo "<P>$GLOBALS[G_DEBUGQUERY]";
         }
         include($Language->getContent('layout/footer'));
+	$GLOBALS['PHPDbg']->DebugDisplay();
         echo '</body>';
         echo '</html>';
 	}
@@ -456,6 +457,21 @@ echo html_blankimage(5,100);
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
         while (list($short_name,$service_data) = each($project->service_data_array)) {
+            if ($short_name == "admin") {
+                // for the admin service, we will check if the user is allowed to use the service
+                // it means : 1) to be a super user, or
+                //            2) to be project admin
+                if (!user_is_super_user()) {
+                    if (!user_isloggedin()) {
+                        continue;   // we don't include the service in the $tabs
+                    } else {
+                        if (!user_ismember($group_id, 'A')) {
+                            continue;   // we don't include the service in the $tabs
+                        }
+                    }
+                }
+            }
+            
             if (!$service_data['is_used']) continue;
             if (!$service_data['is_active']) continue;
             // Get URL, and eval variables

@@ -23,10 +23,14 @@ function mail_header($params) {
 
 
 	site_project_header($params);
-	echo '
-		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A>';
+	echo '<P><B>';
+    // admin link is only displayed if the user is a project administrator
+    if (user_ismember($group_id, 'A')) {
+        echo '<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A>';
+        echo ' | ';
+    }
 	if ($params['help']) {
-	    echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
+	    echo help_button($params['help'],false,$Language->getText('global','help'));
 	}
 	echo '</B><P>';
 }

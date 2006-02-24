@@ -52,9 +52,11 @@ function commits_header($params) {
 	}
 	if (user_isloggedin()) {
 	  echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('cvs_commit_utils', 'menu_my').'</A>';
+      echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_query').'</A>';
 	}
-	echo ' | <A HREF="/cvs/?func=browse&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_query').'</A>';
-	echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_admin').'</A>';	
+	if (user_ismember($group_id, 'A')) {
+        echo ' | <A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_admin').'</A>';
+    }
 	if (!$params['help']) { $params['help'] = "VersionControlWithCVS.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global', 'help'));
 

@@ -866,11 +866,17 @@ if ( $func == 'gotoid' ) {
         $params['pv']  = isset($pv)?$pv:'';
 
         echo site_project_header($params);
-        echo '<strong>'
-                 .'<a href="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
-        echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a>';
+        echo '<strong>';
+        // Admin link and create link are only displayed if the user is a project administrator
+        if (user_ismember($group_id, 'A')) {
+            echo '<a href="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
+            echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a>';
+            if ($params['help']) {
+                echo ' | ';
+            }
+        }
         if ($params['help']) {
-            echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
+            echo help_button($params['help'],false,$Language->getText('global','help'));
         }
         echo "</strong><p>";
         

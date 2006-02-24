@@ -45,14 +45,14 @@ function forum_header($params) {
 
 			//backwards shim for all "generic news" that used to be submitted
 			//as of may, "generic news" is not permitted - only project-specific news
-	       		if (db_result($result,0,'group_id') != $GLOBALS['sys_news_group']) {
+	       	if (db_result($result,0,'group_id') != $GLOBALS['sys_news_group']) {
 				$params['group']=db_result($result,0,'group_id');
         			$params['toptab']='news';
 				$group_id = db_result($result,0,'group_id');
 				site_project_header($params);
 			} else {
-				$HTML->header($params);
-				echo '
+                $HTML->header($params);
+                echo '
 					<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">'.$Language->getText('forum_forum_utils','news').'</A></H2><P>';
 			}
 
@@ -79,7 +79,7 @@ function forum_header($params) {
 		}
 	} else {
 		//this is just a regular forum, not a news item
-		site_project_header($params);
+        site_project_header($params);
 	}
 
 	/*
@@ -107,9 +107,16 @@ function forum_header($params) {
                 echo "<A HREF='".$PHP_SELF."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
             }
             
-            echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';
+            // The forum admin link is only displayed for the forum administrators (and the project administrator of course)
+            if (user_ismember($group_id, 'A') || user_ismember($group_id, 'F2')) {
+                echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';
+                if ($params['help']) {
+                    echo ' | ';
+                }
+            }
+            
             if ($params['help']) {
-                echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
+                echo help_button($params['help'],false,$Language->getText('global','help'));
             }
         }
 	echo '<P>';

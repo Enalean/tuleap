@@ -28,9 +28,13 @@ function survey_header($params) {
 
     site_project_header($params);
 
-    echo "<P><B><A HREF=\"/survey/admin/?group_id=$group_id\">".$Language->getText('survey_s_utils','admin')."</A>";
+    echo "<P><B>";
+    // Admin link is displayed only if the user is a project administrator
+    if (user_ismember($group_id, 'A')) {
+        echo"<A HREF=\"/survey/admin/?group_id=$group_id\">".$Language->getText('survey_s_utils','admin')."</A>";
+    }
 
-    if ($is_admin_page && $group_id) {
+    if ($is_admin_page && $group_id && user_ismember($group_id, 'A')) {
 	echo " | <A HREF=\"/survey/admin/add_survey.php?group_id=$group_id\">".$Language->getText('survey_admin_index','add_s')."</A>";
 	echo " | <A HREF=\"/survey/admin/edit_survey.php?func=browse&group_id=$group_id\">".$Language->getText('survey_admin_browse_survey','edit_s')."</A>";
 	echo " | <A HREF=\"/survey/admin/add_question.php?group_id=$group_id\">".$Language->getText('survey_admin_index','add_q')."</A>";
@@ -39,7 +43,10 @@ function survey_header($params) {
     }
     
     if ($params['help']) {
-	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
+        if (user_ismember($group_id, 'A')) {
+            echo ' | ';
+        }
+	    echo help_button($params['help'],false,$Language->getText('global','help'));
     }
 
     echo "</B><P>";
@@ -127,7 +134,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
 	    if ($question_type == "1") {
 		/*
-		  This is a rædio-button question. Values 1-5.
+		  This is a rï¿½dio-button question. Values 1-5.
 		*/
 		$return .= "<b>1</b>";
 		for ($j=1; $j<=5; $j++) {
