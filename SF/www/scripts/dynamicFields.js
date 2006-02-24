@@ -681,7 +681,7 @@ function buildAdminUI() {
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.source_field == source_field.id;
                 })) {
-                    so.className = 'boxitem';
+                    so.className = 'boxhighlight';
                 }
                 select_source.appendChild(so);
             }
@@ -713,7 +713,7 @@ function buildAdminUI() {
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.target_field == target_field.id;
                 })) {
-                    to.className = 'boxitem';
+                    to.className = 'boxhighlight';
                 }
                 select_target.appendChild(to);
             }
@@ -961,7 +961,7 @@ function buildAdminUI() {
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.source_field == source_field.id;
                     })) {
-                        so.className = 'boxitem';
+                        so.className = 'boxhighlight';
                     }
 
                     $('source_field').appendChild(so);
@@ -998,7 +998,7 @@ function buildAdminUI() {
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.target_field == target_field.id;
                     })) {
-                        to.className = 'boxitem';
+                        to.className = 'boxhighlight';
                     }
 
                     $('target_field').appendChild(to);
