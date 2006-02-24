@@ -36,7 +36,10 @@ function exit_no_group() {
 
 function exit_missing_param() {
   global $feedback,$Language;
-    exit_error($Language->getText('include_exit','missing_param_err'),'<p>'.$feedback);
+  // Display current $feedback normally, and replace feedback with error message
+  $msg=$feedback;
+  $feedback="";
+  exit_error($Language->getText('include_exit','missing_param_err'),'<p>'.$msg);
 }
 
 ?>
