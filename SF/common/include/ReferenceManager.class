@@ -252,7 +252,7 @@ class ReferenceManager {
     function insertReferences(&$html,$group_id) {
 
         $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/]+)+/',
-                                      array($this,"_insertRefCallback"), // method _insertRefCallback of this class
+                                      array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
                                       $html);
     }
 
@@ -360,7 +360,8 @@ class ReferenceManager {
                     $p[$ref->getKeyword()] = array();
                 }
                 if (isset($p[$ref->getKeyword()][$num_args])) {
-                    // Project reference overload system reference (but you can't normally create such references!)
+                    // Project reference overload system reference 
+                    // (but you can't normally create such references, except in CX 2.6 to 2.8 migration)
                     if ($ref->isSystemReference()) continue;
                 }
                 $p[$ref->getKeyword()][$num_args] =& $ref;
