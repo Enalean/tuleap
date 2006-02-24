@@ -370,6 +370,9 @@ project_admin_utils	perm_granted_for_docgroup	Permission granted for document gr
 project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
 project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1
 project_admin_utils	perm_granted_for_object	Permission granted for object $1 
+project_admin_utils	menu_config	Configuration: 
+project_admin_utils	menu_permissions	Permissions: 
+project_admin_utils	menu_data	Data: 
 #... end of values
 #
 #-----------------------------------------------

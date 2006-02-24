@@ -22,14 +22,20 @@ function project_admin_header($params) {
 	site_project_header($params);
 
 	echo '
-	<P><B>
-	<A HREF="/project/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','admin').'</A> | 
+	<P><TABLE width="100%"><TR>';
+        echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
-	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A> |
+	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
+        echo '</td><td>';
+	if ($params['help']) {
+	    echo help_button($params['help'],false,$Language->getText('global','help'));
+	}
+        echo '</td></tr>';
+        echo '</td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_permissions').'</b></td><td><b>
 	<A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> | 
-	<A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> |
-	<BR>
+	<A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A>';
+        echo '</td><td></td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_data').'</b></td><td><b>
 	<A HREF="/project/export/index.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','project_data_export').'</A> |
 	<A HREF="/tracker/import_admin.php?group_id='.$group_id.'&mode=admin">'.$Language->getText('project_admin_utils','tracker_import').'</A> |
 	<A HREF="/project/admin/history.php?group_id='.$group_id.'">'.$Language->getText('project_admin_history','proj_history').'</A> |
@@ -37,9 +43,7 @@ function project_admin_header($params) {
 
 	//<A HREF="/project/admin/?group_id='.$group_id.'&func=import">Tracker Import</A>
 
-	if ($params['help']) {
-	    echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-	}
+        echo '</td><td></td></tr></table>';
 	echo '</B>
 	<P>';
 }
