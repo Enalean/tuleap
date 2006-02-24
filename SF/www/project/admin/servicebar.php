@@ -222,9 +222,9 @@ if ($func=='do_update') {
     }
 
     // If this is a global service (i.e. with a shortname), we might need to (de-)activate the corresponding reference 
-    if (isset($shortname)) {
+    if (isset($short_name)) {
         $reference_manager =& ReferenceManager::instance();
-        $reference_manager->updateReferenceForService($group_id,$shortname,$is_active);
+        $reference_manager->updateReferenceForService($group_id,$short_name,($is_used?"1":"0"));
     }
 }
 

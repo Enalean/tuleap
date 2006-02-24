@@ -83,7 +83,7 @@ class ReferenceAdministrationViews extends Views {
                 echo html_build_list_table_top($title_arr_project);
             }
             $current_scope=$ref->getScope();
-            $this->_display_reference_row($ref,$row_num,$is_superuser);
+            $this->_display_reference_row($ref,$row_num);
         }
                 
         echo '
@@ -92,7 +92,7 @@ class ReferenceAdministrationViews extends Views {
 
     }
     
-    function _display_reference_row($ref, &$row_num, $su) {
+    function _display_reference_row($ref, &$row_num) {
         global $Language;
         
         if ($ref->getId()==100) return; // 'None' reference
@@ -117,7 +117,7 @@ class ReferenceAdministrationViews extends Views {
         }
         
         if (($ref->getScope()!="S")||($ref->getGroupId()==100)) {
-            echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'&action=do_delete" onClick="return confirm(\'';
+            echo '<TD align="center"><a href="/project/admin/reference.php?group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'&action=do_delete" onClick="return confirm(\'';
             if ($ref->getScope()=="S") {
                 echo $Language->getText('project_reference','warning_del_r',$ref->getKeyword());
             } else {

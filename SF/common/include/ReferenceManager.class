@@ -221,7 +221,7 @@ class ReferenceManager {
         $reference_dao =& $this->_getReferenceDao();
         $dar = $reference_dao->searchByServiceShortName($short_name);
         while ($row = $dar->getRow()) {
-            $this->update_ref_group($row['id'],$is_active,$group_id);
+            $reference_dao->update_ref_group($row['id'],$is_active,$group_id);
         }
         return true;
     }
