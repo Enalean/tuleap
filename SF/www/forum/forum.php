@@ -100,6 +100,8 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
 	return $ret_val;
 }
 
+$ret_val="";
+
 if ($forum_id) {
 	/*
 		if necessary, insert a new message into the forum
@@ -110,7 +112,7 @@ if ($forum_id) {
             exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
         }
 
-	if ($post_message == 'y') {
+	if (isset($post_message)&&($post_message == 'y')) {
         //
         // MV: add management on "on post monitoring"
         if($_POST['enable_monitoring'] == 1) {
@@ -130,15 +132,15 @@ if ($forum_id) {
 	/*
 		set up some defaults if they aren't provided
 	*/
-	if ((!$offset) || ($offset < 0)) {
+	if ((!isset($offset)) || ($offset < 0)) {
 		$offset=0;
 	} 
 
-	if (!$style) {
+	if (!isset($style)) {
 		$style='nested';
 	}
 
-	if (!$max_rows || $max_rows < 5) {
+	if (!isset($max_rows) || $max_rows < 5) {
 		$max_rows=25;
 	}
 
@@ -152,7 +154,7 @@ if ($forum_id) {
 	*/
 	if (user_isloggedin()) {
 		$_pref=$style.'|'.$max_rows;
-		if ($set=='custom') {
+		if (isset($set)&&($set=='custom')) {
 			if (user_get_preference('forum_style')) {
 				$_pref=$style.'|'.$max_rows;
 				if ($_pref == user_get_preference('forum_style')) {
@@ -187,7 +189,7 @@ if ($forum_id) {
 	$forum_name=db_result($result,0,'forum_name');
 
         $params=array('title'=>group_getname($group_id).' forum: '.$forum_name,
-                      'pv'   =>$pv);
+                      'pv'   =>isset($pv)?$pv:false);
 	forum_header($params);
 
 	//private forum check
@@ -266,7 +268,7 @@ if ($forum_id) {
 
 	//now show the popup boxes in a form
 		$ret_val .= '<TABLE BORDER="0" WIDTH="50%">';
-                if (!$pv) {
+                if (!isset($pv)||(!$pv)) {
                     $ret_val .= '
 				<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
@@ -401,7 +403,7 @@ if ($forum_id) {
 
 	echo $ret_val;
 
-        if (!$pv) {
+        if (!isset($pv)||!$pv) {
             echo '<P>&nbsp;<P>';
             
             echo '<h3>'.$Language->getText('forum_forum','start_new_thread').':</H3><a name="start_new_thread"></a>';

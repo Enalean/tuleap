@@ -69,7 +69,9 @@ class Plugin {
     }
     function _getPluginPath() {
         $pm =& $this->_getPluginManager();
-        $path = $GLOBALS['sys_pluginspath'];
+        if (isset($GLOBALS['sys_pluginspath']))
+            $path = $GLOBALS['sys_pluginspath'];
+        else $path=""; 
         if ($pm->pluginIsCustom($this)) {
             $path = $GLOBALS['sys_custompluginspath'];
         }

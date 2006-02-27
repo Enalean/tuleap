@@ -19,7 +19,7 @@ $Language->loadLanguageMsg('tracker/tracker');
 if ($group_id && $mode == "admin") {
 
 
-  //   the welcome screen when entering the import facility from admin page ******************************************
+  //   the welcome screen when entering the import facility from admin page
   
   session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
@@ -36,7 +36,7 @@ if ($group_id && $mode == "admin") {
   }
 
 
-  $pg_title = $Language->getText('tracker_import_admin','art_import', $groupname);
+  $pg_title = $Language->getText('tracker_import_admin','art_import');
   
   
   project_admin_header(array('title'=>$pg_title,

@@ -23,7 +23,7 @@ if (db_numrows($res_grp) < 1) {
 }
 $row_grp = db_fetch_array($res_grp);
 
-if ($Update) {
+if (isset($Update)) {
 
     
     // in the database, these all default to '1', 

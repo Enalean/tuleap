@@ -29,15 +29,15 @@ project_admin_header(array('title'=>$Language->getText('project_admin_index','p_
 
 echo "\n\n";
 
-if ( !$who ) {
+if ( !isset($who) ) {
     $who = "nonmembers";
 }
 
-if ( !$span ) {
+if ( !isset($span) ) {
 	$span = 14;
 }
 
-if ( !$view ) { 
+if ( !isset($view) ) { 
 	$view = "daily";
 }
 

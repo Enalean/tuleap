@@ -183,17 +183,12 @@ function display_doc_list($group_id) {
                     print "</ul>\n\n";
                 
                 }
-            
-            
-                $res_package[$row['package_id']]=$row['name'];
-                $num_packages++;
             }
         }
     }
     if ($doc_displayed < 1) {
         print "<b>".$Language->getText('docman_index','nodoc')."</b><p>";
     }
-
 }
 
 
@@ -266,9 +261,9 @@ function docman_header($params) {
 		       $Language->getText('docman_doc_utils','error_off'));
 	}
         // There might be encoded HTML tags in the title
-	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc','pv'=>$params['pv']));
+	site_project_header(array('title'=>strip_tags(util_unconvert_htmlspecialchars($params['title'])),'group'=>$group_id,'toptab'=>'doc','pv'=>isset($params['pv'])?$params['pv']:false));
 
-        if (!$params['pv']) {
+        if (!isset($params['pv']) || !$params['pv']) {
             print "<p><b>";
             // submit link only displayed if the user is a tech (or a project adminitrator)
             if (user_ismember($group_id, 'D1') || user_ismember($group_id, 'A')) {

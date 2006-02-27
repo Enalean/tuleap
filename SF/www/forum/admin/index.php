@@ -14,12 +14,12 @@ $is_admin_page='y';
 
 if ($group_id && (user_ismember($group_id, 'F2'))) {
 
-	if ($post_changes) {
-		/*
-			Update the DB to reflect the changes
-		*/
+    if (isset($post_changes)) {
+        /*
+         Update the DB to reflect the changes
+        */
 
-		if ($delete) {
+        if (isset($delete)) {
                     /*
                      Deleting messages or threads
                     */
@@ -58,7 +58,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
                     } else {
                         $feedback .= ' '.$Language->getText('forum_admin_index','msg_not_found').' ';
                     }
-		} else if ($add_forum) {
+        } else if (isset($add_forum)) {
 			/*
 				Adding forums to this group
 			*/
@@ -71,7 +71,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			    }
 		        }
 
-		} else if ($change_status) {
+        } else if (isset($change_status)) {
 			/*
 				Change a forum to public/private
 			*/
@@ -88,7 +88,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 	} 
 
-	if ($delete) {
+    if (isset($delete)) {
 		/*
 			Show page for deleting messages
 		*/
@@ -110,7 +110,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 		forum_footer(array());
 
-	} else if ($add_forum) {
+    } else if (isset($add_forum)) {
 		/*
 			Show the form for adding forums
 		*/
@@ -149,7 +149,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 		forum_footer(array());
 
-	} else if ($change_status) {
+    } else if (isset($change_status)) {
 		/*
 			Change a forum to public/private
 		*/

@@ -123,8 +123,7 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	ArtifactField object
 	 */
 	function getFieldFromId($field_id) {
-		$field = $this->USAGE_BY_ID[$field_id];
-		return $field;
+            return isset($this->USAGE_BY_ID[$field_id])?$this->USAGE_BY_ID[$field_id]:null;
 	}
 
 	/**

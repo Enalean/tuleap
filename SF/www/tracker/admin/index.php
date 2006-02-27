@@ -191,9 +191,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		if (!$arh) {
 			exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_retrieved_report',$arh->getErrorMessage()));
 		}
-		if ($post_changes) {
+		if (isset($post_changes)) {
 			// apply update or create in bd
-			if ($update_report) {
+                    if (isset($update_report)) {
 				$updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope);
 				if (!$updated) {
 					if ($arh->isError())
@@ -235,7 +235,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			}
 			$arh->fetchData($report_id);
 		
-		} else if ($delete_report) {
+		} else if (isset($delete_report)) {
 			if ( ($arh->scope == 'P') && 
 			     !$ath->userIsAdmin() ) {
 				exit_permission_denied();
@@ -244,10 +244,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			$feedback = $Language->getText('tracker_admin_index','report_deleted');
 		}
 		
-		if ($new_report) {
+		if (isset($new_report)) {
 		
 			$arh->createReportForm();
-		} else if ($show_report) {
+		} else if (isset($show_report)) {
 			$arh = new ArtifactReportHtml($report_id,$atid);
 			if ( ($arh->scope == 'P') && 
 			     !$ath->userIsAdmin() ) {
@@ -278,13 +278,13 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
-	    if ($post_changes) {
-			if ($create_canned) {
+	    if (isset($post_changes)) {
+                if (isset($create_canned)) {
 				$aci = $ach->create($title, $body);
 				if (!$aci) {
 					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_create_canneditem'));
 				} 
-			} else if ($update_canned) {
+                } else if (isset($update_canned)) {
 				$aci = $ach->fetchData($artifact_canned_id);
 				if (!$aci) {
 					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
@@ -298,7 +298,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 				$feedback .= $Language->getText('tracker_admin_index','updated_cannedresponse');
 			
 			}
-		} else if ($delete_canned) {
+            } else if (isset($delete_canned)) {
 		    if (!$ach->delete($artifact_canned_id)) {
 		      exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_delete_canneditem',$artifact_canned_id));
 		    }
@@ -309,7 +309,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 
 		} // End of post_changes
 		// Display the UI Form
-		if ($update_canned && !$post_changes) {
+            if (isset($update_canned) && !isset($post_changes)) {
 		  $ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','modify_cannedresponse'),
 					   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$aci = $ach->fetchData($artifact_canned_id);
@@ -336,7 +336,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		$ath->adminHeader(
 		array ('title'=>$Language->getText('tracker_admin_index','art_admin'),
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
-		if ($submit) {
+		if (isset($submit)) {
 		  $res_new = true;
 		  if ($ath->userIsAdmin()) {
 			$res_new = $ath->updateNotificationSettings($send_all_artifacts, ($new_artifact_address?$new_artifact_address : ''), user_getid(), $watchees,$feedb);
@@ -386,7 +386,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
-		if ( $update ) {
+            if ( isset($update) ) {
                     $name        = $sanitizer->sanitize($name);
                     $description = $sanitizer->sanitize($description);
 		    if ( !$ath->update($name,$description,$itemname,$allow_copy,
@@ -398,7 +398,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		}
 	
 		$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','options'),'help' => 'TrackerAdministration.html#TrackerGeneralSettings'));
-		if ( $succeed ) {
+		if ( isset($succeed) ) {
 			echo '<H3><span class="feedback">'.$Language->getText('tracker_admin_index','update_success_title').'</span></H3>';
 		}
 		$ath->displayOptions($group_id,$atid);

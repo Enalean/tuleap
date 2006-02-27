@@ -50,13 +50,13 @@ if (db_numrows($res)>0) {
         }
         
         if ($authorized) {
-            if ( $release_id ) {
+            if ( isset($release_id) ) {
                 $sql3 = "SELECT package_id FROM frs_release WHERE release_id =". $release_id;
                 $res3 = db_query( $sql3 );
                 $row3 = db_fetch_array($res3);
             }
   	 
-            if ( !$release_id || $row3['package_id']==$row['package_id'] ) {
+            if ( !isset($release_id) || $row3['package_id']==$row['package_id'] ) {
                 $res_package[$row['package_id']]=$row['name'];
                 $license_package[$row['package_id']]=$row['approve_license'];
                 $num_packages++;
@@ -64,7 +64,7 @@ if (db_numrows($res)>0) {
         }
     }
 }
-
+$pv=isset($pv)?$pv:false;
 $params=array('title'=>$Language->getText('file_showfiles','file_p_for',group_getname($group_id)),
               'pv'=>$pv);
 
@@ -144,7 +144,8 @@ function download(group_id,file_id,filename) {
 		. "AND status_id=1 ORDER BY release_date DESC, release_id DESC";
 	$res_release = db_query( $sql );
 	$num_releases = db_numrows( $res_release );
-
+        
+        if (!isset($proj_stats['releases'])) $proj_stats['releases'] = 0;
 	$proj_stats['releases'] += $num_releases;
 
 	if ( !$res_release || $num_releases < 1 ) {
@@ -167,7 +168,7 @@ function download(group_id,file_id,filename) {
                         } // else OK, display the release
 
 			   // Highlight the release if one was chosen
-			if ( $release_id == $package_release['release_id'] ) {
+			if (isset($release_id) && ($release_id == $package_release['release_id'] )) {
 				$bgcolor = 'boxitemalt';
 			} else {
 				$bgcolor = 'boxitem';
@@ -199,6 +200,7 @@ function download(group_id,file_id,filename) {
 			$res_file = db_query( $sql );
 			$num_files = db_numrows( $res_file );
 
+                        if (!isset($proj_stats['files'])) $proj_stats['files']=0;
 			$proj_stats['files'] += $num_files;
 
 			if ( !$res_file || $num_files < 1 ) {
@@ -225,7 +227,7 @@ function download(group_id,file_id,filename) {
 					print "\t\t" . '<TR class="' . $bgcolor .'">'
 						. '<TD COLSPAN=2>&nbsp;</TD>'
                                             . '<TD><B>';
-                                        if (($license_package[$package_id]==0)&&(!$GLOBALS['sys_frs_license_mandatory'])) {
+                                        if (($license_package[$package_id]==0)&&(isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
                                             // Allow direct download
                                              print '<A HREF="/file/download.php/'.$group_id."/".$file_release['file_id']."/".$file_release['filename'].'" title="'.$file_release['file_id']." - ".$fname.'">'. $fname .'</A>';
                                        } else {
@@ -239,8 +241,9 @@ function download(group_id,file_id,filename) {
                                             . '<TD>'. $file_type[$file_release['type']] .'</TD>'
                                             . '<TD>'. format_date( "Y-m-d", $file_release['release_time'] ) .'</TD>'
                                             . '</TR>' . "\n";
-
+                                        if (!isset($proj_stats['size'])) $proj_stats['size']=0;
 					$proj_stats['size'] += $file_release['file_size'];
+                                        if (!isset($proj_stats['downloads'])) $proj_stats['downloads']=0;
 					$proj_stats['downloads'] += $file_release['downloads'];
 				}	
 			}

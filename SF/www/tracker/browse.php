@@ -71,8 +71,8 @@ if (!isset($chunksz) || !$chunksz) { $chunksz = 50; }
 // Make sure offset values, search and multisort flags are defined
 // and have a correct value
 if (!isset($offset) || !$offset || $offset < 0) { $offset=0; }
-if (($advsrch != 1)) { $advsrch = 0; }
-if (($msort != 1)) { $msort = 0; }
+if (!isset($advsrch)||($advsrch != 1)) { $advsrch = 0; }
+if (!isset($msort)||($msort != 1)) { $msort = 0; }
 
 /* ==================================================
   If the report type is not defined then get it from the user preferences.
@@ -178,7 +178,7 @@ if (isset($morder)) {
     - if no preference and not logged in the use 'open' set
      (Prefs is a string of the form  &field1[]=value_id1&field2[]=value_id2&.... )
   ================================================== */
-if (!$set) {
+if (!isset($set)) {
 
     if (user_isloggedin()) {
 
@@ -241,6 +241,7 @@ if ($set=='my') {
     // Exclude the group_id parameter
     reset($prefs);
     while (list($field,$arr_val) = each($prefs)) {
+        $pref_stg="";
 		while (list(,$value_id) = each($arr_val)) {
 		    $pref_stg .= '&'.$field.'[]='.$value_id;
 		}
@@ -286,13 +287,12 @@ if (isset($masschange) && $masschange === true) {
     $masschange = false;
     
   }
-
 $params=array('title'=>$_title,
               'titlevals'=>array($ath->getName()),
               'pagename'=>'tracker_browse',
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
-              'pv'=>$pv,
+              'pv'=>isset($pv)?$pv:false,
               'help' => $_help);
 
 
@@ -300,7 +300,7 @@ $params=array('title'=>$_title,
 $ath->header($params);
 
 // Display the artifact items according to all the parameters
-$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),$pref_stg,$offset,$chunksz,(isset($pv)?$pv:false),$masschange);
+$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:false),$masschange);
 
 $ath->footer($params);
 

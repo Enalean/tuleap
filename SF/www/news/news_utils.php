@@ -29,16 +29,16 @@ function news_header($params) {
 		echo '
 			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">'.$Language->getText('news_index','news').'</A></H2>';
 	}
-        if (!$params['pv']){
+        if (!isset($params['pv']) || !$params['pv']){
             echo '<P><B>';
             // submit link and admin link are only displayed if the user is a project administrator.
             if (user_ismember($group_id, 'A')) {
                 echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
-                if ($params['help']) {
+                if (isset($params['help'])) {
                     echo ' | ';
                 }
             }
-            if ($params['help']) {
+            if (isset($params['help'])) {
                 echo help_button($params['help'],false,$Language->getText('global','help'));
             }
             echo '</b><P>';

@@ -14,7 +14,7 @@ $Language->loadLanguageMsg('news/news');
 if (user_isloggedin()) {
 
     if (user_ismember($group_id,'A')) {
- 	if ($post_changes) {
+ 	if (isset($post_changes)) {
             /*
              Insert the row into the db if it's a generic message
              OR this person is an admin for the group involved

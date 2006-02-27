@@ -14,7 +14,7 @@ $project=project_get_object($group_id);
 $gname = $project->getUnixName();
 
 
-if ($post_changes) {
+if (isset($post_changes)) {
     $buffer = svn_utils_read_svn_access_file_defaults($gname);
     $buffer .= $form_accessfile;
     $ret = svn_utils_write_svn_access_file($gname,$buffer);

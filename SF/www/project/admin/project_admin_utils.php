@@ -28,7 +28,7 @@ function project_admin_header($params) {
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
 	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
         echo '</td><td>';
-	if ($params['help']) {
+	if (isset($params['help'])) {
 	    echo help_button($params['help'],false,$Language->getText('global','help'));
 	}
         echo '</td></tr>';
@@ -133,10 +133,15 @@ function show_grouphistory ($group_id) {
 			// If msg_key cannot be found in the localized message
 			// catalog then display the msg has is because this is very
 			// likely a legacy message (pre-localization version)
-			list($msg_key, $args) = explode(" %% ",$field);
-			if ($args) {
-			    $arr_args = explode('||',$args);
-			}
+                        if (strpos($field," %% ") !== false) {
+                                list($msg_key, $args) = explode(" %% ",$field);
+                                if ($args) {
+                                    $arr_args = explode('||',$args);
+                                }
+                        } else {
+                            $msg_key=$field;
+                            $arr_args="";
+                        }
 			$msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
 			if (!(strpos($msg,"*** Unkown msg") === false)) {
 			    $msg = $field;

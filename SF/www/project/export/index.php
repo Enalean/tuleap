@@ -18,6 +18,7 @@ require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('project/project');
 
+if (!isset($export)) $export="";
 
 // Conditionally include the appropriate modules
 if (ereg('^bug',$export) || ($export == 'project_db') ) {

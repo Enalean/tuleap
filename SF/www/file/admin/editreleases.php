@@ -135,7 +135,7 @@ if (!user_ismember($group_id,'R2')) {
     exit_permission_denied();
 }
 
-if ($submit) {
+if (isset($submit)) {
 	/*
 
 		make updates to the database
@@ -515,7 +515,7 @@ if ($submit) {
             if (!$return_code) exit_error($Language->getText('global','error'),$Language->getText('file_admin_editpackages','perm_update_err').': <p>'.$feedback);
         }
 }
-if ($_POST['reset']) {
+if (isset($_POST['reset'])) {
     // Must reset access rights to defaults
     if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
         $feedback=$Language->getText('file_admin_editpackages','perm_reset');
@@ -527,7 +527,7 @@ if ($_POST['reset']) {
 
 ?><?php
 
-if ($release_id && $func != 'delete_release') {
+if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 
   
 /*
@@ -653,7 +653,7 @@ if ($release_id && $func != 'delete_release') {
 	}
 
 
-	if (!$atleastone) {
+	if (!isset($atleastone)) {
 	    print '<h3>'.$Language->getText('file_admin_editreleases','no_available_files').'</H3>
 		     <P>
 		     '.$Language->getText('file_admin_editreleases','upload_files');
@@ -772,7 +772,7 @@ if ($release_id && $func != 'delete_release') {
 } else {
 
 
-  if ($func == "delete_release" && $group_id) {
+    if (isset($func) && ($func == "delete_release") && $group_id) {
     /*
          Delete a release with all the files included
          Delete the corresponding row from the database

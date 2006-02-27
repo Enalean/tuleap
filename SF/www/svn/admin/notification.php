@@ -16,7 +16,7 @@ $Language->loadLanguageMsg('svn/svn');
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
 //
-if ($post_changes) {
+if (isset($post_changes)) {
     $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
     if ($ret) {
 	$feedback = $Language->getText('svn_admin_notification','upd_success');

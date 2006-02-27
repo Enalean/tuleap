@@ -79,6 +79,8 @@ if (user_is_super_user()) {
     $is_superuser=true;
 }
 
+if (!isset($func)) $func="";
+
 if ($func=='delete') {
 
     // Delete service

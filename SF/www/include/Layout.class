@@ -216,7 +216,6 @@ class Layout extends Error {
                 echo "<P>$GLOBALS[G_DEBUGQUERY]";
         }
         include($Language->getContent('layout/footer'));
-	$GLOBALS['PHPDbg']->DebugDisplay();
         echo '</body>';
         echo '</html>';
 	}

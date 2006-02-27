@@ -22,7 +22,7 @@ if (!user_ismember($group_id,'R2')) {
 }
 file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version'), 'help' => 'QuickFileRelease.html'));
 
-if( $submit ) {
+if( isset($submit) ) {
     //Sanitize some fields
     $strings_to_sanitize = array('release_name', 'release_notes', 'release_changes');
     $sanitizer           = new SimpleSanitizer();
@@ -33,14 +33,14 @@ if( $submit ) {
         }
     }
 
-  if (!$release_name) {
+    if (!isset($release_name)) {
     $feedback .= ' '.$Language->getText('file_admin_qrs','define_rel_name').' ';
     echo db_error();
     file_utils_footer(array());
     exit;
   } 
   
-  if (!$file_name) {
+    if (!isset($file_name)) {
     $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
     file_utils_footer(array());
     exit;
@@ -317,7 +317,7 @@ if( $submit ) {
 	}
 	echo '</SELECT> '.$Language->getText('file_admin_qrs','upload_file').': <input type="file" name="userfile"  size="30">
       <br><span class="smaller"><i>'.$Language->getText('file_admin_editreleases','max_file_size',formatByteToMb($sys_max_size_upload)).'</i></span>';
-	if (!$atleastone) {
+	if (! isset($atleastone)) {
 		print '<h3>'.$Language->getText('file_admin_editreleases','no_available_files').'</H3>
 			<P>';
 	global $Language;

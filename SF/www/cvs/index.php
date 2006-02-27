@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('cvs/cvs');
 
 // ######################## table for summary info
 
-
+if (!isset($func)) $func="";
 switch ($func) {
 
  case 'browse' : {
@@ -60,7 +60,7 @@ switch ($func) {
  default : {
 
    // ############################ developer access
-   if ($commit_id) {
+     if (isset($commit_id)) {
        $_commit_id = $commit_id;
        require('../cvs/browse_commit.php');
    } else {

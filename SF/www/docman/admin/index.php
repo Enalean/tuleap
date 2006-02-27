@@ -36,7 +36,7 @@ function main_page($group_id) {
 			      'help'=>'DocumentAdministration.html'));
     echo '<h2>'.$Language->getText('docman_admin_index','header_doc_mgt').'</h2>';
     display_docs($group_id);
-    docman_footer($params);	
+    docman_footer(array());	
 }
 
 
@@ -58,12 +58,12 @@ function group_main_page($group_id) {
 
 
 //begin to seek out what this page has been called to do.
-if ($func=='update_permissions') {
+if (isset($func)&&$func=='update_permissions') {
     list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
     if (!$return_code) exit_error('Error',$Language->getText('docman_admin_index','error_updating_perm').'<p>'.$feedback);
  }
 
-if ($_POST['reset']) {
+if (isset($_POST['reset'])) {
     // Must reset access rights to defaults
     if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
         $feedback=$Language->getText('docman_admin_index','perm_reset');
@@ -72,6 +72,7 @@ if ($_POST['reset']) {
     }
  }
 
+if (!isset($mode)) $mode="";
 if (strstr($mode,"docedit")) {
     $query = "select * from doc_data,doc_groups "
 	."where docid='$docid' "

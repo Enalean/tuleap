@@ -23,7 +23,7 @@ if (!user_ismember($group_id,'R2')) {
 
 */
 
-if ($submit) {
+if (isset($submit)) {
     /*
 		make updates to the database
 
@@ -64,7 +64,7 @@ if ($submit) {
             if (!$return_code) exit_error($Language->getText('global','error'),$Language->getText('file_admin_editpackages','perm_update_err').': <p>'.$feedback);
         }
 }
-if ($_POST['reset']) {
+if (isset($_POST['reset'])) {
     // Must reset access rights to defaults
     if (permission_clear_all($group_id, $_POST['permission_type'], $_POST['object_id'])) {
         $feedback=$Language->getText('file_admin_editpackages','perm_reset');
@@ -101,7 +101,7 @@ if (!$res || $rows < 1) {
 	$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
 	$title_arr[]=$Language->getText('file_admin_editpackages','rank_on_screen');
 	$title_arr[]=$Language->getText('global','status');
-        if (!$GLOBALS['sys_frs_license_mandatory']) {
+        if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
             $title_arr[]=$Language->getText('file_admin_editpackages','license');
         }
 	$title_arr[]=$Language->getText('file_admin_editpackages','update');
@@ -121,7 +121,7 @@ if (!$res || $rows < 1) {
 				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
                         <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.db_result($res,$i,'rank').'"/></TD>
 			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>';
-                if (!$GLOBALS['sys_frs_license_mandatory']) {
+                if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
                     $approve_license=db_result($res,$i,'approve_license');
                     echo '<TD align="center"><FONT SIZE="-1"><SELECT name="approve_license"> '.
                         '<OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$Language->getText('global','yes').'</OPTION>'.
@@ -161,7 +161,7 @@ echo '<p><hr><P>
 <table>
 <tr><th>'.$Language->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package_name" size="20" MAXLENGTH="30"></td></tr>
 <tr><th>'.$Language->getText('file_admin_editpackages','rank_on_screen').':</th>  <td><input type="text" name="rank" size="4" maxlength="4"></td></tr>';
-if (!$GLOBALS['sys_frs_license_mandatory']) {
+if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
     echo '<tr><th>'.$Language->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="approve_license">
                     <OPTION VALUE="1" SELECTED>'.$Language->getText('global','yes').'</OPTION>
                     <OPTION VALUE="0">'.$Language->getText('global','no').'</OPTION></SELECT></td></tr>';

@@ -144,7 +144,7 @@ class Project extends Group {
     }
 
     function usesPatch() {
-        return $this->use_service['patch'];
+        return isset($this->use_service['patch']) && $this->use_service['patch'];
     }
 
     function usesFile() {

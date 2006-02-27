@@ -45,7 +45,7 @@ if ($project->isError()) {
 $row_grp = db_fetch_array($res_grp);
 
 // ########################### form submission, make updates
-if ($submit) {
+if (isset($submit)) {
     group_add_history ('changed_member_perm','',$group_id);
 
 	$res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
@@ -204,7 +204,7 @@ print '<TD><B>'.$Language->getText('project_admin_userperms','member_ug').'</B><
 if (!$res_dev || db_numrows($res_dev) < 1) {
     echo '<H2>'.$Language->getText('project_admin_userperms','no_users_found').'</H2>';
 } else {
-
+    $i=0;
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
         print '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$row_dev['user_name'].'</TD>';

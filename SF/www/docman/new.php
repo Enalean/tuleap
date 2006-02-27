@@ -22,9 +22,15 @@ if (!(user_ismember($group_id,"D1"))) {
     exit_permission_denied();
 }
 
+if (!user_isloggedin()) {
+    $user=100;
+} else {
+    $user=user_getid();
+}
+
 if($group_id) {
 
-    if ($mode == "add"){
+    if (isset($mode)&&($mode == "add")){
 
         if (!$doc_group || $doc_group ==100) {
             //cannot add a doc unless an appropriate group is provided
@@ -42,12 +48,6 @@ if($group_id) {
             if (!strstr($title,"href")) {
                 exit_missing_param();
             }
-        }
-
-        if (!user_isloggedin()) {
-            $user=100;
-        } else {
-            $user=user_getid();
         }
 
         if ($upload_instead) { 
@@ -103,7 +103,7 @@ if($group_id) {
             docman_header(array('title'=>$Language->getText('docman_new','title_new'),
                                 'help'=>'DocumentSubmission.html'));
             echo '<p>'.$Language->getText('docman_new','error_dbinsert').':</p><h3><span class="feedback">'. db_error() .'</span></h3>';
-            docman_footer($params);
+            docman_footer(array());
         } else {
             $feedback .= $Language->getText('docman_new','insert_ok');
             session_redirect("/docman/?group_id=$group_id&feedback=$feedback");
@@ -164,7 +164,7 @@ if($group_id) {
 			<input type="submit" value="'.$Language->getText('global','btn_submit').'">
 	    </form> '; 
 	
-        docman_footer($params);
+        docman_footer(array());
     }
 
 } else {

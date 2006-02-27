@@ -606,7 +606,7 @@ class ArtifactReport extends Error {
 
 
 		//echo $field_name."->prefs[".$field->getName()."]=".$prefs[$field->getName()][0]."<br>";
-	    if (($field->isSelectBox()||$field->isMultiSelectBox()) && !$this->isvarany($prefs[$field->getName()]) ) {
+          if (($field->isSelectBox()||$field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()])) ) {
 	
 			// Only select box criteria to where clause if argument is not ANY
 			return " AND ".$field_name." IN (".implode(",",$prefs[$field->getName()]).") ";
@@ -657,7 +657,7 @@ class ArtifactReport extends Error {
 			return $where;
 	
 	    } else if ( ($field->isTextField() || $field->isTextArea())
-			 && $prefs[$field->getName()][0]) {
+                        && isset($prefs[$field->getName()][0])) {
 	
 			// It's a text field accept. Process INT or TEXT,VARCHAR fields differently
 			return " AND ".$field->buildMatchExpression($field_name,$prefs[$field->getName()][0]);

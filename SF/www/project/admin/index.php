@@ -30,7 +30,7 @@ if (!(db_result($res_grp,0,'status') == 'A')) {
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-if ($func) {
+if (isset($func)) {
     /*
       updating the database
     */

@@ -1561,7 +1561,7 @@ EOS;
 	
 
 	    echo '
-	      <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+	      <FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST">
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_binding">
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
@@ -1986,7 +1986,8 @@ EOS;
 		
 		    $res = $this->getWatchers($user_id);
 		    $arr_watchers = array();
-		    while ($row_watcher = db_fetch_array($res)) {
+		    $watchers="";
+                    while ($row_watcher = db_fetch_array($res)) {
 				$watcher_name = user_getname($row_watcher['user_id']);
 				$watchers .= '<a href="/users/'.$watcher_name.'">'.$watcher_name.'</a>,';
 		    }

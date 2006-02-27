@@ -73,7 +73,8 @@ class BaseLanguage {
         if (is_null($plugin_name)) {
             $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
         } else {
-            $ftname = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
+            if (isset($GLOBALS['sys_custompluginsroot']))
+                $ftname = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
         }
         if (file_exists ($ftname)) {
             $this->loadLanguageFile($ftname) ;

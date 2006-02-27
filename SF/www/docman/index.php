@@ -23,10 +23,10 @@ $Language->loadLanguageMsg('docman/docman');
 
 $params=array('title'=>$Language->getText('docman_index','title',array(group_getname($group_id))),
               'help'=>'DocumentManager.html',
-              'pv'=>$pv);
+              'pv'=>isset($pv)?$pv:false);
 docman_header($params);
 
-if ($pv) {
+if (isset($pv)&& $pv) {
     echo "<h2>".$Language->getText('docman_index','header')."</h2>";
 } else {
     echo "<TABLE width='100%'><TR><TD>";

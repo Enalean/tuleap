@@ -132,11 +132,15 @@ class PluginFactory {
     }
     
     function _getOfficialPluginsRoot() {
-        return $GLOBALS['sys_pluginsroot'];
+        if (isset($GLOBALS['sys_pluginsroot']))
+            return $GLOBALS['sys_pluginsroot'];
+        else return null;
     }
     
     function _getCustomPluginsRoot() {
-        return $GLOBALS['sys_custompluginsroot'];
+        if (isset($GLOBALS['sys_custompluginsroot']))
+            return $GLOBALS['sys_custompluginsroot'];
+        else return null;
     }
     
     /**

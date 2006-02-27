@@ -11,13 +11,15 @@ require('../mail/mail_utils.php');
 
 $Language->loadLanguageMsg('mail/mail');
 
+$pv=isset($pv)?$pv:false;
+
 if ($group_id) {
 
     $list_server = get_list_server_url();
 
     $params=array('title'=>$Language->getText('mail_index','mail_list_for').group_getname($group_id),
               'help'=>'CommunicationServices.html#MailingLists',
-              'pv'   => $pv);
+                  'pv'   => isset($pv)?$pv:false);
     mail_header($params);
 	
 	if (user_isloggedin() && user_ismember($group_id)) {
@@ -38,7 +40,7 @@ if ($group_id) {
 			<H1>'.$Language->getText('mail_index','no_list_found_for').group_getname($group_id).'</H1>';
 		echo '
 			<P>'.$Language->getText('mail_index','proj_admin_use_admin_link');
-                mail_footer(array('pv'   => $pv)); 
+                mail_footer(array('pv'   => isset($pv)?$pv:false)); 
 		exit;
 	}
 

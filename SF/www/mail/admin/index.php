@@ -15,7 +15,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
     $list_server = get_list_server_url();
 
-    if ($post_changes) {
+    if (isset($post_changes)) {
 		/*
 			Update the DB to reflect the changes
 		*/
@@ -100,7 +100,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 	} 
 
-	if ($add_list) {
+    if (isset($add_list)) {
 		/*
 			Show the form for adding mailing list
 		*/
@@ -140,7 +140,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 		mail_footer(array());
 
-	} else if ($change_status) {
+    } else if (isset($change_status)) {
 		/*
 			Change a forum to public/private
 		*/

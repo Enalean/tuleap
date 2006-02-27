@@ -16,14 +16,14 @@ $Language->loadLanguageMsg('cvs/cvs');
 commits_header(array ('title'=>$Language->getText('cvs_browse_commit', 'title'),
 		      'help' => 'CVSWebInterface.html#QueryingCVS'));
 
-if (!$offset || $offset < 0) {
+if (!isset($offset) || $offset < 0) {
 	$offset=0;
 }
 
-if (!$chunksz) { $chunksz = 15; }
+if (!isset($chunksz)) { $chunksz = 15; }
 
+if (!isset($msort)) { $msort = 0; }
 if (($msort != 0) && ($msort != 1)) { $msort = 0; }
-if (!$msort) { $msort = 0; }
 if (user_isloggedin() && !isset($morder)) {
     $morder = user_get_preference('commit_browse_order'.$group_id);
 }
@@ -62,7 +62,7 @@ $projectname = db_result($result, 0, 'unix_group_name');
 // Memorize order by field as a user preference if explicitly specified.
 // Automatically discard invalid field names.
 //
-if ($order) {
+if (isset($order)) {
 	if ($order=='id' || $order=='description' || $order=='date' || $order=='submitted_by') {
 		if(user_isloggedin() &&
 		   ($order != user_get_preference('commits_browse_order')) ) {
@@ -78,7 +78,7 @@ if ($order) {
 }
 
 
-if (!$set) {
+if (!isset($set)) {
 	/*
 		if no set is passed in, see if a preference was set
 		if no preference or not logged in, use my set
@@ -133,7 +133,7 @@ if ($set=='my') {
 */
 
 //if tag selected, and more to where clause
-if ($_tag && ($_tag != 100)) {
+if (isset($_tag) && ($_tag != 100)) {
 	//for open tasks, add status=100 to make sure we show all
 	$tag_str="AND cvs_checkins.stickytag='$_tag'";
 } else {
@@ -142,7 +142,7 @@ if ($_tag && ($_tag != 100)) {
 }
 
 //if status selected, and more to where clause
-if ($_branch && ($_branch != 100)) {
+if (isset($_branch) && ($_branch != 100)) {
 	//for open tasks, add status=100 to make sure we show all
 	$branch_str="AND cvs_checkins.branchid='$_branch'";
 } else {
@@ -151,13 +151,14 @@ if ($_branch && ($_branch != 100)) {
 }
 
 //if assigned to selected, and more to where clause
-if ($_commit_id != '') {
+if (isset($_commit_id) && ($_commit_id != '')) {
   $commit_str="AND cvs_commits.id='$_commit_id' AND cvs_checkins.commitid != 0 ";
 } else {
+  $_commit_id= '';
   $commit_str='';
 }
 
-if ($_commiter && ($_commiter != 100)) {
+if (isset($_commiter) && ($_commiter != 100)) {
 	$commiter_str="AND user.user_id=cvs_checkins.whoid ".
 	  "AND user.user_name='$_commiter' ";
 } else {
@@ -165,10 +166,11 @@ if ($_commiter && ($_commiter != 100)) {
 	$commiter_str='';
 }
 
-if ($_srch != '') {
+if (isset($_srch) && ($_srch != '')) {
   $srch_str = "AND cvs_descs.description like '%".$_srch."%' ";
 } else {
   $srch_str = "";
+  $_srch = '';
 }
 
 //build page title to make bookmarking easier
@@ -197,9 +199,9 @@ $where = "WHERE cvs_checkins.descid=cvs_descs.id ".
 	"$branch_str ";
 
  
-if (!$pv) { $limit = " LIMIT $offset,$chunksz";}
+if (!isset($pv) || (!$pv)) { $limit = " LIMIT $offset,$chunksz";}
 
-if ($order_by == '') {
+if (!isset($order_by)) {
   $order_by = " ORDER BY id desc, f_when desc ";
 }
 

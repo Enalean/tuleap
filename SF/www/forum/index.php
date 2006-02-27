@@ -18,7 +18,7 @@ if (!$group_id) {
 
 $params=array('title'=>$Language->getText('forum_index','forums_for',group_getname($group_id)),
               'help' => 'WebForums.html',
-              'pv'   => $pv);
+              'pv'   => isset($pv)?$pv:false);
 forum_header($params);
 
 
@@ -44,7 +44,7 @@ if (!$result || $rows < 1) {
     exit;
 }
 
-if ($pv) {
+if (isset($pv)&&$pv) {
     echo '<H3>'.$Language->getText('forum_forum_utils','discuss_forum').'</H3>';
 } else {
     echo "<TABLE width='100%'><TR><TD>";
