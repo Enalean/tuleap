@@ -498,7 +498,7 @@ function addRule(rule_definition) {
 
 }
 
-function initDynamicFields() {
+function initFieldDependencies() {
     
     addOptionsToFields();
     registerFieldsEvents();
@@ -510,9 +510,9 @@ function initDynamicFields() {
             applyRules(null, field.name);
     });
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    codex_dynamic_fields_highlight_change = getStyleClassProperty('codex_dynamic_fields_highlight_change', 'backgroundColor');
-    if (codex_dynamic_fields_highlight_change && codex_dynamic_fields_highlight_change != '') {
-        HIGHLIGHT_STARTCOLOR = codex_dynamic_fields_highlight_change;
+    codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
+    if (codex_field_dependencies_highlight_change && codex_field_dependencies_highlight_change != '') {
+        HIGHLIGHT_STARTCOLOR = codex_field_dependencies_highlight_change;
     }
     var hexChars = "0123456789ABCDEF";
     function Dec2Hex (Dec) { 
@@ -576,7 +576,7 @@ function breadthFirstWalk(start, cb_getChildren, cb_mark, cb_is_marked) {
 * Assign handlers to inputs and build forbidden_sources and forbidden_targets hashs.
 */
 function buildAdminUI() {
-    admin_feedback_dyn_fields = document.getElementsByClassName('feedback_dyn_fields');
+    admin_feedback_field_dependencies = document.getElementsByClassName('feedback_field_dependencies');
     
     //{{{ build forbidden_sources and forbidden_targets hashs
     $H(fields).values().each(function (field) {
@@ -869,18 +869,13 @@ function buildAdminUI() {
     //{{{ Some nice text in the header
     // Expected sentence: If field %1 is selected to %2 then field %3 will propose %4
     // As of 20060210, the sentence is Source: %1 %2 Target: %3 %4
-    if_then = messages['if_then'];
-    p1 = if_then.indexOf('%1');
-    p2 = if_then.indexOf('%2');
-    p3 = if_then.indexOf('%3');
-    p4 = if_then.indexOf('%4');
-    header_source.appendChild(document.createTextNode(if_then.substring(0, p1)));
+    header_source.appendChild(document.createTextNode(messages['source']));
     header_source.appendChild(select_source);
-    header_source.appendChild(document.createTextNode(if_then.substring(p1+2, p2)));
+    header_source.appendChild(document.createTextNode(' '));
 
-    header_target.appendChild(document.createTextNode(if_then.substring(p2+2, p3)));
+    header_target.appendChild(document.createTextNode(messages['target']));
     header_target.appendChild(select_target);
-    header_target.appendChild(document.createTextNode(if_then.substring(p3+2, p4)));
+    header_target.appendChild(document.createTextNode(' '));
     
     //}}}
     
@@ -1056,15 +1051,15 @@ var admin_selected_type;
 /**
 * function to remove the feedback
 */
-var admin_feedback_dyn_fields = [];
-var admin_feedback_dyn_fields_effect_done = false;
+var admin_feedback_field_dependencies = [];
+var admin_feedback_field_dependencies_effect_done = false;
 function admin_removeFeedback() {
-    if (admin_feedback_dyn_fields.length > 0) {
-        admin_feedback_dyn_fields.each(function (el) {
+    if (admin_feedback_field_dependencies.length > 0) {
+        admin_feedback_field_dependencies.each(function (el) {
                 Element.setStyle(el, {visibility:'hidden'});
         });
-        admin_feedback_dyn_fields_effect_done = true;
-        admin_feedback_dyn_fields             = [];
+        admin_feedback_field_dependencies_effect_done = true;
+        admin_feedback_field_dependencies             = [];
     }
 }
 

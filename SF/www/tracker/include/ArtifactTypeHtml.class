@@ -114,7 +114,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">'.$Language->getText('tracker_include_type','permissions').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">'.$Language->getText('tracker_include_type','field_usage').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">'.$Language->getText('tracker_include_type','field_values').'</a>';
-		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=dynamic_fields">'.$Language->getText('tracker_include_type','dynamic_fields').'</a>';
+		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_dependencies">'.$Language->getText('tracker_include_type','field_dependencies').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=canned">'.$Language->getText('tracker_include_type','canned_resp').'</a>';
 		echo ' | <a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='. $this->getID() .'">'.$Language->getText('tracker_include_type','reports').'</a>';
 		echo ' | <a href="/tracker/admin/?func=notification&group_id='.$group_id.'&atid='. $this->getID() .'&func=notification">'.$Language->getText('tracker_include_type','mail_notif').'</a>';
@@ -291,8 +291,8 @@ class ArtifactTypeHtml extends ArtifactType {
 			echo $Language->getText('tracker_include_type','define_use');
 			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_field_values').'</a></H3>';
 			echo $Language->getText('tracker_include_type','define_values');
-			echo '<H3><a href="/tracker/admin/?func=dynamic_fields&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_dynamic_fields').'</a></H3>';
-			echo $Language->getText('tracker_include_type','define_dynamic_fields');
+			echo '<H3><a href="/tracker/admin/?func=field_dependencies&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_field_dependencies').'</a></H3>';
+			echo $Language->getText('tracker_include_type','define_field_dependencies');
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=canned">'.$Language->getText('tracker_include_type','mng_response').'</a></H3>';
 			echo $Language->getText('tracker_include_type','add_del_resp');
 		}

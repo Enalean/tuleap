@@ -90,8 +90,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function displayEditForm($params = array()) {
-        //echo '<h3>'. $GLOBALS['Language']->getText('tracker_include_type','edit_rule') .'</h3>';
-        echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_dynamic_fields','noscript') .'</noscript>';
+        echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule"></div>';
         echo '<input type="hidden" id="save"  name="save" value="no" />';
         echo '<input type="hidden" id="source_field_hidden" name="source_field" value="" />';
@@ -128,26 +127,11 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         echo "messages = {\n";
             //echo "href:               '". $this->href ."',\n";
-            echo "choose_field:       '". addslashes($GLOBALS['Language']->getText('tracker_dynamic_fields','choose_field')) ."',\n";
-            echo "if_then:            '". addslashes($GLOBALS['Language']->getText('tracker_dynamic_fields','if_then')) ."',\n";
+            echo "choose_field:       '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','choose_field')) ."',\n";
+            echo "source:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','source')) ."',\n";
+            echo "target:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','target')) ."',\n";
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
             echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."',\n";
-            
-            echo "inline_help_title:  '". 'Instructions' ."',\n";
-            echo "inline_help_q1:     '". '1. Please select a source or a target field.' ."',\n";
-            echo "inline_help_q2_s:   '". '2. Please select a source field whose values will influence % values.' ."',\n";
-            echo "inline_help_q2_t:   '". '2. Please select a target field whose values will be influenced by % values.' ."',\n";
-            echo "inline_help_a_t:    '". '   => You have choosen % as target.' ."',\n";
-            echo "inline_help_a_s:    '". '   => You have choosen % as source.' ."',\n";
-            echo "inline_help_q3:     '". '3. Please select a source or a target value.' ."',\n";
-            echo "inline_help_a3_t:   '". '   => You have choosen the target value %.' ."',\n";
-            echo "inline_help_a3_s:   '". '   => You have choosen the source value %.' ."',\n";
-            echo "inline_help_q4_t:   '". '4. What value(s) the field %1 will propose if the field %2 is selected to %3?' ."',\n";
-            echo "inline_help_q4_s:   '". '4. What value(s) of the field %1 has(ve) to be selected so that the field %2 proposes %3 ?' ."',\n";
-            echo "inline_help_a4:     '". '   => You have choosen [%].' ."',\n";
-            echo "inline_help_save:   '". 'Please wait while the backend is updated...' ."',\n";
-
-            echo "delete_are_you_sure:'". addslashes($GLOBALS['Language']->getText('tracker_dynamic_fields','delete_are_you_sure')) ."'";
         echo "};\n";
         echo "Event.observe(window, 'load', buildAdminUI, true);";
         echo "\n//------------------------------------------------------\n";
@@ -174,7 +158,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['feedback'] .= '<span class="feedback_dyn_fields">Successfully saved</span>';
+                $GLOBALS['feedback'] .= '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>';
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -192,7 +176,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['feedback'] .= '<span class="feedback_dyn_fields">Successfully saved</span>';
+                $GLOBALS['feedback'] .= '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>';
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -215,10 +199,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     function _header() {
         $params = array();
-        $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_dynamic_fields');
-        $params['help']    = 'TrackerAdministration.html';
+        $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies');
+        $params['help']    = 'TrackerAdministration.html#TrackerFieldDependenciesManagement';
 		$this->artifact_type->adminHeader($params);
-        $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_dynamic_fields_title'));
+        $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies_title'));
     }
     
     function _footer() {

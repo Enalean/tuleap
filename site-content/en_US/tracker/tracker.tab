@@ -508,10 +508,10 @@ tracker_include_type	manage_fields_tracker_permissions	Manage Fields Permissions
 tracker_include_type	manage_fields_tracker_permissions_title	 - Manage Fields Permissions
 tracker_include_type	define_manage_fields_tracker_permissions	Define permissions on the tracker fields
 tracker_include_type	edit_field_perm	Edit field permissions
-tracker_include_type	dynamic_fields	Dynamic&nbsp;Fields
-tracker_include_type	mng_dynamic_fields	Manage Dynamic Fields
-tracker_include_type	mng_dynamic_fields_title	 - Manage Dynamic Fields
-tracker_include_type	define_dynamic_fields	Manage Dynamic Fields
+tracker_include_type	field_dependencies	Field&nbsp;Dependencies
+tracker_include_type	mng_field_dependencies	Manage Field Dependencies
+tracker_include_type	mng_field_dependencies_title	 - Manage Field Dependencies
+tracker_include_type	define_field_dependencies	Define how values in one field depend upon other field values.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -724,12 +724,13 @@ tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	User Group
 tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>
 #
-# Tracker dynamic fields
+# Tracker field dependencies
 #
 #
-tracker_dynamic_fields	no_dynamic_fields	<em>There is not rules for dynamic fields yet.</em>
-tracker_dynamic_fields	noscript	A javascript enabled browser is mandatory to add/edit dynamic fields.
-tracker_dynamic_fields	delete_are_you_sure	Are you sure that you want to delete this rule?
-tracker_dynamic_fields	choose_field	-- Choose field
-#tracker_dynamic_fields	if_then	If field %1 is selected to %2 then field %3 will propose %4
-tracker_dynamic_fields	if_then	Source: %1 %2 Target: %3 %4
+tracker_field_dependencies	noscript	A javascript enabled browser is mandatory to manage field dependencies.
+tracker_field_dependencies	choose_field	-- Choose field
+#tracker_field_dependencies	if_then	If field %1 is selected to %2 then field %3 will propose %4
+tracker_field_dependencies	source	Source:
+tracker_field_dependencies	target	Target:
+tracker_field_dependencies	saved	Saved successfully
+

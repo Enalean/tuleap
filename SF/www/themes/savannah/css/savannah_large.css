@@ -182,7 +182,7 @@ textarea {
 /* Only full hexa are allowed                    */
 /* don't use names (purple, red, yellow)         */
 /* don't use half hexa (#FF0000 instead of #F00) */
-.codex_dynamic_fields_highlight_change {
+.codex_field_dependencies_highlight_change {
     background-color: #FFCC00;
 }
 

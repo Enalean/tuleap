@@ -515,10 +515,10 @@ tracker_include_type	manage_fields_tracker_permissions	Gérer les permissions des
 tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les permissions des champs
 tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs de l'outil de suivi.
 tracker_include_type	edit_field_perm	Editer les permissions du champ
-tracker_include_type	dynamic_fields	Champs&nbsp;dynamiques
-tracker_include_type	mng_dynamic_fields	Gérer les champs dynamiques
-tracker_include_type	mng_dynamic_fields_title	 - Gérer les champs dynamiques
-tracker_include_type	define_dynamic_fields	Gérer les champs dynamiques
+tracker_include_type	field_dependencies	Dépendances&nbsp;entre&nbsp;champs
+tracker_include_type	mng_field_dependencies	Gérer les dépendances entre champs
+tracker_include_type	mng_field_dependencies_title	 - Gérer les dépendances entre champs
+tracker_include_type	define_field_dependencies	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -731,12 +731,13 @@ tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	Groupes d'utilisateurs
 tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces groupes n'aient pas accès au tracker (pas de <a href="$1">permission sur l'outil de suivi</a> définie).</div>
 #
-# Tracker dynamic fields
+# Tracker field dependencies
 #
 #
-tracker_dynamic_fields	no_dynamic_fields	<em>Il n'y a pas encore de règles de champs dynamiques.</em>
-tracker_dynamic_fields	noscript	Un navigateur avec javascript d'activé est obligatoire pour ajouter ou éditer des champs dynamiques.
-tracker_dynamic_fields	delete_are_you_sure	Êtes-vous sûr de vouloir supprimer cette règle ?
-tracker_dynamic_fields	choose_field	-- Choisir un champ
-#tracker_dynamic_fields	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
-tracker_dynamic_fields	if_then	Source : %1  %2 Cible : %3 %4
+tracker_field_dependencies	noscript	Un navigateur avec javascript d'activé est obligatoire pour gérer les dépendances entre champs.
+tracker_field_dependencies	choose_field	-- Choisir un champ
+#tracker_field_dependencies	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
+tracker_field_dependencies	source	Source :
+tracker_field_dependencies	target	Cible :
+tracker_field_dependencies	saved	Sauvegardé avec succès
+

@@ -734,7 +734,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 	case 'permissions':
             require('./tracker_permissions.php');
             break;
-    case 'dynamic_fields':
+    case 'field_dependencies':
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();
 			return;
@@ -750,7 +750,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
         require_once('../include/ArtifactRulesManagerHtml.class');
-        $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=dynamic_fields');
+        $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=field_dependencies');
         $request =& HTTPRequest::instance();
         if ($request->get('save') === 'save' ) {
             if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field'))) {
