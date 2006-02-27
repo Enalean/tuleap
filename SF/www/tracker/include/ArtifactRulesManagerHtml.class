@@ -174,7 +174,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['feedback'] .= '<div>Successfully saved</div>';
+                $GLOBALS['feedback'] .= '<span class="feedback_dyn_fields">Successfully saved</span>';
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -192,7 +192,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['feedback'] .= '<div>Successfully saved</div>';
+                $GLOBALS['feedback'] .= '<span class="feedback_dyn_fields">Successfully saved</span>';
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),

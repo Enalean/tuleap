@@ -576,7 +576,8 @@ function breadthFirstWalk(start, cb_getChildren, cb_mark, cb_is_marked) {
 * Assign handlers to inputs and build forbidden_sources and forbidden_targets hashs.
 */
 function buildAdminUI() {
-
+    admin_feedback_dyn_fields = document.getElementsByClassName('feedback_dyn_fields');
+    
     //{{{ build forbidden_sources and forbidden_targets hashs
     $H(fields).values().each(function (field) {
             forbidden_sources[field.id] = [];
@@ -618,11 +619,6 @@ function buildAdminUI() {
                 function(node){ forbidden_targets[id].push(node); }, 
                 function(node){ return forbidden_targets[id].find(function(element) { return element == node; });});
     });
-    //}}}
-    
-    //{{{ Some inline help
-    $('edit_rule').appendChild(help = document.createElement('div'));
-    help.id = 'dynamicFields_admin_help';
     //}}}
     
     //{{{ Build Table
@@ -903,7 +899,6 @@ function buildAdminUI() {
     save_btn.id      = 'save_btn';        
     td.appendChild(save_btn);
     $('edit_rule_form').onsubmit = function() {
-        updateInlineHelp({action: 'save'});
         $('save').value = 'save';
         $('direction_type').value      = admin_selected_type;
         $('value').value               = admin_selected_value;
@@ -1014,19 +1009,12 @@ function buildAdminUI() {
     //Pre-select value if needed
     if (preselected_source_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
         admin_forceSourceValue(preselected_source_field, preselected_target_field, preselected_source_value);
-        currentstate = helpstates.un_un;
-        currentstate.state.source = preselected_source_field;
-        currentstate.state.target = preselected_target_field;
     } else {
         //Pre-select target if needed
         if (preselected_target_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
             admin_forceTargetValue(preselected_source_field, preselected_target_field, preselected_target_value);
-            currentstate = helpstates.un_un;
-            currentstate.state.source = preselected_source_field;
-            currentstate.state.target = preselected_target_field;
         }
     }
-    updateInlineHelp();
 }
 
 /**
@@ -1066,9 +1054,25 @@ var admin_selected_value;
 var admin_selected_type;
 
 /**
+* function to remove the feedback
+*/
+var admin_feedback_dyn_fields = [];
+var admin_feedback_dyn_fields_effect_done = false;
+function admin_removeFeedback() {
+    if (admin_feedback_dyn_fields.length > 0) {
+        admin_feedback_dyn_fields.each(function (el) {
+                Element.setStyle(el, {visibility:'hidden'});
+        });
+        admin_feedback_dyn_fields_effect_done = true;
+        admin_feedback_dyn_fields             = [];
+    }
+}
+
+/**
 * Callback for (un)checked checkboxes
 */
 function admin_checked(id) {
+    admin_removeFeedback();
     checkbox = admin_getInfosFromId(id);
     //We're going to edit mode if we are not yet
     if (!admin_is_in_edit_mode) {
@@ -1129,7 +1133,6 @@ function admin_checked(id) {
             Element.hide('save_panel');
         }
     }
-    updateInlineHelp();
 }
 
 /**
@@ -1162,11 +1165,11 @@ function admin_displayFields(source, target) {
         });
         Element.show('fields_'+source+'_'+target);
     }
-    updateInlineHelp();
 }
 
 
 function admin_selectTargetValue(source_field_id, target_field_id, target_value_id) {
+    admin_removeFeedback();
     if (admin_is_in_edit_mode) {
         if (confirm('Save modifications ?')) {    
             $('save_btn').click();
@@ -1211,9 +1214,9 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
         }
     });
     
-    updateInlineHelp();
 }
 function admin_selectSourceValue(source_field_id, target_field_id, source_value_id) {
+    admin_removeFeedback();
     if (admin_is_in_edit_mode) {
         if (confirm('Save modifications ?')) {    
             $('save_btn').click();
@@ -1257,401 +1260,6 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
             Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
         }
     });
-    
-    updateInlineHelp();
-}
-
-
-/*
-var inline_help_previous_selection = { source: false, target: false, direction:false};
-
-function updateInlineHelp() {
-    help = $('dynamicFields_admin_help');
-    while (help.firstChild) {
-        help.removeChild(help.firstChild);
-    }
-    help.appendChild(title = document.createElement('h3'));
-    title.appendChild(document.createTextNode(messages.inline_help_title));
-    help.appendChild(dl = document.createElement('dl'));
-    
-    source_field_id = $F('source_field'); source_field_id = source_field_id == -1 ? false : source_field_id;
-    target_field_id = $F('target_field'); target_field_id = target_field_id == -1 ? false : target_field_id;
-    
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q1));
-    if (source_field_id || target_field_id) {
-        if (source_field_id != inline_help_previous_selection.source) {
-            inline_help_previous_selection.source = source_field_id;
-            if (target_field_id) {
-                dl.appendChild(a = document.createElement('dd'));
-                a.appendChild(document.createTextNode(messages.inline_help_a_t.replace('%s', fields[target_field_id].label)));
-                dl.appendChild(q = document.createElement('dt'));
-                q.appendChild(document.createTextNode(messages.inline_help_q2_s.replace('%s', fields[target_field_id].label)));
-                if (source_field_id) {
-                    dl.appendChild(a = document.createElement('dd'));
-                    a.appendChild(document.createTextNode(messages.inline_help_a_s.replace('%s', fields[source_field_id].label)));
-                    dl.appendChild(q = document.createElement('dt'));
-                    q.appendChild(document.createTextNode(messages.inline_help_q3));
-                }
-            } else {
-                if (source_field_id) {
-                    dl.appendChild(a = document.createElement('dd'));
-                    a.appendChild(document.createTextNode(messages.inline_help_a_s.replace('%s', fields[source_field_id].label)));
-                    dl.appendChild(q = document.createElement('dt'));
-                    q.appendChild(document.createTextNode(messages.inline_help_q2_t.replace('%s', fields[source_field_id].label)));
-                }
-            }
-        } else {
-            inline_help_previous_selection.target = target_field_id;
-            if (source_field_id) {
-                dl.appendChild(a = document.createElement('dd'));
-                a.appendChild(document.createTextNode(messages.inline_help_a_s.replace('%s', fields[source_field_id].label)));
-                dl.appendChild(q = document.createElement('dt'));
-                q.appendChild(document.createTextNode(messages.inline_help_q2_t.replace('%s', fields[source_field_id].label)));
-                if (target_field_id) {
-                    dl.appendChild(a = document.createElement('dd'));
-                    a.appendChild(document.createTextNode(messages.inline_help_a_t.replace('%s', fields[target_field_id].label)));
-                    dl.appendChild(q = document.createElement('dt'));
-                    q.appendChild(document.createTextNode(messages.inline_help_q3));
-                }
-            } else {
-                if (target_field_id) {
-                    dl.appendChild(a = document.createElement('dd'));
-                    a.appendChild(document.createTextNode(messages.inline_help_a_t.replace('%s', fields[target_field_id].label)));
-                    dl.appendChild(q = document.createElement('dt'));
-                    q.appendChild(document.createTextNode(messages.inline_help_q2_s.replace('%s', fields[target_field_id].label)));
-                }
-            }
-        }
-    }
-}
-*/
-
-com.xerox.codex.tracker.HelpState = Class.create();
-Object.extend(com.xerox.codex.tracker.HelpState.prototype, {
-    initialize: function (name) {
-        this.name        = name;
-        this.transitions = {};
-        this.state       = {source:false, target:false, selected_value:false };
-    },
-    add: function(evt, st) {
-        this.transitions[evt] = st;
-    },
-    get: function(evt) {
-        return this.transitions[evt];
-    },
-    process: function() {
-        return this;
-    },
-    display: function() {
-    }
-});
-
-com.xerox.codex.tracker.HelpStateFull = Class.create();
-Object.extend(Object.extend(com.xerox.codex.tracker.HelpStateFull.prototype, com.xerox.codex.tracker.HelpState.prototype), {
-    process: function() {
-        next = this;
-        source_field_id = $F('source_field'); source_field_id = source_field_id == -1 ? false : source_field_id;
-        if (!source_field_id) {
-            next = this.get('sf-1');
-            next.state.source = source_field_id;
-            next.state.target = this.state.target;
-        } else {
-            if (source_field_id != this.state.source) {
-                next = this.get('sf');
-                next.state.source = source_field_id;
-                next.state.target = this.state.target;
-            } else {
-                target_field_id = $F('target_field'); target_field_id = target_field_id == -1 ? false : target_field_id;
-                if (!target_field_id) {
-                    next = this.get('tf-1');
-                    next.state.target = target_field_id;
-                    next.state.source = this.state.source;
-                } else {
-                    if (target_field_id != this.state.target) {
-                        next = this.get('tf');
-                        next.state.target = target_field_id;
-                        next.state.source = this.state.source;
-                    } else {
-                        if (admin_selected_type && admin_selected_value) {
-                            if (admin_selected_type == 'source') {
-                                next = this.get('sv');
-                                next.state.source = this.state.source;
-                                next.state.target = this.state.target;
-                                next.state.selected_value = admin_selected_value;
-                            } else if (admin_selected_type == 'target') {
-                                next = this.get('tv');
-                                next.state.source = this.state.source;
-                                next.state.target = this.state.target;
-                                next.state.selected_value = admin_selected_value;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return next;
-    }
-});
-
-helpstates = {
-    zero:         new com.xerox.codex.tracker.HelpState('0'),
-    un:           new com.xerox.codex.tracker.HelpState('1'),
-    un_un:        new com.xerox.codex.tracker.HelpStateFull('1.1'),
-    un_un_un:     new com.xerox.codex.tracker.HelpStateFull('1.1.1'),
-    un_un_deux:   new com.xerox.codex.tracker.HelpStateFull('1.1.2'),
-    deux:         new com.xerox.codex.tracker.HelpState('2'),
-    deux_un:      new com.xerox.codex.tracker.HelpStateFull('2.1'),
-    deux_un_un:   new com.xerox.codex.tracker.HelpStateFull('2.1.1'),
-    deux_un_deux: new com.xerox.codex.tracker.HelpStateFull('2.1.2'),
-    end:          new com.xerox.codex.tracker.HelpState('end')
-};
-
-helpstates.zero.add('sf', helpstates.un);
-helpstates.zero.add('tf', helpstates.deux);
-helpstates.zero.display = function() {
-    help = $('dynamicFields_admin_help');
-    while (help.firstChild) {
-        help.removeChild(help.firstChild);
-    }
-    help.appendChild(title = document.createElement('h3'));
-    title.appendChild(document.createTextNode(messages.inline_help_title));
-    help.appendChild(dl = document.createElement('dl'));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q1));
-    return dl;
-};
-helpstates.zero.process = function() {
-    next = this;
-    source_field_id = $F('source_field'); source_field_id = source_field_id == -1 ? false : source_field_id;
-    if (source_field_id) {
-        next = this.get('sf');
-        next.state.source = source_field_id;
-    } else { 
-        target_field_id = $F('target_field'); target_field_id = target_field_id == -1 ? false : target_field_id;
-        if (target_field_id) {
-            next = this.get('tf');
-            next.state.target = target_field_id;
-        }
-    }
-    return next;
-};
-
-helpstates.un.add('sf-1', helpstates.zero);
-helpstates.un.add('sf',   helpstates.un);
-helpstates.un.add('tf',   helpstates.un_un);
-helpstates.un.display = function() {
-    dl = helpstates.zero.display();
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a_s.replace('%', fields[this.state.source].label)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q2_t.replace('%', fields[this.state.source].label)));
-    return dl;
-};
-helpstates.un.process = function() {
-    next = this;
-    source_field_id = $F('source_field'); source_field_id = source_field_id == -1 ? false : source_field_id;
-    if (!source_field_id) {
-        this.state.source = false;
-        next = this.get('sf-1');
-    } else {
-        if (this.state.source != source_field_id) {
-            next = this.get('sf');
-            next.state.source = source_field_id;
-        }
-        target_field_id = $F('target_field'); target_field_id = target_field_id == -1 ? false : target_field_id;
-        if (target_field_id) {
-            next = this.get('tf');
-            next.state.target = target_field_id;
-            next.state.source = this.state.source;
-        }
-    }
-    return next;
-};
-
-helpstates.un_un.add('tf-1', helpstates.un);
-helpstates.un_un.add('sf-1', helpstates.deux);
-helpstates.un_un.add('sf',   helpstates.un_un);
-helpstates.un_un.add('tf',   helpstates.un_un);
-helpstates.un_un.add('sv',   helpstates.un_un_un);
-helpstates.un_un.add('tv',   helpstates.un_un_deux);
-helpstates.un_un.display = function() {
-    dl = helpstates.un.display();
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a_t.replace('%', fields[this.state.target].label)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q3));
-    return dl;
-};
-
-helpstates.un_un_un.add('tf-1', helpstates.un);
-helpstates.un_un_un.add('sf-1', helpstates.deux);
-helpstates.un_un_un.add('tf',   helpstates.un_un);
-helpstates.un_un_un.add('sf',   helpstates.un_un)
-helpstates.un_un_un.add('tv',   helpstates.un_un_deux);
-helpstates.un_un_un.add('sv',   helpstates.un_un_un);
-helpstates.un_un_un.add('chk',  helpstates.un_un_un);
-helpstates.un_un_un.add('save', helpstates.end);
-helpstates.un_un_un.display = function() {
-    dl = helpstates.un_un.display();
-    value = admin_selected_type == 'target' ? options[this.state.target][this.state.selected_value].option.text : options[this.state.source][this.state.selected_value].option.text;
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a3_s.replace('%', value)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q4_t.replace('%1', fields[this.state.target].label).replace('%2', fields[this.state.source].label).replace('%3', value)));
-    dl.appendChild(a = document.createElement('dd'));
-    values   = [];
-    field_id = admin_selected_type == 'target' ? this.state.source : this.state.target;
-    $H(options[field_id]).values().each((function (opt) {
-            chk = (admin_selected_type == 'target' ? 'source' : 'target')+'_'+this.state.source+'_'+this.state.target+'_'+opt.option.value+'_chk';
-            if ($F(chk)) {
-                values.push(opt.option.text);
-            }
-    }).bind(this));
-    a.appendChild(document.createTextNode(messages.inline_help_a4.replace('%', values.join(', '))));
-    return dl;
-};
-
-helpstates.un_un_deux.add('tf-1', helpstates.un);
-helpstates.un_un_deux.add('sf-1', helpstates.deux);
-helpstates.un_un_deux.add('tf',   helpstates.un_un);
-helpstates.un_un_deux.add('sf',   helpstates.un_un)
-helpstates.un_un_deux.add('sv',   helpstates.un_un_un);
-helpstates.un_un_deux.add('tv',   helpstates.un_un_deux);
-helpstates.un_un_deux.add('chk',  helpstates.un_un_deux);
-helpstates.un_un_deux.add('save', helpstates.end);
-helpstates.un_un_deux.display = function() {
-    dl = helpstates.un_un.display();
-    value = admin_selected_type == 'target' ? options[this.state.target][this.state.selected_value].option.text : options[this.state.source][this.state.selected_value].option.text;
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a3_t.replace('%', fields[this.state.target].label)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q4_s.replace('%1', fields[this.state.source].label).replace('%2', fields[this.state.target].label).replace('%3', value)));
-    dl.appendChild(a = document.createElement('dd'));
-    values   = [];
-    field_id = admin_selected_type == 'target' ? this.state.source : this.state.target;
-    $H(options[field_id]).values().each((function (opt) {
-            chk = (admin_selected_type == 'target' ? 'source' : 'target')+'_'+this.state.source+'_'+this.state.target+'_'+opt.option.value+'_chk';
-            if ($F(chk)) {
-                values.push(opt.option.text);
-            }
-    }).bind(this));
-    a.appendChild(document.createTextNode(messages.inline_help_a4.replace('%', values.join(', '))));
-    return dl;
-};
-
-helpstates.deux.add('tf-1', helpstates.zero);
-helpstates.deux.add('tf',   helpstates.deux);
-helpstates.deux.add('sf',   helpstates.deux_un);
-helpstates.deux.display = function() {
-    dl = helpstates.zero.display();
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a_t.replace('%', fields[this.state.target].label)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q2_s.replace('%', fields[this.state.target].label)));
-    return dl;
-};
-helpstates.deux.process = function() {
-    next = this;
-    target_field_id = $F('target_field'); target_field_id = target_field_id == -1 ? false : target_field_id;
-    if (!target_field_id) {
-        this.state.target = false;
-        next = this.get('tf-1');
-    } else {
-        if (this.state.target != target_field_id) {
-            next = this.get('tf');
-            next.state.target = target_field_id;
-        }
-        source_field_id = $F('source_field'); source_field_id = source_field_id == -1 ? false : source_field_id;
-        if (source_field_id) {
-            next = this.get('sf');
-            next.state.source = source_field_id;
-            next.state.target = this.state.target;
-        }
-    }
-    return next;
-};
-
-helpstates.deux_un.add('sf-1', helpstates.deux);
-helpstates.deux_un.add('tf-1', helpstates.un);
-helpstates.deux_un.add('sf',   helpstates.deux_un);
-helpstates.deux_un.add('tf',   helpstates.deux_un);
-helpstates.deux_un.add('sv',   helpstates.deux_un_un);
-helpstates.deux_un.add('tv',   helpstates.deux_un_deux);
-helpstates.deux_un.display = function() {
-    dl = helpstates.deux.display();
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a_s.replace('%', fields[this.state.source].label)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q3));
-    return dl;
-};
-
-helpstates.deux_un_un.add('tf-1', helpstates.un);
-helpstates.deux_un_un.add('sf-1', helpstates.deux);
-helpstates.deux_un_un.add('tf',   helpstates.deux_un);
-helpstates.deux_un_un.add('sf',   helpstates.deux_un)
-helpstates.deux_un_un.add('tv',   helpstates.deux_un_deux);
-helpstates.deux_un_un.add('sv',   helpstates.deux_un_un);
-helpstates.deux_un_un.add('chk',  helpstates.deux_un_un);
-helpstates.deux_un_un.add('save', helpstates.end);
-helpstates.deux_un_un.display = function() {
-    dl = helpstates.deux_un.display();
-    value = admin_selected_type == 'target' ? options[this.state.target][this.state.selected_value].option.text : options[this.state.source][this.state.selected_value].option.text;
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a3_s.replace('%', fields[this.state.source].label)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q4_t.replace('%1', fields[this.state.target].label).replace('%2', fields[this.state.source].label).replace('%3', value)));
-    dl.appendChild(a = document.createElement('dd'));
-    values   = [];
-    field_id = admin_selected_type == 'target' ? this.state.source : this.state.target;
-    $H(options[field_id]).values().each((function (opt) {
-            chk = (admin_selected_type == 'target' ? 'source' : 'target')+'_'+this.state.source+'_'+this.state.target+'_'+opt.option.value+'_chk';
-            if ($F(chk)) {
-                values.push(opt.option.text);
-            }
-    }).bind(this));
-    a.appendChild(document.createTextNode(messages.inline_help_a4.replace('%', values.join(', '))));
-    return dl;
-};
-
-helpstates.deux_un_deux.add('tf-1', helpstates.un);
-helpstates.deux_un_deux.add('sf-1', helpstates.deux);
-helpstates.deux_un_deux.add('tf',   helpstates.deux_un);
-helpstates.deux_un_deux.add('sf',   helpstates.deux_un)
-helpstates.deux_un_deux.add('sv',   helpstates.deux_un_un);
-helpstates.deux_un_deux.add('tv',   helpstates.deux_un_deux);
-helpstates.deux_un_deux.add('chk',  helpstates.deux_un_deux);
-helpstates.deux_un_deux.add('save', helpstates.end);
-helpstates.deux_un_deux.display = function() {
-    dl = helpstates.deux_un.display();
-    value = admin_selected_type == 'target' ? options[this.state.target][this.state.selected_value].option.text : options[this.state.source][this.state.selected_value].option.text;
-    dl.appendChild(a = document.createElement('dd'));
-    a.appendChild(document.createTextNode(messages.inline_help_a3_t.replace('%', value)));
-    dl.appendChild(q = document.createElement('dt'));
-    q.appendChild(document.createTextNode(messages.inline_help_q4_s.replace('%1', fields[this.state.source].label).replace('%2', fields[this.state.target].label).replace('%3', value)));
-    dl.appendChild(a = document.createElement('dd'));
-    values   = [];
-    field_id = admin_selected_type == 'target' ? this.state.source : this.state.target;
-    $H(options[field_id]).values().each((function (opt) {
-            chk = (admin_selected_type == 'target' ? 'source' : 'target')+'_'+this.state.source+'_'+this.state.target+'_'+opt.option.value+'_chk';
-            if ($F(chk)) {
-                values.push(opt.option.text);
-            }
-    }).bind(this));
-    a.appendChild(document.createTextNode(messages.inline_help_a4.replace('%', values.join(', '))));
-    return dl;
-};
-
-var currentstate = helpstates.zero;
-
-function updateInlineHelp(params) {
-    if (params && params.action && params.action == 'save') {
-        new Insertion.Bottom('dynamicFields_admin_help', messages.inline_help_save);
-    } else {
-        currentstate = currentstate.process();
-        currentstate.display();
-    }
 }
 
 //}}}
