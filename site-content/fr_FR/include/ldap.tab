@@ -18,8 +18,8 @@
 #-----------------------------------------------
 # Script: SF/common/include/LDAP.class
 #
-ldap_class	err_bind_nopasswd	Impossible d'initier la liaison sur $1: mot de passe absent
-ldap_class	err_bind_invpasswd	Impossible d'initier la liaison sur $1: mot de passe invalide ?
+ldap_class	err_bind_nopasswd	Impossible d'initier la liaison sur $1 : mot de passe absent
+ldap_class	err_bind_invpasswd	Impossible d'initier la liaison sur $1 : mot de passe invalide ?
 ldap_class	err_nopasswd	Mot de passe absent
 ldap_class	err_cant_connect	Impossible de se connecter au serveur LDAP
 ldap_class	err_auth_search	La recherche pour l'authentification a échoué

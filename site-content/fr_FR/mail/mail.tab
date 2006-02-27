@@ -24,9 +24,9 @@ mail_admin_index	add_list_err	Erreur lors de la création de la liste
 mail_admin_index	list_added	Liste créée avec succès
 mail_admin_index	invalid_userid	ID utilisateur invalide
 mail_admin_index	does_not_compute	Adresse e-mail introuvable
-mail_admin_index	list_create_explain	Une liste de distribution sera créée sur $1 dans moins de $2 heure(s)\n et vous en êtes l'administrateur. Cette liste est: $3 \n\nLes informations concernant cette liste de distribution sont sur: \n$5\n\nVotre mot de passe d'administration est: $6\nNous vous invitons à changer ce mot de passe par défaut dès que possible.\n\nMerci d'utiliser $1.\n\n -- L'équipe $1\n
+mail_admin_index	list_create_explain	Une liste de distribution sera créée sur $1 dans moins de $2 heure(s)\n et vous en êtes l'administrateur. Cette liste est : $3 \n\nLes informations concernant cette liste de distribution sont sur : \n$5\n\nVotre mot de passe d'administration est : $6\nNous vous invitons à changer ce mot de passe par défaut dès que possible.\n\nMerci d'utiliser $1.\n\n -- L'équipe $1\n
 mail_admin_index	new_mail_list	Nouvelle liste de distribution
-mail_admin_index	mail_sent_to	Note détaillée envoyée par e-mail à: $1
+mail_admin_index	mail_sent_to	Note détaillée envoyée par e-mail à : $1
 mail_admin_index	invalid_list_name	Nom de liste invalide
 mail_admin_index	upate_status_err	Erreur lors de la mise à jour du statut
 mail_admin_index	status_update_success	Statut mis à jour avec succès

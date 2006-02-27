@@ -7,7 +7,7 @@
 // $Id$
 //
 -->
-<H2>Etape 3: Enregistrement du projet</H2>
+<H2>Etape 3 : Enregistrement du projet</H2>
 
 <p>Nous souhaitons en savoir un peu plus sur votre projet. Toutes les
 informations saisies sur cette page seront visibles pour les
@@ -21,38 +21,38 @@ des fins correspondant à la description ci-dessous. Si les objectifs
 du projet devaient changer par la suite, il vous faudra procéder à la
 mise à jour de ces informations.
 
-<P><em>Remarque</em>: Le formattage de votre texte (saut de lignes)
+<P><em>Remarque</em> : Le formattage de votre texte (saut de lignes)
 est préservé. Les URLs seront automatiquement transformés en liens
-hypertextes dans le texte final. <p><font color="red">*</font>: Saisie
+hypertextes dans le texte final. <p><font color="red">*</font> : Saisie
 obligatoire</p> <FONT size=-1> <FORM action="projectname.php"
 method="post"> <INPUT TYPE="HIDDEN" NAME="insert_purpose" VALUE="y">
 
 <P>
-<B><u>Description courte du projet<font color="red">*</font>:</u></B>
+<B><u>Description courte du projet<font color="red">*</font> :</u></B>
 <BR>Quel est le sujet de votre projet (description de 3 ou 4 lignes). Balises HTML autorisées.
 <br><TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="3">
 </TEXTAREA>
 
 <P>
-<B><u>Description complète du projet<font color="red">*</font>:</u></B>
+<B><u>Description complète du projet<font color="red">*</font> :</u></B>
 <BR><b>*** REMARQUE IMPORTANTE ***</b> Veuillez fournir une description contenant tous les mots-clés qui permettront aux utilisateurs de trouver facilement votre projet lors d'une recherche. Une description trop courte ou incomplète ne fera que retarder l'approbation de votre projet.
 <br><TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">
 </TEXTAREA>
 
-<P><B><u>Propriété intellectuelle:</u></B>
-<br> Brevets ou propositions d'invention relatifs à ce projet:
+<P><B><u>Propriété intellectuelle :</u></B>
+<br> Brevets ou propositions d'invention relatifs à ce projet :
 <br><TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">
 </TEXTAREA>
 
-<P><B><u>Autres logiciels requis:</u></B>
-<br>Si votre projet nécessite l'emploi d'autres composants logicielles internes ou externes pour fonctionner correctement, merci de les mentionner ici:
+<P><B><u>Autres logiciels requis :</u></B>
+<br>Si votre projet nécessite l'emploi d'autres composants logicielles internes ou externes pour fonctionner correctement, merci de les mentionner ici :
 <br><TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">
 </TEXTAREA>
 
-<P><B><u>Autres Commentaires:</u></B>
+<P><B><u>Autres Commentaires :</u></B>
 <br>Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi fournir des informations de prix ou un contact commercial, etc.
 <br><TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">
 </TEXTAREA>
-<BR><INPUT type=submit name="Submit" value="Etape 4: Nom du projet">
+<BR><INPUT type=submit name="Submit" value="Etape 4 : Nom du projet">
 </FORM>
 </FONT>

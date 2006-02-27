@@ -9,7 +9,7 @@
 
 
 $message = "Merci d'avoir créé votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
-. "confirmer votre création de compte veuillez suivre le lien ci-dessous: \n\n"
+. "confirmer votre création de compte veuillez suivre le lien ci-dessous : \n\n"
 . "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 . "Vous pouvez maintenant profiter du site.\n\n"
 . " -- L'équipe ".$GLOBALS['sys_name']."\n";

@@ -12,7 +12,7 @@ echo '
 Vous pouvez télécharger les fichiers
 <ul><li> soit en utilisant l\'accès FTP anonyme (login "ftp") vers <B>'."$sys_download_host".'</B> 
 			dans le répertoire <B>/incoming</B>, puis en appuyant sur "<b>'.$Language->getText('file_admin_editreleases','refresh_file_list').'</b>"
-<li>ou en utilisant scp: "scp votre_fichier '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR'].'/"
+<li>ou en utilisant scp : "scp votre_fichier '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR'].'/"
 </ul>
 ';
 ?>

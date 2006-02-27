@@ -8,16 +8,16 @@
 //
 ?>
 
-<H2>Etape 4: Nom du projet</H2>
+<H2>Etape 4 : Nom du projet</H2>
 
 
 <P><B>Nom du projet</B>
 
-<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet:
+<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet :
 
 <P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitée à 40 caractères) et il peut être modifié à tout moment.</P>
 
-<p>Le "nom court" (aussi appelé "nom du groupe") présentent certaines restrictions::
+<p>Le "nom court" (aussi appelé "nom du groupe") présentent certaines restrictions :
 
 <UL>
 <LI>Il ne doit correspondre à aucun nom court existant
@@ -29,7 +29,7 @@
 <P>En dépit de ces restrictions, veillez à choisir un nom évocateur car il sera utilisé à plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dépôt CVS ou Subversion.
 </UL>
 
-<P>Veuillez remplir les champs suivants:
+<P>Veuillez remplir les champs suivants :
 
 <P><B>Nom du projet</B>
 <FONT size=-1>
@@ -37,14 +37,14 @@
 <INPUT TYPE="HIDDEN" NAME="insert_group_name" VALUE="y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">  
 <INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="<?php echo md5($random_num); ?>">
-Nom complet:
+Nom complet :
 <BR>
 <INPUT size="40" maxlength="40" type=text name="form_full_name">
-<P>Nom court:
+<P>Nom court :
 <BR>
 <INPUT type=text maxlength="15" SIZE="15" name="form_unix_name">
 <P>
 <H2><FONT COLOR="RED">Pas de retour arrière au delà de ce point</FONT></H2>
-<INPUT type=submit name="Submit" value="Etape 5: Politique d'échange">
+<INPUT type=submit name="Submit" value="Etape 5 : Politique d'échange">
 </FORM>
 </FONT>

@@ -31,7 +31,7 @@ contact	title	Contactez-nous
 # Script: SF/www/about_foundries.php
 #
 about_foundries	title	A propos des fonderies
-about_foundries	message	Les fonderies permet aux développeurs ayant les mêmes sujets d'intérêt de se regrouper, de partager leur expertise et des nouveautés, de prendre et donner des conseils, et plus généralement de s'entraider afin de produire rapidement du code de meilleur qualité.<p>Si vous souhaitez contribuer à une fonderie ou la créer, <a href="mailto:$1">contactez-nous</a>.<p>Voici les liste des fonderies actuellement disponibles sur le site :$1</p>
+about_foundries	message	Les fonderies permet aux développeurs ayant les mêmes sujets d'intérêt de se regrouper, de partager leur expertise et des nouveautés, de prendre et donner des conseils, et plus généralement de s'entraider afin de produire rapidement du code de meilleur qualité.<p>Si vous souhaitez contribuer à une fonderie ou la créer, <a href="mailto:$1">contactez-nous</a>.<p>Voici les liste des fonderies actuellement disponibles sur le site : $1</p>
 about_foundries	no_foundries	Aucune fonderie disponible
 #
 #-----------------------------------------------
@@ -46,7 +46,7 @@ homepage	news_title2	Dernières annonces - Format RSS
 # Script: SF/www/sendmessage.php
 #
 sendmessage	title	Envoyez un message à $1
-sendmessage	message	Veuillez remplir la totalité de ce formulaire avec précision faute de quoi le destinataire pourrait ne pas être en mesure de vous répondre.<P><span class="highlight"><B>SI VOUS ECRIVEZ POUR DEMANDER DE L'AIDE:</B> Etes-vous sur d'avoir lu la documentation du site? Avez-vous précisé votre <B>nom d'utilisateur</B> Si vous écrivez à propos d'un projet n'oubliez pas de préciser son nom.</span>
+sendmessage	message	Veuillez remplir la totalité de ce formulaire avec précision faute de quoi le destinataire pourrait ne pas être en mesure de vous répondre.<P><span class="highlight"><B>SI VOUS ECRIVEZ POUR DEMANDER DE L'AIDE :</B> Etes-vous sur d'avoir lu la documentation du site? Avez-vous précisé votre <B>nom d'utilisateur</B> Si vous écrivez à propos d'un projet n'oubliez pas de préciser son nom.</span>
 sendmessage	err_nouser	Cet utilisateur n'existe pas.
 sendmessage	err_host	Vous pouvez uniquement envoyer un message aux adresses du type @$1.
 sendmessage	err_noparam	Certaines variables n'ont pas été fournies (ID utilisateur ou adresse e-mail)

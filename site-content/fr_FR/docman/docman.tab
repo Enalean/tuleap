@@ -27,7 +27,7 @@ docman_index	description	Description
 #-----------------------------------------------
 # Script: SF/www/docman/display_doc.php
 #
-docman_display_doc	error_nodoc	Document #$1 introuvable: ce document n'existe pas ou a été détruit.
+docman_display_doc	error_nodoc	Document #$1 introuvable : ce document n'existe pas ou a été détruit.
 docman_display_doc	error_wrongid	Aucun document disponible - numéro de document invalide.
 docman_display_doc	warning_different_group	Veuillez noter que ce document appartient au projet "$1".
 #
@@ -75,7 +75,7 @@ docman_new	header_add	Soumettre un nouveau document
 docman_new	not_logged	Vous n'êtes pas connecté et votre nom ne sera donc pas associé à cet ajout.
 docman_new	no_docgroup	Vous devez spécifier un groupe de documents avant de pouvoir ajouter ce nouveau document. Cliquer sur <a href="$1">Administration</a></b> et créer un groupe de documents.
 docman_new	doc_title	Titre du document
-docman_new	doc_desc	Description: <br> (Balises HTML autorisées)
+docman_new	doc_desc	Description : <br> (Balises HTML autorisées)
 docman_new	doc_upload	Chargement du fichier
 docman_new	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 docman_new	doc_paste	ou copier/coller le document (format HTML)
@@ -107,7 +107,7 @@ docman_admin_index	doc_group_list	Groupe de documents existants
 docman_admin_index	header_doc_mgt	Modifier les documents
 docman_admin_index	doc_deleted	Document détruit
 docman_admin_index	error_deleting_doc	Erreur lors de la destruction d'un document
-docman_admin_index	error_updating_perm	Erreur: la mise à jour des permissions a échoué
+docman_admin_index	error_updating_perm	Erreur : la mise à jour des permissions a échoué
 docman_admin_index	perm_reset	Permissions réinitialiser à leur valeurs par défaut
 #
 #-----------------------------------------------
@@ -125,11 +125,11 @@ docs_site_about	title	A propos du site $1
 #
 docman_admin_editdocgrouppermissions	title	Modifier les permissions d'un groupe de documents
 docman_admin_editdocgrouppermissions	introduction	Vous pouvez définir des permissions spécifiques à un groupe de documents. Ces permissions s'appliquent à tous les documents qui s'y trouvent mais des permissions spécifiques peuvent aussi s'appliquer à chaque document. Par défaut, les groupes de documents sont accessibles à tous les visiteurs.
-docman_admin_editdocgrouppermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce groupe de document:
+docman_admin_editdocgrouppermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce groupe de document :
 #
 #-----------------------------------------------
 # Script: SF/www/docman/admin/editdocpermissions.php
 #
 docman_admin_editdocpermissions	title	Modifier les permissions d'un document
 docman_admin_editdocpermissions	doc_title	Modifier les permissions d'un document
-docman_admin_editdocpermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce document:<br><b>Note</b>: Quand aucune permission n'est définie pour un document, il hérite des permissions du <a href="$1">groupe de document auquel il appartient</a>. <br>Quand des permissions sont définies pour un document, elles prennent le pas sur les permissions du groupe de documents.
+docman_admin_editdocpermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce document :<br><b>Note</b> : Quand aucune permission n'est définie pour un document, il hérite des permissions du <a href="$1">groupe de document auquel il appartient</a>. <br>Quand des permissions sont définies pour un document, elles prennent le pas sur les permissions du groupe de documents.

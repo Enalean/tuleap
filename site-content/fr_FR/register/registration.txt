@@ -7,7 +7,7 @@
 // $Id$
 //
 -->
-<H2>Etape 1: Services et conditions d'utilisation de <?php print $GLOBALS['sys_name']; ?></H2>
+<H2>Etape 1 : Services et conditions d'utilisation de <?php print $GLOBALS['sys_name']; ?></H2>
 
 <p>
 <?php print $GLOBALS['sys_name']; ?> offre une suite complète de services. Si vous ne l'avez déjà fait nous vous invitons à parcourir la documentation concernant les <a href="/docs/site" target="side_window">Services <?php print $GLOBALS['sys_name']; ?></a>.
@@ -52,5 +52,5 @@ confondez pas cette politique d'échange avec le Copyright qui doit
 
 
 
-<BR><H3 align=center><a href="tos.php">Etape 2: Conditions Générales
+<BR><H3 align=center><a href="tos.php">Etape 2 : Conditions Générales
 d'Utilisation</a></H3>

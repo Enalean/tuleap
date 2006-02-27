@@ -22,7 +22,7 @@ l'ensemble des équipes de projet de <?php print
 $GLOBALS['sys_org_name']; ?>.  </p>
 
 <p>
-<i>Ce que nous offrons:</i>
+<i>Ce que nous offrons :</i>
 <li>Environnement de projet configurable
 <li>Systèmes de contrôle de version (CVS, Subversion...)
 <li>Outil de suivi universel et totalement configurable (tâches, défauts, demande de support...)
@@ -39,11 +39,11 @@ $GLOBALS['sys_org_name']; ?>.  </p>
 </p>                           
            
 <p>
-<li>L'approbation d'un compte utilisateur ou projet est à notre seule discrétion et se base sur les critères suivants:
+<li>L'approbation d'un compte utilisateur ou projet est à notre seule discrétion et se base sur les critères suivants :
 <ul>
-<li><i>pertinence</i>: uniquement des projets liés à <?php print $GLOBALS['sys_org_name']; ?>, 
-<li><i>légitimité</i>: votre projet doit être en phase avec les objectifs business de <?php print $GLOBALS['sys_org_name']; ?>,
-<li><i>à propos</i>: les projets hébergés doivent délivrés du logiciel et/ou de la documentation.
+<li><i>pertinence</i> : uniquement des projets liés à <?php print $GLOBALS['sys_org_name']; ?>, 
+<li><i>légitimité</i> : votre projet doit être en phase avec les objectifs business de <?php print $GLOBALS['sys_org_name']; ?>,
+<li><i>à propos</i> : les projets hébergés doivent délivrés du logiciel et/ou de la documentation.
 </ul>
 
 <p>De plus, l'équipe <?php print $GLOBALS['sys_name']; ?> se réserve

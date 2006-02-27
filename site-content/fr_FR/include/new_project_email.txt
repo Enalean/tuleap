@@ -23,13 +23,13 @@ if (session_issecure()) {
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 $message = '
 L\'enregistrement de votre projet a été approuvé. 
-Nom complet du projet:'.$row_grp['group_name'].'
-Nom court du projet:  '.$row_grp['unix_group_name'].'
-Page de sommaire:     '.$server.'/projects/'.$row_grp['unix_group_name'].'
-Site Web du projet:   '.$web_server.'
-Serveur CVS:          cvs.'.$row_grp['unix_group_name'].'.'.$host.'
-Serveur Subversion:   svn.'.$row_grp['unix_group_name'].'.'.$host.'
-Serveur Shell:        '.$row_grp['unix_group_name'].'.'.$host.
+Nom complet du projet :'.$row_grp['group_name'].'
+Nom court du projet :  '.$row_grp['unix_group_name'].'
+Page de sommaire :     '.$server.'/projects/'.$row_grp['unix_group_name'].'
+Site Web du projet :   '.$web_server.'
+Serveur CVS :          cvs.'.$row_grp['unix_group_name'].'.'.$host.'
+Serveur Subversion :   svn.'.$row_grp['unix_group_name'].'.'.$host.'
+Serveur Shell :        '.$row_grp['unix_group_name'].'.'.$host.
 $message_project_type; // defined at upper level
 
 // Directions for project administrators on what to do next
@@ -54,7 +54,7 @@ pourquoi publier votre première annonce informant l\'équipe de la
 création du projet (nous la publierons aussi sur la page de bienvenue
 du site).
 
-Points divers:
+Points divers :
 
 - Vos comptes CVS et Subversion deviendront opérationnels à la 
 prochaine mise à jour du système qui a lieu toutes les '.$GLOBALS['sys_crondelay'].' heures.
@@ -67,7 +67,7 @@ peut prendre jusqu\'à une journée. Si vous êtes pressé d\'utiliser
 vos comptes shell, CVS ou subversion vous pouvez utiliser les
 serveurs génériques '. $GLOBALS['sys_shell_host']. ' et '. $GLOBALS['sys_cvs_host'].'.
 
-- Remarque: si vous possédez déjà un dépôt CVS ou subversion
+- Remarque : si vous possédez déjà un dépôt CVS ou subversion
 l\'équipe '.$GLOBALS['sys_name'].' est en mesure de le transférer
 tel quel sur le site. N\'hésitez pas à la contacter pour connaître
 la marche à suivre.

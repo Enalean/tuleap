@@ -21,5 +21,5 @@ L'équipe <?php print $GLOBALS['sys_name']; ?> invite les équipes de projet de <?
 <P>Dans les pages qui suivent, nous vous présenterons des documents importants concernant l'utilisation de votre compte et de votre environnement de projet. Veuillez les lire attentivement.
 
 <p>&nbsp;
-<BR><H3 align=center><a href="requirements.php">Etape 1: Services et Conditions</a></H3>
+<BR><H3 align=center><a href="requirements.php">Etape 1 : Services et Conditions</a></H3>
 </p>

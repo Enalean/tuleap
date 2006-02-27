@@ -60,7 +60,7 @@ account_change_email	send_new	Envoyer la confirmation
 #-----------------------------------------------
 # Script: SF/www/account/change_email-confirm.php
 #
-account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement:\n\n$2\n\n-- L'équipe $1
+account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement :\n\n$2\n\n-- L'équipe $1
 account_change_email-confirm	title	Confirmation de changement d'adresse e-mail
 account_change_email-confirm	mailsent	Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-mail. Suivez les instructions fournies dans ce message pour confirmer définitivement le changement.
 #
@@ -109,8 +109,8 @@ account_deleted	message	Votre compte utilisateur a été détruit. Si vous avez des
 #
 account_editsshkeys	title	Modification des clés SSH partagées
 account_editsshkeys	message	Pour éviter d'avoir à taper votre mot de passe à chaque ouverture d'une session shell, vous pouvez enregistrer une ou plusieurs de vos clés publiques SSH qui seront stockées dans votre fichier '~/.ssh/authorized_keys'.<P>Pour générer une clé publique SSH, vous devez utiliser le programme 'ssh-keygen' (ou ssh-keygen1) sur votre station de travail. Ensuite, ouvrez le fichier '~/.ssh/identity.pub' où se trouve la clé publique générée. Consultez la documentation de ssh pour plus d'information sur le partage de clés.
-account_editsshkeys	important	<P><b>IMPORTANT:</b>La mise à jour de vos clés SSH ne sera effective qu'après la prochaine mise à jour du backend dans approximativement <B>$1</B> heures et <B>$2</B> minutes.
-account_editsshkeys	keys	Clés partagées:<BR><I>Important: Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
+account_editsshkeys	important	<P><b>IMPORTANT :</b>La mise à jour de vos clés SSH ne sera effective qu'après la prochaine mise à jour du backend dans approximativement <B>$1</B> heures et <B>$2</B> minutes.
+account_editsshkeys	keys	Clés partagées :<BR><I>Important : Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
 #
 #-----------------------------------------------
 # Script: SF/www/account/first.php
@@ -123,7 +123,7 @@ account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En 
 #
 account_login	title	Connexion au site
 account_login	secure	sécurisé
-account_login	error_can_t_update_passwd	Erreur interne: mise à jour des mots de passe impossible.
+account_login	error_can_t_update_passwd	Erreur interne : mise à jour des mots de passe impossible.
 account_login	pending_title	Compte en attente
 account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
 account_login	resend_btn	Renvoyer le message de confirmation
@@ -151,7 +151,7 @@ account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #
 account_lostpw-confirm	title	Confirmation de la perte du mot de passe
 account_lostpw-confirm	mail_subject	Vérification du mot de passe de $1
-account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe:\n\n$2\n\n -- L'équipe $1\n
+account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe :\n\n$2\n\n -- L'équipe $1\n
 account_lostpw-confirm	msg_confirm	<B>Demande de confirmation envoyée</B><P>Un message électronique vient d'être envoyé à l'adresse e-mail de votre compte utilisateur. Suivez les instructions incluses dans ce message pour changer votre mot de passe.
 #
 #-----------------------------------------------
@@ -199,7 +199,7 @@ account_register	title	Création d'un nouveau compte utilisateur
 account_register	login	Nom de login
 account_register	ldap_login	Nom de login LDAP
 account_register	ldap_unix_login	Nom CodeX <strong>(minuscules uniquement, pas d'espace)</strong>
-account_register	ldap_email_help	<em><strong>Remarque:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
+account_register	ldap_email_help	<em><strong>Remarque :</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
 account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
 account_register	login_directions	<strong>(minuscules uniquement!)</strong>
 account_register	passwd	Mot de passe
@@ -209,7 +209,7 @@ account_register	passwd2_directions	&nbsp;
 account_register	realname	Nom Complet
 account_register	realname_directions	&nbsp;
 account_register	email	Adresse e-mail
-account_register	email_directions	<em><strong>Remarque:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
+account_register	email_directions	<em><strong>Remarque :</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
 account_register	tz	Fuseau Horaire
 account_register	mandatory	Les champs marqués $1 sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>
@@ -218,11 +218,11 @@ account_register	purpose	Motif
 account_register	purpose_directions	<em>Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site</em><br>
 account_register	btn_register	Créer le compte
 account_register	btn_next	Etape suivante
-account_register	msg_confirm	Félicitations! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est: <b>$2</b><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. En visitant le lien inclus dans ce message vous activerez votre compte.</p>
+account_register	msg_confirm	Félicitations! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est : <b>$2</b><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. En visitant le lien inclus dans ce message vous activerez votre compte.</p>
 account_register	title_approval	Création de compte - Prêt pour approbation
 account_register	msg_approval	Félicitations! Votre demande de création de compte sur $1 pour l'utilisateur <b>$2</b> a été pris en compte.<p>L'administrateur du site va maintenant examiner votre demande. Une fois approuvée vous recevrez un message de confirmation afin de vérifier votre adresse e-mail.  En visitant le lien inclus dans ce message vous activerez votre compte.
-account_register	mail_approval_subject	Création du nouveau compte: $1
-account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur: $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte:\n\n$3\n
+account_register	mail_approval_subject	Création du nouveau compte : $1
+account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur : $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte :\n\n$3\n
 #
 #-----------------------------------------------
 # Script: SF/www/account/suspended.php

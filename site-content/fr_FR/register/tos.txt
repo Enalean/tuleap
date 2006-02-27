@@ -20,7 +20,7 @@
 services (comme défini ci-dessous) est à tout moment soumise aux
 conditions générales d'utilisation (CGU) qui peuvent être mises à jour
 comme indiqué ci-dessous. Chaque utilisateur peut à tout moment
-consulter la dernière version des CGU sur:
+consulter la dernière version des CGU sur :
 
 <a href="/tos/tos.php"><?php print get_server_url(); ?>/tos/tos.php</a>.
 
@@ -78,7 +78,7 @@ ligne... (collectivement appelés "les services").  </p>
 <B>3. OBLIGATIONS LIEES A L'ENREGISTREMENT</B> 
 </p>
 
-<p>A la demande du site en question, chaque utilisateur doit: (a)
+<p>A la demande du site en question, chaque utilisateur doit : (a)
 fournir des informations véritables, précises, à jour et complètes sur
 le formulaire d'enregistrement du projet (appelées "Données du
 projet") et (b) maintenir et mettre à jour dans les meilleurs délais
@@ -166,7 +166,7 @@ décrit dans la section 1 ci-dessus.
 </p>
 
 <p> Un compte utilisateur peut être résilié, entre autre, pour les
-raisons suivantes: 1.) violation des CGU; 2.) abus des ressources
+raisons suivantes : 1.) violation des CGU; 2.) abus des ressources
 du site ou tentative d'accès illégal au site ou à ses ressources; 3.) 
 Utilisation des services non cohérente avec les objectifs du projet;
 4.) demande de résiliation de l'utilisateur et 5.) application des

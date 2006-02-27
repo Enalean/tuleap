@@ -25,10 +25,10 @@ $from = $GLOBALS['sys_noreply'];
 $hdrs = 'From: '.$from."\n";
 
 // subject and body can be customized to your liking
-$subject = "Nouveau projet enregistré: ".$form_full_name;
+$subject = "Nouveau projet enregistré : ".$form_full_name;
 $body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
-"Nom du projet: ".$form_full_name."\n\n".
-"Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet:\n".
+"Nom du projet : ".$form_full_name."\n\n".
+"Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
 $href_approval."\n";
 
 // Send a notification message to the Site administrator

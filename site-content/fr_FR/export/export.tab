@@ -35,7 +35,7 @@ export_index	g_id_required	argument ?group_id nécessaire dans l'URL
 #-----------------------------------------------
 # Script: SF/www/export/nitf_sfforums.php
 #
-export_nitf_sfforums	g_id_err	ERREUR: Cette URL doit être appelée avec un paramètre group_id valide
+export_nitf_sfforums	g_id_err	ERREUR : Cette URL doit être appelée avec un paramètre group_id valide
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnewreleases.php

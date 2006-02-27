@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Etape 5: Politique d'échange des logiciels</H2>
+<H2>Etape 5 : Politique d'échange des logiciels</H2>
 
 
 
@@ -40,7 +40,7 @@ target="side_window">Politique d'échange générale de <?php echo
 $GLOBALS['sys_name']; ?> </a> avant de prendre une décision pour votre
 projet.
 
-<P>Remarque: si votre projet consiste simplement en un site Web ou que
+<P>Remarque : si votre projet consiste simplement en un site Web ou que
 vous ne publiez aucun code source sur <?php print
 $GLOBALS['sys_name']; ?>, veuillez choisir l'option "Site Web
 uniquement" dans le menu ci-dessous.</p>
@@ -67,6 +67,6 @@ Si vous avez choisi l'option "Autre", merci d'en préciser la raison et de fourni
 <P>
 <H2><FONT COLOR="RED">Pas de retour arrière au delà de ce point</FONT></H2> 
 <P>
-<INPUT type=submit name="Submit" value="Etape 6: Catégories">
+<INPUT type=submit name="Submit" value="Etape 6 : Catégories">
 </FORM>
 </FONT>

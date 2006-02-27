@@ -32,7 +32,7 @@ include_account	name_too_long	Le nom est trop long. Il doit comporter au plus 32
 include_account	reserved	Le nom est réservé.
 include_account	reserved_cvs	Le nom est réservé pour CVS.
 include_account	reserved_dns	Le nom est réservé pour le DNS.
-include_account	dns_error	Les nom de projet ne peuvent comporter des soulignés en raison du DNS.
+include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés en raison du DNS.
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php
@@ -85,7 +85,7 @@ include_foundry_admin	proj_already_member	Le projet est déjà membre
 include_foundry_admin	proj_not_exist	Ce projet n'existe pas
 include_foundry_admin	upd_fail	La mise à jour a échoué
 include_foundry_admin	data_updated	Données mises à jour
-include_foundry_admin	proj_admin	Administration du projet: $1
+include_foundry_admin	proj_admin	Administration du projet : $1
 include_foundry_admin	featured_proj	Projets à l'affiche
 include_foundry_admin	no_proj	Aucun projet
 include_foundry_admin	g_members	Membres du projet
@@ -130,7 +130,7 @@ include_foundry_html_admin	save_changes	Sauver les changements
 include_foundry_news	upd_err	ERREUR lors de la mise à jour
 include_foundry_news	newsbyte_upd	Annonce mise à jour.
 include_foundry_news	newsbyte	Annonces
-include_foundry_news	not_found_err	Erreur - introuvable
+include_foundry_news	not_found_err	Erreur : introuvable
 include_foundry_news	approve_newsbyte	Approuve une annonce
 include_foundry_news	submitted_for_proj	Soumise par le projet
 include_foundry_news	submitted_by	Soumise par
@@ -181,12 +181,12 @@ include_layout	Help	Aide
 #-----------------------------------------------
 # Script: SF/www/include/license.php
 #
-include_license	cannot_open_acc	Impossible d'ouvrir le fichier d'acceptation de la licence: $1 
+include_license	cannot_open_acc	Impossible d'ouvrir le fichier d'acceptation de la licence : $1 
 include_license	license_accepted	CodeX Core Software License accepted on 
-include_license	cannot_write_acc	Impossible d'écrire dans le fichier d'acceptation de la license: $1
-include_license	cannot_open_decl	Impossible d'ouvrir le fichier de refus de la licence: $1
+include_license	cannot_write_acc	Impossible d'écrire dans le fichier d'acceptation de la license : $1
+include_license	cannot_open_decl	Impossible d'ouvrir le fichier de refus de la licence : $1
 include_license	license_declined	CodeX Core Software License declined on 
-include_license	cannot_write_decl	Impossible d'écrire dans le fichier de refus de la licence: $1
+include_license	cannot_write_decl	Impossible d'écrire dans le fichier de refus de la licence : $1
 include_license	msg_accept	Merci d'avoir accepter les termes de la licence \nCodeX. Vous pouvez maintenant utiliser le site
 include_license	msg_declined	Vous avez choisi de refuser les termes de la licence du logiciel CodeX. Vous devez donc retourner à Xerox la totalité du logiciel et de la documentation distribuée sous cette licence et procéder à la désinstallation sur l'ensemble de vos machines
 #
@@ -230,7 +230,7 @@ include_menu	dev_channel	Canaux développeurs
 include_menu	discussion_forum	Forums de discussions
 include_menu	contact_us	Contactez-nous
 include_menu	sf_foundries	Fonderies CodeX
-include_menu	about_foudries	A propos des fonderies
+include_menu	about_foudries	À propos des fonderies
 include_menu	games	Jeux
 include_menu	printing	Impression
 include_menu	proj	Projet
@@ -274,7 +274,7 @@ include_project_home	more_info	Plus d'information
 include_project_home	no_short_desc	Ce projet n'a pas encore soumis une description courte. Vous pouvez <a href="$1">la soumettre</a> maintenant.
 include_project_home	other_info	Autre information
 include_project_home	view_proj_activity	Afficher les <a href="$1">statistiques</a> d'activité du projet
-include_project_home	devel_info	Equipe de projet
+include_project_home	devel_info	Équipe de projet
 include_project_home	proj_admins	Administrateurs du projet
 include_project_home	devels	Membres
 include_project_home	view_members	Voir les membres
@@ -299,11 +299,11 @@ include_project_home	supp_manager	Suivi de demandes de support
 include_project_home	open_requ	<B>$1</B> demandes ouvertes
 include_project_home	tech_supp_manager	Suivi de demandes de support
 include_project_home	doc	Documentation
-include_project_home	doc_man	Gestion de documents: documents du projet
+include_project_home	doc_man	Gestion de documents : documents du projet
 include_project_home	patch_manager	Gestionnaire de correction
 include_project_home	open_patches	<B>$1</B> corrections ouvertes
 include_project_home	mail_lists	Listes de distribution
-include_project_home	public_mail_lists	<B>$1</B> listes publics
+include_project_home	public_mail_lists	<B>$1</B> listes publiques
 include_project_home	total	<B>$1</B> au total
 include_project_home	task_manager	Gestionnaire de tâches
 include_project_home	proj_task_man	Gestionnaire de projet/tâches
@@ -316,9 +316,9 @@ include_project_home	cvs_repo	Dépôt CVS
 include_project_home	commits	<B>$1</B> commits
 include_project_home	adds	<B>$1</B> adds
 include_project_home	co	<B>$1</B> checkouts
-include_project_home	browse_cvs	Parcourir CVS
+include_project_home	browse_cvs	Parcourir l'arbre CVS
 include_project_home	svn_repo	Dépôt Subversion
-include_project_home	browse_svn	Parcourir Subversion
+include_project_home	browse_svn	Parcourir l'arbre Subversion
 include_project_home	accesses	<B>$1</B> accès
 include_project_home	files	Fichiers
 include_project_home	file_releases	Fichiers publiés
@@ -356,14 +356,14 @@ include_session	required_login	Connexion requise
 include_session	login	Pour voir cette page, vous devez être connecté.
 include_session	insufficient_access	Permissions d'accès insuffisantes
 include_session	no_access	Vous essayez d'accéder à une zone du site pour laquelle vous n'avez pas les permissions requises. Vous pouvez probablement résoudre ce problème en naviguant de façon adéquate sur le site.
-include_session	hash_err	ERREUR - deux personnes ont la même clé - faîtes un retour en arrière et cela ne devrait plus se produire
+include_session	hash_err	ERREUR : deux personnes ont la même clé - faîtes un retour en arrière et cela ne devrait plus se produire
 #
 #-----------------------------------------------
 # Script: SF/www/include/snippet_caching.php
 #
 include_snippet_caching	browse_snippet	Parcourir les échantillons 
 include_snippet_caching	browse_explain	Vous pouvez parcourir la bibliothèque d'échantillons par langage ou catégorie. Vous pouvez aussi effectuer une recherche par mots-clés en utilisant la boite de recherche.
-include_snippet_caching	count_update	Dernière mise à jour: $1
+include_snippet_caching	count_update	Dernière mise à jour : $1
 include_snippet_caching	browse_lang	Parcourir par langage
 include_snippet_caching	browse_cat	Parcourir par catégorie
 #
@@ -371,14 +371,14 @@ include_snippet_caching	browse_cat	Parcourir par catégorie
 # Script: SF/www/include/squal_exit.php
 #
 include_squal_exit	err	ERREUR
-include_squal_exit	perm_denied	PERMISSION REFUSEE
+include_squal_exit	perm_denied	PERMISSION REFUSÉE
 include_squal_exit	choose_proj	CHOISIR UN PROJET/GROUPE
-include_squal_exit	missing_param	PARAMETRES REQUIS ABSENTS
+include_squal_exit	missing_param	PARAMÈTRES REQUIS ABSENTS
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_pre.php
 #
-include_squal_pre	not_connect_db	Connexion à la base de donnée impossible
+include_squal_pre	not_connect_db	Connexion à la base de données impossible
 #
 #-----------------------------------------------
 # Script: SF/www/include/stats_function.php
@@ -391,7 +391,7 @@ include_stats_function	new_user_added	Nouveaux utilisateurs créés chaque semaine
 include_stats_function	logo_by_day	Affichage du logo par jour
 include_stats_function	logo_by_proj	Affichage du logo par projet
 include_stats_function	view_by_browser	Pages vues par navigateur
-include_stats_function	view_by_platform	Pages vues par plat-eforme
+include_stats_function	view_by_platform	Pages vues par plate-forme
 include_stats_function	view_by_platform_browser	Pages vues par plate-forme/version de navigateur
 #
 #-----------------------------------------------
@@ -440,7 +440,7 @@ include_user_home	subject	Sujet
 include_user_home	message	Message
 include_user_home	cc	CC
 include_user_home	add_cc	Ajouter un CC
-include_user_home	fill_cc_list_msg	<b><u>Note:</b></u> pour les utilisateurs CodeX utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
+include_user_home	fill_cc_list_msg	<b><u>Note :</b></u> pour les utilisateurs CodeX utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
 #
 #-----------------------------------------------
 # Script: SF/www/include/user.php
@@ -451,7 +451,7 @@ include_user	invalid_u_id	ID utilisateur invalide
 #-----------------------------------------------
 # Script: SF/www/include/utils.php
 #
-include_utils	prio_colors	Echelle de couleurs des priorités
+include_utils	prio_colors	Échelle de couleurs des priorités
 include_utils	address_problem	Les adresses suivantes présentent une anomalie
 include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complète (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
 #
@@ -461,9 +461,9 @@ include_utils	email_explain	Les adresses e-mail doivent être soit des noms de lo
 include_vars	policy	Politique d'échange $1
 include_vars	website_only	Site Web seul
 include_vars	other	Autre
-include_vars	comip	Licence Open Source approuvé par $1
-include_vars	gpl	Licence GNU General Public (GPL)
-include_vars	lgpl	Licence GNU Library Public License (LGPL)
+include_vars	comip	Licence Open Source approuvée par $1
+include_vars	gpl	Licence Licence Publique Générale (GPL)
+include_vars	lgpl	Licence Licence Publique Générale Amoindrie (LGPL)
 include_vars	bsdl	Licence BSD
 include_vars	mitxl	Licence MIT/X Consortium
 include_vars	artistic_l	Licence Artistic

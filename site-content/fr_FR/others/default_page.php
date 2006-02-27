@@ -18,7 +18,7 @@ $default_domain = join('.',$pieces);
 ?>
 <HTML>
 <HEAD>
-<TITLE>CodeX: Bienvenue</TITLE>
+<TITLE>CodeX : Bienvenue</TITLE>
 <LINK rel="stylesheet" href="http://<? echo $default_domain; ?>/codex.css" type="text/css" >
 </HEAD>
 

@@ -43,15 +43,15 @@ wiki_views_wikiserviceviews	wiki_language	Langue du Wiki :
 wiki_views_wikiviews	title_error	Erreur
 wiki_views_wikiviews	not_activate	<H2><span class="feedback">Le Service Wiki n'est pas activé</span></H2><p>Le Service Wiki du projet $1 nécessite un activation par un Administrateur Projet ou un Administrateur Wiki.</p>
 wiki_views_wikiviews	set_perm_title	<h3>Permissions de la Page Wiki</h3>
-wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas</span></h2><p>Vous ne pouvez donner des permissions que sur des pages existantes. Vous devez créer la page avec le moteur Wiki avant de pouvoir donner des permissions.</p><p>Pour créer une page, il suffit de l'éditer.</p><p><strong>Note:</strong> Une page qui ne contient que "Décrivez PageName? ici" est vide du point de vue du moteur Wiki.</p>
-wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécifiques à la Page Wiki $1. Ces <strong>permissions ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de permissions : l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel:</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki :<p>
+wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas</span></h2><p>Vous ne pouvez donner des permissions que sur des pages existantes. Vous devez créer la page avec le moteur Wiki avant de pouvoir donner des permissions.</p><p>Pour créer une page, il suffit de l'éditer.</p><p><strong>Note :</strong> Une page qui ne contient que "Décrivez PageName? ici" est vide du point de vue du moteur Wiki.</p>
+wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécifiques à la Page Wiki $1. Ces <strong>permissions ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de permissions : l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel :</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki :<p>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiAttachment.class
 #
 wiki_lib_attachment	err_extension	Les fichiers ayant les extensions $1 ne sont pas autorisés.
-wiki_lib_attachment	err_alpha	ERREUR chargement de $1: Les noms de fichier ne peuvent contenir que des caractères alphanumériques, ainsi que le point, le souligné et le tiret.
-wiki_lib_attachment	err_insert	Impossible d'insérer une nouvelle révision du fichier joint: $1
+wiki_lib_attachment	err_alpha	ERREUR chargement de $1 : Les noms de fichier ne peuvent contenir que des caractères alphanumériques, ainsi que le point, le souligné et le tiret.
+wiki_lib_attachment	err_insert	Impossible d'insérer une nouvelle révision du fichier joint : $1
 wiki_lib_attachment	err_create_upload_dir	Impossible de créer la zone de stockage du projet
 wiki_lib_attachment	err_create_file_dir	Impossible de créer la zone de stockage de la révision du fichier
 wiki_lib_attachment	err_multi_id	Il existe plusieurs identifiants pour un fichier joint. Merci de contacter un administrateur.
@@ -59,9 +59,9 @@ wiki_lib_attachment	err_multi_id	Il existe plusieurs identifiants pour un fichie
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
 #
-wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki: $1
-wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki: $1
-wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki: $1
+wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki : $1
+wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki : $1
+wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki : $1
 wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été modifiée
 #
 #-----------------------------------------------
@@ -72,7 +72,7 @@ wiki_lib_wikipage	notunique_err	La page wiki n'est pas unique. Merci de contacte
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiPageWrapper.class
 #
-wiki_lib_wikipagewrap	new_page_text	$1 enregistre les pages créées avec l'interface principale:
+wiki_lib_wikipagewrap	new_page_text	$1 enregistre les pages créées avec l'interface principale :
 wiki_lib_wikipagewrap	page_added	$1 ajoutée
 wiki_lib_wikipagewrap	right_error	Cette opération nécessite les permissions admin
 #
@@ -82,7 +82,7 @@ wiki_lib_wikipagewrap	right_error	Cette opération nécessite les permissions admi
 wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Document Wiki mais vous n'avez pas sélectionné de page. Vous devez créer une Page Wiki avant de créer un Document Wiki.
 wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions : <p>$1</p>
 wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette page Wiki : <p>$1</p>
-wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à jour les permissions de ce fichier joint Wiki: <p>$1</p>
+wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à jour les permissions de ce fichier joint Wiki : <p>$1</p>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class
@@ -96,7 +96,7 @@ wiki_wikiservice	acces_denied_page	Vous n'êtes pas autorisé à accéder à cette Pa
 wiki_views_wkserviews	title	Administration Wiki pour $1
 wiki_views_wkserviews	entry_em	<em>Affichée dans la page par défaut du service wiki</em>
 wiki_views_wkserviews	entry_name	Nom du document :
-wiki_views_wkserviews	wikipage	PageWiki:
+wiki_views_wkserviews	wikipage	PageWiki :
 wiki_views_wkserviews	givename	Ou donnez un nom de page :
 wiki_views_wkserviews	wikipage_em	<em>Sélectionnez une <a href="$1&view=wikiPages">Page de Projet Wiki</a> ou entrez un autre nom de PageWiki (Si la page n'existe pas, elle sera créée).</em>
 wiki_views_wkserviews	description	Description :	

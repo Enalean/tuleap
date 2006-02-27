@@ -22,13 +22,13 @@ news_admin_index	group_update_err	ERREUR lors de la mise à jour des annonces
 news_admin_index	project_newsbyte_updated	Annonce(s) mise à jour.
 news_admin_index	title	Annonces
 news_admin_index	not_found_err	Erreur - introuvable
-news_admin_index	approve_for	Approuver une annonce pour le projet: $1
+news_admin_index	approve_for	Approuver une annonce pour le projet : $1
 news_admin_index	submitted_by	Soumise par
 news_admin_index	subject	Sujet
 news_admin_index	details	Détails
 news_admin_index	if_edit_delete	Si cette annonce figure sur la page d'accueil de $1 et que vous la modifiez, elle sera enlevée de la page d'accueil.
-news_admin_index	no_queued_item_found_for	Aucune annonce en attente pour le projet: $1
-news_admin_index	new_items	Annonce(s) soumise(s) par le projet: $1
+news_admin_index	no_queued_item_found_for	Aucune annonce en attente pour le projet : $1
+news_admin_index	new_items	Annonce(s) soumise(s) par le projet : $1
 news_admin_index	update_err	ERREUR lors de la mise à jour
 news_admin_index	newsbyte_updated	Annonce mise à jour.
 news_admin_index	newsbyte_deleted	Annonce enlevée de la file d'attente.
@@ -76,4 +76,4 @@ news_submit	news_added	Annonce ajoutée
 news_submit	only_admin_submits	Permission refusée. Vous ne pouvez soumettre une annonce pour un projet si vous n'en êtes pas l'administrateur
 news_submit	submit_news_for	Soumettre une annonce pour $1
 news_submit	post_explain	Vous pouvez publier une annonce concernant votre projet si vous en êtes l'administrateur.</p><p>Toutes les annonces <b>de votre projet</b> apparaîtront immédiatement sur la page de sommaire de votre projet. Les annonces d'intérêt général peuvent être sélectionnées par l'équipe de $1 pour apparaître sur la page d'accueil de $1.</p><p>Vous pouvez inclure des URLs dans vos annonces, mais pas de HTML. Les URLs seront automatiquement transformés en liens hypertextes lors de la visualisation.</p>
-news_submit	for_project	Pour le projet: $1
+news_submit	for_project	Pour le projet : $1
