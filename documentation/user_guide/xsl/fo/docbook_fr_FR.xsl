@@ -17,7 +17,7 @@
 -->
 
 <!-- CX-SBT: Import all the standard Docbook XSLT first -->
-<xsl:import href="/home/mnazaria/CodeX/tools/docbook-xsl/fo/docbook.xsl"/>
+<xsl:import href="/usr/local/docbook-xsl/fo/docbook.xsl"/>
 
 <!-- CX-SBT: And then import the specific CodeX XSLT -->
 <xsl:import href="param.xsl"/>
