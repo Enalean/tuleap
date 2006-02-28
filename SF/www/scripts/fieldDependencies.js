@@ -60,7 +60,7 @@ function xgs_debug(msg) {
     m = now.getMinutes();
     s = now.getSeconds();
     ms = now.getMilliseconds();
-    d.value += '['+h+':'+m+':'+s+'.'+ms+'] '+msg+'\n';
+    d.value += '['+h+':'+m+':'+s+'.'+ms+']\t'+msg+'\n';
 }
 //==============================================================================
 //==============================================================================
@@ -397,7 +397,6 @@ function applyRules(evt, name) {
         //We process the queue, until it is empty
         var j = 0;
         while(j < queue.length) {
-
             //Highlight queue is an array of element to highlight (those who are modified)
             var highlight_queue = [];
             //originals is a hash of target fields (to save their current state)
@@ -408,8 +407,8 @@ function applyRules(evt, name) {
                     //...clear it (empty options),
                     field.clear();
                     
-                    //...push it to the queue if it as dependencies,
-                    if (dependencies[field.id]) {
+                    //...push it to the queue if it as dependencies, (if we don't have already add it)
+                    if (dependencies[field.id] && !queue.find(function (element) { return element = field;})) {
                             queue.push(field);
                     }
                     
@@ -499,7 +498,6 @@ function addRule(rule_definition) {
 }
 
 function initFieldDependencies() {
-    
     addOptionsToFields();
     registerFieldsEvents();
     $H(rules_definitions).values().each(function(rule_definition) {
