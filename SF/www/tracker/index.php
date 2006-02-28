@@ -153,7 +153,14 @@ if ( $func == 'gotoid' ) {
                         if ($add_file && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
-
+                        
+                        //Check Field Dependencies
+                        require_once('common/tracker/ArtifactRulesManager.class');
+                        $arm =& new ArtifactRulesManager();
+                        if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
+                            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
+                        }
+                        
                         // Artifact creation                
                         if (!$ah->create()) {
                                 exit_error($Language->getText('global','error'),$ah->getErrorMessage());

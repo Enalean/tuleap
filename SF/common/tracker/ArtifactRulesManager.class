@@ -38,51 +38,107 @@ class ArtifactRulesManager {
 	function ArtifactRulesManager() {
     }
     
-    function getAllRulesByArtifactTypeWithOrder($artifact_type) {
-		$fact =& ArtifactRuleFactory::instance();
-        return $fact->getAllRulesByArtifactTypeWithOrder($artifact_type);
+    function getAllRulesByArtifactTypeWithOrder($artifact_type_id) {
+		$fact =& $this->_getArtifactRuleFactory();
+        return $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
 	}
     
-    function saveRuleValue($artifact_type, $source, $source_value, $target, $target_value) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->saveRuleValue($artifact_type, $source, $source_value, $target, $target_value);
+    function saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value);
     }
     
     function deleteRule($rule_id) {
-        $fact =& ArtifactRuleFactory::instance();
+        $fact =& $this->_getArtifactRuleFactory();
         return $fact->deleteRule($rule_id);
     }
     
-    function deleteRuleValueBySource($artifact_type, $source, $source_value, $target) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->deleteRuleValueBySource($artifact_type, $source, $source_value, $target);
+    function deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target);
     }
     
-    function deleteRuleValueByTarget($artifact_type, $source, $target, $target_value) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->deleteRuleValueByTarget($artifact_type, $source, $target, $target_value);
+    function deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value);
     }
     
     function &_getArtifactRuleFactory() {
         return ArtifactRuleFactory::instance();
     }
     
-    function deleteRulesByArtifactType($artifact_type) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->deleteRulesByArtifactType($artifact_type);
+    function deleteRulesByArtifactType($artifact_type_id) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->deleteRulesByArtifactType($artifact_type_id);
     }
-    function deleteRulesByFieldId($artifact_type, $field_id) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->deleteRulesByFieldId($artifact_type, $field_id);
+    function deleteRulesByFieldId($artifact_type_id, $field_id) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->deleteRulesByFieldId($artifact_type_id, $field_id);
     }
-    function deleteRulesByValueId($artifact_type, $field_id, $value_id) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->deleteRulesByValueId($artifact_type, $field_id, $value_id);
+    function deleteRulesByValueId($artifact_type_id, $field_id, $value_id) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->deleteRulesByValueId($artifact_type_id, $field_id, $value_id);
     }
     
-    function copyRules($from_artifact_type, $to_artifact_type) {
-        $fact =& ArtifactRuleFactory::instance();
-        return $fact->copyRules($from_artifact_type, $to_artifact_type);
+    function copyRules($from_artifact_type_id, $to_artifact_type_id) {
+        $fact =& $this->_getArtifactRuleFactory();
+        return $fact->copyRules($from_artifact_type_id, $to_artifact_type_id);
+    }
+    
+    function validate($artifact_type_id, $value_field_list, &$art_field_fact) {
+        $valid = true;
+        
+        $values = array();
+        reset($value_field_list);
+        while (list($field_name,$value) = each($value_field_list)) {
+            $field = $art_field_fact->getFieldFromName($field_name);
+            $values[$field->getID()] = array('field' => &$field, 'value' => $value);
+        }
+        
+        $dependencies = array();
+        foreach($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
+            if (is_a($rule, 'ArtifactRuleValue')) {
+                if (!isset($dependencies[$rule->source_field])) {
+                    $dependencies[$rule->source_field] = array();
+                }
+                if (!isset($dependencies[$rule->source_field][$rule->target_field])) {
+                    $dependencies[$rule->source_field][$rule->target_field] = array();
+                }
+                $dependencies[$rule->source_field][$rule->target_field][] = $rule;
+            }
+        }
+        
+        reset($dependencies);
+        while($valid && (list($source,) = each($dependencies))) {
+            if (isset($values[$source])) {
+                reset($dependencies[$source]);
+                while($valid && (list($target,) = each($dependencies[$source]))) {
+                    if (isset($values[$target])) {
+                        reset($dependencies[$source][$target]);
+                        $applied = false;
+                        while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
+                            if ($dependencies[$source][$target][$rule]->canApplyTo(
+                                $artifact_type_id, 
+                                $source, 
+                                $values[$source]['value'], 
+                                $target, 
+                                $values[$target]['value']))
+                            {
+                                $applied = true;
+                                $valid = $dependencies[$source][$target][$rule]->applyTo(
+                                    $artifact_type_id, 
+                                    $source, 
+                                    $values[$source]['value'], 
+                                    $target, 
+                                    $values[$target]['value']);
+                            }
+                        }
+                        $valid = $valid || !$applied;
+                    }
+                }
+            }
+        }
+        return $valid;
     }
 }
 
