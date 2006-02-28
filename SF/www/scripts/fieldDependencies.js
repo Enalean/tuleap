@@ -408,7 +408,7 @@ function applyRules(evt, name) {
                     field.clear();
                     
                     //...push it to the queue if it as dependencies, (if we don't have already add it)
-                    if (dependencies[field.id] && !queue.find(function (element) { return element = field;})) {
+                    if (dependencies[field.id] && !queue.find(function (element) { return element == field;})) {
                             queue.push(field);
                     }
                     
