@@ -581,6 +581,7 @@ function buildAdminUI() {
             forbidden_sources[field.id] = [];
             forbidden_targets[field.id] = [];
     });
+    //Cycles ( A => B, B => C, C => A) are not allowed (targets)
     $H(forbidden_sources).keys().each(function (id) {
             breadthFirstWalk(id, 
                 function(node){ 
@@ -599,6 +600,7 @@ function buildAdminUI() {
                 function(node){ forbidden_sources[id].push(node); }, 
                 function(node){ return forbidden_sources[id].find(function(element) { return element == node; }); });
     });
+    //Cycles ( A => B, B => C, C => A) are not allowed (targets)
     $H(forbidden_targets).keys().each(function (id) {
             breadthFirstWalk(id, 
                 function(node){ 
@@ -616,6 +618,32 @@ function buildAdminUI() {
                 },
                 function(node){ forbidden_targets[id].push(node); }, 
                 function(node){ return forbidden_targets[id].find(function(element) { return element == node; });});
+    });
+    // We do not allow a relation A => C if exist A => B and B => C (sources)
+    $H(forbidden_sources).keys().each(function (id) {
+            $H(rules_definitions).values().each(function (rule_definition) {
+                    if (rule_definition.target_field != id) {
+                        if (!forbidden_sources[id].find(function (source_field) { return source_field == rule_definition.source_field; })) {
+                            forbidden_sources[id].push(rule_definition.source_field);
+                        }
+                    }
+            });
+            if (!forbidden_sources[id].find(function (source_field) { return source_field == id; })) {
+                forbidden_sources[id].push(id);
+            }
+    });
+    // We do not allow a relation A => C if exist A => B and B => C (targets)
+    $H(forbidden_targets).keys().each(function (id) {
+            $H(rules_definitions).values().each(function (rule_definition) {
+                    if (rule_definition.source_field != id) {
+                        if (!forbidden_targets[id].find(function (target_field) { return target_field == rule_definition.target_field; })) {
+                            forbidden_targets[id].push(rule_definition.target_field);
+                        }
+                    }
+            });
+            if (!forbidden_targets[id].find(function (target_field) { return target_field == id; })) {
+                forbidden_targets[id].push(id);
+            }
     });
     //}}}
     
