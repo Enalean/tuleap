@@ -20,7 +20,7 @@ class ReferenceAdministrationViews extends Views {
     function header() {
         project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_reference','edit_reference'),
                                    'group'=>$GLOBALS['group_id'],
-                                   'help' => 'ReferenceConfiguration.html')); //XXX
+                                   'help' => 'ReferenceConfiguration.html'));
 
     }
     function footer() {
@@ -156,7 +156,9 @@ class ReferenceAdministrationViews extends Views {
 <td><input type="text" name="description" size="70" maxlength="255"></td></tr>';
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','url').'">'.$Language->getText('project_reference','r_link').'</a>:&nbsp;<font color="red">*</font></td>
-<td><input type="text" name="link" size="70" maxlength="255">[?]</td></tr>';
+<td><input type="text" name="link" size="70" maxlength="255"> ';
+            echo  help_button('ReferenceConfiguration.html#ReferenceCreation');
+            echo '</td></tr>';
         if (($group_id==100)&&($su)) {
             echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','r_service_desc').'">'.$Language->getText('project_reference','r_service').'</a>:</td>
@@ -257,7 +259,8 @@ class ReferenceAdministrationViews extends Views {
         if ($ro) {
             echo $ref->getLink();
         } else {
-            echo '<input type="text" name="link" size="70" maxlength="255" value="'.$ref->getLink().'">[?]';//xxx Add pointer to doc here
+            echo '<input type="text" name="link" size="70" maxlength="255" value="'.$ref->getLink().'"> ';
+            echo  help_button('ReferenceConfiguration.html#ReferenceCreation');
         }
         echo '</td></tr>';
         if ($group_id==100) {
