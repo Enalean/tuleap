@@ -619,7 +619,7 @@ function buildAdminUI() {
                 function(node){ forbidden_targets[id].push(node); }, 
                 function(node){ return forbidden_targets[id].find(function(element) { return element == node; });});
     });
-    // We do not allow a relation A => C if exist A => B and B => C (sources)
+    // We do not allow a relation A => C if B => C exists (sources)
     $H(forbidden_sources).keys().each(function (id) {
             $H(rules_definitions).values().each(function (rule_definition) {
                     if (rule_definition.target_field != id) {
@@ -632,7 +632,7 @@ function buildAdminUI() {
                 forbidden_sources[id].push(id);
             }
     });
-    // We do not allow a relation A => C if exist A => B and B => C (targets)
+    // We do not allow a relation A => C if B => C exists (targets)
     $H(forbidden_targets).keys().each(function (id) {
             $H(rules_definitions).values().each(function (rule_definition) {
                     if (rule_definition.source_field != id) {
