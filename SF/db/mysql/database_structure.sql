@@ -1812,7 +1812,7 @@ CREATE TABLE survey_radio_choices (
   radio_choice text NOT NULL,
   PRIMARY KEY  (choice_id),  
   KEY idx_survey_radio_choices_question_id (question_id)
-) TYPE=MyISAM
+) TYPE=MyISAM;
 
 #
 # Table structure for table 'survey_rating_aggregate'
