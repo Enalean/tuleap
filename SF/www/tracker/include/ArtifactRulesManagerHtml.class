@@ -140,6 +140,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     
     function displayRules($params = array()) {
         $this->_header();
+        echo '<div>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</div>';
+        echo '<br />';
         $this->displayEditForm($params);
         echo '<br />';
         $this->_footer();

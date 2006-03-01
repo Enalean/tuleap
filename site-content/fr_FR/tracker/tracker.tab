@@ -111,6 +111,7 @@ tracker_index	not_saved_comment	Le commentaire n'a pu être sauvegardé
 tracker_index	open	ouvert
 tracker_index	updated_aid	Modification de $1
 tracker_index	mass_change	Mise à jour massive
+tracker_index	invalid_field_dependency	Dépendence entre champs invalide
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange_detail.php
@@ -740,4 +741,4 @@ tracker_field_dependencies	choose_field	-- Choisir un champ
 tracker_field_dependencies	source	Source :
 tracker_field_dependencies	target	Cible :
 tracker_field_dependencies	saved	Sauvegardé avec succès
-
+tracker_field_dependencies	inline_help	Selectionnez un champ source et un champ cible pour editer les dépendances entre ces champs.

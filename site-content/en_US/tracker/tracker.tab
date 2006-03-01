@@ -106,6 +106,7 @@ tracker_index	not_saved_comment	Comment could not be saved
 tracker_index	open	open
 tracker_index	updated_aid	Updated $1
 tracker_index	mass_change	Mass Change
+tracker_index	invalid_field_dependency	Invalid Field Dependency
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange_detail.php
@@ -733,4 +734,5 @@ tracker_field_dependencies	choose_field	-- Choose field
 tracker_field_dependencies	source	Source:
 tracker_field_dependencies	target	Target:
 tracker_field_dependencies	saved	Saved successfully
+tracker_field_dependencies	inline_help	Select a source field and a target field to edit dependencies between them.
 
