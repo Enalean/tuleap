@@ -663,12 +663,9 @@ function buildAdminUI() {
     header_target = document.createElement('td');
     header_target.className = 'boxtitle';
 
-    header_help = document.createElement('td');
-    header_help.className = 'boxtitle';
 
     header_row.appendChild(header_source);
     header_row.appendChild(header_target);
-    header_row.appendChild(header_help);
     header.appendChild(header_row);
     table.appendChild(header);
     
