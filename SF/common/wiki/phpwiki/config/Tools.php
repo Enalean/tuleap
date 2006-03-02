@@ -612,14 +612,6 @@ class ValidatorArrayStringList extends Validator {
 
 
 //$Log$
-//Revision 1.1  2005/04/12 13:33:28  guerin
-//First commit for wiki integration.
-//Added Manuel's code as of revision 13 on Partners.
-//Very little modification at the moment:
-//- removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-//- simplified require syntax
-//- removed ST-specific code (for test phase)
-//
 //Revision 1.6  2004/04/16 23:30:41  zorloc
 //More work for new ini config system.  Tools has array type removed and first implimentations of config-dist.ini and IniConfig.php.  Will update config-dist.ini again soon.
 //

@@ -198,14 +198,6 @@ extends WikiPlugin_WikiAdminSelect
 }
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:34  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.6  2004/03/17 20:23:44  rurban
 // fixed p[] pagehash passing from WikiAdminSelect, fixed problem removing pages with [] in the pagename
 //

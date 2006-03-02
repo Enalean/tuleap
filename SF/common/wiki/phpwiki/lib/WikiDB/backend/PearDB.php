@@ -992,14 +992,6 @@ extends WikiDB_backend_PearDB_generic_iter
     }
 }
 // $Log$
-// Revision 1.1  2005/04/12 13:33:30  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.51  2004/05/12 10:49:55  rurban
 // require_once fix for those libs which are loaded before FileFinder and
 //   its automatic include_path fix, and where require_once doesn't grok

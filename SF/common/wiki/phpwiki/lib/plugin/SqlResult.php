@@ -112,14 +112,6 @@ extends WikiPlugin
 };
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:33  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.2  2004/05/03 21:57:47  rurban
 // locale updates: we previously lost some words because of wrong strings in
 //   PhotoAlbum, german rewording.

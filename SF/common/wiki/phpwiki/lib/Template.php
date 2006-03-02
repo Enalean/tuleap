@@ -251,14 +251,6 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 }
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:28  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.57  2004/05/01 18:20:05  rurban
 // Add $charset to template locals (instead of constant CHARSET)
 //

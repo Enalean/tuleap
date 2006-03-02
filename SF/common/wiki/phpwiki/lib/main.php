@@ -955,23 +955,6 @@ main();
 
 
 // $Log$
-// Revision 1.4  2005/05/20 18:45:05  guerin
-// Removed debug trace.
-//
-// Revision 1.3  2005/05/20 13:40:48  nterray
-// Fix some typos and add checks for some undefined variables
-//
-// Revision 1.2  2005/05/13 08:57:26  guerin
-// Fixed issue with initial Wiki document: it is now created within phpWiki main().
-//
-// Revision 1.1  2005/04/12 13:33:28  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.145  2004/05/12 10:49:55  rurban
 // require_once fix for those libs which are loaded before FileFinder and
 //   its automatic include_path fix, and where require_once doesn't grok

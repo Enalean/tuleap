@@ -546,14 +546,6 @@ class PagePermission {
 }
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:28  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.12  2004/05/04 22:34:25  rurban
 // more pdf support
 //

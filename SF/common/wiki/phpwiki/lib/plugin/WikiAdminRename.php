@@ -216,14 +216,6 @@ class _PageList_Column_renamed_pagename extends _PageList_Column {
 };
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:34  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.10  2004/04/06 20:00:11  rurban
 // Cleanup of special PageList column types
 // Added support of plugin and theme specific Pagelist Types

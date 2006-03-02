@@ -266,14 +266,6 @@ $values[] = array(
 
 
 //$Log$
-//Revision 1.1  2005/04/12 13:33:28  guerin
-//First commit for wiki integration.
-//Added Manuel's code as of revision 13 on Partners.
-//Very little modification at the moment:
-//- removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-//- simplified require syntax
-//- removed ST-specific code (for test phase)
-//
 //Revision 1.4  2003/12/07 19:25:41  carstenklapp
 //Code Housecleaning: fixed syntax errors. (php -l *.php)
 //

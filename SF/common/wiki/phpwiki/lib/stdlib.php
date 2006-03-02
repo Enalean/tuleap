@@ -1427,20 +1427,6 @@ function obj2hash ($obj, $exclude = false, $fields = false) {
 }
 
 // $Log$
-// Revision 1.2  2005/05/12 10:08:04  guerin
-// 2nd major commit for Wiki integration:
-// - use localisation from phpWiki
-// - changed wiki creation process
-// - fixed a few other minor issues.
-//
-// Revision 1.1  2005/04/12 13:33:29  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.178  2004/05/12 10:49:55  rurban
 // require_once fix for those libs which are loaded before FileFinder and
 //   its automatic include_path fix, and where require_once doesn't grok

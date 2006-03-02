@@ -1319,14 +1319,6 @@ function listAvailableLanguages() {
 }
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:28  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.96  2004/05/13 13:48:34  rurban
 // doc update for the new 1.3.10 release
 //

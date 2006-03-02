@@ -478,14 +478,6 @@ function stddev(&$hits, $total = false) {
 }
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:33  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.17  2004/05/08 14:06:13  rurban
 // new support for inlined image attributes: [image.jpg size=50x30 align=right]
 // minor stability and portability fixes

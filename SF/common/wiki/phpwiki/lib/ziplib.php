@@ -787,14 +787,6 @@ function ParseMimeifiedPages ($data)
 }
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:29  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.35  2004/05/02 21:26:38  rurban
 // limit user session data (HomePageHandle and auth_dbi have to invalidated anyway)
 //   because they will not survive db sessions, if too large.

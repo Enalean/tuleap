@@ -221,14 +221,6 @@ extends WikiPlugin
 };
 
 // $Log$
-// Revision 1.1  2005/04/12 13:33:33  guerin
-// First commit for wiki integration.
-// Added Manuel's code as of revision 13 on Partners.
-// Very little modification at the moment:
-// - removed use of DOCUMENT_ROOT and SF_LOCAL_INC_PREFIX
-// - simplified require syntax
-// - removed ST-specific code (for test phase)
-//
 // Revision 1.11  2004/03/24 19:39:03  rurban
 // php5 workaround code (plus some interim debugging code in XmlElement)
 //   php5 doesn't work yet with the current XmlElement class constructors,
