@@ -247,53 +247,53 @@ project_admin_permissions	reset_to_def	Retour aux valeurs d'origine
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #
-project_reference	create_fail	Echec lors de la création de la référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
-project_reference	create_for_tracker_fail	Référence associée au tracker non créée&nbsp;: le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
-project_reference	create_s	Créer une nouvelle référence.
+project_reference	create_fail	Echec lors de la création du patron de référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	create_for_tracker_fail	Patron de référence associé au tracker non créé&nbsp;: le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
+project_reference	create_s	Créer un nouveau patron de référence.
 project_reference	del?	Détruire ?
 project_reference	del_fail	- Echec de la destruction ! $1
-project_reference	del_r	Détruire cette référence ?
-project_reference	disabled	<i>Désactivé</i>
-project_reference	edit_fail	Echec lors de l'édition de la référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
-project_reference	edit_r	Editer la référence
-project_reference	edit_reference	Edition des références
-project_reference	edit_s_for	Edition des références de <B>$1</B>
-project_reference	edit_system_s	Edition des références système
-project_reference	enabled	Activé
+project_reference	del_r	Détruire ce patron de référence ?
+project_reference	disabled	<i>Inactif</i>
+project_reference	edit_fail	Echec lors de l'édition du patron de référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	edit_r	Editer le patron de référence
+project_reference	edit_reference	Edition des patrons de référence
+project_reference	edit_s_for	Edition des patrons de référence de <B>$1</B>
+project_reference	edit_system_s	Edition des patrons de référence système
+project_reference	enabled	Actif
 project_reference	enabled_desc	Extrait automatiquement ce mot-clé ?
 project_reference	fields_required	champs obligatoires
 project_reference	id	Identifiant
 project_reference	keyword	Mot Clé
-project_reference	manage_sys_r	Gestion des références système
-project_reference	manage_proj_r	Gestion des références projet
+project_reference	manage_sys_r	Gestion des patrons de référence système
+project_reference	manage_proj_r	Gestion des patrons de référence projet
 project_reference	missing_parameter	Il manque un paramètre. Merci de revenir en arrière et de compléter le formulaire
-project_reference	new_s	Nouvelle référence
+project_reference	new_s	Nouveau patron de référence
 project_reference	project	projet
-project_reference	r_create_success	Référence créée avec succès
-project_reference	r_creation	Créer une nouvelle référence
-project_reference	r_deleted	Référence détruite
+project_reference	r_create_success	Patron de référence créé avec succès
+project_reference	r_creation	Créer un nouveau patron de référence
+project_reference	r_deleted	Patron de référence détruit
 project_reference	r_desc	Description
-project_reference	r_desc_in_tooltip	La description de la référence sera affichée dans une bulle lorsque le pointeur est au dessus d'une référence extraite.
+project_reference	r_desc_in_tooltip	La description sera affichée dans une bulle lorsque le pointeur est au dessus d'une référence extraite.
 project_reference	r_keyword	Mot clé
 project_reference	r_keyword_desc	Mot clé qui déclenche la création d'une référence
 project_reference	r_link	Lien
-project_reference	r_scope	Portée de la référence&nbsp;: projet seulement ou système
+project_reference	r_scope	Portée du patron de référence&nbsp;: projet seulement ou système
 project_reference	r_service	Lié au service
-project_reference	r_service_desc	Si la référence est spécifique à un service de CodeX, le spécifier ici
+project_reference	r_service_desc	Si le patron de référence est spécifique à un service de CodeX, le spécifier ici
 project_reference	ref_scope_P	Projet
 project_reference	ref_scope_S	Système
 project_reference	scope	Portée
-project_reference	sr_deleted	Référence système détruite
+project_reference	sr_deleted	Patron de référence système détruit
 project_reference	system	système
-project_reference	system_r_create_success	Référence système créée avec succès, et ajoutée à tous les projets
-project_reference	t_r_deleted	Référence correspondante détruite
+project_reference	system_r_create_success	Patron de référence système créé avec succès, et ajouté à tous les projets
+project_reference	t_r_deleted	Patron de référence correspondant détruit
 project_reference	url	URL pointée par la référence
-project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous détruire cette référence ? Cela supprimera la référence ($1) de TOUS les projets de ce serveur. Etes-vous SUR de vouloir continuer ?
-project_reference	extract_syntax	Paramètres :\n  group_id : projet qui définit les références\n  text     : texte en entrée
-project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_name : projet qui définit les références<br>- text : texte en entr&eacute;e
-## Description value here for each reference name (system or project wide) that should be localised
+project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous détruire ce patron de référence ? Cela supprimera le patron de référence ($1) de TOUS les projets de ce serveur. Etes-vous SUR de vouloir continuer ?
+project_reference	extract_syntax	Paramètres :\n  group_id : projet qui définit les patrons de référence\n  text     : texte en entrée
+project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_name : projet qui définit les patrons de référence<br>- text : texte en entr&eacute;e
+## Description value here for each reference pattern name (system or project wide) that should be localised
 ## Naming rule for the key: 
-## reference_<reference keyword>_desc_key for the reference description
+## reference_<reference keyword>_desc_key for the reference pattern description
 project_reference	reference_art_desc_key	Artefact
 project_reference	reference_cvs_desc_key	Détail de commit CVS
 project_reference	reference_svn_desc_key	Détail de révision Subversion

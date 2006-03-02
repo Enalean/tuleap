@@ -834,7 +834,7 @@
       automagically create an hyperlink to the web page showing all
       the details of the artifact.</para>
 
-      <para>CodeX References may be used to reference artifacts, as well as source
+      <para>CodeX reference patterns may be used to reference artifacts, as well as source
       code commits, documents, files, etc. Please refer to 
       <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
 

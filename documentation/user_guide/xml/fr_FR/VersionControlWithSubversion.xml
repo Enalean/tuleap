@@ -572,7 +572,7 @@
       commentaires des artefacts ou dans les messages de commits de
       Subversion et que CodeX reconnaît automatiquement.</para>
 
-      <para>Les patrons de texte reconnus automatiquement par CodeX
+      <para>Les patrons de référence reconnus automatiquement par CodeX
       dans les messages de commit ou dans les commentaires des
       artefacts sont les suivants :</para>
 

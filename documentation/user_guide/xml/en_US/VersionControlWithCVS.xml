@@ -521,7 +521,7 @@
 
       <para>The integration of CVS in CodeX precisely provide the
       CodeX users with this bi-directionnal cross-referencing
-      mechanism. This is achieved through the use of 'References', i.e. text patterns
+      mechanism. This is achieved through the use of reference patterns
       that are automatically detected by CodeX in either the follow-up
       comments of the project artifacts or in the messages attached to
       a CVS commit.</para>

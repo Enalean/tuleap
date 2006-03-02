@@ -264,14 +264,14 @@
 
 
     <section id="ReferenceConfiguration">
-      <title>Reference Configuration</title>
+      <title>Reference Pattern Configuration</title>
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
       <para>The &#34;Reference Configuration&#34; item of the Project Administration
-      menu lists all references available to the project. 
-      The Reference Configuration page allows a project 
-      administrator to update, enable, disable or even create references.
+      menu lists all reference patterns available to the project. 
+      The &#34;Reference Configuration&#34; page allows a project 
+      administrator to update, enable, disable or even create reference patterns.
       </para>
 
     <section id="ReferenceOverview">
@@ -281,42 +281,42 @@
       Based on a text pattern, CodeX automatically creates hyperlinks to the desired object.
       </para>
 
-      <para>When typing a follow-up comment, or a commit message, any text that follows the
-      pattern "XXX #NNN" will be interpreted as a reference to the object XXX number NNN.
-      For instance, 'artifact #123' will be detected as a reference to artifact number 123, and 
-      CodeX will automatically create a hyperlink that directly points to the details of artifact 123.
+      <para>When typing a follow-up comment or a commit message, any text containing the
+      pattern "XXX #NNN" will be interpreted as a reference to the object of type XXX with ID number NNN.
+      For instance, 'artifact #123' is recognized as a reference to artifact number 123, and 
+      CodeX automatically creates a hyperlink that directly points to the details of artifact 123.
       </para>
-      <para>You may also reference an object belonging to another project. In that case, use 
+      <para>You may also reference an object that belongs to another project. In that case, use 
       either 'XXX #group_id:NNN' or 'XXX #group_name:NNN' to reference object XXX number NNN 
       belonging to project which ID is 'group_id' or which short name is 'group_name'. 
       For instance, 'wiki #myproj:Welcome' is a reference to the 'Welcome' wiki page of the project 'myproj'.
       </para>
-      <para>Some references may need more than one parameter. In this case, use '/' as a separator 
+      <para>Some reference patterns may need more than one parameter. In this case, use '/' as a separator 
       between parameters. For example, 'wiki #Welcome/2' creates a reference to the wiki page named 'Welcome' at version '2'.
       </para>
 
-      <para>There are two kinds of references:</para>
+      <para>There are two kinds of reference patterns:</para>
 
  
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">System references</emphasis>:
-          these references are defined by the site administrator and are common to
+          <para><emphasis role="bold">System reference patterns</emphasis>:
+          these reference patterns are defined by the site administrator and are common to
           all projects. They cannot be modified, except for their status 
           (enabled/disabled).
           </para>
           <para>Most system references are related to a specific service. For example,
           'artifact', 'doc', 'file' or 'wiki' are respectively related to the tracker,
           document manager, file manager and Wiki services. In order to facilitate 
-          the usage of such references, they are automatically enabled and disabled
+          the usage of such reference patterns, they are automatically enabled and disabled
           when the corresponding service is enabled/disabled. Still, it is always 
-          possible to enable or disable those references manually.
+          possible to enable or disable those reference patterns manually.
           </para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Project references</emphasis>: 
-          these references can be fully customized or deleted by the project administrator.
+          <para><emphasis role="bold">Project reference patterns</emphasis>: 
+          these reference patterns can be created, modified or deleted by the project administrator.
           </para>
         </listitem>
       </itemizedlist>
@@ -324,11 +324,11 @@
 
 
     <section id="ReferencePredefined">
-      <title>Predefined References</title>
-<para>Here is a list of predefined references:</para>
+      <title>Predefined Reference Patterns</title>
+<para>Here is a list of predefined reference patterns:</para>
       <itemizedlist mark="bullet">
         <listitem><para><emphasis role="bold">art #num or artifact #num</emphasis>: 
-        Reference to artifact number 'num'. This is a system-wide number (artifact 'num' is unique accross projects). This reference links to the artifact detail/update page. In addition to the 'art' and 'artifact' keywords, artifacts may be referenced using the tracker short name. For example, an artifact in the bug tracker can be referenced with <emphasis role="bold">bug #NNN</emphasis>, a support request with <emphasis role="bold">sr #NNN</emphasis>, a task with <emphasis role="bold">task #NNN</emphasis> and a patch with <emphasis role="bold">patch #NNN</emphasis>. So, when you create a custom tracker, make sure that you specify a meaningful tracker short name.</para></listitem>
+        Reference to artifact number 'num'. Note that 'num' is a system-wide number and is unique accross projects. This reference links to the artifact detail/update page. In addition to the 'art' and 'artifact' keywords, artifacts may be referenced using the related tracker short name. For example, an artifact in the bug tracker can be referenced with <emphasis role="bold">bug #NNN</emphasis>, a support request with <emphasis role="bold">sr #NNN</emphasis>, a task with <emphasis role="bold">task #NNN</emphasis> and a patch with <emphasis role="bold">patch #NNN</emphasis>. So, when you create a custom tracker, make sure that you specify a meaningful tracker short name.</para></listitem>
         <listitem><para><emphasis role="bold">commit #num or cvs #num</emphasis>: 
         Reference to CVS commit number 'num'. This is a system-wide number. The reference links to the commit details page: log message, impacted files, link to diff view, etc.</para></listitem>
         <listitem><para><emphasis role="bold">rev #num or revision #num or svn #num</emphasis>: 
@@ -353,7 +353,7 @@ While working in the development or the maintenance phase of a software project,
 </para><para>
 The integration of CVS and Subversion in CodeX precisely provide the CodeX users with this bi-directionnal cross-referencing mechanism. This is achieved through the use of references that are automatically detected by CodeX in either the follow-up comments of the project artifacts or in the messages attached to a CVS or SVN commit.
 </para>
-<para>The system is not limited to artifact and commit references, so you may also reference the forum message where the bug was found, the documentation that describes an issue, or the file that fixes it. The system is flexible enough to allow referencing of items that are not stored in CodeX. So you may now create your own reference to link to an external document manager like DocuShare, or source code management tool like ClearCase</para>
+<para>The system is not limited to artifact and commit references, so you may also reference the forum message where the bug was found, the documentation that describes an issue, or the file that fixes it. The system is flexible enough to allow referencing of items that are not stored in CodeX. So you may now create your own reference pattern to link to an external document manager like DocuShare, or source code management tool like ClearCase</para>
 
       <para><tip><title>Tip: cross-reference artifacts and Source Code
       commits</title><para>It is considered a best practice to always
@@ -369,8 +369,8 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 
 
     <section id="ReferenceCreation">
-      <title>Creating or Updating a Reference</title>
-      <para>When creating or updating a reference, one has to fill the following fields:</para>
+      <title>Creating or Updating a Reference Pattern</title>
+      <para>When creating or updating a reference pattern, one has to fill the following fields:</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Reference Keyword</emphasis>:
@@ -438,19 +438,19 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
           <listitem><para><emphasis role="bold">artifact #25</emphasis>: '$0' is 'artifact', '$1' is '25'</para></listitem>
           <listitem><para><emphasis role="bold">wiki #codex:Welcome/1</emphasis>: '$0' is 'wiki', '$1' is 'Welcome', '$2' is '1', '$projname' is 'codex'</para></listitem>
           <listitem><para><emphasis role="bold">myref #123:1/23/456</emphasis>: '$0' is 'myref', '$1' is '1', '$2' is '23', '$3' is '456' and '$group_id' is '123'</para></listitem>
-          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis>: '$0' is 'google', '$1' is 'codex', '$2' is 'xerox'. If you define the reference 'google', with its link pointing at <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, clicking on the reference 'google #codex/xerox' will create a google search for 'codex xerox'.</para></listitem>
-          <listitem><para><emphasis role="bold">ds #123</emphasis>: '$0' is 'ds', '$1' is '123'. If you define the reference 'ds', with its link pointing at <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, clicking on the reference 'ds #123' will download document '123' from your local DocuShare server.</para></listitem>
+          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis>: '$0' is 'google', '$1' is 'codex', '$2' is 'xerox'. If you define the reference pattern 'google', with its link pointing at <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, clicking on the reference 'google #codex/xerox' will create a google search for 'codex xerox'.</para></listitem>
+          <listitem><para><emphasis role="bold">ds #123</emphasis>: '$0' is 'ds', '$1' is '123'. If you define the reference pattern 'ds', with its link pointing at <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, clicking on the reference 'ds #123' will download document '123' from your local DocuShare server.</para></listitem>
           </itemizedlist>
-          <para>You should also note that the number of parameters is important: if the number of parameters used in the text does not match the number of parameters needed by the reference, the reference will not be extracted. This allows one to create several references with the same keywords but different number of arguments. See for instance the 'wiki' references: 'wiki #Welcome' is a reference with one parameter, and it links to the wiki page 'Welcome', while 'wiki #Welcome/2' is another reference with two parameters that links to the wiki page 'Welcome' at version '2'. </para>
+          <para>You should also note that the number of parameters is important: if the number of parameters used in the text does not match the number of parameters needed by the reference pattern, the reference will not be extracted. This allows one to create several reference patterns with the same keywords but different number of arguments. See for instance the 'wiki' references: 'wiki #Welcome' is a reference with one parameter, and it links to the wiki page 'Welcome', while 'wiki #Welcome/2' is another reference with two parameters that links to the wiki page 'Welcome' at version '2'. </para>
         </step>
 
         <step>
           <para><emphasis role="bold">Enabled</emphasis>:
           Toggling this check box will simply disable (or enable)
-          the reference. Disabling a reference just
+          the reference pattern. Disabling a reference pattern just
           means that it is no longer extracted from text fields or 
-          commit emails. Re-enabling the reference is possible.
-          See also &#34;Deleting a Reference&#34; below. 
+          commit emails. Re-enabling the reference pattern is possible.
+          See also &#34;Deleting a Reference Pattern&#34; below. 
           </para>
         </step>
 
@@ -458,14 +458,14 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
     </section>
 
     <section id="ReferenceDeletion">
-      <title>Deleting a Reference</title>
+      <title>Deleting a Reference Pattern</title>
 
-      <para>Project references can be deleted. They appear with a small
-      trash icon in the reference list. Just click on this icon to
-      suppress the reference from the database. A deleted reference
+      <para>Project reference patterns can be deleted. They appear with a small
+      trash icon in the reference pattern list. Just click on this icon to
+      delete the reference pattern from the database. A deleted reference pattern
       must be re-created if you need to use it again.
       </para>
-      <para>System references cannot be deleted. However, you can 
+      <para>System reference patterns cannot be deleted. However, you can 
       disable them so that they will not be extracted.
       </para>
     </section>

@@ -912,7 +912,7 @@
       est rendu possible par le fait qu'un artefact dispose d'un
       identifiant unique sur tout le site CodeX.</para>
 
-      <para>Les références de CodeX peuvent etre utilisees pour référencer des artifacts,
+      <para>Les patrons de référence de CodeX peuvent etre utilisees pour référencer des artifacts,
       mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
       <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans CodeX.</para>
 

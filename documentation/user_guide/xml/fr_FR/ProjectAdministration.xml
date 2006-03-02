@@ -296,40 +296,40 @@
 
 
     <section id="ReferenceConfiguration">
-      <title>Configuration des références</title>
+      <title>Configuration des patrons de référence</title>
 
       <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
 
-      <para>La page de configuration des références liste l'ensemble des références disponibles dans le projet. Elle permet aussi aux administrateurs du projet de modifier, activer, désactiver, ou créer des références.
+      <para>La page de configuration des patrons de référence liste l'ensemble des patrons de référence disponibles dans le projet. Elle permet aussi aux administrateurs du projet de modifier, activer, désactiver, ou créer des patrons de référence.
       </para>
 
     <section id="ReferenceOverview">
       <title>Présentation des références</title>
 
-      <para>Les références sont un outils puissant permettant de créer des références croisées entre objets de CodeX. En fonction d'un patron de texte, CodeX peut créer automatiquement un hyperlien vers l'objet souhaité.
+      <para>Les patrons de référence sont un outils puissant permettant de créer des références croisées entre objets de CodeX. En fonction d'un patron de texte, CodeX peut créer automatiquement un hyperlien vers l'objet souhaité.
       </para>
       <para>Lorsque vous tapez un commentaire, ou un message de de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et CodeX créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
       </para>
       <para>Vous pouvez également référencer un objet appartenant à un autre projet. A cette fin, utilisez soit 'XXX #num_projet:NNN', soit 'XXX #nom_projet:NNN' pour référencer l'objet XXX numéro NNN appartenant au projet numéro 'num_projet', ou dont le nom est 'nom_projet'. Par exemple, 'wiki #monproj:Accueil' est une référence à la page wiki 'Accueil' du projet 'monproj'.
       </para>
-      <para>Certaines références peuvent nécessiter plusieurs paramètres. Dans ce cas, utilisez le caractère '/' comme séparateur entre les paramètres. Par exemple, 'wiki #Accueil/2' crée une référence vers la page wiki 'Accueil' à la version 2.
+      <para>Certains patrons de référence peuvent nécessiter plusieurs paramètres. Dans ce cas, utilisez le caractère '/' comme séparateur entre les paramètres. Par exemple, 'wiki #Accueil/2' crée une référence vers la page wiki 'Accueil' à la version 2.
       </para>
 
-      <para>Il existe deux types de références:</para>
+      <para>Il existe deux types de patrons de référence:</para>
 
  
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Les références systèmes</emphasis> :
-ces références sont définies par l'administrateur du site et sont communes à l'ensemble des projets. Elles ne peuvent pas être modifiées, excepté leur statut (activé/désactivé).
+          <para><emphasis role="bold">Les patrons de référence système</emphasis> :
+ces patrons de référence sont définis par l'administrateur du site et sont communs à l'ensemble des projets. Ils ne peuvent pas être modifiés, excepté leur statut (activé/désactivé).
           </para>
-          <para>La plupart des références systèmes sont liées à un service spécifique. Ainsi 'art', 'doc', 'file' ou 'wiki' sont liés respectivement aux services outils de suivi, gestionnaire de documents, gestionnaire de fichiers et Wiki. Afin de faciliter l'utilisation de ces références, elles sont automatiquement activées ou désactivées lorsque le service correspondant est activé/désactivé. Cependant, il est toujours possible de les activer ou de les désactiver manuellement.
+          <para>La plupart des patrons de référence système sont liés à un service spécifique. Ainsi 'art', 'doc', 'file' ou 'wiki' sont liés respectivement aux services outils de suivi, gestionnaire de documents, gestionnaire de fichiers et Wiki. Afin de faciliter l'utilisation de ces patrons de référence, ils sont automatiquement activés ou désactivés lorsque le service correspondant est activé/désactivé. Cependant, il est toujours possible de les activer ou de les désactiver manuellement.
           </para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Les références projet</emphasis> : 
-          ces références peuvent être entièrement personnalisées par les administrateurs du projet.
+          <para><emphasis role="bold">Les patrons de référence projet</emphasis> : 
+          ces patrons de référence peuvent être entièrement personnalisés par les administrateurs du projet.
           </para>
         </listitem>
       </itemizedlist>
@@ -337,8 +337,8 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
 
     <section id="ReferencePredefined">
-      <title>Références prédéfinies</title>
-<para>Voici la liste des références prédéfinies :</para>
+      <title>Patrons de référence prédéfinis</title>
+<para>Voici la liste des patrons de référence prédéfinis :</para>
       <itemizedlist mark="bullet">
         <listitem><para><emphasis role="bold">art #num ou artifact #num</emphasis> : 
         référence à l'artefact numéro 'num'. C'est un numéro global au système (l'artefact 'num' est unique, et n'existe que dans un projet). Cette référence crée un lien vers la page de description et de mise à jour de l'artefact. En sus des mots clés 'art' et 'artifact', les artefacts peuvent être référencés à l'aide du nom court de l'outil de suivi. Ainsi, un artefact issu d'un outil de suivi de bugs (anomalies) pourra être référencé par <emphasis role="bold">bug #NNN</emphasis>, une demande de support (support request) par <emphasis role="bold">sr #NNN</emphasis>, une tâche par <emphasis role="bold">task #NNN</emphasis> et un patch avec <emphasis role="bold">patch #NNN</emphasis>. Ainsi, lorque vous créez un outil de suivi personnalisé, il est important de bien choisir son nom court.</para></listitem>
@@ -380,7 +380,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       et que CodeX reconnaît automatiquement.</para>
 
 
-      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres références pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source come ClearCase.
+      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source come ClearCase.
       </para>
 
    <para><tip><title>Coup de pouce: référencez les artefacts et les
@@ -398,8 +398,8 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
 
     <section id="ReferenceCreation">
-      <title>Création ou modification d'une référence</title>
-      <para>Pour créer ou modifier une référence, il faut remplir les champs suivants :</para>
+      <title>Création ou modification d'un patron de référence</title>
+      <para>Pour créer ou modifier un patron de référence, il faut remplir les champs suivants :</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Mot-clé</emphasis> :
@@ -410,14 +410,14 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
         <step>
           <para><emphasis role="bold">Description</emphasis> :
-          Courte description de la référence. Elle est affichée lorsqu'on place la souris sur une référence extraite.</para>
+          Courte description du patron de référence. Elle est affichée lorsqu'on place la souris sur une référence extraite.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Lien</emphasis> :
           C'est l'URL vers lequel pointe la référence. L'utilisateur sera automatiquement
           redirigé vers cette adresse s'il clique sur la référence.
-          L'URL ne pointe pas nécessairement vers le serveur CodeX: on peut créer des références qui pointent vers des pages externes. 
+          L'URL ne pointe pas nécessairement vers le serveur CodeX: on peut créer des patrons de référence qui pointent vers des pages externes. 
           La nouvelle page sera chargée dans le fenêtre courante.
           </para>
           <para>Certaines chaînes de caractères seront interprétées lors de la création de la référence:
@@ -437,7 +437,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
             <listitem>
               <para><emphasis role="bold">$0</emphasis> : 
-              le mot-clé extrait par cette référence.
+              le mot-clé extrait par ce patron de référence.
               </para>
             </listitem>
 
@@ -467,18 +467,18 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
           <listitem><para><emphasis role="bold">artifact #25</emphasis> : '$0' vaut 'artifact', '$1' vaut '25'</para></listitem>
           <listitem><para><emphasis role="bold">wiki #codex:Accueil/1</emphasis> : '$0' vaut 'wiki', '$1' vaut 'Accueil', '$2' vaut '1', '$projname' vaut 'codex'</para></listitem>
           <listitem><para><emphasis role="bold">myref #123:1/23/456</emphasis> : '$0' vaut 'myref', '$1' vaut '1', '$2' vaut '23', '$3' vaut '456' et '$group_id' vaut '123'</para></listitem>
-          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis> : '$0' vaut 'google', '$1' vaut 'codex', '$2' vaut 'xerox'. Si vous avez défini la référence 'google', avec un lien pointant vers <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, cliquer sur la référence 'google #codex/xerox' lancera une recherche Google de 'codex xerox'.</para></listitem>
-          <listitem><para><emphasis role="bold">ds #123</emphasis> : '$0' vaut 'ds', '$1' vaut '123'. Si vous avez défini la référence 'ds', avec un lien pointant vers <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, cliquer sur la référence 'ds #123' lancera le téléchargement du document '123' de votre serveur Docushare local.</para></listitem>
+          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis> : '$0' vaut 'google', '$1' vaut 'codex', '$2' vaut 'xerox'. Si vous avez défini le patron de référence 'google', avec un lien pointant vers <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, cliquer sur la référence 'google #codex/xerox' lancera une recherche Google de 'codex xerox'.</para></listitem>
+          <listitem><para><emphasis role="bold">ds #123</emphasis> : '$0' vaut 'ds', '$1' vaut '123'. Si vous avez défini le patron de référence 'ds', avec un lien pointant vers <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, cliquer sur la référence 'ds #123' lancera le téléchargement du document '123' de votre serveur Docushare local.</para></listitem>
           </itemizedlist>
-          <para>Il faut noter que le nombre de paramètres est important: si le nombre de paramètres dans le texte ne correspond pas au nombre de paramètres définis dans la référence, la référence ne sera pas extraite. Ceci permet de créer plusieurs références avec le même mot-clé, mais un nombre de paramètres différent. Voyez par exemple les références suivantes: 'wiki #Accueil' est une référence à un seul paramètre pointant vers la page Wiki 'Accueil', alors que la référence 'wiki #Accueil/2' est une autre référence à deux paramètres pointant vers la page Wiki 'Accueil' à la version '2'.</para>
+          <para>Il faut noter que le nombre de paramètres est important: si le nombre de paramètres dans le texte ne correspond pas au nombre de paramètres définis dans le patron de référence, la référence ne sera pas extraite. Ceci permet de créer plusieurs patrons de référence avec le même mot-clé, mais un nombre de paramètres différent. Voyez par exemple les références suivantes: 'wiki #Accueil' est une référence à un seul paramètre pointant vers la page Wiki 'Accueil', alors que la référence 'wiki #Accueil/2' est une autre référence à deux paramètres pointant vers la page Wiki 'Accueil' à la version '2'.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Active</emphasis> : En cochant
-          cette case, la référence est activée, c'est à dire qu'elle est
-          utilisable est sera extraite automatiquement. 
-          Décocher la case revient à désactiver la référence.
-          Voir aussi la &#34;Suppression d'une référence&#34; ci-dessous.
+          <para><emphasis role="bold">Actif</emphasis> : En cochant
+          cette case, le patron de référence est activé, c'est à dire qu'il est
+          utilisable est sera extrait automatiquement. 
+          Décocher la case revient à désactiver le patron de référence.
+          Voir aussi la &#34;Suppression d'un patron de référence&#34; ci-dessous.
           </para>
         </step>
 
@@ -486,14 +486,14 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     </section>
 
     <section id="ReferenceDeletion">
-      <title>Suppression d'une référence</title>
+      <title>Suppression d'un patron de référence</title>
 
-      <para>les références projet peuvent aussi être détruites. Un clic sur
-      l'icône corbeille figurant à proximité du nom de la référence supprime définitivement cette dernière.
-      Une référence détruite devra être recréée pour être à nouveau utilisable
+      <para>les patrons de référence projet peuvent aussi être détruits. Un clic sur
+      l'icône corbeille figurant à proximité du nom du patron de référence supprime définitivement ce dernier.
+      Un patron de référence détruit devra être recréé pour être à nouveau utilisable
       </para>
-      <para>Les références système ne peuvent être détruites. Vous pouvez
-      cependant les désactiver pour qu'elles ne soient plus extraites.
+      <para>Les patrons de référence système ne peuvent être détruits. Vous pouvez
+      cependant les désactiver pour que les références ne soient plus extraites.
       </para>
     </section>
     </section>
