@@ -175,7 +175,7 @@ function download(group_id,file_id,filename) {
 			}
 
 			print "\t" . '<TR class="'. $bgcolor .'"><TD>&nbsp;</TD><TD><B>'
-				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'">'
+				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'" title="'.$release_id." - ".$package_release['name'].'">'
 				. $package_release['name'] .'</A></B>';
                         if ($authorized_user) {
                             if ($permission_exists) {
@@ -237,8 +237,8 @@ function download(group_id,file_id,filename) {
                                         print '</B></TD>'
                                             . '<TD>'. $file_release['file_size'] .'</TD>'
                                             . '<TD>'. ($file_release['downloads'] ? $file_release['downloads'] : '0') .'</TD>'
-                                            . '<TD>'. $processor[$file_release['processor']] .'</TD>'
-                                            . '<TD>'. $file_type[$file_release['type']] .'</TD>'
+                                            . '<TD>'. (isset($processor[$file_release['processor']])?$processor[$file_release['processor']]:"") .'</TD>'
+                                            . '<TD>'. (isset($file_type[$file_release['type']])?$file_type[$file_release['type']]:"") .'</TD>'
                                             . '<TD>'. format_date( "Y-m-d", $file_release['release_time'] ) .'</TD>'
                                             . '</TR>' . "\n";
                                         if (!isset($proj_stats['size'])) $proj_stats['size']=0;

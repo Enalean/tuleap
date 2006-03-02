@@ -342,6 +342,8 @@
         Reference to forum number 'num' or to forum message number 'num'. Those are system-wide numbers. The first reference links to the forum welcome page, while the second one directly links to the message page, where you can view the message thread, and post a follow-up message.</para></listitem>
         <listitem><para><emphasis role="bold">file #num</emphasis>: 
         Reference to file number 'num'. This is a system-wide number. This kind of reference allows a direct download of a file that is part of a release. File numbers, or IDs, are visible in the 'Files' main page by hovering over a file name with the mouse pointer. This reference links to the file itself, so you might be prompted for a location to store the file. You may also have to accept the project license before downloading the file.</para></listitem>
+        <listitem><para><emphasis role="bold">release #num</emphasis>: 
+        Reference to release number 'num'. This is a system-wide number. Release numbers, or IDs, are visible in the 'Files' main page by hovering over a release name with the mouse pointer. This reference links to the project file manager page, where the referenced release is highlighted in the list.</para></listitem>
       </itemizedlist>
     </section>
 

@@ -356,6 +356,8 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
         référence vers le forum numéro 'num' ou vers le message de forum numéro 'num'. Ce sont des numéros globaux au système. La première référence crée un lien vers la page d'accueil du forum, tandis que la deuxième crée un lien vers un message précis.</para></listitem>
         <listitem><para><emphasis role="bold">file #num</emphasis> : 
         référence vers le fichier numéro 'num'. C'est un numéro global au système. Ce type de référence permet de télécharger directement un fichier faisant partie d'une version. Les numéros de fichiers sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom du fichier. La référence pointe sur le fichier lui-même, et le navigateur peut alors vous demander à quel endroit vous voulez le sauvegarder. Il se peut aussi que vous deviez accepter la licence du projet avant de pouvoir télécharger le fichier.</para></listitem>
+        <listitem><para><emphasis role="bold">release #num</emphasis> : 
+        référence vers la version (release) numéro 'num'. C'est un numéro global au système. Les numéros de version sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom de la version. La référence pointe sur la page d'accueil du gestionnaire de fichier, où la version référencée est mise en valeur dans la liste.</para></listitem>
       </itemizedlist>
     </section>
 
