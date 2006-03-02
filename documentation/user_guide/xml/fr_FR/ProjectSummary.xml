@@ -34,29 +34,29 @@
       personnelle et à cliquer sur le nom de projet approprié.</para>
 
       <para>Pour les autres utilisateurs il existe plusieurs façons de
-      se rendre sur le page de sommaire d'un projet:</para>
+      se rendre sur le page de sommaire d'un projet :</para>
 
       <procedure>
         <step>
-          <para>Vous pouvez utiliser la boite de recherche par
+          <para>Vous pouvez utiliser la boîte de recherche par
           mots-clés pour retrouver un projet dont vous connaissez tout
           ou partie du nom.</para>
         </step>
 
         <step>
           <para>Vous pouvez explorer l'arbre des projets si vous savez
-          dans quelles categories se trouve le projet.</para>
+          dans quelles catégories se trouve le projet.</para>
         </step>
 
         <step>
           <para>Vous pouvez aussi cliquer sur le nom du projet s'il
-          apparait dans le tableau de bord de la page d'accueil de
+          apparaît dans le tableau de bord de la page d'accueil de
           CodeX.</para>
         </step>
 
         <step>
           <para>Et enfin vous pouvez aussi indiquer explicitement
-          l'URL à votre navigateur sous la forme:</para>
+          l'URL à votre navigateur sous la forme :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
@@ -66,13 +66,13 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
       <para>Si vous devez consulter régulièrement des projets dont
       vous n'êtes pas membre de, nous vous conseillons de faire
-      apparaitre l'URL de la page de sommaire dans votre page
+      apparaître l'URL de la page de sommaire dans votre page
       personnelle CodeX en utilisant la fonction &#34;Cette page en
       signet&#34; du menu de CodeX (voir <xref
       linkend="LoginAndPersonalPage" />)</para>
 
       <tip>
-        <title>Le Sommaire du Projet n'est pas sa Page d'Accueil!</title>
+        <title>Le Sommaire du Projet n'est pas sa Page d'Accueil !</title>
 
         <para>La page de sommaire du projet ne doit pas être confondue
         avec la page d'accueil. La page de sommaire donne une vue
@@ -98,12 +98,12 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
       <para>Un exemple de page de sommaire d'un projet est visible sur
       la <xref linkend="FigureASampleProjectSummaryPage" />. La page
-      se divise en plusieurs zones:</para>
+      se divise en plusieurs zones :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Menu principal du
-          projet</emphasis>: il se trouve en haut de la page juste
+          projet</emphasis> : il se trouve en haut de la page juste
           sous le nom du projet. Le menu principal est un
           récapitulatif de l'ensemble des services disponibles pour ce
           projet. Ce menu reste visible sur toutes les pages qui
@@ -112,7 +112,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
         <listitem>
           <para><emphasis role="bold">Description courte et
-          catégorisation</emphasis>: ces éléments ont déjà été décrits
+          catégorisation</emphasis> : ces éléments ont déjà été décrits
           auparavant. A côté de la description courte figure un
           pointeur vers une description plus détaillée du
           projet.</para>
@@ -120,7 +120,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
         <listitem>
           <para><emphasis role="bold">Membres et administrateurs du
-          projet</emphasis>: ils apparaissent en haut à droite de la
+          projet</emphasis> : ils apparaissent en haut à droite de la
           page. Un clic sur l'un des noms vous donnera plus
           d'information sur l'utilisateur et la possibilité de lui
           envoyer un email.</para>
@@ -128,19 +128,19 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
         <listitem>
           <para><emphasis role="bold">Derniers fichiers
-          publiés</emphasis>: montre la liste des versions les plus
+          publiés</emphasis> : montre la liste des versions les plus
           récentes des paquets logiciels disponibles en
-          téléchargement. L'icone Notes 
+          téléchargement. L'icône Notes 
           (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/manual16c.png"
           /></imageobject></inlinemediaobject>) permet de consulter
           les notes concernant cette version ainsi qu'un résumé des
-          changements (Changelog). A proximité se situe l'icone de
+          changements (Changelog). A proximité se situe l'icône de
           surveillance de ce paquet
           (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/mail16d.png"
           /></imageobject></inlinemediaobject>). La sélection de cette
-          icone active la surveillance automatique de ce paquet
+          icône active la surveillance automatique de ce paquet
           logiciel par CodeX. A chaque fois que l'équipe de projet
           dépose une nouvelle version du logiciel, un message de
           notification vous est envoyé. Tous les paquets sous
@@ -149,10 +149,10 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Zones publiques</emphasis>: il
+          <para><emphasis role="bold">Zones publiques</emphasis> : il
           s'agit d'une liste de tous les services disponibles pour ce
           projet assortis d'informations complémentaires (comme par
-          exemple le nombre d'artifact ouvert ou fermé). Le rôle de
+          exemple le nombre d'artefact ouvert ou fermé). Le rôle de
           cette liste est quasiment identique à celui du menu
           principal du projet situé en haut de la page à savoir
           fournir un accès rapide à chacun des services du
@@ -160,9 +160,9 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Dernières annonces</emphasis>:
+          <para><emphasis role="bold">Dernières annonces</emphasis> :
           les dix dernières annonces publiées par les membres du
-          projet. Certaines de ces annonces peuvent aussi apparaitre
+          projet. Certaines de ces annonces peuvent aussi apparaître
           sur le page d'accueil du site si l'équipe CodeX en décide
           ainsi.</para>
         </listitem>

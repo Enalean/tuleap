@@ -22,7 +22,7 @@
     les équipes de projets et leurs communautés.</para>
 
     <para>A cette fin, CodeX propose un ensemble de services de
-    communication que l'équipe de projet peut personaliser. Cela
+    communication que l'équipe de projet peut personnaliser. Cela
     inclut les listes de diffusion, le service d'annonces (news) et
     les forums Web.</para>
 
@@ -46,13 +46,13 @@
 
       <para>Dans le but de minimiser les conflits de nom entre listes
       de diffusion des différents projets, leur nom suit le patron
-      suivant:</para>
+      suivant :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 nomprojet-nomliste@&SYS_LISTS_HOST;
 </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
@@ -75,9 +75,9 @@ nomprojet-nomliste@&SYS_LISTS_HOST;
       important contenant des URLs vers les pages d'information et
       d'administration de la liste de diffusion ainsi que le mot de passe par défaut
       généré par CodeX permettant d'accéder aux fonctions
-      d'administration. Gardez-le dans un endroit sûr!</para></note>
+      d'administration. Gardez-le dans un endroit sûr !</para></note>
 
-      <para><tip><title>Coup de pouce: créez au moins une
+      <para><tip><title>Coup de pouce : créez au moins une
       liste de diffusion</title><para>Un projet hébergé sur CodeX devrait toujours
       créer au moins une liste de diffusion (ou un forum Web) où les utilisateurs
       peuvent poster leurs questions et leurs commentaires. Cette
@@ -94,7 +94,7 @@ nomprojet-nomliste@&SYS_LISTS_HOST;
         l'interface Web. Vous pouvez accéder à la page d'administration
         de la liste de diffusion en utilisant l'URL que vous avez reçu lors de la
         création de la liste de diffusion. Si vous avez égaré cette URL la voici à
-        nouveau:</para>
+        nouveau :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://&SYS_LISTS_HOST;/mailman/admin/nomliste
@@ -141,7 +141,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       <para>Le service d'annonces vient en complément du service de
       listes de diffusion. Il vous permet de publier des annonces
       relatives au projet. Tous les évènements survenant dans la vie
-      de votre projet peuvent faire l'objet d'une annonce: une
+      de votre projet peuvent faire l'objet d'une annonce : une
       nouvelle personne dans l'équipe, une nouvelle version du
       logiciel, des informations sur les technologies liées au projet
       et pourquoi pas l'annonce de votre mariage où l'arrivée de votre
@@ -161,7 +161,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       sommaire du projet et sont donc visibles pour l'ensemble des
       utilisateurs qui rendent visite à votre projet. N'importe quel
       utilisateur CodeX peut attacher un commentaire à l'annonce,
-      ce qui siginifie que chaque annonce est un forum de discussion en
+      ce qui signifie que chaque annonce est un forum de discussion en
       puissance<footnote><para>En arrière plan, chaque annonce est en
       fait gérée exactement comme un forum Web
       CodeX.</para></footnote>. De plus, l'équipe d'administration du
@@ -169,7 +169,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       les différents projets et peut décider de faire apparaître
       certaines d'entre elles sur la page d'accueil principale du site
       CodeX si elles présentent un intérêt pour l'ensemble des
-      utilisateurs. Une belle publicité en vérité!!</para>
+      utilisateurs. Une belle publicité en vérité !!</para>
     </section>
 
     <section id="WebForums">
@@ -186,7 +186,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       <para>Pour accéder aux forums Web d'un projet CodeX, cliquez sur
       le lien &#34;Forums&#34; dans la barre de service du
       projet. Lorsqu'un projet CodeX est créé il est pourvu de trois
-      forums: Open Discussions, Help and Developers. Ces forums et
+      forums : Open Discussions, Help and Developers. Ces forums et
       tous les autres sont accessibles en lecture et en écriture à
       tous les utilisateurs CodeX à moins que vous ne décidiez de les
       rendre privés (voir ci-dessous). Un utilisateur peut aussi

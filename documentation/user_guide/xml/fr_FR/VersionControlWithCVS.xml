@@ -45,7 +45,7 @@
   gestion de configuration.</para>
 
   <section id="CVS:ConcurrentVersionControl">
-    <title>CVS: Concurrent Version Control</title>
+    <title>CVS : Concurrent Version Control</title>
 
     <para>CVS signifie Concurrent Versions System. Cet outil permet à
     une équipe de plusieurs développeurs de gérer concurremment leur
@@ -64,7 +64,7 @@
     ClearCase, TeamWare...)</para></footnote> Bien que Subversion soit
     un système de contrôle de version plus moderne que CVS, ce dernier
     reste un choix parfaitement valable pour les raisons
-    suivantes:</para>
+    suivantes :</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
@@ -120,7 +120,7 @@
       quant à lui fait fonctionner en arrière plan un serveur CVS qui
       communique avec les clients pour agir sur le dépôt. Il existe
       plusieurs types de clients CVS pour toutes les plateformes
-      (Windows, Mac et tous les Unix): ligne de commande, client lourd
+      (Windows, Mac et tous les Unix) : ligne de commande, client lourd
       avec interface graphique et interface web.</para>
 
       <section id="CommandLineInterface">
@@ -139,7 +139,7 @@
 	<title>Interfaces graphiques</title>
 
 	<para>Il existe de nombreux clients CVS avec interface
-	graphique et pour toutes les plateformes: Windows, Linux, Unix
+	graphique et pour toutes les plateformes : Windows, Linux, Unix
 	et MacOS. WinCVS et Tortoise sont les clients les plus
 	populaires sous Windows (voir ci-dessous). Sur Linux, gCVS et
 	Cervisia sont parmi les plus utilisés.</para>
@@ -178,33 +178,33 @@
         </listitem>
 
         <listitem>
-	  <para>Lancez WinCVS: <literal>Démarrer->Programmes->WinCvs</literal>
+	  <para>Lancez WinCVS : <literal>Démarrer->Programmes->WinCvs</literal>
           </para>
         </listitem>
 	
         <listitem>
-	  <para>Configurer la connexion vers le projet CodeX: 
+	  <para>Configurer la connexion vers le projet CodeX : 
           <literal>Admin->Preferences</literal>
-          </para><para>Indiquez la valeur de CVSROOT:</para><para>
+          </para><para>Indiquez la valeur de CVSROOT :</para><para>
           <literal>:pserver:nom_utilisateur@cvs.nom_projet.&SYS_DEFAULT_DOMAIN;:/cvsroot/nom_projet</literal>
-          </para><para>Assurez vous que le mode d'authentification est positionné sur: 
+          </para><para>Assurez vous que le mode d'authentification est positionné sur : 
           <literal>"passwd" file on the cvs server</literal></para>
           <para>Ensuite cliquez sur OK.</para>
         </listitem>
 
         <listitem>
-	  <para>Connectez-vous au dépôt CVS: <literal>Admin->Login...</literal> et saisissez votre mot de passe CodeX.
+	  <para>Connectez-vous au dépôt CVS : <literal>Admin->Login...</literal> et saisissez votre mot de passe CodeX.
           </para>
         </listitem>
 	
         <listitem>
-          <para>Identifiez l'endroit où vous allez placer le code source de votre projet: 
+          <para>Identifiez l'endroit où vous allez placer le code source de votre projet : 
           <literal>View->Browse Location->Change...</literal>
           </para>
         </listitem> 
 	
         <listitem>
-	  <para>Récuperez (checkout) le code source de votre projet CodeX depuis le dépôt CVS.</para>
+	  <para>Récupérez (checkout) le code source de votre projet CodeX depuis le dépôt CVS.</para>
           <para><literal>Create->Check out module</literal></para>
           <para><literal>Enter the module name and path on the server:</literal> indiquez le chemin du code source que vous souhaitez extraire du dépôt CVS. En général il s'agit du nom du dossier situé à la racine du dépôt CVS.</para>
           <para><literal>  nom_projet</literal></para>
@@ -221,13 +221,13 @@
         </listitem>
         </itemizedlist>
 
-        <para>Autres points à connaitre à propos de WinCVS:</para>
+        <para>Autres points à connaitre à propos de WinCVS :</para>
 
         <itemizedlist mark="bullet" spacing="compact">
         <listitem>
 	  <para>Si quelqu'un modifie un fichier en même temps que
 	  vous, les modifications apportées seront fusionnées avec les
-	  votres lors de la prochaine mise à jour de votre copie de
+	  vôtres lors de la prochaine mise à jour de votre copie de
 	  travail (update). Si CVS détecte un conflit, vous verrez
 	  apparaître un message d'erreur et vous devrez résoudre le
 	  conflit manuellement en éditant le fichier. Les zones en
@@ -256,11 +256,11 @@
       manuel d'utilisation de CVS. Il se concentre sur l'intégration
       de CVS dans CodeX et comment utiliser CVS dans le contexte de
       CodeX. Si vous souhaitez en savoir plus sur CVS, référez-vous
-      aux documents suivants:</para>
+      aux documents suivants :</para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para>A CVS Tutorial (Powerpoint): voir <ulink
+	  <para>A CVS Tutorial (Powerpoint) : voir <ulink
 	  url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt">http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt</ulink>). An
 	  HTML version (compressed) is also available at <ulink
 	  url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip">http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip</ulink></para>
@@ -274,7 +274,7 @@
 	  </para>
 	</listitem>
 	<listitem>
-	  <para>Le manuel CVS officiel. Aussi connu sous l'appelation
+	  <para>Le manuel CVS officiel. Aussi connu sous l'appellation
 	  "Cederqvist" d'après le nom de son auteur. Voir <ulink
 	  url="http://www.cvshome.org/docs/manual/index.html">http://www.cvshome.org/docs/manual/index.html</ulink>. Ce
 	  document est en général livré avec CVS - voir plus
@@ -299,10 +299,10 @@
     <section id="TheCVSRepository">
       <title>Le dépôt CVS</title>
 
-      <para>Dès qu'un nouveau projet est hébergé, un nouvau dépôt CVS
+      <para>Dès qu'un nouveau projet est hébergé, un nouveau dépôt CVS
       est automatiquement créé et initialisé correctement. Chaque
       projet dispose de son propre dépôt, ce qui présente un certain
-      nombre d'avantages: les fichiers de log, le journal (fichier
+      nombre d'avantages : les fichiers de log, le journal (fichier
       <literal>CVSROOT/history</literal>) et tous les fichiers
       d'administration sont propres à chaque projet. Cela permet une
       personnalisation complète des dépôts CVS projet par
@@ -340,12 +340,12 @@
       linkend="VersionControlWithSubversion" />).</para>
 
       <para>Pour les projets publics, les règles d'accès par défaut
-      sont les suivantes:</para>
+      sont les suivantes :</para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
 	  <para><emphasis role="bold">Utilisateurs
-	  anonymes</emphasis>: les utilisateurs non enregistrés (ou
+	  anonymes</emphasis> : les utilisateurs non enregistrés (ou
 	  non connectés) n'ont <emphasis role="underline">aucun
 	  accès</emphasis> aux dépôts CVS. Selon la configuration du
 	  serveur CodeX, il est même possible que les utilisateurs
@@ -355,7 +355,7 @@
 	
 	<listitem>
 	  <para><emphasis role="bold">Utilisateurs
-	  enregistrés</emphasis>: ils ont un accès en lecture
+	  enregistrés</emphasis> : ils ont un accès en lecture
 	  uniquement. Ils peuvent faire un checkout d'une copie de
 	  travail mais ils ne peuvent faire aucune modification
 	  (commit) dans le dépôt CVS. Les contributions au code source
@@ -364,7 +364,7 @@
 	  projet via l'outil de suivi des correctifs (patch) (Voir
 	  <xref linkend="PatchTemplate" /> ).</para>
 
-	  <note><para><emphasis role="bold">Note</emphasis>: tous les
+	  <note><para><emphasis role="bold">Note</emphasis> : tous les
 	  accès au code source sur CodeX sont enregistrés. Les
 	  administrateurs des projets peuvent à tout moment consulter
 	  la liste des utilisateurs qui ont accédé au code source
@@ -373,7 +373,7 @@
 	</listitem>
 
 	<listitem>
-	  <para><emphasis role="bold">Membres du projet</emphasis>:
+	  <para><emphasis role="bold">Membres du projet</emphasis> :
 	  les membres d'un projet hébergé sur CodeX ont un droit
 	  d'accès en lecture et en écriture au dépôt après s'être
 	  authentifié à l'aide de leur nom d'utilisateur CodeX et leur
@@ -385,7 +385,7 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Administrateurs du
-	  projet</emphasis>: mêmes conditions d'accès que les membres
+	  projet</emphasis> : mêmes conditions d'accès que les membres
 	  du projet.</para>
 	</listitem>
       </itemizedlist>
@@ -404,13 +404,13 @@
     &#34;CVS&#34; de la barre de menu ou via l'entrée CVS de la
     zone publique de la page de sommaire (voir <xref
     linkend="FigureASampleProjectSummaryPage" />). L'interface Web de
-    CVS propose les fonctionnalités suivantes:</para>
+    CVS propose les fonctionnalités suivantes :</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para><emphasis role="bold">Accès au dépôt CVS</emphasis>: la page
+	<para><emphasis role="bold">Accès au dépôt CVS</emphasis> : la page
 	d'accueil du service CVS vous donne toutes les informations
-	nécessaires pour accèder au dépôt depuis votre client CVS. Le
+	nécessaires pour accéder au dépôt depuis votre client CVS. Le
 	chemin d'accès au dépôt, la façon de se connecter et de
 	récupérer le code source (checkout) figure parmi les
 	informations portées sur cette page. A noter que les
@@ -419,13 +419,13 @@
       </listitem>
       <listitem>
 	<para><emphasis role="bold">Naviguer dans le dépôt
-	CVS</emphasis>: L'interface Web vous permet de parcourir le
+	CVS</emphasis> : L'interface Web vous permet de parcourir le
 	dépôt CVS sans qu'il soit nécessaire d'installer un véritable
 	client CVS sur votre poste de travail.</para>
       </listitem>
       <listitem>
 	<para><emphasis role="bold">Interroger le dépôt CVS
-	</emphasis>: si la fonction de suivi de CVS est activée pour
+	</emphasis> : si la fonction de suivi de CVS est activée pour
 	votre projet (c'est toujours le cas par défaut) tous les
 	évènements concernant la modification du dépôt (commit, ajout
 	ou suppression de fichiers) sont consignés dans la base de
@@ -434,7 +434,7 @@
 	critères.</para>
       </listitem>
       <listitem>
-	<para><emphasis role="bold">Administration CVS </emphasis>: ce
+	<para><emphasis role="bold">Administration CVS </emphasis> : ce
 	service permet d'activer ou de désactiver la fonction de suivi
 	de CVS pour votre projet, d'activer la notification des
 	commits par email et de personnaliser la page d'accueil du
@@ -442,7 +442,7 @@
       </listitem>
     </itemizedlist>
 
-    <para>Voyons plus en détail certaines de ces fonctionnalités:</para>
+    <para>Voyons plus en détail certaines de ces fonctionnalités :</para>
 
     <section id="BrowsingTheCVSRepository">
     <title>Naviguer dans le dépôt CVS</title>
@@ -472,12 +472,12 @@
       <para>Si le projet a activé la fonction de suivi de CVS (voir
       <xref linkend="CVSAdministration" />), l'interface Web de CVS
       offre des fonctionnalités particulièrement intéressantes pour les
-      développeurs:</para>
+      développeurs :</para>
 
       <itemizedlist mark="dash">
 	<listitem>
 	  <para><emphasis role="bold">Commits CVS atomiques et identifiés
-	  de façon unique</emphasis>: tous les changements
+	  de façon unique</emphasis> : tous les changements
 	  (modification, ajout ou suppression de fichiers) commités en
 	  une seule opération depuis votre poste client se verront
 	  assignés un identifiant unique de la part de CodeX. Toutes
@@ -488,10 +488,10 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Références croisées entre
-	  commits</emphasis>: L'identifiant unique affecté à chaque
+	  commits</emphasis> : L'identifiant unique affecté à chaque
 	  opération de commit peut être référencé dans de futures
 	  opérations de commits ou dans les commentaires associés aux
-	  artefacts des différents outils de suivi (taches, anomalies,
+	  artefacts des différents outils de suivi (tâches, anomalies,
 	  demande d'assistance...) simplement en utilisant le patron
 	  <literal>commit #XXXX</literal> (où XXXX est l'identifiant
 	  unique généré par CodeX). Toute référence de ce type est
@@ -503,7 +503,7 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Recherche dans les
-	  commits</emphasis>: un des autres avantages de la base de
+	  commits</emphasis> : un des autres avantages de la base de
 	  suivi de CVS est de permettre une recherche selon différents
 	  critères. Il est possible d'effectuer des recherches parmi
 	  les changements apportés au code par auteur (qui a fait le
@@ -562,14 +562,14 @@
 
       <para>Les patrons de texte reconnus automatiquement par CodeX
       dans les messages de commit ou dans les commentaires des
-      artefacts sont les suivants:</para>
+      artefacts sont les suivants :</para>
 
    <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para> <emphasis role="bold">XXX #NNN</emphasis>: ce patron se
+	<para> <emphasis role="bold">XXX #NNN</emphasis> : ce patron se
 	réfère à l'artefact de type XXX numéro NNN, où NNN est
 	l'identifiant unique de l'artefact et XXX le nom court utilisé
-	dans l'outil de suivi correspondant (exemple: &#34;bug
+	dans l'outil de suivi correspondant (exemple : &#34;bug
 	#123&#34;, &#34;tâche #321&#34;, &#34;DA #12&#34;, etc.). Si
 	vous ne connaissez pas le nom court de l'outil de suivi ou que
 	vous ne souhaitez pas le préciser vous pouvez utiliser le
@@ -580,7 +580,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">commit #YYY</emphasis>: ce patron
+	<para><emphasis role="bold">commit #YYY</emphasis> : ce patron
 	référence le commit YYY où YYY est l'identifiant unique du
 	commit tel qu'il apparaît dans la base de suivi CVS. Lorsque
 	CodeX affiche un message contenant ce genre de patron, il le
@@ -594,12 +594,12 @@
       </listitem>
    </itemizedlist>
 
-   <para><tip><title>Coup de pouce: référencez les artefacts et les
+   <para><tip><title>Coup de pouce : référencez les artefacts et les
    commits CVS</title><para>C'est une excellente pratique que de
-   toujours référencer les taches, anomalies, demande d'assistance
+   toujours référencer les tâches, anomalies, demande d'assistance
    appropriées dans le message de commit CVS. De la même façon,
    lorsque l'artefact correspondant est fermé, assurez-vous de
-   mentionner le commit qui résoud le problème dans un
+   mentionner le commit qui résout le problème dans un
    commentaire. Vous constaterez que cette pratique est extrêmement
    efficace pour suivre l'historique des changements et pourquoi un
    changement a eu lieu.</para></tip></para>
@@ -611,11 +611,11 @@
       <title>Administration CVS</title>
 
       <para>CodeX vous permet de configurer les paramètres suivants de
-      CVS depuis l'interface Web:</para>
+      CVS depuis l'interface Web :</para>
       
       <itemizedlist mark="bullet">
 	<listitem>
-	  <para><emphasis role="bold">Suivi CVS</emphasis>: étant
+	  <para><emphasis role="bold">Suivi CVS</emphasis> : étant
 	  donné que CVS est un système de contrôle de version il prend
 	  naturellement en charge l'historique des changements opérés
 	  sur vos fichiers ainsi que le nom de l'auteur et la date de
@@ -633,7 +633,7 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Notification e-mail de
-	  CVS</emphasis>: En complément des fonctions de suivi, CodeX
+	  CVS</emphasis> : En complément des fonctions de suivi, CodeX
 	  peut aussi expédier un courrier électronique proprement
 	  formaté à des individus ou à une liste de diffusion à
 	  chaque modification de code. Le courrier électronique
@@ -644,7 +644,7 @@
 	</listitem>
 
 	<listitem>
-	  <para><emphasis role="bold">Préambule CVS</emphasis>: dans
+	  <para><emphasis role="bold">Préambule CVS</emphasis> : dans
 	  certains cas (par ex. pour des projets existants), il se
 	  peut que le dépôt CVS d'un projet ne soit pas hébergé sur
 	  CodeX. Dans ce cas, les informations affichées sur la page
@@ -656,14 +656,14 @@
 
       </itemizedlist>
 
-      <para><tip><title>Coup de pouce: pensez à créer une liste de
+      <para><tip><title>Coup de pouce : pensez à créer une liste de
       diffusion pour l'envoi de vos notifications CVS</title><para>Si
       vous avez l'intention d'envoyer des emails pour notifier
       certains utilisateurs de changements intervenus dans le dépôt
       CVS, nous vous recommandons de créer une liste de diffusion
       spécifique appelée
       <literal>nom_projet-cvsevents</literal>. Ainsi, les utilisateurs
-      CodeX et les membres du projet intéréssés par les notifications
+      CodeX et les membres du projet intéressés par les notifications
       pourront s'inscrire sur la liste de diffusion. De plus, le
       gestionnaire de liste de diffusion de CodeX se charge d'archiver
       tous les messages ce qui peut servir de référence
@@ -705,7 +705,7 @@
     <section id="LoggingIn">
       <title>Se connecter</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>La première étape à franchir lorsque vous travaillez avec
       un dépôt CVS consiste à vous connecter au serveur CVS. Sur
@@ -718,14 +718,14 @@
       <para>En supposant que vous disposez de votre nom d'utilisateur
       et de votre mot de passe, vous pouvez vous authentifier auprès
       du dépôt CVS. Pour se faire, tapez la commande suivante (sur une
-      seule ligne):</para>
+      seule ligne) :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -d:pserver:nom_utilisateur@cvs.nom_projet.&SYS_DEFAULT_DOMAIN;:/cvsroot/nom_projet
 login
         </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -758,7 +758,7 @@ login
     <section id="ImportingExistingSourceCode">
       <title>Importer du code source existant</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>En tant qu'administrateur d'un tout nouveau projet CodeX,
       la première chose à faire consiste à peupler votre tout nouveau dépôt
@@ -766,7 +766,7 @@ login
       répertoire <literal>racine</literal> sur votre poste de travail
       et placez y votre code source en gardant la structure de
       répertoires à laquelle vous êtes habitué. Ensuite tapez les
-      commandes suivantes (la seconde sur une seule ligne):</para>
+      commandes suivantes (la seconde sur une seule ligne) :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 $ cd racine
@@ -774,7 +774,7 @@ $ cvs -d:pserver:nom_utilisateur@cvs.nom_projet.&SYS_DEFAULT_DOMAIN;:/cvsroot/no
 import racine tag_vendeur start
         </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -804,8 +804,8 @@ import racine tag_vendeur start
 	</listitem>
       </itemizedlist>
 
-      <para><tip><title>Coup de pouce: vous avez commis une erreur
-      lors de l'importation de votre code source?</title><para>Il
+      <para><tip><title>Coup de pouce : vous avez commis une erreur
+      lors de l'importation de votre code source ?</title><para>Il
       n'est pas rare de faire une erreur lors de l'importation de code
       source dans un nouveau dépôt CVS. Placer les répertoires au
       mauvais niveau ou avec un mauvais nom est une erreur typique. Ne
@@ -825,14 +825,14 @@ import racine tag_vendeur start
     <section id="CheckingCodeOut">
       <title>Créer une copie de travail (checkout)</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>Une fois le dépôt CVS en place, les membres du projet (ou
       plus généralement les utilisateurs CodeX si l'accès leur est
       permis) peuvent créer une copie de travail sur leur propre
       poste. A noter que cette opération dite &#34;checkout&#34; ne
       permet pas à l'utilisateur de verrouiller quelque fichier que ce
-      soit. Le paradigme CVS est le suivant: n'importe qui (ayant les
+      soit. Le paradigme CVS est le suivant : n'importe qui (ayant les
       permissions adéquates) peut créer sa propre copie de travail et
       la modifier; les changements effectués par les différents
       utilisateurs sont réconciliés automatiquement ou marqués comme
@@ -857,14 +857,14 @@ import racine tag_vendeur start
       toutes dans l'environnement d'une copie de travail et CVS sait
       donc parfaitement où se trouve le dépôt d'origine.</para>
 
-      <para>Pour créer une copie de travail, tapez la commande suivante:</para>
+      <para>Pour créer une copie de travail, tapez la commande suivante :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -d:pserver:nom_utilisateur@cvs.nom_projet.&SYS_DEFAULT_DOMAIN;:/cvsroot/nom_projet
 checkout répertoire
 </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -897,30 +897,30 @@ checkout répertoire
     <section id="UpdatingtheSourceCode">
       <title>Mettre à jour le code source (update)</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>Lancer la commande &#34;<literal>cvs update</literal>&#34;
       depuis une copie de travail a pour effet de mettre à jour la
       copie de travail (ou une sous-partie) avec les dernières
       versions de chaque fichier en provenance du dépôt. Pour mettre à
       jour une copie de travail avec un mode d'affichage concis des
-      informations, tapez la commande:</para>
+      informations, tapez la commande :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -q update
         </programlisting>
 
       <para>Si vous souhaitez uniquement savoir quels sont les
-      fichiers qui ont été modifiés dans le dépôt depuis la derniere
+      fichiers qui ont été modifiés dans le dépôt depuis la dernière
       mise à jour de votre copie de travail sans pour autant la mettre
       à jour, il suffit d'ajouter l'argument -n à la commande
-      précédente:</para>
+      précédente :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -n -q update
         </programlisting>
 
-      <para>Remarque: la commande update de CVS est l'une des plus
+      <para>Remarque : la commande update de CVS est l'une des plus
       riches. Outre l'utilisation que nous venons d'en faire, elle
       permet aussi de fusionner les changements de votre code avec
       d'autres versions du même logiciel, de changer la branche sur
@@ -931,7 +931,7 @@ cvs -n -q update
     <section id="CommittingyourChanges">
       <title>Remonter les modifications vers le dépôt (commit)</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>Les membres du projet impliqués dans les activités de
       développement voudront certainement faire remonter les
@@ -940,13 +940,13 @@ cvs -n -q update
       commit.</para>
 
       <para>Pour faire remonter les changements de votre copie de
-      travail vers le dépôt, tapez la commande suivante:</para>
+      travail vers le dépôt, tapez la commande suivante :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichiers]
         </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -957,7 +957,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 
 	<listitem>
 	  <para>L'argument <emphasis>nom_fichiers</emphasis> est
-	  optionel. Il peut s'agir de nom de fichiers ou de
+	  optionnel. Il peut s'agir de nom de fichiers ou de
 	  répertoires. Si aucun nom n'est précisé cvs prend en compte
 	  tous les fichiers qui ont subi une modification dans le
 	  répertoire courant et tous les sous-répertoires
@@ -965,7 +965,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 	</listitem>
       </itemizedlist>
 
-      <para><tip><title>Coup de pouce: N'oubliez pas d'inclure un
+      <para><tip><title>Coup de pouce : N'oubliez pas d'inclure un
       identifiant de tâche ou d'anomalies dans vos messages de
       commit</title><para>Dans un monde parfait, toutes les
       modifications effectuées dans le code source devraient se
@@ -988,7 +988,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
       d'un build et d'un test automatique après chaque journée de
       travail..</para>
 
-      <para><tip><title>Coup de pouce: mettez votre copie de travail à
+      <para><tip><title>Coup de pouce : mettez votre copie de travail à
       jour avant de remonter des changements vers le
       dépôt</title><para>Si vous essayez de faire remonter vers le
       dépôt un fichier qui a lui-même fait l'objet d'une remontée par
@@ -996,7 +996,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
       commande <literal>cvs commit</literal>. Vous devez tout d'abord
       lancer une commande <literal>cvs update</literal> pour mettre à
       jour votre copie de travail avec les changements intervenus dans
-      le dépôt, fusionner ces changements avec les votres (CVS le fait
+      le dépôt, fusionner ces changements avec les vôtres (CVS le fait
       automatiquement dans la plupart des cas) et ensuite seulement
       faire remonter vos propres changements dans le dépôt. Si vous
       voulez vous affranchir des changements effectués par les autres
@@ -1008,7 +1008,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
     <section id="ContributingyourChanges">
       <title>Proposer des modifications à l'équipe de projet</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>Il s'agit d'une variante de la section précédente pour les
       utilisateurs qui n'ont pas d'accès en écriture au dépôt CVS d'un
@@ -1040,7 +1040,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
       directement avec votre client CVS si vous avez effectué vos
       modifications dans une copie de travail CVS.</para>
 
-      <para><emphasis role="bold">La façon <literal>diff</literal>:</emphasis></para>
+      <para><emphasis role="bold">La façon <literal>diff</literal> :</emphasis></para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -1054,7 +1054,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 	</listitem>
 
 	<listitem>
-	  <para>Vous pouvez générer un fichier diff à l'aide de la commande suivante (tous les fichiers de tous les sous-répertoires feront l'objet d'une comparaison):</para>
+	  <para>Vous pouvez générer un fichier diff à l'aide de la commande suivante (tous les fichiers de tous les sous-répertoires feront l'objet d'une comparaison) :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 diff -rc projet-0.1/ projet-0.1-nouveau/
@@ -1063,7 +1063,7 @@ diff -rc projet-0.1/ projet-0.1-nouveau/
 	</listitem>
       </itemizedlist>
 
-      <para><emphasis role="bold">La façon CVS:</emphasis></para>
+      <para><emphasis role="bold">La façon CVS :</emphasis></para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -1076,7 +1076,7 @@ diff -rc projet-0.1/ projet-0.1-nouveau/
 	<listitem>
 	  <para>Vous pouvez générer un fichier diff entre votre
 	  version et la version la plus récente du dépôt en tapant la
-	  commande CVS suivante:</para>
+	  commande CVS suivante :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs diff -c
@@ -1088,7 +1088,7 @@ cvs diff -c
 	  <para>Si vous souhaitez générer un fichier diff entre votre
 	  version et une version spécifique du dépôt, il vous faut
 	  alors préciser le tag de cette version spécifique (version
-	  V1 dans l'exemple ci-dessous):</para>
+	  V1 dans l'exemple ci-dessous) :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs diff -c -r V1
@@ -1102,13 +1102,13 @@ cvs diff -c -r V1
       (voir <xref linkend="PatchTemplate" />) pour soumettre votre
       correctif à l'équipe de projet.</para>
 
-      <para>Et un grand merci pour votre contribution!</para>
+      <para>Et un grand merci pour votre contribution !</para>
     </section>
 
     <section id="ExportingandPackaging">
       <title>Exporter et empaqueter</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>Il existe une façon rapide et simple de publier une
       version empaquetée de votre code source et de les mettre à la
@@ -1125,7 +1125,7 @@ cvs diff -c -r V1
 	<step>
 	  <para>Mettez à jour votre copie de travail avec l'ensemble
 	  des changements remontés par les développeurs de votre
-	  équipe avec la commande suivante:</para>
+	  équipe avec la commande suivante :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -q update
@@ -1146,7 +1146,7 @@ cvs -q update
 	  la version la plus récente de tous les fichiers
 	  commités. Depuis votre copie de travail, tapez la commande
 	  suivante (V_1_2 est ici un nom de tag qui représente la
-	  version 1.2 du projet):</para>
+	  version 1.2 du projet) :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -q tag V_1_2
@@ -1161,7 +1161,7 @@ cvs -q tag V_1_2
 	  supposant que vous vouliez extraire une copie propre de la
 	  version 1.2 dans le répertoire
 	  <literal>nom_projet-1.2</literal>, la commande à taper serait la
-	  suivante:</para>
+	  suivante :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cvs -d:pserver:nom_utilisateur@cvs.nom_projet.&SYS_DEFAULT_DOMAIN;:/cvsroot/nom_projet
@@ -1180,7 +1180,7 @@ export nom_projet-1.2
 	</step>
 
 	<step>
-	  <para>C'est fini! Joli travail... Accordez-vous une pause. Et
+	  <para>C'est fini ! Joli travail... Accordez-vous une pause. Et
 	  n'oubliez pas d'annoncer la disponibilité de cette nouvelle
 	  version en utilisant le service d'annonces de CodeX (voir
 	  <xref linkend="NewsService" />).</para>
@@ -1208,7 +1208,7 @@ export nom_projet-1.2
       actuellement pas faisable depuis l'interface Web de CodeX. Vous
       devez utiliser votre compte Shell pour vous connecter au serveur
       (voir <xref linkend="ShellAccount" />) et suivre les étapes
-      suivantes:</para>
+      suivantes :</para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -1221,7 +1221,7 @@ export nom_projet-1.2
 	</listitem>
 
 	<listitem>
-	  <para>Editer le fichier <literal>readers</literal> et
+	  <para>&Eacute;diter le fichier <literal>readers</literal> et
 	  ajouter les noms des membres du projet qui ne doivent avoir
 	  accès au dépôt CVS qu'en lecture (un nom par ligne).</para>
 	</listitem>
@@ -1241,13 +1241,13 @@ export nom_projet-1.2
       projet comme la possibilité de créer des modules virtuels à
       partir d'une collection de répertoires et de fichiers dispersés,
       de provoquer l'envoi d'email sur certaines opérations comme
-      commit ou add (note: CodeX le fait déjà pour vous - voir
+      commit ou add (note : CodeX le fait déjà pour vous - voir
       ci-dessous), vérifier le format d'un tag CVS avant de
       l'accepter, etc... (Voir la documentation CVS mentionnée dans la
       <xref linkend="CVSReferences" /> pour plus d'information sur les
       fichiers d'administration de CVS).</para>
 
-      <para><tip><title>Coup de pouce: Ne jamais éditer les fichiers
+      <para><tip><title>Coup de pouce : Ne jamais éditer les fichiers
       d'administration de CVS directement dans le
       dépôt</title><para>Il est très important de ne jamais modifier
       les fichiers d'administration de CVS directement dans le dépôt

@@ -35,32 +35,32 @@
       <title>Page d'accueil CodeX</title>
 
       <para>La page d'accueil est divisée en quatre parties (voir la <xref
-      linkend="FigureTheCodeXHomePage" />):</para>
+      linkend="FigureTheCodeXHomePage" />) :</para>
 
       <procedure>
         <step>
           <para><emphasis role="bold">Le menu principal de
-          CodeX</emphasis>: sur la partie gauche de l'écran ou au
+          CodeX</emphasis> : sur la partie gauche de l'écran ou au
           sommet selon le thème graphique employé.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Une courte introduction à
-          CodeX</emphasis>: la partie centrale supérieure présente le
+          CodeX</emphasis> : la partie centrale supérieure présente le
           site CodeX en quelques points clés et fournit des pointeurs
           vers des documents ou des services importants.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Les dernières nouvelles de
-          CodeX</emphasis>: la partie centrale inférieure montre en
+          CodeX</emphasis> : la partie centrale inférieure montre en
           permanence les dix nouvelles les plus récentes concernant la
           vie des projets hébergés ou du site CodeX.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">La tableau de bord
-          CodeX</emphasis>: La partie droite de la page d'accueil
+          CodeX</emphasis> : La partie droite de la page d'accueil
           montre une série d'indicateurs statistiques concernant
           l'activité globale du site CodeX.</para>
         </step>
@@ -73,7 +73,7 @@
       <para>Le menu principal de CodeX est présent sur l'ensemble des
       pages du site. Son contenu peut varier selon les pages visitées
       et suivant les droits qui vous sont octroyés. En d'autres termes
-      il dépend du contexte. En voici deux exemples:</para>
+      il dépend du contexte. En voici deux exemples :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
@@ -114,7 +114,7 @@
         <title>Arbre des projets</title>
 
         <para>L'arbre des projets est un important service de CodeX
-        que vous pouvez (ou devez!) utiliser pour déterminer si
+        que vous pouvez (ou devez !) utiliser pour déterminer si
         certains logiciels développés sur le site peuvent présenter un
         intérêt pour vos propres activités. L'arbre des projets est
         l'une des deux façons de chercher des informations dans la base
@@ -133,31 +133,31 @@
         </figure>
 
         <para>Quand un projet est créé il est classé suivant 7
-        critères:</para>
+        critères :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
             <para><emphasis role="bold">Statut de
-            développement</emphasis>: le niveau de maturité du projet
+            développement</emphasis> : le niveau de maturité du projet
             (alpha, bêta, stable,...)</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Environnement</emphasis>: dans
+            <para><emphasis role="bold">Environnement</emphasis> : dans
             quel environnement tourne le logiciel (Web, Win32, X
             Window, mode texte,...)</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Audience</emphasis>: La
+            <para><emphasis role="bold">Audience</emphasis> : La
             population d'utilisateurs visée (développeurs,
             utilisateurs finaux, administrateurs
             système,&hellip;)</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Licence</emphasis>: la licence
+            <para><emphasis role="bold">Licence</emphasis> : la licence
             de distribution du logiciel. Dans la plupart des cas il
             s'agira de la licence d'échange de CodeX de
             &SYS_ORG_NAME;</para>
@@ -165,18 +165,18 @@
 
           <listitem>
             <para><emphasis role="bold">Système
-            d'exploitation</emphasis>: Le ou les systèmes
+            d'exploitation</emphasis> : Le ou les systèmes
             d'exploitation sur lesquels le logiciel s'exécute</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Langages de
-            programmation</emphasis>: les langages de programmation
+            programmation</emphasis> : les langages de programmation
             utilisés dans le développement de ce projet.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Domaine</emphasis>: Le domaine
+            <para><emphasis role="bold">Domaine</emphasis> : Le domaine
             d'application de votre projet qui varie suivant le domaine
             d'activité de l'entreprise.</para>
           </listitem>
@@ -207,7 +207,7 @@
         exemple, l'utilisatrice a d'abord ouvert le dossier Langages
         de Programmation puis elle a sélectionné le langage C. Ceci a
         probablement amené un grand nombre de projets et elle a donc
-        appliqué deux filtres supplémentaires: le premier spécifie que
+        appliqué deux filtres supplémentaires : le premier spécifie que
         le Statut de développement doit être Stable et le second impose
         que le logiciel fonctionne avec le système d'exploitation
         SunOS/Solaris.</para>
@@ -217,7 +217,7 @@
         intéressant à neuf et elle peut donc les examiner un par un
         (seul le premier projet est montré sur la <xref
         linkend="FigureSoftwareMapSampleBrowsing" />). Les filtres ont
-        une autre propriété intéressante: ils sont persistants. Cela
+        une autre propriété intéressante : ils sont persistants. Cela
         signifie que si vous décidez d'explorer l'arbre des projets en
         partant d'un autre angle (par exemple en ouvrant le dossier
         Domaine en premier), les filtres sélectionnés continuent à
@@ -243,7 +243,7 @@
         de nombreux outils et services. Toutefois tous les logiciels
         ne nécessitent pas un environnement aussi riche. Pour partager
         ou sauvegarder un court échantillon de code comme une macro,
-        une fonction, un script shell un outil simple parait plus
+        une fonction, un script shell un outil simple paraît plus
         adapté. C'est précisément le rôle de la boîte à outils.</para>
 
         <para>La boîte à outils est accessible depuis le menu
@@ -262,7 +262,7 @@
           <para></para>
 
 	  <para>Vous pouvez parcourir la collection d'échantillons de
-	  deux façons:</para>
+	  deux façons :</para>
 
           <itemizedlist mark="bullet"
                         spacing="compact">
@@ -306,7 +306,7 @@
           champs titre et description (tout pointeur Web - ou URL -
           tapé dans le champ description sera automatiquement
           transformé en hyperliens par CodeX), le type de
-          l'échantillon, sa categorie et son langage de
+          l'échantillon, sa catégorie et son langage de
           programmation. Si une catégorie ou un langage de
           programmation venait à manquer, veuillez contacter l'équipe
           CodeX.</para>
@@ -388,7 +388,7 @@
           &#34;Créer un paquet&#34; dans le menu situé en haut de la
           page. Fournissez un titre, une description, un type, une
           catégorie et un numéro de version pour ce paquet. Après
-          avoir soumis le formulaire, une nouvelle fenêtre apparait
+          avoir soumis le formulaire, une nouvelle fenêtre apparaît
           vous demandant d'indiquer les identifiants uniques (ID) des
           échantillons à placer dans le paquet. Veillez à avoir cette
           liste d'identifiant à portée de main lors de la création
@@ -425,7 +425,7 @@
         <title>Index de l'aide</title>
 
         <para>CodeX est livré avec un guide de l'utilisateur très
-        complet décrivant l'ensemble des outils et services. Un click
+        complet décrivant l'ensemble des outils et services. Un clic
         sur le lien &#34;Index de l'aide&#34; dirige l'utilisateur vers
         la table des matières du guide de l'utilisateur de CodeX. Ce
         même guide est utilisé sur l'ensemble du site CodeX par les
@@ -463,13 +463,13 @@
         à <email>&SYS_EMAIL_CONTACT;</email> si vous souhaitez faire
         une demande de création.</para>
 
-        <para>Le Canaux Dévelopeurs de CodeX présente un certain
-        nombre de caractéristiques intéressantes:</para>
+        <para>Le Canaux Développeurs de CodeX présente un certain
+        nombre de caractéristiques intéressantes :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
-            <para>Les operations d'abonnement et le désabonnement au
+            <para>Les opérations d'abonnement et le désabonnement au
             canal peuvent être effectuées par l'utilisateur lui-même à
             travers l'interface Web de CodeX.</para>
           </listitem>
@@ -493,7 +493,7 @@
         <title>Forums de discussion CodeX</title>
 
         <para>Les forums de discussion CodeX proposent une alternative
-        au Canaux Dévelopeurs. Il s'agit de forums d'échange dont
+        au Canaux Développeurs. Il s'agit de forums d'échange dont
         l'objectif est d'améliorer la communication entre les
         utilisateurs de CodeX et l'équipe en charge de
         l'administration du site. On y trouve des forums où il est
@@ -531,13 +531,13 @@
         mots-clés dans quasiment toutes les informations disponibles
         sur le site. Lorsque vous vous trouvez sur la page d'accueil
         de CodeX vous pouvez rechercher des informations dans les
-        ressources suivantes:</para>
+        ressources suivantes :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
             <para><emphasis role="bold">Les projets
-            logiciels</emphasis>: les mots-clés sont recherchés dans
+            logiciels</emphasis> : les mots-clés sont recherchés dans
             le nom et les descriptions courte et longue des
             projets. Ce mécanisme de recherche est très complémentaire
             avec l'arbre des projets (voir <xref linkend="SoftwareMap"
@@ -545,7 +545,7 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Boîte à outils</emphasis>:
+            <para><emphasis role="bold">Boîte à outils</emphasis> :
             vous pouvez effectuer une recherche par mots-clés dans les
             échantillons de code disponibles dans la boîte à outils de
             CodeX (voir <xref linkend="TheCodeSnippetLibrary" />). La
@@ -556,16 +556,16 @@
 
           <listitem>
             <para role=""><emphasis
-            role="bold">Utilisateurs</emphasis>: dans ce cas la
+            role="bold">Utilisateurs</emphasis> : dans ce cas la
             recherche s'effectue dans la liste des utilisateurs du
             site sur la base de leur nom d'utilisateur, leur nom
             complet ou leur adresse email.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Cet outil de suivi</emphasis>:
+            <para><emphasis role="bold">Cet outil de suivi</emphasis> :
             si vous utilisez un outil de suivi de CodeX, l'entrée
-            &#34;Cet outil de suivi&#34; apparait dans la boîte de
+            &#34;Cet outil de suivi&#34; apparaît dans la boîte de
             recherche, permettant ainsi d'effectuer une recherche par
             mots-clés dans les artefacts de cet outil de suivi.</para>
           </listitem>
@@ -579,27 +579,27 @@
       <para>Par défaut, le tableau de bord de CodeX se trouve sur la
       partie droite de la page d'accueil du site. Il donne une vue
       d'ensemble de l'activité du site à travers plusieurs
-      indicateurs:</para>
+      indicateurs :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-          <para><emphasis role="bold">Statistiques CodeX</emphasis>:
+          <para><emphasis role="bold">Statistiques CodeX</emphasis> :
           indique le nombre total de projets hébergés sur CodeX, le
           nombre d'utilisateurs enregistrés, le nombre total de
-          téléchargements et l enombre de pages visitées depuis
+          téléchargements et le nombre de pages visitées depuis
           l'ouverture du site.</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Top Téléchargements
-          hier</emphasis>: donne la liste des projets qui ont fait
+          hier</emphasis> : donne la liste des projets qui ont fait
           l'objet d'un téléchargement la veille et en quelle
           quantité.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Versions récentes</emphasis>:
+          <para><emphasis role="bold">Versions récentes</emphasis> :
           donne une liste des versions de logiciels les plus récentes
           postées sur le site par les différents projets. Si vous
           souhaitez connaître les dernières versions disponibles vous
@@ -618,7 +618,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Projets récents</emphasis>: les
+          <para><emphasis role="bold">Projets récents</emphasis> : les
           10 derniers projets enregistrés. En listant cette liste de
           façon régulière vous pouvez être tenu informé de la création
           de tout nouveau projet CodeX.</para>
@@ -626,11 +626,11 @@
 
         <listitem>
           <para><emphasis role="bold">Les plus actifs cette
-          semaine</emphasis>: les 20 projets les plus actifs sur la
+          semaine</emphasis> : les 20 projets les plus actifs sur la
           semaine écoulée de 0 à 100%. La formule magique utilisée
           pour ce calcul est une somme pondérée de l'activité observée
           dans chacun des services utilisés par les projets. Elle
-          prend en compte de nombreux indicateurs: le nombre de
+          prend en compte de nombreux indicateurs : le nombre de
           transactions CVS/Subversion, le nombre d'artefacts (bugs,
           tâches...) soumis ou modifiés, le nombre de versions de
           logiciel postés, etc&hellip; En consultant cette liste vous
@@ -644,7 +644,7 @@
       développement logiciel chez &SYS_ORG_NAME;.</para>
 
       <para><emphasis role="underline">En un mot comme en
-      cent</emphasis>: Faites de CodeX la page par défaut de votre
+      cent</emphasis> : Faites de CodeX la page par défaut de votre
       navigateur :-)</para>
     </section>
   </chapter>

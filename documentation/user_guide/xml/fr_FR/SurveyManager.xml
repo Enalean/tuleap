@@ -16,15 +16,15 @@
 
     <para>Le gestionnaire de sondage permet à une équipe de projet de
     créer des sondages d'opinion. Fournir un service de sondage dans
-    un environnement dedié aux activités de développement logiciel
+    un environnement dédié aux activités de développement logiciel
     peut paraître un peu étrange au premier abord. Cependant, si vous
     vous souvenez que CodeX est aussi un outil qui permet de rester en
     contact avec votre communauté d'utilisateurs, vous réaliserez
-    assez rapidement qu'être à l'écoute de cette coumunauté est le
+    assez rapidement qu'être à l'écoute de cette communauté est le
     meilleur moyen de la faire croître et de la satisfaire.</para>
 
     <para>Rester à l'écoute de sa communauté peut se faire de
-    plusieurs façons sur CodeX:</para>
+    plusieurs façons sur CodeX :</para>
 
     <itemizedlist mark="bullet"
                   spacing="compact">
@@ -50,8 +50,8 @@
     que faire si vous souhaitez recueillir l'avis de votre communauté
     d'utilisateurs sur un certain nombre de sujets et que vous voulez
     que les réponses soient choisies parmi une liste de choix définis
-    par l'équipe de projet? C'est précisément ce que permet de faire
-    le gestionnaire de sondages:</para>
+    par l'équipe de projet ? C'est précisément ce que permet de faire
+    le gestionnaire de sondages :</para>
 
     <itemizedlist mark="bullet"
                   spacing="compact">
@@ -88,16 +88,16 @@
     <section id="PublishingaSurvey">
       <title>Publier un sondage</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>Vous avez travaillé dur pour créer ce sondage parfaitement
-      paufiné et vous désirez maintenant atteindre l'audience la plus
+      peaufiné et vous désirez maintenant atteindre l'audience la plus
       large possible. CodeX vous permet de rendre votre sondage
-      visible de plusieurs façons:</para>
+      visible de plusieurs façons :</para>
 
       <procedure>
         <step>
-          <para><emphasis role="bold">Via le gestionnaire de sondages lui-même</emphasis>:
+          <para><emphasis role="bold">Via le gestionnaire de sondages lui-même</emphasis> :
           aussitôt qu'un sondage est créé il apparaît sur la page
           d'accueil du gestionnaire de sondages (voir <xref
           linkend="FigureSurveyManagerWelcomeScreen" />). Tout
@@ -110,7 +110,7 @@
 
         <step>
           <para><emphasis role="bold">Service d'annonces du
-          projet</emphasis>: lorsque vous disposez d'un nouveau
+          projet</emphasis> : lorsque vous disposez d'un nouveau
           sondage, assurez-vous de publier une annonce annonçant sa
           disponibilité, qui est supposé y répondre et le pointeur Web
           (URL) où se trouve le sondage (voir ci-dessous). En publiant
@@ -120,7 +120,7 @@
         </step>
 
         <step>
-          <para><emphasis role="bold">E-mail</emphasis>: le sondage
+          <para><emphasis role="bold">E-mail</emphasis> : le sondage
           que vous avez créé est accessible directement via un
           pointeur Web (URL) du site CodeX. En conséquence vous pouvez
           informer votre communauté d'utilisateur en incluant ce
@@ -132,7 +132,7 @@
       </procedure>
 
       <para>Tous les sondages créés sur CodeX sont accessibles via un
-      pointeur Web (URL) comme celui-ci:</para>
+      pointeur Web (URL) comme celui-ci :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
@@ -152,7 +152,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> montre
       un exemple de sondage.</para>
 
-      <para><tip><title>Note importante: confidentialité des
+      <para><tip><title>Note importante : confidentialité des
       sondages</title><para>Les informations collectées dans ces
       enquêtes sont strictement internes à &SYS_ORG_NAME;. Elles sont
       uniquement destinées à mieux comprendre le profil du projet et
@@ -161,7 +161,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       ni par une partie tierce et encore moins par le public. Les
       informations collectées sont uniquement présentées de façon
       agrégée et non pas dans le but de mettre en évidence un ou
-      plusieurs utiisateurs ou développeurs.</para></tip></para>
+      plusieurs utilisateurs ou développeurs.</para></tip></para>
 
       <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
         <title>Un exemple de sondage émanant du projet CodeX</title>
@@ -178,7 +178,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
     <section id="AdministeringSurveys">
       <title>Administration des sondages</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>Les fonctions d'administration du gestionnaire de sondages sont uniquement utilisables par les administrateurs du projet. Le module d'administration vous permet de</para>
 
@@ -207,7 +207,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       linkend="FigureSurveyManagerAdministrationScreen" />).</para>
 
       <figure id="FigureSurveyManagerAdministrationScreen">
-        <title>Ecran d'administration du gestionnaire de sondages</title>
+        <title>&Eacute;cran d'administration du gestionnaire de sondages</title>
 
         <mediaobject>
           <imageobject>
@@ -222,10 +222,10 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
 
         <para>Pour maîtriser le processus de création et de mise à
         jour d'un sondage, il est nécessaire de bien comprendre que le
-        gestionnaire de sondages gère deux réservoirs d'entités distinctes: un réservoir de
+        gestionnaire de sondages gère deux réservoirs d'entités distinctes : un réservoir de
         sondages et un réservoir de questions. En conséquence, la
         création d'un sondage complet est un processus en deux
-        étapes:</para>
+        étapes :</para>
 
         <procedure>
           <step>
@@ -253,11 +253,11 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         <para>En tout premier lieu vous devez définir un jeu de
         questions et les réponses possibles pour chacune
         d'elles. Créer un bon sondage n'est pas chose aisée et cela
-        demande du travail et de la réflexion: la valeur ajoutée des
+        demande du travail et de la réflexion : la valeur ajoutée des
         réponses reçues est directement liée à la qualité des
-        questions. Quelques conseils: ne mettez pas trop de questions
+        questions. Quelques conseils : ne mettez pas trop de questions
         dans un sondage, les questions doivent être courtes, claires,
-        sans ambiguité et non redondantes. Prenez donc du temps pour
+        sans ambiguïté et non redondantes. Prenez donc du temps pour
         penser aux questions avec votre équipe.</para>
 
         <para>Pour créer des questions, cliquez sur le lien du même
@@ -266,12 +266,12 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         de taper le texte et de choisir un type de question. Il existe
         5 types de réponses possibles (voir <xref
         linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> pour
-        quelques exemples de questions):</para>
+        quelques exemples de questions) :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
-            <para><emphasis role="bold">Boutons radio 1-5</emphasis>:
+            <para><emphasis role="bold">Boutons radio 1-5</emphasis> :
             ce type de question oblige l'utilisateur à répondre en
             cochant un des boutons radio parmi les valeurs 1 à
             5.</para>
@@ -279,19 +279,19 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
 
           <listitem>
             <para><emphasis role="bold">Boutons radio
-            Oui/Non</emphasis>: il s'agit d'une variante du type
+            Oui/Non</emphasis> : il s'agit d'une variante du type
             précédent où seules les réponses Oui ou Non sont
             possibles.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Champ texte</emphasis>:
+            <para><emphasis role="bold">Champ texte</emphasis> :
             question pour laquelle vous souhaitez une réponse sous
             forme de texte court (une ligne).</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Zone de texte</emphasis>:
+            <para><emphasis role="bold">Zone de texte</emphasis> :
             comme précédemment si ce n'est que l'utilisateur peut
             saisir plusieurs lignes de texte. A utiliser lorsque vous
             souhaitez obtenir des réponses détaillées à vos
@@ -299,14 +299,14 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Commentaire</emphasis>: il ne
+            <para><emphasis role="bold">Commentaire</emphasis> : il ne
             s'agit pas vraiment d'une question mais d'un moyen
             d'insérer des commentaires entre deux questions dans votre
             sondage.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Aucun</emphasis>: choisir ce
+            <para><emphasis role="bold">Aucun</emphasis> : choisir ce
             type de réponse pour une question revient à la
             désactiver. La question disparaît alors de tous les
             sondages qui l'utilisent. Comme souvent en pareil cas dans
@@ -330,7 +330,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         situé dans la colonne de gauche, vous pouvez modifier les
         propriétés de la question.</para>
 
-        <para><emphasis role="underline">Remarque</emphasis>: modifier
+        <para><emphasis role="underline">Remarque</emphasis> : modifier
         une question après que des réponses aient été collectées est une
         très mauvaise idée particulièrement si vous changez le type de
         la question. Dans ce cas les réponses déjà collectées
@@ -349,7 +349,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         <para>Pour créer un sondage cliquez sur le lien du même
         nom dans la barre de menu du gestionnaire de sondages ou dans la page d'accueil du
         module d'administration (voir <xref
-        linkend="FigureSurveyManagerAdministrationScreen" />). Ensuite, saisissez les informations suivantes:</para>
+        linkend="FigureSurveyManagerAdministrationScreen" />). Ensuite, saisissez les informations suivantes :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -364,13 +364,13 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             virgules. Pour consulter la liste des identifiants dans
             une fenêtre séparée, cliquez sur le lien 'Lister les
             questions existantes' et choisissez les identifiants
-            appropriés dans la liste. Les questions apparaitront dans
+            appropriés dans la liste. Les questions apparaîtront dans
             le sondage dans le même ordre que les identifiants.</para>
           </listitem>
 
           <listitem>
-            <para>Le statut d'un sondage: il peut être actif ou
-            pas. Tant qu'un sondage est inactif il n'apparait pas sur
+            <para>Le statut d'un sondage : il peut être actif ou
+            pas. Tant qu'un sondage est inactif il n'apparaît pas sur
             l'écran de bienvenue du gestionnaire de sondages et il n'est donc pas
             accessibles aux utilisateurs.
             </para>
@@ -395,7 +395,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <section id="ReviewingSurveyResults">
         <title>Consulter les résultats d'un sondage</title>
 
-        <para><emphasis>Audience: membres du projet</emphasis></para>
+        <para><emphasis>Audience : membres du projet</emphasis></para>
 
         <para>A n'importe quel moment dans le cycle de vie d'un
         sondage, il est possible de consulter les réponses recueillies

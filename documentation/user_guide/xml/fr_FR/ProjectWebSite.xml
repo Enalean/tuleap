@@ -18,17 +18,17 @@
       <title>Visiter un site Web</title>
 
 		<para>Lorsqu'un projet est créé sur CodeX un site Web spécifique est initialisé.
-			Vous pouvez accéder au site Web de deux façons différentes:</para>
+			Vous pouvez accéder au site Web de deux façons différentes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
           <para>En tapant l'URL suivant sur votre navigateur Web favori
-          (nom_projet est le nom court du projet):</para>
+          (nom_projet est le nom court du projet) :</para>
 
           <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://nom_projet.&SYS_DEFAULT_DOMAIN;
           </programlisting>
-          <para>Ou si votre serveur CodeX est en mode sécurisé:</para>
+          <para>Ou si votre serveur CodeX est en mode sécurisé :</para>
           <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 https://nom_projet.&SYS_DEFAULT_DOMAIN;
           </programlisting>
@@ -56,7 +56,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
         <para>Chaque projet possède son propre emplacement de stockage
         des pages HTML, des images, des fichiers de données et des
         documents qui constituent le site Web. Tous ces fichiers
-        doivent être placés dans:</para>
+        doivent être placés dans :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 /home/groups/nom_projet
@@ -67,20 +67,20 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
         connecter au serveur CodeX et vous placer dans ce répertoire
         en utilisant la commande Unix &#34;cd
         /home/groups/nom_projet&#34; vous verrez trois
-        répertoires:</para>
+        répertoires :</para>
 
         <itemizedlist mark="bullet">
           <listitem>
-            <para><emphasis role="bold">htdocs</emphasis>: c'est dans
+            <para><emphasis role="bold">htdocs</emphasis> : c'est dans
             ce répertoire que doivent se trouver toutes les pages HTML
             y compris celles incluant du PHP ou des directives SSI
             (voir ci-dessous pour plus de détails). Toutes les images,
-            icones ou documents utilisés ou référencés dans vos pages
+            icônes ou documents utilisés ou référencés dans vos pages
             Web doivent aussi se trouver à  cet endroit (ou dans un
             sous-répertoire sous htdocs). Dans le jargon
             Apache<footnote><para>Apache est un serveur HTTP développé
             par la Consortium Apache. Il est disponible sous une
-            license Open Source et il est de loin de le serveur Web le
+            licence Open Source et il est de loin de le serveur Web le
             plus populaire avec plus de 60% de part de marché. Pour
             plus d'information consultez le site Web Apache sur <ulink
             url="http://www.apache.org">http://httpd.apache.org</ulink></para></footnote>
@@ -90,7 +90,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
             site Web.</para>
 
 			<para>Apache s'attend à  ce que la page d'accueil de votre site Web se trouve dans
-				un des fichiers suivants:</para>
+				un des fichiers suivants :</para>
 
             <itemizedlist mark="bullet"
                           spacing="compact">
@@ -109,7 +109,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
 
 			<para>Si votre page d'accueil se nomme index.php, prenez soins de renommer le
 				fichier index.php d'origine en utilisant les commandes suivantes depuis
-				votre compte Shell:</para>
+				votre compte Shell :</para>
 
             <para><literal>
             cd /home/groups/nom_projet/htdocs
@@ -117,14 +117,14 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">cgi-bin</emphasis>: ce
+            <para><emphasis role="bold">cgi-bin</emphasis> : ce
             répertoire accueille tous les scripts CGI. Les scripts CGI
             peuvent être écrits en Perl, Python , Shell ou même
             C.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">log</emphasis>: il s'agit d'un
+            <para><emphasis role="bold">log</emphasis> : il s'agit d'un
             répertoire réservé. N'y placez aucun fichier.</para>
           </listitem>
         </itemizedlist>
@@ -424,18 +424,18 @@ if ( user_isloggedin() ) {
         <title>Publication du site Web</title>
 
         <para>Vous pouvez utiliser différentes méthodes pour publier les pages
-        de votre site Web sur le serveur CodeX:</para>
+        de votre site Web sur le serveur CodeX :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
-            <para>Edition à  distance avec des éditeurs HTML comme
+            <para>&Eacute;dition à  distance avec des éditeurs HTML comme
             celui de Netscape/Mozilla, Microsoft Frontpage ou Emacs
             avec accès FTP transparent.</para>
           </listitem>
 
           <listitem>
-            <para>Edition locale sur votre machine et transfert des fichiers soit par FTP ou, encore mieux, par SCP.</para>
+            <para>&Eacute;dition locale sur votre machine et transfert des fichiers soit par FTP ou, encore mieux, par SCP.</para>
           </listitem>
 
           <listitem>
@@ -458,12 +458,12 @@ if ( user_isloggedin() ) {
           page.</para>
 
           <para>Saisissez les paramètres suivants dans la boîte de
-          dialogue:</para>
+          dialogue :</para>
 
           <itemizedlist mark="bullet"
                         spacing="compact">
             <listitem>
-              <para>Upload Files to this location:</para>
+              <para>Upload Files to this location :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
@@ -472,7 +472,7 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
             </listitem>
 
             <listitem>
-              <para>Login and Password: tapez votre nom d'utilisateur
+              <para>Login and Password : tapez votre nom d'utilisateur
               et votre mot de passe CodeX. Cliquez sur la case à 
               cocher pour éviter d'avoir à  taper le mot de passe à 
               chaque opération de sauvegarde.</para>
@@ -490,7 +490,7 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
 				travail, travaillez sur cette copie locale puis publiez les pages
 				modifiées via FTP.</para>
 
-			<para>Les utilisateurs Windows ont aussi la possiblité de pointer directement
+			<para>Les utilisateurs Windows ont aussi la possibilité de pointer directement
 				sur les répertoires des projets sur CodeX (voir <xref
 					linkend="MSWindowsSharedResources"/>) et de travailler sur les
 				fichiers HTML comme s'ils étaient situés sur votre poste de travail. Dans ce
@@ -526,21 +526,21 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
         </section>
 
         <section id="LocalEditingandRemoteTransfer">
-          <title>Edition locale et transfert à distance</title>
+          <title>&Eacute;dition locale et transfert à distance</title>
 
 			<para>Pour ceux d'entre vous qui utilisez un éditeur HTML dépourvu d'une
-				fonctionalité d'exportation des fichiers à distance, il est possible de
+				fonctionnalité d'exportation des fichiers à distance, il est possible de
 				transférer vos fichiers HTML par d'autres moyens.</para>
 
           <itemizedlist mark="bullet"
                         spacing="compact">
             <listitem>
-				<para><emphasis role="bold">FTP</emphasis>: c'est le moyen le plus
+				<para><emphasis role="bold">FTP</emphasis> : c'est le moyen le plus
 					simple de transférer vos pages Web vers l'emplacement CodeX distant.
 					Utilisez un client ftp de votre choix pour vous connecter au serveur
 					<literal>nom_projet.&SYS_DEFAULT_DOMAIN;</literal> et
 					utilisez votre nom d'utilisateur et mot de passe CodeX. Une fois
-					connecté, utilisez la commande suivante: </para>
+					connecté, utilisez la commande suivante : </para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cd /home/groups/nom_projet/htdocs
@@ -554,7 +554,7 @@ cd /home/groups/nom_projet/htdocs
             </listitem>
 
             <listitem>
-              <para><emphasis role="bold">SCP</emphasis>:</para>
+              <para><emphasis role="bold">SCP</emphasis> :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
@@ -574,7 +574,7 @@ scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
       <title>Référencer le site CodeX</title>
 
 		<para>L'équipe CodeX demande à ce que tous les sites Web des projets affichent le logo
-			CodeX sur leur page d'accueil. Ceci pour deux raisons:</para>
+			CodeX sur leur page d'accueil. Ceci pour deux raisons :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
@@ -599,7 +599,7 @@ scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
         </listitem>
       </itemizedlist>
 
-      <para>Pour affichier le logo CodeX sur votre page Web utilisez l'URL suivant:</para>
+      <para>Pour afficher le logo CodeX sur votre page Web utilisez l'URL suivant :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
@@ -610,7 +610,7 @@ http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
 
 		<para>Vous pouvez utiliser ce logo dans des balises de type ancre ou image. Ainsi vous
 			pouvez par exemple lui associer un hyperlien pointant directement sur la page de
-			sommaire de votre projet:</para>
+			sommaire de votre projet :</para>
 
         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 &#60;A href=&#34;http://&SYS_DEFAULT_DOMAIN;/projects/nom_projet&#34;&#62;
@@ -619,7 +619,7 @@ http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
 &#60;/A&#62;
         </programlisting>
 
-<note><para><emphasis role="bold">Attention!</emphasis> Veillez à remplacer le nombre situé après
+<note><para><emphasis role="bold">Attention !</emphasis> Veillez à remplacer le nombre situé après
 &#34;group_id&#34; (N dans cet exemple) par votre propre identifiant de projet. Vous pouvez
 prendre connaissance de votre identifiant de projet en visitant n'importe quelle page Web
 d'un des services de votre projet et en cherchant la valeur du paramètre group_id dans l'URL

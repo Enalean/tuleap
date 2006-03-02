@@ -16,10 +16,10 @@
     <title>Publication de fichiers</title>
 
     <section id="SourceCodeReleaseGuidelines">
-      <title>Publication du code source: conseils</title>
+      <title>Publication du code source : conseils</title>
 
       <para>Il existe deux façons pour un administrateur de projet de
-      donner accès au code source d'un projet hébergé sur CodeX: le
+      donner accès au code source d'un projet hébergé sur CodeX : le
       système de contrôle de version (CVS ou Subversion) et le système
       de publication de fichiers. A première vue, le fait d'avoir deux
       systèmes de livraison du code source peut paraître
@@ -34,7 +34,7 @@
           <para><emphasis role="bold">Le système de contrôle de
           version (SCV)</emphasis> offre un accès au code source y
           compris l'historique des différentes versions de chaque
-          fichier. Toutefois accèder au SCV nécessite l'installation
+          fichier. Toutefois accéder au SCV nécessite l'installation
           d'un logiciel particulier sur le poste client. Certains
           utilisateurs ne peuvent pas ou ne souhaitent pas le
           faire. L'accès au SCV est particulièrement adapté aux
@@ -94,7 +94,7 @@
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Paquets</emphasis>: les paquets
+          <para><emphasis role="bold">Paquets</emphasis> : les paquets
           sont les conteneurs de plus haut niveau du service de
           publication de fichiers. Un paquet peut contenir une ou
           plusieurs version d'un logiciel. En général un paquet
@@ -108,7 +108,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Versions</emphasis>: une version
+          <para><emphasis role="bold">Versions</emphasis> : une version
           est une collection de fichiers individuels qui ont été figés
           à un certain moment, versionnés et livrés. En général les
           fichiers contenus dans un conteneur &#34;Version&#34; sont
@@ -124,7 +124,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Fichiers</emphasis>: les
+          <para><emphasis role="bold">Fichiers</emphasis> : les
           fichiers sont les entités de base qu'on trouve dans une
           version. En nous appuyant encore une fois sur notre exemple
           de moteur de base de données, on peut imaginer que la
@@ -187,7 +187,7 @@
 
       <para>Le second exemple provient d'un projet appelé Global
       Solutions Architecture. La structure est ici différente du cas
-      précédent. Le projet utilise deux paquets distincts: un pour le
+      précédent. Le projet utilise deux paquets distincts : un pour le
       GSA Toolkit et un second pour la DataBus. Les schémas de nommage
       des versions de chaque paquet sont totalement différents. Il est
       fort probable que la version 0.5 de DataBus fonctionne avec les 3
@@ -213,11 +213,11 @@
 
       <para>Cette section s'adresse uniquement aux membres d'un
       projet. Elle explique par le menu le processus de livraison de
-      fichiers. Il se décompose en trois étapes:</para>
+      fichiers. Il se décompose en trois étapes :</para>
 
       <procedure>
         <step>
-          <para><emphasis role="bold">Création de paquets</emphasis>:
+          <para><emphasis role="bold">Création de paquets</emphasis> :
           il faut tout d'abord créer un ou plusieurs paquets. Ceci ne
           doit être fait qu'une seule fois. Lorsque les paquets sont
           en place vous pouvez y ajouter de nouvelles versions à
@@ -225,14 +225,14 @@
         </step>
 
         <step>
-          <para><emphasis role="bold">Création de versions</emphasis>:
+          <para><emphasis role="bold">Création de versions</emphasis> :
           une fois le paquet créé on peut y ajouter une ou plusieurs
           versions.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Définition et
-          validation</emphasis>: une fois le conteneur de la version
+          validation</emphasis> : une fois le conteneur de la version
           créé on peut y attacher des fichiers, définir la date de
           publication, lister les changements contenus dans cette
           version, etc...</para>
@@ -254,7 +254,7 @@
         du projet puis sur le lien &#34;Administration&#34; du menu de
         publication de fichiers.</para>
 
-        <para>La premiere fois que vous utilisez ce service aucun
+        <para>La première fois que vous utilisez ce service aucun
         paquet n'est disponible. Pour en créer un il suffit de taper
         le nom du paquet dans le champ vierge réservé à cet effet
         ainsi qu'un chiffre indiquant son emplacement à l'écran par
@@ -336,7 +336,7 @@
 
         <itemizedlist mark="bullet">
           <listitem>
-            <para><emphasis role="bold">Etape 1 - Donnez les informations concernant la version</emphasis></para>
+            <para><emphasis role="bold">&Eacute;tape 1 - Donnez les informations concernant la version</emphasis></para>
 
             <para>La première étape permet de modifier les informations
             saisies précédemment comme le nom de la version, son
@@ -364,12 +364,12 @@
             pour ceux qui utilisent votre logiciel dans d'autres
             activités de développement ou d'intégration.</para>
 
-            <para><tip><title>Coup de pouce: comment générer
+            <para><tip><title>Coup de pouce : comment générer
             facilement un fichier de recensement des
             modifications</title><para>Si vous utilisez CVS comme
             outil de contrôle de version vous pouvez très facilement
             générer un fichier de Changelog informatif et correctement
-            formatté. L'outil cvs2cl disponible sur <ulink
+            formaté. L'outil cvs2cl disponible sur <ulink
             url="http://www.red- bean.com/cvs2cl">http://www.red-
             bean.com/cvs2cl</ulink> extrait automatiquement tous les
             messages associés aux opérations de commit et les présente
@@ -379,7 +379,7 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Etape 2 - Télécharger et attacher les fichiers à une version</emphasis></para>
+            <para><emphasis role="bold">&Eacute;tape 2 - Télécharger et attacher les fichiers à une version</emphasis></para>
 
             <para>Comme expliqué précédemment plusieurs fichiers
             peuvent être attachés à une version. Avant que les
@@ -390,10 +390,10 @@
             n'oubliez pas d'appuyer sur le bouton &#34;Rafraîchir&#34;
             pour voir apparaître les fichiers chargés. Par ailleurs,
             si vous êtes un utilisateur Windows, vous pouvez aussi
-            accèder à l'espace de chargement FTP directement depuis
+            accéder à l'espace de chargement FTP directement depuis
             l'explorateur Windows et y glisser les fichiers (voir
             <xref linkend="MSWindowsSharedResources" />). Ensuite
-            rafraichissez la page Web pour voir apparaître les
+            rafraîchissez la page Web pour voir apparaître les
             fichiers chargés.</para>
 
             <para>Avant de charger les fichiers assurez-vous de leur
@@ -406,7 +406,7 @@
             de chacun d'eux et cliquez sur le bouton &#34;Attachez les
             fichiers sélectionnés&#34; </para>
 
-            <para><tip><title>Coup de pouce: compressez toujours vos
+            <para><tip><title>Coup de pouce : compressez toujours vos
             délivrables</title><para>Pour économiser l'espace de
             stockage sur le serveur CodeX ainsi que sur les machines
             des utilisateurs et pour minimiser l'utilisation de la
@@ -417,7 +417,7 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Etape 3 - Fournir les
+            <para><emphasis role="bold">&Eacute;tape 3 - Fournir les
             informations complémentaires pour chaque fichier 
             attaché</emphasis></para>
 
@@ -432,9 +432,9 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Etape 4 - Envoyer une notification par email (optionel)</emphasis></para>
+            <para><emphasis role="bold">&Eacute;tape 4 - Envoyer une notification par email (optionnel)</emphasis></para>
 
-            <para>Cette étape est optionelle, c'est à dire qu'elle peut
+            <para>Cette étape est optionnelle, c'est à dire qu'elle peut
             ne pas apparaître à l'écran. Si certains utilisateurs
             CodeX ont activé la surveillance de l'un de vos paquets,
             l'étape 4 vous indiquera combien l'ont fait. CodeX vous
@@ -445,7 +445,7 @@
             tenir vous utilisateurs informés.</para>
 
             
-            <para><tip><title>Coup de pouce: fournissez toujours un
+            <para><tip><title>Coup de pouce : fournissez toujours un
             fichier LISEZMOI (ou README en
             anglais)</title><para>Lorsque vous préparez les fichiers
             d'une nouvelle version, assurez vous de toujours inclure
@@ -464,7 +464,7 @@
       <title>Configurer les droits d'accès</title>
       
       <para>Par défaut les paquets et versions n'ont aucune permission
-      d'accès spécifiques: l'accès en lecture est permis à tous les
+      d'accès spécifiques : l'accès en lecture est permis à tous les
       utilisateurs à la seule condition qu'ils soient enregistrés (les
       utilisateurs anonymes n'y ont pas accès). Cependant certains
       projets peuvent souhaiter limiter l'accès aux fichiers
@@ -474,17 +474,17 @@
       d'information sur les groupes d'utilisateurs.</para>
 
 
-      <para>Les permissions d'accès sur les paquets et les versions sont vérifiés à deux niveaux:</para>
+      <para>Les permissions d'accès sur les paquets et les versions sont vérifiés à deux niveaux :</para>
       <itemizedlist mark="bullet">
         <listitem><para><emphasis role="bold">Liste de
-        fichiers:</emphasis> Lorsqu'un utilisateur n'a pas accès à un
+        fichiers :</emphasis> Lorsqu'un utilisateur n'a pas accès à un
         paquet ou à une version alors ce paquet ou cette version
         n'apparaît pas dans la page principale du service
-        'Fichiers'. Ainsi l'utilisateur ne connait pas l'existence de
+        'Fichiers'. Ainsi l'utilisateur ne connaît pas l'existence de
         la version ou du paquet en question.</para></listitem>
 
         <listitem><para><emphasis
-        role="bold">Téléchargement:</emphasis> Si un utiisateur
+        role="bold">Téléchargement :</emphasis> Si un utilisateur
         récupère ou construit manuellement un lien de téléchargement
         d'un fichier non autorisé, le téléchargement échouera. Le
         système contrôle en effet de façon systématique les
@@ -493,7 +493,7 @@
       </itemizedlist>
 
       <para>Les permissions d'accès peuvent donc être définies au
-      niveau d'un paquet ou d'une version:</para>
+      niveau d'un paquet ou d'une version :</para>
 
       <figure id="FigurePackagePermissions">
         <title>Modification des permissions d'accès sur un paquet</title>
@@ -573,7 +573,7 @@
         </listitem>
 
       </itemizedlist>
-      <para><tip><title>Coup de pouce: mise à jour des permissions existantes</title>
+      <para><tip><title>Coup de pouce : mise à jour des permissions existantes</title>
 
         <para>Il existe un raccourci pour mettre à jour rapidement les
         permissions d'une version ou d'un paquet. Les administrateurs
@@ -581,7 +581,7 @@
         sur le service 'Fichiers' verront s'afficher un petit cadenas
         à côté de chaque version ou paquet protégé sur la page
         publique montrant les différentes version disponibles. Un
-        simple clic sur le cadenas permet d'accèder directement à la
+        simple clic sur le cadenas permet d'accéder directement à la
         page de définition des permissions de l'objet en question.
       </para>
       </tip></para>
@@ -603,12 +603,12 @@
       plusieurs à la fois comme dans la procédure complète.</para>
 
       <para>D'autre part l'écran de publication rapide vous permet de
-      charger les fichiers de la version de deux façons différentes:
+      charger les fichiers de la version de deux façons différentes :
 
          <itemizedlist mark="bullet" spacing="compact">
 
            <listitem>
-             <para><emphasis role="underline">FTP</emphasis>:
+             <para><emphasis role="underline">FTP</emphasis> :
              téléchargez le fichier par FTP comme dans la procédure de
              publication complète et sélectionnez le dans la boîte de
              sélection.</para>
@@ -616,7 +616,7 @@
 
            <listitem>
              <para><emphasis role="underline">Chargement
-             direct</emphasis>: téléchargez le fichier via l'interface
+             direct</emphasis> : téléchargez le fichier via l'interface
              Web (HTTP) en utilisant le bouton &#34;Parcourir...&#34;
              (ou &#34;Browse&#34;) et en sélectionnant le fichier
              approprié sur votre disque local.</para>
@@ -632,7 +632,7 @@
       <para>Si certains utilisateurs ont placé sous surveillance le
       paquet contenant la nouvelle version, ils recevront
       automatiquement une notification email à moins que vous n'ayez
-      placé la version en status 'Caché'.</para>
+      placé la version en statut 'Caché'.</para>
 
     </section>
   </chapter>

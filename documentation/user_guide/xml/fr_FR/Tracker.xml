@@ -34,7 +34,7 @@
     employée pour les outils de suivi ainsi que sur les
     fonctionnalités communes.</para>
 
-    <para>Etant donné que les outils de suivi sont conçus pour assurer
+    <para>&Eacute;tant donné que les outils de suivi sont conçus pour assurer
     le suivi de toutes sortes d'items, le terme générique
     &#34;artefact&#34; est utilisé dans ce document pour désigner tout
     type d'item faisant l'objet d'un suivi. Il peut s'agir
@@ -47,18 +47,18 @@
 
     <para>En complément des champs personnalisables il existe un
     certain nombre d'autres informations qui sont attachés à un
-    artefact de façon immuable. A savoir:</para>
+    artefact de façon immuable. A savoir :</para>
 
     <itemizedlist mark="bullet" spacing="compact">
 
       <listitem>
-        <para> <emphasis role="bold">Les commentaires</emphasis>: tous
+        <para> <emphasis role="bold">Les commentaires</emphasis> : tous
         les artefacts disposent d'un historique complet des
         commentaires postés par les différents utilisateurs.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Fichiers attachés</emphasis>: tous
+        <para><emphasis role="bold">Fichiers attachés</emphasis> : tous
         les artefacts peuvent recevoir un nombre quelconque de
         fichiers attachés. Ces fichiers contiennent en général des
         informations complémentaires qui précisent la nature de
@@ -67,7 +67,7 @@
 
       <listitem>
         <para><emphasis role="bold">Destinataires en copie
-        (CC)</emphasis>: un nombre quelconque d'utilisateurs peuvent
+        (CC)</emphasis> : un nombre quelconque d'utilisateurs peuvent
         être informés par email de toute modification intervenant sur
         l'artefact en ajoutant leur nom dans la liste des
         destinataires en copie.</para>
@@ -80,7 +80,7 @@
   <section id="EnteringtheTrackerService">
     <title>Accéder à un outil de suivi</title>
 
-    <para>Pour accèder au service outil de suivi d'un projet, rendez
+    <para>Pour accéder au service outil de suivi d'un projet, rendez
     vous d'abord sur la page de sommaire du projet (voir <xref
     linkend="AccessingAProjectSummaryPage" />) et cliquez soit sur
     l'entrée &#34;Suivi&#34; de la barre de services ou directement
@@ -119,7 +119,7 @@
     />.</para>
 
     <para>En pénétrant dans un outil de suivi, un écran de sélection et de
-    navigation apparait (plus d'information sur cette fonctionnalité
+    navigation apparaît (plus d'information sur cette fonctionnalité
     dans la <xref linkend="ArtifactBrowsing" />). Pour le moment
     cliquez sur l'entrée &#34;Nouveau&#34; dans le menu de l'outil de suivi en
     haut de l'écran (voir <xref
@@ -147,7 +147,7 @@
     <para>Dans l'exemple fourni sur la <xref
     linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> les
     artefacts sont des bugs (aussi connu sous le nom &#34;défauts&#34;
-    ou &#34;anomalies&#34; dans un langage plus chatié). Ici
+    ou &#34;anomalies&#34; dans un langage plus châtié). Ici
     l'utilisateur doit fournir une catégorie, un groupe, une priorité
     et une personne à laquelle assigner l'artefact à partir des
     boîtes de sélection. Viennent ensuite la description d'une ligne
@@ -174,12 +174,12 @@
     l'outil de suivi (voir <xref linkend="TrackerAdministration" />)</para>
 
     <para>Quoi qu'il en soit, n'oubliez pas de cliquer sur le bouton
-    &#34;Soumettre lorsque vous en avez terminé avec le formulaire
-    !</para>
+    &#34;Soumettre lorsque vous en avez terminé avec le formulaire !
+    </para>
 
-    <para><tip><title>Coup de pouce: assurez-vous que votre artefact
+    <para><tip><title>Coup de pouce : assurez-vous que votre artefact
     n'a pas déjà été soumis</title><para>Vous êtes sur le point de
-    soumettre un bug ou une demande d'assistance à un projet CodeX? 
+    soumettre un bug ou une demande d'assistance à un projet CodeX ? 
     Avant de vous lancer, assurez-vous qu'un artefact similaire n'est
     pas déjà présent. Pour ce faire, vous pouvez effectuer une
     recherche dans la base des artefacts soit par l'écran de
@@ -208,9 +208,9 @@
       configuration mise en place par les administrateurs de
       l'outil.</para>
 
-      <para>La facon de spécifier la valeur d'un critère de sélection
+      <para>La façon de spécifier la valeur d'un critère de sélection
       dépend de son type. Le service outil de suivi propose
-      actuellement les types de champs suivants:</para>
+      actuellement les types de champs suivants :</para>
 
       <section id="ArtifactSelectBoxField">
         <title>Champ de type boîte de sélection</title>
@@ -222,7 +222,7 @@
         recherche, utilisez le mode recherche avancée.</para>
 
         <para>En général deux autres valeurs figurent dans la boîte de
-        sélection: &#34;Tous&#34; correspond à n'importe quelle valeur
+        sélection : &#34;Tous&#34; correspond à n'importe quelle valeur
         de la liste et &#34;Aucun&#34; correspond aux artefacts pour
         lesquels la valeur de ce champ n'a pas encore été remplie.</para>
       </section>
@@ -234,14 +234,14 @@
         une liste prédéfinie. Contrairement à la boîte de sélection
         décrite précédemment celle-ci permet d'affecter plusieurs
         valeurs à un même champ. En mode recherche, elle se comporte
-        exactement comme la boîte de sélection précédente: si vous
+        exactement comme la boîte de sélection précédente : si vous
         utilisez le mode de recherche simple, seule une valeur peut
         être retenue comme critère de recherche. Si vous désirez
         sélectionner plusieurs valeurs de recherche, utilisez le mode
         recherche avancée.</para>
 
         <para>En général deux autres valeurs figurent dans la boîte de
-        sélection: &#34;Tous&#34; correspond à n'importe quelle valeur
+        sélection : &#34;Tous&#34; correspond à n'importe quelle valeur
         de la liste et &#34;Aucun&#34; correspond aux artefacts pour
         lesquels la valeur de ce champ n'a pas encore été
         remplie.</para>
@@ -253,14 +253,14 @@
 
         <para>Un champ texte peut contenir n'importe quel texte. Il
         existe deux façons d'effectuer une recherche dans un champ
-        texte:</para>
+        texte :</para>
 
 
         <itemizedlist mark="bullet" spacing="compact">
 
           <listitem>
             <para> <emphasis role="underline">La recherche par
-            mots-clés</emphasis>: vous pouvez taper une série de
+            mots-clés</emphasis> : vous pouvez taper une série de
             mots-clés séparés par des espaces qui seront TOUS
             recherchés dans le champ texte (y compris en tant que
             sous-chaîne dans un mot)</para>
@@ -268,14 +268,14 @@
 
           <listitem>
             <para><emphasis role="underline">La recherche
-            par expression régulière</emphasis>: vos pouvez aussi
+            par expression régulière</emphasis> : vos pouvez aussi
             spécifier un critère de recherche sous la forme d'une
             <ulink
             url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expression
             régulière MySQL</ulink> (n'oubliez pas les caractères /.../
-            qui doivent impérativement entourer l'expression!)</para>
+            qui doivent impérativement entourer l'expression !)</para>
 
-            <para>Exemples:</para>
+            <para>Exemples :</para>
             <itemizedlist mark="dash" spacing="compact">
               <listitem>
                 <para>/^[Aa]ddition/ : correspond aux champs texte qui
@@ -301,7 +301,7 @@
         forme AAAA-MM-JJ où AAAA est l'année, MM le mois et JJ le
         jour.</para>
 
-        <para>Exemples: 1999-03-21 pour le 21 Mars 1999, 2002-12-05
+        <para>Exemples : 1999-03-21 pour le 21 Mars 1999, 2002-12-05
         pour le 5 Décembre 2002. </para>
 
       </section>
@@ -312,39 +312,39 @@
         <para>Un champ de type entier peut prendre des valeurs
         entières positives, négatives ou nulle.</para>
 
-        <para>Exemples: 0, 1, +2, -100&hellip;</para>
+        <para>Exemples : 0, 1, +2, -100&hellip;</para>
 
         <para>Il existe plusieurs façons d'interroger un champ de type
-        entier. Les voici:</para>
+        entier. Les voici :</para>
         <itemizedlist>
           <listitem>
             <para> <emphasis role="underline">Entier
-            simple</emphasis>: si vous tapez une simple valeur
+            simple</emphasis> : si vous tapez une simple valeur
             d'entier dans le champ la recherche renverra les champs
-            qui contiennent exactement cette valeur (exemple:
+            qui contiennent exactement cette valeur (exemple :
             610)</para>
           </listitem>
           <listitem>
-            <para><emphasis role="underline">Inégalité</emphasis>: Si
+            <para><emphasis role="underline">Inégalité</emphasis> : Si
             vous utilisez les signes &gt;, &lt;, &gt;= ou =&lt; suivi
             d'un entier la recherche renverra les champs dont la
             valeur est inférieure, supérieure, inférieure ou égale,
             supérieure ou égale à la valeur d'entier spécifiée
-            (exemples: &gt; 120 , &lt; -30).</para>
+            (exemples : &gt; 120 , &lt; -30).</para>
           </listitem>
           <listitem><para><emphasis
-          role="underline">Intervalle</emphasis>: si vous utilisez la
+          role="underline">Intervalle</emphasis> : si vous utilisez la
           notation &#34;entier1-entier2&#34; la recherche renverra les
           champs dont la valeur est supérieure ou égale à entier1 et
-          inférieure ou égale à entier2 (exemples: 800 - 900 pour les
+          inférieure ou égale à entier2 (exemples : 800 - 900 pour les
           entiers entre 800 et 900 inclus, -45 - 12 pour les entiers
           compris entre -45 et +12)</para>
           </listitem>
           <listitem><para><emphasis role="underline">Expression
-          régulière</emphasis>: les <ulink
+          régulière</emphasis> : les <ulink
           url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expressions
           régulières étendues de MySQL</ulink> peuvent aussi être
-          utilisées comme critère de recherche (exemple: /^4.*8$/
+          utilisées comme critère de recherche (exemple : /^4.*8$/
           recherche tous les entiers dont la valeur commence par un
           &#34;4&#34;, se termine par un &#34;8&#34; avec un nombre de
           chiffres quelconque entre les deux.</para>
@@ -360,40 +360,40 @@
         utiliser la notation exponentielle pour exprimer de très
         grandes valeurs.</para>
 
-        <para>Exemples: 0, 1.23, -2.456, 122.45E+12&hellip;</para>
+        <para>Exemples : 0, 1.23, -2.456, 122.45E+12&hellip;</para>
 
         <para>Il existe plusieurs façons d'interroger un champ de type
-        flottant. Les voici:</para>
+        flottant. Les voici :</para>
 
         <itemizedlist>
           <listitem>
             <para> <emphasis role="underline">Flottant
-            simple</emphasis>: si vous tapez une simple valeur
+            simple</emphasis> : si vous tapez une simple valeur
             de flottant dans le champ la recherche renverra les champs
-            qui contiennent exactement cette valeur (exemple:
+            qui contiennent exactement cette valeur (exemple :
             2.35)</para>
           </listitem>
           <listitem>
-            <para><emphasis role="underline">Inégalité</emphasis>: Si
+            <para><emphasis role="underline">Inégalité</emphasis> : Si
             vous utilisez les signes &gt;, &lt;, &gt;= ou =&lt; suivi
             d'un nombre la recherche renverra les champs dont la
             valeur est inférieure, supérieure, inférieure ou égale,
             supérieure ou égale à la valeur spécifiée
-            (exemples: &gt; 120.3 , &lt; -3.3456E-2).</para>
+            (exemples : &gt; 120.3 , &lt; -3.3456E-2).</para>
           </listitem>
           <listitem><para><emphasis
-          role="underline">Intervalle</emphasis>: si vous utilisez la
+          role="underline">Intervalle</emphasis> : si vous utilisez la
           notation &#34;flottant1-flottant2&#34; la recherche renverra
           les champs dont la valeur est supérieure ou égale à
-          flottant1 et inférieure ou égale à flottant2 (exemples: -1.2
+          flottant1 et inférieure ou égale à flottant2 (exemples : -1.2
           - 4.5 pour des valeurs comprises entre -1.2 et 4.5
           inclus)</para>
           </listitem>
           <listitem><para><emphasis role="underline">Expression
-          régulière</emphasis>: les <ulink
+          régulière</emphasis> : les <ulink
           url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expressions
           régulières étendues de MySQL</ulink> peuvent aussi être
-          utilisées comme critère de recherche (exemple: /^4.*8$/
+          utilisées comme critère de recherche (exemple : /^4.*8$/
           recherche tous les nombres dont la valeur commence par un
           &#34;4&#34;, se termine par un &#34;8&#34; avec un nombre de
           chiffres quelconque entre les deux y compris le point
@@ -407,7 +407,7 @@
     <section id="TrackerQueries">
       <title>Requêtes favorites ou prédéfinies pour les outils de suivi</title>
 
-      <para><tip><title>Coup de pouce: sauvegardez et réutilisez vos
+      <para><tip><title>Coup de pouce : sauvegardez et réutilisez vos
       requêtes favorites</title><para>Si vous effectuez souvent les
       mêmes recherches dans un outil de suivi (c'est à dire des
       recherches utilisant les mêmes champs de sélection et les mêmes
@@ -418,7 +418,7 @@
       &#34;Afficher&#34; pour lancer la requête. Après exécution et
       affichage des résultats, il suffit de cliquez sur le lien
       &#34;Cette page en signet&#34; figurant dans le menu principal
-      de CodeX pour faire apparaitre un nouveau signet dans votre page
+      de CodeX pour faire apparaître un nouveau signet dans votre page
       personnelle. En sélectionnant ce signet vous pouvez à tout
       moment relancer la même requête.</para></tip></para>
 
@@ -426,13 +426,13 @@
 
       <itemizedlist mark="bullet" spacing="compact">
         <listitem>
-          <para><emphasis role="bold">Artefacts ouverts</emphasis>:
+          <para><emphasis role="bold">Artefacts ouverts</emphasis> :
           affiche tous les artefacts qui ne sont pas encore fermés pour
           ce projet.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Mes Artefacts</emphasis>:
+          <para><emphasis role="bold">Mes Artefacts</emphasis> :
           affiche tous les artefacts qui vous sont assignés (sur la
           base du compte utilisateur que vous êtes en train
           d'utiliser)</para>
@@ -453,7 +453,7 @@
         avancée. Le mode recherche avancée permet de spécifier
         plusieurs valeurs pour chaque critère de sélection. En
         utilisant ce mode vous pouvez par exemple rechercher à la fois
-        les bugs dont le status est 'ouvert' ou 'en attente' qui ont
+        les bugs dont le statut est 'ouvert' ou 'en attente' qui ont
         été assignés aux utilisateurs A ou B.</para>
       </section>
     </section>
@@ -529,7 +529,7 @@
         cette fonctionnalité vous pouvez aisément tester plusieurs
         stratégies de tri.</para>
 
-        <note><para>Note: les critères de tri, comme les critères de
+        <note><para>Note : les critères de tri, comme les critères de
         sélection, sont aussi sauvegardés dans vos préférences
         utilisateurs et CodeX appliquera les mêmes critères de tri
         lors de votre prochaine requête.</para></note>
@@ -553,7 +553,7 @@
 
         <para>Vous pouvez à tout moment cliquer sur le lien
         &#34;Version imprimable&#34; pour générer une version
-        simplifée et non décorée de la liste des artefacts que vous
+        simplifiée et non décorée de la liste des artefacts que vous
         pourrez imprimer depuis votre navigateur ou copier-coller dans
         un document de votre choix. Pour une meilleure lisibilité nous
         vous conseillons d'imprimer les résultats en format
@@ -592,13 +592,13 @@
     <title>Modifier un artefact</title>
 
     <para>La sélection de l'identifiant (ID) d'un artefact dans la
-    liste générée suite à une opération de recherche entraine
+    liste générée suite à une opération de recherche entraîne
     l'affichage d'une page qui comporte toutes les informations
     concernant cet artefact. Selon les droits qui vous ont été octroyés
     sur cet outil de suivi (voir <xref linkend="FieldPermissionsManagement" />)
     la vue détaillée présente un certain nombre de champs texte
     immuables ou d'autres champs modifiables. Si vous êtes un visiteur
-    anonynome ou un utilisateur enregistré qui n'est pas membre du
+    anonyme ou un utilisateur enregistré qui n'est pas membre du
     projet, il est très probable que la plupart des champs
     apparaissent comme non modifiables. Par défaut, les utilisateurs
     extérieurs à l'équipe ne peuvent modifier les champs d'un
@@ -607,8 +607,8 @@
     ou d'attacher un fichier à l'artefact.</para>
 
     <para>L'écran de modification d'un artefact se divise en plusieurs
-    sections:<emphasis role="bold">Entête, Commentaires,
-    Destinataires en copie, Fichier attachés, Dépendences et
+    sections :<emphasis role="bold">Entête, Commentaires,
+    Destinataires en copie, Fichier attachés, Dépendances et
     Historique.</emphasis></para>
 
     <section id="ArtifactHeaders">
@@ -644,11 +644,11 @@
       dans un champ texte.</para>
 
       <para>Les commentaires présentent plusieurs caractéristiques
-      intéressantes:</para>
+      intéressantes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Réponses-type</emphasis>: il
+          <para><emphasis role="bold">Réponses-type</emphasis> : il
           n'est pas rare de voir les personnes en charge de la gestion
           des artefacts poster les mêmes commentaires de façon
           répétée. Un message de remerciement à la personne qui a
@@ -669,7 +669,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Types de commentaire</emphasis>:
+          <para><emphasis role="bold">Types de commentaire</emphasis> :
           dans le but d'éviter la croissance exponentielle du nombre
           de champs texte d'un outil de suivi destinés à recevoir du texte libre,
           CodeX offre un mécanisme de typage des
@@ -679,7 +679,7 @@
           définir la nature de l'information contenue dans un
           commentaire et pour les repérer rapidement dans la liste des
           commentaires. Voici quelques exemples typiques de labels
-          utilisés dans un système de suivi d'anomalies: &#34;Solution
+          utilisés dans un système de suivi d'anomalies : &#34;Solution
           de Rechange&#34; pour un commentaire qui explique comment
           contourner un problème, &#34;Fichiers concernés&#34; pour un
           commentaire qui donne la liste des fichiers à modifier pour
@@ -691,7 +691,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Références croisées</emphasis>:
+          <para><emphasis role="bold">Références croisées</emphasis> :
           lorsque vous saisissez un commentaire, vous pouvez utiliser
           certains patrons de texte pour référencer d'autres
           artefacts, des commits CVS ou Subversion, des documents, etc... Ces patrons
@@ -735,7 +735,7 @@
       vouliez envoyer une copie-carbone (CC) de la notification email
       à votre responsable assurance qualité ou bien à la personne qui
       est à l'origine de l'artefact si ce n'est pas la même que celle
-      qui l'a soumis. C'es précisément le rôle que remplit la section
+      qui l'a soumis. C'est précisément le rôle que remplit la section
       Destinataires en copie. Les utilisateurs insérés dans cette
       liste recevront les notifications en rapport avec cet
       artefact.</para>
@@ -750,7 +750,7 @@
         <itemizedlist mark="bullet">
           <listitem>
             <para><emphasis role="bold">Nom d'utilisateur
-            CodeX</emphasis>: lorsque la personne que vous souhaitez
+            CodeX</emphasis> : lorsque la personne que vous souhaitez
             notifier dispose d'un compte CodeX il est recommandé
             d'utiliser ce nom plutôt que son adresse email. En
             utilisant son nom d'utilisateur vous permettez à
@@ -763,7 +763,7 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Adresse email</emphasis>: il
+            <para><emphasis role="bold">Adresse email</emphasis> : il
             n'existe aucune restriction concernant les adresses emails
             saisies dans la liste des destinataires en copie. Il peut
             s'agir d'adresse email individuelle ou de liste de
@@ -788,19 +788,19 @@
         été ajoutés ou qui ils sont.</para>
 
         <para>L'ajout et la suppression de destinataires en copie sont
-        sujets à certaines permissions:</para>
+        sujets à certaines permissions :</para>
 
         <itemizedlist mark="bullet">
           <listitem>
-            <para>Ajout d'un destinataire: les utilisateurs anonymes
+            <para>Ajout d'un destinataire : les utilisateurs anonymes
             ne peuvent ajouter de destinataire. Tout autre utilisateur
-            possédant un compte sur CodeX peut ajouter un destinaire
+            possédant un compte sur CodeX peut ajouter un destinataire
             et la liste des destinataires indiquera clairement qui a
             ajouté cette entrée et quand.</para>
           </listitem>
 
           <listitem>
-            <para>Suppression d'un destinaire: les utilisateurs ayant
+            <para>Suppression d'un destinataire : les utilisateurs ayant
             les droits d'administrateurs sur un outil de suivi (voir <xref
             linkend="UserPermissions" />) peuvent détruire toute entrée
             dans la liste des destinataire pour cet outil de suivi. Tous les
@@ -829,7 +829,7 @@
       à un artefact.</para>
 
       <para>Les fichiers attachés peuvent être de n'importe quel type
-      (image, vidéo, son, text, binaire&hellip;) et un commentaire
+      (image, vidéo, son, texte, binaire&hellip;) et un commentaire
       permet éventuellement d'annoter le fichier attaché. La taille
       maximum d'un fichier attaché est variable selon le site. Elle
       est en général de 2 Moctets.</para>
@@ -852,7 +852,7 @@
       des artefacts. Votre équipe de projet est donc libre de
       s'entendre sur la signification d'un tel lien. Il peut s'agir
       d'une dépendance causale, d'une duplication de l'information ou
-      d'une dépendence temporel dans le cas d'un outil de suivi de tâches.</para>
+      d'une dépendance temporel dans le cas d'un outil de suivi de tâches.</para>
 
           <figure id="FigureArtifactDependencies">
             <title>Dépendance entre artefacts</title>
@@ -869,17 +869,17 @@
       <para>Pour créer une dépendance, il faut indiquer l'identifiant
       d'un ou plusieurs artefacts (séparés par une virgule) dans le
       champ réservé à cet effet et soumettre le formulaire. Les
-      artefacts référencés apparaitront dans une table juste en
+      artefacts référencés apparaîtront dans une table juste en
       dessous du formulaire de saisie  précisant la description de
       l'artefact ainsi que l'outil de suivi et le projet auquel ils
       appartiennent.</para>
 
       <para>Pour supprimer une dépendance il suffit de cliquer sur
-      l'icone corbeille située à la droite de la ligne de description
+      l'icône corbeille située à la droite de la ligne de description
       de l'artefact et confirmer (ou infirmer) la suppression dans la
       boîte de dialogue.</para>
 
-      <para>Les dépendances sont affichées dans les deux sens:
+      <para>Les dépendances sont affichées dans les deux sens :
        non seulement on montre la liste des
       artefacts dont dépend l'artefact courant mais on montre aussi
       tous les artefacts qui dépendent de l'artefact courant.</para>
@@ -889,14 +889,14 @@
       <title>Références croisées entre artefact</title>
 
       <para>En complément de la façon plutôt formelle d'exprimer une
-      dépendence entre deux artefacts presentée dans la <xref
+      dépendence entre deux artefacts présentée dans la <xref
       linkend="ArtifactDependencies"/>, CodeX permet de créer une
       référence sur n'importe quel artefact ou autre objet CodeX dans un commentaire.</para>
 
       <para>Lorsque vous tapez un commentaire, tout morceau de texte
       qui suit le patron &#34;XXX #NNN&#34; est interprété comme une
       référence à l'artefact XXX numéro NNN, où XXX est le nom court
-      de l'artefact et NNN l'identifiant unique (ID) (exemple:
+      de l'artefact et NNN l'identifiant unique (ID) (exemple :
       &#34;bug #123&#34;, &#34;tache #321&#34;, &#34;req #12&#34;,
       etc...). Si vous ne connaissez pas le nom court de l'outil de suivi ou si
       vous souhaitez ne pas le spécifier vous pouvez utiliser le
@@ -910,7 +910,7 @@
       mécanisme <emphasis role="bold">n'est</emphasis> pas limité aux
       artefact appartenant aux outils de suivi du même projet. Cela
       est rendu possible par le fait qu'un artefact dispose d'un
-      indentifiant unique sur tout le site CodeX.</para>
+      identifiant unique sur tout le site CodeX.</para>
 
       <para>Les références de CodeX peuvent etre utilisees pour référencer des artifacts,
       mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
@@ -958,7 +958,7 @@
     d'artefacts, d'assigner une collection d'artefact à une même
     personne, etc... Une application typique de cette fonctionnalité
     de mise à jour massive consiste précisément à réassigner tous les
-    artifacts d'une personne à une autre.</para>
+    artefacts d'une personne à une autre.</para>
 
       <section id="MassChangeSelectionCriteria">
         <title>Critères de sélection</title>
@@ -980,7 +980,7 @@
         par la recherche dans la base d'artefacts.</para>
 
         <figure id="MassChangeSelection">
-    <title>Ecran de sélection des artefacts pour une mise à jour massive</title>
+    <title>&Eacute;cran de sélection des artefacts pour une mise à jour massive</title>
 
     <mediaobject>
       <imageobject>
@@ -998,7 +998,7 @@ width="14.5cm" />
         <para>Une fois sélectionnés les artefacts à modifier on peut
         passer à l'écran de mise à jour suivant. Cet écran est très
         similaire à l'écran de modification d'un artefact. Il comporte
-        les mêmes sections: entête, commentaire, destinataires en
+        les mêmes sections : entête, commentaire, destinataires en
         copie, fichiers attachés et dépendances.</para>
 
         <figure id="MassChangeUpdateHeader">
@@ -1037,9 +1037,9 @@ width="14.5cm" />
         <para>La section des destinataires en copie diffère de son
         comportement en ce qu'elle montre tous les destinataires de
         tous les artefacts retenus pour la mise à jour massive avec un
-        compteur indiquant dans combien d'artefacts un destinaire est
+        compteur indiquant dans combien d'artefacts un destinataire est
         présent. Dans l'exemple de la <xref
-        linkend="MassChangeUpdateCC" />, un des destinaires est
+        linkend="MassChangeUpdateCC" />, un des destinataires est
         utilisé dans un des trois artefacts. En sélectionnant la case
         Détruire ? on supprime le destinataire de la liste des
         destinataires.</para>
@@ -1047,7 +1047,7 @@ width="14.5cm" />
         <para>De la même façon, la section consacrée aux fichiers
         attachés montre l'ensemble des fichiers attachés de tous les
         artefacts sélectionnés pour la mise à jour massive. La section
-        des dépendances est structurée de la même facon.</para>
+        des dépendances est structurée de la même façon.</para>
 
         <para>Chaque modification massive est consignée dans
         l'historique de chaque artefact affecté (<xref
@@ -1066,8 +1066,8 @@ width="14.5cm" />
     décident autrement, le système de notification par email adopte un
     comportement par défaut très simple. A chaque fois qu'un artefact
     est créé ou modifié - que ce soit avec un nouveau commentaire, un
-    nouveau fichier attaché ou un changment dans l'un quelconque des
-    champs - un message est envoyé aux acteurs suivants:</para>
+    nouveau fichier attaché ou un changement dans l'un quelconque des
+    champs - un message est envoyé aux acteurs suivants :</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
@@ -1096,7 +1096,7 @@ width="14.5cm" />
     première partie montrant les changements récemment intervenus dans
     l'artefact à l'occasion de la dernière mise à jour. A la suite se
     trouve un récapitulatif complet de l'artefact. Des pointeurs Web
-    sont aussi présents dans le message pour vous permettre d'accèder
+    sont aussi présents dans le message pour vous permettre d'accéder
     facilement et rapidement à l'artefact sur CodeX.</para>
 
   </section>
@@ -1145,11 +1145,11 @@ width="14.5cm" />
       provenance d'autres outils de suivi dans les outils de suivi de
       CodeX.</para>
 
-    <para>L'importation d'artefacts se déroule en trois étapes:
+    <para>L'importation d'artefacts se déroule en trois étapes :
 
         <itemizedlist mark="bullet" spacing="compact">
 		<listitem><para><emphasis role="bold">Soumission du fichier CSV. </emphasis>
-			L'administrateur du projet peut accèder à la fonction d'importation soit à
+			L'administrateur du projet peut accéder à la fonction d'importation soit à
 			partir de l'écran de recherche et de navigation, soit à partir du menu de l'écran
 			d'administration du projet. Choisissez ensuite l'outil de suivi concerné et le
 			fichier CSV à importer. Durant cette étape vous pouvez aussi choisir d'envoyer
@@ -1173,11 +1173,11 @@ width="14.5cm" />
     </para>
 
     <section>
-      <title>Quand utiliser la fonction d'importation?</title>
-        <para>Vous trouverez ci-dessous quelques suggestions d'utilisation de la fonction d'importation de l'outil de suivi:
+      <title>Quand utiliser la fonction d'importation ?</title>
+        <para>Vous trouverez ci-dessous quelques suggestions d'utilisation de la fonction d'importation de l'outil de suivi :
 
         <itemizedlist mark="bullet" spacing="compact">
-        <listitem><para>Importation des données en provenance d'un logiciel de gestion de projet externe vers un outil de suivi de taches de CodeX.</para></listitem>
+        <listitem><para>Importation des données en provenance d'un logiciel de gestion de projet externe vers un outil de suivi de tâches de CodeX.</para></listitem>
         <listitem><para>Migration des données de votre ancien système de suivi dans le nouvel outil de suivi de CodeX.</para></listitem>
         <listitem><para>Migration d'artefact d'un outil de suivi CodeX vers un autre.</para></listitem>
         </itemizedlist>
@@ -1186,7 +1186,7 @@ width="14.5cm" />
 
     <section>
         <title>Exporter une feuille de calcul Excel au format CSV</title>
-          <para>Pour exporter une feuille de calcul Excel au format CSV, suivez les étapes suivantes:
+          <para>Pour exporter une feuille de calcul Excel au format CSV, suivez les étapes suivantes :
           <itemizedlist mark="bullet" spacing="compact">
 
           <listitem><para>Sélectionnez <literal>Fichier -> Enregistrer
@@ -1206,7 +1206,7 @@ width="14.5cm" />
         <para>Le format CSV accepté en entrée est documenté sur
         l'écran de soumission du fichier CSV. Cette page vous permet
         de vérifier de façon manuelle que votre fichier CSV est bien
-        formatté et quels champs sont obligatoires en cas de
+        formaté et quels champs sont obligatoires en cas de
         soumission d'un nouvel artefact. Qui plus est, un exemple de
         fichier CSV figure en bas de page. Si vous avez déjà utilisé
         le module d'exportation (voir <xref
@@ -1238,12 +1238,12 @@ width="14.5cm" />
         uniquement les noms des champs à modifier dans le fichier CSV
         et non pas l'ensemble des champs obligatoires.</para>
 
-        <para>Le processus d'analyse vérifie la cohérence du fichier CSV sur plusieurs points:
+        <para>Le processus d'analyse vérifie la cohérence du fichier CSV sur plusieurs points :
         <itemizedlist mark="bullet" spacing="compact">
         <listitem><para>Omission de champs obligatoires lors de la création de nouveaux artefacts.</para></listitem>
         <listitem><para>Le nombre de champs mentionnés sur la première ligne ne correspond pas au nombre de valeurs des lignes suivantes</para></listitem>
         <listitem><para>Nom de champ inconnu sur la première ligne</para></listitem>
-        <listitem><para>Valeurs de champs qui ne correspondent pas aux valeurs prédéfinies pour les champs de type boîte de selection.
+        <listitem><para>Valeurs de champs qui ne correspondent pas aux valeurs prédéfinies pour les champs de type boîte de séléction.
         </para></listitem>
         <listitem><para>Soumission en double (par exemple soumission d'un nouvel artefact ayant le même résumé qu'un artefact déjà existant)</para></listitem>
         <listitem><para>Identifiant d'artefact inconnu.</para></listitem>
@@ -1282,7 +1282,7 @@ width="14.5cm" />
         suite à l'opération d'importation.</para>
     </section>
 
-    <para><tip id="ExcelAndRegionals"><title>Tip: Excel et les
+    <para><tip id="ExcelAndRegionals"><title>Tip : Excel et les
     paramètres régionaux</title> <para>Si un fichier CSV est ouvert
     avec Excel, tout changement opéré sur la feuille de calcul (y
     compris un simple changement d'une largeur de colonne) peut amener
@@ -1300,15 +1300,15 @@ width="14.5cm" />
     erreurs durant l'importation des données. A l'inverse, des
     fichiers CSV exportés depuis CodeX peuvent ne pas s'ouvrir
     correctement sous Excel avec certaines valeurs des paramètres
-    regionaux.
+    régionaux.
     </para>
     
     <para>
     Si vous vous retrouvez dans ce cas de figure, essayez de procéder
-    aux modifications suivantes sur Windows: Assurez-vous que toutes
+    aux modifications suivantes sur Windows : Assurez-vous que toutes
     vos applications sont arrêtées. Modifiez vos paramètres régionaux
     (Démarrer > Configuration > Panneau de contrôle, Paramètres
-    Regionaux) pour utiliser l'anglais avec les formats suivants: Date
+    Régionaux) pour utiliser l'anglais avec les formats suivants : Date
     = MM/dd/YYYY Heure = hh:mm. Avec Excel, ouvrez le fichier CSV qui
     pose problème, ajustez la largeur d'une colonne quelconque,
     sauvegardez le fichier et fermez Excel. Remettez les paramètres
@@ -1332,7 +1332,7 @@ width="14.5cm" />
     plus d'information sur la configuration des permissions d'accès
     aux outils de suivi reportez-vous à la <xref
     linkend="TrackerPermissionsManagement"/>). Les permissions par
-    défaut sont résumées dans la table ci-dessous:</para>
+    défaut sont résumées dans la table ci-dessous :</para>
 
     <table frame="all">
       <title>Permissions d'accès par défaut des outils de suivi</title>
@@ -1443,11 +1443,11 @@ width="14.5cm" />
 
     <para>Avant de choisir les champs et les valeurs associés aux
     champs d'un outil de suivi, il faut tout d'abord créer cet outil de suivi. On peut
-    accèder à la page de création d'un tracker depuis l'entrée
+    accéder à la page de création d'un tracker depuis l'entrée
     &#34;Créer un outil de suivi&#34; visible à la fois dans le menu de la partie
     publique et dans celui de la partie administration.</para>
 
-    <para><tip><title>Coup de pouce: utilisez de préférence les outils
+    <para><tip><title>Coup de pouce : utilisez de préférence les outils
     de suivi prédéfinis</title> <para>Quand un projet est créé sur
     CodeX un certain nombre d'outils de suivi sont automatiquement
     créés pour ce projet. Il s'agit typiquement d'outils de suivi pour
@@ -1459,25 +1459,25 @@ width="14.5cm" />
 
     <para>Pour définir un nouvel outil de suivi vous devez fournir les
     informations suivantes (voir <xref
-    linkend="FigureCreateANewTracker" />): </para>
+    linkend="FigureCreateANewTracker" />) : </para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem id="TrackerCreationName">
-        <para><emphasis role="bold">Nom</emphasis>: il s'agit du nom
+        <para><emphasis role="bold">Nom</emphasis> : il s'agit du nom
         de l'outil de suivi. Le nom d'un outil de suivi est classiquement calqué sur le nom
         des artefacts qui sont gérés. Ce nom est utilisé par CodeX
         dans le titre de plusieurs écrans de l'outil de suivi. Quelques exemples
-        de noms d'outils de suivi: Demandes de fonctionnalités,
-        Taches, Anomalies,&hellip;</para>
+        de noms d'outils de suivi : Demandes de fonctionnalités,
+        Tâches, Anomalies,&hellip;</para>
       </listitem>
       <listitem id="TrackerCreationDescription">
-        <para><emphasis role="bold">Description</emphasis>: une
+        <para><emphasis role="bold">Description</emphasis> : une
         description plus complète de l'outil de suivi et des artefacts qu'il
         gère.</para>
       </listitem>
 
       <listitem id="TrackerCreationShortName">
-        <para><emphasis role="bold">Nom court</emphasis>: il s'agit
+        <para><emphasis role="bold">Nom court</emphasis> : il s'agit
         d'un nom court décrivant le type d'artefacts gérés par
         l'outil de suivi. Le nom doit être aussi court que possible car il est
         utilisé sur plusieurs écrans de l'outil de suivi comme, par exemple, sur
@@ -1485,7 +1485,7 @@ width="14.5cm" />
         dans la barre de menu et à côté de l'identifiant de
         l'artefact. Si nous reprenons les exemples donnés pour le
         champ Nom ci-dessus, les noms courts correspondants pourraient
-        être: fonc, tache, anom,&hellip;</para>
+        être : fonc, tache, anom,&hellip;</para>
       </listitem>
     </itemizedlist>
 
@@ -1509,7 +1509,7 @@ width="14.5cm" />
     votre propre outil de suivi. Ces patrons sont définis soit au niveau du site
     (patrons-site) soit au niveau du projet.</para>
 
-    <para><emphasis role="bold">Remarque</emphasis>: l'utilisation de
+    <para><emphasis role="bold">Remarque</emphasis> : l'utilisation de
     patrons ne signifie pas que vous deviez vous conformer strictement
     aux champs proposés. Il est toujours possible d'ajouter, de
     supprimer ou de modifier des champs en partant du patron
@@ -1517,7 +1517,7 @@ width="14.5cm" />
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem id="TrackerCreationFromCodeXTemplate">
-        <para><emphasis role="bold">Patrons-site</emphasis>: il s'agit
+        <para><emphasis role="bold">Patrons-site</emphasis> : il s'agit
         de patrons définis par les administrateurs du site CodeX qui
         sont en général utiles à de nombreux projets. C'est aussi un
         moyen d'assurer une certaine harmonie d'un projet à l'autre
@@ -1531,14 +1531,14 @@ width="14.5cm" />
       </listitem>
 
       <listitem id="TrackerCreationFromProjectTemplate">
-        <para><emphasis role="bold">Patrons-projet</emphasis>: si vous
+        <para><emphasis role="bold">Patrons-projet</emphasis> : si vous
         avez déjà défini un outil de suivi qui répond à vos besoins et
         que vous souhaitez le réutiliser, il suffit de spécifier
         l'identifiant du projet et celui de l'outil de suivi soit manuellement
         soit en utilisant les flèches du menu déroulant, puis de
         cliquer sur le bouton de création. Vous allez ainsi créer un
         nouvel outil de suivi strictement identique au précédent. (<emphasis
-        role="bold">Note</emphasis>: cette opération ne copie pas les
+        role="bold">Note</emphasis> : cette opération ne copie pas les
         artefacts mais uniquement la configuration des champs)</para>
       </listitem>
 
@@ -1551,7 +1551,7 @@ width="14.5cm" />
     <title>Patrons d'outils de suivi du site</title>
 
     <para>Les outils de suivi standards fournis pour chaque projet
-    sont:
+    sont :
       <itemizedlist mark="bullet" spacing="compact">
         <listitem><para>Bugs</para></listitem>
         <listitem><para>Patch</para></listitem>
@@ -1652,7 +1652,7 @@ width="14.5cm" />
       <para>Malgré sa simplicité, l'outil de suivi de tâches offre un certain
       nombre de fonctionnalités qui en font un outil très
       complémentaire des logiciels de gestion et de planification de
-      projets:</para>
+      projets :</para>
 
       <itemizedlist mark="bullet"
         spacing="compact">
@@ -1721,36 +1721,36 @@ width="14.5cm" />
       </mediaobject>
     </figure>
 
-    <para>La configuration d'un outil de suivi se divise en sept sections:</para>
+    <para>La configuration d'un outil de suivi se divise en sept sections :</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem><para><emphasis role="bold">Options
-      Générales</emphasis>: le nom, la description et quelques autres
+      Générales</emphasis> : le nom, la description et quelques autres
       paramètres généraux sont définis dans cette section.</para>
       </listitem>
       <listitem><para><emphasis role="bold">Gestion des
-      permissions</emphasis>: permet d'octroyer des permissions
+      permissions</emphasis> : permet d'octroyer des permissions
       d'accès différentes aux utilisateurs en fonction de leur
       rôle.</para>
       </listitem>
       <listitem><para><emphasis role="bold">Gestion de
-      champs</emphasis>: définition des champs utilisés dans cet
+      champs</emphasis> : définition des champs utilisés dans cet
       outil de suivi.</para>
       </listitem>
       <listitem><para><emphasis role="bold">Gestion des valeurs des
-      champs</emphasis>: définition des valeurs prédéfinies ou valeurs
+      champs</emphasis> : définition des valeurs prédéfinies ou valeurs
       par défaut associées aux champs.</para>
       </listitem>
       <listitem><para><emphasis role="bold">Gestion des
-      réponses-type</emphasis>: permet de créer des commentaires
+      réponses-type</emphasis> : permet de créer des commentaires
       prédéfinis que l'équipe utilise régulièrement.</para>
       </listitem>
-      <listitem><para><emphasis role="bold">Manage Reports</emphasis>:
+      <listitem><para><emphasis role="bold">Manage Reports</emphasis> :
       définition de rapport de recherche d'artefacts (critères de
       recherche et table de résultats).</para>
       </listitem>
       <listitem><para><emphasis role="bold">Options de notification
-      </emphasis>: réglage des options de notification par email
+      </emphasis> : réglage des options de notification par email
       globales ou personnelles.</para>
       </listitem>
     </itemizedlist>
@@ -1770,7 +1770,7 @@ width="14.5cm" />
 
       <itemizedlist mark="bullet" spacing="compact">
         <listitem id="TrackerGeneralSettingsName">
-          <para><emphasis role="bold">Nom</emphasis>: <!--this is a
+          <para><emphasis role="bold">Nom</emphasis> : <!--this is a
           short name that best describe the type of artifact managed
           in this tracker. This name must be quite short as it is used
           in various screens of the CodeX Tracker like the artifact
@@ -1782,18 +1782,18 @@ width="14.5cm" />
           suivi est classiquement calqué sur le nom des artefacts qui
           sont gérés. Ce nom est utilisé par CodeX dans le titre de 
           plusieurs écrans de l'outil de suivi. Quelques exemples de
-          noms d'outils de suivi : Demandes de fonctionnalités, Taches, 
+          noms d'outils de suivi : Demandes de fonctionnalités, Tâches, 
           Anomalies, ...</para>
         </listitem>
 
         <listitem id="TrackerGeneralSettingsDescription">
-          <para><emphasis role="bold">Description</emphasis>: une
+          <para><emphasis role="bold">Description</emphasis> : une
         description plus complète de l'outil de suivi et des artefacts qu'il
         gère.</para>
         </listitem>
 
         <listitem id="TrackerGeneralSettingsShortName">
-          <para><emphasis role="bold">Nom court</emphasis>: il s'agit
+          <para><emphasis role="bold">Nom court</emphasis> : il s'agit
         d'un nom court décrivant le type d'artefacts gérés par
         l'outil de suivi. Le nom doit être aussi court que possible car il est
         utilisé sur plusieurs écrans de l'outil de suivi comme, par exemple, sur
@@ -1801,16 +1801,16 @@ width="14.5cm" />
         dans la barre de menu et à côté de l'identifiant de
         l'artefact. Si nous reprenons les exemples donnés pour le
         champ Nom ci-dessus, les noms courts correspondants pourraient
-        être: fonc, tache, anom,&hellip;</para>
+        être : fonc, tache, anom,&hellip;</para>
         </listitem>
 
         <listitem id="TrackerGeneralSettingsSubmitInstructions">
           <para><emphasis role="bold">Instructions de
-          soumission</emphasis>: un message d'introduction qui
+          soumission</emphasis> : un message d'introduction qui
           s'affiche en haut de l'écran de soumission d'un nouvel
           artefact. C'est une façon très commode de donner des
           instructions aux utilisateurs qui soumettent de nouveaux
-          artefacts. Le texte doit être formatté avec des balises
+          artefacts. Le texte doit être formaté avec des balises
           HTML, ce qui vous donne une grande flexibilité (vous pouvez
           utiliser des caractères gras, de l'italique, des couleurs,
           des URLs&hellip;)</para>
@@ -1818,9 +1818,9 @@ width="14.5cm" />
 
         <listitem id="TrackerGeneralSettingsBrowseInstructions">
           <para><emphasis role="bold">Instructions de
-          navigation</emphasis>: un message d'introduction qui
+          navigation</emphasis> : un message d'introduction qui
           s'affiche en haut de l'écran de recherche et de navigation
-          dans la base d'artefacts. Le texte doit être formatté avec
+          dans la base d'artefacts. Le texte doit être formaté avec
           des balises HTML, ce qui vous donne un grande flexibilité
           (vous pouvez utiliser des caractères gras, de l'italique,
           des couleurs, des URLs&hellip;)</para>
@@ -1835,23 +1835,23 @@ width="14.5cm" />
       <para>Ce module est utilisé pour donner des permissions d'accès
       différentes aux utilisateurs suivant leur rôle.</para>
 
-      <para>Les permissions d'accès peuvent être définies à deux niveaux: </para>
+      <para>Les permissions d'accès peuvent être définies à deux niveaux : </para>
 
       <itemizedlist mark="bullet" spacing="compact">
         <listitem>
           <para><emphasis role="bold">Au niveau de l'outil de suivi et des
-          artefacts</emphasis>: à ce niveau, vous pouvez déterminer si
+          artefacts</emphasis> : à ce niveau, vous pouvez déterminer si
           certains groupes d'utilisateurs ont un accès total, partiel
           ou nul à l'outil de suivi et à ses artefacts.</para>
         </listitem>
         <listitem>
           <para><emphasis role="bold">Au niveau des champs d'un
-          artefact</emphasis>: il s'agit d'un niveau de permission
+          artefact</emphasis> : il s'agit d'un niveau de permission
           plus fin défini au niveau de chaque champ de l'outil de suivi. En
           utilisant cette fonctionnalité vous pouvez spécifier quels
           groupes ont uniquement les droits en lecture sur un champ,
           quels autres groupes ont les droits de modification et quels
-          sont ceux qui n'on aucun accès.</para>
+          sont ceux qui n'ont aucun accès.</para>
         </listitem>
       </itemizedlist>
 
@@ -1864,7 +1864,7 @@ width="14.5cm" />
         <title>Gestion des permissions</title>
 
         <para>En pénétrant dans ce module, une liste de groupes
-        d'utilisateurs apparait ainsi que leur permissions d'accès. La
+        d'utilisateurs apparaît ainsi que leur permissions d'accès. La
         liste des groupes montre tout d'abord les groupes définis au
         niveau du système CodeX comme l'ensemble des utilisateurs, les
         utilisateurs enregistrés, les membres du projet, etc... Il
@@ -1876,12 +1876,12 @@ width="14.5cm" />
         plus d'information sur la définition et la gestion de ces
         groupes d'utilisateurs).</para>
 
-        <para>Chaque groupe peut être associé avec les permissions suivantes:</para>
+        <para>Chaque groupe peut être associé avec les permissions suivantes :</para>
 
         <itemizedlist mark="bullet" spacing="compact">
 
           <listitem>
-            <para><emphasis role="bold">&hyphen;&hyphen;</emphasis>:
+            <para><emphasis role="bold">&hyphen;&hyphen;</emphasis> :
             ce niveau de permission qui s'affiche sous forme d'un
             double tiret signifie que le groupe n'a accès à aucun
             artefact.</para>
@@ -1889,27 +1889,27 @@ width="14.5cm" />
 
           <listitem>
             <para><emphasis role="bold">Accès à tous les
-            artefacts</emphasis>: le groupe a accès à tous les artefacts
+            artefacts</emphasis> : le groupe a accès à tous les artefacts
             de l'outil de suivi.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Accès aux artefacts confiés au
-            groupe</emphasis>: le groupe voit uniquement les artefacts
+            groupe</emphasis> : le groupe voit uniquement les artefacts
             qui sont assignés à un ou plusieurs membres du
             groupe.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Accès aux artefacts soumis par
-            le groupe</emphasis>: le groupe voit uniquement les
+            le groupe</emphasis> : le groupe voit uniquement les
             artefacts qui ont été soumis par un des membres du
             groupe.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Accès aux artefacts confiés au
-            groupe ou soumis par le groupe</emphasis>: le groupe a
+            groupe ou soumis par le groupe</emphasis> : le groupe a
             uniquement accès aux artefacts soumis par un des membres
             du groupe ou assignés à un ou plusieurs membres.</para>
         </listitem>
@@ -1918,7 +1918,7 @@ width="14.5cm" />
 
       <para>
         <tip>
-          <title>Exemple: configurer les permissions pour vos clients</title>
+          <title>Exemple : configurer les permissions pour vos clients</title>
             
           <para>A titre d'exemple supposons que vous avez créé un outil de suivi
           qui sera utilisé par deux de vos clients pour rendre compte
@@ -1928,13 +1928,13 @@ width="14.5cm" />
           les anomalies soumises par les autres sociétés.</para>
 
           <para>Pour parvenir à ce résultat, il suffit de créer un
-          groupe companie_A qui comprend tous les noms des
+          groupe compagnie_A qui comprend tous les noms des
           utilisateurs de la société A puis de faire la même chose
-          pour la companie B. Ensuite on donne à ces deux groupes une
+          pour la compagnie B. Ensuite on donne à ces deux groupes une
           permission de type 'Accès aux artefacts soumis par le
           groupe' pour limiter l'accès aux seules anomalies soumises
           par leur groupe d'utilisateur. De plus, vous donnerez
-          vraissemblablement la permission 'Accès à tous les
+          vraisemblablement la permission 'Accès à tous les
           artefacts' aux membres du projet ou aux administrateurs de
           l'outil de suivi de façon à ce qu'ils puissent avoir accès à toutes les
           anomalies quelle qu'en soit l'origine.</para>
@@ -1959,7 +1959,7 @@ width="14.5cm" />
         
         <para>L'écran de ce module de configuration des permissions
         sur les champs permet à tout moment de basculer entre deux
-        vues: vous pouvez soit visualiser les permissions de tous les groupes
+        vues : vous pouvez soit visualiser les permissions de tous les groupes
         pour un champ donné OU pour un groupe d'utilisateurs donnés
         vous pouvez visualiser ses permissions sur tous les champs de
         l'outil de suivi. L'expérience montre que la vue par champ est souvent la
@@ -1971,12 +1971,12 @@ width="14.5cm" />
         d'utilisateurs).</para>
 
         <para>Chaque groupe d'utilisateurs peut recevoir les
-        permissions suivantes pour un champ donné:</para>
+        permissions suivantes pour un champ donné :</para>
 
         <itemizedlist mark="bullet" spacing="compact">
 
           <listitem>
-            <para><emphasis role="bold">Peut soumettre</emphasis>:
+            <para><emphasis role="bold">Peut soumettre</emphasis> :
             permet de déterminer si un groupe d'utilisateurs peut
             spécifier la valeur initiale d'un champ lorsque l'artefact
             est soumis pour la première fois. Si la case n'est pas
@@ -1985,20 +1985,20 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Lecture seule</emphasis>: avec
+            <para><emphasis role="bold">Lecture seule</emphasis> : avec
             cette permission un groupe d'utilisateurs ne peut que lire
             le champ. En d'autres terme la valeur du champ leur est
             visible mais ils ne peuvent la modifier.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Mise à jour</emphasis>: avec
+            <para><emphasis role="bold">Mise à jour</emphasis> : avec
             cette permission, un groupe d'utilisateurs peut voir la
             valeur d'un champ et la modifier.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Aucun accès (--)</emphasis>:
+            <para><emphasis role="bold">Aucun accès (--)</emphasis> :
             avec cette permission (affichée sous la forme d'un double
             tiret) un groupe d'utilisateurs ne verra pas du tout le
             champ en question.</para>
@@ -2006,7 +2006,7 @@ width="14.5cm" />
 
         </itemizedlist>
 
-        <para><emphasis role="bold">Note importante</emphasis>: les
+        <para><emphasis role="bold">Note importante</emphasis> : les
         permissions associés à un champ s'appliquent à plusieurs
         fonctions de l'outil de suivi. Ainsi, si un groupe d'utilisateur n'a pas
         du tout accès à un champ, ce champ sera invisible sur le
@@ -2025,26 +2025,26 @@ width="14.5cm" />
       <para>Lorsqu'un outil de suivi est créé, il comprend un ensemble de
       champs préconfigurés qui proviennent du patron utilisé pour sa
       création. Pour la majorité des projets hébergés sur CodeX il est
-      très probable que les patrons standards (bugs, taches, demandes
+      très probable que les patrons standards (bugs, tâches, demandes
       d'assistance) répondent à la plupart des besoins.</para>
 
       <para>Toutefois CodeX vous permet de personnaliser les champs
       utilisés par vos outils de suivi. Il peut s'agir d'une
       variation autour d'un patron standard comprenant l'ajout ou la
-      suppression de quelques champs mais celà peut aussi être une
+      suppression de quelques champs mais cela peut aussi être une
       définition complète à partir d'un patron vierge.</para>
 
       <section id="TrackerFieldTypes" xreflabel="Tracker Field Types">
         <title>Types de champs d'un outil de suivi</title>
 
-        <para>Les champs d'un outil de suivi peuvent être de plusieurs types: boîte de sélection, boîte de sélections multiples, zone de texte, champ de texte, champ à nombre entier, champ à nombre flottant et champ date.</para>
+        <para>Les champs d'un outil de suivi peuvent être de plusieurs types : boîte de sélection, boîte de sélections multiples, zone de texte, champ de texte, champ à nombre entier, champ à nombre flottant et champ date.</para>
 
-        <para>Voici une description détaillée de chaque type de champ:</para>
+        <para>Voici une description détaillée de chaque type de champ :</para>
 
         <itemizedlist mark="dash" spacing="compact">
           <listitem>
             <para><emphasis role="underline">Boîte de
-            sélection</emphasis>: un champ de type &#34;Boîte de
+            sélection</emphasis> : un champ de type &#34;Boîte de
             sélection&#34; prend sa valeur parmi une liste de valeurs
             prédéfinies par l'administrateur de l'outil de suivi. Selon le
             navigateur que vous utilisez l'apparence de ce type de
@@ -2056,7 +2056,7 @@ width="14.5cm" />
 
           <listitem>
             <para><emphasis role="underline">Boîte de sélections
-            multiples</emphasis>: comme la boîte de sélection simple
+            multiples</emphasis> : comme la boîte de sélection simple
             décrite précédemment, ce champ prend sa valeur parmi une
             liste de valeurs prédéfinies. Par contre il permet de
             donner plusieurs valeurs au champ à un instant donné. Ce
@@ -2066,7 +2066,7 @@ width="14.5cm" />
 
           <listitem>
             <para> <emphasis role="underline">Zone de
-            texte</emphasis>: permet à l'utilisateur de saisir un
+            texte</emphasis> : permet à l'utilisateur de saisir un
             texte libre de plusieurs lignes. Ce type de champ est
             utilisé dans de nombreux outils de suivi pour le champ
             &#34;Description original Submission&#34;.</para>
@@ -2074,27 +2074,27 @@ width="14.5cm" />
 
           <listitem>
             <para><emphasis role="underline">Ligne de
-            texte</emphasis>: permet à l'utilisateur de saisir un
+            texte</emphasis> : permet à l'utilisateur de saisir un
             texte libre d'une seule ligne. Le résumé d'un artefact est
             un exemple de champ de type ligne de texte.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="underline">Champ date</emphasis>: un
+            <para><emphasis role="underline">Champ date</emphasis> : un
             champ d'une ligne qui accepte les dates au format ISO
             (AAAA-MM-JJ)</para>
           </listitem>
           <listitem>
             <para><emphasis role="underline">Champ à nombre
-            entier</emphasis>: champ d'une ligne qui accepte
-            uniquement les nombres entiers (exemple: 3, -100,
+            entier</emphasis> : champ d'une ligne qui accepte
+            uniquement les nombres entiers (exemple : 3, -100,
             2345&hellip;)</para>
           </listitem>
           
           <listitem>
             <para><emphasis role="underline">Champ à nombre
-            flottant</emphasis>: champ d'une ligne qui accepte
-            uniquement les nombres flottants(exemple: 3.56, -100.3,
+            flottant</emphasis> : champ d'une ligne qui accepte
+            uniquement les nombres flottants(exemple : 3.56, -100.3,
             2345, 34E+6&hellip;)</para>
           </listitem>
           
@@ -2111,7 +2111,7 @@ width="14.5cm" />
         d'un outil de suivi. L'écran d'utilisation des champs (<xref
         linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
         />) montre un exemple de champs disponibles dans un outil de suivi de
-        CodeX. Cet écran se divise en trois sections:</para>
+        CodeX. Cet écran se divise en trois sections :</para>
 
         <procedure>
           <step>
@@ -2135,18 +2135,18 @@ width="14.5cm" />
 
 
         <para>Les informations suivantes sont présentées sur la liste
-        des champs:</para>
+        des champs :</para>
 
         <itemizedlist mark="bullet">
           <listitem>
-            <para><emphasis role="bold">Label du champ</emphasis>: le
+            <para><emphasis role="bold">Label du champ</emphasis> : le
             nom du champ. Pour ajuster les propriétés d'un champ il
             faut cliquer sur le nom.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Type</emphasis>: un champ peut
-            prendre un des types suivants: boîte de sélection, boîte de
+            <para><emphasis role="bold">Type</emphasis> : un champ peut
+            prendre un des types suivants : boîte de sélection, boîte de
             sélections multiples, ligne de texte, zone de texte, champ
             date, champ à nombre entier, champ à nombre flottant. Pour
             une description détaillée des types de champs voir la 
@@ -2154,12 +2154,12 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>: la
+            <para><emphasis role="bold">Description</emphasis> : la
             description du champ.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Rang à l'écran</emphasis>: le
+            <para><emphasis role="bold">Rang à l'écran</emphasis> : le
             rang indique dans quel ordre les champs apparaîtront à
             l'écran dans le formulaire de soumission ou dans le
             formulaire de mise à jour. Les champs avec le plus petit
@@ -2167,13 +2167,13 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Statut</emphasis>:</para>
+            <para><emphasis role="bold">Statut</emphasis> :</para>
             <itemizedlist mark="dash" spacing="compact">
               <listitem>
-                <para><emphasis role="underline">Utilisé</emphasis>: le champ est utilisé par l'outil de suivi.</para>
+                <para><emphasis role="underline">Utilisé</emphasis> : le champ est utilisé par l'outil de suivi.</para>
               </listitem>
               <listitem>
-                <para><emphasis role="underline">Inutilisé</emphasis>:
+                <para><emphasis role="underline">Inutilisé</emphasis> :
                 le champ n'est pas utilisé par l'outil de suivi. 
                 Notez qu'un champ inutilisé n'est rien d'autre champ 
                 &#34;caché&#34;. Si vous changez le statut d'un champ 
@@ -2184,7 +2184,7 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Détruire?</emphasis>:
+            <para><emphasis role="bold">Détruire ?</emphasis> :
             lorsqu'un champ est détruit il disparaît complètement de
             la liste des champs disponibles. De plus toutes les
             données associées à ce champ sont supprimées de tous les
@@ -2195,7 +2195,7 @@ width="14.5cm" />
 
 
         <figure id="FigureTrackerFieldUsageScreenOfACodeXHostedProject">
-          <title>Ecran de gestion de l'utilisation des champs dans un outil de suivi</title>
+          <title>&Eacute;cran de gestion de l'utilisation des champs dans un outil de suivi</title>
 
           <mediaobject>
             <imageobject>
@@ -2211,7 +2211,7 @@ width="14.5cm" />
       <section id="CreationandModificationofaTrackerField">
         <title>Création et modification du champ d'un outil de suivi</title>
 
-        <para>Etant donné que les formulaires de création et de
+        <para>&Eacute;tant donné que les formulaires de création et de
         modification d'un champ sont très similaires ils sont tous
         deux traités dans cette section.</para>
 
@@ -2221,11 +2221,11 @@ width="14.5cm" />
         modifier.</para>
 
 
-        <para><tip><title>Coup de pouce: utilisez d'abord les champs
+        <para><tip><title>Coup de pouce : utilisez d'abord les champs
         prédéfinis !</title><para>A tout instant dans la vie de votre
         projet vous pouvez enrichir vos outils de suivi avec de
         nouveaux champs. Cependant avant de créer un nouveau champ,
-        prenez la peine de consulter la liste des champs inutilisés:
+        prenez la peine de consulter la liste des champs inutilisés :
         l'un d'eux correspond peut-être à ce que vous cherchez. En
         utilisant les champs prédéfinis vous contribuez à l'unité
         globale des environnements de projet et vous facilitez la vie
@@ -2235,11 +2235,11 @@ width="14.5cm" />
 
 
         <para>Les propriétés à définir pour un champ sont les
-        suivantes:</para>
+        suivantes :</para>
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-            <para><emphasis role="bold">Label du champ</emphasis>: il
+            <para><emphasis role="bold">Label du champ</emphasis> : il
             s'agit du nom du champ. Bien que vous soyez entièrement
             libre de modifier le nom d'un champ, nous vous
             recommandons de le modifier uniquement si vous lui donnez
@@ -2252,13 +2252,13 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>: une
+            <para><emphasis role="bold">Description</emphasis> : une
             description plus longue du rôle de ce champ.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Type du champ</emphasis>:un
-            champ peut prendre un des types suivants: boîte de
+            <para><emphasis role="bold">Type du champ</emphasis> : un
+            champ peut prendre un des types suivants : boîte de
             sélection, boîte de sélections multiples, ligne de texte,
             zone de texte, champ date, champ à nombre entier, champ à
             nombre flottant. Pour une description détaillée des types de
@@ -2267,7 +2267,7 @@ width="14.5cm" />
 
           <listitem>
             <para id="FieldDisplaySize" xreflabel="Field Display
-            Size"><emphasis role="bold">Taille d'affichage</emphasis>:
+            Size"><emphasis role="bold">Taille d'affichage</emphasis> :
             cette propriété vous permet de définir l'espace occupé par
             le champ à l'écran. Ce champ a une signification et un
             format différent en fonction du type du champ.</para>
@@ -2276,14 +2276,14 @@ width="14.5cm" />
             <itemizedlist mark="dash" spacing="compact">
               <listitem>
                 <para><emphasis role="underline">Boîte de
-                sélection</emphasis>: la taille d'affichage ne
+                sélection</emphasis> : la taille d'affichage ne
                 s'applique pas à ce champ. Toute information saisie est
                 ignorée.</para>
               </listitem>
 
               <listitem>
                 <para><emphasis role="underline">Boîte de sélections
-                multiples</emphasis>: la taille d'affichage se compose
+                multiples</emphasis> : la taille d'affichage se compose
                 d'une seule valeur indiquant combien de valeurs
                 associées à ce champ sont visibles simultanément à
                 l'écran. La valeur raisonnable se situe en général
@@ -2292,7 +2292,7 @@ width="14.5cm" />
 
               <listitem>
                 <para><emphasis role="underline">Champ texte, entier
-                ou flottant</emphasis>: pour tous les champs qui
+                ou flottant</emphasis> : pour tous les champs qui
                 tiennent sur une seule ligne, la taille d'affichage
                 suit le patron &#34;V/M&#34; où V est le nombre de
                 caractères visibles à l'écran et M est le nombre
@@ -2310,20 +2310,20 @@ width="14.5cm" />
 
               <listitem>
                 <para><emphasis role="underline">Champ
-                date</emphasis>: une date suit toujours le patron
+                date</emphasis> : une date suit toujours le patron
                 AAAA-MM-JJ et les champs date ont donc une taille fixe
                 de 10 caractères.</para>
               </listitem>
 
               <listitem>
                 <para><emphasis role="underline">Zone de
-                texte</emphasis>: pour les zones de texte, la taille
+                texte</emphasis> : pour les zones de texte, la taille
                 d'affichage s'exprime sous la forme &#34;C/L&#34; ou C
                 est le nombre de colonnes de la zone de texte (sa
                 largeur) et R le nombre de lignes de texte (sa
                 hauteur). Notez que le nombre de lignes que l'on peut
                 taper n'est pas limité à R. Si le texte a plus de R
-                lignes un ascenceur de défilement apparaît
+                lignes un ascenseur de défilement apparaît
                 automatiquement pour naviguer dans le texte.</para>
 
                 <para>Une taille d'affichage de 60/7 donne une zone
@@ -2335,11 +2335,11 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Rang à l'écran</emphasis>: ce
+            <para><emphasis role="bold">Rang à l'écran</emphasis> : ce
             nombre entier de valeur quelconque vous permet de définir
             la position des champs à l'écran dans les formulaires de
             soumission et de modification. Les champs avec les valeurs
-            les pluts petites apparaissent en premier à l'écran. Les
+            les plus petites apparaissent en premier à l'écran. Les
             valeurs n'ont pas à être consécutives. Il est même
             recommandé de les numéroter à intervalle régulier comme
             10, 20, 30... pour pouvoir facilement insérer de nouveaux
@@ -2359,24 +2359,24 @@ width="14.5cm" />
 
           <listitem>
             <para><emphasis role="bold">Autoriser la valeur
-            vide</emphasis>: indique s'il est permis de laisser le
+            vide</emphasis> : indique s'il est permis de laisser le
             champ sans valeur dans les écrans de soumission et de
             modification d'un artefact. Si la case n'est pas cochée
             l'outil de suivi n'acceptera pas le formulaire tant qu'une valeur
             n'aura pas été spécifiée par l'utilisateur. Les champs
-            dont la saisie est obligatoire sont marqués d'un astérique
+            dont la saisie est obligatoire sont marqués d'un astérisque
             rouge sur les formulaires de saisie.</para></listitem>
 
           <listitem>
             <para><emphasis role="bold">Conserver l'historique des
-            changements</emphasis>: indique si les valeurs successives
+            changements</emphasis> : indique si les valeurs successives
             de ce champ doivent être conservées dans l'historique de
             l'artefact (voir <xref linkend="ArtifactHistory"
             />).</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Utiliser ce champ</emphasis>:
+            <para><emphasis role="bold">Utiliser ce champ</emphasis> :
             cette propriété apparaît uniquement sur l'écran de
             modification des propriétés du champ. Lorsqu'un champ est
             créé il prend automatiquement le statut
@@ -2402,7 +2402,7 @@ width="14.5cm" />
       définir les valeurs associées à ces champs. Ceci concerne
       essentiellement les champs de type &#34;Boîte de sélection&#34;
       et &#34;Boîte de sélections multiples&#34; où la liste des
-      valeurs que vous définissez apparait dans les menus déroulants
+      valeurs que vous définissez apparaît dans les menus déroulants
       des écrans de soumission et de modification des artefacts. Les
       autres types de champs ne nécessitent pas de définition de
       valeurs. Pour ces champs, seule la valeur par défaut peut être
@@ -2427,15 +2427,15 @@ width="14.5cm" />
           </mediaobject>
         </figure>
 
-        <para>Les informations affichées sur cette première page:</para>
+        <para>Les informations affichées sur cette première page :</para>
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-            <para><emphasis role="bold">la label du champ</emphasis>:
+            <para><emphasis role="bold">la label du champ</emphasis> :
             le nom du champ. Cliquez sur ce champ pour voir la liste
             des valeurs du champ.</para>
           </listitem>
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>: la
+            <para><emphasis role="bold">Description</emphasis> : la
             description du champ</para>
           </listitem>
         </itemizedlist>
@@ -2451,7 +2451,7 @@ width="14.5cm" />
         liste des valeurs pour ce champ (voir <xref
         linkend="FigureListOfValuesForTrackerFieldStatus" />).</para>
 
-        <para>La table des valeurs fournit les informations suivantes:</para>
+        <para>La table des valeurs fournit les informations suivantes :</para>
 
 
         <itemizedlist mark="dash" spacing="compact">
@@ -2474,7 +2474,7 @@ width="14.5cm" />
         </listitem>
           -->
           <listitem>
-            <para><emphasis role="bold">Label de la valeur</emphasis>:
+            <para><emphasis role="bold">Label de la valeur</emphasis> :
             l'intitulé de la valeur telle qu'elle apparaît dans la
             boîte de sélection. Pour modifier les propriétés d'une
             valeur il suffit de cliquer sur le label (voir <xref
@@ -2482,12 +2482,12 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>:
+            <para><emphasis role="bold">Description</emphasis> :
             description de la valeur.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Rang</emphasis>: permet de
+            <para><emphasis role="bold">Rang</emphasis> : permet de
             définir l'ordre dans lequel les valeurs apparaissent dans
             la boîte de sélection. Les valeurs ayant les valeurs de
             rang les plus petites apparaissent en tête de la boîte.
@@ -2495,17 +2495,17 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Statut</emphasis>:</para>
+            <para><emphasis role="bold">Statut</emphasis> :</para>
 
             <itemizedlist mark="dash" spacing="compact">
               <listitem>
-                <para><emphasis role="underline">Active</emphasis>: la
+                <para><emphasis role="underline">Active</emphasis> : la
                 valeur est visible dans la boîte de sélection et
                 peut-être utilisée dans le champ correspondant.</para>
               </listitem>
               
               <listitem>
-                <para><emphasis role="underline">Cachée</emphasis>: la
+                <para><emphasis role="underline">Cachée</emphasis> : la
                 valeur n'est pas visible dans la boîte de
                 sélection. Cependant si la valeur a été utilisée par
                 certains artefacts de l'outil de suivi avant d'être cachée, elle
@@ -2515,7 +2515,7 @@ width="14.5cm" />
               
               <listitem>
                 <para><emphasis
-                role="underline">Permanente</emphasis>: une valeur
+                role="underline">Permanente</emphasis> : une valeur
                 permanente est définie pour l'ensemble des outils de suivi
                 utilisant ce champ. Elle ne peut être cachée ni supprimée.
                 Seuls les administrateurs du site en charge de la définition 
@@ -2542,7 +2542,7 @@ width="14.5cm" />
 
         <para>Vous avez bien sûr la possibilité d'ajouter vos propres
         valeurs au champ Statut. C'est d'ailleurs ce qu'a fait le
-        projet montré en exemple: la valeur de statut
+        projet montré en exemple : la valeur de statut
         &#34;Assigned&#34; a été ajouté à la liste de valeurs
         actives. Cependant dans le but de conserver une certaine
         harmonie entre les différents outils de suivi de CodeX, nous
@@ -2594,7 +2594,7 @@ width="14.5cm" />
         
         <para>CodeX vous permet non seulement de créer une liste de
         valeurs pour un champ de type boîte de sélection mais il offre
-        aussi la possiblité d'associer un champ avec une liste de
+        aussi la possibilité d'associer un champ avec une liste de
         valeurs prédéfinies générées dynamiquement par
         CodeX. L'exemple le plus classique consiste à montrer la liste
         des membres du projet dans une boîte de sélection. Au lieu
@@ -2605,7 +2605,7 @@ width="14.5cm" />
         <para>Notez que si vous décidez d'associer un champ à une
         liste de valeurs générées dynamiquement vous ne pouvez plus
         définir vos propres valeurs. Les listes dynamiques suivantes
-        sont actuellement disponibles:</para>
+        sont actuellement disponibles :</para>
 
         <itemizedlist mark="dash" spacing="compact">
           <listitem>
@@ -2619,12 +2619,12 @@ width="14.5cm" />
           </listitem>
           <listitem>
             <para><emphasis role="bold">Les personnes ayant soumis un
-            artefact</emphasis>: la liste complète des utilisateurs
+            artefact</emphasis> : la liste complète des utilisateurs
             ayant soumis au moins un artefact dans l'outil de suivi.</para>
           </listitem>
           <listitem>
             <para><emphasis role="bold">Un groupe d'utilisateurs
-            défini par le projet</emphasis>: vous pouvez associer une
+            défini par le projet</emphasis> : vous pouvez associer une
             boîte de sélection avec la liste des utilisateurs d'un
             groupe d'utilisateurs quelconque du projet. Sur la façon
             de définir des groupes d'utilisateurs voir la <xref
@@ -2647,8 +2647,8 @@ width="14.5cm" />
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-            <para><emphasis role="bold">Valeur</emphasis>: changer la
-            valeur elle-même. La valeur saisie dans ce champ apparait
+            <para><emphasis role="bold">Valeur</emphasis> : changer la
+            valeur elle-même. La valeur saisie dans ce champ apparaît
             telle quelle dans la boîte de sélection. Gardez présent à
             l'esprit que si vous modifiez une valeur, cette
             modification prend effet dans tous les artefacts qui
@@ -2656,7 +2656,7 @@ width="14.5cm" />
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Rang</emphasis>: un nombre
+            <para><emphasis role="bold">Rang</emphasis> : un nombre
             entier quelconque qui permet de définir l'ordre
             d'apparition des valeurs dans la boîte de sélection. Les
             valeurs ayant le plus petit rang apparaissent en
@@ -2664,20 +2664,20 @@ width="14.5cm" />
             &#34;Aucun&#34;) est proposée dans la liste des valeurs sa
             valeur de rang est 10. Ce nombre est délibérément faible
             car, par convention, &#34;None&#34; (ou &#34;Aucun&#34;)
-            apparaît toujours en première position dans la boite de
+            apparaît toujours en première position dans la boîte de
             sélection. Soyez donc bon citoyens et utilisez des valeurs
             de rang supérieures à 10 pour vos propres valeurs.</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Statut</emphasis>: Active ou
+            <para><emphasis role="bold">Statut</emphasis> : Active ou
             Cachée.  Comme expliqué plus haut changer cette propriété
             au cours de la vie du projet n'a aucun impact négatif sur
             la base d'artefacts.</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>: nous
+            <para><emphasis role="bold">Description</emphasis> : nous
             en dit un peu plus sur la signification de cette
             valeur.</para>
           </listitem>
@@ -2694,7 +2694,7 @@ width="14.5cm" />
           </mediaobject>
         </figure>
 
-        <para><tip><title>Coup de pouce: laisser de la place entre les
+        <para><tip><title>Coup de pouce : laisser de la place entre les
         valeurs de rang</title><para>Que ce soit pour les champs ou
         les valeurs de champs nous vous recommandons d'utiliser des
         nombres assez grands pour les valeurs de rang comme 100, 200,
@@ -2711,7 +2711,7 @@ width="14.5cm" />
       <para>Il est assez fréquent de voir des membres d'un projet en
       charge de la gestion des artefacts taper souvent le même genre
       de commentaires. Parmi les exemples classiques de commentaires
-      répétitifs, on trouve: un message de remerciement à la personne
+      répétitifs, on trouve : un message de remerciement à la personne
       qui a soumis l'artefact, une demande d'information
       complémentaire comme un numéro de version ou le type de machine
       utilisée, etc...(voir <xref
@@ -2721,7 +2721,7 @@ width="14.5cm" />
       CodeX permet aux membres du projet de définir un ensemble de
       commentaires prédéfinis appelés réponses-type. Après avoir
       défini ces réponses-type, poster le commentaire correspondant
-      necessite simplement de choisir la réponse-type dans la boîte
+      nécessite simplement de choisir la réponse-type dans la boîte
       de sélection située à proximité de la zone de saisie du
       commentaire dans le formulaire de modification d'un artefact.
       </para>
@@ -2766,7 +2766,7 @@ width="14.5cm" />
       utilisateurs ne peuvent définir que des rapports de recherche à
       usage personnel.</para>
 
-      <para><tip><title>Coup de pouce: Les rapports de recherche
+      <para><tip><title>Coup de pouce : Les rapports de recherche
       définissent la structure d'un rapport et non pas son
       contenu</title><para>Lors de la configuration d'un rapport de
       recherche vous remarquerez certainement que l'écran de
@@ -2776,7 +2776,7 @@ width="14.5cm" />
       structure d'un rapport et le remplissage des critères de
       recherche sont deux opérations distinctes sur CodeX. Une fois le
       rapport de recherche défini dans le module d'administration (par
-      exemple: &#39;Rapport simple&#39;, &#39;Rapport Qualité&#39;,
+      exemple : &#39;Rapport simple&#39;, &#39;Rapport Qualité&#39;,
       &#39;Rapport quotidien&#39;,&hellip;) vous pouvez vous rendre
       sur l'écran de recherche et de navigation, sélectionner le
       rapport de recherche qui vous convient, remplir les valeurs des
@@ -2785,43 +2785,43 @@ width="14.5cm" />
       des valeurs des critères) à l'aide du mécanisme de signets de
       CodeX (voir le coup de pouce de la <xref
       linkend="ArtifactSelectionCriteria" />). Et
-      voila!</para></tip></para>
+      voila !</para></tip></para>
 
       <section id="TrackerReportBrowsing">
         <title>Afficher les rapports de recherche</title>
 
         <para>Un clic sur l'entrée &#34;Rapport&#34; du menu de la
-        page d'administratin d'un outil de suivi affiche la liste des rapports de
+        page d'administration d'un outil de suivi affiche la liste des rapports de
         recherche disponibles (voir <xref
         linkend="FigureTrackerReportBrowsing" />) accompagnée des
-        informations suivantes:</para>
+        informations suivantes :</para>
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-            <para><emphasis role="bold">ID</emphasis>: l'identifiant
+            <para><emphasis role="bold">ID</emphasis> : l'identifiant
             unique du rapport. Un clic sur l'ID vous conduit vers la
             page de configuration du rapport (voir <xref
             linkend="TrackerReportSetting" />).</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Nom du rapport</emphasis>: le
-            nom du rapport tel qu'il apparaitra dans la boîte de
-            selection des rapports sur la page de recherche des
-            artefacts (Exemple de nom: Rapport simple, Rapport
+            <para><emphasis role="bold">Nom du rapport</emphasis> : le
+            nom du rapport tel qu'il apparaîtra dans la boîte de
+            séléction des rapports sur la page de recherche des
+            artefacts (Exemple de nom : Rapport simple, Rapport
             qualité, Rapport quotidien&hellip;).</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>: une
+            <para><emphasis role="bold">Description</emphasis> : une
             description plus détaillée du rapport.</para>
           </listitem>
           <listitem>
-            <para><emphasis role="bold">Portée</emphasis>:</para>
+            <para><emphasis role="bold">Portée</emphasis> :</para>
 
             <itemizedlist mark="dash" spacing="compact">
               <listitem>
-                <para><emphasis role="underline">Projet</emphasis>: ce
+                <para><emphasis role="underline">Projet</emphasis> : ce
                 rapport est utilisable par tous les membres du
                 projet. Seuls les administrateurs de l'outil de suivi peuvent
                 définir des rapports dont la portée s'étend à
@@ -2829,13 +2829,13 @@ width="14.5cm" />
               </listitem>
               
               <listitem>
-                <para><emphasis role="underline">Personnel</emphasis>:
+                <para><emphasis role="underline">Personnel</emphasis> :
                 ce rapport est uniquement utilisable par la personne
                 qui l'a créé.</para>
               </listitem>
               
               <listitem>
-                <para><emphasis role="underline">Système</emphasis>:
+                <para><emphasis role="underline">Système</emphasis> :
                 ce type de rapport est défini au niveau du système
                 CodeX et ne peut être supprimé. Le rapport de
                 recherche par défaut qui est préconfiguré à la
@@ -2846,8 +2846,8 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Détruire?</emphasis>: cliquez
-            sur l'icone corbeille pour supprimer le rapport. Les
+            <para><emphasis role="bold">Détruire ?</emphasis> : cliquez
+            sur l'icône corbeille pour supprimer le rapport. Les
             rapports de type Projet ne peuvent être détruit que par
             les administrateurs de l'outil de suivi.</para>
           </listitem>
@@ -2878,12 +2878,12 @@ width="14.5cm" />
         constituée à partir des artefacts sélectionnés dans la base de
         données.</para>
 
-        <para>Les informations suivantes sont présentes à l'écran:</para>
+        <para>Les informations suivantes sont présentes à l'écran :</para>
 
         <itemizedlist mark="bullet"
           spacing="compact">
           <listitem>
-            <para><emphasis role="bold">Nom</emphasis>: chaque rapport
+            <para><emphasis role="bold">Nom</emphasis> : chaque rapport
             porte un nom. Il ne doit pas être trop long car il
             apparaît dans une boîte de sélection sur l'écran de
             recherche des artefacts lorsque vous choisissez le rapport
@@ -2891,7 +2891,7 @@ width="14.5cm" />
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Portée</emphasis>: les
+            <para><emphasis role="bold">Portée</emphasis> : les
             administrateurs de l'outil de suivi peuvent définir des rapports de
             type projet utilisables par tous les utilisateurs. Les
             autres utilisateurs ne peuvent définir que des rapports de
@@ -2899,26 +2899,26 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Description</emphasis>: une description plus détaillée du rapport.</para>
+            <para><emphasis role="bold">Description</emphasis> : une description plus détaillée du rapport.</para>
           </listitem
             >
           <listitem>
             <para><emphasis role="bold">Sélection des
-            champs</emphasis>: La table des champs montre l'ensemble
+            champs</emphasis> : La table des champs montre l'ensemble
             des champs utilisés par l'outil de suivi. Pour chaque champ, on peut
-            définir les paramètres suivants:</para>
+            définir les paramètres suivants :</para>
 
             <itemizedlist mark="bullet" spacing="compact">
               <listitem>
                 <para><emphasis role="underline">Utiliser comme
-                critère de recherche</emphasis>: si vous cochez cette
+                critère de recherche</emphasis> : si vous cochez cette
                 case, le champ apparaîtra comme l'un des critères de
                 sélection utilisable lors de vos recherches dans la
                 base d'artefacts.</para>
               </listitem>
               <listitem>
                 <para><emphasis role="underline">Rang à la
-                recherche</emphasis>: un nombre peut être précisé dans
+                recherche</emphasis> : un nombre peut être précisé dans
                 ce champ. Le rang vous permet de placer le champ par
                 rapport aux autres à l'écran. Les champs avec la plus
                 petite valeur de rang sont affichés en premier. Ces
@@ -2926,7 +2926,7 @@ width="14.5cm" />
               </listitem>
               <listitem>
                 <para><emphasis role="underline">Utiliser comme
-                colonne dans le rapport</emphasis>: si vous cochez
+                colonne dans le rapport</emphasis> : si vous cochez
                 cette case, le champ apparaîtra comme l'une des
                 colonnes dans la table de résultats de la
                 recherche.</para>
@@ -2934,7 +2934,7 @@ width="14.5cm" />
               
               <listitem>
                 <para><emphasis role="underline">Rang dans le rapport
-                de recherche</emphasis>: un nombre peut être précisé
+                de recherche</emphasis> : un nombre peut être précisé
                 dans ce champ. Le rang vous permet de placer le champ
                 par rapport aux autres à l'écran. Les champs avec la
                 plus petite valeur de rang sont affichés en premier
@@ -2946,19 +2946,19 @@ width="14.5cm" />
 
           <listitem>
             <para><emphasis role="bold">Largeur de la
-            colonne</emphasis>(optionel): si vous souhaitez imposer une
+            colonne</emphasis>(optionnel) : si vous souhaitez imposer une
             largeur de colonne pour ce champ dans la table de
             résultats vous pouvez la spécifier ici sous forme d'un
             pourcentage de la largeur totale de la page. Cette valeur
             est optionnelle et nous vous recommandons de la laisser
-            vierge à moins que votre navigateur ne formatte pas la
+            vierge à moins que votre navigateur ne formate pas la
             table comme vous le souhaitez. Si vous voulez qu'une
             colonne soit la plus étroite possible, spécifiez un
             pourcentage très faible comme 1 ou 2.</para>
           </listitem>
         </itemizedlist>
 
-        <note><para><emphasis role="bold">Note</emphasis>: il est
+        <note><para><emphasis role="bold">Note</emphasis> : il est
         parfaitement possible d'utiliser un champ comme critère de
         recherche sans le faire figurer dans la table de résultat et
         inversement. Pour les champs que vous ne souhaitez pas
@@ -2987,7 +2987,7 @@ width="14.5cm" />
       préconfigurés avec une série de règles leur permettant
       d'informer les personnes concernées des évènements survenant
       dans le cycle de vie d'un artefact. Ces règles de notification
-      par défaut peuvent être modifiées de plusieurs façons:</para>
+      par défaut peuvent être modifiées de plusieurs façons :</para>
 
       <section id="TrackerGlobalEmailNotification">
         <title>Notification email globale</title>
@@ -3008,7 +3008,7 @@ width="14.5cm" />
         en charge de leur qualification et leur assignation.</para>
 
         <para><tip>
-            <title>Coup de pouce: créer une liste de distribution pour notifier plusieurs personnes</title>
+            <title>Coup de pouce : créer une liste de distribution pour notifier plusieurs personnes</title>
             
             <para>Si vous souhaitez notifier de nombreuses personnes,
             nous vous suggérons d'utiliser les listes de distributions
@@ -3019,7 +3019,7 @@ width="14.5cm" />
             informées.</para>
 
             <para>La création d'une liste de distribution a plusieurs
-            avantages: tout d'abord chaque individu peut s'abonner ou
+            avantages : tout d'abord chaque individu peut s'abonner ou
             se désabonner comme il le souhaite et, ensuite, tous les
             messages envoyés à une liste de distribution sont
             conservés dans une archive et peuvent donc servir de
@@ -3038,11 +3038,11 @@ width="14.5cm" />
         notifications envoyées à certaines autres personnes.</para>
 
         <para>Voici quelques exemples où cette fonctionnalité se
-        révèle particulièrement utile:</para>
+        révèle particulièrement utile :</para>
 
         <itemizedlist>
           <listitem>
-            <para><emphasis role="bold">Remplacement</emphasis>:
+            <para><emphasis role="bold">Remplacement</emphasis> :
             lorsqu'un membre de l'équipe est absent il est souvent
             très commode de pouvoir déléguer le traitement des
             artefacts dont il est en charge à une autre personne de
@@ -3060,7 +3060,7 @@ width="14.5cm" />
 
           <listitem>
             <para><emphasis role="bold">Contact assurance
-            qualité</emphasis>: une autre utilisation de cette
+            qualité</emphasis> : une autre utilisation de cette
             fonctionnalité consiste pour les responsables de
             l'assurance qualité de l'équipe à taper le nom des
             ingénieurs avec lesquels ils travaillent. Ils savent ainsi
@@ -3069,7 +3069,7 @@ width="14.5cm" />
           </listitem>
         </itemizedlist>
 
-        <note><para>Remarque: le but de cette fonctionnalité n'est pas
+        <note><para>Remarque : le but de cette fonctionnalité n'est pas
         de vous espionner. Ainsi, pour être sûr que personne ne suit
         vos notifications email sans votre consentement, CodeX montre
         sur cette page le nom des utilisateurs qui ont demandé à
@@ -3097,29 +3097,29 @@ width="14.5cm" />
         vous jouez dans un artefact.</para>
 
         <para>Un utilisateur peut avoir quatre rôles vis à vis d'un
-        artefact:</para>
+        artefact :</para>
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-            <para><emphasis role="bold">A soumis</emphasis>: vous êtes
+            <para><emphasis role="bold">A soumis</emphasis> : vous êtes
             la personne qui a initialement soumis l'artefact en
             remplissant le formulaire de soumission.</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">En charge</emphasis>:
+            <para><emphasis role="bold">En charge</emphasis> :
             l'artefact vous a été assigné et c'est à vous de le
             gérer.</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">CC</emphasis>: Votre nom
+            <para><emphasis role="bold">CC</emphasis> : Votre nom
             apparaît dans la liste des destinataires en copie (voir
             <xref linkend="ArtifactCCList" />).</para>
           </listitem>
           
           <listitem>
-            <para><emphasis role="bold">Commentateur</emphasis>: vous
+            <para><emphasis role="bold">Commentateur</emphasis> : vous
             avez posté au moins un commentaire dans l'artefact.</para>
           </listitem>
         </itemizedlist>
@@ -3130,7 +3130,7 @@ width="14.5cm" />
         visibles sur la colonne la plus à gauche de la <xref
         linkend="FigureTrackerNotificationMatrix" />. Les descriptions
         des évènements parlent d'elles mêmes et n'appellent qu'un
-        commentaire: les huit premiers évènements de la liste ne
+        commentaire : les huit premiers évènements de la liste ne
         peuvent survenir que lors de la modification d'un
         artefact. Seul le dernier évènement se rapporte à la création
         d'un nouvel artefact.</para>
@@ -3139,7 +3139,7 @@ width="14.5cm" />
         en exemple sur la <xref
         linkend="FigureTrackerNotificationMatrix" /> et voyons, étape
         par étape, comment cet utilisateur a configuré ses paramètres
-        de notification:</para>
+        de notification :</para>
 
         <itemizedlist>
           <listitem><para>Commençons par la colonne Commentateur. Ici
@@ -3153,8 +3153,8 @@ width="14.5cm" />
           lieu à une notification pour cet
           utilisateur.</para></listitem>
 
-          <listitem><para>Ensuite si nous examinon la matrice par
-          èvènement et non plus par rôle, on peut voir que
+          <listitem><para>Ensuite si nous examinons la matrice par
+          évènement et non plus par rôle, on peut voir que
           l'utilisateur a indiqué que lorsqu'il modifie un artefact
           lui-même (évènement &#34;Je suis l'auteur de la
           modification&#34;) il ne souhaite pas recevoir de

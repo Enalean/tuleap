@@ -21,12 +21,12 @@
   <para>Bien que le gestionnaire de documents de CodeX ne soit pas
   comparable à un système de gestion documentaire dédié, il est
   cependant extrêmement pratique pour gérer les documents critiques
-  pour votre communauté d'utilisateurs. Quelques exemples: manuel
+  pour votre communauté d'utilisateurs. Quelques exemples : manuel
   d'installation, d'administration ou d'utilisation, documentation des
   API, Foire aux Questions, etc...</para>
 
   <para>Le gestionnaire de documents offre les fonctionnalités
-  suivantes:</para>
+  suivantes :</para>
 
   <itemizedlist mark="bullet"
 		spacing="compact">
@@ -124,7 +124,7 @@
     chaque projet appelé 'Documents'. Il est possible de renommer ce
     groupe par défaut.</para>
 
-    <para><tip><title>Coup de pouce: documents collés ou
+    <para><tip><title>Coup de pouce : documents collés ou
     téléchargés</title> <para>Un document collé directement dans la
     zone de texte sera affiché dans une page CodeX lors de la
     consultation. S'il s'agit d'un document utilisant des balises HTML
@@ -141,7 +141,7 @@
     typographiques ainsi que des pointeurs vers d'autres sites ou
     documents, etc&hellip;</para>
 
-    <para><tip><title>Coup de pouce: référencer des documents
+    <para><tip><title>Coup de pouce : référencer des documents
     externes</title> <para>Il est parfois pratique de créer des
     documents factices qui ne font que pointer vers d'autres
     emplacements tels qu'un fichier dans un autre gestionnaire de
@@ -189,7 +189,7 @@
       sur le gestionnaire de document peuvent modifier un document
       existant.</para>
 
-      <para>Un document peut être mis à jour de plusieurs façons:</para>
+      <para>Un document peut être mis à jour de plusieurs façons :</para>
 
       <itemizedlist mark="bullet"
 		    spacing="compact">
@@ -261,8 +261,8 @@
       lien &#34;[Définir les permissions].</para>
 
       <para>Les groupes de documents peuvent être supprimés en
-      cliquant sur l'icone figurant une corbeille. Seuls les groupes
-      vides peuvent être supprimés: il faut donc au préalable
+      cliquant sur l'icône figurant une corbeille. Seuls les groupes
+      vides peuvent être supprimés : il faut donc au préalable
       supprimer ou déplacer les documents qui s'y trouvent.</para>
 
     </section>
@@ -272,21 +272,21 @@
       
       <para>La définition des droits d'accès aux documents est très
       similaires à celle des fichiers (<xref
-      linkend="FileAccessPermissions" />): vous devez tout d'abord
+      linkend="FileAccessPermissions" />) : vous devez tout d'abord
       créer des groupes d'utilisateurs et assigner ces groupes
       d'utilisateurs à des documents individuels ou à des groupes de
       documents.</para>
 
       <para>Par défaut, les documents et les groupes de documents
-      n'ont pas de permissions d'accès définis: tous les utilisateurs,
+      n'ont pas de permissions d'accès définis : tous les utilisateurs,
       y compris les utilisateurs anonymes (non connectés) ont accès à
       tous les documents. Cependant, vous pouvez choisir de limiter
       l'accès à certains documents qui, par exemple, contiennent des
       informations confidentielles.</para>
 
       <para>Les permissions d'accès peuvent être définies à deux
-      niveaux distincts: celui d'un groupe de documents ou bien à
-      celui d'un document individuel:</para>
+      niveaux distincts : celui d'un groupe de documents ou bien à
+      celui d'un document individuel :</para>
 
       <itemizedlist mark="bullet">
 
@@ -347,11 +347,11 @@
         </listitem>
 
       </itemizedlist>
-      <para><tip><title>Coup de pouce: mise à jour des permissions
+      <para><tip><title>Coup de pouce : mise à jour des permissions
       existantes</title> <para>Il existe un raccourci qui permet aux
       administrateurs du projet ou du gestionnaire de documents de
       mettre rapidement à jour les permissions d'un document ou d'un
-      groupes de documents. Ce raccourci se matérialise par une icone
+      groupes de documents. Ce raccourci se matérialise par une icône
       en forme de cadenas sur la page principale du gestionnaire de
       document. Un simple clic sur ce cadenas permet de modifier les
       permissions associées à l'objet correspondant.

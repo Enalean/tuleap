@@ -39,7 +39,7 @@
     <section id="AddingRemovingUsers">
       <title>Ajout/Suppression d'utilisateurs</title>
 
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+      <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
       <para>L'administration des membres d'un projet est aisée. Pour
       ajouter un utilisateur aux membres du groupe, un des
@@ -51,11 +51,11 @@
       en tapant une partie du nom ou du prénom de l'utilisateur et en
       n'oubliant pas de préciser que la recherche porte sur les
       &#34;Utilisateurs&#34;. La liste de résultat fera
-      vraissemblablement apparaître le nom complet et le nom
+      vraisemblablement apparaître le nom complet et le nom
       d'utilisateur de la personne que vous recherchez.</para>
 
       <para>Supprimer un utilisateur des membres du projet est encore
-      plus simple. Il suffit de cliquer sur l'icone corbeille
+      plus simple. Il suffit de cliquer sur l'icône corbeille
       (<inlinemediaobject><imageobject><imagedata format="PNG"
       fileref="../../icons/trash.png"
       /></imageobject></inlinemediaobject>) située à proximité du nom
@@ -99,7 +99,7 @@
 
       <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
 
-      <para>L'item &#34;Edition Infos Publiques&#34; du menu
+      <para>L'item &#34;&Eacute;dition Infos Publiques&#34; du menu
       d'administration permet à un administrateur de mettre à jour les
       éléments de description du projet; il s'agit d'éléments fournis
       pendant la phase d'enregistrement du projet.</para>
@@ -128,7 +128,7 @@
       d'administration donne accès à la liste de tous les services
       activés pour le projet courant. Les services sont les items qui
       apparaissent dans la &#34;Barre de Services&#34;, à savoir le
-      menu qui apparait en haut de chaque page du projet: outils de
+      menu qui apparaît en haut de chaque page du projet: outils de
       suivi, documentation, CVS, Page d'accueil, etc... La page de
       configuration des services permet à l'administrateur du projet
       de modifier, activer, désactiver ou même créer des services dans
@@ -178,7 +178,7 @@
      <procedure>
         <step>
           <para><emphasis role="bold">Label du service</emphasis> : Il
-          s'agit du nom du service tel qu'il apparaitra dans la barre
+          s'agit du nom du service tel qu'il apparaîtra dans la barre
           de services. Il doit être aussi concis que possible.</para>
         </step>
 
@@ -238,9 +238,9 @@
         <step>
           <para><emphasis role="bold">Actif</emphasis> : En cochant
           cette case, le service est activé c'est à dire qu'il est
-          utilisable et qu'il apparait dans la barre de
+          utilisable et qu'il apparaît dans la barre de
           services. Décocher la case revient à désactiver le service et
-          à le faire disparaitre de la barre de services. Il est à
+          à le faire disparaître de la barre de services. Il est à
           noter que la désactivation d'un service n'affecte en rien
           les données de ce dernier. En d'autres termes, la
           réactivation d'un service donne accès à l'ensemble des
@@ -254,7 +254,7 @@
           <para><emphasis role="bold">Rang à l'écran</emphasis> : ce
           nombre entier arbitraire permet de définir la position de ce
           service relativement aux autres dans la barre de
-          service. Les services ayant la valeur de rang l aplus faible
+          service. Les services ayant la valeur de rang la plus faible
           appraitra en premier dans la barre de service (en partant de
           la gauche). Il est recommandé d'utiliser des nombres comme
           10, 20, 30,... pour pouvoir insérer de futurs services sans
@@ -266,9 +266,9 @@
     <section id="ServiceDeletion">
       <title>Suppression d'un service</title>
 
-      <para>les services peuvent aussi être détruits si l'icone
+      <para>les services peuvent aussi être détruits si l'icône
       corbeille figure à proximité du nom du service. Un clic sur
-      cette icone supprime définitivement le service de la liste. Les
+      cette icône supprime définitivement le service de la liste. Les
       données du service correspondant sont cependant préservées.
       </para>
       <para>Les services système ne peuvent être détruits. Vous pouvez
@@ -385,7 +385,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
    <para><tip><title>Coup de pouce: référencez les artefacts et les
    commits</title><para>C'est une excellente pratique que de
-   toujours référencer les taches, anomalies, demande d'assistance
+   toujours référencer les tâches, anomalies, demande d'assistance
    appropriées dans le message de commit CVS ou Subversion. De la même façon,
    lorsque l'artefact correspondant est fermé, assurez-vous de
    mentionner le commit qui résoud le problème dans un
@@ -420,7 +420,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
           L'URL ne pointe pas nécessairement vers le serveur CodeX: on peut créer des références qui pointent vers des pages externes. 
           La nouvelle page sera chargée dans le fenêtre courante.
           </para>
-          <para>Certaines chaines de caractères seront interprétées lors de la création de la référence:
+          <para>Certaines chaînes de caractères seront interprétées lors de la création de la référence:
           </para>
           <itemizedlist mark="bullet">
             <listitem>
@@ -489,7 +489,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       <title>Suppression d'une référence</title>
 
       <para>les références projet peuvent aussi être détruites. Un clic sur
-      l'icone corbeille figurant à proximité du nom de la référence supprime définitivement cette dernière.
+      l'icône corbeille figurant à proximité du nom de la référence supprime définitivement cette dernière.
       Une référence détruite devra être recréée pour être à nouveau utilisable
       </para>
       <para>Les références système ne peuvent être détruites. Vous pouvez
@@ -502,7 +502,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     <section id="UserPermissions">
       <title>Permissions utilisateurs</title>
 
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+      <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
       <para>Les administrateurs du projet ont la capacité à définir
       les permissions des membres du projets. Un membre de l'équipe de
@@ -526,7 +526,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       un exemple de table de permissions des membres d'un
       projet. Chaque colonne représente un service ou une capacité de
       l'utilisateur et chaque ligne représente les droits d'un des
-      membres du projet. Passons en revue chacune des colonnes:</para>
+      membres du projet. Passons en revue chacune des colonnes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
@@ -540,7 +540,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Ecriture CVS</emphasis> :
+          <para><emphasis role="bold">&Eacute;criture CVS</emphasis> :
           actuellement toujours positionné à Oui. Tous les membres du
           projet ont les droits d'accès en écriture sur le dépôt CVS
           <footnote><para>CVS signifie Concurrent Version
@@ -592,7 +592,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
             <listitem>
               <para><emphasis role="underline">Modérateur</emphasis> :
-              (Forums uniquement): un modérateur a la capacité à gérer
+              (Forums uniquement) : un modérateur a la capacité à gérer
               la section forum du projet, à savoir créer/détruire des
               forums, supprimer des messages indésirables dans un
               forum et changer la configuration d'un forum comme
@@ -601,8 +601,8 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
             </listitem>
 
             <listitem>
-              <para><emphasis role="underline">Editeur</emphasis> :
-              (Gestionnaire de documents uniquement): Un éditeur peut
+              <para><emphasis role="underline">&Eacute;diteur</emphasis> :
+              (Gestionnaire de documents uniquement) : Un éditeur peut
               passer en revue et valider un document avant sa
               publication. Il peut aussi mettre à jour ou détruire un
               document.</para>
@@ -611,7 +611,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
             <listitem>
               <para><emphasis
               role="underline">Administrateur</emphasis> :
-              (Gestionnaire de fichiers uniquement): un
+              (Gestionnaire de fichiers uniquement) : un
               administrateur du gestionnaire de fichiers peut gérer
               les paquets et les versions de fichiers. Il peut aussi
               définir les permissions d'accès à ces fichiers pour les
@@ -628,13 +628,13 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
           dans cette colonne la liste des groupes d'utilisateurs
           auxquels il appartient. Voir <xref linkend="UserGroups" />
           pour plus d'information sur les groupes
-          d'utilsiateurs.</para>
+          d'utilisateurs.</para>
         </listitem>
 
       </itemizedlist>
 
       <important>
-        <title>Rappel!</title>
+        <title>Rappel !</title>
 
         <para>N&#39;oubliez pas de cliquer sur le bouton &#34;Mettre à
         jour les permissions&#34; en bas de page après avoir effectuer
@@ -718,7 +718,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
      <procedure>
         <step>
           <para><emphasis role="bold">Nom</emphasis> : Il s'agit du nom
-          du groupe tel qu'il apparaitra dans les écrans de définition
+          du groupe tel qu'il apparaîtra dans les écrans de définition
           des permissions. Le nom ne peut contenir ni espace, ni
           ponctuation.</para>
         </step>
@@ -744,7 +744,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       </procedure>
 
       <figure id="FigureUserGroupEdit">
-        <title>Edition d'un groupe d'utilisateur</title>
+        <title>&Eacute;dition d'un groupe d'utilisateur</title>
         <mediaobject>
           <imageobject>
             <imagedata format="PNG"
@@ -773,7 +773,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       pouvez aussi filtrer en tapant une partie du nom de
       l'utilisateur dans la boîte de texte 'Filtre'. Par exemple, si
       vous tapez 'jean', seuls les utilisateurs dont le nom complet ou
-      le nom d'utilisateur comporte cette chaine de caractères seront
+      le nom d'utilisateur comporte cette chaîne de caractères seront
       affichés.</para>
 
       <para>Une fois la sélection des utilisateurs terminée, il ne
@@ -783,11 +783,11 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     </section>
 
       <tip>
-        <title>Coup de pouce: combiner les groupes pré-définis avec des utilisateurs supplémentaires?</title>
+        <title>Coup de pouce: combiner les groupes pré-définis avec des utilisateurs supplémentaires ?</title>
 
         <para>Il se peut que vous souhaitiez accorder certaines
         permissions à tous les membres du projet plus quelques
-        utilisateurs externes. Dans ce cas, il peut vous paraitre
+        utilisateurs externes. Dans ce cas, il peut vous paraître
         tentant de créer un nouveau groupe à partir du groupe
         membres_projet et d'y ajouter les quelques utilisateurs
         externes manquants. Cette solution est tout à fait acceptable
@@ -807,7 +807,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       <para>Pour mettre à jour un groupe d'utilisateurs existant, il
       suffit de le sélectionner dans la liste des groupes
       d'utilisateurs. Un écran semblable à l'écran de création
-      apparait alors qui vous permet de modifier la composition de ce
+      apparaît alors qui vous permet de modifier la composition de ce
       groupe d'utilisateurs.</para>
 
     </section>
@@ -817,7 +817,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       <title>Supprimer un groupe d'utilisateurs</title>
 
       <para>Les groupes d'utilisateurs peuvent aisément être supprimés
-      en cliquant sur l'icone corbeille situé en regard du nom du
+      en cliquant sur l'icône corbeille situé en regard du nom du
       groupe sur la page d'administration des groupes (voir <xref
       linkend="FigureUserGroupManagementPage" />). Seuls les groupes
       d'utilisateurs personnalisés peuvent être supprimés.</para>
@@ -829,7 +829,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
         d'utilisateurs impliqué dans la définition de certaines
         permissions est une action dangereuse. Par exemple, si ce
         groupe sert à limiter l'accès à un paquet logiciel, la
-        suppression du groupe entrainera la suppression du contrôle
+        suppression du groupe entraînera la suppression du contrôle
         d'accès et son retour au comportement par défaut, c'est à dire
         un accès à tous les utilisateurs.
       </para>
@@ -840,7 +840,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     <section>
       <title>Informations complémentaires sur les groupes d'utilisateurs</title>
 
-      <para>Il est possible de connaitre l'ensemble des groupes auquel
+      <para>Il est possible de connaître l'ensemble des groupes auquel
       appartient un membre du projet en accédant à la page de
       définition des permissions des membres(<xref
       linkend="UserPermissions" />). Veuillez noter cependant que
@@ -871,7 +871,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     <section id="ProjectDataExport">
       <title>Exportation des données du projet</title>
 
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+      <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
       <para>CodeX est particulièrement attractif pour de nombreuses
       équipes de projet car il offre une série d'outils complets pour
@@ -893,7 +893,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
       Excel, Crystal Report, Open Office ou tout autre outil
       adapté.</para>
 
-      <para>CodeX offre 2 mécanismes d'exportation des données:</para>
+      <para>CodeX offre 2 mécanismes d'exportation des données :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
@@ -923,15 +923,15 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     <section id="ExportedData">
       <title>Données exportées</title>
 
-      <para>CodeX export les données suivantes (le détail des champs
-      exportés et de leur format est disponible sur la page CodeX):
+      <para>CodeX exporte les données suivantes (le détail des champs
+      exportés et de leur format est disponible sur la page CodeX) :
       </para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
 	  <para><emphasis role="bold">Outil de suivi</emphasis> :
 	  toutes les données des artefacts, l'historique de leurs
-	  modifications et leurs dépendences peuvent être exportés
+	  modifications et leurs dépendances peuvent être exportés
 	  pour chaque outil de suivi.</para>
 	</listitem>
 
@@ -966,7 +966,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
 	<para>Avant de pouvoir importer les données dans MS Access,
 	vous devez d'abord créer une nouvelle base de
-	données. Exécutez ensuite les étapes suivantes:</para>
+	données. Exécutez ensuite les étapes suivantes :</para>
 
 	<itemizedlist mark="bullet" spacing="compact">
 	  <listitem>
@@ -1006,7 +1006,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 	    commentaires ou la description originale d'un artefact
 	    dont le type doit être Memo. Si vous ne spécifiez pas ce type
 	    spécifique, MS Access va corrompre les données
-	    importées.</para> <para>Si vous recontrez des difficultés
+	    importées.</para> <para>Si vous rencontrez des difficultés
 	    à l'importation du fichier CSV, veuillez consulter la
 	    <xref linkend="ExcelAndRegionals"/> </para></note>
 	  </listitem>
@@ -1020,7 +1020,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
         Après avoir spécifié les paramètres de l'importation, vous pouvez
         les enregistrer en cliquant sur le bouton 
         <literal>Sauvegarder sous...</literal>.Pour de futures importations
-        sur la même table, cliquez simplement sur le boutton Specs... et
+        sur la même table, cliquez simplement sur le bouton Specs... et
         rechargez vos paramètres d'importation.</para>
       </section>
 
@@ -1059,7 +1059,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
 	<note><para><emphasis role="bold">Remarque</emphasis> : si la
 	base de données de votre projet contient plusieurs milliers
-	d'enregistrements (taches, bugs&hellip;) le processus de
+	d'enregistrements (tâches, bugs&hellip;) le processus de
 	génération de la base de données peut prendre plusieurs
 	minutes.</para></note>
       </section>
@@ -1083,7 +1083,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 	  <step>
 	    <para>Ajouter votre base de données dans les Source de
 	    Données Windows. Pour les utilisateurs de Windows
-	    NT/2000/XP:</para>
+	    NT/2000/XP :</para>
 
 	    <itemizedlist mark="bullet" spacing="compact">
 	      <listitem>
@@ -1105,8 +1105,8 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 	      </listitem>
 	      
 	      <listitem>
-		<para>Une boite de dialogue apparait vous demandant
-		les paramètres de connexion suivants:</para>
+		<para>Une boîte de dialogue apparaît vous demandant
+		les paramètres de connexion suivants :</para>
 
 		<itemizedlist mark="bullet" spacing="compact">
 		  <listitem>
@@ -1171,7 +1171,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 	<xref linkend="InstallingandConfiguringtheMySQLODBCDriver" />)
 	et que vous avez généré la base de données elle-même (voir
 	<xref linkend="GeneratingYourProjectDatabase" />). Ensuite
-	exécutez les étapes suivantes:</para>
+	exécutez les étapes suivantes :</para>
 
 	<itemizedlist mark="bullet" spacing="compact">
 	  <listitem>
@@ -1182,7 +1182,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 	    <literal>Données externes -> Importer</literal>. </para>
 	  </listitem>
 	  <listitem>
-	    <para>Dans la boite de sélection <literal>Types de
+	    <para>Dans la boîte de sélection <literal>Types de
 	    fichier</literal> sélectionnez l'entrée <literal>Bases de
 	    données ODBC</literal>.</para>
 	  </listitem>
@@ -1208,11 +1208,10 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
   </section>
 
 
-    <section id="TrackerImport">
+   <section id="TrackerImport">
       <title>Importation d'artefacts dans les outils de suivi</title>
 
       <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
-
       <para>Reportez vous à la <xref linkend="ArtifactImport" /></para>
     </section>
 
@@ -1235,7 +1234,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
     <section id="SourceCodeAccessLogs">
       <title>Journal des accès</title>
 
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+      <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
       <para>Selon la configuration du site CodeX et la configuration
       de chaque projet, différentes populations d'utilisateurs sont
@@ -1244,7 +1243,7 @@ ces références sont définies par l'administrateur du site et sont communes à l'e
 
       <para>Le journal d'accès fournit aux membres du projet un audit
       complet des accès à ces ressources. La page du journal d'accès
-      comprend les informations suivantes:</para>
+      comprend les informations suivantes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>

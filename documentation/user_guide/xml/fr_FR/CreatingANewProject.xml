@@ -14,14 +14,14 @@
   <chapter id="CreatingANewProject">
     <title>Créer un nouveau projet</title>
 
-    <para>Vous êtes désormais un utilisateur CodeX fraichement
+    <para>Vous êtes désormais un utilisateur CodeX fraîchement
     enregistré et vous voulez vous simplifier la vie ainsi que celle
-    de vos équipes de projet. En d'autre termes vous voulez:</para>
+    de vos équipes de projet. En d'autre termes vous voulez :</para>
 
     <itemizedlist mark="bullet"
                   spacing="compact">
       <listitem>
-        <para>Eviter le travail et les dépenses liés à la mise en
+        <para>&Eacute;viter le travail et les dépenses liés à la mise en
         place et à la maintenance de votre propre infrastructure
         (serveurs de développement, serveur de sauvegarde,
         etc...)</para>
@@ -47,7 +47,7 @@
       </listitem>
     </itemizedlist>
 
-    <para>Si l'un de ces points vous parait pertinent pour votre
+    <para>Si l'un de ces points vous paraît pertinent pour votre
     activité alors vous devriez absolument héberger vos projets sur
     CodeX. Voyons comment faire.</para>
 
@@ -61,18 +61,18 @@
       projet&#34; dans le menu de CodeX.</para>
 
       <para>L'enregistrement d'un projet est un processus en sept
-      étapes et prend moins de 10 minutes:</para>
+      étapes et prend moins de 10 minutes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Etape 1 - Services et Conditions</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 1 - Services et Conditions</emphasis></para>
 
           <para>Il s'agit d'informations à propos des services
           CodeX. Lisez les attentivement.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Etape 2 - Conditions générales d'utilisation</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 2 - Conditions générales d'utilisation</emphasis></para>
 
           <para>Vous découvrirez sur cette page une liste des services
           disponibles sur CodeX. Y figure aussi certaines obligations
@@ -84,9 +84,9 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Etape 3 - Enregistrement du projet</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 3 - Enregistrement du projet</emphasis></para>
 
-          <para>C'est là que tout commence véritablement! En
+          <para>C'est là que tout commence véritablement ! En
           commençant par une description de votre projet. Il est
           important d'en donner une description aussi précise que
           possible pour que tous les intervenants sachent de quoi il
@@ -94,13 +94,13 @@
           liées à la propriété intellectuelle comme des propositions
           d'inventions ou des brevets ou bien établir la liste des
           logiciels nécessaires au bon fonctionnement de votre
-          projet. Le dernier champ est libre: vous pouvez y faire
-          figurer toute information qui vous parait pertinente pour
+          projet. Le dernier champ est libre : vous pouvez y faire
+          figurer toute information qui vous paraît pertinente pour
           votre projet et ses utilisateurs.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Etape 4 - Nom du projet</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 4 - Nom du projet</emphasis></para>
 
           <para>Indiquez le nom court et le nom complet du
           projet. Lisez attentivement les instructions fournies. Le
@@ -108,25 +108,25 @@
           projet mais pas le nom court.<footnote><para>En fait il peut
           l'être mais cela nécessite l'intervention des
           administrateurs du site.</para></footnote>. Réfléchissez
-          donc bien avant de choisir!</para>
+          donc bien avant de choisir !</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Etape 5 - Politique d'échange</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 5 - Politique d'échange</emphasis></para>
 
-          <para>NOTE: cette étape ne s'applique que si vous créez un
+          <para>NOTE : cette étape ne s'applique que si vous créez un
           projet public. Si c'est le cas, le choix par défaut est
           celui que vous devez conserver à savoir la &#34;Politique
           d'Echange de &SYS_ORG_NAME;&#34;. Comme expliqué plus haut,
           l'équipe CodeX assistée du département légal de
           &SYS_ORG_NAME; ont créé et validé ces règles d'échange. Un
           certain nombre de licences Open Source sont aussi
-          mentionnées. Enfin vous pouvez aussi spéficier vos propres
+          mentionnées. Enfin vous pouvez aussi spécifier vos propres
           termes de licence.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Etape 6 - Catégories</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 6 - Catégories</emphasis></para>
 
           <para>Cette page est là pour vous rappeler qu'une fois votre
           projet enregistré et approuvé, il vous sera demandé de le
@@ -136,11 +136,11 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Etape 7 - Confirmation finale</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 7 - Confirmation finale</emphasis></para>
 
           <para>Lors de cette dernière étape un récapitulatif des
           différentes informations saisies vous est présenté pour
-          approbation. Mais ne vous inquiétez pas: vous pourrez encore
+          approbation. Mais ne vous inquiétez pas : vous pourrez encore
           modifier ces informations une fois votre projet approuvé. Si
           tout est conforme cliquez sur le lien [D'ACCORD]. Si vous
           cliquez sur [PAS D'ACCORD] le projet pré-enregistré est
@@ -168,14 +168,14 @@
       l'enregistrement du projet consiste à se rendre sur le page de
       &#34;Sommaire du Projet&#34; (URL inclut dans le message de
       notification) et à achever la configuration. Il y au minimum
-      deux actions à prendre:</para>
+      deux actions à prendre :</para>
 
       <itemizedlist mark="bullet">
 
         <listitem>
           <para><emphasis role="bold">Classer votre projet dans l'arbre des logiciels</emphasis></para>
 
-          <para>La catégorisation de votre projet apparait sur la page
+          <para>La catégorisation de votre projet apparaît sur la page
           de &#34;Sommaire&#34; du projet. Pour catégoriser le projet,
           cliquez sur le lien &#34;le catégoriser&#34; et renseignez
           les différentes catégories.</para>
@@ -195,7 +195,7 @@
       </itemizedlist>
 
       <tip>
-        <title>Coup de pouce:  vous ne trouvez pas la bonne catégorie? Contactez-nous</title>
+        <title>Coup de pouce :  vous ne trouvez pas la bonne catégorie ? Contactez-nous</title>
 
         <para>Plutôt que de mettre en place une hiérarchie de valeurs
         lourdes et complexes pour chacun des sept critères de

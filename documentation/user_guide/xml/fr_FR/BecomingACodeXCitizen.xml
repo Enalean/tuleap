@@ -19,12 +19,12 @@
     <para>Avant d'aborder les explications concernant le processus
     d'enregistrement d'un utilisateur, il est utile de passer en revue
     les différentes classes d'utilisateurs de CodeX. Il en existe
-    quatre:</para>
+    quatre :</para>
 
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Les utilisateurs
-	anonymes</emphasis>: il s'agit là des utilisateurs qui visitent
+	anonymes</emphasis> : il s'agit là des utilisateurs qui visitent
 	CodeX pour la première fois ou qui n'ont pas pris la peine de
 	se connecter en arrivant sur la page d'accueil. Par défaut,
 	les utilisateurs anonymes peuvent parcourir le site CodeX
@@ -37,7 +37,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Les utilisateurs
-	enregistrés</emphasis>: une fois votre compte utilisateur
+	enregistrés</emphasis> : une fois votre compte utilisateur
 	enregistré (voir plus bas) vous pouvez utiliser votre nom
 	d'utilisateur et votre mot de passe pour vous authentifier
 	auprès de CodeX. Les utilisateurs enregistrés ont accès à tous
@@ -51,7 +51,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Les membres d'un
-	projet</emphasis>: ce sont les utilisateurs participant aux
+	projet</emphasis> : ce sont les utilisateurs participant aux
 	activités d'un projet hébergé sur CodeX. Pour devenir membre
 	d'un projet vous devez d'abord devenir utilisateur enregistré
 	et, ensuite, demander à l'administrateur du projet de vous
@@ -68,7 +68,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Les administrateurs d'un
-	projet</emphasis>: les utilisateurs enregistrés qui créent un
+	projet</emphasis> : les utilisateurs enregistrés qui créent un
 	nouveau projet sur CodeX héritent du rôle d'administrateur de
 	ce projet.Les administrateurs d'un projet disposent des pleins
 	pouvoirs sur ce projet sauf en ce qui concerne la suppression
@@ -81,9 +81,9 @@
 
       <listitem>
 	<para><emphasis role="bold">Les utilisateurs
-	restreints</emphasis>: il s'agit là de membres ou
+	restreints</emphasis> : il s'agit là de membres ou
 	d'administrateurs de projet dont les droits d'accès sont
-	restreints: ils n'ont accès qu'aux projets dont ils sont
+	restreints : ils n'ont accès qu'aux projets dont ils sont
 	membres et ne voient pas les autres projets quels qu'ils
 	soient. Ce rôle particulier est en général activé sur les
 	sites CodeX mêlant utilisateurs internes et externes sur le
@@ -105,7 +105,7 @@
     parcourez le site et permet à CodeX de personnaliser les
     informations qui vous sont présentées.</para>
 
-    <para>S'enregistrer sur CodeX est simple et rapide:</para>
+    <para>S'enregistrer sur CodeX est simple et rapide :</para>
 
     <procedure>
       <step>
@@ -114,29 +114,29 @@
 
       <step>
 	<para>Remplissez les champs suivants (ceux marqués d'un
-	astérisque sont obligatoires):</para>
+	astérisque sont obligatoires) :</para>
 
 	<substeps>
 	  <step>
-	    <para><emphasis role="bold">Nom de login</emphasis>: votre
+	    <para><emphasis role="bold">Nom de login</emphasis> : votre
 	    nom d'utilisateur. A noter que sur certains systèmes CodeX
 	    connectés à un annuaire d'entreprise le nom d'utilisateur
 	    peut être imposé (voir plus loin).</para>
 	  </step>
 
 	  <step>
-	    <para><emphasis role="bold">Mot de passe</emphasis>: 6
+	    <para><emphasis role="bold">Mot de passe</emphasis> : 6
 	    caractères minimum à répéter deux fois pour éviter toute
 	    erreur de frappe.</para>
 	  </step>
 
 	  <step>
-	    <para><emphasis role="bold">Nom complet</emphasis>:
-	    rappelez-moi votre nom&hyphen; s'il vous plait.</para>
+	    <para><emphasis role="bold">Nom complet</emphasis> :
+	    rappelez-moi votre nom&hyphen; s'il vous plaît.</para>
 	  </step>
 
 	  <step>
-	    <para><emphasis role="bold">Adresse email</emphasis>:
+	    <para><emphasis role="bold">Adresse email</emphasis> :
 	    suivant la configuration du site les adresses emails
 	    considérés comme valides peuvent se limiter au domaine
 	    &SYS_ORG_NAME; ou à l'un de ses sous-domaines. Vérifiez
@@ -146,7 +146,7 @@
 	  </step>
 
 	  <step>
-	    <para><emphasis role="bold">Fuseau horaire</emphasis>:
+	    <para><emphasis role="bold">Fuseau horaire</emphasis> :
 	    choisissez le fuseau horaire dans lequel vous vivez. C'est
 	    une information importante car CodeX stocke tous ses
 	    marqueurs de temps en temps universel (GMT) et s'appuie
@@ -156,7 +156,7 @@
 	  </step>
 
 	  <step>
-	    <para><emphasis role="bold">Annonces site</emphasis>:
+	    <para><emphasis role="bold">Annonces site</emphasis> :
 	    cochez cette case si vous souhaitez recevoir les
 	    informations concernant les mises à jour du site CodeX. Le
 	    trafic est très faible et nous vous recommandons vivement
@@ -169,7 +169,7 @@
 
 	  <step>
 	    <para><emphasis role="bold">Annonces site
-	    supplémentaires</emphasis>: cochez cette case pour
+	    supplémentaires</emphasis> : cochez cette case pour
 	    recevoir des messages moins importants concernant la vie
 	    du site. Vous pouvez cocher cette case sans crainte d'être
 	    submergé de messages car le trafic est extrêmement
@@ -182,7 +182,7 @@
 	<para>Peu après avoir validé l'enregistrement de votre compte
 	utilisateur un email doit vous parvenir vous demandant
 	confirmation. En cliquant sur l'URL contenu dans ce message,
-	vous ferez apparaitre un formulaire vous demandant à nouveau
+	vous ferez apparaître un formulaire vous demandant à nouveau
 	votre nom d'utilisateur et votre mot de passe. S'ils
 	correspondent bien à ceux que vous avez initialement choisis,
 	votre compte utilisateur est définitivement validé et vous
@@ -191,13 +191,13 @@
     </procedure>
 
     <tip>
-      <title>Coup de pouce: serveur CodeX relié à un annuaire d'entreprise</title>
+      <title>Coup de pouce : serveur CodeX relié à un annuaire d'entreprise</title>
 
       <para>Si votre serveur CodeX est connecté à un annuaire
       d'entreprise le processus d'enregistrement est encore plus
-      simple: il vous suffit de taper votre nom d'utilisateur LDAP et
+      simple : il vous suffit de taper votre nom d'utilisateur LDAP et
       votre mot de passe et CodeX extraira automatiquement le reste
-      des informations vous concernant dans l'annuaire: adresse email,
+      des informations vous concernant dans l'annuaire : adresse email,
       nom complet, etc&hellip;</para>
     </tip>
 
@@ -209,20 +209,20 @@
     compte ne peut-être validé depuis l'extérieur.</para>
 
     <tip>
-      <title>Coup de pouce: que faire si j'oublie mon mot de passe ou mon nom d'utilisateur ?</title>
+      <title>Coup de pouce : que faire si j'oublie mon mot de passe ou mon nom d'utilisateur ?</title>
 
       <para>Tout d'abord ne paniquez pas et, surtout, ne créez pas un
       nouveau compte dans la foulée. Si vous avez oublié votre mot de
       passe, allez sur la page de connexion au site CodeX et suivez le
-      lien [Mot de passe perdu ?]. Un formulaire apparait qui vous
+      lien [Mot de passe perdu ?]. Un formulaire apparaît qui vous
       demande votre nom d'utilisateur. Après l'avoir soumis vous
       recevrez un email contenant un URL. Après avoir suivi cet URL et
       avoir choisi un nouveau mot de passe, vous pourrez à nouveau
       accéder au site.</para>
 
       <para>Et que se passe-t-il si j'ai aussi oublié mon nom
-      d'utilisateur ? Là ça devient serieux! Dans ce cas utilisez la
-      boite de recherche par mots-clés, sélectionnez l'option
+      d'utilisateur ? Là ça devient sérieux ! Dans ce cas utilisez la
+      boîte de recherche par mots-clés, sélectionnez l'option
       "Utilisateurs", tapez tout ou partie de votre nom de famille et
       voyez si les résultats retournés vous permettent de retrouver
       votre nom d'utilisateur. Si oui appliquez alors la procédure en
@@ -291,20 +291,20 @@
     &#34;Mon compte&#34; dans le menu de CodeX.</para>
 
     <para>La plupart des informations modifiables sur la page &#34;Mon
-    compte&#34; vous paraitront évidentes. Nous voulons cependant
-    attirer votre attention sur certaines d'entre elles:</para>
+    compte&#34; vous paraîtront évidentes. Nous voulons cependant
+    attirer votre attention sur certaines d'entre elles :</para>
 
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Voir mon profil de
-	compétences</emphasis>: un utilisateur peut publier son CV sur
+	compétences</emphasis> : un utilisateur peut publier son CV sur
 	CodeX. Le but est de permettre aux autres utilisateurs de
-	mieux vous connaitre vous et votre expertise technique.</para>
+	mieux vous connaître vous et votre expertise technique.</para>
       </listitem>
 
       <listitem>
 	<para><emphasis role="bold">&#34;Souviens-toi de
-	moi&#34;</emphasis>: par défaut , votre session de travail
+	moi&#34;</emphasis> : par défaut , votre session de travail
 	courante sur CodeX s'achève dès que vous stoppez votre
 	navigateur Web. Au prochain démarrage vous devrez à nouveau
 	vous identifier. En cochant cette case vous demandez à CodeX
@@ -317,7 +317,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Clés SSH partagées</emphasis>: ce
+	<para><emphasis role="bold">Clés SSH partagées</emphasis> : ce
 	champ se rapporte au service Compte Shell. Lorsque vous êtes
 	utilisateur enregistré, le serveur CodeX vous offre un compte
 	shell personnel qui utilise le même nom d'utilisateur et le

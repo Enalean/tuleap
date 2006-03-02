@@ -45,7 +45,7 @@
   gestion de configuration.</para>
 
   <section id="Subversion:TheNextGenerationCVS">
-    <title>Subversion: l'après CVS</title>
+    <title>Subversion : l'après CVS</title>
 
     <para>Subversion est un système de contrôle de version Open Source
     qui gère l'historique de vos fichiers et répertoires. L'effort de
@@ -69,12 +69,12 @@
     par les autres membres de l'équipe à tout moment.</para>
 
     <para>Subversion présente aussi un nombre important d'amélioration
-    par rapport à CVS:</para>
+    par rapport à CVS :</para>
 
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Versionnage des
-	répertoires</emphasis>: étant donné que CVS s'appuie sur le
+	répertoires</emphasis> : étant donné que CVS s'appuie sur le
 	système de fichiers de la machine sur laquelle il est
 	installé, il s'est avéré impossible de versionner les
 	répertoires. Subversion s'appuie sur un système de fichiers
@@ -85,7 +85,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Véritable historique des
-	versions</emphasis>: le déplacement et le renommage des
+	versions</emphasis> : le déplacement et le renommage des
 	fichiers dans un dépôt CVS sont soumis à certaines limitations
 	car CVS gère un numéro de version pour chaque fichier. Avec
 	Subversion il est possible d'ajouter, de supprimer, de
@@ -95,7 +95,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Commits atomiques</emphasis>: bien
+	<para><emphasis role="bold">Commits atomiques</emphasis> : bien
 	que CodeX offre une surcouche au dessus de CVS qui donne une
 	vue atomique des opérations de commits, CVS en lui-même ne
 	conserve aucune trace du fait que vous avez fait remonter des
@@ -107,7 +107,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Méta-données
-	versionnées</emphasis>: Subversion peut attacher un nombre
+	versionnées</emphasis> : Subversion peut attacher un nombre
 	quelconque de propriétés (sous la forme de paires clé/valeur)
 	à des fichiers ou à des répertoires. Ces propriétés sont
 	elles-même versionnées comme les fichiers et les répertoires
@@ -116,7 +116,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Divers protocoles
-	d'accès</emphasis>: comme CVS, Subversion offre un éventail de
+	d'accès</emphasis> : comme CVS, Subversion offre un éventail de
 	protocoles permettant l'accès au dépôt. Il peut s'agir d'un
 	accès local via le système de fichiers, ou d'un accès par le
 	protocole léger de Subversion (svnserve) ou encore d'un accès
@@ -131,7 +131,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Détermination efficace des
-	différences</emphasis>: lorsque vous créez une copie de
+	différences</emphasis> : lorsque vous créez une copie de
 	travail sur votre machine, une version complète des fichiers
 	originaux est conservée sur le disque dur local ce qui permet
 	d'effectuer des opérations comme <literal>status</literal> et
@@ -141,7 +141,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Etiquetage et création de
-	branches efficaces</emphasis>: dans Subversion ces deux
+	branches efficaces</emphasis> : dans Subversion ces deux
 	opérations sont effectuées en copiant (tout ou partie) du
 	dépôt. La copie est virtuelle dans le sens où le système de
 	fichiers virtuel de Subversion établit un lien pour indiquer
@@ -152,7 +152,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Contrôle d'accès fin</emphasis>:
+	<para><emphasis role="bold">Contrôle d'accès fin</emphasis> :
 	tel qu'intégré dans CodeX, votre dépôt Subversion communique à
 	travers le protocole HTTP (ou HTTPS) et il tire donc parti de
 	la richesse des méthodes d'authentification proposées par
@@ -163,7 +163,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Extensibilité</emphasis>: comme
+	<para><emphasis role="bold">Extensibilité</emphasis> : comme
 	CVS, Subversion propose une ensemble de points d'accrochage
 	(hooks) aux différents stades d'une opération de commit
 	(pre-check, post-check, etc...). Contrairement à CVS,
@@ -185,7 +185,7 @@
       fond. Les clients Subversion s'adressent à ce serveur pour agir
       sur le dépôt. Les clients Subversion sont disponibles sous
       plusieurs formes pour toutes les plateformes (Windows et tous
-      les Unix): ligne de commandes, interface graphique et interface
+      les Unix) : ligne de commandes, interface graphique et interface
       Web.</para>
 
       <section id="SubversionCommandLineInterface">
@@ -239,9 +239,9 @@
         </listitem>
 	
         <listitem>
-	  <para>Créez un nouveau signet (bookmark) pour votre dépôt Subversion:
+	  <para>Créez un nouveau signet (bookmark) pour votre dépôt Subversion :
 	  <literal>Bookmarks->Add Repository...</literal></para>
-	  <para>A l'invite, saisissez l'URL d'accès de votre dépôt:
+	  <para>A l'invite, saisissez l'URL d'accès de votre dépôt :
 	  <literal>http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet</literal></para>
         </listitem>
 
@@ -256,8 +256,8 @@
         <listitem>
 	  <para>Pour créer votre propre copie de travail, utilisez le
 	  menu <literal>Repository->Checkout...</literal></para>
-	  <para>Lorsque la boite de dialogue apparaît, tapez le même
-	  URL que précédemment et choississez l'emplacement où vous
+	  <para>Lorsque la boîte de dialogue apparaît, tapez le même
+	  URL que précédemment et choisissez l'emplacement où vous
 	  souhaitez créer votre copie de travail locale.</para>
         </listitem>
 	
@@ -268,7 +268,7 @@
 	  la liste des fichiers et répertoires de la copie de travail
 	  assortis de leur numéro de révision et de leur statut. A
 	  partir de là vous pouvez utiliser votre éditeur de texte
-	  favori pour modifier le code source, rafraichissez ensuite
+	  favori pour modifier le code source, rafraîchissez ensuite
 	  l'écran de rapidSVN pour voir apparaître les fichiers
 	  modifiés localement et faites remonter les changements
 	  (commit) vers le dépôt lorsque vous avez terminé vos
@@ -286,7 +286,7 @@
       <para>Comme indiqué précédemment, ce chapitre n'est pas un
       manuel d'utilisation de Subversion. Si vous souhaitez en savoir
       plus sur Subversion, référez-vous à l'un des documents
-      suivants:</para>
+      suivants :</para>
 
       <itemizedlist mark="bullet">
 	<listitem>
@@ -296,7 +296,7 @@
 	<listitem>
 	  <para>Le site Web officiel de Subversion. Voir <ulink
 	  url="http://subversion.tigris.org/">http://subversion.tigris.org/</ulink>
-	  C'est là que vous trouveres le logiciel Subversion et le
+	  C'est là que vous trouverez le logiciel Subversion et le
 	  frontal graphique rapidSVN.</para>
 	</listitem>
 
@@ -319,15 +319,15 @@
     <title>Intégration de Subversion dans CodeX</title>
 
     <section id="TheSubversionRepository">
-      <title>Le dépot Subversion</title>
+      <title>Le dépôt Subversion</title>
 
-      <para>Dès qu'un nouveau projet est hébergé, un nouvau dépôt
+      <para>Dès qu'un nouveau projet est hébergé, un nouveau dépôt
       Subversion est automatiquement créé et initialisé
       correctement. Chaque projet dispose de son propre dépôt, ce qui
-      présente un certain nombre d'avantages: le journal des
+      présente un certain nombre d'avantages : le journal des
       transactions, l'historique des fichiers et tous les fichiers
       administratifs (par exemple les scripts utilisés sur les points
-      d'accrochage) sont spécifiques à chaque projet.Celà permet une
+      d'accrochage) sont spécifiques à chaque projet. Cela permet une
       personnalisation complète des dépôts Subversion projet par
       projet.</para>
 
@@ -349,7 +349,7 @@
 
       <para>Lorsqu'un nouveau projet CodeX est créé, il est pourvu
       d'un dépôt Subversion totalement vierge que l'équipe de projet
-      doit remplir et structurer. Etant donné que Subversion gère les
+      doit remplir et structurer. &Eacute;tant donné que Subversion gère les
       branches et les étiquettes via son système de fichiers virtuel
       (et non pas par des labels attachés à chaque fichier comme dans
       CVS) il existe des recommandations concernant l'organisation
@@ -360,7 +360,7 @@
 
       <para>Si vous prévoyez de ne gérer qu'un seul délivrable dans
       votre projet, vous pouvez créer les répertoires suivants au
-      niveau le plus haut de votre dépôt:</para>
+      niveau le plus haut de votre dépôt :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 /trunk
@@ -370,7 +370,7 @@
 
       <para>où <literal>/trunk</literal> contient la ligne de
       développement principale, <literal>/branches</literal> contient
-      les branches de dévelopement et <literal>/tags</literal> les
+      les branches de développement et <literal>/tags</literal> les
       copies du code source qui correspondent en général à des
       versions de votre logiciel.</para>
 
@@ -382,7 +382,7 @@
       supposant que vous ayez deux sous-projets appelés
       <literal>engine</literal> et <literal>client</literal>, la
       structure initiale de votre dépôt devait ressembler à
-      ceci:</para>
+      ceci :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 /engine/trunk
@@ -413,13 +413,13 @@
      &#34;Subversion&#34; de la barre de menu ou via l'entrée Subversion de la
     zone publique de la page de sommaire (voir <xref
     linkend="FigureASampleProjectSummaryPage" />). L'interface Web de
-    Subversion propose les fonctionnalités suivantes:</para>
+    Subversion propose les fonctionnalités suivantes :</para>
 
     <itemizedlist mark="bullet">
       <listitem>
-	<para><emphasis role="bold">Accès au dépôt Subversion</emphasis>: la
+	<para><emphasis role="bold">Accès au dépôt Subversion</emphasis> : la
 	page d'accueil du service Subversion vous donne toutes les
-	informations nécessaires pour accèder au dépôt depuis votre
+	informations nécessaires pour accéder au dépôt depuis votre
 	client Subversion. Le chemin d'accès au dépôt, la façon de se
 	connecter et de récupérer le code source (checkout) figure
 	parmi les informations portées sur cette page. A noter que les
@@ -430,14 +430,14 @@
 
       <listitem>
 	<para><emphasis role="bold">Naviguer dans le dépôt
-	Subversion</emphasis>: L'interface Web vous permet de parcourir le
-	dépôt Subversion sans qu'il soit nécessire d'installer un véritable
+	Subversion</emphasis> : L'interface Web vous permet de parcourir le
+	dépôt Subversion sans qu'il soit nécessaire d'installer un véritable
 	client Subversion sur votre poste de travail.</para>
       </listitem>
 
       <listitem>
 	<para><emphasis role="bold">Interroger le dépôt Subversion
-	</emphasis>: si la fonction de suivi de Subversion est activée pour
+	</emphasis> : si la fonction de suivi de Subversion est activée pour
 	votre projet (c'est toujours le cas par défaut) tous les
 	évènements concernant la modification du dépôt (commit, ajout
 	ou suppression de fichiers) sont consignés dans la base de
@@ -447,7 +447,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Administration Subversion </emphasis>: ce
+	<para><emphasis role="bold">Administration Subversion </emphasis> : ce
 	service permet aux administrateurs du projet d'effectuer les
 	tâches d'administration et de configuration du dépôt
 	Subversion les plus courantes depuis l'interface Web de CodeX
@@ -456,7 +456,7 @@
       </listitem>
     </itemizedlist>
 
-    <para>Voyons plus en détail quelques unes de ces fonctionnalités:</para>
+    <para>Voyons plus en détail quelques unes de ces fonctionnalités :</para>
 
     <section id="BrowsingTheSubversionRepository">
     <title>Naviguer dans le dépôt Subversion</title>
@@ -469,7 +469,7 @@
     fichier.</para>
 
       <figure id="FigureASampleSubversionWebSession">
-	<title>Un exemple de naviguation dans le dépôt Subversion</title>
+	<title>Un exemple de navigation dans le dépôt Subversion</title>
 	
 	<mediaobject>
 	  <imageobject>
@@ -486,12 +486,12 @@
       <para>Si le projet a activé le fonction de suivi de Subversion (voir
       <xref linkend="SubversionAdministrationInterface" />), l'interface Web de Subversion
       offre des fonctionnalités particulièrement intéressantes pour les
-      développeurs:</para>
+      développeurs :</para>
 
       <itemizedlist mark="dash">
 	<listitem>
 	  <para><emphasis role="bold">Commits Subversion atomiques et
-	  identifiés de façon unique</emphasis>: tous les changements
+	  identifiés de façon unique</emphasis> : tous les changements
 	  (modification, ajout ou suppression de fichiers) commités en
 	  une seule opération depuis votre poste client se verront
 	  assignés un identifiant unique de la part de CodeX qui
@@ -500,10 +500,10 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Références croisées entre
-	  commits</emphasis>: L'identifiant unique affecté à chaque
+	  commits</emphasis> : L'identifiant unique affecté à chaque
 	  opération de commit peut être référencé dans de futures
 	  opérations de commits ou dans les commentaires associés aux
-	  artefacts des différents outils de suivi (taches, anomalies,
+	  artefacts des différents outils de suivi (tâches, anomalies,
 	  demande d'assistance...) simplement en utilisant le patron
 	  <literal>revision
 	  #XXXX</literal> ou encore <literal>rev #XXXX</literal> (où
@@ -519,7 +519,7 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Recherche dans les
-	  commits</emphasis>: un des autres avantages de la base de
+	  commits</emphasis> : un des autres avantages de la base de
 	  suivi de Subversion est de permettre une recherche selon différents
 	  critères. Il est possible d'effectuer des recherches parmi
 	  les changements apportés au code par auteur (qui a fait le
@@ -574,14 +574,14 @@
 
       <para>Les patrons de texte reconnus automatiquement par CodeX
       dans les messages de commit ou dans les commentaires des
-      artefacts sont les suivants:</para>
+      artefacts sont les suivants :</para>
 
    <itemizedlist mark="bullet" spacing="compact">
       <listitem>
-	<para> <emphasis role="bold">XXX #NNN</emphasis>: ce patron se
+	<para> <emphasis role="bold">XXX #NNN</emphasis> : ce patron se
 	réfère à l'artefact de type XXX numéro NNN, où NNN est
 	l'identifiant unique de l'artefact et XXX le nom court utilisé
-	dans l'outil de suivi correspondant (exemple: &#34;bug
+	dans l'outil de suivi correspondant (exemple : &#34;bug
 	#123&#34;, &#34;tâche #321&#34;, &#34;DA #12&#34;, etc.). Si
 	vous ne connaissez pas le nom court de l'outil de suivi ou que
 	vous ne souhaitez pas le préciser vous pouvez utiliser le
@@ -593,7 +593,7 @@
 
       <listitem>
 	<para><emphasis role="bold">commit #YYY or revision #YYY or 
-	  rev #YYY</emphasis>: ce patron
+	  rev #YYY</emphasis> : ce patron
 	référence le commit YYY où YYY est l'identifiant unique du
 	commit tel qu'il apparaît dans la base de suivi Subversion. Lorsque
 	CodeX affiche un message contenant ce genre de patron, il le
@@ -620,12 +620,12 @@
       </figure>
 
 
-      <para><tip><title>Coup de pouce: référencez les artefacts et les
+      <para><tip><title>Coup de pouce : référencez les artefacts et les
       commits Subversion</title><para>C'est une excellente pratique
       que de toujours référencer les tâches, anomalies, demande
       d'assistance appropriées dans le message de commit Subversion. De la
       même façon, lorsque l'artefact correspondant est fermé,
-      assurez-vous de mentionner le commit qui résoud le problème dans
+      assurez-vous de mentionner le commit qui résout le problème dans
       un commentaire. Vous constaterez que cette pratique est
       extrêmement efficace pour suivre l'historique des changements et
       pourquoi un changement a eu lieu.</para></tip></para>
@@ -648,7 +648,7 @@
 
 	<itemizedlist mark="bullet">
 	  <listitem>
-	    <para><emphasis role="bold">Suivi Subversion</emphasis>: étant
+	    <para><emphasis role="bold">Suivi Subversion</emphasis> : étant
 	    donné que Subversion est un système de contrôle de version il
 	    prend naturellement en charge l'historique des changements
 	    opérés sur vos fichiers ainsi que le nom de l'auteur et la
@@ -665,7 +665,7 @@
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="bold">Préambule Subversion</emphasis>: dans
+	    <para><emphasis role="bold">Préambule Subversion</emphasis> : dans
 	    certains cas (par ex. pour des projets existants), il se
 	    peut que le dépôt Subversion d'un projet ne soit pas hébergé sur
 	    CodeX. Dans ce cas, les informations affichées sur la page
@@ -696,13 +696,13 @@
         permissions d'accès comme indiqué ci-dessous.</para>
 
         <para>Pour les projets publics, les règles d'accès par défaut
-        sont les suivantes:</para>
+        sont les suivantes :</para>
 
 	<itemizedlist mark="bullet">
 
 	  <listitem>
 	    <para><emphasis role="bold">Utilisateurs
-	    anonymes</emphasis>: les utilisateurs non enregistrés (ou
+	    anonymes</emphasis> : les utilisateurs non enregistrés (ou
 	    non connectés) n'ont <emphasis role="underline">aucun
 	    accès</emphasis> aux dépôts Subversion. Selon la configuration du
 	    serveur CodeX, il est même possible que les utilisateurs
@@ -712,7 +712,7 @@
 	  
 	  <listitem>
 	  <para><emphasis role="bold">Utilisateurs
-	  enregistrés</emphasis>: ils ont un accès en lecture
+	  enregistrés</emphasis> : ils ont un accès en lecture
 	  uniquement. Ils peuvent faire un checkout d'une copie de
 	  travail mais ils ne peuvent faire aucune modification
 	  (commit) dans le dépôt Subversion. Les contributions au code source
@@ -721,7 +721,7 @@
 	  projet via l'outil de suivi des correctifs (patch) (Voir
 	  <xref linkend="PatchTemplate" /> ).</para>
 
-	  <note><para><emphasis role="bold">Note</emphasis>: tous les
+	  <note><para><emphasis role="bold">Note</emphasis> : tous les
 	  accès au code source sur CodeX sont enregistrés. Les
 	  administrateurs des projets peuvent à tout moment consulter
 	  la liste des utilisateurs qui ont accédé au code source
@@ -730,10 +730,10 @@
 	  </listitem>
 
 	  <listitem>
-	  <para><emphasis role="bold">Membres du projet</emphasis>:
+	  <para><emphasis role="bold">Membres du projet</emphasis> :
 	  les membres d'un projet hébergé sur CodeX ont un droit
-	  d'accès en lecture et en écriture au dépôt apres s'être
-	  authentifé à l'aide de leur nom d'utilisateur CodeX et leur
+	  d'accès en lecture et en écriture au dépôt après s'être
+	  authentifié à l'aide de leur nom d'utilisateur CodeX et leur
 	  mot de passe. Comme expliqué plus haut dans le paragraphe
 	  concernant les projets privés, il est là aussi possible de
 	  restreindre l'accès en lecture seule pour les membres du
@@ -742,7 +742,7 @@
 
 	  <listitem>
 	    <para><emphasis role="bold">Administrateurs du
-	    projet</emphasis>: même conditions d'accès que les membres
+	    projet</emphasis> : même conditions d'accès que les membres
 	    du projet.</para>
 	  </listitem>
 	</itemizedlist>
@@ -758,14 +758,14 @@
 
 	<para>Pour ce faire, il suffit de spécifier des règles d'accès
 	qui complètent ou même remplacent les règles par défaut. La
-	syntaxe des permissions d'accès suit le modèle suivant:</para>
+	syntaxe des permissions d'accès suit le modèle suivant :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [chemin]
 nom = permission
       </programlisting>
 
-	<para>où: </para>
+	<para>où : </para>
 	<itemizedlist mark="dash">
 
 	  <listitem><para><literal>chemin</literal> est le chemin vers
@@ -784,7 +784,7 @@ nom = permission
 	    permission</literal> peut être répétée autant de fois que
 	    nécessaire pour un chemin donné. Pour définir des groupes
 	    d'utilisateurs, utilisez le bloc d'instructions
-	    suivant:</para>
+	    suivant :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [groups]
@@ -807,7 +807,7 @@ nom_groupe = utilisateur1, utilisateur2,...
           </listitem>
 	</itemizedlist>
 
-	<para>En guise d'exemple, les permissions par défaut du dépôt Subversion telles qu'expliquées ci-dessus, s'expriment par les règles suivantes:</para>
+	<para>En guise d'exemple, les permissions par défaut du dépôt Subversion telles qu'expliquées ci-dessus, s'expriment par les règles suivantes :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [groups]
@@ -843,12 +843,12 @@ members = membre1,membre2,...,membreN
 
 	<para>Les administrateurs d'un projet peuvent configurer les
 	paramètres suivants concernant la notification par
-	e-mail:</para>
+	e-mail :</para>
 
 	<itemizedlist mark="bullet">
 	  <listitem>
 	    <para><emphasis role="bold">Les adresses
-	    e-mail</emphasis>: une liste d'adresses e-mail (séparées
+	    e-mail</emphasis> : une liste d'adresses e-mail (séparées
 	    par des virgules) destinataires des notifications. Si vous
 	    souhaitez informer un nombre important d'utilisateurs nous
 	    vous recommandons vivement de créer un liste de diffusion à
@@ -856,7 +856,7 @@ members = membre1,membre2,...,membreN
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="bold">Entête du sujet</emphasis>:
+	    <para><emphasis role="bold">Entête du sujet</emphasis> :
 	    une chaîne de caractères qui apparaîtra en tête de la
 	    ligne Sujet des notifications emails envoyées. Cette
 	    entête est supposée aider les destinataires à identifier
@@ -867,14 +867,14 @@ members = membre1,membre2,...,membreN
 
 	</itemizedlist>
 
-      <para><tip><title>Coup de pouce: pensez à créer une liste de
+      <para><tip><title>Coup de pouce : pensez à créer une liste de
       diffusion pour l'envoi de vos notifications Subversion</title><para>Si
       vous avez l'intention d'envoyer des emails pour notifier
       certains utilisateurs de changements intervenus dans le dépôt
       Subversion, nous vous recommandons de créer une liste de diffusion
       spécifique appelée
       <literal>nom_projet-cvsevents</literal>. Ainsi, les utilisateurs
-      CodeX et les membres du projet intéréssés par les notifications
+      CodeX et les membres du projet intéressés par les notifications
       pourront s'inscrire sur la liste de diffusion. De plus, le
       gestionnaire de liste de diffusion de CodeX se charge d'archiver
       tous les messages ce qui peut servir de référence
@@ -916,7 +916,7 @@ members = membre1,membre2,...,membreN
     <section id="SubversionLoggingIn">
       <title>Se connecter</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>Contrairement à Subversion lorsqu'il est utilisé avec le
       protocole pserver, il n'est pas nécessaire de se connecter
@@ -930,7 +930,7 @@ members = membre1,membre2,...,membreN
     <section id="SubversionImportingExistingSourceCode">
       <title>Importer du code source existant</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>En tant qu'administrateur d'un tout nouveau projet CodeX,
       la première chose à faire consiste à peupler votre tout nouveau dépôt
@@ -941,7 +941,7 @@ members = membre1,membre2,...,membreN
 
       <para> Ensuite placez vous dans le répertoire
       <literal>racine</literal> et tapez les commandes suivantes (la
-      seconde sur une seule ligne):</para>
+      seconde sur une seule ligne) :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn --username nom_utilissateur import . 
@@ -949,7 +949,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
 --message "Version initiale du répertoire"
         </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet">
 	<listitem>
@@ -959,7 +959,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
 	<listitem>
 	  <para><literal>nom_utilisateur</literal> est votre nom
 	  d'utilisateur CodeX (en minuscules). L'option --username est
-	  nécessire uniquement si votre nom d'utilisateur CodeX est
+	  nécessaire uniquement si votre nom d'utilisateur CodeX est
 	  différent de votre login Unix ou Windows sous lequel vous
 	  êtes en train de travailler.</para>
 	</listitem>
@@ -971,8 +971,8 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
       <literal>http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet</literal> 
       dans tous les exemples qui suivent.</para></note>
 
-     <para><tip><title>Coup de pouce: vous avez commis une erreur
-      lors de l'importation de votre code source?</title><para>Il
+     <para><tip><title>Coup de pouce : vous avez commis une erreur
+      lors de l'importation de votre code source ?</title><para>Il
       n'est pas rare de faire une erreur lors de l'importation de code
       source dans un nouveau dépôt Subversion. Placer les répertoires au
       mauvais niveau ou avec un mauvais nom est une erreur typique. Ne
@@ -991,14 +991,14 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
     <section id="SubversionCheckingCodeOut">
       <title>Créer une copie de travail (checkout)</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>Une fois le dépôt Subversion en place, les membres du projet (ou
       plus généralement les utilisateurs CodeX si l'accès leur est
       permis) peuvent créer une copie de travail sur leur propre
       poste. A noter que cette opération dite &#34;checkout&#34; ne
       permet pas à l'utilisateur de verrouiller quelque fichier que ce
-      soit. Le paradigme Subversion est le suivant: n'importe qui (ayant les
+      soit. Le paradigme Subversion est le suivant : n'importe qui (ayant les
       permissions adéquates) peut créer sa propre copie de travail et
       la modifier; les changements effectués par les différents
       utilisateurs sont réconciliés automatiquement ou marqués comme
@@ -1024,13 +1024,13 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
       donc parfaitement où se trouve le dépôt d'origine.</para>
 
       <para>Pour créer une copie de travail, tapez la commande
-      suivante:</para>
+      suivante :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn checkout http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
 </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet"	spacing="compact">
 	<listitem>
@@ -1042,13 +1042,13 @@ svn checkout http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet
     <section id="SubversionUpdatingtheSourceCode">
       <title>Mettre à jour le code source (update)</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
       <para>Lancer la commande &#34;<literal>svn update</literal>&#34;
       depuis une copie de travail a pour effet de mettre à jour la
       copie de travail (ou une sous-partie) avec les dernières
       versions de chaque fichier en provenance du dépôt. Pour mettre à
-      jour une copie de travail, tapez la commande:</para>
+      jour une copie de travail, tapez la commande :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn update
@@ -1061,7 +1061,7 @@ svn update
 
       <para>Si vous souhaitez savoir quels fichiers ont été modifiés
       dans le dépôt Subversion ou dans votre copie de travail depuis
-      votre dernière mise à jour, tapez la commande suivante:</para>
+      votre dernière mise à jour, tapez la commande suivante :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn status
@@ -1073,7 +1073,7 @@ svn status
 
       <para>Pour comparer les fichiers modifiés localement avec la
       version qui se trouve dans le dépôt, vous pouvez utiliser la
-      commande diff:</para>
+      commande diff :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn diff nom_de_fichier
@@ -1088,7 +1088,7 @@ svn diff nom_de_fichier
     <section id="SubversionCommittingyourChanges">
       <title>Remonter les modifications vers le dépôt (commit)</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>Les membres du projet impliqués dans les activités de
       développement voudront certainement faire remonter les
@@ -1097,13 +1097,13 @@ svn diff nom_de_fichier
       commit.</para>
 
       <para>Pour faire remonter les changements de votre copie de
-      travail vers le dépôt, tapez la commande suivante:</para>
+      travail vers le dépôt, tapez la commande suivante :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichiers]
         </programlisting>
 
-      <para>Où:</para>
+      <para>Où :</para>
 
       <itemizedlist mark="bullet">
 	<listitem>
@@ -1113,7 +1113,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 
 	<listitem>
 	  <para>L'argument <emphasis>nom_fichiers</emphasis> est
-	  optionel. Il peut s'agir de nom de fichiers ou de
+	  optionnel. Il peut s'agir de nom de fichiers ou de
 	  répertoires. Si aucun nom n'est précisé Subversion prend en compte
 	  tous les fichiers qui ont subi une modification dans le
 	  répertoire courant et tous les sous-répertoires
@@ -1121,7 +1121,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 	</listitem>
       </itemizedlist>
 
-      <para><tip><title>Coup de pouce: N'oubliez pas d'inclure un
+      <para><tip><title>Coup de pouce : N'oubliez pas d'inclure un
       identifiant de tâche ou d'anomalies dans vos messages de
       commit</title><para>Dans un monde parfait, toutes les
       modifications effectuées dans le code source devraient se
@@ -1134,7 +1134,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
       pas ce genre de références.</para></tip></para>
 
 
-      <para><tip><title>Coup de pouce: mettez votre copie de travail à
+      <para><tip><title>Coup de pouce : mettez votre copie de travail à
       jour avant de remonter des changements vers le
       dépôt</title><para>Si vous essayez de faire remonter vers le
       dépôt un fichier qui a lui-même fait l'objet d'une remontée par
@@ -1142,7 +1142,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
       commande <literal>cvs commit</literal>. Vous devez tout d'abord
       lancer une commande <literal>cvs update</literal> pour mettre à
       jour votre copie de travail avec les changements intervenus dans
-      le dépôt, fusionner ces changements avec les votres (Subversion le fait
+      le dépôt, fusionner ces changements avec les vôtres (Subversion le fait
       automatiquement dans la plupart des cas) et ensuite seulement
       faire remonter vos propres changements dans le dépôt. Si vous
       voulez vous affranchir des changements effectués par les autres
@@ -1154,7 +1154,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
     <section id="SubversionContributingyourChanges">
       <title>Proposer des modifications à l'équipe de projet</title>
 
-      <para><emphasis>Audience: tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
 
      <para>Il s'agit d'une variante de la section précédente pour les
       utilisateurs qui n'ont pas d'accès en écriture au dépôt Subversion d'un
@@ -1188,7 +1188,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 
 
 
-      <para><emphasis role="bold">La façon <literal>diff</literal>:</emphasis></para>
+      <para><emphasis role="bold">La façon <literal>diff</literal> :</emphasis></para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -1202,7 +1202,7 @@ svn commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
 	</listitem>
 
 	<listitem>
-	  <para>Vous pouvez générer un fichier diff à l'aide de la commande suivante (tous les fichiers de tous les sous-répertoires feront l'objet d'une comparaison):</para>
+	  <para>Vous pouvez générer un fichier diff à l'aide de la commande suivante (tous les fichiers de tous les sous-répertoires feront l'objet d'une comparaison) :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 diff -rc projet-0.1/ projet-0.1-nouveau/
@@ -1211,7 +1211,7 @@ diff -rc projet-0.1/ projet-0.1-nouveau/
 	</listitem>
       </itemizedlist>
 
-      <para><emphasis role="bold">La façon Subversion:</emphasis></para>
+      <para><emphasis role="bold">La façon Subversion :</emphasis></para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
@@ -1224,7 +1224,7 @@ diff -rc projet-0.1/ projet-0.1-nouveau/
 	<listitem>
 	  <para>Vous pouvez générer un fichier diff entre votre
 	  version et la version la plus récente du dépôt en tapant la
-	  commande Subversion suivante:</para>
+	  commande Subversion suivante :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn diff
@@ -1237,7 +1237,7 @@ svn diff
 	  version et une version spécifique du dépôt, il vous faut
 	  alors préciser le numéro de révision de cette version
 	  spécifique (révision #9398 dans l'exemple
-	  ci-dessous):</para>
+	  ci-dessous) :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn diff -r 9398
@@ -1251,13 +1251,13 @@ svn diff -r 9398
       (voir <xref linkend="PatchTemplate" />) pour soumettre votre
       correctif à l'équipe de projet.</para>
 
-      <para>Et un grand merci pour votre contribution!</para>
+      <para>Et un grand merci pour votre contribution !</para>
     </section>
 
     <section id="SubversionExportingandPackaging">
       <title>Exporter et empaqueter</title>
 
-      <para><emphasis>Audience: membres du projet</emphasis></para>
+      <para><emphasis>Audience : membres du projet</emphasis></para>
 
       <para>Il existe une façon rapide et simple de publier une
       version empaquetée de votre code source et de la mettre à la
@@ -1274,7 +1274,7 @@ svn diff -r 9398
 	<step>
 	  <para>Mettez à jour votre copie de travail avec l'ensemble
 	  des changements remontés par les développeurs de votre
-	  équipe avec la commande suivante:</para>
+	  équipe avec la commande suivante :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn update
@@ -1295,7 +1295,7 @@ svn update
 	  tronc) en lui donnant un nom approprié. En supposant que le
 	  nom de la version à publier est
 	  <literal>nom_projet-1.4</literal>, la création de la nouvelle
-	  version se fait de la façon suivante:</para>
+	  version se fait de la façon suivante :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn copy
@@ -1310,7 +1310,7 @@ http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet/tags/nom_projet-1.
 	  <para>Votre version est maintenant prête. Il ne reste plus
 	  qu'à exporter une copie du code source propre (exempte des
 	  fichiers spécifiques à Subversion) de la version 1.4 de votre
-	  logiciel en tapant:</para>
+	  logiciel en tapant :</para>
 
 	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn export
@@ -1331,7 +1331,7 @@ http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet/tags/nom_projet-1.
 	</step>
 
 	<step>
-	  <para>C'est fini! Joli travail... Accordez-vous une pause. Et
+	  <para>C'est fini ! Joli travail... Accordez-vous une pause. Et
 	  n'oubliez pas d'annoncer la disponibilité de cette nouvelle
 	  version en utilisant le service d'annonces de CodeX (voir
 	  <xref linkend="NewsService" />).</para>
@@ -1361,7 +1361,7 @@ http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet/tags/nom_projet-1.
       l'administrateur du site ait décidé de désactiver les compte
       Shell.</para></footnote>.</para>.
 
-      <para>Une fois connecté, tapez la commande suivante à l'invite du shell:</para>
+      <para>Une fois connecté, tapez la commande suivante à l'invite du shell :</para>
 
       <itemizedlist mark="bullet">
 	<listitem>
@@ -1387,8 +1387,8 @@ http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet/tags/nom_projet-1.
 	</listitem>
       </itemizedlist>
 
-      <para><tip><title>***Note Importante***: attention aux points
-      d'accrochage de CodeX!</title><para>Si vous personnalisez les
+      <para><tip><title>***Note Importante*** : attention aux points
+      d'accrochage de CodeX !</title><para>Si vous personnalisez les
       scripts d'accrochage de Subversion pour votre dépôt, veillez à
       ne pas altérer les instructions mises en place par CodeX. Ces
       instructions sont clairement marquées à l'aide de lignes de

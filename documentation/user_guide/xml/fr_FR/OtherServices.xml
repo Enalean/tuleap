@@ -17,17 +17,17 @@
     <section id="ShellAccount">
       <title>Compte Shell</title>
 
-		<para><emphasis role="bold">Note Importante</emphasis>: cette fonctionnalité
+		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalité
 			peut avoir été désactivée par l'administrateur de votre site CodeX et s'avérer
 			indisponible dans votre organisation.</para>
 
 		<para>Si l'administrateur CodeX a activé cette fonctionnalité, chaque
 			utilisateur enregistré dispose alors de son compte Shell Unix sur le serveur de
-			comptes Shell CodeX. Vous pouvez accéder à ce compte de deux façons:</para>
+			comptes Shell CodeX. Vous pouvez accéder à ce compte de deux façons :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-			<para><emphasis role="bold">SSH</emphasis>: l'utilisation du client de
+			<para><emphasis role="bold">SSH</emphasis> : l'utilisation du client de
 				compte shell sécurisé est recommandée pour se connecter au serveur de
 				comptes Shell CodeX. Les clients SSH sont disponibles sur toutes les
 				plateformes (Windows, Linux, Unix et Mac). Ils établissent un lien
@@ -35,7 +35,7 @@
 				disposer d'autres utilitaires comme SCP pour le transfert de fichiers à
 				distance. Pour accéder à votre compte Shell, tapez la commande suivante et
 				utilisez votre nom d'utilisateur et mot de passe CodeX pour vous
-				indentifier:</para>
+				identifier :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 ssh -l nom_utilisateur &SYS_SHELL_HOST;
@@ -43,12 +43,12 @@ ssh -l nom_utilisateur &SYS_SHELL_HOST;
         </listitem>
 
         <listitem>
-			<para><emphasis role="bold">Telnet</emphasis>: telnet est livré en
+			<para><emphasis role="bold">Telnet</emphasis> : telnet est livré en
 				standard dans les environnement Windows et Unix. Pour accéder à votre
 				compte Shell, tapez la commande suivante et utilisez votre nom
-				d'utilisateur et mot de passe CodeX pour vous indentifier (remarque: sur
+				d'utilisateur et mot de passe CodeX pour vous identifier (remarque : sur
 				certains sites CodeX il se peut que telnet soit désactivé pour des raisons
-				de sécurité):</para>
+				de sécurité) :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 telnet &SYS_SHELL_HOST;
@@ -61,7 +61,7 @@ telnet &SYS_SHELL_HOST;
 			répertoires auxquels vous avez accès. Utilisez la commande Unix &#34;cd&#34;
 			pour changer le répertoire de travail courant. Si vous êtes membre de plusieurs
 			projets vous devez spécifier pour quel projet vous allez travailler durant
-			cette session Shell en utilisant la commande suivante:</para>
+			cette session Shell en utilisant la commande suivante :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 newgrp nom_projet
@@ -78,7 +78,7 @@ newgrp nom_projet
       <title>Espaces de stockage FTP</title>
 
 		<para>Chaque projet dispose de son propre espace de stockage FTP qui est constitué de
-			deux zones distinctes: l'espace FTP anonyme et l'espace FTP de publication de
+			deux zones distinctes : l'espace FTP anonyme et l'espace FTP de publication de
 			version.</para>
 
       <section id="TheAnonymousFTPSpace">
@@ -93,7 +93,7 @@ newgrp nom_projet
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-			<para>Accès en utilisateur anonyme: utilisez un client ftp pour vous connecter
+			<para>Accès en utilisateur anonyme : utilisez un client ftp pour vous connecter
 				à <literal>&SYS_DOWNLOAD_HOST;</literal>. Utilisez &#34;ftp&#34;
 				comme nom d'utilisateur et votre adresse email comme mot de passe. Ensuite
 				utilisez la commande <literal>cd /pub/nom_projet</literal> pour
@@ -101,7 +101,7 @@ newgrp nom_projet
           </listitem>
 
           <listitem>
-			<para>Accès pour les membres du projet: utilisez un client ftp pour vous
+			<para>Accès pour les membres du projet : utilisez un client ftp pour vous
 				connecter à <literal>&SYS_DOWNLOAD_HOST;</literal>. utilisez votre
 				nom d'utilisateur et mot de passe CodeX pour vous identifier, puis tapez la
 				commande <literal>cd /pub/nom_projet</literal> pour accéder à l'espace
@@ -109,7 +109,7 @@ newgrp nom_projet
 				écriture et peuvent télécharger des fichiers dans les deux sens.</para>
 
 		<para>Pour pointer sur cet espace de stockage dans une page Web ou dans un email,
-			utilisez l'URL suivant:</para>
+			utilisez l'URL suivant :</para>
 
             <para><literal>ftp://nom_projet.&SYS_DEFAULT_DOMAIN;:/pub/nom_projet</literal></para>
 
@@ -129,7 +129,7 @@ newgrp nom_projet
 			l'interface Web de CodeX.</emphasis> Si vous avez des questions à propos de la
 			publication de vos fichiers, veuillez contacter l'équipe CodeX.</para>
 
-        <para>Les membres du projet peuvent accéder à cet espace FTP de la façon suivante:</para>
+        <para>Les membres du projet peuvent accéder à cet espace FTP de la façon suivante :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -143,8 +143,8 @@ newgrp nom_projet
         </itemizedlist>
 
 		<para>Dans les deux cas, il faut faire usage de vos nom d'utilisateur et mot de passe de
-			CodeX pour vous identifier et utiliser la commande suivante pour accèder à
-			l'espace FTP de publication de fichiers:</para>
+			CodeX pour vous identifier et utiliser la commande suivante pour accéder à
+			l'espace FTP de publication de fichiers :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 cd &FTPFILES_DIR;/nom_projet
@@ -155,13 +155,13 @@ cd &FTPFILES_DIR;/nom_projet
 	<section id="MSWindowsSharedResources">
 		<title>Ressources partagées MS Windows</title>
 		
-		<para><emphasis role="bold">Note Importante</emphasis>: cette fonctionnalité
+		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalité
 			peut avoir été désactivée par l'administrateur de votre site CodeX et s'avérer
 			indisponible dans votre organisation.</para>
 		
 		<para>Les utilisateurs Windows (et les utilisateurs Linux/Unix disposant de
 			Samba) peuvent utiliser des disques réseau pour accéder aux espaces de stockage
-			suivants depuis leur explorateur de fichiers:</para>
+			suivants depuis leur explorateur de fichiers :</para>
 		
 		<itemizedlist mark="bullet" spacing="compact">
 			<listitem>
@@ -181,7 +181,7 @@ cd &FTPFILES_DIR;/nom_projet
 			</listitem>
 		</itemizedlist>
 		
-		<para>Pour accèder aux ressources partagées CodeX, ouvrez votre explorateur de
+		<para>Pour accéder aux ressources partagées CodeX, ouvrez votre explorateur de
 			fichiers, naviguez dans le Réseau Microsoft Global, ouvrez le domaine
 			&SYS_SAMBA_DOMAIN; et cliquez sur le serveur CodeX. Utilisez vos nom
 			d'utilisateur et mot de passe CodeX pour vous connecter aux ressources (ils vous
@@ -189,7 +189,7 @@ cd &FTPFILES_DIR;/nom_projet
 			d'utilisateur et mot de passe Windows).</para>
 		
 		<para>Les ressources partagées peuvent aussi être accédées directement en
-			utilisant les chemins suivants:</para>
+			utilisant les chemins suivants :</para>
 		
 		<itemizedlist mark="bullet" spacing="compact">
 			<listitem>
