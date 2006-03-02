@@ -10,7 +10,7 @@
 <?php
 
 $content = "
-<H2>Enregistrement terminé!</H2>
+<H2>Enregistrement terminé !</H2>
 	<P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
 	Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
 	<P>

@@ -21,16 +21,16 @@
 #
 admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
-admin_main	message		<b>Attention!</b> L'utilisation du bouton <b>Retour</b> de votre navigateur est fortement déconseillée dans les fonctions d'administration.
+admin_main	message		<b>Attention !</b> L'utilisation du bouton <b>Retour</b> de votre navigateur est fortement déconseillée dans les fonctions d'administration.
 admin_main	header_user	Administration des utilisateurs
-admin_main	display_user	Afficher les utilisateurs commençant par :
-admin_main	search_user	ou chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
+admin_main	display_user	Afficher les utilisateurs commençant par&nbsp;:
+admin_main	search_user	ou chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur)&nbsp;:
 admin_main	search	Chercher
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
 admin_main	need_approval	approbation requise
 admin_main	header_group	Administration de groupes
-admin_main	display_group	Afficher les groupes commençant par :
-admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet) :
+admin_main	display_group	Afficher les groupes commençant par&nbsp;:
+admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet)&nbsp;:
 admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
 admin_main	all_groups	Tous les <a href="$1">groupes</a>
 admin_main	incomplete_group	Groupes en statut <a href="$1"><B>I</B> (incomplet)</A>
@@ -133,7 +133,7 @@ admin_groupedit	active	Actif
 admin_groupedit	pending	En attente
 admin_groupedit	holding	En suspend
 admin_groupedit	deleted	Détruit
-admin_groupedit	public	Public?
+admin_groupedit	public	Public ?
 admin_groupedit	license	Licence
 admin_groupedit	home_box	Serveur maison
 admin_groupedit	http_domain	Domaine HTTP
@@ -170,7 +170,7 @@ admin_lastlogins	recent	Connections les plus récentes
 admin_massmail_execute	post_recvd	Requête Post reçue. Interrogation en cours	
 admin_massmail_execute	mailing	Interrogation terminée. Démarrage du mailing ver $1 adresses e-mail distinctes
 admin_massmail_execute	sending	envoi à
-admin_massmail_execute	done	Terminé!
+admin_massmail_execute	done	Terminé !
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php
@@ -216,15 +216,15 @@ admin_show_license	title	Termes et conditions de la licence
 #-----------------------------------------------
 # Script: SF/www/admin/user_changepw.php
 #
-admin_user_changepw	error_userid	Erreur interne : pas d'ID utilisateur
+admin_user_changepw	error_userid	Erreur interne&nbsp;: pas d'ID utilisateur
 admin_user_changepw	error_nopasswd	Vous devez fournir un mot de passe.
 admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
-admin_user_changepw	error_update	Erreur interne : le mot de passe n'a pu être mis à jour.
+admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu être mis à jour.
 admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe CodeX
 admin_user_changepw	msg_changed	le mot de passe utilisateur a été modifié. Ce changement est effectif immédiatement sur le site web, mais ne prendra effet sur le compte shell ou CVS qu'à la prochaine mise à jour du backend dans  <span class=\"highlight\"><b>$1</b> heure(s) <b>$2</b> minute(s)</b></span>.
 admin_user_changepw	title	Changement de mot de passe
-admin_user_changepw	ldap_warning	ATTENTION : Changer le mot de passe ici ne changera pas le mot de passe LDAP!
+admin_user_changepw	ldap_warning	ATTENTION&nbsp;: Changer le mot de passe ici ne changera pas le mot de passe LDAP !
 admin_user_changepw	header	Changement du mot de passe CodeX
 admin_user_changepw	new_passwd	Nouveau mot de passe
 admin_user_changepw	new_passwd2	Nouveau mot de passe (confirmez)
@@ -241,8 +241,8 @@ admin_usergroup	error_upd_u	Erreur lors de la mise à jour de l'utilisateur
 admin_usergroup	success_upd_u	Utilisateur mis à jour avec succès
 admin_usergroup	error_upd_ux	Erreur lors de la mise à jour du statut unix
 admin_usergroup	success_upd_ux	Statut unix mis à jour avec succès
-admin_usergroup	error_nouid	ID utilisateur manquant!
-admin_usergroup	error_nogid	ID groupe manquant!
+admin_usergroup	error_nouid	ID utilisateur manquant !
+admin_usergroup	error_nogid	ID groupe manquant !
 admin_usergroup	error_add_ug	Erreur lors de l'ajout d'un utilisateur au groupe
 admin_usergroup	success_add_ug	Utilisateur ajouté au groupe avec succès
 admin_usergroup	error_member	L'utilisateur est déjà membre du groupe $1
@@ -266,7 +266,7 @@ admin_usergroup	change_passwd	Changer le mot de passe de l'utilisateur
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	legend	Légende pour le Statut :&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
+admin_userlist	legend	Légende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
 admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
 admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
 admin_userlist	user_suspended	Utilisateur mis à jour avec le statut SUSPENDU
@@ -305,7 +305,7 @@ admin_trove_cat_add	parent	Catégorie parent
 admin_trove_cat_delete	title	Arbre des projets - Détruire une catégorie
 admin_trove_cat_delete	header	Détruire une catégorie de l'arbre des projets
 admin_trove_cat_delete	warning	<span class="feedback">**ATTENTION**</span> Vous êtes sur le point de détruire une catégorie de l'arbre des projets.
-admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catégorie possède <b>$1</b> sous-catégorie(s). Sa destruction va aussi entraîner la destruction des sous-catégories de façon récursive!!
+admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catégorie possède <b>$1</b> sous-catégorie(s). Sa destruction va aussi entraîner la destruction des sous-catégories de façon récursive !!
 admin_trove_cat_delete	no_child	Cette catégorie n'a pas de sous-catégorie
 admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catégorie et ses sous-catégories (si elle en a) sont utilisées par <b>$1 projet(s)</b>. La destruction de cette catégorie entraînera la réaffectation de tous les projets à la catégorie parent (ou à 'Aucune' si la catégorie parent est la racine de l'arbre)
 admin_trove_cat_delete	no_proj	Cette catégorie n'est utilisée par aucun projet

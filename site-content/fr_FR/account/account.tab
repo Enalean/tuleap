@@ -60,7 +60,7 @@ account_change_email	send_new	Envoyer la confirmation
 #-----------------------------------------------
 # Script: SF/www/account/change_email-confirm.php
 #
-account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement :\n\n$2\n\n-- L'équipe $1
+account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement&nbsp;:\n\n$2\n\n-- L'équipe $1
 account_change_email-confirm	title	Confirmation de changement d'adresse e-mail
 account_change_email-confirm	mailsent	Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-mail. Suivez les instructions fournies dans ce message pour confirmer définitivement le changement.
 #
@@ -76,7 +76,7 @@ account_change_email-complete	message	Bienvenue, $1.<P>Votre changement d'adress
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Mot de passe modifié avec succès
-account_change_pw	message	Félicitations! Vous venez de changer votre mot de passe. Ce changement est immédiat sur votre compte Web, mais ne prendra effet sur vos comptes shell ou cvs qu'à la prochaine mise à jour du backend qui aura lieu dans <span class=\"highlight\"><b> $2&nbsp;h&nbsp;$3&nbsp;minutes</b></span>.
+account_change_pw	message	Félicitations ! Vous venez de changer votre mot de passe. Ce changement est immédiat sur votre compte Web, mais ne prendra effet sur vos comptes shell ou cvs qu'à la prochaine mise à jour du backend qui aura lieu dans <span class=\"highlight\"><b> $2&nbsp;h&nbsp;$3&nbsp;minutes</b></span>.
 account_change_pw	title	Changement du mot de passe
 account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Nouveau mot de passe
@@ -109,13 +109,13 @@ account_deleted	message	Votre compte utilisateur a été détruit. Si vous avez des
 #
 account_editsshkeys	title	Modification des clés SSH partagées
 account_editsshkeys	message	Pour éviter d'avoir à taper votre mot de passe à chaque ouverture d'une session shell, vous pouvez enregistrer une ou plusieurs de vos clés publiques SSH qui seront stockées dans votre fichier '~/.ssh/authorized_keys'.<P>Pour générer une clé publique SSH, vous devez utiliser le programme 'ssh-keygen' (ou ssh-keygen1) sur votre station de travail. Ensuite, ouvrez le fichier '~/.ssh/identity.pub' où se trouve la clé publique générée. Consultez la documentation de ssh pour plus d'information sur le partage de clés.
-account_editsshkeys	important	<P><b>IMPORTANT :</b>La mise à jour de vos clés SSH ne sera effective qu'après la prochaine mise à jour du backend dans approximativement <B>$1</B> heures et <B>$2</B> minutes.
-account_editsshkeys	keys	Clés partagées :<BR><I>Important : Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
+account_editsshkeys	important	<P><b>IMPORTANT&nbsp;:</b>La mise à jour de vos clés SSH ne sera effective qu'après la prochaine mise à jour du backend dans approximativement <B>$1</B> heures et <B>$2</B> minutes.
+account_editsshkeys	keys	Clés partagées&nbsp;:<BR><I>Important&nbsp;: Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
 #
 #-----------------------------------------------
 # Script: SF/www/account/first.php
 #
-account_first	title	Bienvenue sur $1!
+account_first	title	Bienvenue sur $1 !
 account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web $1. Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés, ou même démarrer votre propre projet.<P><center><b><span class="highlight">** REMARQUES IMPORTANTES **</span></b></center><BR>Bien que votre compte Web soit disponible dès maintenant, $1 prendra quelques temps pour créer votre <u>compte shell</u>. Certaines fonctionnalités comme l'accès aux répertoires CVS en dépendent. Votre <u>compte shell</u> sera activé dans approximativement <b>$2</b> heures et <B>$3</B> minutes. <P>Entre temps nous vous recommandons vivement de parcourir le site, lire la <A href="/docs/site/">documentation du site</a> et de peaufiner la configuration de votre <a href="/account/">compte utilisateur</a> (définir votre profil de compétences, vos préférences, etc&hellip;)<P><center><b><span class="highlight">*-*-*-*</span></b></center> <P>Profitez pleinement du site, envoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de $1 autour de vous. <P>-- L'équipe $1
 #
 #-----------------------------------------------
@@ -123,7 +123,7 @@ account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En 
 #
 account_login	title	Connexion au site
 account_login	secure	sécurisé
-account_login	error_can_t_update_passwd	Erreur interne : mise à jour des mots de passe impossible.
+account_login	error_can_t_update_passwd	Erreur interne&nbsp;: mise à jour des mots de passe impossible.
 account_login	pending_title	Compte en attente
 account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
 account_login	resend_btn	Renvoyer le message de confirmation
@@ -151,14 +151,14 @@ account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #
 account_lostpw-confirm	title	Confirmation de la perte du mot de passe
 account_lostpw-confirm	mail_subject	Vérification du mot de passe de $1
-account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe :\n\n$2\n\n -- L'équipe $1\n
+account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe&nbsp;:\n\n$2\n\n -- L'équipe $1\n
 account_lostpw-confirm	msg_confirm	<B>Demande de confirmation envoyée</B><P>Un message électronique vient d'être envoyé à l'adresse e-mail de votre compte utilisateur. Suivez les instructions incluses dans ce message pour changer votre mot de passe.
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostpw.php
 #
 account_lostpw	title	Mot de passe perdu
-account_lostpw	message	<B>Mot de passe perdu?</B><P>Hé... la perte d'un mot de passe est à prendre au sérieux. Cela peut compromettre la sécurité de votre compte, de vos projets et du site.<P>En cliquant sur le bouton ci-dessous, un message électronique comportant un lien (URL). Dans ce lien se trouve une clé de confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de changer mot de passe puis de vous connecter.
+account_lostpw	message	<B>Mot de passe perdu ?</B><P>Hé... la perte d'un mot de passe est à prendre au sérieux. Cela peut compromettre la sécurité de votre compte, de vos projets et du site.<P>En cliquant sur le bouton ci-dessous, un message électronique comportant un lien (URL). Dans ce lien se trouve une clé de confirmation unique à 128 bits. En visitant ce lien vous serez en mesure de changer mot de passe puis de vous connecter.
 account_lostpw	send_hash	Envoyer la clé pour le mot de passe perdu
 #
 #-----------------------------------------------
@@ -199,9 +199,9 @@ account_register	title	Création d'un nouveau compte utilisateur
 account_register	login	Nom de login
 account_register	ldap_login	Nom de login LDAP
 account_register	ldap_unix_login	Nom CodeX <strong>(minuscules uniquement, pas d'espace)</strong>
-account_register	ldap_email_help	<em><strong>Remarque :</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
+account_register	ldap_email_help	<em><strong>Remarque&nbsp;:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
 account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
-account_register	login_directions	<strong>(minuscules uniquement!)</strong>
+account_register	login_directions	<strong>(minuscules uniquement !)</strong>
 account_register	passwd	Mot de passe
 account_register	passwd_directions	(6 caractères minimum)	
 account_register	passwd2	Mot de passe (confirmez)
@@ -209,7 +209,7 @@ account_register	passwd2_directions	&nbsp;
 account_register	realname	Nom Complet
 account_register	realname_directions	&nbsp;
 account_register	email	Adresse e-mail
-account_register	email_directions	<em><strong>Remarque :</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
+account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
 account_register	tz	Fuseau Horaire
 account_register	mandatory	Les champs marqués $1 sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>
@@ -218,11 +218,11 @@ account_register	purpose	Motif
 account_register	purpose_directions	<em>Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site</em><br>
 account_register	btn_register	Créer le compte
 account_register	btn_next	Etape suivante
-account_register	msg_confirm	Félicitations! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est : <b>$2</b><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. En visitant le lien inclus dans ce message vous activerez votre compte.</p>
+account_register	msg_confirm	Félicitations ! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est&nbsp;: <b>$2</b><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. En visitant le lien inclus dans ce message vous activerez votre compte.</p>
 account_register	title_approval	Création de compte - Prêt pour approbation
-account_register	msg_approval	Félicitations! Votre demande de création de compte sur $1 pour l'utilisateur <b>$2</b> a été pris en compte.<p>L'administrateur du site va maintenant examiner votre demande. Une fois approuvée vous recevrez un message de confirmation afin de vérifier votre adresse e-mail.  En visitant le lien inclus dans ce message vous activerez votre compte.
-account_register	mail_approval_subject	Création du nouveau compte : $1
-account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur : $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte :\n\n$3\n
+account_register	msg_approval	Félicitations ! Votre demande de création de compte sur $1 pour l'utilisateur <b>$2</b> a été pris en compte.<p>L'administrateur du site va maintenant examiner votre demande. Une fois approuvée vous recevrez un message de confirmation afin de vérifier votre adresse e-mail.  En visitant le lien inclus dans ce message vous activerez votre compte.
+account_register	mail_approval_subject	Création du nouveau compte&nbsp;: $1
+account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur&nbsp;: $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte&nbsp;:\n\n$3\n
 #
 #-----------------------------------------------
 # Script: SF/www/account/suspended.php

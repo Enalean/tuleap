@@ -17,7 +17,7 @@
 advanced_search	all	tous
 advanced_search	and_search	tous les mots
 advanced_search	error_search_minlength	Le mot recherché doit contenir au moins trois charactères
-advanced_search	headline	Résultats de la recherche dans : $1
+advanced_search	headline	Résultats de la recherche dans&nbsp;: $1
 advanced_search	no_matches_found	Aucun résultat trouvé
 advanced_search	no_matches_found_no_under_section	Aucun résultat trouvé - Aucune section disponible (vérifiez vos permissions)
 advanced_search	none	aucun
@@ -34,7 +34,7 @@ group	activitystat	Voir les <a href="/project/stats/?group_id=$1">statistiques d
 group	developer_info	Equipe-Projet
 group	developers	Développeurs&nbsp;
 group	long_bugs	Gestion des bugs
-group	long_docman	Gestion de documents : Documentation du projet
+group	long_docman	Gestion de documents&nbsp;: Documentation du projet
 group	long_forum	Forums de discussion
 group	long_ftp	Espace FTP anonyme
 group	long_homepage	Page d'accueil du projet

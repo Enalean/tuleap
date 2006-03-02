@@ -18,7 +18,7 @@
 #-----------------------------------------------
 # Script: SF/www/help/browse_bug_query_field.php
 #
-help_browse_bug_query_field	no_field	Champ inconnu : $1
+help_browse_bug_query_field	no_field	Champ inconnu&nbsp;: $1
 help_browse_bug_query_field	bug_search_criteria	Recherche de bugs - Critère de sélection
 help_browse_bug_query_field	field_name	Nom du champ
 help_browse_bug_query_field	field_type	Type du champ
@@ -41,7 +41,7 @@ help_index	page_info	Page d'information
 #-----------------------------------------------
 # Script: SF/www/help/show_help.php
 #
-help_show_help	page_not_found	Système d'aide $1 - Erreur : page introuvable
+help_show_help	page_not_found	Système d'aide $1 - Erreur&nbsp;: page introuvable
 help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avez demandée (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
 #
 #-----------------------------------------------

@@ -29,7 +29,7 @@ svn_admin_access_control	not_created	Votre dépôt Subversion n'a pas été créé. Le
 # Script: SF/www/svn/admin/general_settings.php
 #
 svn_admin_general_settings	upd_success	Options générales mises à jour avec succès
-svn_admin_general_settings	upd_fail	La mise à jour des options générales a échoué : $1
+svn_admin_general_settings	upd_fail	La mise à jour des options générales a échoué&nbsp;: $1
 svn_admin_general_settings	gen_settings	Administration de Subversion  - Options générales
 svn_admin_general_settings	tracking	Suivi de Subversion
 svn_admin_general_settings	tracking_comment	Lorsque le suivi de Subversion est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et  effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservé dans la base de données ; vous disposez uniquement de l'historique Subversion.
@@ -50,7 +50,7 @@ svn_admin_index	email_comment	Définition des destinataires des notification e-ma
 # Script: SF/www/svn/admin/notification.php
 #
 svn_admin_notification	upd_success	Notification e-mail mise à jour avec succès
-svn_admin_notification	upd_fail	La mise à jour de la notification e-mail a échoué : $1
+svn_admin_notification	upd_fail	La mise à jour de la notification e-mail a échoué&nbsp;: $1
 svn_admin_notification	email	Administration de Subversion  - Notification e-mail 
 svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée.</I></p>
 svn_admin_notification	mail_to	Envoyer à
@@ -61,7 +61,7 @@ svn_admin_notification	header	Entête du sujet
 #
 svn_browse_revision	browsing	Affichage des révisions Subversion
 svn_browse_revision	view_commit	Afficher les commits
-svn_browse_revision	browse_commit	Afficher les commits par :
+svn_browse_revision	browse_commit	Afficher les commits par&nbsp;:
 svn_browse_revision	rev	Révision
 svn_browse_revision	commiter	Soumis par
 svn_browse_revision	path	Chemin
@@ -115,8 +115,8 @@ svn_utils	del	Supprimé
 svn_utils	impacted_files	Liste des fichiers concernés
 svn_utils	no_hist	Ce projet n'a pas d'historique Subversion.
 svn_utils	ci_week	Commits (Derniers 7 jours/Total)
-svn_utils	file_err	Erreur : Ouverture fichier $1 impossible
-svn_utils	write_err	Erreur : Impossible d'écrire dans le fichier $1
+svn_utils	file_err	Erreur&nbsp;: Ouverture fichier $1 impossible
+svn_utils	write_err	Erreur&nbsp;: Impossible d'écrire dans le fichier $1
 #
 #-----------------------------------------------
 # Script: SF/www/svn/svn_utils.php

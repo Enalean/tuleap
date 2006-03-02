@@ -18,19 +18,19 @@
 #-----------------------------------------------
 # Script: SF/www/project/admin/editgroupinfo.php
 #
-project_admin_editgroupinfo	upd_fail	LA MISE A JOUR A ECHOUE OU AUCUNE DONNEE N'A ETE MODIFIEE! $1
+project_admin_editgroupinfo	upd_fail	LA MISE A JOUR A ECHOUE OU AUCUNE DONNEE N'A ETE MODIFIEE ! $1
 project_admin_editgroupinfo	upd_success	Mis à jour avec succès
 project_admin_editgroupinfo	changed_public_info	Information publique modifiée
 project_admin_editgroupinfo	editing_g_info	Modification des informations du projet
-project_admin_editgroupinfo	editing_g_info_for	Modification des informations pour le projet : <B>$1</B>
-project_admin_editgroupinfo	descriptive_g_name	Nom descriptif du projet :
-project_admin_editgroupinfo	short_desc	Description courte (255 caractères max.) :
-project_admin_editgroupinfo	long_desc	Description longue :
+project_admin_editgroupinfo	editing_g_info_for	Modification des informations pour le projet&nbsp;: <B>$1</B>
+project_admin_editgroupinfo	descriptive_g_name	Nom descriptif du projet&nbsp;:
+project_admin_editgroupinfo	short_desc	Description courte (255 caractères max.)&nbsp;:
+project_admin_editgroupinfo	long_desc	Description longue&nbsp;:
 project_admin_editgroupinfo	patents	Brevets et propositions d'inventions
 project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
-project_admin_editgroupinfo	comments	Autre commentaires :
-project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet :
-project_admin_editgroupinfo	hide_members	Cacher la liste des membres dans la page de sommaire du projet :
+project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
+project_admin_editgroupinfo	license_comment	Commentaires à propos de la licence non répertoriée utilisée par ce projet&nbsp;:
+project_admin_editgroupinfo	hide_members	Cacher la liste des membres dans la page de sommaire du projet&nbsp;:
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -45,7 +45,7 @@ project_admin_editservice	s_short_name	Nom court pour le service
 project_admin_editservice	short_name	Nom court
 project_admin_editservice	s_desc_in_tooltip	La description du service sera affichée dans une bulle d'aide au dessus du label.
 project_admin_editservice	s_desc	Description du service
-project_admin_editservice	s_scope	Portée du service : projet seul ou tout le système
+project_admin_editservice	s_scope	Portée du service&nbsp;: projet seul ou tout le système
 project_admin_editservice	scope	Portée
 project_admin_editservice	display_options	Options d'affichage
 project_admin_editservice	instanciated_for_new_p	Instancié dans les nouveaux projets ?
@@ -60,7 +60,7 @@ project_admin_editservice	system	système
 project_admin_editservice	project	projet
 project_admin_editservice	mandatory	: imposé pour les services de type système
 project_admin_editservice	edit_s	Modifier un service
-project_admin_editservice	s_not_exist	Le service n'existe pas : $1
+project_admin_editservice	s_not_exist	Le service n'existe pas&nbsp;: $1
 project_admin_editservice	forbidden	Interdit
 project_admin_editservice	no_access_inactive_s	Vous ne pouvez accéder à un service inactif
 ## There must be a label and description value here for each service name (system or project wide) that should be localised
@@ -111,23 +111,23 @@ project_admin_editugroup	desc	Description
 project_admin_editugroup	browser_not_accepted	Désolé, votre navigateur (Netscape 4.x) n'est pas supporté. Pour modifier our créer un groupe d'utilisateur, veuillez utiliser un autre navigateur
 project_admin_editugroup	create_ug	Créer un groupe d'utilisateurs
 project_admin_editugroup	create_ug_for	Créer un nouveau groupe d'utilisateurs pour <B>$1</B>
-project_admin_editugroup	fill_ug_desc	Veuillez remplir le nom et la description de ce nouveau groupe d'utilisateurs :
+project_admin_editugroup	fill_ug_desc	Veuillez remplir le nom et la description de ce nouveau groupe d'utilisateurs&nbsp;:
 project_admin_editugroup	create_from	Créer à partir de
 project_admin_editugroup	empty_g	Groupe vide
 project_admin_editugroup	proj_members	Membres du projet
 project_admin_editugroup	proj_admins	Administrateurs du projet
 project_admin_editugroup	ug_id_missed	L'ID du ugroup est manquant
-project_admin_editugroup	ug_not_found	ERREUR - Impossible de trouver le ugroup :$1 - $2
+project_admin_editugroup	ug_not_found	ERREUR - Impossible de trouver le ugroup&nbsp;:$1 - $2
 project_admin_editugroup	edit_ug	Modifier les groupes d'utilisateurs
 project_admin_editugroup	ug_admin	Administration du groupe d'utilisateurs '<B>$1</B>'
-project_admin_editugroup	upd_ug_name	Vous pouvez modifier le nom et la description de ce groupe d'utilisateurs :
-project_admin_editugroup	select_ug_members	Veuillez sélectionner les membres du groupe d'utilisateurs :
-project_admin_editugroup	quick_filters	Filtres rapides :
+project_admin_editugroup	upd_ug_name	Vous pouvez modifier le nom et la description de ce groupe d'utilisateurs&nbsp;:
+project_admin_editugroup	select_ug_members	Veuillez sélectionner les membres du groupe d'utilisateurs&nbsp;:
+project_admin_editugroup	quick_filters	Filtres rapides&nbsp;:
 project_admin_editugroup	show_items	Montrer les items commençant par $1
 project_admin_editugroup	sel01	Sélection 01 - veuillez ignorer
 project_admin_editugroup	please_wait	Veuillez patienter...
-project_admin_editugroup	filter	Filtre :
-project_admin_editugroup	ug_perms	Ce groupe d'utilisateurs possède les permissions suivantes :
+project_admin_editugroup	filter	Filtre&nbsp;:
+project_admin_editugroup	ug_perms	Ce groupe d'utilisateurs possède les permissions suivantes&nbsp;:
 project_admin_editugroup	permission	Permission
 project_admin_editugroup	resource_name	Nom de la ressource
 project_admin_editugroup	release		Version
@@ -145,7 +145,7 @@ project_admin_editugroup	tracker_field	Champs de l'outil de suivi
 #
 project_admin_grouptrove	changed_trove	Modifier la catégorisation du projet
 project_admin_grouptrove	g_trove_info	Information sur la catégorisation du projet
-project_admin_grouptrove	select_3_classifs	Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. Cela permettra aux utilisateurs de trouver rapidement votre projet. Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".<P>REMARQUES IMPORTANTES : <ul><li>Les projets doivent être classifiés dans la catégorie la plus précise possible de l'arbre des projets.</li><li>Si vous sélectionnez simultanément une catégorie et une sous-catégorie plus spécialisée, seule cette dernière sera retenue.</li><li><em><b>Pour la catégorie Topic (Domaine) seulement</b></em> : Si votre projet ne correspond à aucune des valeurs de la catégorie, sélectionner simplement la valeur "Other/Non Listed Topics" ("Autre/Domaine non défini"). Au fur et à mesure de la soumission de nouveaux projets, l'équipe $1 enrichira la catégorie Topic (Domaine) avec des sous-catégories de 2ème ou de 3ème niveau. Toutes les suggestions à ce sujet sont les bienvenues. Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.</li></ul>
+project_admin_grouptrove	select_3_classifs	Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. Cela permettra aux utilisateurs de trouver rapidement votre projet. Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".<P>REMARQUES IMPORTANTES&nbsp;: <ul><li>Les projets doivent être classifiés dans la catégorie la plus précise possible de l'arbre des projets.</li><li>Si vous sélectionnez simultanément une catégorie et une sous-catégorie plus spécialisée, seule cette dernière sera retenue.</li><li><em><b>Pour la catégorie Topic (Domaine) seulement</b></em>&nbsp;: Si votre projet ne correspond à aucune des valeurs de la catégorie, sélectionner simplement la valeur "Other/Non Listed Topics" ("Autre/Domaine non défini"). Au fur et à mesure de la soumission de nouveaux projets, l'équipe $1 enrichira la catégorie Topic (Domaine) avec des sous-catégories de 2ème ou de 3ème niveau. Toutes les suggestions à ce sujet sont les bienvenues. Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.</li></ul>
 project_admin_grouptrove	submit_all_changes	Valider les changements de catégories
 #
 #-----------------------------------------------
@@ -164,13 +164,13 @@ project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
 project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur l'outil de suivi ($1) a échoué
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
 project_admin_index	user_removed	Utilisateur enlevé
-project_admin_index	p_admin	Administration du projet : $1
-project_admin_index	p_edit	Information sur le projet : $1
-project_admin_index	short_desc	Description courte : $1
-project_admin_index	home_page_link	Lien site Web : $1
-project_admin_index	trove_cat_info	<B>Information de classification</B> - Le projet est classifié de la façon suivante :
+project_admin_index	p_admin	Administration du projet&nbsp;: $1
+project_admin_index	p_edit	Information sur le projet&nbsp;: $1
+project_admin_index	short_desc	Description courte&nbsp;: $1
+project_admin_index	home_page_link	Lien site Web&nbsp;: $1
+project_admin_index	trove_cat_info	<B>Information de classification</B> - Le projet est classifié de la façon suivante&nbsp;:
 project_admin_index	edit_trove_cat	[Modifier la classification]
-project_admin_index	login_name	Nom de login :
+project_admin_index	login_name	Nom de login&nbsp;:
 project_admin_index	add_user	Ajouter un utilisateur
 project_admin_index	edit_member_perm	[Editer les permissions des membres]
 project_admin_index	s_admin	Administration
@@ -194,7 +194,7 @@ project_admin_index	file_rel	Publication de fichiers
 project_admin_index	edit_add_rel	[Modifier/Ajouter une version]
 project_admin_index	quick_file_add	[Ajout rapide d'une version]
 project_admin_index	if_1_file_in_rel	Si vous avez juste un fichier à publier.
-project_admin_index	packages_available	Paquet(s) actuellement disponible(s) :
+project_admin_index	packages_available	Paquet(s) actuellement disponible(s)&nbsp;:
 project_admin_index	or	ou
 #
 #-----------------------------------------------
@@ -234,33 +234,33 @@ project_admin_permissions	obj_id_missed	object_id manquant
 project_admin_permissions	perm_type_missed	permission_type manquant
 project_admin_permissions	g_id_missed	group_id manquant
 project_admin_permissions	all_users_added	Tous les utilisateurs ajoutés, y compris les utilisateurs anonymes
-project_admin_permissions	cant_add_ug_anonymous	$1 - ERREUR : Impossible d'ajouter le ugroup Anonyme
+project_admin_permissions	cant_add_ug_anonymous	$1 - ERREUR&nbsp;: Impossible d'ajouter le ugroup Anonyme
 project_admin_permissions	ignore_g	- les autres groupes spécifiés sont ignorés
 project_admin_permissions	all_registered_users_added	Tous les utilisateurs enregistrés ont été ajoutés 
-project_admin_permissions	cant_add_ug_reg_users	$1 - ERREUR : le ugroup utilisateurs enregistrés n'a pu être ajouté
+project_admin_permissions	cant_add_ug_reg_users	$1 - ERREUR&nbsp;: le ugroup utilisateurs enregistrés n'a pu être ajouté
 project_admin_permissions	g_nobody_ignored	Groupe 'nobody' ignoré puisque d'autres groupes ont été sélectionnés.
-project_admin_permissions	nobody_has_no_access	Veuillez noter que 'nobody' n'a plus accès à cet objet!
-project_admin_permissions	cant_add_ug	$1 - ERREUR : Impossible d'ajouter le ugroup $2. Etes-vous administrateur de ce service ?
+project_admin_permissions	nobody_has_no_access	Veuillez noter que 'nobody' n'a plus accès à cet objet !
+project_admin_permissions	cant_add_ug	$1 - ERREUR&nbsp;: Impossible d'ajouter le ugroup $2. Etes-vous administrateur de ce service ?
 project_admin_permissions	def_val	(valeurs par défaut)
 project_admin_permissions	perm_update_success	$1 - Permissions mises à jour avec succès
 project_admin_permissions	reset_to_def	Retour aux valeurs d'origine
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #
-project_reference	create_fail	Echec lors de la création de la référence : le mot clé choisi est invalide (réservé, ou déjà affecté)
-project_reference	create_for_tracker_fail	Référence associée au tracker non créée : le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
+project_reference	create_fail	Echec lors de la création de la référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	create_for_tracker_fail	Référence associée au tracker non créée&nbsp;: le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
 project_reference	create_s	Créer une nouvelle référence.
-project_reference	del?	Détruire?
-project_reference	del_fail	- Echec de la destruction! $1
+project_reference	del?	Détruire ?
+project_reference	del_fail	- Echec de la destruction ! $1
 project_reference	del_r	Détruire cette référence ?
 project_reference	disabled	<i>Désactivé</i>
-project_reference	edit_fail	Echec lors de l'édition de la référence : le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	edit_fail	Echec lors de l'édition de la référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
 project_reference	edit_r	Editer la référence
 project_reference	edit_reference	Edition des références
 project_reference	edit_s_for	Edition des références de <B>$1</B>
 project_reference	edit_system_s	Edition des références système
 project_reference	enabled	Activé
-project_reference	enabled_desc	Extrait automatiquement ce mot-clé?
+project_reference	enabled_desc	Extrait automatiquement ce mot-clé ?
 project_reference	fields_required	champs obligatoires
 project_reference	id	Identifiant
 project_reference	keyword	Mot Clé
@@ -277,7 +277,7 @@ project_reference	r_desc_in_tooltip	La description de la référence sera affichée
 project_reference	r_keyword	Mot clé
 project_reference	r_keyword_desc	Mot clé qui déclenche la création d'une référence
 project_reference	r_link	Lien
-project_reference	r_scope	Portée de la référence : projet seulement ou système
+project_reference	r_scope	Portée de la référence&nbsp;: projet seulement ou système
 project_reference	r_service	Lié au service
 project_reference	r_service_desc	Si la référence est spécifique à un service de CodeX, le spécifier ici
 project_reference	ref_scope_P	Projet
@@ -288,7 +288,7 @@ project_reference	system	système
 project_reference	system_r_create_success	Référence système créée avec succès, et ajoutée à tous les projets
 project_reference	t_r_deleted	Référence correspondante détruite
 project_reference	url	URL pointée par la référence
-project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous détruire cette référence? Cela supprimera la référence ($1) de TOUS les projets de ce serveur. Etes-vous SUR de vouloir continuer?
+project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous détruire cette référence ? Cela supprimera la référence ($1) de TOUS les projets de ce serveur. Etes-vous SUR de vouloir continuer ?
 project_reference	extract_syntax	Paramètres :\n  group_id : projet qui définit les références\n  text     : texte en entrée
 project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_name : projet qui définit les références<br>- text : texte en entr&eacute;e
 ## Description value here for each reference name (system or project wide) that should be localised
@@ -375,9 +375,9 @@ project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le groupe
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
 project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1 
-project_admin_utils	menu_config	Configuration : 
-project_admin_utils	menu_permissions	Permissions : 
-project_admin_utils	menu_data	Données : 
+project_admin_utils	menu_config	Configuration&nbsp;: 
+project_admin_utils	menu_permissions	Permissions&nbsp;: 
+project_admin_utils	menu_data	Données&nbsp;: 
 #... end of values
 #
 #-----------------------------------------------
@@ -388,10 +388,10 @@ project_admin_servicebar	disabled	Inactif
 project_admin_servicebar	warning_del_s	*********** AVERTISSEMENT ***********\nVoulez-vous détruire ce service ? Ce faisant le service ($1) ne sera plus accessible à AUCUN des projets hébergés sur ce site. Voulez-vous vraiment continuer ?
 project_admin_servicebar	del_s	Détruire ce service ?
 project_admin_servicebar	del	DETRUIRE
-project_admin_servicebar	s_id_not_given	ECHEC : L'ID du service n'est pas spécifié
+project_admin_servicebar	s_id_not_given	ECHEC&nbsp;: L'ID du service n'est pas spécifié
 project_admin_servicebar	s_del	Service Détruit
-project_admin_servicebar	cant_delete_s_from_p	- Impossible détruire le service dans les projets : le nom court est manquant
-project_admin_servicebar	del_fail	- ECHEC DE LA DESTRUCTION! $1
+project_admin_servicebar	cant_delete_s_from_p	- Impossible détruire le service dans les projets&nbsp;: le nom court est manquant
+project_admin_servicebar	del_fail	- ECHEC DE LA DESTRUCTION ! $1
 project_admin_servicebar	s_del_from_p	- Service détruit dans $1 projets
 project_admin_servicebar	label_missed	Le label est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
 project_admin_servicebar	link_missed	Le lien est manquant, veuillez cliquer sur le bouton "Retour" de votre navigateur et remplissez ce champ
@@ -400,11 +400,11 @@ project_admin_servicebar	cant_make_s	Impossible de créer un service de portée "s
 project_admin_servicebar	set_stat_unused	- Statut sur "inutilisé" -
 project_admin_servicebar	short_name_exist	Un service ayant le même nom court existe déjà. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier de champ
 project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100. Veuillez cliquer sur le bouton "Retour" de votre navigateur et modifier le champ
-project_admin_servicebar	cant_create_s	ERREUR - Impossible de créer le service : $1
+project_admin_servicebar	cant_create_s	ERREUR - Impossible de créer le service&nbsp;: $1
 project_admin_servicebar	s_create_success	Service créé avec succès
 project_admin_servicebar	s_add_success	- Service ajouté avec succès à $1 projet(s)
 project_admin_servicebar	s_id_missed	L'ID du service est manquant
-project_admin_servicebar	cant_update_s	ERREUR - Impossible de mettre à jour le service : $1
+project_admin_servicebar	cant_update_s	ERREUR - Impossible de mettre à jour le service&nbsp;: $1
 project_admin_servicebar	s_update_success	Service mis à jour avec succès
 project_admin_servicebar	edit_s_bar	Modifier la barre de service
 project_admin_servicebar	edit_system_s	Modifier les services systèmes
@@ -414,7 +414,7 @@ project_admin_servicebar	create_s	Créer un nouveau service.
 project_admin_servicebar	manage_s	Modifier les services existants
 project_admin_servicebar	availability	Disponibilité
 project_admin_servicebar	rank_on_screen	Rang à l'écran
-project_admin_servicebar	del?	Détruire?
+project_admin_servicebar	del?	Détruire ?
 project_admin_servicebar	home_page	Site Web
 project_admin_servicebar	cant_create_s_for_p	ERREUR - Impossible de créer le service pour le projet $1
 #
@@ -435,23 +435,23 @@ project_admin_ugroup	predef_g	(*) indique un groupe prédéfini
 # Script: SF/www/project/admin/ugroup_utils.php
 #
 project_admin_ugroup_utils	ug__exist	Le groupe d'utilisateurs '$1' existe déjà pour ce projet. Veuillez choisir un autre nom.
-project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer le groupe d'utilisateurs : $1
+project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer le groupe d'utilisateurs&nbsp;: $1
 project_admin_ugroup_utils	ug_create_success	Le groupe d'utilisateurs a été créé avec succès
-project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID : 
+project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID&nbsp;: 
 project_admin_ugroup_utils	no_g_template	- Aucun modèle de groupe sélectionné
 project_admin_ugroup_utils	cant_insert_u_in_g	ERREUR - Impossible d'insérer l'utilisateur $1 dans le groupe $2 : $3
 project_admin_ugroup_utils	u_added	- $1 ajouté
 project_admin_ugroup_utils	ug_name_missed	Le nom de groupe est manquant. Veuillez cliquer sur le bouton "Retour" de votre navigateur et remplir ce champ.
-project_admin_ugroup_utils	invalid_ug_name	Nom de groupe invalide : $1. Veuillez n'utiliser que des caractères alphanumériques. Cliquer sur le bouton "Retour" de votre navigateur et modifier ce champ.
-project_admin_ugroup_utils	cant_update_ug	ERREUR - Impossible de mettre à jour le groupe d'utilisateurs : $1
+project_admin_ugroup_utils	invalid_ug_name	Nom de groupe invalidenbsp;: $1. Veuillez n'utiliser que des caractères alphanumériques. Cliquer sur le bouton "Retour" de votre navigateur et modifier ce champ.
+project_admin_ugroup_utils	cant_update_ug	ERREUR - Impossible de mettre à jour le groupe d'utilisateurs&nbsp;: $1
 project_admin_ugroup_utils	cant_reset_ug	ERREUR - Impossible de réinitialiser le groupe d'utilisateurs $1 : $2
 project_admin_ugroup_utils	ug_upd_success	Groupe d'utilisateurs $1 mis à jour avec succès ($2 membres)
-project_admin_ugroup_utils	ug_not_given	ECHEC : l'ID de ugroup ID n'est pas spécifié
+project_admin_ugroup_utils	ug_not_given	ECHEC&nbsp;: l'ID de ugroup ID n'est pas spécifié
 project_admin_ugroup_utils	g_del	Groupe d'utilisateurs détruit
-project_admin_ugroup_utils	cant_remove_u	- Erreur : Impossible d'enlever l'utilisateur! $1
+project_admin_ugroup_utils	cant_remove_u	- Erreur&nbsp;: Impossible d'enlever l'utilisateur ! $1
 project_admin_ugroup_utils	all_u_removed	- Tous les utilisateurs ont été enlevés de ce groupe
-project_admin_ugroup_utils	cant_remove_perm	- Erreur : impossible d'enlever les permissions! $1
-project_admin_ugroup_utils	perm_warning	- AVERTISSEMENT : permissions associées à $1 détruites. <br>Note : Si ce groupe était le seul autorisé à accéder à cet objet, les permissions seront réinitialisées à leurs valeurs par défaut.
+project_admin_ugroup_utils	cant_remove_perm	- Erreur&nbsp;: impossible d'enlever les permissions ! $1
+project_admin_ugroup_utils	perm_warning	- AVERTISSEMENT&nbsp;: permissions associées à $1 détruites. <br>Note&nbsp;: Si ce groupe était le seul autorisé à accéder à cet objet, les permissions seront réinitialisées à leurs valeurs par défaut.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/userperms.php
@@ -459,7 +459,7 @@ project_admin_ugroup_utils	perm_warning	- AVERTISSEMENT : permissions associées 
 project_admin_userperms	invalid_g	Groupe invalide
 project_admin_userperms	group_not_exist	Cet utilisateur n'existe pas.
 project_admin_userperms	unable_load_p	Impossible de charger l'objet projet
-project_admin_userperms	cannot_remove_admin_stat	Impossible d'enlever le statut Administrateur : le projet a besoin d'au moins un administrateur!
+project_admin_userperms	cannot_remove_admin_stat	Impossible d'enlever le statut Administrateur&nbsp;: le projet a besoin d'au moins un administrateur !
 project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
 project_admin_userperms	perm_upd	Permissions mises à jour
 project_admin_userperms	user_name	Nom d'utilisateur
@@ -473,8 +473,8 @@ project_admin_userperms	patch_man	Suivi de corrections
 project_admin_userperms	supp_man	Suivi de support
 project_admin_userperms	doc_man	Gestion Documentation
 project_admin_userperms	file_man	Gestion fichiers
-project_admin_userperms	tracker	Suivi :<br>$1
-project_admin_userperms	member_ug	Membre des groupes d'utilisateurs :
+project_admin_userperms	tracker	Suivi&nbsp;:<br>$1
+project_admin_userperms	member_ug	Membre des groupes d'utilisateurs&nbsp;:
 project_admin_userperms	no_users_found	Aucun utilisateur dans ce projet
 project_admin_userperms	tech_only	Technicien
 project_admin_userperms	admin_only	Administrateur
@@ -494,7 +494,7 @@ project_export_artifact_deps_export	db_access_err	Erreur lors de l'accès à la ba
 project_export_artifact_deps_export	deps_export_format	Format d'exportation des dépendances
 project_export_artifact_deps_export	deps_export_format_msg	Le format d'exportation des dépendances comprend les champs suivants. Les valeurs données en exemple indique le type des données.
 project_export_artifact_deps_export	create_proj_err	Erreur à la création de la table $2 pour le projet $1
-project_export_artifact_deps_export	security_violation	VIOLATION DE SECURITE!!! Nom de base de données non autorisé : $1
+project_export_artifact_deps_export	security_violation	VIOLATION DE SECURITE !!! Nom de base de données non autorisé&nbsp;: $1
 project_export_artifact_deps_export	art_id_desc	Identifiant unique de l'artefact
 project_export_artifact_deps_export	depend_on_art	Dépend du/des artefacts
 #
@@ -560,7 +560,7 @@ project_export_bug_export	depend_on_bugs_desc	Liste des bus dont celui-ci dépend
 #-----------------------------------------------
 # Script: SF/www/project/export/index.php
 #
-project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilote ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connexion à la base de données pour le pilote ODB/JDC sont les suivants :
+project_export_index	proj_db_success	La base de données de votre projet a été créé avec succès. Vous pouvez maintenant utiliser votre application préférée et accéder à vos données en utilisant le pilote ODBC/JDBC de MySQL installé sur votre ordinateur. Les paramètres de connexion à la base de données pour le pilote ODB/JDC sont les suivants&nbsp;:
 project_export_index	export_to_csv_or_db	Les données de votre projet peuvent être exportées dans des fichiers texte (format CSV) ou dans une base de données spécifique à laquelle vous pouvez vous connecter depuis votre environnement de travail en utilisant le pilote ODBC/JDBC approprié. Voir l'$1 pour plus d'information.
 project_export_index	export_to_csv_hdr	Exporter au format texte $1
 project_export_index	export_to_csv_msg	Cliquer sur un des liens ci-dessous pour exporter les données au format texte (CSV format).
@@ -578,7 +578,7 @@ project_export_index	support_request	Suivi de demandes de support
 project_export_index	survey_responses	Réponses aux sondages
 project_export_index	direct_db_access	Accès direct à la base de données 
 project_export_index	generate_full_db	Générer la base de données du projet</a> </b> (<- Cliquer sur ce lien pour générer la base)
-project_export_index	db_connection_params	Paramètres de connexion à la base de données :
+project_export_index	db_connection_params	Paramètres de connexion à la base de données&nbsp;:
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/project_export_utils.php

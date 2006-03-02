@@ -13,33 +13,33 @@
 	echo '
 	<H2>Confirmation finale</H2>
 	<P>
-	<B><FONT COLOR="RED">pas de retour arrière!</FONT></B>
-	<P><font color="red">*</font> : Saisie obligatoire</p>
+	<B><FONT COLOR="RED">pas de retour arrière !</FONT></B>
+	<P><font color="red">*</font>&nbsp;: Saisie obligatoire</p>
 	<FORM action="'.$PHP_SELF.'" method="post">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="rand_hash" VALUE="'.$rand_hash.'">
-	<B>Description courte du projet<font color="red">*</font> :</B><BR>
+	<B>Description courte du projet<font color="red">*</font>&nbsp;:</B><BR>
 	<TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="12">'.db_result($result,0,'short_description').'</TEXTAREA>
 	<P>
-	<B>Description complète du projet<font color="red">*</font> :</B><BR>
+	<B>Description complète du projet<font color="red">*</font>&nbsp;:</B><BR>
 	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.db_result($result,0,'register_purpose').'</TEXTAREA>
 	<P>
-	<B>Propriété intellectuelle :</B><BR>
+	<B>Propriété intellectuelle&nbsp;:</B><BR>
 	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'patents_ips').'</TEXTAREA>
 	<P>
-	<B>Autres logiciels requis :</B><BR>
+	<B>Autres logiciels requis&nbsp;:</B><BR>
 	<TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">'.db_result($result,0,'required_software').'</TEXTAREA>
 	<P>
-	<B>Autres Commentaires :</B><BR>
+	<B>Autres Commentaires&nbsp;:</B><BR>
 	<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.db_result($result,0,'other_comments').'</TEXTAREA>
 
-	<P>	<B>Nom complet :</B><BR>
+	<P>	<B>Nom complet&nbsp;:</B><BR>
 	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.db_result($result,0,'group_name').'">
 	<P>
-	<B>Nom court :</B><BR>
+	<B>Nom court&nbsp;:</B><BR>
 	'.db_result($result,0,'unix_group_name').'
 	<P>
-	<B>Licence :</B><BR>
+	<B>Licence&nbsp;:</B><BR>
 	<SELECT NAME="form_license">
 	';
 
@@ -53,12 +53,12 @@
 	echo '</SELECT>';
 	echo '
 	<P>
-	<B>Si licence autre :</B><BR>
+	<B>Si licence autre&nbsp;:</B><BR>
 	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.db_result($result,0,'license_other').'</TEXTAREA>
 	<P>';
 	if ( $sys_show_project_type ) {
 		echo '
-		<B>Type de projet :</B><BR>
+		<B>Type de projet&nbsp;:</B><BR>
 		'.show_project_type_box('');
 	} else {
 		// Default value

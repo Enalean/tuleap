@@ -28,6 +28,6 @@ $GLOBALS['sys_org_name']; ?>.</p>
 $GLOBALS['sys_org_name']; ?></a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
 href="/docman/display_doc.php?docid=16&group_id=1">la lire</a>. <P>
 
-<p>Nous vous remercions pour votre soutien!</P>
+<p>Nous vous remercions pour votre soutien !</P>
 
 <p>L'équipe <?php print $GLOBALS['sys_name']; ?>.</p>

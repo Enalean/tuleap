@@ -24,7 +24,7 @@ forum_admin_index	msg_not_found	Message introuvable
 forum_admin_index	upd_err	Erreur lors de la mise à jour des informations du forum
 forum_admin_index	upd_success	Informations du forum mises à jour avec succès
 forum_admin_index	del_a_msg	Détruire un message
-forum_admin_index	delete_warn	ATTENTION! Vous êtes sur le point de détruire un message et tout son fil de discussion!!
+forum_admin_index	delete_warn	ATTENTION ! Vous êtes sur le point de détruire un message et tout son fil de discussion !!
 forum_admin_index	enter_msg_id	Entrer l'identifiant (ID) du message
 forum_admin_index	add_a_forum	Ajouter un forum
 forum_admin_index	existing_forums	Forums existants

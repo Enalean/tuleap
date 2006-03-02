@@ -30,8 +30,8 @@ file_admin_editpackagepermissions	select_u_group	Sélectionner les groupes d'util
 file_admin_editpackages	p_name_exists	Ce nom de paquet existe déjà. Veuillez choisir un autre nom.
 file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un paquet qui contient des versions actives. Veuillez d'abord cacher ces versions.
 file_admin_editpackages	p_updated	Paquet mis à jour avec succès
-file_admin_editpackages	perm_update_err	Erreur : la mise à jour des permissions a échoué
-file_admin_editpackages	perm_reset_err	Erreur : la ré-initialisation des permissions a échoué
+file_admin_editpackages	perm_update_err	Erreur&nbsp;: la mise à jour des permissions a échoué
+file_admin_editpackages	perm_reset_err	Erreur&nbsp;: la ré-initialisation des permissions a échoué
 file_admin_editpackages	perm_reset	Permissions réinitialisées à leur valeurs par défaut
 file_admin_editpackages	p_added	Paquet ajouté
 file_admin_editpackages	release_edit_f_rel	Création/Modification d'une version
@@ -60,7 +60,7 @@ file_admin_editreleasepermissions	edit_rel_perm	Modifier les permissions de la v
 file_admin_editreleasepermissions	release	Version
 file_admin_editreleasepermissions	from_p	du paquet
 file_admin_editreleasepermissions	perm_explain	&nbsp;
-file_admin_editreleasepermissions	select_u_group	Sélectionner les groupes d'utilisateurs qui ont accès à cette version : \n<br><b>Note</b> : Quand aucune permission n'est définie pour une version, elle hérite des permissions du paquet parent. \n<br>Quand des permissions sont définies pour une version, elles prennent le pas sur les permissions du <a href="$1">paquet parent</a>.
+file_admin_editreleasepermissions	select_u_group	Sélectionner les groupes d'utilisateurs qui ont accès à cette version&nbsp;: \n<br><b>Note</b>&nbsp;: Quand aucune permission n'est définie pour une version, elle hérite des permissions du paquet parent. \n<br>Quand des permissions sont définies pour une version, elles prennent le pas sur les permissions du <a href="$1">paquet parent</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleases.php
@@ -92,7 +92,7 @@ file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce pr
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit
 file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
-file_admin_editreleases	download_explain	Une nouvelle version de $1 vient d'être publié. \nVous pouvez la télécharger à : \n\n$2\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
+file_admin_editreleases	download_explain	Une nouvelle version de $1 vient d'être publié. \nVous pouvez la télécharger à&nbsp;: \n\n$2\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
 file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version
@@ -106,7 +106,7 @@ file_admin_editreleases	upload_or_paste	Vous pouvez soit télécharger les notes e
 file_admin_editreleases	paste	Copier/coller les notes et modifications
 file_admin_editreleases	upload_change	Télécharger les modifications
 file_admin_editreleases	upload_notes	Télécharger les notes
-file_admin_editreleases	max_file_size	(Taille maximum de téléchargement : $1 MOctets)
+file_admin_editreleases	max_file_size	(Taille maximum de téléchargement&nbsp;: $1 MOctets)
 file_admin_editreleases	release_notes	Notes
 file_admin_editreleases	change_log	Modifications
 file_admin_editreleases	preserve_preformatted	Préserver le pré-formattage du texte.
@@ -134,10 +134,10 @@ file_admin_editreleases	contain_multiple_files	Une version d'un paquet peut cont
 file_admin_editreleases	your_release	Vos versions
 file_admin_editreleases	no_releases_defined	Vous n'avez aucune version définie $1
 file_admin_editreleases	release_name	Nom de la version
-file_admin_editreleases	delete	Détruire?
+file_admin_editreleases	delete	Détruire ?
 file_admin_editreleases	edit_this_release	Modifier cette version
 file_admin_editreleases	edit_this_p	Modifier ce paquet
-file_admin_editreleases	warn	** ATTENTION!! ** Voulez-vous vraiment détruire cette version, tous ses fichiers attachés et les logs d\'accès correspondants (il est impossible de revenir en arrière)?
+file_admin_editreleases	warn	** ATTENTION !! ** Voulez-vous vraiment détruire cette version, tous ses fichiers attachés et les logs d\'accès correspondants (il est impossible de revenir en arrière) ?
 file_admin_editreleases	new_release_name	Nom de la nouvelle version
 file_admin_editreleases	belongs_to_p	appartient au paquet 
 file_admin_editreleases	create_this_release	Créer cette version
@@ -160,7 +160,7 @@ file_admin_qrs	define_rel_name	Veuillez définir un nom de version.
 file_admin_qrs	choose_processor_type	Veuillez choisir un type de processeur
 file_admin_qrs	choose_file_type	Veuillez choisir un type de fichier
 file_admin_qrs	added_success	$1 ajouté avec succès
-file_admin_qrs	no_email_sent	pas d'e-mail envoyé : la version est cachée
+file_admin_qrs	no_email_sent	pas d'e-mail envoyé&nbsp;: la version est cachée
 file_admin_qrs	email_sent	e-mail envoyé à $1 utilisateur(s) qui surveillent ce paquet
 file_admin_qrs	no_p_available	Aucun paquet disponible
 file_admin_qrs	create_new_p	Créer un nouveau paquet
@@ -187,7 +187,7 @@ file_download	incorrect_release_id	ID de version, paquet ou projet incorrect
 file_download	report_error	Veuillez informer l'administrateur $1 de cette erreur en utilisant le lien <i>Contactez-nous</i> dans le menu principal
 file_download	access_denied	Accès refusé
 file_download	access_not_authorized	Vous n'avez pas les droits d'accès sur ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
-file_download	file_not_available	Erreur interne : le fichier n'est pas disponible. Veuillez contacter l'administrateur du site.
+file_download	file_not_available	Erreur interne&nbsp;: le fichier n'est pas disponible. Veuillez contacter l'administrateur du site.
 #
 #-----------------------------------------------
 # Script: SF/www/file/filemodule_monitor.php

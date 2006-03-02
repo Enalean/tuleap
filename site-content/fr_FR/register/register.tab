@@ -50,10 +50,10 @@ register_form	first_name	Prénom
 register_form	last_name	Nom
 register_form	email	E-mail
 register_form	project_name	Nom du projet
-register_form	proj_description	Description brève<br>du projet :
-register_form	desired_subdomain	Sous-domaine souhaité :<br>(e.g. 
-register_form	passwd	Mot de passe souhaité :<br>(à saisir deux fois)
-register_form	comments	Commentaires/Questions :
+register_form	proj_description	Description brève<br>du projet&nbsp;:
+register_form	desired_subdomain	Sous-domaine souhaité&nbsp;:<br>(e.g. 
+register_form	passwd	Mot de passe souhaité&nbsp;:<br>(à saisir deux fois)
+register_form	comments	Commentaires/Questions&nbsp;:
 register_form	clear_form	Effacer le formulaire
 #
 #-----------------------------------------------
@@ -79,10 +79,10 @@ register_projectname	info_missed	Information manquante. Veuillez saisir les info
 # Script: SF/www/register/tos.php
 #
 register_tos	tos	Condition générales d'utilisation
-register_tos	tos_agreement	Etape 2 : Condition générales d'utilisation
+register_tos	tos_agreement	Etape 2&nbsp;: Condition générales d'utilisation
 register_tos	tos_agree	En cliquant ci-dessous, vous reconnaissez avoir pris connaissance et avoir compris les condition générales d'utilisation. Cliquer sur "D'ACCORD" constitue une signature légale du document.<P><H3 align=center><A href="$1">[D'ACCORD]</A>&nbsp;&nbsp;<A href="/">[PAS D'ACCORD]</A></H3>
 #
 #-----------------------------------------------
 # Script: SF/www/register/why.php
 #
-register_why	why_register	Pourquoi enregistrer un projet?
+register_why	why_register	Pourquoi enregistrer un projet ?
