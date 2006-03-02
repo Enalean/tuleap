@@ -498,7 +498,7 @@
 	  automatiquement transformé en hyperlien vers la base de
 	  suivi de CVS. Ce mécanisme permet de naviguer facilement
 	  depuis un changement dans le code jusqu'à l'artefact qui lui
-	  a donné naissance et vice-versa.</para>
+	  a donné naissance et vice-versa (voir ci-dessous pour plus de détails).</para>
 	</listitem>
 
 	<listitem>
@@ -556,7 +556,7 @@
 
       <para>L'intégration de CVS avec CodeX fournit précisément ce
       mécanisme de références croisées. Ceci est rendu possible par
-      l'utilisation de certains patrons de texte à utiliser dans les
+      l'utilisation de 'références', patrons de texte prédéfinis à utiliser dans les
       commentaires des artefacts ou dans les messages de commits de
       CVS et que CodeX reconnaît automatiquement.</para>
 
@@ -590,14 +590,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">doc #ZZZ</emphasis>: ce patron
-	référence le document ZZZ dans le gestionnaire de documents du
-	projet où ZZZ est l'indentifiant unique du document tel qu'il
-	apparaît dans le gestionnaire du documents (voir <xref
-	linkend="DocumentCrossReference" />). Lorsque CodeX affiche un
-	message contenant ce genre de patron, il le transforme
-	automatiquement en hyperlien vers la description du document
-	concerné.</para>
+	<para>Le mécanisme de références de CodeX permet les références croisées entre tous les objets de CodeX: artefacts, documents, messages de commit, fichiers, etc. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans CodeX.</para>
       </listitem>
    </itemizedlist>
 

@@ -85,17 +85,15 @@
     <section id="DocumentCrossReference">
       <title>Références croisées sur les documents</title>
 
-      <para>A l'instar des artefacts (voir <xref
-      linkend="ArtifactCrossReferencing" />), des commits CVS (<xref
-      linkend="Cross-Referencing CVS Commits" />) et des numéros de
-      révision Subversion (<xref
-      linkend="Cross-ReferencingSubversionCommits" />), les documents
+      <para>A l'instar des artefacts, des commits CVS, des numéros de
+      révision Subversion et autres objets CodeX, les documents
       peuvent être référencés dans les commentaires associés aux
       artefacts ou aux messages de commit. L'utilisation du patron "doc
       #NNN" crée automatiquement un lien vers le document dont
       l'identifiant est NNN. L'identifiant d'un document est visible
       sur la page principale du gestionnaire de documents lorsqu'on
-      place la souris sur le titre.</para>
+      place la souris sur le titre. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans CodeX.
+    </para>
 
     </section>
   </section>

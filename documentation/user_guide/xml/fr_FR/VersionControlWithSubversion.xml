@@ -505,9 +505,9 @@
 	  opérations de commits ou dans les commentaires associés aux
 	  artefacts des différents outils de suivi (taches, anomalies,
 	  demande d'assistance...) simplement en utilisant le patron
-	  <literal>commit #XXXX</literal> ou <literal>revision
+	  <literal>revision
 	  #XXXX</literal> ou encore <literal>rev #XXXX</literal> (où
-	  XXXX est l'identifiant unique généré par CodeX). Toute
+	  XXXX est le numéro de la révision généré par Subversion). Toute
 	  référence de ce type est automatiquement transformé en
 	  hyperlien vers la base de suivi de Subversion. Ce mécanisme permet
 	  de naviguer facilement depuis un changement dans le code
@@ -568,7 +568,7 @@
 
       <para>L'intégration de Subversion avec CodeX fournit précisément ce
       mécanisme de références croisées. Ceci est rendu possible par
-      l'utilisation de certains patrons de texte à utiliser dans les
+      l'utilisation des 'références', patrons de texte prédéfinis à utiliser dans les
       commentaires des artefacts ou dans les messages de commits de
       Subversion et que CodeX reconnaît automatiquement.</para>
 
@@ -604,14 +604,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">doc #ZZZ</emphasis>: ce patron
-	référence le document ZZZ dans le gestionnaire de documents du
-	projet où ZZZ est l'indentifiant unique du document tel qu'il
-	apparait dans le gestionnaire du documents (voir <xref
-	linkend="DocumentCrossReference" />). Lorsque CodeX affiche un
-	message contenant ce genre de patron, il le transforme
-	automatiquement en hyperlien vers la description du document
-	concerné.</para>
+	<para>Le mécanisme de références de CodeX permet les références croisées entre tous les objets de CodeX: artefacts, documents, messages de commit, fichiers, etc. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans CodeX.</para>
       </listitem>
    </itemizedlist>  
 

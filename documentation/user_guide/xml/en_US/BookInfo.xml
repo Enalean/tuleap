@@ -29,6 +29,8 @@
       <year>2002</year>
       <year>2003</year>
       <year>2004</year>
+      <year>2005</year>
+      <year>2006</year>
 
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
@@ -567,6 +569,16 @@
 
         <revremark>Project defined user groups are now available in
 	the project SVN Access File
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.5</revnumber>
+
+        <date>2-Mar-2006</date>
+
+        <authorinitials>Nicolas Guérin</authorinitials>
+
+        <revremark>Added section on reference configuration
         </revremark>
       </revision>
     </revhistory>

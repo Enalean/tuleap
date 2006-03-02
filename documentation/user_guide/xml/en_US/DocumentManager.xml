@@ -79,14 +79,13 @@
     <section id="DocumentCrossReference">
       <title>Cross-Referencing documents</title>
 
-      <para>Like artifacts (see <xref linkend="ArtifactCrossReferencing" />),
-      CVS commits (<xref linkend="Cross-Referencing CVS Commits" />) and 
-      Subversion revision numbers (<xref linkend="Cross-ReferencingSubversionCommits" />),
+      <para>Like artifacts, CVS/Subversion commits, and other CodeX objects,
       documents may be referenced in artifact comments or commit messages.
       Simply type the "doc #NNN" pattern to automatically create
       a link to the document with ID number NNN. Document IDs are
       visible in the 'Docs' main page by hovering over a document title
-      with the mouse pointer.</para>
+      with the mouse pointer. Please refer to <xref linkend="ReferenceOverview" /> 
+      for more details on CodeX references.</para>
 
     </section>
   </section>

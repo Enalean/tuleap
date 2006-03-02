@@ -560,10 +560,9 @@
 	</listitem>
 
 	<listitem>
-	  <para><emphasis role="bold">commit #YYY or revision #YYY or 
+	  <para><emphasis role="bold">revision #YYY or 
 	  rev #YYY</emphasis>: this pattern refers to the commit YYY where
-	  YYY is the commit revision number as listed when querying
-	  the Subversion tracking database. When browsing a message
+	  YYY is the commit revision number. When browsing a message
 	  containing this pattern anywhere in CodeX, the pattern will
 	  be automatically transformed into an hyperlink to the commit
 	  description which include log messages, impacted files,
@@ -571,15 +570,9 @@
 	  linkend="FigureSubversionShowCommit" />) .</para>
 	</listitem>
 
-	<listitem>
-	  <para><emphasis role="bold">doc #ZZZ</emphasis>: this
-	  pattern refers to a document from the project document
-	  manager where ZZZ is the document unique ID as listed in the
-	  document manager (see <xref linkend="DocumentCrossReference"
-	  />). When browsing a message containing this pattern
-	  anywhere in CodeX, the pattern will be automatically
-	  transformed into an hyperlink to the document.</para>
-	</listitem>
+        <listitem>
+        <para>The CodeX reference mechanism allows cross-referencing with any CodeX object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
+        </listitem>
       </itemizedlist>
 
 

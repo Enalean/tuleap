@@ -31,6 +31,7 @@
       <year>2003</year>
       <year>2004</year>
       <year>2005</year>
+      <year>2006</year>
 
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
@@ -65,6 +66,15 @@
         <authorinitials>Laurent Julliard</authorinitials>
 
         <revremark>Version française initiale par  L. Julliard basée sur la version 2.9.4 anglaise du 21-Déc-2005</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.5</revnumber>
+
+        <date>2-Mar-2006</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Ajout d'une section concernant la gestion des références.</revremark>
       </revision>
     </revhistory>
   </bookinfo>

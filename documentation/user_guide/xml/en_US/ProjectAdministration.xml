@@ -82,6 +82,396 @@
       </figure>
     </section>
 
+    <section id="ProjectPublicInformation">
+      <title>Project Public Information</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>The &#34;Edit Public Info&#34; item of the Project Administration
+      menu allows a project administrator to update the Project Description Elements:
+      these are elements provided during the registration process.</para>
+
+    </section>
+
+    <section id="ProjectCategorization">
+      <title>Project Categorization</title>
+
+      <para><emphasis>Location: Page Admin Content</emphasis></para>
+
+      <para>This is where you can categorize your project. You can define up
+      to 3 values for each of the 7 criteria used in the Software Map. If you
+      cannot find any matching value in the predefined list do not hesitate to
+      contact the CodeX Team.</para>
+    </section>
+
+
+    <section id="ServiceConfiguration">
+      <title>Service Configuration</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>The &#34;Service Configuration&#34; item of the Project Administration
+      menu lists all services available to the project. Services are items listed 
+      in the  &#34;Service Bar &#34; on top of each page: trackers, 
+      CVS, homepage, documentation, etc. 
+      The Service Configuration page allows a project 
+      administrator to update, enable, disable or even create services.
+      </para>
+
+      <para>There are two kinds of services:</para>
+ 
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">System services</emphasis>:
+          these services are defined by the site administrator and are common to
+          all projects. They cannot be modified, except for their status 
+          (enabled/disabled) and their position on the screen (see below).
+          </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project services</emphasis>: 
+          these services can be fully customized or deleted by the project administrator.
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>There is one exception, the
+          <emphasis role="bold">Home Page</emphasis> service is a
+          system service but it can be customized with any URL. Each
+          project hosted on CodeX has its own virtual Web server available on
+          the CodeX site. By default the &#34;Home Page&#34; in the Project
+          Service Bar links to this location (see <xref linkend="ProjectWebSite" /> for more details).
+          If you want the Home Page of your project to link to some other
+          locations on the Intranet or on the Web, simply replace
+          the default value with your own Web location. Do not confuse your
+          Project Home Page with your Project Summary page. The Project Home
+          Page actually points to real Web Site whereas the Public Summary
+          Page is just an entry point to access software related activities
+          and deliverables.</para>
+
+
+    <section id="ServiceCreation">
+      <title>Creating or Updating a Service</title>
+      <para>When creating or updating a service, one has to fill the following fields:</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Service Label</emphasis>:
+          This is the label that will be displayed in the Service Bar. It 
+          should be as concise as possible.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Service Link</emphasis>:
+          This is the URL of the service, i.e. the address the user will be 
+          redirected to when clicking on the service label in the Service Bar.
+          If the URL is absolute (i.e. starting with &#34;http://&#34;), the page
+          will be loaded in a new window. Otherwise, it will be loaded in the 
+          current window.
+          </para>
+          <para>A few keywords can be inserted into the link: they will be automatically replaced by their value:
+          <itemizedlist mark="bullet">
+            <listitem>
+              <para><emphasis role="bold">$projectname</emphasis>:
+              short name of the project
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$sys_default_domain</emphasis>: 
+              domain of your CodeX server (e.g. &#34;&SYS_DEFAULT_DOMAIN;&#34;)
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$group_id</emphasis>: 
+              project number.
+              </para>
+              <para></para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$sys_default_protocol</emphasis>: 
+              'https' if your server is configured in secure mode, 'http' otherwise.
+              </para>
+              <para></para>
+            </listitem>
+          </itemizedlist>
+          </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Service Description</emphasis>:
+          Short description of the service. It will be displayed as a tooltip 
+          when the mouse cursor is over the service label.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Enabled</emphasis>:
+          Toggling this check box will simply disable (or enable)
+          the service. Disabling a service just
+          means that it no longer appears in the Service Bar and in the  
+          Project Summary page of your
+          project but all existing data related to this service remains
+          untouched. In other words, re-enabling the service will restore
+          the service in the exact same state it was when you first
+          disabled it. See also &#34;Deleting a Service&#34; below. 
+          </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Rank on Screen</emphasis>:
+	    this arbitrary number allows you to define the position of
+	    this service in the Service Bar relative to other services. 
+	    The services with smaller values will appear first. The
+	    rank values don't have to be consecutive values. It is a
+	    good idea to use values like 10, 20, 30,... so that it is
+	    easy for you to insert new services in the future without
+	    having to renumber all the services.</para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="ServiceDeletion">
+      <title>Deleting a Service</title>
+
+      <para>Project services can be deleted. They appear with a small
+      trash icon in the service list. Just click on this icon to
+      suppress the service from the database. The service data are
+      however preserved.
+      </para>
+      <para>System services cannot be deleted. However, you can 
+      disable them and they will not appear in the Service Bar.
+      </para>
+    </section>
+    </section>
+
+
+    <section id="ServicesAdministration">
+      <title>Services Administration</title>
+
+      <para><emphasis>Location: Project Admin page</emphasis></para>
+
+      <para>The project administration page gives direct access to the
+      administration of all services that have been activated for a
+      given project. This is available in the form of a series of
+      pointers located on the lower left part of the project
+      administration page. Only project members with appropriate
+      permission are allowed to access the CodeX services
+      administration pages (see <xref linkend="UserPermissions"
+      />).</para>
+
+    </section>
+
+
+    <section id="ReferenceConfiguration">
+      <title>Reference Configuration</title>
+
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+
+      <para>The &#34;Reference Configuration&#34; item of the Project Administration
+      menu lists all references available to the project. 
+      The Reference Configuration page allows a project 
+      administrator to update, enable, disable or even create references.
+      </para>
+
+    <section id="ReferenceOverview">
+      <title>Reference Overview</title>
+
+      <para>References are a powerful tool that allow cross-referencing of CodeX objects.
+      Based on a text pattern, CodeX automatically creates hyperlinks to the desired object.
+      </para>
+
+      <para>When typing a follow-up comment, or a commit message, any text that follows the
+      pattern "XXX #NNN" will be interpreted as a reference to the object XXX number NNN.
+      For instance, 'artifact #123' will be detected as a reference to artifact number 123, and 
+      CodeX will automatically create a hyperlink that directly points to the details of artifact 123.
+      </para>
+      <para>You may also reference an object belonging to another project. In that case, use 
+      either 'XXX #group_id:NNN' or 'XXX #group_name:NNN' to reference object XXX number NNN 
+      belonging to project which ID is 'group_id' or which short name is 'group_name'. 
+      For instance, 'wiki #myproj:Welcome' is a reference to the 'Welcome' wiki page of the project 'myproj'.
+      </para>
+      <para>Some references may need more than one parameter. In this case, use '/' as a separator 
+      between parameters. For example, 'wiki #Welcome/2' creates a reference to the wiki page named 'Welcome' at version '2'.
+      </para>
+
+      <para>There are two kinds of references:</para>
+
+ 
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">System references</emphasis>:
+          these references are defined by the site administrator and are common to
+          all projects. They cannot be modified, except for their status 
+          (enabled/disabled).
+          </para>
+          <para>Most system references are related to a specific service. For example,
+          'artifact', 'doc', 'file' or 'wiki' are respectively related to the tracker,
+          document manager, file manager and Wiki services. In order to facilitate 
+          the usage of such references, they are automatically enabled and disabled
+          when the corresponding service is enabled/disabled. Still, it is always 
+          possible to enable or disable those references manually.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project references</emphasis>: 
+          these references can be fully customized or deleted by the project administrator.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+
+    <section id="ReferencePredefined">
+      <title>Predefined References</title>
+<para>Here is a list of predefined references:</para>
+      <itemizedlist mark="bullet">
+        <listitem><para><emphasis role="bold">art #num or artifact #num</emphasis>: 
+        Reference to artifact number 'num'. This is a system-wide number (artifact 'num' is unique accross projects). This reference links to the artifact detail/update page. In addition to the 'art' and 'artifact' keywords, artifacts may be referenced using the tracker short name. For example, an artifact in the bug tracker can be referenced with <emphasis role="bold">bug #NNN</emphasis>, a support request with <emphasis role="bold">sr #NNN</emphasis>, a task with <emphasis role="bold">task #NNN</emphasis> and a patch with <emphasis role="bold">patch #NNN</emphasis>. So, when you create a custom tracker, make sure that you specify a meaningful tracker short name.</para></listitem>
+        <listitem><para><emphasis role="bold">commit #num or cvs #num</emphasis>: 
+        Reference to CVS commit number 'num'. This is a system-wide number. The reference links to the commit details page: log message, impacted files, link to diff view, etc.</para></listitem>
+        <listitem><para><emphasis role="bold">rev #num or revision #num or svn #num</emphasis>: 
+        Reference to Subversion revision number 'num'. This is a project-specific number, so if you need to reference a revision belonging to another project, you should specify the project in the reference (e.g. 'rev #myproj:123'). The reference links to the subversion revision details page: log message, impacted files, link to diff view, etc.</para></listitem>
+        <listitem><para><emphasis role="bold">wiki #wikipage and wiki #wikipage/num</emphasis>: 
+        Reference to a wiki page named 'wikipage'. The second format allows one to specify a wiki page version. Wiki pages are project specific, so if you need to reference a page belonging to another project, you should specify the project in the reference.</para></listitem>
+        <listitem><para><emphasis role="bold">doc #num or document #num</emphasis>: 
+        Reference to the document number 'num'. This is a system-wide number. Document numbers, or IDs, are visible in the 'Docs' main page by hovering over a document title with the mouse pointer. This reference links to the document itself.</para></listitem>
+        <listitem><para><emphasis role="bold">news #num</emphasis>: Reference to the news item number 'num'. This is a system-wide number. The reference links to the news item page, where you can add comments.</para></listitem>
+        <listitem><para><emphasis role="bold">forum #num and msg #num</emphasis>: 
+        Reference to forum number 'num' or to forum message number 'num'. Those are system-wide numbers. The first reference links to the forum welcome page, while the second one directly links to the message page, where you can view the message thread, and post a follow-up message.</para></listitem>
+        <listitem><para><emphasis role="bold">file #num</emphasis>: 
+        Reference to file number 'num'. This is a system-wide number. This kind of reference allows a direct download of a file that is part of a release. File numbers, or IDs, are visible in the 'Files' main page by hovering over a file name with the mouse pointer. This reference links to the file itself, so you might be prompted for a location to store the file. You may also have to accept the project license before downloading the file.</para></listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="ReferenceUsage">
+      <title>Reference Usage</title>
+
+<para>
+While working in the development or the maintenance phase of a software project, it is vital to keep track of the changes made to the source code. This is what Version Control systems like CVS and Subversion do. In addition to keeping track of the source code change history it is often critical to relate the changes to the artifact (a task, a defect or a support request) that led the developers to make a change in the code. And conversely, when reading the artifact description it is also very helpful to immediately see how the change was implemented.
+</para><para>
+The integration of CVS and Subversion in CodeX precisely provide the CodeX users with this bi-directionnal cross-referencing mechanism. This is achieved through the use of references that are automatically detected by CodeX in either the follow-up comments of the project artifacts or in the messages attached to a CVS or SVN commit.
+</para>
+<para>The system is not limited to artifact and commit references, so you may also reference the forum message where the bug was found, the documentation that describes an issue, or the file that fixes it. The system is flexible enough to allow referencing of items that are not stored in CodeX. So you may now create your own reference to link to an external document manager like DocuShare, or source code management tool like ClearCase</para>
+
+      <para><tip><title>Tip: cross-reference artifacts and Source Code
+      commits</title><para>It is considered a best practice to always
+      reference a bug, a task or a support request in any of the log
+      message attached to a Subversion or CVS commit. Similarly when closing
+      the related artifact (task, bug,etc.) make sure you mention the
+      revision or commit number in the follow-up comment. You will find this
+      extremely convenient while trying to keep track of the changes
+      and why they were made.</para></tip></para>
+
+
+</section>
+
+
+    <section id="ReferenceCreation">
+      <title>Creating or Updating a Reference</title>
+      <para>When creating or updating a reference, one has to fill the following fields:</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Reference Keyword</emphasis>:
+          This is the keyword that triggers a reference creation when it is found.
+          It should be concise and meaningful in order to facilitate readability.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Reference Description</emphasis>:
+          Short description of the reference. It is displayed in a tooltip 
+          when the mouse cursor is over an identified reference.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Reference Link</emphasis>:
+          This is the URL pointed by the reference, i.e. the address the user will be 
+          redirected to when clicking on a reference. 
+          The URL does not need to point to the CodeX server: you may create references pointing to external pages.
+          The page will be loaded in the current window.
+          </para>
+          <para>A few keywords can be inserted into the link: they will be automatically replaced by their value:
+          </para>
+          <itemizedlist mark="bullet">
+            <listitem>
+              <para><emphasis role="bold">$projname</emphasis>:
+              short name of the project.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$group_id</emphasis>: 
+              project number.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$0</emphasis>: 
+              The keyword extracted for this reference.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$1</emphasis>: 
+              The first parameter in the reference.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$2</emphasis>: 
+              The second parameter in the reference.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$3...$9</emphasis>: 
+              Up to nine parameters in the reference.
+              </para>
+            </listitem>
+          </itemizedlist>
+
+          <para> Examples:</para>
+          <itemizedlist mark="bullet">
+            
+
+          <listitem><para><emphasis role="bold">artifact #25</emphasis>: '$0' is 'artifact', '$1' is '25'</para></listitem>
+          <listitem><para><emphasis role="bold">wiki #codex:Welcome/1</emphasis>: '$0' is 'wiki', '$1' is 'Welcome', '$2' is '1', '$projname' is 'codex'</para></listitem>
+          <listitem><para><emphasis role="bold">myref #123:1/23/456</emphasis>: '$0' is 'myref', '$1' is '1', '$2' is '23', '$3' is '456' and '$group_id' is '123'</para></listitem>
+          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis>: '$0' is 'google', '$1' is 'codex', '$2' is 'xerox'. If you define the reference 'google', with its link pointing at <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, clicking on the reference 'google #codex/xerox' will create a google search for 'codex xerox'.</para></listitem>
+          <listitem><para><emphasis role="bold">ds #123</emphasis>: '$0' is 'ds', '$1' is '123'. If you define the reference 'ds', with its link pointing at <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, clicking on the reference 'ds #123' will download document '123' from your local DocuShare server.</para></listitem>
+          </itemizedlist>
+          <para>You should also note that the number of parameters is important: if the number of parameters used in the text does not match the number of parameters needed by the reference, the reference will not be extracted. This allows one to create several references with the same keywords but different number of arguments. See for instance the 'wiki' references: 'wiki #Welcome' is a reference with one parameter, and it links to the wiki page 'Welcome', while 'wiki #Welcome/2' is another reference with two parameters that links to the wiki page 'Welcome' at version '2'. </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Enabled</emphasis>:
+          Toggling this check box will simply disable (or enable)
+          the reference. Disabling a reference just
+          means that it is no longer extracted from text fields or 
+          commit emails. Re-enabling the reference is possible.
+          See also &#34;Deleting a Reference&#34; below. 
+          </para>
+        </step>
+
+      </procedure>
+    </section>
+
+    <section id="ReferenceDeletion">
+      <title>Deleting a Reference</title>
+
+      <para>Project references can be deleted. They appear with a small
+      trash icon in the reference list. Just click on this icon to
+      suppress the reference from the database. A deleted reference
+      must be re-created if you need to use it again.
+      </para>
+      <para>System references cannot be deleted. However, you can 
+      disable them so that they will not be extracted.
+      </para>
+    </section>
+    </section>
+
+
     <section id="UserPermissions">
       <title>User Permissions</title>
 
@@ -203,41 +593,205 @@
       </important>
     </section>
 
-    <section id="ProjectPublicInformation">
-      <title>Project Public Information</title>
 
-      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+  <section id="UserGroups">
+    <title>User Groups</title>
+    
+    <para><emphasis>Location: Project Administration Menu</emphasis></para>
+    
+    <para>A user group, sometimes called a &#34;ugroup &#34;, is
+    simply a group of CodeX users.  User groups are used to set
+    specific permissions to some project data (e.g. software releases
+    and packages - see <xref linkend="FileAccessPermissions" />).  A
+    user group is always attached to a project, but the users
+    comprising the group do not necessarily belong to that
+    project.</para>
+    
+    <section id="UGroupList">
+      <title>User Groups Management</title>
 
-      <para>The &#34;Edit Public Info&#34; item of the Project Administration
-      menu allows a project administrator to update the Project Description Elements:
-      these are elements provided during the registration process.</para>
+      <para>The &#34;User Groups Admin&#34; function of the Project
+      Administration menu lists all available user groups, and
+      provides a way to create new ones.</para>
+
+      <figure id="FigureUserGroupManagementPage">
+        <title>User Group Management Page</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_usergrouplist.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In the list, (see for example <xref
+      linkend="FigureUserGroupManagementPage" />) there are two
+      different kinds of user groups: </para>
+
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Pre-defined User
+          Groups</emphasis>: These groups are defined for every
+          project. Examples of pre-defined groups are: <emphasis
+          role="bold">project_members, project_admins,
+          registered_users, nobody, file_manager_admin</emphasis>,
+          etc. These groups are dynamic: if you assign some permission
+          to 'project_admins', and a new project administrator is
+          defined, then this new user will automatically be granted
+          the corresponding permission.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Custom User Groups</emphasis>
+          are defined by project administrators. They are composed of
+          a static list of users. The only requirement is that any
+          member must be a registered CodeX user. This list can be
+          modified at any time, but will not automatically be updated,
+          except if a member is removed from the project or deleted
+          from the system.
+          </para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="UGroupCreation">
+      <title>Creating a User Group </title> <para>When creating a user
+      group, one has to provide the following fields:</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Name</emphasis>: This is the
+          label that will be displayed when selecting user groups in a
+          permission screen. The group name may not contain space and
+          punctuation.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Description</emphasis>: Short
+          description of the user group. It is only displayed in the
+          User Group Admin page.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Create From</emphasis>: This is
+          a quick way of pre-selecting group members: you may create a
+          user group from scratch (Empty Group), from all Project
+          Members or Project Admins, or from an existing user group
+          attached to this project. The members of the selected group
+          will automatically be added to the new group. You will be
+          able to add or remove members on the next screen.
+          </para>
+        </step>
+      </procedure>
+
+      <figure id="FigureUserGroupEdit">
+        <title>User Group Edit</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_usergroupedit.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>In the next page (see <xref linkend="FigureUserGroupEdit"
+      />), the project administrator may select individually the
+      members of the new group.</para>
+
+      <para>Two columns are displayed: the one on the left contains
+      the list of all CodeX registered users, while the one on the
+      right contains the list of users already admitted to the
+      group. Use the two arrows between the columns to move users from
+      one column to the other. </para>
+
+      <para>The user interface also provides convenient ways of
+      selecting users when the registered list is very large: you can
+      choose to display only those users whose login starts with a
+      specific letter, or you may also filter the list by typing
+      letters in the 'Filter' text box.  For instance, if you type
+      'john', only users whose name or login contains 'john' will be
+      displayed.</para>
+      
+      <para>Once you are done, you may click on the Submit button. The
+      user group is created.</para>
 
     </section>
 
-    <section id="ProjectCategorization">
-      <title>Project Categorization</title>
+      <tip>
+        <title>Tip: Combining pre-defined groups with additional members</title>
 
-      <para><emphasis>Location: Page Admin Content</emphasis></para>
+        <para>Sometimes, you might want to grant some permissions to
+        all project members and some other CodeX users.  In this case,
+        you might be tempted to build a user group from the list of
+        project members and to add the other users to the group.  The
+        issue with this solution is that if new members join the
+        project, they will have to be manually added to the group. So
+        it is more convenient to create a group containing only the
+        users that are not member of the project. And then,
+        permissions should be granted to this group and to the
+        pre-defined "project members" group.
+        </para>
+      </tip>
 
-      <para>This is where you can categorize your project. You can define up
-      to 3 values for each of the 7 criteria used in the Software Map. If you
-      cannot find any matching value in the predefined list do not hesitate to
-      contact the CodeX Team.</para>
+    <section id="UGroupUpdate">
+      <title>Updating a User Group</title>
+
+      <para>In order to update an existing user group, simply select
+      it in the user group list. You will be presented with the same
+      screen as with Group Creation, where you can update the name,
+      description and composition of the user group.
+      </para>
     </section>
 
-    <section id="ProjectHistory">
-      <title>Project History</title>
 
-      <para><emphasis>Location: Project Administration Menu</emphasis></para>
+    <section id="UGroupDeletion">
+      <title>Deleting a User Group</title>
 
-      <para>The Project History provides project members with Audit
-      capabilities. Clicking on this menu item shows a list of all the changes
-      that have taken place in the administration of the project since its
-      creation. The list of changes reports the nature of the change (e.g.
-      Changed Public Info, Changed Permissions, Changed Software Map, ...) ,
-      what the value was before it changed (if applicable), who changed it and
-      when.</para>
+      <para>User groups can be deleted. Just click on the trash icon
+      next to the group name in the group management page (<xref
+      linkend="FigureUserGroupManagementPage" />) to suppress the user
+      group from the database. Only custom user groups can be deleted.
+      </para>
+
+      <important>
+        <title>Warning</title>
+
+        <para>Please note that if a user group was specifically
+        granted some permission, deleting the user group might be
+        dangerous. Indeed, if a group is the only one allowed to
+        access a package and this group is deleted, the permission is
+        also deleted and reset to default, so any registered user can
+        access the package.
+      </para>
+      </important>
     </section>
+
+
+    <section>
+      <title>Additional Information on User Groups</title>
+
+      <para>It is possible to know all user groups one individual
+      project member belongs to. Simply display the User Permissions
+      page (<xref linkend="UserPermissions" />). However, please note
+      that only user groups belonging to the current project are
+      displayed. The user might also be a member of additional user
+      groups in other projects.
+      </para>
+
+      <para>The bottom of the User Group Edit page (<xref
+      linkend="FigureUserGroupEdit" />) also lists all the permissions
+      granted to this group, e.g. packages and releases this user
+      group is granted access to.</para>
+
+      <para>When a project member is removed from a project, or quits
+      a project, they are also automatically removed from all project
+      user groups for safety reasons.</para>
+
+      <para>Similarly, when a user is deleted (not just suspended) by
+      the site administrator, they are removed from all user
+      groups in all projects.</para>
+    </section>
+
+    </section>
+
 
     <section id="ProjectDataExport">
       <title>Project Data Export</title>
@@ -556,343 +1110,28 @@
 
   </section>
 
-    <section id="ServiceConfiguration">
-      <title>Service Configuration</title>
+
+    <section id="TrackerImport">
+      <title>Tracker Artifact Import</title>
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>The &#34;Service Configuration&#34; item of the Project Administration
-      menu lists all services available to the project. Services are items listed 
-      in the  &#34;Service Bar &#34; on top of each page: trackers, 
-      CVS, homepage, documentation, etc. 
-      The Service Configuration page allows a project 
-      administrator to update, enable, disable or even create services.
-      </para>
-
-      <para>There are two kinds of services:</para>
- 
-      <itemizedlist mark="bullet">
-        <listitem>
-          <para><emphasis role="bold">System services</emphasis>:
-          these services are defined by the site administrator and are common to
-          all projects. They cannot be modified, except for their status 
-          (enabled/disabled) and their position on the screen (see below).
-          </para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Project services</emphasis>: 
-          these services can be fully customized or deleted by the project administrator.
-          </para>
-        </listitem>
-      </itemizedlist>
-      <para>There is one exception, the
-          <emphasis role="bold">Home Page</emphasis> service is a
-          system service but it can be customized with any URL. Each
-          project hosted on CodeX has its own virtual Web server available on
-          the CodeX site. By default the &#34;Home Page&#34; in the Project
-          Service Bar links to this location (see <xref linkend="ProjectWebSite" /> for more details).
-          If you want the Home Page of your project to link to some other
-          locations on the Intranet or on the Web, simply replace
-          the default value with your own Web location. Do not confuse your
-          Project Home Page with your Project Summary page. The Project Home
-          Page actually points to real Web Site whereas the Public Summary
-          Page is just an entry point to access software related activities
-          and deliverables.</para>
-
-
-    <section id="ServiceCreation">
-      <title>Creating or Updating a Service</title>
-      <para>When creating or updating a service, one has to fill the following fields:</para>
-     <procedure>
-        <step>
-          <para><emphasis role="bold">Service Label</emphasis>:
-          This is the label that will be displayed in the Service Bar. It 
-          should be as concise as possible.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Service Link</emphasis>:
-          This is the URL of the service, i.e. the address the user will be 
-          redirected to when clicking on the service label in the Service Bar.
-          If the URL is absolute (i.e. starting with &#34;http://&#34;), the page
-          will be loaded in a new window. Otherwise, it will be loaded in the 
-          current window.
-          </para>
-          <para>A few keywords can be inserted into the link: they will be automatically replaced by their value:
-          <itemizedlist mark="bullet">
-            <listitem>
-              <para><emphasis role="bold">$projectname</emphasis>:
-              short name of the project
-              </para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">$sys_default_domain</emphasis>: 
-              domain of your CodeX server (e.g. &#34;&SYS_DEFAULT_DOMAIN;&#34;)
-              </para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">$group_id</emphasis>: 
-              project number.
-              </para>
-              <para></para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">$sys_default_protocol</emphasis>: 
-              'https' if your server is configured in secure mode, 'http' otherwise.
-              </para>
-              <para></para>
-            </listitem>
-          </itemizedlist>
-          </para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Service Description</emphasis>:
-          Short description of the service. It will be displayed as a tooltip 
-          when the mouse cursor is over the service label.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Enabled</emphasis>:
-          Toggling this check box will simply disable (or enable)
-          the service. Disabling a service just
-          means that it no longer appears in the Service Bar and in the  
-          Project Summary page of your
-          project but all existing data related to this service remains
-          untouched. In other words, re-enabling the service will restore
-          the service in the exact same state it was when you first
-          disabled it. See also &#34;Deleting a Service&#34; below. 
-          </para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Rank on Screen</emphasis>:
-	    this arbitrary number allows you to define the position of
-	    this service in the Service Bar relative to other services. 
-	    The services with smaller values will appear first. The
-	    rank values don't have to be consecutive values. It is a
-	    good idea to use values like 10, 20, 30,... so that it is
-	    easy for you to insert new services in the future without
-	    having to renumber all the services.</para>
-        </step>
-      </procedure>
-    </section>
-
-    <section id="ServiceDeletion">
-      <title>Deleting a Service</title>
-
-      <para>Project services can be deleted. They appear with a small
-      trash icon in the service list. Just click on this icon to
-      suppress the service from the database. The service data are
-      however preserved.
-      </para>
-      <para>System services cannot be deleted. However, you can 
-      disable them and they will not appear in the Service Bar.
-      </para>
-    </section>
+      <para>Please see <xref linkend="ArtifactImport" /></para>
     </section>
 
 
-  <section id="UserGroups">
-    <title>User Groups</title>
-    
-    <para><emphasis>Location: Project Administration Menu</emphasis></para>
-    
-    <para>A user group, sometimes called a &#34;ugroup &#34;, is
-    simply a group of CodeX users.  User groups are used to set
-    specific permissions to some project data (e.g. software releases
-    and packages - see <xref linkend="FileAccessPermissions" />).  A
-    user group is always attached to a project, but the users
-    comprising the group do not necessarily belong to that
-    project.</para>
-    
-    <section id="UGroupList">
-      <title>User Groups Management</title>
+    <section id="ProjectHistory">
+      <title>Project History</title>
 
-      <para>The &#34;User Groups Admin&#34; function of the Project
-      Administration menu lists all available user groups, and
-      provides a way to create new ones.</para>
+      <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <figure id="FigureUserGroupManagementPage">
-        <title>User Group Management Page</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_usergrouplist.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>In the list, (see for example <xref
-      linkend="FigureUserGroupManagementPage" />) there are two
-      different kinds of user groups: </para>
-
-     <procedure>
-        <step>
-          <para><emphasis role="bold">Pre-defined User
-          Groups</emphasis>: These groups are defined for every
-          project. Examples of pre-defined groups are: <emphasis
-          role="bold">project_members, project_admins,
-          registered_users, nobody, file_manager_admin</emphasis>,
-          etc. These groups are dynamic: if you assign some permission
-          to 'project_admins', and a new project administrator is
-          defined, then this new user will automatically be granted
-          the corresponding permission.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Custom User Groups</emphasis>
-          are defined by project administrators. They are composed of
-          a static list of users. The only requirement is that any
-          member must be a registered CodeX user. This list can be
-          modified at any time, but will not automatically be updated,
-          except if a member is removed from the project or deleted
-          from the system.
-          </para>
-        </step>
-      </procedure>
-    </section>
-
-    <section id="UGroupCreation">
-      <title>Creating a User Group </title> <para>When creating a user
-      group, one has to provide the following fields:</para>
-     <procedure>
-        <step>
-          <para><emphasis role="bold">Name</emphasis>: This is the
-          label that will be displayed when selecting user groups in a
-          permission screen. The group name may not contain space and
-          punctuation.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Description</emphasis>: Short
-          description of the user group. It is only displayed in the
-          User Group Admin page.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Create From</emphasis>: This is
-          a quick way of pre-selecting group members: you may create a
-          user group from scratch (Empty Group), from all Project
-          Members or Project Admins, or from an existing user group
-          attached to this project. The members of the selected group
-          will automatically be added to the new group. You will be
-          able to add or remove members on the next screen.
-          </para>
-        </step>
-      </procedure>
-
-      <figure id="FigureUserGroupEdit">
-        <title>User Group Edit</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_usergroupedit.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-      <para>In the next page (see <xref linkend="FigureUserGroupEdit"
-      />), the project administrator may select individually the
-      members of the new group.</para>
-
-      <para>Two columns are displayed: the one on the left contains
-      the list of all CodeX registered users, while the one on the
-      right contains the list of users already admitted to the
-      group. Use the two arrows between the columns to move users from
-      one column to the other. </para>
-
-      <para>The user interface also provides convenient ways of
-      selecting users when the registered list is very large: you can
-      choose to display only those users whose login starts with a
-      specific letter, or you may also filter the list by typing
-      letters in the 'Filter' text box.  For instance, if you type
-      'john', only users whose name or login contains 'john' will be
-      displayed.</para>
-      
-      <para>Once you are done, you may click on the Submit button. The
-      user group is created.</para>
-
-    </section>
-
-      <tip>
-        <title>Tip: Combining pre-defined groups with additional members</title>
-
-        <para>Sometimes, you might want to grant some permissions to
-        all project members and some other CodeX users.  In this case,
-        you might be tempted to build a user group from the list of
-        project members and to add the other users to the group.  The
-        issue with this solution is that if new members join the
-        project, they will have to be manually added to the group. So
-        it is more convenient to create a group containing only the
-        users that are not member of the project. And then,
-        permissions should be granted to this group and to the
-        pre-defined "project members" group.
-        </para>
-      </tip>
-
-    <section id="UGroupUpdate">
-      <title>Updating a User Group</title>
-
-      <para>In order to update an existing user group, simply select
-      it in the user group list. You will be presented with the same
-      screen as with Group Creation, where you can update the name,
-      description and composition of the user group.
-      </para>
-    </section>
-
-
-    <section id="UGroupDeletion">
-      <title>Deleting a User Group</title>
-
-      <para>User groups can be deleted. Just click on the trash icon
-      next to the group name in the group management page (<xref
-      linkend="FigureUserGroupManagementPage" />) to suppress the user
-      group from the database. Only custom user groups can be deleted.
-      </para>
-
-      <important>
-        <title>Warning</title>
-
-        <para>Please note that if a user group was specifically
-        granted some permission, deleting the user group might be
-        dangerous. Indeed, if a group is the only one allowed to
-        access a package and this group is deleted, the permission is
-        also deleted and reset to default, so any registered user can
-        access the package.
-      </para>
-      </important>
-    </section>
-
-
-    <section>
-      <title>Additional Information on User Groups</title>
-
-      <para>It is possible to know all user groups one individual
-      project member belongs to. Simply display the User Permissions
-      page (<xref linkend="UserPermissions" />). However, please note
-      that only user groups belonging to the current project are
-      displayed. The user might also be a member of additional user
-      groups in other projects.
-      </para>
-
-      <para>The bottom of the User Group Edit page (<xref
-      linkend="FigureUserGroupEdit" />) also lists all the permissions
-      granted to this group, e.g. packages and releases this user
-      group is granted access to.</para>
-
-      <para>When a project member is removed from a project, or quits
-      a project, they are also automatically removed from all project
-      user groups for safety reasons.</para>
-
-      <para>Similarly, when a user is deleted (not just suspended) by
-      the site administrator, they are removed from all user
-      groups in all projects.</para>
-    </section>
-
+      <para>The Project History provides project members with Audit
+      capabilities. Clicking on this menu item shows a list of all the changes
+      that have taken place in the administration of the project since its
+      creation. The list of changes reports the nature of the change (e.g.
+      Changed Public Info, Changed Permissions, Changed Software Map, ...) ,
+      what the value was before it changed (if applicable), who changed it and
+      when.</para>
     </section>
 
 
@@ -953,30 +1192,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-    </section>
-
-    <section id="ServicesAdministration">
-      <title>Services Administration</title>
-
-      <para><emphasis>Location: Project Admin page</emphasis></para>
-
-      <para>The project administration page gives direct access to the
-      administration of all services that have been activated for a
-      given project. This is available in the form of a series of
-      pointers located on the lower left part of the project
-      administration page. Only project members with appropriate
-      permission are allowed to access the CodeX services
-      administration pages (see <xref linkend="UserPermissions"
-      />).</para>
-
-    </section>
-
-    <section id="TrackerImport">
-      <title>Tracker Artifact Import</title>
-
-      <para><emphasis>Location: Project Administration Menu</emphasis></para>
-
-      <para>Please see <xref linkend="ArtifactImport" /></para>
     </section>
 
   </chapter>

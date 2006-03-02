@@ -639,7 +639,7 @@
 	<listitem>
 	  <para><emphasis role="bold">Cross-References</emphasis>:
 	  while typing a follow-up comment, you can use some special
-	  text pattern to refer to other artifacts or CVS or
+	  text pattern to refer to other artifacts, documents, files, or CVS or
 	  Subversion commits.  These pattern will be automatically
 	  displayed as hyperlinks when the follow-up comment is
 	  displayed on the screen. This is an extremelly powerful and
@@ -820,7 +820,7 @@
       <para>In addition to the rather formal way of expressing a
       dependency between two artifacts presented in
       <xref linkend="ArtifactDependencies"/>, CodeX offers the ability to
-      cross-reference any artifact from within a follow-up
+      cross-reference any artifact, or any other CodeX object from within a follow-up
       comment.</para>
 
       <para>When typing a follow-up comment, any text that follows the
@@ -834,48 +834,9 @@
       automagically create an hyperlink to the web page showing all
       the details of the artifact.</para>
 
-      <para>A follow-up comment can contain a reference to an artifact
-      of any nature and from any project. It is <emphasis
-      role="bold">not</emphasis> limited in scope to the artifact
-      belonging to the same tracker or the same project. This is made
-      possible because an artifact has a unique ID across the entire
-      CodeX site.</para>
-
-      <para><emphasis role="bold">Important Notes</emphasis></para>
-
-      <itemizedlist mark="bullet" spacing="compact">
-	<listitem>
-	  <para>You can also use the pattern &#34;commit #NNN&#34; in
-	  a follow-up comment to refer to the commit with ID number
-	  NNN as listed in your CVS tracking database. If you use
-	  Subversion as a version control system, you can also use the
-	  pattern &#34;rev #NNN&#34;. This is very useful for instance
-	  when you want to close a defect or a task artifact with a
-	  reference to the corresponding source code
-	  modifications. Conversely your commit message can also
-	  contain a reference to the originating artifact therefore
-	  ensuring a two directional cross-reference between source
-	  code modifications and the related artifact. For more
-	  details about the CVS tracking database see <xref
-	  linkend="CVSWebInterface"/>.</para>
-	</listitem>
-	<listitem>
-	  <para>If the referenced artifact belongs to another project, or if
-          the artifact name (&#34;XXX&#34; above) does not match the short name
-          of the tracker it belongs to, a message will be displayed on top of the
-          target page to warn the user that she was redirected to another project,
-          or that she should check the tracker name.</para>
-	</listitem>
-	<listitem>
-	  <para>If a project uses one of the legacy bug tracking
-	  system, task manager or support request manager, it is also
-	  possible to refer to one of those by using the patterns &#34;bug
-	  #NNN&#34;, &#34;task #NNN&#34; or &#34;sr #NNN&#34;. If there is a
-          tracker with the same short name (e.g. a &#34;bug&#34; tracker), the
-          system should be smart enough to link to the right page.</para>
-	</listitem>
-
-      </itemizedlist>
+      <para>CodeX References may be used to reference artifacts, as well as source
+      code commits, documents, files, etc. Please refer to 
+      <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
 
     </section>
 

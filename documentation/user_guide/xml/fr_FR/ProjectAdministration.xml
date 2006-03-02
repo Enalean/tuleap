@@ -94,6 +94,411 @@
       </figure>
     </section>
 
+    <section id="ProjectPublicInformation">
+      <title>Informations publiques du projet</title>
+
+      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+
+      <para>L'item &#34;Edition Infos Publiques&#34; du menu
+      d'administration permet à un administrateur de mettre à jour les
+      éléments de description du projet; il s'agit d'éléments fournis
+      pendant la phase d'enregistrement du projet.</para>
+
+    </section>
+
+    <section id="ProjectCategorization">
+      <title>Catégorisation du projet</title>
+
+      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+
+      <para>C'est ici que vous pouvez définir la catégorisation de
+      votre projet. Vous pouvez définir au plus trois valeurs pour
+      chacun des sept critères de catégorisation utilisé
+      dans l'arbre des projets. Si vous ne trouvez pas de valeur
+      correspondant à votre projet, n'hésitez pas à contacter l'équipe
+      CodeX.</para>
+    </section>
+
+    <section id="ServiceConfiguration">
+      <title>Configuration des services</title>
+
+      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+
+      <para>L'entrée &#34;Configuration des services&#34; dans le menu
+      d'administration donne accès à la liste de tous les services
+      activés pour le projet courant. Les services sont les items qui
+      apparaissent dans la &#34;Barre de Services&#34;, à savoir le
+      menu qui apparait en haut de chaque page du projet: outils de
+      suivi, documentation, CVS, Page d'accueil, etc... La page de
+      configuration des services permet à l'administrateur du projet
+      de modifier, activer, désactiver ou même créer des services dans
+      la barre de services.
+      </para>
+
+      <para>Il existe deux sortes de services:</para>
+ 
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Les services système</emphasis> :
+          ces services sont définis par l'administrateur du site et
+          sont communs à tous les projets. Seuls leur état
+          (actif/inactif) et leur position à l'écran peuvent être
+          modifiés (voir ci-dessous).
+          </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Les services projet</emphasis> :
+          ces services peuvent être modifiés à loisir, voire même
+          supprimés par l'administrateur du projet.
+          </para>
+        </listitem>
+      </itemizedlist>
+
+      <para>La seule exception concerne le service <emphasis
+      role="bold">Site Web</emphasis>; il s'agit d'un service système
+      mais il peut être personnalisé pour pointer sur l'URL de votre
+      choix. Chaque projet hébergé sur CodeX possède son propre
+      serveur Web virtuel sur le site CodeX. Par défaut le service
+      &#34;Site Web&#34; de la barre de services pointe sur ce site
+      (voir le <xref linkend="ProjectWebSite" /> pour plus de
+      détails). Vous pouvez remplacer l'URL par défaut avec un
+      pointeur vers votre propre site Web. Attention à ne pas
+      confondre le site web de votre projet avec la page de
+      sommaire. Le site web de votre projet pointe sur un ensemble de
+      pages HTML dont vous êtes l'auteur alors que la page de sommaire
+      du projet est uniquement un point d'entrée vers les différents
+      services et délivrables de votre projet.</para>
+
+
+    <section id="ServiceCreation">
+      <title>Créer ou modifier un service</title> <para>Lors de la
+      création ou de la modification d'un service, vous devez fournir
+      les informations suivantes:</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Label du service</emphasis> : Il
+          s'agit du nom du service tel qu'il apparaitra dans la barre
+          de services. Il doit être aussi concis que possible.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Lien vers le service</emphasis> :
+          il s'agit de l'URL qui mène au service en question, c'est à
+          dire l'URL vers lequel l'utilisateur est redirigé lorsqu'il
+          sélectionne ce service dans la barre de service. Si l'URL
+          est absolu (c'est à dire qu'il commence par
+          &#34;http://&#34;), la page d'accès à ce service s'ouvrira
+          dans une nouvelle fenêtre de votre navigateur. Dans le cas
+          contraire la page sera chargée dans la fenêtre courante.
+          </para>
+          <para>Quelques mots-clés particuliers peuvent être utilisés
+          dans l'URL; ils seront automatiquement remplacés par leur
+          valeur avant d'être insérés dans la barre de service:
+          <itemizedlist mark="bullet">
+            <listitem>
+              <para><emphasis role="bold">$projectname</emphasis> :
+              le nom court du projet
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$sys_default_domain</emphasis> : 
+              le nom de domaine du serveur CodeX (ici &#34;&SYS_DEFAULT_DOMAIN;&#34;)
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$group_id</emphasis> : 
+              l'identifiant du projet
+              </para>
+              <para></para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis
+              role="bold">$sys_default_protocol</emphasis> : 'https' si
+              le serveur CodeX fonctionne en mode sécurisé, 'http'
+              dans le cas contraire.
+              </para>
+              <para></para>
+            </listitem>
+          </itemizedlist>
+          </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Description du
+          service</emphasis> : Description courte du service. Elle
+          est affichée dans une bulle de texte lorsque le curseur de la
+          souris se trouve sur le label du service dans la barre de
+          services.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Actif</emphasis> : En cochant
+          cette case, le service est activé c'est à dire qu'il est
+          utilisable et qu'il apparait dans la barre de
+          services. Décocher la case revient à désactiver le service et
+          à le faire disparaitre de la barre de services. Il est à
+          noter que la désactivation d'un service n'affecte en rien
+          les données de ce dernier. En d'autres termes, la
+          réactivation d'un service donne accès à l'ensemble des
+          données telles qu'elles étaient au moment de la
+          désactivation. Voir aussi la &#34;Suppression d'un
+          service&#34; ci-dessous.
+          </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Rang à l'écran</emphasis> : ce
+          nombre entier arbitraire permet de définir la position de ce
+          service relativement aux autres dans la barre de
+          service. Les services ayant la valeur de rang l aplus faible
+          appraitra en premier dans la barre de service (en partant de
+          la gauche). Il est recommandé d'utiliser des nombres comme
+          10, 20, 30,... pour pouvoir insérer de futurs services sans
+          avoir à renuméroter tous les services existants.</para>
+        </step>
+      </procedure>
+    </section>
+
+    <section id="ServiceDeletion">
+      <title>Suppression d'un service</title>
+
+      <para>les services peuvent aussi être détruits si l'icone
+      corbeille figure à proximité du nom du service. Un clic sur
+      cette icone supprime définitivement le service de la liste. Les
+      données du service correspondant sont cependant préservées.
+      </para>
+      <para>Les services système ne peuvent être détruits. Vous pouvez
+      cependant les désactiver pour qu'ils n'apparaissent pas dans la
+      barre de services.
+      </para>
+    </section>
+    </section>
+
+    <section id="ServicesAdministration">
+      <title>Administration des services</title>
+
+      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+
+      <para>La page d'administration du projet donne aussi un accès
+      direct à l'ensemble des modules d'administration de chaque
+      service activés par le projet. Cet accès est fourni sous la
+      forme d'une liste de liens hypertextes situés en bas à gauche de
+      la page d'administration. Seuls les membres du projet ayant les
+      droits d'administration sur les différents services ont accès à
+      ces modules (voir <xref linkend="UserPermissions" />).</para>
+
+    </section>
+
+
+
+    <section id="ReferenceConfiguration">
+      <title>Configuration des références</title>
+
+      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+
+      <para>La page de configuration des références liste l'ensemble des références disponibles dans le projet. Elle permet aussi aux administrateurs du projet de modifier, activer, désactiver, ou créer des références.
+      </para>
+
+    <section id="ReferenceOverview">
+      <title>Présentation des références</title>
+
+      <para>Les références sont un outils puissant permettant de créer des références croisées entre objets de CodeX. En fonction d'un patron de texte, CodeX peut créer automatiquement un hyperlien vers l'objet souhaité.
+      </para>
+      <para>Lorsque vous tapez un commentaire, ou un message de de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et CodeX créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
+      </para>
+      <para>Vous pouvez également référencer un objet appartenant à un autre projet. A cette fin, utilisez soit 'XXX #num_projet:NNN', soit 'XXX #nom_projet:NNN' pour référencer l'objet XXX numéro NNN appartenant au projet numéro 'num_projet', ou dont le nom est 'nom_projet'. Par exemple, 'wiki #monproj:Accueil' est une référence à la page wiki 'Accueil' du projet 'monproj'.
+      </para>
+      <para>Certaines références peuvent nécessiter plusieurs paramètres. Dans ce cas, utilisez le caractère '/' comme séparateur entre les paramètres. Par exemple, 'wiki #Accueil/2' crée une référence vers la page wiki 'Accueil' à la version 2.
+      </para>
+
+      <para>Il existe deux types de références:</para>
+
+ 
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Les références systèmes</emphasis> :
+ces références sont définies par l'administrateur du site et sont communes à l'ensemble des projets. Elles ne peuvent pas être modifiées, excepté leur statut (activé/désactivé).
+          </para>
+          <para>La plupart des références systèmes sont liées à un service spécifique. Ainsi 'art', 'doc', 'file' ou 'wiki' sont liés respectivement aux services outils de suivi, gestionnaire de documents, gestionnaire de fichiers et Wiki. Afin de faciliter l'utilisation de ces références, elles sont automatiquement activées ou désactivées lorsque le service correspondant est activé/désactivé. Cependant, il est toujours possible de les activer ou de les désactiver manuellement.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Les références projet</emphasis> : 
+          ces références peuvent être entièrement personnalisées par les administrateurs du projet.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+
+    <section id="ReferencePredefined">
+      <title>Références prédéfinies</title>
+<para>Voici la liste des références prédéfinies :</para>
+      <itemizedlist mark="bullet">
+        <listitem><para><emphasis role="bold">art #num ou artifact #num</emphasis> : 
+        référence à l'artefact numéro 'num'. C'est un numéro global au système (l'artefact 'num' est unique, et n'existe que dans un projet). Cette référence crée un lien vers la page de description et de mise à jour de l'artefact. En sus des mots clés 'art' et 'artifact', les artefacts peuvent être référencés à l'aide du nom court de l'outil de suivi. Ainsi, un artefact issu d'un outil de suivi de bugs (anomalies) pourra être référencé par <emphasis role="bold">bug #NNN</emphasis>, une demande de support (support request) par <emphasis role="bold">sr #NNN</emphasis>, une tâche par <emphasis role="bold">task #NNN</emphasis> et un patch avec <emphasis role="bold">patch #NNN</emphasis>. Ainsi, lorque vous créez un outil de suivi personnalisé, il est important de bien choisir son nom court.</para></listitem>
+        <listitem><para><emphasis role="bold">commit #num ou cvs #num</emphasis> : 
+        référence au commit CVS numéro 'num'. C'est un numéro global au système. Cette référence crée un lien vers la page de description du commit, qui contient le message du commit, la liste des fichiers modifiés, les liens vers les modifications, ...</para></listitem>
+        <listitem><para><emphasis role="bold">rev #num ou revision #num ou svn #num</emphasis> : 
+        référence à la révision Subversion numéro 'num'. C'est un numéro propre au projet : si vous souhaitez référencer une révision Subversion d'un autre projet, il vous faudra spécifier le projet dans la référence (par exemple: 'rev #monproj#123'). Cette référence crée un lien vers la page de description de la révision, qui contient le message du commit, la liste des fichiers modifiés, les liens vers les modifications, ...</para></listitem>
+        <listitem><para><emphasis role="bold">wiki #pagewiki et wiki #pagewiki/num</emphasis> : 
+        référence à la page Wiki nommée 'pagewiki'. Le second format permet de spécifier la version de la page Wiki. Les pages Wiki sont propres à un projet, donc si vous devez référencer une page appartenant à un autre projet, il faut spécifier le projet dans la référence. </para></listitem>
+        <listitem><para><emphasis role="bold">doc #num ou document #num</emphasis> : 
+        référence au document numéro 'num'. C'est un numéro global au système. Les numéros de documents sont visibles dans la page principale du service 'Documentation' : l'identifiant est visible lorsqu'on place la souris sur le titre. La référence pointe sur le document lui-même.</para></listitem>
+        <listitem><para><emphasis role="bold">news #num</emphasis> : 
+        référence vers l'annonce numéro 'num'. C'est un numéro global au système. Cette référence crée un lien vers la page d'annonce, où il est possible d'ajouter des commentaires.</para></listitem>
+        <listitem><para><emphasis role="bold">forum #num et msg #num</emphasis> : 
+        référence vers le forum numéro 'num' ou vers le message de forum numéro 'num'. Ce sont des numéros globaux au système. La première référence crée un lien vers la page d'accueil du forum, tandis que la deuxième crée un lien vers un message précis.</para></listitem>
+        <listitem><para><emphasis role="bold">file #num</emphasis> : 
+        référence vers le fichier numéro 'num'. C'est un numéro global au système. Ce type de référence permet de télécharger directement un fichier faisant partie d'une version. Les numéros de fichiers sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom du fichier. La référence pointe sur le fichier lui-même, et le navigateur peut alors vous demander à quel endroit vous voulez le sauvegarder. Il se peut aussi que vous deviez accepter la licence du projet avant de pouvoir télécharger le fichier.</para></listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="ReferenceUsage">
+      <title>Utilisation des références</title>
+
+      <para>Lors des phases de développement ou de maintenance d'un
+      projet, il est essentiel de garder la trace des changements
+      effectués dans le code source. C'est ce que font les systèmes de
+      gestion de configuration comme CVS ou Subversion. En complément de ce suivi,
+      il est tout aussi critique de pouvoir relier ces changements de
+      code aux artefacts (une tâche, une anomalie ou une demande
+      d'assistance) qui ont amené les développeurs à modifier le code
+      ou la documentation. Et inversement, à la lecture d'un artefact
+      il est très utile de voir quels changements il a engendré dans
+      le code source.</para>
+
+      <para>L'intégration de CVS et de Subversion avec CodeX fournit précisément ce
+      mécanisme de références croisées. Ceci est rendu possible par
+      l'utilisation des références à utiliser dans les
+      commentaires des artefacts ou dans les messages de commits
+      et que CodeX reconnaît automatiquement.</para>
+
+
+      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres références pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source come ClearCase.
+      </para>
+
+   <para><tip><title>Coup de pouce: référencez les artefacts et les
+   commits</title><para>C'est une excellente pratique que de
+   toujours référencer les taches, anomalies, demande d'assistance
+   appropriées dans le message de commit CVS ou Subversion. De la même façon,
+   lorsque l'artefact correspondant est fermé, assurez-vous de
+   mentionner le commit qui résoud le problème dans un
+   commentaire. Vous constaterez que cette pratique est extrêmement
+   efficace pour suivre l'historique des changements et pourquoi un
+   changement a eu lieu.</para></tip></para>
+
+
+</section>
+
+
+    <section id="ReferenceCreation">
+      <title>Création ou modification d'une référence</title>
+      <para>Pour créer ou modifier une référence, il faut remplir les champs suivants :</para>
+     <procedure>
+        <step>
+          <para><emphasis role="bold">Mot-clé</emphasis> :
+          C'est le mot-clé qui va déclencher la création d'une référence lorsqu'il est détecté.
+          Il est préférable de le choisir court et explicite pour favoriser la lecture des références.
+        </para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Description</emphasis> :
+          Courte description de la référence. Elle est affichée lorsqu'on place la souris sur une référence extraite.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Lien</emphasis> :
+          C'est l'URL vers lequel pointe la référence. L'utilisateur sera automatiquement
+          redirigé vers cette adresse s'il clique sur la référence.
+          L'URL ne pointe pas nécessairement vers le serveur CodeX: on peut créer des références qui pointent vers des pages externes. 
+          La nouvelle page sera chargée dans le fenêtre courante.
+          </para>
+          <para>Certaines chaines de caractères seront interprétées lors de la création de la référence:
+          </para>
+          <itemizedlist mark="bullet">
+            <listitem>
+              <para><emphasis role="bold">$projname</emphasis> :
+              nom court du projet.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$group_id</emphasis> : 
+              numéro du projet.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$0</emphasis> : 
+              le mot-clé extrait par cette référence.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$1</emphasis> : 
+              le premier paramètre de la référence.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$2</emphasis> : 
+              le deuxième paramètre de la référence.
+              </para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">$3...$9</emphasis> : 
+              du troisième au neuvième paramètre de la référence.
+              </para>
+            </listitem>
+          </itemizedlist>
+
+          <para> Exemples:</para>
+          <itemizedlist mark="bullet">
+            
+
+          <listitem><para><emphasis role="bold">artifact #25</emphasis> : '$0' vaut 'artifact', '$1' vaut '25'</para></listitem>
+          <listitem><para><emphasis role="bold">wiki #codex:Accueil/1</emphasis> : '$0' vaut 'wiki', '$1' vaut 'Accueil', '$2' vaut '1', '$projname' vaut 'codex'</para></listitem>
+          <listitem><para><emphasis role="bold">myref #123:1/23/456</emphasis> : '$0' vaut 'myref', '$1' vaut '1', '$2' vaut '23', '$3' vaut '456' et '$group_id' vaut '123'</para></listitem>
+          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis> : '$0' vaut 'google', '$1' vaut 'codex', '$2' vaut 'xerox'. Si vous avez défini la référence 'google', avec un lien pointant vers <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, cliquer sur la référence 'google #codex/xerox' lancera une recherche Google de 'codex xerox'.</para></listitem>
+          <listitem><para><emphasis role="bold">ds #123</emphasis> : '$0' vaut 'ds', '$1' vaut '123'. Si vous avez défini la référence 'ds', avec un lien pointant vers <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, cliquer sur la référence 'ds #123' lancera le téléchargement du document '123' de votre serveur Docushare local.</para></listitem>
+          </itemizedlist>
+          <para>Il faut noter que le nombre de paramètres est important: si le nombre de paramètres dans le texte ne correspond pas au nombre de paramètres définis dans la référence, la référence ne sera pas extraite. Ceci permet de créer plusieurs références avec le même mot-clé, mais un nombre de paramètres différent. Voyez par exemple les références suivantes: 'wiki #Accueil' est une référence à un seul paramètre pointant vers la page Wiki 'Accueil', alors que la référence 'wiki #Accueil/2' est une autre référence à deux paramètres pointant vers la page Wiki 'Accueil' à la version '2'.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Active</emphasis> : En cochant
+          cette case, la référence est activée, c'est à dire qu'elle est
+          utilisable est sera extraite automatiquement. 
+          Décocher la case revient à désactiver la référence.
+          Voir aussi la &#34;Suppression d'une référence&#34; ci-dessous.
+          </para>
+        </step>
+
+      </procedure>
+    </section>
+
+    <section id="ReferenceDeletion">
+      <title>Suppression d'une référence</title>
+
+      <para>les références projet peuvent aussi être détruites. Un clic sur
+      l'icone corbeille figurant à proximité du nom de la référence supprime définitivement cette dernière.
+      Une référence détruite devra être recréée pour être à nouveau utilisable
+      </para>
+      <para>Les références système ne peuvent être détruites. Vous pouvez
+      cependant les désactiver pour qu'elles ne soient plus extraites.
+      </para>
+    </section>
+    </section>
+
+
     <section id="UserPermissions">
       <title>Permissions utilisateurs</title>
 
@@ -125,7 +530,7 @@
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Admin Projet</emphasis>: Un
+          <para><emphasis role="bold">Admin Projet</emphasis> : Un
           choix Oui/Non permet de définir si un utilisateur est un
           administrateur du projet ou pas. Un administrateur a
           absolument tous les droits sur tous les services, les
@@ -135,7 +540,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Ecriture CVS</emphasis>:
+          <para><emphasis role="bold">Ecriture CVS</emphasis> :
           actuellement toujours positionné à Oui. Tous les membres du
           projet ont les droits d'accès en écriture sur le dépôt CVS
           <footnote><para>CVS signifie Concurrent Version
@@ -151,19 +556,19 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Outils de suivi</emphasis>: 
+          <para><emphasis role="bold">Outils de suivi</emphasis> : 
           </para>
 
           <itemizedlist spacing="compact">
             <listitem>
-              <para><emphasis role="underline">None</emphasis>:
+              <para><emphasis role="underline">None</emphasis> :
               l'utilisateur a les mêmes droits sur cet outil qu'un
               utilisateur externe au projet.</para>
             </listitem>
 
             <listitem>
               <para><emphasis
-              role="underline">Administrateur</emphasis>: Les
+              role="underline">Administrateur</emphasis> : Les
               administrateurs des outils de suivi (et des autres
               services) ont tous les droits d'administration
               concernant ce service. Par exemple, il leur est possible
@@ -175,18 +580,18 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Forums, Gestionnaire de documents, Gestionnaires de fichiers</emphasis>:
+          <para><emphasis role="bold">Forums, Gestionnaire de documents, Gestionnaires de fichiers</emphasis> :
           </para>
 
           <itemizedlist spacing="compact">
             <listitem>
-              <para><emphasis role="underline">None</emphasis>:
+              <para><emphasis role="underline">None</emphasis> :
               l'utilisateur a les mêmes droits sur cet outil qu'un
               utilisateur externe au projet.</para>
             </listitem>
 
             <listitem>
-              <para><emphasis role="underline">Modérateur</emphasis>:
+              <para><emphasis role="underline">Modérateur</emphasis> :
               (Forums uniquement): un modérateur a la capacité à gérer
               la section forum du projet, à savoir créer/détruire des
               forums, supprimer des messages indésirables dans un
@@ -196,7 +601,7 @@
             </listitem>
 
             <listitem>
-              <para><emphasis role="underline">Editeur</emphasis>:
+              <para><emphasis role="underline">Editeur</emphasis> :
               (Gestionnaire de documents uniquement): Un éditeur peut
               passer en revue et valider un document avant sa
               publication. Il peut aussi mettre à jour ou détruire un
@@ -205,7 +610,7 @@
 
             <listitem>
               <para><emphasis
-              role="underline">Administrateur</emphasis>:
+              role="underline">Administrateur</emphasis> :
               (Gestionnaire de fichiers uniquement): un
               administrateur du gestionnaire de fichiers peut gérer
               les paquets et les versions de fichiers. Il peut aussi
@@ -219,7 +624,7 @@
         </listitem>
         <listitem>
           <para><emphasis role="bold">Membres des groupes
-          d'utilisateurs</emphasis>: Pour chaque utilisateur figure
+          d'utilisateurs</emphasis> : Pour chaque utilisateur figure
           dans cette colonne la liste des groupes d'utilisateurs
           auxquels il appartient. Voir <xref linkend="UserGroups" />
           pour plus d'information sur les groupes
@@ -236,545 +641,6 @@
         des modifications dans la table des permissions.</para>
       </important>
     </section>
-
-    <section id="ProjectPublicInformation">
-      <title>Informations publiques du projet</title>
-
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
-
-      <para>L'item &#34;Edition Infos Publiques&#34; du menu
-      d'administration permet à un administrateur de mettre à jour les
-      éléments de description du projet; il s'agit d'éléments fournis
-      pendant la phase d'enregistrement du projet.</para>
-
-    </section>
-
-    <section id="ProjectCategorization">
-      <title>Catégorisation du projet</title>
-
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
-
-      <para>C'est ici que vous pouvez définir la catégorisation de
-      votre projet. Vous pouvez définir au plus trois valeurs pour
-      chacun des sept critères de catégorisation utilisé
-      dans l'arbre des projets. Si vous ne trouvez pas de valeur
-      correspondant à votre projet, n'hésitez pas à contacter l'équipe
-      CodeX.</para>
-    </section>
-
-    <section id="ProjectHistory">
-      <title>Historique du projet</title>
-
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
-
-      <para>L'historique du projet fournit une fonction d'audit aux
-      membres du projet. Un clic sur cet item montre une liste de
-      l'ensemble des changements opérés dans le module
-      d'administration du projet depuis sa création. La liste décrit
-      la nature du changement intervenu (modification des infos
-      publiques, modification des permissions,...), la valeur de
-      l'information avant le changement, l'auteur et la date de la
-      modification.</para>
-    </section>
-
-    <section id="ProjectDataExport">
-      <title>Exportation des données du projet</title>
-
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
-
-      <para>CodeX est particulièrement attractif pour de nombreuses
-      équipes de projet car il offre une série d'outils complets pour
-      le développement et la gestion de projet. Un projet peut-être
-      géré quasiment intégralement depuis CodeX. Cependant il se peut
-      que l'équipe ressente le besoin d'effectuer certaines opérations
-      sur les données du projet en dehors de CodeX comme par exemple
-      rédiger un rapport sur l'état d'avancement du projet, ce qui se
-      passe bien ou moins bien, actualiser la date de livraison
-      prévue, dériver des données statistiques, etc...</para>
-
-      <para>Il n'est pas du ressort de CodeX de fournir ces outils de
-      reporting sophistiqués. Il existe de nombreux outils spécialisés
-      sur le marché capable de générer des rapports d'activité et
-      chaque équipe possède son outil préféré. Dans le but de
-      satisfaire la grande diversité de ces besoins, CodeX offre un
-      mécanisme très efficace qui permet d'exporter les données hors
-      du projet pour les utiliser dans des outils comme MS Access, MS
-      Excel, Crystal Report, Open Office ou tout autre outil
-      adapté.</para>
-
-      <para>CodeX offre 2 mécanismes d'exportation des données:</para>
-
-      <itemizedlist mark="bullet">
-        <listitem>
-          <para><emphasis role="bold">Exportation au format
-          texte</emphasis>: ce mécanisme permet d'exporter les données
-          au format CSV (Comma Separated Value), un format reconnu par
-          quasiment tous les outils de bureautique ou les bases de
-          données du marché. Si vous souhaitez développer votre propre
-          application de reporting, la plupart des langages de
-          programmation propose une librairie standard capable de
-          manipuler le format CSV.</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Accès direct à la base de
-          données</emphasis>: à proprement parlé il ne s'agit pas
-          d'exportation de données. Ce mécanisme permet en fait de se
-          connecter directement à la base de données de vote projet via
-          un pilote ODBC ou JDBC. Si vous souhaitez manipuler les
-          données de votre projet avec un outil de base de données
-          (comme MS Access ou une application ODBC/JDBC) c'est sans
-          aucun doute le mécanisme d'exportation à utiliser.</para>
-        </listitem>
-    </itemizedlist>
-
-
-    <section id="ExportedData">
-      <title>Données exportées</title>
-
-      <para>CodeX export les données suivantes (le détail des champs
-      exportés et de leur format est disponible sur la page CodeX):
-      </para>
-
-      <itemizedlist mark="bullet" spacing="compact">
-	<listitem>
-	  <para><emphasis role="bold">Outil de suivi</emphasis>:
-	  toutes les données des artefacts, l'historique de leurs
-	  modifications et leurs dépendences peuvent être exportés
-	  pour chaque outil de suivi.</para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="bold">Réponses aux
-	  enquêtes</emphasis>: toutes les réponses à toutes les
-	  enquêtes menées par votre projet sont exportables.</para>
-	</listitem>
-      </itemizedlist>
-    </section>
-
-    <section id="TextFileExport">
-      <title>Exportation au format texte</title>
-
-      <para>L'exportation au format texte suit le format CSV bien
-      connu de toutes les suites bureautiques du marché. Il peut être
-      très facilement importé dans MS Access, MS Excel, Open
-      Calc,&hellip;</para>
-
-      <section id="ImportingCSVFilesinExcel">
-	<title>Chargement d'un fichier CSV dans Excel</title> <para>Un
-	clic sur un des liens d'exportation des données de la page
-	d'exportation génère et télécharge à la volée un fichier CSV
-	que vous pouvez sauvegarder sur votre ordinateur ou ouvrir
-	directement dans Excel ou tout autre tableur de votre
-	choix. Aucune configuration particulière n'est
-	nécessaire.</para>
-      </section>
-
-      <section id="ImportingCSVFilesinMS-Access">
-	<title>Chargement de fichiers CSV dans MS-Access</title>
-
-	<para>Avant de pouvoir importer les données dans MS Access,
-	vous devez d'abord créer une nouvelle base de
-	données. Exécutez ensuite les étapes suivantes:</para>
-
-	<itemizedlist mark="bullet" spacing="compact">
-	  <listitem>
-	    <para>Sélectionnez <literal>Menu Fichier -> Accès au données externes -> Importer</literal></para>
-	  </listitem>
-	  <listitem>
-	    <para>Choisissez le fichier CSV que vous venez juste de
-	    sauvegarder puis cliquez sur le bouton
-	    <literal>Importer...</literal>. Une prévisualisation de la
-	    table importée vous est présentée pour validation.</para>
-	  </listitem>
-	  <listitem>
-	    <para>Cliquez sur le bouton <literal>Avancé...</literal></para>
-	  </listitem>
-	  <listitem>
-	    <para>Positionnez le délimiteur de texte à " (un guillemet)</para>
-	  </listitem>
-	  <listitem>
-	    <para>Positionnez le format de date à <literal>AMJ</literal></para>
-	  </listitem>
-	  <listitem>
-	    <para>Positionnez le délimiteur de date à - (tiret)</para>
-	  </listitem>
-	  
-	  <listitem>
-	    <para>Ensuite saisissez le nom et le type de chaque champ
-	    dans la partie inférieure de la boîte de
-	    dialogue. Souvenez-vous que ces informations sont
-	    disponibles sur la page d'exportation des données de
-	    CodeX.</para>
-
-	    <note><para><emphasis role="bold">Remarque
-	    importante</emphasis>: vous pouvez conserver les noms de
-	    champs par défaut (Champ1,....ChampN) ainsi que les types
-	    par défaut proposés par MS Access. La seule exception
-	    concerne les champs texte longs comme les champs
-	    commentaires ou la description originale d'un artefact
-	    dont le type doit être Memo. Si vous ne spécifiez pas ce type
-	    spécifique, MS Access va corrompre les données
-	    importées.</para> <para>Si vous recontrez des difficultés
-	    à l'importation du fichier CSV, veuillez consulter la
-	    <xref linkend="ExcelAndRegionals"/> </para></note>
-	  </listitem>
-	</itemizedlist>
-
-	<para><!--Once you are done with the specification of the Import,
-	save it by clicking on the <literal>Save As...</literal>
-	button. For future import of the same table simply click on
-	the Specs... button and reload your Import
-	specification.-->
-        Après avoir spécifié les paramètres de l'importation, vous pouvez
-        les enregistrer en cliquant sur le bouton 
-        <literal>Sauvegarder sous...</literal>.Pour de futures importations
-        sur la même table, cliquez simplement sur le boutton Specs... et
-        rechargez vos paramètres d'importation.</para>
-      </section>
-
-    </section>
-
-    <section id="DirectDatabaseAccess">
-      <title>Accès direct à la base de données</title>
-
-      <para>Dans le but d'offrir une flexibilité maximale CodeX offre
-      aussi un accès direct aux données du projet via un connexion
-      ODBC ou JDBC. Une fois installé sur votre PC, le pilote ODBC (ou
-      JDBC) de MySQL permet un accès transparent aux tables de votre
-      base de données spécifiques.</para>
-
-      <para>Si vous utilisez MS Access pour générer vos rapports
-      d'activité, l'accès direct à la base de données est le moyen le
-      plus simple et le plus rapide d'exploiter vos données.</para>
-
-
-      <section id="GeneratingYourProjectDatabase">
-	<title>Générer la base de données du projet</title>
-
-	<para>Avant toute tentative d'accès aux données de votre
-	projet via ODBC ou JDBC vous devez d'abord générer la base de
-	données du projet. Pour ce faire, rendez vous sur la page
-	d'exportation des données et cliquez sur le lien 'Générer la
-	base de données du projet' au bas de la page. Vous devrez
-	aussi cliquer sur ce lien à chaque fois que vous voulez
-	actualiser les données de votre projet.</para>
-
-	<para>Si tout se passe comme prévu, la base de données de
-	votre projet sera alors générée en temps réel et un message
-	vous informera de la fin du processus en vous rappelant la
-	valeur des paramètres à utiliser pour vous connecter depuis
-	votre ordinateur. Conservez-les soigneusement.</para>
-
-	<note><para><emphasis role="bold">Remarque</emphasis>: si la
-	base de données de votre projet contient plusieurs milliers
-	d'enregistrements (taches, bugs&hellip;) le processus de
-	génération de la base de données peut prendre plusieurs
-	minutes.</para></note>
-      </section>
-      
-      <section id="InstallingandConfiguringtheMySQLODBCDriver">
-	<title>Installer et configurer le pilote ODBC de MySQL</title>
-
-	<procedure>
-	  <step>
-	    <para>Chargez tout d'abord le <ulink
-	    url="http://www.mysql.com/downloads/api-myodbc.html">pilote
-	    ODBC de MySQL </ulink> et décompressez l'archive dans un
-	    répertoire temporaire de votre choix.</para> </step>
-	  <step>
-	    <para>Lancez l'exécution du programme setup et parcourez
-	    les étapes du processus d'installation.<emphasis
-	    role="bold">Remarque importante</emphasis>: sur Windows
-	    NT/2000/XP vous devez être administrateur pour pouvoir
-	    installer le pilote.</para>
-	  </step>
-	  <step>
-	    <para>Ajouter votre base de données dans les Source de
-	    Données Windows. Pour les utilisateurs de Windows
-	    NT/2000/XP:</para>
-
-	    <itemizedlist mark="bullet" spacing="compact">
-	      <listitem>
-		<para>Utilisez votre login Windows habituel.</para>
-	      </listitem>
-	      <listitem>
-		<para>Cliquez sur <literal>menu Démarrer ->
-		Configuration -> Panneau de Configuration -> Outils
-		d'administration -> Sources de données
-		(ODBC)</literal></para>
-	      </listitem>
-	      <listitem>
-		<para>Sélectionnez l'onglet "DSN Utilisateur" et cliquez sur le bouton 
-		"Ajouter"</para>
-	      </listitem>
-	      <listitem>
-		<para>Sélectionnez l'item "MySQL" dans la liste puis
-		cliquez sur le bouton "Terminer"</para>
-	      </listitem>
-	      
-	      <listitem>
-		<para>Une boite de dialogue apparait vous demandant
-		les paramètres de connexion suivants:</para>
-
-		<itemizedlist mark="bullet" spacing="compact">
-		  <listitem>
-		    <para><emphasis>Windows DSN Name</emphasis>:
-		    c'est le nom de votre choix pour cette
-		    connexion. Vous pouvez indiquer quelque chose
-		    comme "Base de données du projet X" par
-		    exemple.</para>
-		  </listitem>
-		  <listitem>
-		    <para><emphasis>MySQL Host(IP ou nom)</emphasis>: &SYS_DEFAULT_DOMAIN;</para>
-		  </listitem>
-		  <listitem>
-		    <para><emphasis>MySQL Database Name</emphasis>: le
-		    nom de la bases de données correspond au nom court
-		    de votre projet qui vous a été donné à la fin du
-		    processus de génération de votre base (voir plus
-		    haut).</para>
-		  </listitem>
-		  <listitem>
-		    <para><emphasis>User</emphasis>: le nom d'utilisateur est
-		    'cxuser'.</para>
-		  </listitem>
-		  <listitem>
-		    <para><emphasis>Password</emphasis>: pas de mot passe
-		    (laissez le champ vide).</para>
-		  </listitem>
-		  <listitem>
-		    <para><emphasis>Port (if not 3306)</emphasis>:
-		    utilisez le port par défaut (ou laissez le champ
-		    vide).</para>
-		  </listitem>
-		  
-		  <listitem>
-		    <para><emphasis>SQL command on connect</emphasis>:
-		    aucune (laissez le champ vide).</para>
-		  </listitem>
-		</itemizedlist>
-	      </listitem>
-	    </itemizedlist>
-	  </step>
-	</procedure>
-      </section>
-
-      <section id="InstallingandConfiguringtheMySQLJDBCDriver">
-	<title>Installer et configurer le pilote JDBC de MySQL</title>
-
-	<para>Pour ceux d'entre vous qui utilisent une application
-	Java basée sur un driver JDBC, les instructions d'installation
-	du pilote JDBC de MySQL sont disponibles sur la page <ulink
-	url="http://www.mysql.com/doc/en/Java.html">MySQL Java
-	Connectivity</ulink> page.</para>
-
-      </section>
-
-      <section id="UsingYourProjectDatabaseFromMS-Access">
-	<title>Utiliser les données du projet depuis MS-Access</title>
-
-	<para>Avant d'utiliser MS-Access pour vous connecter à la base
-	de données de votre projet, assurez-vous que le pilote ODBC de
-	MySQL est correctement installé sur votre ordinateur( voir
-	<xref linkend="InstallingandConfiguringtheMySQLODBCDriver" />)
-	et que vous avez généré la base de données elle-même (voir
-	<xref linkend="GeneratingYourProjectDatabase" />). Ensuite
-	exécutez les étapes suivantes:</para>
-
-	<itemizedlist mark="bullet" spacing="compact">
-	  <listitem>
-	    <para>Lancez MS Access et ouvrez une nouvelle base de données.</para>
-	  </listitem>
-	  <listitem>
-	    <para>Dans le menu <literal>Fichier</literal> sélectionnez
-	    <literal>Données externes -> Importer</literal>. </para>
-	  </listitem>
-	  <listitem>
-	    <para>Dans la boite de sélection <literal>Types de
-	    fichier</literal> sélectionnez l'entrée <literal>Bases de
-	    données ODBC</literal>.</para>
-	  </listitem>
-	  <listitem>
-	    <para>Sélectionnez l'onglet <literal>Source de données machine</literal>
-	    et cliquez sur la base de données de votre projet.</para>
-	  </listitem>
-	  <listitem>
-	    <para>Sélectionnez les tables qui vous intéressent ou bien
-	    l'ensemble des tables en cliquant sur <literal>Tout
-	    sélectionner</literal>.</para>
-	  </listitem>
-	</itemizedlist>
-
-	<para>MS-Access importe instantanément (à la vitesse de
-	MS-Access :-)) les données de votre projet et vous pouvez
-	désormais exploiter vos données comme vous le feriez pour une
-	base de données native MS Access.</para>
-      </section>
-
-    </section>
-
-  </section>
-
-    <section id="ServiceConfiguration">
-      <title>Configuration des services</title>
-
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
-
-      <para>L'entrée &#34;Configuration des services&#34; dans le menu
-      d'administration donne accès à la liste de tous les services
-      activés pour le projet courant. Les services sont les items qui
-      apparaissent dans la &#34;Barre de Services&#34;, à savoir le
-      menu qui apparait en haut de chaque page du projet: outils de
-      suivi, documentation, CVS, Page d'accueil, etc... La page de
-      configuration des services permet à l'administrateur du projet
-      de modifier, activer, désactiver ou même créer des services dans
-      la barre de services.
-      </para>
-
-      <para>Il existe deux sortes de services:</para>
- 
-      <itemizedlist mark="bullet">
-        <listitem>
-          <para><emphasis role="bold">Les services système</emphasis>:
-          ces services sont définis par l'administrateur du site et
-          sont communs à tous les projets. Seuls leur état
-          (actif/inactif) et leur position à l'écran peuvent être
-          modifiés (voir ci-dessous).
-          </para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Les services projet</emphasis>:
-          ces services peuvent être modifiés à loisir, voire même
-          supprimés par l'administrateur du projet.
-          </para>
-        </listitem>
-      </itemizedlist>
-
-      <para>La seule exception concerne le service <emphasis
-      role="bold">Site Web</emphasis>; il s'agit d'un service système
-      mais il peut être personnalisé pour pointer sur l'URL de votre
-      choix. Chaque projet hébergé sur CodeX possède son propre
-      serveur Web virtuel sur le site CodeX. Par défaut le service
-      &#34;Site Web&#34; de la barre de services pointe sur ce site
-      (voir le <xref linkend="ProjectWebSite" /> pour plus de
-      détails). Vous pouvez remplacer l'URL par défaut avec un
-      pointeur vers votre propre site Web. Attention à ne pas
-      confondre le site web de votre projet avec la page de
-      sommaire. Le site web de votre projet pointe sur un ensemble de
-      pages HTML dont vous êtes l'auteur alors que la page de sommaire
-      du projet est uniquement un point d'entrée vers les différents
-      services et délivrables de votre projet.</para>
-
-
-    <section id="ServiceCreation">
-      <title>Créer ou modifier un service</title> <para>Lors de la
-      création ou de la modification d'un service, vous devez fournir
-      les informations suivantes:</para>
-     <procedure>
-        <step>
-          <para><emphasis role="bold">Label du service</emphasis>: Il
-          s'agit du nom du service tel qu'il apparaitra dans la barre
-          de services. Il doit être aussi concis que possible.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Lien vers le service</emphasis>:
-          il s'agit de l'URL qui mène au service en question, c'est à
-          dire l'URL vers lequel l'utilisateur est redirigé lorsqu'il
-          sélectionne ce service dans la barre de service. Si l'URL
-          est absolu (c'est à dire qu'il commence par
-          &#34;http://&#34;), la page d'accès à ce service s'ouvrira
-          dans une nouvelle fenêtre de votre navigateur. Dans le cas
-          contraire la page sera chargée dans la fenêtre courante.
-          </para>
-          <para>Quelques mots-clés particuliers peuvent être utilisés
-          dans l'URL; ils seront automatiquement remplacés par leur
-          valeur avant d'être insérés dans la barre de service:
-          <itemizedlist mark="bullet">
-            <listitem>
-              <para><emphasis role="bold">$projectname</emphasis>:
-              le nom court du projet
-              </para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">$sys_default_domain</emphasis>: 
-              le nom de domaine du serveur CodeX (ici &#34;&SYS_DEFAULT_DOMAIN;&#34;)
-              </para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis role="bold">$group_id</emphasis>: 
-              l'identifiant du projet
-              </para>
-              <para></para>
-            </listitem>
-
-            <listitem>
-              <para><emphasis
-              role="bold">$sys_default_protocol</emphasis>: 'https' si
-              le serveur CodeX fonctionne en mode sécurisé, 'http'
-              dans le cas contraire.
-              </para>
-              <para></para>
-            </listitem>
-          </itemizedlist>
-          </para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Description du
-          service</emphasis>: Description courte du service. Elle
-          est affichée dans une bulle de texte lorsque le curseur de la
-          souris se trouve sur le label du service dans la barre de
-          services.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Actif</emphasis>: En cochant
-          cette case, le service est activé c'est à dire qu'il est
-          utilisable et qu'il apparait dans la barre de
-          services. Décocher la case revient à désactiver le service et
-          à le faire disparaitre de la barre de services. Il est à
-          noter que la désactivation d'un service n'affecte en rien
-          les données de ce dernier. En d'autres termes, la
-          réactivation d'un service donne accès à l'ensemble des
-          données telles qu'elles étaient au moment de la
-          désactivation. Voir aussi la &#34;Suppression d'un
-          service&#34; ci-dessous.
-          </para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Rang à l'écran</emphasis>: ce
-          nombre entier arbitraire permet de définir la position de ce
-          service relativement aux autres dans la barre de
-          service. Les services ayant la valeur de rang l aplus faible
-          appraitra en premier dans la barre de service (en partant de
-          la gauche). Il est recommandé d'utiliser des nombres comme
-          10, 20, 30,... pour pouvoir insérer de futurs services sans
-          avoir à renuméroter tous les services existants.</para>
-        </step>
-      </procedure>
-    </section>
-
-    <section id="ServiceDeletion">
-      <title>Suppresion d'un service</title>
-
-      <para>les services peuvent aussi être détruits si l'icone
-      corbeille figure à proximité du nom du service. Un clic sur
-      cette icone supprime définitivement le service de la liste. Les
-      données du service correspondant sont cependant préservées.
-      </para>
-      <para>Les services système ne peuvent être détruits. Vous pouvez
-      cependant les désactiver pour qu'ils n'apparaissent pas dans la
-      barre de services.
-      </para>
-    </section>
-    </section>
-
 
   <section id="UserGroups">
     <title>Groupes d'utilisateurs</title>
@@ -816,7 +682,7 @@
      <procedure>
         <step>
           <para><emphasis role="bold">Les groupes d'utilisateurs
-          prédéfinis</emphasis>: Ces groupes sont automatiquement
+          prédéfinis</emphasis> : Ces groupes sont automatiquement
           définis pour chaque projet. Il s'agit par exemple de:
           <emphasis role="bold">membres_projet, admins_projet,
           utilisateurs_enregistres, personne,
@@ -851,21 +717,21 @@
       informations suivantes doivent être fournies:</para>
      <procedure>
         <step>
-          <para><emphasis role="bold">Nom</emphasis>: Il s'agit du nom
+          <para><emphasis role="bold">Nom</emphasis> : Il s'agit du nom
           du groupe tel qu'il apparaitra dans les écrans de définition
           des permissions. Le nom ne peut contenir ni espace, ni
           ponctuation.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Description</emphasis>: une
+          <para><emphasis role="bold">Description</emphasis> : une
           description courte du groupe d'utilisateurs. Elle est
           uniquement utilisée dans les écrans d'administration des
           groupes d'utilisateurs.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Créer à partir de</emphasis>:
+          <para><emphasis role="bold">Créer à partir de</emphasis> :
           c'est un moyen de présélection rapide des membres du groupe:
           vous pouvez créer un groupe à partir de rien (Groupe vide)
           ou bien en partant de la liste des membres du projet ou des
@@ -1002,6 +868,370 @@
     </section>
 
 
+    <section id="ProjectDataExport">
+      <title>Exportation des données du projet</title>
+
+      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+
+      <para>CodeX est particulièrement attractif pour de nombreuses
+      équipes de projet car il offre une série d'outils complets pour
+      le développement et la gestion de projet. Un projet peut-être
+      géré quasiment intégralement depuis CodeX. Cependant il se peut
+      que l'équipe ressente le besoin d'effectuer certaines opérations
+      sur les données du projet en dehors de CodeX comme par exemple
+      rédiger un rapport sur l'état d'avancement du projet, ce qui se
+      passe bien ou moins bien, actualiser la date de livraison
+      prévue, dériver des données statistiques, etc...</para>
+
+      <para>Il n'est pas du ressort de CodeX de fournir ces outils de
+      reporting sophistiqués. Il existe de nombreux outils spécialisés
+      sur le marché capable de générer des rapports d'activité et
+      chaque équipe possède son outil préféré. Dans le but de
+      satisfaire la grande diversité de ces besoins, CodeX offre un
+      mécanisme très efficace qui permet d'exporter les données hors
+      du projet pour les utiliser dans des outils comme MS Access, MS
+      Excel, Crystal Report, Open Office ou tout autre outil
+      adapté.</para>
+
+      <para>CodeX offre 2 mécanismes d'exportation des données:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Exportation au format
+          texte</emphasis> : ce mécanisme permet d'exporter les données
+          au format CSV (Comma Separated Value), un format reconnu par
+          quasiment tous les outils de bureautique ou les bases de
+          données du marché. Si vous souhaitez développer votre propre
+          application de reporting, la plupart des langages de
+          programmation propose une librairie standard capable de
+          manipuler le format CSV.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Accès direct à la base de
+          données</emphasis> : à proprement parlé il ne s'agit pas
+          d'exportation de données. Ce mécanisme permet en fait de se
+          connecter directement à la base de données de vote projet via
+          un pilote ODBC ou JDBC. Si vous souhaitez manipuler les
+          données de votre projet avec un outil de base de données
+          (comme MS Access ou une application ODBC/JDBC) c'est sans
+          aucun doute le mécanisme d'exportation à utiliser.</para>
+        </listitem>
+    </itemizedlist>
+
+
+    <section id="ExportedData">
+      <title>Données exportées</title>
+
+      <para>CodeX export les données suivantes (le détail des champs
+      exportés et de leur format est disponible sur la page CodeX):
+      </para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Outil de suivi</emphasis> :
+	  toutes les données des artefacts, l'historique de leurs
+	  modifications et leurs dépendences peuvent être exportés
+	  pour chaque outil de suivi.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">Réponses aux
+	  enquêtes</emphasis> : toutes les réponses à toutes les
+	  enquêtes menées par votre projet sont exportables.</para>
+	</listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="TextFileExport">
+      <title>Exportation au format texte</title>
+
+      <para>L'exportation au format texte suit le format CSV bien
+      connu de toutes les suites bureautiques du marché. Il peut être
+      très facilement importé dans MS Access, MS Excel, Open
+      Calc,&hellip;</para>
+
+      <section id="ImportingCSVFilesinExcel">
+	<title>Chargement d'un fichier CSV dans Excel</title> <para>Un
+	clic sur un des liens d'exportation des données de la page
+	d'exportation génère et télécharge à la volée un fichier CSV
+	que vous pouvez sauvegarder sur votre ordinateur ou ouvrir
+	directement dans Excel ou tout autre tableur de votre
+	choix. Aucune configuration particulière n'est
+	nécessaire.</para>
+      </section>
+
+      <section id="ImportingCSVFilesinMS-Access">
+	<title>Chargement de fichiers CSV dans MS-Access</title>
+
+	<para>Avant de pouvoir importer les données dans MS Access,
+	vous devez d'abord créer une nouvelle base de
+	données. Exécutez ensuite les étapes suivantes:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para>Sélectionnez <literal>Menu Fichier -> Accès au données externes -> Importer</literal></para>
+	  </listitem>
+	  <listitem>
+	    <para>Choisissez le fichier CSV que vous venez juste de
+	    sauvegarder puis cliquez sur le bouton
+	    <literal>Importer...</literal>. Une prévisualisation de la
+	    table importée vous est présentée pour validation.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Cliquez sur le bouton <literal>Avancé...</literal></para>
+	  </listitem>
+	  <listitem>
+	    <para>Positionnez le délimiteur de texte à " (un guillemet)</para>
+	  </listitem>
+	  <listitem>
+	    <para>Positionnez le format de date à <literal>AMJ</literal></para>
+	  </listitem>
+	  <listitem>
+	    <para>Positionnez le délimiteur de date à - (tiret)</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para>Ensuite saisissez le nom et le type de chaque champ
+	    dans la partie inférieure de la boîte de
+	    dialogue. Souvenez-vous que ces informations sont
+	    disponibles sur la page d'exportation des données de
+	    CodeX.</para>
+
+	    <note><para><emphasis role="bold">Remarque
+	    importante</emphasis> : vous pouvez conserver les noms de
+	    champs par défaut (Champ1,....ChampN) ainsi que les types
+	    par défaut proposés par MS Access. La seule exception
+	    concerne les champs texte longs comme les champs
+	    commentaires ou la description originale d'un artefact
+	    dont le type doit être Memo. Si vous ne spécifiez pas ce type
+	    spécifique, MS Access va corrompre les données
+	    importées.</para> <para>Si vous recontrez des difficultés
+	    à l'importation du fichier CSV, veuillez consulter la
+	    <xref linkend="ExcelAndRegionals"/> </para></note>
+	  </listitem>
+	</itemizedlist>
+
+	<para><!--Once you are done with the specification of the Import,
+	save it by clicking on the <literal>Save As...</literal>
+	button. For future import of the same table simply click on
+	the Specs... button and reload your Import
+	specification.-->
+        Après avoir spécifié les paramètres de l'importation, vous pouvez
+        les enregistrer en cliquant sur le bouton 
+        <literal>Sauvegarder sous...</literal>.Pour de futures importations
+        sur la même table, cliquez simplement sur le boutton Specs... et
+        rechargez vos paramètres d'importation.</para>
+      </section>
+
+    </section>
+
+    <section id="DirectDatabaseAccess">
+      <title>Accès direct à la base de données</title>
+
+      <para>Dans le but d'offrir une flexibilité maximale CodeX offre
+      aussi un accès direct aux données du projet via un connexion
+      ODBC ou JDBC. Une fois installé sur votre PC, le pilote ODBC (ou
+      JDBC) de MySQL permet un accès transparent aux tables de votre
+      base de données spécifiques.</para>
+
+      <para>Si vous utilisez MS Access pour générer vos rapports
+      d'activité, l'accès direct à la base de données est le moyen le
+      plus simple et le plus rapide d'exploiter vos données.</para>
+
+
+      <section id="GeneratingYourProjectDatabase">
+	<title>Générer la base de données du projet</title>
+
+	<para>Avant toute tentative d'accès aux données de votre
+	projet via ODBC ou JDBC vous devez d'abord générer la base de
+	données du projet. Pour ce faire, rendez vous sur la page
+	d'exportation des données et cliquez sur le lien 'Générer la
+	base de données du projet' au bas de la page. Vous devrez
+	aussi cliquer sur ce lien à chaque fois que vous voulez
+	actualiser les données de votre projet.</para>
+
+	<para>Si tout se passe comme prévu, la base de données de
+	votre projet sera alors générée en temps réel et un message
+	vous informera de la fin du processus en vous rappelant la
+	valeur des paramètres à utiliser pour vous connecter depuis
+	votre ordinateur. Conservez-les soigneusement.</para>
+
+	<note><para><emphasis role="bold">Remarque</emphasis> : si la
+	base de données de votre projet contient plusieurs milliers
+	d'enregistrements (taches, bugs&hellip;) le processus de
+	génération de la base de données peut prendre plusieurs
+	minutes.</para></note>
+      </section>
+      
+      <section id="InstallingandConfiguringtheMySQLODBCDriver">
+	<title>Installer et configurer le pilote ODBC de MySQL</title>
+
+	<procedure>
+	  <step>
+	    <para>Chargez tout d'abord le <ulink
+	    url="http://www.mysql.com/downloads/api-myodbc.html">pilote
+	    ODBC de MySQL </ulink> et décompressez l'archive dans un
+	    répertoire temporaire de votre choix.</para> </step>
+	  <step>
+	    <para>Lancez l'exécution du programme setup et parcourez
+	    les étapes du processus d'installation.<emphasis
+	    role="bold">Remarque importante</emphasis> : sur Windows
+	    NT/2000/XP vous devez être administrateur pour pouvoir
+	    installer le pilote.</para>
+	  </step>
+	  <step>
+	    <para>Ajouter votre base de données dans les Source de
+	    Données Windows. Pour les utilisateurs de Windows
+	    NT/2000/XP:</para>
+
+	    <itemizedlist mark="bullet" spacing="compact">
+	      <listitem>
+		<para>Utilisez votre login Windows habituel.</para>
+	      </listitem>
+	      <listitem>
+		<para>Cliquez sur <literal>menu Démarrer ->
+		Configuration -> Panneau de Configuration -> Outils
+		d'administration -> Sources de données
+		(ODBC)</literal></para>
+	      </listitem>
+	      <listitem>
+		<para>Sélectionnez l'onglet "DSN Utilisateur" et cliquez sur le bouton 
+		"Ajouter"</para>
+	      </listitem>
+	      <listitem>
+		<para>Sélectionnez l'item "MySQL" dans la liste puis
+		cliquez sur le bouton "Terminer"</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para>Une boite de dialogue apparait vous demandant
+		les paramètres de connexion suivants:</para>
+
+		<itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+		    <para><emphasis>Windows DSN Name</emphasis> :
+		    c'est le nom de votre choix pour cette
+		    connexion. Vous pouvez indiquer quelque chose
+		    comme "Base de données du projet X" par
+		    exemple.</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>MySQL Host(IP ou nom)</emphasis> : &SYS_DEFAULT_DOMAIN;</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>MySQL Database Name</emphasis> : le
+		    nom de la bases de données correspond au nom court
+		    de votre projet qui vous a été donné à la fin du
+		    processus de génération de votre base (voir plus
+		    haut).</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>User</emphasis> : le nom d'utilisateur est
+		    'cxuser'.</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>Password</emphasis> : pas de mot passe
+		    (laissez le champ vide).</para>
+		  </listitem>
+		  <listitem>
+		    <para><emphasis>Port (if not 3306)</emphasis> :
+		    utilisez le port par défaut (ou laissez le champ
+		    vide).</para>
+		  </listitem>
+		  
+		  <listitem>
+		    <para><emphasis>SQL command on connect</emphasis> :
+		    aucune (laissez le champ vide).</para>
+		  </listitem>
+		</itemizedlist>
+	      </listitem>
+	    </itemizedlist>
+	  </step>
+	</procedure>
+      </section>
+
+      <section id="InstallingandConfiguringtheMySQLJDBCDriver">
+	<title>Installer et configurer le pilote JDBC de MySQL</title>
+
+	<para>Pour ceux d'entre vous qui utilisent une application
+	Java basée sur un driver JDBC, les instructions d'installation
+	du pilote JDBC de MySQL sont disponibles sur la page <ulink
+	url="http://www.mysql.com/doc/en/Java.html">MySQL Java
+	Connectivity</ulink> page.</para>
+
+      </section>
+
+      <section id="UsingYourProjectDatabaseFromMS-Access">
+	<title>Utiliser les données du projet depuis MS-Access</title>
+
+	<para>Avant d'utiliser MS-Access pour vous connecter à la base
+	de données de votre projet, assurez-vous que le pilote ODBC de
+	MySQL est correctement installé sur votre ordinateur( voir
+	<xref linkend="InstallingandConfiguringtheMySQLODBCDriver" />)
+	et que vous avez généré la base de données elle-même (voir
+	<xref linkend="GeneratingYourProjectDatabase" />). Ensuite
+	exécutez les étapes suivantes:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para>Lancez MS Access et ouvrez une nouvelle base de données.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Dans le menu <literal>Fichier</literal> sélectionnez
+	    <literal>Données externes -> Importer</literal>. </para>
+	  </listitem>
+	  <listitem>
+	    <para>Dans la boite de sélection <literal>Types de
+	    fichier</literal> sélectionnez l'entrée <literal>Bases de
+	    données ODBC</literal>.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Sélectionnez l'onglet <literal>Source de données machine</literal>
+	    et cliquez sur la base de données de votre projet.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Sélectionnez les tables qui vous intéressent ou bien
+	    l'ensemble des tables en cliquant sur <literal>Tout
+	    sélectionner</literal>.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>MS-Access importe instantanément (à la vitesse de
+	MS-Access :-)) les données de votre projet et vous pouvez
+	désormais exploiter vos données comme vous le feriez pour une
+	base de données native MS Access.</para>
+      </section>
+
+    </section>
+
+  </section>
+
+
+    <section id="TrackerImport">
+      <title>Importation d'artefacts dans les outils de suivi</title>
+
+      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+
+      <para>Reportez vous à la <xref linkend="ArtifactImport" /></para>
+    </section>
+
+
+    <section id="ProjectHistory">
+      <title>Historique du projet</title>
+
+      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+
+      <para>L'historique du projet fournit une fonction d'audit aux
+      membres du projet. Un clic sur cet item montre une liste de
+      l'ensemble des changements opérés dans le module
+      d'administration du projet depuis sa création. La liste décrit
+      la nature du changement intervenu (modification des infos
+      publiques, modification des permissions,...), la valeur de
+      l'information avant le changement, l'auteur et la date de la
+      modification.</para>
+    </section>
+
     <section id="SourceCodeAccessLogs">
       <title>Journal des accès</title>
 
@@ -1059,29 +1289,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-    </section>
-
-    <section id="ServicesAdministration">
-      <title>Administration des services</title>
-
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
-
-      <para>La page d'administration du projet donne aussi un accès
-      direct à l'ensemble des modules d'administration de chaque
-      service activés par le projet. Cet accès est fourni sous la
-      forme d'une liste de liens hypertextes situés en bas à gauche de
-      la page d'administration. Seuls les membres du projet ayant les
-      droits d'administration sur les différents services ont accès à
-      ces modules (voir <xref linkend="UserPermissions" />).</para>
-
-    </section>
-
-    <section id="TrackerImport">
-      <title>Importation d'artefacts dans les outils de suivi</title>
-
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
-
-      <para>Reportez vous à la <xref linkend="ArtifactImport" /></para>
     </section>
 
   </chapter>

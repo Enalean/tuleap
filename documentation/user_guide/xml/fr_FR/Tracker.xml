@@ -694,7 +694,7 @@
           <para><emphasis role="bold">Références croisées</emphasis>:
           lorsque vous saisissez un commentaire, vous pouvez utiliser
           certains patrons de texte pour référencer d'autres
-          artefacts, des commits CVS ou Subversion, etc... Ces patrons
+          artefacts, des commits CVS ou Subversion, des documents, etc... Ces patrons
           seront automatiquement transformés en hyperliens vers les
           objets correspondants lors d'un prochain affichage du
           commentaire. Il s'agit d'un mécanisme extrêmement puissant
@@ -891,7 +891,7 @@
       <para>En complément de la façon plutôt formelle d'exprimer une
       dépendence entre deux artefacts presentée dans la <xref
       linkend="ArtifactDependencies"/>, CodeX permet de créer une
-      référence sur n'importe quel artefact dans un commentaire.</para>
+      référence sur n'importe quel artefact ou autre objet CodeX dans un commentaire.</para>
 
       <para>Lorsque vous tapez un commentaire, tout morceau de texte
       qui suit le patron &#34;XXX #NNN&#34; est interprété comme une
@@ -912,47 +912,10 @@
       est rendu possible par le fait qu'un artefact dispose d'un
       indentifiant unique sur tout le site CodeX.</para>
 
-      <para><emphasis role="bold">Notes Importantes</emphasis></para>
+      <para>Les références de CodeX peuvent etre utilisees pour référencer des artifacts,
+      mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
+      <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans CodeX.</para>
 
-      <itemizedlist mark="bullet" spacing="compact">
-        <listitem>
-          <para>Vous pouvez aussi utiliser le patron &#34;commit
-          #NNN&#34; dans un commentaire pour vous référer à un commit
-          dont l'identifiant est NNN comme indiqué dans la base de
-          suivi de commit CVS. Si Subversion est le système de
-          contrôle de version retenu par votre projet, vous pouvez
-          aussi utiliser le patron &#34;rev #NNN&#34;. Ces patrons
-          sont extrêmement utiles lorsqu'il s'agit de clore un bug ou
-          une tâche et que vous désirez référencer les modifications
-          de code correspondantes. De la même façon, votre message de
-          commit peut aussi contenir une référence aux artefacts
-          d'origine, permettant ainsi d'établir des références
-          croisées entre modification de code et artefact. Pour plus
-          d'information sur la base de suivi des commits CVS reportez
-          vous à la <xref linkend="CVSWebInterface"/>.</para>
-        </listitem>
-
-        <listitem>
-          <para>Si la référence pointe sur un artefact d'un autre
-          projet ou si le nom court de l'artefact (ici &#34;XXX&#34;)
-          ne correspond pas à celui de l'objet pointé, un message
-          d'avertissement est affiché lorsque vous suivez le lien pour
-          vous avertir que vous êtes sur le point d'être redirigé vers
-          un autre projet ou que vous devriez peut-être vous assurez
-          que l'artefact pointé est bien le bon.</para>
-        </listitem>
-
-        <listitem>
-          <para>Si un projet utilise l'ancienne version des outils de
-          suivi pour les bugs, tâches ou demande d'assistance, il est
-          possible d'utiliser les patrons &#34;bug #NNN&#34;,
-          &#34;task #NNN&#34; et &#34;sr #NNN&#34;. S'il existe un
-          nouvel outil de suivi qui utilise le même nom court (par
-          exemple &#34;bug&#34; tracker), le système sera suffisamment
-          intelligent pour vous rediriger vers le bon objet.</para>
-        </listitem>
-
-      </itemizedlist>
 
     </section>
 

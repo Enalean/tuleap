@@ -459,7 +459,7 @@
           automatically transformed into an hyperlink to the CVS
           tracking database. This mechanism makes it very easy to go
           from project artifacts like bugs, support requests or tasks
-          to source code changes and vice-versa.</para>
+          to source code changes and vice-versa. (see below for more details)</para>
         </listitem>
 
         <listitem>
@@ -521,7 +521,7 @@
 
       <para>The integration of CVS in CodeX precisely provide the
       CodeX users with this bi-directionnal cross-referencing
-      mechanism. This is achieved through the use of text patterns
+      mechanism. This is achieved through the use of 'References', i.e. text patterns
       that are automatically detected by CodeX in either the follow-up
       comments of the project artifacts or in the messages attached to
       a CVS commit.</para>
@@ -552,13 +552,7 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">doc #ZZZ</emphasis>: this pattern
-        refers to a document from the project document manager where
-        ZZZ is the document unique ID as listed in the document
-        manager (see <xref linkend="DocumentCrossReference" />). When
-        browsing a message containing this pattern anywhere in CodeX,
-        the pattern will be automatically transformed into an
-        hyperlink to the document.</para>
+        <para>The CodeX reference mechanism allows cross-referencing with any CodeX object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
       </listitem>
    </itemizedlist>
 
