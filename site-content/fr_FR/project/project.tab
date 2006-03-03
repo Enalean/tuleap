@@ -308,6 +308,7 @@ project_reference	reference_bug_desc_key	Bug
 project_reference	reference_task_desc_key	Tache
 project_reference	reference_sr_desc_key	Demande de support
 project_reference	reference_patch_desc_key	Patch
+project_reference	reference_release_desc_key	Version
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php
