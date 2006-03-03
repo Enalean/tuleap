@@ -53,8 +53,212 @@ CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL"
 
+# Functions
+create_group() {
+    # $1: groupname, $2: groupid
+    $GROUPDEL "$1" 2>/dev/null
+    $GROUPADD -g "$2" "$1"
+}
 
+build_dir() {
+    # $1: dir path, $2: user, $3: group, $4: permission
+    $MKDIR -p "$1" 2>/dev/null; $CHOWN "$2.$3" "$1";$CHMOD "$4" "$1";
+}
+
+make_backup() {
+    # $1: file name, $2: extension for old file (optional)
+    file="$1"
+    ext="$2"
+    if [ -z $ext ]; then
+	ext="nocodex"
+    fi
+    backup_file="$1.$ext"
+    [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
+}
+
+todo() {
+    # $1: message to log in the todo file
+    echo -e "- $1" >> $TODO_FILE
+}
+
+die() {
+  # $1: message to prompt before exiting
+  echo -e "**ERROR** $1"; exit 1
+}
+
+substitute() {
+  # $1: filename, $2: string to match, $3: replacement string
+  $PERL -pi -e "s/$2/$3/g" $1
+}
+
+##############################################
+# CodeX 2.6 to 2.8 migration
+##############################################
+echo "Migration script from CodeX 2.6 to CodeX 2.8"
+echo
+
+##############################################
+# Check the machine is running CodeX 2.4
+#
+OLD_CX_RELEASE='2.6'
+yn="y"
+$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
+if [ $? -ne 0 ]; then
+    $CAT <<EOF
+This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
+script may cause data loss or corruption.
+EOF
+read -p "Continue? [yn]: " yn
+else
+    echo "Found CodeX ${OLD_CX_RELEASE} installed... good!"
+fi
+
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+##############################################
+# Check that all command line tools we need are available
+#
+for cmd in `echo ${CMD_LIST}`
+do
+    [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
+done
+
+##############################################
+# Warn user about upgrade
+#
+
+yn="y"
+$CAT <<EOF
+This script will reinstall some configuration files:
+/etc/httpd/conf/httpd.conf
+/etc/httpd/conf.d/php.conf
+If you have customized these files for your special needs, you should backup them before starting the migration.
+
+EOF
+read -p "Continue? [yn]: " yn
+
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+##############################################
+# Check we are running on RHEL 3
+#
+RH_RELEASE="3"
+yn="y"
+$RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
+if [ $? -eq 1 ]; then
+    cat <<EOF
+This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
+script may cause data loss or corruption.
+EOF
+read -p "Continue? [yn]: " yn
+else
+    echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
+fi
+
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+$RM -f $TODO_FILE
+todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
+
+##############################################
+# Stop some services before upgrading
+#
+echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
+$SERVICE crond stop
+$SERVICE apache stop
+$SERVICE httpd stop
+$SERVICE mysql stop
+$SERVICE sendmail stop
+$SERVICE postfix stop
+$SERVICE mailman stop
+
+
+##############################################
+# Check Required Stock RedHat RPMs are installed
+# (note: gcc is required to recompile mailman)
+#
+
+# Removed: see install script for required RPMs. No new RPM needed for upgrade
+
+##############################################
+# Ask for domain name and other installation parameters
+#
+sys_default_domain=`grep ServerName /etc/httpd/conf/httpd.conf | grep -v '#' | head -1 | cut -d " " -f 2 ;`
+if [ -z $sys_default_domain ]; then
+  read -p "CodeX Domain name: " sys_default_domain
+fi
+sys_ip_address=`grep NameVirtualHost /etc/httpd/conf/httpd.conf | grep -v '#' | cut -d " " -f 2 | cut -d ":" -f 1`
+if [ -z $sys_ip_address ]; then
+  read -p "Codex Server IP address: " sys_ip_address
+fi
+
+##############################################
+
+##############################################
+# Update local.inc  XXX OLd 2.4 to 2.6 SCRIPT!!!!!!!
+#
+make_backup /etc/codex/conf/local.inc codex24
+
+substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
+$GREP -q "sys_session_lifetime" /etc/codex/conf/local.inc
+if [ $? -ne 0 ]; then
+   # Not a maintained 2.4 release...
+   $PERL -i'.orig2' -p -e's:^(\$sys_is_project_public.*):\1\n//\n// Default session duration when user select "Remember Me" option in user\n// account maintainance.\n// Default value is about 6 months, 3600*24*183\n\$sys_session_lifetime = 3600*24*183;\n:' /etc/codex/conf/local.inc
+fi
+
+$PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root directory \n\$sys_pluginsroot="/home/httpd/plugins/";\n\n// Where wiki attachments are stored\n\$sys_wiki_attachment_data_dir = "/home/data/wiki";:' /etc/codex/conf/local.inc
+
+build_dir /home/data root root 755
+build_dir /home/data/wiki sourceforge sourceforge 700
+rmdir /etc/codex/themes/messages
+
+##############################################
+# Now install CodeX specific RPMS (and remove RedHat RPMs)
+#
+
+
+##############################################
+# Update the CodeX software
+
+echo "Installing the CodeX software..."
+cd /home
+$MV httpd httpd_26
+$MKDIR httpd;
+cd httpd
+$TAR xfz ${CodeX_DIR}/codex*.tgz
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
+
+# copy some configuration files 
+make_backup /etc/httpd/conf/httpd.conf codex26
+make_backup /etc/httpd/conf.d/php.conf codex26
+$CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
+$CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
+
+# replace string patterns in httpd.conf
+substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+
+todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
+#todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
+
+# Re-copy phpMyAdmin and viewcvs installations
+$CP -af /home/httpd_26/phpMyAdmin* /home/httpd
+$CP -af /home/httpd_26/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
+
+
+
+##############################################
 # French documentation
+echo "Preparing directories for French documentation"
 $MKDIR -p  /etc/codex/documentation/user_guide/xml/fr_FR
 $CHOWN -R sourceforge.sourceforge /etc/codex/documentation
 $CP $INSTALL_DIR/documentation/user_guide/xml/fr_FR/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/fr_FR
@@ -64,17 +268,64 @@ $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
 
 
+##############################################
+# Database Structure and initvalues upgrade
+#
+echo "Updating the CodeX database..."
+
+$SERVICE mysql start
+sleep 5
+
+pass_opt=""
+# See if MySQL root account is password protected
+mysqlshow 2>&1 | grep password
+while [ $? -eq 0 ]; do
+    read -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    mysqlshow --password=$old_passwd 2>&1 | grep password
+done
+[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
+
+
+echo "Starting DB update for CodeX 2.8. This might take a few minutes."
+
+echo " DB - plugin update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
+
 ###############################################################################
 #
 #
 ALTER TABLE `plugin` CHANGE `enabled` `available` TINYINT( 4 ) DEFAULT '0' NOT NULL 
 
+EOF
+
 ajouter $sys_custompluginsroot dans local.inc
+
+echo " DB - LDAP update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
+
+###############################################################################
+#
+# LDAP
+
+ALTER TABLE user ADD ldap_id TEXT AFTER ldap_name;
+ALTER TABLE user DROP COLUMN ldap_name;
+
+EOF
+
+echo " DB - FRS update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
 
 ###############################################################################
 # Add approve_licence row in frs_package table
 
 ALTER TABLE frs_package ADD approve_license TINYINT(1) NOT NULL default '1';
+EOF
+
+echo " DB - Field Dependencies update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
 
 
 ###############################################################################
@@ -94,6 +345,10 @@ CREATE TABLE artifact_rule (
 );
 
 
+EOF
+
+echo " DB - Reference patterns update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
 
 
 ###############################################################################
@@ -248,6 +503,14 @@ INSERT INTO reference SET \
     scope='S', \
     service_short_name='file';
 
+INSERT INTO reference SET \
+    id='16',        \
+    keyword='release', \
+    description='reference_release_desc_key', \
+    link='/file/showfiles.php?group_id=$group_id6&release_id=$1', \
+    scope='S', \
+    service_short_name='file';
+
 # Legacy references
 
 INSERT INTO reference SET \
@@ -289,7 +552,7 @@ INSERT INTO reference SET \
     service_short_name='';
 
 #
-# Initial referecne values for template project:
+# Initial reference values for template project:
 #
 INSERT INTO reference_group SET reference_id='1', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='2', group_id='100', is_active='1';
@@ -310,6 +573,12 @@ INSERT INTO reference_group SET reference_id='90', group_id='100', is_active='0'
 INSERT INTO reference_group SET reference_id='91', group_id='100', is_active='0';
 INSERT INTO reference_group SET reference_id='92', group_id='100', is_active='0';
 INSERT INTO reference_group SET reference_id='93', group_id='100', is_active='0';
+
+EOF
+
+echo " DB - artifact status update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
 
 
 
@@ -405,6 +674,14 @@ INSERT INTO artifact_field_value_list VALUES (12,5,7,'In Test','Updated/Created 
 INSERT INTO artifact_field_value_list VALUES (12,5,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
 INSERT INTO artifact_field_value_list VALUES (12,5,9,'Declined','The artifact was not accepted.',100,'A');
 INSERT INTO artifact_field_value_list VALUES (12,5,10,'Done','The artifact is closed.',110,'A');
+
+
+
+EOF
+
+echo "End of main DB upgrade"
+
+echo "Update: add ugroups in SVN Access file"
 
 ###############################################################################
 # add project ugroup definition in CodeX default SVN Access file
@@ -590,9 +867,10 @@ exit;
 EOF
 
 ###############################################################################
-# add project ugroup definition in CodeX default SVN Access file
+# create references for existing projects
 #
 
+echo "Update: add references"
 
 $PERL <<'EOF'
 
@@ -683,18 +961,85 @@ print "** All references created\n";
 EOF
 
 
+##############################################
+# Reinstall modified shell scripts
+#
+echo "Copying updated /usr/local/bin/commit-email.pl"
+$CP $INSTALL_DIR/SF/utils/svn/commit-email.pl /usr/local/bin
+$CHOWN sourceforge.sourceforge /usr/local/bin/commit-email.pl
+$CHMOD 775 /usr/local/bin/commit-email.pl
+$CHMOD u+s /usr/local/bin/commit-email.pl
+
+echo "Copying updated /usr/local/bin/log_accum"
+$CP $INSTALL_DIR/SF/utils/cvs1/log_accum /usr/local/bin
+$CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
+$CHMOD 775 /usr/local/bin/log_accum
+$CHMOD u+s /usr/local/bin/log_accum
+
+echo "Copying updated /home/tools/backup_subversion.sh"
+$CP $INSTALL_DIR/SF/utils/svn/backup_subversion.sh /home/tools
+$CHOWN root.root /home/tools/backup_subversion.sh
+$CHMOD 740 /home/tools/backup_subversion.sh
+todo "Customize backup directories in /home/tools/backup_subversion.sh"
+
+
+
+###############################################################################
+# Run 'analyse' on all MySQL DB
+echo "Analyzing MySQL databases (this might take a few minutes)"
+mysqlcheck -Aa $pass_opt
+
+
+
+##############################################
+# Restarting some services
+#
+echo "Starting crond and apache..."
+$SERVICE crond start
+$SERVICE httpd start
+$SERVICE sendmail start
+$SERVICE mailman start
+
+
+##############################################
+# Generate Documentation
+#
+echo "Updating the User Manual. This might take a few minutes."
+/home/httpd/SF/utils/generate_doc.sh -f
+/home/httpd/SF/utils/generate_programmer_doc.sh -f
+$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
+
+
+##############################################
+# Make sure all major services are on
+#
+$CHKCONFIG named on
+$CHKCONFIG sshd on
+$CHKCONFIG httpd on
+$CHKCONFIG mysql on
+$CHKCONFIG cvs on
+$CHKCONFIG mailman on
+
+##############################################
+# More things to do
+
+
+
+# End of it
+echo "=============================================="
+echo "Migration completed succesfully!"
+$CAT $TODO_FILE
+
+exit 1;
+
 
 # Still To Do
 #
-# - copy new svn backup script
+#OK  - copy new svn backup script
 # - convert all repositories to FSFS
-# add this in httpd.conf:
-<Directory "/home/httpd/SF/www/api">
-    ForceType application/x-httpd-php
-</Directory>
-# - copy commit-email and log-accum
+#OK - copy commit-email and log-accum
 # drop svn_tracks and cvs_tracks tables.
-# analyze/optimize tables
+#OK analyze/optimize tables
 # add $sys_frs_license_mandatory in local.inc
 # add $sys_noreply in local.inc?
 
