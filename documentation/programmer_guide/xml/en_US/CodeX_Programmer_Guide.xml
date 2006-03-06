@@ -26,6 +26,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterCodeXDevelopment SYSTEM "CodeXDevelopment.xml">
 <!ENTITY ChapterCodexFramework SYSTEM "CodexFramework.xml">
 <!ENTITY ChapterSubmittingCode SYSTEM "SubmittingCode.xml">
+<!ENTITY ChapterDocumentation SYSTEM "Documentation.xml">
 
 <!-- Entity definition and inclusion for default and custom parameters
 (e.g. site name, server names, company name,etc.)
@@ -35,8 +36,8 @@ an entity cannot be redefined. Hence this particular order
 Also note that we are re-using parameters from the User Guide to
 avoid duplications -->
 
-<!ENTITY % ParametersDefault SYSTEM "../../../user_guide/xml/en_US/ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "../../../user_guide/xml/en_US/ParametersLocal.dtd">
+<!ENTITY % ParametersDefault SYSTEM "../../../user_guide/xml/ParametersDefault.dtd">
+<!ENTITY % ParametersLocal SYSTEM "../../../user_guide/xml/ParametersLocal.dtd">
 %ParametersLocal;
 %ParametersDefault;
 ]>
@@ -56,5 +57,6 @@ avoid duplications -->
   &ChapterDirStructure;
   &ChapterCodeXDevelopment;
   &ChapterCodexFramework;
-  &ChapterSubmittingCode; 
+  &ChapterSubmittingCode;
+  &ChapterDocumentation;  
 </book>

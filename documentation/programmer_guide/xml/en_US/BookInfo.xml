@@ -58,6 +58,15 @@
 
         <revremark>Initial draft by N. Guerin</revremark>
       </revision>
+      <revision>
+        <revnumber>0.1.1</revnumber>
+
+        <date>06-Mar-2006</date>
+
+        <authorinitials>Marc Nazarian</authorinitials>
+
+        <revremark>Add a chapter about documentation</revremark>
+      </revision>
 
     </revhistory>
   </bookinfo>
