@@ -1008,6 +1008,16 @@ echo "Updating the User Manual. This might take a few minutes."
 /home/httpd/SF/utils/generate_doc.sh -f
 /home/httpd/SF/utils/generate_programmer_doc.sh -f
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
+todo "A french version of the Codex User Guide is now available."
+todo "  To make it available to users, please add a new entry into the Document Manager : "
+todo "  - PDF location is : /documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf ;"
+todo "  - multi-page HTML location is : /documentation/user_guide/html/fr_FR/index.html ;"
+todo "  - single-page HTML location is : /documentation/user_guide/html/fr_FR/CodeX_User_Guide.html ;"
+todo "  For instance, an example of description could be :"
+todo "   Un guide complet décrivant tous les services de CodeX et comment les utiliser de manière optimale. Fournit également de nombreuses astuces et explications pour gérer efficacement votre projet CodeX. Disponible au format <a href=\"/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf\">PDF </a>, <a href=\"/documentation/user_guide/html/fr_FR/index.html\">HTML (multi-fichiers)</a> et <a href=\"/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html\">HTML (une page, 4 Mo)</a>. [Version française]"
+todo "The english version of the CodeX User Guide is supplemented by a single page HTML version."
+todo "  To make it available to users, please update your entry into the Document Manager : "
+todo "  - single-page HTML location is : /documentation/user_guide/html/en_US/CodeX_User_Guide.html ;"
 
 
 ##############################################
