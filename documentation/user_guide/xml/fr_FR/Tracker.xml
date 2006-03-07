@@ -156,6 +156,8 @@
     bouton Soumettre, un identifiant unique (ID) lui est
     automatiquement assigné.</para>
 
+    <para>Les valeurs proposées par un champ peuvent dépendre d'une valeur d'un autre champ. Si le javascript est activé dans votre navigateur, les champs seront alors filtrés dynamiquement. Sinon, CodeX s'assurera que les valeurs que vous soumettez sont correctes.</para>
+
     <para>Comme expliqué plus haut, le formulaire de soumission d'un
     artefact peut varier considérablement d'un outil de suivi à l'autre en
     fonction des champs utilisés. Le formulaire de soumission peut
@@ -2703,6 +2705,129 @@ width="14.5cm" />
         redéfinir l'ordre d'apparition de tous les autres champs ou
         valeurs de champ.</para></tip></para>
       </section>
+    </section>
+
+    <section id="TrackerFieldDependenciesManagement">
+      <title>Dépendances entre champs</title>
+
+      <para>Les dépendances entre champs permettent de lier les valeurs d'un champ source aux valeurs d'un champ cible. Autrement dit, les valeurs proposées à l'utilisateur final pour un champ pourront dépendre de la valeur sélectionnée dans un autre champ.</para>
+
+      <para>Prenons un cas concret. Soit un champ Système d'exploitation(Linux, MacOS X, MS Windows, NetBSD) et un champ Version(2.0, 2.1, 2.2, 2.4, 2.6, 3.0, 10.1, 10.2, 10.3, 10.4 (Tiger), NT, 2000, XP). Définissons les dépendances dans l'interface d'administration de l'outil de suivi :</para>
+
+      <orderedlist numerotation="arabic" spacing="compact">
+        <listitem><para>On sélectionne d'abord le champ source "Système d'exploitation" puis le champ cible "Version". L'ensemble des valeurs pour ces deux champs sont alors affichées. Les valeurs qui font partie d'une définition de dépendance entre les deux champs sont mises en valeur (police grasse).</para></listitem>
+        <listitem><para>Pour créer des dépendances entre la valeur Linux et les versions correspondant à ce système, il suffit de selectionner la valeur puis de cocher/decocher les valeurs correspondantes dans l'autre champ. Le surlignage permet de faire le rapprochement visuel entre les correspondances, aidé par les petites flèches indiquant le sens de lecture "source vers cible".</para></listitem>
+        <listitem><para>A tout moment vous pouvez annuler les modifications en cours en cliquant sur le bouton de réinitialisation. Une fois validées, les modifications sont enregistrées.</para></listitem>
+      </orderedlist>
+
+      <para>Voici ce que donnent nos dépendances pour le système Linux :</para>
+      <figure id="FigureFieldDependenciesLinux">
+        <title>Dépendances pour le système Linux</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_02.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>On continue en sélectionnant la prochaine valeur source MacOS X</para>
+      <figure id="FigureFieldDependenciesMac">
+        <title>Dépendances pour le système MacOS X</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_03.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>On continue en sélectionnant la prochaine valeur source MS Windows</para>
+      <figure id="FigureFieldDependenciesWin">
+        <title>Dépendances pour le système MS Windows</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_04.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>On finit avec la dernière valeur source NetBSD</para>
+      <figure id="FigureFieldDependenciesBSD">
+        <title>Dépendances pour le système NetBSD</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_05.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>Il est aussi possible de "naviguer" à travers les dependances dans le sens inverse : définir l'ensemble des valeurs sources qui correspondent à une valeur cible :</para>
+      <figure id="FigureFieldDependencies20">
+        <title>La version 2.0 "dépend" de Linux et NetBSD</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_06.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+      <para>Une fois les dépendances définies, l'utilisateur final (lors de la soumission/édition d'un artefact) verra les options du champ Version filtrées en fonction de la sélection du champ Système d'exploitation :</para>
+      <figure id="FigureFieldDependenciesFinalUserLinux">
+        <title>Les versions proposées pour Linux</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_07.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserMac">
+        <title>Les versions proposées pour MacOS X</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_08.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserWin">
+        <title>Les versions proposées pour MS Windows</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_09.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserBSD">
+        <title>Les versions proposées pour NetBSD</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackerfielddependencies_10.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Lors de la définition de vos dépendances, veuillez prendre en compte les points suivants :</para>
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para>Seuls les champs de type <emphasis>Boîte de sélection</emphasis> et 
+                <emphasis>Boîte de sélection multiple</emphasis> peuvent avoir des dépendances,</para>
+        </listitem>
+        <listitem>
+          <para>Les dépendances cycliques sont interdites (Champ 1 => Champ 2 => ... => Champ 1),</para>
+        </listitem>
+        <listitem>
+          <para>Un champ ne peut dépendre que d'un seul champ,</para>
+        </listitem>
+        <listitem>
+          <para>Javascript doit être autorisé sur le navigateur pour pouvoir administrer les dépendances,</para>
+        </listitem>
+        <listitem>
+          <para>Si un champ n'est pas cible d'une dépendance, alors il proposera toutes ses valeurs. Dans le cas contraire, il ne proposera que celles qui satisferont les règles de dépendances.</para>
+        </listitem>
+      </itemizedlist>
     </section>
 
     <section id="TrackerCannedResponses">

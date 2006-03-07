@@ -153,6 +153,8 @@
     Description to the person in charge. A unique ID is automatically
     assigned to the submitted artifact.</para>
 
+    <para>The values proposed by a field could depend upon other field value. If javascript is activated in your browser, fields will be filtered dynamically. Otherwise, CodeX will ensure that the values you submit are correct.</para>
+
     <para>As explained above, artifact submission forms vary from one
     project to another depending on the fields used by the
     tracker. The submission form can also vary according to the
@@ -2591,6 +2593,128 @@ width="14.5cm" />
 	future and avoid a tedious renumbering of the existing
 	items.</para></tip></para>
       </section>
+    </section>
+
+    <section id="TrackerFieldDependenciesManagement">
+      <title>Field Dependencies</title>
+
+      <para>Field dependencies allow us to link source field values to target field values. In other words, the values proposed to a final user for a field will depend upon the value selected for another field.</para>
+      <para>As an example, if you define a field Operating System(Linux, MacOS X, MS Windows, NetBSD) and a field Version(2.0, 2.1, 2.2, 2.4, 2.6, 3.0, 10.1, 10.2, 10.3, 10.4 (Tiger), NT, 2000, XP), you can define dependencies in the tracker administration interface:</para>
+
+      <orderedlist numerotation="arabic" spacing="compact">
+        <listitem><para>First, select the source field "Operating System" then the target field "Version". All values for both fields are displayed. Values which are part of a dependency between the two field are emphasised (in bold).</para></listitem>
+        <listitem><para>To create dependencies between Linux and the corresponding versions, you just have to select the source value and check/uncheck corresponding values in the target field. The highlighting helps to link source and target values, with the small arrows indicating the direction of reading, "source to target".</para></listitem>
+        <listitem><para>You can cancel your modifications by clicking on the reset button. Once validated, the modifications are saved.</para></listitem>
+      </orderedlist>
+
+
+      <para>Here are the dependencies for Linux:</para>
+      <figure id="FigureFieldDependenciesLinux">
+        <title>Linux Dependencies</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_02.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>Now you can continue with the next source value MacOS X:</para>
+      <figure id="FigureFieldDependenciesMac">
+        <title>MacOS X Dependencies</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_03.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>Thus, with the next source value MS Windows:</para>
+      <figure id="FigureFieldDependenciesWin">
+        <title>MS Windows Dependencies</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_04.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>And, with the last source value NetBSD:</para>
+      <figure id="FigureFieldDependenciesBSD">
+        <title>NetBSD Dependencies</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_05.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+<para>We>You can also "navigate" through dependencies in the opposite direction: to define the source values which influence one target value:</para>
+      <figure id="FigureFieldDependencies20">
+        <title>Version 2.0 depends upon Linux and NetBSD systems</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_06.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Once dependencies are defined, the final user (when submiting/updating an artifact) will see the Version options filtered according to the selection of the Operating System:</para>
+      <figure id="FigureFieldDependenciesFinalUserLinux">
+        <title>Proposed versions for Linux</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_07.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserMac">
+        <title>Proposed versions for MacOS X</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_08.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserWin">
+        <title>Proposed versions for MS Windows</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_09.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserBSD">
+        <title>Proposed versions for NetBSD</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_10.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>When you define your dependencies, please be aware of the following points:</para>
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para>Only <emphasis>Select Boxes</emphasis> and <emphasis>Multi Select Boxes</emphasis> can have dependencies,</para>
+        </listitem>
+        <listitem>
+          <para>The cyclic dependencies are forbidden (Field 1 => Field 2 => ... => Field 1),</para>
+        </listitem>
+        <listitem>
+          <para>A field can depend upon only one field,</para>
+        </listitem>
+        <listitem>
+          <para>Javascript must be allowed on the browser to manage dependencies,</para>
+        </listitem>
+        <listitem>
+          <para>If a field is not the target of a dependency, then it will propose all its values. On the opposite, it will propose only those which satisfy the dependencies.</para>
+        </listitem>
+      </itemizedlist>
     </section>
 
     <section id="TrackerCannedResponses">
