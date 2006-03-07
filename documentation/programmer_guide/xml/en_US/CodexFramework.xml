@@ -75,11 +75,12 @@
 			<listitem><simpara>DataAcessObject class provides only two methods, the first for retrieving data (SELECT statement) which will return the instance for DataAccessResult from the DataAccess class. The second method is used for anything that changes the database, i.e. INSERT, UPDATE and DELETE.</simpara></listitem>
 			<listitem><simpara>To access a table, you have to provide a specific Data Access Object which extends the Dao class, and add methods to retrieve or update your data. For exemple:<programlisting><![CDATA[
 function & searchByID ($id) {
-	$sql="SELECT * FROM log WHERE id='".$id."'";
+	$sql = sprintf('SELECT * FROM log WHERE id = ', $this->da->quoteSmart($id));
 	return $this->retrieve($sql);
 }
 ]]></programlisting>
 			</simpara></listitem>
+                        <listitem><simpara>DataAccess provide a method <programlisting>quoteSmart</proramlisting> which escape malicious characters (from sql engine point of view) from a string and add quotes around if needed (numerics do not need quotes). Please note that the string should not have been already escaped. This method is mandatory when inserting data from request, and should be used in association with the HTTPRequest wrapper.</simpara></listitem>
 		</itemizedlist>
 	</section>
 	<section id="Events">
@@ -130,7 +131,7 @@ function & searchByID ($id) {
 			<title>Develop</title>
 			<section>
 				<title>Naming Convention</title>
-				<para>The short-name of a plugin must be unique and composed of lowercase letters only, because it is going to be used in table names and we don't want namespace conflicts.</para>
+				<para>The short-name of a plugin must be unique and composed of lowercase letters and digits only, because it is going to be used in table names and we don't want namespace conflicts.</para>
 				<para>The main class of the plugin must be composed of the short-name followed by "Plugin.class" e.g: "templatePlugin.class".</para>
 				<para>SQL tables of the plugin must follow this pattern <literal><![CDATA[plugin_<plugin-shortname>_<table-name>]]></literal> to avoid conflicts.</para>
 			</section>
