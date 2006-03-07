@@ -10,7 +10,7 @@ require_once('pre.php');
 
 $Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$Language->getText('account_first', 'title', array($GLOBALS['sys_name']))));
+$HTML->header(array('title'=>$Language->getText('account_first', 'title', array($GLOBALS['sys_name']))));
 ?>
 
 <P><h2><?php echo $Language->getText('account_first', 'title', array($GLOBALS['sys_name'])); ?></h2>
@@ -19,8 +19,8 @@ $HTML->header(array(title=>$Language->getText('account_first', 'title', array($G
 <?php 
 
 $date = getdate(time());
-$hoursleft = ($sys_crondelay - 1) - ($date[hours] % $sys_crondelay);
-$minutesleft = 60 - $date[minutes];
+$hoursleft = ($sys_crondelay - 1) - ($date['hours'] % $sys_crondelay);
+$minutesleft = 60 - $date['minutes'];
 
 echo $Language->getText('account_first', 'message', array($GLOBALS['sys_name'],$hoursleft,$minutesleft));
 

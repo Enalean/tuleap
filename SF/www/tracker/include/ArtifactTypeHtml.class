@@ -585,7 +585,6 @@ EOS;
                         $html .= "</td><td>";
                         
                         
-                        //$html .= " ".$GLOBALS['Language']->getText('tracker_admin_permissions', 'and')." ";
                         //Other permissions (R/W)
                         $html .= "<select name='".$name_of_variable."[others]' >";
                         $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";

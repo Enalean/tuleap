@@ -171,7 +171,7 @@ function display_doc_list($group_id) {
                         print "</a>\n";
                         if ($authorized_user) {
                             if (permission_exist('DOCUMENT_READ',$subrow['docid'])) {
-                                if (!$pv) print ' <a href="/docman/admin/editdocpermissions.php?docid='.$subrow['docid'].
+                                if (!isset($pv)||!$pv) print ' <a href="/docman/admin/editdocpermissions.php?docid='.$subrow['docid'].
                                     '&group_id='.$group_id.'"><img src="'.util_get_image_theme("ic/lock.png").'" border="0"></a>';
                             }
                         }
