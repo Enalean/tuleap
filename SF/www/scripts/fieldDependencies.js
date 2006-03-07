@@ -892,11 +892,11 @@ function buildAdminUI() {
     //{{{ Some nice text in the header
     // Expected sentence: If field %1 is selected to %2 then field %3 will propose %4
     // As of 20060210, the sentence is Source: %1 %2 Target: %3 %4
-    header_source.appendChild(document.createTextNode(messages['source']));
+    header_source.innerHTML = messages['source'];
     header_source.appendChild(select_source);
     header_source.appendChild(document.createTextNode(' '));
 
-    header_target.appendChild(document.createTextNode(messages['target']));
+    header_target.innerHTML = messages['target'];
     header_target.appendChild(select_target);
     header_target.appendChild(document.createTextNode(' '));
     
