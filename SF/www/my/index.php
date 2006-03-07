@@ -49,7 +49,8 @@ if (user_isloggedin()) {
             $feedback.= $Language->getText('my_index', 'err_badbrowser');
         }
 	$title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
-        site_header(array('title'=>$title));
+    
+    site_header(array('title'=>$title));
 	?>
 
     <span class="small">
@@ -437,10 +438,10 @@ if (user_isloggedin()) {
     $my_artifact_title .= $Language->getText('my_index', 'my_arts').'&nbsp;&nbsp;';
     
     $my_artifact_title .= '<select name="show" onchange="this.form.submit()">';
-    $my_artifact_title .= '<option value="N"  '.($_artifact_show === 'N'?'selected="selected"':'').'>Do not show any artifacts</option>';
-    $my_artifact_title .= '<option value="A"  '.($_artifact_show === 'A'?'selected="selected"':'').'>assigned to me [A]</option>';
-    $my_artifact_title .= '<option value="S"  '.($_artifact_show === 'S'?'selected="selected"':'').'>submitted by me [S]</option>';
-    $my_artifact_title .= '<option value="AS" '.($_artifact_show === 'AS'?'selected="selected"':'').'>assigned to or submitted by me [AS]</option>';
+    $my_artifact_title .= '<option value="N"  '.($_artifact_show === 'N'?'selected="selected"':'').'>'.$Language->getText('my_index', 'no_info');
+    $my_artifact_title .= '<option value="A"  '.($_artifact_show === 'A'?'selected="selected"':'').'>'.$Language->getText('my_index', 'a_info');
+    $my_artifact_title .= '<option value="S"  '.($_artifact_show === 'S'?'selected="selected"':'').'>'.$Language->getText('my_index', 's_info');
+    $my_artifact_title .= '<option value="AS" '.($_artifact_show === 'AS'?'selected="selected"':'').'>'.$Language->getText('my_index', 'as_info');
     $my_artifact_title .= '</select>';
     
     $my_artifact_title .= '<noscript>&nbsp;<input type="submit" value="Change" /></noscript>';

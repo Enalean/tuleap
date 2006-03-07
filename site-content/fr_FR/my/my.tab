@@ -45,12 +45,13 @@ my_index	not_member	Vous n'êtes membre d'aucun projet.
 my_index	admin_link	Admin
 my_index	quit_proj	Quitter ce projet ?
 my_index	priv_proj	<em>Projet privé</em>
-my_index	a	A
-my_index	s	S
-my_index	as	AS
-my_index	a_info	Afficher les artifacts auxquels vous êtes assignés.
-my_index	s_info	Afficher les artifacts que vous avez soumis.
-my_index	as_info	Afficher les artifacts auxquels vous êtes assignés ou que vous avez soumis.
+#my_index	a	A
+#my_index	s	S
+#my_index	as	AS
+my_index	no_info	N'afficher aucun artefact
+my_index	a_info	assignés à moi [A]
+my_index	s_info	soumis par moi [S]
+my_index	as_info	assignés à moi ou soumis par moi [AS]
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
 #
@@ -87,3 +88,10 @@ bookmark_rmproject	err_notmember	Vous n'êtes pas membre de ce projet.
 bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever à nouveau du projet. 
 bookmark_rmproject	mail_subject	$1 : utilisateur $2 enlevé du projet '$3'
 bookmark_rmproject	mail_body	Ce message est envoyé pour prévenir le(s) administrateurs du\nprojet '$1' que l'utilisateur '$2' a quitté le projet.\n\nSuivez le lien ci-dessous pour voir la liste des membres actuels du projet :\n$3\n\n
+#
+#-----------------------------------------------
+# Script: SF/www/my/redirect.php
+#
+my_redirect	page_title	Redirection vers
+my_redirect	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
+my_redirect	default_txt	Vous êtes sur la page de redirection de CodeX. Vous trouverez des liens utiles sur votre <a href="/my">page personnelle</a>.

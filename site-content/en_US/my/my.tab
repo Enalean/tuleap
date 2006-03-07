@@ -40,12 +40,13 @@ my_index	not_member	You're not a member of any project
 my_index	admin_link	Admin
 my_index	quit_proj	Quit this project?
 my_index	priv_proj	<em>Private project</em>
-my_index	a	A
-my_index	s	S
-my_index	as	AS
-my_index	a_info	Display artifacts you are assigned to.
-my_index	s_info	Display artifacts you submitted.
-my_index	as_info	Display artifacts assigned to or submitted by you.
+#my_index	a	A
+#my_index	s	S
+#my_index	as	AS
+my_index	no_info	Do not show any artifacts
+my_index	a_info	assigned to me [A]
+my_index	s_info	submitted by me [S]
+my_index	as_info	assigned to or submitted by me [AS]
 #
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
@@ -83,3 +84,10 @@ bookmark_rmproject	err_notmember	You are not a member of that project.
 bookmark_rmproject	err_removing	You cannot remove a group administrator. Remove this person's administrator privileges on the user permissions page before attempting to remove them from the project. 
 bookmark_rmproject	mail_subject	$1: user $2 removed from project '$3'
 bookmark_rmproject	mail_body	This message is being sent to notify the administrator(s) of\nproject ID '$1' that user ID $2 has chosen to\nremove him/herself from the project.\n\nFollow this link to see the current members of your project:\n$3\n\n
+#
+#-----------------------------------------------
+# Script: SF/www/my/redirect.php
+#
+my_redirect	page_title	Redirect to
+my_redirect	return_to	<p>Requested page currently loading. If it does not, try <a href="$1">$1</a>.</p>
+my_redirect	default_txt	You are on the Codex redirection page. You may found useful links on your <a href="/my">personnal page</a>.
