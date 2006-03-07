@@ -104,64 +104,27 @@ echo '</B></TD>
 
 </TR>';
 
-
-// Some more information on the user from the LDAP server if available
-if ($GLOBALS['sys_ldap_server']) {
-    if (!$showdir) {
-      echo '<td colspan="2" align="center"><a href="'.$PHP_SELF.'/?showdir=1"><hr>[ '.$Language->getText('include_user_home','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
-	
-    } else {
-        include($Language->getContent('include/user_home'));
-
-        if ($GLOBALS['sys_ldap_filter']) {
-            $ldap_filter = $GLOBALS['sys_ldap_filter'];
-        } else {
-            $ldap_filter = "mail=%email%";
-        }
-        preg_match_all("/%([\w\d\-\_]+)%/", $ldap_filter, $match);
-        while (list(,$v) = each($match[1])) {
-            $ldap_filter = str_replace("%$v%", db_result($res_user,0,$v),$ldap_filter);
-        }
-
-        $ldap = new LDAP();
-        $info = $ldap->search($GLOBALS['sys_ldap_dn'],$ldap_filter);
-        if (!$info) {
-            $feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('include_user_home','directory').': '.$ldap->getErrorMessage();
-        } else {
-            // Format LDAP output based on templates given in user_home.txt
-            if ( $my_html_ldap_format ) {
-                preg_match_all("/%([\w\d\-\_]+)%/", $my_html_ldap_format, $match);
-                $html = $my_html_ldap_format;
-                while (list(,$v) = each($match[1])) {
-                    $value = (isset($info[0][$v]) ? $info[0][$v][0] : "-");
-                    $value = $info[0][$v][0];
-                    $html = str_replace("%$v%", $value, $html);
-                }
-                print $html;
-            } else {
-                // if no html template then produce a raw output
-                print '<td colspan="2" align="center"><hr><td>';
-                print '<tr valign="top"><td colspan="2">'.$Language->getText('include_user_home','total_entries').': '.$info["count"]."</td></tr>";
-                
-                for ($i=0; $i<$info["count"]; $i++) {
-                    print '<tr valign="top"><td colspan="2"><b>'.$Language->getText('include_user_home','entry_#').' '.$i."</b></td></tr>";
-                    print '<tr valign="top"><td>&nbsp;&nbsp;'.$Language->getText('include_user_home','entry_dn').' </td><td>'.$info[$i]["dn"]."</td></tr>";
-                    print '<tr valign="top"><td>&nbsp;&nbsp;# '.$Language->getText('include_user_home','attributes').' </td><td>'.$info[$i]["count"]."</td></tr>";
-                    
-                    for ($j=0; $j<$info[$i]["count"]; $j++) {
-                        $attrib_name = $info[$i][$j];
-                        $nb_values = $info[$i][$attrib_name]["count"];
-                        unset($info[$i][$attrib_name]["count"]);
-                        print '<tr valign="top"><td>&nbsp;&nbsp;'.$attrib_name.'</td><td>'.join('<br>',$info[$i][$attrib_name])."</td></tr>";
-                    }
-                }
-            }
-        }
-
-	if ($feedback)
-	    echo '<td colspan="2" align="center"><hr><b>'.$feedback.'</b></td>';
-    }
+$em =& EventManager::instance();
+$GLOBALS['user_home_pi_entry_label'] = array();
+$GLOBALS['user_home_pi_entry_value'] = array();
+$em->processEvent('user_home_pi_entry', array('user_id' => db_result($res_user,0,'user_id')));
+foreach($GLOBALS['user_home_pi_entry_label'] as $key => $label) {
+    $value = $GLOBALS['user_home_pi_entry_value'][$key];
+    print '
+<TR valign=top>
+	<TD>'.$label.'</TD>
+	<TD><B>'.$value.'</B></TD>
+</TR>
+';
 }
+
+$hooks_output = "";
+$em =& EventManager::instance();
+$showdir=isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
+$em->processEvent('user_home_pi_tail', array('showdir' => $showdir
+                                             ,'user_name' => db_result($res_user,0,'user_name')));
+$hooks_output = isset($GLOBALS['user_home_pi_tail'])?$GLOBALS['user_home_pi_tail']:"";
+echo $hooks_output;
 ?>
 
 </TR>

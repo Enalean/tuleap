@@ -513,9 +513,19 @@ if ($type_of_search == "soft") {
 		echo "</TABLE>\n";
 	}
 } else {
-
-	echo '<H1>'.$Language->getText('search_index','invalid_search').'</H1>';
-
+    $GLOBALS['search_type'] = false;
+    $em =& EventManager::instance();
+    $em->processEvent('search_type', array('words' => $_REQUEST['words']
+                                           ,'offset' => $offset
+                                           ,'nbRows' => 25
+                                           ,'type_of_search' => $type_of_search));
+    if($GLOBALS['search_type'] === false) {
+    	echo '<H1>'.$Language->getText('search_index','invalid_search').'</H1>';
+    }
+    else {
+        $rows_returned = $GLOBALS['rows_returned'];
+        $rows          = $GLOBALS['rows'];
+    }
 }
 
    // This code puts the nice next/prev.
