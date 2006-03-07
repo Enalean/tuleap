@@ -19,40 +19,39 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 function register_valid()	{
     global $Language;
 
-  if (!$GLOBALS['Update']) {
-    return 0;
-  }
-  if (!$GLOBALS['user_id']) {
-    $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_userid');
-    return 0;
-  }
-  if (!$GLOBALS['form_pw']) {
-    $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_nopasswd');
-    return 0;
-  }
-  if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2']) {
-    $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_passwd');
-    return 0;
-  }
-  if (!account_pwvalid($GLOBALS['form_pw'])) {
-    return 0;
-  }
+    if (!isset($GLOBALS['Update'])) {
+        return 0;
+    }
+    if (!isset($GLOBALS['user_id'])) {
+        $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_userid');
+        return 0;
+    }
+    if (!isset($GLOBALS['form_pw'])) {
+        $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_nopasswd');
+        return 0;
+    }
+    if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2']) {
+        $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_passwd');
+        return 0;
+    }
+    if (!account_pwvalid($GLOBALS['form_pw'])) {
+        return 0;
+    }
 	
-  // if we got this far, it must be good
-  if (!account_set_password($GLOBALS['user_id'],$GLOBALS['form_pw']) ) {
-      $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_update');
-      return 0;
-  }
-    
-  return 1;
+    // if we got this far, it must be good
+    if (!account_set_password($GLOBALS['user_id'],$GLOBALS['form_pw']) ) {
+        $GLOBALS['register_error'] = $Language->getText('admin_user_changepw','error_update');
+        return 0;
+    }
+    return 1;
 }
 
 // ###### first check for valid login, if so, congratulate
 
 if (register_valid()) {
-    $HTML->header(array(title=>$Language->getText('admin_user_changepw','title_changed')));
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed')));
     $d = getdate(time());
-    $h = ($sys_crondelay - 1) - ($d[hours] % $sys_crondelay);
+    $h = ($sys_crondelay - 1) - ($d['hours'] % $sys_crondelay);
     $m= 60 - $d['minutes'];
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header_changed'); ?></h3>
@@ -61,14 +60,15 @@ if (register_valid()) {
 <p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
 <?php
 } else { // not valid registration, or first time to page
-    $HTML->header(array(title=>$Language->getText('admin_user_changepw','title')));
-    if ($GLOBALS['sys_auth_type'] == 'ldap') {
-        // Won't change the LDAP password!
-        echo "<p><b><span class=\"feedback\">".$Language->getText('admin_user_changepw','ldap_warning')."</span></b>";
-    }
+    $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title')));
+
+    require_once('common/event/EventManager.class');
+    $em =& EventManager::instance();
+    $em->processEvent('before_admin_change_pw', array());
+
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header'); ?></h3>
-<?php if ($register_error) print "<p><span class=\"highlight\">$register_error</span>"; ?>
+<?php if (isset($register_error)) print "<p><span class=\"highlight\">$register_error</span>"; ?>
 <form action="user_changepw.php" method="post">
 <p><?php echo $Language->getText('admin_user_changepw','new_passwd'); ?>:
 <br><input type="password" name="form_pw">

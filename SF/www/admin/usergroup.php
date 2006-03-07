@@ -15,6 +15,8 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
 
+if (!isset($action)) $action='';
+
 // user remove from group
 if ($action=='remove_user_from_group') {
 	/*
@@ -49,13 +51,19 @@ if ($action=='remove_user_from_group') {
 	/*
 		Update the user
 	*/
-        $result=db_query("UPDATE user SET shell='$form_shell', email='$email', ldap_name='".$HTTP_POST_VARS['ldap_name']."' WHERE user_id=$user_id");
+        $result=db_query("UPDATE user SET shell='$form_shell', email='$email' WHERE user_id=$user_id");
 	if (!$result) {
 		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');
                 echo db_error();
 	} else {
 		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
 	}
+        // Update in plugin
+        require_once('common/event/EventManager.class');
+        $em =& EventManager::instance();
+        $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
+                                                    'user_id' => $user_id ));        
+
 	// status changing
 	if ($form_unixstatus != 'N') {
 		$res_uid = db_query("SELECT unix_uid FROM user WHERE user_id=$user_id");
@@ -141,10 +149,10 @@ $row_user = db_fetch_array($res_user);
 
 <P>
 <?php 
-if ($GLOBALS['sys_auth_type'] == 'ldap') {
-    echo $Language->getText('admin_usergroup','ldap_name').': <INPUT TYPE="TEXT" NAME="ldap_name" VALUE="'.$row_user['ldap_name'].'" SIZE="35" MAXLENGTH="55">
-<P>';
-}
+require_once('common/event/EventManager.class');
+$em =& EventManager::instance();
+$em->processEvent('usergroup_update_form', array());
+
 ?>
 
 <INPUT type="submit" name="Update_Unix" value="<?php echo $Language->getText('global','btn_update'); ?>">
