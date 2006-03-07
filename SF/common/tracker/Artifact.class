@@ -926,7 +926,7 @@ class Artifact extends Error {
 	
 	//calculate old_values to put into artifact_history
 	$old_value=$this->getCCEmails();
-
+    reset($arr_email);
         while (list(,$cc) = each($arr_email)) {
             // Add this cc only if not there already
             if (!$this->existCC($cc)) {
@@ -986,7 +986,8 @@ class Artifact extends Error {
 		$feedback = $Language->getText('tracker_common_artifact','prob_cc_list',$this->getID());
 		$ok = false;
 	}
-	
+
+	reset($arr_email);
 	while (list(,$cc) = each($arr_email)) {
                 $changed = true;
                 $res = $this->insertCC($cc,$user_id,$comment,$date);
