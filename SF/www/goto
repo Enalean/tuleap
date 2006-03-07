@@ -46,6 +46,7 @@ while ($groups_array = db_fetch_array($results)) {
  }
 
 $ref->replaceLink($args,$projname);
+$feed=isset($feed)?$feed:"";
 $location = "Location: ".$ref->getLink().$feed;
 header($location);
 exit;
