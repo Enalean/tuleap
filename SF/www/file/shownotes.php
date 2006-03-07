@@ -10,6 +10,14 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 $Language->loadLanguageMsg('file/file');
 
+// NTY Now only for registered users on CodeX
+if (!user_isloggedin()) {
+    /*
+    Not logged in
+    */
+    exit_not_logged_in();
+}
+
 $result=db_query("SELECT frs_release.notes,frs_release.changes,frs_release.preformatted,frs_release.name,frs_package.group_id ".
 		"FROM frs_release,frs_package ".
 		"WHERE frs_release.package_id=frs_package.package_id AND frs_release.release_id='$release_id'");
