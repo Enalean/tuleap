@@ -9,6 +9,10 @@
 require_once('pre.php');    
 require_once('account.php');
 
+require_once('common/event/EventManager.class');
+$em =& EventManager::instance();
+$em->processEvent('before_change_realname', array());
+
 $Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
@@ -21,8 +25,8 @@ function register_valid()	{
 		return 0;
 	}
 	
-	if (!$GLOBALS[form_realname]) {
-		$GLOBALS[register_error] = $Language->getText('account_change_realname', 'error');
+	if (!$GLOBALS['form_realname']) {
+		$GLOBALS['register_error'] = $Language->getText('account_change_realname', 'error');
 		return 0;
 	}
 	

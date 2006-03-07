@@ -10,11 +10,9 @@ require_once('pre.php');
 
 $Language->loadLanguageMsg('account/account');
 
-if ($GLOBALS['sys_auth_type'] == 'ldap') {
-    // Don't send LDAP password!
-    // There should be no link to this page...
-    exit_permission_denied();
-}
+require_once('common/event/EventManager.class');
+$em =& EventManager::instance();
+$em->processEvent('before_lostpw', array());
 
 $HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
 ?>

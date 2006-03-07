@@ -8,11 +8,15 @@
 
 require_once('pre.php');
 
-session_require(array(isloggedin=>1));
+require_once('common/event/EventManager.class');
+$em =& EventManager::instance();
+$em->processEvent('before_change_email', array());
+
+session_require(array('isloggedin'=>1));
 
 $Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=> $Language->getText('account_change_email', 'title')));
+$HTML->header(array('title'=> $Language->getText('account_change_email', 'title')));
 ?>
 
 <P><B><?php echo $Language->getText('account_change_email', 'title'); ?></B>

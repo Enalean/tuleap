@@ -10,6 +10,10 @@ require_once('pre.php');
 require_once('account.php');
 require_once('timezones.php');
 
+require_once('common/event/EventManager.class');
+$em =& EventManager::instance();
+$em->processEvent('before_change_timezone', array());
+
 $Language->loadLanguageMsg('account/account');
 
 if (!user_isloggedin()) {

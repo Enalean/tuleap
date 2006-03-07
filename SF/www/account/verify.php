@@ -40,7 +40,7 @@ function verify_login_valid()	{
 
 // ###### first check for valid login, if so, redirect
 
-if ($Login){
+if (isset($Login)){
     $success=verify_login_valid();
     if ($success) {
         // Get user status: if already set to 'R' (restricted) don't change it!
@@ -80,10 +80,10 @@ $HTML->header(array('title'=>$Language->getText('account_verify', 'title')));
 <?php
 echo '<p>'.$Language->getText('account_verify', 'message');
 
-if ($GLOBALS['error_msg']) {
+if (isset($GLOBALS['error_msg'])) {
 	print '<P><span class="feedback">'.$GLOBALS['error_msg'].'</span>';
 }
-if ($Login && !$success) {
+if (isset($Login) && !$success) {
 	echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
 }
 ?>

@@ -8,8 +8,12 @@
 
 require_once('pre.php');   
 require_once('common/mail/Mail.class');
+require_once('common/event/EventManager.class');
 
 $Language->loadLanguageMsg('account/account');
+
+$em =& EventManager::instance();
+$em->processEvent('before_change_email-confirm', array());
 
 $confirm_hash = substr(md5($session_hash . time()),0,16);
 

@@ -11,11 +11,9 @@ require_once('common/mail/Mail.class');
 
 $Language->loadLanguageMsg('account/account');
 
-if ($GLOBALS['sys_auth_type'] == 'ldap') {
-    // Don't send LDAP password!
-    // There should be no link to this page...
-    exit_permission_denied();
- }
+require_once('common/event/EventManager.class');
+$em =& EventManager::instance();
+$em->processEvent('before_lostpw-confirm', array());
 
 $confirm_hash = md5($session_hash . strval(time()) . strval(rand()));
 
