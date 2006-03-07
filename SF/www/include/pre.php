@@ -208,6 +208,7 @@ print "<p>DBG: SCRIPT_NAME = ".$SCRIPT_NAME";
 
 if ($SERVER_NAME != 'localhost' && 
     $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
+    $SCRIPT_NAME != '/current_css.php'  && 
     $SCRIPT_NAME != '/account/login.php'  && 
     $SCRIPT_NAME != '/account/register.php'&& 
     $SCRIPT_NAME != '/account/lostpw.php' &&
@@ -219,7 +220,7 @@ if ($SERVER_NAME != 'localhost' &&
     
     $return_to = urlencode((($REQUEST_URI === "/")?"/my/":$REQUEST_URI));
 
-    if ($GLOBALS['sys_force_ssl'] == 1 || $_SERVER['HTTPS'] === 'on') {
+    if ($GLOBALS['sys_force_ssl'] == 1 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
         header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
     } else {
         header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".$return_to);
