@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');    
+require_once('common/event/EventManager.class');
 
 session_require(array('isloggedin'=>'1'));
 
@@ -48,21 +49,18 @@ $HTML->box1_top($Language->getText('account_options', 'title').": ".user_getreal
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'login_name'); ?>: </TD>
 <TD><B><?php print $row_user['user_name']; ?></B></td>
-<td><?php if (($GLOBALS['sys_auth_type'] != 'ldap')||(!$row_user['ldap_name'])) {
-    echo '<A href="change_pw.php">['.$Language->getText('account_options', 'change_password').']</A></TD>';
- } ?>
-</TR>
-
-<?php 
-if ($GLOBALS['sys_auth_type'] == 'ldap') {
-    echo '
-<TR valign=top>
-<TD>'.$Language->getText('account_options', 'ldap_name').': </TD>
-<TD><B>'.$row_user['ldap_name'].'</B></td>
-<td></TD>
-</TR>';
-}
+<td>
+<?php
+$em =& EventManager::instance();
+$display_change_password = true;
+$params = array('allow' => &$display_change_password);
+$em->processEvent('display_change_password', $params);
+if ($display_change_password) {
+    echo '<A href="change_pw.php">['.$Language->getText('account_options', 'change_password').']</A>';
+ }
 ?>
+</TD>
+</TR>
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'timezone'); ?>: </TD>
@@ -70,19 +68,56 @@ if ($GLOBALS['sys_auth_type'] == 'ldap') {
 <td><A href="change_timezone.php">[<?php echo $Language->getText('account_options', 'change_timezone'); ?>]</A></TD>
 </TR>
 
-
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'real_name'); ?>: </TD>
 <TD><B><?php print $row_user['realname']; ?></B></td>
-<td><A href="change_realname.php">[<?php echo $Language->getText('account_options', 'change_real_name'); ?>]</A></TD>
+<td>
+<?php
+$em =& EventManager::instance();
+$display_change_realname = true;
+$params = array('allow' => &$display_change_realname);
+$em->processEvent('display_change_realname', $params);
+if ($display_change_realname) {
+    echo '<A href="change_realname.php">['.$Language->getText('account_options', 'change_real_name').']</A>';
+ }
+?>
+</TD>
 </TR>
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'email_address'); ?>: </TD>
 <TD><B><?php print $row_user['email']; ?></B></td>
-<td><A href="change_email.php">[<?php echo $Language->getText('account_options', 'change_email_address'); ?>]</A>
+<td>
+<?php
+$em =& EventManager::instance();
+$display_change_email = true;
+$params = array('allow' => &$display_change_email);
+$em->processEvent('display_change_email', $params);
+if ($display_change_email) {
+    echo '<A href="change_email.php">['.$Language->getText('account_options', 'change_email_address').']</A>';
+ }
+?>
 </TD>
 </TR>
+
+<?php
+$GLOBALS['account_pi_entry_label']  = array();
+$GLOBALS['account_pi_entry_value']  = array();
+$GLOBALS['account_pi_entry_change'] = array();
+$em =& EventManager::instance();
+$em->processEvent('account_pi_entry', array('user_id' => db_result($res_user,0,'user_id')));
+foreach($GLOBALS['account_pi_entry_label'] as $key => $label) {
+    $value  = $GLOBALS['account_pi_entry_value'][$key];
+    $change = $GLOBALS['account_pi_entry_change'][$key];
+    print '
+<TR valign=top>
+<TD>'.$label.'</TD>
+<TD><B>'.$value.'</B></td>
+<TD>'.$change.'</TD>
+</TR>
+';
+}
+?>
 
 <TR>
 <TD COLSPAN=3>&nbsp;<BR></td>
