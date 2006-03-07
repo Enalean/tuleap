@@ -250,7 +250,7 @@ admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisa
 admin_usergroup	account_info	Information sur le compte Unix
 admin_usergroup	shell	Shell
 admin_usergroup	email	E-mail
-admin_usergroup	ldap_name	Login LDAP
+admin_usergroup	ldap_id	Identifiant LDAP
 admin_usergroup	unix_status	Statut du compte Unix
 admin_usergroup	no_account	Pas de compte Unix
 admin_usergroup	active	Actif

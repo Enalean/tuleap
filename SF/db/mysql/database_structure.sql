@@ -1993,7 +1993,7 @@ CREATE TABLE user (
   unix_status char(1) NOT NULL default 'N',
   unix_uid int(11) NOT NULL default '0',
   unix_box varchar(10) NOT NULL default 'shell1',
-  ldap_name text,
+  ldap_id text,
   add_date int(11) NOT NULL default '0',
   confirm_hash varchar(32) default NULL,
   mail_siteupdates int(11) NOT NULL default '0',

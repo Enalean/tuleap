@@ -245,7 +245,7 @@ admin_usergroup	header	User/Group Management for user
 admin_usergroup	account_info	Unix Account Information
 admin_usergroup	shell	Shell
 admin_usergroup	email	Email
-admin_usergroup	ldap_name	LDAP Login
+admin_usergroup	ldap_id	LDAP Identifier
 admin_usergroup	unix_status	Unix Account Status
 admin_usergroup	no_account	No Unix Account
 admin_usergroup	active	Active
