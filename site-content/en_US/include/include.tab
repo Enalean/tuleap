@@ -417,12 +417,6 @@ include_user_home	pending	Pending
 include_user_home	deleted	 Deleted
 include_user_home	suspended	Suspended
 include_user_home	unkown	Unkown
-include_user_home	more_from_directory	More from the $1 Directory
-include_user_home	directory	Directory
-include_user_home	total_entries	Total number of entries
-include_user_home	entry_#	Entry #
-include_user_home	entry_dn	Entry dn
-include_user_home	attributes	attributes
 include_user_home	proj_info	Project info
 include_user_home	is_member	This developer is a member of the following projects
 include_user_home	not_member	This developer is not a member of any projects.

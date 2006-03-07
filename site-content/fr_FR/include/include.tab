@@ -422,12 +422,6 @@ include_user_home	pending	En attente
 include_user_home	deleted	 Détruit
 include_user_home	suspended	Suspendu
 include_user_home	unkown	Inconnu
-include_user_home	more_from_directory	Plus d'info de l'annuaire $1
-include_user_home	directory	Annuaire
-include_user_home	total_entries	Nombre total d'entrées
-include_user_home	entry_#	No. entrée
-include_user_home	entry_dn	Entrée dn
-include_user_home	attributes	attributs
 include_user_home	proj_info	Info projet
 include_user_home	is_member	Cet utilisateur est membre des projets suivants
 include_user_home	not_member	Cet utilisateur n'est membre d'aucun des projet.
