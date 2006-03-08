@@ -648,12 +648,7 @@ function buildAdminUI() {
             });
     });
     //}}}
-    $('edit_rule').appendChild(dbg = document.createElement('textarea'));
-    dbg.cols = 80;
-    dbg.rows = 10;
-    dbg.value = $H(forbidden_sources).inspect();
-    dbg.value += '\n';
-    dbg.value += $H(forbidden_targets).inspect();
+    
     //{{{ Build Table
     table = document.createElement('table');
     table.border      = 0;
