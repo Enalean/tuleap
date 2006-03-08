@@ -111,7 +111,7 @@ tracker_index	not_saved_comment	Le commentaire n'a pu être sauvegardé
 tracker_index	open	ouvert
 tracker_index	updated_aid	Modification de $1
 tracker_index	mass_change	Mise à jour massive
-tracker_index	invalid_field_dependency	Dépendence entre champs invalide
+tracker_index	invalid_field_dependency	Dépendance entre champs invalide
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange_detail.php
