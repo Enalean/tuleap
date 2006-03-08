@@ -623,15 +623,18 @@ function buildAdminUI() {
     });
     // We do not allow a relation A => C if B => C exists (sources)
     $H(forbidden_sources).keys().each(function (id) {
-            $H(rules_definitions).values().each(function (rule_definition) {
-                    if (rule_definition.target_field != id) {
-                        if (!forbidden_sources[id].find(function (source_field) { return source_field == rule_definition.source_field; })) {
-                            forbidden_sources[id].push(rule_definition.source_field);
-                        }
-                    }
+            existing_sources_for_this_field = $H(rules_definitions).values().partition(function (rule_definition) {
+                    return rule_definition.target_field == id;
             });
-            if (!forbidden_sources[id].find(function (source_field) { return source_field == id; })) {
-                forbidden_sources[id].push(id);
+            existing_sources_for_this_field = existing_sources_for_this_field[0].pluck('source_field');
+            if (existing_sources_for_this_field.length > 0) {
+                $H(fields).keys().each(function (source) {
+                        if (!forbidden_sources[id].find(function (source_field) { return source_field == source; }) &&
+                            !existing_sources_for_this_field.find(function (source_field) { return source_field == source; })) 
+                        {
+                                forbidden_sources[id].push(source);
+                        }
+                });
             }
     });
     // We do not allow a relation A => C if B => C exists (targets)
@@ -643,12 +646,14 @@ function buildAdminUI() {
                         }
                     }
             });
-            if (!forbidden_targets[id].find(function (target_field) { return target_field == id; })) {
-                forbidden_targets[id].push(id);
-            }
     });
     //}}}
-    
+    $('edit_rule').appendChild(dbg = document.createElement('textarea'));
+    dbg.cols = 80;
+    dbg.rows = 10;
+    dbg.value = $H(forbidden_sources).inspect();
+    dbg.value += '\n';
+    dbg.value += $H(forbidden_targets).inspect();
     //{{{ Build Table
     table = document.createElement('table');
     table.border      = 0;
@@ -948,7 +953,6 @@ function buildAdminUI() {
     
     //{{{ Handlers on select boxes (source and target fields)
     select_target.onchange = function() {
-        admin_displayFields($F('source_field'), $F('target_field'));
         //{{{ re-build source selectbox
         var previous_selected = $F('source_field');
         var len = $('source_field').options.length;
@@ -962,7 +966,7 @@ function buildAdminUI() {
                 //Don't add field if it is forbidden
                 if (forbidden_targets[source_field.id].length != $H(fields).keys().length
                     && (
-                        $F('target_field') == '-1' 
+                        $F('target_field') == '-1'
                         || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
                                 return source_field.id == forbidden_source;
                         }) 
@@ -983,9 +987,9 @@ function buildAdminUI() {
                 }
         });
         //}}}
+        admin_displayFields($F('source_field'), $F('target_field'));
     };
     select_source.onchange = function() {
-        admin_displayFields($F('source_field'), $F('target_field'));
         //{{{ re-build target selectbox
         var previous_selected = $F('target_field');
         var len = $('target_field').options.length;
@@ -1020,6 +1024,7 @@ function buildAdminUI() {
                 }
         });
         //}}}
+        admin_displayFields($F('source_field'), $F('target_field'));
     };
     //}}}
     
