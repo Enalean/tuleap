@@ -195,6 +195,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
         }
         if (i >= len) {
             opt = new Option(options[this.id][new_option_id].option.text, options[this.id][new_option_id].option.value);
+            opt.innerHTML = options[this.id][new_option_id].option.text;
             $(this.name).options[$(this.name).options.length] = opt;
             this.actualOptions.push(new_option_id);
         }
@@ -231,6 +232,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             //fill new options
             for (i = 0 ; i < this.defaultOptions.length ; i++) {
                 opt = new Option(options[this.id][this.defaultOptions[i]].option.text, options[this.id][this.defaultOptions[i]].option.value);
+                opt.innerHTML = options[this.id][this.defaultOptions[i]].option.text;
                 el.options[el.options.length] = opt;
                 this.actualOptions.push(this.defaultOptions[i]);
             }
@@ -693,9 +695,9 @@ function buildAdminUI() {
                     )
                 ) {
                 so = document.createElement('option');
-                so.value = source_field.id;
-                so.selected = (preselected_source_field == so.value);
-                so.appendChild(document.createTextNode(source_field.label));
+                so.value     = source_field.id;
+                so.selected  = (preselected_source_field == so.value);
+                so.innerHTML = source_field.label;
                 //If a rule exist for this field, highlight it
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.source_field == source_field.id;
@@ -725,9 +727,9 @@ function buildAdminUI() {
                 )
             ) {
                 to = document.createElement('option');
-                to.value = target_field.id;
-                to.selected = (preselected_target_field == to.value);
-                to.appendChild(document.createTextNode(target_field.label));
+                to.value     = target_field.id;
+                to.selected  = (preselected_target_field == to.value);
+                to.innerHTML = target_field.label;
                 //If a rule exist for this field, highlight it
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.target_field == target_field.id;
@@ -759,7 +761,7 @@ function buildAdminUI() {
                         inner_table.appendChild(inner_tbody = document.createElement('tbody'));
                         //Foreach option build an inner row
                         $H(options[source_field.id]).values().each(function(opt) {
-                            txt = document.createTextNode(opt['option'].text+' ');
+                            txt = opt['option'].text+' ';
                             inner_tr = document.createElement('tr');
                             inner_tr.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
                             
@@ -795,9 +797,9 @@ function buildAdminUI() {
                                         definition.source_value == opt['option'].value;
                             })) {
                                 label.appendChild(strong = document.createElement('strong'));
-                                strong.appendChild(txt);
+                                strong.innerHTML = txt;
                             } else {
-                                label.appendChild(txt);
+                                label.innerHTML = txt;
                             }
                             Element.setStyle(label, {cursor:'pointer'});
                             inner_tr.appendChild(td_txt);
@@ -826,7 +828,7 @@ function buildAdminUI() {
                         inner_table.appendChild(inner_tbody = document.createElement('tbody'));
                         //Foreach option build an inner row
                         $H(options[target_field.id]).values().each(function(opt) {
-                            txt = document.createTextNode(opt['option'].text+' ');
+                            txt = opt['option'].text+' ';
                             inner_tr = document.createElement('tr');
                             inner_tr.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
                             
@@ -871,9 +873,9 @@ function buildAdminUI() {
                                         definition.target_value == opt['option'].value;
                             })) {
                                 label.appendChild(strong = document.createElement('strong'));
-                                strong.appendChild(txt);
+                                strong.innerHTML = txt;
                             } else {
-                                label.appendChild(txt);
+                                label.innerHTML = txt;
                             }
                             Element.setStyle(label, {cursor:'pointer'});
                             inner_tr.appendChild(td_txt);
@@ -967,9 +969,9 @@ function buildAdminUI() {
                     )
                 ) {
                     so = document.createElement('option');
-                    so.value    = source_field.id;
-                    so.selected = source_field.id == previous_selected ? 'selected' : '';
-                    so.appendChild(document.createTextNode(source_field.label));
+                    so.value     = source_field.id;
+                    so.selected  = source_field.id == previous_selected ? 'selected' : '';
+                    so.innerHTML = source_field.label;
                     //If a rule exist for this field, highlight it
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.source_field == source_field.id;
@@ -1004,9 +1006,9 @@ function buildAdminUI() {
                     )
                 ) {
                     to = document.createElement('option');
-                    to.value    = target_field.id;
-                    to.selected = target_field.id == previous_selected ? 'selected' : '';
-                    to.appendChild(document.createTextNode(target_field.label));
+                    to.value     = target_field.id;
+                    to.selected  = target_field.id == previous_selected ? 'selected' : '';
+                    to.innerHTML = target_field.label;
                     //If a rule exist for this field, highlight it
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.target_field == target_field.id;
