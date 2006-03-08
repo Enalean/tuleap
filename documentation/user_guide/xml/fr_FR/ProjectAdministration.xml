@@ -308,7 +308,7 @@
 
       <para>Les patrons de référence sont un outils puissant permettant de créer des références croisées entre objets de CodeX. En fonction d'un patron de texte, CodeX peut créer automatiquement un hyperlien vers l'objet souhaité.
       </para>
-      <para>Lorsque vous tapez un commentaire, ou un message de de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et CodeX créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
+      <para>Lorsque vous tapez un commentaire, ou un message de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et CodeX créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
       </para>
       <para>Vous pouvez également référencer un objet appartenant à un autre projet. A cette fin, utilisez soit 'XXX #num_projet:NNN', soit 'XXX #nom_projet:NNN' pour référencer l'objet XXX numéro NNN appartenant au projet numéro 'num_projet', ou dont le nom est 'nom_projet'. Par exemple, 'wiki #monproj:Accueil' est une référence à la page wiki 'Accueil' du projet 'monproj'.
       </para>
@@ -379,10 +379,10 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
       mécanisme de références croisées. Ceci est rendu possible par
       l'utilisation des références à utiliser dans les
       commentaires des artefacts ou dans les messages de commits
-      et que CodeX reconnaît automatiquement.</para>
+      que CodeX reconnaît automatiquement.</para>
 
 
-      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source come ClearCase.
+      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source comme ClearCase.
       </para>
 
    <para><tip><title>Coup de pouce: référencez les artefacts et les
@@ -390,7 +390,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
    toujours référencer les tâches, anomalies, demande d'assistance
    appropriées dans le message de commit CVS ou Subversion. De la même façon,
    lorsque l'artefact correspondant est fermé, assurez-vous de
-   mentionner le commit qui résoud le problème dans un
+   mentionner le commit qui résout le problème dans un
    commentaire. Vous constaterez que cette pratique est extrêmement
    efficace pour suivre l'historique des changements et pourquoi un
    changement a eu lieu.</para></tip></para>
@@ -478,7 +478,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
         <step>
           <para><emphasis role="bold">Actif</emphasis> : En cochant
           cette case, le patron de référence est activé, c'est à dire qu'il est
-          utilisable est sera extrait automatiquement. 
+          utilisable et sera extrait automatiquement. 
           Décocher la case revient à désactiver le patron de référence.
           Voir aussi la &#34;Suppression d'un patron de référence&#34; ci-dessous.
           </para>
@@ -492,7 +492,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
       <para>les patrons de référence projet peuvent aussi être détruits. Un clic sur
       l'icône corbeille figurant à proximité du nom du patron de référence supprime définitivement ce dernier.
-      Un patron de référence détruit devra être recréé pour être à nouveau utilisable
+      Un patron de référence détruit devra être recréé pour être à nouveau utilisable.
       </para>
       <para>Les patrons de référence système ne peuvent être détruits. Vous pouvez
       cependant les désactiver pour que les références ne soient plus extraites.
