@@ -125,13 +125,13 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         } else {
             echo "var preselected_target_value = undefined;\n";
         }
-        echo "messages = {\n";
+        echo "var messages = {\n";
             //echo "href:               '". $this->href ."',\n";
             echo "choose_field:       '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','choose_field')) ."',\n";
             echo "source:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','source')) ."',\n";
             echo "target:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','target')) ."',\n";
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
-            echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."',\n";
+            echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."'\n";
         echo "};\n";
         echo "Event.observe(window, 'load', buildAdminUI, true);";
         echo "\n//------------------------------------------------------\n";
