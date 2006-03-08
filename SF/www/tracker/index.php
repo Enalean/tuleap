@@ -146,7 +146,8 @@ if ( $func == 'gotoid' ) {
                         // First check parameters
                         
                         // CC
-			if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
+                        $array_add_cc = split('[,;]', $add_cc);
+			if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
 			// Files
@@ -223,7 +224,8 @@ if ( $func == 'gotoid' ) {
                         
                         // CC
 			// 			
-			if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
+                        $array_add_cc = split('[,;]', $add_cc);
+			if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
 
@@ -432,7 +434,8 @@ if ( $func == 'gotoid' ) {
                         // First check parameters
                         
                         // CC
-                    if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
+                        $array_add_cc = split('[,;]', $add_cc);
+                    if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
                     }
                     // Files
@@ -517,7 +520,8 @@ if ( $func == 'gotoid' ) {
 		// First check parameters
                         
                 // CC
-		if ($add_cc && !util_validateCCList(util_split_emails($add_cc), $message)) {
+                $array_add_cc = split('[,;]', $add_cc);
+		if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
 		  exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 		}
 		// Files
@@ -646,11 +650,7 @@ if ( $func == 'gotoid' ) {
             if (isset($_REQUEST['add_cc'])) {
                 $add_cc = trim($_REQUEST['add_cc']);
                 if ($add_cc !== "") {
-                    if (!util_validateCCList(util_split_emails($add_cc), $message)) {
-                        exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
-                    } else {
-                        $ah->addCC($add_cc,$cc_comment,$changes);
-                    }
+                    $ah->addCC($add_cc,$cc_comment,$changes);
                 }
             }
             

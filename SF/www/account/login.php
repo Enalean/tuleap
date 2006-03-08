@@ -17,7 +17,8 @@ $Language->loadLanguageMsg('account/account');
 
 if (!session_issecure() && isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
     //force use of SSL for login
-    header('Location: https://'.$GLOBALS['sys_https_host'].'/account/login.php');
+    util_return_to('https://'.$GLOBALS['sys_https_host'].'/account/login.php');
+    exit;
 }
 
 // ###### first check for valid login, if so, redirect
@@ -25,54 +26,7 @@ if (!session_issecure() && isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_h
 if (isset($login) && $login) {
     list($success, $status) = session_login_valid($form_loginname,$form_pw);
     if ($success) {
-
-        if ($sys_auth_type == 'ldap') {
-            // If using LDAP authentication, check that local password is still synchronized;
-            // Otherwise, update it.
-         
-            $res = db_query("SELECT user_pw FROM user WHERE ldap_name='$form_loginname'");
-            $usr = db_fetch_array($res);
-            // Check that local password is the same as LDAP password.
-            // Otherwise, update it.
-            if ($usr['user_pw'] != md5($form_pw)) {
-                // LDAP password has changed, so synchronize other paswwords too
-                if (!account_set_password($usr['user_id'],$form_pw )) {
-                    $feedback= $Language->getText('account_login', 'error_can_t_update_passwd');
-                }
-            }
-        }
-
-	/*
-	  You can now optionally stay in SSL mode
-	*/
-	$use_ssl = session_issecure()
-		&& $GLOBALS['sys_https_host'] != ""
-		&& ($GLOBALS['sys_force_ssl']
-		    || !$GLOBALS['sys_stay_in_ssl']
-		    || $HTTP_POST_VARS['stay_in_ssl']
-		    );
-
-	if ($return_to) {
-	    // if return_to URL start with a protocol name then take as is
-	    // otherwise prepend the proper http protocol
-	    if (preg_match("/^\s*\w*:\/\//", $return_to)) {
-		header("Location: $return_to");
-	    } else {
-		if ($use_ssl) {
-		    header("Location: https://".$GLOBALS['sys_https_host'].$return_to);
-		} else {
-		    header("Location: http://".$GLOBALS['sys_default_domain'].$return_to);
-		}
-	    }
-	    exit;
-	} else {
-	    if ($use_ssl) {
-		header("Location: https://".$GLOBALS['sys_https_host']."/my/");
-	    } else {
-		header("Location: http://".$GLOBALS['sys_default_domain']."/my/");
-	    }
-	    exit;
-	}
+        account_redirect_after_login();
     }
 }
 if (isset($session_hash) && $session_hash) {
@@ -146,12 +100,19 @@ if ( isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != '' && $G
 </form>
 <P>
 <?php 
-if ($GLOBALS['sys_auth_type'] == 'codex') {
+$em =& EventManager::instance();
+$display_lostpw_createaccount = true;
+$em->processEvent('display_lostpw_createaccount', array('allow' => &$display_lostpw_createaccount));
+if ($display_lostpw_createaccount) {
     echo $Language->getText('account_login', 'lost_pw',array($GLOBALS['sys_email_admin'],$GLOBALS['sys_name'])); 
+    echo '<P>';
+    echo $Language->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name'])); 
 }
+
+$em =& EventManager::instance();
+$em->processEvent('login_after_form', array());
+
 ?>
-<P>
-<?php echo $Language->getText('account_login', 'create_acct',array($GLOBALS['sys_name'],$GLOBALS['sys_org_name'])); ?>
 
 <SCRIPT language="JavaScript"> <!-- 
     document.form_login.form_loginname.focus();

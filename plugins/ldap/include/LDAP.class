@@ -9,6 +9,7 @@
 
 
 require_once('common/include/Error.class');
+require_once('LDAPResult.class');
 
 /**
  * LDAP class definition
@@ -31,12 +32,23 @@ class LDAP extends Error {
 
         $this->Error(); 
         $this->serverList   = explode(",",$GLOBALS['sys_ldap_server']);
-        $this->default_bind_dn    = $GLOBALS['sys_ldap_bind_dn'];
-        $this->default_bind_passwd= $GLOBALS['sys_ldap_bind_passwd'];
+        if(array_key_exists('sys_ldap_bind_dn', $GLOBALS)) {
+            $this->default_bind_dn    = $GLOBALS['sys_ldap_bind_dn'];
+        }
+        if(array_key_exists('sys_ldap_bind_passwd', $GLOBALS)) {
+            $this->default_bind_passwd= $GLOBALS['sys_ldap_bind_passwd'];
+        }
         $this->auth_dn_template   = $GLOBALS['sys_ldap_auth_dn'];
         $Language->loadLanguageMsg('include/ldap');
     }
 
+    function &instance() {
+        static $_ldap_instance;
+        if (!$_ldap_instance) {
+            $_ldap_instance = new LDAP();
+        }
+        return $_ldap_instance;
+    }
 
     //
     // Private methods: should not be called directly
@@ -52,11 +64,21 @@ class LDAP extends Error {
             foreach ($this->serverList as $ldap_server) {  	    
                 $this->ds = ldap_connect($ldap_server);
                 if($this->ds) {
-                    return true;
+                    // MV:
+                    // Since ldap_connect allways return a resource with
+                    // OpenLdap 2.2.x, we have to check that this ressource is
+                    // valid with a bind, If bind success: that's great, if
+                    // not, this is a connexion failure.
+                    if(@ldap_bind($this->ds)) {
+                        return true;
+                    }
                 }
             }
-        } 
-        return false;
+            return false;
+        }
+        else {
+            return true;
+        }
     }
     
 
@@ -84,7 +106,7 @@ class LDAP extends Error {
             return false;
         }
 
-        if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
+        if ($bind_result = @ldap_bind($this->ds, $binddn, stripslashes($bindpw))) {
             return true;
         } else {
             $this->setError($Language->getText('ldap_class','err_bind_invpasswd',$binddn));
@@ -159,7 +181,7 @@ class LDAP extends Error {
 
     // Search the LDAP directory with the given DN and filter.
     // @return array of result entries
-    function search($dn,$filter) {
+    function &search($dn,$filter) {
         global $Language;
         if (!$this->connect()) {
             $this->setError($Language->getText('ldap_class','err_cant_connect'));
@@ -183,8 +205,75 @@ class LDAP extends Error {
         }
         return $info;
     }
+
+
+    /**
+     * aseach return a Iterator on the result of the LDAP search made on the
+     * given argument (filter)
+     *
+     * @param $filter string LDAP filter
+     * @return LDAPResultIterator
+     */
+    function &asearch($filter) {
+        return new LDAPResultIterator($this->search($GLOBALS['sys_ldap_dn'], $filter));    
+    }
+
+
+    /**
+     * Search if given argument correspond to a LDAP login (generally this
+     * correspond to ldap 'uid' field).
+     *
+     * @param $name string login
+     * @return LDAPResultIterator
+     */    
+    function &searchLogin($name) {
+        if ($GLOBALS['sys_ldap_auth_filter']) {
+            $ldap_filter = $GLOBALS['sys_ldap_auth_filter'];
+        } else {
+            $ldap_filter = "uid=%ldap_name%";
+        }
+        $ldap_filter = str_replace("%ldap_name%", $name, $ldap_filter);
+    
+        return $this->asearch($ldap_filter);
+    }
+
+    
+    /**
+     * Search if given argument correspond to a LDAP Identifier. This is the
+     * uniq number that represent a user.
+     *
+     * @param $name string LDAP Id
+     * @return LDAPResultIterator
+     */  
+    function &searchEdUid($name) {
+        if ($GLOBALS['sys_ldap_auth_filter']) {
+            $ldap_filter = $GLOBALS['sys_ldap_eduid_filter'];
+        } else {
+            $ldap_filter = "eduid=%eduid%";
+        }
+        $ldap_filter = str_replace("%eduid%", $name, $ldap_filter);
+
+        return $this->asearch($ldap_filter);
+    }
+
+
+    /**
+     * Search if a LDAP user match a filter defined in local conf.
+     *
+     * @param $name string
+     * @return LDAPResultIterator
+     */  
+    function &searchUser($words) {
+        if(array_key_exists('sys_ldap_search_user', $GLOBALS)) {
+            $ldap_filter = $GLOBALS['sys_ldap_search_user'];
+        }
+        else {
+            $ldap_filter = 'cn=%words%';
+        }
+        $ldap_filter = str_replace("%words%", $words, $ldap_filter);
+
+        return $this->asearch($ldap_filter);
+    }       
 }
-
-
 
 ?>

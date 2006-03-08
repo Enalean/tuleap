@@ -7,8 +7,6 @@
 // $Id$
 //
 
-require_once('common/include/LDAP.class');
-
 //$Language->loadLanguageMsg('include/include');
 
 $G_SESSION=array();
@@ -18,102 +16,93 @@ $ALL_USERS_DATA = array();
 $ALL_USERS_GROUPS = array();
 $ALL_USERS_TRACKERS = array();
 
-function session_login_valid($form_loginname,$form_pw,$allowpending=0)  {
-  global $session_hash,$feedback,$Language;
+function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
+    $em =& EventManager::instance();
+    $em->processEvent('session_before_login', array('loginname' => $form_loginname
+                                                   ,'passwd'=>$form_pw
+                                                   ,'allowpending'=>$allowpending));
+    
+    $success = false;
+    if(array_key_exists('auth_success', $GLOBALS)) {
+        $success =  $GLOBALS['auth_success'];
+    }
+    
+    if(!$success) {
+        $success = session_login_valid_db($form_loginname,$form_pw,$allowpending);        
+    }
+    
+    if($success) {
+        // check status of this user
+        if(session_login_valid_status($GLOBALS['auth_user_status'], $allowpending)) {
+        
+            //create a new session
+            session_set_new($GLOBALS['auth_user_id']);
+            
+            return array(true, '');
+        }
+        else {
+            return array(false, $GLOBALS['auth_user_status']);
+        }
+    }
+    else {
+        return array(false, '');
+    }
+}
+
+// Standard CodeX authentication, based on password stored in DB
+function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
+  global $feedback,$Language;
     $usr=null;
 
     if (!$form_loginname || !$form_pw) {
         $feedback = $Language->getText('include_session','missing_pwd');
-        return array(false,'');
+        return false;
     }
 
-    $use_ldap_auth=false;
-
-    // Only perform LDAP authentication if this is the default authentication mode AND if the ldap
-    // login exists. Otherwise, do a standard CodeX authentication.
-    // Why? transition phase between CodeX and LDAP authentication, and additionnaly,
-    // some users are not in the LDAP directory (e.g. 'admin')
-    if ($GLOBALS['sys_auth_type'] == 'ldap') {
-        // LDAP authentication
-        $res = db_query("SELECT user_id,user_name,status,user_pw FROM user WHERE "
-                        . "ldap_name='$form_loginname'");
-        if (!$res || db_numrows($res) < 1) {
-            //invalid user_name
-            //$feedback=$Language->getText('include_session','invalid_ldap_name');
-            //return false;
-        } else {
-            $use_ldap_auth=true;
-        }
-    }
-
-    if ($use_ldap_auth) {
-        // LDAP authentication
-        $usr = db_fetch_array($res);
-        
-        // Perform LDAP authentication
-        $ldap = new LDAP();
-        if (!$ldap->authenticate($form_loginname,$form_pw)) {
-            // password is invalid or user does not exist
-            $feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('include_session','dir_authent').': '.$ldap->getErrorMessage();
-            return array(false,$status);
-        }
-    } else {
-        // Standard CodeX authentication, based on password stored in DB
-
-        //get the user from the database using user_id and password
+    //get the user from the database using user_id and password
 	$res = db_query("SELECT user_id,status FROM user WHERE "
-		. "user_name='$form_loginname' "
-		. "AND user_pw='" . md5($form_pw) . "'");
+                    . "user_name='$form_loginname' "
+                    . "AND user_pw='" . md5($form_pw) . "'");
 	if (!$res || db_numrows($res) < 1) {
 		//invalid password or user_name
 		$feedback=$Language->getText('include_session','missing_pwd');
-		return array(false,'');
+		return false;
 	} 
+    else {
+        $GLOBALS['auth_user_id']      = db_result($res,0,'user_id');
+        $GLOBALS['auth_user_status']  = db_result($res,0,'status');
+        return true;
+    }    
+}
 
-        $usr = db_fetch_array($res);
+function session_login_valid_status($status, $allowpending=0) {
+    global $feedback, $Language;
 
-        if (($GLOBALS['sys_auth_type'] == 'ldap')&&($usr['ldap_name'])) {
-            // The user MUST use his LDAP login if it exists
-            $feedback=' '.$Language->getText('include_session','use_ldap_login').':'.$usr['ldap_name'];
-            return array(false,$status);
-        } 
-    }
-     
-            
-    // check status of this user
-    $status = $usr['status'];
     // if allowpending (for verify.php) then allow
-    if ($allowpending && ($status == 'P')) {
-        //1;
+    if (($status == 'A') || ($allowpending && ($status == 'P'))) {
+        return true;
     } else {
         if ($status == 'S') { 
             //acount suspended
             $feedback = $Language->getText('include_session','account_suspended');
-            return array(false,$status);
+            return false;
         }
         if ($status == 'P') { 
             //account pending
             $feedback = $Language->getText('include_session','account_pending');
-            return array(false,$status);
+            return false;
         } 
         if ($status == 'D') { 
             //account deleted
             $feedback = $Language->getText('include_session','account_deleted');
-            return array(false,$status);
+            return false;
         }
         if (($status != 'A')&&($status != 'R')) {
             //unacceptable account flag
             $feedback = $Language->getText('include_session','account_not_active');
-            return array(false,$status);
+            return false;
         }
     }
-    //create a new session
-    session_set_new(db_result($res,0,'user_id'));
-
-    //if we got this far, the name/pw must be ok
-    //db_query("UPDATE session SET user_id='" . db_result($res,0,'user_id') . "' WHERE session_hash='$session_hash'");
-
-    return array(true,$status);
 }
 
 function session_checkip($oldip,$newip) {

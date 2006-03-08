@@ -988,12 +988,14 @@ class ArtifactType extends Error {
 	  $result = true;
 	  
 	  if ($email_address) {
-	    if (!util_validateCCList(util_split_emails($email_address), $feedback)) {
-		  $email_address='';
-		  $result = false;
-	    } else {
-	      $email_address = util_cleanup_emails($email_address);
-	    }
+          $arr_email_address = split('[,;]', $email_address);
+          if (!util_validateCCList($arr_email_address, $feedback, false)) {
+              $email_address='';
+              $result = false;
+          } else {
+              $email_address = implode(", ", $arr_email_address);
+              $email_address = util_cleanup_emails($email_address);
+          }
 	  }
 
 	  if ($email_all && !$email_address) {
@@ -1041,11 +1043,11 @@ class ArtifactType extends Error {
 		if ($watchees) {
 			//echo "watchees";
    			$res_watch = true;
-			$watchees = preg_replace("/\s+/","",$watchees);
- 			$arr_user_names = split(',',$watchees);
+            $arr_user_names = split('[,;]', $watchees);
 			$arr_user_ids = array();
 			while (list(,$user_name) = each($arr_user_names)) {
-			    $res = user_get_result_set_from_unix($user_name);
+			    $user_ident = util_user_finder($user_name, true);
+                $res = user_get_result_set_from_unix($user_ident);
 			    if (!$res || (db_numrows($res) <= 0)) {
 				// user doesn;t exist  so abort this step and give feedback
 				$this->setError(" - ".$Language->getText('tracker_common_type','invalid_name',$user_name));

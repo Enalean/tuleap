@@ -621,9 +621,10 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 	}
 }
 
-// Clean up email address (remove spaces...) and put to lower case
+// Clean up email address (remove starting and ending spaces) and put to lower
+// case
 function util_cleanup_emails ($addresses) {
-    return strtolower(preg_replace("/\s/","", $addresses));
+    return strtolower(rtrim(trim($addresses)));
 }
 
 // Clean up email address (remove spaces...) and add @... if it is a simple
@@ -685,24 +686,25 @@ function util_normalize_emails($adresses) {
      *
      * @param arr_email: list of email addresses
      * @param message (OUT): error message if an error is found
+     * @param strict (IN): Parametrer for user_finder function
      *
      * @return boolean
      */
-    function util_validateCCList($arr_email, &$message) {
+    function util_validateCCList(&$arr_email, &$message, $strict=false) {
       global $Language;
         $valid = true;
         $message = "";
         
-        while (list(,$cc) = each($arr_email)) {
+        foreach($arr_email as $key => $cc) {
             // Make sure that the address is valid
-            if ($cc && $cc != '' && ! validate_email($cc)) {
-                // check for a valid CodeX user.
-                $res = user_get_result_set_from_unix($cc);
-                if (db_numrows($res) == 0) {
-                    $valid = false;
-                    $message .= "$cc<br>";
-                    continue;
-                }
+            $ref = util_user_finder($cc, $strict);	  
+            if(empty($ref)) {
+                $valid = false;
+                $message .= "'$cc'<br>";
+                continue;
+            }
+            else {	    
+                $arr_email[$key] = $ref;
             }
         }
         
@@ -714,6 +716,50 @@ function util_normalize_emails($adresses) {
         
         return $valid;
     }
+
+
+/**
+ * Try to find the best user identifier for a given identifier.
+ *
+ * The best (from CodeX point of view) user identifier is the CodeX
+ * user_name. But people don't remember CodeX user_name. A given user can
+ * reference another user with his email, codex user_name, ldap uid, ldap
+ * common name.
+ * This function returns the best identifier:
+ * - if $ident is a CodeX user name, it is returned as-is
+ * - else, if $ident is a valid LDAP id of a CodeX user, return the CodeX name
+ * - else, if $ident is a valid LDAP id of an unknown user, return the user email (from LDAP directory)
+ * - else, if $ident is an email address and 'strict' is false, return the address
+ * - else, return an empty string
+ *
+ * @param ident (IN) : A user identifier
+ * @param strict (IN): If strict mode is enabled only CodeX user and ldap valid
+ *                     entries are allowed. Otherwise, return an empty string
+ * @return String
+ */
+function util_user_finder($ident, $strict=true) {
+    $bestCodexIdentifier='';
+
+    $ident = rtrim($ident);
+    $ident = trim($ident);
+
+    $res = user_get_result_set_from_unix($ident);
+    if($res && db_numrows($res) === 1 ) {
+        $bestCodexIdentifier = $ident;
+    }
+    else {
+        $em =& EventManager::instance();
+        $em->processEvent("user_finder", array('ident' => $ident));
+        if (isset($GLOBALS['best_codex_identifier']) && $GLOBALS['best_codex_identifier']!="")
+            $bestCodexIdentifier = $GLOBALS['best_codex_identifier'];
+        else if (!$strict) {
+            // Test email address
+            if (validate_email($ident)) $bestCodexIdentifier=$ident;
+        }
+    } 
+
+    return $bestCodexIdentifier;
+}
 
 
 function util_is_valid_filename ($file) {
@@ -1213,6 +1259,66 @@ function util_translate_name_ugroup($name) {
 **/
 function util_translate_desc_ugroup($desc) {
     return util_translate($desc, "ugroup_", "_desc_key", "project_ugroup");
+}
+
+function util_make_return_to_url($url) {
+    $urlToken = parse_url($url);
+
+    $finaleUrl = '';
+
+    if(array_key_exists('host', $urlToken) && $urlToken['host']) {
+        $server_url = $urlToken['scheme'].'://'.$urlToken['host'];
+        if(array_key_exists('port', $urlToken) && $urlToken['port']) {
+            $server_url .= ':'.$urlToken['port'];
+        }
+    }
+    else {
+        if (session_issecure()
+            && $GLOBALS['sys_https_host'] != ""
+            && ($GLOBALS['sys_force_ssl']
+                || !$GLOBALS['sys_stay_in_ssl']
+                || $HTTP_POST_VARS['stay_in_ssl']
+                )) {
+            $server_url = 'https://'.$GLOBALS['sys_https_host'];
+        }
+        else {
+            $server_url = 'http://'.$GLOBALS['sys_default_domain'];
+        }
+    }
+
+    $finaleUrl = $server_url;
+
+    if(array_key_exists('path', $urlToken) && $urlToken['path']) {
+        $finaleUrl .= $urlToken['path'];
+    }
+    
+    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to']) {
+        $rt = 'return_to='.urlencode($_REQUEST['return_to']);
+    
+        if(array_key_exists('query', $urlToken) && $urlToken['query']) {
+            $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$rt;
+        }
+        else {
+            $finaleUrl .= '?'.$rt;
+        }
+    }
+    else {
+        if(array_key_exists('query', $urlToken) && $urlToken['query']) {
+            $finaleUrl .= '?'.$urlToken['query'];
+        }
+    }
+
+    if(array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
+        $finaleUrl .= '#'.$urlToken['fragment'];
+    }
+
+    return $finaleUrl;
+}
+
+function util_return_to($url) {
+    $finaleUrl = util_make_return_to_url($url);
+    header('Location: '.$finaleUrl);
+    exit;
 }
 
 ?>

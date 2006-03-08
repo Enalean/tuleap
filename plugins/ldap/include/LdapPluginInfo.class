@@ -1,0 +1,14 @@
+<?php
+
+require_once('common/plugin/PluginInfo.class');
+require_once('LdapPluginDescriptor.class');
+
+class LdapPluginInfo extends PluginInfo {
+    
+    function LdapPluginInfo(&$plugin) {
+        $this->PluginInfo($plugin);
+        $this->setPluginDescriptor(new LdapPluginDescriptor());
+    }
+    
+}
+?>

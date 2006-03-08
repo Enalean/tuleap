@@ -11,11 +11,11 @@ require_once('common/mail/Mail.class');
 
 $Language->loadLanguageMsg('homepage/homepage');
 
-if (!$toaddress && !$touser) {
+if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
 }
 
-if ($touser) {
+if (isset($touser)) {
 	/*
 		check to see if that user even exists
 		Get their name and email if it does
@@ -29,13 +29,13 @@ if ($touser) {
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
-if ($toaddress && !eregi($host,$toaddress)) {
+if (isset($toaddress) && !eregi($host,$toaddress)) {
 	exit_error($Language->getText('include_exit', 'error'),
 		   $Language->getText('sendmessage','err_host',array($host)));
 }
 
 
-if ($send_mail) {
+if (isset($send_mail)) {
 	if (!$subject || !$body || !$name || !$email) {
 		/*
 			force them to enter all vars
@@ -43,12 +43,12 @@ if ($send_mail) {
 		exit_missing_param();
 	}
 
-	if ($toaddress) {
+	if (isset($toaddress)) {
 		/*
 			send it to the toaddress
 		*/
 		$to=eregi_replace('_maillink_','@',$toaddress);
-	} else if ($touser) {
+	} else if (isset($touser)) {
 		/*
 			figure out the user's email and send it there
 		*/
@@ -58,10 +58,17 @@ if ($send_mail) {
 	$mail =& new Mail();
     $mail->setTo($to);
     $dest = $to;
-    if (isset($_REQUEST['cc']) && count($_REQUEST['cc']) > 0) {
-        $cc = util_normalize_emails($_REQUEST['cc']);
+    if (isset($_REQUEST['cc']) && strlen($_REQUEST['cc']) > 0) {
+        $cc_array =& split('[,;]', $_REQUEST['cc']);
+        if(!util_validateCCList($cc_array, $feedback, false)) {
+            exit_error($Language->getText('include_exit', 'error'),
+                       $feedback);
+        }
+        $cc_list  =& implode(', ', $cc_array);
+        $cc = util_normalize_emails($cc_list);
         $mail->setCc($cc);
         $dest .= ','.$cc;
+
     }
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));

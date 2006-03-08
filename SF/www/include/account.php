@@ -37,11 +37,12 @@ function account_set_password($user_id,$password) {
 }
 
 // Add user to an existing project
-function account_add_user_to_group ($group_id,$user_unix_name) {
+function account_add_user_to_group ($group_id,&$user_unix_name) {
   global $feedback,$Language;
 	
 	$ret = false;
 
+    $user_unix_name = util_user_finder($user_unix_name, true);
 	$res_newuser = db_query("SELECT status,user_id,unix_status,unix_uid FROM user WHERE user_name='$user_unix_name'");
 
 	if (db_numrows($res_newuser) > 0) {
@@ -187,10 +188,7 @@ function account_groupnamevalid($name) {
 
 	return 1;
 }
-
-// The following is a random salt generator
-function account_gensalt(){
-	function rannum(){	     
+function rannum(){	     
 		mt_srand((double)microtime()*1000000);		  
 		$num = mt_rand(46,122);		  
 		return $num;		  
@@ -201,7 +199,10 @@ function account_gensalt(){
 		} while ( ( $num > 57 && $num < 65 ) || ( $num > 90 && $num < 97 ) );	  
 		$char = chr($num);	  
 		return $char;	  
-	}	   
+	}
+// The following is a random salt generator
+function account_gensalt(){
+		   
 
 	$a = genchr(); 
 	$b = genchr();
@@ -249,4 +250,67 @@ function account_shellselects($current) {
 		}
 	}
 }
+
+function account_create($loginname=''
+                        ,$pw=''
+                        ,$ldap_id=''
+                        ,$realname=''
+                        ,$register_purpose=''
+                        ,$email=''
+                        ,$status='P'
+                        ,$confirm_hash=''
+                        ,$mail_site=0
+                        ,$mail_va=0
+                        ,$timezone='GMT'
+                        ,$lang_id=1
+                        ,$unix_uid
+                        ,$unix_status='N'
+                        ) {
+    
+    global $Language;
+
+    $result=db_query("INSERT INTO user"
+                     ." SET user_name='".$loginname."'"
+                     ." ,user_pw='".md5($pw)."'"
+                     ." ,unix_pw='".account_genunixpw($pw)."'"
+                     ." ,windows_pw='".account_genwinpw($pw)."'"
+                     ." ,ldap_id='".$ldap_id."'"
+                     ." ,realname='".addslashes($realname)."'"
+                     ." ,register_purpose='".$register_purpose."'"
+                     ." ,email='".$email."'"
+                     ." ,add_date='". time()."'"
+                     ." ,status='".$status."'"
+                     ." ,confirm_hash='".$confirm_hash."'"
+                     ." ,mail_siteupdates='".$mail_site."'"
+                     ." ,mail_va='".$mail_va."'"
+                     ." ,timezone='".$timezone."'"
+                     ." ,language_id='".$lang_id."'"
+                     ." ,unix_uid='".$unix_uid."'"
+                     ." ,unix_status='".$unix_status."'");
+    
+    if (!$result) {
+        exit_error($Language->getText('include_exit', 'error'), db_error());
+        return 0;
+    } else {
+        return db_insertid($result);
+    }
+}
+
+function account_redirect_after_login() {
+    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
+        $returnToToken = parse_url($_REQUEST['return_to']);
+        if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
+            header('Location: /my/index.php');
+            exit;
+        }
+        else {
+            util_return_to('/my/redirect.php');
+        }
+    }
+    else {
+        header('Location: /my/index.php');
+        exit;
+    }
+}
+
 ?>
