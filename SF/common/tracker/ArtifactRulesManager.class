@@ -92,7 +92,7 @@ class ArtifactRulesManager {
         reset($value_field_list);
         while (list($field_name,$value) = each($value_field_list)) {
             $field = $art_field_fact->getFieldFromName($field_name);
-            $values[$field->getID()] = array('field' => &$field, 'value' => $value);
+            $values[$field->getID()] = array('field' => &$field, 'values' => is_array($value)?$value:array($value));
         }
         
         $dependencies = array();
@@ -107,7 +107,6 @@ class ArtifactRulesManager {
                 $dependencies[$rule->source_field][$rule->target_field][] = $rule;
             }
         }
-        
         reset($dependencies);
         while($valid && (list($source,) = each($dependencies))) {
             if (isset($values[$source])) {
@@ -117,20 +116,26 @@ class ArtifactRulesManager {
                         reset($dependencies[$source][$target]);
                         $applied = false;
                         while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
-                            if ($dependencies[$source][$target][$rule]->canApplyTo(
-                                $artifact_type_id, 
-                                $source, 
-                                $values[$source]['value'], 
-                                $target, 
-                                $values[$target]['value']))
-                            {
-                                $applied = true;
-                                $valid = $dependencies[$source][$target][$rule]->applyTo(
-                                    $artifact_type_id, 
-                                    $source, 
-                                    $values[$source]['value'], 
-                                    $target, 
-                                    $values[$target]['value']);
+                            reset($values[$source]['values']);
+                            while(!($applied && $valid) && (list($source_value,) = each($values[$source]['values']))) {
+                                reset($values[$target]['values']);
+                                while(!($applied && $valid) && (list($target_value,) = each($values[$target]['values']))) {
+                                    if ($dependencies[$source][$target][$rule]->canApplyTo(
+                                        $artifact_type_id, 
+                                        $source, 
+                                        $source_value, 
+                                        $target, 
+                                        $target_value))
+                                    {
+                                        $applied = true;
+                                        $valid = $dependencies[$source][$target][$rule]->applyTo(
+                                            $artifact_type_id, 
+                                            $source, 
+                                            $source_value, 
+                                            $target, 
+                                            $target_value);
+                                    }
+                                }
                             }
                         }
                         $valid = $valid || !$applied;
