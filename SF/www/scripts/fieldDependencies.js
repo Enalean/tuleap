@@ -258,7 +258,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
     */
     select: function() {
         if (arguments[0]) {
-            this.selectedOptions = [arguments[0]];
+            this.selectedOptions = arguments[0];
         } else {
             selectedOptions = this.selectedOptions;
             this.selectedOptions = this.actualOptions.findAll(function(element) {
@@ -310,7 +310,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
         this.source_value_id = rule_definition.source_value;
         this.target_field_id = rule_definition.target_field;
         this.target_value_id = rule_definition.target_value;
-        this.selected        = false;
+        this.selected        = [];
     },
     process: function(source_field) {
         applied = false;
@@ -333,11 +333,12 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
                 if (this.can_apply()) {
                     var len = $(fields[this.target_field_id].name).options.length;
                     var i = 0;
-                    while (i < len && $(fields[this.target_field_id].name).options[i].value != this.target_value_id) {
+                    this.selected = [];
+                    while (i < len) {
+                        if ($(fields[this.target_field_id].name).options[i].selected) {
+                            this.selected.push($(fields[this.target_field_id].name).options[i].value);
+                        }
                         i++;
-                    }
-                    if (i < len && $(fields[this.target_field_id].name).options[i].selected) {
-                        this.selected = this.target_value_id;
                     }
                 }
             }
@@ -505,9 +506,18 @@ function initFieldDependencies() {
     $H(rules_definitions).values().each(function(rule_definition) {
             addRule(rule_definition);
     });
-    //Once rules have been loaded, we applied them an fields
+    //Once rules have been loaded, we applied them on fields
     $H(fields).values().each(function (field) {
             applyRules(null, field.name);
+    });
+    //Once rules have been applied, we preselect values
+    $H(fields).keys().each(function (field_id) {
+            if (options[field_id]) {
+                    options_that_should_be_selected = $H(options[field_id]).keys().findAll(function (option_id) {
+                                return options[field_id][option_id]['selected'];
+                    });
+                    fields[field_id].select(options_that_should_be_selected);
+            }
     });
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
     codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
