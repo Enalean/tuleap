@@ -16,7 +16,7 @@
 				<div class="section">This plugin allow administrators to manage plugins with a web-based interface. The features are:
 					<dl>
 						<dt><a href="#manage">Manage Installed Plugins</a></dt>
-						<dd>Enable/disable plugins, consult their properties, uninstall them.</dd>
+						<dd>Available/unavailable plugins, consult their properties, uninstall them.</dd>
 						<dt><a href="#install">Install a Plugin</a></dt>
 						<dd>Finish the installation of the plugin.</dd>
 						<dt><a href="#priorities">Manage Priorities</a></dt>
@@ -32,21 +32,22 @@
 						<dl id="legendInstalledPlugins">
 							<dt id="description">1. Plugin</dt>
 							<dd id="descriptionDef"><a href="#legendInstalledPlugins"><span>Description of the plugin.</span></a></dd>
-							<dt id="enable">2. Enabled?</dt>
-							<dd id="enableDef"><a href="#legendInstalledPlugins"><span>Enable or disable the plugin.</span></a></dd>
+							<dt id="enable">2. Available?</dt>
+							<dd id="enableDef"><a href="#legendInstalledPlugins"><span>Make the plugin (un)available.</span></a></dd>
 							<dt id="actions">3. Actions</dt>
 							<dd id="actionsDef"><a href="#legendInstalledPlugins"><span>Special actions: show its properties, uninstall the plugin.</span></a></dd>
 						</dl>
 					</div>
-					<p>This panel displays informations about installed plugins. Those plugins can be enabled or disabled and you can do others actions : uninstall them and show properties.</p>
-					<p>There is at least one plugin: PluginsAdministration itself, which cannot be uninstalled or disabled.</p>
-					<p>Please note that uninstall or make a plugin disabled through this interface <strong>does not prevent access</strong> to its web pages!</p>
+					<p>This panel displays informations about installed plugins. Those plugins can be available or unavailable and you can do others actions : uninstall them and show properties.</p>
+					<p>There is at least one plugin: PluginsAdministration itself, which cannot be uninstalled or unavailable.</p>
+					<p>Please note that uninstall or set a plugin unavailable through this interface <strong>does not prevent access</strong> to its web pages!</p>
 					<p>The properties for a plugin are:
 						<ul>
 							<li>FullName,</li>
 							<li>Version,</li>
 							<li>Description,</li>
-							<li>Listened Hooks.</li>
+							<li>Listened Hooks,</li>
+							<li>Custom Properties, depending on the plugin itself.</li>
 						</ul>
 					</p>
 				</div>

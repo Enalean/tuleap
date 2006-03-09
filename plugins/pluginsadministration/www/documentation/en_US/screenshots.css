@@ -19,7 +19,7 @@
 dl#legendInstalledPlugins{
 	background:transparent url(InstalledPlugins.png) top left no-repeat;
 	height: 151px;
-	width: 496px;
+	width: 491px;
 }
 
 dl#legendPriorities{
@@ -45,23 +45,24 @@ dl#legendPriorities{
 }
 
 /* ---------- Hotspot Declarations ---------- */
-dd#descriptionDef{ top: 91px; left: 14px; }
-dd#descriptionDef a{ position: absolute; width: 244px; height: 46px; text-decoration: none; }
+dd#descriptionDef{ top: 89px; left: 12px; }
+dd#descriptionDef a{ position: absolute; width: 223px; height: 46px; text-decoration: none; }
 dd#descriptionDef a span{ display: none; }
-dd#descriptionDef a:hover{ background: transparent url(InstalledPlugins.png)  -14px  -242px no-repeat; }
+dd#descriptionDef a:hover{ background: transparent url(InstalledPlugins.png)  -12px  -240px no-repeat; }
 dd#descriptionDef a:hover span {display: block;}
 
-dd#enableDef{ top: 98px; left: 317px; }
-dd#enableDef a{ position: absolute; width: 55px; height: 29px; text-decoration: none; }
+
+dd#enableDef{ top: 97px; left: 277px; }
+dd#enableDef a{ position: absolute; width: 59px; height: 28px; text-decoration: none; }
 dd#enableDef a span{ display: none; }
-dd#enableDef a:hover{ background: transparent url(InstalledPlugins.png)  -317px -249px  no-repeat; }
+dd#enableDef a:hover{ background: transparent url(InstalledPlugins.png)  -277px  -248px no-repeat; }
 dd#enableDef a:hover span {display: block; width:200%;}
 
 
-dd#actionsDef{ top: 95px; left: 393px; }
-dd#actionsDef a{ position: absolute; width: 90px; height: 35px; text-decoration: none;	}
+dd#actionsDef{ top: 97px; left: 398px; }
+dd#actionsDef a{ position: absolute; width: 78px; height: 28px; text-decoration: none; }
 dd#actionsDef a span{ display: none; }
-dd#actionsDef a:hover{ background: transparent url(InstalledPlugins.png) -393px -246px no-repeat; }
+dd#actionsDef a:hover{ background: transparent url(InstalledPlugins.png)  -398px  -248px no-repeat; }
 dd#actionsDef a:hover span {display: block; width:250%;}
 
 /* */
