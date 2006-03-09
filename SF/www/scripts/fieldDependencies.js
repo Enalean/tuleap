@@ -195,8 +195,8 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
         }
         if (i >= len) {
             opt = new Option(options[this.id][new_option_id].option.text, options[this.id][new_option_id].option.value);
-            opt.innerHTML = options[this.id][new_option_id].option.text;
             $(this.name).options[$(this.name).options.length] = opt;
+            $(this.name).options[$(this.name).options.length - 1].innerHTML = opt.text;
             this.actualOptions.push(new_option_id);
         }
     },
@@ -232,8 +232,8 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             //fill new options
             for (i = 0 ; i < this.defaultOptions.length ; i++) {
                 opt = new Option(options[this.id][this.defaultOptions[i]].option.text, options[this.id][this.defaultOptions[i]].option.value);
-                opt.innerHTML = options[this.id][this.defaultOptions[i]].option.text;
                 el.options[el.options.length] = opt;
+                el.options[el.options.length - 1] = opt.text; //html entities (cannot be done before in IE)
                 this.actualOptions.push(this.defaultOptions[i]);
             }
             
@@ -693,7 +693,7 @@ function buildAdminUI() {
     select_source.appendChild(choose = document.createElement('option'));
     choose.value    = '-1';
     choose.selected = (preselected_source_field == choose.value);
-    choose.appendChild(document.createTextNode(messages['choose_field']));
+    choose.innerHTML = messages['choose_field'];
     $H(fields).values().each(function(source_field) {
             //Don't add field if it is forbidden
             if (forbidden_targets[source_field.id].length != $H(fields).keys().length 
@@ -725,7 +725,7 @@ function buildAdminUI() {
     select_target.appendChild(choose = document.createElement('option'));
     choose.value = '-1';
     choose.selected = (preselected_target_field == choose.value);
-    choose.appendChild(document.createTextNode(messages['choose_field']));
+    choose.innerHTML = messages['choose_field'];
     $H(fields).values().each(function(target_field) {
             //Don't add field if it is forbidden
             if (forbidden_sources[target_field.id].length != $H(fields).keys().length
@@ -966,7 +966,7 @@ function buildAdminUI() {
         }
         $('source_field').appendChild(choose = document.createElement('option'));
         choose.value = '-1';
-        choose.appendChild(document.createTextNode(messages['choose_field']));
+        choose.innerHTML = ['choose_field'];
         $H(fields).values().each(function(source_field) {
                 //Don't add field if it is forbidden
                 if (forbidden_targets[source_field.id].length != $H(fields).keys().length
@@ -1003,7 +1003,7 @@ function buildAdminUI() {
         }
         $('target_field').appendChild(choose = document.createElement('option'));
         choose.value = '-1';
-        choose.appendChild(document.createTextNode(messages['choose_field']));
+        choose.innerHTML = messages['choose_field'];
         $H(fields).values().each(function(target_field) {
                 //Don't add field if it is forbidden
                 if (forbidden_sources[target_field.id].length != $H(fields).keys().length
