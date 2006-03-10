@@ -14,7 +14,7 @@ $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministr
 class PluginsAdministrationPluginDescriptor extends PluginDescriptor {
     
     function PluginsAdministrationPluginDescriptor() {
-        $version     = 'v1.0';
+        $version     = 'v1.0.1';
         $name        = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'descriptor_name');
         $description = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'descriptor_description');
         $this->PluginDescriptor($name, $version, $description);
