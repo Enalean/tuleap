@@ -13,6 +13,8 @@ session_require(array('isloggedin'=>'1'));
 
 $Language->loadLanguageMsg('account/account');
 
+$em =& EventManager::instance();
+
 $HTML->header(array('title'=>$Language->getText('account_options', 'title')));
 
 // get global user vars
@@ -51,7 +53,6 @@ $HTML->box1_top($Language->getText('account_options', 'title').": ".user_getreal
 <TD><B><?php print $row_user['user_name']; ?></B></td>
 <td>
 <?php
-$em =& EventManager::instance();
 $display_change_password = true;
 $params = array('allow' => &$display_change_password);
 $em->processEvent('display_change_password', $params);
@@ -73,7 +74,6 @@ if ($display_change_password) {
 <TD><B><?php print $row_user['realname']; ?></B></td>
 <td>
 <?php
-$em =& EventManager::instance();
 $display_change_realname = true;
 $params = array('allow' => &$display_change_realname);
 $em->processEvent('display_change_realname', $params);
@@ -89,7 +89,6 @@ if ($display_change_realname) {
 <TD><B><?php print $row_user['email']; ?></B></td>
 <td>
 <?php
-$em =& EventManager::instance();
 $display_change_email = true;
 $params = array('allow' => &$display_change_email);
 $em->processEvent('display_change_email', $params);
@@ -104,7 +103,7 @@ if ($display_change_email) {
 $GLOBALS['account_pi_entry_label']  = array();
 $GLOBALS['account_pi_entry_value']  = array();
 $GLOBALS['account_pi_entry_change'] = array();
-$em =& EventManager::instance();
+
 $em->processEvent('account_pi_entry', array('user_id' => db_result($res_user,0,'user_id')));
 foreach($GLOBALS['account_pi_entry_label'] as $key => $label) {
     $value  = $GLOBALS['account_pi_entry_value'][$key];

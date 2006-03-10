@@ -14,7 +14,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook('search_type', 'ldapSearch', false);
 
         // Authentication
-        $this->_addHook('session_login_valid', 'authenticate', false);
+        $this->_addHook('session_before_login', 'authenticate', false);
         
         // Login
         $this->_addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
@@ -235,9 +235,13 @@ class LdapPlugin extends Plugin {
             $GLOBALS['user_home_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
 
             $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
-            $link = $this->buildLinkToDirectory($lr, $lr->getLogin());
-
-            $GLOBALS['user_home_pi_entry_value'][$this->getId()] = $link;
+            if($lr) {
+                $link = $this->buildLinkToDirectory($lr, $lr->getLogin());
+                $GLOBALS['user_home_pi_entry_value'][$this->getId()] = $link;
+            }
+            else {
+                $GLOBALS['user_home_pi_entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+            }
         }            
     }     
 
