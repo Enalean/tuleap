@@ -13,6 +13,7 @@ plugin_ldap	attributes	attributs
 plugin_ldap	ldap_login	Login sur l'annuaire d'entreprise&nbsp;:
 plugin_ldap	not_found	Erreur - Introuvable
 plugin_ldap	no_ldap_login_found	Login sur l'annuaire d'entreprise introuvable
+plugin_ldap	login_pls_use_ldap	Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de $1).
 #
 #-----------------------------------------------
 # Script: plugins/ldap/www/welcome.php

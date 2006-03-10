@@ -15,7 +15,8 @@ class LdapPlugin extends Plugin {
 
         // Authentication
         $this->_addHook('session_before_login', 'authenticate', false);
-        
+        $this->_addHook('session_after_login', 'allowCodexLogin', false);
+
         // Login
         $this->_addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
         $this->_addHook('login_after_form', 'loginAfterForm', false);
@@ -195,6 +196,25 @@ class LdapPlugin extends Plugin {
     }
     
     
+    /**
+     * @params $params $params['user_id'] IN
+     *                 $params['allow_codex_login'] IN/OUT
+     */
+    function allowCodexLogin($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            if(UserLdap::isLdapUser($params['user_id'])) {
+                $params['allow_codex_login'] = false;
+                $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
+                $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('plugin_ldap',
+                                                                          'login_pls_use_ldap',
+                                                                          array($GLOBALS['sys_name']));
+            }
+            else {
+                $params['allow_codex_login'] = true;
+            }
+        }
+    }
+
     /**
      * Hook
      */

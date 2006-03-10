@@ -36,6 +36,19 @@ class UserLdap {
         return $USER_RES["_".$user_id."_"];
     }     
 
+    function isLdapUser($user_id) {
+        $sql = 'SELECT user_id'
+            .' FROM user'
+            .' WHERE user_id='.((int)$user_id)
+            .' AND ldap_id != ""'
+            .' AND ldap_id IS NOT NULL';
+        $res = db_query($sql);
+        if(db_numrows($res) === 1) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 
      */

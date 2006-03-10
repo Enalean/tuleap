@@ -19,8 +19,7 @@ $ALL_USERS_TRACKERS = array();
 function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     $em =& EventManager::instance();
     $em->processEvent('session_before_login', array('loginname' => $form_loginname
-                                                   ,'passwd'=>$form_pw
-                                                   ,'allowpending'=>$allowpending));
+                                                   ,'passwd'=>$form_pw));
     
     $success = false;
     if(array_key_exists('auth_success', $GLOBALS)) {
@@ -28,7 +27,12 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     }
     
     if(!$success) {
-        $success = session_login_valid_db($form_loginname,$form_pw,$allowpending);        
+        $success = session_login_valid_db($form_loginname,$form_pw,$allowpending);
+        $allow_codex_login = true;
+        $params = array('user_id'           => $GLOBALS['auth_user_id'],
+                        'allow_codex_login' => &$allow_codex_login);
+        $em->processEvent('session_after_login', $params);
+        $success = $allow_codex_login;
     }
     
     if($success) {
