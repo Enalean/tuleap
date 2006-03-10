@@ -48,7 +48,7 @@ if (register_valid()) {
 
 ?>
 
-<?php if ($register_error) print "<p>$register_error"; ?>
+<?php if (isset($register_error) && $register_error) print "<p>$register_error"; ?>
 <form action="editsshkeys.php" method="post">
 <p><?php echo $Language->getText('account_editsshkeys', 'keys'); ?>
 <br><TEXTAREA rows=10 cols=60 name="form_authorized_keys">
