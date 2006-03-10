@@ -270,11 +270,18 @@ class LdapPlugin extends Plugin {
      */
     function accountPiEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
+            if(UserLdap::isLdapUser($params['user_id'])) {
+                $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
 
-            $GLOBALS['account_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
-            $GLOBALS['account_pi_entry_value'][$this->getId()] = $lr->getLogin();
-            $GLOBALS['account_pi_entry_change'][$this->getId()] = '';
+                $GLOBALS['account_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+                $GLOBALS['account_pi_entry_value'][$this->getId()] = $lr->getLogin();
+                $GLOBALS['account_pi_entry_change'][$this->getId()] = '';
+            }
+            else {
+                $GLOBALS['account_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+                $GLOBALS['account_pi_entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+                $GLOBALS['account_pi_entry_change'][$this->getId()] = '';
+            }
         }      
     }
 
