@@ -388,7 +388,12 @@ class LdapPlugin extends Plugin {
 
     function redirectToLogin($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            util_return_to('https://'.$GLOBALS['sys_https_host'].'/account/login.php');
+            if (isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
+                $host = 'https://'.$GLOBALS['sys_https_host'];
+            } else {
+                $host = 'http://'.$GLOBALS['sys_default_domain'];
+            }
+            util_return_to($host.'/account/login.php');
         }
     }
 
