@@ -46,3 +46,9 @@ For instance:
 <!ENTITY ChapterVersionControlWithCVS "">
 etc...
 -->
+
+<!-- Deprecated Legacy trackers won't be included -->
+<!ENTITY ChapterBugTrackingSystem "">
+<!ENTITY ChapterTaskManager "">
+<!ENTITY ChapterPatchManager "">
+<!ENTITY ChapterSupportRequestManager "">
