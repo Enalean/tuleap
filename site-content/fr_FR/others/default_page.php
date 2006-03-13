@@ -12,7 +12,7 @@
 //   Please replace this file with your own website
 
 $headers = getallheaders();
-$pieces = explode('.', $headers[Host]);
+$pieces = explode('.', $headers['Host']);
 $project_name = array_shift($pieces);
 $default_domain = join('.',$pieces);
 ?>
@@ -41,10 +41,10 @@ $default_domain = join('.',$pieces);
 <TABLE width="100%" border=0 cellspacing=0 cellpadding=0 bgcolor="" valign="center">
   <TR valign="top" bgcolor="#ece9e5">
     <TD valign="center">
-      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/codex_logo.png" vspace="" hspace="7" border=0 alt="Xerox Code eXchange Site"></A>
+      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/codex_logo.png" vspace="" hspace="7" border=0 alt="CodeX Site"></A>
     </TD>
     <TD width="99%"><!-- right of logo -->
-      <a href="http://www.xerox.com"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/organization_logo.png" align="right" alt="Xerox" hspace="5" vspace="7" border=0 width="51" height="48"></A>
+      <IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/organization_logo.png" align="right" alt="Organisation" hspace="5" vspace="7" border=0 width="51" height="48">
     </TD><!-- right of logo -->
   </TR>
   <TR><TD bgcolor="#543a48" colspan=2><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/blank.png" height=2 vspace=0></TD></TR>
@@ -69,7 +69,8 @@ $default_domain = join('.',$pieces);
 <TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#BCBCAD">
   <TR>
     <TD align="center"><FONT color="#ffffff"><B><SPAN class="maintitlebar">
-     Code eXchange est un site interne à Xerox. Tout ce qui est hebergé sur ce site est la propriété de Xerox. ©2001 Xerox Corporation.</SPAN></B></FONT>
+     Ce site web est hébergé par CodeX.
+     </SPAN></B></FONT>
     </TD>
   </TR>
 </TABLE>
