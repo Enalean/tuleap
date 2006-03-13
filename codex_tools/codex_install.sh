@@ -515,15 +515,23 @@ for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
 done
 
 # CodeX User Guide
-# a) copy the local parameters file in custom area
+# a) copy the local parameters file in custom area and customize it
 # b) create the html target directory
 # c) create the PDF target directory
 #
+
+$MKDIR -p  /etc/codex/documentation/user_guide/xml
+$CP $INSTALL_DIR/SF/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+# replace string patterns in ParametersLocal.dtd
+substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' "$sys_win_domain" 
+
 for lang in en_US fr_FR
 do
     $MKDIR -p  /etc/codex/documentation/user_guide/xml/$lang
     $CHOWN -R sourceforge.sourceforge /etc/codex/documentation
-    $CP $INSTALL_DIR/documentation/user_guide/xml/$lang/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
     $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
@@ -571,8 +579,7 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 
 todo "Customize /etc/codex/conf/local.inc"
-todo "Customize /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd"
-todo "Customize /etc/codex/documentation/user_guide/xml/fr_FR/ParametersLocal.dtd"
+todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /home/tools/backup_job and /home/tools/backup_subversion.sh"
 
 ##############################################

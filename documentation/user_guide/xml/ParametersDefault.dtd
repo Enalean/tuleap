@@ -15,8 +15,9 @@
 
 <!-- This DTD file contains entities that are used to in the user
 guide content. If you want to customize the content for your own site
-do not modify this file. Use the ParametersLocal.dtd file instead and
-redefine your entities there. If this file doesn't exist create it.-->
+do not modify this file. Use the 
+/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd file 
+instead and redefine your entities there. If this file doesn't exist create it.-->
 
 <!ENTITY SYS_DEFAULT_DOMAIN "codex.xerox.com">
 <!ENTITY SYS_CVS_HOST "cvs.codex.xerox.com">
