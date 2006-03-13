@@ -194,20 +194,20 @@ read -p "Windows domain (Samba): " sys_win_domain
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
 while [ "$rt_passwd" != "$rt_passwd2" ]; do
-    read -p "Password for user root: " rt_passwd
-    read -p "Retype root password: " rt_passwd2
+    read -s -p "Password for user root: " rt_passwd
+    read -s -p "Retype root password: " rt_passwd2
 done
 
 sf_passwd="a"; sf_passwd2="b";
 while [ "$sf_passwd" != "$sf_passwd2" ]; do
-    read -p "Password for user sourceforge: " sf_passwd
-    read -p "Retype sourceforge password: " sf_passwd2
+    read -s -p "Password for user sourceforge: " sf_passwd
+    read -s -p "Retype sourceforge password: " sf_passwd2
 done
 
 mm_passwd="a"; mm_passwd2="b";
 while [ "$mm_passwd" != "$mm_passwd2" ]; do
-    read -p "Password for user mailman: " mm_passwd
-    read -p "Retype mailman password: " mm_passwd2
+    read -s -p "Password for user mailman: " mm_passwd
+    read -s -p "Retype mailman password: " mm_passwd2
 done
 
 py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
@@ -624,7 +624,7 @@ fi
 # See if MySQL root account is password protected
 mysqlshow 2>&1 | grep password
 while [ $? -eq 0 ]; do
-    read -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
     mysqlshow --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
