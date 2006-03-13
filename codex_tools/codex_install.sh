@@ -523,10 +523,10 @@ done
 $MKDIR -p  /etc/codex/documentation/user_guide/xml
 $CP $INSTALL_DIR/SF/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
 # replace string patterns in ParametersLocal.dtd
-substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
-substitute '/etc/codex/documenta	tion/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' "$sys_win_domain" 
+substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' "$sys_win_domain" 
 
 for lang in en_US fr_FR
 do
