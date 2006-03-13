@@ -15,7 +15,7 @@ if (db_numrows($res_grp) < 1) {
 	$row_grp = db_fetch_array($res_grp);
 }
 
-print '<?xml version="1.0"?>
+print '<?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE sf_forum SYSTEM "'.get_server_url().'/exports/sf_forum_0.1.dtd">
 ';
 print "<group name=\"$row_grp[group_name]\">";
