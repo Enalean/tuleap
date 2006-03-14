@@ -34,9 +34,6 @@ if (isset($show_confirm) && $show_confirm) {
 		Finalize the db entries
 
 	*/
-        if (!isset($project_type)) {
-                $project_type = '';
-        }
 	$result=db_query("UPDATE groups SET status='P', ".
 		"short_description='".$form_short_description."', ".
 		"register_purpose='".htmlspecialchars($form_purpose)."', ".
@@ -44,8 +41,7 @@ if (isset($show_confirm) && $show_confirm) {
 		"patents_ips='".htmlspecialchars($form_patents)."', ".
 		"other_comments='".htmlspecialchars($form_comments)."', ".
 		"group_name='$form_full_name', license='$form_license', ".
-		"license_other='".htmlspecialchars($form_license_other)."', ".
-		"project_type='".$project_type."' ".
+		"license_other='".htmlspecialchars($form_license_other)."'".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
 	if (db_affected_rows($result) < 1) {

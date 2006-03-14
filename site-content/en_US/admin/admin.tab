@@ -122,7 +122,6 @@ admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
 admin_groupedit	group_type	Group Type
-admin_groupedit	project_type	Project Type
 admin_groupedit	incomplete	Incomplete
 admin_groupedit	active	Active
 admin_groupedit	pending	Pending

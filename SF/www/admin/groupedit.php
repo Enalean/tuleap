@@ -30,11 +30,9 @@ if ($Update) {
 		{ group_add_history ('http_domain',db_result($res_grp,0,'http_domain'),$group_id);  }
 	if (db_result($res_grp,0,'unix_box') != $form_box)
 		{ group_add_history ('unix_box',db_result($res_grp,0,'unix_box'),$group_id);  }
-	if (db_result($res_grp,0,'project_type') != $project_type)
-		{ group_add_history ('project_type',db_result($res_grp,0,'project_type'),$group_id);  }
 
 	db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
-		. "license='$form_license',type='$group_type',project_type='$project_type',"
+		. "license='$form_license',type='$group_type',"
 		. "unix_box='$form_box',http_domain='$form_domain' WHERE group_id=$group_id");
 
 	$feedback .= $Language->getText('admin_groupedit','feedback_info');
@@ -106,19 +104,6 @@ echo show_group_type_box('group_type',$row_grp['type']);
 <?php echo $Language->getText('global','no'); ?>
 </SELECT>
 
-<?
-if ( $sys_show_project_type ) {
-?>
-<p><B><?php echo $Language->getText('admin_groupedit','project_type'); ?>:</B><br>
-<?php
-
-echo show_project_type_box($row_grp['project_type']);
-
-?>
-<?
-}
-?>
-
 <P><B><?php echo $Language->getText('admin_groupedit','license'); ?></B>
 <SELECT name="form_license">
 <OPTION value="none"><?php echo $Language->getText('admin_groupedit','license_na'); ?>
@@ -154,15 +139,8 @@ print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp
 print "<br><u>".$Language->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";
 
 print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
-	
-if ( $GLOBALS['sys_show_project_type'] ) {
-    print "<br><u>".$Language->getText('admin_groupedit','project_type')."</u>: ";
-    $res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp['project_type']);
-    $row_type = db_fetch_array($res_type);
-    print $row_type['description'];
- }	
 
-	echo "<P><HR><P>";
+echo "<P><HR><P>";
 
 echo '
 <P>'.show_grouphistory ($group_id);

@@ -1016,7 +1016,6 @@ CREATE TABLE groups (
   patch_preamble text NOT NULL,
   pm_preamble text NOT NULL,
   xrx_export_ettm int(11) NOT NULL default '0',
-  project_type int(11) NOT NULL default '0',
   bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11)   NOT NULL default '1',
   cvs_events_mailing_list text NOT NULL,
@@ -2396,18 +2395,6 @@ CREATE TABLE project_field_value (
   KEY idx_project_fv_group_id (group_id),
   KEY idx_project_fv_value_id (value_id),
   KEY idx_project_fv_status (status)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'project_type' for project type
-#
-
-CREATE TABLE project_type (
-  project_type_id int(11) NOT NULL,
-  label varchar(30) NOT NULL default '',
-  description varchar(255) NOT NULL default '',
-  PRIMARY KEY  (project_type_id),
-  KEY project_label_idx (label)
 ) TYPE=MyISAM;
 
 # CREATE cvs support tables

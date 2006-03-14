@@ -262,10 +262,6 @@ $sys_max_size_upload = 16*1024*1024;
 $sys_max_size_attachment = 2*1024*1024;
 
 //
-// Show the project type
-$sys_show_project_type = 0;
-
-//
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 

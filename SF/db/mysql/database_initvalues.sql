@@ -70,7 +70,6 @@ INSERT INTO groups SET \
   patch_preamble = '', \
   pm_preamble = '', \
   xrx_export_ettm = '0', \
-  project_type = '0', \
   bug_allow_anon = '1', \
   cvs_tracker = '1', \
   cvs_events_mailing_list = '', \
@@ -113,7 +112,6 @@ INSERT INTO groups SET \
   patch_preamble = '', \
   pm_preamble = '', \
   xrx_export_ettm = '0', \
-  project_type = '0', \
   bug_allow_anon = '1', \
   cvs_tracker = '0', \
   cvs_events_mailing_list = '', \
@@ -157,7 +155,6 @@ INSERT INTO groups SET \
   patch_preamble = '', \
   pm_preamble = '', \
   xrx_export_ettm = '0', \
-  project_type = '0', \
   bug_allow_anon = '1', \
   cvs_tracker = '0', \
   cvs_events_mailing_list = '', \
@@ -1127,10 +1124,6 @@ INSERT INTO project_field_usage VALUES (102,100,1,1,1,110,NULL,NULL,NULL,NULL,NU
 #
 INSERT INTO project_field_usage VALUES (103,100,1,1,1,120,NULL,NULL,NULL,NULL,NULL);
 
-# None value for project_type
-#
-INSERT INTO project_type VALUES (100,'None','None');
-
 
 
 #****************************************************************
@@ -1727,7 +1720,7 @@ insert into doc_groups(groupname,group_id,group_rank) values ('Documents','1','1
 
 -- insert User Guide (english and french versions)
 insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,description,filename,filesize,filetype) values('&lt;a href=&quot;/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf&quot;&gt;&lt;b&gt;CodeX User Guide&lt;/b&gt;&lt;/a&gt;','','1095756374','1095756374','101','1','10','A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently. Available in <a href=\"/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf\">PDF </a>, <a href=\"/documentation/user_guide/html/en_US/index.html\">multi-page HTML </a> and <a href=\"/documentation/user_guide/html/en_US/index.html\">single-page HTML (2.7 MB)</a> format. [English Version]','',0,'text/html');
-insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,description,filename,filesize,filetype) values('&lt;a href=&quot;/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf&quot;&gt;&lt;b&gt;Guide de l\'Utilisateur CodeX&lt;/b&gt;&lt;/a&gt;','','1095756374','1095756374','101','1','20','Un guide complet décrivant tous les services de CodeX et comment les utiliser de manière optimale. Fournit également de nombreuses astuces et explications pour gérer efficacement votre projet CodeX. Disponible au format <a href=\"/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf\">PDF </a>, <a href=\"/documentation/user_guide/html/fr_FR/index.html\">HTML (multi-fichiers)</a> et <a href=\"/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html\">HTML (une page, 4,2 Mo)</a>. [Version française]','',0,'text/html');
+insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,description,filename,filesize,filetype) values('&lt;a href=&quot;/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf&quot;&gt;&lt;b&gt;Guide de l\'Utilisateur CodeX&lt;/b&gt;&lt;/a&gt;','','1095756374','1095756374','101','1','20','Un guide complet dï¿½crivant tous les services de CodeX et comment les utiliser de maniï¿½re optimale. Fournit ï¿½galement de nombreuses astuces et explications pour gï¿½rer efficacement votre projet CodeX. Disponible au format <a href=\"/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf\">PDF </a>, <a href=\"/documentation/user_guide/html/fr_FR/index.html\">HTML (multi-fichiers)</a> et <a href=\"/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html\">HTML (une page, 4,2 Mo)</a>. [Version franï¿½aise]','',0,'text/html');
 
 
 
@@ -2048,7 +2041,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Franï¿½ais','French_FR.tab','fr_FR','ISO-8859-1',1);
 
 
 -- install and enable pluginsadministration

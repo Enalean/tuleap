@@ -56,14 +56,6 @@
 	<B>Si licence autre&nbsp;:</B><BR>
 	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.db_result($result,0,'license_other').'</TEXTAREA>
 	<P>';
-	if ( $sys_show_project_type ) {
-		echo '
-		<B>Type de projet&nbsp;:</B><BR>
-		'.show_project_type_box('');
-	} else {
-		// Default value
-		$project_type = 100;
-	}
 	echo '
 	<P>
 	Si vous êtes d\'accord avec ces informations, votre projet sera créé. Si vous n\'êtes pas d\'accord pour l\'enregistrement, toutes les données seront détruites du système.

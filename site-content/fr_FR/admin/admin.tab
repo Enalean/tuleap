@@ -127,7 +127,6 @@ admin_groupedit	proj_edit	Editer les détails d'un projet
 admin_groupedit	proj_admin	Admin Projet
 admin_groupedit	proj_member	Voir/Editer les membres d'un projet
 admin_groupedit	group_type	Type de groupe
-admin_groupedit	project_type	Type de projet
 admin_groupedit	incomplete	Incomplet
 admin_groupedit	active	Actif
 admin_groupedit	pending	En attente

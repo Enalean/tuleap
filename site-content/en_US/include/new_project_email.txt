@@ -7,12 +7,6 @@
 // $Id$
 //
 
-//{{{define undefined vars
-if (!isset($message_project_type)) {
-   $message_project_type = '';
-}
-//}}}
-
 if (session_issecure()) {
         $web_server= "https://".$row_grp['unix_group_name'].".".$GLOBALS['sys_https_host'];
 } else {
@@ -31,7 +25,6 @@ Project Web Server:   '.$web_server.'
 CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$host.'
 Subversion Server:    svn.'.$row_grp['unix_group_name'].'.'.$host.'
 Shell Server:         '.$row_grp['unix_group_name'].'.'.$host.
-$message_project_type; // defined at upper level
 
 // Directions for project administrators on what to do next
 $message = $message .'

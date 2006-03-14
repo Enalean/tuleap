@@ -150,14 +150,7 @@ if (db_numrows($res_grp) < 1) {
         print "<br><u>".$Language->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";
     
         print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
-        
-        if ( $sys_show_project_type ) {
-            print "<br><u>".$Language->getText('admin_groupedit','project_type')."</u>: ";
-            $res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
-            $row_type = db_fetch_array($res_type);
-            print $row_type[description];
-        }	
-    
+            
         echo "<P><HR><P>";
     
     }

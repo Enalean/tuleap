@@ -12,7 +12,7 @@ require_once('common/mail/Mail.class');
 $Language->loadLanguageMsg('include/include');
 
 function send_new_project_email($group_id) {
-  global $sys_show_project_type,$Language;
+  global $Language;
 
 	$res_grp = db_query("SELECT * FROM groups WHERE group_id='$group_id'");
 
@@ -35,13 +35,7 @@ function send_new_project_email($group_id) {
     $nb_mail_failed = 0;
 	while ($row_admins = db_fetch_array($res_admins)) {
 
-        if ( $sys_show_project_type ) {
-            $res_type = db_query("SELECT * FROM project_type WHERE project_type_id = ". $row_grp[project_type]);
-            $row_type = db_fetch_array($res_type);
-            $message_project_type = "\n".$Language->getText('include_proj_email','proj_type').':         '.$row_type[description];
-        }
-    
-            $server = get_server_url();
+        $server = get_server_url();
         // $message is defined in the content file
         include($Language->getContent('include/new_project_email'));
     
