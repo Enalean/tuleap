@@ -1202,6 +1202,9 @@ $CHKCONFIG mailman on
 ##############################################
 # End of installation
 #
+todo "To customize the network gallery, edit the /home/site-content/en_US/layout/osdn_sites.txt file and modify it by respecting the same syntax :"
+todo "$osdn_sites[] = array('displayed site name' => 'URL');"
+todo ""
 todo "Add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'"
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."

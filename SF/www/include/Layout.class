@@ -13,7 +13,7 @@ require_once('common/include/Error.class');
 require_once('common/event/EventManager.class');
 
 //$Language->loadLanguageMsg('include/include');
-include($Language->getContent('layout/osdn_sites'));
+//include($Language->getContent('layout/osdn_sites'));
 
 /*
 
@@ -582,9 +582,13 @@ echo html_blankimage(5,100);
         if (!strpos($motd,"empty.txt")) { # empty.txt returned when no motd file found
             include($motd);
         } else {
-            $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_osdn','network_gallery').'&nbsp;:&nbsp;';
-            $output .= $this->_getOsdnRandpick($GLOBALS['osdn_sites'], 5);
-            $output .= '</span>';
+            // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
+            if (isset($GLOBALS['osdn_sites'])) {
+                $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_osdn','network_gallery').'&nbsp;:&nbsp;';
+                // if less than 5 sites are defined, we only display the min number
+                $output .= $this->_getOsdnRandpick($GLOBALS['osdn_sites'], min(5, count($GLOBALS['osdn_sites'])));
+                $output .= '</span>';
+            }
         }
 
         $output .= '</div>
@@ -621,21 +625,25 @@ echo html_blankimage(5,100);
         $output .= '<a href="'.get_server_url().'" class="osdn_codex_logo">';
         $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
         $output .= '<br /></a>';
-        $output .= '<select name="navbar" onChange="handle_navbar(selectedIndex,this)">';
-		$output .= '   <option>------------</option>';
-        reset ($GLOBALS['osdn_sites']);
-        while (list ($key, $val) = each ($GLOBALS['osdn_sites'])) {
-            list ($key, $val) = each ($val);
-            $output .= '   <option value="'.$val.'">'.$key.'</option>';
+        // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
+        if (isset($GLOBALS['osdn_sites'])) {
+            $output .= '<select name="navbar" onChange="handle_navbar(selectedIndex,this)">';
+            $output .= '   <option>------------</option>';
+            reset ($GLOBALS['osdn_sites']);
+            while (list ($key, $val) = each ($GLOBALS['osdn_sites'])) {
+                list ($key, $val) = each ($val);
+                $output .= '   <option value="'.$val.'">'.$key.'</option>';
+            }
+            $output .= '</select>';
+            $output .= '</div></form>';
         }
-        $output .= '</select>';
-        $output .= '</div></form>';
         $output .= '<noscript>';
         $output .= '<a href="'.get_server_url().'" class="osdn_codex_logo">';
         $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
         $output .= '</a><br />';
         $output .= '</noscript>
         <!-- end OSDN navdropdown -->';
+        
         return $output;
     }
     
