@@ -305,7 +305,7 @@ class ReferenceManager {
     // if it is not a reference (e.g. wrong keyword) return null;
     function &_getReferenceInstanceFromMatch($match) {
         // Analyse match
-        $key=$match[1];
+        $key=strtolower($match[1]);
         if ($match[2]) {
             // A target project name or ID was specified
             // remove trailing colon
@@ -332,7 +332,7 @@ class ReferenceManager {
         $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
         if (!$ref) return null;
         $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref);
-        $refInstance->computeGotoLink($match[1],$match[3],$ref_gid);
+        $refInstance->computeGotoLink($key,$match[3],$ref_gid);
         return $refInstance;
     }
 
