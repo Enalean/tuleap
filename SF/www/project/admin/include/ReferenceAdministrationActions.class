@@ -126,6 +126,11 @@ class ReferenceAdministrationActions extends Actions {
         // Load existing reference from DB
         $ref=& $reference_manager->loadReference($request->get('reference_id'),$request->get('group_id'));
 
+        if (!$ref) {
+            // Already deleted? User reloaded a page?
+            return;
+        }
+
         // WARNING: If it is a system reference, delete all occurences of the reference!
         if ($ref->isSystemReference()) {
             $result=$reference_manager->deleteSystemReference($ref);
