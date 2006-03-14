@@ -26,8 +26,10 @@ use strict;
 
 # Location of CodeX sources to analyse
 my $source_dir="../../SF";
+my $plugin_src_dir="../../plugins";
 # Language specific dir
 my $tab_dir="../../site-content/";
+my $plugin_tab_dir="../../plugins/*/site-content/";
 
 # end of configuration
 
@@ -60,16 +62,16 @@ if ($ARGV[0]) {
   } else { print $usage; }
 }
 
-my @files=`find $source_dir -name "*.class"`;
-push @files,`find $source_dir -name "*.php"`;
+my @files=`find $source_dir $plugin_src_dir -name "*.class"`;
+push @files,`find $source_dir $plugin_src_dir -name "*.php"`;
 push @files,"$source_dir/www/foundry";
 push @files,"$source_dir/www/projects";
 push @files,"$source_dir/www/users";
 
 
-print "***\n" unless ($silent_mode);
+print "***\n" if ($verbose_mode);
 print "*** Reading Source Code\n" unless ($silent_mode);
-print "***\n" unless ($silent_mode);
+print "***\n" if ($verbose_mode);
 
 # Read all messages in the source code.
 foreach my $filename (@files) {
@@ -96,16 +98,16 @@ foreach my $filename (@files) {
 }
 
 if (!$silent_mode) {
-  print "***\n";
+  print "***\n" if ($verbose_mode);
   print "*** Reading Tab files\n";
-  print "***\n";
+  print "***\n" if ($verbose_mode);
 }
 
-my @lang_tab_dir=`/bin/ls $tab_dir | grep -v CVS`;
+my @lang_tab_dir=`/bin/ls $tab_dir`;
 
 foreach my $my_tab_dir (@lang_tab_dir) {
   chomp $my_tab_dir;
-  print "*** $my_tab_dir\n\n" unless ($silent_mode);
+  print "\n*** $my_tab_dir\n" unless ($silent_mode);
   my $missing_keys=0;
   my $tab_lines=0;
   my $duplicate_keys=0;
@@ -114,7 +116,7 @@ foreach my $my_tab_dir (@lang_tab_dir) {
   my %tab_keys;
 
   # Read messages in tab files
-  my @tab_files=`find $tab_dir/$my_tab_dir -name "*.tab"`;
+  my @tab_files=`find $tab_dir/$my_tab_dir $plugin_tab_dir/$my_tab_dir -name "*.tab"`;
   foreach my $filename (@tab_files) {
     next if ($filename =~ /\/Base\.tab$/); # GForge file
     chomp $filename;
@@ -156,9 +158,9 @@ foreach my $my_tab_dir (@lang_tab_dir) {
 
 
   if (!$silent_mode) {
-    print "***\n";
+    print "***\n" if ($verbose_mode);
     print "*** Checking missing keys\n";
-    print "***\n";
+    print "***\n" if ($verbose_mode);
   }
   foreach my $key1 (keys %keys) {
     foreach my $key2 (keys %{ $keys{"$key1"}}) {
@@ -172,9 +174,9 @@ foreach my $my_tab_dir (@lang_tab_dir) {
 
 
   if (!$silent_mode) {
-    print "***\n";
+    print "***\n" if ($verbose_mode);
     print "*** Checking unused keys\n";
-    print "***\n";
+    print "***\n" if ($verbose_mode);
   }
   foreach my $key1 (keys %tab_keys) {
     foreach my $key2 (keys %{ $tab_keys{"$key1"}}) {
