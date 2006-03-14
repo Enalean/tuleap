@@ -145,6 +145,9 @@ class LdapPlugin extends Plugin {
         global $Language;
 
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            
+            $GLOBALS['auth_success'] = false;
+            
             $ldap =& LDAP::instance();
             
             // Perform LDAP authentication        
@@ -183,14 +186,14 @@ class LdapPlugin extends Plugin {
                 }	  
                 else {
                     // @todo: transfert to plugin site-content
-                    $feedback=$Language->getText('include_session','invalid_ldap_name');
+                    $GLOBALS['feedback'] .= $Language->getText('include_session','invalid_ldap_name') .'. ';
                 }
             }
             else {
                 // password is invalid or user does not exist
 
                 // @todo: transfert to plugin site-content
-                $feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('include_session','dir_authent').': '.$ldap->getErrorMessage();
+                $GLOBALS['feedback'] .= $GLOBALS['sys_org_name'].' '.$Language->getText('include_session','dir_authent').': '.$ldap->getErrorMessage() .'. ';
             }
         }
     }
