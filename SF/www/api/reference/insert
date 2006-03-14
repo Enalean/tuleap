@@ -36,7 +36,7 @@ if (!$request->get('text')) {
     # Empty string? return empty string...
     exit;
  }
-if (!$request->get('help')) {
+if ($request->get('help')) {
     echo $GLOBALS['Language']->getText('project_reference', 'insert_syntax');
     exit;
 }
