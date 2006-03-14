@@ -33,7 +33,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUserId($userId) {
-        $sql = sprintf("SELECT user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_id = %s",
+        $sql = sprintf("SELECT user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_id = %s",
 				$this->da->quoteSmart($userId));
         return $this->retrieve($sql);
     }
@@ -43,7 +43,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUserName($userName) {
-        $sql = sprintf("SELECT user_id, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_name = %s",
+        $sql = sprintf("SELECT user_id, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_name = %s",
 				$this->da->quoteSmart($userName));
         return $this->retrieve($sql);
     }
@@ -53,7 +53,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByEmail($email) {
-        $sql = sprintf("SELECT user_id, user_name, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE email = %s",
+        $sql = sprintf("SELECT user_id, user_name, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE email = %s",
 				$this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
@@ -63,7 +63,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUserPw($userPw) {
-        $sql = sprintf("SELECT user_id, user_name, email, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_pw = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_pw = %s",
 				$this->da->quoteSmart($userPw));
         return $this->retrieve($sql);
     }
@@ -73,7 +73,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByRealname($realname) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE realname = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE realname = %s",
 				$this->da->quoteSmart($realname));
         return $this->retrieve($sql);
     }
@@ -83,7 +83,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByRegisterPurpose($registerPurpose) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE register_purpose = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE register_purpose = %s",
 				$this->da->quoteSmart($registerPurpose));
         return $this->retrieve($sql);
     }
@@ -93,7 +93,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByStatus($status) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE status = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE status = %s",
 				$this->da->quoteSmart($status));
         return $this->retrieve($sql);
     }
@@ -103,7 +103,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByShell($shell) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE shell = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE shell = %s",
 				$this->da->quoteSmart($shell));
         return $this->retrieve($sql);
     }
@@ -113,7 +113,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUnixPw($unixPw) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_pw = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_pw = %s",
 				$this->da->quoteSmart($unixPw));
         return $this->retrieve($sql);
     }
@@ -123,7 +123,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUnixStatus($unixStatus) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_status = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_status = %s",
 				$this->da->quoteSmart($unixStatus));
         return $this->retrieve($sql);
     }
@@ -133,7 +133,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUnixUid($unixUid) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_uid = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_uid = %s",
 				$this->da->quoteSmart($unixUid));
         return $this->retrieve($sql);
     }
@@ -143,7 +143,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByUnixBox($unixBox) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_box = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE unix_box = %s",
 				$this->da->quoteSmart($unixBox));
         return $this->retrieve($sql);
     }
@@ -152,8 +152,8 @@ class UserDao extends DataAccessObject {
     * Searches User by LdapName 
     * @return DataAccessResult
     */
-    function & searchByLdapName($ldapName) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE ldap_name = %s",
+    function & searchByLdapId($ldapName) {
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE ldap_id = %s",
 				$this->da->quoteSmart($ldapName));
         return $this->retrieve($sql);
     }
@@ -163,7 +163,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByAddDate($addDate) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE add_date = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE add_date = %s",
 				$this->da->quoteSmart($addDate));
         return $this->retrieve($sql);
     }
@@ -173,7 +173,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByConfirmHash($confirmHash) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE confirm_hash = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE confirm_hash = %s",
 				$this->da->quoteSmart($confirmHash));
         return $this->retrieve($sql);
     }
@@ -183,7 +183,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMailSiteupdates($mailSiteupdates) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE mail_siteupdates = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE mail_siteupdates = %s",
 				$this->da->quoteSmart($mailSiteupdates));
         return $this->retrieve($sql);
     }
@@ -193,7 +193,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMailVa($mailVa) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE mail_va = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE mail_va = %s",
 				$this->da->quoteSmart($mailVa));
         return $this->retrieve($sql);
     }
@@ -203,7 +203,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByStickyLogin($stickyLogin) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE sticky_login = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE sticky_login = %s",
 				$this->da->quoteSmart($stickyLogin));
         return $this->retrieve($sql);
     }
@@ -213,7 +213,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByAuthorizedKeys($authorizedKeys) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE authorized_keys = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE authorized_keys = %s",
 				$this->da->quoteSmart($authorizedKeys));
         return $this->retrieve($sql);
     }
@@ -223,7 +223,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByEmailNew($emailNew) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE email_new = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE email_new = %s",
 				$this->da->quoteSmart($emailNew));
         return $this->retrieve($sql);
     }
@@ -233,7 +233,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByPeopleViewSkills($peopleViewSkills) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE people_view_skills = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE people_view_skills = %s",
 				$this->da->quoteSmart($peopleViewSkills));
         return $this->retrieve($sql);
     }
@@ -243,7 +243,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByPeopleResume($peopleResume) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE people_resume = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE people_resume = %s",
 				$this->da->quoteSmart($peopleResume));
         return $this->retrieve($sql);
     }
@@ -253,7 +253,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByTimezone($timezone) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, windows_pw, fontsize, theme, language_id FROM user WHERE timezone = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, windows_pw, fontsize, theme, language_id FROM user WHERE timezone = %s",
 				$this->da->quoteSmart($timezone));
         return $this->retrieve($sql);
     }
@@ -263,7 +263,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByWindowsPw($windowsPw) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id FROM user WHERE windows_pw = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id FROM user WHERE windows_pw = %s",
 				$this->da->quoteSmart($windowsPw));
         return $this->retrieve($sql);
     }
@@ -273,7 +273,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByFontsize($fontsize) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, theme, language_id FROM user WHERE fontsize = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, theme, language_id FROM user WHERE fontsize = %s",
 				$this->da->quoteSmart($fontsize));
         return $this->retrieve($sql);
     }
@@ -283,7 +283,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByTheme($theme) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, language_id FROM user WHERE theme = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, language_id FROM user WHERE theme = %s",
 				$this->da->quoteSmart($theme));
         return $this->retrieve($sql);
     }
@@ -293,7 +293,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByLanguageId($languageId) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme FROM user WHERE language_id = %s",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme FROM user WHERE language_id = %s",
 				$this->da->quoteSmart($languageId));
         return $this->retrieve($sql);
     }
@@ -303,8 +303,8 @@ class UserDao extends DataAccessObject {
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_name, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $windows_pw, $fontsize, $theme, $language_id) {
-		$sql = sprintf("INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_name, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $windows_pw, $fontsize, $theme, $language_id) {
+		$sql = sprintf("INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 				$this->da->quoteSmart($user_name),
 				$this->da->quoteSmart($email),
 				$this->da->quoteSmart($user_pw),
@@ -316,7 +316,7 @@ class UserDao extends DataAccessObject {
 				$this->da->quoteSmart($unix_status),
 				$this->da->quoteSmart($unix_uid),
 				$this->da->quoteSmart($unix_box),
-				$this->da->quoteSmart($ldap_name),
+				$this->da->quoteSmart($ldap_id),
 				$this->da->quoteSmart($add_date),
 				$this->da->quoteSmart($confirm_hash),
 				$this->da->quoteSmart($mail_siteupdates),
