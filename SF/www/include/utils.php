@@ -1274,10 +1274,9 @@ function util_make_return_to_url($url) {
     }
     else {
         if (session_issecure()
-            && $GLOBALS['sys_https_host'] != ""
             && ($GLOBALS['sys_force_ssl']
                 || !$GLOBALS['sys_stay_in_ssl']
-                || $HTTP_POST_VARS['stay_in_ssl']
+                || $_REQUEST['stay_in_ssl']
                 )) {
             $server_url = 'https://'.$GLOBALS['sys_https_host'];
         }

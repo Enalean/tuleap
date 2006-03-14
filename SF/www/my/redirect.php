@@ -33,14 +33,9 @@ if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
     // if return_to URL start with a protocol name then take as is
     // otherwise prepend the proper http protocol
     
-    $return_to = trim(rtrim($_REQUEST['return_to']));
+    $return_to = trim($_REQUEST['return_to']);
 
-    $use_ssl = session_issecure()
-        && $GLOBALS['sys_https_host'] != ""
-        && ($GLOBALS['sys_force_ssl']
-            || !$GLOBALS['sys_stay_in_ssl']
-            || $HTTP_POST_VARS['stay_in_ssl']
-            );
+    $use_ssl = session_issecure() || $GLOBALS['sys_force_ssl'];
     
     if ($use_ssl) {
         $server_url = "https://".$GLOBALS['sys_https_host'];
