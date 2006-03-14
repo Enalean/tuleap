@@ -642,21 +642,11 @@ release space (runs suid root because it must read/write in all project
 space
 areas)</li>
         <li> <b>gensmbpasswd:</b> given a password in clear text it
-generates MD4 encrypted password. This executable is used when a new
+generates MD4 encrypted password. This perl script is used when a new
 account is created
 on CodeX. The encrypted Windows password is stored in the User table
 for later
 re-use and the clear text password is immediately discarded.</li>
-        <li> <b>syncmail:</b> a Python script that can be used by any
-CVS
-repository owner to generate e-mail notification of changes committed
-to
-a CVS repository. For a example of how to use this script&nbsp;See the <a
- href="http://cvs.codex.xerox.com/cgi-bin/cvsweb.cgi/?cvsroot=codex">CVS
-repository
-of the CodeX project</a> for an example of how to set up email
-notification
-(look at CVSROOT/loginfo and CVSROOT/commitinfo files)</li>
         <li><span style="font-weight: bold;">gotohell:</span> a small
 shell script used to redirect some emails (e.g noreply address) to a
 black hole!<br>
@@ -702,9 +692,10 @@ defined by CVS and must not be touched. <br>
       <br>
 By default CVS servers on CodeX are configured to perform all
 transactions through the pserver protocol. CodeX can be tuned to use
-the ssh tunnelling protocol instead. Ask the Xerox CodeX team for more
+the ssh tunnelling protocol, or the sserver encrypted protocol 
+(with CVSNT) instead. Ask the Xerox CodeX team for more
 information. If secured transaction and fine grain access permissions
-are high on your&nbsp; list of preoject requirements, we strongly
+are high on your&nbsp; list of project requirements, we strongly
 advise you to consider the use of Subversion instead of CVS.<br>
       <p>Exceptions to these rules are: </p>
       <ul>
@@ -1151,7 +1142,7 @@ MySQL is fast, lightweight and very robust. <br>
 The CodeX database is created once when the CodeX software is first
 installed. The scripts used to create and populate the database are
 located in <span style="font-family: monospace;">SF/db/mysql</span>. <br>
-<b><font color="#ff0000">Remark:</font></b> NEVER EVER run this SQL
+<b><font color="#ff0000">Remark:</font></b> NEVER EVER run these SQL
 scripts
 once the DB has been created or it will destroy all of your existing
 data !! <br>
@@ -1831,11 +1822,11 @@ to quickly and easily put in place new bug fixes, new features while
 minimizing the server downtime. The CodeX software is made of PHP and
 Perl code that is delivered in source form to our customers. The CodeX
 software resides in the <span style="font-family: monospace;">/home/httpd</span>
-directory and it is formatted in such a way that it behaves like a CVS
+directory and it is formatted in such a way that it behaves like a Subversion
 working copy that can be remotely updated when ever the system
 administrator decide to do so.<br>
 <br>
-As a CodeX customer you will be entitled to receive the CodeX CVS
+As a CodeX customer you will be entitled to receive the CodeX Subversion
 events by email. They are reports about the defect that have been
 solved and the new feature that have been implemented in CodeX.
 Benefiting from these new features is just a matter of update your
@@ -1843,9 +1834,8 @@ CodeX working copy. Here is how you should proceed:<br>
 <br>
 </p>
 <ul>
-  <li>First you should obtain the pointer to the CodeX source code
-repository that you must use for your updates. This pointer is called
-the <span style="font-style: italic;">CVS Root</span> and is different
+  <li>First you should make sure that the CodeX source code
+repository that you must use for your updates is accessible. This repository is different
 depending whether&nbsp; you operate a CodeX site on the Xerox Intranet
 or on your own customer network :</li>
 </ul>
@@ -1861,49 +1851,42 @@ Site Location<br>
       </td>
       <td
  style="vertical-align: top; font-weight: bold; background-color: rgb(204, 204, 204);">CodeX
-repository pointer (CVS Root)<br>
+repository pointer<br>
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">Xerox Intranet<br>
       </td>
-      <td style="vertical-align: top;">:pserver:<span
- style="font-style: italic;">username</span>@cvs.codex.codex.xerox.com:/cvsroot/codex</td>
+      <td style="vertical-align: top;">http://svn.codex.codex.xerox.com/svnroot/codex</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">Customer Extranet<br>
       </td>
-      <td style="vertical-align: top;">:pserver:<span
- style="font-style: italic;">username</span>@cvs.codex.partners.xrce.xerox.com:/cvsroot/codex<br>
+      <td style="vertical-align: top;">https://partners.xrce.xerox.com:/svnroot/codex<br>
       </td>
     </tr>
   </tbody>
 </table>
-<div style="text-align: center;">(where <span
- style="font-style: italic;">username </span>is your login on the
-CodeX support site given to you when your support contract was activated<span
- style="font-style: italic;">)</span><br>
-</div>
 <br>
 </div>
 <ul>
   <li>Log to the 'sourceforge' CodeX shell account on the CodeX server</li>
   <li>Go to the CodeX top directory: <span
  style="font-family: monospace;">cd /home/httpd</span></li>
-  <li>Setup the CVSROOT environment variable with the appropriate value
-(see table above)</li>
-  <li>Launch a dry-run CVS update command to get a list of all the
+  <li>Launch an SVN status command to get a list of all the
 files that needs to be updated on your local CodeX directory<br>
     <br>
-    <span style="font-family: monospace;">cvs -nq up -Pd<br>
+    <span style="font-family: monospace;">svn status -u --username  <span style="font-style: italic;">username </span> </span>
+<br>(where <span style="font-style: italic;">username </span>is your login on the
+CodeX support site given to you when your support contract was activated)<br>
     <br>
     </span></li>
   <li>At that stage you must carefully review the file list and look if
-the file SF/etc/local.inc.dist or&nbsp; SF/db/upgrades/dbxxxx.sql
+the files SF/etc/local.inc.dist, SF/etc/httpd.conf.dist or SF/db/upgrades/dbxxxx.sql
 are mentioned in the list. If this is so go to the next step. If not
 then it 's a normal update operation that you can do with a simple:<br>
     <br>
-    <span style="font-family: monospace;">cvs -q up -Pd<br>
+    <span style="font-family: monospace;">svn update --username  <span style="font-style: italic;">username </span><br>
     <br>
     </span>... and that's all you have to do!!<br>
     <br>
@@ -1914,31 +1897,30 @@ differences with your own local.inc.dist and make the changes in your <span
  style="font-family: monospace;">/etc/local.inc</span> file
 accordingly. To see what has changed in the local.inc.dist file type:<br>
     <br>
-    <span style="font-family: monospace;">cvs diff
+    <span style="font-family: monospace;">svn diff --username  <span style="font-style: italic;">username </span>
 SF/etc/local.inc.dist # look at the changes and keep them in a safe
 place<br>
-cvs -q up
--Pd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+svn update --username  <span style="font-style: italic;">username</span>&nbsp;
 # do the real update<br>
 vi
-/etc/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/etc/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # edit your CodeX configuration file and merge the changes<br>
     </span><br>
-then do the real cvs update as above.<br>
+then do the real update as above.<br>
     <br>
   </li>
+  <li>Similarly, if <span style="font-family: monospace;">SF/etc/httpd.conf.dist</span> is in the list of files to be updated, you should look at the differences with your own httpd.conf.dist, then merge them in your <span style="font-family: monospace;">/etc/httpd/conf/httpd.conf</span>.
   <li>If one or several <span style="font-family: monospace;">SF/db/upgrades/dbxxxx.sql</span>
 or <span style="font-family: monospace;">SF/db/upgrades/dbxxxx.pl</span>
 (where xxxx is a four digit number) are listed then it means you have
 to perform some update on the CodeX database structure. You must first
 do the real update and then <span
- style="text-decoration: underline; font-weight: bold;">apply the each
+ style="text-decoration: underline; font-weight: bold;">apply each
 database patch in order starting with the smallest xxxx number first
 and growing</span><br
  style="text-decoration: underline; font-weight: bold;">
     <br>
-    <span style="font-family: monospace;">cvs -q up
--Pd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span style="font-family: monospace;">svn update --username  <span style="font-style: italic;">username </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # do the real update<br>
     </span><span style="font-family: monospace;"><span
  style="font-family: monospace;">cd SF/db/upgrades</span></span><span

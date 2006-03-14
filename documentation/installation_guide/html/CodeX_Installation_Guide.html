@@ -33,8 +33,8 @@ The <a
  href="/documentation/installation_guide/html/CodeX_Installation_Guide.html">CodeX
 Installation Guide</a> covers the various steps that one has to go
 through to install and configure the CodeX software. After or while you
-ar reading the installation guide we also recommend that you read the <a
- href="file:///documentation/administration_guide/html/CodeX_Administration_Guide.html">CodeX
+are reading the installation guide we also recommend that you read the <a
+ href="/documentation/administration_guide/html/CodeX_Administration_Guide.html">CodeX
 Administration Guide</a> which focuses on the various tasks to perform
 to properly administrate a CodeX site on a daily basis. <br>
 <br>
@@ -45,7 +45,7 @@ takes care of most of the installation process described below. After
 completion the installation script will inform you of the remaining
 configuration that must be done manually.<br>
 <h1><a name="Linux_OS_Installation"></a>Linux OS Installation</h1>
-CodeX 2.2 is designed to run on on a PC server (Intel x86 CPU or
+CodeX is designed to run on on a PC server (Intel x86 CPU or
 compatible) running Linux RedHat Linux Enterprise Server 3.0 wether WS,
 ES or AS version. Other distributions are not supported by Xerox.<br>
 <br>
@@ -210,8 +210,8 @@ Administration Guide</a>.<br>
 When you setup your filesystem make sure that the followind top
 directories are located on file system with enough storage space:<br>
 <ul>
-  <li>/cvsroot: where the CVS repositories reside (if you want to place
-it elsewhere make sure /cvsroot is a link pointing to the real location)</li>
+  <li>/cvsroot and /svnroot: where the CVS and SVN repositories reside (if you want to place
+them elsewhere make sure /cvsroot or /svnroot is a link pointing to the real location)</li>
   <li>/home : this one holds the user personal directories, project
 directories (project web site), ftp spaces (file release and anonymous
 storage space).&nbsp; </li>
@@ -367,17 +367,30 @@ cvs tracking script that feed the CodeX database<br>
       </td>
     </tr>
     <tr>
-      <td colspan="4" rowspan="1" valign="top"><b>Log files
-(http/cvs/ftp traffic archive)</b><br>
-      </td>
-    </tr>
-    <tr>
       <td valign="top">/cvsroot<br>
       </td>
       <td valign="top">sourceforge.sourceforge</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top">Where all CVS repo reside.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" rowspan="1" valign="top"><b>Subversion directory</b><br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/svnroot<br>
+      </td>
+      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">drwxr-xr-x<br>
+      </td>
+      <td valign="top">Where all Subversion repositories reside.<br>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" rowspan="1" valign="top"><b>Log files
+(http/cvs/ftp traffic archive)</b><br>
       </td>
     </tr>
     <tr>
@@ -501,13 +514,13 @@ Packages<br>
       </td>
       <td valign="top">Install httpd and mod_ssl RPMs.&nbsp;
 httpd-devel and httpd-manual RPMs are
-optional<br>
+optional. This is a patched version of Apache 2.0: do not use a standard package.<br>
       </td>
     </tr>
     <tr>
       <td valign="top">cvs or cvsnt<br>
       </td>
-      <td valign="top">Install the cvs or cvsnt package<br>
+      <td valign="top">Install the cvs or cvsnt package. If you use CVS, make sure you use a package provided with CodeX: it is a patched version.<br>
       </td>
     </tr>
     <tr>
@@ -576,6 +589,7 @@ Install the following packages: MySQL, MySQL-client and MySQL-shared<br>
       <td valign="top">The following RPMs must be installed <br>
       <ul>
         <li>perl-suidperl</li>
+        <li>perl-Crypt-SmbHash</li>
         <li>wu-ftpd</li>
         </li>
       </ul>
@@ -687,7 +701,7 @@ domain is hosted on the central CodeX server. <br>
 Your DNS zone (called codex.zone) definition file must be placed in <tt>/var/named/</tt>
 because this path is hardcoded in the <tt>/home/httpd/SF/utils/underworld-dummy/dns_conf.pl</tt>
 script that is used to automatically generate the DNS aliases for
-project sites and per project CVS server. <br>
+project sites and per project CVS and SVN servers. <br>
 <br>
 As an example here is how the codex.zone file looks like on the CodeX
 central site of the Xerox Corporation. Adapt the file to your own needs:<br>
@@ -781,7 +795,7 @@ IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 As you can see the CodeX central hosts all the CodeX services on a
 single physical
 server. Hence the alias to the atlas machine name for all other logical
-servers (CVS, mail, download, shell account,etc...). The reason for
+servers (CVS, SVN, mail, download, shell account,etc...). The reason for
 defining
 those aliases is that at the site grows you are given the flexibility
 to
@@ -945,7 +959,7 @@ A couple of remarks on the some the variables in local.inc:<br>
 <ul>
   <li><b>Machine names</b>: The local.inc file is included by all CodeX
 PHP scripts and contains global variables that are used throughout the
-site. This file is also by the backend Perl scripts (see below).
+site. This file is also read by the backend Perl scripts and Python scripts (see below).
 &nbsp;You'll see that CodeX allows you to give distinct machine names
 that will be in charge of the various CodeX services (Web front end,
 CVS, Shell account, list manager,etc.). Even if you run all those
@@ -964,9 +978,7 @@ the password for the MySQL sourceforge user here so make sure you have
 set the file permission of local.inc correctly (see above)</li>
   <li><b>CodeX News group</b> ($sys_news_group): this is a reserved
 CodeX group_id. Leave this value unchanged.</li>
-  <li><b>Site language</b> ($sys_lang): right now only the US English
-is
-supported so leave this variable as is</li>
+  <li><b>Site language</b> ($sys_lang): right now, CodeX supports two languages: English (en_US) and French (fr_FR).</li>
   <li><span style="font-weight: bold;">HTTPS host </span>($sys_https_host):
 if your Apache server is SSL enabled (HTTPS protocol) set this variable
 with name/port number of the host to talk to. In general it is the same
@@ -989,14 +1001,12 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
    php_value upload_max_file_size 20M
    php_value upload_tmp_dir /home/large_tmp</pre>
   </li>
+  <li>Use /home/large_tmp as temporary directory to store uploaded file:
+   <pre>   php_admin_value upload_tmp_dir /home/large_tmp</pre>
+  </li>
   <li>phpWiki also needs this parameter to avoid warnings:<br>
     <pre>   php_value allow_call_time_pass_reference on</pre>
   </li>
-</ul>
-You still need to setup a variable in <b>/etc/php.ini</b> (because it is system-wide):
-<ul>
-  <li>Use /home/large_tmp as temporary directory to store uploaded file:
-   <pre>upload_tmp_dir=/home/large_tmp</pre>
 </ul>
 <h2>Modifying maximum size of uploaded files</h2>
 <p>
@@ -1201,7 +1211,7 @@ edit this file by hand**<br>
 <u>/home/httpd/SF/utils/underworld-dummy/aliases.zone</u><br>
 <br>
 This is where you can define CodeX level aliases like codex-contact,
-codex-admin, etc. This file is currently under cvs control so if you
+codex-admin, etc. This file is currently under version control so if you
 are
 managing your own site it might be a better idea to add these aliases
 in
@@ -1293,8 +1303,8 @@ access
 to Windows shared resources like the ftp Incoming directory, the user
 personal directory and the project directory the user belong to.<br>
 <br>
-This file is quite difficult to compile so get it from the location
-mentioned at the beginning of this section. Ownership and permission
+This file used to be quite difficult to compile, but it has been rewritten as a Perl script.
+Ownership and permission
 must be:<br>
 <pre>&nbsp;&nbsp;&nbsp; 	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 892963 Oct&nbsp; 7 21:37 /usr/local/bin/gensmbpasswd</pre>
 <h2>gotohell</h2>
@@ -1346,7 +1356,7 @@ CODEX because it is the name of the central site)<br>
 <ul>
   <li>First make sure the CodeX specific RPMs for Subversion are installed on
 your CodeX server (see the section on <a
- href="file:///tmp/CodeX_Installation_Guide.html#RPM_Packages">RPM
+ href="#RPM_Packages">RPM
 Packages</a>)</li>
   <li>Create the <tt>/svnroot</tt> directory and the <span
  style="font-family: monospace;">/etc/httpd/conf/htpasswd</span> as
@@ -1673,7 +1683,7 @@ following mysql command:<br>
     <pre>$ mysql -u sourceforge sourceforge -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/bin/false' ;</pre>
   </li>
 </ul>
-Note: if you do this then you must use the pserver protocol to access
+Note: if you do this then you must use the pserver or sserver protocols to access
 the cvs repository as the access through ssh requires a shell account
 to be activated.<br>
 <br>
@@ -1838,7 +1848,7 @@ http://your.codex_site.url/projects/codex.<br>
 All documents stored in the document manager of the 'Admin Project'
 will automatically appear under 'Site Documentation' (except those
 documents marked 'private' or hidden'. See the <a
- href="http://codex.xerox.com/documentation/user_guide/html/en_US/DocumentManager.html">CodeX
+ href="/documentation/user_guide/html/en_US/DocumentManager.html">CodeX
 User Guide</a> for more details on the Document Manager service. This
 is
 also why you will not find the Site Documentation of the CodeX central
@@ -1860,13 +1870,13 @@ directories.<br>
 The User Guide contain references to the company name, server name
 running CodeX,etc. These pieces of information vary from one site to
 another. Therefore a specific file has been introduced at <span
- style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd</span>
+ style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/ParametersLocal.dtd</span>
 that you can use to customize the&nbsp; content of the CodeX User
 Guide. To do so:<br>
 <ul>
-  <li>Copy <span style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/en_US/ParametersLocal.dtd
+  <li>Copy <span style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/ParametersLocal.dtd
 to </span><span style="font-family: monospace;"><span
- style="font-family: monospace;">/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd</span></span></li>
+ style="font-family: monospace;">/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
   <li>Edit the file you just copied and redefine the XML entities that
 govern
 the site specific information. For a list of the available XML entities
@@ -1895,24 +1905,17 @@ software packages to install</a>.<br>
 <h2>Project Web Site</h2>
 When a project is registered on CodeX a new web site is created for
 that project. A default home page is installed for that project from
-the <span style="font-family: monospace;">SF/utils/default_page.php</span>
-file. You want to create your own custom
-file for your own CodeX site. To do so:<br>
-<ul>
-  <li>create a directory named <span style="font-family: monospace;">custom</span>
-in <span style="font-family: monospace;">SF/utils</span> if it doesn't
-exist<br>
-  </li>
-  <li>copy the <span style="font-family: monospace;">SF/utils/default_page.php</span>
-in the <span style="font-family: monospace;">SF/utils/custom</span>
+the <span style="font-family: monospace;">/home/httpd/site-content/en_US/others/default_page.php</span>
+file. You may want to create your own custom
+file for your own CodeX site. To do so, copy the <span style="font-family: monospace;">
+/home/httpd/site-content/en_US/others/default_page.php</span> file
+in the <span style="font-family: monospace;">/etc/codex/site-content/en_US/others/</span>
 directory if not already
-there<br>
-  </li>
-  <li>edit the custom file it and customize it to your liking<br>
-  </li>
-</ul>
+there. Then, edit the custom file and customize it to your liking<br>
 <hr>
 <h1>LDAP Authentication and Querying</h1>
+<p><b>NOTE: LDAP settings have changed in CodeX 2.8.</b>
+<br><b>This documentation is only valid for CodeX 2.6. It will be updated soon</b>
 <h2>LDAP information from the company directory</h2>
 <p>
 While visiting a user information page on CodeX, you have the ability
@@ -2029,12 +2032,23 @@ that</tt><br>
   <tt># Run on Monday at 1am</tt><br>
   <tt>0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root;
 ./db_project_weekly_metric</tt><tt>.pl)</tt><br>
+  <tt># daily incremental backup of subversion repositories</tt><br>
+  <tt>45 23 * * 1-6 /home/tools/backup_subversion.sh -i</tt><br>
+  <tt>#</tt><br>
+  <tt># weekly full backup of subversion repositories (0:15 on Sunday)</tt><br>
+  <tt>15 0 * * Sun /home/tools/backup_subversion.sh</tt><br>
+  <tt>#</tt><br>
+  <tt># weekly backup preparation (mysql shutdown, file dump and restart)</tt><br>
+  <tt>45 0 * * Sun /home/tools/backup_job</tt><br>
   <tt>#</tt><br>
   <tt># Delete all files in FTP incoming that are older than 2 weeks
 (336 hours)</tt><br>
   <tt>#</tt><br>
   <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming</tt><br>
   <tt>#</tt><br>
+  <tt>#</tt><br>
+  <tt># Once a minute make sure that the setuid bit is set on some critical files</tt><br>
+  <tt>* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum fileforge)</tt><br>
   <br>
 </blockquote>
 Please note that your own root crontab should probably contain some
@@ -2348,7 +2362,7 @@ likely)</li>
   <li>From your own account create a new project 'Guinea Pig'
 (shortname: gpig)&nbsp; that you will use as a test project for anybody
 who wants to experiment with the site. Setup the project completely,
-approve it and then set up the CVS repository with some sample code,
+approve it and then set up the CVS or SVN repository with some sample code,
 create a release, download it,etc...</li>
   <li>Under the 'CodeX Project' create a piece of news to announce the
 launch of the CodeX site and promote the news to the front page.<br>
