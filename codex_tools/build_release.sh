@@ -1,8 +1,8 @@
 #!/bin/sh
 PACKAGE_DIR=/root/packages-rhel3
 BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 2.6sup"
-ISO_FILE="/tmp/codex-2.6sup.iso"
+ISO_LABEL="CodeX 2.8sup"
+ISO_FILE="/tmp/codex-2.8sup.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -33,11 +33,11 @@ cd $PACKAGE_DIR
 $CP -af $PACKAGE_DIR/CodeX/src/codex_tools/codex_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codex_install.sh
 
-# Copy the 2.4 to 2.6 migration script at the top directory
-echo "Copying the CodeX 2.4 to 2.6 migration script..."
+# Copy the 2.6 to 2.8 migration script at the top directory
+echo "Copying the CodeX 2.6 to 2.8 migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_26.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_26.sh
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_28.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_28.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
@@ -76,7 +76,7 @@ $CHOWN root.root ../codex.tgz
 cd $BUILD_DIR
 cat <<'EOF' >README
 CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
 http://codex.xerox.com
 
 The CodeX software From Xerox aims at providing large companies with a
@@ -125,14 +125,14 @@ EOF
 # create a INSTALL file at the top
 cat <<'EOF' >INSTALL
 CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
 http://codex.xerox.com
 
 - login as root user
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.4 to 2.6 run the migration script ./migration_26.sh 
+- For an update from 2.6 to 2.8 run the migration script ./migration_28.sh 
 - Follow the instructions of the migration script
 
 -- The CodeX Team
@@ -142,33 +142,35 @@ EOF
 # create a RELEASE_NOTES file at the top
 cat <<'EOF' >RELEASE_NOTES
 CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2005. All Rights Reserved
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
 http://codex.xerox.com
 
-This is CodeX 2.6.
+This is CodeX 2.8.
 
 After downloading the file, read the README and INSTALL files
 carefully. And get in touch with us at codex-contact@codex.xerox.com
 if you have questions.
 
 
-Major improvements of CodeX 2.6 over 2.4:
-- Plugin architecture: CodeX now offers a flexible plugin architecture to easily integrate external tools or customized code. See the Programmer Guide for more details.
-- New theme architecture. Themes may now be fully customized. Try the new theme 'CodeXTab' and read the Programmer Guide for additional information.
-- CVS NT support. You may now install CVSNT on CodeX to support the sserver protocol. See the Installation Guide for details. Note that CVS remains the default package.
+Major improvements of CodeX 2.8 over 2.6:
+- Field dependencies in trackers: Field dependencies allow you to link source field values to target field values. In other words, the values proposed to a final user for a field will depend upon the value selected for another field.
+- New Reference system. With earlier versions of CodeX, it was possible to automatically create links in commit messages or artifact follow-ups by using certain patterns: 'commit #123' to reference a CVS commit, 'rev #234' for subversion, or 'art #246' for an artifact. This made a direct link to the object. With CodeX 2.8, it is now possible to reference any kind of object (documents, files, artifacts, revisions, external objects, etc.), and to customize the list of recognized patterns per project.
+- new LDAP authentication mechanism. It is now provided as a plugin, which is a contribution from ST.
+- Improved scalability and response time.
+- User guide is now available in French
+ 
 
 Other changes:
-- Export tracker report page as CSV file
-- Subversion repositories are now created by default with the 'fsfs' file system, and a new backup script is provided.
-- The 'Tracher Technician' role has disappeared. By default, any project member may be assigned artifacts, and may modify artifacts. Create groups if you need a finer access control.
-  Note: for each trackers that used specific permissions for tracker technicians, a group 'trackername_techs' is automatically created, except when all project members were technicians.
-- Support for Wiki attachments has been added thanks to contributions from ST.
-- Features from CodeX 2.4.1 are also available: in particular, trackers and tracker fields access control.
-- CodeX source code is now managed with Subversion.
+- Improved plugin architecture
+- File download popup is not mandatory any longer (see local.inc)
+- artifact status simplified: only 'open' and 'close' values allowed. Use the new 'stage' field to specify more info (new, analyzed, accepted, under implementation, etc.)
+- Subversion permission file improved: you may now use ugroups in your permissions.
+- CVS lockdir moved from /cvsroot/projectname/.lockdir to /var/lock/cvs/projectname
+- updated SVN backup script
 - and many bugs fixed!
 
 Package Update:
-None
+- Now install Subversion 1.2.3 (without BDB support) on new CodeX servers (do not upgrade existing servers)
 
 -- The CodeX Team
    <info@codex.xerox.com>
@@ -176,7 +178,7 @@ EOF
 
 # Build ISO image
 echo "Building ISO image in $ISO_FILE..."
-mkisofs -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -v -T -x ./lost+found -o "$ISO_FILE" $BUILD_DIR
+mkisofs -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -o "$ISO_FILE" $BUILD_DIR
 
 echo "CodeX ISO image available at $ISO_FILE..."
 echo "Done!"
