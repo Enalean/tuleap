@@ -1883,10 +1883,9 @@ width="14.5cm" />
         <itemizedlist mark="bullet" spacing="compact">
 
           <listitem>
-            <para><emphasis role="bold">&hyphen;&hyphen;</emphasis> :
+            <para><emphasis role="bold">&hyphen;</emphasis> :
             ce niveau de permission qui s'affiche sous forme d'un
-            double tiret signifie que le groupe n'a accès à aucun
-            artefact.</para>
+             tiret signifie que le groupe n'a pas de permission spécifique.</para>
           </listitem>
 
           <listitem>
@@ -1921,6 +1920,16 @@ width="14.5cm" />
       <para>
         <tip>
           <title>Exemple : configurer les permissions pour vos clients</title>
+    <figure id="TrackerPermissionsExample">
+      <title>A sample tracker permissions screen</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/fr_FR/sc_trackerpermissions.png" />
+	</imageobject>
+      </mediaobject>
+    </figure>
             
           <para>A titre d'exemple supposons que vous avez créé un outil de suivi
           qui sera utilisé par deux de vos clients pour rendre compte
@@ -1930,7 +1939,7 @@ width="14.5cm" />
           les anomalies soumises par les autres sociétés.</para>
 
           <para>Pour parvenir à ce résultat, il suffit de créer un
-          groupe compagnie_A qui comprend tous les noms des
+          groupe compagnie A qui comprend tous les noms des
           utilisateurs de la société A puis de faire la même chose
           pour la compagnie B. Ensuite on donne à ces deux groupes une
           permission de type 'Accès aux artefacts soumis par le
@@ -1940,6 +1949,18 @@ width="14.5cm" />
           artefacts' aux membres du projet ou aux administrateurs de
           l'outil de suivi de façon à ce qu'ils puissent avoir accès à toutes les
           anomalies quelle qu'en soit l'origine.</para>
+
+          <para>Dans cet exemple :</para>
+          <itemizedlist mark="bullet" spacing="compact">
+            <listitem><simpara>un utilisateur non connecté n'aura pas accès aux artefacts,</simpara></listitem>
+            <listitem><simpara>un utilisateur connecté n'aura pas accès aux artefacts,</simpara></listitem>
+            <listitem><simpara>un membre du projet aura accès à tous les artefacts,</simpara></listitem>
+            <listitem><simpara>un admin projet aura accès à tous les artefacts, puisqu'il est membre du projet,</simpara></listitem>
+            <listitem><simpara>un admin outil de suivi aura accès à tous les artefacts, puisqu'il est membre du projet,</simpara></listitem>
+            <listitem><simpara>un membre de Compagnie_A aura accès seulement aux artefacts soumis par un membre de Compagnie_A (pareil pour Compagnie_B),</simpara></listitem>
+            <listitem><simpara>un membre du projet qui est aussi membre de Compagnie_A aura accès à tous les artefacs puisqu'il est membre du projet,</simpara></listitem>
+            <listitem><simpara>un membre de Compagnie_C n'aura pas accès aux artefacts (si il n'est pas membre d'un group comme membres_projet, Compagnie_A ou Compagny_C).</simpara></listitem>
+          </itemizedlist>
 
           </tip>
         </para>
@@ -2000,10 +2021,9 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Aucun accès (--)</emphasis> :
-            avec cette permission (affichée sous la forme d'un double
-            tiret) un groupe d'utilisateurs ne verra pas du tout le
-            champ en question.</para>
+            <para><emphasis role="bold">-</emphasis> :
+            ce niveau de permission qui s'affiche sous forme d'un
+             tiret signifie que le groupe n'a pas de permission spécifique, à l'instar des permissions sur less outils de suivis.</para>
           </listitem>
 
         </itemizedlist>

@@ -1790,9 +1790,9 @@ width="14.5cm" />
         <itemizedlist mark="bullet" spacing="compact">
 
   	  <listitem>
-	    <para><emphasis role="bold">&hyphen;&hyphen;</emphasis>:
-	    this level of permission that displays as a double hyphen
-	    means that the group has no access to any artifact.</para>
+	    <para><emphasis role="bold">&hyphen;</emphasis>:
+	    this level of permission that displays as a hyphen
+	    means that the group has no specific permission.</para>
 	  </listitem>
 
 	  <listitem>
@@ -1829,7 +1829,17 @@ width="14.5cm" />
       <para>
         <tip>
           <title>Example: Using tracker access permissions with your clients</title>
-	    
+    <figure id="TrackerPermissionsExample">
+      <title>A sample tracker permissions screen</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackerpermissions.png" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
 	  <para>As an example of how you can use these permissions
 	  let's assume that you have created a tracker where several
 	  of your customers can report defects on your software. In
@@ -1847,6 +1857,18 @@ width="14.5cm" />
 	  to all artifacts' to the project members or to the
 	  'tracker_administrators' groups so that your team members can
 	  manage artifacts from any customer.</para>
+
+          <para>In this example:</para>
+          <itemizedlist mark="bullet" spacing="compact">
+            <listitem><simpara>a user which is not logged-in will not have access to artifacts,</simpara></listitem>
+            <listitem><simpara>a user which is logged-in will not have access to artifacts,</simpara></listitem>
+            <listitem><simpara>a project member will have access to all artifacts,</simpara></listitem>
+            <listitem><simpara>a project admin will have access to all artifacts, since a project admin is a project member,</simpara></listitem>
+            <listitem><simpara>a tracker admin will have access to all artifacts, since a tracker admin is a project member,</simpara></listitem>
+            <listitem><simpara>a member of ugroup Company_A will only have access to artifacts submitted by members of the ugroup Company_A (the same for Company_B),</simpara></listitem>
+            <listitem><simpara>a project member which is also member of ugroup Company_A will have access to all artifacts since he is a project member,</simpara></listitem>
+            <listitem><simpara>a member of ugroup Company_C will not have access to artifacts (if he is not also member of a ugroup like project_member, company_a or company_b).</simpara></listitem>
+          </itemizedlist>
 
 	  </tip>
         </para>
@@ -1904,10 +1926,8 @@ width="14.5cm" />
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="bold">No access (--)</emphasis>: if
-	    granted this permission (which is displayed a double hyphen
-	    in the menu), the group of users will not see the field at
-	    all.</para>
+	    <para><emphasis role="bold">-</emphasis>: this level of permission that displays as a hyphen
+	    means that the group has no specific permission, like in tracker permissions.</para>
 	  </listitem>
 
         </itemizedlist>
