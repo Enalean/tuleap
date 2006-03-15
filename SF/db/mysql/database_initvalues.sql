@@ -28,7 +28,7 @@ INSERT INTO user VALUES (100, 'None', 'noreply@_DOMAIN_NAME_', \
 '*********34343', '0', NULL, 'S', '0', '0', '0', 0, '0', NULL, 940000000, NULL, 1, \
 0, 0, NULL, NULL, 0, '', 'GMT', '', 0, '',1);
 
-INSERT INTO user VALUES (101, 'admin', '', \
+INSERT INTO user VALUES (101, 'admin', 'codex-admin@_DOMAIN_NAME_', \
 '6f3cac6213ffceee27cc85414f458caa', 'Site Administrator', NULL, 'A', \
 '/bin/bash', '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', 'A', 1,'shell1', NULL, \
 940000000, NULL, 0, 0, 0, NULL, NULL, 0, '', 'GMT', \
