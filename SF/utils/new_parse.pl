@@ -203,7 +203,7 @@ while ($ln = pop(@groupdump_array)) {
 		# Let's create a CVS repository for this group
 		$cvs_dir = "$cvs_prefix/$gname";
 
-		# Firce create the repository
+		# First create the repository
 		mkdir $cvs_dir, 0775;
 		system("/usr/bin/cvs -d$cvs_dir init");
 	
@@ -222,14 +222,15 @@ while ($ln = pop(@groupdump_array)) {
                 if (! $use_cvsnt) {
                   # LJ But to allow checkout/update to registered users we
                   # need to setup a world writable directory for CVS lock files
-                  mkdir "$cvs_dir/.lockdir", 0777;
-                  chmod 0777, "$cvs_dir/.lockdir"; # overwrite umask value
+                  $lockdir="$cvslock_prefix/$gname";
+                  mkdir "$lockdir", 0777;
+                  chmod 0777, "$lockdir"; # overwrite umask value
                   system("echo  >> $cvs_dir/CVSROOT/config");
                   system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
                   system("echo '# Put all CVS lock files in a single directory world writable' >> $cvs_dir/CVSROOT/config");
                   system("echo '# directory so that any CodeX registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
                   system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
-                  system("echo 'LockDir=$cvs_dir/.lockdir' >> $cvs_dir/CVSROOT/config");
+                  system("echo 'LockDir=$lockdir' >> $cvs_dir/CVSROOT/config");
                   # commit changes to config file (directly with RCS)
                   system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
                 }

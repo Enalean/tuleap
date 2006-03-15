@@ -704,9 +704,7 @@ the executable flags to be preserved when the file is checked out of
 the
 CVS repository must have the executable flag set <br>
         </li>
-        <li> The hidden directory <tt>.lockdir</tt> created under each
-CVS
-repo. It is world writable (drwxrwxrwx) so that all users even those
+        <li> The CVS lock dir is now created in /var/lock/cvs/<i>ProjectName</i>. It is world writable (drwxrwxrwx) so that all users even those
 not
 part of the project team can checkout a working copy of the CVS tree.</li>
         <li>The CVS repository for each project is owned by the user <i>sourceforge.</i>
@@ -1719,7 +1717,7 @@ default home from the master copy in SF/utils/default_page.php)</li>
     <li> Initialize a new CVS repository for this project with the "cvs
 init"
 command</li>
-    <li> Create the .lockdir directory in the new CVS repository with
+    <li> Create the lock directory in /var/lock/cvs/<i>projectname</i> with
 world
 writable permission (see <a href="#CVS_Repositories">CVS&nbsp;Repositories
       </a>above) and change the CVSROOT/config file to tell CVS that it

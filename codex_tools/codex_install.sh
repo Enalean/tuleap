@@ -282,6 +282,7 @@ build_dir /etc/codex/plugins/pluginsadministration sourceforge sourceforge 755
 build_dir /var/run/log_accum root root 1777
 build_dir /cvsroot sourceforge sourceforge 755
 build_dir /svnroot sourceforge sourceforge 755
+build_dir /var/lock/cvs root root 751
 
 $TOUCH /home/ftp/incoming/.delete_files
 $CHOWN sourceforge.ftpadmin /home/ftp/incoming/.delete_files
@@ -1202,7 +1203,7 @@ $CHKCONFIG mailman on
 ##############################################
 # End of installation
 #
-todo "To customize the network gallery, edit /etc/codex/site-content/en_US/layout/osdn_sites.txt"
+todo "To customize the network gallery, copy /home/httpd/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
 todo "Add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'"
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."

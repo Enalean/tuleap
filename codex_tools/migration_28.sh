@@ -248,7 +248,7 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_dom
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
 todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
-#todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
 
 # Re-copy phpMyAdmin and viewcvs installations
 $CP -af /home/httpd_26/phpMyAdmin* /home/httpd
@@ -575,6 +575,15 @@ INSERT INTO reference_group SET reference_id='92', group_id='100', is_active='0'
 INSERT INTO reference_group SET reference_id='93', group_id='100', is_active='0';
 
 EOF
+
+echo " DB - drop svn_tracks and cvs_tracks tables"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
+DROP TABLE svn_tracks;
+DROP TABLE cvs_tracks;
+
+EOF
+
 
 echo " DB - artifact status update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
@@ -960,6 +969,29 @@ print "** All references created\n";
 1;
 EOF
 
+##############################################
+# CVS lockdir moved from cvs root to /var/lock/cvs
+# This is to prevent checking out the lock dir.
+# We do not delete existing .lockdir
+print "Creating new CVS lock directories, and updating existing cvs configs"
+
+build_dir /var/lock/cvs root root 751
+
+for projconfig in `ls /cvsroot/x*/CVSROOT/config`
+do
+   projname=`echo $projconfig | perl -e '$_=<>; s@/cvsroot/(.*)/CVSROOT.*@\1@; chomp; print'`
+   # Create lockdir
+   mkdir /var/lock/cvs/$projname
+   chmod 0777 /var/lock/cvs/$projname
+   # Update CVS config
+   perl -pi -e "s@LockDir\=.*@LockDir=/var/lock/cvs/$projname@" "$projconfig"
+   # commit changes to config file (directly with RCS)
+   cd /cvsroot/$projname/CVSROOT
+   rcs -q -l config
+   ci -q -m"CodeX 2.8 modifications" config
+   co -q config
+done
+
 
 ##############################################
 # Reinstall modified shell scripts
@@ -1048,10 +1080,10 @@ exit 1;
 #OK  - copy new svn backup script
 # - convert all repositories to FSFS
 #OK - copy commit-email and log-accum
-# drop svn_tracks and cvs_tracks tables.
 #OK analyze/optimize tables
 # add $sys_frs_license_mandatory in local.inc
 # add $sys_noreply in local.inc?
+# Move CVS lockdir to safer place?
 
 #Changelog:
 # $sys_noreply => local.inc.dist  (SR #281)
