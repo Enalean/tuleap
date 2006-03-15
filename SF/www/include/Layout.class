@@ -13,7 +13,7 @@ require_once('common/include/Error.class');
 require_once('common/event/EventManager.class');
 
 //$Language->loadLanguageMsg('include/include');
-//include($Language->getContent('layout/osdn_sites'));
+include($Language->getContent('layout/osdn_sites'));
 
 /*
 
@@ -584,7 +584,7 @@ echo html_blankimage(5,100);
         } else {
             // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
             if (isset($GLOBALS['osdn_sites'])) {
-                $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_osdn','network_gallery').'&nbsp;:&nbsp;';
+                $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_layout','network_gallery').'&nbsp;:&nbsp;';
                 // if less than 5 sites are defined, we only display the min number
                 $output .= $this->_getOsdnRandpick($GLOBALS['osdn_sites'], min(5, count($GLOBALS['osdn_sites'])));
                 $output .= '</span>';

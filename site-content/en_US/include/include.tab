@@ -172,6 +172,7 @@ include_layout	banner	Banner
 include_layout	logo	Logo
 include_layout	counter	Counter
 include_layout	Help	Help
+include_layout	network_gallery	Network Gallery
 #
 #-----------------------------------------------
 # Script: SF/www/include/license.php
@@ -244,11 +245,6 @@ include_menu	bookmark_this_page	Bookmark This Page
 include_menu	not_logged_in	NOT LOGGED IN
 include_menu	login	Login
 include_menu	new_user	New User
-#
-#-----------------------------------------------
-# Script: SF/www/include/osdn.php
-#
-include_osdn	network_gallery	Network Gallery
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php
