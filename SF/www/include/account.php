@@ -300,16 +300,14 @@ function account_redirect_after_login() {
     if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
         $returnToToken = parse_url($_REQUEST['return_to']);
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
-            header('Location: /my/index.php');
-            exit;
+            util_return_to('/my/index.php');
         }
         else {
             util_return_to('/my/redirect.php');
         }
     }
     else {
-        header('Location: /my/index.php');
-        exit;
+        util_return_to('/my/index.php');
     }
 }
 
