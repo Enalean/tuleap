@@ -41,7 +41,7 @@ if (isset($show_confirm) && $show_confirm) {
 		"patents_ips='".htmlspecialchars($form_patents)."', ".
 		"other_comments='".htmlspecialchars($form_comments)."', ".
 		"group_name='$form_full_name', license='$form_license', ".
-		"license_other='".htmlspecialchars($form_license_other)."'".
+		"license_other='".htmlspecialchars($form_license_other)."' ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
 	if (db_affected_rows($result) < 1) {
