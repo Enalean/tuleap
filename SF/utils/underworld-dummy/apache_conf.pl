@@ -23,11 +23,24 @@ $c->execute();
 $output = `/usr/sbin/httpd -v`;
 ($apache_version) = ($output =~ /version:.*\/(\d)\.\d+\.\d+/);
 
+my $warn_noip=0;
+
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
 
 	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.$sys_default_domain");
 	@blah = unpack('C4', $addrs[0]);
 	$ip = join(".", @blah);
+        if ($ip eq "") {
+          # DNS not yet configured? Display warning and use sys_default_domain IP address
+          # Otherwise, Apache won't run.
+          if (!$warn_noip) {
+            print "WARNING: No IP address for $unix_box.$sys_default_domain (and possibly others). Using address from $sys_default_domain.\n";
+            $warn_noip=1;
+          }
+          ($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$sys_default_domain");
+          @blah = unpack('C4', $addrs[0]);
+          $ip = join(".", @blah);
+        }
 
         # Replace double quotes by single quotes in project name.
         $group_name=~s/\"/\'/g;
