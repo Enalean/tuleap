@@ -117,9 +117,9 @@ class ArtifactRulesManager {
                         $applied = false;
                         while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
                             reset($values[$source]['values']);
-                            while(!($applied && $valid) && (list($source_value,) = each($values[$source]['values']))) {
+                            while(!($applied && $valid) && (list(,$source_value) = each($values[$source]['values']))) {
                                 reset($values[$target]['values']);
-                                while(!($applied && $valid) && (list($target_value,) = each($values[$target]['values']))) {
+                                while(!($applied && $valid) && (list(,$target_value) = each($values[$target]['values']))) {
                                     if ($dependencies[$source][$target][$rule]->canApplyTo(
                                         $artifact_type_id, 
                                         $source, 
