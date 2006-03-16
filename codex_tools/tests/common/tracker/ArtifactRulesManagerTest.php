@@ -9,8 +9,7 @@ require_once('tests/simpletest/unit_tester.php');
 require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 
 require_once('common/tracker/ArtifactRulesManager.class');
-require_once('common/tracker/ArtifactRulesManager.class');
-Mock::generatePartial('ArtifactRulesManager', 'ArtifactRulesManagerTestVersion', array('_getArtifactRuleFactory'));
+Mock::generatePartial('ArtifactRulesManager', 'ArtifactRulesManagerTestVersion', array('_getArtifactRuleFactory', '_getSelectedValuesForField'));
 
 require_once('common/tracker/ArtifactRuleValue.class');
 Mock::generate('ArtifactRuleValue');
@@ -29,6 +28,8 @@ Mock::generate('ArtifactFieldFactory');
 //require_once('common/tracker/ArtifactField.class');
 class ArtifactField {
     function getID() {}
+    function getFieldPredefinedValues() {}
+    function getLabel() {}
 }
 Mock::generate('ArtifactField');
 
@@ -82,8 +83,14 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         $f1->setReturnValue('getID', 'F1');
         $f2 =& new MockArtifactField($this);
         $f2->setReturnValue('getID', 'F2');
+        $f2->setReturnValue('getLabel', 'f_2');
+        $f2->setReturnValue('getFieldPredefinedValues', array());
+        
         $f3 =& new MockArtifactField($this);
         $f3->setReturnValue('getID', 'F3');
+        $f3->setReturnValue('getLabel', 'f_3');
+        $f3->setReturnValue('getFieldPredefinedValues', 'F3');
+        
         $f4 =& new MockArtifactField($this);
         $f4->setReturnValue('getID', 'F4');
         
@@ -95,7 +102,10 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         
         $arm =& new ArtifactRulesManagerTestVersion($this);
         $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        $arm->setReturnValueAt(0, '_getSelectedValuesForField', array('C2')); // source
+        $arm->setReturnValueAt(1, '_getSelectedValuesForField', array('B3')); // target
         
+        $GLOBALS['feedback'] = '';
         //S1
         $this->assertTrue(
             $arm->validate(
@@ -109,6 +119,9 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
+        $this->assertEqual($GLOBALS['feedback'], '');
+        
+        $GLOBALS['feedback'] = '';
         //S2
         $this->assertFalse(
             $arm->validate(
@@ -122,6 +135,7 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
+        $this->assertEqual($GLOBALS['feedback'],  'f_3(C2) -> f_2(B3) : ');
     }
 }
 

@@ -85,16 +85,30 @@ class ArtifactRulesManager {
         return $fact->copyRules($from_artifact_type_id, $to_artifact_type_id);
     }
     
+    /**
+     * Check if all the selected values of a submitted artefact are coherent regarding the dependences 
+     *
+     * @param int $artifact_type_id the artifact id to test
+     * @param array $value_field_list the selected values to test for the artifact
+     * @param {ArtifactFieldFactory Object} $art_field_fact reference to the artifact field factory of this artifact
+     * @global string $feedback the error message updated to give more detail about the error
+     * @return boolean true if the submitted values are coherent regarding the dependencies, false otherwise
+     */
     function validate($artifact_type_id, $value_field_list, &$art_field_fact) {
         $valid = true;
         
+        // construction of $values array : selected values in the form
+        // $values[$field_id]['field'] = artifactfield Object
+        // $values[$field_id]['values'][] = selected value
         $values = array();
         reset($value_field_list);
         while (list($field_name,$value) = each($value_field_list)) {
-            $field = $art_field_fact->getFieldFromName($field_name);
+            $field =& $art_field_fact->getFieldFromName($field_name);
             $values[$field->getID()] = array('field' => &$field, 'values' => is_array($value)?$value:array($value));
         }
         
+        // construction of $dependencies array : dependcies defined rules
+        // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
         $dependencies = array();
         foreach($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
             if (is_a($rule, 'ArtifactRuleValue')) {
@@ -107,6 +121,7 @@ class ArtifactRulesManager {
                 $dependencies[$rule->source_field][$rule->target_field][] = $rule;
             }
         }
+        
         reset($dependencies);
         while($valid && (list($source,) = each($dependencies))) {
             if (isset($values[$source])) {
@@ -118,8 +133,10 @@ class ArtifactRulesManager {
                         while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
                             reset($values[$source]['values']);
                             while(!($applied && $valid) && (list(,$source_value) = each($values[$source]['values']))) {
+                                $current_source_value = $source_value;
                                 reset($values[$target]['values']);
                                 while(!($applied && $valid) && (list(,$target_value) = each($values[$target]['values']))) {
+                                    $current_target_value = $target_value;
                                     if ($dependencies[$source][$target][$rule]->canApplyTo(
                                         $artifact_type_id, 
                                         $source, 
@@ -139,12 +156,45 @@ class ArtifactRulesManager {
                             }
                         }
                         $valid = $valid || !$applied;
+                        
+                        // when a dependence problem is detected, we detail the message error
+                        // to explain the fields that trigger the problem 
+                        if (! $valid) {
+                            // looking for the source field value which cause the dependence problem
+                            $pb_source_field_values = $values[$source]['field']->getFieldPredefinedValues($artifact_type_id);
+                            $pb_source_values = $this->_getSelectedValuesForField($pb_source_field_values, $source, $values[$source]['values']);
+                            
+                            // looking for the target field value which cause the dependence problem
+                            $pb_target_field_values = $values[$target]['field']->getFieldPredefinedValues($artifact_type_id);
+                            $pb_target_values = $this->_getSelectedValuesForField($pb_target_field_values, $target, $values[$target]['values']);
+                            
+                            // detailled error message
+                            $GLOBALS['feedback'] .= $values[$source]['field']->getLabel().'('.implode(', ', $pb_source_values).') -> '.$values[$target]['field']->getLabel().'('.implode(', ', $pb_target_values).') : ';
+                        }
                     }
                 }
             }
         }
         return $valid;
     }
+    
+    /**
+     * protected method
+     *
+     * Returns the selected values of a field
+     */
+    function _getSelectedValuesForField($db_result, $field_id, $field_values) {
+        $selected_values = array();
+        if (db_numrows($db_result) > 1) {
+            while ($row = db_fetch_array($db_result)) {
+                if ($row['field_id'] == $field_id && in_array($row['value_id'], $field_values)) {
+                    $selected_values[] = $row['value'];
+                }
+            }
+        }
+        return $selected_values;
+    }
+    
 }
 
 ?>
