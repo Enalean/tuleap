@@ -370,6 +370,8 @@ CREATE TABLE artifact_rule (
 
 
 EOF
+todo "  "
+todo "                 *** IF YOU HAVE A CUSTOM THEME *** "
 todo "Fields Dependencies use an optional css rule for highlighting. "
 todo "  Default color is yellow. You can customize it for your theme by overiding "
 todo "  this css rule in your stylesheets. Please have a look at the end of "
