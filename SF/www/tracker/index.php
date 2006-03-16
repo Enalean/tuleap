@@ -443,6 +443,13 @@ if ( $func == 'gotoid' ) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
 
+                        //Check Field Dependencies
+                        require_once('common/tracker/ArtifactRulesManager.class');
+                        $arm =& new ArtifactRulesManager();
+                        if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
+                            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
+                        }
+                        
                         //data control layer
                         $changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes);
                         if (!$changed) {
