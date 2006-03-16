@@ -374,7 +374,7 @@ $RPM -e --nodeps db4-devel db4-utils 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm # Don't install db42 with SVN 1.2.3
+$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm 
 $RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util-0.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
@@ -419,7 +419,7 @@ cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
+$RPM -Uvh --force --nodeps ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
 $RPM -Uvh --force ${newest_rpm}/mod_dav_svn*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
@@ -542,7 +542,6 @@ done
 # c) create the PDF target directory
 #
 
-$MKDIR -p  /etc/codex/documentation/user_guide/xml
 $CP $INSTALL_DIR/SF/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
 # replace string patterns in ParametersLocal.dtd
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
@@ -1232,6 +1231,8 @@ todo "Last, run the main crontab script manually: /home/httpd/SF/utils/xerox_cro
 
 todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."
 todo "If you plan to use CVSNT, please refer to the installation guide"
+todo "-----------------------------------------"
+todo "This TODO list is available in $TODO_FILE"
 
 # End of it
 echo "=============================================="
