@@ -283,14 +283,24 @@ $CP -af /home/httpd_26/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 ##############################################
 # French documentation
 echo "Preparing directories for French documentation"
-$MKDIR -p  /etc/codex/documentation/user_guide/xml/fr_FR
 $CHOWN -R sourceforge.sourceforge /etc/codex/documentation
-$CP $INSTALL_DIR/documentation/user_guide/xml/fr_FR/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/fr_FR
 $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/fr_FR
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/fr_FR
 $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
 
+# Moved local documentation parameters
+if [ -f "/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd" ]; then
+    $MV /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+else
+    $CP $INSTALL_DIR/SF/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+    # replace string patterns in ParametersLocal.dtd
+    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "Xerox" 
+    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "Xerox Corporation" 
+    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' " "
+    todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd"
+fi
 
 ##############################################
 # Database Structure and initvalues upgrade
@@ -1099,6 +1109,8 @@ todo "   Un guide complet décrivant tous les services de CodeX et comment les u
 todo "The english version of the CodeX User Guide is supplemented by a single page HTML version."
 todo "  To make it available to users, please update your entry into the Document Manager : "
 todo "  - single-page HTML location is : /documentation/user_guide/html/en_US/CodeX_User_Guide.html ;"
+todo "-----------------------------------------"
+todo "This TODO list is available in $TODO_FILE"
 
 
 ##############################################
