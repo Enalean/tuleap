@@ -19,7 +19,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 [
 
 <!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "../ParametersLocal.dtd">
+<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd">
 %ParametersLocal;
 %ParametersDefault;
 
