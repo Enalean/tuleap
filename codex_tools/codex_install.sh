@@ -22,7 +22,9 @@
 # ./codex_install.sh 2>&1 | tee /tmp/codex_install.log
 
 progname=$0
-scriptdir=`dirname $progname`
+if [ -z "$scriptdir" ]; then 
+    scriptdir=`dirname $progname`
+fi
 cd ${scriptdir};TOP_DIR=`pwd`;cd -
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
@@ -143,9 +145,9 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-CGI perl-suidperl gd gcc \
+   openssl openldap perl perl-DBI perl-CGI gd gcc \
    sendmail telnet bind ntp samba python enscript \
-   bind python-devel rcs sendmail-cf
+   python-devel rcs sendmail-cf
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -190,24 +192,31 @@ read -p "Codex Server fully qualified machine name: " sys_fullname
 read -p "Codex Server IP address: " sys_ip_address
 read -p "LDAP server name: " sys_ldap_server
 read -p "Windows domain (Samba): " sys_win_domain
+read -p "Activate user shell accounts? [y|n]:" active_shell
 
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
 while [ "$rt_passwd" != "$rt_passwd2" ]; do
     read -s -p "Password for user root: " rt_passwd
+    echo
     read -s -p "Retype root password: " rt_passwd2
+    echo
 done
 
 sf_passwd="a"; sf_passwd2="b";
 while [ "$sf_passwd" != "$sf_passwd2" ]; do
     read -s -p "Password for user sourceforge: " sf_passwd
+    echo
     read -s -p "Retype sourceforge password: " sf_passwd2
+    echo
 done
 
 mm_passwd="a"; mm_passwd2="b";
 while [ "$mm_passwd" != "$mm_passwd2" ]; do
     read -s -p "Password for user mailman: " mm_passwd
+    echo
     read -s -p "Retype mailman password: " mm_passwd2
+    echo
 done
 
 py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
@@ -307,6 +316,15 @@ cd ${RPMS_DIR}/wu-ftpd
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
 
+# -> perlsuid
+echo "Removing Perl suid if any..."
+$RPM -e --nodeps perl-suidperl 2>/dev/null
+echo "Installing Perl suid..."
+cd ${RPMS_DIR}/perl-suidperl
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/perl-suidperl*.i386.rpm
+
+
 # -> Perl DBD for MySQL
 echo "Removing Redhat Perl DBD MySQL if any..."
 $RPM -e --nodeps perl-DBD-MySQL 2>/dev/null
@@ -356,7 +374,7 @@ $RPM -e --nodeps db4-devel db4-utils 2>/dev/null
 echo "Installing Apache RPMs for CodeX...."
 cd ${RPMS_DIR}/apache
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm
+#$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm # Don't install db42 with SVN 1.2.3
 $RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util-0.*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
@@ -402,7 +420,7 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-server*.i386.rpm
+$RPM -Uvh --force ${newest_rpm}/mod_dav_svn*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
@@ -508,6 +526,9 @@ for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
 
     if [ "$yn" = "y" ]; then
 	$CP -f $f $f.orig
+    fi
+
+    if [ "$yn" != "n" ]; then
 	$CP -f $INSTALL_DIR/SF/etc/$fn.dist $f
     fi
 
@@ -626,6 +647,7 @@ fi
 mysqlshow 2>&1 | grep password
 while [ $? -eq 0 ]; do
     read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    echo
     mysqlshow --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
@@ -886,10 +908,8 @@ todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project w
 ##############################################
 # Shell Access configuration
 #
-yn="-"
-read -p "Activate user shell accounts? [y|n]:" yn
 
-if [ "$yn" = "n" ]; then
+if [ "$active_shell" = "n" ]; then
     echo "Shell access configuration defaulted to 'No shell account'..."
     $MYSQL -u sourceforge sourceforge --password=$sf_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
 fi
@@ -934,7 +954,7 @@ $CAT <<'EOF' >/tmp/cronfile
 45 23 * * 1-6 /home/tools/backup_subversion.sh -i
 #
 # weekly full backup of subversion repositories (0:15 on Sunday)
-15 0 * * Sun /home/tools/backup_subversion.sh
+15 0 * * Sun /home/tools/backup_subversion.sh -noarchives
 #
 # weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /home/tools/backup_job

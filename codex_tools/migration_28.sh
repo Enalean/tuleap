@@ -21,6 +21,17 @@
 #
 
 
+progname=$0
+if [ -z "$scriptdir" ]; then 
+    scriptdir=`dirname $progname`
+fi
+cd ${scriptdir};TOP_DIR=`pwd`;cd -
+RPMS_DIR=${TOP_DIR}/RPMS_CodeX
+nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
+CodeX_DIR=${TOP_DIR}/CodeX
+TODO_FILE=/tmp/todo_codex.txt
+CODEX_TOPDIRS="SF site-content documentation cgi-bin codex_tools"
+INSTALL_DIR="/home/httpd"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -205,17 +216,27 @@ fi
 
 ##############################################
 # Update local.inc  XXX OLd 2.4 to 2.6 SCRIPT!!!!!!!
-#
+# add $sys_frs_license_mandatory in local.inc
+# OK add $sys_noreply in local.inc?
+#$sys_custompluginsroot ="/etc/codex/plugins/";
+#$sys_pluginspath       ="/plugins";
+#$sys_custompluginspath ="/customplugins";
+
 make_backup /etc/codex/conf/local.inc codex24
 
-substitute /etc/codex/conf/local.inc "sys_themedefault[\\s]*=[\\s]*['\"]codex['\"]" "sys_themedefault = 'CodeX'"
-$GREP -q "sys_session_lifetime" /etc/codex/conf/local.inc
+$PERL -i'.orig' -p -e's:^(\$sys_show_project_type.*)://\1 DEPRECATED in CodeX 2.8:' /etc/codex/conf/local.inc
+
+$GREP -q "sys_server_join" /etc/codex/conf/local.inc
 if [ $? -ne 0 ]; then
-   # Not a maintained 2.4 release...
-   $PERL -i'.orig2' -p -e's:^(\$sys_is_project_public.*):\1\n//\n// Default session duration when user select "Remember Me" option in user\n// account maintainance.\n// Default value is about 6 months, 3600*24*183\n\$sys_session_lifetime = 3600*24*183;\n:' /etc/codex/conf/local.inc
+   # Not a maintained 2.6 release...
+   $PERL -i'.orig2' -p -e's:^(\$sys_server.*):\1\n\$sys_server_join="30";\n:' /etc/codex/conf/local.inc
 fi
 
 $PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root directory \n\$sys_pluginsroot="/home/httpd/plugins/";\n\n// Where wiki attachments are stored\n\$sys_wiki_attachment_data_dir = "/home/data/wiki";:' /etc/codex/conf/local.inc
+
+$PERL -i'.orig3' -p -e's:($sys_email_contact.*):\1\n\/\/\n\/\/ Address from which emails are sent\n\$sys_noreply = \'"CodeX" <noreply@%sys_default_domain%>\';\n:' /etc/codex/conf/local.inc
+
+substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
 
 build_dir /home/data root root 755
 build_dir /home/data/wiki sourceforge sourceforge 700
@@ -224,6 +245,9 @@ rmdir /etc/codex/themes/messages
 ##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
+
+# Nothing new in CodeX 2.8
+
 
 
 ##############################################
@@ -280,11 +304,11 @@ pass_opt=""
 # See if MySQL root account is password protected
 mysqlshow 2>&1 | grep password
 while [ $? -eq 0 ]; do
-    read -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    echo
     mysqlshow --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
-
 
 echo "Starting DB update for CodeX 2.8. This might take a few minutes."
 
@@ -1008,18 +1032,25 @@ $CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
 $CHMOD 775 /usr/local/bin/log_accum
 $CHMOD u+s /usr/local/bin/log_accum
 
+echo "Copying updated /usr/local/bin/fileforge"
+$CP -a ${nonRPMS_DIR}/utilities/fileforge /usr/local/bin
+$CHOWN root.root /usr/local/bin/fileforge
+$CHMOD u+s /usr/local/bin/fileforge
+
+
 echo "Copying updated /home/tools/backup_subversion.sh"
 $CP $INSTALL_DIR/SF/utils/svn/backup_subversion.sh /home/tools
 $CHOWN root.root /home/tools/backup_subversion.sh
 $CHMOD 740 /home/tools/backup_subversion.sh
-todo "Customize backup directories in /home/tools/backup_subversion.sh"
+todo "Customize backup directories in /home/tools/backup_subversion.sh."
+todo "You may also want to add the '-noarchives' flag to backup_subversion when used in full backup (see root crontab). This will delete previous backups once the full backup is completed."
 
 
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
-echo "Analyzing MySQL databases (this might take a few minutes)"
-mysqlcheck -Aa $pass_opt
+echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
+mysqlcheck -Aao $pass_opt
 
 
 
@@ -1080,10 +1111,10 @@ exit 1;
 #OK  - copy new svn backup script
 # - convert all repositories to FSFS
 #OK - copy commit-email and log-accum
-#OK analyze/optimize tables
+#OK - analyze/optimize tables
 # add $sys_frs_license_mandatory in local.inc
 # add $sys_noreply in local.inc?
-# Move CVS lockdir to safer place?
+#OK - Move CVS lockdir to safer place?
 
 #Changelog:
 # $sys_noreply => local.inc.dist  (SR #281)

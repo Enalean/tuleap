@@ -167,6 +167,7 @@ Other changes:
 - Subversion permission file improved: you may now use ugroups in your permissions.
 - CVS lockdir moved from /cvsroot/projectname/.lockdir to /var/lock/cvs/projectname
 - updated SVN backup script
+- allow anonymous access to wiki
 - and many bugs fixed!
 
 Package Update:
