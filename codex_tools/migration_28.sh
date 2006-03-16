@@ -370,6 +370,22 @@ CREATE TABLE artifact_rule (
 
 
 EOF
+todo "Fields Dependencies use an optional css rule for highlighting. "
+todo "  Default color is yellow. You can customize it for your theme by overiding "
+todo "  this css rule in your stylesheets. Please have a look at the end of "
+todo "  CodeX stylesheets for an example."
+todo "Fields Dependencies need javascript files to be updated. Perhaps you have to "
+todo "  modify your Theme.class in order to handle the inclusion of those files."
+todo "  This can only happen if you have overiden the method generic_header_start() "
+todo "  or if you have overiden the method header() and you don't call "
+todo "  generic_header_start. Locates the line \$em->processEvent(\"javascript_file\", null);\" "
+todo "  and add below this line the following snippet: "
+todo "  "
+todo "          foreach (\$this->javascript_files as \$file) { "
+todo "              echo '<script type=\"text/javascript\" src=\"'. \$file .'\"></script>'.\"\\\n\"; "
+todo "          } "
+todo "  "
+
 
 echo " DB - Reference patterns update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
