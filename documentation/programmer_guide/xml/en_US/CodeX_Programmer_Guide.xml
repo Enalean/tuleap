@@ -37,7 +37,7 @@ Also note that we are re-using parameters from the User Guide to
 avoid duplications -->
 
 <!ENTITY % ParametersDefault SYSTEM "../../../user_guide/xml/ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "../../../user_guide/xml/ParametersLocal.dtd">
+<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd">
 %ParametersLocal;
 %ParametersDefault;
 ]>
