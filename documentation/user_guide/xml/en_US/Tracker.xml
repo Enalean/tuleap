@@ -1867,7 +1867,7 @@ width="14.5cm" />
             <listitem><simpara>a tracker admin will have access to all artifacts, since a tracker admin is a project member,</simpara></listitem>
             <listitem><simpara>a member of ugroup Company_A will only have access to artifacts submitted by members of the ugroup Company_A (the same for Company_B),</simpara></listitem>
             <listitem><simpara>a project member which is also member of ugroup Company_A will have access to all artifacts since he is a project member,</simpara></listitem>
-            <listitem><simpara>a member of ugroup Company_C will not have access to artifacts (if he is not also member of a ugroup like project_member, company_a or company_b).</simpara></listitem>
+            <listitem><simpara>a member of ugroup Company_C will not have access to artifacts (if he is not also member of a ugroup like project_member, Company_A or Company_B).</simpara></listitem>
           </itemizedlist>
 
 	  </tip>

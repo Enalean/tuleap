@@ -75,12 +75,13 @@
 			<listitem><simpara>DataAcessObject class provides only two methods, the first for retrieving data (SELECT statement) which will return the instance for DataAccessResult from the DataAccess class. The second method is used for anything that changes the database, i.e. INSERT, UPDATE and DELETE.</simpara></listitem>
 			<listitem><simpara>To access a table, you have to provide a specific Data Access Object which extends the Dao class, and add methods to retrieve or update your data. For exemple:<programlisting><![CDATA[
 function & searchByID ($id) {
-	$sql = sprintf('SELECT * FROM log WHERE id = ', $this->da->quoteSmart($id));
+	$sql = sprintf('SELECT * FROM log WHERE id = ', 
+		$this->da->quoteSmart($id));
 	return $this->retrieve($sql);
 }
 ]]></programlisting>
 			</simpara></listitem>
-                        <listitem><simpara>DataAccess provide a method <programlisting>quoteSmart</proramlisting> which escape malicious characters (from sql engine point of view) from a string and add quotes around if needed (numerics do not need quotes). Please note that the string should not have been already escaped. This method is mandatory when inserting data from request, and should be used in association with the HTTPRequest wrapper.</simpara></listitem>
+                        <listitem><simpara>DataAccess provide a method <programlisting>quoteSmart</programlisting> which escape malicious characters (from sql engine point of view) from a string and add quotes around if needed (numerics do not need quotes). Please note that the string should not have been already escaped. This method is mandatory when inserting data from request, and should be used in association with the HTTPRequest wrapper.</simpara></listitem>
 		</itemizedlist>
 	</section>
 	<section id="Events">
@@ -358,6 +359,17 @@ cp -ir /home/httpd/SF/www/themes/CodeX/images/*
 			</orderedlist>
 		</section>
 	</section>
+        <section id="FieldsDependencies">
+                <title>Fields Dependencies</title>
+		<figure>
+			<title>Field Dependencies Architecture</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodeXFieldsDependencies.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+        </section>
 </chapter>
 <!--
 Local Variables:

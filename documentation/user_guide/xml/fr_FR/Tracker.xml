@@ -1921,7 +1921,7 @@ width="14.5cm" />
         <tip>
           <title>Exemple : configurer les permissions pour vos clients</title>
     <figure id="TrackerPermissionsExample">
-      <title>A sample tracker permissions screen</title>
+      <title>Exemple d'écran de permissions pour un outil de suivi</title>
 
       <mediaobject>
 	<imageobject>
@@ -1959,7 +1959,7 @@ width="14.5cm" />
             <listitem><simpara>un admin outil de suivi aura accès à tous les artefacts, puisqu'il est membre du projet,</simpara></listitem>
             <listitem><simpara>un membre de Compagnie_A aura accès seulement aux artefacts soumis par un membre de Compagnie_A (pareil pour Compagnie_B),</simpara></listitem>
             <listitem><simpara>un membre du projet qui est aussi membre de Compagnie_A aura accès à tous les artefacs puisqu'il est membre du projet,</simpara></listitem>
-            <listitem><simpara>un membre de Compagnie_C n'aura pas accès aux artefacts (si il n'est pas membre d'un group comme membres_projet, Compagnie_A ou Compagny_C).</simpara></listitem>
+            <listitem><simpara>un membre de Compagnie_C n'aura pas accès aux artefacts (si il n'est pas membre d'un groupe comme membres_projet, Compagnie_A ou Compagnie_B).</simpara></listitem>
           </itemizedlist>
 
           </tip>
@@ -2023,7 +2023,7 @@ width="14.5cm" />
           <listitem>
             <para><emphasis role="bold">-</emphasis> :
             ce niveau de permission qui s'affiche sous forme d'un
-             tiret signifie que le groupe n'a pas de permission spécifique, à l'instar des permissions sur less outils de suivis.</para>
+             tiret signifie que le groupe n'a pas de permission spécifique, à l'instar des permissions sur les outils de suivis.</para>
           </listitem>
 
         </itemizedlist>
