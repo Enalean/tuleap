@@ -109,7 +109,9 @@ fi
 export PATH=${OLD_PATH}
 
 cd $BASEDIR/programmer_guide/pdf/en_US
-cp -f CodeX_Programmer_Guide.pdf CodeX_Programmer_Guide_old.pdf > /dev/null
+if [ -f "CodeX_Programmer_Guide.pdf" ]; then
+    cp -f CodeX_Programmer_Guide.pdf CodeX_Programmer_Guide_old.pdf > /dev/null
+fi
 mv CodeX_Programmer_Guide_new.pdf CodeX_Programmer_Guide.pdf
 cd "$CURRENTDIR"
 exit 0

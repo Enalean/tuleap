@@ -141,7 +141,9 @@ do
     export PATH=${OLD_PATH}
 
     cd $BASEDIR/user_guide/pdf/$lang
-    cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf > /dev/null
+    if [ -f "CodeX_User_Guide.pdf" ]; then
+        cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf > /dev/null
+    fi
     mv CodeX_User_Guide_new.pdf CodeX_User_Guide.pdf
 done
 cd "$CURRENTDIR"
