@@ -165,8 +165,8 @@ if (isset($show_confirm) && $show_confirm) {
                                      '',  // service ID - N/A
                                      '1', // is_used
                                      $group_id);
-                $result=$reference_manager->createReference($ref);
-            }
+                $result=$reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
+           }
         }
 	
 	// Show the final registration complete message and send email
