@@ -2257,24 +2257,6 @@ width="14.5cm" />
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="bold">Display this field
-	    ...</emphasis>: you can decide if you want to see this
-	    field to appear on the bug submission form for project
-	    members and non project members. In general non project
-	    members are given access to restricted set of fields when
-	    they submit a bug. As an example they are not supposed to
-	    know how critical a bug is (&#34;Severity&#34; field), how to
-	    prioritize it (&#34;Priority&#34; field) (or whom a bug should be
-	    assigned to (&#34;Assigned To&#34; field). Therefore these fields
-	    should probably not appear on non project members submission
-	    form.</para>
-
-	    <para>Finally, some fields have fixed display settings and
-	    they always or never appear on the submission form. For
-	    instance the &#34;Artifact ID&#34; field never appears on the bug
-	    submission form because by definition a bug not yet
-	    submitted has no Artifact ID.</para>
-	    
 	    <figure id="FigureTrackerFieldUsageSettings">
 	      <title>Tracker field usage settings</title>
 	      
