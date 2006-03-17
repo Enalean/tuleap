@@ -244,6 +244,7 @@ while ($ln = pop(@groupdump_array)) {
                   system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
                 }
                 system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
+                system("chown -R $cxname:$gid loginfo*");
 
 		# put an empty line in in the valid tag cache (means no tag yet)
 		# (this file is not under version control so don't check it in)
@@ -315,6 +316,7 @@ while ($ln = pop(@groupdump_array)) {
 	      system("echo \"ALL /usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
+              system("chown -R $cxname:$gid commitinfo*");
 	    }
 	}
 	#
