@@ -63,9 +63,15 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         F3(C1) => F2(B1, B3) The person C1 can access to rooms B1 and B3
         F3(C2) => F2(B2)     The person C2 can access to room B2 only
         
+        /!\ those rules are not right since a field can be a target for only one field.
+        
         Scenarios:
         S1 => A2, B3, C1, D1 should be valid (C1 can use A2 in B3)
-        S2 => A2, B3, C2, D1 should not be valid (C2 cannot access to B3)
+        S2 => A2, B3, C2, D1 should *not* be valid (C2 cannot access to B3)
+        S3 => (A1, A2), B3, C1, D1 should be valid
+        S4 => (A1, A2), B2, C2, D1 should be valid (even if A1 cannot access to B2)
+        S5 => A1, (B1, B3), C1, D1 should be valid
+        S6 => A1, (B1, B2), C1, D1 should *not* be valid (A1 or C1 cannot access to B2)
         */
         $r1 =& new ArtifactRuleValue(1, 1, 'F1', 'A1', 'F2', 'B1');
         $r2 =& new ArtifactRuleValue(2, 1, 'F1', 'A1', 'F2', 'B3');
@@ -81,18 +87,23 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         
         $f1 =& new MockArtifactField($this);
         $f1->setReturnValue('getID', 'F1');
+        $f1->setReturnValue('getLabel', 'f_1');
+        $f1->setReturnValue('getFieldPredefinedValues', null);
+
         $f2 =& new MockArtifactField($this);
         $f2->setReturnValue('getID', 'F2');
         $f2->setReturnValue('getLabel', 'f_2');
-        $f2->setReturnValue('getFieldPredefinedValues', array());
+        $f2->setReturnValue('getFieldPredefinedValues', null);
         
         $f3 =& new MockArtifactField($this);
         $f3->setReturnValue('getID', 'F3');
         $f3->setReturnValue('getLabel', 'f_3');
-        $f3->setReturnValue('getFieldPredefinedValues', 'F3');
+        $f3->setReturnValue('getFieldPredefinedValues', null);
         
         $f4 =& new MockArtifactField($this);
         $f4->setReturnValue('getID', 'F4');
+        $f4->setReturnValue('getLabel', 'f_4');
+        $f4->setReturnValue('getFieldPredefinedValues', null);
         
         $aff =& new MockArtifactFieldFactory($this);
         $aff->setReturnReference('getFieldFromName', $f1, array('f_1'));
@@ -102,11 +113,28 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         
         $arm =& new ArtifactRulesManagerTestVersion($this);
         $arm->setReturnReference('_getArtifactRuleFactory', $arf);
-        $arm->setReturnValueAt(0, '_getSelectedValuesForField', array('C2')); // source
-        $arm->setReturnValueAt(1, '_getSelectedValuesForField', array('B3')); // target
+        $arm->setReturnValue('_getSelectedValuesForField', array('a_1'), array(null, 'F1', 'A1'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('a_2'), array(null, 'F1', 'A2'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_1'), array(null, 'F2', 'B1'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_2'), array(null, 'F2', 'B2'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_3'), array(null, 'F2', 'B3'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('c_1'), array(null, 'F3', 'C1'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('c_2'), array(null, 'F3', 'C2'));
+        $arm->setReturnValue('_getSelectedValuesForField', array('a_1'), array(null, 'F1', array('A1')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('a_2'), array(null, 'F1', array('A2')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_1'), array(null, 'F2', array('B1')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_2'), array(null, 'F2', array('B2')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_3'), array(null, 'F2', array('B3')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('c_1'), array(null, 'F3', array('C1')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('c_2'), array(null, 'F3', array('C2')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('a_1', 'a_2'), array(null, 'F3', array('A1', 'A2')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_1', 'b_3'), array(null, 'F3', array('B1', 'B3')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_1', 'b_2'), array(null, 'F3', array('B1', 'B2')));
+        $arm->setReturnValue('_getSelectedValuesForField', array('b_2', 'b_3'), array(null, 'F3', array('B2', 'B3')));
         
-        $GLOBALS['feedback'] = '';
+        /**/
         //S1
+        $GLOBALS['feedback'] = '';
         $this->assertTrue(
             $arm->validate(
                 1, 
@@ -120,9 +148,9 @@ class ArtifactRulesManagerTest extends UnitTestCase {
             )
         );
         $this->assertEqual($GLOBALS['feedback'], '');
-        
-        $GLOBALS['feedback'] = '';
+        /**/
         //S2
+        $GLOBALS['feedback'] = '';
         $this->assertFalse(
             $arm->validate(
                 1, 
@@ -135,7 +163,72 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'],  'f_3(C2) -> f_2(B3) : ');
+        $this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
+        /**/
+        //S3
+        $GLOBALS['feedback'] = '';
+        $this->assertTrue(
+            $arm->validate(
+                1, 
+                array(
+                    'f_1' => array('A1', 'A2'),
+                    'f_2' => 'B3',
+                    'f_3' => 'C1',
+                    'f_4' => 'D1'
+                ),
+                $aff
+            )
+        );
+        $this->assertEqual($GLOBALS['feedback'],  '');
+        /**/
+        //S4
+        $GLOBALS['feedback'] = '';
+        $this->assertTrue(
+            $arm->validate(
+                1, 
+                array(
+                    'f_1' => array('A1', 'A2'),
+                    'f_2' => 'B2',
+                    'f_3' => 'C2', 
+                    'f_4' => 'D1'
+                ),
+                $aff
+            )
+        );
+        $this->assertEqual($GLOBALS['feedback'],  '');
+        /**/
+        //S5
+        $GLOBALS['feedback'] = '';
+        $this->assertTrue(
+            $arm->validate(
+                1, 
+                array(
+                    'f_1' => 'A1',
+                    'f_2' => array('B1', 'B3'),
+                    'f_3' => 'C1',
+                    'f_4' => 'D1'
+                ),
+                $aff
+            )
+        );
+        $this->assertEqual($GLOBALS['feedback'],  '');
+        /**/
+        //S6
+        $GLOBALS['feedback'] = '';
+        $this->assertFalse(
+            $arm->validate(
+                1, 
+                array(
+                    'f_1' => 'A1', 
+                    'f_2' => array('B1', 'B2'), //A1 cannot access to B2 ! 
+                    'f_3' => 'C1', 
+                    'f_4' => 'D1'
+                ),
+                $aff
+            )
+        );
+        $this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2) : ');
+        /**/
     }
 }
 
