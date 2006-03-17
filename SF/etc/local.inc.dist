@@ -222,7 +222,7 @@ $sys_lang='en_US';
 // secure and unsecure connection after login
 // (checkbox on login page). If 0 she cannot choose.
 // 
-$sys_stay_in_ssl = 0;
+$sys_stay_in_ssl = 1;
 
 //
 // If set to 1 (one) it forces the server to operate
