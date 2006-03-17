@@ -11,7 +11,7 @@
 #
 #  $Id: migration_24.sh 1776 2005-06-23 14:29:05Z guerin $
 #
-#      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
+#      Originally written by Laurent Julliard 2004-2006, CodeX Team, Xerox
 #
 #  This file is part of the CodeX software and must be placed at the same
 #  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
@@ -109,7 +109,7 @@ echo "Migration script from CodeX 2.6 to CodeX 2.8"
 echo
 
 ##############################################
-# Check the machine is running CodeX 2.4
+# Check the machine is running CodeX 2.6
 #
 OLD_CX_RELEASE='2.6'
 yn="y"
@@ -195,10 +195,25 @@ $SERVICE mailman stop
 
 ##############################################
 # Check Required Stock RedHat RPMs are installed
-# (note: gcc is required to recompile mailman)
-#
+# perl libwww is required for log_accum (reference extraction...)
 
-# Removed: see install script for required RPMs. No new RPM needed for upgrade
+rpms_ok=1
+for rpm in perl-URI perl-HTML-Tagset \
+   perl-HTML-Parser perl-libwww-perl
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ $? -eq 1 ]; then
+	rpms_ok=0
+	missing_rpms="$missing_rpms $rpm"
+    fi
+done
+if [ $rpms_ok -eq 0 ]; then
+    msg="The following Redhat Linux RPMs must be installed first:\n"
+    msg="${msg}$missing_rpms\n"
+    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the migration script"
+    die "$msg"
+fi
+echo "All requested RedHat RPMS installed... good!"
 
 ##############################################
 # Ask for domain name and other installation parameters
@@ -215,28 +230,28 @@ fi
 ##############################################
 
 ##############################################
-# Update local.inc  XXX OLd 2.4 to 2.6 SCRIPT!!!!!!!
-# add $sys_frs_license_mandatory in local.inc
-# OK add $sys_noreply in local.inc?
-#$sys_custompluginsroot ="/etc/codex/plugins/";
-#$sys_pluginspath       ="/plugins";
-#$sys_custompluginspath ="/customplugins";
+# Update local.inc  
+#
 
-make_backup /etc/codex/conf/local.inc codex24
+make_backup /etc/codex/conf/local.inc codex26
 
 $PERL -i'.orig' -p -e's:^(\$sys_show_project_type.*)://\1 DEPRECATED in CodeX 2.8:' /etc/codex/conf/local.inc
 
-$GREP -q "sys_server_join" /etc/codex/conf/local.inc
+$GREP -q "sys_server_join" local.test
 if [ $? -ne 0 ]; then
    # Not a maintained 2.6 release...
    $PERL -i'.orig2' -p -e's:^(\$sys_server.*):\1\n\$sys_server_join="30";\n:' /etc/codex/conf/local.inc
 fi
 
-$PERL -i'.orig3' -p -e's:(sys_session_lifetime.*):\1\n//\n// Plugins root directory \n\$sys_pluginsroot="/home/httpd/plugins/";\n\n// Where wiki attachments are stored\n\$sys_wiki_attachment_data_dir = "/home/data/wiki";:' /etc/codex/conf/local.inc
+$PERL -i'.orig3' -p -e's:(sys_pluginsroot.*):\1\n\$sys_custompluginsroot ="/etc/codex/plugins/";\n\$sys_pluginspath="/plugins";\n\$sys_custompluginspath ="/customplugins";:' /etc/codex/conf/local.inc
 
-$PERL -i'.orig3' -p -e's:($sys_email_contact.*):\1\n\/\/\n\/\/ Address from which emails are sent\n\$sys_noreply = \'"CodeX" <noreply@%sys_default_domain%>\';\n:' /etc/codex/conf/local.inc
-
+$PERL -i'.orig4' -p -e's:(sys_email_contact.*):\1\n\n\/\/\n\/\/ Address from which emails are sent\n\$sys_noreply = @@"CodeX" <noreply@%sys_default_domain%>@@;\n:' /etc/codex/conf/local.inc
+# This is just because we have pbs using quotes in the perl command
+substitute '/etc/codex/conf/local.inc' '@@' "'" 
 substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
+
+$PERL -i'.orig5' -p -e's:(sys_session_lifetime.*):\1\n\n_\/\/\n\/\/ Is license approval mandatory when downloading a file from the FRS?\n\/\/ (1 is mandatory, 0 is optional)\n\$sys_frs_license_mandatory = 1;\n:' /etc/codex/conf/local.inc
+
 
 build_dir /home/data root root 755
 build_dir /home/data/wiki sourceforge sourceforge 700
@@ -1142,22 +1157,4 @@ $CAT $TODO_FILE
 
 exit 1;
 
-
-# Still To Do
-#
-#OK  - copy new svn backup script
-# - convert all repositories to FSFS
-#OK - copy commit-email and log-accum
-#OK - analyze/optimize tables
-# add $sys_frs_license_mandatory in local.inc
-# add $sys_noreply in local.inc?
-#OK - Move CVS lockdir to safer place?
-
-#Changelog:
-# $sys_noreply => local.inc.dist  (SR #281)
-# [plugins] name : [^a-zA-Z0-9_-]
-# [plugins] enabled => available
-# HTTPRequest => wrapper on $_GET & $_POST (To use with Dao::quoteSmart)
-# Dao => quoteSmart (To use with HTTPRequest)
-# Collection Framework => follow SPL
 

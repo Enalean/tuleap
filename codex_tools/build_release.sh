@@ -158,6 +158,7 @@ Major improvements of CodeX 2.8 over 2.6:
 - new LDAP authentication mechanism. It is now provided as a plugin, which is a contribution from ST.
 - Improved scalability and response time.
 - User guide is now available in French
+- Menus (e.g. 'admin') are only displayed if the user has enough permission to use them.
  
 
 Other changes:
