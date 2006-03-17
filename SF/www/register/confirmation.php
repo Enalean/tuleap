@@ -155,6 +155,17 @@ if (isset($show_confirm) && $show_confirm) {
             $ath_new = new ArtifactType($group_100,$arr_template['group_artifact_id']);
             if ( !$ath->create($group_id,100,$ath_new->getID(),$ath_new->getName(),$ath_new->getDescription(),$ath_new->getItemName()) ) {
                 $tracker_error .= $ath->getErrorMessage()."<br>";
+            } else {
+                // Create corresponding reference
+                $ref=& new Reference(0, // no ID yet
+                                     strtolower($ath_new->getItemName()),
+                                     $Language->getText('project_reference','reference_art_desc_key'), // description
+                                     '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
+                                     'P', // scope is 'project'
+                                     '',  // service ID - N/A
+                                     '1', // is_used
+                                     $group_id);
+                $result=$reference_manager->createReference($ref);
             }
         }
 	
