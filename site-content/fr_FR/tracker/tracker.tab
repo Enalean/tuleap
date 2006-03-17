@@ -251,7 +251,7 @@ tracker_include_artifactfile	not_attached	Fichier pas attaché&nbsp;: la taille d
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactHtml.class
 #
-tracker_include_artifact	project	Projet&nbsp;:
+tracker_include_artifact	project	Projet :
 tracker_include_artifact	submit	Valider
 tracker_include_artifact	follow_ups	Commentaires
 tracker_include_artifact	cc_list	Destinataires en copie (CC)
@@ -298,9 +298,9 @@ tracker_include_artifact	add_cc	Ajouter CC&nbsp;:
 tracker_include_artifact	check_already_submitted	Avez-vous vérifié que cet artefact n'a pas déjà été soumis ?</span></b> (utiliser la boîte de recherche)	
 tracker_include_artifact	latest_modif	DERNIERES MODIFICATIONS
 tracker_include_artifact	full_snapshot	COPIE COMPLETE
-tracker_include_artifact	follow_link	Pour des informations détaillées, suivez ce lien&nbsp;:
+tracker_include_artifact	follow_link	Pour des informations détaillées, suivez ce lien :
 tracker_include_artifact	update_sent	Notification de la mise à jour de l'artefact envoyée
-tracker_include_artifact	changes_by	Modifié par&nbsp;:
+tracker_include_artifact	changes_by	Modifié par :
 tracker_include_artifact	anon_user	Utilisateur anonyme
 tracker_include_artifact	add_flup_comment	Commentaire additionnel
 tracker_include_artifact	add_attachment	Fichiers attachés additionnels
