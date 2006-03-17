@@ -636,6 +636,13 @@ DROP TABLE cvs_tracks;
 
 EOF
 
+echo " DB - drop project_type table and project_type field (in groups table)"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
+ALTER TABLE `groups` DROP `project_type`;
+DROP TABLE `project_type`;
+
+EOF
 
 echo " DB - artifact status update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
