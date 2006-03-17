@@ -147,7 +147,8 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-CGI gd gcc \
    sendmail telnet bind ntp samba python enscript \
-   python-devel rcs sendmail-cf
+   python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
+   perl-HTML-Parser perl-libwww-perl
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -520,7 +521,7 @@ for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
 /etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 /etc/codex/conf/local.inc; do
-    yn="y"
+    yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
 
