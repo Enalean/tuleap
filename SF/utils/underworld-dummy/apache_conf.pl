@@ -108,7 +108,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	      "$server_alias",
 	      "  SuexecUserGroup dummy $unix_group_name\n",
 	      "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
-              "  php_admin_value open_basedir \"/home/groups/$unix_group_name/htdocs/\"\n",
+              "  php_admin_value open_basedir \"/home/groups/$unix_group_name/htdocs\"\n",
               "  php_admin_value include_path \"/home/groups/$unix_group_name/htdocs/\"\n",
               "  php_admin_flag safe_mode on\n",
               "  php_admin_flag safe_mode_gid on\n",
