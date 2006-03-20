@@ -348,7 +348,6 @@ ALTER TABLE `plugin` CHANGE `enabled` `available` TINYINT( 4 ) DEFAULT '0' NOT N
 
 EOF
 
-ajouter $sys_custompluginsroot dans local.inc
 
 echo " DB - LDAP update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
