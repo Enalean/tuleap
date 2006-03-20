@@ -20,7 +20,7 @@ class DataAccess {
     * @param $db string database name
     */
     function DataAccess($host,$user,$pass,$db) {
-        $this->db = @mysql_pconnect($host,$user,$pass);
+        $this->db = @mysql_connect($host,$user,$pass);
         if ($this->db) {
             mysql_select_db($db,$this->db);
         }
