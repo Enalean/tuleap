@@ -333,6 +333,74 @@ done
 
 echo "Starting DB update for CodeX 2.8. This might take a few minutes."
 
+################################################################################
+echo " Upgrading 2.6 if needed"
+$PERL <<'EOF'
+
+use DBI;
+use Sys::Hostname;
+use Carp;
+
+require "/home/httpd/SF/utils/include.pl";  # Include all the predefined functions
+
+&load_local_config();
+
+&db_connect;
+
+$query = "SELECT ugroup_id FROM permissions_values WHERE permission_type = 'WIKI_READ' AND ugroup_id = 1";
+$c = $dbh->prepare($query);
+$c->execute();
+if (my ($ugroup_id) = $c->fetchrow()) {
+    #Do nothing
+} else {
+    $query = "INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',1)";
+    $c = $dbh->prepare($query);
+    $c->execute();
+}
+
+$query = "SELECT ugroup_id FROM permissions_values WHERE permission_type = 'WIKIPAGE_READ' AND ugroup_id = 1";
+$c = $dbh->prepare($query);
+$c->execute();
+if (my ($ugroup_id) = $c->fetchrow()) {
+    #Do nothing
+} else {
+    $query = "INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIPAGE_READ',1)";
+    $c = $dbh->prepare($query);
+    $c->execute();
+}
+
+$query = "SELECT ugroup_id FROM permissions_values WHERE permission_type = 'WIKIATTACHMENT_READ' AND ugroup_id = 1";
+$c = $dbh->prepare($query);
+$c->execute();
+if (my ($ugroup_id) = $c->fetchrow()) {
+    #Do nothing
+} else {
+    $query = "INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',1)";
+    $c = $dbh->prepare($query);
+    $c->execute();
+}
+
+$query = "DELETE FROM permissions_values WHERE permission_type = 'TRACKER_ACCESS_SUBMITTER' AND ugroup_id = '2'";
+$c = $dbh->prepare($query);
+$c->execute();
+$query = "DELETE FROM permissions_values WHERE permission_type = 'TRACKER_ACCESS_ASSIGNEE' AND ugroup_id = '2'";
+$c = $dbh->prepare($query);
+$c->execute();
+
+$query = "SELECT ugroup_id FROM permissions WHERE ugroup_id = 2 AND permission_type = 'TRACKER_ACCESS_ASSIGNEE' OR permission_type = 'TRACKER_ACCESS_SUBMITTER'";
+$c = $dbh->prepare($query);
+$c->execute();
+if (my ($ugroup_id) = $c->fetchrow()) {
+    $query = "INSERT INTO permissions(object_id, ugroup_id, permission_type) SELECT DISTINCT object_id, 2, 'TRACKER_ACCESS_FULL' FROM permissions WHERE ugroup_id = 2 AND permission_type = 'TRACKER_ACCESS_ASSIGNEE' OR permission_type = 'TRACKER_ACCESS_SUBMITTER'";
+    $c = $dbh->prepare($query);
+    $c->execute();
+    
+    $query = "DELETE FROM permissions WHERE ugroup_id = 2 AND permission_type = 'TRACKER_ACCESS_ASSIGNEE' OR permission_type = 'TRACKER_ACCESS_SUBMITTER'";
+    $c = $dbh->prepare($query);
+    $c->execute();
+}
+EOF
+
 echo " DB - plugin update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
