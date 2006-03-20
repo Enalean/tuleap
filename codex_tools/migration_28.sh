@@ -250,7 +250,7 @@ $PERL -i'.orig4' -p -e's:(sys_email_contact.*):\1\n\n\/\/\n\/\/ Address from whi
 substitute '/etc/codex/conf/local.inc' '@@' "'" 
 substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
 
-$PERL -i'.orig5' -p -e's:(sys_session_lifetime.*):\1\n\n_\/\/\n\/\/ Is license approval mandatory when downloading a file from the FRS?\n\/\/ (1 is mandatory, 0 is optional)\n\$sys_frs_license_mandatory = 1;\n:' /etc/codex/conf/local.inc
+$PERL -i'.orig5' -p -e's:(sys_session_lifetime.*):\1\n\n\/\/\n\/\/ Is license approval mandatory when downloading a file from the FRS?\n\/\/ (1 is mandatory, 0 is optional)\n\$sys_frs_license_mandatory = 1;\n:' /etc/codex/conf/local.inc
 
 
 ##############################################
@@ -408,7 +408,7 @@ $CAT <<EOF | $MYSQL $pass_opt sourceforge
 ###############################################################################
 #
 #
-ALTER TABLE 'plugin' CHANGE 'enabled' 'available' TINYINT( 4 ) DEFAULT '0' NOT NULL 
+ALTER TABLE plugin CHANGE enabled available TINYINT( 4 ) DEFAULT '0' NOT NULL;
 
 EOF
 
@@ -517,7 +517,7 @@ INSERT INTO reference SET \
     id='1',        \
     keyword='art', \
     description='reference_art_desc_key', \
-    link='/tracker/?func=detail&aid=$1&group_id=$group_id', \
+    link='/tracker/?func=detail&aid=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='tracker';
 
@@ -525,7 +525,7 @@ INSERT INTO reference SET \
     id='2',        \
     keyword='artifact', \
     description='reference_art_desc_key', \
-    link='/tracker/?func=detail&aid=$1&group_id=$group_id', \
+    link='/tracker/?func=detail&aid=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='tracker';
 
@@ -533,7 +533,7 @@ INSERT INTO reference SET \
     id='3',        \
     keyword='commit', \
     description='reference_cvs_desc_key', \
-    link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
+    link='/cvs/?func=detailcommit&commit_id=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='cvs';
 
@@ -541,7 +541,7 @@ INSERT INTO reference SET \
     id='4',        \
     keyword='cvs', \
     description='reference_cvs_desc_key', \
-    link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
+    link='/cvs/?func=detailcommit&commit_id=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='cvs';
 
@@ -549,7 +549,7 @@ INSERT INTO reference SET \
     id='5',        \
     keyword='rev', \
     description='reference_svn_desc_key', \
-    link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
+    link='/svn/?func=detailrevision&rev_id=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='svn';
 
@@ -557,7 +557,7 @@ INSERT INTO reference SET \
     id='6',        \
     keyword='revision', \
     description='reference_svn_desc_key', \
-    link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
+    link='/svn/?func=detailrevision&rev_id=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='svn';
 
@@ -565,7 +565,7 @@ INSERT INTO reference SET \
     id='7',        \
     keyword='svn', \
     description='reference_svn_desc_key', \
-    link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
+    link='/svn/?func=detailrevision&rev_id=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='svn';
 
@@ -573,7 +573,7 @@ INSERT INTO reference SET \
     id='8',        \
     keyword='wiki', \
     description='reference_wiki_desc_key', \
-    link='/wiki/index.php?group_id=$group_id&pagename=$1', \
+    link='/wiki/index.php?group_id=\$group_id&pagename=\$1', \
     scope='S', \
     service_short_name='wiki';
 
@@ -581,7 +581,7 @@ INSERT INTO reference SET \
     id='9',        \
     keyword='wiki', \
     description='reference_wikiversion_desc_key', \
-    link='/wiki/index.php?group_id=$group_id&pagename=$1&version=$2', \
+    link='/wiki/index.php?group_id=\$group_id&pagename=\$1&version=\$2', \
     scope='S', \
     service_short_name='wiki';
 
@@ -589,7 +589,7 @@ INSERT INTO reference SET \
     id='10',        \
     keyword='doc', \
     description='reference_doc_desc_key', \
-    link='/docman/display_doc.php?docid=$1&group_id=$group_id', \
+    link='/docman/display_doc.php?docid=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='doc';
 
@@ -597,7 +597,7 @@ INSERT INTO reference SET \
     id='11',        \
     keyword='document', \
     description='reference_doc_desc_key', \
-    link='/docman/display_doc.php?docid=$1&group_id=$group_id', \
+    link='/docman/display_doc.php?docid=\$1&group_id=\$group_id', \
     scope='S', \
     service_short_name='doc';
 
@@ -605,7 +605,7 @@ INSERT INTO reference SET \
     id='12',        \
     keyword='news', \
     description='reference_news_desc_key', \
-    link='/forum/forum.php?forum_id=$1', \
+    link='/forum/forum.php?forum_id=\$1', \
     scope='S', \
     service_short_name='news';
 
@@ -613,7 +613,7 @@ INSERT INTO reference SET \
     id='13',        \
     keyword='forum', \
     description='reference_forum_desc_key', \
-    link='/forum/forum.php?forum_id=$1', \
+    link='/forum/forum.php?forum_id=\$1', \
     scope='S', \
     service_short_name='forum';
 
@@ -621,7 +621,7 @@ INSERT INTO reference SET \
     id='14',        \
     keyword='msg', \
     description='reference_msg_desc_key', \
-    link='/forum/message.php?msg_id=$1', \
+    link='/forum/message.php?msg_id=\$1', \
     scope='S', \
     service_short_name='forum';
 
@@ -629,7 +629,7 @@ INSERT INTO reference SET \
     id='15',        \
     keyword='file', \
     description='reference_file_desc_key', \
-    link='/file/confirm_download.php?group_id=$group_id&file_id=$1', \
+    link='/file/confirm_download.php?group_id=\$group_id&file_id=\$1', \
     scope='S', \
     service_short_name='file';
 
@@ -637,7 +637,7 @@ INSERT INTO reference SET \
     id='16',        \
     keyword='release', \
     description='reference_release_desc_key', \
-    link='/file/showfiles.php?group_id=$group_id6&release_id=$1', \
+    link='/file/showfiles.php?group_id=\$group_id6&release_id=\$1', \
     scope='S', \
     service_short_name='file';
 
@@ -647,28 +647,28 @@ INSERT INTO reference SET \
     id='90',        \
     keyword='bug', \
     description='reference_bug_desc_key', \
-    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=bug', \
+    link='/tracker/?func=gotoid&group_id=\$group_id&aid=\$1&atn=bug', \
     scope='S', \
     service_short_name='bugs';
 INSERT INTO reference SET \
     id='91',        \
     keyword='task', \
     description='reference_task_desc_key', \
-    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=task', \
+    link='/tracker/?func=gotoid&group_id=\$group_id&aid=\$1&atn=task', \
     scope='S', \
     service_short_name='task';
 INSERT INTO reference SET \
     id='92',        \
     keyword='sr', \
     description='reference_sr_desc_key', \
-    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=sr', \
+    link='/tracker/?func=gotoid&group_id=\$group_id&aid=\$1&atn=sr', \
     scope='S', \
     service_short_name='support';
 INSERT INTO reference SET \
     id='93',        \
     keyword='patch', \
     description='reference_patch_desc_key', \
-    link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=patch', \
+    link='/tracker/?func=gotoid&group_id=\$group_id&aid=\$1&atn=patch', \
     scope='S', \
     service_short_name='patch';
 
@@ -717,8 +717,8 @@ EOF
 echo " DB - drop project_type table and project_type field (in groups table)"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
-ALTER TABLE 'groups' DROP 'project_type';
-DROP TABLE 'project_type';
+ALTER TABLE groups DROP project_type;
+DROP TABLE project_type;
 
 EOF
 
@@ -1110,11 +1110,11 @@ EOF
 # CVS lockdir moved from cvs root to /var/lock/cvs
 # This is to prevent checking out the lock dir.
 # We do not delete existing .lockdir
-print "Creating new CVS lock directories, and updating existing cvs configs"
+echo "Creating new CVS lock directories, and updating existing cvs configs"
 
 build_dir /var/lock/cvs root root 751
 
-for projconfig in `ls /cvsroot/x*/CVSROOT/config`
+for projconfig in `ls /cvsroot/*/CVSROOT/config`
 do
    projname=`echo $projconfig | perl -e '$_=<>; s@/cvsroot/(.*)/CVSROOT.*@\1@; chomp; print'`
    # Create lockdir
