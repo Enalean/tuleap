@@ -237,7 +237,7 @@ make_backup /etc/codex/conf/local.inc codex26
 
 $PERL -i'.orig' -p -e's:^(\$sys_show_project_type.*)://\1 DEPRECATED in CodeX 2.8:' /etc/codex/conf/local.inc
 
-$GREP -q "sys_server_join" local.test
+$GREP -q "sys_server_join" /etc/codex/conf/local.inc
 if [ $? -ne 0 ]; then
    # Not a maintained 2.6 release...
    $PERL -i'.orig2' -p -e's:^(\$sys_server.*):\1\n\$sys_server_join="30";\n:' /etc/codex/conf/local.inc
@@ -252,10 +252,6 @@ substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_doma
 
 $PERL -i'.orig5' -p -e's:(sys_session_lifetime.*):\1\n\n_\/\/\n\/\/ Is license approval mandatory when downloading a file from the FRS?\n\/\/ (1 is mandatory, 0 is optional)\n\$sys_frs_license_mandatory = 1;\n:' /etc/codex/conf/local.inc
 
-
-build_dir /home/data root root 755
-build_dir /home/data/wiki sourceforge sourceforge 700
-rmdir /etc/codex/themes/messages
 
 ##############################################
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
@@ -344,7 +340,7 @@ $CAT <<EOF | $MYSQL $pass_opt sourceforge
 ###############################################################################
 #
 #
-ALTER TABLE `plugin` CHANGE `enabled` `available` TINYINT( 4 ) DEFAULT '0' NOT NULL 
+ALTER TABLE 'plugin' CHANGE 'enabled' 'available' TINYINT( 4 ) DEFAULT '0' NOT NULL 
 
 EOF
 
@@ -653,8 +649,8 @@ EOF
 echo " DB - drop project_type table and project_type field (in groups table)"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
-ALTER TABLE `groups` DROP `project_type`;
-DROP TABLE `project_type`;
+ALTER TABLE 'groups' DROP 'project_type';
+DROP TABLE 'project_type';
 
 EOF
 
