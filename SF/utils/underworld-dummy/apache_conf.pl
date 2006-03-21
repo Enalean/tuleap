@@ -89,21 +89,13 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 
 	  # Determine whether the virtual host can be accessed through
 	  # HTTP and/or HTTPS
-          # Virtual hosts with HTTPS are incompatible with Subversion, so remove
-          # virtual hosts in this case.
-	  if ($sys_https_host eq "") {
-	    $vhost = "$ip:80";
-	  } else {
-	    if ($sys_force_ssl == 1) {
-	      $vhost = "$ip:443";
-	    } else {
-	      $vhost = "$ip:80 $ip:443";
-	    }
-	  }
+          # Name-based Virtual hosts are incompatible with HTTPS, so only use $ip:80 for now.
+          # (used to be $vhost = "$ip:80 $ip:443";)
+          # HTTPS and virtualhosts are compatible with IP-based vhosts.
 
 	  # Project Virtual Web site
 	  push @apache_zone,
-	    ( "<VirtualHost $vhost>\n",
+	    ( "<VirtualHost $ip:80>\n",
 	      "$server_name",
 	      "$server_alias",
 	      "  SuexecUserGroup dummy $unix_group_name\n",
