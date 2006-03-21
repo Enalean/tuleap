@@ -317,6 +317,20 @@ DocumentRoot "/home/httpd/SF/www"
     Allow from all
 </Directory>
 
+# Don't allow access to API for anyone.
+# Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
+# For better security, you can filter on the server IP address
+SetEnvIf User-Agent ^CodeX let_me_in
+<Directory "/home/httpd/SF/www/api">
+    # API scrips do not end with ".php"
+    ForceType application/x-httpd-php
+    Order Deny,Allow
+    Deny from all
+    Allow from env=let_me_in
+</Directory>
+
+
+
 #
 # UserDir: The name of the directory that is appended onto a user's home
 # directory if a ~user request is received.
@@ -529,126 +543,6 @@ Alias /icons/ "/var/www/icons/"
     Allow from all
 </Directory>
 
-# CodeX documentation
-Alias /documentation/ "/home/httpd/documentation/"
-
-<Directory "/home/httpd/documentation">
-    Options MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
-
-# Don't allow access to API for anyone.
-# Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
-# For better security, you can filter on the server IP address
-SetEnvIf User-Agent ^CodeX let_me_in
-<Directory "/home/httpd/SF/www/api">
-    # API scrips do not end with ".php"
-    ForceType application/x-httpd-php
-    Order Deny,Allow
-    Deny from all
-    Allow from env=let_me_in
-</Directory>
-
-
-# CodeX custom themes
-Alias /custom/ "/etc/codex/themes/"
-
-
-# phpWiki themes
-Alias /wiki/themes "/home/httpd/SF/common/wiki/phpwiki/themes"
-<Directory "/home/httpd/SF/common/wiki/phpwiki/themes">
-    Options None
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
-
-# MRTG (Multi Router Traffic Grapher) - Monitor System
-Alias /mrtg/ "/home/httpd/mrtg/"
-
-<Directory "/home/httpd/mrtg">
-    Options MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
-
-# The PHP interface to MySQL administration
-Alias /phpMyAdmin /home/httpd/phpMyAdmin
-
-<Directory "/home/httpd/phpMyAdmin">
-    Options MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
-
-<IfModule mod_dav_fs.c>
-    # Location of the WebDAV lock database.
-    DAVLockDB /var/lib/dav/lockdb
-</IfModule>
-
-# Plugins directory
-ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/home/httpd/plugins/$1"
-<Directory "/home/httpd/plugins/[^/]*/cgi-bin">
-    AllowOverride None
-    Options ExecCGI
-    Order allow,deny
-    Allow from all
-</Directory>
-
-AliasMatch ^/plugins/([^/]*)/(.*) /home/httpd/plugins/$1/www/$2
-<DirectoryMatch "/home/httpd/plugins/([^/]*)/www/">
-    Options Indexes MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</DirectoryMatch>
-
-# Custom plugins directory
-ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codex/plugins/$1"
-<Directory "/etc/codex/plugins/[^/]*/cgi-bin">
-    AllowOverride None
-    Options ExecCGI
-    Order allow,deny
-    Allow from all
-</Directory>
-
-AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codex/plugins/$1/www/$2
-<DirectoryMatch "/etc/codex/plugins/([^/]*)/www/">
-    Options Indexes MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</DirectoryMatch>
-
-#
-# ScriptAlias: This controls which directories contain server scripts.
-# ScriptAliases are essentially the same as Aliases, except that
-# documents in the realname directory are treated as applications and
-# run by the server when requested rather than as documents sent to the client.
-# The same rules about trailing "/" apply to ScriptAlias directives as to
-# Alias.
-#
-ScriptAlias /cgi-bin/ "/home/httpd/cgi-bin/"
-
-# FollowSymLinks is needed here because of the rewrite rule (otherwise, other CGIs are forbidden...)
-<Directory "/home/httpd/cgi-bin">
-    AllowOverride None
-    Options ExecCGI FollowSymLinks
-    Order allow,deny
-    Allow from all
-    RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewcvs.php/$1
-    <IfModule mod_rewrite.c>
-      RewriteEngine on
-      RewriteCond %{QUERY_STRING} roottype=svn
-      RewriteRule viewcvs.cgi/(.*) /svn/viewcvs.php/$1 [R]
-
-      RewriteRule viewcvs.cgi/(.*) /cvs/viewcvs.php/$1 [R]
-    </IfModule>
-</Directory>
 
 #
 # Redirect allows you to tell clients about documents which used to exist in
@@ -1119,6 +1013,10 @@ NameVirtualHost %sys_ip_address%:80
 <VirtualHost %sys_ip_address%:80>
  ServerName %sys_default_domain%
  ServerAlias xww.%sys_default_domain% www.%sys_default_domain%
+
+ # Include CodeX alias definitions (also included in conf.d/ssl.conf)
+ Include conf/codex_aliases.conf
+
 </VirtualHost>
 
                                                                                 

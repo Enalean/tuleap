@@ -277,13 +277,20 @@ make_backup /etc/httpd/conf/httpd.conf codex26
 make_backup /etc/httpd/conf.d/php.conf codex26
 $CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
 $CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
+$CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
+$CP $INSTALL_DIR/SF/etc/codex_aliases.conf.dist /etc/httpd/conf/codex_aliases.conf
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+# replace string patterns in ssl.conf
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
 todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
 todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
+todo "Edit the new /etc/httpd/conf/codex_aliases.conf file and update it if needed"
 
 # Re-copy phpMyAdmin and viewcvs installations
 $CP -af /home/httpd_26/phpMyAdmin* /home/httpd

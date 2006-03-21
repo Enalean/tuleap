@@ -520,7 +520,7 @@ make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
 /etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
-/etc/codex/conf/local.inc; do
+/etc/codex/conf/local.inc /etc/httpd/conf/codex_aliases.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -904,7 +904,9 @@ if [ "$yn" = "y" ]; then
     $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
 todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
-
+todo "Customize site-content information for your site."
+todo "  For instance: contact/contact.txt cvs/intro.txt"
+todo "  svn/intro.txt include/new_project_email.txt, etc."
 ##############################################
 # Shell Access configuration
 #
