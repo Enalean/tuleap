@@ -327,7 +327,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
     /**
     * we store internally the state of the target selection to not loose it when user switches between rules
     */
-    updateSelected: function(target_field, source_field) {
+    updateSelected: function(source_field, target_field) {
         if (this.target_field_id == target_field.id) {
             if (this.source_field_id == source_field.id) {
                 if (this.can_apply()) {
@@ -385,7 +385,7 @@ function applyRules(evt, name) {
     if(selections[source_field.id]) {
         $H(selections[source_field.id]).keys().each(function(key) {
             rules.each(function(rule) {
-                rule.updateSelected(source_field, fields[key]);
+                rule.updateSelected(fields[key], source_field);
             });
         });
     }
@@ -518,6 +518,16 @@ function initFieldDependencies() {
                     });
                     fields[field_id].select(options_that_should_be_selected);
             }
+    });
+    //Once fields have been selected, we store curent selection in rules
+    $H(fields).keys().each(function (target_id) {
+        if(selections[target_id]) {
+            $H(selections[target_id]).keys().each(function(source_id) {
+                rules.each(function(rule) {
+                    rule.updateSelected(fields[source_id], fields[target_id] );
+                });
+            });
+        }
     });
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
     codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
