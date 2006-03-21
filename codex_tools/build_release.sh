@@ -153,26 +153,41 @@ if you have questions.
 
 
 Major improvements of CodeX 2.8 over 2.6:
-- Field dependencies in trackers: Field dependencies allow you to link source field values to target field values. In other words, the values proposed to a final user for a field will depend upon the value selected for another field.
-- New Reference system. With earlier versions of CodeX, it was possible to automatically create links in commit messages or artifact follow-ups by using certain patterns: 'commit #123' to reference a CVS commit, 'rev #234' for subversion, or 'art #246' for an artifact. This made a direct link to the object. With CodeX 2.8, it is now possible to reference any kind of object (documents, files, artifacts, revisions, external objects, etc.), and to customize the list of recognized patterns per project.
-- new LDAP authentication mechanism. It is now provided as a plugin, which is a contribution from ST.
+- Field dependencies in trackers: Field dependencies allow you to link source 
+  field values to target field values. In other words, the values proposed to
+  a final user for a field will depend upon the value selected for another field.
+- New Reference system. With earlier versions of CodeX, it was possible to 
+  automatically create links in commit messages or artifact follow-ups by using
+  certain patterns: 'commit #123' to reference a CVS commit, 'rev #234' for 
+  subversion, or 'art #246' for an artifact. This made a direct link to the 
+  object. With CodeX 2.8, it is now possible to reference any kind of object
+  (documents, files, artifacts, revisions, external objects, etc.), and to
+  customize the list of recognized patterns per project.
+- new LDAP authentication mechanism. It is now provided as a plugin, which is a
+  contribution from ST.
 - Improved scalability and response time.
 - User guide is now available in French
-- Menus (e.g. 'admin') are only displayed if the user has enough permission to use them.
+- Menus (e.g. 'admin') are only displayed if the user has enough permission to 
+  use them.
  
 
 Other changes:
 - Improved plugin architecture
 - File download popup is not mandatory any longer (see local.inc)
-- artifact status simplified: only 'open' and 'close' values allowed. Use the new 'stage' field to specify more info (new, analyzed, accepted, under implementation, etc.)
-- Subversion permission file improved: you may now use ugroups in your permissions.
-- CVS lockdir moved from /cvsroot/projectname/.lockdir to /var/lock/cvs/projectname
+- artifact status simplified: only 'open' and 'close' values allowed. Use the 
+  new 'stage' field to specify more info (new, analyzed, accepted, under 
+  implementation, etc.)
+- Subversion permission file improved: you may now use ugroups in your 
+  permissions.
+- CVS lockdir moved from /cvsroot/projectname/.lockdir to 
+  /var/lock/cvs/projectname
 - updated SVN backup script
 - allow anonymous access to wiki
 - and many bugs fixed!
 
 Package Update:
-- Now install Subversion 1.2.3 (without BDB support) on new CodeX servers (do not upgrade existing servers)
+- Now install Subversion 1.2.3 (without BDB support) on new CodeX servers (do
+  not upgrade existing servers)
 
 -- The CodeX Team
    <info@codex.xerox.com>
