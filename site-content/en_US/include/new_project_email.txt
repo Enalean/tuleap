@@ -7,11 +7,7 @@
 // $Id$
 //
 
-if (session_issecure()) {
-        $web_server= "https://".$row_grp['unix_group_name'].".".$GLOBALS['sys_https_host'];
-} else {
-        $web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];
-}
+$web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];
 
 // Message preamble with Web pointers and server names
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
