@@ -383,7 +383,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 				}
 			}
 			$return .= '>'. ($show_value?$val.'-':'').
-			    substr($row['text'],0,35). '</OPTION>';
+			    substr($row['text'],0,60). '</OPTION>';
 		}
 	}
 	$return .= '
