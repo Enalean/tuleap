@@ -239,10 +239,10 @@ if ($set=='my') {
     // Get the list of artifact fields used in the form (they are in the URL - GET method)
     // and then build the preferences array accordingly
     // Exclude the group_id parameter
+    $pref_stg="";
     reset($prefs);
     while (list($field,$arr_val) = each($prefs)) {
-        $pref_stg="";
-		while (list(,$value_id) = each($arr_val)) {
+        while (list(,$value_id) = each($arr_val)) {
 		    $pref_stg .= '&'.$field.'[]='.$value_id;
 		}
 	
