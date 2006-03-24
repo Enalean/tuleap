@@ -110,7 +110,6 @@ class ArtifactFieldHtml extends ArtifactField {
             foreach ($values as $row) {
                 $output .= "options['". $this->getID() ."']['". $row['0'] ."'] = {option:new Option('". addslashes($row['1']) ."', '". $row['0'] ."'), selected:". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') ."};\n";
             }
-            $output .= "</script>";
             return $output;
     }        
 	/**
