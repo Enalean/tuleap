@@ -86,6 +86,15 @@ class ArtifactFieldHtml extends ArtifactField {
 	    } else {
 			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
             $array_values = array();
+            // $array_values is used to write javascript field dependencies
+            // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
+            // so we add them everytime by precaution.
+            if ($show_any) {
+                $array_values[] = array(0, $text_any);
+            }
+            if ($show_none) {
+                $array_values[] = array(100, $text_none);
+            }
             while($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
@@ -134,8 +143,17 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$group_artifact_id) {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
-			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
+            $result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
             $array_values = array();
+            // $array_values is used to write javascript field dependencies
+            // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
+            // so we add them everytime by precaution.
+            if ($show_any) {
+                $array_values[] = array(0, $text_any);
+            }
+            if ($show_none) {
+                $array_values[] = array(100, $text_none);
+            }
             while($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
@@ -144,7 +162,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			if ($box_name == '') {
 			    $box_name = $this->field_name;
 			}
-			$output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
+            $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
             $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".addslashes($this->getLabel())."');\n";
              $output .= $this->_getValuesAsJavascript($array_values,$checked);
             $output .= "\n</script>";
