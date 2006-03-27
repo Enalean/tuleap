@@ -320,38 +320,6 @@ while ($ln = pop(@groupdump_array)) {
               system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
 	    }
 	}
-	#
-	# Private directories are set to be unreadable, unwritable,
-	# and untraversable.  The project home and cvs root directories
-	# are private if either:
-	# (1) The project is private
-	# (2) The directory contains a file named .CODEX_PRIVATE
-	#
-	if ($gstatus eq 'A') {
-	  my ($cvsmode, $grpmode, $new_cvsmode, $new_grpmode);
-	  my ($public_cvs, $public_grp);
-
-	  ($d,$d,$cvsmode) = stat("$cvs_prefix/$gname");
-	  ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
-
-	  $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODEX_PRIVATE";
-	  $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
-
-	  if ($public_cvs) {
-	    $new_cvsmode = ($cvsmode | 0005);
-	  } else {
-	    $new_cvsmode = ($cvsmode & ~0007);
-	  }
-
-	  if ($public_grp) {
-	    $new_grpmode = ($grpmode | 0005);
-	  } else {
-	    $new_grpmode = ($grpmode & ~0007);
-	  }
-
-	  chmod $new_cvsmode,"$cvs_prefix/$gname" if ($cvsmode != $new_cvsmode);
-	  chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
-        }
 
 	# Create Subversion repository if needed
 	$svn_dir = "$svn_prefix/$gname";
@@ -375,13 +343,13 @@ while ($ln = pop(@groupdump_array)) {
 
 	# update Subversion DAV access control file if needed
 	my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
-        # This test will be removed if we need to list active/restricted users in the SVN auth file
-        $filetime= ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-         $atime,$mtime,$ctime,$blksize,$blocks)
-          = (stat($filename))[9];
+        
         if ($group_modified ||
             ($gstatus eq 'A' && !(-e "$svnaccess_file")) ||
-            ((stat($0))[9] > (stat("$svnaccess_file"))[9]) ) { # i.e. this script has been modified since last update
+            ( -e "$svn_prefix/$gname/.CODEX_PRIVATE") || # file may be created any time
+            ((stat($0))[9] > (stat("$svnaccess_file"))[9]) ) { 
+          # i.e. this script has been modified since last update
+          # This test will be removed if we need to list active/restricted users in the SVN auth file
           my $custom_perm=0;
           my $custom_lines;
           my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
@@ -455,6 +423,50 @@ while ($ln = pop(@groupdump_array)) {
 	  }
 	  close(FD);
 	}
+
+
+	#
+	# Private directories are set to be unreadable, unwritable,
+	# and untraversable.  The project home, subversion root and cvs root directories
+	# are private if either:
+	# (1) The project is private
+	# (2) The directory contains a file named .CODEX_PRIVATE
+	#
+	if ($gstatus eq 'A') {
+	  my ($cvsmode, $svnmode, $grpmode, $new_cvsmode, $new_svnmode, $new_grpmode);
+	  my ($public_cvs, $public_svn, $public_grp);
+
+	  ($d,$d,$cvsmode) = stat("$cvs_prefix/$gname");
+	  ($d,$d,$svnmode) = stat("$svn_prefix/$gname");
+	  ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
+
+	  $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODEX_PRIVATE";
+	  $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+	  $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+
+	  if ($public_cvs) {
+	    $new_cvsmode = ($cvsmode | 0005);
+	  } else {
+	    $new_cvsmode = ($cvsmode & ~0007);
+	  }
+
+	  if ($public_svn) {
+	    $new_svnmode = ($svnmode | 0005);
+	  } else {
+	    $new_svnmode = ($svnmode & ~0007);
+	  }
+
+	  if ($public_grp) {
+	    $new_grpmode = ($grpmode | 0005);
+	  } else {
+	    $new_grpmode = ($grpmode & ~0007);
+	  }
+
+	  chmod $new_cvsmode,"$cvs_prefix/$gname" if ($cvsmode != $new_cvsmode);
+	  chmod $new_svnmode,"$svn_prefix/$gname" if ($svnmode != $new_svnmode);
+	  chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
+        }
+
       }
 
 #
