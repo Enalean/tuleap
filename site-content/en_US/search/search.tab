@@ -17,7 +17,7 @@ search_index	search	Search
 search_index	at_least_3_ch	Search must be at least three characters
 search_index	enter_s_words	Enter Your Search Words Above
 search_index	no_match_found	No matches found for $1
-search_index	search_res	Search results for $1
+search_index	search_res	Search results for $1 ($2 results)
 search_index	project_name	Project Name
 search_index	description	Description
 search_index	user_n	User Name
