@@ -109,11 +109,11 @@ class WikiPageWrapper {
       // Create a new page (first use or page previously erased)
       $version = 0;
       $text = $Language->getText('wiki_lib_wikipagewrap', 'new_page_text', array($projectPageName));
-      $meta['author'] = user_getname();
     }
 
     $text .= "\n* [$pagename]";
     $meta['summary'] =  $Language->getText('wiki_lib_wikipagewrap', 'page_added', array($pagename));
+    $meta['author'] = user_getname();
     $pagehandle->save($text, $version + 1, $meta);
   }
 
