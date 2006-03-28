@@ -22,7 +22,7 @@ search_index	search	Recherche
 search_index	at_least_3_ch	Le mot-clé recherché doit au moins avoir 3 caractères
 search_index	enter_s_words	Saisissez les mots à rechercher dans le champs ci-dessus
 search_index	no_match_found	Aucune correspondance pour $1
-search_index	search_res	Résultats de la recherche pour $1
+search_index	search_res	Résultats de la recherche pour $1 ($2 résultats)
 search_index	project_name	Nom du projet
 search_index	description	Description
 search_index	user_n	Nom d'utilisateur
