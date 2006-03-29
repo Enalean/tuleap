@@ -2847,6 +2847,9 @@ width="14.5cm" />
         <listitem>
           <para>Si un champ n'est pas cible d'une dépendance, alors il proposera toutes ses valeurs. Dans le cas contraire, il ne proposera que celles qui satisferont les règles de dépendances.</para>
         </listitem>
+        <listitem>
+          <para>Pour rester cohérent, si il y a une dépendance entre deux champs, les permissions sur ces champs <emphasis>devraient</emphasis> être les mêmes.</para>
+        </listitem>
       </itemizedlist>
     </section>
 

@@ -2716,6 +2716,9 @@ width="14.5cm" />
         <listitem>
           <para>If a field is not the target of a dependency, then it will propose all its values. On the opposite, it will propose only those which satisfy the dependencies.</para>
         </listitem>
+        <listitem>
+          <para>To remain coherent, if there is a dependency between two fields, the permissions on those fields <emphasis>should</emphasis> be the same.</para>
+        </listitem>
       </itemizedlist>
     </section>
 
