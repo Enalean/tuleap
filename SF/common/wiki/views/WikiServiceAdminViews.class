@@ -81,10 +81,17 @@ class WikiServiceAdminViews extends WikiViews {
 
     $allPages =& WikiPage::getAllUserPages();
     $allPages[]='';
+
+    $selectedPage = $page;
+    $upageValue   = '';
+    if(!in_array($page, $allPages)) {
+        $selectedPage = '';
+        $upageValue = $page;
+    }
     print '<tr>
              <td>'.$Language->getText('wiki_views_wkserviews', 'wikipage').'</td>
              <td>
-               '.html_build_select_box_from_array($allPages, 'page', $page, true).'<br />'.$Language->getText('wiki_views_wkserviews', 'givename').' <input type="text" name="upage" value="'.$page.'" size="20" maxlength="255"/>
+               '.html_build_select_box_from_array($allPages, 'page', $selectedPage, true).'<br />'.$Language->getText('wiki_views_wkserviews', 'givename').' <input type="text" name="upage" value="'.$upageValue.'" size="20" maxlength="255"/>
              </td>
              <td>'.$Language->getText('wiki_views_wkserviews', 'wikipage_em', array($this->wikiAdminLink)).'</td>
            </tr>';
