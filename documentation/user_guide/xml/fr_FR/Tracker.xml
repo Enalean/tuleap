@@ -1210,10 +1210,17 @@ width="14.5cm" />
         de vérifier de façon manuelle que votre fichier CSV est bien
         formaté et quels champs sont obligatoires en cas de
         soumission d'un nouvel artefact. Qui plus est, un exemple de
-        fichier CSV figure en bas de page. Si vous avez déjà utilisé
+        fichier CSV figure en bas de page. 
+        Comme pour l'export de données, vous pouvez spécifier le séparateur
+        utilisé dans le fichier CSV que vous voulez importer (voir 
+        <xref linkend="AccountMaintenance" />).
+        Si vous avez déjà utilisé
         le module d'exportation (voir <xref
         linkend="ProjectDataExport" />) vous remarquerez que les
-        formats sont strictement identiques. Vous pouvez vous référez
+        formats sont strictement identiques. 
+        Ceci veut donc dire que si vous avez changé le séparateur CSV pour un export,
+        vous devrez utiliser le même séparateur pour importer ces données.
+        Vous pouvez vous référez
         à la documentation du format d'exportation en particulier pour
         les champs de type date et commentaire (voir <xref
         linkend="ArtifactComments" />). Le premier enregistrement d'un

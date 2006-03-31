@@ -285,6 +285,22 @@
       </listitem>
 
       <listitem>
+	<para><emphasis role="bold">CSV separator</emphasis>:
+          CodeX provides you export and import functionalities
+          (See <xref linkend="ProjectDataExport" /> for details).
+          The import/export format is CSV format. Like CSV norm is
+          not implemented by the same way in each software, we allow you
+          to change the CSV separator, in order to fit with your
+          prefered software!
+          The available separators are:
+          <itemizedlist mark="bullet">
+            <listitem><para>comma (,) : the default separator.</para></listitem>
+            <listitem><para>semicolon (;) : used by default by the french version of Excel.</para></listitem>
+            <listitem><para>tab (tab).</para></listitem>
+          </itemizedlist></para>
+      </listitem>
+
+      <listitem>
 	<para><emphasis role="bold">SSH shared keys</emphasis>: this one has
           to do with the Shell Account service. When you are a registered
           user, the CodeX server gives you a personal shell account with the

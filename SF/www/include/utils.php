@@ -10,6 +10,14 @@
 
 require_once('common/include/ReferenceManager.class');
 
+// Part about CSV format export
+// The separator for CSV export can differ regarding the Excel version.
+// So we let the user define his prefered separator
+define("DEFAULT_CSV_SEPARATOR", ",");
+// array of allowed separators for CSV export
+$csv_separators = array("comma", "semicolon", "tab");
+
+
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
 function format_date($format,$value,$default_value = '-') {

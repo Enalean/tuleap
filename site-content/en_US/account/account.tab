@@ -43,6 +43,11 @@ account_options	shell_box	Shell Box
 account_options	shell_shared_keys	SSH Shared Keys
 account_options	shell_edit_keys	Edit Keys
 account_options	remember_me	"Remember me" <u><i>($1 remembers your login/password. If you change this preference make sure to logout and login again)</i></u>
+account_options	csv_separator	CSV separator
+account_options	comma	comma
+account_options	semicolon	semicolon
+account_options	tab	tab
+
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php
