@@ -49,7 +49,7 @@ License
 <dt><a href="#CodeX_HowTo">CodeX HowTo</a></dt>
 <dd><dl>
 <dt><a href="#HowTo_Import">Importing an existing CVS repository in CodeX</a></dt>
-<dt><a href="#HowTo_Regenerate_CVS">Regenerating a fresh CVS repository for a CodeX project</a></dt>
+<dt><a href="#HowTo_Regenerate_VC">Regenerating a fresh CVS or SVN repository for a CodeX project</a></dt>
 <dt><a href="#HowTo_Change_User_Name">Changing a User Name on CodeX</a></dt>
 <dt><a href="#HowTo_Change_Project_Name">Changing a Project Short Name on CodeX</a></dt>
 <dt><a href="#HowTo_Email_pb">New user registration problems - email address errors</a></dt>
@@ -2212,23 +2212,23 @@ same on CodeX)
 That's all folks!
 
 <hr>
-<h2><a name="HowTo_Regenerate_CVS"></a>Regenerating a fresh CVS repository for a CodeX project</h2>
+<h2><a name="HowTo_Regenerate_VC"></a>Regenerating a fresh CVS or SVN repository for a CodeX project</h2>
 <em>When the first import goes wrong or the project team screwed up everything and want to start again from scratch</em>
 <p>
 The fastest and safest way (where xxx is the project name):
 <ul>
 <li>Log as root
-<li>cd /cvsroot
-<li>Make a backup copy of the current CVS tree in /tmp just in case...:
-<br><tt>tar cvfz /tmp/xxx_cvs.tgz ./xxx   </tt>
-<li>Delete the CVS tree: <br><tt>rm -rf  xxx</tt>
+<li>cd /cvsroot for a CVS repository, or cd /svnroot for a SVN repository
+<li>Make a backup copy of the current tree in /tmp just in case...:
+<br><tt>tar cvfz /tmp/xxx_repository.tgz ./xxx   </tt>
+<li>Delete the CVS or SVN tree: <br><tt>rm -rf  xxx</tt>
 <li>Force the cron update process to run now:
 <pre>
 $ cd ~sourceforge/utils
 $./xerox_crontab.sh
 </pre>
 </ul>
-Now you have a fresh CVS repository and the team can start the import again.
+Now you have a fresh CVS or SVN repository and the team can start the import again.
 <hr>
 <h2><a name="HowTo_Change_User_Name"></a>Changing a User Name on CodeX</h2>
 <em>How a CodeX administrator can change a user's login name</em>
