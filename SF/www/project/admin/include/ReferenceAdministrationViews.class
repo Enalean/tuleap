@@ -76,9 +76,16 @@ class ReferenceAdministrationViews extends Views {
                 echo '</TABLE><H3>'.$GLOBALS['Language']->getText('project_reference','manage_proj_r').'</H3><P>';
                 echo '<TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
                 $title_arr_project=array();
+                if ($request->get('group_id')==100) {
+                    $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','id');
+                }
                 $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','keyword');
                 $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','r_desc');
                 $title_arr_project[]=$GLOBALS['Language']->getText('global','status');
+                if ($request->get('group_id')==100) {
+                    $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','scope');
+                    $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','r_service');
+                }
                 $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','del?');
                 echo html_build_list_table_top($title_arr_project);
             }
