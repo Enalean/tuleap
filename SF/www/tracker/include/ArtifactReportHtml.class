@@ -29,13 +29,13 @@ class ArtifactReportHtml extends ArtifactReport {
         }
         
         /**
-         *      Return the HTML table which displays the priority colors
+         *      Return the HTML table which displays the priority colors and export button
          *
          *      @param msg: the label of te table
          *
          *      @return string
          */
-        function showPriorityColorsKey($msg,$aids,$masschange) {
+        function showPriorityColorsKey($msg,$aids,$masschange,$pv) {
 	  global $Language,$group_id;
 
                 $html_result = "";
@@ -51,7 +51,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 $html_result .=  '</TR></TABLE>';
                 
-		if (!$masschange) {
+		if ((!$masschange)&&(!$pv)) {
 		  $html_result .= '</td><td align="right" width="50%">';
 		  $html_result .= '
                           <FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" NAME="artifact_export_form">
@@ -627,7 +627,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
                     if ($pv) { $chunksz = 100000; }
                     $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$chunksz,$aids,$masschange);
-                    $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange);
+                    $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
                 
                 } else {
                 
