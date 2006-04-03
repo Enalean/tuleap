@@ -876,8 +876,12 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 	Export, Task Export,..) on the Project Data Export page 
 	generates and downloads a CSV file that you can save on your
 	local disk or directly open in Excel or any other spreadsheet
-	of your choice. No particular
-	setting is required.</para>
+	of your choice. No particular setting is required in most cases.
+    Nevertheless, you can change the CSV separator (see <xref linkend="AccountMaintenance" />)
+    if the default one doesn't correspond with your Excel version
+    <footnote><para>For example, by default, the separator for the french version 
+    of Excel is the semicolon instead of the comma.</para></footnote>.
+    </para>
       </section>
 
       <section id="ImportingCSVFilesinMS-Access">

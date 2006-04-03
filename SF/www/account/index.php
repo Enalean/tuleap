@@ -214,6 +214,27 @@ print "</select>\n";
 echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
 ?>
 
+
+&nbsp;&nbsp;<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('AccountMaintenance'); ?>:
+<?php
+if ($u_separator = user_get_preference("user_csv_separator")) {
+} else {
+    $u_separator = DEFAULT_CSV_SEPARATOR;
+}
+// build the CSV separator select box
+print '<select name="user_csv_separator">'."\n";
+// $csv_separators is defined in SF/www/include/utils.php
+foreach ($csv_separators as $separator) {
+    print '<option value="'.$separator.'"';
+    if ($u_separator == $separator) {
+        print ' selected="selected"';
+    }
+    print '>'.$Language->getText('account_options', $separator).'</option>\n';
+}
+print "</select>\n";
+?>
+
+
 <P align=center><CENTER><INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>"></CENTER>
 </FORM>
 <?php $HTML->box1_bottom(); 

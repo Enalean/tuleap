@@ -960,7 +960,12 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 	que vous pouvez sauvegarder sur votre ordinateur ou ouvrir
 	directement dans Excel ou tout autre tableur de votre
 	choix. Aucune configuration particulière n'est
-	nécessaire.</para>
+	nécessaire dans la plupart des cas.
+    Néanmoins, vous avez la possibilité de changer le séparateur CSV 
+    (voir <xref linkend="AccountMaintenance" />) si le séparateur par 
+    défaut ne correspond pas au séparateur par défaut de votre version d'Excel
+    <footnote><para>Par exemple, le séparateur par défaut de la version française
+    d'Excel est le point-virgule au lieu de la virgule.</para></footnote>.</para>
       </section>
 
       <section id="ImportingCSVFilesinMS-Access">

@@ -406,7 +406,7 @@ class ArtifactImport extends Error {
   $csv_file = fopen($csv_filename, "r");
   $row = 0;
   
-  while ($data = fgetcsv($csv_file, $length, ",")) {
+  while ($data = fgetcsv($csv_file, $length, get_csv_separator())) {
     // do the real parsing here
     
     //parse the first line with all the field names

@@ -48,6 +48,10 @@ account_options	shell_box	Serveur Shell
 account_options	shell_shared_keys	Clés SSH partagées
 account_options	shell_edit_keys	Editer les Clés
 account_options	remember_me	"Souviens-toi de moi" <u><i>($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</i></u>
+account_options	csv_separator	Séparateur CSV
+account_options	comma	virgule
+account_options	semicolon	point-virgule
+account_options	tab	tabulation
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

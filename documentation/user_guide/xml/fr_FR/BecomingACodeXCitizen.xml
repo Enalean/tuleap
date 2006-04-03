@@ -317,6 +317,21 @@
       </listitem>
 
       <listitem>
+	<para><emphasis role="bold">Séparateur CSV</emphasis>:
+          CodeX vous permet d'importer et d'exporter des données de vos projets
+          (Voir <xref linkend="ProjectDataExport" /> pour plus de détails).
+          Le format d'import et d'export utilisé est le format CSV.
+          Comme la norme CSV n'est pas implémentée de la même manière dans tous les 
+          logiciels, vous avez la possibilité de définir votre séparateur CSV.          
+          Les différents séparateurs disponibles sont :
+          <itemizedlist mark="bullet">
+            <listitem><para>la virgule (,) : le séparateur par défaut.</para></listitem>
+            <listitem><para>le point-virgule (;) : utilisé par défaut par la version française d'Excel.</para></listitem>
+            <listitem><para>tab (tabulation).</para></listitem>
+          </itemizedlist></para>
+      </listitem>
+      
+      <listitem>
 	<para><emphasis role="bold">Clés SSH partagées</emphasis> : ce
 	champ se rapporte au service Compte Shell. Lorsque vous êtes
 	utilisateur enregistré, le serveur CodeX vous offre un compte

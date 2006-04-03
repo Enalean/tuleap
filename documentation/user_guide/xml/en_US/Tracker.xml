@@ -1125,11 +1125,16 @@ width="14.5cm" />
 	This page allows manual validation of the tracker 
 	field labels, indicating which fields are mandatory in
       	case of a new artifact submission. In addition, it gives
-      	you a sample CSV file. If you already use the Tracker
+      	you a sample CSV file.
+        As for the export feature, you can specify the separator
+        used in the CSV file you want to import (See <xref linkend="AccountMaintenance" />).
+        If you already use the Tracker
       	Artifact Export (see <xref linkend="ProjectDataExport" />)
       	you will notice that the format of the files to import
-      	and the exported files are exactly the same. You can
-      	refer to the export format especially
+      	and the exported files are exactly the same. 
+        This means that if you changed your CSV separator for exporting 
+        data, you must use the same to import those data.
+        You can refer to the export format especially
       	for the date formats as well as the format of the
       	follow-up comments (see <xref linkend="ArtifactComments" />).
       	The first record in the CSV import file is always the 

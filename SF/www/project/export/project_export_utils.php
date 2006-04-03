@@ -16,9 +16,10 @@ function tocsv($string) {
     // Escape the double quote character by doubling it
     $string = ereg_replace('"', '""', $string);
 
-    //Surround with double quotes if there is a comma 
-    // or a space in the string
-    if (strchr($string,' ') || strchr($string,',') || 
+    //Surround with double quotes if there is a comma; 
+    // a space or the user separator in the string
+    if (strchr($string,' ') || strchr($string,',') ||
+        strchr($string, get_csv_separator()) ||
 	strchr($string,"\n") ||
 	strchr($string,"\t") ||
 	strchr($string,"\r") ||
@@ -31,11 +32,39 @@ function tocsv($string) {
 
 }
 
+/**
+ * Get the CSV separator defined in the Account Maintenance preferences
+ *
+ * @return string the CSV separator defined by the user or "," by default if the user didn't defined it
+ */
+function get_csv_separator() {
+    if ($u_separator = user_get_preference("user_csv_separator")) {
+    } else {
+        $u_separator = DEFAULT_CSV_SEPARATOR;
+    }
+    $separator = '';
+    switch ($u_separator) {
+        case 'comma':
+            $separator = ",";
+            break;
+        case 'semicolon':
+            $separator = ";";
+            break;
+        case 'tab':
+            $separator = "\t";
+            break;
+        default:
+            $separator = DEFAULT_CSV_SEPARATOR;
+            break;
+    }
+    return $separator;
+}
+
 function build_csv_header($col_list, $lbl_list) {
     $line = '';
     reset($col_list);
     while (list(,$col) = each($col_list)) {
-	$line .= tocsv($lbl_list[$col]).',';
+	$line .= tocsv($lbl_list[$col]).get_csv_separator();
     }
     $line = substr($line,0,-1);
     return $line;
@@ -45,7 +74,7 @@ function build_csv_record($col_list, $record) {
     $line = '';
     reset($col_list);
     while (list(,$col) = each($col_list)) {
-	$line .= tocsv($record[$col]).',';
+	$line .= tocsv($record[$col]).get_csv_separator();
     }
     $line = substr($line,0,-1);
     return $line;
