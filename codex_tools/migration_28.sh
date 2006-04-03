@@ -1086,6 +1086,7 @@ sub insert_tracker_references {
   $c = $dbh->prepare($query);
   $c->execute();
   while (my ($group_id,$short_name) = $c->fetchrow()) {
+    next if ($group_id==100); # do not create tracker refrences for template group
     $query2 = "INSERT INTO reference (keyword,description,link,scope) VALUES ('".lc($short_name)."','Tracker Artifact','/tracker/?func=detail&aid=\$1&group_id=$group_id','P')";
     $c2 = $dbh->prepare($query2);
     $c2->execute();
@@ -1112,6 +1113,8 @@ print "*    $nb_ref_tracker tracker references added\n";
 print "** All references created\n";
 1;
 EOF
+
+todo "If your server does not support legacy trackers, go in the site Reference Administration page (/project/admin/reference.php?group_id=100) and delete (by clicking on trash icon) entries for 'bug' 'patch' 'sr' and 'task'"
 
 ##############################################
 # CVS lockdir moved from cvs root to /var/lock/cvs
