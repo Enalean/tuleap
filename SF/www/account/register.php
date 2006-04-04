@@ -12,6 +12,7 @@ require_once('account.php');
 require_once('timezones.php');
 
 require_once('common/mail/Mail.class');
+require_once('common/include/HTTPRequest.class');
 
 $Language->loadLanguageMsg('account/account');
 
@@ -21,6 +22,8 @@ $Language->loadLanguageMsg('account/account');
 function register_valid($confirm_hash)	{
     global $HTTP_POST_VARS, $Language;
 
+    $request =& HTTPRequest:: instance();
+    
     if (!$HTTP_POST_VARS['form_loginname']) {
 	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_nouser');
 	return 0;
@@ -63,9 +66,9 @@ function register_valid($confirm_hash)	{
     $res = account_create($HTTP_POST_VARS['form_loginname']
                           ,$HTTP_POST_VARS['form_pw']
                           ,''
-                          ,$GLOBALS['form_realname']
+                          ,$request->get('form_realname')
                           ,$GLOBALS['form_register_purpose']
-                          ,$GLOBALS['form_email']
+                          ,$request->get('form_email')
                           ,'P'
                           ,$confirm_hash
                           ,$GLOBALS['form_mail_site']
@@ -105,11 +108,11 @@ function display_account_form($register_error)	{
 <?php print $Language->getText('account_register', 'passwd2_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
-<INPUT size=40 type="text" name="form_realname" value="<?php print stripslashes($form_realname); ?>">
+<INPUT size=40 type="text" name="form_realname" value="<?php print htmlentities($form_realname, ENT_QUOTES); ?>">
 <?php print $Language->getText('account_register', 'realname_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
-<INPUT size=40 type="text" name="form_email" value="<?php print stripslashes($form_email); ?>"><BR>
+<INPUT size=40 type="text" name="form_email" value="<?php print htmlentities($form_email, ENT_QUOTES); ?>"><BR>
 <?php print $Language->getText('account_register', 'email_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
@@ -146,6 +149,8 @@ if ($GLOBALS['sys_user_approval'] == 1) {
 
 if (isset($Register)) {
 
+    $request =& HTTPRequest:: instance();
+    
     $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
     if ($new_userid = register_valid($confirm_hash)) {
@@ -153,7 +158,7 @@ if (isset($Register)) {
         $user_name = user_getname($new_userid);
         $content = '';
         if ($GLOBALS['sys_user_approval'] == 0) {
-            if (!send_new_user_email($GLOBALS['form_email'], $confirm_hash)) {
+            if (!send_new_user_email($request->get('form_email'), $confirm_hash)) {
                 $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
             }
             $content .= '<p><b>'.$Language->getText('account_register', 'title_confirm').'</b>';
