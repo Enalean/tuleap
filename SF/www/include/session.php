@@ -143,7 +143,7 @@ function session_make_url($loc) {
 }
 
 function session_redirect($loc) {
-	header('Location: ' . session_make_url($loc));
+	header('Location: ' . $loc);
 	print("\n\n");
 	exit;
 }
