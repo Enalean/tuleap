@@ -17,13 +17,30 @@ require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
 require_once('common/include/ReferenceManager.class');
+require_once('trove.php');
 
 $Language->loadLanguageMsg('register/register');
 
 if (isset($show_confirm) && $show_confirm) {
 
     $HTML->header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
-
+    
+    // Set the categories for the project.
+    // there is at least a $root1[xxx]
+	while (list($rootnode,$value) = each($root1)) {
+		// check for array, then clear each root node for group
+		db_query('DELETE FROM trove_group_link WHERE group_id='.$group_id
+			.' AND trove_cat_root='.$rootnode);
+		
+		for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
+			$varname = 'root'.$i;
+			// check to see if exists first, then insert into DB
+			if (${$varname}[$rootnode]) {
+				trove_setnode($group_id,${$varname}[$rootnode],$rootnode);
+			}
+		}
+	}
+    
     include($Language->getContent('register/confirmation'));
 
     $HTML->footer(array());

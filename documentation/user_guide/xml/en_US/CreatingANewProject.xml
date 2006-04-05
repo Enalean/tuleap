@@ -119,8 +119,13 @@
         <listitem>
           <para><emphasis role="bold">Step 6 - Categories</emphasis></para>
 
-          <para>Just to remind you that once your project is approved
-          you&#39;ll have to categorize it according to the seven criteria
+          <para>Please select up to three classifications for this project in 
+          each of the Trove root categories. This will help potential developers 
+          and users to find your project and engage. If the project does not 
+          require any or all of these classification, simply select 
+          "None Selected".
+          You can change the trove categories for this project at any time.
+          You can categorize your project according to the seven criteria
           listed in <xref linkend="SoftwareMap" />.</para>
         </listitem>
 
@@ -170,7 +175,9 @@
           <para><emphasis role="bold">Categorize your project in the Software
           Map</emphasis></para>
 
-          <para>Your project categorization appears on your
+          <para>If you haven't done it during the project registration
+          process, you should do it now!
+          Your project categorization appears on your
           &#34;Project Summary&#34; page. To categorize your project
           select the &#34;categorize it now&#34; link and fill out the
           category form fields.</para>
