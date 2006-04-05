@@ -36,7 +36,7 @@ $pending_users = $row['count'];
 <li><?php echo $Language->getText('admin_main', 'display_user');
 
 	for ($i=0; $i < count($abc_array); $i++) {
-		echo "<a href=\"userlist.php?user_name_search=$abc_array[$i]\">$abc_array[$i]</a>|";
+        echo '<a href="userlist.php?user_name_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
 	}
 ?>
 <br>
@@ -65,7 +65,7 @@ echo ")</b>";
 
 <li><?php echo $Language->getText('admin_main', 'display_group');
 	for ($i=0; $i < count($abc_array); $i++) {
-		echo "<a href=\"grouplist.php?group_name_search=$abc_array[$i]\">$abc_array[$i]</a>|";
+		echo '<a href="grouplist.php?group_name_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
 	}
 ?>
 <br>

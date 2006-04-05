@@ -64,8 +64,10 @@ if ($form_catroot == 1) {
 </TR>
 
 <?php
+$odd_even = array('boxitem', 'boxitemalt');
+$i = 0;
 while ($grp = db_fetch_array($res)) {
-	print "<tr>";
+	print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
 	print "<td><a href=\"groupedit.php?group_id=$grp[group_id]\">$grp[group_name]</a></td>";
 	print "<td>$grp[unix_group_name]</td>";
 	print "<td>$grp[status]</td>";
