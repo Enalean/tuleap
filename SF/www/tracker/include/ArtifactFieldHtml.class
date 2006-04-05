@@ -98,12 +98,13 @@ class ArtifactFieldHtml extends ArtifactField {
             while($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
-            db_reset_result($result);
+            if (db_numrows($result)>0)
+                db_reset_result($result);
             
-			if ($box_name == '') {
-			    $box_name = $this->field_name.'[]';
-			}
-			$output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
+            if ($box_name == '') {
+                $box_name = $this->field_name.'[]';
+            }
+            $output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
             $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".addslashes($this->getLabel())."');\n";
             $output .= $this->_getValuesAsJavascript($array_values,$checked);
             $output .= "</script>";
@@ -157,11 +158,12 @@ class ArtifactFieldHtml extends ArtifactField {
             while($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
-            db_reset_result($result);
+            if (db_numrows($result)>0)
+                db_reset_result($result);
 	
-			if ($box_name == '') {
-			    $box_name = $this->field_name;
-			}
+            if ($box_name == '') {
+                $box_name = $this->field_name;
+            }
             $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
             $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".addslashes($this->getLabel())."');\n";
              $output .= $this->_getValuesAsJavascript($array_values,$checked);
