@@ -173,21 +173,21 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 	. "user_group.admin_flags AS admin_flags FROM "
 	. "groups,user_group WHERE user_group.user_id=$user_id AND "
 	. "groups.group_id=user_group.group_id");
-
+    
 	while ($row_cat = db_fetch_array($res_cat)) {
-		print ("<br><b>" . group_getname($row_cat[group_id]) . "</b> "
-			. "<a href=\"usergroup.php?user_id=$user_id&action=remove_user_from_group&group_id=$row_cat[group_id]\">"
+		print ('<br><a href="groupedit.php?group_id='. $row_cat['group_id'] .'"><b>'. group_getname($row_cat['group_id']) . '</b></a>'
+			. "&nbsp;&nbsp;&nbsp;<a href=\"usergroup.php?user_id=$user_id&action=remove_user_from_group&group_id=$row_cat[group_id]\">"
 			. "[".$Language->getText('admin_usergroup','remove_ug')."]</a>");
 		// editing for flags
 		?>
 		<form action="<?php echo $PHP_SELF; ?>" method="post">
 		<INPUT type="hidden" name="action" value="update_user_group">
 		<input name="user_id" type="hidden" value="<?php print $user_id; ?>">
-		<input name="group_id" type="hidden" value="<?php print $row_cat[group_id]; ?>">
+		<input name="group_id" type="hidden" value="<?php print $row_cat['group_id']; ?>">
 		<br>
 		<?php echo $Language->getText('admin_usergroup','admin_flags'); ?>: 
 		<BR>
-		<input type="text" name="admin_flags" value="<?php print $row_cat[admin_flags]; ?>">
+		<input type="text" name="admin_flags" value="<?php print $row_cat['admin_flags']; ?>">
 		<BR>
 		<input type="submit" name="Update_Group" value="<?php echo $Language->getText('global','btn_update'); ?>">
 		</form>

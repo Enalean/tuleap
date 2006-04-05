@@ -21,9 +21,10 @@ function show_users_list ($result) {
 	echo '<P>'.$Language->getText('admin_userlist','legend').'
 		<P>
 		<TABLE width=100% cellspacing=0 cellpadding=0 BORDER="1">';
-
+    $odd_even = array('boxitem', 'boxitemalt');
+    $i = 0;
 	while ($usr = db_fetch_array($result)) {
-		print "\n<TR><TD><a href=\"usergroup.php?user_id=$usr[user_id]\">";
+		print "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\"><TD><a href=\"usergroup.php?user_id=$usr[user_id]\">";
 		if ($usr['status'] == 'A') print "<B>";
 		if ($usr['status'] == 'R') print "<u>";
 		if ($usr['status'] == 'D') print "<I>";
