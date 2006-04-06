@@ -1,0 +1,80 @@
+#container
+{
+	width:90%;
+	margin: 10px auto;
+	background-color: #fff;
+	color: #333;
+	border: 1px solid gray;
+	line-height: 130%;
+}
+
+#top
+{
+	font-family:helvetica, sans-serif;
+	padding: .5em;
+	background-color: #ddd;
+	border-bottom: 1px solid gray;
+}
+#top table {
+	width:100%;
+}
+
+
+#top .next {
+	color:#bbb;
+}
+#top a:hover {
+	color:red;
+}
+#top .current {
+	color:green;
+}
+.numero {
+	font-size:2em;
+}
+
+#content
+{
+	padding: 1em;
+	height:auto;
+	min-height: 300px;
+	_height:300px; //hack IE/win
+}
+
+#footer
+{
+	margin: 0;
+	padding: .5em;
+	color: #333;
+	background-color: #ddd;
+	border-top: 1px solid gray;
+}
+
+#content h2 { 
+	margin: 0 0 .5em 0; 
+}
+
+#footer table {
+	width:100%;
+}
+#footer table .left {
+	text-align:left;
+}
+#footer table .right {
+	text-align:right;
+}
+
+#choices table {
+	margin:0 auto;
+}
+#use_web_space_options,
+#create_db_options {
+	padding-left:2em;
+}
+.disabled {
+	color:gray;
+}
+.enabled {
+	color:#333;
+}
+
