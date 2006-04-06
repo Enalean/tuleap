@@ -223,6 +223,7 @@ class LdapPlugin extends Plugin {
      */
     function loginAfterForm($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
+            $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
             echo $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login_help', array($GLOBALS['sys_email_admin'], $GLOBALS['sys_name']));
         }
     }
@@ -273,6 +274,7 @@ class LdapPlugin extends Plugin {
      */
     function accountPiEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
+            $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
             if(UserLdap::isLdapUser($params['user_id'])) {
                 $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
 
