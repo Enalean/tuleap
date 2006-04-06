@@ -835,6 +835,7 @@ INSERT INTO artifact_field_value_list VALUES (12,5,10,'Done','The artifact is cl
 EOF
 
 echo "End of main DB upgrade"
+todo "If you built custom tracker templates, please update them manually: remove all values from their 'status' field except 'open' and 'closed'. If you used additional values, you may propose them in a new field (e.g. create a 'stage' field)"
 
 echo "Update: add ugroups in SVN Access file"
 
