@@ -248,6 +248,10 @@ $sys_user_approval = 0;
 $sys_themedefault = 'CodeX';
 
 //
+// Default theme for old browsers (currently netscape 4)
+$sys_themedefault_old = 'CodeX';
+
+//
 //
 // Max upload size for quick release, documentation, patch and code snippet.
 // in bytes
