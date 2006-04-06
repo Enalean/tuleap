@@ -23,6 +23,10 @@ class DBTablesDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    function analyzeTable($name) {
+        $sql = "ANALYZE TABLE ".$name;
+        return $this->retrieve($sql);
+    }
     /**
     * Gets a log files
     * @return object a result object
