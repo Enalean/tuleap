@@ -71,7 +71,7 @@ class UserLdap {
                 . ", unix_pw='" . account_genunixpw($pwd) . "'"
                 . ", windows_pw='" . account_genwinpw($pwd) . "'"
                 . ", realname='".addslashes($lr->getCommonName())."'"
-                . ", email='".$lr->getEmail()."'"
+                . ", email='".addslashes($lr->getEmail())."'"
                 . " WHERE user_id=" . $userId;
             $res1 = db_query($qry1);
             if ($res1 && db_affected_rows($res1) === 1) {
