@@ -47,6 +47,10 @@ class LDAP extends Error {
         if (!$_ldap_instance) {
             $_ldap_instance = new LDAP();
         }
+        else {
+            $_ldap_instance->error_state=false;
+            $_ldap_instance->error_message=null;
+        }
         return $_ldap_instance;
     }
 
