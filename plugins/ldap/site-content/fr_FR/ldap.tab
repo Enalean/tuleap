@@ -23,14 +23,15 @@ plugin_ldap	welcome_title	Bienvenue $1
 plugin_ldap	welcome_first_login	Premier login sur $1
 plugin_ldap	welcome_fill_form	Merci de remplir les champs suivants avant d'accéder à la suite&nbsp;:
 plugin_ldap	welcome_btn_update	Mettre à jour mon compte
-plugin_ldap	welcome_your_data	Détails du compte&nbsp;:
+plugin_ldap	welcome_preferences	Préférences du compte
+plugin_ldap	welcome_your_data	Détails du compte
 plugin_ldap	welcome_ldap_login	Nom de l'utilisateur&nbsp;:
 plugin_ldap	welcome_email	Adresse email&nbsp;: 
 plugin_ldap	welcome_codex_login	Login interne $1&nbsp;:
 plugin_ldap	welcome_codex_login_j	<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>.
 plugin_ldap	welcome_error_up	Erreur lors de la mise à jour des paramètres de l'utilisateur
 plugin_ldap	welcome_error_up_expl	Une erreur s'est produite pendant la mise à jour du compte: $1.
-plugin_ldap	welcome_err_notz	Prière de choisir un autre fuseau horaire que 'Aucun'.
+plugin_ldap	welcome_err_notz	Prière de choisir un autre fuseau horaire que 'Aucun'. <br /><br />Cliquez sur 'Retour' et choisissez un fuseau horaire.
 plugin_ldap	welcome_tz	Fuseau Horaire
 plugin_ldap	welcome_communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <I>(Faible trafic)</I>
 plugin_ldap	welcome_siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>

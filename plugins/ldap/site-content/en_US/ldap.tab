@@ -23,14 +23,15 @@ plugin_ldap	welcome_title	Welcome $1
 plugin_ldap	welcome_first_login	First login to $1
 plugin_ldap	welcome_fill_form	Thank you to fill the following before accessing your data:
 plugin_ldap	welcome_btn_update	Update my account
-plugin_ldap	welcome_your_data	Account details:
+plugin_ldap	welcome_preferences	Account preferences
+plugin_ldap	welcome_your_data	Account details
 plugin_ldap	welcome_ldap_login	User name:
 plugin_ldap	welcome_email	Email Address: 
 plugin_ldap	welcome_codex_login	$1 internal login:
 plugin_ldap	welcome_codex_login_j	<em>Required for CVS, FTP and Subversion accesses</em>.
 plugin_ldap	welcome_error_up	User settings update error
 plugin_ldap	welcome_error_up_expl	An error occured during account update: $1.
-plugin_ldap	welcome_err_notz	You must supply a timezone.
+plugin_ldap	welcome_err_notz	You must supply a timezone.<br /><br />Click on 'Back' to return to the previous screen and select a timezone.
 plugin_ldap	welcome_tz	Timezone
 plugin_ldap	welcome_communitymail	Receive additional community mailings. <em>(Low traffic.)</em>
 plugin_ldap	welcome_siteupdate	Receive Email about Site Updates <em>(Very low traffic and includes security notices. Highly Recommended.)</em>
