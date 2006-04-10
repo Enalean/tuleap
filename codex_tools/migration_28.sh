@@ -644,7 +644,7 @@ INSERT INTO reference SET \
     id='16',        \
     keyword='release', \
     description='reference_release_desc_key', \
-    link='/file/showfiles.php?group_id=\$group_id6&release_id=\$1', \
+    link='/file/showfiles.php?group_id=\$group_id&release_id=\$1', \
     scope='S', \
     service_short_name='file';
 
@@ -706,6 +706,7 @@ INSERT INTO reference_group SET reference_id='12', group_id='100', is_active='1'
 INSERT INTO reference_group SET reference_id='13', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='14', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='15', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='16', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='90', group_id='100', is_active='0';
 INSERT INTO reference_group SET reference_id='91', group_id='100', is_active='0';
 INSERT INTO reference_group SET reference_id='92', group_id='100', is_active='0';
