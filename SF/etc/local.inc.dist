@@ -135,6 +135,11 @@ $sys_crondelay=2;
 $sys_news_group=46;
 
 //
+// Default trove category in software map welcome page.
+// Default is 18 ('topic')
+$sys_default_trove_cat=18;
+
+//
 // Authentication scheme:
 // Should be either 'ldap' or 'codex'
 // WARNING: this is still experimental
