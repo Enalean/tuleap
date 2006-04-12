@@ -70,9 +70,17 @@ sleep 5
 # Move current bkp to old dir
 ${MKDIR} -p ${oldBackupDir}
 
-${MV} ${currentBackupDstDir}/codex-bin.* ${oldBackupDir}
-
-${MV} ${currentBackupDstDir}/sqldump* ${oldBackupDir}
+# Because of -e flag, we need to make sure the files exist before moving them
+binfiles=`ls ${currentBackupDstDir} | grep codex-bin | head -1`
+if [ $binfiles ];
+then
+    ${MV} ${currentBackupDstDir}/codex-bin.* ${oldBackupDir}
+fi
+dumpfiles=`ls ${currentBackupDstDir} | grep sqldump | head -1`
+if [ $dumpfiles ];
+then
+    ${MV} ${currentBackupDstDir}/sqldump* ${oldBackupDir}
+fi
 
 # back up mysql datafiles to disk
 ${DUMP} 0f ${currentBackupDstDir}/sqldump.`date +%m%d%y.%H%M` -M ${mysqlDataDir}
