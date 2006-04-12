@@ -637,12 +637,7 @@ echo html_blankimage(5,100);
             $output .= '</select>';
             $output .= '</div></form>';
         }
-        $output .= '<noscript>';
-        $output .= '<a href="'.get_server_url().'" class="osdn_codex_logo">';
-        $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
-        $output .= '</a><br />';
-        $output .= '</noscript>
-        <!-- end OSDN navdropdown -->';
+        $output .= '<!-- end OSDN navdropdown -->';
         
         return $output;
     }
