@@ -123,20 +123,54 @@ function trove_getallroots() {
 	return $CATROOTS;
 }
 
-// returns full select output for a particular root
-function trove_catselectfull($node,$selected,$name) {
-  global $Language;
-	print "<BR><SELECT name=\"$name\">";
-	print '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n";
+// returns HTML code for full select output for a particular root
+function trove_get_html_cat_selectfull($node,$selected,$name) {
+    global $Language;
+	$html = "";
+    $html .= "<BR><SELECT name=\"$name\">";
+	$html .= '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n";
 	$res_cat = db_query('SELECT trove_cat_id,fullpath FROM trove_cat WHERE '
 		.'root_parent='.$node.' ORDER BY fullpath');
 	while ($row_cat = db_fetch_array($res_cat)) {
-		print '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
-		if ($selected == $row_cat['trove_cat_id']) print (' selected');
-		print '>'.$row_cat['fullpath']."\n";
+		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
+		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
+		$html .= '>'.$row_cat['fullpath']."\n";
 	}
-	print "</SELECT>\n";
+	$html .= "</SELECT>\n";
+    return $html;
 }
+
+/**
+ * returns the html code for the full select 
+ * for all categories, for a specific group
+ *
+ * @param int group_id the group for categorization
+ * @return string html code for the full select
+ */
+function trove_get_html_allcat_selectfull($group_id) {
+    $html = "";
+    $CATROOTS = trove_getallroots();
+    while (list($catroot,$fullname) = each($CATROOTS)) {
+        $html .= "\n<HR>\n<P><B>$fullname</B> ".help_button('trove_cat',$catroot)."\n";
+    
+        $res_grpcat = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '
+            .'group_id='.$group_id.' AND trove_cat_root='.$catroot
+            .' ORDER BY trove_group_id');
+        for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
+            // each drop down, consisting of all cats in each root
+            $name= "root$i"."[$catroot]";
+            // see if we have one for selection
+            if ($row_grpcat = db_fetch_array($res_grpcat)) {
+                $selected = $row_grpcat["trove_cat_id"];	
+            } else {
+                $selected = 0;
+            }
+            $html .= trove_get_html_cat_selectfull($catroot,$selected,$name);
+        }
+    }
+    return $html;
+}
+
 
 // ###############################################################
 // gets discriminator listing for a group
