@@ -84,7 +84,7 @@ function session_login_valid_status($status, $allowpending=0) {
     global $feedback, $Language;
 
     // if allowpending (for verify.php) then allow
-    if (($status == 'A') || ($allowpending && ($status == 'P'))) {
+    if (($status == 'A') || ($status == 'R') || ($allowpending && ($status == 'P'))) {
         return true;
     } else {
         if ($status == 'S') { 
