@@ -64,7 +64,7 @@ account_change_email	send_new	Envoyer la confirmation
 #-----------------------------------------------
 # Script: SF/www/account/change_email-confirm.php
 #
-account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement&nbsp;:\n\n$2\n\n-- L'équipe $1
+account_change_email-confirm	message	Vous avez demandé a changer votre adresse e-mail en $1.\nMerci de visiter le lien ci-dessous pour confirmer ce changement :\n\n$2\n\n-- L'équipe $1
 account_change_email-confirm	title	Confirmation de changement d'adresse e-mail
 account_change_email-confirm	mailsent	Un courrier électronique vient d'être envoyé à votre nouvelle adresse e-mail. Suivez les instructions fournies dans ce message pour confirmer définitivement le changement.
 #
@@ -155,7 +155,7 @@ account_lostlogin	newpasswd2	Nouveau mot de passe (confirmez)
 #
 account_lostpw-confirm	title	Confirmation de la perte du mot de passe
 account_lostpw-confirm	mail_subject	Vérification du mot de passe de $1
-account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe&nbsp;:\n\n$2\n\n -- L'équipe $1\n
+account_lostpw-confirm	mail_body	Quelqu'un (nous supposons qu'il s'agit de vous) sur le site $1 a demandé le\nchangement de mot de passe avec vérification par e-mail. Si vous n'avez\npas fait cette demande, ignorez tout simplement ce message.\n\nSi vous êtes bien à l'origine de cette demande, veuillez visiter le lien ci-dessous\npour changer votre mot de passe :\n\n$2\n\n -- L'équipe $1\n
 account_lostpw-confirm	msg_confirm	<B>Demande de confirmation envoyée</B><P>Un message électronique vient d'être envoyé à l'adresse e-mail de votre compte utilisateur. Suivez les instructions incluses dans ce message pour changer votre mot de passe.
 #
 #-----------------------------------------------
@@ -225,8 +225,8 @@ account_register	btn_next	Etape suivante
 account_register	msg_confirm	Félicitations ! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est&nbsp;: <b>$2</b><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. En visitant le lien inclus dans ce message vous activerez votre compte.</p>
 account_register	title_approval	Création de compte - Prêt pour approbation
 account_register	msg_approval	Félicitations ! Votre demande de création de compte sur $1 pour l'utilisateur <b>$2</b> a été pris en compte.<p>L'administrateur du site va maintenant examiner votre demande. Une fois approuvée vous recevrez un message de confirmation afin de vérifier votre adresse e-mail.  En visitant le lien inclus dans ce message vous activerez votre compte.
-account_register	mail_approval_subject	Création du nouveau compte&nbsp;: $1
-account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur&nbsp;: $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte&nbsp;:\n\n$3\n
+account_register	mail_approval_subject	Création du nouveau compte : $1
+account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur : $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte :\n\n$3\n
 #
 #-----------------------------------------------
 # Script: SF/www/account/suspended.php
