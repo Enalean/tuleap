@@ -18,6 +18,7 @@
 import re
 import sys
 import string
+import user
 
 global SVNACCESS, SVNGROUPS
 SVNACCESS = None
@@ -91,7 +92,7 @@ def check_read_access(username, svnrepo, svnpath):
     
     global SVNACCESS, SVNGROUPS
 
-    if username == 'admin':
+    if user.user_is_super_user():
         return True
 
     if SVNACCESS is None:
