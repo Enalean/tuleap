@@ -19,15 +19,15 @@ session_require(array('group'=>1,'admin_flags'=>'A'));
 // LJ in the mail command later in this script
 switch ($destination) {
 	case 'comm': 
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' AND mail_va=1 GROUP BY lcase(email)");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) AND mail_va=1 GROUP BY lcase(email)");
 		$to_name = 'Additional Community Mailings Subcribers';
 		break;
 	case 'sf':
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' AND mail_siteupdates=1 GROUP BY lcase(email)");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) AND mail_siteupdates=1 GROUP BY lcase(email)");
 		$to_name = 'Site Updates Subcribers';
 		break;
 	case 'all':
-		$res_mail = db_query("SELECT email,user_name FROM user WHERE status='A' OR status='R' GROUP BY lcase(email)");
+		$res_mail = db_query("SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) GROUP BY lcase(email)");
 		$to_name = 'All Users';
 		break;
 	case 'admin':
@@ -59,7 +59,7 @@ print $Language->getText('admin_massmail_execute','post_recvd')."\n";
 flush();
 
 
-print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))."\n\n";
+print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)\n\n";
 flush();
 
 $rows=db_numrows($res_mail);
