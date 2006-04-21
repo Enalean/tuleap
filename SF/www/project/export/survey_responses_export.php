@@ -10,21 +10,23 @@ $Language->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the survey responses for this group
 
-$sql = "SELECT group_id,survey_id,question_id,response,date,date AS date_stamp ".
+$sql = "SELECT group_id,survey_id,user_id,question_id,response,date,date AS date_stamp ".
 'FROM survey_responses '.
 "WHERE group_id='$group_id' ".
 'ORDER BY survey_id, date_stamp, question_id';
 
-$col_list = array('group_id','survey_id','question_id',
+$col_list = array('group_id','survey_id','user_id','question_id',
 		  'response','date','date_stamp');
 $lbl_list = array( 'group_id' => $Language->getText('project_export_bug_deps_export','g_id'),
 		   'survey_id' => $Language->getText('project_export_survey_responses_export','survey_id'),
+		   'user_id' => $Language->getText('project_export_survey_responses_export','user_id'),
 		   'question_id' => $Language->getText('project_export_survey_responses_export','question_id'),
 		   'response' => $Language->getText('project_export_survey_responses_export','response'),
 		   'date' => $Language->getText('project_admin_utils','date'),
 		  'date_stamp' => $Language->getText('project_export_survey_responses_export','date_stamp'));
 $dsc_list = array( 'group_id' => $Language->getText('project_export_bug_deps_export','g_id_desc'),
 		   'survey_id' => $Language->getText('project_export_survey_responses_export','survey_id_desc'),
+		   'user_id' => $Language->getText('project_export_survey_responses_export','user_id_desc'),
 		   'question_id' => $Language->getText('project_export_survey_responses_export','question_id_desc'),
 		   'response' => $Language->getText('project_export_survey_responses_export','response_desc'),
 		   'date' => $Language->getText('project_export_survey_responses_export','date_desc'),
@@ -51,6 +53,10 @@ if ($export == 'survey_responses') {
 	echo build_csv_header($col_list, $lbl_list).$eol;
 
 	while ($arr = db_fetch_array($result)) {
+	    //compute encrypted artificial user_id to replace the real user_id
+	    $enc_user_id = bin2hex(md5($arr['user_id']));
+	    $arr['user_id'] = $enc_user_id;
+	    
 	    prepare_survey_responses_record($group_id,$arr);
 	    echo build_csv_record($col_list, $arr).$eol;
 	}
