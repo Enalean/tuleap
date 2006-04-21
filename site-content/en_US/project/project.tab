@@ -548,6 +548,7 @@ project_export_support_request_export	follow_up_desc	All follow-up comments in o
 #
 project_export_survey_responses_export	survey_id	Survey ID
 project_export_survey_responses_export	question_id	Question ID
+project_export_survey_responses_export	user_id	User Identifier
 project_export_survey_responses_export	response	Response
 project_export_survey_responses_export	date_stamp	Date Stamp
 project_export_survey_responses_export	survey_id_desc	Unique survey identifier
@@ -555,6 +556,7 @@ project_export_survey_responses_export	question_id_desc	Unique question identifi
 project_export_survey_responses_export	response_desc	The response to the question
 project_export_survey_responses_export	date_desc	Date/Time the user response was registered
 project_export_survey_responses_export	date_stamp_desc	A unique identifier for the responses that belong to a survey taken by a given user
+project_export_survey_responses_export	user_id_desc	User Unique and Artificial Identifier
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php
