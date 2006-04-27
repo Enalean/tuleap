@@ -195,9 +195,10 @@ class ReferenceAdministrationViews extends Views {
         }
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','enabled_desc').'">'.$Language->getText('project_reference','enabled').':</a> </td>
-<td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>
+<td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>';
+        if ($su) echo '<tr><td><a href="#" title="'.$Language->getText('project_reference','force_desc').'">'.$Language->getText('project_reference','force').'</a> </td><td><input type="CHECKBOX" NAME="force"></td></tr>';
+        echo '
 </table>
-
 <P><INPUT type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">
 </form>
 <p><font color="red">*</font>: '.$Language->getText('project_reference','fields_required').'</p>
@@ -222,6 +223,10 @@ class ReferenceAdministrationViews extends Views {
         $referenceManager =& ReferenceManager::instance();
         $ref=& $referenceManager->loadReference($refid,$group_id);
 
+        $su=false;
+        if (user_is_super_user()) {
+            $su=true;
+        }
         $star='&nbsp;<font color="red">*</font>';
         // "Read-only" -> can only edit reference availability (system reference)
         $ro=false;
@@ -294,7 +299,11 @@ class ReferenceAdministrationViews extends Views {
         }
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','enabled_desc').'">'.$Language->getText('project_reference','enabled').':</a> </td>
-<td><input type="CHECKBOX" NAME="is_used" VALUE="1"'.($ref->isActive()?" CHECKED":'').'></td></tr>
+<td><input type="CHECKBOX" NAME="is_used" VALUE="1"'.($ref->isActive()?" CHECKED":'').'></td></tr>';
+        if ($su) echo '<tr><td><a href="#" title="'.$Language->getText('project_reference','force_desc').'">'
+                      .$Language->getText('project_reference','force').'</a> </td>
+                       <td><input type="CHECKBOX" NAME="force"></td></tr>';
+        echo '
 </table>
 
 <P><INPUT type="submit" name="Create" value="'.$Language->getText('global','btn_update').'">
