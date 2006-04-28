@@ -597,20 +597,22 @@ global $SVNACCESS, $SVNGROUPS;
   }
 
  $forbidden = array();
- if (array_key_exists('*',$SVNACCESS)) {
-   foreach ($SVNACCESS['*'] as $path => $perm) {
-     if (strpos($perm,'r') === false) $forbidden[$path] = true;
-   }
- }
-
- if (array_key_exists($username,$SVNACCESS)) {
-   foreach ($SVNACCESS[$username] as $path => $perm) {
-     if (strpos($perm,'r') === false) {
-       $forbidden[$path] = true;
-     } else {
-       if (array_key_exists($path,$forbidden)) unset($forbidden[$path]);
+ if (!user_is_super_user()) {   // super user have all the rights (no forbidden paths)
+     if (array_key_exists('*',$SVNACCESS)) {
+       foreach ($SVNACCESS['*'] as $path => $perm) {
+         if (strpos($perm,'r') === false) $forbidden[$path] = true;
+       }
      }
-   }
+    
+     if (array_key_exists($username,$SVNACCESS)) {
+       foreach ($SVNACCESS[$username] as $path => $perm) {
+         if (strpos($perm,'r') === false) {
+           $forbidden[$path] = true;
+         } else {
+           if (array_key_exists($path,$forbidden)) unset($forbidden[$path]);
+         }
+       }
+     }
  }
  return $forbidden;
 }
