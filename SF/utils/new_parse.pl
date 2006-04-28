@@ -416,7 +416,7 @@ while ($ln = pop(@groupdump_array)) {
 	    print FD "#!/bin/sh\n";
 	    print FD "$MARKER_BEGIN\n";
 	    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
-	    print FD "/usr/local/bin/commit-email.pl \"\$REPOS\" \"\$REV\"\n";
+	    print FD "/usr/local/bin/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
 	    print FD "$MARKER_END\n";
 	    system("chown -R $cxname:$gid $postcommit_file");
 	    system("chmod 775 $postcommit_file");
