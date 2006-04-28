@@ -128,11 +128,13 @@
         <listitem>
           <para><emphasis role="bold">&Eacute;tape 6 - Catégories</emphasis></para>
 
-          <para>Cette page est là pour vous rappeler qu'une fois votre
-          projet enregistré et approuvé, il vous sera demandé de le
-          décrire suivant sept critères qui sont ceux utilisés dans
-          l'arbre des projets (voir <xref linkend="SoftwareMap"
-          />).</para>
+          <para>Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. 
+          Cela permettra aux utilisateurs de trouver rapidement votre projet. 
+          Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".
+          Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.
+          Vous pouvez catégoriser votre projet suivant sept critères qui sont 
+          ceux utilisés dans l'arbre des projets 
+          (voir <xref linkend="SoftwareMap" />).</para>
         </listitem>
 
         <listitem>
@@ -175,7 +177,9 @@
         <listitem>
           <para><emphasis role="bold">Classer votre projet dans l'arbre des logiciels</emphasis></para>
 
-          <para>La catégorisation de votre projet apparaît sur la page
+          <para>Si vous ne l'avez pas fait lors de l'enregistrement de votre
+          projet, nous vous invitons fortement à le faire maintenant !
+          La catégorisation de votre projet apparaît sur la page
           de &#34;Sommaire&#34; du projet. Pour catégoriser le projet,
           cliquez sur le lien &#34;le catégoriser&#34; et renseignez
           les différentes catégories.</para>

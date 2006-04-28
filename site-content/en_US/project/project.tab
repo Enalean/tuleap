@@ -256,6 +256,8 @@ project_reference	edit_s_for	Editing Reference Patterns for <B>$1</B>
 project_reference	edit_system_s	Editing System Reference Patterns
 project_reference	enabled	Enabled
 project_reference	enabled_desc	Automatically extract this keyword?
+project_reference	force	Bypass filters <em>(CodeX administrators only)</em>:
+project_reference	force_desc	Force reference pattern creation
 project_reference	fields_required	fields required
 project_reference	id	Reference ID
 project_reference	keyword	Keyword

@@ -46,25 +46,8 @@ print '<P>'.$Language->getText('project_admin_grouptrove','select_3_classifs',$G
 
 print "\n<FORM method=\"post\">";
 
-$CATROOTS = trove_getallroots();
-while (list($catroot,$fullname) = each($CATROOTS)) {
-	print "\n<HR>\n<P><B>$fullname</B> ".help_button('trove_cat',$catroot)."\n";
-
-	$res_grpcat = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '
-		.'group_id='.$group_id.' AND trove_cat_root='.$catroot
-		.' ORDER BY trove_group_id');
-	for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
-		// each drop down, consisting of all cats in each root
-		$name= "root$i"."[$catroot]";
-		// see if we have one for selection
-		if ($row_grpcat = db_fetch_array($res_grpcat)) {
-			$selected = $row_grpcat["trove_cat_id"];	
-		} else {
-			$selected = 0;
-		}
-		trove_catselectfull($catroot,$selected,$name);
-	}
-}
+// HTML select for all available categories for this group
+print trove_get_html_allcat_selectfull($group_id);
 
 print '<P><INPUT type="submit" name="Submit" value="'.$Language->getText('project_admin_grouptrove','submit_all_changes').'">';
 print '</FORM>';

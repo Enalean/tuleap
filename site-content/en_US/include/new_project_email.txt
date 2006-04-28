@@ -34,7 +34,8 @@ Guide) is available under the "Site documentation" link on the
 We now invite you to visit the Public Summary page of your project at
 '.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
 create a short public description for your project and categorize it
-in the Software Map. This will be immensely helpful to the '.$GLOBALS['sys_name'].' visitors.
+in the Software Map if it hasn\'t been done.
+This will be immensely helpful to the '.$GLOBALS['sys_name'].' visitors.
 
 Once on your Project Summary Page you will see a "Project Admin" link.
 This Admin. page allows you to fully administrate your project

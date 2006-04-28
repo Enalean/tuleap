@@ -25,6 +25,7 @@ function forum_header($params) {
 
 	$params['group']=$group_id;
 	$params['toptab']='forum';
+    $params['help'] = 'WebForums.html';
 
 	/*
 
@@ -89,7 +90,7 @@ function forum_header($params) {
 		echo '<P><H3>'.$Language->getText('forum_forum_utils','discuss_forum').': <A HREF="/forum/forum.php?forum_id='.$forum_id.'">'.$forum_name.'</A></H3>';
 	}
 
-        if (!isset($params['pv'])) {
+        if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
             echo '<P><B>';
 
             if ($forum_id && user_isloggedin() ) {
@@ -98,8 +99,8 @@ function forum_header($params) {
                 else 
                     $msg = $Language->getText('forum_forum_utils','monitor');
                 
-		echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">' . 
-                    html_image("ic/check.png",array()).' '.$msg.' | '.
+		echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
+        echo html_image("ic/check.png",array()).' '.$msg.'</A> | '.
                     '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 		echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
                 print ' <a href="#start_new_thread">';
@@ -110,16 +111,16 @@ function forum_header($params) {
             // The forum admin link is only displayed for the forum administrators (and the project administrator of course)
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'F2')) {
                 echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';
-                if (isset($params['help'])) {
+                if (isset($params['help']) && $params['help']) {
                     echo ' | ';
                 }
             }
             
-            if (isset($params['help'])) {
+            if (isset($params['help']) && $params['help']) {
                 echo help_button($params['help'],false,$Language->getText('global','help'));
             }
         }
-	echo '<P>';
+	echo '</B><P>';
 }
 
 function forum_footer($params) {

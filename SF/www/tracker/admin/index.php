@@ -745,11 +745,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 	
-	    if ( !user_ismember($group_id,'A') ) {
-			exit_permission_denied();
-			return;
-		}
-        require_once('../include/ArtifactRulesManagerHtml.class');
+	    require_once('../include/ArtifactRulesManagerHtml.class');
         $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=field_dependencies');
         $request =& HTTPRequest::instance();
         if ($request->get('save') === 'save' ) {

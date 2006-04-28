@@ -12,14 +12,12 @@ require_once('trove.php');
 
 $Language->loadLanguageMsg('softwaremap/softwaremap');
 
-$HTML->header(array('title'=>$Language->getText('softwaremap_trove_list','map')));
-echo'
-	<h2>'.$Language->getText('softwaremap_trove_list','map').' '.help_button('TheCodeXMainMenu.html#SoftwareMap').'</h2>
-	<HR NoShade>
-';
-
 // assign default. 18 is 'topic'
-if (!$form_cat) $form_cat = 18;
+if (!isset($form_cat)) {
+    if (isset($GLOBALS['sys_default_trove_cat'])) $form_cat = $GLOBALS['sys_default_trove_cat'];
+    else $form_cat = 18;
+ }
+
 $form_cat = intval($form_cat);
 
 // get info about current folder
@@ -30,16 +28,24 @@ if (db_numrows($res_trove_cat) < 1) {
 }
 $row_trove_cat = db_fetch_array($res_trove_cat);
 
+
+$HTML->header(array('title'=>$Language->getText('softwaremap_trove_list','map')));
+echo'
+	<h2>'.$Language->getText('softwaremap_trove_list','map').' '.help_button('TheCodeXMainMenu.html#SoftwareMap').'</h2>
+	<HR NoShade>
+';
+
+
 // #####################################
 // this section limits search and requeries if there are discrim elements
 
 unset ($discrim_url);
 unset ($discrim_desc);
 
-if ($discrim) {
-	unset ($discrim_queryalias);
-	unset ($discrim_queryand);
-	unset ($discrim_url_b);
+if (isset($discrim)) {
+        $discrim_queryalias='';
+        $discrim_queryand='';
+        $discrim_url_b='';
 
 	// commas are ANDs
 	$expl_discrim = explode(',',$discrim);
@@ -103,6 +109,7 @@ if ($discrim) {
 
 // #######################################
 
+if (!isset($discrim_desc)) $discrim_desc="";
 print '<P>'.$discrim_desc;
 
 // ######## two column table for key on right
@@ -120,7 +127,8 @@ for ($i=0;$i<$folders_len;$i++) {
 	print "&nbsp; ";
 	// no anchor for current cat
 	if ($folders_ids[$i] != $form_cat) {
-		print '<A href="/softwaremap/trove_list.php?form_cat='
+            if (!isset($discrim_url)) $discrim_url="";
+            print '<A href="/softwaremap/trove_list.php?form_cat='
 			.$folders_ids[$i].$discrim_url.'">';
 	} else {
 		print '<B>';
@@ -147,6 +155,7 @@ while ($row_sub = db_fetch_array($res_sub)) {
 	for ($sp=0;$sp<($folders_len*2);$sp++) {
 		print " &nbsp; ";
 	}
+        if (!isset($discrim_url)) $discrim_url="";
 	print ('<a href="trove_list.php?form_cat='.$row_sub['trove_cat_id'].$discrim_url.'">');
 	html_image("ic/cfolder15.png",array());
 	print ('&nbsp; '.$row_sub['fullname'].'</a> <I>('
@@ -198,7 +207,7 @@ print '</TD></TR></TABLE>';
 
 //BAD QUERY!!!
 
-if($_GET['special_cat'] == 'none') {
+if((isset($_GET['special_cat'])) && ($_GET['special_cat'] == 'none')) {
     $qry_root_trov = 'SELECT group_id'
         .' FROM trove_group_link'
         .' WHERE trove_cat_root='.$form_cat
@@ -235,6 +244,9 @@ if($_GET['special_cat'] == 'none') {
 }
 else {
 // now do limiting query
+    if (!isset($discrim_queryalias)) $discrim_queryalias="";
+    if (!isset($discrim_queryand)) $discrim_queryand="";
+
 $query_projlist = "SELECT groups.group_id, "
 	. "groups.group_name, "
 	. "groups.unix_group_name, "
@@ -265,6 +277,7 @@ $querytotalcount = db_numrows($res_grp);
 // limit/offset display
 
 // no funny stuff with get vars
+if (!isset($page)) $page=1;
 $page = intval($page);
 if (!$page) {
 	$page = 1;

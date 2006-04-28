@@ -659,4 +659,12 @@ function check_cvs_access($username, $group_name, $cvspath) {
     return true;
   }
 }
+
+
+// Return the group ID from a repository name
+// Repository names look like '/cvsroot/groupname', without trailing slash!
+function get_group_id_from_repository($repository) {
+    return group_getid_by_name(basename($repository));
+}
+
 ?>

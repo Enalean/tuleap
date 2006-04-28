@@ -87,18 +87,17 @@ if ($pv) {
     echo '<p>'.$Language->getText('file_showfiles','select_release').'</p>';
 }
 
-$url = get_server_url();
 ?>
 <SCRIPT language="JavaScript">
 <!--
 function showConfirmDownload(group_id,file_id,filename) {
-    url = "<?php echo $url; ?>/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
+    url = "/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
     wConfirm = window.open(url,"confirm","width=520,height=450,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
 
 function download(group_id,file_id,filename) {
-    url = "<?php echo $url; ?>/file/download.php/" + group_id + "/" + file_id +"/"+filename;
+    url = "/file/download.php/" + group_id + "/" + file_id +"/"+filename;
     wConfirm.close();
     self.location = url;
     

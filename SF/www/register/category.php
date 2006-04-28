@@ -10,6 +10,7 @@ require_once('pre.php');    // Initial db and session library, opens session
 require_once('vars.php');
 session_require(array('isloggedin'=>'1'));
 require_once('account.php');
+require_once('trove.php');
 
 $Language->loadLanguageMsg('register/register');
 

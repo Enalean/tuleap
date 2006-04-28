@@ -16,6 +16,7 @@
 register_category	upd_query_fail	This is an invalid state. Update query failed. <B>PLEASE</B> report to $1
 register_category	var_missing	This is an invalid state. Some form variables were missing. If you are certain you entered everything, <B>PLEASE</B> report to $1 and include info on your browser and platform configuration
 register_category	project_category	Project Category
+project_admin_grouptrove	select_3_classifs	Please select up to three classifications for this project in each of the Trove root categories. This will help potential developers and users to find your project and engage. If the project does not require any or all of these classification, simply select "None Selected".<P>IMPORTANT REMARKS: <ul><li>Projects should be categorized in the most specific locations available in the map.</li><li>Simultaneous categorization in a specific category AND a parent category will result in only the more specific categorization being accepted.</li><li><em><b>Topic Trove only</b></em>: If your project does not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted, the $1 Team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li></ul>
 #
 #-----------------------------------------------
 # Script: SF/www/register/confirmation.php

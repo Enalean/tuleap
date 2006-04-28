@@ -52,6 +52,9 @@ $sql="SELECT repository, cvs_commits.comm_when as c_when, repositoryid, descript
 $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
+    if (get_group_id_from_repository(db_result($result, 0, 'repository'))!=$group_id)
+        exit_error('Error',$Language->getText('cvs_detail_commit', 'error_notfound',array($commit_id)));
+
     commits_header(array ('title'=>$Language->getText('cvs_detail_commit', 'title',array($commit_id)),
 			  'help' => 'CVSWebInterface.html#QueryingCVS'));
     show_commit_details($result);

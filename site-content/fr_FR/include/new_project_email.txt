@@ -36,7 +36,8 @@ Guide Utilisateur) est disponible sous le lien "Documentation site" que vous tro
 Nous vous invitons maintenant à visiter la page de sommaire de votre
 projet sur '.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
  à créer une description courte de votre projet et à le classer dans
-l\'arbre des projets. Tout cela s\'avèrera très utiles aux utilisateurs
+l\'arbre des projets si vous ne l\'avez pas encore fait.
+Tout cela s\'avèrera très utiles aux utilisateurs
 du site '.$GLOBALS['sys_name'].'.
 
 Une fois sur la page de sommaire de votre projet vous trouverez un lien

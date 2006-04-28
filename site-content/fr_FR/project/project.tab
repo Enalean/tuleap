@@ -261,6 +261,8 @@ project_reference	edit_s_for	Edition des patrons de référence de <B>$1</B>
 project_reference	edit_system_s	Edition des patrons de référence système
 project_reference	enabled	Actif
 project_reference	enabled_desc	Extrait automatiquement ce mot-clé ?
+project_reference	force	Ignore les filtres <em>(Administrateurs CodeX seulement)</em>&nbsp;:
+project_reference	force_desc	Force la création du patron de la référence
 project_reference	fields_required	champs obligatoires
 project_reference	id	Identifiant
 project_reference	keyword	Mot Clé
