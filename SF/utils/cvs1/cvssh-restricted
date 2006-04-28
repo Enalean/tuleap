@@ -15,13 +15,13 @@
 
 
 use strict ;
+use warnings ;
 use vars qw/ @allowed_options @allowed_commands $errmsg @cmd / ;
 use subs qw/ &reject / ;
 no locale ;
 
 @allowed_options = ('-c', '-e') ;
-@allowed_commands = ('cvs') ;
-#@allowed_commands = ('cvs','scp','svnserve') ;
+@allowed_commands = ('cvs', 'scp', 'sftp') ;
 
 # Clean up our environment
 delete @ENV{qw(IFS CDPATH ENV BASH_ENV PATH)};
@@ -93,7 +93,7 @@ if ($ARGV[1] eq "cvs server") {
   }
 
   # cleanup old files in tmp (files older than one day with same owner)
-  $username=`/usr/bin/whoami`;
+  my $username=`/usr/bin/whoami`;
   chomp $username;
   `find /tmp -name "cvssh.*" -atime +1  -user $username -exec /bin/rm {} \\;`;
 
@@ -104,7 +104,8 @@ if ($ARGV[1] eq "cvs server") {
   open TMP,"> /tmp/cvssh.$$.$timestamp";
   print TMP $req;
   close TMP;
-  exec "cat /tmp/cvssh.$$.$timestamp - | cvs server";
+  system("cat /tmp/cvssh.$$.$timestamp - | cvs server");
+  unlink "/tmp/cvssh.$$";
 }
 
 exec @cmd ;
