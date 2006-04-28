@@ -264,11 +264,13 @@ ws[cfh]");
 
         $res = db_query($sql);
 
-        if(db_affected_rows($res) === 1)
-            return true;
-
-        trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);
-        return false;
+        if($res === false) {            
+	  trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);	  
+	  return false;
+	}
+	else {
+	  return true;
+	}
     }
 
     function create() {

@@ -184,11 +184,16 @@ class WikiEntry {
 		    ' wiki_link="'.mysql_real_escape_string($this->page).'",'.
 		    ' description="'.mysql_real_escape_string($this->desc).'"');
     
-    if(db_affected_rows($res) === 1)
+    if($res === false) {
+      trigger_error($Language->getText('wiki_lib_wikientry',
+				       'insert_err',
+				       db_error()), 
+		    E_USER_ERROR);
+      return false;
+    }
+    else {
       return true;
-
-    trigger_error($Language->getText('wiki_lib_wikientry','insert_err',db_error()), E_USER_ERROR);
-    return false;
+    }
   }
 
   function del() {
@@ -197,11 +202,16 @@ class WikiEntry {
 		    ' WHERE id='.$this->id.
 		    ' AND group_id='.$this->gid);
 
-    if(db_affected_rows($res) === 1)
+    if($res === false) {
+      trigger_error($Language->getText('wiki_lib_wikientry',
+				       'delete_err', 
+				       db_error()), 
+		    E_USER_ERROR);
+          return false;
+    }
+    else {
       return true;
-
-    trigger_error($Language->getText('wiki_lib_wikientry','delete_err',db_error()), E_USER_ERROR);
-    return false;
+    }
   }
 
   function update() {
@@ -218,21 +228,21 @@ class WikiEntry {
       $res = db_query($sql);
       $err = db_error();
       
-      if(!empty($err)) {
-          trigger_error($Language->getText('wiki_lib_wikientry','update_err',$err), E_USER_ERROR);
-          return false;
+      if($res === false) {
+	trigger_error($Language->getText('wiki_lib_wikientry',
+					 'update_err',
+					 db_error()),
+		      E_USER_ERROR);
+	return false;
       }
-
-      if(db_affected_rows($res) === 1) {
-          return true;
+      else {
+	if(db_affected_rows() === 0) {
+          $feedback .= $Language->getText('wiki_lib_wikientry',
+					  'no_update',
+					  $this->name);
+	}
+	return true;
       }
-
-      if(db_affected_rows($res) === 0) {
-          $feedback .= $Language->getText('wiki_lib_wikientry','no_update',$this->name);
-          return true;
-      }
-
-      return false;
   }
 }
 
