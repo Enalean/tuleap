@@ -52,11 +52,7 @@ if ($export == 'survey_responses') {
 	
 	echo build_csv_header($col_list, $lbl_list).$eol;
 
-	while ($arr = db_fetch_array($result)) {
-	    //compute encrypted artificial user_id to replace the real user_id
-	    $enc_user_id = bin2hex(md5($arr['user_id']));
-	    $arr['user_id'] = $enc_user_id;
-	    
+	while ($arr = db_fetch_array($result)) {    
 	    prepare_survey_responses_record($group_id,$arr);
 	    echo build_csv_record($col_list, $arr).$eol;
 	}
@@ -97,7 +93,7 @@ if ($export == 'survey_responses') {
 	db_project_query($dbname,'DROP TABLE IF EXISTS '.$tbl_name);
 	
 	$sql_create = "CREATE TABLE $tbl_name (".
-	    'group_id INTEGER, survey_id INTEGER, question_id INTEGER, '.
+	    'group_id INTEGER, survey_id INTEGER, user_id DOUBLE, question_id INTEGER, '.
 	    'response TEXT, date DATETIME, date_stamp INTEGER)';
 
 	$res = db_project_query($dbname, $sql_create);
