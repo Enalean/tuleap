@@ -37,6 +37,7 @@ require_once('WikiPage.class');
 class Wiki {
   /* private int */ var $gid;
   /* private int */ var $language_id;
+    /* private int */ var $exist;
 
   /**
    * WikiSericeModel - Constructor
@@ -46,6 +47,7 @@ class Wiki {
    */
   function Wiki($id=0) {
     $this->gid = (int) $id;
+    $this->exist = null;
   }
 
   /**
@@ -102,13 +104,13 @@ class Wiki {
    * @return boolean
    */
   function exist() {
-    $res = db_query('  SELECT id FROM wiki_page'
-		    .' WHERE group_id='.$this->gid);
-    
-    if(db_numrows($res) > 0) 
-      return true;
-    else
-      return false;
+      if($this->exist === null) {
+          $res = db_query('SELECT count(*) AS nb FROM wiki_page'
+                          .' WHERE group_id='.$this->gid);
+
+          $this->exist = (db_result($res, 0, 'nb') > 0);
+      }
+      return $this->exist;
   }
 
   /**
