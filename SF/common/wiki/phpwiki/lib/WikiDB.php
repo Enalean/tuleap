@@ -1045,7 +1045,7 @@ class WikiDB_Page
         $emails = join(',',$emails);
         if (mail("<undisclosed-recipients>",
                  "[".WIKI_NAME."] ".$subject, 
-                 $subject."\n". $editedby."\n". $difflink."\n\n". $content,
+                 $subject."\n". $editedby."\n". $difflink."\n\n",
                  "From: $from\r\nBcc: $emails"))
             trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                   $this->_pagename, join(',',$userids)), E_USER_NOTICE);
