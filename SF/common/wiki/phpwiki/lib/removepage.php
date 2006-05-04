@@ -49,6 +49,10 @@ function RemovePage (&$request) {
                      HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink)));
     }
     else {
+        // CodeX specific: remove permissions for this page @codextodo: may be transferable otherwhere.
+        require_once('SF/common/wiki/lib/WikiPage.class');
+        $wiki_page = new WikiPage(GROUP_ID, $_REQUEST['pagename']);
+        $wiki_page->resetPermissions();
         // Real delete.
         $pagename = $page->getName();
         $dbi = $request->getDbh();
