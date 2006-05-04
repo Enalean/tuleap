@@ -854,7 +854,7 @@ extends _AnonUser
             }
         } else {
             if (!$this->_prefs) {
-            	$this->_prefs = new UserPreferences();
+            	$this->_prefs = new CodexUserPreferences();
             	$need_pref = true;
             }
             $this->_prefs->_method = 'HomePage';
