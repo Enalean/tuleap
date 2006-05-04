@@ -129,7 +129,7 @@ class ADODB_sqlite extends ADOConnection {
 	{
 		if (!function_exists('sqlite_open')) return false;
 		
-		$this->_connectionID = sqlite_open($argHostname);
+		$this->_connectionID = sqlite_open($argDatabasename);
 		if ($this->_connectionID === false) return false;
 		$this->_createFunctions();
 		return true;
@@ -138,9 +138,9 @@ class ADODB_sqlite extends ADOConnection {
 	// returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
-		if (!function_exists('sqlite_open')) return false;
+		if (!function_exists('sqlite_popen')) return false;
 		
-		$this->_connectionID = sqlite_popen($argHostname);
+		$this->_connectionID = sqlite_popen($argDatabasename);
 		if ($this->_connectionID === false) return false;
 		$this->_createFunctions();
 		return true;

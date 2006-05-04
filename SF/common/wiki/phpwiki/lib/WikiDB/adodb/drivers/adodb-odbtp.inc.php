@@ -626,5 +626,3 @@ class ADORecordSet_odbtp extends ADORecordSet {
 }
 
 ?>
-
-

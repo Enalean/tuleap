@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id: PageTrail.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: PageTrail.php,v 1.8 2005/08/06 13:23:14 rurban Exp $');
 /**
- Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
+ Copyright 1999,2000,2001,2002,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -22,7 +22,7 @@ rcs_id('$Id: PageTrail.php 2691 2006-03-02 15:31:51Z guerin $');
 
 /**
  * A simple PageTrail WikiPlugin.
- * Put this at the end of each page to store the trail,
+ * Put this at the begin/end of each page to store the trail,
  * or better in a template (body or bottom) to support it for all pages.
  * But Cache should be turned off then.
  *
@@ -33,7 +33,7 @@ rcs_id('$Id: PageTrail.php 2691 2006-03-02 15:31:51Z guerin $');
  */
 
 if (!defined('PAGETRAIL_ARROW'))
-    define('PAGETRAIL_ARROW', " ==> ");
+    define('PAGETRAIL_ARROW', " => ");
 
 class WikiPlugin_PageTrail
 extends WikiPlugin
@@ -52,14 +52,14 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.8 $");
     }
 
     // default values
     function getDefaultArguments() {
         return array('numberlinks' => $this->def_numberlinks,
-                     'invisible' => false,
-                     'duplicates' => false,
+                     'invisible'   => false,
+                     'duplicates'  => false,
                      );
     }
 
@@ -72,21 +72,21 @@ extends WikiPlugin
 
         // Get name of the current page we are on
         $thispage = $request->getArg('pagename');
-        $thiscookie = $request->cookies->get("Wiki_PageTrail");
-        $Pages = explode(':', $thiscookie);
+        $Pages = $request->session->get("PageTrail");
+        if (!is_array($Pages)) $Pages = array();
 
         if ($duplicates || ($thispage != $Pages[0])) {
             array_unshift($Pages, $thispage);
-            $request->cookies->set("Wiki_PageTrail",implode(':',$Pages));
+            $request->session->set("PageTrail", $Pages);
         }
 
-        if (! $invisible) {
-            $numberlinks = min(count($Pages)-1, $numberlinks);
+        $numberlinks = min(count($Pages), $numberlinks);
+        if (! $invisible and $numberlinks) {
             $html = HTML::tt(WikiLink($Pages[$numberlinks-1], 'auto'));
             for ($i = $numberlinks - 2; $i >= 0; $i--) {
                 if (!empty($Pages[$i]))
-                    $html->pushContent(PAGETRAIL_ARROW, WikiLink($Pages[$i],
-                                                                 'auto'));
+                    $html->pushContent(PAGETRAIL_ARROW, 
+                                       WikiLink($Pages[$i], 'auto'));
             }
             return $html;
         } else
@@ -94,7 +94,19 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: PageTrail.php,v $
+// Revision 1.8  2005/08/06 13:23:14  rurban
+// improved empty cookie
+//
+// Revision 1.7  2005/02/28 21:24:34  rurban
+// ignore forbidden ini_set warnings. Bug #1117254 by Xavier Roche
+//
+// Revision 1.6  2005/02/27 21:34:10  rurban
+// Fix error with : in pagenames. Thanks to Dan Frankowski. bug #1115479
+//
+// Revision 1.5  2005/02/02 19:38:42  rurban
+// shorter default trail
+//
 // Revision 1.4  2004/02/27 02:49:40  rurban
 // patch #680562 "PageTrail Duplicates Patch (1.3.4)"
 //

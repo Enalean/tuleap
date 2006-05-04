@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: PageGroup.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: PageGroup.php,v 1.9 2004/09/25 16:35:09 rurban Exp $');
 /**
  Copyright 1999,2000,2001,2002,2004 $ThePhpWikiProgrammingTeam
 
@@ -50,7 +50,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.9 $");
     }
 
     function getDefaultArguments() {
@@ -64,7 +64,7 @@ extends WikiPlugin
     }
 
     // Stolen from IncludePage.php
-    function extractSection ($section, $content, $page) {
+    function extractGroupSection ($section, $content, $page) {
         $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
         if (preg_match("/ ^(!{1,})\\s*$qsection" // section header
                        . "  \\s*$\\n?"           // possible blank lines
@@ -112,14 +112,14 @@ extends WikiPlugin
                              'last'     => _("Last")
                              );
 
-        global $Theme;
-        $sep = $Theme->getButtonSeparator();
+        global $WikiTheme;
+        $sep = $WikiTheme->getButtonSeparator();
         if (!$sep)
             $sep = " | "; // force some kind of separator
 
         // default label
         if (!$label)
-            $label = $Theme->makeLinkButton($parent);
+            $label = $WikiTheme->makeLinkButton($parent);
 
         // This is where the list extraction occurs from the named
         // $section on the $parent page.
@@ -137,7 +137,7 @@ extends WikiPlugin
         }
 
         $c = $r->getContent();
-        $c = $this->extractSection($section, $c, $parent);
+        $c = $this->extractGroupSection($section, $c, $parent);
 
         $pagename = $request->getArg('pagename');
 
@@ -164,7 +164,7 @@ extends WikiPlugin
                     }
                     // mind the French : punctuation
                     $text = fmt("%s: %s", $directions[$go_item],
-                                $Theme->makeLinkButton($linkpage));
+                                $WikiTheme->makeLinkButton($linkpage));
                     $links->pushcontent($text);
                     $links->pushcontent($sep); // this works because
                                                // there are only 2 go
@@ -175,7 +175,7 @@ extends WikiPlugin
                     } else {
                         $linkpage  = $c[$thispage - 1];
                         $text = fmt("%s: %s", $directions[$go_item],
-                                    $Theme->makeLinkButton($linkpage));
+                                    $WikiTheme->makeLinkButton($linkpage));
                         $links->pushcontent($text);
                         $links->pushcontent($sep); //this works
                                                    //because there are
@@ -191,14 +191,14 @@ extends WikiPlugin
                         $linkpage  = $c[$thispage + 1];
                     }
                     $text = fmt("%s: %s", $directions[$go_item],
-                                $Theme->makeLinkButton($linkpage));
+                                $WikiTheme->makeLinkButton($linkpage));
                 } else {
                     if ($thispage == $lastindex) {
                         // skip it
                     } else {
                         $linkpage = $c[$thispage + 1];
                         $text = fmt("%s: %s", $directions[$go_item],
-                                    $Theme->makeLinkButton($linkpage));
+                                    $WikiTheme->makeLinkButton($linkpage));
                     }
                 }
                 $links->pushcontent($text);
@@ -209,7 +209,18 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: PageGroup.php,v $
+// Revision 1.9  2004/09/25 16:35:09  rurban
+// use stdlib firstNWordsOfContent, extractSection
+//
+// Revision 1.8  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.7  2004/05/03 15:53:20  rurban
 // Support [] links, but no [name|page] links yet
 // Support subpages

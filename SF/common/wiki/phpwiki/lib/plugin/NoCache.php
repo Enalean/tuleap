@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: NoCache.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: NoCache.php,v 1.3 2004/06/18 14:42:17 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
 
@@ -45,7 +45,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.3 $");
     }
 
     function getDefaultArguments() {
@@ -56,11 +56,14 @@ extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         // works regardless of WIKIDB_NOCACHE_MARKUP
         // if WIKIDB_NOCACHE_MARKUP is false it doesn't hurt
-        return $request->setArg('nocache',$args['nocache']);
+        return $request->setArg('nocache', $args['nocache']);
     }
 };
 
-// $Log$
+// $Log: NoCache.php,v $
+// Revision 1.3  2004/06/18 14:42:17  rurban
+// added wikilens libs (not yet merged good enough, some work for DanFr)
+//
 // Revision 1.2  2004/02/25 16:21:25  rurban
 // fixed parse error on line 71
 //

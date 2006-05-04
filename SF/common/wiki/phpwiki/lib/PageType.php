@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id: PageType.php 2603 2006-02-20 15:06:57Z mnazaria $');
+rcs_id('$Id: PageType.php,v 1.45 2005/05/06 16:48:41 rurban Exp $');
 /*
- Copyright 1999,2000,2001,2002,2003,2004 $ThePhpWikiProgrammingTeam
+ Copyright 1999,2000,2001,2002,2003,2004,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -34,9 +34,11 @@ class TransformedText extends CacheableMarkup {
      *        pagetype than that specified in its version meta-data.
      */
     function TransformedText($page, $text, $meta, $type_override=false) {
-        @$pagetype = $meta['pagetype'];
+    	$pagetype = false;
         if ($type_override)
             $pagetype = $type_override;
+        elseif (isset($meta['pagetype']))
+            $pagetype = $meta['pagetype'];
 	$this->_type = PageType::GetPageType($pagetype);
 	$this->CacheableMarkup($this->_type->transform($page, $text, $meta),
                                $page->getName());
@@ -74,13 +76,11 @@ class PageType {
     function GetPageType ($name=false) {
         if (!$name)
             $name = 'wikitext';
-        if ($name) {
-            $class = "PageType_" . (string)$name;
-            if (class_exists($class))
-                return new $class;
-            trigger_error(sprintf("PageType '%s' unknown", (string)$name),
-                          E_USER_WARNING);
-        }
+        $class = "PageType_" . (string)$name;
+        if (class_exists($class))
+            return new $class;
+        trigger_error(sprintf("PageType '%s' unknown", (string)$name),
+                      E_USER_WARNING);
         return new PageType_wikitext;
     }
 
@@ -103,7 +103,7 @@ class PageType {
      * @param hash $meta Version meta-data
      * @return XmlContent The transformed page text.
      */
-    function transform($page, $text, $meta) {
+    function transform($page, &$text, $meta) {
         $fmt_class = 'PageFormatter_' . $this->getName();
         $formatter = new $fmt_class($page, $meta);
         return $formatter->format($text);
@@ -119,17 +119,32 @@ class PageType_comment extends PageType {}
 class PageType_wikiforum extends PageType {}
 
 /* To prevent from PHP5 Fatal error: Using $this when not in object context */
-function getInterwikiMap () {
-    $map = new PageType_interwikimap();
+function getInterwikiMap ($pagetext = false) {
+    static $map;
+    if (empty($map))
+        $map = new PageType_interwikimap($pagetext);
     return $map;
 }
 
 class PageType_interwikimap extends PageType
 {
-    function PageType_interwikimap() {
-        global $request;
-        $dbi = $request->getDbh();
-        $intermap = $this->_getMapFromWikiPage($dbi->getPage(_("InterWikiMap")));
+    function PageType_interwikimap($pagetext = false) {
+        if (!$pagetext) {
+            $dbi = $GLOBALS['request']->getDbh();
+            $page = $dbi->getPage(_("InterWikiMap"));
+            if ($page->get('locked')) {
+                $current = $page->getCurrentRevision();
+                $pagetext = $current->getPackedContent();
+                $intermap = $this->_getMapFromWikiText($pagetext);
+            } elseif ($page->exists()) {
+                trigger_error(_("WARNING: InterWikiMap page is unlocked, so not using those links."));
+                $intermap = false;
+            }
+            else 
+                $intermap = false;
+        } else {
+            $intermap = $this->_getMapFromWikiText($pagetext);
+        }
         if (!$intermap && defined('INTERWIKI_MAP_FILE'))
             $intermap = $this->_getMapFromFile(INTERWIKI_MAP_FILE);
 
@@ -137,10 +152,10 @@ class PageType_interwikimap extends PageType
         $this->_regexp = $this->_getRegexp();
     }
 
-    function GetMap ($request = false) {
+    function GetMap ($pagetext = false) {
     	/*PHP5 Fatal error: Using $this when not in object context */
         if (empty($this->_map)) {
-            $map = new PageType_interwikimap();
+            $map = new PageType_interwikimap($pagetext);
             return $map;
         } else {
             return $this;
@@ -152,7 +167,6 @@ class PageType_interwikimap extends PageType
     }
 
     function link ($link, $linktext = false) {
-
         list ($moniker, $page) = split (":", $link, 2);
         
         if (!isset($this->_map[$moniker])) {
@@ -164,17 +178,7 @@ class PageType_interwikimap extends PageType
         
         // Urlencode page only if it's a query arg.
         // FIXME: this is a somewhat broken heuristic.
-        if($moniker == 'Attach' || $moniker == 'Upload') {
-            if(preg_match('/^([0-9]+)\/(.*)$/', $page, $matches)) {
-                $page_enc = $matches[1].'/'.rawurlencode($matches[2]);
-            }
-            else {
-                $page_enc = rawurlencode($page);
-            }
-        }
-        else {
-            $page_enc = strstr($url, '?') ? rawurlencode($page) : $page;
-        }
+        $page_enc = strstr($url, '?') ? rawurlencode($page) : $page;
 
         if (strstr($url, '%s'))
             $url = sprintf($url, $page_enc);
@@ -198,36 +202,77 @@ class PageType_interwikimap extends PageType
 
 
     function _parseMap ($text) {
-        if (!preg_match_all("/^\s*(\S+)\s+(\S+)/m",
+        if (!preg_match_all("/^\s*(\S+)\s+(.+)$/m",
                             $text, $matches, PREG_SET_ORDER))
             return false;
+
         foreach ($matches as $m) {
             $map[$m[1]] = $m[2];
         }
-        if (empty($map['Upload']))
-            $map['Upload'] = SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
-        if (empty($map['Attach']))
-            $map['Attach'] = SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';   
+
+        // Add virtual monikers Upload: Talk: User:
+        // and expand special variables %u, %b, %d
+
+        // Upload: Should be expanded later to user-specific upload dirs. 
+        // In the Upload plugin, not here: Upload:ReiniUrban/uploaded-file.png
+        if (empty($map['Upload'])) {
+            $map['Upload'] = getUploadDataPath();
+        }
+        // User:ReiniUrban => ReiniUrban or Users/ReiniUrban
+        // Can be easily overriden by a customized InterWikiMap: 
+        //   User Users/%s
+        if (empty($map["User"])) {
+            $map["User"] = "%s";
+        }
+        // Talk:PageName => PageName/Discussion as default, which might be overridden
+        if (empty($map["Talk"])) {
+            $pagename = $GLOBALS['request']->getArg('pagename');
+            // against PageName/Discussion/Discussion
+            if (string_ends_with($pagename, SUBPAGE_SEPARATOR._("Discussion")))
+                $map["Talk"] = "%s";
+            else
+                $map["Talk"] = "%s".SUBPAGE_SEPARATOR._("Discussion");
+        }
+
+        foreach (array('Upload','User','Talk') as $special) {
+            // Expand special variables:
+            //   %u => username
+            //   %b => wikibaseurl
+            //   %d => iso8601 DateTime
+            // %s is expanded later to the pagename
+            if (strstr($map[$special], '%u'))
+                $map[$special] = str_replace($map[$special],
+                                             '%u', 
+                                             $GLOBALS['request']->_user->_userid);
+            if (strstr($map[$special], '%b'))
+                $map[$special] = str_replace($map[$special],
+                                             '%b', 
+                                             PHPWIKI_BASE_URL);
+            if (strstr($map[$special], '%d'))
+                $map[$special] = str_replace($map[$special],
+                                             '%d', 
+                                             // such as 2003-01-11T14:03:02+00:00
+                                             Iso8601DateTime());
+        }
+
+        // Maybe add other monikers also - SemanticWeb link predicates
+        // Should they be defined in a RDF? (strict mode)
+        // Or should the SemanticWeb lib add it by itself? 
+        // (adding only a subset dependent on the context = model)
         return $map;
     }
 
-    function _getMapFromWikiPage ($page) {
-        if (! $page->get('locked'))
-            return false;
-        
-        $current = $page->getCurrentRevision();
-        
-        if (preg_match('|^<verbatim>\n(.*)^</verbatim>|ms',
-                       $current->getPackedContent(), $m)) {
+    function _getMapFromWikiText ($pagetext) {
+        if (preg_match('|^<verbatim>\n(.*)^</verbatim>|ms', $pagetext, $m)) {
             return $m[1];
         }
         return false;
     }
 
-    // Fixme!
     function _getMapFromFile ($filename) {
         if (defined('WARN_NONPUBLIC_INTERWIKIMAP') and WARN_NONPUBLIC_INTERWIKIMAP) {
-            $error_html = sprintf(_("Loading InterWikiMap from external file %s."), $filename);
+            $error_html = sprintf(_("Loading InterWikiMap from external file %s."), 
+                                  $filename);
             trigger_error( $error_html, E_USER_NOTICE );
         }
         if (!file_exists($filename)) {
@@ -260,13 +305,15 @@ class PageFormatter {
      * @param WikiDB_Page $page
      * @param hash $meta Version meta-data.
      */
-    function PageFormatter($page, $meta) {
+    function PageFormatter(&$page, $meta) {
         $this->_page = $page;
 	$this->_meta = $meta;
 	if (!empty($meta['markup']))
 	    $this->_markup = $meta['markup'];
 	else
-	    $this->_markup = 1;
+	    $this->_markup = 2; // dump used old-markup as empty. 
+        // FIXME: To be able to restore old plain-backups we should keep markup 1 as default.
+        // New policy: default = new markup (old crashes quite often)
     }
 
     function _transform($text) {
@@ -286,7 +333,7 @@ class PageFormatter {
 
 class PageFormatter_wikitext extends PageFormatter 
 {
-    function format($text) {
+    function format(&$text) {
 	return HTML::div(array('class' => 'wikitext'),
 			 $this->_transform($text));
     }
@@ -295,10 +342,10 @@ class PageFormatter_wikitext extends PageFormatter
 class PageFormatter_interwikimap extends PageFormatter
 {
     function format($text) {
-	return HTML::div(array('class' => 'wikitext'),
-			 $this->_transform($this->_getHeader($text)),
-			 $this->_formatMap(),
-			 $this->_transform($this->_getFooter($text)));
+        return HTML::div(array('class' => 'wikitext'), 
+                         $this->_transform($this->_getHeader($text)),
+                         $this->_formatMap($text),
+                         $this->_transform($this->_getFooter($text)));
     }
 
     function _getHeader($text) {
@@ -309,18 +356,15 @@ class PageFormatter_interwikimap extends PageFormatter
 	return preg_replace('@.*?(</verbatim>|\Z)@s', '', $text, 1);
     }
     
-    function _getMap() {
-        $map = PageType_interwikimap::getMap();
+    function _getMap($pagetext) {
+        $map = getInterwikiMap($pagetext);
         return $map->_map;
     }
     
-    function _formatMap() {
-	$map = $this->_getMap();
+    function _formatMap($pagetext) {
+	$map = $this->_getMap($pagetext);
 	if (!$map)
-	    return HTML::p("<No map found>"); // Shouldn't happen.
-
-	global $request;
-        $dbi = $request->getDbh();
+	    return HTML::p("<No interwiki map found>"); // Shouldn't happen.
 
         $mon_attr = array('class' => 'interwiki-moniker');
         $url_attr = array('class' => 'interwiki-url');
@@ -349,7 +393,8 @@ class FakePageRevision {
         return $this->_meta[$key];
     }
 }
-        
+
+// abstract base class
 class PageFormatter_attach extends PageFormatter
 {
     var $type, $prefix;
@@ -389,8 +434,9 @@ class PageFormatter_wikiforum extends PageFormatter_attach {
  *
  * Warning! Once a page is edited with a htmlarea like control it is
  * stored in HTML and cannot be converted back to WikiText as long as
- * we have no HTML => WikiText or any other interim format (WikiExchangeFormat e.g. Xml) 
- * converter. So it has a viral effect and certain plugins will not work anymore.
+ * we have no HTML => WikiText or any other interim format (WikiExchangeFormat e.g. XML) 
+ * converter. See lib/HtmlParser.php for ongoing work on that. 
+ * So it has a viral effect and certain plugins will not work anymore.
  * But a lot of wikiusers seem to like it.
  */
 class PageFormatter_html extends PageFormatter
@@ -456,6 +502,45 @@ class PageFormatter_pdf extends PageFormatter
         return $pdf;
     }
 }
+// $Log: PageType.php,v $
+// Revision 1.47  2005/08/07 09:14:38  rurban
+// fix comments
+//
+// Revision 1.46  2005/08/06 13:09:33  rurban
+// allow spaces in interwiki paths, even implicitly. fixes bug #1218733
+//
+// Revision 1.45  2005/05/06 16:48:41  rurban
+// support %u, %b, %d expansion for Upload: User: and Talk: interwiki monikers
+//
+// Revision 1.44  2005/04/23 11:07:34  rurban
+// cache map
+//
+// Revision 1.43  2005/02/02 20:40:12  rurban
+// fix Talk: and User: names and links
+//
+// Revision 1.42  2005/02/02 19:36:56  rurban
+// more plans
+//
+// Revision 1.41  2005/02/02 19:34:09  rurban
+// more maps: Talk, User
+//
+// Revision 1.40  2005/01/31 12:15:08  rurban
+// avoid some cornercase intermap warning. Thanks to Stefan <sonstiges@bayern-mail.de>
+//
+// Revision 1.39  2005/01/25 06:59:35  rurban
+// fix bogus InterWikiMap warning
+//
+// Revision 1.38  2004/12/26 17:10:44  rurban
+// just docs or whitespace
+//
+// Revision 1.37  2004/12/06 19:49:55  rurban
+// enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+// renamed delete_page to purge_page.
+// enable action=edit&version=-1 to force creation of a new version.
+// added BABYCART_PATH config
+// fixed magiqc in adodb.inc.php
+// and some more docs
+//
 
 // Local Variables:
 // mode: php

@@ -1,0 +1,166 @@
+Date: Sat, 5 Jun 2004 16:49:53 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: AdministrationDePhpWiki,v 1.6 2004/06/08 19:54:15 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=AdministrationDePhpWiki;
+  pgsrc_version="3 $Revision: 1.6 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+_*Note :*_ _La plupart des actions sur cette page nécessitent des privilèges 
+d'administrateur. Elles ne fonctionneront pas à moins que vous ayez défini un 
+nom d'administrateur et un mot de passe dans le fichier de configuration de 
+PhpWiki_
+
+<?plugin CreateToc jshide||=1 with_toclink||=1 ?>
+
+----
+!!! Explorateur de pages
+
+D'abord choississez une ou plusieurs pages et ensuite définissez une action :
+
+<?plugin-form WikiAdminSelect s="nom de la page" ?>
+
+ou appelez directement les actions ~WikiAdmin disponibles :
+
+[/Supprimer] |
+  [/Renommer] |
+    [/Remplacer] |
+      [/DéfinirAcl] |
+        [/Chown] |
+          [/Droits]
+
+----
+!!! Gestionnaire d'utilisateur
+
+PhpWiki:EmailVerification est habituellement non-strict laissant ainsi des trous possibles qui peuvent être administrés ci-dessous.
+
+Ce bouton affichera la liste de tous les utilisateurs qui ont une adresse reconnue et les boutons pour effectuer une vérification manuelle.
+
+  <?plugin WikiAdminUtils
+           action=email-verification
+           label="Vérification de l'email"
+   ?>
+
+Pour prévenir des robots occupant toutes les ressources en un court temps, bloquant depuis certaines adresses IP ou ayant un mauvais comportement, les agents utilisateurs peuvent être définis ci-dessous. Voir PhpWiki:HowToBlockRobots et MeatBall:SurgeProtector. _Note : Pas encore activé._
+
+  <?plugin WikiAdminUtils
+           action=access-restrictions
+           label="Restrictions d'accès"
+   ?>
+
+----------
+!!! Nettoyage
+
+Le [BacÀSable] Wiki est très simple à nettoyer. Vous pouvez ici le restaurer 
+dans un état virginal en chargeant sa version par défaut depuis pgsrc:
+
+[ Râtisser le BacÀSable | phpwiki:?action=loadfile&source=pgsrc/SandBox ]
+
+----------
+!!! Sauvegarde des pages
+
+!! Récupération des fichiers
+
+Ces liens mènent à des fichiers compressés au format ZIP, générés à la volée et contenant toutes les pages de votre Wiki. Le fichier zip sera téléchargé sur votre ordinateur.
+
+Cette __[Sauvegarde ZIP | phpwiki:?action=zip]__ ne contient que la dernière version de chaque page, tandis que cet __[Archivage ZIP | phpwiki:?action=zip&include=all]__ contient toutes les versions archivées.
+
+Si le PhpWiki est configuré pour le permettre, n'importe qui peut télécharger un fichier zip.
+
+Si votre php supporte la ''zlib'', les fichiers dans l'archive seront compressés, sinon ils seront simplement stockés.
+
+!! Sauvegarde dans un répertoire
+
+Ici vous pouvez enregistrer les pages de votre Wiki dans le répertoire de votre choix.
+
+<?plugin WikiForm action=dumpserial?>
+
+La version la plus récente de chaque page sera écrite dans le répertoire, à raison d'une page par fichier. Votre serveur doit avoir le droit d'écrire dans le répertoire !
+
+-----------
+!!! Restauration
+
+Si vous avez sauvegardé un ensemble de pages de PhpWiki, vous pouvez les recharger ici. Notez que les pages dans votre base de données seront écrasées ; ainsi, si vous avez récupéré votre [PageAccueil], lorsque vous le rechargerez depuis ce formulaire, il écrasera celui qui est actuellement dans votre base de données. Si vous désirez être sélectif, effacez juste du répertoire (ou du fichier zip) les pages que vous ne voulez pas charger.
+
+!! Déposer un fichier sur le serveur
+
+Ici vous pouvez déposer des archives Zip ou des fichiers simples depuis votre machine cliente.
+
+<?plugin WikiForm action=upload?>
+
+!! Télécharger un fichier
+
+Ici vous pouvez télécharger des archives ZIP, des fichiers individuels ou des répertoires entiers. Le fichier ou le répertoire doit être local au serveur http. Vous pouvez aussi utiliser ce formulaire pour charger les données d'un URL http: ou ftp:.
+
+<?plugin WikiForm action=loadfile?>
+
+!! Mise à jour
+
+Fait quelques vérifications et mises à jours automatiquement après avoir installé un nouveau moteur phpwiki de mise à jour 
+* Met à jour les nouvelles pages ou les pages révisées depuis pgsrc
+* Met à jour la base de données (mysql _page.id auto_increment_, ADD _session.sess_ip_),
+
+;:[ Mise à jour | phpwiki:HomePage?action=upgrade ]
+
+-----------
+!!! Format des fichiers
+
+Actuellement, les pages sont stockées, une par fichier, sous forme de messages électronique (RFC:822) MIME (RFC:2045). Le content-type utilisé est ''application/x-phpwiki'', et les métadonnées de chaque page sont codées dans les paramètres du content-type. Si le fichier contient plusieurs versions d'une page, il aura comme type ''multipart/mixed'', et contiendra plusieurs sous-parties, chacune de type ''application/x-phpwiki''. Le corps du message contient le texte de la page.
+
+!! Anciens formats
+
+__Fichiers sérialisés__
+
+La commande de sauvegarde dans un répertoire récupérait les pages en tant que chaînes php ''serialized()''. Cela rendait les fichiers très difficiles à lire pour les humains, et presque impossibles à éditer.
+
+__Fichiers simples__
+
+Avant cela, le texte des pages était simplement enregistré dans un fichier -- ce qui signifie que toutes les métadonnées des pages étaient perdues. Notez que lorsqu'on charge des ''fichiers simples'', le nom de la page est déduit du nom du fichier.
+
+Les fonctions de téléchargement et de chargement reconnaîtront automatiquement chacun de ces trois types de fichiers, et les géreront convenablement.
+
+----
+
+!!! Sauvegarde des pages au format xhtml
+
+  <?plugin WikiForm action=dumphtml?>
+
+Ceci génèrera un répertoire de pages statiques convenables pour une distribution sur disque où des serveurs web ne sont pas disponible. Les liens variés pour les fonctions d'édition et de navigation sont enlevés de ces pages.
+
+La collection de fichiers XHTML peut aussi être téléchargée comme une __[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]__.
+
+----
+
+!!! Le coeur de phpwiki
+
+Tout ceci surtout pour des déboguages (au moins c'est ce que j'espère).
+
+En utilisation normale, vous ne devriez par les utiliser mais ça ne devrait 
+pas vous faire de mal.
+
+!! Purger le cache
+
+Si votre wiki est ainsi configuré, le contenu transformé (presque HTML) de la plus récente version des pages est mis en cache. Ceci accélère la vitesse de chargement dans le navigateur car transformer le texte wiki prend du temps.
+
+Une pression sur ce bouton effacera tout le cache. Le contenu de chaque page sera transformer et remis en cache la prochaine fois que quelqu'un la verra.
+
+  <?plugin WikiAdminUtils
+           action=purge-cache
+           label="Purge du cache"
+   ?>
+
+!! Suppression des pages indésirables dans la base des données wiki
+
+Les pages dont le nom commence avec un séparateur de sous-page (habituellement un slash =/=) ne sont pas autorisées. Elles sont parfois crées par un plugin mal écrit...
+
+Ce bouton effacera toutes les pages dont le nom est illégal.
+  <?plugin WikiAdminUtils
+           action=purge-bad-pagenames
+           label="Nettoyage de WikiDB"
+   ?>
+
+----
+DocumentationDePhpWiki

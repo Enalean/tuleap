@@ -1,16 +1,11 @@
-Note: postgresql does work with phpwiki 1.3.
+Note: postgresql does work with phpwiki 1.2.x and 1.3.x
 
-FIXME: The pgsql backend has not yet been ported to the new database
-scheme.  (Though it should not be very hard, and is certainly in
-the works.)
-
-See http://www.sslug.dk/~chlor/phpwiki-pgsql-install.html for notes how 
-to install it for 1.3.4 (and later)
+You might want to see http://www.sslug.dk/~chlor/phpwiki-pgsql-install.html 
+for notes how to install it for 1.3.4 (and later)
 
 ----------
 NOTE for the 1.2 release: You may see a few warnings when you first
 load the pages. They may look like this:
-
 
 ***
 Warning: PostgresSQL query failed: ERROR: ExecAppend: Fail to add null
@@ -22,7 +17,6 @@ Inserting page ConvertSpacesToTabs, version 1 from text file
 This is not a problem since PhpWiki is trying to update a table that
 tracks hits and links.
 ----------
-
 
 Installation instructions for PhpWiki with a Postgresql database
 
@@ -52,26 +46,30 @@ Postgresql to allow 32K per row, but supposedly performance
 suffers. The 7.x release of Postgresql is supposed to fix this.
 
 It's probably a good idea to install PhpWiki as-is first, running it
-off the DBM file. This way you can test most of the functionality of
-the Wiki.
+off DATABASE_TYPE=dba, a single DBM file. This way you can test most 
+of the functionality of the Wiki.
 
 Once that's done and you have the basic stuff done that's listed in 
 the INSTALL, the time comes to move to Postgresql.
 
-Edit lib/config.php and edit $WhichDatabase for Postgresql. The lines
-are clearly commented and you should have no problem with this.
+Edit config.ini for Postgresql. The lines are clearly commented and 
+you should have no problem with this.
 
-Next you need to create a database called "wiki".
+Next you need to create a new database, like "phpwiki".
 
-bash$ createdb wiki
+  bash$ createdb phpwiki
 
-Now run the script schemas/psql.sql to create the tables:
+Now run the script schemas/psql-initialize.sql to create the tables:
 
-bash$ psql wiki -f schemas/psql.sql
+  bash$ psql phpwiki -f schemas/psql-initialize.sql
 
-(Newer versions of postgresql will require: psql wiki < schemas/psql.sql)
+Newer versions of postgresql will require: 
+  bash$ pgql phpwiki < schemas/psql-initialize.sql
 
-If the schema starts to load but then fails near the end, you might need to change the user name at the top of psql.sql to match that which is used by your web server; e.g. nobody, apache, or www.
+If the schema starts to load but then fails near the end, you might
+need to change the user name at the top of psql-initialize.sql to
+match that which is used by your web server; e.g. nobody, apache, or
+www.
 
 For some reason I had to stop/start the database so that these changes took 
 effect.. after that just open up the Wiki in your browser and you should
@@ -83,4 +81,4 @@ swain@panix.com
 
 Report bugs to phpwiki-talk@lists.sourceforge.net
 
-$Id: INSTALL.pgsql 1422 2005-04-12 13:33:49Z guerin $
+$Id: INSTALL.pgsql,v 1.6 2004/12/17 09:28:40 rurban Exp $

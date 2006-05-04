@@ -1,11 +1,11 @@
-<?php rcs_id('$Id: RssWriter.php 1422 2005-04-12 13:33:49Z guerin $');
+<?php rcs_id('$Id: RssWriter.php,v 1.12 2005/07/24 09:52:59 rurban Exp $');
 /*
  * Code for creating RSS 1.0.
  */
 
-
 // Encoding for RSS output.
-define('RSS_ENCODING', $GLOBALS['charset']);
+if (!defined('RSS_ENCODING'))
+  define('RSS_ENCODING', $GLOBALS['charset']);
 
 /**
  * A class for writing RSS 1.0.
@@ -119,6 +119,7 @@ class RssWriter extends XmlElement
     function __spew() {
         header("Content-Type: application/xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
+        printf("<!-- generator=\"PhpWiki-%s\" -->\n", PHPWIKI_VERSION);
         $this->printXML();
     }
         

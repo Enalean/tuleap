@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: WikiPoll.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: WikiPoll.php,v 1.9 2004/06/16 10:38:59 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
  
@@ -65,7 +65,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.9 $");
     }
 
     function getDefaultArguments() {
@@ -159,7 +159,7 @@ extends WikiPlugin
             //view at least the result or disable the Go button
             $html = HTML(HTML::strong(
                         _("Sorry! You must wait at least 20 minutes until you can vote again!")));
-            $html->pushContent($this->doPoll(&$page, &$request, $request->getArg('answer'),true));
+            $html->pushContent($this->doPoll($page, $request, $request->getArg('answer'),true));
             return $html;
         }
             
@@ -180,9 +180,9 @@ extends WikiPlugin
                  or 
                  ($args['require_least'] and
                   count($request->getArg('answer')) >= $args['require_least']))) {
-                $page->set("poll",$poll);
+                $page->set("poll", $poll);
                 // update statistics and present them the user
-                return $this->doPoll(&$page, &$request, $request->getArg('answer'));
+                return $this->doPoll($page, $request, $request->getArg('answer'));
             } else {
                 $html->pushContent(HTML::p(HTML::strong(_("Not enough questions answered!"))));
             }
@@ -232,14 +232,14 @@ extends WikiPlugin
     }
 
     function bar($percent) {
-        global $Theme;
-        return HTML(HTML::img(array('src' => $Theme->getImageUrl('leftbar'),
+        global $WikiTheme;
+        return HTML(HTML::img(array('src' => $WikiTheme->getImageUrl('leftbar'),
                                     'alt' => '<')),
-                    HTML::img(array('src' => $Theme->getImageUrl('mainbar'),
+                    HTML::img(array('src' => $WikiTheme->getImageUrl('mainbar'),
                                     'alt' => '-',
                                     'width' => sprintf("%02d",$percent),
                                     'height' => 14)),
-                    HTML::img(array('src' => $Theme->getImageUrl('rightbar'),
+                    HTML::img(array('src' => $WikiTheme->getImageUrl('rightbar'),
                                     'alt' => '>')));
     }
 
@@ -267,10 +267,10 @@ extends WikiPlugin
                 if ($result >= 0)
                     $checkbox->setAttr('checked',1);
 	        if (!$readonly)
-                    list($percent,$count,$all) = $this->storeResult(&$page, $i, $result ? 1 : 0);
+                    list($percent,$count,$all) = $this->storeResult($page, $i, $result ? 1 : 0);
                 else 
-                    list($percent,$count,$all) = $this->getResult(&$page, $i, 1);
-                $print = sprintf(_("  %d%% (%d/%d)"),$percent,$count,$all);
+                    list($percent,$count,$all) = $this->getResult($page, $i, 1);
+                $print = sprintf(_("  %d%% (%d/%d)"), $percent, $count, $all);
                 $html->pushContent(HTML::tr(HTML::th(array('colspan' => 4,'align'=>'left'),$q)));
                 $html->pushContent(HTML::tr(HTML::td($checkbox),
                                             HTML::td($a),
@@ -280,11 +280,11 @@ extends WikiPlugin
                 $html->pushContent(HTML::tr(HTML::th(array('colspan' => 4,'align'=>'left'),$q)));
                 $row = HTML();
                 if (!$readonly)
-                    $this->storeResult(&$page,$i,$answers[$i]);
+                    $this->storeResult($page, $i, $answers[$i]);
                 for ($j=0; $j <= count($a); $j++) {
                     if (isset($a[$j])) {
-                    	list($percent,$count,$all) = $this->getResult(&$page,$i,$j);
-                        $print = sprintf(_("  %d%% (%d/%d)"),$percent,$count,$all);
+                    	list($percent,$count,$all) = $this->getResult($page,$i,$j);
+                        $print = sprintf(_("  %d%% (%d/%d)"), $percent, $count, $all);
                         $radio = HTML::input(array('type' => 'radio',
                                                    'name' => "answer[$i]",
                                                    'value' => $j));
@@ -329,7 +329,24 @@ extends WikiPlugin
 
 };
 
-// $Log$
+// $Log: WikiPoll.php,v $
+// Revision 1.9  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
+// Revision 1.8  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.7  2004/05/01 15:59:29  rurban
 // more php-4.0.6 compatibility: superglobals
 //

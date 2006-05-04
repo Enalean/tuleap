@@ -18,7 +18,7 @@
 // |          Tomas V.V.Cox <cox@idecnet.com>                             |
 // +----------------------------------------------------------------------+
 //
-rcs_id('$Id: PEAR.php 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: PEAR.php,v 1.5 2005/02/28 21:24:33 rurban Exp $');
 rcs_id('From Pear CVS: Id: PEAR.php,v 1.59 2003/04/03 23:10:10 ssb Exp');
 //
 
@@ -47,7 +47,7 @@ $GLOBALS['_PEAR_destructor_object_list'] = array();
 $GLOBALS['_PEAR_shutdown_funcs']         = array();
 $GLOBALS['_PEAR_error_handler_stack']    = array();
 
-ini_set('track_errors', true);
+@ini_set('track_errors', true);
 
 /**
  * Base class for other PEAR classes.  Provides rudimentary
@@ -231,7 +231,7 @@ class PEAR
      */
     function isError($data, $code = null)
     {
-        if (is_object($data) && (get_class($data) == 'pear_error' ||
+        if (is_object($data) && (strtolower(get_class($data)) == 'pear_error' ||
                                  is_subclass_of($data, 'pear_error'))) {
             if (is_null($code)) {
                 return true;

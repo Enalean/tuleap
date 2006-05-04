@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: _AuthInfo.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: _AuthInfo.php,v 1.19 2005/04/01 14:04:31 rurban Exp $');
 /**
  Copyright 2004 $ThePhpWikiProgrammingTeam
 
@@ -32,7 +32,7 @@ class WikiPlugin__AuthInfo
 extends WikiPlugin
 {
     function getName () {
-        return _("_AuthInfo");
+        return _("AuthInfo");
     }
 
     function getDescription () {
@@ -41,7 +41,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.19 $");
     }
 
     function getDefaultArguments() {
@@ -52,12 +52,12 @@ extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if (empty($userid) or $userid == $request->_user->UserName()) {
-            $user = & $request->_user;
+            $user =& $request->_user;
             $userid = $user->UserName();
         } else {
             $user = WikiUser($userid);
         }
-        if (!$user->isAdmin() and !DEBUG) {
+        if (!$user->isAdmin() and ! (DEBUG && _DEBUG_LOGIN)) {
             $request->_notAuthorized(WIKIAUTH_ADMIN);
             $this->disabled("! user->isAdmin");
         }
@@ -97,7 +97,7 @@ extends WikiPlugin
         unset($DBAuthParams['dummy']);
         $table->pushContent($this->_showhash("\$DBAuthParams[]", $DBAuthParams));
         $html->pushContent($table);
-        $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'",$userid))));
+        $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'", $userid))));
         if (!$user) {
             $html->pushContent(HTML::p(fmt("No userid")));
         } else {
@@ -105,28 +105,34 @@ extends WikiPlugin
                                        'cellpadding' => 2,
                                        'cellspacing' => 0));
             //$table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
-            $userdata = obj2hash($user);
+            $userdata = obj2hash($user, array('_dbi','_request', 'password', 'passwd'));
             $table->pushContent($this->_showhash("User: Object of ".get_class($user), $userdata));
-            $group = &WikiGroup::getGroup($request);
-            $groups = $group->getAllGroupsIn();
-            $groupdata = obj2hash($group);
-            unset($groupdata['request']);
-            $table->pushContent($this->_showhash("Group: Object of ".get_class($group), $groupdata));
-            $groups = $group->getAllGroupsIn();
-            $groupdata = array('getAllGroupsIn' => $groups);
-            foreach ($groups as $g) {
+            if (ENABLE_USER_NEW) {
+              $group = &$request->getGroup();
+              $groups = $group->getAllGroupsIn();
+              $groupdata = obj2hash($group, array('_dbi','_request', 'password', 'passwd'));
+              unset($groupdata['request']);
+              $table->pushContent($this->_showhash("Group: Object of ".get_class($group), $groupdata));
+              $groups = $group->getAllGroupsIn();
+              $groupdata = array('getAllGroupsIn' => $groups);
+              foreach ($groups as $g) {
                 $groupdata["getMembersOf($g)"] = $group->getMembersOf($g);
                 $groupdata["isMember($g)"] = $group->isMember($g);
+              }
+              $table->pushContent($this->_showhash("Group Methods: ", $groupdata));
             }
-            $table->pushContent($this->_showhash("Group Methods: ", $groupdata));
             $html->pushContent($table);
         }
         return $html;
     }
 
-    function _showhash ($heading, $hash) {
+    function _showhash ($heading, $hash, $depth = 0) {
     	static $seen = array();
+    	static $maxdepth = 0;
         $rows = array();
+        $maxdepth++;
+        if ($maxdepth > 35) return $heading;
+        
         if ($heading)
             $rows[] = HTML::tr(array('bgcolor' => '#ffcccc',
                                      'style' => 'color:#000000'),
@@ -140,25 +146,27 @@ extends WikiPlugin
             foreach ($hash as $key => $val) {
                 if (is_object($val)) {
                     $heading = "Object of ".get_class($val);
-                    if ($heading == "Object of wikidb_sql") $val = $heading;
+                    if ($depth > 3) $val = $heading;
+                    elseif ($heading == "Object of wikidb_sql") $val = $heading;
                     elseif (substr($heading,0,13) == "Object of db_") $val = $heading;
                     elseif (!isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(array('border' => 1,
                                                  'cellpadding' => 2,
                                                  'cellspacing' => 0),
-                                           $this->_showhash($heading, obj2hash($val)));
+                                           $this->_showhash($heading, obj2hash($val), $depth+1));
                     } else {
                         $val = $heading;
                     }
                 } elseif (is_array($val)) {
                     $heading = $key."[]";
-                    if (!isset($seen[$heading])) {
+                    if ($depth > 3) $val = $heading;
+                    elseif (!isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(array('border' => 1,
                                                  'cellpadding' => 2,
                                                  'cellspacing' => 0),
-                                           $this->_showhash($heading, $val));
+                                           $this->_showhash($heading, $val, $depth+1));
                     } else {
                         $val = $heading;
                     }
@@ -189,7 +197,38 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: _AuthInfo.php,v $
+// Revision 1.19  2005/04/01 14:04:31  rurban
+// use obj2hash exclude arg,
+// fix minor security flaw: enable _AuthInfo only if Admin or DEBUG && _DEBUG_LOGIN
+//   not on any DEBUG value
+//
+// Revision 1.18  2005/03/27 19:46:12  rurban
+// security fixes (unknown why and where these get defined)
+//
+// Revision 1.17  2004/10/21 21:00:59  rurban
+// fix recursion bug for old WikiUser:
+//   limit max recursion depth (4) and overall recursions (35).
+//
+// Revision 1.16  2004/06/25 14:29:22  rurban
+// WikiGroup refactoring:
+//   global group attached to user, code for not_current user.
+//   improved helpers for special groups (avoid double invocations)
+// new experimental config option ENABLE_XHTML_XML (fails with IE, and document.write())
+// fixed a XHTML validation error on userprefs.tmpl
+//
+// Revision 1.15  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
+// Revision 1.14  2004/05/18 14:49:52  rurban
+// Simplified strings for easier translation
+//
 // Revision 1.13  2004/04/02 15:06:56  rurban
 // fixed a nasty ADODB_mysql session update bug
 // improved UserPreferences layout (tabled hints)

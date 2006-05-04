@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: GoTo.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: GoTo.php,v 1.4 2004/07/08 20:30:07 rurban Exp $');
 
 /**
  *  Display a form with text entry box and 'Go' button.
@@ -26,7 +26,7 @@ extends WikiPlugin
         return array('size' => 32);
     }
 
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage) {
         $request->setArg('action',false);
         $args = $this->getArgs($argstr, $request);
         extract($args);
@@ -65,7 +65,11 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: GoTo.php,v $
+// Revision 1.4  2004/07/08 20:30:07  rurban
+// plugin->run consistency: request as reference, added basepage.
+// encountered strange bug in AllPages (and the test) which destroys ->_dbi
+//
 // Revision 1.3  2004/04/18 01:11:52  rurban
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.

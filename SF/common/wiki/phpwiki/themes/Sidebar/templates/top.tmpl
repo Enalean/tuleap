@@ -1,11 +1,11 @@
 <?php // -*-html-*-
-rcs_id('$Id: top.tmpl 2117 2005-09-30 08:32:03Z nterray $');
+rcs_id('$Id: top.tmpl,v 1.3 2004/06/14 11:26:51 rurban Exp $');
 global $HIDE_TOOLBARS;
 if (!$HIDE_TOOLBARS) {
 ?>
 <!-- The logo -->
-<div id="logo"><a class="wikilink" 
+<div id="logo"><a class="wikilink"
     href="<?=WikiURL(HOME_PAGE)?>" target="_top"
-    ><img src="<?=$Theme->getImageURL('logo')?>" id="logo-img"
-      border="0" alt="<?=fmt("%s: %s", WIKI_NAME, HOME_PAGE) ?>" /></a></div>
+    ><img src="<?=$WikiTheme->getImageURL('logo')?>" id="logo-img"
+      border="0" alt="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?>" /></a></div>
 <?php } ?>

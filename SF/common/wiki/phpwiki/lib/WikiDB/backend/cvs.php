@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id: cvs.php 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: cvs.php,v 1.26 2005/11/14 22:24:33 rurban Exp $');
 /**
  * Backend for handling CVS repository. 
  *
@@ -307,10 +307,16 @@ extends WikiDB_backend
     }
 
     /**
+     * See ADODB for a better delete_page(), which can be undone and is seen in RecentChanges.
+     * See backend.php
+     */
+    //function delete_page($pagename) { $this->purge_page($pagename); }
+
+    /**
      * This returns false if page was not deleted or could not be deleted
      * else return true.
      */
-    function delete_page($pagename) 
+    function purge_page($pagename) 
     {
         $this->_cvsDebug( "delete_page [$pagename]") ;
         $filename = $this->_docDir . "/" . $pagename;
@@ -381,7 +387,8 @@ extends WikiDB_backend
         $this->_writeMetaInfo( $pagename, $megaHash );
     }
 
-    function get_links($pagename, $reversed) 
+    function get_links($pagename, $reversed=true, $include_empty=false,
+                       $sortby=false, $limit=false, $exclude=false)
     {
         // TODO: ignores the $reversed argument and returns
         // TODO: the value of _links_ attribute of the meta information
@@ -393,27 +400,28 @@ extends WikiDB_backend
         return $megaHash[CMD_LINK_ATT];
     }
 
-    function get_all_revisions($pagename) 
-    {
+    /* function get_all_revisions($pagename) {
         // TODO: should replace this with something more efficient
         include_once('lib/WikiDB/backend/dumb/AllRevisionsIter.php');
         return new WikiDB_backend_dumb_AllRevisionsIter($this, $pagename);
-    }
+    } */
 
-    function get_all_pages($include_defaulted=false, $orderby='pagename') 
+    function get_all_pages($include_empty=false, $sortby=false, $limit=false) 
     {
-        // FIXME: this ignores the include_defaulted parameter.
+        // FIXME: this ignores the parameters.
         return new Cvs_Backend_Array_Iterator(
                               $this->_getAllFileNamesInDir( $this->_docDir ));
     }
 
-    function text_search($search = '', $fullsearch = false) 
+    function text_search($search, $fullsearch = false, $orderby=false, $limit=false, $exclude=false) 
     {
         if ( $fullsearch ) {
-            return new Cvs_Backend_Full_Search_Iterator(
+            $iter = new Cvs_Backend_Full_Search_Iterator(
                                $this->_getAllFileNamesInDir( $this->_docDir ), 
                                $search, 
                                $this->_docDir );
+            $iter->stoplisted =& $search->stoplisted;
+            return $iter;
         } else {
             return new Cvs_Backend_Title_Search_Iterator(
                                $this->_getAllFileNamesInDir( $this->_docDir ),
@@ -421,7 +429,7 @@ extends WikiDB_backend
         }
     }
 
-    function most_popular($limit,$sortby = '') {
+    function most_popular($limit, $sortby='') {
         // TODO: needs to be tested ...
         $mp = $this->_getMostPopular();
         if ($limit < 0){

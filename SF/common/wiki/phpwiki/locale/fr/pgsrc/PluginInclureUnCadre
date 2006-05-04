@@ -1,0 +1,36 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginInclureUnCadre,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginInclureUnCadre;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Ce plugin créera un cadre HTML qui remplira complètement la surface de la 
+page (c'est-à-dire toute la surface que l'utilisateur peut éditer). Tout 
+autre texte sera rejeté quand la page est affichée (tout ce qui est en 
+dehors de l'appel du plugin). Dans le langage de l'hypertexte, ça s'appelle 
+la <i>transclusion</i>.
+
+Vous pouvez être intéressé également par PluginInclureUnePage.
+
+Exemples: pour inclure une page depuis un autre site, utilisez l'argument <b>src</b> :
+
+<verbatim>
+<?plugin FrameInclude src="http://phpwiki.org/" ?>
+</verbatim>
+
+Pour inclure une page depuis ce wiki, utilisez l'argument <b>page</b> :
+
+<verbatim>
+<?plugin FrameInclude page=PageAccueil ?>
+</verbatim>
+
+Pour plus d'informations sur ce plugin, lisez s'il vous plaît, la source
+PHP dans le répertoire /lib/plugin.
+
+
+

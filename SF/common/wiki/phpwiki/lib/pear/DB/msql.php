@@ -1,9 +1,9 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
+// | Copyright (c) 1997-2004 The PHP Group                                |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.02 of the PHP license,      |
 // | that is bundled with this package in the file LICENSE, and is        |
@@ -14,27 +14,33 @@
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
 // | Author: Sterling Hughes <sterling@php.net>                           |
+// | Maintainer: Daniel Convissor <danielc@php.net>                       |
 // +----------------------------------------------------------------------+
 //
-// $Id: msql.php 1422 2005-04-12 13:33:49Z guerin $
-//
-// Database independent query interface definition for PHP's Mini-SQL
-// extension.
-//
-// Based on DB 1.3 from the pear.php.net repository. 
-// The only modifications made have been modification of the include paths. 
-//
-rcs_id('$Id: msql.php 1422 2005-04-12 13:33:49Z guerin $');
-rcs_id('From Pear CVS: Id: msql.php,v 1.3 2002/05/09 12:29:53 ssb Exp');
+// $Id: msql.php,v 1.3 2004/06/21 08:39:38 rurban Exp $
 
 require_once 'DB/common.php';
 
+/**
+ * Database independent query interface definition for PHP's Mini-SQL
+ * extension.
+ *
+ * @package  DB
+ * @version  $Id: msql.php,v 1.3 2004/06/21 08:39:38 rurban Exp $
+ * @category Database
+ * @author   Sterling Hughes <sterling@php.net>
+ */
 class DB_msql extends DB_common
 {
+    // {{{ properties
+
     var $connection;
     var $phptype, $dbsyntax;
     var $prepare_tokens = array();
     var $prepare_types = array();
+
+    // }}}
+    // {{{ constructor
 
     function DB_msql()
     {
@@ -49,22 +55,25 @@ class DB_msql extends DB_common
         );
     }
 
+    // }}}
+    // {{{ connect()
+
     function connect($dsninfo, $persistent = false)
     {
-        if (!DB::assertExtension('msql'))
+        if (!DB::assertExtension('msql')) {
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
+        }
 
         $this->dsn = $dsninfo;
-        $user = $dsninfo['username'];
-        $pw = $dsninfo['password'];
         $dbhost = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : 'localhost';
 
         $connect_function = $persistent ? 'msql_pconnect' : 'msql_connect';
 
-        if ($dbhost && $user && $pw) {
-            $conn = $connect_function($dbhost, $user, $pw);
-        } elseif ($dbhost && $user) {
-            $conn = $connect_function($dbhost,$user);
+        if ($dbhost && $dsninfo['username'] && $dsninfo['password']) {
+            $conn = $connect_function($dbhost, $dsninfo['username'],
+                                      $dsninfo['password']);
+        } elseif ($dbhost && $dsninfo['username']) {
+            $conn = $connect_function($dbhost, $dsninfo['username']);
         } else {
             $conn = $connect_function($dbhost);
         }
@@ -78,12 +87,18 @@ class DB_msql extends DB_common
         return DB_OK;
     }
 
+    // }}}
+    // {{{ disconnect()
+
     function disconnect()
     {
         $ret = @msql_close($this->connection);
         $this->connection = null;
         return $ret;
     }
+
+    // }}}
+    // {{{ simpleQuery()
 
     function simpleQuery($query)
     {
@@ -98,6 +113,8 @@ class DB_msql extends DB_common
         return DB::isManip($query) ? DB_OK : $result;
     }
 
+
+    // }}}
     // {{{ nextResult()
 
     /**
@@ -115,20 +132,27 @@ class DB_msql extends DB_common
     }
 
     // }}}
+    // {{{ fetchInto()
 
-    function fetchRow($result, $fetchmode = DB_FETCHMODE_DEFAULT, $rownum=null)
-    {
-        if ($fetchmode == DB_FETCHMODE_DEFAULT) {
-            $fetchmode = $this->fetchmode;
-        }
-        $res = $this->fetchInto ($result, $arr, $fetchmode, $rownum);
-        if ($res !== DB_OK) {
-            return $res;
-        }
-        return $arr;
-    }
-
-    function fetchInto($result, &$ar, $fetchmode, $rownum=null)
+    /**
+     * Fetch a row and insert the data into an existing array.
+     *
+     * Formating of the array and the data therein are configurable.
+     * See DB_result::fetchInto() for more information.
+     *
+     * @param resource $result    query result identifier
+     * @param array    $arr       (reference) array where data from the row
+     *                            should be placed
+     * @param int      $fetchmode how the resulting array should be indexed
+     * @param int      $rownum    the row number to fetch
+     *
+     * @return mixed DB_OK on success, null when end of result set is
+     *               reached or on failure
+     *
+     * @see DB_result::fetchInto()
+     * @access private
+     */
+    function fetchInto($result, &$arr, $fetchmode, $rownum=null)
     {
         if ($rownum !== null) {
             if (!@msql_data_seek($result, $rownum)) {
@@ -136,32 +160,39 @@ class DB_msql extends DB_common
             }
         }
         if ($fetchmode & DB_FETCHMODE_ASSOC) {
-            $ar = @msql_fetch_array($result, MSQL_ASSOC);
+            $arr = @msql_fetch_array($result, MSQL_ASSOC);
+            if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE && $arr) {
+                $arr = array_change_key_case($arr, CASE_LOWER);
+            }
         } else {
-            $ar = @msql_fetch_row($result);
+            $arr = @msql_fetch_row($result);
         }
-        if (!$ar) {
-            if ($error = msql_error()) {
+        if (!$arr) {
+            if ($error = @msql_error()) {
                 return $this->raiseError($error);
             } else {
                 return null;
             }
         }
+        if ($this->options['portability'] & DB_PORTABILITY_RTRIM) {
+            $this->_rtrimArrayValues($arr);
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_NULL_TO_EMPTY) {
+            $this->_convertNullArrayValuesToEmpty($arr);
+        }
         return DB_OK;
     }
 
+    // }}}
+    // {{{ freeResult()
+
     function freeResult($result)
     {
-        if (is_resource($result)) {
-            return @msql_free_result($result);
-        }
-        if (!isset($this->prepare_tokens[$result])) {
-            return false;
-        }
-        unset($this->prepare_tokens[$result]);
-        unset($this->prepare_types[$result]);
-        return true;
+        return @msql_free_result($result);
     }
+
+    // }}}
+    // {{{ numCols()
 
     function numCols($result)
     {
@@ -172,6 +203,9 @@ class DB_msql extends DB_common
         return $cols;
     }
 
+    // }}}
+    // {{{ numRows()
+
     function numRows($result)
     {
         $rows = @msql_num_rows($result);
@@ -181,35 +215,28 @@ class DB_msql extends DB_common
         return $rows;
     }
 
+    // }}}
+    // {{{ affected()
+
     /**
      * Gets the number of rows affected by a query.
      *
      * @return number of rows affected by the last query
      */
-
     function affectedRows()
     {
         return @msql_affected_rows($this->connection);
     }
 
-    // {{{ getSpecialQuery()
-
-    /**
-    * Returns the query needed to get some backend info
-    * @param string $type What kind of info you want to retrieve
-    * @return string The SQL query string
-    */
-    function getSpecialQuery($type)
-    {
-        switch ($type) {
-            case 'tables':
-            default:
-                return null;
-        }
-        return $sql;
-    }
-
     // }}}
 
 }
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ */
+
 ?>

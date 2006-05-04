@@ -1,14 +1,13 @@
-<?php // -*-html-*- ?>
-<!-- $Id: info.tmpl 2691 2006-03-02 15:31:51Z guerin $ -->
+<?php // -*-php-*- ?>
+<!-- $Id: info.tmpl,v 1.18 2005/02/02 19:02:10 rurban Exp $ -->
 <?php
 
-$modifed = $Theme->formatDateTime($revision->get('mtime'));
+$modifed = $WikiTheme->formatDateTime($revision->get('mtime'));
 
-global $WikiNameRegexp;
 $dbi = $request->getDbh();
 $author = $revision->get('author');
 $authorLink = $author;
-if (preg_match("/^$WikiNameRegexp\$/", $author) && $dbi->isWikiPage($author))
+if ($dbi->isWikiPage($author))
     $authorLink = WikiLink($author);
 
 $authorId = $revision->get('author_id');
@@ -27,7 +26,7 @@ $bytes = strlen($revision->_data['%content']);
 $size = ByteFormatter($bytes, /* $longformat = */true);
 // Count words
 preg_match_all('/\\w+\\W*/', $revision->_data['%content'], $whitespacematches);
-if (1 == $c = count_all($whitespacematches))
+if (1 == ($c = count_all($whitespacematches)))
   $wordcount = fmt("1 word");
 else
   $wordcount = fmt("%s words", $c);
@@ -54,7 +53,7 @@ if ($is_current = $revision->isCurrent()) {
                                    'checked'  => $page->get('locked')));
 
     // Not sure if I want to keep this... --Carsten
-    if ($user->isadmin()) {
+    if ($user->isAdmin()) {
         $lockunlock = $page->get('locked') ? 'unlock' : 'lock';
         $clickcheckbUrl = WikiURL($revision, array('action' => $lockunlock));
         $clickcheckb = "location.href='$clickcheckbUrl'";
@@ -62,18 +61,18 @@ if ($is_current = $revision->isCurrent()) {
         $LOCKED_CB->setAttr('onclick', $clickcheckb);
     }
 
-    $label['date'] = _("Last Modified:");
-    $label['author'] = _("Last Author:");
-    $label['summary'] = _("Last Summary:");
+    $label['date'] = _("Last Modified").':';
+    $label['author'] = _("Last Author").':';
+    $label['summary'] = _("Last Summary").':';
 
 } else {
     $label['date'] = _("Saved on:");
-    $label['author'] = _("Author:");
-    $label['summary'] = _("Summary:");
+    $label['author'] = _("Author").':';
+    $label['summary'] = _("Summary").':';
 }
 
 $tableSummary = fmt("Statistics about %s.", $page->getName());
-$Sep = $Theme->getButtonSeparator();
+$Sep = $WikiTheme->getButtonSeparator();
 
 ?>
 
@@ -84,7 +83,7 @@ $Sep = $Theme->getButtonSeparator();
 <?php if (!$is_current) { ?>
   <tr>
     <td align="right" class="pageinfo"><?=_("Supplanted on:")?></td>
-    <td><?= $Theme->formatDateTime($revision->get('_supplanted')) ?></td>
+    <td><?= $WikiTheme->formatDateTime($revision->get('_supplanted')) ?></td>
   </tr>
 <?php } ?>
 
@@ -95,7 +94,8 @@ $Sep = $Theme->getButtonSeparator();
   <tr>
     <td align="right" class="pageinfo"><?= $label['author'] ?></td>
     <td><?= $authorLink ?>
-      <?php if (! ($author == $authorId)) { ?>
+<?php if (! ($author == $authorId)) { 
+    if ($dbi->isWikiPage($authorId)) $authorId = WikiLink($authorId); ?>
         <span class="pageinfo-authorid">(<?= $authorId ?>)</span>
       <?php } ?></td>
   </tr>
@@ -159,7 +159,16 @@ if (isSubPage($page->getName())) {
 
 <?php
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                         
-// $Log$
+// $Log: info.tmpl,v $
+// Revision 1.18  2005/02/02 19:02:10  rurban
+// link author
+//
+// Revision 1.17  2004/06/14 11:26:52  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+//
+// Revision 1.16  2004/05/18 14:47:21  rurban
+// Simplified strings for easier translation
+//
 // Revision 1.15  2003/12/11 19:38:29  carstenklapp
 // Internal change: Fix PHP Warning: Call-time pass-by-reference has been deprecated
 //

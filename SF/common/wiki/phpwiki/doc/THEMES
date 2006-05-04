@@ -25,6 +25,10 @@ of your theme to index.php.
 
 ! Template Structure
 
+Templates currently must use the .tmpl extension (simple PHP parsed files).
+Other file extensions are reserved for future use (i.e. .tpl for Smarty or 
+.html for our old template expansion.)
+
 Only one template is called, ususally the "html.tmpl" template, 
 which includes all other templates then.
 
@@ -42,6 +46,10 @@ Templates are used
 * by certain actions (editpage) or plugins (e.g. info, userprefs, 
   addcomment, ...) or 
 * by certain pagetypes (e.g. wikiblog, comment, wikiforum)
+
+To include templates from other themes use this syntax:
+  <?= Template('default/search') ?>
+includes the search template from the default theme.
 
 Warning!
 When you write your own templates or change existing ones, you might 

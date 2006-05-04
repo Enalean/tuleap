@@ -1,0 +1,83 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginM%E9t%E9oPhp,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginM%E9t%E9oPhp;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Description
+
+PluginMétéoPhp est un PluginWiki qui utilise [PhpWeather|http://phpweather.sourceforge.net/]
+pour afficher un bout de texte avec la météo actuelle pour n'importe quel aéroport
+dans le monde. Cela ressemble à ça :
+
+<?plugin PhpWeather menu=true ?>
+
+!!Arguments 
+
+__menu__:
+  Mettre ceci sur =true= pour que le plugin affiche un menu après le 
+  rapport. L'utilisateur pourra sélectionner un pays à partir de ce menu
+  et, après ça, un aéroport et une langue. La valeur par défaut est 
+  <tt>false</tt>.  
+
+__icao__:
+  Utilisez ceci pour pré-sélectionner un aéroport spécifique à la place
+  de l'aéroport par défaut qui est <tt>EKAH</tt>. Si vous voulez que
+  l'utilisateur puisse changer la station en utilisant le menu alors
+  lancer le plugin comme ceci : 
+  <verbatim>
+  <?plugin PhpWeather menu=true icao||=EKYT ?>
+  </verbatim>
+  de telle sorte que la valeur peut être ré-écrite lorsque l'utilisateur
+  soumet le formulaire. Si vous mettez seulement :
+  <verbatim>
+  <?plugin PhpWeather menu=true icao=EKYT ?>
+  </verbatim>
+  alors rien ne se produira lorsque l'utilisateur sélectionnera une autre 
+  station depuis la liste.
+ 
+__cc__:
+  Spécifie le code du pays (country code). Vous pouvez l'utiliser si vous 
+  souhaitez pré-sélectionner un pays différent de celui spécifié dans le 
+  ICAO. Ainsi :  
+  <verbatim>
+  <?plugin PhpWeather menu=true cc||=GB icao||=KTTS ?>
+  </verbatim>
+  affichera la météo courante à NASA Shuttle Facility, États-Unis
+  (<tt>KTTS</tt>) et en même temps donnera à l'utilisateur une liste des 
+  stations du Royaume Uni. Comme l'exemple le montre vous devriez utiliser
+  <tt>cc||=XX</tt> en le combinant avec __menu__ mis sur <tt>true</tt>.
+
+__language__:
+  La langue par défaut. Quand vous combinez __language__ avec __menu__
+  mis sur <tt>true</tt> alors souvenez-vous d'utiliser la forme 
+  <code>language||=xx</code>.
+
+__units__:
+  Vous pouvez spécifer le manière dont les unités seront affichées. Le choix
+  se fait sur la possibilité d'avoir les deux unités (métriques ou impériales)
+  ou juste l'un d'entres elles. Mettant __units__ sur =both_metric= affichera
+  la valeur métrique d'abord et ensuite l'impériale entre parenthèses.
+   __units__ sur =both_imperial= fait exactement l'inverse.
+
+  Si vous voulez l'une ou l'autre seulement alors mettez  __units__ sur 
+  =only_metric= ou =only_imperial= et ça le fera.
+
+!!Exemple
+
+Le temps chez les Bretons :
+
+<verbatim>
+<?plugin PhpWeather cc=FR icao=LFRN language=fr units=only_metric?>
+</verbatim>
+
+et qui est actuellement :
+<?plugin PhpWeather cc=FR icao=LFRN language=fr units=only_metric?>
+
+----
+PluginWiki

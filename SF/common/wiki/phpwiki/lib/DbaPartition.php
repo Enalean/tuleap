@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: DbaPartition.php 1422 2005-04-12 13:33:49Z guerin $');
+<?php rcs_id('$Id: DbaPartition.php,v 1.2 2004/11/21 11:59:14 rurban Exp $');
 
 class DbaPartition
 {

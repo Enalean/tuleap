@@ -1,9 +1,9 @@
 <?php // -*-php-*-
-rcs_id('$Id: VisualWiki.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: VisualWiki.php,v 1.19 2005/10/12 06:19:31 rurban Exp $');
 /*
  Copyright (C) 2002 Johannes Große (Johannes Gro&szlig;e)
 
- This file is (not yet) part of PhpWiki.
+ This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,50 +26,22 @@ rcs_id('$Id: VisualWiki.php 2691 2006-03-02 15:31:51Z guerin $');
  * sitemap of PhpWiki by calling the <code>dot</code> commandline tool
  * from graphviz (http://www.graphviz.org).
  * @author Johannes Große
- * @version 0.8
+ * @version 0.9
  */
 define('VISUALWIKI_ALLOWOPTIONS', true);
-global $dotbin;
-if (PHP_OS == "Darwin") { // Mac OS X
-    $dotbin = '/sw/bin/dot'; // graphviz via Fink
-    //$dotbin = '/usr/local/bin/dot';
-
-    // Name of the Truetypefont - at least LucidaSansRegular.ttf is always present on OS X
-    define('VISUALWIKIFONT', 'LucidaSansRegular');
-
-    // The default font paths do not find your fonts, set the path here:
-    $fontpath = "/System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Home/lib/fonts/";
-    //$fontpath = "/usr/X11R6/lib/X11/fonts/TTF/";
-}
-elseif (isWindows()) {
-  $dotbin = 'dot';
-  define('VISUALWIKIFONT', 'Arial');
-} else { // other os
-    $dotbin = '/usr/local/bin/dot';
-
-    // Name of the Truetypefont - Helvetica is probably easier to read
-    //define('VISUALWIKIFONT', 'Helvetica');
-    //define('VISUALWIKIFONT', 'Times');
-    define('VISUALWIKIFONT', 'Arial');
-
-    // The default font paths do not find your fonts, set the path here:
-    //$fontpath = "/usr/X11R6/lib/X11/fonts/TTF/";
-    //$fontpath = "/usr/share/fonts/default/TrueType/";
-}
-
 if (!defined('VISUALWIKI_ALLOWOPTIONS'))
     define('VISUALWIKI_ALLOWOPTIONS', false);
 
-require_once "lib/WikiPluginCached.php";
+require_once "lib/plugin/GraphViz.php";
 
 class WikiPlugin_VisualWiki
-extends WikiPluginCached
+extends WikiPlugin_GraphViz
 {
     /**
      * Sets plugin type to map production
      */
     function getPluginType() {
-        return PLUGIN_CACHED_MAP;
+        return ($GLOBALS['request']->getArg('debug')) ? PLUGIN_CACHED_IMG_ONDEMAND : PLUGIN_CACHED_MAP;
     }
 
     /**
@@ -83,7 +55,7 @@ extends WikiPluginCached
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.19 $");
     }
 
     /**
@@ -100,8 +72,8 @@ extends WikiPluginCached
      */
     function defaultarguments() {
         return array('imgtype'        => 'png',
-                     'width'          => 5,
-                     'height'         => 7,
+                     'width'          => false, // was 5, scale it automatically
+                     'height'         => false, // was 7, scale it automatically
                      'colorby'        => 'age', // sort by 'age' or 'revtime'
                      'fillnodes'      => 'off',
                      'label'          => 'name',
@@ -113,7 +85,8 @@ extends WikiPluginCached
                      'neighbour_list' => '',
                      'exclude_list'   => '',
                      'include_list'   => '',
-                     'fontsize'       => 10,
+                     'fontsize'       => 9,
+                     'debug'          => false,
                      'help'           => false );
     }
 
@@ -123,7 +96,7 @@ extends WikiPluginCached
      * for each different set of parameters, there can be a lot of
      * these (large) graphs if you allow different parameters.
      * Set <code>VISUALWIKI_ALLOWOPTIONS</code> to <code>false</code>
-     * to allow no options to be set and use only the default paramters.
+     * to allow no options to be set and use only the default parameters.
      * This will need an disk space of about 20 Kbyte all the time.
      */
     function getDefaultArguments() {
@@ -140,43 +113,32 @@ extends WikiPluginCached
     function checkArguments(&$arg) {
         extract($arg);
         $def = $this->defaultarguments();
-
         if (($width < 3) || ($width > 15))
             $arg['width'] = $def['width'];
-
         if (($height < 3) || ($height > 20))
             $arg['height'] = $def['height'];
-
         if (($fontsize < 8) || ($fontsize > 24))
             $arg['fontsize'] = $def['fontsize'];
-
         if (!in_array($label, array('name', 'number')))
             $arg['label'] = $def['label'];
 
         if (!in_array($shape, array('ellipse', 'box', 'point', 'circle',
                                     'plaintext')))
             $arg['shape'] = $def['shape'];
-
         if (!in_array($colorby, array('age', 'revtime')))
             $arg['colorby'] = $def['colorby'];
-
         if (!in_array($fillnodes, array('on', 'off')))
             $arg['fillnodes'] = $def['fillnodes'];
-
         if (($large_nb < 0) || ($large_nb > 50))
             $arg['large_nb'] = $def['large_nb'];
-
         if (($recent_nb < 0)  || ($recent_nb > 50))
             $arg['recent_nb'] = $def['recent_nb'];
-
         if (($refined_nb < 0 ) || ( $refined_nb > 50))
             $arg['refined_nb'] = $def['refined_nb'];
-
         if (($backlink_nb < 0) || ($backlink_nb > 50))
             $arg['backlink_nb'] = $def['backlink_nb'];
-
         // ToDo: check if "ImageCreateFrom$imgtype"() exists.
-        if (!in_array($imgtype, $GLOBALS['CacheParams']['imgtypes']))
+        if (!in_array($imgtype, $GLOBALS['PLUGIN_CACHED_IMGTYPES']))
             $arg['imgtype'] = $def['imgtype'];
         if (empty($fontname))
             $arg['fontname'] = VISUALWIKIFONT;
@@ -191,6 +153,7 @@ extends WikiPluginCached
         if (!VISUALWIKI_ALLOWOPTIONS)
             $argarray = $this->defaultarguments();
         $this->checkArguments($argarray);
+        $request->setArg('debug',$argarray['debug']);
         //extract($argarray);
         if ($argarray['help'])
             return array($this->helpImage(), ' '); // FIXME
@@ -199,43 +162,8 @@ extends WikiPluginCached
         /* ($dbi,  $large, $recent, $refined, $backlink,
             $neighbour, $excludelist, $includelist, $color); */
         return $this->invokeDot($argarray);
-        /* ($width, $height, $color, $shape, $text); */
-    }
-
-    /**
-     * Sets the expire time to one day (so the image producing
-     * functions are called seldomly) or to about two minutes
-     * if a help screen is created.
-     */
-    function getExpire($dbi, $argarray, $request) {
-        if ($argarray['help'])
-            return '+120'; // 2 minutes
-        return sprintf('+%d', 3*86000); // approx 3 days
-    }
-
-    /**
-     * Sets the imagetype according to user wishes and
-     * relies on WikiPluginCached to catch illegal image
-     * formats.
-     * (I feel unsure whether this option is reasonable in
-     *  this case, because png will definitely have the
-     *  best results.)
-     *
-     * @return string 'png', 'gif', 'jpeg'
-     */
-    function getImageType($dbi, $argarray, $request) {
-        return $argarray['imgtype'];
-    }
-
-    /**
-     * This gives an alternative text description of
-     * the image map. I do not know whether it interferes
-     * with the <code>title</code> attributes in &lt;area&gt;
-     * tags of the image map. Perhaps this will be removed.
-     * @return string
-     */
-    function getAlt($dbi, $argstr, $request) {
-        return $this->getDescription();
+        /* => ($width, $height, $color, $shape, $text); */
+	
     }
 
     // ------------------------------------------------------------------------------------------
@@ -246,11 +174,11 @@ extends WikiPluginCached
      */
     function helpImage() {
         $def = $this->defaultarguments();
-        $other_imgtypes = $GLOBALS['CacheParams']['imgtypes'];
+        $other_imgtypes = $GLOBALS['PLUGIN_CACHED_IMGTYPES'];
         unset ($other_imgtypes[$def['imgtype']]);
         $helparr = array(
             '<?plugin '.$this->getName() .
-            ' img'             => ' = "' . $def['imgtype'] . "(default)|" . join('|',$GLOBALS['CacheParams']['imgtypes']).'"',
+            ' img'             => ' = "' . $def['imgtype'] . "(default)|" . join('|',$GLOBALS['PLUGIN_CACHED_IMGTYPES']).'"',
             'width'            => ' = "width in inches"',
             'height'           => ' = "height in inches"',
             'fontname'         => ' = "font family"',
@@ -347,7 +275,7 @@ extends WikiPluginCached
     *                              should not be displayed (like PhpWiki, for
     *                              example)
     * @param  INCLUDELIST string   colon separated list of pages which are
-    *                              allways included (for example your own
+    *                              always included (for example your own
     *                              page :)
     * @param  COLOR       string   'age', 'revtime' or 'none'; Selects which
     *                              page feature is used to determine the
@@ -361,21 +289,29 @@ extends WikiPluginCached
 
         extract($argarray);
         // FIXME: gettextify?
-        $exclude_list   = explode(':', $exclude_list);
-        $include_list   = explode(':', $include_list);
-        $neighbour_list = explode(':', $neighbour_list);
+        $exclude_list   = $exclude_list ? explode(':', $exclude_list) : array();
+        $include_list   = $include_list ? explode(':', $include_list) : array();
+        $neighbour_list = $neighbour_list ? explode(':', $neighbour_list) : array();
 
-        // FIXME remove INCLUDED from EXCLUDED
+        // remove INCLUDED from EXCLUDED, includes override excludes.
+        if ($exclude_list and $include_list) {
+        	$diff = array_diff($exclude_list, $include_list);
+        	if ($diff)
+        	    $exclude_list = $diff;
+        }
 
         // collect all pages
-        $allpages = $dbi->getAllPages();
+        $allpages = $dbi->getAllPages(false, false, false, $exclude_list);
         $pages = &$this->pages;
         $countpages = 0;
         while ($page = $allpages->next()) {
             $name = $page->getName();
 
-            // skip exluded pages
-            if (in_array($name, $exclude_list)) continue;
+            // skip excluded pages
+            if (in_array($name, $exclude_list)) {
+            	$page->free();	
+                continue;
+            }
 
             // false = get links from actual page
             // true  = get links to actual page ("backlinks")
@@ -385,26 +321,28 @@ extends WikiPluginCached
             while ($blink = $backlinks->next()) {
                 array_push($bconnection, $blink->getName());
             }
+            $backlinks->free();
             unset($backlinks);
 
             // include all neighbours of pages listed in $NEIGHBOUR
-            if (in_array($name,$neighbour_list)) {
-                $l = $page->getLinks(false);
+            if (in_array($name, $neighbour_list)) {
+                $ln = $page->getLinks(false);
                 $con = array();
-                while ($link = $l->next()) {
+                while ($link = $ln->next()) {
                     array_push($con, $link->getName());
                 }
                 $include_list = array_merge($include_list, $bconnection, $con);
+                $ln->free();
                 unset($l);
                 unset($con);
             }
 
-            unset($currev);
-            $currev = $page->getCurrentRevision();
+            unset($rev);
+            $rev = $page->getCurrentRevision();
 
             $pages[$name] = array(
-                'age'         => $now-$currev->get('mtime'),
-                'revnr'       => $currev->getVersion(),
+                'age'         => $now - $rev->get('mtime'),
+                'revnr'       => $rev->getVersion(),
                 'links'       => array(),
                 'backlink_nb' => count($bconnection),
                 'backlinks'   => $bconnection,
@@ -414,6 +352,7 @@ extends WikiPluginCached
 
             unset($page);
         }
+        $allpages->free();
         unset($allpages);
         $this->names = array_keys($pages);
 
@@ -424,7 +363,7 @@ extends WikiPluginCached
             $this->findbest($recent_nb,   'age',         true),
             $this->findbest($refined_nb,  'revtime',     true),
             $x = $this->findbest($backlink_nb, 'backlink_nb', false),
-//            $this->findbest($large_nb,    'size',        false),
+//          $this->findbest($large_nb,    'size',        false),
             $include_list));
 
         foreach($all_selected as $name)
@@ -442,7 +381,7 @@ extends WikiPluginCached
 
         // remove dead links and collect links
         reset($pages);
-        while( list($name,$page) = each($pages) ) {
+        while( list($name, $page) = each($pages) ) {
             if (is_array($page['backlinks'])) {
                 reset($page['backlinks']);
                 while ( list($index, $link) = each( $page['backlinks'] ) ) {
@@ -462,7 +401,7 @@ extends WikiPluginCached
         $this->oldest = $pages[$oldestname][$colorby];
         foreach($this->names as $name)
             $pages[$name]['color'] = $this->getColor($pages[$name][$colorby] / $this->oldest);
-    } // extract_wikipages
+    }
 
     /**
      * Creates the text file description of the graph needed to invoke
@@ -488,12 +427,14 @@ extends WikiPluginCached
         $ok = true;
         $names = &$this->names;
         $pages = &$this->pages;
-
-        $nametonumber = array_flip($names);
+        if ($names)
+            $nametonumber = array_flip($names);
 
         $dot = "digraph VisualWiki {\n" // }
-             . (!empty($fontpath) ? "    fontpath=\"$fontpath\"\n" : "")
-             . "    size=\"$width,$height\";\n    ";
+            . (!empty($fontpath) ? "    fontpath=\"$fontpath\"\n" : "");
+        if ($width and $height)
+            $dot .= "    size=\"$width,$height\";\n    ";
+
 
         switch ($shape) {
         case 'point':
@@ -514,8 +455,7 @@ extends WikiPluginCached
 
             $url = rawurlencode($name);
             // patch to allow Page/SubPage
-            $url = preg_replace('/' . urlencode(SUBPAGE_SEPARATOR) . '/',
-                                SUBPAGE_SEPARATOR, $url);
+            $url = str_replace(urlencode(SUBPAGE_SEPARATOR), SUBPAGE_SEPARATOR, $url);
             $nodename = ($label != 'name' ? $nametonumber[$name] + 1 : $name);
 
             $dot .= "    \"$nodename\" [URL=\"$url\"";
@@ -564,99 +504,55 @@ extends WikiPluginCached
                 $legend[] = $name;
             }
             $dot .= '        '. join(' -> ', $legend)
-                 . ";\n    }\n";
-
+		. ";\n    }\n";
         }
 
         // {
         $dot .= "}\n";
-
+        $this->source = $dot;
+        // write a temp file
         $ok = fwrite($fp, $dot);
         $ok = fclose($fp) && $ok;  // close anyway
 
         return $ok;
     }
 
-    /**
-     * Execute system command.
+
+    /** 
+     * static workaround on broken Cache or broken dot executable, 
+     * called only if debug=static.
      *
-     * @param  cmd string   command to be invoked
-     * @return     boolean  error status; true=ok; false=error
+     * @access private
+     * @param  url      string  url pointing to the image part of the map
+     * @param  map      string  &lt;area&gt; tags defining active
+     *                          regions in the map
+     * @param  dbi      WikiDB  database abstraction class
+     * @param  argarray array   complete (!) arguments to produce 
+     *                          image. It is not necessary to call 
+     *                          WikiPlugin->getArgs anymore.
+     * @param  request  Request ??? 
+     * @return          string  html output
      */
-    function execute($cmd) {
-        exec($cmd, $errortxt, $returnval);
-        return ($returnval == 0);
+    function embedImg($url,&$dbi,$argarray,&$request) {
+        if (!VISUALWIKI_ALLOWOPTIONS)
+            $argarray = $this->defaultarguments();
+        $this->checkArguments($argarray);
+        //extract($argarray);
+        if ($argarray['help'])
+            return array($this->helpImage(), ' '); // FIXME
+        $this->createColors();
+        $this->extract_wikipages($dbi, $argarray);
+        list($imagehandle, $content['html']) = $this->invokeDot($argarray);
+        // write to uploads and produce static url
+        $file_dir = defined('PHPWIKI_DIR') ? 
+            PHPWIKI_DIR . "/uploads" : "uploads";
+        $upload_dir = SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/';
+        $tmpfile = tempnam($file_dir,"VisualWiki").".".$argarray['imgtype'];
+        WikiPluginCached::writeImage($argarray['imgtype'], $imagehandle, $tmpfile);             
+        ImageDestroy($imagehandle);
+        return WikiPluginCached::embedMap(1,$upload_dir.basename($tmpfile),$content['html'],
+                                          $dbi,$argarray,$request);
     }
-
-    /**
-     * Produces a dot file, calls dot twice to obtain an image and a
-     * text description of active areas for hyperlinking and returns
-     * an image and an html map.
-     *
-     * @param width     float   width of the output graph in inches
-     * @param height    float   height of the graph in inches
-     * @param colorby   string  color sceme beeing used ('age', 'revtime',
-     *                                                   'none')
-     * @param shape     string  node shape; 'ellipse', 'box', 'circle', 'point'
-     * @param label     string  not used anymore
-     */
-    function invokeDot($argarray) {
-        global $dotbin;
-        $cacheparams = $GLOBALS['CacheParams'];
-        $tempfiles = tempnam($cacheparams['cache_dir'], 'VisualWiki');
-        $gif = $argarray['imgtype'];
-        $ImageCreateFromFunc = "ImageCreateFrom$gif";
-        $ok =  $tempfiles
-            && $this->createDotFile($tempfiles.'.dot',$argarray)
-            && $this->execute("$dotbin -T$gif $tempfiles.dot -o $tempfiles.$gif")
-            && $this->execute("$dotbin -Timap $tempfiles.dot -o $tempfiles.map")
-            && file_exists( "$tempfiles.$gif" )
-            && file_exists( $tempfiles.'.map' )
-            && ($img = $ImageCreateFromFunc( "$tempfiles.$gif" ))
-            && ($fp = fopen($tempfiles.'.map','r'));
-
-        $map = HTML();
-        if ($ok) {
-            while (!feof($fp)) {
-                $line = fgets($fp, 1000);
-                if (substr($line, 0, 1) == '#')
-                    continue;
-                list($shape, $url, $e1, $e2, $e3, $e4) = sscanf($line,
-                                                                "%s %s %d,%d %d,%d");
-                if ($shape != 'rect')
-                    continue;
-
-                // dot sometimes gives not allways the right order so
-                // so we have to sort a bit
-                $x1 = min($e1, $e3);
-                $x2 = max($e1, $e3);
-                $y1 = min($e2, $e4);
-                $y2 = max($e2, $e4);
-                $map->pushContent(HTML::area(array(
-                            'shape'  => 'rect',
-                            'coords' => "$x1,$y1,$x2,$y2",
-                            'href'   => $url,
-                            'title'  => rawurldecode($url),
-                            'alt' => $url)));
-                }
-            fclose($fp);
-//trigger_error("url=".$url);
-        }
-
-        // clean up tempfiles
-        if ($ok && empty($_GET['debug']) && $tempfiles) {
-            //unlink($tempfiles);
-            //unlink("$tempfiles.$gif");
-            //unlink($tempfiles . '.map');
-            //unlink($tempfiles . '.dot');
-//trigger_error($tempfiles);
-        }
-
-        if ($ok)
-            return array($img, $map);
-        else
-            return array(false, false);
-    } // invokeDot
 
     /**
      * Prepares some rainbow colors for the nodes of the graph
@@ -708,20 +604,57 @@ extends WikiPluginCached
         }
         $lastcol = end($this->ColorTab);
         return $lastcol;
-    } // getColor
-} // WikiPlugin_VisualWiki
+    }
+}
 
 /**
  * Linear interpolates a value between two point a and b
  * at a value pos.
  * @return float  interpolated value
  */
-
 function interpolate($a, $b, $pos) {
     return $a + ($b - $a) * $pos;
 }
 
-// $Log$
+// $Log: VisualWiki.php,v $
+// Revision 1.19  2005/10/12 06:19:31  rurban
+// remove INCLUDED from EXCLUDED, includes override excludes.
+//
+// Revision 1.18  2004/12/17 16:49:52  rurban
+// avoid Invalid username message on Sign In button click
+//
+// Revision 1.17  2004/10/14 19:19:34  rurban
+// loadsave: check if the dumped file will be accessible from outside.
+// and some other minor fixes. (cvsclient native not yet ready)
+//
+// Revision 1.16  2004/10/12 15:34:47  rurban
+// redirect stderr to display the failing msg
+//
+// Revision 1.15  2004/09/08 13:38:00  rurban
+// improve loadfile stability by using markup=2 as default for undefined markup-style.
+// use more refs for huge objects.
+// fix debug=static issue in WikiPluginCached
+//
+// Revision 1.14  2004/09/07 13:26:31  rurban
+// new WikiPluginCached option debug=static and some more sf.net defaults for VisualWiki
+//
+// Revision 1.13  2004/09/06 12:13:00  rurban
+// provide sf.net default dotbin
+//
+// Revision 1.12  2004/09/06 12:08:50  rurban
+// memory_limit on unix workaround
+// VisualWiki: default autosize image
+//
+// Revision 1.11  2004/09/06 10:10:27  rurban
+// fixed syntax error
+//
+// Revision 1.10  2004/06/19 10:06:38  rurban
+// Moved lib/plugincache-config.php to config/*.ini
+// use PLUGIN_CACHED_* constants instead of global $CacheParams
+//
+// Revision 1.9  2004/06/03 09:40:57  rurban
+// WikiPluginCache improvements
+//
 // Revision 1.8  2004/01/26 09:18:00  rurban
 // * changed stored pref representation as before.
 //   the array of objects is 1) bigger and 2)

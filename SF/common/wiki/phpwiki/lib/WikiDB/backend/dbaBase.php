@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: dbaBase.php 1422 2005-04-12 13:33:49Z guerin $');
+<?php rcs_id('$Id: dbaBase.php,v 1.23 2005/09/11 13:21:45 rurban Exp $');
 
 require_once('lib/WikiDB/backend.php');
 
@@ -25,8 +25,7 @@ require_once('lib/WikiDB/backend.php');
  *   value: serialized list of pages which link to pagename
  *
  *  TODO:
- *
- *  Don't keep tables locked the whole time?
+ *  Don't keep tables locked the whole time
  *
  *  index table with:
  *   list of pagenames for get_all_pages
@@ -46,8 +45,9 @@ extends WikiDB_backend
 {
     function WikiDB_backend_dbaBase (&$dba) {
         $this->_db = &$dba;
-        // FIXME: page and version tables should be in their own files, probably.
+        // TODO: page and version tables should be in their own files, probably.
         // We'll pack them all in one for now (testing).
+        // 2004-07-09 10:07:30 rurban: It's fast enough this way.
         $this->_pagedb = new DbaPartition($dba, 'p');
         $this->_versiondb = new DbaPartition($dba, 'v');
         $linkdbpart = new DbaPartition($dba, 'l');
@@ -55,6 +55,10 @@ extends WikiDB_backend
         $this->_dbdb = new DbaPartition($dba, 'd');
     }
 
+    function sortable_columns() {
+        return array('pagename','mtime'/*,'author_id','author'*/);
+    }
+    
     function close() {
         $this->_db->close();
     }
@@ -84,7 +88,6 @@ extends WikiDB_backend
         $data = unserialize($packed);
         return $data;
     }
-
             
     function update_pagedata($pagename, $newdata) {
         $result = $this->_pagedb->get($pagename);
@@ -122,16 +125,29 @@ extends WikiDB_backend
         }
         return false;
     }
-        
-    function get_versiondata($pagename, $version, $want_content = false) {
+
+    //check $want_content
+    function get_versiondata($pagename, $version, $want_content=false) {
         $data = $this->_versiondb->get((int)$version . ":$pagename");
-        return $data ? unserialize($data) : false;
+        if (empty($data)) return false;
+        else {
+            $data = unserialize($data);
+            if (!$want_content)
+                $data['%content'] = !empty($data['%content']);
+            return $data;
+        }
     }
         
     /**
-     * Delete page from the database.
+     * See ADODB for a better delete_page(), which can be undone and is seen in RecentChanges.
+     * See backend.php
      */
-    function delete_page($pagename) {
+    //function delete_page($pagename) { $this->purge_page($pagename);  }
+
+    /**
+     * Completely delete page from the database.
+     */
+    function purge_page($pagename) {
         $pagedb = &$this->_pagedb;
         $versdb = &$this->_versiondb;
 
@@ -145,12 +161,23 @@ extends WikiDB_backend
     }
 
     function rename_page($pagename, $to) {
-	$data = get_pagedata($pagename);
-	if (isset($data['pagename']))
-	  $data['pagename'] = $to;
-        //$vdata = get_versiondata($pagename, $version, 1);
-	//$this->delete_page($pagename);
-	$this->update_pagedata($to, $data);
+        $result = $this->_pagedb->get($pagename);
+        if ($result) {
+            list($version,$flags,$data) = explode(':', $result, 3);
+            $data = unserialize($data);
+        }
+        else
+            return false;
+
+        $this->_pagedb->delete($pagename);
+        $data['pagename'] = $to;
+        $this->_pagedb->set($to,
+                            (int)$version . ':'
+                            . (int)$flags . ':'
+                            . serialize($data));
+        // move over the latest version only
+        $pvdata = $this->get_versiondata($pagename, $version, true);
+        $this->set_versiondata($to, $version, $pvdata);
 	return true;
     }
             
@@ -169,7 +196,7 @@ extends WikiDB_backend
 
         if ($version == $latest) {
             $previous = $this->get_previous_version($version);
-            if ($previous> 0) {
+            if ($previous > 0) {
                 $pvdata = $this->get_versiondata($pagename, $previous);
                 $is_empty = empty($pvdata['%content']);
             }
@@ -202,69 +229,140 @@ extends WikiDB_backend
         $pagedb->set($pagename, (int)$latest . ':' . (int)$flags . ":$pagedata");
     }
 
-    function get_all_pages($include_deleted = false, $orderby='pagename') {
+    function numPages($include_empty=false, $exclude=false) {
         $pagedb = &$this->_pagedb;
+        $count = 0;
+        for ($page = $pagedb->firstkey(); $page!== false; $page = $pagedb->nextkey()) {
+            if (!$page) {
+                assert(!empty($page));
+                continue;
+            }
+            if ($exclude and in_array($page, $exclude)) continue; 
+            if (!$include_empty) {
+            	if (!($data = $pagedb->get($page))) continue;
+                list($latestversion,$flags,) = explode(':', $data, 3);
+                unset($data);
+                if ($latestversion == 0 || $flags != 0)
+                    continue;   // current content is empty 
+            }
+            $count++;
+        }
+        return $count;
+    }
 
+    function get_all_pages($include_empty=false, $sortby=false, $limit=false, $exclude=false) {
+        $pagedb = &$this->_pagedb;
         $pages = array();
         for ($page = $pagedb->firstkey(); $page!== false; $page = $pagedb->nextkey()) {
             if (!$page) {
                 assert(!empty($page));
                 continue;
             }
-            
-            if (!$include_deleted) {
+            if ($exclude and in_array($page, $exclude)) continue; 
+            if ($limit and count($pages) > $limit) break;
+            if (!$include_empty) {
             	if (!($data = $pagedb->get($page))) continue;
                 list($latestversion,$flags,) = explode(':', $data, 3);
+                unset($data);
                 if ($latestversion == 0 || $flags != 0)
                     continue;   // current content is empty 
             }
             $pages[] = $page;
         }
-        usort($pages, 'WikiDB_backend_dbaBase_sortbypagename');
-        return new WikiDB_backend_dbaBase_pageiter($this, $pages);
+        return new WikiDB_backend_dbaBase_pageiter($this, $pages, 
+                                                   array('sortby'=>$sortby,
+                                                         'limit' =>$limit));
     }
 
     function set_links($pagename, $links) {
         $this->_linkdb->set_links($pagename, $links);
     }
-    
 
-    function get_links($pagename, $reversed = true) {
-        /*
-        if ($reversed) {
-            include_once('lib/WikiDB/backend/dumb/BackLinkIter.php');
-            $pages = $this->get_all_pages();
-            return new WikiDB_backend_dumb_BackLinkIter($this, $pages, $pagename);
-        }
-        */
+    function get_links($pagename, $reversed=true, $include_empty=false,
+                       $sortby=false, $limit=false, $exclude=false) {
         $links = $this->_linkdb->get_links($pagename, $reversed);
-        return new WikiDB_backend_dbaBase_pageiter($this, $links);
+        return new WikiDB_backend_dbaBase_pageiter($this, $links, 
+                                                   array('sortby'=>$sortby,
+                                                         'limit' =>$limit,
+                                                         'exclude'=>$exclude,
+                                                         ));
     }
 };
 
-function WikiDB_backend_dbaBase_sortbypagename ($a, $b) {
-    $aname = $a['pagename'];
-    $bname = $b['pagename'];
-    return strcasecmp($aname, $bname);
+function WikiDB_backend_dbaBase_sortby_pagename_ASC ($a, $b) {
+    return strcasecmp($a, $b);
 }
-
+function WikiDB_backend_dbaBase_sortby_pagename_DESC ($a, $b) {
+    return strcasecmp($b, $a);
+}
+function WikiDB_backend_dbaBase_sortby_mtime_ASC ($a, $b) {
+    return WikiDB_backend_dbaBase_sortby_num($a, $b, 'mtime');
+}
+function WikiDB_backend_dbaBase_sortby_mtime_DESC ($a, $b) {
+    return WikiDB_backend_dbaBase_sortby_num($b, $a, 'mtime');
+}
+/*
+function WikiDB_backend_dbaBase_sortby_hits_ASC ($a, $b) {
+    return WikiDB_backend_dbaBase_sortby_num($a, $b, 'hits');
+}
+function WikiDB_backend_dbaBase_sortby_hits_DESC ($a, $b) {
+    return WikiDB_backend_dbaBase_sortby_num($b, $a, 'hits');
+}
+*/
+function WikiDB_backend_dbaBase_sortby_num($aname, $bname, $field) {
+    global $request;
+    $dbi = $request->getDbh();
+    // fields are stored in versiondata
+    $av = $dbi->_backend->get_latest_version($aname);
+    $bv = $dbi->_backend->get_latest_version($bname);
+    $a = $dbi->_backend->get_versiondata($aname, $av, false);
+    if (!$a) return 0;
+    $b = $dbi->_backend->get_versiondata($bname, $bv, false);
+    if (!$b) return 0;
+    if ((!isset($a[$field]) && !isset($b[$field])) || ($a[$field] === $b[$field])) {
+        return 0; 
+    } else {
+        return (!isset($a[$field]) || ($a[$field] < $b[$field])) ? -1 : 1;
+    }
+}
 
 class WikiDB_backend_dbaBase_pageiter
 extends WikiDB_backend_iterator
 {
-    function WikiDB_backend_dbaBase_pageiter(&$backend, &$pages) {
+    function WikiDB_backend_dbaBase_pageiter(&$backend, &$pages, $options=false) {
         $this->_backend = $backend;
-        $this->_pages = $pages ? $pages : array();
+        $this->_options = $options;
+        if ($pages) { 
+            if (!empty($options['sortby'])) {
+                $sortby = WikiDB_backend::sortby($options['sortby'], 'db', array('pagename','mtime'));
+                if ($sortby and !strstr($sortby, "hits ")) { // check for which column to sortby
+                    usort($pages, 'WikiDB_backend_dbaBase_sortby_'.str_replace(' ','_',$sortby));
+                }
+            }
+            if (!empty($options['limit'])) {
+                list($offset,$limit) = WikiDB_backend::limit($options['limit']);
+                $pages = array_slice($pages, $offset, $limit);
+            }
+            $this->_pages = $pages;
+        } else 
+            $this->_pages = array();
     }
 
     function next() {
-        if ( ! ($next = array_shift($this->_pages)) )
+        if ( ! ($pagename = array_shift($this->_pages)) )
             return false;
-        return array('pagename' => $next);
+        if (!empty($options['exclude']) and in_array($pagename, $options['exclude']))
+            return $this->next();
+        return array('pagename' => $pagename);
     }
             
     function count() {
         return count($this->_pages);
+    }
+
+    function asArray() {
+        reset($this->_pages);
+        return $this->_pages;
     }
 
     function free() {
@@ -278,10 +376,9 @@ class WikiDB_backend_dbaBase_linktable
         $this->_db = &$dba;
     }
 
-    //FIXME: try stroring link lists as hashes rather than arrays.
+    //FIXME: try storing link lists as hashes rather than arrays.
     // (backlink deletion would be faster.)
-    
-    function get_links($page, $reversed = true) {
+    function get_links($page, $reversed=true) {
         return $this->_get_links($reversed ? 'i' : 'o', $page);
     }
     

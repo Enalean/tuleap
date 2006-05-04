@@ -1,9 +1,9 @@
 <?php // -*-php-*-
-rcs_id('$Id: WhoIsOnline.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: WhoIsOnline.php,v 1.11 2005/02/02 19:39:42 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
  
- This file is (not yet) part of PhpWiki.
+ This file is part of PhpWiki.
 
  PhpWiki is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ rcs_id('$Id: WhoIsOnline.php 2691 2006-03-02 15:31:51Z guerin $');
  * links to the page with the other mode.
  *
  * Formatting and idea borrowed from postnuke. Requires USE_DB_SESSION.
- * Works with PearDB, ADODB and dba DB_Sessions.
+ * Works with PearDB, ADODB and dba DbSessions.
  *
  * Author: Reini Urban
  */
@@ -44,7 +44,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.11 $");
     }
 
     function getDefaultArguments() {
@@ -58,13 +58,13 @@ extends WikiPlugin
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-        global $Theme;
+        global $WikiTheme;
         $request->setArg('nocache',1);
         $args = $this->getArgs($argstr, $request);
         // use the "online.tmpl" template
         // todo: check which arguments are really needed in the template.
         $stats = $this->getStats($dbi,$request,$args['mode']);
-        if ($src = $Theme->getImageURL("whosonline"))
+        if ($src = $WikiTheme->getImageURL("whosonline"))
             $img = HTML::img(array('src' => $src,
                                    'alt' => $this->getName(),
                                    'border' => 0));
@@ -79,8 +79,10 @@ extends WikiPlugin
     function box($args=false, $request=false, $basepage=false) {
         if (!$request) $request =& $GLOBALS['request'];
         $stats = $this->getStats($request->_dbi,$request,'summary');
-        return $this->makeBox(WikiLink(_("WhoIsOnline"),'',_("Who is online")),
-                              fmt("%d online users",$stats['NUM_USERS']));
+        return $this->makeBox(_("Who is online"),
+                              HTML(HTML::Raw('&middot; '),
+                                   WikiLink(_("WhoIsOnline"),'auto',
+                                            fmt("%d online users", $stats['NUM_USERS']))));
     }
 
     function getSessions($dbi, &$request) {
@@ -114,24 +116,27 @@ extends WikiPlugin
                 if (empty($date)) continue;
                 $num_online++;
                 $user = @unserialize($data);
-                if (!empty($user)) {
-                    if ($mode == 'summary' and in_array($user->UserName(),$uniquenames)) continue;
-                    $uniquenames[] = $user->UserName();
+                if (!empty($user) and !isa($user, "__PHP_incomplete_Class")) {
+                    // if "__PHP_incomplete_Class" try to avoid notice
+                    $userid = @$user->_userid;
+                    $level = @$user->_level;
+                    if ($mode == 'summary' and in_array($userid, $uniquenames)) continue;
+                    $uniquenames[] = $userid;
                     $page = _("<unknown>");  // where is he?
 	            $action = 'browse';
 	            $objvars = array_keys(get_object_vars($user));
                     if (in_array('action',$objvars))
-                        $action = $user->action;
+                        $action = @$user->action;
                     if (in_array('page',$objvars))
-                        $page = $user->page;
-                    if ($user->_level and $user->UserName()) { // registered or guest or what?
+                        $page = @$user->page;
+                    if ($level and $userid) { // registered or guest or what?
                         //FIXME: htmlentitities name may not be called here. but where then?
                         $num_registered++;
-                        $registered[] = array('name'  => $user->UserName(),
+                        $registered[] = array('name'  => $userid,
                                               'date'  => $date,
                                               'action'=> $action,
                                               'page'  => $page,
-                                              'level' => $user->_level,
+                                              'level' => $level,
                                               'ip'    => $ip,
                                               'x'     => 'x');
                         if ($user->_level == WIKIAUTH_ADMIN)
@@ -142,7 +147,7 @@ extends WikiPlugin
                                           'date'  => $date,
                                           'action'=> $action,
                                           'page'  => $page,
-                                          'level' => $user->_level,
+                                          'level' => $level,
                                           'ip'    => $ip,
                                           'x'     => 'x');
                     }
@@ -193,7 +198,33 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: WhoIsOnline.php,v $
+// Revision 1.11  2005/02/02 19:39:42  rurban
+// better box layout
+//
+// Revision 1.10  2005/02/01 16:22:58  rurban
+// avoid __PHP_incomplete_Class notice
+//
+// Revision 1.9  2004/12/18 17:04:24  rurban
+// stabilize not to call UserName() of an incomplete (not loaded) object
+//
+// Revision 1.8  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.7  2004/05/27 17:49:06  rurban
+// renamed DB_Session to DbSession (in CVS also)
+// added WikiDB->getParam and WikiDB->getAuthParam method to get rid of globals
+// remove leading slash in error message
+// added force_unlock parameter to File_Passwd (no return on stale locks)
+// fixed adodb session AffectedRows
+// added FileFinder helpers to unify local filenames and DATA_PATH names
+// editpage.php: new edit toolbar javascript on ENABLE_EDIT_TOOLBAR
+//
 // Revision 1.6  2004/05/02 15:10:08  rurban
 // new finally reliable way to detect if /index.php is called directly
 //   and if to include lib/main.php

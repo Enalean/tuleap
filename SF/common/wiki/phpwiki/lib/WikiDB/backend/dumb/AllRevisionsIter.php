@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: AllRevisionsIter.php 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: AllRevisionsIter.php,v 1.2 2004/04/26 20:44:35 rurban Exp $');
     
 /**
  * An iterator which returns all revisions of page.

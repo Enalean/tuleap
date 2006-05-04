@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: IncludePage.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: IncludePage.php,v 1.27 2004/11/17 20:07:18 rurban Exp $');
 /*
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -40,7 +40,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.27 $");
     }
 
     function getDefaultArguments() {
@@ -52,45 +52,6 @@ extends WikiPlugin
                       'section' => false, // include a named section
                       'sectionhead' => false // when including a named section show the heading
                       );
-    }
-
-    function firstNWordsOfContent( $n, $content ) {
-        $wordcount = 0;
-        $new = array( );
-        foreach ($content as $line) {
-            $words = explode(' ', $line);
-            if ($wordcount + count($words) > $n) {
-                $new[] = implode(' ', array_slice($words, 0, $n - $wordcount))
-                    . "... (first $n words)";
-                return $new;
-            } else {
-                $wordcount += count($words);
-                $new[] = $line;
-            }
-        }
-        return $new;
-    }
-
-    function extractSection ($section, $content, $page, $quiet, $sectionhead) {
-        $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
-
-        if (preg_match("/ ^(!{1,})\\s*$qsection" // section header
-                       . "  \\s*$\\n?"           // possible blank lines
-                       . "  ( (?: ^.*\\n? )*? )" // some lines
-                       . "  (?= ^\\1 | \\Z)/xm", // sec header (same or higher level) (or EOF)
-                       implode("\n", $content),
-                       $match)) {
-            // Strip trailing blanks lines and ---- <hr>s
-            $text = preg_replace("/\\s*^-{4,}\\s*$/m", "", $match[2]);
-            if ($sectionhead)
-                $text = $match[1] . $section ."\n". $text;
-            return explode("\n", $text);
-        }
-        if ($quiet)
-            $mesg = $page ." ". $section;
-        else
-            $mesg = $section;
-        return array(sprintf(_("<%s: no such section>"), $mesg));
     }
 
     function getWikiPageLinks($argstr, $basepage) {
@@ -105,7 +66,7 @@ extends WikiPlugin
         return array($page->name);
     }
                 
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
         if ($page) {
             // Expand relative page names.
@@ -125,7 +86,6 @@ extends WikiPlugin
         }
 
         $p = $dbi->getPage($page);
-
         if ($rev) {
             $r = $p->getRevision($rev);
             if (!$r) {
@@ -135,17 +95,14 @@ extends WikiPlugin
         } else {
             $r = $p->getCurrentRevision();
         }
-
         $c = $r->getContent();
 
         if ($section)
-            $c = $this->extractSection($section, $c, $page, $quiet,
-                                       $sectionhead);
+            $c = extractSection($section, $c, $page, $quiet, $sectionhead);
         if ($lines)
             $c = array_slice($c, 0, $lines);
         if ($words)
-            $c = $this->firstNWordsOfContent($words, $c);
-
+            $c = firstNWordsOfContent($words, $c);
 
         array_push($included_pages, $page);
 
@@ -190,7 +147,17 @@ extends WikiPlugin
 //   includes a plugin
 
 
-// $Log$
+// $Log: IncludePage.php,v $
+// Revision 1.27  2004/11/17 20:07:18  rurban
+// just whitespace
+//
+// Revision 1.26  2004/09/25 16:35:09  rurban
+// use stdlib firstNWordsOfContent, extractSection
+//
+// Revision 1.25  2004/07/08 20:30:07  rurban
+// plugin->run consistency: request as reference, added basepage.
+// encountered strange bug in AllPages (and the test) which destroys ->_dbi
+//
 // Revision 1.24  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

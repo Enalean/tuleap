@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: ziplib.php 2691 2006-03-02 15:31:51Z guerin $');
+<?php rcs_id('$Id: ziplib.php,v 1.44 2005/01/31 00:28:48 rurban Exp $');
 
 /**
  * GZIP stuff.
@@ -22,7 +22,10 @@ function gzip_tempnam () {
     
     if (!$gzip_tmpfile) {
         //FIXME: does this work on non-unix machines?
-        $gzip_tmpfile = tempnam("/tmp", "wkzip");
+        if (is_writable("/tmp"))
+            $gzip_tmpfile = tempnam("/tmp", "wkzip");
+        else
+            $gzip_tmpfile = tempnam(TEMP_DIR, "wkzip");
         register_shutdown_function("gzip_cleanup");
     }
     return $gzip_tmpfile;
@@ -36,17 +39,6 @@ function gzip_compress ($data) {
     if (!gzclose($fp)) {
         trigger_error(sprintf("%s failed", 'gzclose'), E_USER_ERROR);
     }
-/* ---- Original code ----  
-	$size = filesize($filename);
-    if (!($fp = fopen($filename, "rb"))) {
-        trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
-	}
-    if (!($z = fread($fp, $size)) || strlen($z) != $size)
-        trigger_error(sprintf("%s failed", 'fread'), E_USER_ERROR);
-    if (!fclose($fp))
-        trigger_error(sprintf("%s failed", 'fclose'), E_USER_ERROR);
-*/
-// -- FIX -------------
     $z = NULL;
     if (!($fp = fopen($filename,"rb"))) {
         trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
@@ -56,7 +48,6 @@ function gzip_compress ($data) {
     }
     if (!fclose($fp))
         trigger_error(sprintf("%s failed", 'fclose'), E_USER_ERROR);
-// -- End FIX ----------
     unlink($filename);
     return $z;
 }
@@ -165,7 +156,7 @@ function zip_deflate ($content)
     if (function_exists('gzencode'))
         $z = gzencode($content);
     else
-    $z = gzip_compress($content);
+        $z = gzip_compress($content);
     
     // Suck OS type byte from gzip header. FIXME: this smells bad.
     
@@ -283,7 +274,7 @@ class ZipWriter
       }
       else  {
           // Punt:
-          $os_type = 0;     // 0 = FAT --- hopefully this is good enough.
+          $os_type = 3;     // 0 = FAT --- hopefully this is good enough.
           /* (Another choice might be 3 = Unix) */
       }
 
@@ -370,7 +361,7 @@ class ZipWriter
 
 
 /**
- * Class for reading zip files.
+ * Class for reading zip files. Handles buffers also.
  *
  * BUGS:
  *
@@ -388,27 +379,50 @@ class ZipWriter
 class ZipReader
 {
     function ZipReader ($zipfile) {
-        if (!is_string($zipfile))
-            $this->fp = $zipfile;	// File already open
-        else if (!($this->fp = fopen($zipfile, "rb")))
-            trigger_error(sprintf(_("Can't open zip file '%s' for reading"),
-                                  $zipfile), E_USER_ERROR);
+        if (!is_string($zipfile)) { // filepointer: File already open
+            $this->fp = $zipfile;
+            $zipfile = NULL;
+        } elseif (((ord($zipfile[0]) * 256 + ord($zipfile[1])) % 31 == 0) // buffer
+		and (substr($zipfile,0,2) == "\037\213")
+		or (substr($zipfile,0,2) == "x\332")) {  // 120, 218
+	    $this->fp = NULL;	
+	    $this->buf = $zipfile;
+            $zipfile = NULL;
+	} 
+        if ($zipfile) {
+            $this->zipfile = $zipfile;
+            if (!($this->fp = fopen($zipfile, "rb"))) {
+                trigger_error(sprintf(_("Can't open zip file '%s' for reading"),
+                                    $zipfile), E_USER_ERROR);
+            }
+        }
     }
     
     function _read ($nbytes) {
-        $chunk = fread($this->fp, $nbytes);
-        if (strlen($chunk) != $nbytes)
-            trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
-        return $chunk;
+	if ($this->fp) {
+            $chunk = fread($this->fp, $nbytes);
+            if (strlen($chunk) != $nbytes)
+                trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
+            return $chunk;
+	} elseif ($this->buf)  {
+	    if (strlen($this->buf) < $nbytes)
+		trigger_error(_("Unexpected EOF in zip file"), E_USER_ERROR);
+	    $chunk = substr($this->buf, 0, $nbytes);
+	    $this->buf = substr($this->buf, $nbytes);
+	    return $chunk;
+	}
     }
     
     function done () {
-        fclose($this->fp);
+	if ($this->fp)
+            fclose($this->fp);
+	else
+	    $this->buf = '';
         return false;
     }
     
   function readFile () {
-      $head = $this->_read(30);
+      $head = $this->_read(30); // FIXME: This is bad for gzip compressed buffers
       
       extract(unpack("a4magic/vreq_version/vflags/vcomp_type"
                      . "/vmod_time/vmod_date"
@@ -416,13 +430,26 @@ class ZipReader
                      . "/vfilename_len/vextrafld_len",
                      $head));
       
-      //FIXME: we should probably check $req_version.
-      $attrib['mtime'] = dostime2unixtime($mod_date, $mod_time);
-      
       if ($magic != ZIP_LOCHEAD_MAGIC) {
+          // maybe gzip?
+          //$x = substr($magic,0,3);
+          if (substr($magic,0,3) == "\037\213\225")
+              //and (substr($magic,3,1) & 0x3e) == 0) 
+          {
+              if ($this->fp) {
+                  fclose($this->fp);
+                  $this->fp = fopen($this->zipfile, "rb");
+                  $content = $this->_read(filesize($this->fp));
+              } else {
+                  $content = $this->buf;
+              }
+              // TODO...
+              $data = zip_deflate($content);
+              return array($filename, $data, $attrib);
+          }
           if ($magic != ZIP_CENTHEAD_MAGIC)
               // FIXME: better message?
-              ExitWiki(sprintf("Bad header type: %s", $magic));
+              ExitWiki(sprintf("Unsupported ZIP header type: %s", $magic));
           return $this->done();
       }
       if (($flags & 0x21) != 0)
@@ -432,6 +459,8 @@ class ZipReader
           ExitWiki("Postponed CRC not yet supported.");
       
       $filename = $this->_read($filename_len);
+      //FIXME: we should probably check $req_version.
+      $attrib['mtime'] = dostime2unixtime($mod_date, $mod_time);
       if ($extrafld_len != 0)
           $attrib['extra_field'] = $this->_read($extrafld_len);
       
@@ -543,8 +572,9 @@ function MimeMultipart ($parts)
  * automatically convert encodings to a safe type if they receive
  * mail encoded in '8bit' and/or 'binary' encodings.
  */
-function MimeifyPageRevision ($revision) {
-    $page = $revision->getPage();
+function MimeifyPageRevision (&$page, &$revision) {
+    // $wikidb =& $revision->_wikidb;
+    // $page = $wikidb->getPage($revision->getName());
     // FIXME: add 'hits' to $params 
     $params = array('pagename'     => $page->getName(),
                     'flags'        => "",
@@ -558,12 +588,19 @@ function MimeifyPageRevision ($revision) {
         $params['flags'] = 'PAGE_LOCKED';
     if ($revision->get('author_id'))
         $params['author_id'] = $revision->get('author_id');
-    if ($revision->get('markup'))
+    if ($revision->get('markup')) // what is the default? we must use 1
         $params['markup'] = $revision->get('markup');
     if ($revision->get('summary'))
         $params['summary'] = $revision->get('summary');
     if ($page->get('hits'))
         $params['hits'] = $page->get('hits');
+    if ($page->get('owner'))
+        $params['owner'] = $page->get('owner');
+    if ($page->get('perm') and class_exists('PagePermission')) {
+        $acl = getPagePermissions($page);
+        $params['acl'] = $acl->asAclLines();
+        //TODO: convert to multiple lines? acl-view => groups,...; acl-edit => groups,... 
+    }
 
     $params['charset'] = $GLOBALS['charset'];
 
@@ -571,6 +608,10 @@ function MimeifyPageRevision ($revision) {
     // special handling) --- so we urlencode all parameter values.
     foreach ($params as $key => $val)
         $params[$key] = rawurlencode($val);
+    if (isset($params['acl'])) 
+        // default: "view:_EVERY; edit:_AUTHENTICATED; create:_AUTHENTICATED,_BOGOUSER; ".
+        //          "list:_EVERY; remove:_ADMIN,_OWNER; change:_ADMIN,_OWNER; dump:_EVERY; "
+        $params['acl'] = str_replace(array("%3A","%3B%20","%2C"),array(":","; ",","),$params['acl']);
     
     $out = MimeContentTypeHeader('application', 'x-phpwiki', $params);
     $out .= sprintf("Content-Transfer-Encoding: %s\r\n",
@@ -609,13 +650,14 @@ function ParseRFC822Headers (&$string)
     
     if (empty($headers))
         return false;
-    
-    if (! preg_match("/^\r?\n/", $string, $match))  {
-        // No blank line after headers.
-        return false;
+
+    if (strlen($string) > 0) {
+        if (! preg_match("/^\r?\n/", $string, $match))  {
+            // No blank line after headers.
+            return false;
+        }
+        $string = substr($string, strlen($match[0]));
     }
-    
-    $string = substr($string, strlen($match[0]));
     
     return $headers;
 }
@@ -698,6 +740,30 @@ function GenerateFootnotesFromRefs($params)
         return "";
 }
 
+// counterpart to $acl->asAclLines() and rawurl undecode
+// default: "view:_EVERY; edit:_AUTHENTICATED; create:_AUTHENTICATED,_BOGOUSER; ".
+//          "list:_EVERY; remove:_ADMIN,_OWNER; change:_ADMIN,_OWNER; dump:_EVERY; "
+function ParseMimeifiedPerm($string) {
+    if (!class_exists('PagePermission')) {
+        return '';
+    }
+    $hash = array();
+    foreach (split(";",trim($string)) as $accessgroup) {
+        list($access,$groupstring) = split(":",trim($accessgroup));
+        $access = trim($access);
+        $groups = split(",",trim($groupstring));
+        foreach ($groups as $group) {
+            $group = trim($group);
+            $bool = (boolean) (substr($group,0,1) != '-');
+            if (substr($group,0,1) == '-' or substr($group,0,1) == '+')
+                $group = substr($group,1);
+            $hash[$access][$group] = $bool;
+        }
+    }
+    $perm = new PagePermission($hash);
+    $perm->sanify();
+    return serialize($perm->perm);
+}
 
 // Convert references in meta-data to footnotes.
 // Only zip archives generated by phpwiki 1.2.x or earlier should have
@@ -732,7 +798,8 @@ function ParseMimeifiedPages ($data)
     $pagedata    = array();
     $versiondata = array();
     $pagedata['date'] = strtotime($headers['date']);
-    
+
+    //DONE: support owner and acl
     foreach ($params as $key => $value) {
         if (empty($value))
             continue;
@@ -746,9 +813,16 @@ function ParseMimeifiedPages ($data)
             if (preg_match('/PAGE_LOCKED/', $value))
                 $pagedata['locked'] = 'yes';
             break;
+        case 'owner':
         case 'created':
         case 'hits':
             $pagedata[$key] = $value;
+            break;
+        case 'acl':
+        case 'perm':
+            if (class_exists('PagePermission')) {
+                $pagedata['perm'] = ParseMimeifiedPerm($value);
+            }
             break;
         case 'lastmodified':
             $versiondata['mtime'] = $value;
@@ -767,8 +841,10 @@ function ParseMimeifiedPages ($data)
     //        haven't got one yet?
     if (!isset($versiondata['author'])) {
         global $request;
-        $user = $request->getUser();
-        $versiondata['author'] = $user->getId(); //FIXME:?
+        if (is_object($request)) {
+            $user = $request->getUser();
+            $versiondata['author'] = $user->getId(); //FIXME:?
+        }
     }
     
     $encoding = strtolower($headers['content-transfer-encoding']);
@@ -786,7 +862,40 @@ function ParseMimeifiedPages ($data)
     return array($page);
 }
 
-// $Log$
+// $Log: ziplib.php,v $
+// Revision 1.45  2005/12/27 18:05:48  rurban
+// start with GZIP reading within ZipReader (not yet ready)
+//
+// Revision 1.44  2005/01/31 00:28:48  rurban
+// fix bug 1044945: pgsrc upgrade problem if mime wo/body
+//
+// Revision 1.43  2005/01/25 08:00:09  rurban
+// use unix type to support subdirs with forward slash and long filenames
+//
+// Revision 1.42  2004/11/16 16:17:51  rurban
+// support ENABLE_PAGEPERM=false mime load/save
+//
+// Revision 1.41  2004/11/01 10:43:58  rurban
+// seperate PassUser methods into seperate dir (memory usage)
+// fix WikiUser (old) overlarge data session
+// remove wikidb arg from various page class methods, use global ->_dbi instead
+// ...
+//
+// Revision 1.40  2004/06/19 12:32:37  rurban
+// new TEMP_DIR for ziplib
+//
+// Revision 1.39  2004/06/08 10:54:47  rurban
+// better acl dump representation, read back acl and owner
+//
+// Revision 1.38  2004/06/08 10:05:11  rurban
+// simplified admin action shortcuts
+//
+// Revision 1.37  2004/06/07 22:28:04  rurban
+// add acl field to mimified dump
+//
+// Revision 1.36  2004/06/07 19:50:40  rurban
+// add owner field to mimified dump
+//
 // Revision 1.35  2004/05/02 21:26:38  rurban
 // limit user session data (HomePageHandle and auth_dbi have to invalidated anyway)
 //   because they will not survive db sessions, if too large.

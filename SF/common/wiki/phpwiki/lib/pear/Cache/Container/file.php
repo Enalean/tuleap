@@ -1,8 +1,8 @@
 <?php
 // +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
+// | PEAR :: Cache                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997, 1998, 1999, 2000, 2001 The PHP Group             |
+// | Copyright (c) 1997-2003 The PHP Group                                |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the PHP license,       |
 // | that is bundled with this package in the file LICENSE, and is        |
@@ -16,17 +16,29 @@
 // |          Sebastian Bergmann <sb@sebastian-bergmann.de>               |
 // +----------------------------------------------------------------------+
 //
-// $Id: file.php 1422 2005-04-12 13:33:49Z guerin $
+// $Id: file.php,v 1.4 2004/06/21 08:39:38 rurban Exp $
 
-require_once('Cache/Container.php');
+require_once 'Cache/Container.php';
 
 /**
 * Stores cache contents in a file.
 *
 * @author   Ulf Wendel  <ulf.wendel@phpdoc.de>
-* @version  $Id: file.php 1422 2005-04-12 13:33:49Z guerin $
+* @version  $Id: file.php,v 1.4 2004/06/21 08:39:38 rurban Exp $
 */
 class Cache_Container_file extends Cache_Container {
+
+    /**
+    * File locking
+    *
+    * With file container, it's possible, that you get corrupted
+    * data-entries under bad circumstances. The file locking must
+    * improve this problem but it's experimental stuff. So the
+    * default value is false. But it seems to give good results
+    *
+    * @var boolean
+    */
+    var $fileLocking = false;
 
     /**
     * Directory where to put the cache files.
@@ -40,7 +52,7 @@ class Cache_Container_file extends Cache_Container {
     *
     * You can use the filename prefix to implement a "domain" based cache or just
     * to give the files a more descriptive name. The word "domain" is borroed from
-    * a user authentication system. One user id (cached dataset with the ID x)
+    * a user authentification system. One user id (cached dataset with the ID x)
     * may exists in different domains (different filename prefix). You might want
     * to use this to have different cache values for a production, development and
     * quality assurance system. If you want the production cache not to be influenced
@@ -69,6 +81,19 @@ class Cache_Container_file extends Cache_Container {
     */
     var $total_size = 0;
 
+
+    /**
+    * Max Line Length of userdata
+    *
+    * If set to 0, it will take the default 
+    * ( 1024 in php 4.2, unlimited in php 4.3)
+    * see http://ch.php.net/manual/en/function.fgets.php
+    * for details
+    *
+    * @var int
+    */
+    var $max_userdata_linelength = 257;
+
     /**
     * Creates the cache directory if neccessary
     *
@@ -76,7 +101,7 @@ class Cache_Container_file extends Cache_Container {
     */
      function Cache_Container_file($options = '') {
         if (is_array($options))
-            $this->setOptions($options, array_merge($this->allowed_options, array('cache_dir', 'filename_prefix')));
+            $this->setOptions($options, array_merge($this->allowed_options, array('cache_dir', 'filename_prefix', 'max_userdata_linelength')));
         
         clearstatcache();
         if ($this->cache_dir)
@@ -87,7 +112,7 @@ class Cache_Container_file extends Cache_Container {
                 $this->cache_dir = realpath( getcwd() . '/' . $this->cache_dir) . '/';
 
             // check if a trailing slash is in cache_dir
-            if (!substr($this->cache_dir,-1) ) 
+            if ($this->cache_dir{strlen($this->cache_dir)-1} != DIRECTORY_SEPARATOR)
                  $this->cache_dir .= '/';
 
             if  (!file_exists($this->cache_dir) || !is_dir($this->cache_dir))
@@ -107,20 +132,33 @@ class Cache_Container_file extends Cache_Container {
         if (!($fh = @fopen($file, 'rb')))
             return new Cache_Error("Can't access cache file '$file'. Check access rights and path.", __FILE__, __LINE__);
 
+        // File locking (shared lock)
+        if ($this->fileLocking)
+            flock($fh, LOCK_SH);
+
         // file format:
         // 1st line: expiration date
         // 2nd line: user data
         // 3rd+ lines: cache data
         $expire = trim(fgets($fh, 12));
-        $userdata = trim(fgets($fh, 257));
+        if ($this->max_userdata_linelength == 0 ) {
+            $userdata = trim(fgets($fh));
+        } else {
+            $userdata = trim(fgets($fh, $this->max_userdata_linelength));
+        }
         $cachedata = $this->decode(fread($fh, filesize($file)));
+
+        // Unlocking
+        if ($this->fileLocking)
+            flock($fh, LOCK_UN);
+
         fclose($fh);
 
         // last usage date used by the gc - maxlifetime
         // touch without second param produced stupid entries...
         touch($file,time());
         clearstatcache();
-        
+
         return array($expire, $cachedata, $userdata);
     } // end func fetch
 
@@ -137,6 +175,10 @@ class Cache_Container_file extends Cache_Container {
         if (!($fh = @fopen($file, 'wb')))
             return new Cache_Error("Can't access '$file' to store cache data. Check access rights and path.", __FILE__, __LINE__);
 
+        // File locking (exclusive lock)
+        if ($this->fileLocking)
+            flock($fh, LOCK_EX);
+
         // file format:
         // 1st line: expiration date
         // 2nd line: user data
@@ -145,6 +187,10 @@ class Cache_Container_file extends Cache_Container {
         fwrite($fh, $expires . "\n");
         fwrite($fh, $userdata . "\n");
         fwrite($fh, $this->encode($cachedata));
+
+        // File unlocking
+        if ($this->fileLocking)
+            flock($fh, LOCK_UN);
 
         fclose($fh);
 
@@ -256,7 +302,7 @@ class Cache_Container_file extends Cache_Container {
                 continue;
             }
 
-            $expire = fgets($fh, 12);
+            $expire = fgets($fh, 11);
             fclose($fh);
             $lastused = filemtime($file);
             
@@ -312,7 +358,7 @@ class Cache_Container_file extends Cache_Container {
 
         $num_removed = 0;
 
-        while ($file = readdir($dh)) {
+        while (false !== $file = readdir($dh)) {
             if ('.' == $file || '..' == $file)
                 continue;
 

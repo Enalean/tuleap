@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: RecentChangesCached.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: RecentChangesCached.php,v 1.4 2004/03/08 18:17:10 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -56,7 +56,7 @@ extends WikiPluginCached
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.4 $");
     }
 
     function getDefaultArguments() {
@@ -76,7 +76,7 @@ extends WikiPluginCached
 
 } // WikiPlugin_TexToPng
 
-// $Log$
+// $Log: RecentChangesCached.php,v $
 // Revision 1.4  2004/03/08 18:17:10  rurban
 // added more WikiGroup::getMembersOf methods, esp. for special groups
 // fixed $LDAP_SET_OPTIONS

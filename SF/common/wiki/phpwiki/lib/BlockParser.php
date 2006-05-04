@@ -1,5 +1,6 @@
-<?php rcs_id('$Id: BlockParser.php 1422 2005-04-12 13:33:49Z guerin $');
-/* Copyright (C) 2002, Geoffrey T. Dairiki <dairiki@dairiki.org>
+<?php rcs_id('$Id: BlockParser.php,v 1.55 2005/01/29 21:08:41 rurban Exp $');
+/* Copyright (C) 2002 Geoffrey T. Dairiki <dairiki@dairiki.org>
+ * Copyright (C) 2004,2005 Reini Urban
  *
  * This file is part of PhpWiki.
  * 
@@ -37,6 +38,10 @@ require_once('lib/InlineParser.php');
  *  Still to do:
  *    (old-style) tables
  * FIXME: unify this with the RegexpSet in InlineParser.
+ *
+ * FIXME: This is very php5 sensitive: It was fixed for 1.3.9, 
+ *        but is again broken with the 1.3.11 
+ *        allow_call_time_pass_reference clean fixes
  *
  * @package Markup
  * @author: Geoffrey T. Dairiki 
@@ -91,6 +96,7 @@ class AnchoredRegexpSet
      * @return object  A RegexpSet_match object, or false if no match.
      */
     function match ($text) {
+    	if (!is_string($text)) return false;
         if (! preg_match($this->_re, $text, $m)) {
             return false;
         }
@@ -196,7 +202,8 @@ class BlockParser_Input {
     }
 
     function advance () {
-        $this->_atSpace = $this->_lines[$this->_pos++] === '';
+        $this->_atSpace = ($this->_lines[$this->_pos] === '');
+        $this->_pos++;
     }
     
     function getPos () {
@@ -229,6 +236,7 @@ class BlockParser_Input {
         printXML(HTML::div("$tab $msg: at: '",
                            HTML::tt($where),
                            "'"));
+        flush();                   
     }
 }
 
@@ -341,7 +349,12 @@ class ParsedBlock extends Block_HtmlElement {
     }
 
     function _parse (&$input) {
-        for ($block = $this->_getBlock($input); $block; $block = $nextBlock) {
+        // php5 failed to advance the block. php5 copies objects by ref.
+        // nextBlock == block, both are the same objects. So we have to clone it.
+        for ($block = $this->_getBlock($input); 
+             $block; 
+             $block = (is_object($nextBlock) ? clone($nextBlock) : $nextBlock))
+        {
             while ($nextBlock = $this->_getBlock($input)) {
                 // Attempt to merge current with following block.
                 if (! ($merged = $block->merge($nextBlock)) ) {
@@ -353,41 +366,57 @@ class ParsedBlock extends Block_HtmlElement {
         }
     }
 
-    // FIXME: hackish
+    // FIXME: hackish. This should only be called once.
     function _initBlockTypes () {
-        foreach (array('oldlists', 'list', 'dl', 'table_dl',
-                       'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
-                       'plugin', 'p')
-                 as $type) {
-            $class = "Block_$type";
-            $proto = new $class;
-            $this->_block_types[] = $proto;
-            $this->_regexps[] = $proto->_re;
+    	// better static or global?
+    	static $_regexpset, $_block_types;
+
+    	if (!is_object($_regexpset)) {
+            foreach (array('oldlists', 'list', 'dl', 'table_dl',
+                           'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
+                           'plugin', 'p')
+                     as $type) {
+                $class = "Block_$type";
+                $proto = new $class;
+                $this->_block_types[] = $proto;
+                $this->_regexps[] = $proto->_re;
+            }
+            $this->_regexpset = new AnchoredRegexpSet($this->_regexps);
+            $_regexpset = $this->_regexpset;
+            $_block_types = $this->_block_types;
+    	} else {
+             $this->_regexpset = $_regexpset;
+             $this->_block_types = $_block_types;
         }
-        $this->_regexpset = new AnchoredRegexpSet($this->_regexps);
     }
 
     function _getBlock (&$input) {
         $this->_atSpace = $input->skipSpace();
 
-        if (($line = $input->currentLine()) === '')
+        $line = $input->currentLine();
+        if ($line === false or $line === '') { // allow $line === '0' 
             return false;
-
+        }
         $tight_top = !$this->_atSpace;
         $re_set = &$this->_regexpset;
+        //FIXME: php5 fails to advance here!
         for ($m = $re_set->match($line); $m; $m = $re_set->nextMatch($line, $m)) {
-            $block = $this->_block_types[$m->regexp_ind];
-            //$input->_debug('>', get_class($block));
+            $block = clone($this->_block_types[$m->regexp_ind]);
+            if (DEBUG & _DEBUG_PARSER)
+                $input->_debug('>', get_class($block));
             
             if ($block->_match($input, $m)) {
-                //$input->_debug('<', get_class($block));
+            	//$block->_text = $line;
+                if (DEBUG & _DEBUG_PARSER)
+                    $input->_debug('<', get_class($block));
                 $tight_bottom = ! $input->skipSpace();
                 $block->_setTightness($tight_top, $tight_bottom);
                 return $block;
             }
-            //$input->_debug('[', "_match failed");
+            if (DEBUG & _DEBUG_PARSER)
+                $input->_debug('[', "_match failed");
         }
-        if (!$line)
+        if ($line === false or $line === '') // allow $line === '0' 
             return false;
 
         trigger_error("Couldn't match block: '$line'", E_USER_NOTICE);
@@ -459,7 +488,6 @@ class BlockMarkup {
 class Block_blockquote extends BlockMarkup
 {
     var $_depth;
-
     var $_re = '\ +(?=\S)';
 
     function _match (&$input, $m) {
@@ -491,7 +519,6 @@ class Block_list extends BlockMarkup
                   | [o](?=\ )
                   | [*] (?!(?=\S)[^*]*(?<=\S)[*](?:\\s|[-)}>"\'\\/:.,;!?_*=]) )
                 )\ *(?=\S)';
-
     var $_content = array();
 
     function _match (&$input, $m) {
@@ -520,7 +547,11 @@ class Block_list extends BlockMarkup
     }
     
     function merge ($nextBlock) {
-        if (isa($nextBlock, 'Block_list') && $this->_tag == $nextBlock->_tag) {
+        if (isa($nextBlock, 'Block_list') and $this->_tag == $nextBlock->_tag) {
+            if ($nextBlock->_content === $this->_content) {
+            	trigger_error("Internal Error: no block advance", E_USER_NOTICE);
+            	return false;
+            }
             array_splice($this->_content, count($this->_content), 0,
                          $nextBlock->_content);
             return $this;
@@ -616,12 +647,12 @@ class Block_table_dl_defn extends XmlContent
         $this->_tight_top = $tight_top;
 	$this->_tight_bot = $tight_bot;
 	$first = &$this->firstTR();
-	$last = &$this->lastTR();
+	$last  = &$this->lastTR();
 	$first->setInClass('top', $tight_top);
         if (!empty($last)) {
             $last->setInClass('bottom', $tight_bot);
         } else {
-            trigger_error(sprintf("no lastTR: %s",AsXml($this->_content[0])), E_USER_WARNING);
+            trigger_error(sprintf("no lastTR: %s",AsXML($this->_content[0])), E_USER_WARNING);
         }
     }
     
@@ -820,8 +851,9 @@ class Block_oldlists extends Block_list
             $li->setTightness($top, $bot);
         }
         else {
-            // This is where php5 broke
-            if (DEBUG and check_php_version(5)) {
+            // This is where php5 usually brakes.
+            // wrong duplicated <li> contents
+            if (DEBUG and DEBUG & _DEBUG_PARSER and check_php_version(5)) {
                 if (count($this->_content) != 2) {
                     echo "<pre>";
                     /*
@@ -849,14 +881,19 @@ class Block_oldlists extends Block_list
                     */
                     echo 'count($this->_content): ', count($this->_content),"\n";
                     echo "\$this->_content[0]: "; var_dump ($this->_content[0]);
-                    foreach ($this->_content as $c) {
+                    
+                    for ($i=1; $i < min(5, count($this->_content)); $i++) {
+                        $c =& $this->_content[$i];
+                        echo '$this->_content[',$i,"]: \n";
                         echo "_tag: "; var_dump ($c->_tag);
                         echo "_content: "; var_dump ($c->_content);
                         echo "_properties: "; var_dump ($c->_properties);
                     }
                     debug_print_backtrace();
-                    if (function_exists("xdebug_get_function_stack")) {
-                        var_dump (xdebug_get_function_stack());
+                    if (DEBUG & _DEBUG_APD) {
+                        if (function_exists("xdebug_get_function_stack")) {
+                            var_dump (xdebug_get_function_stack());
+                        }
                     }
                     echo "</pre>";
                 }
@@ -902,7 +939,6 @@ class Block_pre extends BlockMarkup
     }
 }
 
-
 class Block_plugin extends Block_pre
 {
     var $_re = '<\?plugin(?:-form)?(?!\S)';
@@ -910,8 +946,11 @@ class Block_plugin extends Block_pre
     // FIXME:
     /* <?plugin Backlinks
      *       page=ThisPage ?>
+    /* <?plugin ListPages pages=<!plugin-list Backlinks!>
+     *                    exclude=<!plugin-list TitleSearch s=T*!> ?>
      *
-     * should work. */
+     * should all work.
+     */
     function _match (&$input, $m) {
         $pos = $input->getPos();
         $pi = $m->match . $m->postmatch;
@@ -981,6 +1020,7 @@ class Block_p extends BlockMarkup
 {
     var $_tag = 'p';
     var $_re = '\S.*';
+    var $_text = '';
 
     function _match (&$input, $m) {
         $this->_text = $m->match;
@@ -995,7 +1035,7 @@ class Block_p extends BlockMarkup
 
     function merge ($nextBlock) {
         $class = get_class($nextBlock);
-        if ($class == 'block_p' && $this->_tight_bot) {
+        if (strtolower($class) == 'block_p' and $this->_tight_bot) {
             $this->_text .= "\n" . $nextBlock->_text;
             $this->_tight_bot = $nextBlock->_tight_bot;
             return $this;
@@ -1014,38 +1054,76 @@ class Block_p extends BlockMarkup
 ////////////////////////////////////////////////////////////////
 //
 
-function TransformText ($text, $markup = 2.0, $basepage=false) {
+/**
+ * Transform the text of a page, and return a parse tree.
+ */
+function TransformTextPre ($text, $markup = 2.0, $basepage=false) {
     if (isa($text, 'WikiDB_PageRevision')) {
         $rev = $text;
         $text = $rev->getPackedContent();
         $markup = $rev->get('markup');
     }
-
-    if (empty($markup) || $markup < 2.0) {
-        //include_once("lib/transform.php");
-        //return do_transform($text);
+    // NEW: default markup is new, to increase stability
+    if (!empty($markup) && $markup < 2.0) {
         $text = ConvertOldMarkup($text);
     }
     
     // Expand leading tabs.
     $text = expand_tabs($text);
-
     //set_time_limit(3);
-
     $output = new WikiText($text);
-    if (0 && DEBUG && check_php_version(5)) {
-        echo "<pre>"; var_dump($output); echo "</pre>"; 
-    }
 
+    return $output;
+}
+
+/**
+ * Transform the text of a page, and return an XmlContent,
+ * suitable for printXml()-ing.
+ */
+function TransformText ($text, $markup = 2.0, $basepage=false) {
+    $output = TransformTextPre($text, $markup, $basepage);
     if ($basepage) {
         // This is for immediate consumption.
         // We must bind the contents to a base pagename so that
         // relative page links can be properly linkified...
         return new CacheableMarkup($output->getContent(), $basepage);
     }
-    
     return new XmlContent($output->getContent());
 }
+
+// $Log: BlockParser.php,v $
+// Revision 1.55  2005/01/29 21:08:41  rurban
+// update (C)
+//
+// Revision 1.54  2005/01/29 21:00:54  rurban
+// do not warn on empty nextBlock
+//
+// Revision 1.53  2005/01/29 20:36:44  rurban
+// very important php5 fix! clone objects
+//
+// Revision 1.52  2004/10/21 19:52:10  rurban
+// Patch #994487: Allow callers to get the parse tree for a page (danfr)
+//
+// Revision 1.51  2004/09/14 09:54:04  rurban
+// cache ParsedBlock::_initBlockTypes
+//
+// Revision 1.50  2004/09/08 13:38:00  rurban
+// improve loadfile stability by using markup=2 as default for undefined markup-style.
+// use more refs for huge objects.
+// fix debug=static issue in WikiPluginCached
+//
+// Revision 1.49  2004/07/02 09:55:58  rurban
+// more stability fixes: new DISABLE_GETIMAGESIZE if your php crashes when loading LinkIcons: failing getimagesize in old phps; blockparser stabilized
+//
+// Revision 1.48  2004/06/21 06:30:16  rurban
+// revert to prev references
+//
+// Revision 1.47  2004/06/20 15:30:04  rurban
+// get_class case-sensitivity issues
+//
+// Revision 1.46  2004/06/20 14:42:53  rurban
+// various php5 fixes (still broken at blockparser)
+//
 
 // (c-file-style: "gnu")
 // Local Variables:

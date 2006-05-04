@@ -1,0 +1,71 @@
+Date: Sat, 5 Jun 2004 16:49:57 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginRechercheExterne,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginRechercheExterne;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!! Descrition
+
+Le PluginRechercheExterne crée un formulaire pour interroger les
+InterWiki~s ou autres sites Internet.
+
+!! Usage
+
+<verbatim>
+<?plugin ExternalSearch
+         url="InterWiki ou URL"
+         name="texte du bouton"
+?>
+</verbatim>
+
+
+!! Arguments
+__url__:
+  Spécifie un wiki depuis la CarteInterWiki ou une url. N'importe quel
+  texte saisi par l'utilisateur sera ajouté à l'url de recherche. La 
+  chaîne '__=%s=__' peut être utilisée pour insérer une requête de 
+  recherche dans l'url plutôt que de l'ajouter.
+
+__name__:
+  Texte à afficher dans le bouton de validation. Pour les sites 
+  InterWiki, c'est le nom wiki par défaut. Pour les autres url, 
+  c'est le texte "External Search" par défaut.
+
+__formsize__:
+  Spécifie la taille de la zone de saisie (30 caractères par défaut)
+
+__debug__:
+  Ne redirige pas réellement vers le site externe mais affiche juste 
+  l'url vers lequel il devrait l'être.
+
+!! Exemples
+
+<verbatim>
+  url="http://sunir.org/apps/meta.pl?"       name="Metawiki Search"
+  url="http://www.usemod.com/cgi-bin/mb.pl?" name="MeatBall Search"
+  url=php-lookup
+  url=php-function
+  url=PhpWiki
+</verbatim>
+
+Effectue une recherche en texte intégral sur les wiki multiples :
+<?plugin ExternalSearch url="http://sunir.org/apps/meta.pl?" name="Recherche Metawiki" ?>
+
+Effectue une recherche en texte intégral sur [MeatBall|MeatBall:SiteSearch] wiki:
+<?plugin ExternalSearch url="http://www.usemod.com/cgi-bin/mb.pl?" name="Recherche MeatBall" ?>
+
+Recherche sur le site web PHP pour une fonction :
+<?plugin ExternalSearch url=php-lookup ?>
+
+Entre le nom d'une fonction PHP pour voir la page de documentation :
+<?plugin ExternalSearch url=php-function ?>
+
+Entre n'importe quel nom de page sur PhpWiki pour arriver sur cette page :
+<?plugin ExternalSearch url=PhpWiki ?>
+----
+DocumentationDePhpWiki PluginWiki

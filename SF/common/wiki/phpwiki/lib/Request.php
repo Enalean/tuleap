@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id: Request.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: Request.php,v 1.100 2006/01/17 18:57:09 uckelman Exp $');
 /*
- Copyright (C) 2002,2004 $ThePhpWikiProgrammingTeam
+ Copyright (C) 2002,2004,2005 $ThePhpWikiProgrammingTeam
  
  This file is part of PhpWiki.
 
@@ -28,7 +28,6 @@ if (!function_exists('ob_clean')) {
     }
 }
 
-        
 class Request {
         
     function Request() {
@@ -51,19 +50,8 @@ class Request {
         $this->session = new Request_SessionVars; 
         $this->cookies = new Request_CookieVars;
         
-        if (ACCESS_LOG) {
-            if (! is_writeable(ACCESS_LOG)) {
-                trigger_error
-                    (sprintf(_("%s is not writable."), _("The PhpWiki access log file"))
-                    . "\n"
-                    . sprintf(_("Please ensure that %s is writable, or redefine %s in index.php."),
-                            sprintf(_("the file '%s'"), ACCESS_LOG),
-                            'ACCESS_LOG')
-                    , E_USER_NOTICE);
-            }
-            else
-                $this->_log_entry = & new Request_AccessLogEntry($this,
-                                                                ACCESS_LOG);
+        if (ACCESS_LOG or ACCESS_LOG_SQL) {
+            $this->_accesslog = new Request_AccessLog(ACCESS_LOG, ACCESS_LOG_SQL);
         }
         
         $GLOBALS['request'] = $this;
@@ -73,7 +61,7 @@ class Request {
         if (!empty($GLOBALS['HTTP_SERVER_VARS']))
             $vars = &$GLOBALS['HTTP_SERVER_VARS'];
         else // cgi or other servers than Apache
-            $vars = &$GLOBALS['_ENV'];
+            $vars = &$GLOBALS['HTTP_ENV_VARS'];
 
         if (isset($vars[$key]))
             return $vars[$key];
@@ -151,11 +139,14 @@ class Request {
         return (float) $m[1];
     }
     
-    function redirect($url, $noreturn=true) {
-        $bogus = defined('DISABLE_HTTP_REDIRECT') and DISABLE_HTTP_REDIRECT;
+    /* Redirects after edit may fail if no theme signature image is defined. 
+     * Set DISABLE_HTTP_REDIRECT = true then.
+     */
+    function redirect($url, $noreturn = true) {
+        $bogus = defined('DISABLE_HTTP_REDIRECT') && DISABLE_HTTP_REDIRECT;
         
         if (!$bogus) {
-            //header("Location: $url");
+            header("Location: $url");
             /*
              * "302 Found" is not really meant to be sent in response
              * to a POST.  Worse still, according to (both HTTP 1.0
@@ -176,24 +167,28 @@ class Request {
              * version < 1.1.
              */
             $status = $this->httpVersion() >= 1.1 ? 303 : 302;
-
             $this->setStatus($status);
         }
 
         if ($noreturn) {
+            $this->discardOutput(); // This might print the gzip headers. Not good.
+            $this->buffer_output(false);
+            
             include_once('lib/Template.php');
-            $this->discardOutput();
             $tmpl = new Template('redirect', $this, array('REDIRECT_URL' => $url));
             $tmpl->printXML();
             $this->finish();
         }
-        else if ($bogus) {
+        elseif ($bogus) {
+            // Safari needs window.location.href = targeturl
             return JavaScript("
               function redirect(url) {
                 if (typeof location.replace == 'function')
                   location.replace(url);
                 else if (typeof location.assign == 'function')
                   location.assign(url);
+                else if (self.location.href)
+                  self.location.href = url;
                 else
                   window.location = url;
               }
@@ -256,15 +251,17 @@ class Request {
         $validators = &$this->_validators;
         
         // Set validator headers
-        /*if (($etag = $validators->getETag()) !== false)
-            header("ETag: " . $etag->asString());
-        if (($mtime = $validators->getModificationTime()) !== false)
-            header("Last-Modified: " . Rfc1123DateTime($mtime));*/
+        if ($this->_is_buffering_output or !headers_sent()) {
+            if (($etag = $validators->getETag()) !== false)
+                header("ETag: " . $etag->asString());
+            if (($mtime = $validators->getModificationTime()) !== false)
+                header("Last-Modified: " . Rfc1123DateTime($mtime));
 
-        // Set cache control headers
-        $this->cacheControl();
+            // Set cache control headers
+            $this->cacheControl();
+        }
 
-        if (CACHE_CONTROL == 'NONE')
+        if (CACHE_CONTROL == 'NO_CACHE')
             return;             // don't check conditionals...
         
         // Check conditional headers in request
@@ -272,7 +269,7 @@ class Request {
         if ($status) {
             // Return short response due to failed conditionals
             $this->setStatus($status);
-            print "\n\n";
+            echo "\n\n";
             $this->discardOutput();
             $this->finish();
             exit();
@@ -282,8 +279,8 @@ class Request {
     /** Set the cache control headers in the HTTP response.
      */
     function cacheControl($strategy=CACHE_CONTROL, $max_age=CACHE_CONTROL_MAX_AGE) {
-        if ($strategy == 'NONE') {
-            $cache_control = "no-cache";
+        if ($strategy == 'NO_CACHE') {
+            $cache_control = "no-cache"; // better set private. See Pear HTTP_Header
             $max_age = -20;
         }
         elseif ($strategy == 'ALLOW_STALE' && $max_age > 0) {
@@ -293,14 +290,14 @@ class Request {
             $cache_control = "must-revalidate";
             $max_age = -20;
         }
-        /*header("Cache-Control: $cache_control");
+        header("Cache-Control: $cache_control");
         header("Expires: " . Rfc1123DateTime(time() + $max_age));
-        header("Vary: Cookie"); // FIXME: add more here?*/
+        header("Vary: Cookie"); // FIXME: add more here?
     }
     
     function setStatus($status) {
         if (preg_match('|^HTTP/.*?\s(\d+)|i', $status, $m)) {
-            //header($status);
+            header($status);
             $status = $m[1];
         }
         else {
@@ -315,7 +312,7 @@ class Request {
                             '404' => 'Not Found',
                             '412' => 'Precondition Failed');
             // FIXME: is it always okay to send HTTP/1.1 here, even for older clients?
-            // header(sprintf("HTTP/1.1 %d %s", $status, $reason[$status]));
+            header(sprintf("HTTP/1.1 %d %s", $status, $reason[$status]));
         }
 
         if (isset($this->_log_entry))
@@ -323,22 +320,59 @@ class Request {
     }
 
     function buffer_output($compress = true) {
+        // FIXME: disables sessions (some byte before all headers_sent())
+        /*if (defined('USECACHE') and !USECACHE) {
+            $this->_is_buffering_output = false;
+            return;
+        }*/
         if (defined('COMPRESS_OUTPUT')) {
             if (!COMPRESS_OUTPUT)
                 $compress = false;
         }
-        elseif (!function_exists('version_compare')
-                || version_compare(phpversion(), '4.2.3', "<")) {
+        elseif (!check_php_version(4,2,3))
             $compress = false;
-        }
-
-        // Should we compress even when apache_note is not available?
-        // sf.net bug #933183 and http://bugs.php.net/17557
-        if (!function_exists('ob_gzhandler') or !function_exists('apache_note'))
+        elseif (isCGI()) // necessary?
+            $compress = false;
+            
+        if ($this->getArg('start_debug'))
             $compress = false;
         
+        // Should we compress even when apache_note is not available?
+        // sf.net bug #933183 and http://bugs.php.net/17557
+        // This effectively eliminates CGI, but all other servers also. hmm.
+        if ($compress 
+            and (!function_exists('ob_gzhandler') 
+                 or !function_exists('apache_note'))) 
+            $compress = false;
+            
+        // "output handler 'ob_gzhandler' cannot be used twice"
+        // http://www.php.net/ob_gzhandler
+        if ($compress and ini_get("zlib.output_compression"))
+            $compress = false;
+
+        // New: we check for the client Accept-Encoding: "gzip" presence also
+        // This should eliminate a lot or reported problems.
+        if ($compress
+            and (!$this->get("HTTP_ACCEPT_ENCODING")
+                 or !strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip")))
+            $compress = false;
+
+        // Most RSS clients are NOT(!) application/xml gzip compatible yet. 
+        // Even if they are sending the accept-encoding gzip header!
+        // wget is, Mozilla, and MSIE no.
+        // Of the RSS readers only MagpieRSS 0.5.2 is. http://www.rssgov.com/rssparsers.html
+        // See also http://phpwiki.sourceforge.net/phpwiki/KnownBugs
+        if ($compress 
+            and $this->getArg('format') 
+            and strstr($this->getArg('format'), 'rss'))
+            $compress = false;
+
         if ($compress) {
-            ob_start('ob_gzhandler');
+            ob_start('phpwiki_gzhandler');
+            
+            // TODO: dont send a length or get the gzip'ed data length.
+            $this->_is_compressing_output = true; 
+            header("Content-Encoding: gzip");
             /*
              * Attempt to prevent Apache from doing the dreaded double-gzip.
              *
@@ -355,30 +389,112 @@ class Request {
             // at any point.
             // FIXME: change the name of this method.
             ob_start();
+            $this->_is_compressing_output = false;
         }
         $this->_is_buffering_output = true;
+        $this->_ob_get_length = 0;
     }
 
     function discardOutput() {
-        if (!empty($this->_is_buffering_output))
-            ob_clean();
-        else
-            trigger_error("Not buffering output", E_USER_NOTICE);
-    }
-    
-    function finish() {
-        session_write_close();
         if (!empty($this->_is_buffering_output)) {
-            //header(sprintf("Content-Length: %d", ob_get_length()));
-            ob_end_flush();
+            ob_clean();
+            $this->_is_buffering_output = false;
+        } else {
+            trigger_error("Not buffering output", E_USER_NOTICE);
         }
-        //exit;
+    }
+
+    /** 
+     * Longer texts need too much memory on tiny or memory-limit=8MB systems.
+     * We might want to flush our buffer and restart again.
+     * (This would be fine if php would release its memory)
+     * Note that this must not be called inside Template expansion or other 
+     * sections with ob_buffering.
+     */
+    function chunkOutput() {
+        if (!empty($this->_is_buffering_output) or 
+            (function_exists('ob_get_level') and @ob_get_level())) {
+            $this->_do_chunked_output = true;
+            if (empty($this->_ob_get_length)) $this->_ob_get_length = 0;
+            $this->_ob_get_length += ob_get_length();
+            while (@ob_end_flush());
+            ob_end_clean();
+            ob_start();
+        }
+    }
+
+    function finish() {
+    	$this->_finishing = true;
+        if (!empty($this->_accesslog)) {
+            $this->_accesslog->push($this);
+            if (empty($this->_do_chunked_output) and empty($this->_ob_get_length))
+                $this->_ob_get_length = ob_get_length();
+            $this->_accesslog->setSize($this->_ob_get_length);
+            global $RUNTIMER;
+            if ($RUNTIMER) $this->_accesslog->setDuration($RUNTIMER->getTime());
+            // sql logging must be done before the db is closed.
+            if (isset($this->_accesslog->logtable))
+                $this->_accesslog->write_sql();
+        }
+        
+        if (!empty($this->_is_buffering_output)) {
+            /* This cannot work because it might destroy xml markup */
+            /*
+            if (0 and $GLOBALS['SearchHighLightQuery'] and check_php_version(4,2)) {
+                $html = str_replace($GLOBALS['SearchHighLightQuery'],
+                                    '<span class="search-term">'.$GLOBALS['SearchHighLightQuery'].'</span>',
+                                    ob_get_contents());
+                ob_clean();
+                header(sprintf("Content-Length: %d", strlen($html)));
+                echo $html;
+            } else {
+            */
+            // if _is_compressing_output then ob_get_length() returns 
+            // the uncompressed length, not the gzip'ed as required.
+	    if (!headers_sent() and !$this->_is_compressing_output) {
+		if (empty($this->_do_chunked_output)) {
+		    $this->_ob_get_length = ob_get_length();
+		}
+		header(sprintf("Content-Length: %d", $this->_ob_get_length));
+            }
+            $this->_is_buffering_output = false;
+	}
+
+        while (@ob_end_flush()); // hmm. there's some error in redirect
+        session_write_close();
+        if (!empty($this->_dbi)) {
+            $this->_dbi->close();
+            unset($this->_dbi);
+        }
+
+        exit;
     }
 
     function getSessionVar($key) {
         return $this->session->get($key);
     }
     function setSessionVar($key, $val) {
+        if ($key == 'wiki_user') {
+            if (empty($val->page))
+                $val->page = $this->getArg('pagename');
+            if (empty($val->action))
+                $val->action = $this->getArg('action');
+            // avoid recursive objects and session resource handles
+            // avoid overlarge session data (max 4000 byte!)
+            if (isset($val->_group)) {
+                unset($val->_group->_request);
+                unset($val->_group->user);
+            }
+            if (ENABLE_USER_NEW) {
+                unset($val->_HomePagehandle);
+                unset($val->_auth_dbi);
+            } else {
+                unset($val->_dbi);
+                unset($val->_authdbi);
+                unset($val->_homepage);
+                unset($val->_request);
+            }
+        }
         return $this->session->set($key, $val);
     }
     function deleteSessionVar($key) {
@@ -441,9 +557,12 @@ class Request {
 class Request_SessionVars {
     function Request_SessionVars() {
         // Prevent cacheing problems with IE 5
-        //session_cache_limiter('none');
+        session_cache_limiter('none');
                                         
-        //        session_start();
+        // Avoid to get a notice if session is already started,
+        // for example if session.auto_start is activated
+        if (!session_id())
+            session_start();
     }
     
     function get($key) {
@@ -455,23 +574,6 @@ class Request_SessionVars {
     
     function set($key, $val) {
         $vars = &$GLOBALS['HTTP_SESSION_VARS'];
-        if ($key == 'wiki_user') {
-            if (DEBUG) {
-	      if (!$val) {
-	        trigger_error("delete user session",E_USER_WARNING);
-	      } elseif (!$val->_level) {
-	        trigger_error("lost level in session",E_USER_WARNING);
-	      }
-            }
-	    if (is_object($val)) {
-                $val->page   = $GLOBALS['request']->getArg('pagename');
-                $val->action = $GLOBALS['request']->getArg('action');
-                // sessiondata may not exceed a certain size!
-                // otherwise it will get lost.
-                unset($val->_HomePagehandle);
-                unset($val->_auth_dbi);
-	    }
-        }
         if (!function_usable('get_cfg_var') or get_cfg_var('register_globals')) {
             // This is funky but necessary, at least in some PHP's
             $GLOBALS[$key] = $val;
@@ -479,16 +581,16 @@ class Request_SessionVars {
         $vars[$key] = $val;
         if (isset($_SESSION))
             $_SESSION[$key] = $val;
-        //session_register($key);
+        session_register($key);
     }
     
     function delete($key) {
         $vars = &$GLOBALS['HTTP_SESSION_VARS'];
         if (!function_usable('ini_get') or ini_get('register_globals'))
             unset($GLOBALS[$key]);
-        if (DEBUG) trigger_error("delete session $key",E_USER_WARNING);
+        if (DEBUG) trigger_error("delete session $key", E_USER_WARNING);
         unset($vars[$key]);
-        //session_unregister($key);
+        session_unregister($key);
     }
 }
 
@@ -526,6 +628,8 @@ class Request_CookieVars {
     function set($key, $val, $persist_days = false, $path = false) {
     	// if already defined, ignore
     	if (defined('MAIN_setUser') and $key = 'WIKI_ID') return;
+        if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
+
         $vars = &$GLOBALS['HTTP_COOKIE_VARS'];
         if (is_numeric($persist_days)) {
             $expires = time() + (24 * 3600) * $persist_days;
@@ -538,20 +642,25 @@ class Request_CookieVars {
         else
             $packedval = urlencode($val);
         $vars[$key] = $packedval;
-        /*        if ($path)
-            setcookie($key, $packedval, $expires, $path);
+        @$_COOKIE[$key] = $packedval;
+        if ($path)
+            @setcookie($key, $packedval, $expires, $path);
         else
-            setcookie($key, $packedval, $expires);*/
+            @setcookie($key, $packedval, $expires);
     }
     
     function delete($key) {
         static $deleted = array();
         if (isset($deleted[$key])) return;
+        if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
+        
         $vars = &$GLOBALS['HTTP_COOKIE_VARS'];
-        //setcookie($key,'',0);
-        //setcookie($key,'',0,defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN : '/');
-        unset($vars[$key]);
+        if (!defined('COOKIE_DOMAIN'))
+            @setcookie($key, '', 0);
+        else    
+            @setcookie($key, '', 0, COOKIE_DOMAIN);
         unset($GLOBALS['HTTP_COOKIE_VARS'][$key]);
+        unset($_COOKIE[$key]);
         $deleted[$key] = 1;
     }
 }
@@ -566,18 +675,39 @@ class Request_CookieVars {
 class Request_UploadedFile {
     function getUploadedFile($postname) {
         global $HTTP_POST_FILES;
-        
+
+        // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
+        if (empty($HTTP_POST_FILES) and !empty($_FILES))
+            $HTTP_POST_FILES =& $_FILES;
         if (!isset($HTTP_POST_FILES[$postname]))
             return false;
         
-        $fileinfo = &$HTTP_POST_FILES[$postname];
+        $fileinfo =& $HTTP_POST_FILES[$postname];
         if ($fileinfo['error']) {
-            trigger_error("Upload error: #" . $fileinfo['error'],
-                          E_USER_ERROR);
+            // See https://sourceforge.net/forum/message.php?msg_id=3093651
+            $err = (int) $fileinfo['error'];
+            // errmsgs by Shilad Sen
+            switch ($err) {
+            case 1:
+                trigger_error(_("Upload error: file too big"), E_USER_WARNING);
+                break;
+            case 2:
+                trigger_error(_("Upload error: file too big"), E_USER_WARNING);
+                break;
+            case 3:
+                trigger_error(_("Upload error: file only partially recieved"), E_USER_WARNING);
+                break;
+            case 4:
+                trigger_error(_("Upload error: no file selected"), E_USER_WARNING);
+                break;
+            default:
+                trigger_error(_("Upload error: unknown error #") . $err, E_USER_WARNING);
+            }
             return false;
         }
 
         // With windows/php 4.2.1 is_uploaded_file() always returns false.
+        // Be sure that upload_tmp_dir ends with a slash!
         if (!is_uploaded_file($fileinfo['tmp_name'])) {
             if (isWindows()) {
                 if (!$tmp_file = get_cfg_var('upload_tmp_dir')) {
@@ -585,18 +715,24 @@ class Request_UploadedFile {
                 }
                 $tmp_file .= '/' . basename($fileinfo['tmp_name']);
                 /* but ending slash in php.ini upload_tmp_dir is required. */
-                if (ereg_replace('/+', '/', $tmp_file) != $fileinfo['tmp_name']) {
-                    trigger_error(sprintf("Uploaded tmpfile illegal: %s != %s",$tmp_file, $fileinfo['tmp_name']),
+                if (realpath(ereg_replace('/+', '/', $tmp_file)) != realpath($fileinfo['tmp_name'])) {
+                    trigger_error(sprintf("Uploaded tmpfile illegal: %s != %s.",$tmp_file, $fileinfo['tmp_name']).
+                    	          "\n".
+                    	          "Probably illegal TEMP environment or upload_tmp_dir setting.",
                                   E_USER_ERROR);
                     return false;
                 } else {
+                    /*
                     trigger_error(sprintf("Workaround for PHP/Windows is_uploaded_file() problem for %s.",
                                           $fileinfo['tmp_name'])."\n".
-            	                  "Probably illegal TEMP environment setting.",E_USER_NOTICE);
+            	                  "Probably illegal TEMP environment or upload_tmp_dir setting.", 
+            	                  E_USER_NOTICE);
+            	    */
+            	    ;
                 }
             } else {
-              trigger_error(sprintf("Uploaded tmpfile %s not found.",$fileinfo['tmp_name'])."\n".
-                           " Probably illegal TEMP environment setting.",
+              trigger_error(sprintf("Uploaded tmpfile %s not found.", $fileinfo['tmp_name'])."\n".
+                           " Probably illegal TEMP environment or upload_tmp_dir setting.",
                           E_USER_WARNING);
             }
         }
@@ -659,14 +795,189 @@ class Request_UploadedFile {
 
 /**
  * Create NCSA "combined" log entry for current request.
+ * Also needed for advanced spam prevention.
+ * global object holding global state (sql or file, entries, to dump)
  */
+class Request_AccessLog {
+    /**
+     * @param $logfile string  Log file name.
+     */
+    function Request_AccessLog ($logfile, $do_sql = false) {
+        //global $request; // request not yet initialized!
+
+        $this->logfile = $logfile;
+        if ($logfile and !is_writeable($logfile)) {
+            trigger_error
+                (sprintf(_("%s is not writable."), _("The PhpWiki access log file"))
+                 . "\n"
+                 . sprintf(_("Please ensure that %s is writable, or redefine %s in config/config.ini."),
+                           sprintf(_("the file '%s'"), ACCESS_LOG),
+                           'ACCESS_LOG')
+                 , E_USER_NOTICE);
+        }
+        //$request->_accesslog =& $this;
+        //if (empty($request->_accesslog->entries))
+        register_shutdown_function("Request_AccessLogEntry_shutdown_function");
+        
+        if ($do_sql) {
+            global $DBParams;
+            if (!in_array($DBParams['dbtype'], array('SQL','ADODB'))) {
+                trigger_error("Unsupported database backend for ACCESS_LOG_SQL.\nNeed DATABASE_TYPE=SQL or ADODB");
+            } else {
+                //$this->_dbi =& $request->_dbi;
+                $this->logtable = (!empty($DBParams['prefix']) ? $DBParams['prefix'] : '')."accesslog";
+            }
+        }
+        $this->entries = array();
+        $this->entries[] = new Request_AccessLogEntry($this);
+    }
+
+    function _do($cmd, &$arg) {
+        if ($this->entries)
+            for ($i=0; $i < count($this->entries);$i++)
+                $this->entries[$i]->$cmd($arg);
+    }
+    function push(&$request)   { $this->_do('push',$request); }
+    function setSize($arg)     { $this->_do('setSize',$arg); }
+    function setStatus($arg)   { $this->_do('setStatus',$arg); }
+    function setDuration($arg) { $this->_do('setDuration',$arg); }
+
+    /**
+     * Read sequentially all previous entries from the beginning.
+     * while ($logentry = Request_AccessLogEntry::read()) ;
+     * For internal log analyzers: RecentReferrers, WikiAccessRestrictions
+     */
+    function read() {
+        return $this->logtable ? $this->read_sql() : $this->read_file();
+    }
+
+    /**
+     * Return iterator of referer items reverse sorted (latest first).
+     */
+    function get_referer($limit=15, $external_only=false) {
+        if ($external_only) { // see stdlin.php:isExternalReferrer()
+            $base = SERVER_URL;
+            $blen = strlen($base);
+        }
+        if (!empty($this->_dbi)) {
+            // check same hosts in referer and request and remove them
+            $ext_where = " AND LEFT(referer,$blen) <> ".$this->_dbi->quote($base)
+                ." AND LEFT(referer,$blen) <> LEFT(CONCAT(".$this->_dbi->quote(SERVER_URL).",request_uri),$blen)";
+            return $this->_read_sql_query("(referer <>'' AND NOT(ISNULL(referer)))"
+                                          .($external_only ? $ext_where : '')
+                                          ." ORDER BY time_stamp DESC"
+                                          .($limit ? " LIMIT $limit" : ""));
+        } else {
+            $iter = new WikiDB_Array_generic_iter(0);
+            $logs =& $iter->_array;
+            while ($logentry = $this->read_file()) {
+                if (!empty($logentry->referer)
+                    and (!$external_only or (substr($logentry->referer,0,$blen) != $base)))
+                {
+                    $iter->_array[] = $logentry;
+                    if ($limit and count($logs) > $limit)
+                        array_shift($logs);
+                }
+            }
+            $logs = array_reverse($logs);
+            $logs = array_slice($logs,0,min($limit,count($logs)));
+            return $iter;
+        }
+    }
+
+    /**
+     * Return iterator of matching host items reverse sorted (latest first).
+     */
+    function get_host($host, $since_minutes=20) {
+        if ($this->logtable) {
+            // mysql specific only:
+            return $this->read_sql("request_host=".$this->_dbi->quote($host)." AND time_stamp > ". (time()-$since_minutes*60) 
+                            ." ORDER BY time_stamp DESC");
+        } else {
+            $iter = new WikiDB_Array_generic_iter();
+            $logs =& $iter->_array;
+            $logentry = new Request_AccessLogEntry($this);
+            while ($logentry->read_file()) {
+                if (!empty($logentry->referer)) {
+                    $iter->_array[] = $logentry;
+                    if ($limit and count($logs) > $limit)
+                        array_shift($logs);
+                    $logentry = new Request_AccessLogEntry($this);
+                }
+            }
+            $logs = array_reverse($logs);
+            $logs = array_slice($logs,0,min($limit,count($logs)));
+            return $iter;
+        }
+    }
+
+    /**
+     * Read sequentially all previous entries from log file.
+     */
+    function read_file() {
+        global $request;
+        if ($this->logfile) $this->logfile = ACCESS_LOG; // support Request_AccessLog::read
+
+        if (empty($this->reader))       // start at the beginning
+            $this->reader = fopen($this->logfile, "r");
+        if ($s = fgets($this->reader)) {
+            $entry = new Request_AccessLogEntry($this);
+            if (preg_match('/^(\S+)\s(\S+)\s(\S+)\s\[(.+?)\] "([^"]+)" (\d+) (\d+) "([^"]*)" "([^"]*)"$/',$s,$m)) {
+            	list(,$entry->host, $entry->ident, $entry->user, $entry->time,
+                     $entry->request, $entry->status, $entry->size,
+                     $entry->referer, $entry->user_agent) = $m;
+            }
+            return $entry;
+        } else { // until the end
+            fclose($this->reader);
+            return false;
+        }
+    }
+    function _read_sql_query($where='') {
+        $dbh =& $GLOBALS['request']->_dbi;
+        $log_tbl =& $this->logtable;
+        return $dbh->genericSqlIter("SELECT *,request_uri as request,request_time as time,remote_user as user,"
+                                    ."remote_host as host,agent as user_agent"
+                                    ." FROM $log_tbl"
+                                    . ($where ? " WHERE $where" : ""));
+    }
+    function read_sql($where='') {
+        if (empty($this->sqliter))
+            $this->sqliter = $this->_read_sql_query($where);
+        return $this->sqliter->next();
+    }
+
+    /* done in request->finish() before the db is closed */
+    function write_sql() {
+    	$dbh =& $GLOBALS['request']->_dbi;
+        if (isset($this->entries) and $dbh and $dbh->isOpen())
+            foreach ($this->entries as $entry) {
+                $entry->write_sql();
+            }
+    }
+    /* done in the shutdown callback */
+    function write_file() {
+        if (isset($this->entries) and $this->logfile)
+            foreach ($this->entries as $entry) {
+                $entry->write_file();
+            }
+        unset($this->entries);
+    }
+    /* in an ideal world... */
+    function write() {
+        if ($this->logfile) $this->write_file();
+        if ($this->logtable) $this->write_sql();
+        unset($this->entries);
+    }
+}
+
 class Request_AccessLogEntry
 {
     /**
      * Constructor.
      *
-     * The log entry will be automatically appended to the log file
-     * when the current request terminates.
+     * The log entry will be automatically appended to the log file or 
+     * SQL table when the current request terminates.
      *
      * If you want to modify a Request_AccessLogEntry before it gets
      * written (e.g. via the setStatus and setSize methods) you should
@@ -674,36 +985,39 @@ class Request_AccessLogEntry
      * original (rather than a copy) object.
      *
      * <pre>
-     *    $log_entry = & new Request_AccessLogEntry($req, "/tmp/wiki_access_log");
+     *    $log_entry = & new Request_AccessLogEntry("/tmp/wiki_access_log");
      *    $log_entry->setStatus(401);
+     *    $log_entry->push($request);
      * </pre>
      *
      *
-     * @param $request object  Request object for current request.
-     * @param $logfile string  Log file name.
      */
-    function Request_AccessLogEntry (&$request, $logfile) {
-        $this->logfile = $logfile;
-        
+    function Request_AccessLogEntry (&$accesslog) {
+        $this->_accesslog = $accesslog;
+        $this->logfile = $accesslog->logfile;
+        $this->time = time();
+        $this->status = 200;    // see setStatus()
+        $this->size = 0;	// see setSize()
+    }
+
+    /**
+     * @param $request object  Request object for current request.
+     */
+    function push(&$request) {
         $this->host  = $request->get('REMOTE_HOST');
         $this->ident = $request->get('REMOTE_IDENT');
         if (!$this->ident)
             $this->ident = '-';
-        $this->user = '-';        // FIXME: get logged-in user name
-        $this->time = time();
+        $user = $request->getUser();
+        if ($user->isAuthenticated())
+            $this->user = $user->UserName();
+        else
+            $this->user = '-';
         $this->request = join(' ', array($request->get('REQUEST_METHOD'),
                                          $request->get('REQUEST_URI'),
                                          $request->get('SERVER_PROTOCOL')));
-        $this->status = 200;
-        $this->size = 0;
         $this->referer = (string) $request->get('HTTP_REFERER');
         $this->user_agent = (string) $request->get('HTTP_USER_AGENT');
-
-        global $Request_AccessLogEntry_entries;
-        if (!isset($Request_AccessLogEntry_entries)) {
-            register_shutdown_function("Request_AccessLogEntry_shutdown_function");
-        }
-        $Request_AccessLogEntry_entries[] = &$this;
     }
 
     /**
@@ -720,8 +1034,11 @@ class Request_AccessLogEntry
      *
      * @param $size integer
      */
-    function setSize ($size) {
+    function setSize ($size=0) {
         $this->size = $size;
+    }
+    function setDuration ($seconds) {
+        $this->duration = $seconds;
     }
     
     /**
@@ -757,24 +1074,30 @@ class Request_AccessLogEntry
     function _ncsa_time($time = false) {
         if (!$time)
             $time = time();
-
         return date("d/M/Y:H:i:s", $time) .
             " " . $this->_zone_offset();
+    }
+
+    function write() {
+        if ($this->_accesslog->logfile) $this->write_file();
+        if ($this->_accesslog->logtable) $this->write_sql();
     }
 
     /**
      * Write entry to log file.
      */
-    function write() {
+    function write_file() {
         $entry = sprintf('%s %s %s [%s] "%s" %d %d "%s" "%s"',
                          $this->host, $this->ident, $this->user,
                          $this->_ncsa_time($this->time),
                          $this->request, $this->status, $this->size,
                          $this->referer, $this->user_agent);
-
+        if (!empty($this->_accesslog->reader)) {
+            fclose($this->_accesslog->reader);
+            unset($this->_accesslog->reader);
+        }
         //Error log doesn't provide locking.
         //error_log("$entry\n", 3, $this->logfile);
-
         // Alternate method
         if (($fp = fopen($this->logfile, "a"))) {
             flock($fp, LOCK_EX);
@@ -782,6 +1105,48 @@ class Request_AccessLogEntry
             fclose($fp);
         }
     }
+
+    /* This is better been done by apache mod_log_sql */
+    /* If ACCESS_LOG_SQL & 2 we do write it by our own */
+    function write_sql() {
+    	global $request;
+    	
+        $dbh =& $request->_dbi;
+        if ($dbh and $dbh->isOpen() and $this->_accesslog->logtable) {
+            $log_tbl =& $this->_accesslog->logtable;
+            if ($request->get('REQUEST_METHOD') == "POST") {
+                // strangely HTTP_POST_VARS doesn't contain all posted vars.
+          	if (check_php_version(4,2))
+                    $args = $_POST; // copy not ref. clone not needed on hashes
+                else
+                    $args = $GLOBALS['HTTP_POST_VARS'];
+                // garble passwords
+                if (!empty($args['auth']['passwd']))    $args['auth']['passwd'] = '<not displayed>';
+                if (!empty($args['dbadmin']['passwd'])) $args['dbadmin']['passwd'] = '<not displayed>';
+                if (!empty($args['pref']['passwd']))    $args['pref']['passwd'] = '<not displayed>';
+                if (!empty($args['pref']['passwd2']))   $args['pref']['passwd2'] = '<not displayed>';
+                $this->request_args = substr(serialize($args),0,254); // if VARCHAR(255) is used.
+            } else {
+          	$this->request_args = $request->get('QUERY_STRING'); 
+            }
+            // duration problem: sprintf "%f" might use comma e.g. "100,201" in european locales
+            $dbh->genericSqlQuery
+                (
+                 sprintf("INSERT INTO $log_tbl"
+                         . " (time_stamp,remote_host,remote_user,request_method,request_line,request_uri,"
+                         .   "request_args,request_time,status,bytes_sent,referer,agent,request_duration)"
+                         . " VALUES(%d,%s,%s,%s,%s,%s,%s,%s,%d,%d,%s,%s,'%s')",
+                     $this->time,
+                     $dbh->quote($this->host), $dbh->quote($this->user),
+                     $dbh->quote($request->get('REQUEST_METHOD')), $dbh->quote($this->request), 
+                     $dbh->quote($request->get('REQUEST_URI')), $dbh->quote($this->request_args),
+                     $dbh->quote($this->_ncsa_time($this->time)), $this->status, $this->size,
+                     $dbh->quote($this->referer),
+                     $dbh->quote($this->user_agent),
+                     $this->duration));
+        }
+    }
+
 }
 
 /**
@@ -790,20 +1155,20 @@ class Request_AccessLogEntry
  * @access private
  * @see Request_AccessLogEntry
  */
-function Request_AccessLogEntry_shutdown_function ()
-{
-    global $Request_AccessLogEntry_entries;
+function Request_AccessLogEntry_shutdown_function () {
+    global $request;
     
-    foreach ($Request_AccessLogEntry_entries as $entry) {
-        $entry->write();
-    }
-    unset($Request_AccessLogEntry_entries);
+    if (isset($request->_accesslog->entries) and $request->_accesslog->logfile)
+        foreach ($request->_accesslog->entries as $entry) {
+            $entry->write_file();
+        }
+    unset($request->_accesslog->entries);
 }
 
 
 class HTTP_ETag {
     function HTTP_ETag($val, $is_weak=false) {
-        $this->_val = hash($val);
+        $this->_val = wikihash($val);
         $this->_weak = $is_weak;
     }
 
@@ -862,10 +1227,10 @@ class HTTP_ETag {
 
 // Possible results from the HTTP_ValidatorSet::_check*() methods.
 // (Higher numerical values take precedence.)
-define ('_HTTP_VAL_PASS', 0);   // Test is irrelevant
-define ('_HTTP_VAL_NOT_MODIFIED', 1); // Test passed, content not changed
-define ('_HTTP_VAL_MODIFIED', 2); // Test failed, content changed
-define ('_HTTP_VAL_FAILED', 3); // Precondition failed.
+define ('_HTTP_VAL_PASS', 0);         	// Test is irrelevant
+define ('_HTTP_VAL_NOT_MODIFIED', 1); 	// Test passed, content not changed
+define ('_HTTP_VAL_MODIFIED', 2); 	// Test failed, content changed
+define ('_HTTP_VAL_FAILED', 3);   	// Precondition failed.
 
 class HTTP_ValidatorSet {
     function HTTP_ValidatorSet($validators) {
@@ -898,8 +1263,10 @@ class HTTP_ValidatorSet {
         // If either is weak, we're weak
         if (!empty($that->_weak))
             $this->_weak = true;
-
-        $this->_tag = array_merge($this->_tag, $that->_tag);
+        if (is_array($this->_tag))
+            $this->_tag = array_merge($this->_tag, $that->_tag);
+        else
+            $this->_tag = $that->_tag;
     }
 
     function getETag() {
@@ -978,7 +1345,197 @@ class HTTP_ValidatorSet {
 }
 
 
-// $Log$
+// $Log: Request.php,v $
+// Revision 1.100  2006/01/17 18:57:09  uckelman
+// _accesslog->logtable is not set when using non-SQL logging; check should
+//  be isset to avoid a PHP warning
+//
+// Revision 1.99  2005/09/18 16:01:09  rurban
+// trick to send the correct gzipped Content-Length
+//
+// Revision 1.98  2005/09/18 15:15:53  rurban
+// add a proper Content-Encoding: gzip if compressed, and omit Content-Length then.
+//
+// Revision 1.97  2005/09/14 05:58:17  rurban
+// protect against Content-Length if headers_sent(), fixed writing unwanted accesslog sql entries
+//
+// Revision 1.96  2005/08/07 10:52:43  rurban
+// stricter error handling: dba errors are fatal, display errors on Request->finish or session_close
+//
+// Revision 1.95  2005/08/07 10:09:33  rurban
+// set _COOKIE also
+//
+// Revision 1.94  2005/08/07 09:14:39  rurban
+// fix comments
+//
+// Revision 1.93  2005/08/06 14:31:10  rurban
+// ensure absolute uploads path
+//
+// Revision 1.92  2005/05/14 07:22:47  rurban
+// remove mysql specific INSERT DELAYED
+//
+// Revision 1.91  2005/04/11 19:40:14  rurban
+// Simplify upload. See https://sourceforge.net/forum/message.php?msg_id=3093651
+// Improve UpLoad warnings.
+// Move auth check before upload.
+//
+// Revision 1.90  2005/02/26 18:30:01  rurban
+// update (C)
+//
+// Revision 1.89  2005/02/04 10:38:36  rurban
+// do not log passwords! Thanks to Charles Corrigan
+//
+// Revision 1.88  2005/01/25 07:00:23  rurban
+// fix redirect,
+//
+// Revision 1.87  2005/01/08 21:27:45  rurban
+// Prevent from Overlarge session data crash
+//
+// Revision 1.86  2005/01/04 20:26:34  rurban
+// honor DISABLE_HTTP_REDIRECT, do not gzip the redirect template, flush it
+//
+// Revision 1.85  2004/12/26 17:08:36  rurban
+// php5 fixes: case-sensitivity, no & new
+//
+// Revision 1.84  2004/12/17 16:37:30  rurban
+// avoid warning
+//
+// Revision 1.83  2004/12/10 02:36:43  rurban
+// More help with the new native xmlrpc lib. no warnings, no user cookie on xmlrpc.
+//
+// Revision 1.82  2004/12/06 19:49:55  rurban
+// enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+// renamed delete_page to purge_page.
+// enable action=edit&version=-1 to force creation of a new version.
+// added BABYCART_PATH config
+// fixed magiqc in adodb.inc.php
+// and some more docs
+//
+// Revision 1.81  2004/11/27 14:39:04  rurban
+// simpified regex search architecture:
+//   no db specific node methods anymore,
+//   new sql() method for each node
+//   parallel to regexp() (which returns pcre)
+//   regex types bitmasked (op's not yet)
+// new regex=sql
+// clarified WikiDB::quote() backend methods:
+//   ->quote() adds surrounsing quotes
+//   ->qstr() (new method) assumes strings and adds no quotes! (in contrast to ADODB)
+//   pear and adodb have now unified quote methods for all generic queries.
+//
+// Revision 1.80  2004/11/21 11:59:16  rurban
+// remove final \n to be ob_cache independent
+//
+// Revision 1.79  2004/11/11 18:29:44  rurban
+// (write_sql) isOpen really is useless in non-SQL, do more explicit check
+//
+// Revision 1.78  2004/11/10 15:29:20  rurban
+// * requires newer Pear_DB (as the internal one): quote() uses now escapeSimple for strings
+// * ACCESS_LOG_SQL: fix cause request not yet initialized
+// * WikiDB: moved SQL specific methods upwards
+// * new Pear_DB quoting: same as ADODB and as newer Pear_DB.
+//   fixes all around: WikiGroup, WikiUserNew SQL methods, SQL logging
+//
+// Revision 1.77  2004/11/09 17:11:04  rurban
+// * revert to the wikidb ref passing. there's no memory abuse there.
+// * use new wikidb->_cache->_id_cache[] instead of wikidb->_iwpcache, to effectively
+//   store page ids with getPageLinks (GleanDescription) of all existing pages, which
+//   are also needed at the rendering for linkExistingWikiWord().
+//   pass options to pageiterator.
+//   use this cache also for _get_pageid()
+//   This saves about 8 SELECT count per page (num all pagelinks).
+// * fix passing of all page fields to the pageiterator.
+// * fix overlarge session data which got broken with the latest ACCESS_LOG_SQL changes
+//
+// Revision 1.76  2004/11/09 08:15:18  rurban
+// fix ADODB quoting style
+//
+// Revision 1.75  2004/11/07 18:34:28  rurban
+// more logging fixes
+//
+// Revision 1.74  2004/11/07 16:02:51  rurban
+// new sql access log (for spam prevention), and restructured access log class
+// dbh->quote (generic)
+// pear_db: mysql specific parts seperated (using replace)
+//
+// Revision 1.73  2004/11/06 04:51:25  rurban
+// readable ACCESS_LOG support: RecentReferrers, WikiAccessRestrictions
+//
+// Revision 1.72  2004/11/01 10:43:55  rurban
+// seperate PassUser methods into seperate dir (memory usage)
+// fix WikiUser (old) overlarge data session
+// remove wikidb arg from various page class methods, use global ->_dbi instead
+// ...
+//
+// Revision 1.71  2004/10/22 09:20:36  rurban
+// fix for USECACHE=false
+//
+// Revision 1.70  2004/10/21 19:59:18  rurban
+// Patch #991494 (ppo): Avoid notice in PHP >= 4.3.3 if session already started
+//
+// Revision 1.69  2004/10/21 19:00:37  rurban
+// upload errmsgs by Shilad Sen.
+// chunkOutput support: flush the buffer piecewise (dumphtml, large pagelists)
+//   doesn't gain much because ob_end_clean() doesn't release its
+//   memory properly yet.
+//
+// Revision 1.68  2004/10/12 13:13:19  rurban
+// php5 compatibility (5.0.1 ok)
+//
+// Revision 1.67  2004/09/25 18:56:54  rurban
+// make start_debug logic work
+//
+// Revision 1.66  2004/09/25 16:24:52  rurban
+// dont compress on debugging
+//
+// Revision 1.65  2004/09/17 14:13:49  rurban
+// We check for the client Accept-Encoding: "gzip" presence also
+// This should eliminate a lot or reported problems.
+//
+// Note that this doesn#t fix RSS ssues:
+// Most RSS clients are NOT(!) application/xml gzip compatible yet.
+// Even if they are sending the accept-encoding gzip header!
+// wget is, Mozilla, and MSIE no.
+// Of the RSS readers only MagpieRSS 0.5.2 is. http://www.rssgov.com/rssparsers.html
+//
+// Revision 1.64  2004/09/17 13:32:36  rurban
+// Disable server-side gzip encoding for RSS (RDF encoding), even if the client says it
+// supports it. Mozilla has this error, wget works fine. IE not checked.
+//
+// Revision 1.63  2004/07/01 09:29:40  rurban
+// fixed another DbSession crash: wrong WikiGroup vars
+//
+// Revision 1.62  2004/06/27 10:26:02  rurban
+// oci8 patch by Philippe Vanhaesendonck + some ADODB notes+fixes
+//
+// Revision 1.61  2004/06/25 14:29:17  rurban
+// WikiGroup refactoring:
+//   global group attached to user, code for not_current user.
+//   improved helpers for special groups (avoid double invocations)
+// new experimental config option ENABLE_XHTML_XML (fails with IE, and document.write())
+// fixed a XHTML validation error on userprefs.tmpl
+//
+// Revision 1.60  2004/06/19 11:51:13  rurban
+// CACHE_CONTROL: NONE => NO_CACHE
+//
+// Revision 1.59  2004/06/13 11:34:22  rurban
+// fixed bug #969532 (space in uploaded filenames)
+// improved upload error messages
+//
+// Revision 1.58  2004/06/04 20:32:53  rurban
+// Several locale related improvements suggested by Pierrick Meignen
+// LDAP fix by John Cole
+// reanable admin check without ENABLE_PAGEPERM in the admin plugins
+//
+// Revision 1.57  2004/06/03 18:54:25  rurban
+// fixed "lost level in session" warning, now that signout sets level = 0 (before -1)
+//
+// Revision 1.56  2004/05/17 17:43:29  rurban
+// CGI: no PATH_INFO fix
+//
+// Revision 1.55  2004/05/15 18:31:00  rurban
+// some action=pdf Request fixes: With MSIE it works now. Now the work with the page formatting begins.
+//
 // Revision 1.54  2004/05/04 22:34:25  rurban
 // more pdf support
 //

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: AuthorHistory.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: AuthorHistory.php,v 1.6 2004/06/14 11:31:38 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -76,7 +76,7 @@ extends WikiPlugin
     
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.6 $");
     }
     
     function getDefaultArguments() {
@@ -108,7 +108,7 @@ extends WikiPlugin
         
         $nbsp = HTML::raw('&nbsp;');
         
-        global $Theme; // date & time formatting
+        global $WikiTheme; // date & time formatting
         
         if (! ($page == 'all')) {
             $p = $dbi->getPage($page);
@@ -144,7 +144,7 @@ extends WikiPlugin
                                                             'if_known'), $nbsp),
                                    HTML::td($nbsp, $rev->get('summary')),
                                    HTML::td(array('align'=> 'right'),
-                                            $Theme->formatdatetime($rev->get('mtime')))
+                                            $WikiTheme->formatdatetime($rev->get('mtime')))
                                    );
                     
                     $class = $isminor ? 'evenrow' : 'oddrow';
@@ -201,7 +201,7 @@ extends WikiPlugin
                                        $includeminor ? (HTML::td($nbsp, ($isminor ? "minor" : "major"), $nbsp)) : "",
                                        HTML::td($nbsp, $rev->get('summary')),
                                        HTML::td(array('align'=> 'right'),
-                                                $Theme->formatdatetime($rev->get('mtime')), $nbsp)
+                                                $WikiTheme->formatdatetime($rev->get('mtime')), $nbsp)
                                        );
                         
                         $class = $isminor ? 'evenrow' : 'oddrow';
@@ -245,7 +245,15 @@ extends WikiPlugin
     
 };
 
-// $Log$
+// $Log: AuthorHistory.php,v $
+// Revision 1.6  2004/06/14 11:31:38  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.5  2004/02/28 21:14:08  rurban
 // generally more PHPDOC docs
 //   see http://xarch.tu-graz.ac.at/home/rurban/phpwiki/xref/

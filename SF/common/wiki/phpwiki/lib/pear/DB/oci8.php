@@ -1,9 +1,9 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
+// | Copyright (c) 1997-2004 The PHP Group                                |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.02 of the PHP license,      |
 // | that is bundled with this package in the file LICENSE, and is        |
@@ -14,27 +14,30 @@
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
 // | Author: James L. Pine <jlp@valinux.com>                              |
+// | Maintainer: Daniel Convissor <danielc@php.net>                       |
 // +----------------------------------------------------------------------+
 //
-// $Id: oci8.php 1422 2005-04-12 13:33:49Z guerin $
-//
-// Database independent query interface definition for PHP's Oracle 8
-// call-interface extension.
-//
+// $Id: oci8.php,v 1.3 2004/06/21 08:39:38 rurban Exp $
 
-//
+
 // be aware...  OCIError() only appears to return anything when given a
 // statement, so functions return the generic DB_ERROR instead of more
 // useful errors that have to do with feedback from the database.
-//
-// Based on DB 1.3 from the pear.php.net repository. 
-// The only modifications made have been modification of the include paths. 
-//
-rcs_id('$Id: oci8.php 1422 2005-04-12 13:33:49Z guerin $');
-rcs_id('From Pear CVS: Id: oci8.php,v 1.4 2002/07/02 16:39:16 mj Exp');
+
 
 require_once 'DB/common.php';
 
+/**
+ * Database independent query interface definition for PHP's Oracle 8
+ * call-interface extension.
+ *
+ * Definitely works with versions 8 and 9 of Oracle.
+ *
+ * @package  DB
+ * @version  $Id: oci8.php,v 1.3 2004/06/21 08:39:38 rurban Exp $
+ * @category Database
+ * @author   James L. Pine <jlp@valinux.com>
+ */
 class DB_oci8 extends DB_common
 {
     // {{{ properties
@@ -45,6 +48,19 @@ class DB_oci8 extends DB_common
     var $prepare_types = array();
     var $autoCommit = 1;
     var $last_stmt = false;
+
+    /**
+     * stores the $data passed to execute() in the oci8 driver
+     *
+     * Gets reset to array() when simpleQuery() is run.
+     *
+     * Needed in case user wants to call numRows() after prepare/execute
+     * was used.
+     *
+     * @var array
+     * @access private
+     */
+    var $_data = array();
 
     // }}}
     // {{{ constructor
@@ -61,11 +77,15 @@ class DB_oci8 extends DB_common
             'limit' => 'alter'
         );
         $this->errorcode_map = array(
+            1 => DB_ERROR_CONSTRAINT,
             900 => DB_ERROR_SYNTAX,
             904 => DB_ERROR_NOSUCHFIELD,
+            921 => DB_ERROR_SYNTAX,
             923 => DB_ERROR_SYNTAX,
             942 => DB_ERROR_NOSUCHTABLE,
             955 => DB_ERROR_ALREADY_EXISTS,
+            1400 => DB_ERROR_CONSTRAINT_NOT_NULL,
+            1407 => DB_ERROR_CONSTRAINT_NOT_NULL,
             1476 => DB_ERROR_DIVZERO,
             1722 => DB_ERROR_INVALID_NUMBER,
             2289 => DB_ERROR_NOSUCHTABLE,
@@ -92,16 +112,16 @@ class DB_oci8 extends DB_common
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
         }
         $this->dsn = $dsninfo;
-        $user = $dsninfo['username'];
-        $pw = $dsninfo['password'];
-        $hostspec = $dsninfo['hostspec'];
 
         $connect_function = $persistent ? 'OCIPLogon' : 'OCILogon';
 
-        if ($hostspec) {
-            $conn = @$connect_function($user,$pw,$hostspec);
-        } elseif ($user || $pw) {
-            $conn = @$connect_function($user,$pw);
+        if ($dsninfo['hostspec']) {
+            $conn = @$connect_function($dsninfo['username'],
+                                       $dsninfo['password'],
+                                       $dsninfo['hostspec']);
+        } elseif ($dsninfo['username'] || $dsninfo['password']) {
+            $conn = @$connect_function($dsninfo['username'],
+                                       $dsninfo['password']);
         } else {
             $conn = false;
         }
@@ -121,7 +141,7 @@ class DB_oci8 extends DB_common
     /**
      * Log out and disconnect from the database.
      *
-     * @return bool TRUE on success, FALSE if not connected.
+     * @return bool true on success, false if not connected.
      */
     function disconnect()
     {
@@ -145,6 +165,7 @@ class DB_oci8 extends DB_common
      */
     function simpleQuery($query)
     {
+        $this->_data = array();
         $this->last_query = $query;
         $query = $this->modifyQuery($query);
         $result = @OCIParse($this->connection, $query);
@@ -183,61 +204,49 @@ class DB_oci8 extends DB_common
     }
 
     // }}}
-    // {{{ fetchRow()
-
-    /**
-     * Fetch a row and return as array.
-     *
-     * @param $result oci8 result identifier
-     * @param $fetchmode how the resulting array should be indexed
-     *
-     * @return int an array on success, a DB error code on failure, NULL
-     *             if there is no more data
-     */
-    function &fetchRow($result, $fetchmode = DB_FETCHMODE_DEFAULT)
-    {
-        if ($fetchmode == DB_FETCHMODE_DEFAULT) {
-            $fetchmode = $this->fetchmode;
-        }
-        if ($fetchmode & DB_FETCHMODE_ASSOC) {
-            $moredata = @OCIFetchInto($result, $row, OCI_ASSOC + OCI_RETURN_NULLS + OCI_RETURN_LOBS);
-        } else {
-            $moredata = @OCIFetchInto($result, $row, OCI_RETURN_NULLS + OCI_RETURN_LOBS);
-        }
-        if (!$moredata) {
-            return NULL;
-        }
-        return $row;
-    }
-
-    // }}}
     // {{{ fetchInto()
 
     /**
      * Fetch a row and insert the data into an existing array.
      *
-     * @param $result oci8 result identifier
-     * @param $arr (reference) array where data from the row is stored
-     * @param $fetchmode how the array data should be indexed
-     * @param $rownum the row number to fetch (not yet supported)
+     * Formating of the array and the data therein are configurable.
+     * See DB_result::fetchInto() for more information.
      *
-     * @return int DB_OK on success, a DB error code on failure
+     * @param resource $result    query result identifier
+     * @param array    $arr       (reference) array where data from the row
+     *                            should be placed
+     * @param int      $fetchmode how the resulting array should be indexed
+     * @param int      $rownum    the row number to fetch
+     *
+     * @return mixed DB_OK on success, null when end of result set is
+     *               reached or on failure
+     *
+     * @see DB_result::fetchInto()
+     * @access private
      */
-    function fetchInto($result, &$arr, $fetchmode = DB_FETCHMODE_DEFAULT, $rownum=NULL)
+    function fetchInto($result, &$arr, $fetchmode, $rownum=null)
     {
-        if ($rownum !== NULL) {
+        if ($rownum !== null) {
             return $this->raiseError(DB_ERROR_NOT_CAPABLE);
         }
         if ($fetchmode & DB_FETCHMODE_ASSOC) {
             $moredata = @OCIFetchInto($result,$arr,OCI_ASSOC+OCI_RETURN_NULLS+OCI_RETURN_LOBS);
-            if ($moredata && $this->options['optimize'] == 'portability') {
+            if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE &&
+                $moredata)
+            {
                 $arr = array_change_key_case($arr, CASE_LOWER);
             }
         } else {
-            $moredata = @OCIFetchInto($result,$arr,OCI_RETURN_NULLS+OCI_RETURN_LOBS);
+            $moredata = OCIFetchInto($result,$arr,OCI_RETURN_NULLS+OCI_RETURN_LOBS);
         }
         if (!$moredata) {
-            return NULL;
+            return null;
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_RTRIM) {
+            $this->_rtrimArrayValues($arr);
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_NULL_TO_EMPTY) {
+            $this->_convertNullArrayValuesToEmpty($arr);
         }
         return DB_OK;
     }
@@ -248,21 +257,30 @@ class DB_oci8 extends DB_common
     /**
      * Free the internal resources associated with $result.
      *
-     * @param $result oci8 result identifier or DB statement identifier
+     * @param $result oci8 result identifier
      *
-     * @return bool TRUE on success, FALSE if $result is invalid
+     * @return bool true on success, false if $result is invalid
      */
     function freeResult($result)
     {
-        if (is_resource($result)) {
-            return @OCIFreeStatement($result);
-        }
-        if (!isset($this->prepare_tokens[(int)$result])) {
+        return @OCIFreeStatement($result);
+    }
+
+    /**
+     * Free the internal resources associated with a prepared query.
+     *
+     * @param $stmt oci8 statement identifier
+     *
+     * @return bool true on success, false if $result is invalid
+     */
+    function freePrepared($stmt)
+    {
+        if (isset($this->prepare_types[(int)$stmt])) {
+            unset($this->prepare_types[(int)$stmt]);
+            unset($this->manip_query[(int)$stmt]);
+        } else {
             return false;
         }
-        unset($this->prepare_tokens[(int)$result]);
-        unset($this->prepare_types[(int)$result]);
-        unset($this->manip_query[(int)$result]);
         return true;
     }
 
@@ -272,12 +290,20 @@ class DB_oci8 extends DB_common
     function numRows($result)
     {
         // emulate numRows for Oracle.  yuck.
-        if ($this->options['optimize'] == 'portability' &&
-            $result === $this->last_stmt) {
-            $countquery = "SELECT COUNT(*) FROM (".$this->last_query.")";
+        if ($this->options['portability'] & DB_PORTABILITY_NUMROWS &&
+            $result === $this->last_stmt)
+        {
+            $countquery = 'SELECT COUNT(*) FROM ('.$this->last_query.')';
             $save_query = $this->last_query;
             $save_stmt = $this->last_stmt;
-            $count = $this->query($countquery);
+
+            if (count($this->_data)) {
+                $smt = $this->prepare('SELECT COUNT(*) FROM ('.$this->last_query.')');
+                $count = $this->execute($smt, $this->_data);
+            } else {
+                $count =& $this->query($countquery);
+            }
+
             if (DB::isError($count) ||
                 DB::isError($row = $count->fetchRow(DB_FETCHMODE_ORDERED)))
             {
@@ -337,36 +363,67 @@ class DB_oci8 extends DB_common
     // {{{ prepare()
 
     /**
-     * Prepares a query for multiple execution with execute().  With
-     * oci8, this is emulated.
-     * @param $query query to be prepared
+     * Prepares a query for multiple execution with execute().
      *
-     * @return DB statement resource
+     * With oci8, this is emulated.
+     *
+     * prepare() requires a generic query as string like <code>
+     *    INSERT INTO numbers VALUES (?, ?, ?)
+     * </code>.  The <kbd>?</kbd> characters are placeholders.
+     *
+     * Three types of placeholders can be used:
+     *   + <kbd>?</kbd>  a quoted scalar value, i.e. strings, integers
+     *   + <kbd>!</kbd>  value is inserted 'as is'
+     *   + <kbd>&</kbd>  requires a file name.  The file's contents get
+     *                     inserted into the query (i.e. saving binary
+     *                     data in a db)
+     *
+     * Use backslashes to escape placeholder characters if you don't want
+     * them to be interpreted as placeholders.  Example: <code>
+     *    "UPDATE foo SET col=? WHERE col='over \& under'"
+     * </code>
+     *
+     * @param string $query query to be prepared
+     * @return mixed DB statement resource on success. DB_Error on failure.
      */
     function prepare($query)
     {
-        $tokens = split('[\&\?]', $query);
-        $token = 0;
-        $types = array();
-        for ($i = 0; $i < strlen($query); $i++) {
-            switch ($query[$i]) {
+        $tokens   = preg_split('/((?<!\\\)[&?!])/', $query, -1,
+                               PREG_SPLIT_DELIM_CAPTURE);
+        $binds    = count($tokens) - 1;
+        $token    = 0;
+        $types    = array();
+        $newquery = '';
+
+        foreach ($tokens as $key => $val) {
+            switch ($val) {
                 case '?':
                     $types[$token++] = DB_PARAM_SCALAR;
+                    unset($tokens[$key]);
                     break;
                 case '&':
                     $types[$token++] = DB_PARAM_OPAQUE;
+                    unset($tokens[$key]);
                     break;
+                case '!':
+                    $types[$token++] = DB_PARAM_MISC;
+                    unset($tokens[$key]);
+                    break;
+                default:
+                    $tokens[$key] = preg_replace('/\\\([&?!])/', "\\1", $val);
+                    if ($key != $binds) {
+                        $newquery .= $tokens[$key] . ':bind' . $token;
+                    } else {
+                        $newquery .= $tokens[$key];
+                    }
             }
         }
-        $binds = sizeof($tokens) - 1;
-        $newquery = '';
-        for ($i = 0; $i < $binds; $i++) {
-            $newquery .= $tokens[$i] . ":bind" . $i;
-        }
-        $newquery .= $tokens[$i];
+
         $this->last_query = $query;
         $newquery = $this->modifyQuery($newquery);
-        $stmt = @OCIParse($this->connection, $newquery);
+        if (!$stmt = @OCIParse($this->connection, $newquery)) {
+            return $this->oci8RaiseError();
+        }
         $this->prepare_types[$stmt] = $types;
         $this->manip_query[(int)$stmt] = DB::isManip($query);
         return $stmt;
@@ -378,54 +435,74 @@ class DB_oci8 extends DB_common
     /**
      * Executes a DB statement prepared with prepare().
      *
-     * @param $stmt a DB statement resource (returned from prepare())
-     * @param $data data to be used in execution of the statement
-     *
+     * @param resource  $stmt  a DB statement resource returned from prepare()
+     * @param mixed  $data  array, string or numeric data to be used in
+     *                      execution of the statement.  Quantity of items
+     *                      passed must match quantity of placeholders in
+     *                      query:  meaning 1 for non-array items or the
+     *                      quantity of elements in the array.
      * @return int returns an oci8 result resource for successful
      * SELECT queries, DB_OK for other successful queries.  A DB error
      * code is returned on failure.
+     * @see DB_oci::prepare()
      */
-    function execute($stmt, $data = false)
+    function &execute($stmt, $data = array())
     {
-        $types=&$this->prepare_types[$stmt];
-        if (($size = sizeof($types)) != sizeof($data)) {
-            return $this->raiseError(DB_ERROR_MISMATCH);
+        if (!is_array($data)) {
+            $data = array($data);
         }
-        for ($i = 0; $i < $size; $i++) {
-            if (is_array($data)) {
-                $pdata[$i] = &$data[$i];
-            }
-            else {
-                $pdata[$i] = &$data;
-            }
-            if ($types[$i] == DB_PARAM_OPAQUE) {
-                $fp = fopen($pdata[$i], "r");
-                $pdata[$i] = '';
-                if ($fp) {
-                    while (($buf = fread($fp, 4096)) != false) {
-                        $pdata[$i] .= $buf;
-                    }
+
+        $this->_data = $data;
+
+        $types =& $this->prepare_types[$stmt];
+        if (count($types) != count($data)) {
+            $tmp =& $this->raiseError(DB_ERROR_MISMATCH);
+            return $tmp;
+        }
+
+        $i = 0;
+        foreach ($data as $key => $value) {
+            if ($types[$i] == DB_PARAM_MISC) {
+                /*
+                 * Oracle doesn't seem to have the ability to pass a
+                 * parameter along unchanged, so strip off quotes from start
+                 * and end, plus turn two single quotes to one single quote,
+                 * in order to avoid the quotes getting escaped by
+                 * Oracle and ending up in the database.
+                 */
+                $data[$key] = preg_replace("/^'(.*)'$/", "\\1", $data[$key]);
+                $data[$key] = str_replace("''", "'", $data[$key]);
+            } elseif ($types[$i] == DB_PARAM_OPAQUE) {
+                $fp = @fopen($data[$key], 'rb');
+                if (!$fp) {
+                    $tmp =& $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
+                    return $tmp;
                 }
+                $data[$key] = fread($fp, filesize($data[$key]));
+                fclose($fp);
             }
-            if (!@OCIBindByName($stmt, ":bind" . $i, $pdata[$i], -1)) {
-                return $this->oci8RaiseError($stmt);
+            if (!@OCIBindByName($stmt, ':bind' . $i, $data[$key], -1)) {
+                $tmp = $this->oci8RaiseError($stmt);
+                return $tmp;
             }
+            $i++;
         }
         if ($this->autoCommit) {
             $success = @OCIExecute($stmt, OCI_COMMIT_ON_SUCCESS);
-        }
-        else {
+        } else {
             $success = @OCIExecute($stmt, OCI_DEFAULT);
         }
         if (!$success) {
-            return $this->oci8RaiseError($stmt);
+            $tmp = $this->oci8RaiseError($stmt);
+            return $tmp;
         }
         $this->last_stmt = $stmt;
         if ($this->manip_query[(int)$stmt]) {
-            return DB_OK;
+            $tmp = DB_OK;
         } else {
-            return new DB_result($this, $stmt);
+            $tmp =& new DB_result($this, $stmt);
         }
+        return $tmp;
     }
 
     // }}}
@@ -505,7 +582,7 @@ class DB_oci8 extends DB_common
         // "SELECT 2+2" must be "SELECT 2+2 FROM dual" in Oracle
         if (preg_match('/^\s*SELECT/i', $query) &&
             !preg_match('/\sFROM\s/i', $query)) {
-            $query .= " FROM dual";
+            $query .= ' FROM dual';
         }
         return $query;
     }
@@ -514,34 +591,36 @@ class DB_oci8 extends DB_common
     // {{{ modifyLimitQuery()
 
     /**
-    * Emulate the row limit support altering the query
-    *
-    * @param string $query The query to treat
-    * @param int    $from  The row to start to fetch from
-    * @param int    $count The offset
-    * @return string The modified query
-    *
-    * @author Tomas V.V.Cox <cox@idecnet.com>
-    */
+     * Emulate the row limit support altering the query
+     *
+     * @param string $query The query to treat
+     * @param int    $from  The row to start to fetch from
+     * @param int    $count The offset
+     * @return string The modified query
+     *
+     * @author Tomas V.V.Cox <cox@idecnet.com>
+     */
     function modifyLimitQuery($query, $from, $count)
     {
         // Let Oracle return the name of the columns instead of
         // coding a "home" SQL parser
         $q_fields = "SELECT * FROM ($query) WHERE NULL = NULL";
-        if (!$result = OCIParse($this->connection, $q_fields)) {
+        if (!$result = @OCIParse($this->connection, $q_fields)) {
+            $this->last_query = $q_fields;
             return $this->oci8RaiseError();
         }
-        if (!OCIExecute($result, OCI_DEFAULT)) {
+        if (!@OCIExecute($result, OCI_DEFAULT)) {
+            $this->last_query = $q_fields;
             return $this->oci8RaiseError($result);
         }
         $ncols = OCINumCols($result);
         $cols  = array();
         for ( $i = 1; $i <= $ncols; $i++ ) {
-            $cols[] = OCIColumnName($result, $i);
+            $cols[] = '"' . OCIColumnName($result, $i) . '"';
         }
         $fields = implode(', ', $cols);
         // XXX Test that (tip by John Lim)
-        //if(preg_match('/^\s*SELECT\s+/is', $query, $match)) {
+        //if (preg_match('/^\s*SELECT\s+/is', $query, $match)) {
         //    // Introduce the FIRST_ROWS Oracle query optimizer
         //    $query = substr($query, strlen($match[0]), strlen($query));
         //    $query = "SELECT /* +FIRST_ROWS */ " . $query;
@@ -550,12 +629,11 @@ class DB_oci8 extends DB_common
         // Construct the query
         // more at: http://marc.theaimsgroup.com/?l=php-db&m=99831958101212&w=2
         // Perhaps this could be optimized with the use of Unions
-        $from += 1; // in Oracle rownum starts at 1
         $query = "SELECT $fields FROM".
                  "  (SELECT rownum as linenum, $fields FROM".
                  "      ($query)".
-                 "  WHERE rownum <= ". ($from + $count) .
-                 ") WHERE linenum >= $from";
+                 '  WHERE rownum <= '. ($from + $count) .
+                 ') WHERE linenum >= ' . ++$from;
         return $query;
     }
 
@@ -563,17 +641,17 @@ class DB_oci8 extends DB_common
     // {{{ nextId()
 
     /**
-     * Get the next value in a sequence.  We emulate sequences
-     * for MySQL.  Will create the sequence if it does not exist.
+     * Returns the next free id in a sequence
      *
+     * @param string  $seq_name  name of the sequence
+     * @param boolean $ondemand  when true, the seqence is automatically
+     *                           created if it does not exist
+     *
+     * @return int  the next id number in the sequence.  DB_Error if problem.
+     *
+     * @internal
+     * @see DB_common::nextID()
      * @access public
-     *
-     * @param $seq_name the name of the sequence
-     *
-     * @param $ondemand whether to create the sequence table on demand
-     * (default is true)
-     *
-     * @return a sequence integer, or a DB error
      */
     function nextId($seq_name, $ondemand = true)
     {
@@ -581,7 +659,7 @@ class DB_oci8 extends DB_common
         $repeat = 0;
         do {
             $this->expectError(DB_ERROR_NOSUCHTABLE);
-            $result = $this->query("SELECT ${seqname}.nextval FROM dual");
+            $result =& $this->query("SELECT ${seqname}.nextval FROM dual");
             $this->popExpect();
             if ($ondemand && DB::isError($result) &&
                 $result->getCode() == DB_ERROR_NOSUCHTABLE) {
@@ -601,9 +679,18 @@ class DB_oci8 extends DB_common
         return $arr[0];
     }
 
-    // }}}
-    // {{{ createSequence()
-
+    /**
+     * Creates a new sequence
+     *
+     * @param string $seq_name  name of the new sequence
+     *
+     * @return int  DB_OK on success.  A DB_Error object is returned if
+     *              problems arise.
+     *
+     * @internal
+     * @see DB_common::createSequence()
+     * @access public
+     */
     function createSequence($seq_name)
     {
         $seqname = $this->getSequenceName($seq_name);
@@ -613,6 +700,17 @@ class DB_oci8 extends DB_common
     // }}}
     // {{{ dropSequence()
 
+    /**
+     * Deletes a sequence
+     *
+     * @param string $seq_name  name of the sequence to be deleted
+     *
+     * @return int  DB_OK on success.  DB_Error if problems.
+     *
+     * @internal
+     * @see DB_common::dropSequence()
+     * @access public
+     */
     function dropSequence($seq_name)
     {
         $seqname = $this->getSequenceName($seq_name);
@@ -622,6 +720,16 @@ class DB_oci8 extends DB_common
     // }}}
     // {{{ oci8RaiseError()
 
+    /**
+     * Gather information about an error, then use that info to create a
+     * DB error object and finally return that object.
+     *
+     * @param  integer  $errno  PEAR error number (usually a DB constant) if
+     *                          manually raising an error
+     * @return object  DB error object
+     * @see DB_common::errorCode()
+     * @see DB_common::raiseError()
+     */
     function oci8RaiseError($errno = null)
     {
         if ($errno === null) {
@@ -640,120 +748,113 @@ class DB_oci8 extends DB_common
     // {{{ getSpecialQuery()
 
     /**
-    * Returns the query needed to get some backend info
-    * @param string $type What kind of info you want to retrieve
-    * @return string The SQL query string
-    */
+     * Returns the query needed to get some backend info
+     * @param string $type What kind of info you want to retrieve
+     * @return string The SQL query string
+     */
     function getSpecialQuery($type)
     {
         switch ($type) {
             case 'tables':
-                $sql = "SELECT table_name FROM user_tables";
-                break;
+                return 'SELECT table_name FROM user_tables';
             default:
                 return null;
         }
-        return $sql;
     }
 
     // }}}
+    // {{{ tableInfo()
 
+    /**
+     * Returns information about a table or a result set.
+     *
+     * NOTE: only supports 'table' and 'flags' if <var>$result</var>
+     * is a table name.
+     *
+     * NOTE: flags won't contain index information.
+     *
+     * @param object|string  $result  DB_result object from a query or a
+     *                                string containing the name of a table
+     * @param int            $mode    a valid tableInfo mode
+     * @return array  an associative array with the information requested
+     *                or an error object if something is wrong
+     * @access public
+     * @internal
+     * @see DB_common::tableInfo()
+     */
     function tableInfo($result, $mode = null)
     {
-        $count = 0;
-        $res   = array();
-        /*
-         * depending on $mode, metadata returns the following values:
-         *
-         * - mode is false (default):
-         * $res[]:
-         *   [0]["table"]       table name
-         *   [0]["name"]        field name
-         *   [0]["type"]        field type
-         *   [0]["len"]         field length
-         *   [0]["nullable"]    field can be null (boolean)
-         *   [0]["format"]      field precision if NUMBER
-         *   [0]["default"]     field default value
-         *
-         * - mode is DB_TABLEINFO_ORDER
-         * $res[]:
-         *   ["num_fields"]     number of fields
-         *   [0]["table"]       table name
-         *   [0]["name"]        field name
-         *   [0]["type"]        field type
-         *   [0]["len"]         field length
-         *   [0]["nullable"]    field can be null (boolean)
-         *   [0]["format"]      field precision if NUMBER
-         *   [0]["default"]     field default value
-         *   ['order'][field name] index of field named "field name"
-         *   The last one is used, if you have a field name, but no index.
-         *   Test:  if (isset($result['order']['myfield'])) { ...
-         *
-         * - mode is DB_TABLEINFO_ORDERTABLE
-         *    the same as above. but additionally
-         *   ["ordertable"][table name][field name] index of field
-         *      named "field name"
-         *
-         *      this is, because if you have fields from different
-         *      tables with the same field name * they override each
-         *      other with DB_TABLEINFO_ORDER
-         *
-         *      you can combine DB_TABLEINFO_ORDER and
-         *      DB_TABLEINFO_ORDERTABLE with DB_TABLEINFO_ORDER |
-         *      DB_TABLEINFO_ORDERTABLE * or with DB_TABLEINFO_FULL
-         */
+        if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE) {
+            $case_func = 'strtolower';
+        } else {
+            $case_func = 'strval';
+        }
 
-        // if $result is a string, we collect info for a table only
         if (is_string($result)) {
+            /*
+             * Probably received a table name.
+             * Create a result resource identifier.
+             */
             $result = strtoupper($result);
-            $q_fields = "select column_name, data_type, data_length, data_precision,
-                         nullable, data_default from user_tab_columns
-                         where table_name='$result' order by column_id";
-            if (!$stmt = OCIParse($this->connection, $q_fields)) {
-                return $this->oci8RaiseError();
+            $q_fields = 'SELECT column_name, data_type, data_length, '
+                        . 'nullable '
+                        . 'FROM user_tab_columns '
+                        . "WHERE table_name='$result' ORDER BY column_id";
+
+            $this->last_query = $q_fields;
+
+            if (!$stmt = @OCIParse($this->connection, $q_fields)) {
+                return $this->oci8RaiseError(DB_ERROR_NEED_MORE_DATA);
             }
-            if (!OCIExecute($stmt, OCI_DEFAULT)) {
+            if (!@OCIExecute($stmt, OCI_DEFAULT)) {
                 return $this->oci8RaiseError($stmt);
             }
-            while (OCIFetch($stmt)) {
-                $res[$count]['table']       = $result;
-                $res[$count]['name']        = @OCIResult($stmt, 1);
-                $res[$count]['type']        = @OCIResult($stmt, 2);
-                $res[$count]['len']         = @OCIResult($stmt, 3);
-                $res[$count]['format']      = @OCIResult($stmt, 4);
-                $res[$count]['nullable']    = (@OCIResult($stmt, 5) == 'Y') ? true : false;
-                $res[$count]['default']     = @OCIResult($stmt, 6);
+
+            $i = 0;
+            while (@OCIFetch($stmt)) {
+                $res[$i]['table'] = $case_func($result);
+                $res[$i]['name']  = $case_func(@OCIResult($stmt, 1));
+                $res[$i]['type']  = @OCIResult($stmt, 2);
+                $res[$i]['len']   = @OCIResult($stmt, 3);
+                $res[$i]['flags'] = (@OCIResult($stmt, 4) == 'N') ? 'not_null' : '';
+
                 if ($mode & DB_TABLEINFO_ORDER) {
-                    $res['order'][$res[$count]['name']] = $count;
+                    $res['order'][$res[$i]['name']] = $i;
                 }
                 if ($mode & DB_TABLEINFO_ORDERTABLE) {
-                    $res['ordertable'][$res[$count]['table']][$res[$count]['name']] = $count;
+                    $res['ordertable'][$res[$i]['table']][$res[$i]['name']] = $i;
                 }
-                $count++;
+                $i++;
             }
-            $res['num_fields'] = $count;
+
+            if ($mode) {
+                $res['num_fields'] = $i;
+            }
             @OCIFreeStatement($stmt);
-        } else { // else we want information about a resultset
+
+        } else {
+            if (isset($result->result)) {
+                /*
+                 * Probably received a result object.
+                 * Extract the result resource identifier.
+                 */
+                $result = $result->result;
+            } else {
+                /*
+                 * ELSE, probably received a result resource identifier.
+                 * Depricated.  Here for compatibility only.
+                 */
+            }
+
             if ($result === $this->last_stmt) {
                 $count = @OCINumCols($result);
+
                 for ($i=0; $i<$count; $i++) {
-                    $res[$i]['name']  = @OCIColumnName($result, $i+1);
+                    $res[$i]['table'] = '';
+                    $res[$i]['name']  = $case_func(@OCIColumnName($result, $i+1));
                     $res[$i]['type']  = @OCIColumnType($result, $i+1);
                     $res[$i]['len']   = @OCIColumnSize($result, $i+1);
-
-                    $q_fields = "select table_name, data_precision, nullable, data_default from user_tab_columns where column_name='".$res[$i]['name']."'";
-                    if (!$stmt = OCIParse($this->connection, $q_fields)) {
-                        return $this->oci8RaiseError();
-                    }
-                    if (!OCIExecute($stmt, OCI_DEFAULT)) {
-                        return $this->oci8RaiseError($stmt);
-                    }
-                    OCIFetch($stmt);
-                    $res[$i]['table']       = OCIResult($stmt, 1);
-                    $res[$i]['format']      = OCIResult($stmt, 2);
-                    $res[$i]['nullable']    = (OCIResult($stmt, 3) == 'Y') ? true : false;
-                    $res[$i]['default']     = OCIResult($stmt, 4);
-                    OCIFreeStatement($stmt);
+                    $res[$i]['flags'] = '';
 
                     if ($mode & DB_TABLEINFO_ORDER) {
                         $res['order'][$res[$i]['name']] = $i;
@@ -762,7 +863,10 @@ class DB_oci8 extends DB_common
                         $res['ordertable'][$res[$i]['table']][$res[$i]['name']] = $i;
                     }
                 }
-                $res['num_fields'] = $count;
+
+                if ($mode) {
+                    $res['num_fields'] = $count;
+                }
 
             } else {
                 return $this->raiseError(DB_ERROR_NOT_CAPABLE);
@@ -770,9 +874,16 @@ class DB_oci8 extends DB_common
         }
         return $res;
     }
+
+    // }}}
+
 }
-// Local variables:
-// tab-width: 4
-// c-basic-offset: 4
-// End:
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ */
+
 ?>

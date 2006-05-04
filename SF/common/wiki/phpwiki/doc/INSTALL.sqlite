@@ -13,22 +13,17 @@ To setup the initial tables you currently need the external sqlite
 executable client. On Microsoft Windows download the sqlite.exe binary
 from http://www.sqlite.org/sqlite.zip
 We work on a solution to setup the database on a virgin wiki 
-automatically, so that the sqlite binary is needed anymore.
+automatically, so that the sqlite binary is not needed anymore.
 
-sqlite /tmp/phpwiki-sqlite.db < schemas/sqlite.sql
+sqlite /tmp/phpwiki-sqlite.db < schemas/sqlite-initialize.sql
 
-Edit $DBParams in index.php to reflect your settings.
+Edit the DATABASE settings in config/config.ini to reflect your settings.
 
-  a) $DBParams['dbtype'] should be set to 'SQL'.
-      ADODB not yet supported. This is planned for the 1.4.0 release.
-  b) $DBParams['dsn'] should be set to something like
+  a) DATABASE_TYPE must be set to 'SQL'.
+     ADODB not yet. This is planned for the 1.4.0 release.
 
-	$DBParams['directory'] = "/tmp";
-	$DBParams['dsn'] = array (
-		  'phptype'   => "sqlite",
-		  'database'  => $DBParams['directory'] . "/phpwiki-sqlite.db",
-		  'mode'      => 0664
-		  );
+  b) DATABASE_DSN should be set to something like
+     DATABASE_DSN = "sqlite:////tmp/phpwiki-sqlite.db?mode=0664&persistent=1"
 
 That's it. PhpWiki should now work.
 
@@ -43,4 +38,4 @@ sqlite /tmp/phpwiki-sqlite.db < dump.sql
 Authors: 
 ReiniUrban (phpwiki developer) and Matthew Palmer (phpwiki debian maintainer)
 
-$Id: INSTALL.sqlite 1422 2005-04-12 13:33:49Z guerin $
+$Id: INSTALL.sqlite,v 1.7 2004/07/25 17:46:44 dfrankow Exp $

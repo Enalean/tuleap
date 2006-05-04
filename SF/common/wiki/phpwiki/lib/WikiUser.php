@@ -1,5 +1,5 @@
 <?php //-*-php-*-
-rcs_id('$Id: WikiUser.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: WikiUser.php,v 1.65 2005/06/05 05:38:02 rurban Exp $');
 
 // It is anticipated that when userid support is added to phpwiki,
 // this object will hold much more information (e-mail,
@@ -23,6 +23,9 @@ define('WIKIAUTH_USER', 2);     // real auth from a database/file/server.
 define('WIKIAUTH_ADMIN', 10);  // Wiki Admin
 define('WIKIAUTH_UNOBTAINABLE', 100);  // Permissions that no user can achieve
 
+if (!defined('COOKIE_EXPIRATION_DAYS')) define('COOKIE_EXPIRATION_DAYS', 365);
+if (!defined('COOKIE_DOMAIN'))          define('COOKIE_DOMAIN', '/');
+
 $UserPreferences = array(
                          'userid'        => new _UserPreference(''), // really store this also?
                          'passwd'        => new _UserPreference(''),
@@ -35,7 +38,9 @@ $UserPreferences = array(
                          'noLinkIcons'   => new _UserPreference_bool(),
                          'editHeight'    => new _UserPreference_int(22, 5, 80),
                          'timeOffset'    => new _UserPreference_numeric(0, -26, 26),
-                         'relativeDates' => new _UserPreference_bool()
+                         'relativeDates' => new _UserPreference_bool(),
+                         'googleLink'    => new _UserPreference_bool(), // 1.3.10
+                         'doubleClickEdit' => new _UserPreference_bool(), // 1.3.11
                          );
 
 function WikiUserClassname() {
@@ -157,6 +162,12 @@ class WikiUser {
         return $this->_level >= $require_level;
     }
 
+    function isValidName ($userid = false) {
+        if (!$userid)
+            $userid = $this->_userid;
+        return preg_match("/^[\w\.@\-]+$/",$userid) and strlen($userid) < 32;
+    }
+
     function AuthCheck ($postargs) {
         // Normalize args, and extract.
         $keys = array('userid', 'passwd', 'require_level', 'login', 'logout',
@@ -173,6 +184,9 @@ class WikiUser {
         elseif (!$login && !$userid)
             return false;       // Nothing to do?
 
+        if (!$this->isValidName($userid))
+            return _("Invalid username.");
+
         $authlevel = $this->_pwcheck($userid, $passwd);
         if (!$authlevel)
             return _("Invalid password or userid.");
@@ -180,7 +194,7 @@ class WikiUser {
             return _("Insufficient permissions.");
 
         // Successful login.
-        $user = new WikiUser($this->_request,$userid,$authlevel);
+        $user = new WikiUser($this->_request, $userid, $authlevel);
         return $user;
     }
 
@@ -201,9 +215,10 @@ class WikiUser {
                               compact('pagename', 'userid', 'require_level',
                                       'fail_message', 'pass_required'));
         if ($seperate_page) {
-            $top = new Template('html', $request,
-                                array('TITLE' => _("Sign In")));
-            return $top->printExpansion($login);
+            $request->discardOutput();
+            $page = $request->getPage($pagename);
+            $revision = $page->getCurrentRevision();
+            return GeneratePage($login,_("Sign In"),$revision);
         } else {
             return $login;
         }
@@ -230,7 +245,7 @@ class WikiUser {
                     // maybe we forgot to enable ENCRYPTED_PASSWD?
                     if ( function_exists('crypt')
                          && crypt($passwd, ADMIN_PASSWD) == ADMIN_PASSWD ) {
-                        trigger_error(_("You forgot to set ENCRYPTED_PASSWD to true. Please update your /index.php"),
+                        trigger_error(_("You forgot to set ENCRYPTED_PASSWD to true. Please update your config/config.ini"),
                                       E_USER_WARNING);
                         return WIKIAUTH_ADMIN;
                     }
@@ -249,6 +264,10 @@ class WikiUser {
         // WikiDB_User DB/File Authentication from $DBAuthParams
         // Check if we have the user. If not try other methods.
         if (ALLOW_USER_LOGIN) { // && !empty($passwd)) {
+            if (!$this->isValidName($userid)) {
+                trigger_error(_("Invalid username."), E_USER_WARNING);
+                return false;
+            }
             $request = $this->_request;
             // first check if the user is known
             if ($this->exists($userid)) {
@@ -256,7 +275,7 @@ class WikiUser {
                 return ($this->checkPassword($passwd)) ? WIKIAUTH_USER : false;
             } else {
                 // else try others such as LDAP authentication:
-                if (ALLOW_LDAP_LOGIN && !empty($passwd)) {
+                if (ALLOW_LDAP_LOGIN && defined(LDAP_AUTH_HOST) && !empty($passwd) && !strstr($userid,'*')) {
                     if ($ldap = ldap_connect(LDAP_AUTH_HOST)) { // must be a valid LDAP server!
                         $r = @ldap_bind($ldap); // this is an anonymous bind
                         $st_search = "uid=$userid";
@@ -344,7 +363,7 @@ class WikiUser {
             if ($this->isSignedIn()) {
                 if ($this->isAdmin())
                     $prefs->set('passwd', '');
-                // already stored in index.php, and it might be
+                // already stored in config/config.ini, and it might be
                 // plaintext! well oh well
                 if ($homepage = $this->homePage()) {
                     // check for page revision 0
@@ -495,17 +514,22 @@ class WikiUser {
         if (! $this->mayChangePass() ) {
             trigger_error(sprintf("Attempt to change an external password for '%s'. Not allowed!",
                                   $this->_userid), E_USER_ERROR);
-            return;
+            return false;
         }
         if ($passwd2 && $passwd2 != $newpasswd) {
             trigger_error("The second password must be the same as the first to change it",
                           E_USER_ERROR);
-            return;
+            return false;
         }
+        if (!$this->isAuthenticated()) return false;
+
         $prefs = $this->getPreferences();
-        //$oldpasswd = $prefs->get('passwd');
-        $prefs->set('passwd', crypt($newpasswd));
+        if (ENCRYPTED_PASSWD)
+            $prefs->set('passwd', crypt($newpasswd));
+        else 
+            $prefs->set('passwd', $newpasswd);
         $this->setPreferences($prefs);
+        return true;
     }
 
     function mayChangePass() {
@@ -639,9 +663,9 @@ extends _UserPreference
     }
 
     function update ($newvalue) {
-        global $Theme;
+        global $WikiTheme;
         include_once($this->_themefile($newvalue));
-        if (empty($Theme))
+        if (empty($WikiTheme))
             include_once($this->_themefile(THEME));
     }
 
@@ -717,11 +741,60 @@ class UserPreferences {
     }
 
     function hash () {
-        return hash($this->_prefs);
+        return wikihash($this->_prefs);
     }
 }
 
-// $Log$
+// $Log: WikiUser.php,v $
+// Revision 1.65  2005/06/05 05:38:02  rurban
+// Default ENABLE_DOUBLECLICKEDIT = false. Moved to UserPreferences
+//
+// Revision 1.64  2005/02/08 13:25:50  rurban
+// encrypt password. fix strict logic.
+// both bugs reported by Mikhail Vladimirov
+//
+// Revision 1.63  2005/01/21 14:07:50  rurban
+// reformatting
+//
+// Revision 1.62  2004/11/21 11:59:16  rurban
+// remove final \n to be ob_cache independent
+//
+// Revision 1.61  2004/10/21 21:02:04  rurban
+// fix seperate page login
+//
+// Revision 1.60  2004/06/15 09:15:52  rurban
+// IMPORTANT: fixed passwd handling for passwords stored in prefs:
+//   fix encrypted usage, actually store and retrieve them from db
+//   fix bogologin with passwd set.
+// fix php crashes with call-time pass-by-reference (references wrongly used
+//   in declaration AND call). This affected mainly Apache2 and IIS.
+//   (Thanks to John Cole to detect this!)
+//
+// Revision 1.59  2004/06/14 11:31:36  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.58  2004/06/04 20:32:53  rurban
+// Several locale related improvements suggested by Pierrick Meignen
+// LDAP fix by John Cole
+// reanable admin check without ENABLE_PAGEPERM in the admin plugins
+//
+// Revision 1.57  2004/06/04 12:40:21  rurban
+// Restrict valid usernames to prevent from attacks against external auth or compromise
+// possible holes.
+// Fix various WikiUser old issues with default IMAP,LDAP,POP3 configs. Removed these.
+// Fxied more warnings
+//
+// Revision 1.56  2004/06/03 12:36:03  rurban
+// fix eval warning on signin
+//
+// Revision 1.55  2004/06/03 09:39:51  rurban
+// fix LDAP injection (wildcard in username) detected by Steve Christey, MITRE
+//
 // Revision 1.54  2004/04/29 17:18:19  zorloc
 // Fixes permission failure issues.  With PagePermissions and Disabled Actions when user did not have permission WIKIAUTH_FORBIDDEN was returned.  In WikiUser this was ok because WIKIAUTH_FORBIDDEN had a value of 11 -- thus no user could perform that action.  But WikiUserNew has a WIKIAUTH_FORBIDDEN value of -1 -- thus a user without sufficent permission to do anything.  The solution is a new high value permission level (WIKIAUTH_UNOBTAINABLE) to be the default level for access failure.
 //

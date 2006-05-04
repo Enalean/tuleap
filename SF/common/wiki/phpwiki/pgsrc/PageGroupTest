@@ -1,0 +1,34 @@
+Date: Tue, 30 Nov 2004 21:46:53 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre-20041130)
+X-Rcs-Id: $Id: PageGroupTest,v 1.9 2004/12/05 11:15:41 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageGroupTest;
+  pgsrc_version="2 $Revision: 1.9 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+PageGroupTest is a test of the ~PageGroup plugin.
+
+Click the first page to start the tour of this experimental plugin.
+
+!Table of Contents
+# [PageGroupTestOne]
+# [PageGroupTestTwo]
+# [PageGroupTestThree]
+# [PageGroupTestFour]
+
+! TODO
+
+* Support ~[ name | page ~] links
+* Support Previous, Next ... image buttons
+
+%%% %%% %%% %%%
+
+----
+
+For reference, here are all the pages that link to PageGroupTest
+(note that one is missing):
+
+<?plugin BackLinks page=PageGroupTest ?>

@@ -1,8 +1,8 @@
 <?php // -*-html-*-
-  rcs_id('$Id: browse-footer.tmpl 1422 2005-04-12 13:33:49Z guerin $');
+  rcs_id('$Id: browse-footer.tmpl,v 1.4 2004/06/14 11:26:52 rurban Exp $');
 ?>
 <hr class="printer" noshade="noshade" />
-<p class="editdate"><?= $Theme->getLastModifiedMessage($revision) ?></p>
+<p class="editdate"><?= $WikiTheme->getOwnerMessage($page) ?>  <?= $WikiTheme->getLastModifiedMessage($revision) ?> <?= $WikiTheme->getAuthorMessage($revision) ?></p>
 <?php
 global $HIDE_TOOLBARS;
 if (!$HIDE_TOOLBARS) {

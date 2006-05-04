@@ -1,0 +1,15 @@
+Date: Sat, 5 Jun 2004 16:49:53 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: %C9diterLeContenu,v 1.2 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=%C9diterLeContenu;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Toute les pages (sauf les résultats de recherche) ont un lien Éditer en bas. 
+Vous pouvez éditer la page que vous lisez en cliquant sur ce lien.
+----
+DocumentationDePhpWiki

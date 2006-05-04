@@ -1,0 +1,36 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: ChercherUnePage,v 1.3 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=ChercherUnePage;
+  pgsrc_version="2 $Revision: 1.3 $";
+  flags=PAGE_LOCKED;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Voici quelques bons points de départ pour la navigation.
+
+* CommentUtiliserUnWiki vous donne quelques informations rapides sur le marquage Wiki.
+* Les DernièresModifs sont enregistrées automatiquement.
+* DétailsTechniques sur la navigation et l'édition sur ce serveur.
+
+Voici une recherche sur les titres. Essayez quelque chose comme ''wiki'' ou ''sandwich''.
+
+<?plugin-form TitleSearch?>
+
+Utilisez ce qui suit pour une recherche en texte intégral. Ceci prend quelques secondes. 
+Les résultats montreront toutes les lignes de chaque page contenant une correspondance.
+
+<?plugin-form FullTextSearch?>
+
+Dans une recherche !PagesFloues les titres de toutes les pages sont examinés pour trouver 
+ceux qui s'épellent ou sonnent de façon similaire (en anglais).
+
+<?plugin-form FuzzyPages?>
+------
+! Trucs
+Séparez les mots par des espaces.
+__Tous__ les mots doivent correspondre (c'est le ET logique)%%%
+Pour exclure un mot, faites-le précéder d'un '-'.%%%
+Exemple : 'wiki text -php' recherche toutes les pages contenant les mots 'wiki'
+__et__ 'text', mais ne contenant __pas__ le mot 'php'.

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: _BackendInfo.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: _BackendInfo.php,v 1.24 2005/01/29 19:47:43 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -36,7 +36,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.24 $");
     }
 
     function getDefaultArguments() {
@@ -91,14 +91,19 @@ extends WikiPlugin
         $user = $request->getUser();
 
         foreach ($data as $key => $val) {
-            if ($key == 'passwd' and !$user->isAdmin())
+            if (is_integer($key)) {
+            	;
+            } elseif ($key == 'passwd' and !$user->isAdmin()) {
                 $data[$key] = $val ? _("<not displayed>") : _("<empty>");
-            elseif ($key == '_cached_html') {
+            } elseif ($key and $key == '_cached_html') {
                 $val = TransformedText::unpack($val);
                 ob_start();
                 print_r($val);
                 $data[$key] = HTML::pre(ob_get_contents());
                 ob_end_clean();
+            }
+            elseif (is_bool($val)) {
+            	$data[$key] = $val ? "<true>" : "<false>";
             }
             elseif (is_string($val) && (substr($val, 0, 2) == 'a:')) {
                 // how to indent this table?
@@ -117,7 +122,7 @@ extends WikiPlugin
                                                 'cellspacing' => 0),
                                           $this->_showhash(false, $val));
             }
-            elseif ($key == '%content') {
+            elseif ($key and $key == '%content') {
                 if ($val === true)
                     $val = '<true>';
                 elseif (strlen($val) > 40)
@@ -127,7 +132,6 @@ extends WikiPlugin
         }
         unset($data['%pagedata']); // problem in backend
     }
-
             
     function _showhash ($heading, $hash, $pagename = '') {
         $rows = array();
@@ -153,7 +157,13 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: _BackendInfo.php,v $
+// Revision 1.24  2005/01/29 19:47:43  rurban
+// support bool
+//
+// Revision 1.23  2005/01/21 14:13:23  rurban
+// stabilize on numeric keys (strange php problem)
+//
 // Revision 1.22  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

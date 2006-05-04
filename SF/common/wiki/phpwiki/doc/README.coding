@@ -81,4 +81,4 @@ file, add the following to your .emacs file:
 See INSTALL.MacOSX for instructions on using Project Builder with
 PhpWiki and SourceForge.
 
-$Id: README.coding 1422 2005-04-12 13:33:49Z guerin $
+$Id: README.coding,v 1.5 2002/01/05 10:32:16 carstenklapp Exp $

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: WikiAdminChmod.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: WikiAdminChmod.php,v 1.14 2004/12/13 14:36:35 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
 
@@ -28,8 +28,6 @@ rcs_id('$Id: WikiAdminChmod.php 2691 2006-03-02 15:31:51Z guerin $');
  * Author:  Reini Urban <rurban@x-ray.at>
  *
  * KNOWN ISSUES:
- * Currently we must be Admin. Later we use PagePermissions authorization.
- *   (require_authority_for_post' => WIKIAUTH_ADMIN)
  * Requires PHP 4.2 so far.
  */
 require_once('lib/PageList.php');
@@ -48,19 +46,19 @@ extends WikiPlugin_WikiAdminSelect
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.14 $");
     }
 
     function getDefaultArguments() {
-        return array(
-                     /* Pages to exclude in listing */
-                     'exclude'  => '',
-                     /* Columns to include in listing */
-                     'info'     => 'pagename,perm,mtime,author',
-                     /* How to sort */
-                     'sortby'   => 'pagename',
-                     'limit'    => 0,
-                     );
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array(
+                   's' 		=> false,
+                   'perm' 	=> false,
+                   /* Columns to include in listing */
+                   'info'     => 'pagename,perm,mtime,author',
+                   ));
     }
 
     // todo: change permstring to some kind of default ACL hash. 
@@ -102,12 +100,10 @@ extends WikiPlugin_WikiAdminSelect
         
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
-        if (!empty($args['exclude']))
-            $exclude = explodePageList($args['exclude']);
-        else
-            $exclude = false;
+        $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
+        if (!$p) $p = $this->_list;
         $post_args = $request->getArg('admin_chmod');
         $next_action = 'select';
         $pages = array();
@@ -115,9 +111,8 @@ extends WikiPlugin_WikiAdminSelect
             $pages = $p;
         if ($p && $request->isPost() &&
             !empty($post_args['chmod']) && empty($post_args['cancel'])) {
-
-            // FIXME: check individual PagePermissions
-            if (!$request->_user->isAdmin()) {
+            // without individual PagePermissions:
+            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -137,12 +132,13 @@ extends WikiPlugin_WikiAdminSelect
         }
         if ($next_action == 'select' and empty($pages)) {
             // List all pages to select from.
-            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit']);
+            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], $args['exclude']);
         }
         if ($next_action == 'verify') {
             $args['info'] = "checkbox,pagename,perm,author,mtime";
         }
-        $pagelist = new PageList_Selectable($args['info'], $exclude);
+        $args['types'] = array('perm' => new _PageList_Column_chmod_perm('perm', _("Permission")));
+        $pagelist = new PageList_Selectable($args['info'], $args['exclude'], $args);
         $pagelist->addPageList($pages);
 
         $header = HTML::p();
@@ -169,8 +165,10 @@ extends WikiPlugin_WikiAdminSelect
                           HiddenInputs($request->getArgs(),
                                         false,
                                         array('admin_chmod')),
-                          HiddenInputs(array('admin_chmod[action]' => $next_action,
-                                             'require_authority_for_post' => WIKIAUTH_ADMIN)),
+                          HiddenInputs(array('admin_chmod[action]' => $next_action)),
+                          ENABLE_PAGEPERM
+                          ? ''
+                          : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
                           $buttons);
     }
 
@@ -186,18 +184,75 @@ extends WikiPlugin_WikiAdminSelect
         $checkbox = HTML::input(array('type' => 'checkbox',
                                       'name' => 'admin_chmod[updatechildren]',
                                       'value' => 1));
-        if ($post_args['updatechildren'])  $checkbox->setAttr('checked','checked');
-        $header->pushContent($checkbox,
+        if (!empty($post_args['updatechildren']))  $checkbox->setAttr('checked','checked');
+        $header->pushContent($checkbox, HTML::raw("&nbsp;"),
         	_("Propagate new permissions to all subpages?"),
         	HTML::raw("&nbsp;&nbsp;"),
         	HTML::em(_("(disable individual page permissions, enable inheritance)?")));
         $header->pushContent(HTML::hr(),HTML::p());
         return $header;
     }
-
 }
 
-// $Log$
+// conflicts with WikiAdminSetAcl
+class _PageList_Column_chmod_perm extends _PageList_Column {
+    function _getValue ($page_handle, &$revision_handle) {
+        $perm_array = pagePermissions($page_handle->_pagename);
+        return pagePermissionsSimpleFormat($perm_array,
+                                           $page_handle->get('author'),
+                                           $page_handle->get('group'));
+    }
+};
+
+// $Log: WikiAdminChmod.php,v $
+// Revision 1.14  2004/12/13 14:36:35  rurban
+// avoid nameclash with SetAcl
+//
+// Revision 1.13  2004/12/06 19:50:05  rurban
+// enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+// renamed delete_page to purge_page.
+// enable action=edit&version=-1 to force creation of a new version.
+// added BABYCART_PATH config
+// fixed magiqc in adodb.inc.php
+// and some more docs
+//
+// Revision 1.12  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.11  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
+// Revision 1.10  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.9  2004/06/13 15:33:20  rurban
+// new support for arguments owner, author, creator in most relevant
+// PageList plugins. in WikiAdmin* via preSelectS()
+//
+// Revision 1.8  2004/06/04 20:32:54  rurban
+// Several locale related improvements suggested by Pierrick Meignen
+// LDAP fix by John Cole
+// reanable admin check without ENABLE_PAGEPERM in the admin plugins
+//
+// Revision 1.7  2004/06/03 22:24:42  rurban
+// reenable admin check on !ENABLE_PAGEPERM, honor s=Wildcard arg, fix warning after Remove
+//
 // Revision 1.6  2004/03/17 20:23:44  rurban
 // fixed p[] pagehash passing from WikiAdminSelect, fixed problem removing pages with [] in the pagename
 //

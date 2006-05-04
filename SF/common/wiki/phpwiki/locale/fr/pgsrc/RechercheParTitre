@@ -1,0 +1,21 @@
+Date: Sat, 5 Jun 2004 16:49:57 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: RechercheParTitre,v 1.2 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=RechercheParTitre;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin TitleSearch ?>
+----
+Recherches supplémentaires :
+<?plugin-form TitleSearch auto_redirect=0?>
+<?plugin-form FullTextSearch?>
+<?plugin-form FuzzyPages?>
+
+----
+
+<?plugin IncludePage page=ChercherUnePage quiet=1 section=Trucs sectionhead=1 ?>

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: Calendar.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: Calendar.php,v 1.30 2005/04/02 03:05:44 uckelman Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -47,7 +47,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.30 $");
     }
 
     function getDefaultArguments() {
@@ -62,30 +62,21 @@ extends WikiPlugin
                      'start_wday'       => '0');
     }
 
-    /** Get wiki-pages linked to by plugin invocation.
-     *
-     * A plugin may override this method to add pages to the
-     * link database for the invoking page.
-     *
-     * For example, the IncludePage plugin should override this so
-     * that the including page shows up in the backlinks list for the
-     * included page.
-     *
-     * Not all plugins which generate links to wiki-pages need list
-     * those pages here.
-     *
-     * Note also that currently the links are calculated at page save
-     * time, so only static page links (e.g. those dependent on the PI
-     * args, not the rest of the wikidb state or any request query args)
-     * will work correctly here.
+    /**
+     * return links (static only as of action=edit) 
      *
      * @param string $argstr The plugin argument string.
      * @param string $basepage The pagename the plugin is invoked from.
      * @return array List of pagenames linked to (or false).
      */
     function getWikiPageLinks ($argstr, $basepage) {
-        if (isset($this->_links)) return $this->_links;
-        else return false;
+        if (isset($this->_links)) 
+            return $this->_links;
+        else {
+            global $request;	
+            $this->run($request->_dbi, $argstr, $request, $basepage);
+            return $this->_links;
+        }
     }
 
     function __header($pagename, $time) {
@@ -247,7 +238,13 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: Calendar.php,v $
+// Revision 1.30  2005/04/02 03:05:44  uckelman
+// Removed & from vars passed by reference (not needed, causes PHP to complain).
+//
+// Revision 1.29  2004/12/06 19:15:04  rurban
+// save edit-time links as requested in #946679
+//
 // Revision 1.28  2004/05/08 14:06:13  rurban
 // new support for inlined image attributes: [image.jpg size=50x30 align=right]
 // minor stability and portability fixes

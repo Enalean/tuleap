@@ -1,8 +1,8 @@
 <?php // -*-html-*-
-rcs_id('$Id: browse.tmpl 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: browse.tmpl,v 1.26 2004/12/10 03:05:58 rurban Exp $');
 ?>
 
-<?php if (! $revision->isCurrent()) { ?>
+<?php if ($revision and !$revision->isCurrent()) { ?>
   <p><strong><?=_("Note:")?></strong>
      <?=_("You are viewing an old revision of this page.")?>
   <?= Button('browse', _("View the current version"), $page)?>.

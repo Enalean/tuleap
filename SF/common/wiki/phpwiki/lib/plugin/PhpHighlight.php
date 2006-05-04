@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: PhpHighlight.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: PhpHighlight.php,v 1.9 2004/04/10 07:25:24 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -68,7 +68,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.9 $");
     }
 
     // Establish default values for each of this plugin's arguments.
@@ -187,7 +187,7 @@ extends WikiPlugin
 
 };
 
-// $Log$
+// $Log: PhpHighlight.php,v $
 // Revision 1.9  2004/04/10 07:25:24  rurban
 // fixed sf bug #928230
 //

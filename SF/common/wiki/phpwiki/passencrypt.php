@@ -1,10 +1,10 @@
-<?php printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", 'iso-8859-1'); ?>
+<?php echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n"; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<!-- $Id: passencrypt.php 1422 2005-04-12 13:33:49Z guerin $ -->
+<!-- $Id: passencrypt.php,v 1.6 2005/09/18 11:14:56 rurban Exp $ -->
 <title>Password Encryption Tool</title>
 <!--
 Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
@@ -100,11 +100,22 @@ function random_good_password ($minlength = 5, $maxlength = 8) {
     return $newpass;
 }
 
+/** PHP5 deprecated old-style globals if !(bool)ini_get('register_long_arrays'). 
+  *  See Bug #1180115
+  * We want to work with those old ones instead of the new superglobals, 
+  * for easier coding.
+  */
+foreach (array('SERVER','GET','POST','ENV') as $k) {
+    if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k]))
+        $GLOBALS['HTTP_'.$k.'_VARS'] =& $GLOBALS['_'.$k];
+}
+unset($k);
+
 $posted = $GLOBALS['HTTP_POST_VARS'];
 if (!empty($posted['create'])) {
     $new_password = random_good_password();
-    echo "<p>The newly created random password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<strong>",
-         htmlentities($new_password),"</strong></p>\n";
+    echo "<p>The newly created random password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
+         htmlentities($new_password),"</strong></tt></p>\n";
     $posted['password'] = $new_password;
     $posted['password2'] = $new_password;
 }
@@ -126,8 +137,8 @@ if (($posted['password'] != "")
     $debug = $HTTP_GET_VARS['debug'];
     if ($debug)
         echo "The password was encrypted using a salt length of: $salt_length<br />\n";
-    echo "<p>The encrypted password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<strong>",
-         htmlentities($encrypted_password),"</strong></p>\n";
+    echo "<p>The encrypted password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
+         htmlentities($encrypted_password),"</strong></tt></p>\n";
     echo "<hr />\n";
 }
 else if ($posted['password'] != "") {

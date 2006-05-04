@@ -1,0 +1,120 @@
+Date: Sat, 5 Jun 2004 16:49:57 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginWiki,v 1.3 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginWiki;
+  pgsrc_version="3 $Revision: 1.3 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+PhpWiki supporte les plugins depuis 1.3.x
+
+~Les plugins Wiki permettent à chacun d'ajouter un nouveau type de contenu
+dynamique (ou autre fonctionnalité) aux pages wiki avec PhpWiki. Par exemple,
+dans ce wiki, les DernièresModifs, RétroLiens, PagesSemblables et la plupart
+des autres pages indexées sont toutes implémentées en utilisant les plugins.
+
+À plus ou moins court terme, l'ancien style phpwiki [URLMagiquesPhpWiki] sera
+remplacé par des plugins également.
+
+!!!Exemple
+
+Habituellement, on appelle un plugin en écrivant quelque chose comme ceci :
+
+<verbatim>
+<?plugin BackLinks?>
+</verbatim>
+
+dans une page wiki classique. Cet exemple particulier génère une liste des 
+pages qui sont liées à la page courante. Ici on a :
+
+<?plugin BackLinks?>
+
+(C'est intéressant pour les pages Catégorie ou Sujets. Vous pouvez l'utiliser
+pour en obtenir une liste automatique)
+
+!!!Détails
+
+Les plugins peuvent être utilisés avec une liste d'arguments. Il existe 
+quatre moyens pour spécifier leur valeur. Dans l'ordre de priorité :
+
+# L'appel du plugin peut spécifier la valeur d'un argument comme ceci :
+  <verbatim>
+  <?plugin BackLinks page=OtherPage ?>
+  </verbatim>
+
+# L'arguement peut être spécifié via l'argument d'une requête HTTP. Ceci ne 
+  devrait pas se produire (ce n'est pas permis) à moins que l'argument soit 
+  mentionné dans l'appel du plugin : 
+
+  <verbatim>
+  <?plugin BackLinks page ?>
+  </verbatim>
+
+# Valeurs par défaut spécifiées dans l'appel du plugin :
+
+  <verbatim>
+  <?plugin BackLinks page||=OtherPage ?>
+  </verbatim>
+
+# Le plugin remplace les valeurs par défaut pour chaque argument utilisé
+  par des arguments d'URL comme ceci :
+  <verbatim>
+    BackLinks?page=ThisPage&sortby=-mtime
+  </verbatim>
+  (Le plugin RétroLiens utilise la page courante comme valeur par défaut
+  pour l'argument ''page'')
+
+!!! Il y a quatre types de base pour les plugins :
+
+Tous les plugins viennent de la classe PluginWiki étendant la méthode run
+qui retourne un objet arbre des objets HTML, et doivent réagir sur chaque 
+arguments fournit depuis une ~WikiPage (voir les arguments plus loin) ou
+passé par l'URL (arguments GET et POST définit via '||=').
+
+  *plugin-form* est utilisé pour afficher une boîte input type=text box 
+   comme argument par défaut.
+
+  *plugin-head* n'existe plus !
+
+  *plugin-link* peut être utilisé pour changer les liens sortants pour 
+  cette page.
+
+<verbatim>
+<?plugin PluginName [args...] ?>
+</verbatim>
+
+<verbatim>
+<?plugin-form PluginName [args...] ?>
+</verbatim>
+
+<verbatim>
+<?plugin-link PluginName [args...] ?>
+</verbatim>
+;:Ce n'est pas utilisé.
+
+<verbatim>
+<?plugin-head PluginName [args...] ?>
+</verbatim>
+;:Ce n'est plus utilisé.
+
+
+!!!Plugins existants :
+
+Voir GestionDesPlugins pour la liste actuelle. La plupart des plugins ont leur 
+propre page de documentation avec le mot *Plugin* ajouté.
+
+-----
+
+Pages dans cette catégorie :
+
+<?plugin BackLinks page=[pagename] noheader=1?>
+
+* RechercheEnTexteIntégral : ChercherUnePage
+* RechercheParTitre : PagesSemblables (match_head, match_tail).
+
+-----
+
+DocumentationDePhpWiki

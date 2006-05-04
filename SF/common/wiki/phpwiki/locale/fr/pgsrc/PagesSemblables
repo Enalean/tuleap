@@ -1,0 +1,15 @@
+Date: Sat, 5 Jun 2004 16:49:55 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PagesSemblables,v 1.2 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PagesSemblables;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Les PagesSemblables sont des pages qui partagent un mot initial ou 
+final avec cette page (voir aussi Wiki:LikePages et MeatBall:LikePages).
+----
+<?plugin LikePages ?>

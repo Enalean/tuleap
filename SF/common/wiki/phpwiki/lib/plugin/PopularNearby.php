@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: PopularNearby.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: PopularNearby.php,v 1.5 2004/11/23 15:17:19 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
 
@@ -50,13 +50,13 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.5 $");
     }
 
     function getDefaultArguments() {
         return array('pagename' => '[pagename]',
                      'mode'     => 'nearby', // or 'incoming' or 'outgoing'
-                     'exclude'  => '',
+                     //'exclude'  => false,  // not yet
                      'limit'    => 5,
                      'noheader' => 0,
                     );
@@ -156,7 +156,15 @@ function cmp_by_hits($a, $b) {
 }
 
 
-// $Log$
+// $Log: PopularNearby.php,v $
+// Revision 1.5  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
 // Revision 1.4  2004/05/01 18:02:41  rurban
 // 4.0.6 obviously cannot use methods as cmp function. so it must be a global func
 //

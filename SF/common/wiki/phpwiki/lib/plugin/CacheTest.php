@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: CacheTest.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: CacheTest.php,v 1.2 2003/01/18 21:19:25 carstenklapp Exp $');
 // +---------------------------------------------------------------------+
 // | CacheTest.php                                                       |
 // +---------------------------------------------------------------------+
@@ -51,7 +51,7 @@ extends WikiPluginCached
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.2 $");
     }
 
     function getDefaultArguments() {
@@ -150,7 +150,7 @@ extends WikiPluginCached
 
 } // WikiPlugin_CacheTest
 
-// $Log$
+// $Log: CacheTest.php,v $
 // Revision 1.2  2003/01/18 21:19:25  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription

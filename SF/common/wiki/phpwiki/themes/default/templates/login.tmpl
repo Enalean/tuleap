@@ -1,7 +1,6 @@
 <?php // -*-php-*- ?>
-<!-- $Id: login.tmpl 1422 2005-04-12 13:33:49Z guerin $ -->
+<!-- $Id: login.tmpl,v 1.35 2004/11/05 21:03:27 rurban Exp $ -->
 <!-- The login form -->
-
 <?php if ($fail_message) { ?>
   <p><strong><?=$fail_message?></strong></p>
   <hr noshade="noshade" />
@@ -10,15 +9,24 @@
 <br class="clear-floats" />
 
 <?php 
-if (DEBUG) {
-  $t = sprintf("  DEBUG: ALLOW_ANON_EDIT = %s, ALLOW_BOGO_LOGIN = %s, ALLOW_USER_PASSWORDS = %s", 
+if (DEBUG & _DEBUG_LOGIN) {
+  $t = sprintf("  DEBUG: ALLOW_ANON_EDIT = %s, ALLOW_BOGO_LOGIN = %s, ALLOW_USER_PASSWORDS = %s, ENABLE_PAGEPERM = %s, ", 
 	       ALLOW_ANON_EDIT ? "true" : "false",
 	       ALLOW_BOGO_LOGIN ? "true" : "false",
-	       ALLOW_USER_PASSWORDS ? "true" : "false");
+	       ALLOW_USER_PASSWORDS ? "true" : "false",
+               ENABLE_PAGEPERM ? "true" : "false");
   if (ALLOW_USER_PASSWORDS) {
-    $t .= sprintf("  USER_AUTH_ORDER: %s",join(" => ",$GLOBALS['USER_AUTH_ORDER'])) .
-         sprintf(",  USER_AUTH_POLICY: %s",USER_AUTH_POLICY) .
-         sprintf(",  PASSWORD_LENGTH_MINIMUM: %s",PASSWORD_LENGTH_MINIMUM);
+    if ($fail_message) { // add for each method the exact failing reason.
+      $t .= "  USER_AUTH_ORDER: ";
+      foreach ($GLOBALS['USER_AUTH_ORDER'] as $auth) {
+          $t .= " => $auth";
+          if ($fail = @$GLOBALS['USER_AUTH_ERROR']["_".strtolower($auth)."passuser"])
+              $t .= " ($fail)";
+      }
+    } else
+      $t .= sprintf("  USER_AUTH_ORDER: %s", join(" => ", $GLOBALS['USER_AUTH_ORDER']));
+    $t .= sprintf(",  USER_AUTH_POLICY: %s", USER_AUTH_POLICY)
+       . sprintf(",  PASSWORD_LENGTH_MINIMUM: %s", PASSWORD_LENGTH_MINIMUM);
   }
   echo asXML(HTML::div(array('class' => 'debug'),$t));
   echo "<br />\n";
@@ -54,9 +62,7 @@ if (ALLOW_BOGO_LOGIN && $require_level <= WIKIAUTH_BOGO) {
   if (empty($pass_required)) ?>
   <p><?= _("New users may use an empty password.") ?></p>
 <?php } ?>
-
 <form method="post" action="<?= $request->getPostURL() ?>" accept-charset="<?=CHARSET?>" name="login">
-
 <table cellspacing="4">
 <tr>
   <td align="right"><?= _("UserId:") ?></td>

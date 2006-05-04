@@ -1,5 +1,5 @@
 <?php // -*-html-*- ?>
-<!-- $Id: viewsource.tmpl 1422 2005-04-12 13:33:49Z guerin $ -->
+<!-- $Id: viewsource.tmpl,v 1.23 2005/01/25 07:16:44 rurban Exp $ -->
 
 <?php if ($page->get('locked') && !$user->isAdmin()) { ?>
   <p><strong><?=_("Note:")?></strong>
@@ -22,10 +22,10 @@ rows="<?=$request->getPref('editHeight')?>"
 cols="<?=$request->getPref('editWidth')?>"
 readonly="readonly"
 wrap="virtual"><?= $PAGE_SOURCE ?></textarea>
+</form>
 
 <div id="footer"><!-- for top & bottom toolbars stylesheet -->
 <?=Template('browse-footer')?>
 </div>
 
 <?= HiddenInputs($request->getArgs()) ?>
-</form>

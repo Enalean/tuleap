@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: Transclude.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: Transclude.php,v 1.9 2004/06/14 11:31:39 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -57,7 +57,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.9 $");
     }
 
     function getDefaultArguments() {
@@ -67,7 +67,7 @@ extends WikiPlugin
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-        global $Theme;
+        global $WikiTheme;
 
         $args = ($this->getArgs($argstr, $request));
         extract($args);
@@ -148,7 +148,15 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: Transclude.php,v $
+// Revision 1.9  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.8  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

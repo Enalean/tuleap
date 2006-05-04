@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: ArchiveCleaner.php 1422 2005-04-12 13:33:49Z guerin $');
+<?php rcs_id('$Id: ArchiveCleaner.php,v 1.4 2004/06/29 08:52:22 rurban Exp $');
 
 class ArchiveCleaner
 {
@@ -33,11 +33,11 @@ class ArchiveCleaner
 
         $authors_seen = array();
         
-        $current = $page->getCurrentRevision();
+        $current = $page->getCurrentRevision(false);
 
-        for ( $revision = $page->getRevisionBefore($current);
+        for ( $revision = $page->getRevisionBefore($current,false);
               $revision->getVersion() > 0;
-              $revision = $page->getRevisionBefore($revision) ) {
+              $revision = $page->getRevisionBefore($revision,false) ) {
 
             if ($revision->get('is_minor_edit'))
                 $keep = $counter['minor']->keep($revision);

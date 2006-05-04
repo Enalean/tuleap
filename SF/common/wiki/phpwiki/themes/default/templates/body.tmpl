@@ -1,11 +1,13 @@
 <?php // -*-html-*-
-rcs_id('$Id: body.tmpl 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: body.tmpl,v 1.35 2004/12/19 18:28:59 rurban Exp $');
 ?>
-<body<?= $Theme->getMoreAttr('body') ?>>
+<body<?= $WikiTheme->getMoreAttr('body') ?>>
 
-<div id="header"><?php // for top-and-bottom toolbars style sheet ?>
+<div id="header">
   <?= Template('top') ?>
 </div>
+<div id="content">
 <?= $CONTENT ?>
+</div>
 <?= Template('bottom') ?>
 </body>

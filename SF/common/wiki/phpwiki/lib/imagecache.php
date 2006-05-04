@@ -1,4 +1,4 @@
-<?php rcs_id('$Id: imagecache.php 1422 2005-04-12 13:33:49Z guerin $');
+<?php rcs_id('$Id: imagecache.php,v 1.12 2004/11/21 11:59:20 rurban Exp $');
 /*
  Copyright (C) 2002 Johannes Große (Johannes Gro&szlig;e)
 
@@ -25,7 +25,7 @@
  * @version 0.8
  */
 
-include "lib/config.php";
+include_once("lib/config.php");
 require_once(dirname(__FILE__)."/stdlib.php");
 require_once('lib/Request.php');
 if (ENABLE_USER_NEW) require_once("lib/WikiUserNew.php");
@@ -96,42 +96,14 @@ function mainImageCache() {
     // normalize pagename
     $request->setArg('pagename', deducePagename($request));
     $pagename = $request->getArg('pagename');
-
-    // assume that every user may use the cache    
-    global $user; // FIXME: necessary ?
+    $request->_dbi = WikiDB::open($GLOBALS['DBParams']);
     if (ENABLE_USER_NEW) {
-        $userid = deduceUsername();	
-        if (isset($request->_user) and 
-            !empty($request->_user->_authhow) and 
-            $request->_user->_authhow == 'session')
-        {
-            if (isset($request->_user) and 
-                ( ! isa($request->_user,WikiUserClassname())
-                  or (strtolower(get_class($request->_user)) == '_passuser')))
-            {
-                $request->_user = WikiUser($userid,$request->_user->_prefs);
-            }
-            unset($request->_user->_HomePagehandle);
-            $request->_user->hasHomePage();
-            // update the lockfile filehandle
-            if (  isa($request->_user,'_FilePassUser') and 
-                  $request->_user->_file->lockfile and 
-                  !$request->_user->_file->fplock  )
-	    {
-                $request->_user = new _FilePassUser($userid,$request->_user->_prefs,$request->_user->_file->filename);
-            }
-            $request->_prefs = & $request->_user->_prefs;
-        } else {
-            $user = WikiUser($userid);
-            $request->_user =& $user;
-            $request->_prefs =& $request->_user->_prefs;
-        }
+        $request->_user = new _AnonUser();
+        $request->_prefs =& $request->_user->_prefs;
     } else {
-        $user = new WikiUser($request, deduceUsername());
-        $request->_user =& $user;
-        $request->_prefs = $request->_user->getPreferences();
+    	$request->_user = new WikiUser($request);
+        $request->_prefs = new UserPreferences();
     }
-    $dbi = WikiDB::open($GLOBALS['DBParams']);
     
     // Enable the output of most of the warning messages.
     // The warnings will screw up zip files and setpref though.
@@ -143,6 +115,7 @@ function mainImageCache() {
     $id = $request->getArg('id');
     $args = $request->getArg('args');
     $request->setArg('action', 'imagecache');
+    $cache = new WikiPluginCached;
 
     if ($id) {
         // this indicates a direct call (script wasn't called as
@@ -159,26 +132,27 @@ function mainImageCache() {
             $uri = $request->get('REQUEST_URI');
         }
         if (!$uri) {
-            WikiPluginCached::printError( 'png', 
+            $cache->printError( 'png', 
                 'Could not deduce image identifier or creation'
                 . ' parameters. (Neither REQUEST nor REDIRECT'
                 . ' obtained.)' ); 
             return;
         }    
-        $cacheparams = $GLOBALS['CacheParams'];
-        if (!preg_match(':^(.*/)?'.$cacheparams['filename_prefix'].'([^\?/]+)\.img(\?args=([^\?&]*))?$:', $uri, $matches)) {
-            WikiPluginCached::printError('png', "I do not understand this URL: $uri");
+        //$cacheparams = $GLOBALS['CacheParams'];
+        if (!preg_match(':^(.*/)?'.PLUGIN_CACHED_FILENAME_PREFIX.'([^\?/]+)\.img(\?args=([^\?&]*))?$:', $uri, $matches)) {
+            $cache->printError('png', "I do not understand this URL: $uri");
             return;
         }        
         
-        $request->setArg('id',$matches[2]);
+        $request->setArg('id', $matches[2]);
         if ($matches[4]) {
-           $request->setArg('args',rawurldecode($matches[4]));
+            // md5 args?
+           $request->setArg('args', rawurldecode($matches[4]));
         }
         $request->setStatus(200); // No, we do _not_ have an Error 404 :->
     }
 
-    WikiPluginCached::fetchImageFromCache($dbi,$request,'png');
+    $cache->fetchImageFromCache($request->_dbi, $request, 'png');
 }
 
 

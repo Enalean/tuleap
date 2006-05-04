@@ -1,0 +1,44 @@
+Date: Sun, 16 Nov 2003 02:28:52 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.5pre)
+X-Rcs-Id: $Id: MoreAboutMechanics,v 1.11 2003/11/16 01:42:36 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=MoreAboutMechanics;
+  pgsrc_version="2 $Revision: 1.11 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+PhpWiki is written in the server-side scripting language PHP,
+available from http://www.php.net/. PHP resembles C and Perl in its
+syntax, and functions much like ASP, ~EmbPerl or JSP.
+
+PhpWiki consists of a dozen or so files of mixed PHP and HTML. The web
+pages that make up a WikiWikiWeb based on PHP live in a database with
+backup copies of previous versions of pages stored as well. (For the
+database, PhpWiki works with DBM, MySQL, PostgreSQL or text files.)
+
+Every time a user hits the site, the page requested is pulled from the
+database and rendered on the fly. The user only really ever requests
+the file =index.php=, which then decides which other php files to
+include.
+
+Links to pages in the Wiki are automatically linked: AddingPages.
+This might be the single most compelling aspect of a Wiki, the ability
+to add pages simply by linking to them. The next most compelling thing
+is how easily external URLs link, like this:
+
+# http://www.wcsb.org/
+# ftp://ftp.redhat.com/
+# news://news.mozilla.org/
+# http://slashdot.org/
+# http://theregister.co.uk/
+
+Combined with one namespace and a simple markup, a Wiki exhibits many
+of the characteristics of WabiSabi.
+
+PhpWiki is licensed under the GNU General Public license, which you
+should be able to see here: http://www.gnu.org/copyleft/gpl.txt.
+
+----
+PhpWikiDocumentation CategoryWiki

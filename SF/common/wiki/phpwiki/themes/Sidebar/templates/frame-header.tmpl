@@ -1,5 +1,5 @@
 <?php  // -*-html-*-
-/* $Id: frame-header.tmpl 2117 2005-09-30 08:32:03Z nterray $
+/* $Id: frame-header.tmpl,v 1.2 2004/06/14 11:26:51 rurban Exp $
  *
  * This template is responsible mainly for the outer level <html> stuff.
  */
@@ -10,10 +10,10 @@ printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <?= Template('head') ?>
 <body>
-<div align="right" id="logo"><a class="wikilink" 
+<div align="right" id="logo"><a class="wikilink"
                   href="<?=WikiURL(HOME_PAGE)?>" target="_top"
-                  ><img src="<?=$Theme->getImageURL('logo')?>" id="logo-img"
-                        border="0" alt="<?=fmt("%s: %s", WIKI_NAME, HOME_PAGE) ?>"
+                  ><img src="<?=$WikiTheme->getImageURL('logo')?>" id="logo-img"
+                        border="0" alt="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?>"
                         align="right" /></a></div>
 
 <!-- Page title -->

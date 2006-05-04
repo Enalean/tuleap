@@ -1,0 +1,118 @@
+Date: Sat, 5 Jun 2004 16:49:55 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginBeauTableau,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginBeauTableau;
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Descrition
+PluginBeauTableau est un plugin qui remplace OldStyleTablePlugin. Il permet
+à l'utilisateur de spécifier des propriétés arbitraires pour <tt><table></tt>, 
+<tt><tr></tt> et <tt><td></tt> par un très simple marquage.
+
+!!Usage
+Ce plugin a été amélioré de telle sorte que maintenant le contenu de chaque 
+cellule est traité individuellement par ~BlockParser. Ceci signifie que si tout 
+va bien, on peut invoquer des plugins, utiliser des listes... à l'intérieur
+de chaque cellule !
+
+*Un tiret <tt>"-"</tt> en début de ligne indique une ligne dans le tableau
+*Un trait vertical <tt>"|"</tt> (ou tuyau pour les unixiens) au début d'une ligne indique une cellule
+*Attributs d'une marque
+  * une ligne qui commence par une astérisque <tt>"*"</tt> après un <tt>"|"</tt> est destinée à recevoir les arguments de la cellule
+  * les attributs du tableau sont donnés sur la ligne commencant avec <tt>"*"</tt> seulement si la ligne se trouve avant toute autre ligne à l'exception des espaces
+  * une ligne qui commence par un <tt>-</tt> est toujours complétée par les attributs puisqu'il ne peut pas y avoir de contenu comme dans une cellule
+*Contenu d'une cellule
+  *le contenu est traité par ~BlockParser.
+  *une ligne qui commence avec <tt>"*"</tt> n'importe où ailleurs que sur la ligne des attributs est traitée comme un contenu normal
+  *une ligne qui débute avec un espace est également traitée comme du contenu normal
+  *une ligne de cellule qui <tt>"*"</tt> après <tt>"|"</tt> est traitée comme du contenu normal
+  *tout le contenu des lignes qui suivent une ligne de cellule est ajouté à la cellule. À l'exception des cas considérés plus haut, le texte peut être quelconque.
+  *s'il n'y a pas de cellule dans la ligne du tableau courante alors le contenu est ignoré 
+*les deux caractères spéciaux <tt>"~~"</tt> et <tt>"?>"</tt> doivent être neutralisés comme <tt>"\~~"</tt> and <tt>"?\>"</tt>. Je n'ai pas trouvé d'autres caractères devant être neutralisés. Il faut le faire pour le filtrage du texte.
+
+!!Avertissements
+* code source à revoir
+* le plugin ne peut pas s'appeler lui-même. Les tableaux récursifs ne sont pas possible
+
+!!Exemple
+
+<?plugin RichTable
+
+*border=1, cellpadding=5, bgcolor=#f0f8f8, width=75%, align=center
+-
+|* colspan=3, align=center
+PageAccueil
+-
+|* colspan=2
+[http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+|* rowspan=2
+Cette cellule fait appel à un plugin !
+<?plugin
+BackLinks
+?\>
+- bgcolor=white
+|
+#Un
+#Deux
+|
+*Foo
+*Bar
+- bgcolor=cyan
+Cette lign a sauté... aucune cellule ne la contient !
+|* bgcolor=#f0f0ff, align=center
+Un paragraphe
+
+Un autre paragraphe ?
+|* align=left
+Cette cellule utilise la couleur de ligne
+| J'espère pouvoir insérer un tableau ! :(
+?>
+
+Le tableau ci-dessus a été construit avec :
+
+<verbatim>
+<?plugin RichTable
+
+*border=1, cellpadding=5, bgcolor=#f0f8f8, width=75%, align=center
+-
+|* colspan=3, align=center
+PageAccueil
+-
+|* colspan=2
+[http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+|* rowspan=2
+Cette cellule fait appel à un plugin !
+<?plugin
+BackLinks
+?\>
+- bgcolor=white
+|
+#Un
+#Deux
+|
+*Foo
+*Bar
+- bgcolor=cyan
+Cette lign a sauté... aucune cellule ne la contient !
+|* bgcolor=#f0f0ff, align=center
+Un paragraphe
+
+Un autre paragraphe ?
+|* align=left
+Cette cellule utilise la couleur de ligne
+| J'espère pouvoir insérer un tableau ! :(
+?>
+</verbatim>
+
+!!Auteur
+Sameer D. Sahasrabuddhe
+!!Url 
+http://www.it.iitb.ac.in/~sameerds/phpwiki/index.php/RichTablePlugin
+
+----
+
+PluginWiki

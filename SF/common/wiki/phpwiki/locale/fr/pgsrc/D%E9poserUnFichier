@@ -1,0 +1,18 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: D%E9poserUnFichier,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=D%E9poserUnFichier;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+__C'est une page expérimentale. Pour le moment, elle n'est fonctionnelle que 
+pour l'administrateur du Wiki.__
+
+----
+<?plugin UpLoad ?>
+----
+PluginWiki GestionsDesPlugins

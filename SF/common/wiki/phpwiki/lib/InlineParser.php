@@ -1,7 +1,7 @@
 <?php 
-rcs_id('$Id: InlineParser.php 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: InlineParser.php,v 1.70 2005/10/31 16:45:23 rurban Exp $');
 /* Copyright (C) 2002 Geoffrey T. Dairiki <dairiki@dairiki.org>
- * Copyright (C) 2004 Reini Urban
+ * Copyright (C) 2004,2005 Reini Urban
  *
  * This file is part of PhpWiki.
  * 
@@ -156,7 +156,7 @@ class RegexpSet
 	$matched = array(); $matched_ind = array();
         for ($i=0; $i<count($regexps); $i++) {
             if (!trim($regexps[$i])) {
-                trigger_error("empty regexp $i",E_USER_WARNING);
+                trigger_error("empty regexp $i", E_USER_WARNING);
                 continue;
             }
             $pat= "/ ( . $repeat ) ( " . $regexps[$i] . " ) /x";
@@ -175,6 +175,14 @@ class RegexpSet
         
         // Optimization: if the matches are only "$" and another, then omit "$"
         if (! _INLINE_OPTIMIZATION or count($matched) > 2) {
+            assert(!empty($repeat));
+            assert(!empty($regexps));
+            for ($i=0; $i<count($regexps); $i++) {
+                if (!trim($regexps[$i])) {
+                    trigger_error("empty regexp $i", E_USER_WARNING);
+                    $regexps[$i] = '\Wxxxx\w\W\w\W\w\W\w\W\w\W\w'; // some placeholder
+                }
+            }
             // We could do much better, if we would know the matching markup for the 
             // longest regexp match:
             $hugepat= "/ ( . $repeat ) ( (" . join(')|(', $regexps) . ") ) /Asx";
@@ -196,7 +204,7 @@ class RegexpSet
 
         /* DEBUGGING */
         /*
-        if (DEBUG == 4) {
+        if (DEBUG & 4) {
           var_dump($regexps); var_dump($matched); var_dump($matched_inc); 
         PrintXML(HTML::dl(HTML::dt("input"),
                           HTML::dd(HTML::pre($text)),
@@ -310,6 +318,7 @@ class Markup_escape  extends SimpleMarkup
  */
 function isImageLink($link) {
     if (!$link) return false;
+    assert(defined('INLINE_IMAGES'));
     return preg_match("/\\.(" . INLINE_IMAGES . ")$/i", $link)
         or preg_match("/\\.(" . INLINE_IMAGES . ")\s+(size|border|align|hspace|vspace)=/i", $link);
 }
@@ -320,8 +329,13 @@ function LinkBracketLink($bracketlink) {
     // be either a page name, a URL or both separated by a pipe.
     
     // strip brackets and leading space
+    // FIXME: \n inside [] will lead to errors
     preg_match('/(\#?) \[\s* (?: (.*?) \s* (?<!' . ESCAPE_CHAR . ')(\|) )? \s* (.+?) \s*\]/x',
 	       $bracketlink, $matches);
+    if (count($matches) < 4) {
+    	trigger_error(_("Invalid [] syntax ignored").": ".$bracketlink, E_USER_WARNING);
+    	return new Cached_Link;
+    }
     list (, $hash, $label, $bar, $rawlink) = $matches;
 
     $label = UnWikiEscape($label);
@@ -331,22 +345,35 @@ function LinkBracketLink($bracketlink) {
      *   "[http:/server/~name/]" will work as expected
      *   "http:/server/~name/"   will NOT work as expected, will remove the ~
      */
-    if (strstr($rawlink, "http://") or strstr($rawlink, "https://"))
+    if (strstr($rawlink, "http://") or strstr($rawlink, "https://")) {
         $link = $rawlink;
-    else
+        // Mozilla Browser URI Obfuscation Weakness 2004-06-14
+        //   http://www.securityfocus.com/bid/10532/
+        //   goodurl+"%2F%20%20%20."+badurl
+        if (preg_match("/%2F(%20)+\./i", $rawlink)) {
+            $rawlink = preg_replace("/%2F(%20)+\./i","%2F.",$rawlink);
+        }
+    } else
         $link  = UnWikiEscape($rawlink);
 
+    /* Relatives links by Joel Schaubert.
+     * Recognize [../bla] or [/bla] as relative links, without needing http://
+     */
+    if (preg_match('/^(\.\.\/|\/)/', $link)) {
+        return new Cached_ExternalLink($link, $label);
+    }
     // [label|link]
     // if label looks like a url to an image, we want an image link.
     if (isImageLink($label)) {
         $imgurl = $label;
+        $intermap = getInterwikiMap();
         if (preg_match("/^" . $intermap->getRegexp() . ":/", $label)) {
             $imgurl = $intermap->link($label);
             $imgurl = $imgurl->getAttr('href');
         } elseif (! preg_match("#^(" . ALLOWED_PROTOCOLS . "):#", $imgurl)) {
             // local theme linkname like 'images/next.gif'.
-            global $Theme;
-            $imgurl = $Theme->getImageURL($imgurl);
+            global $WikiTheme;
+            $imgurl = $WikiTheme->getImageURL($imgurl);
         }
         $label = LinkImage($imgurl, $link);
     }
@@ -373,11 +400,16 @@ function LinkBracketLink($bracketlink) {
      * File:my_image.gif shows a plain inter-wiki link,
      * [what a pic|File:my_image.gif] shows a named inter-wiki link to the gif
      * [File:my_image.gif|what a pic] shows a inlimed image linked to the page "what a pic"
+     *
+     * Note that for simplicity we will accept embedded object tags (non-images) 
+     * here also, and seperate them later in LinkImage()
      */
-    elseif (strstr($link,':') and 
-            ($intermap = getInterwikiMap()) and 
-            preg_match("/^" . $intermap->getRegexp() . ":/", $link)) {
-        if (empty($label) && isImageLink($link)) {
+    elseif (strstr($link,':')
+            and ($intermap = getInterwikiMap()) 
+            and preg_match("/^" . $intermap->getRegexp() . ":/", $link)) 
+    {
+        // trigger_error("label: $label link: $link", E_USER_WARNING);
+        if (empty($label) and isImageLink($link)) {
             // if without label => inlined image [File:xx.gif]
             $imgurl = $intermap->link($link);
             return LinkImage($imgurl->getAttr('href'), $label);
@@ -593,6 +625,31 @@ class Markup_html_abbr extends BalancedMarkup
     }
 }
 
+/** ENABLE_MARKUP_COLOR
+ *  See http://www.pmwiki.org/wiki/PmWiki/WikiStyles and
+ *      http://www.flexwiki.com/default.aspx/FlexWiki/FormattingRules.html
+ */
+class Markup_color extends BalancedMarkup {
+    // %color=blue% blue text %% and back to normal
+    var $_start_regexp = "%color=(?: [^%]*)%";
+    var $_end_regexp = "%%";
+    
+    function markup ($match, $body) {
+    	$color = substr($match, 7, -1);
+        if (strlen($color) != 7 
+            and in_array($color, array('red', 'blue', 'grey', 'black'))) {
+            // must be a name
+            return new HtmlElement('font', array('color' => $color), $body);
+        } elseif ((substr($color,0,1) == '#') 
+                  and (strspn(substr($color,1),'0123456789ABCDEFabcdef') == strlen($color)-1)) {
+            return new HtmlElement('font', array('color' => $color), $body);
+        } else {
+            trigger_error(sprintf(_("unknown color %s ignored"), $color), E_USER_WARNING);
+        }
+        	
+    }
+}
+
 // Special version for single-line plugins formatting, 
 //  like: '<small>< ?plugin PopularNearby ? ></small>'
 class Markup_plugin extends SimpleMarkup
@@ -606,14 +663,68 @@ class Markup_plugin extends SimpleMarkup
     }
 }
 
+/** ENABLE_MARKUP_TEMPLATE
+ *  Template syntax similar to mediawiki
+ *  {{template}}
+ * => <?plugin Template page=template?>
+ *  {{template|var=value|...}}
+ * => <?plugin Template page=template vars="var=value&..."?>
+ */
+class Markup_template_plugin  extends SimpleMarkup
+{
+    var $_match_regexp = '\{\{\w[^\n]+\}\}';
+    
+    function markup ($match) {
+        $page = substr($match,2,-2); $vars = '';
+        if (preg_match('/^(\S+)\|(.*)$/', $page, $_m)) {
+            $page = $_m[1];
+            $vars = str_replace('|', '&', $_m[2]);
+        }
+        if ($vars)
+    	    $s = '<?plugin Template page=' . $page . ' vars="' . $vars . '"?>';
+    	else
+    	    $s = '<?plugin Template page=' . $page . '?>';
+	return new Cached_PluginInvocation($s);
+    }
+}
 
 // TODO: "..." => "&#133;"  browser specific display (not cached?)
 // TODO: "--" => "&emdash;" browser specific display (not cached?)
+// TODO: Support more HTML::Entities: (C) for copy, --- for mdash, -- for ndash
+
+class Markup_html_entities  extends SimpleMarkup {
+    var $_match_regexp = '(: \.\.\.|\-\-|\-\-\-|\(C\) )';
+   
+    function markup ($match) {
+        static $entities = array('...'  => '&#133;',
+                                 '--'   => '&ndash;',
+                                 '---'  => '&mdash;',
+                                 '(C)'  => '&copy;',
+                                 );
+        return HTML::Raw($entities[$match]);
+    }
+}
+
+class Markup_isonumchars  extends SimpleMarkup {
+    var $_match_regexp = '\&\#\d{2,5};';
+    
+    function markup ($match) {
+        return HTML::Raw($match);
+    }
+}
+
+class Markup_isohexchars extends SimpleMarkup {
+    // hexnums, like &#x00A4; <=> &curren;
+    var $_match_regexp = '\&\#x[0-9a-fA-F]{2,4};';
+    
+    function markup ($match) {
+        return HTML::Raw($match);
+    }
+}
 
 // FIXME: Do away with magic phpwiki forms.  (Maybe phpwiki: links too?)
 // FIXME: Do away with plugin-links.  They seem not to be used.
 //Plugin link
-
 
 class InlineTransformer
 {
@@ -621,15 +732,24 @@ class InlineTransformer
     var $_markup = array();
     
     function InlineTransformer ($markup_types = false) {
-        if (!$markup_types)
+        if (!$markup_types) {
+            $non_default = false;
             $markup_types = array('escape', 'bracketlink', 'url',
                                   'interwiki', 'wikiword', 'linebreak',
                                   'old_emphasis', 'nestled_emphasis',
-                                  'html_emphasis', 'html_abbr', 'plugin');
+                                  'html_emphasis', 'html_abbr', 'plugin',
+                                  'isonumchars', 'isohexchars', /*'html_entities',*/
+                                  );
+        } else 
+            $non_default = true;
         foreach ($markup_types as $mtype) {
             $class = "Markup_$mtype";
             $this->_addMarkup(new $class);
         }
+        if (ENABLE_MARKUP_COLOR and !$non_default)
+            $this->_addMarkup(new Markup_color);
+        if (ENABLE_MARKUP_TEMPLATE and !$non_default)
+            $this->_addMarkup(new Markup_template_plugin);
     }
 
     function _addMarkup ($markup) {
@@ -680,7 +800,10 @@ class InlineTransformer
 
             // Matched markup.  Eat input, push output.
             // FIXME: combine adjacent strings.
-            $current = $markup->markup($match->match, $body);
+            if (isa($markup, 'SimpleMarkup'))
+                $current = $markup->markup($match->match);
+            else
+                $current = $markup->markup($match->match, $body);
             $input = $match->postmatch;
             if (isset($markup) and is_object($markup) and isa($markup,'Markup_plugin')) {
                 $current->setTightness(true,true);
@@ -754,6 +877,26 @@ function TransformLinks($text, $markup = 2.0, $basepage = false) {
     }
     return $trfm->parse($text);
 }
+
+// $Log: InlineParser.php,v $
+// Revision 1.70  2005/10/31 16:45:23  rurban
+// added cfg-able markups only for default TextTransformation, not for links and others
+//
+// Revision 1.69  2005/09/14 05:57:19  rurban
+// make ENABLE_MARKUP_TEMPLATE optional
+//
+// Revision 1.68  2005/09/10 21:24:32  rurban
+// optionally support {{Template|vars}} syntax
+//
+// Revision 1.67  2005/06/06 17:41:20  rurban
+// support new ENABLE_MARKUP_COLOR
+//
+// Revision 1.66  2005/04/23 11:15:49  rurban
+// handle allowed inlined objects within INLINE_IMAGES
+//
+// Revision 1.65  2005/03/27 18:24:17  rurban
+// add Log
+//
 
 // (c-file-style: "gnu")
 // Local Variables:

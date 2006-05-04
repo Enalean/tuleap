@@ -1,9 +1,13 @@
-<?php rcs_id('$Id: XmlElement.php 1422 2005-04-12 13:33:49Z guerin $');
+<?php rcs_id('$Id: XmlElement.php,v 1.38 2005/10/10 19:36:09 rurban Exp $');
 /**
  * Code for writing XML.
- * @author: Jeff Dairiki
+ * @package Markup
+ * @author: Jeff Dairiki,
+ *          Reini Urban (php5 tricks)
  *
- * FIXME: This code is not (yet) php5 compatible.
+ * WARNING: This module is very php5 sensitive. 
+ *        Fixed for 1.3.9 and 1.3.11.
+ *        With allow_call_time_pass_reference clean fixes.
  */
 
 /**
@@ -36,7 +40,7 @@ class XmlContent
     }
 
     function _pushContent ($item) {
-        if (get_class($item) == 'xmlcontent')
+        if (strtolower(get_class($item)) == 'xmlcontent')
             array_splice($this->_content, count($this->_content), 0,
                          $item->_content);
         else
@@ -62,7 +66,7 @@ class XmlContent
     }
 
     function _unshiftContent ($item) {
-        if (get_class($item) == 'xmlcontent')
+        if (strtolower(get_class($item)) == 'xmlcontent')
             array_splice($this->_content, 0, 0, $item->_content);
         else
             array_unshift($this->_content, $item);
@@ -80,11 +84,11 @@ class XmlContent
     function printXML () {
         foreach ($this->_content as $item) {
             if (is_object($item)) {
-                if (method_exists($item, 'printxml'))
+                if (method_exists($item, 'printXML'))
                     $item->printXML();
-                elseif (method_exists($item, 'asxml'))
+                elseif (method_exists($item, 'asXML'))
                     echo $item->asXML();
-                elseif (method_exists($item, 'asstring'))
+                elseif (method_exists($item, 'asString'))
                     echo $this->_quote($item->asString());
                 else
                     printf("==Object(%s)==", get_class($item));
@@ -98,9 +102,9 @@ class XmlContent
         $xml = '';
         foreach ($this->_content as $item) {
             if (is_object($item)) {
-                if (method_exists($item, 'asxml'))
+                if (method_exists($item, 'asXML'))
                     $xml .= $item->asXML();
-                elseif (method_exists($item, 'asstring'))
+                elseif (method_exists($item, 'asString'))
                     $xml .= $this->_quote($item->asString());
                 else
                     $xml .= sprintf("==Object(%s)==", get_class($item));
@@ -115,9 +119,9 @@ class XmlContent
         $pdf = '';
         foreach ($this->_content as $item) {
             if (is_object($item)) {
-                if (method_exists($item, 'aspdf'))
+                if (method_exists($item, 'asPDF'))
                     $pdf .= $item->asPDF();
-                elseif (method_exists($item, 'asstring'))
+                elseif (method_exists($item, 'asString'))
                     $pdf .= $this->_quote($item->asString());
                 else
                     $pdf .= sprintf("==Object(%s)==", get_class($item));
@@ -132,7 +136,7 @@ class XmlContent
         $val = '';
         foreach ($this->_content as $item) {
             if (is_object($item)) {
-                if (method_exists($item, 'asstring'))
+                if (method_exists($item, 'asString'))
                     $val .= $item->asString();
                 else
                     $val .= sprintf("==Object(%s)==", get_class($item));
@@ -161,7 +165,11 @@ class XmlContent
     }
     
     function _quote ($string) {
-        return htmlspecialchars($string);
+    	if (!$string) return $string;
+        if (check_php_version(4,1) and isset($GLOBALS['charset']))
+            return htmlspecialchars($string, ENT_COMPAT, $GLOBALS['charset']);
+        else
+            return htmlspecialchars($string);
     }
 };
 
@@ -196,6 +204,31 @@ class XmlElement extends XmlContent
 
         $this->setContent($args);
     }
+    
+    /** Methods only needed for XmlParser,
+     *  to be fully compatible to perl Html::Element
+     */
+    // doesn't yet work with php5 as __destruct()
+    function _destruct () {
+        if ($this->hasChildren()) {
+            foreach ($this->getChildren() as $node) {
+                $node->_destruct();
+            }
+        }
+        unset($this->_tag);
+        unset($this->_attr);
+        unset($this->_content);
+    }
+    
+    function getChildren () {
+        return $this->_children;
+    }
+
+    function hasChildren () {
+        return !empty($this->_children);
+    }
+    /* End XmlParser Methods
+     */
 
     function getTag () {
         return $this->_tag;
@@ -204,8 +237,10 @@ class XmlElement extends XmlContent
     function setAttr ($attr, $value = false) {
 	if (is_array($attr)) {
             assert($value === false);
-            foreach ($attr as $a => $v)
-		$this->set($a, $v);
+            foreach ($attr as $a => $v) {
+                $this->_attr[strtolower($a)] = $v;
+		//$this->set($a, $v);
+            }
             return;
 	}
 
@@ -228,8 +263,8 @@ class XmlElement extends XmlContent
 	if ($attr == 'class')
 	    $this->_setClasses();
 
-	if (isset($this->_attr[$attr]))
-	    return $this->_attr[$attr];
+	if (isset($this->_attr[strtolower($attr)]))
+	    return $this->_attr[strtolower($attr)];
 	else
 	    return false;
     }
@@ -457,19 +492,31 @@ class FormattedText {
     }
 }
 
+/**
+ * PHP5 compatibility
+ * Error[2048]: Non-static method XmlContent::_quote() should not be called statically
+ */
+function XmlContent_quote ($string) {
+    if (!$string) return $string;
+    if (check_php_version(4,1) and isset($GLOBALS['charset']))
+        return htmlspecialchars($string, ENT_COMPAT, $GLOBALS['charset']);
+    else
+        return htmlspecialchars($string);
+}
+
 function PrintXML ($val /* , ... */ ) {
     if (func_num_args() > 1) {
         foreach (func_get_args() as $arg)
             PrintXML($arg);
     }
     elseif (is_object($val)) {
-        if (method_exists($val, 'printxml'))
+        if (method_exists($val, 'printXML'))
             $val->printXML();
-        elseif (method_exists($val, 'asxml')) {
+        elseif (method_exists($val, 'asXML')) {
             echo $val->asXML();
         }
-        elseif (method_exists($val, 'asstring'))
-            echo XmlContent::_quote($val->asString());
+        elseif (method_exists($val, 'asString'))
+            echo XmlContent_quote($val->asString());
         else
             printf("==Object(%s)==", get_class($val));
     }
@@ -482,7 +529,7 @@ function PrintXML ($val /* , ... */ ) {
             PrintXML($x);
     }
     else
-        echo (string)XmlContent::_quote((string)$val);
+        echo (string)XmlContent_quote((string)$val);
 }
 
 function AsXML ($val /* , ... */) {
@@ -495,10 +542,10 @@ function AsXML ($val /* , ... */) {
         return $xml;
     }
     elseif (is_object($val)) {
-        if (method_exists($val, 'asxml'))
+        if (method_exists($val, 'asXML'))
             return $val->asXML();
-        elseif (method_exists($val, 'asstring'))
-            return XmlContent::_quote($val->asString());
+        elseif (method_exists($val, 'asString'))
+            return XmlContent_quote($val->asString());
         else
             return sprintf("==Object(%s)==", get_class($val));
     }
@@ -517,7 +564,7 @@ function AsXML ($val /* , ... */) {
         return $xml;
     }
     else
-        return XmlContent::_quote((string)$val);
+        return XmlContent_quote((string)$val);
 }
 
 function AsString ($val) {
@@ -528,7 +575,7 @@ function AsString ($val) {
         return $str;
     }
     elseif (is_object($val)) {
-        if (method_exists($val, 'asstring'))
+        if (method_exists($val, 'asString'))
             return $val->asString();
         else
             return sprintf("==Object(%s)==", get_class($val));
@@ -555,7 +602,38 @@ function fmt ($fs /* , ... */) {
     $s->_init($args);
     return $s;
 }
-    
+
+// $Log: XmlElement.php,v $
+// Revision 1.38  2005/10/10 19:36:09  rurban
+// fix comment
+//
+// Revision 1.37  2005/01/25 07:04:27  rurban
+// case-sensitive for php5
+//
+// Revision 1.36  2004/12/06 19:49:56  rurban
+// enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+// renamed delete_page to purge_page.
+// enable action=edit&version=-1 to force creation of a new version.
+// added BABYCART_PATH config
+// fixed magiqc in adodb.inc.php
+// and some more docs
+//
+// Revision 1.35  2004/11/21 11:59:18  rurban
+// remove final \n to be ob_cache independent
+//
+// Revision 1.34  2004/10/12 13:13:19  rurban
+// php5 compatibility (5.0.1 ok)
+//
+// Revision 1.33  2004/07/02 09:55:58  rurban
+// more stability fixes: new DISABLE_GETIMAGESIZE if your php crashes when loading LinkIcons: failing getimagesize in old phps; blockparser stabilized
+//
+// Revision 1.32  2004/06/20 15:30:05  rurban
+// get_class case-sensitivity issues
+//
+// Revision 1.31  2004/06/20 14:42:54  rurban
+// various php5 fixes (still broken at blockparser)
+//
+
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

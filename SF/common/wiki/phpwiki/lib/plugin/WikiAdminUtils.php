@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id: WikiAdminUtils.php 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: WikiAdminUtils.php,v 1.18 2005/09/10 11:30:40 rurban Exp $');
 /**
- Copyright 2003 $ThePhpWikiProgrammingTeam
+ Copyright 2003, 2004 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -21,6 +21,13 @@ rcs_id('$Id: WikiAdminUtils.php 1422 2005-04-12 13:33:49Z guerin $');
  */
 
 /**
+  valid actions: 
+        purge-cache
+        purge-bad-pagenames
+        purge-empty-pages
+        access-restrictions
+        email-verification
+        convert-cached-html
  */
 class WikiPlugin_WikiAdminUtils
 extends WikiPlugin
@@ -30,12 +37,12 @@ extends WikiPlugin
     }
 
     function getDescription () {
-        return _("Miscellaneous utility functions of use to the administrator.");
+        return _("Miscellaneous utility functions for the Administrator.");
     }
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1422 $");
+                            "\$Revision: 1.18 $");
     }
 
     function getDefaultArguments() {
@@ -57,9 +64,8 @@ extends WikiPlugin
             return $this->disabled("(action != 'browse')");
         
         $posted = $request->getArg('wikiadminutils');
-        $request->setArg('wikiadminutils', false);
 
-        if ($request->isPost()) {
+        if ($request->isPost() and $posted['action'] == $action) { // a different form. we might have multiple
             $user = $request->getUser();
             if (!$user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
@@ -67,10 +73,9 @@ extends WikiPlugin
             }
             return $this->do_action($request, $posted);
         }
-
         if (empty($label))
             $label = $default_label;
-        
+
         return $this->_makeButton($request, $args, $label);
     }
 
@@ -101,7 +106,8 @@ extends WikiPlugin
 
     function _getLabel($action) {
         $labels = array('purge-cache' => _("Purge Markup Cache"),
-                        'purge-bad-pagenames' => _("Delete Pages With Invalid Names"));
+                        'purge-bad-pagenames' => _("Purge all Pages With Invalid Names"),
+                        'purge-empty-pages' => _("Purge all empty, unreferenced Pages"));
         return @$labels[$action];
     }
 
@@ -117,30 +123,80 @@ extends WikiPlugin
     function _do_purge_bad_pagenames(&$request, $args) {
         // FIXME: this should be moved into WikiDB::normalize() or something...
         $dbi = $request->getDbh();
+        $count = 0;
+        $list = HTML::ol(array('align'=>'left'));
         $pages = $dbi->getAllPages('include_empty'); // Do we really want the empty ones too?
-        $badpages = array();
         while (($page = $pages->next())) {
             $pagename = $page->getName();
             $wpn = new WikiPageName($pagename);
-            if (! $wpn->isValid())
-                $badpages[] = $pagename;
+            if (! $wpn->isValid() ) {
+                $dbi->purgePage($pagename);
+                $list->pushContent(HTML::li($pagename));
+                $count++;
+            }
         }
-
-        if (!$badpages)
-            return _("No pages with bad names were found.");
-        
-        $list = HTML::ul();
-        foreach ($badpages as $pagename) {
-            $dbi->deletePage($pagename);
-            $list->pushContent(HTML::li($pagename));
+        $pages->free();
+        if (!$count)
+            return _("No pages with bad names had to be deleted.");
+        else {
+            return HTML(fmt("Deleted %s pages with invalid names:", $count),
+                        HTML::div(array('align'=>'left'), $list));
         }
-        
-        return HTML(fmt("Deleted %s pages with invalid names:",
-                        count($badpages)),
-                    $list);
     }
 
-    //TODO
+    /** 
+     * Purge all non-referenced empty pages. Mainly those created by bad link extraction.
+     */
+    function _do_purge_empty_pages(&$request, $args) {
+        $dbi = $request->getDbh();
+        $count = 0; $notpurgable = 0;
+        $list = HTML::ol(array('align'=>'left'));
+        $pages = $dbi->getAllPages('include_empty');
+        while (($page = $pages->next())) {
+            if (!$page->exists() and ($links = $page->getBackLinks('include_empty')) and !$links->next()) {
+                $pagename = $page->getName();
+                if ($pagename == 'global_data' or $pagename == '.') continue;
+                if ($dbi->purgePage($pagename))
+                    $list->pushContent(HTML::li($pagename.' '._("[purged]")));
+                else {
+                    $list->pushContent(HTML::li($pagename.' '._("[not purgable]")));
+                    $notpurgable++;
+                }
+                $count++;
+            }
+        }
+        $pages->free();
+        if (!$count)
+            return _("No empty, unreferenced pages were found.");
+        else
+            return HTML(fmt("Deleted %s unreferenced pages:", $count),
+                        HTML::div(array('align'=>'left'), $list),
+                        ($notpurgable ? 
+        fmt("The %d not-purgable pages/links are links in some page(s). You might want to edit them.", 
+            $notpurgable)
+                                      : ''));
+    }
+
+
+    function _do_convert_cached_html(&$request, $args) {
+
+        require_once("lib/upgrade.php");
+        $dbh = $request->_dbi;
+        _upgrade_db_init($dbh);
+
+        $count = _upgrade_cached_html($dbh, false);
+
+        if (!$count)
+            return _("No old _cached_html pagedata found.");
+        else {
+            return HTML(fmt("Converted successfully %d pages", $count),
+                        HTML::div(array('align'=>'left'), $list));
+        }
+    }
+
+
+    //TODO: We need a seperate plugin for this.
+    //      Too many options.
     function _do_access_restrictions(&$request, &$args) {
     	return _("Sorry. Access Restrictions not yet implemented");
     }
@@ -151,13 +207,14 @@ extends WikiPlugin
         $pagelist = new PageList('pagename',0,$args);
         //$args['return_url'] = 'action=email-verification-verified';
         $email = new _PageList_Column_email('email',_("E-Mail"),'left');
-        $emailVerified = new _PageList_Column_emailVerified('emailVerified',_("Verification Status"),'center');
+        $emailVerified = new _PageList_Column_emailVerified('emailVerified',
+                                                            _("Verification Status"),'center');
         $pagelist->_columns[] = $email;
         $pagelist->_columns[] = $emailVerified;
         //This is the best method to find all users (Db and PersonalPage)
         $current_user = $request->_user;
 	if (empty($args['verify'])) {
-            $group = WikiGroup::getGroup($request);
+            $group = $request->getGroup();
 	    $allusers = $group->_allUsers();
 	} else {
 	    $allusers = array_keys($args['user']);
@@ -166,7 +223,7 @@ extends WikiPlugin
             if (ENABLE_USER_NEW)
                 $user = WikiUser($username);
             else 
-                $user = new WikiUser(&$request,$username);
+                $user = new WikiUser($request, $username);
             $prefs = $user->getPreferences();
             if ($prefs->get('email')) {
             	if (!$prefs->get('userid'))
@@ -175,13 +232,15 @@ extends WikiPlugin
                 $class = ($group % 2) ? 'oddrow' : 'evenrow';
                 $row = HTML::tr(array('class' => $class));
                 $page_handle = $dbi->getPage($username);
-                $row->pushContent($pagelist->_columns[0]->format($pagelist, $page_handle, $page_handle));
-                $row->pushContent($email->format($pagelist, &$prefs, $page_handle));
+                $row->pushContent($pagelist->_columns[0]->format($pagelist, 
+                                                                 $page_handle, $page_handle));
+                $row->pushContent($email->format($pagelist, $prefs, $page_handle));
 		if (!empty($args['verify'])) {
-		    $prefs->_prefs['email']->set('emailVerified',empty($args['verified'][$username]) ? 0 : 2);
+		    $prefs->_prefs['email']->set('emailVerified', 
+                                                 empty($args['verified'][$username]) ? 0 : 2);
 		    $user->setPreferences($prefs);
 		}
-                $row->pushContent($emailVerified->format($pagelist, &$prefs, $args['verify']));
+                $row->pushContent($emailVerified->format($pagelist, $prefs, $args['verify']));
                 $pagelist->_rows[] = $row;
             }
         }
@@ -198,7 +257,8 @@ extends WikiPlugin
                                              WIKIAUTH_ADMIN)),
                           HiddenInputs($request->getArgs()),
                           $pagelist->_generateTable(false),                   
-                          HTML::p(Button('submit:', _("Change Verification Status"), 'wikiadmin'),
+                          HTML::p(Button('submit:', _("Change Verification Status"), 
+                                         'wikiadmin'),
                                   HTML::Raw('&nbsp;'),
                                   Button('cancel', _("Cancel")))
                                  );
@@ -210,14 +270,14 @@ require_once("lib/PageList.php");
 
 class _PageList_Column_email 
 extends _PageList_Column {
-    function _getValue ($prefs, $dummy) {
+    function _getValue (&$prefs, $dummy) {
         return $prefs->get('email');
     }
 }
 
 class _PageList_Column_emailVerified
 extends _PageList_Column {
-    function _getValue ($prefs, $status) {
+    function _getValue (&$prefs, $status) {
     	$name = $prefs->get('userid');
     	$input = HTML::input(array('type' => 'checkbox',
     	                           'name' => 'wikiadminutils[verified]['.$name.']',
@@ -226,9 +286,10 @@ extends _PageList_Column {
     	    $input->setAttr('checked','1');
 	if ($status)
     	    $input->setAttr('disabled','1');
-    	return HTML($input,HTML::input(array('type' => 'hidden',
-    	                                     'name' => 'wikiadminutils[user]['.$name.']',
-    	                                     'value' => $name)));
+    	return HTML($input, HTML::input
+                    (array('type' => 'hidden',
+                           'name' => 'wikiadminutils[user]['.$name.']',
+                           'value' => $name)));
     }
 }
 

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: PageInfo.php 2691 2006-03-02 15:31:51Z guerin $');
+rcs_id('$Id: PageInfo.php,v 1.5 2004/02/17 12:11:36 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -39,7 +39,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 2691 $");
+                            "\$Revision: 1.5 $");
     }
 
     function getDefaultArguments() {
@@ -73,7 +73,7 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: PageInfo.php,v $
 // Revision 1.5  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

@@ -1,0 +1,116 @@
+Date: Fri, 24 Sep 2004 21:30:51 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: PloticusPlugin,v 1.4 2004/09/26 18:10:40 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PloticusPlugin;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The Ploticus WikiPlugin passes all its arguments to the ploticus
+binary and displays the result as PNG, GIF, EPS, SVG, SVGZ or SWF.
+Ploticus is a free, GPL, non-interactive software package
+for producing plots, charts, and graphics from data.
+See http://ploticus.sourceforge.net/doc/welcome.html
+
+!! Usage
+<verbatim>
+  <?plugin Ploticus device||=png [ploticus options...]
+     multiline ploticus script ...
+  ?>
+</verbatim>
+
+!! Plugin Arguments
+__device__: |
+  gif, png, jpeg or svg. Soon also PS or SWG. Default: png
+__data__:  |
+  optionally add data by <!plugin-list !> pagelist plugins.
+__alt__:  |
+  alt text for the image
+__-prefab__:  |
+  use the given prefab script (may need $_ENV~['PLOTICUS_PREFABS'~])
+__-csmap__:  |
+  If a clickable map should be produced (not yet tested)
+__help__:  |
+  Show a help screen (not yet)
+
+!! Known Problems
+
+# For windows you need either a gd library with GIF support or
+  a ploticus with PNG support. This comes only with the cygwin 
+  build so far.
+# We support only images supported by GD (PNG most likely) and now 
+  also SVG. MAP support not yet tested. No EPS, PS or SWG support yet.
+
+!! Examples
+
+<?plugin Ploticus device||=png
+#proc page
+#if @DEVICE in gif,png
+  scale: 0.7
+#endif
+
+//  specify data using {proc getdata}
+#proc getdata
+data:	Brazil 22
+	Columbia 17
+	"Costa Rica" 22
+	Guatemala 3
+	Honduras 12
+	Mexico 14
+	Nicaragua 28
+	Belize 9
+ 	United\nStates 21
+	Canada 8
+
+//  render the pie graph using {proc pie}
+#proc pie
+firstslice: 90
+explode: .2 0 0 0 0  .2 0
+datafield: 2
+labelfield: 1
+labelmode: line+label
+center: 4 4
+radius: 2
+colors: yellow pink pink pink pink yellow pink
+labelfarout: 1.05
+?>
+
+The pie chart above was produced by this code from the ploticus
+testsuite:
+
+<verbatim>
+<?plugin Ploticus device||=png alt="Sample Pie Chart"
+#proc page
+#if @DEVICE in gif,png
+  scale: 0.7
+#endif
+
+//  specify data using {proc getdata}
+#proc getdata
+data:	Brazil 22
+	Columbia 17
+	"Costa Rica" 22
+	Guatemala 3
+	Honduras 12
+	Mexico 14
+	Nicaragua 28
+	Belize 9
+ 	United\nStates 21
+	Canada 8
+
+//  render the pie graph using {proc pie}
+#proc pie
+firstslice: 90
+explode: .2 0 0 0 0  .2 0
+datafield: 2
+labelfield: 1
+labelmode: line+label
+center: 4 4
+radius: 2
+colors: yellow pink pink pink pink yellow pink
+labelfarout: 1.05
+?>
+</verbatim>

@@ -1,5 +1,5 @@
 <?php //-*-php-*-
-rcs_id('$Id: WikiCallback.php 1422 2005-04-12 13:33:49Z guerin $');
+rcs_id('$Id: WikiCallback.php,v 1.3 2004/11/01 10:43:56 rurban Exp $');
 
 /**
  * A callback
@@ -119,13 +119,13 @@ class WikiMethodCb
 
     function call_array ($args) {
         $method = &$this->methodName;
-        $obj = &$this->object;
+        //$obj = &$this->object;
 
         // This should work, except PHP's before 4.0.5 (which includes mine)
         // don't have 'call_user_method_array'.
-        /*
-        return call_user_method_array($method, $obj, $args);
-        */
+        if (check_php_version(4,0,5)) {
+            return call_user_func_array(array(&$this->object, $method), $args);
+        }
 
         // This should work, but doesn't.  At least in my PHP, the object seems
         // to get passed by value, rather than reference, so any changes to the
@@ -143,11 +143,11 @@ class WikiMethodCb
 
         // This seems to work, at least for me (so far):
         switch (count($args)) {
-        case 0: return $obj->$method();
-        case 1: return $obj->$method($args[0]);
-        case 2: return $obj->$method($args[0], $args[1]);
-        case 3: return $obj->$method($args[0], $args[1], $args[2]);
-        case 4: return $obj->$method($args[0], $args[1], $args[2], $args[3]);
+        case 0: return $this->object->$method();
+        case 1: return $this->object->$method($args[0]);
+        case 2: return $this->object->$method($args[0], $args[1]);
+        case 3: return $this->object->$method($args[0], $args[1], $args[2]);
+        case 4: return $this->object->$method($args[0], $args[1], $args[2], $args[3]);
         default: trigger_error("Too many arguments to method callback", E_USER_ERROR);
         }
     }

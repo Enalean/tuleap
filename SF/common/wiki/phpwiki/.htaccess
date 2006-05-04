@@ -1,4 +1,4 @@
-# $Id: .htaccess 1422 2005-04-12 13:33:49Z guerin $
+# $Id: .htaccess,v 1.8 2004/11/03 18:21:16 rurban Exp $
 
 <IfModule mod_php4.c>
 
@@ -19,10 +19,10 @@
 </Files>
 
 # Try various wiki versions, like wiki, wikide, wikisidebar, ...
+# Requires certain AllowOverride permissions (which?)
 # <Files "wiki*">
 #   SetHandler application/x-httpd-php
 #   <IfDefine APACHE2>
-#    ForceType  application/x-httpd-php
 #    AcceptPathInfo on
 #   </IfDefine>
 # </Files>

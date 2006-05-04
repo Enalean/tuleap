@@ -1,9 +1,14 @@
 <?php  // -*-html-*-
-  rcs_id('$Id: head.tmpl 2691 2006-03-02 15:31:51Z guerin $');
+  rcs_id('$Id: head.tmpl,v 1.22 2005/01/25 07:15:47 rurban Exp $');
 ?>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?=CHARSET?>" />
-<?php $ROBOTS_CONTENT = $ROBOTS_META ? $ROBOTS_META : "noindex,nofollow"; ?>
+<?php if (ENABLE_XHTML_XML and strstr($request->get('HTTP_ACCEPT'),'application/xhtml+xml')) { ?>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?=$charset?>" />
+<?php } else { ?>
+<meta http-equiv="Content-Type" content="text/html; charset=<?=$charset?>" />
+<?php } ?>
+<meta http-equiv="content-language" content="<?=$GLOBALS['LANG']?>" />
+<?php $ROBOTS_CONTENT = isset($ROBOTS_META) ? $ROBOTS_META : "noindex,nofollow"; ?>
 <meta name="robots" content="<?= $ROBOTS_CONTENT ?>" />
 <?php if (!empty($PAGE_DESCRIPTION)) { ?>
 <meta name="description" content="<?=$PAGE_DESCRIPTION?>" />
@@ -11,13 +16,13 @@
 <?php if (!empty($PAGE_KEYWORDS)) { ?>
 <meta name="keywords" content="<?=$PAGE_KEYWORDS?>" />
 <?php } ?>
-<meta name="language" content="<?=DEFAULT_LANGUAGE?>" />
+<meta name="language" content="<?=$GLOBALS['LANG']?>" />
 <meta name="document-type" content="Public" />
 <meta name="document-rating" content="General" />
 <meta name="generator" content="PhpWiki" />
 <meta name="PHPWIKI_VERSION" content="<?=PHPWIKI_VERSION?>" />
 <base href="<?=PHPWIKI_BASE_URL?>" />
-<link rel="shortcut icon" href="<?=$Theme->getImageURL('favicon.ico')?>" />
+<link rel="shortcut icon" href="<?=$WikiTheme->getImageURL('favicon.ico')?>" />
 <?php /**
        * Additional navigation links are provided here in the html header for browsers
        * which support them: Mozilla, iCab, Amaya (and certain versions of Opera??).
@@ -27,11 +32,13 @@
        */ ?>
 <?php /* The next few lines are wrapped in an odd manner to allow gettext string extraction: cd locale;make */ ?>
 <link rel="home" title="<?=HOME_PAGE?>" href="<?=WikiURL(HOME_PAGE)?>" />
-<link rel="help" title="<?=_("HowToUseWiki")?>" href="<?=WikiURL(
+<link rel="help" title="<?=
+_("HowToUseWiki")?>" href="<?=WikiURL(
 _("HowToUseWiki"))?>" />
 <link rel="copyright" title="<?=COPYRIGHTPAGE_TITLE?>" href="<?=COPYRIGHTPAGE_URL?>" />
 <link rel="author" title="<?=AUTHORPAGE_TITLE?>" href="<?=AUTHORPAGE_URL?>" />
-<link rel="search" title="<?=_("FindPage")?>" href="<?=WikiURL(
+<link rel="search" title="<?=
+_("FindPage")?>" href="<?=WikiURL(
 _("FindPage"))?>" />
 <?php /**
        * Provide alternate variations of the page content:
@@ -57,28 +64,31 @@ _("FindPage"))?>" />
        * http://www.oreillynet.com/cs/weblog/view/wlg/1475
        */
 ?>
-<link rel="alternate" type="application/rss+xml" title="RSS" href="<?=WikiURL(_("RecentChanges"), array('format' => 'rss'))?>" />
-
+<link rel="alternate" type="application/rss+xml" title="RSS" href="<?=WikiURL(
+_("RecentChanges"), array('format' => 'rss'))?>" />
 <?php /**
        * Add some user-specific links.
        */ ?>
 <?php if (!$user->isSignedIn()) {
       /* For users not signed in */ ?>
-<link rel="bookmark" title="<?=_("SandBox")?>" href="<?=WikiURL(
+<link rel="bookmark" title="<?=
+_("SandBox")?>" href="<?=WikiURL(
 _("SandBox"))?>" />
-<link rel="bookmark" title="<?=_("WikiWikiWeb")?>" href="<?=WikiURL(
+<link rel="bookmark" title="<?=
+_("WikiWikiWeb")?>" href="<?=WikiURL(
 _("WikiWikiWeb"))?>" />
 <?php } ?>
 
-<?php if ($user->isadmin()) {
+<?php if ($user->isAdmin()) {
       /* Only for the Administrator */ ?>
-<link rel="bookmark" title="<?=_("PhpWikiAdministration")?>" href="<?=WikiURL(
+<link rel="bookmark" title="<?=
+_("PhpWikiAdministration")?>" href="<?=WikiURL(
 _("PhpWikiAdministration"))?>" />
 <?php } ?>
-
 <?php if ($user->isSignedIn()) {
       /* For signed-in users */ ?>
-<link rel="bookmark" title="<?=_("UserPreferences")?>" href="<?=WikiURL(
+<link rel="bookmark" title="<?=
+_("UserPreferences")?>" href="<?=WikiURL(
 _("UserPreferences"))?>" />
 <?php /* User's calendar page
        */
@@ -96,9 +106,7 @@ _("UserPreferences"))?>" />
 <link rel="bookmark" title="<?= $UserCalPageTodayTitle ?>" href="<?= $UserCalPageTodayUrl ?>" />
 <?php } ?>
 <?php } //end of links for signed-in user ?>
-
-<?= $Theme->getCSS() ?>
-<?php
+<?= $WikiTheme->getCSS() ?><?php
   // avoid redundant bookmark title for custom home page
   if ($page->getName() == WIKI_NAME && HOME_PAGE == WIKI_NAME)
       $pagetitle = "";
@@ -106,14 +114,26 @@ _("UserPreferences"))?>" />
       $pagetitle = " - ". AsString($TITLE);
 ?>
 <title><?= WIKI_NAME.$pagetitle ?></title>
-<?= $Theme->getMoreHeaders() ?>
+<?= $WikiTheme->getMoreHeaders() ?>
 </head>
-
 <?php
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -                         
-// $Log$
-// Revision 1.14  2004/02/17 12:19:49  rurban
-// support to add more javascript dynamically
+// $Log: head.tmpl,v $
+// Revision 1.22  2005/01/25 07:15:47  rurban
+// fix ROBOTS_META warning, break xgettext strings, add log as comment
+//
+// Revision 1.4  2004/06/18 08:40:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+//
+// Revision 1.3  2004/06/04 20:34:11  rurban
+// Put several _("") into new lines if inside attr="", so that xgettext
+// can pick it up. (Suggested by Pierrick Meignen)
+//
+// Revision 1.2  2004/06/03 12:30:38  rurban
+// support edit_toolbar in other themes
+//
+// Revision 1.1  2004/05/12 19:42:16  rurban
+// new Crao theme by Arnaud Fontaine and Laurent Lunati
 //
 // Revision 1.13  2003/12/05 15:36:39  carstenklapp
 // Improvements: to make it easier to run multiple wikis off of one set

@@ -1,0 +1,30 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginInfosSyst%E8me,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginInfosSyst%E8me;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Description
+
+PluginInfosSystème donne l'accès à des informations de niveau inférieur
+concernant PhpWiki relativement au système sur lequel il est installé.
+
+!!Usage
+
+<verbatim>
+ Usage:  <?plugin SystemInfo all ?>
+      ou <?plugin SystemInfo pagestats cachestats discspace hitstats ?>
+      ou <?plugin SystemInfo version ?>
+      ou <?plugin SystemInfo current_theme ?>
+      ou <?plugin SystemInfo PHPWIKI_DIR ?>
+</verbatim>
+
+
+!!Exemple
+
+<?plugin SystemInfo all ?>
