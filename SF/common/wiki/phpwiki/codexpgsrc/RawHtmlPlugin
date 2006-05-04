@@ -1,0 +1,57 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.7)
+X-Rcs-Id: $Id: RawHtmlPlugin,v 1.5 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=RawHtmlPlugin;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<b>With this plugin you can embed raw unfiltered HTML in the page source; say, for example, you want to put in a complicated set of nested tables to display data. By default, raw HTML is not allowed in most Wikis due to security problems (because malicious users can insert redirects, Javascript, etc.)</b>
+
+<b>For this plugin to work, the page must be locked by the administrator. If you are seeing the raw HTML being displayed below, instead of rendered, try locking the page (log in as the administrator first).</b>
+
+<?plugin RawHtml
+
+<!-- Keep link lines at 72 characters or lynx will break them poorly. -->
+<!-- Obviously, we list ONLY the most useful/important URLs here. -->
+<!-- Keep it short and sweet: 3 lines and 2 columns is already enough -->
+
+<table border="1" cellpadding="10">
+<tr><td>Sample HTML from www.gnu.org</td>
+<td>
+
+<!-- Keep link lines at 72 characters or lynx will break them poorly. -->
+<!-- Obviously, we list ONLY the most useful/important URLs here. -->
+<!-- Keep it short and sweet: 3 lines and 2 columns is already enough -->
+
+<table>
+  <tr>
+    <td align="left">
+    <ul>
+      <li><a href="http://www.gnu.org//provide.html">What we provide</a></li>
+      <li><a href="http://www.gnu.org//philosophy/philosophy.html">Why we exist</a></li>
+
+      <li><a href="http://www.gnu.org//gnu/gnu-history.html">Where we are going</a></li>
+    </ul>
+    </td>
+    <td>
+    <ul>
+      <li><a href="http://www.gnu.org//help/help.html">How you can help us get there</a></li>
+      <li><a href="http://www.gnu.org//people/people.html">Who we are</a></li>
+
+      <li><a href="http://www.gnu.org//testimonials/testimonials.html">What users think of GNU software</a></li>
+    </ul>
+    </td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+?>
+
+-------------
+
+PhpWikiDocumentation WikiPlugin

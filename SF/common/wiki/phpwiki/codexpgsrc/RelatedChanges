@@ -1,0 +1,12 @@
+Date: Mon, 19 Apr 2004 23:29:50 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10pre)
+X-Rcs-Id: $Id: RelatedChanges,v 1.1 2004/04/21 04:26:47 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=RelatedChanges;
+  pgsrc_version="3 $Revision: 1.1 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin RelatedChanges show_minor||=1 days||=7 daylist=1,3,7,30,90,0 ?>

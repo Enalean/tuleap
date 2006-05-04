@@ -1,0 +1,32 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.7)
+X-Rcs-Id: $Id: FrameIncludePlugin,v 1.6 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=FrameIncludePlugin;
+  pgsrc_version="2 $Revision: 1.6 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+This plugin will create an HTML frame that will fill the entire display area of the page (that is, the whole area the user is allowed to edit). All other text will be discarded when the page is rendered (anything outside the call to plugin, that is). In the language of hypertext this is called <i>transclusion</i>.
+
+You might also be interested in the IncludePagePlugin.
+
+Examples: to include a page from another site, use the <b>src</b> attribute:
+
+<verbatim>
+<?plugin FrameInclude src="http://phpwiki.org/" ?>
+</verbatim>
+
+To include a page from within this wiki, use the <b>page</b> attribute:
+
+<verbatim>
+<?plugin FrameInclude page=HomePage ?>
+</verbatim>
+
+For more information on this plugin please read the PHP source code in the /lib/plugin directory.
+
+-----
+
+PhpWikiDocumentation WikiPlugin

@@ -1,0 +1,80 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: HowToUseWiki,v 1.11 2002/12/29 00:32:34 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=HowToUseWiki;
+  pgsrc_version="2 $Revision: 1.11 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+''"Wiki wiki"'' means "quick" in Hawai'ian.
+
+*All you really need to know is:*
+
+* To edit any page click on the Edit link at the bottom of the page.
+  You should do that right now, and read the source code of this page.
+  It will make more sense.
+
+* You get italics by surrounding words with underscores on either side
+  _like this_.
+
+* You get *bold text* by using two asterisks on either side.
+
+* And, *_bold italics_* by using both.
+
+* You get =monospaced text= by using two equal-signs on either side.
+
+* You get bullets by using an asterisk * at the start of the line.
+
+* To have a paragraph in plain monospaced font, start it with <pre>
+  and end it with </pre>:
+
+  <pre>
+  this is a poem for sure
+  about monospacing
+  i wrote in purple velour
+  but couldn't find a rhyme for monospacing
+  </pre>
+
+* You separate paragraphs with an extra blank line. Example:
+
+  I am a paragraph.
+
+  I am a paragraph too. We're just very small paragraphs.
+
+* You can get horizontal rules with four or more dashes like this:
+
+  ---------
+
+* To create hyperlinks you just capitalize the words and string them
+  together. Let's say you want to create a page about how Steve
+  Wainstead eats worms. All you have to do is capitalize each word and
+  string them together like this: SteveWainsteadEatsLiveWorms. If the
+  page does not exist yet a question mark appears after the link,
+  inviting you to create the page: ThisPageShouldNotExist. (And please
+  don't ruin the example by creating one.)
+
+* To link to pages outside the Wiki, you can just type in the URL and
+  Wiki will link it for you: http://www.nytimes.com/
+
+* To put images in, just provide the hyperlink in brackets like this:
+  ~[~http://www.yourhost.yourdomain/images/picture.png]. Image URLs not
+  in brackets will just appear as hyperlinks to the image.
+
+* Now you are ready to begin AddingPages.
+
+----
+
+A WikiWikiWeb is meant to be fast and easy to edit. It has very simple
+markup that you can read about in TextFormattingRules.
+
+----
+
+If you don't like the size of the text editing window you get, you can
+change it.  See UserPreferences.
+
+----
+
+PhpWikiDocumentation

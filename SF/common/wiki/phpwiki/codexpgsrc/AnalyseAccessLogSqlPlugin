@@ -1,0 +1,106 @@
+Date: Wed, 2 Feb 2005 20:32:44 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: AnalyseAccessLogSqlPlugin,v 1.1 2005/02/27 09:47:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=AnalyseAccessLogSqlPlugin;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The AnalyseAccessLogSql plugin provides a framework to analyse the SQL access log 
+and display the results.
+This information may be sensitive and therefore this plugin is limited to 
+administrator access only.
+
+A small number of queries that may (or might not) use the ~MySQL
+specific dialect of SQL are provided in <tt>lib/plugin/~AnalyseAccessLogSql.php</tt>. 
+For more information, please see the section *Adding new queries* below.
+
+!!!Usage
+Experimental! Will change a lot.
+
+!!!Usage
+<verbatim>
+  <?plugin AnalyseAccessLogSql mode=<QUERY NAME> ?>
+</verbatim>
+
+!Parameters
+mode _(required parameter)_:
+  The name of the query to execute. See *Adding new queries* below.
+
+period:
+  Use in combination with the _count_ parameter. The type of history period to retrieve from the SQL access log. Blank (the default) for all history, or one of "*weeks*", "*days*", "*hours*", or "*minutes*".
+
+count:
+  Use in combination with the _period_ parameter. Must be a number. The number of periods to retrieve from the access log.
+
+caption:
+  The value of this parameter is used as the caption for the output. If not set, the caption on the table defaults to the mode.
+
+center:
+  If set, the table is centered on the page, otherwise left justified.
+
+debugShowQuery:
+  If set, the SQL will be displayed in the table footer. Useful while debugging new queries or just for interest.
+
+user:
+  Blank (the default) to retrieve all users, or a specific user, or "*<NONE>*" for SQL access log entries with no user.
+
+host:
+  Blank (the default) to retrieve all remote_hosts, or a specific host.
+
+referrer:
+  Blank (the default) to retrieve all referrers, "*<NONE>*" to retrieve entries with no referrer, otherwise any referrer that matches this parameter, truncating longer referrers before matching. So a parameter of referrer='~http://localhost' will match '~http://localhost/wiki/index.php', '~http://localhost/wiki/index.php/~HomePage' etc.
+
+local_referrers:
+  If set (the default), return all referrers. If not set, return only external referring sites, excluding references from within the wiki.
+
+!!!Adding new queries
+The file <tt>lib/plugin/AnalyseAccessLogSql.php</tt> contains a default set of queries against the SQL access log.
+Feel free to change this file to suit your own needs, but please note that this requires filesystem access to the web server where PhpWiki is running.
+In particular, this file may need to be modified to correctly query databases other than MySQL.
+The queries supplied by default are: "*Referring URLs*", "*Referring Domains*", "*Remote Hosts*", "*Users*" and "*Host Users*".
+
+To add a new query, add a new section towards the end of the file, using one of the existing queries as a template. An example of an existing query is:
+<pre>
+} elseif ($mode=="Users") {
+    $query = "SELECT "
+        ."remote_user AS User, "
+        ."count(*) AS 'Access Count' "
+        ."FROM $accesslog "
+        .($whereConditions ? 'WHERE '.$whereConditions : '')
+        ."GROUP BY User";
+</pre>
+
+If you do add a query, please consider contributing it back to the PhpWiki project at http://http://sourceforge.net/projects/phpwiki
+!API for ~AnalyseAccessLogSql
+* input arguments:
+  - *$mode* contains the name of the query requested in the plugin parameters.
+  - *$accesslog* contains the qualified name of the accesslog table, which may or may not be equal to "accesslog".
+  - *$whereConditions* contains the conditions (specific user, etc.) requested in the plugin parameters.
+
+* output:
+  - *$query* must contain the final SQL query to be executed.
+
+* conventions:
+  - While constructing the query string,
+    * each clause is on a separate line and
+    * each clause contains the required trailing punctuation or space.
+  - The mode parameter is, by default, displayed as the caption in the final output, so please choose a user friendly name.
+  - The column names displayed on the wiki page are generated from the SQL column names defined in the queries, so please choose user friendly names. MySQL allows column names to include spaces.  If spaces are not allowed, then "*_*" is probably the next best choice.
+
+* language hints for PHP newbies - please remember:
+  - terminate statements with "*;*",
+  - assignment uses "*=*" and comparison uses "*==*",
+  - concatenate strings using the "*.*" operator,
+  - the parentheses around the expression "*=($whereConditions ? 'WHERE '.$whereConditions : '' )=*" are essential,
+  - strings enclosed in single quotes may not contain substrings enclosed in single quotes (actually the truth is more complex but let's leave it like that here), and
+  - strings enclosed in double quotes will evaluate and replace variable names so that, for example, *"FROM $accesslog "* might be evaluated to *"FROM phpwiki_accesslog "*.
+
+! Author
+PhpWiki:CharlesCorrigan %%%
+Changes by PhpWiki:ReiniUrban
+----
+PhpWikiDocumentation WikiPlugin

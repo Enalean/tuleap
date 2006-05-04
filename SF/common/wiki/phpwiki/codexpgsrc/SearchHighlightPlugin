@@ -1,0 +1,25 @@
+Date: Fri, 24 Sep 2004 21:30:51 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: SearchHighlightPlugin,v 1.1 2004/09/27 09:24:56 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=SearchHighlightPlugin;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The SearchHighLight WikiPlugin is an internal actionpage plugin, 
+which is only used internally.
+
+When someone is referred from a search engine like Google, Yahoo
+or our own fulltextsearch, the terms the user searched for are highlighted.
+See also http://wordpress.org/about/shots/1.2/plugins.png
+
+!! Plugin Arguments
+__s__: |
+  The search term
+__case_exact__:  |
+  boolean. 
+__regex__:  |
+  boolean.

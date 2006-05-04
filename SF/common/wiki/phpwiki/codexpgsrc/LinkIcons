@@ -1,0 +1,65 @@
+Date: Thu, 28 Mar 2002 14:57:00 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: LinkIcons,v 1.10 2002/12/29 00:32:34 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=LinkIcons;
+  pgsrc_version="2 $Revision: 1.10 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+LinkIcons are an optional new feature of PhpWiki. When activated,
+icons will be displayed in front of URLs to indicate the type of link.
+
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/http.png]
+  http link
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/url.png]
+  generic internet link
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/interwiki.png]
+  InterWiki link
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/https.png]
+  https link
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/mailto.png]
+  mailto link
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/ftp.png]
+  ftp link
+
+__Note__: Some of the default icons use the alpha channel feature of
+the [PNG | http://www.libpng.org/pub/png/png-sitemap.html] image format
+for smooth rendering on any page color or textured background. Older
+browsers may not display all the images properly.
+
+!!!Examples
+
+The following examples will display with the above link icons only if
+the administrator has enabled this feature.
+
+!! InterWiki links
+
+* InterWiki link PhpWiki:InterWiki
+* A named InterWiki [read WhyWikiWorks at c2|Wiki:WhyWikiWorks].
+
+!!URLs
+
+* Email address [PhpWiki-talk mailing list|mailto:phpwiki-talk@lists.sourceforge.net]
+* Normal http link [PhpWiki's Home Page|http://phpwiki.sourceforge.net/phpwiki/]
+* Secure http link [PhpWiki's Home Page|https://phpwiki.sourceforge.net/phpwiki/]
+* File transfer ftp://ftp.sourceforge.net/
+
+''A generic icon is shown for other less common link types.''
+
+* news://nntp.news.com
+* gopher://gopher.caltech.cmu.edu
+
+LinkIcons will only display when the URL protocol is one which PhpWiki
+is allowed to link to. The following examples won't show any icons and
+PhpWiki won't automatically provide double-clickable links either,
+unless the administrator adds them:
+
+* bogus://oedipus.nostradamus.com
+* bolo://lgm.cheshire.org
+
+----
+
+PhpWikiDocumentation
