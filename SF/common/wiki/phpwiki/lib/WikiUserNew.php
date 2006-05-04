@@ -1126,6 +1126,12 @@ extends _AnonUser
             }
         }
         if ($num = _AnonUser::setPreferences($prefs, $id_only)) {
+            // Codex specific: We have to load the home page here because since
+            // the user page is not systematicaly created, the home page handle
+            // is not passed as user argument on _PassUser call. BTW, this
+            // method is called without test because it's only used because it
+            // load the '$this->_HomePagehandle' param.
+            $this->hasHomePage();
             // Encode only the _prefs array of the UserPreference object
             if (!empty($this->_HomePagehandle) and !$id_only) {
                 $this->_HomePagehandle->set('pref', $this->_prefs->store());
