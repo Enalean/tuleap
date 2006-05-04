@@ -1669,7 +1669,7 @@ function ValidateMail($email, $noconnect=false) {
 
     // if this check is too strict (like invalid mail addresses in a local network only)
     // uncomment the following line:
-    // return array(true,"not validated");
+    return array(true,"not validated");
     // see http://sourceforge.net/tracker/index.php?func=detail&aid=1053681&group_id=6121&atid=106121
 
     $result = array();
