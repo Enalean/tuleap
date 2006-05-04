@@ -606,6 +606,7 @@ class WikiRequest extends Request {
             case 'edit':
             case 'revert':
             case 'soap':
+            case 'upload':
                 if (defined('REQUIRE_SIGNIN_BEFORE_EDIT') && REQUIRE_SIGNIN_BEFORE_EDIT)
                     return WIKIAUTH_BOGO;
                 return WIKIAUTH_ANON;
@@ -618,7 +619,6 @@ class WikiRequest extends Request {
                     return $this->requiredAuthorityForAction('edit');
                 return $this->requiredAuthorityForAction('browse');
 
-            case 'upload':
             case 'dumpserial':
             case 'dumphtml':
             case 'loadfile':
@@ -841,6 +841,9 @@ class WikiRequest extends Request {
 
         if (!empty($this->args['auth']) and !empty($this->args['auth']['userid']))
             return $this->args['auth']['userid'];
+
+        // Codex specific
+        return user_getname();
 
         if ($user = $this->getSessionVar('wiki_user')) {
             // switched auth between sessions. 
