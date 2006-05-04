@@ -11,7 +11,25 @@ rcs_id('$Id: actionbar.tmpl,v 1.36 2005/04/23 11:43:44 rurban Exp $');
 <tr valign="baseline">
   <td>
   <div id="actionbuttons">
-    <?php if ((!$page->get('locked') || $user->isAdmin()) and $revision) { ?>
+    <?php 
+// To be able to edit :
+//  - page is not locked and:
+//     + you are anonymous and anonymous can edit
+//    or
+//     + you are not anonymous
+// or
+//  - you are admin
+if (
+    (
+     !$page->get('locked') &&
+     (
+      (!$user->isAuthenticated() && ALLOW_ANON_EDIT) ||
+      $user->isAuthenticated()
+      )
+     ) ||
+    $user->isAdmin()
+    )
+{ ?>
       <?= Button("edit", $revision->isCurrent() ? _("Edit") : _("Edit Old Revision")) ?>
     <?php } else { ?>
       <?= Button("viewsource", _("View Source")) ?>
@@ -23,13 +41,13 @@ rcs_id('$Id: actionbar.tmpl,v 1.36 2005/04/23 11:43:44 rurban Exp $');
       <?=$SEP?><?= Button('setacl') ?>
     <?php }} ?>
     <?php if ($user->isAdmin() or mayAccessPage('remove', $page->getName())) { ?>
-      <?=$SEP?><?= Button('revert',_("Revert"), $revision->isCurrent() ? $page->GetRevisionBefore() : $revision) ?>
+      <!--<?=$SEP?><?= Button('revert',_("Revert"), $revision->isCurrent() ? $page->GetRevisionBefore() : $revision) ?>-->
       <?=$SEP?><?= Button('remove') ?>
     <?php } ?>
     <?=$SEP?><?= Button("PageHistory", _("PageHistory")) ?>
     <?=$SEP?><?= Button("diff") ?> 
     <?=$SEP?><?= Button("PageInfo", _("PageInfo")) ?>
-<?php if ((DEBUG and $request->getArg('action') == 'browse') || $user->isAdmin()) { ?> 
+<?php if (false && ((DEBUG and $request->getArg('action') == 'browse') || $user->isAdmin())) { ?> 
     <!-- Buttons really only for debugging -->
     <?=$SEP?><?= Button("DebugInfo", _("DebugInfo")) ?>
     <?=$SEP?><?= Button("PageDump", _("PageDump")) ?>

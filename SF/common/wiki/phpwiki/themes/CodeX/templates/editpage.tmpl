@@ -35,12 +35,7 @@
   <br clear="all" class="clear-floats" />
   <table width="100%">
     <tr><td><?= $EDIT_TOOLBAR ?></td>
-        <td align="right"><div id="editarea-size">
-    <?=_("Size").':'?>
-    <label for="pref[editHeight]"><b><?=_("H")?></b></label> <?=$HEIGHT_PREF?> 
-    <label for="pref[editWidth]"><b><?=_("W")?></b></label> <?=$WIDTH_PREF?>
-    <noscript><?=Button("submit:", _("Adjust"), 'wikiaction')?></noscript>
-  </div></td></tr></table>
+    </tr></table>
   <a name="editarea"></a><?=$EDIT_TEXTAREA?>
 <!-- FIXME: fix layout, move CSS to CSS -->
 <div class="toolbar" style="text-align: center;">
@@ -65,7 +60,6 @@
       <?=$SEP?><?= $SAVE_B ?>
     <?php } ?>
   </td>
-  <td>&nbsp; <?=$AUTHOR_MESSAGE?></td>
 </tr>
 <tr>
   <td>

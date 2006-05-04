@@ -3,9 +3,9 @@ rcs_id('$Id: redirect.tmpl,v 1.4 2005/01/22 12:09:05 rurban Exp $');
 /* 
  * Redirect output.
  */
-if (browserVersion() >= 4.0)
-  echo "<","?xml version=\"1.0\" encoding=\"", $charset, "\"?", ">\n";
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

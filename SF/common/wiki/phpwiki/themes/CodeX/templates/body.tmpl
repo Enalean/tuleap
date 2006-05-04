@@ -1,8 +1,8 @@
 <?php // -*-html-*-
-rcs_id('$Id: body.tmpl,v 1.35 2004/12/19 18:28:59 rurban Exp $');
-?>
-<body<?= $WikiTheme->getMoreAttr('body') ?>>
 
+wiki_display_header();
+
+?>
 <div id="header">
   <?= Template('top') ?>
 </div>
@@ -10,4 +10,6 @@ rcs_id('$Id: body.tmpl,v 1.35 2004/12/19 18:28:59 rurban Exp $');
 <?= $CONTENT ?>
 </div>
 <?= Template('bottom') ?>
-</body>
+<?php
+wiki_display_footer();
+?>
