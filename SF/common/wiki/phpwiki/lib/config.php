@@ -556,7 +556,7 @@ function getUploadFilePath() {
         : realpath(dirname(__FILE__) . "/../uploads/");
 }
 function getUploadDataPath() {
-  return SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/';
+  return SERVER_URL . ((substr(DATA_PATH,0,1)=='/') ? '' : "/") . DATA_PATH . '/uploads/'.GROUP_ID.'/';
 }
 
 // $Log: config.php,v $
