@@ -202,6 +202,11 @@ function WikiURL($pagename, $args = '', $get_abs_url = false) {
         if ($args)
             $url .= "&$args";
     }
+    global $group_id;
+    $url .= '&group_id='.$group_id;
+    global $pv;
+    if ($pv)
+        $url .= '&pv='.$pv;
     if ($anchor)
         $url .= "#" . MangleXmlIdentifier($anchor);
     return $url;
