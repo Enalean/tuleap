@@ -143,10 +143,10 @@ if (!defined('TIMEOFFSET_DEFAULT_HOURS')) define('TIMEOFFSET_DEFAULT_HOURS', 0);
  */
 
 // The last object in the row is the bad guy...
-if (!is_array($USER_AUTH_ORDER))
-    $USER_AUTH_ORDER = array("Forbidden");
+if (!is_array($GLOBALS['USER_AUTH_ORDER']))
+    $GLOBALS['USER_AUTH_ORDER'] = array("Forbidden");
 else
-    $USER_AUTH_ORDER[] = "Forbidden";
+    $GLOBALS['USER_AUTH_ORDER'][] = "Forbidden";
 
 // Local convenience functions.
 function _isAnonUserAllowed() {
