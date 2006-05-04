@@ -122,6 +122,9 @@ extends _RecentChanges_HtmlFormatter
         $html[] = HTML::input(array('type'  => 'hidden',
                                     'name'  => 'action',
                                     'value' => 'diff'));
+        $html[] = HTML::input(array('type'  => 'hidden',
+                                    'name'  => 'group_id',
+                                    'value' => GROUP_ID));
         if (USE_PATH_INFO) {
             $action = WikiURL($pagename);
         }
