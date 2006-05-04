@@ -1,4 +1,4 @@
- # $Id$
+ # $Id: Makefile 1502 2005-05-12 10:08:20Z guerin $
 #
 # locale/Makefile
 #

@@ -1,4 +1,4 @@
--- $Id$
+-- $Id: mysql.sql 1422 2005-04-12 13:33:49Z guerin $
 
 drop table if exists page;
 CREATE TABLE page (

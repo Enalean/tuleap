@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: removepage.php 1502 2005-05-12 10:08:20Z guerin $');
 require_once('lib/Template.php');
 require_once(PHPWIKI_DIR.'/../lib/WikiPage.class'); // CodeX specific
 

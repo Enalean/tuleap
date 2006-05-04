@@ -1,5 +1,5 @@
 <?php //-*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiPlugin.php 1422 2005-04-12 13:33:49Z guerin $');
 
 class WikiPlugin
 {
@@ -87,7 +87,7 @@ class WikiPlugin
     function getVersion() {
         return _("n/a");
         //return preg_replace("/[Revision: $]/", '',
-        //                    "\$Revision$");
+        //                    "\$Revision: 1422 $");
     }
 
     function getArgs($argstr, $request=false, $defaults = false) {

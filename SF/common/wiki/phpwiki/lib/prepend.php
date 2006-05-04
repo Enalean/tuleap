@@ -5,7 +5,7 @@
  */
 $RCS_IDS = '';
 function rcs_id ($id) { $GLOBALS['RCS_IDS'] .= "$id\n"; }
-rcs_id('$Id$');
+rcs_id('$Id: prepend.php 1422 2005-04-12 13:33:49Z guerin $');
 
 define ('PHPWIKI_VERSION', '1.3.10');
 

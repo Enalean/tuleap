@@ -1,4 +1,4 @@
-$Id$
+$Id: README 1422 2005-04-12 13:33:49Z guerin $
 
 todo: certain blocks are repeated over and over. For example, editing
 a page is always the same set of links to follow, but this info is

@@ -1,6 +1,6 @@
 <?php
 
-rcs_id( '$Id$' );
+rcs_id( '$Id: file.php 2691 2006-03-02 15:31:51Z guerin $' );
 
 /**
  Copyright 1999, 2000, 2001, 2002, 2003 $ThePhpWikiProgrammingTeam

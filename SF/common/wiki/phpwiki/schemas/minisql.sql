@@ -1,4 +1,4 @@
-# $Id$
+# $Id: minisql.sql 1422 2005-04-12 13:33:49Z guerin $
 
 drop table wiki\g
 drop table wikipages\g

@@ -1,9 +1,9 @@
 Date: Sat, 11 Jan 2003 14:53:00 -0500
 Mime-Version: 1.0 (Produced by PhpWiki 1.3.4)
-X-Rcs-Id: $Id$
+X-Rcs-Id: $Id: PhpWeatherPlugin 1502 2005-05-12 10:08:20Z guerin $
 Content-Type: application/x-phpwiki;
   pagename=PhpWeatherPlugin;
-  pgsrc_version="2 $Revision$";
+  pgsrc_version="2 $Revision: 1502 $";
   flags="";
   markup=2;
   charset=iso-8859-1

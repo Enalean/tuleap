@@ -1,6 +1,6 @@
 <?php
 
-rcs_id( '$Id$' );
+rcs_id( '$Id: cvs.php 1422 2005-04-12 13:33:49Z guerin $' );
 
 require_once( 'lib/WikiDB.php' );
 require_once( 'lib/WikiDB/backend/cvs.php' );

@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: editpage.php 2691 2006-03-02 15:31:51Z guerin $');
 
 require_once('lib/Template.php');
 

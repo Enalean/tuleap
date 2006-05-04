@@ -1,6 +1,6 @@
 -- http://www.hezmatt.org/~mpalmer/sqlite-phpwiki/sqlite.sql
 
--- $Id$
+-- $Id: sqlite.sql 1422 2005-04-12 13:33:49Z guerin $
 
 CREATE TABLE page (
 	id              INT NOT NULL,

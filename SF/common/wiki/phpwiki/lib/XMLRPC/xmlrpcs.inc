@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id$
+// $Id: xmlrpcs.inc 1422 2005-04-12 13:33:49Z guerin $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.

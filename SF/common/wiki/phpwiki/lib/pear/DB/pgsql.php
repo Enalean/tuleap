@@ -20,7 +20,7 @@
 // Based on DB 1.3 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths. 
 //
-rcs_id('$Id$');
+rcs_id('$Id: pgsql.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: Id: pgsql.php,v 1.22 2003/05/07 16:58:28 mj Exp');
 //
 // Database independent query interface definition for PHP's PostgreSQL

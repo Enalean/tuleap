@@ -16,7 +16,7 @@
 // | Author: Tomas V.V.Cox <cox@idecnet.com>                              |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: ifx.php 1422 2005-04-12 13:33:49Z guerin $
 //
 // Database independent query interface definition for PHP's Informix
 // extension.
@@ -33,7 +33,7 @@
 // Based on DB 1.3 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths. 
 //
-rcs_id('$Id$');
+rcs_id('$Id: ifx.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: Id: ifx.php,v 1.4 2002/05/26 14:41:27 cox Exp');
 
 require_once 'DB/common.php';

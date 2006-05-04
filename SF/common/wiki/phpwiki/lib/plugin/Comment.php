@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: Comment.php 2691 2006-03-02 15:31:51Z guerin $');
 /**
  * A WikiPlugin for putting comments in WikiPages
  *
@@ -29,7 +29,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 2691 $");
     }
 
     // No arguments here.

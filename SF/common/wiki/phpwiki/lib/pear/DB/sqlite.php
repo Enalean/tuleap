@@ -20,7 +20,7 @@
 // Based on DB 1.5.0RC2 from the pear.php.net repository. 
 // The only modification is the include path.
 //
-rcs_id('$Id$');
+rcs_id('$Id: sqlite.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: $Id: sqlite.php,v 1.14 2003/09/11 12:55:23 tuupola Exp');
 // 
 //

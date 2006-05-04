@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: IniConfig.php 2691 2006-03-02 15:31:51Z guerin $');
 
 /**
  * A configurator intended to read it's config from a PHP-style INI file,

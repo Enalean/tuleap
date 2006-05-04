@@ -1,9 +1,9 @@
 Date: Wed, 12 May 2004 11:53:46 +0100
 Mime-Version: 1.0 (Produced by PhpWiki 1.3.10pre)
-X-Rcs-Id: $Id$
+X-Rcs-Id: $Id: RecentChanges 1502 2005-05-12 10:08:20Z guerin $
 Content-Type: application/x-phpwiki;
   pagename=RecentChanges;
-  pgsrc_version="3 $Revision$";
+  pgsrc_version="3 $Revision: 1502 $";
   flags=PAGE_LOCKED;
   markup=2;
   charset=iso-8859-1

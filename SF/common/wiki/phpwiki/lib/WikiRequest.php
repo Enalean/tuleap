@@ -1,5 +1,5 @@
 <?php //-*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiRequest.php 2132 2005-10-03 15:28:38Z guerin $');
 
 define ('USE_PREFS_IN_PAGE', true);
 

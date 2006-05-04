@@ -1,10 +1,10 @@
 Date: Wed, 13 Feb 2002 20:50:00 -0500
 Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
-X-Rcs-Id: $Id$
+X-Rcs-Id: $Id: PluginCalendrier 1502 2005-05-12 10:08:20Z guerin $
 Content-Type: application/x-phpwiki;
   pagename=PluginCalendrier;
   flags=PAGE_LOCKED;
-  pgsrc_version="2 $Revision$";
+  pgsrc_version="2 $Revision: 1502 $";
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 

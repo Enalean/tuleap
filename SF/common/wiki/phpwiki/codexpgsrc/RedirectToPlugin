@@ -2,7 +2,7 @@ Date: Sat, 15 Feb 2003 15:46:58 -0800
 Mime-Version: 1.0 (Produced by PhpWiki 1.3.4pre)
 Content-Type: application/x-phpwiki;
   pagename=RedirectToPlugin;
-  pgsrc_version="1 $Revision$";
+  pgsrc_version="1 $Revision: 1502 $";
   flags="";
   lastmodified=1045352818;
   markup=2;

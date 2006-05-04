@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: Tools.php 2691 2006-03-02 15:31:51Z guerin $');
 /*
  Copyright 2002 $ThePhpWikiProgrammingTeam
 

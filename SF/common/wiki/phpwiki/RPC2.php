@@ -1,5 +1,5 @@
 <?php 
-// $Id$
+// $Id: RPC2.php 1422 2005-04-12 13:33:49Z guerin $
 /*
  * The guts of this code have been moved to lib/XmlRpcServer.php.
  *

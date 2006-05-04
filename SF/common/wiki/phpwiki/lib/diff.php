@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: diff.php 2691 2006-03-02 15:31:51Z guerin $');
 // diff.php
 //
 // PhpWiki diff output code.

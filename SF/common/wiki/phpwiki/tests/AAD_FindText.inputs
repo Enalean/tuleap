@@ -1,6 +1,6 @@
 # Test the page WabiSabi for the text
 # string "imperfect, impermanent, and incomplete"
-# $Id$
+# $Id: AAD_FindText.inputs 1422 2005-04-12 13:33:49Z guerin $
 
 # get the starting page
 type: starting_page

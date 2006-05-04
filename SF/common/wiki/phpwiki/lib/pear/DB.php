@@ -22,7 +22,7 @@
 // The only modifications made have been modification of the include paths,
 // plus the inclusion depricated DB_Warning class.
 //
-rcs_id('$Id$');
+rcs_id('$Id: DB.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: Id: DB.php,v 1.20 2003/05/07 16:54:45 mj Exp');
 //
 // Database independent query interface.

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: RichTable.php 2691 2006-03-02 15:31:51Z guerin $');
 /**
   RichTablePlugin
   A PhpWiki plugin that allows insertion of tables using a richer syntax
@@ -42,7 +42,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 2691 $");
     }
 
     function run($dbi, $argstr, &$request, $basepage) {

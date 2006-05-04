@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: InlineParserTest.php 1422 2005-04-12 13:33:49Z guerin $');
 
 /* Copyright (C) 2004, Dan Frankowski <dfrankow@cs.umn.edu>
  */

@@ -65,4 +65,4 @@ if (!extension_loaded("mysql"))  { dl("mysql.so"); }
 /Arno
 ahollosi@mail.com
 
-$Id$
+$Id: INSTALL.mysql 1422 2005-04-12 13:33:49Z guerin $

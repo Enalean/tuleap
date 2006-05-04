@@ -1,5 +1,5 @@
 <?php //-*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: main.php 2691 2006-03-02 15:31:51Z guerin $');
 
 define ('USE_PREFS_IN_PAGE', true);
 

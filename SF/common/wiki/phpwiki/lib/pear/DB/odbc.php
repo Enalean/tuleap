@@ -16,7 +16,7 @@
 // | Author: Stig Bakken <ssb@fast.no>                                    |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: odbc.php 1422 2005-04-12 13:33:49Z guerin $
 //
 // Database independent query interface definition for PHP's ODBC
 // extension.
@@ -33,7 +33,7 @@
 // Based on DB 1.3 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths. 
 //
-rcs_id('$Id$');
+rcs_id('$Id: odbc.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: Id: odbc.php,v 1.3 2002/05/09 12:29:53 ssb Exp');
 
 require_once 'DB/common.php';

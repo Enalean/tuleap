@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: TexToPng.php 2691 2006-03-02 15:31:51Z guerin $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -105,7 +105,7 @@ class WikiPlugin_TexToPng extends WikiPluginCached
     
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 2691 $");
     }
 
     function getDefaultArguments() {

@@ -16,7 +16,7 @@
 // |          Sebastian Bergmann <sb@sebastian-bergmann.de>               |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: Cache.php 1422 2005-04-12 13:33:49Z guerin $
 
 require_once('PEAR.php');
 require_once('Cache/Error.php');
@@ -59,7 +59,7 @@ require_once('Cache/Error.php');
 *          bad circumstances  (especially with the file container)
 *
 * @author   Ulf Wendel <ulf.wendel@phpdoc.de>
-* @version  $Id$
+* @version  $Id: Cache.php 1422 2005-04-12 13:33:49Z guerin $
 * @package  Cache
 * @access   public
 */

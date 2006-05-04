@@ -83,4 +83,4 @@ swain@panix.com
 
 Report bugs to phpwiki-talk@lists.sourceforge.net
 
-$Id$
+$Id: INSTALL.pgsql 1422 2005-04-12 13:33:49Z guerin $

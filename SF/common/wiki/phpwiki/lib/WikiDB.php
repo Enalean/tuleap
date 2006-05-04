@@ -1,5 +1,5 @@
 <?php //-*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiDB.php 2691 2006-03-02 15:31:51Z guerin $');
 
 //require_once('lib/stdlib.php');
 require_once('lib/PageType.php');

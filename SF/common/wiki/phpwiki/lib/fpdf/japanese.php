@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: japanese.php 1422 2005-04-12 13:33:49Z guerin $');
 
 // PDF functions taken from FPDF http://www.fpdf.org
 

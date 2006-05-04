@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: mysql.php 1422 2005-04-12 13:33:49Z guerin $');
 
 require_once('lib/WikiDB/backend/PearDB.php');
 

@@ -16,7 +16,7 @@
 // | Author: James L. Pine <jlp@valinux.com>                              |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: oci8.php 1422 2005-04-12 13:33:49Z guerin $
 //
 // Database independent query interface definition for PHP's Oracle 8
 // call-interface extension.
@@ -30,7 +30,7 @@
 // Based on DB 1.3 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths. 
 //
-rcs_id('$Id$');
+rcs_id('$Id: oci8.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: Id: oci8.php,v 1.4 2002/07/02 16:39:16 mj Exp');
 
 require_once 'DB/common.php';

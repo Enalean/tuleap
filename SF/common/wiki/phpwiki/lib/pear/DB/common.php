@@ -19,7 +19,7 @@
 // Based on DB 1.3 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths.
 //
-rcs_id('$Id$');
+rcs_id('$Id: common.php 1422 2005-04-12 13:33:49Z guerin $');
 rcs_id('From Pear CVS: Id: common.php,v 1.15 2003/05/07 16:58:28 mj Exp');
 //
 // Base class for DB implementations.

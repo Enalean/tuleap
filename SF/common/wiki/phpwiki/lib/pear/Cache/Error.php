@@ -15,7 +15,7 @@
 // | Authors: Ulf Wendel <ulf.wendel@phpdoc.de>                           |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: Error.php 1422 2005-04-12 13:33:49Z guerin $
 
 require_once 'PEAR.php';
 
