@@ -1788,7 +1788,7 @@ class UserPreferences
                     'noLinkIcons'   => new _UserPreference_bool(),    // 1.3.8 
                     'editHeight'    => new _UserPreference_int(EDITHEIGHT_DEFAULT_ROWS,
                                                                EDITHEIGHT_MIN_ROWS,
-                                                               EDITHEIGHT_DEFAULT_ROWS),
+                                                               EDITHEIGHT_MAX_ROWS),
                     'timeOffset'    => new _UserPreference_numeric(TIMEOFFSET_DEFAULT_HOURS,
                                                                    TIMEOFFSET_MIN_HOURS,
                                                                    TIMEOFFSET_MAX_HOURS),
