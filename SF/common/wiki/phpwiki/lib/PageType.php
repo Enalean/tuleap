@@ -178,7 +178,17 @@ class PageType_interwikimap extends PageType
         
         // Urlencode page only if it's a query arg.
         // FIXME: this is a somewhat broken heuristic.
+        if($moniker == 'Attach' || $moniker == 'Upload') {
+            if(preg_match('/^([0-9]+)\/(.*)$/', $page, $matches)) {
+                $page_enc = $matches[1].'/'.rawurlencode($matches[2]);
+            }
+            else {
+                $page_enc = rawurlencode($page);
+            }
+        }
+        else {
         $page_enc = strstr($url, '?') ? rawurlencode($page) : $page;
+        }
 
         if (strstr($url, '%s'))
             $url = sprintf($url, $page_enc);
@@ -217,6 +227,9 @@ class PageType_interwikimap extends PageType
         // In the Upload plugin, not here: Upload:ReiniUrban/uploaded-file.png
         if (empty($map['Upload'])) {
             $map['Upload'] = getUploadDataPath();
+        }
+        if (empty($map['Attach'])) {
+            $map['Attach'] = getUploadDataPath();
         }
         // User:ReiniUrban => ReiniUrban or Users/ReiniUrban
         // Can be easily overriden by a customized InterWikiMap: 
