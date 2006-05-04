@@ -305,6 +305,9 @@ class WikiPlugin
                                  'method' => $args['method'],
                                  'class'  => $args['class'],
                                  'accept-charset' => $GLOBALS['charset']));
+        $form->pushContent(HTML::input(array('type' => 'hidden', 
+                                             'name' => 'group_id', 
+                                             'value' => GROUP_ID)));
         if (! USE_PATH_INFO ) {
             $pagename = $request->get('pagename');
             $form->pushContent(HTML::input(array('type' => 'hidden', 
