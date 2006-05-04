@@ -64,8 +64,8 @@ extends WikiPlugin
                       'with_toclink' => 0,         // link back to TOC
                       'jshide'    => 0,            // collapsed TOC as DHTML button
                       'liststyle' => 'dl',         // or 'ul' or 'ol'
-                      'indentstr' => '&nbsp;&nbsp;',
-		      'with_counter' => 0,
+                      'indentstr' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+		      'with_counter' => 1,
                       );
     }
     // Initialisation of toc counter
