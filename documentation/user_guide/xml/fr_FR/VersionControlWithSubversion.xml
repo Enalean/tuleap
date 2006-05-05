@@ -820,7 +820,26 @@ members = membre1,membre2,...,membreN
 
 	<para>où <literal>membre1,membre2,...,membreN</literal>
 	représentent la liste des utilisateurs du projet.</para>
+        <para>En outre, tous les groupes d'utilisateurs définis dans ce projet sont également détaillés dans cette section.</para>
+        <para>Cette configuration par défaut est générée automatiquement, et ne peut pas être éditée par l'utilisateur. Il faut considérer cette section comme le début du fichier de spécification des permission du dépôt Subversion: les administrateurs du projet peuvent définir des permissions, qui seront ajoutées à la suite de cette section.</para>
+        <para>Notez bien qu'il n'est pas possible de restreindre des permissions déjà accordées sur un même répertoire.</para>
+       <para>Par exemple, un projet publique aura le fichier de permission décrit plus haut; il est inutile dans ce cas d'écrire des règles plus strictes pour limiter l'accès au repertoire racine. Ainsi, ajouter:
+</para>
 
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[/]
+* = 
+      </programlisting>
+      <para>n'empèchera pas tout utilisateur enregistré d'accéder au dépôt, puisque la règle par défaut l'y autorise. Néanmoins, il est tout à fait possible de restreindre l'accès à un sous-répertoire:
+</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[/secret]
+* = 
+@members = rw
+      </programlisting>
+      <para>empèchera effectivement aux utilisateurs non membres du projet d'accéder au repertoire '/secret'.</para>
+      <para>Si vous souhaitez néanmoins interdire l'accès à la totalité du dépôt, vous devrez contacter un administrateur CodeX (il créera un fichier .CODEX_PRIVATE dans le dépôt).</para>
 	<para>Pour plus d'information concernant le format de ce
 	fichier référez-vous aux ouvrages sur Subversion (voir <xref
 	linkend="SubversionReferences" />).</para>

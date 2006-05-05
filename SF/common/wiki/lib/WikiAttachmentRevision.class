@@ -121,11 +121,13 @@ class WikiAttachmentRevision {
 
         $res = db_query($sql);
 
-        if(db_affected_rows($res) === 1)
-            return true;
-
-        trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
-        return false;
+        if($res === false) {
+	  trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
+	  return false;
+	}
+	else {
+	  return true;
+	}
     }
 
 

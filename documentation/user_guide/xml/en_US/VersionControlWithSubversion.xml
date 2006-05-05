@@ -775,7 +775,30 @@ members = member1,member2,...,memberN
 
 	<para>where <literal>member1,member2,...,memberN</literal> are
 	the CodeX login name of the CodeX project members.</para>
+        <para>Additionnaly, all existing
+        user groups defined in this project are listed in this section.</para>
+        <para>These default permission settings are automatically generated, and cannot
+        be edited. You should consider this section as the beginning of the Subversion permission
+        file: project administrators can then edit additional permissions that will be added below the automatic section.
+        </para>
+        <para>Please note that it is not possible to restrict permissions already granted on the same directory.</para>
+       <para>For instance, a public project has the default permission file detailed above; it is useless to add a stricter rule on the root directory. For instance, adding:
+</para>
 
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[/]
+* = 
+      </programlisting>
+      <para>will not prevent registered users to access the repository, since the default rule already grants this permission. However, it is possible to restrict permissions on a subfolder:
+</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[/secret]
+* = 
+@members = rw
+      </programlisting>
+      <para>will indeed prevent registered users from reading the '/secret' directory.</para>
+      <para>If you really need to prevent access to the whole repository, you should contact a CodeX administrator (s/he will create a .CODEX_PRIVATE file in the repository).</para>
 	<para>For more information about the format of this file you
 	should refer to the Subversion Book (see <xref
 	linkend="SubversionReferences" />).</para>
