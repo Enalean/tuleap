@@ -157,10 +157,9 @@ class Wiki {
       // The language of the wiki is the language of all its wiki documents.
       if (!$this->language_id) {
           // We only support one language for all the wiki documents of a project.
-          $wem = new WikiEntryManager($this->gid);
-          $wem->getList();
-          if ($wem->count()) {
-              $we = $wem->iterate(); // get first element  
+          $wei =& WikiEntry::getEntryIterator($this->gid);
+          if ($wei->valid()) {
+              $we =& $wei->current(); // get first element  
               $this->language_id = $we->getLanguage_id();
           }
       }

@@ -190,8 +190,8 @@ class WikiServiceAdminViews extends WikiViews {
    */
   function _browseWikiDocument() {
     global $Language;
-    $wem = new WikiEntryManager($this->gid);
-    $wem->getList();
+
+    $wei = WikiEntry::getEntryIterator($this->gid);
    
     print $Language->getText('wiki_views_wkserviews', 'browsedoc');
     
@@ -200,7 +200,9 @@ class WikiServiceAdminViews extends WikiViews {
                                           $Language->getText('wiki_views_wkserviews', 'doc_rank'),
                                           $Language->getText('wiki_views_wkserviews', 'doc_delete')));
     $i=0;
-    while($we = $wem->iterate()) {
+    while($wei->valid()) {
+        $we = $wei->current();
+
       print '<tr class="'.html_get_alt_row_color($i).'">';
 
       print '<td>
@@ -227,7 +229,9 @@ class WikiServiceAdminViews extends WikiViews {
       print '</td>';
 
       print '</tr>';
+
       $i++;
+      $wei->next();
     }
     print '</table>';
   }

@@ -119,15 +119,19 @@ class WikiServiceViews extends WikiViews {
    */
   function _browseWikiDocuments() {
     global $Language;
-    $wem = new WikiEntryManager($this->gid);
-    $wem->getList();
+
+    $wei =& WikiEntry::getEntryIterator($this->gid);
 
     print '<ul class="WikiEntries">';
-    while($we = $wem->iterate()) {
+    while($wei->valid()) {
+        $we = $wei->current();
+
       $href = $this->_buildPageLink($we->wikiPage, $we->getName());
       if(!empty($href)) {
           print $Language->getText('wiki_views_wikiserviceviews', 'wikientries', array($href, $we->getDesc()));
       }
+
+      $wei->next();
     }
     print '</ul>';
   }

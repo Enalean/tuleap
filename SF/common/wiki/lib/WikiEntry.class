@@ -1,6 +1,6 @@
 <?php
 /* 
- * Copyright 2005, STMicroelectronics
+ * Copyright 2005, 2006 STMicroelectronics
  *
  * Originally written by Manuel Vacelet
  *
@@ -23,30 +23,9 @@
 
 require_once('HTMLCleaner.class');
 require_once('WikiPage.class');
-require_once('RecordIterator.class');
+require_once('common/collection/ArrayIterator.class');
 
 $Language->loadLanguageMsg('wiki/wiki');
-
-class WikiEntryManager extends RecordIterator {
-  /* private int */ var $gid;
-
-  /**
-   * Constructor
-   */
-  function WikiEntryManager($gid=0) {
-    $this->gid = (int) $gid;
-    parent::RecordIterator('WikiEntry');
-  }
-
-  function getList() {
-    $this->sqlStatement = 
-      '  SELECT * FROM wiki_group_list'
-      .' WHERE group_id='.$this->gid
-      .' ORDER BY rank';
-    $this->dbinit();
-  }
-
-}
 
 /**
  *
@@ -170,6 +149,35 @@ class WikiEntry {
   function getDesc() {
     return stripslashes($this->desc);
   }
+
+    /**
+     * Return an iterator on WikiEntries
+     */
+    function getEntryIterator($gid=null) {
+        if($gid !== null) {
+            $gid = (int) $gid;
+        }
+        else {
+            $gid = $this->gid;
+        }
+
+        //@todo: transfer to a DAO
+        $qry = ' SELECT * FROM wiki_group_list'
+            .' WHERE group_id='.$gid
+            .' ORDER BY rank';
+        
+        $res = db_query($qry);
+
+        $weArray = array();
+        while($row = db_fetch_array($res)) {
+            $we =& new WikiEntry();
+            $we->setFromRow($row);
+            $weArray[] =& $we;
+            unset($we);
+        }
+
+        return new ArrayIterator($weArray);
+    }
 
   /**
    * Data handle
