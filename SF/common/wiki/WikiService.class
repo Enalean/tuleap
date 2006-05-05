@@ -112,7 +112,7 @@ class WikiService extends Controler {
         $this->view = 'browse';
 
     if(!empty($_REQUEST['pagename'])) 
-        $this->view = 'wiki';
+        $this->view = 'empty';
 
     if(isset($_REQUEST['format']) && 
        ($_REQUEST['format'] == 'rss') )
