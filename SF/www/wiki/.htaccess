@@ -1,13 +1,5 @@
-<IfModule mod_php4.c>
+# Force mime-type for PHP scripts without .php extension
 <Files uploads>
 ForceType application/x-httpd-php
 </Files>
-</IfModule>
 
-<IfModule sapi_apache2.c>
-<Files uploads>
- AcceptPathInfo on
- SetOutputFilter PHP
- SetInputFilter PHP
-</Files>
-</IfModule>
