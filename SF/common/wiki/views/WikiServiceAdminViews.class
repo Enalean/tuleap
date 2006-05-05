@@ -440,14 +440,11 @@ class WikiServiceAdminViews extends WikiViews {
      */
     function browseAttachment() {
         global $Language;
-        $attachmentId = $_GET['id'];
+        $attachmentId = (int) $_GET['id'];
     
         $wa = new WikiAttachment($this->gid);
         $wa->initWithId($attachmentId);
-      
-        $wari = new WikiAttachmentRevisionIterator($attachmentId);
-        $wari->getList();
-
+              
         echo $Language->getText('wiki_views_wkserviews', 'browse_attachment_title', array($this->wikiname,$wa->getFilename()));
 
         // if($wari->exist()) {      
@@ -455,8 +452,11 @@ class WikiServiceAdminViews extends WikiViews {
                                               $Language->getText('wiki_views_wkserviews', 'attachment_date'),
                                               $Language->getText('wiki_views_wkserviews', 'attachment_author'),
                                               $Language->getText('wiki_views_wkserviews', 'attachment_size')));
-    
-        while($war =& $wari->iterate()) {      
+        $wari =& WikiAttachmentRevision::getRevisionIterator($this->gid, $attachmentId);
+        $wari->rewind();
+        while($wari->valid()) {
+            $war =& $wari->current();
+
             print '
              <tr>
 	       <td><a href="/wiki/uploads/'.$this->gid.'/'.$wa->getFilename().'/'.($war->getRevision()+1).'">'.($war->getRevision()+1).'</a></td>
@@ -464,6 +464,8 @@ class WikiServiceAdminViews extends WikiViews {
                <td><a href="/users/'.user_getname($war->getOwnerId()).'/">'.user_getname($war->getOwnerId()).'</td>
 	       <td>'.$war->getSize().'</td>
 	     </tr>';
+
+            $wari->next();
         }
     
         print '</table>';

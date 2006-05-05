@@ -38,7 +38,6 @@ require_once('RecordIterator.class');
  *
  *
  * @see       WikiAttachment
- * @see       WikiAttachmentRevisionIterator
  * @package   WikiService
  * @copyright STMicroelectronics, 2005
  * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
@@ -65,7 +64,7 @@ class WikiAttachmentRevision {
      */
     function WikiAttachmentRevision($gid=null) {
         if(is_numeric($gid)) {
-            $this->gid = $gid;
+            $this->gid = (int) $gid;
             $this->basedir = ATTACHMENT_DATA_DIR.'/'.$this->gid;
         }
     }
@@ -92,8 +91,7 @@ class WikiAttachmentRevision {
     
         /** @todo: add lock */
 
-        $waIter = new WikiAttachmentRevisionIterator($this->attachmentId);
-        $waIter->getList();
+        $waIter =& $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
         if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {		
@@ -298,47 +296,37 @@ class WikiAttachmentRevision {
     function getDate() {
         return $this->date;
     }
-}
 
-
-/**
- * Iteratator for file revisions
- *
- * This class helps for WikiAttachment and WikiAttachement_Revision handeling
- * It offers classical function to walk into WikiAttachement_Revision and to
- * compute interesting values.
- *
- * @see       WikiAttachment
- * @see       WikiAttachmentRevision
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
-class WikiAttachmentRevisionIterator extends RecordIterator {
-    /**
-     * attachment id
-     * @var int
-     */
-    var $id;
-  
     /**
      * @access public
-     * @param  $file string File to iterate
+     * @param  Iterator
      */
-    function WikiAttachmentRevisionIterator($id) {
-        $this->id = (int) $id;   
-        parent::RecordIterator('WikiAttachmentRevision');
-    }
+    function &getRevisionIterator($gid=null, $id=null) {
+        if($id !== null) {
+            $id  = (int) $id;
+            $gid = (int) $gid;            
+        }
+        else {
+            $gid = $this->gid;
+            $id  = $this->attachmentId;
+        }
 
-
-    function getList() {
-        $this->sqlStatement = 
-            '  SELECT * FROM wiki_attachment_revision'
-            .' WHERE attachment_id="'.$this->id.'"'
+        //@todo: transfer to a DAO
+        $qry = '  SELECT * FROM wiki_attachment_revision'
+            .' WHERE attachment_id="'.$id.'"'
             .' ORDER BY date DESC';
-        $this->dbinit();
+        
+        $res = db_query($qry);
+        while($row = db_fetch_array($res)) {
+            $war =& new WikiAttachmentRevision($gid);
+            $war->setFromRow($row);
+            $warArray[] =& $war;
+            unset($war);
+        }
+
+        return new ArrayIterator($warArray);
     }
+
 }
 
 ?>

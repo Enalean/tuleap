@@ -39,7 +39,6 @@ $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
  *
  *
  * @see       WikiAttachmentRevision
- * @see       WikiAttachmentRevisionIterator
  * @package   WikiService
  * @copyright STMicroelectronics, 2005
  * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
@@ -422,8 +421,7 @@ ws[cfh]");
 
     function count() {
         $this->getId();
-        $waIter = new WikiAttachmentRevisionIterator($this->id);
-        $waIter->getList();
+        $waIter =& WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
         return $waIter->count();
     }
 
