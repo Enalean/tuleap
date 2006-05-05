@@ -36,7 +36,7 @@ extends WikiPlugin
 {
     var $disallowed_extensions;
     // TODO: use PagePerms instead
-    var $only_authenticated = true; // allow only authenticated users may upload.
+    var $only_authenticated = false; // allow only authenticated users may upload.
 
     function getName () {
         return "UpLoad";
@@ -47,7 +47,7 @@ extends WikiPlugin
     }
 
     function getDefaultArguments() {
-        return array('logfile'  => 'phpwiki-upload.log',
+        return array('logfile'  => false,
         	     // add a link of the fresh file automatically to the 
         	     // end of the page (or current page)
         	     'autolink' => true, 
@@ -108,6 +108,13 @@ ws[cfh]");
         $contents->pushContent(HTML::input(array('type' => 'hidden',
                                                  'name' => 'MAX_FILE_SIZE',
                                                  'value' => MAX_UPLOAD_SIZE)));
+        /// MV add pv
+        /// @todo: have a generic method to transmit pv
+        if(!empty($_REQUEST['pv'])) {
+            $contents->pushContent(HTML::input(array('type' => 'hidden',
+                                                     'name' => 'pv',
+                                                     'value' => $_REQUEST['pv'])));
+        }
         $contents->pushContent(HTML::input(array('name' => 'userfile',
                                                  'type' => 'file',
                                                  'size' => '50')));
@@ -136,34 +143,17 @@ ws[cfh]");
             $userfile_name = trim(basename($userfile_name));
             $userfile_tmpname = $userfile->getTmpName();
 	    $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
-            if (preg_match("/(\." . join("|\.", $this->disallowed_extensions) . ")\$/",
-                           $userfile_name))
-            {
-            	$message->pushContent($err_header);
-                $message->pushContent(fmt("Files with extension %s are not allowed.",
-                                          join(", ", $this->disallowed_extensions)),HTML::br(),HTML::br());
-            } 
-            elseif (preg_match("/[^._a-zA-Z0-9-]/", $userfile_name))
-            {
-            	$message->pushContent($err_header);
-                $message->pushContent(_("File names may only contain alphanumeric characters and dot, underscore or dash."),
-                                      HTML::br(),HTML::br());
-            }
-            elseif (file_exists($file_dir . $userfile_name)) {
-            	$message->pushContent($err_header);
-                $message->pushContent(fmt("There is already a file with name %s uploaded.",
-                                          $userfile_name),HTML::br(),HTML::br());
-            }
-            elseif ($userfile->getSize() > (MAX_UPLOAD_SIZE)) {
-            	$message->pushContent($err_header);
-                $message->pushContent(_("Sorry but this file is too big."),HTML::br(),HTML::br());
-            }
-            elseif (move_uploaded_file($userfile_tmpname, $file_dir . $userfile_name) or
-                    (IsWindows() and rename($userfile_tmpname, $file_dir . $userfile_name))
-                    )
-            {
+        
+            /// MV add
+            /// Wiki attachments
+            require_once('common/wiki/lib/WikiAttachment.class');
+            $wa  = new WikiAttachment(GROUP_ID);
+            $rev = $wa->createRevision($userfile_name, $userfile->getSize(), 
+                                       $userfile->getType(), $userfile->getTmpName());
+            if($rev >= 0) {
+                $prev = $rev+1;
             	$interwiki = new PageType_interwikimap();
-            	$link = $interwiki->link("Upload:$userfile_name");
+            	$link = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
 
@@ -179,9 +169,10 @@ ws[cfh]");
                         $current = $pagehandle->getCurrentRevision();
                         $version = $current->getVersion();
                         $text = $current->getPackedContent();
-                        $newtext = $text . "\n* [Upload:$userfile_name]";
+                        $newtext = $text . "\n* [Upload:$prev/$userfile_name]";
                         $meta = $current->_data;
-                        $meta['summary'] = sprintf(_("uploaded %s"),$userfile_name);
+                        $meta['summary'] = sprintf(_("uploaded %s revision %d"),$userfile_name, $prev);
+                        $meta['author'] = user_getname();
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
                 }
