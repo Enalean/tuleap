@@ -50,7 +50,7 @@ extends WikiPlugin
         return array('logfile'  => false,
         	     // add a link of the fresh file automatically to the 
         	     // end of the page (or current page)
-        	     'autolink' => true, 
+        	     'autolink' => false, 
         	     'page'     => '[pagename]',
         	     );
     }
@@ -156,7 +156,7 @@ ws[cfh]");
             	$link = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
-
+                
                 // the upload was a success and we need to mark this event in the "upload log"
                 if ($logfile) { 
                     $upload_log = $file_dir . basename($logfile);
@@ -169,10 +169,9 @@ ws[cfh]");
                         $current = $pagehandle->getCurrentRevision();
                         $version = $current->getVersion();
                         $text = $current->getPackedContent();
-                        $newtext = $text . "\n* [Upload:$prev/$userfile_name]";
+                        $newtext = $text . "\n* [Upload:$userfile_name]";
                         $meta = $current->_data;
-                        $meta['summary'] = sprintf(_("uploaded %s revision %d"),$userfile_name, $prev);
-                        $meta['author'] = user_getname();
+                        $meta['summary'] = sprintf(_("uploaded %s"),$userfile_name);
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
                 }
