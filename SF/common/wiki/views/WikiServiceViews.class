@@ -246,7 +246,8 @@ class WikiServiceViews extends WikiViews {
     print '
     <ul class="ServiceMenu">
       <li><a href="'.$this->wikiLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menudocuments').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>';
+      <li><a href="'.$this->wikiLink.'&view=browsePages">'.$Language->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiLink.'&pagename=UserPreferences">'.$Language->getText('wiki_views_wikiserviceviews', 'menuprefs').'</a>&nbsp;|&nbsp;</li>';
     if(user_ismember($this->gid, 'W2')) {
         print '<li><a href="'.$this->wikiAdminLink.'">'.$Language->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>';
     }
