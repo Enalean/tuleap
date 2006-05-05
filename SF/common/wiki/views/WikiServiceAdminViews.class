@@ -380,10 +380,12 @@ class WikiServiceAdminViews extends WikiViews {
                                               $Language->getText('wiki_views_wkserviews', 'attachment_revisions'), 
                                               $Language->getText('wiki_views_wkserviews', 'attachment_permissions')
                                               /*, 'Delete ?'*/));
-        $wai = new WikiAttachmentIterator($this->gid);
-        $wai->getList();
 
-        while($wa =& $wai->iterate()) {
+        $wai =& WikiAttachment::getAttachmentIterator($this->gid);
+        $wai->rewind();
+        while($wai->valid()) {
+            $wa =& $wai->current();
+
             print '<tr>';
 
             $filename = basename($wa->getFilename());
@@ -407,6 +409,8 @@ class WikiServiceAdminViews extends WikiViews {
             // print 'n/a';
             //print '</td>';
             print '</tr>';
+
+            $wai->next();
         }
     
         print '</table>';

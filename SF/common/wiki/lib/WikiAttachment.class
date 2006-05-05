@@ -23,7 +23,7 @@
 
 define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
-require_once($_SERVER['DOCUMENT_ROOT'].'/project/admin/permissions.php');
+require_once('www/project/admin/permissions.php');
 
 $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
@@ -91,6 +91,33 @@ class WikiAttachment /* implements UGroupPermission */ {
          */
         if (!user_isloggedin())
             exit_not_logged_in();
+    }
+
+    /**
+     * @access public
+     * @param  Iterator
+     */
+    function &getAttachmentIterator($gid=null) {
+        if($gid !== null) {
+            $gid = (int) $gid;
+        }
+        else {
+            $gid = $this->gid;
+        }
+
+        //@todo: transfer to a DAO
+        $qry = '  SELECT * FROM wiki_attachment'
+            .' WHERE group_id='.$gid;
+        
+        $res = db_query($qry);
+        while($row = db_fetch_array($res)) {
+            $wa =& new WikiAttachment($gid);
+            $wa->setFromRow($row);
+            $waArray[] =& $wa;
+            unset($wa);
+        }
+
+        return new ArrayIterator($waArray);
     }
 
     /**
@@ -446,37 +473,6 @@ ws[cfh]");
                                     $this->id);
     }
 
-}
-
-
-
-/**
- *
- * @see       WikiAttachment
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
-class WikiAttachmentIterator extends RecordIterator {
-    var $gid;
- 
-
-    /**
-     * @access public
-     * @param int $id Project Id
-     */
-    function WikiAttachmentIterator($id=0) {
-        $this->gid     = (int) $id;
-        parent::RecordIterator('WikiAttachment');
-    }
-
-    function getList() {
-        $this->sqlStatement = 
-            '  SELECT * FROM wiki_attachment'
-            .' WHERE group_id="'.$this->gid.'"';
-        $this->dbinit();
-    }
 }
 
 ?>
