@@ -83,6 +83,14 @@ function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
   return array($hide_now, $hide_url, $hide_img);
 }
 
+function wiki_display_header() {
+    $GLOBALS['wiki_view']->header();
+}
+
+function wiki_display_footer() {
+    $GLOBALS['wiki_view']->footer();
+}
+
 /**
  * Common functions for WikiServiceViews and WikiServiceAdminViews
  *

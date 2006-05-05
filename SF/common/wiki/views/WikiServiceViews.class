@@ -51,6 +51,7 @@ class WikiServiceViews extends WikiViews {
                                                           'wiki_title',
                                                           array(group_getname($this->gid)));
     }
+    $GLOBALS['wiki_view'] =& $this;
   }
 
   /**
