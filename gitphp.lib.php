@@ -138,7 +138,7 @@ function git_read_commit($proj,$head)
 		}
 	}
 	/*
-	 * Store title and comment
+	 * TODO: Store title and comment
 	 */
 	$age = time() - $commit['committer_epoch'];
 	$commit['age'] = $age;

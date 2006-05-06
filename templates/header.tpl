@@ -27,6 +27,9 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 <!-- gitphp web interface {$version}, (C) 2006 Christopher Han <xiphux@gmail.com> -->
 <head>
 <title>{$title}</title>
+{if $rss_link}
+<link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
+{/if}
 {literal}<style type="text/css">/*<![CDATA[[*/<!--
  .italic {font-style:italic;}
  .bold {font-weight:bold;}
@@ -97,7 +100,7 @@ span.tag {
 <a href="http://www.kernel.org/pub/software/scm/git/docs/" title="git documentation">
 <img src="images/git-logo.png" width="72" height="27" alt="git" style="float:right; border-width:0px;" />
 </a>
-<a href="{$SCRIPT_NAME}">projects</a> / 
+<a href="index.php">projects</a> / 
 {if $project}
   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>
   {if $action}

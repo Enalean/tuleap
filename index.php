@@ -41,12 +41,32 @@
   */
  include_once('gitphp.lib.php');
 
+ $rss_link = FALSE;
+
+ ob_start();
+ if (isset($_GET['p'])) {
+ 	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p']))
+		echo "No such directory";
+	else if (!is_file($gitphp_conf['projectroot'] . $_GET['p'] . "/HEAD"))
+		echo "No such project";
+	else {
+		$rss_link = TRUE;
+	}
+ } else
+ 	git_project_list($gitphp_conf['projectroot'],$git_projects);
+ $main = ob_get_contents();
+ ob_end_clean();
+
  $tpl->clear_all_assign();
  $tpl->assign("version",$version);
  $tpl->assign("title",$gitphp_conf['title']);
+ if ($rss_link) {
+ 	$tpl->assign("rss_link",TRUE);
+	$tpl->assign("project",$_GET['p']);
+ }
  $tpl->display("header.tpl");
 
- git_project_list($gitphp_conf['projectroot'],$git_projects);
+ echo $main;
 
  $tpl->display("footer.tpl");
 
