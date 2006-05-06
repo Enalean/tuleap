@@ -30,10 +30,10 @@ $gitphp_conf['projectroot'] = "/storage/anime3/non-anime/git/";
 
 /*
  * gitbin
- * Path to git binaries
+ * Path to git binaries (don't forget trailing slash!)
  * (Leave blank or comment to just use $PATH)
  */
-$gitphp_conf['gitbin'] = "/usr/bin";
+$gitphp_conf['gitbin'] = "/usr/bin/";
 
 /*
  * gittmp
