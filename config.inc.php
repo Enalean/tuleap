@@ -24,8 +24,9 @@
 /*
  * projectroot
  * Absolute filesystem path prepended to project paths
+ * (don't forget trailing slash!)
  */
-$gitphp_conf['projectroot'] = "/storage/anime3/non-anime/git";
+$gitphp_conf['projectroot'] = "/storage/anime3/non-anime/git/";
 
 /*
  * gitbin
@@ -68,5 +69,23 @@ $gitphp_conf['title'] = "gitphp :: $gitphp_appstring";
  * like /usr/share/php/Smarty.class.php, /usr/lib/php/Smarty.class.php, etc.
  */
 $gitphp_conf['smarty_prefix'] = "smarty/";
+
+$git_projects['none']['Spring'] = "external/taspring.git";
+$git_projects['School']['CS135'] = "school/cs135.git";
+$git_projects['School']['CS150'] = "school/cs150.git";
+$git_projects['School']['CS151'] = "school/cs151.git";
+$git_projects['School']['CS156'] = "school/cs156.git";
+$git_projects['School']['CS160'] = "school/cs160.git";
+$git_projects['School']['CS161'] = "school/cs161.git";
+$git_projects['School']['CS178'] = "school/cs178.git";
+$git_projects['School']['CS180'] = "school/cs180.git";
+$git_projects['School']['CS189'] = "school/cs189.git";
+$git_projects['Core']['Codex'] = "core/codex.git";
+$git_projects['Core']['gitphp'] = "core/gitphp.git";
+$git_projects['Core']['Mvm'] = "core/Mvm.git";
+$git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
+$git_projects['Core']['Scripts'] = "core/scripts.git";
+$git_projects['Core']['Soulforge'] = "core/soulforge.git";
+$git_projects['Core']['XNSS'] = "core/xnss.git";
 
 ?>

@@ -1,11 +1,7 @@
-<?php
- ob_start();
- $version = "v01a";
- $gitphp_appstring = "gitphp $version";
-/*
- *  index.php
+{*
+ *  projlist_item.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Index script
+ *  Component: Project list item template
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *
@@ -22,34 +18,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
- /*
-  * Configuration
-  */
- include_once('config.inc.php');
-
- /*
-  * Instantiate Smarty
-  */
- include_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
- $tpl =& new Smarty;
- $tpl->load_filter('output','trimwhitespace');
-
- /*
-  * Function library
-  */
- include_once('gitphp.lib.php');
-
- $tpl->clear_all_assign();
- $tpl->assign("version",$version);
- $tpl->assign("title",$gitphp_conf['title']);
- $tpl->display("header.tpl");
-
- git_project_list($gitphp_conf['projectroot'],$git_projects);
-
- $tpl->display("footer.tpl");
-
- ob_end_flush();
-
-?>
+ *}
+<tr class="{$class}">
+<td>
+{if $idt}<span style="white-space:pre;">  {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>{if $idt}</span>{/if}
+</td>
+<td>{$descr}</td>
+<td><i>{$owner}</i></td>
+<td>
+{if $age_colored}
+<span style="color: #009900;">
+{/if}
+{if $age_bold}
+<b>
+{/if}
+<i>
+{$age_string}
+</i>
+{if $age_bold}
+</b>
+{/if}
+{if $age_colored}
+</span>
+{/if}
+</td>
+<td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a></td>
+</tr>
