@@ -42,6 +42,7 @@
  include_once('gitphp.lib.php');
 
  $tpl->clear_all_assign();
+ $tpl->assign("version",$version);
  $tpl->assign("title",$gitphp_conf['title']);
  $tpl->display("header.tpl");
 

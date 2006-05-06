@@ -19,5 +19,15 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *}
+<div class="page_footer">
+{if $project}
+  {if $descr}
+    <div class="page_footer_text">{$descr}</div>
+  {/if}
+  <a href="{$SCRIPT_NAME}?p={$project}&a=rss" class="rss_logo">RSS</a>
+{else}
+  <a href="{$SCRIPT_NAME}?a=opml" class="rss_logo">OPML</a>
+{/if}
+</div>
 </body>
 </html>
