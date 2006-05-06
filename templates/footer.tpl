@@ -1,11 +1,7 @@
-<?php
- ob_start();
- $version = "v01a";
- $gitphp_appstring = "gitphp $version";
-/*
- *  index.php
+{*
+ *  footer.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Index script
+ *  Component: Page footer template
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *
@@ -22,31 +18,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
- /*
-  * Configuration
-  */
- include_once('config.inc.php');
-
- /*
-  * Instantiate Smarty
-  */
- include_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
- $tpl =& new Smarty;
- $tpl->load_filter('output','trimwhitespace');
-
- /*
-  * Function library
-  */
- include_once('gitphp.lib.php');
-
- $tpl->clear_all_assign();
- $tpl->assign("title",$gitphp_conf['title']);
- $tpl->display("header.tpl");
-
- $tpl->display("footer.tpl");
-
- ob_end_flush();
-
-?>
+ *}
+</body>
+</html>
