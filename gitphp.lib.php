@@ -76,6 +76,19 @@ function git_read_head($proj)
 	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-parse --verify HEAD");
 }
 
+function git_read_revlist($proj,$head)
+{
+	global $gitphp_conf;
+	$revlist = array();
+	$revs = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --max-count=17 " . $head);
+	$tok = strtok($revs,"\n");
+	while ($tok !== false) {
+		$revlist[] = $tok;
+		$tok = strtok("\n");
+	}
+	return $revlist;
+}
+
 function age_string($age)
 {
 	if ($age > 60*60*24*365*2)
@@ -204,6 +217,93 @@ function git_project_list($projectroot,$projectlist)
 			echo "No projects found";
 	} else
 		echo $projects;
+}
+
+function read_info_ref($project, $type = "")
+{
+	$refs = array();
+	$lines = file($project);
+	foreach ($lines as $no => $line) {
+		if (ereg("^([0-9a-fA-F]{40})\t.*" . $type . "/([^\^]+)",$line,$regs)) {
+			if ($isset($refs[$regs[1]]))
+				$refs[$regs[1]] .= " / " . $regs[2];
+			else
+				$refs[$regs[1]] = $regs[2];
+		}
+	}
+	return $refs;
+}
+
+function date_str($epoch,$tz = "-0000")
+{
+	$date = array();
+	$date['hour'] = date("H",$epoch);
+	$date['minute'] = date("i",$epoch);
+	$date['mday'] = date("d",$epoch);
+	$date['day'] = date("D",$epoch);
+	$date['month'] = date("M",$epoch);
+	$date['rfc2822'] = date("r",$epoch);
+	$date['mday-time'] = date("d M H:i",$epoch);
+	if (ereg("^([+\-][0-9][0-9])([0-9][0-9])$",$tz,$regs)) {
+		$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+		$date['hour_local'] = date("H",$local);
+		$date['minute_local'] = date("i",$local);
+		$date['tz_local'] = $tz;
+	}
+	return $date;
+}
+
+function git_summary($projectroot,$project)
+{
+	global $tpl;
+	$descr = git_project_descr($projectroot,$project);
+	$head = git_read_head($projectroot . $project);
+	$commit = git_read_commit($projectroot . $project, $head);
+	$commitdate = date_str($commit['committer_epoch'],$commit['committer_tz']);
+	$owner = git_project_owner($projectroot,$project);
+	$refs = read_info_ref($projectroot . $project);
+	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->assign("head",$head);
+	$tpl->display("project_nav.tpl");
+	$tpl->clear_all_assign();
+	$tpl->assign("description",$descr);
+	$tpl->assign("owner",$owner);
+	$tpl->assign("lastchange",$commitdate['rfc2822']);
+	$tpl->display("project_brief.tpl");
+	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->display("project_revlist_header.tpl");
+	$revlist = git_read_revlist($projectroot . $project, $head);
+	$alternate = FALSE;
+	foreach ($revlist as $i => $rev) {
+		$tpl->clear_all_assign();
+		$revco = git_read_commit($projectroot . $project, $rev);
+		$authordate = date_str($revco['author_epoch']);
+		if ($alternate)
+			$tpl->assign("class","dark");
+		else
+			$tpl->assign("class","light");
+		$alternate = !$alternate;
+		if ($i < 16) {
+			$tpl->assign("commit",$rev);
+			if (isset($refs[$rev]))
+				$tpl->assign("commitref",$refs[$rev]);
+			$tpl->assign("commitage",$revco['age_string']);
+			$tpl->assign("commitauthor",$revco['author_name']);
+			if (strlen($revco['title_short']) < strlen($revco['title'])) {
+				$tpl->assign("title",$revco['title']);
+				$tpl->assign("title_short",$revco['title_short']);
+			} else
+				$tpl->assign("title_short",$revco['title']);
+		} else {
+			$tpl->assign("project",$project);
+			$tpl->assign("truncate",TRUE);
+		}
+		$tpl->display("project_revlist_item.tpl");
+	}
+	$tpl->clear_all_assign();
+	$tpl->display("project_revlist_footer.tpl");
 }
 
 ?>

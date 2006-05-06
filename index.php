@@ -51,23 +51,47 @@
 		echo "No such project";
 	else {
 		$rss_link = TRUE;
+		if (!isset($_GET['a']))
+			git_summary($gitphp_conf['projectroot'],$_GET['p']);
+		else {
+			switch ($_GET['a']) {
+				case "summary":
+					git_summary($gitphp_conf['projectroot'],$_GET['p']);
+					break;
+				default:
+					echo "Unknown action";
+					break;
+			}
+		}
 	}
- } else
+ } else {
+ 	$tpl->display("hometext.tpl");
  	git_project_list($gitphp_conf['projectroot'],$git_projects);
+ }
  $main = ob_get_contents();
  ob_end_clean();
 
  $tpl->clear_all_assign();
  $tpl->assign("version",$version);
- $tpl->assign("title",$gitphp_conf['title']);
+ $title = $gitphp_conf['title'];
  if ($rss_link) {
  	$tpl->assign("rss_link",TRUE);
 	$tpl->assign("project",$_GET['p']);
+	$title .= " :: " . $_GET['p'];
+	if (isset($_GET['a'])) {
+		$tpl->assign("action",$_GET['a']);
+		$title .= "/" . $_GET['a'];
+	}
  }
+ $tpl->assign("title",$title);
  $tpl->display("header.tpl");
 
  echo $main;
 
+ if ($rss_link) {
+	$tpl->assign("project",$_GET['p']);
+	$tpl->assign("descr",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
+ }
  $tpl->display("footer.tpl");
 
  ob_end_flush();
