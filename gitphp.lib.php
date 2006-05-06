@@ -1,8 +1,8 @@
 <?php
 /*
- *  config.inc.php
+ *  gitphp.lib.php
  *  gitphp: A PHP git repository browser
- *  Component: Configuration
+ *  Component: Function library
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *
@@ -20,32 +20,5 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-/*
- * projectroot
- * Absolute filesystem path prepended to project paths
- */
-$gitphp_conf['projectroot'] = "/storage/anime3/non-anime/git";
-
-/*
- * gitbin
- * Path to git binaries
- * (Leave blank or comment to just use $PATH)
- */
-$gitphp_conf['gitbin'] = "/usr/bin";
-
-/*
- * gittmp
- * Location for temporary files for diffs
- */
-$gitphp_conf['gittmp'] = "/tmp/gitweb";
-
-/*
- * title
- * The string that will be used as the page title
- * The variable '$gitphp_appstring' will expand to
- * the name (gitphp) and version
- */
-$gitphp_conf['title'] = "gitphp :: $gitphp_appstring";
 
 ?>
