@@ -200,6 +200,80 @@ function git_project_listentry($projectroot,$project,$class,$indent)
 	$tpl->display("projlist_item.tpl");
 }
 
+function mode_str($octmode)
+{
+	$mode = octdec($octmode);
+	if (($mode & 0x4000) == 0x4000)
+		return "drwxr-xr-x";
+	else if (($mode & 0xA000) == 0xA000)
+		return "lrwxrwxrwx";
+	else if (($mode & 0x8000) == 0x8000) {
+		if (($mode & 0x0040) == 0x0040)
+			return "-rwxr-xr-x";
+		else
+			return "-rw-r--r--";
+	}
+	return "----------";
+}
+
+function git_tree($projectroot,$project,$hash,$file,$hashbase)
+{
+	global $gitphp_conf,$tpl;
+	if (!isset($hash)) {
+		$hash = git_read_head($projectroot . $project);
+		if (isset($file))
+			$hash = git_get_hash_by_path(($hashbase?$hashbase:$hash),$file,"tree");
+			if (!isset($hashbase))
+				$hashbase = $hash;
+	}
+	$lsout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-ls-tree -z " . $hash);
+	$refs = read_info_ref($projectroot . $project);
+	$tpl->clear_all_assign();
+	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
+		$basekey = $hashbase;
+		$tpl->assign("hashbase",$hashbase);
+		$tpl->assign("project",$project);
+		$tpl->assign("title",$co['title']);
+		if (isset($refs[$hashbase]))
+			$tpl->assign("hashbaseref",$refs[$hashbase]);
+		$tpl->display("tree_nav.tpl");
+	} else {
+		$tpl->assign("hash",$hash);
+		$tpl->display("tree_emptynav.tpl");
+	}
+	$tpl->clear_all_assign();
+	if (isset($file))
+		$tpl->assign("filename",$file);
+	$tpl->display("tree_filelist_header.tpl");
+
+	$tok = strtok($lsout,"\0");
+	$alternate = FALSE;
+	while ($tok !== false) {
+		if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$tok,$regs)) {
+			$tpl->clear_all_assign();
+			if ($alternate)
+				$tpl->assign("class","dark");
+			else
+				$tpl->assign("class","light");
+			$alternate = !$alternate;
+			$tpl->assign("filemode",mode_str($regs[1]));
+			$tpl->assign("type",$regs[2]);
+			$tpl->assign("hash",$regs[3]);
+			$tpl->assign("name",$regs[4]);
+			$tpl->assign("project",$project);
+			if (isset($file))
+				$tpl->assign("base",$file . "/");
+			if (isset($basekey))
+				$tpl->assign("hashbase",$basekey);
+			$tpl->display("tree_filelist_item.tpl");
+		}
+		$tok = strtok("\0");
+	}
+
+	$tpl->clear_all_assign();
+	$tpl->display("tree_filelist_footer.tpl");
+}
+
 function git_project_list($projectroot,$projectlist)
 {
 	global $tpl;

@@ -58,6 +58,9 @@
 				case "summary":
 					git_summary($gitphp_conf['projectroot'],$_GET['p']);
 					break;
+				case "tree":
+					git_tree($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f'],$_GET['hb']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
