@@ -1033,8 +1033,36 @@ function git_tags($projectroot,$project)
 
 function git_opml($projectroot,$projectlist)
 {
+	global $tpl,$gitphp_conf;
 	$projlist = git_read_projects($projectroot,$projectlist);
 	header("Content-type: text/xml; charset=UTF-8");
+	$tpl->clear_all_assign();
+	$tpl->display("opml_header.tpl");
+	echo "\n";
+	foreach ($projlist as $cat => $plist) {
+		if (is_array($plist)) {
+			foreach ($plist as $i => $proj) {
+				$head = git_read_head($projectroot . $proj);
+				$co = git_read_commit($projectroot . $proj, $head);
+				$tpl->clear_all_assign();
+				$tpl->assign("proj",$proj);
+				$tpl->assign("self",$gitphp_conf['self']);
+				$tpl->display("opml_item.tpl");
+				echo "\n";
+			}
+		} else {
+			$head = git_read_head($projectroot . $plist);
+			$co = git_read_commit($projectroot . $plist, $head);
+			$tpl->clear_all_assign();
+			$tpl->assign("proj",$plist);
+			$tpl->assign("self",$gitphp_conf['self']);
+			$tpl->display("opml_item.tpl");
+			echo "\n";
+		}
+	}
+
+	$tpl->clear_all_assign();
+	$tpl->display("opml_footer.tpl");
 }
 
 ?>

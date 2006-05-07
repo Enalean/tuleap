@@ -45,7 +45,10 @@
  $suppress_headers = FALSE;
 
  ob_start();
- if (isset($_GET['p'])) {
+ if (isset($_GET['a']) && $_GET['a'] == "opml") {
+	$suppress_headers = TRUE;
+	git_opml($gitphp_conf['projectroot'],$git_projects);
+ } else if (isset($_GET['p'])) {
  	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p']))
 		echo "No such directory";
 	else if (!is_file($gitphp_conf['projectroot'] . $_GET['p'] . "/HEAD"))
@@ -83,10 +86,6 @@
 					break;
 				case "tags":
 					git_tags($gitphp_conf['projectroot'],$_GET['p']);
-					break;
-				case "opml":
-					$suppress_headers = TRUE;
- 					git_opml($gitphp_conf['projectroot'],$git_projects);
 					break;
 				default:
 					echo "Unknown action";
