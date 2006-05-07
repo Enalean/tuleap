@@ -216,6 +216,18 @@ function mode_str($octmode)
 	return "----------";
 }
 
+function file_type($octmode)
+{
+	$mode = octdec($octmode);
+	if (($mode & 0x4000) == 0x4000)
+		return "directory";
+	else if (($mode & 0xA000) == 0xA000)
+		return "symlink";
+	else if (($mode & 0x8000) == 0x8000)
+		return "file";
+	return "unknown";
+}
+
 function git_tree($projectroot,$project,$hash,$file,$hashbase)
 {
 	global $gitphp_conf,$tpl;
@@ -490,6 +502,7 @@ function git_summary($projectroot,$project)
 		else
 			$tpl->assign("class","light");
 		$alternate = !$alternate;
+		$tpl->assign("project",$project);
 		if ($i < 16) {
 			$tpl->assign("commit",$rev);
 			if (isset($refs[$rev]))
@@ -502,7 +515,6 @@ function git_summary($projectroot,$project)
 			} else
 				$tpl->assign("title_short",$revco['title']);
 		} else {
-			$tpl->assign("project",$project);
 			$tpl->assign("truncate",TRUE);
 		}
 		$tpl->display("project_revlist_item.tpl");
@@ -685,6 +697,96 @@ function git_log($projectroot,$project,$hash,$page)
 			$tpl->assign("notempty",TRUE);
 		$tpl->display("log_item.tpl");
 	}
+}
+
+function git_commit($projectroot,$project,$hash)
+{
+	global $gitphp_conf,$tpl;
+	$co = git_read_commit($projectroot . $project, $hash);
+	$ad = date_str($co['author_epoch'],$co['author_tz']);
+	$cd = date_str($co['committer_epoch'],$co['committer_tz']);
+	if (isset($co['parent'])) {
+		$root = "";
+		$parent = $co['parent'];
+	} else {
+		$root = "--root";
+		$parent = "";
+	}
+	$difftree = array();
+	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r -M " . $root . " " . $parent . " " . $hash);
+	$tok = strtok($diffout,"\n");
+	while ($tok !== false) {
+		$difftree[] = $tok;
+		$tok = strtok("\n");
+	}
+	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->assign("hash",$hash);
+	$tpl->assign("tree",$co['tree']);
+	if (isset($co['parent']))
+		$tpl->assign("parent",$co['parent']);
+	$tpl->display("commit_nav.tpl");
+	$tpl->assign("title",$co['title']);
+	if (isset($refs[$co['id']]))
+		$tpl->assign("commitref",$refs[$co['id']]);
+	$tpl->assign("author",$co['author']);
+	$tpl->assign("adrfc2822",$ad['rfc2822']);
+	$tpl->assign("adhourlocal",$ad['hour_local']);
+	$tpl->assign("adminutelocal",$ad['minute_local']);
+	$tpl->assign("adtzlocal",$ad['tz_local']);
+	$tpl->assign("committer",$co['committer']);
+	$tpl->assign("cdrfc2822",$cd['rfc2822']);
+	$tpl->assign("cdhourlocal",$cd['hour_local']);
+	$tpl->assign("cdminutelocal",$cd['minute_local']);
+	$tpl->assign("cdtzlocal",$cd['tz_local']);
+	$tpl->assign("id",$co['id']);
+	$tpl->assign("parents",$co['parents']);
+	$tpl->assign("comment",$co['comment']);
+	$tpl->assign("difftreesize",count($difftree)+1);
+	$tpl->display("commit_data.tpl");
+	$alternate = FALSE;
+	foreach ($difftree as $i => $line) {
+		$tpl->clear_all_assign();
+		if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$",$line,$regs)) {
+			if ($alternate)
+				$tpl->assign("class","dark");
+			else
+				$tpl->assign("class","light");
+			$alternate = !$alternate;
+			$tpl->assign("project",$project);
+			$tpl->assign("hash",$hash);
+			$tpl->assign("from_mode",$regs[1]);
+			$tpl->assign("to_mode",$regs[2]);
+			$tpl->assign("from_id",$regs[3]);
+			$tpl->assign("to_id",$regs[4]);
+			$tpl->assign("status",$regs[5]);
+			$tpl->assign("similarity",$regs[6]);
+			$tpl->assign("file",$regs[7]);
+			$tpl->assign("from_file",strtok($regs[7],"\t"));
+			$tpl->assign("to_file",strtok("\t"));
+			$tpl->assign("to_filetype",file_type($regs[2]));
+			if ((octdec($regs[2]) & 0x8000) == 0x8000)
+				$tpl->assign("isreg",TRUE);
+			$modestr = "";
+			if ((octdec($regs[1]) & 0x17000) != (octdec($regs[2]) & 0x17000))
+				$modestr .= " from " . file_type($regs[1]) . " to " . file_type($regs[2]);
+			if ((octdec($regs[1]) & 0777) != (octdec($regs[2]) & 0777)) {
+				if ((octdec($regs[1]) & 0x8000) && (octdec($regs[2]) & 0x8000))
+					$modestr .= " mode: " . (octdec($regs[1]) & 0777) . "->" . (octdec($regs[2]) & 0777);
+				else if (octdec($regs[2]) & 0x8000)
+					$modestr .= " mode: " . (octdec($regs[2]) & 0777);
+			}
+			$tpl->assign("modechange",$modestr);
+			$simmodechg = "";
+			if ($regs[1] != $regs[2])
+				$simmodechg .= ", mode: " . (octdec($regs[2]) & 0777);
+			$tpl->assign("simmodechg",$simmodechg);
+
+			$tpl->display("commit_item.tpl");
+		}
+	}
+	$tpl->clear_all_assign();
+	$tpl->display("commit_footer.tpl");
 }
 
 ?>

@@ -67,6 +67,9 @@
 				case "log":
 					git_log($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['pg']);
 					break;
+				case "commit":
+					git_commit($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
