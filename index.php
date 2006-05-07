@@ -70,6 +70,9 @@
 				case "commit":
 					git_commit($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
 					break;
+				case "commitdiff":
+					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hp']);
+					break;
 				default:
 					echo "Unknown action";
 					break;

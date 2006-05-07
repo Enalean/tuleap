@@ -44,8 +44,9 @@ $gitphp_conf['gitbin'] = "/usr/bin/";
 /*
  * gittmp
  * Location for temporary files for diffs
+ * (don't forget trailing slash!)
  */
-$gitphp_conf['gittmp'] = "/tmp/gitweb";
+$gitphp_conf['gittmp'] = "/tmp/gitphp/";
 
 /*
  * title

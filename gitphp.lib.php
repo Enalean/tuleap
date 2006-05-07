@@ -21,6 +21,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+function prep_tmpdir($dir)
+{
+	if (file_exists($dir)) {
+		if (is_dir($dir)) {
+			if (!is_writeable($dir))
+				return "Specified tmpdir is not writeable!";
+		} else
+			return "Specified tmpdir is not a directory";
+	} else
+		if (!mkdir($dir,0700))
+			return "Could not create tmpdir";
+	return TRUE;
+}
+
 function git_read_projects($projectroot,$projectlist)
 {
 	$projects = array();
@@ -789,6 +803,116 @@ function git_commit($projectroot,$project,$hash)
 	}
 	$tpl->clear_all_assign();
 	$tpl->display("commit_footer.tpl");
+}
+
+function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
+{
+	global $gitphp_conf,$tpl;
+	$from_tmp = "/dev/null";
+	$to_tmp = "/dev/null";
+	$pid = posix_getpid();
+	if (isset($from)) {
+		$from_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_from";
+		shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $from . " > " . $from_tmp);
+	}
+	if (isset($to)) {
+		$to_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_to";
+		shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $to . " > " . $to_tmp);
+	}
+	$diffout = shell_exec("diff -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
+	if ($format == "plain")
+		echo $diffout;
+	else {
+		$line = strtok($diffout,"\n");
+		while ($line !== false) {
+			$start = substr($line,0,1);
+			unset($color);
+			if ($start == "+")
+				$color = "#008800";
+			else if ($start == "-")
+				$color = "#cc0000";
+			else if ($start == "@")
+				$color = "#990099";
+			if ($start != "\\") {
+			/*
+				while (($pos = strpos($line,"\t")) !== false) {
+					if ($c = (8 - (($pos - 1) % 8))) {
+						$spaces = "";
+						for ($i = 0; $i < $c; $i++)
+							$spaces .= " ";
+						preg_replace('/\t/',$spaces,$line,1);
+					}
+				}
+			 */
+				$tpl->clear_all_assign();
+				$tpl->assign("line",htmlentities($line));
+				if (isset($color))
+					$tpl->assign("color",$color);
+				$tpl->display("diff_line.tpl");
+			}
+			$line = strtok("\n");
+		}
+	}
+	if (isset($from))
+		unlink($from_tmp);
+	if (isset($to))
+		unlink($to_tmp);
+}
+
+function git_commitdiff($projectroot,$project,$hash,$hash_parent)
+{
+	global $gitphp_conf,$tpl;
+	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	if ($ret !== TRUE) {
+		echo $ret;
+		return;
+	}
+	$co = git_read_commit($projectroot . $project, $hash);
+	if (!isset($hash_parent))
+		$hash_parent = $co['parent'];
+	$difftree = array();
+	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $hash_parent . " " . $hash);
+	$tok = strtok($diffout,"\n");
+	while ($tok !== false) {
+		$difftree[] = $tok;
+		$tok = strtok("\n");
+	}
+	$refs = read_info_ref($projectroot . $project);
+	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->assign("hash",$hash);
+	$tpl->assign("tree",$co['tree']);
+	$tpl->assign("hashparent",$hash_parent);
+	$tpl->display("commitdiff_nav.tpl");
+	$tpl->assign("title",$co['title']);
+	if (isset($refs[$co['id']]))
+		$tpl->assign("commitref",$refs[$co['id']]);
+	$tpl->assign("comment",$co['comment']);
+	$tpl->display("commitdiff_header.tpl");
+
+	foreach ($difftree as $i => $line) {
+		if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs)) {
+			$tpl->clear_all_assign();
+			$tpl->assign("from_mode",$regs[1]);
+			$tpl->assign("to_mode",$regs[2]);
+			$tpl->assign("from_id",$regs[3]);
+			$tpl->assign("to_id",$regs[4]);
+			$tpl->assign("status",$regs[5]);
+			$tpl->assign("file",$regs[6]);
+			$tpl->assign("from_type",file_type($regs[1]));
+			$tpl->assign("to_type",file_type($regs[2]));
+			$tpl->display("commitdiff_item.tpl");
+			if ($regs[5] == "A")
+				git_diff_print($projectroot . $project, null,"/dev/null",$regs[4],"b/" . $regs[6]);
+			else if ($regs[5] == "D")
+				git_diff_print($projectroot . $project, $regs[3],"a/" . $regs[6],null,"/dev/null");
+			else if (($regs[5] == "M") && ($regs[3] != $regs[4]))
+				git_diff_print($projectroot . $project, $regs[3],"a/" . $regs[6],$regs[4],"b/" . $regs[6]);
+		}
+	}
+
+	$tpl->clear_all_assign();
+	$tpl->display("commitdiff_footer.tpl");
 }
 
 ?>
