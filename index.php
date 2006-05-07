@@ -42,6 +42,7 @@
  include_once('gitphp.lib.php');
 
  $rss_link = FALSE;
+ $suppress_headers = FALSE;
 
  ob_start();
  if (isset($_GET['p'])) {
@@ -73,6 +74,10 @@
 				case "commitdiff":
 					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hp']);
 					break;
+				case "commitdiff_plain":
+					$suppress_headers = TRUE;
+					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hp']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
@@ -86,29 +91,33 @@
  $main = ob_get_contents();
  ob_end_clean();
 
- $tpl->clear_all_assign();
- $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
- $tpl->assign("version",$version);
- $title = $gitphp_conf['title'];
- if ($rss_link) {
- 	$tpl->assign("rss_link",TRUE);
-	$tpl->assign("project",$_GET['p']);
-	$title .= " :: " . $_GET['p'];
-	if (isset($_GET['a'])) {
-		$tpl->assign("action",$_GET['a']);
-		$title .= "/" . $_GET['a'];
-	}
+ if (!$suppress_headers) {
+	 $tpl->clear_all_assign();
+	 $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
+	 $tpl->assign("version",$version);
+	 $title = $gitphp_conf['title'];
+	 if ($rss_link) {
+		$tpl->assign("rss_link",TRUE);
+		$tpl->assign("project",$_GET['p']);
+		$title .= " :: " . $_GET['p'];
+		if (isset($_GET['a'])) {
+			$tpl->assign("action",$_GET['a']);
+			$title .= "/" . $_GET['a'];
+		}
+	 }
+	 $tpl->assign("title",$title);
+	 $tpl->display("header.tpl");
  }
- $tpl->assign("title",$title);
- $tpl->display("header.tpl");
 
  echo $main;
 
- if ($rss_link) {
-	$tpl->assign("project",$_GET['p']);
-	$tpl->assign("descr",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
+ if (!$suppress_headers) {
+	 if ($rss_link) {
+		$tpl->assign("project",$_GET['p']);
+		$tpl->assign("descr",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
+	 }
+	 $tpl->display("footer.tpl");
  }
- $tpl->display("footer.tpl");
 
  ob_end_flush();
 

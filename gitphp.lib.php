@@ -859,6 +859,59 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 		unlink($to_tmp);
 }
 
+function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
+{
+	global $gitphp_conf;
+	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	if ($ret !== TRUE) {
+		echo $ret;
+		return;
+	}
+	$co = git_read_commit($projectroot . $project, $hash);
+	if (!isset($hash_parent))
+		$hash_parent = $co['parent'];
+	$difftree = array();
+	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $hash_parent . " " . $hash);
+	$tok = strtok($diffout,"\n");
+	while ($tok !== false) {
+		$difftree[] = $tok;
+		$tok = strtok("\n");
+	}
+	$refs = read_info_ref($projectroot . $project,"tags");
+	$listout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-rev-list HEAD");
+	$tok = strtok($listout,"\n");
+	while ($tok !== false) {
+		if (isset($refs[$tok]))
+			$tagname = $refs[$tok];
+		if ($tok == $hash)
+			break;
+		$tok = strtok("\n");
+	}
+	header("Content-type: text/plain; charset=UTF-8");
+	header("Content-disposition: inline; filename=\"git-" . $hash . ".patch\"");
+	$ad = date_str($co['author_epoch'],$co['author_tz']);
+	echo "From: " . $co['author'] . "\n";
+	echo "Date: " . $ad['rfc2822'] . "\n";
+	echo "Subject: " . $co['title'] . "\n";
+	if (isset($tagname))
+		echo "X-Git-Tag: " . $tagname . "\n";
+	echo "X-Git-Url: " . $_SERVER['HTTP_REFERER'] . "\n";
+	echo "\n";
+	foreach ($co['comment'] as $i => $line)
+		echo $line . "\n";
+	echo "---\n\n";
+	foreach ($difftree as $i => $line) {
+		if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs)) {
+			if ($regs[5] == "A")
+				git_diff_print($projectroot . $project, null, "/dev/null", $regs[4], "b/" . $regs[6], "plain");
+			else if ($regs[5] == "D")
+				git_diff_print($projectroot . $project, $regs[3], "a/" . $regs[6], null, "/dev/null", "plain");
+			else if ($regs[5] == "M")
+				git_diff_print($projectroot . $project, $regs[3], "a/" . $regs[6], $regs[4], "b/" . $regs[6], "plain");
+		}
+	}
+}
+
 function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 {
 	global $gitphp_conf,$tpl;
