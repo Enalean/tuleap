@@ -57,9 +57,12 @@ function git_read_projects($projectroot,$projectlist)
 	return $projects;
 }
 
-function git_project_descr($projectroot,$project)
+function git_project_descr($projectroot,$project,$trim = FALSE)
 {
-	return file_get_contents($projectroot . $project . "/description");
+	$desc = file_get_contents($projectroot . $project . "/description");
+	if ($trim && (strlen($desc) > 50))
+		$desc = substr($desc,0,50) . " ...";
+	return $desc;
 }
 
 function git_project_owner($projectroot,$project)
@@ -131,6 +134,7 @@ function git_read_commit($proj,$head)
 	}
 	$commit['parents'] = $parents;
 	$commit['parent'] = $parents[0];
+	$comment = array();
 	foreach ($lines as $i => $line) {
 		if (ereg("^tree ([0-9a-fA-F]{40})$",$line,$regs))
 			$commit['tree'] = $regs[1];
@@ -148,11 +152,21 @@ function git_read_commit($proj,$head)
 			$commit['committer_tz'] = $regs[3];
 			$commit['committer_name'] = $commit['committer'];
 			$commit['committer_name'] = ereg_replace(" <.*","",$commit['committer_name']);
+		} else {
+			$trimmed = trim($line);
+			if ((strlen($trimmed) > 0) && !ereg("^[0-9a-fA-F]{40}",$trimmed) && !ereg("^parent [0-9a-fA-F]{40}",$trimmed)) {
+				if (!isset($commit['title'])) {
+					$commit['title'] = $trimmed;
+					if (strlen($trimmed) > 50)
+						$commit['title_short'] = substr($trimmed,0,50) . " ...";
+					else
+						$commit['title_short'] = $trimmed;
+				}
+				$comment[] = $trimmed;
+			}
 		}
 	}
-	/*
-	 * TODO: Store title and comment
-	 */
+	$commit['comment'] = $comment;
 	$age = time() - $commit['committer_epoch'];
 	$commit['age'] = $age;
 	$commit['age_string'] = age_string($age);
@@ -172,7 +186,7 @@ function git_project_listentry($projectroot,$project,$class,$indent)
 	$tpl->clear_all_assign();
 	$tpl->assign("class",$class);
 	$tpl->assign("project",$project);
-	$tpl->assign("descr",git_project_descr($projectroot,$project));
+	$tpl->assign("descr",git_project_descr($projectroot,$project,TRUE));
 	$tpl->assign("owner",git_project_owner($projectroot,$project));
 	if ($indent)
 		$tpl->assign("idt",TRUE);
