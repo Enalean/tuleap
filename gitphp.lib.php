@@ -253,6 +253,123 @@ function date_str($epoch,$tz = "-0000")
 	return $date;
 }
 
+function git_read_tag($project, $tag_id)
+{
+	global $gitphp_conf;
+	$tag = array();
+	$tagout = shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file tag " . $tag_id);
+	$tag['id'] = $tag_id;
+	$comment = array();
+	$tok = strtok($tagout,"\n");
+	while ($tok !== false) {
+		if (ereg("^object ([0-9a-fA-F]{40})$",$tok,$regs))
+			$tag['object'] = $regs[1];
+		else if (ereg("^type (.+)$",$tok,$regs))
+			$tag['type'] = $regs[1];
+		else if (ereg("^tag (.+)$",$tok,$regs))
+			$tag['name'] = $regs[1];
+		else if (ereg("^tagger (.*) ([0-9]+) (.*)$",$tok,$regs)) {
+			$tag['author'] = $regs[1];
+			$tag['epoch'] = $regs[2];
+			$tag['tz'] = $regs[3];
+		} else if (ereg("--BEGIN",$tok)) {
+			while ($tok !== false) {
+				$comment[] = $tok;
+				$tok = strtok("\n");
+			}
+			break;
+		}
+		$tok = strtok("\n");
+	}
+	$tag['comment'] = $comment;
+	if (!isset($tag['name']))
+		return null;
+	return $tag;
+}
+
+function git_get_type($project, $hash)
+{
+	global $gitphp_conf;
+	return trim(shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file -t " . $hash));
+}
+
+function git_read_hash($path)
+{
+	return file_get_contents($path);
+}
+
+function epochcmp($a,$b)
+{
+	if ($a['epoch'] == $b['epoch'])
+		return 0;
+	return ($a['epoch'] < $b['epoch']) ? 1 : -1;
+}
+
+function git_read_refs($projectroot,$project,$refdir)
+{
+	if (!is_dir($projectroot . $project . "/" . $refdir))
+		return null;
+	$refs = array();
+	if ($dh = opendir($projectroot . $project . "/" . $refdir)) {
+		while (($dir = readdir($dh)) !== false) {
+			if (strpos($dir,'.') !== 0) {
+				if (is_dir($projectroot . $project . "/" . $refdir . "/" . $dir)) {
+					if ($dh2 = opendir($projectroot . $project . "/" . $refdir . "/" . $dir)) {
+						while (($dir2 = readdir($dh2)) !== false) {
+							if (strpos($dir2,'.') !== 0)
+								$refs[] = $dir . "/" . $dir2;
+						}
+						closedir($dh2);
+					}
+				}
+				$refs[] = $dir;
+			}
+		}
+		closedir($dh);
+	} else
+		return null;
+	$reflist = array();
+	foreach ($refs as $i => $ref_file) {
+		$ref_id = git_read_hash($projectroot . $project . "/" . $refdir . "/" . $ref_file);
+		$type = git_get_type($projectroot . $project, $ref_id);
+		if ($type) {
+			$ref_item = array();
+			$ref_item['type'] = $type;
+			$ref_item['id'] = $ref_id;
+			$ref_item['epoch'] = 0;
+			$ref_item['age'] = "unknown";
+
+			if ($type == "tag") {
+				$tag = git_read_tag($projectroot . $project, $ref_id);
+				$ref_item['comment'] = $tag['comment'];
+				if ($tag['type'] == "commit") {
+					$co = git_read_commit($projectroot . $project, $tag['object']);
+					$ref_item['epoch'] = $co['committer_epoch'];
+					$ref_item['age'] = $co['age_string'];
+				} else if (isset($tag['epoch'])) {
+					$age = time() - $tag['epoch'];
+					$ref_item['epoch'] = $tag['epoch'];
+					$ref_item['age'] = age_string($age);
+				}
+				$ref_item['reftype'] = $tag['type'];
+				$ref_item['name'] = $tag['name'];
+				$ref_item['refid'] = $tag['object'];
+			} else if ($type == "commit") {
+				$co = git_read_commit($projectroot . $project, $ref_id);
+				$ref_item['reftype'] = "commit";
+				$ref_item['name'] = $ref_file;
+				$ref_item['title'] = $co['title'];
+				$ref_item['refid'] = $ref_id;
+				$ref_item['epoch'] = $co['committer_epoch'];
+				$ref_item['age'] = $co['age_string'];
+			}
+			$reflist[] = $ref_item;
+		}
+	}
+	usort($reflist,"epochcmp");
+	return $reflist;
+}
+
 function git_summary($projectroot,$project)
 {
 	global $tpl;
@@ -304,6 +421,63 @@ function git_summary($projectroot,$project)
 	}
 	$tpl->clear_all_assign();
 	$tpl->display("project_revlist_footer.tpl");
+
+	$taglist = git_read_refs($projectroot,$project,"refs/tags");
+	if (isset($taglist) && (count($taglist) > 0)) {
+		$tpl->clear_all_assign();
+		$tpl->assign("project",$project);
+		$tpl->display("project_taglist_header.tpl");
+		$alternate = FALSE;
+		foreach ($taglist as $i => $tag) {
+			$tpl->clear_all_assign();
+			$tpl->assign("project",$project);
+			if ($alternate)
+				$tpl->assign("class","dark");
+			else
+				$tpl->assign("class","light");
+			$alternate = !$alternate;
+			if ($i < 16) {
+				$tpl->assign("tagage",$tag['age']);
+				$tpl->assign("tagname",$tag['name']);
+				$tpl->assign("tagid",$tag['id']);
+				$tpl->assign("tagtype",$tag['type']);
+				$tpl->assign("refid",$tag['refid']);
+				$tpl->assign("reftype",$tag['reftype']);
+				if (isset($tag['comment']))
+					$tpl->assign("comment",$tag['comment']);
+			} else
+				$tpl->assign("truncate",TRUE);
+			$tpl->display("project_taglist_item.tpl");
+		}
+		$tpl->clear_all_assign();
+		$tpl->display("project_taglist_footer.tpl");
+	}
+
+	$headlist = git_read_refs($projectroot,$project,"refs/heads");
+	if (isset($headlist) && (count($headlist) > 0)) {
+		$tpl->clear_all_assign();
+		$tpl->assign("project",$project);
+		$tpl->display("project_headlist_header.tpl");
+		$alternate = FALSE;
+		foreach ($headlist as $i => $head) {
+			$tpl->clear_all_assign();
+			$tpl->assign("project",$project);
+			if ($alternate)
+				$tpl->assign("class","dark");
+			else
+				$tpl->assign("class","light");
+			$alternate = !$alternate;
+			if ($i < 16) {
+				$tpl->assign("headage",$head['age']);
+				$tpl->assign("headname",$head['name']);
+			} else
+				$tpl->assign("truncate",TRUE);
+			$tpl->display("project_headlist_item.tpl");
+		}
+
+		$tpl->clear_all_assign();
+		$tpl->display("project_headlist_footer.tpl");
+	}
 }
 
 ?>
