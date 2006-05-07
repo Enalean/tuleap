@@ -64,6 +64,9 @@
 				case "shortlog":
 					git_shortlog($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['pg']);
 					break;
+				case "log":
+					git_log($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['pg']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
