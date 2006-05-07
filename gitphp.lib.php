@@ -757,6 +757,8 @@ function git_commit($projectroot,$project,$hash)
 			$tpl->assign("hash",$hash);
 			$tpl->assign("from_mode",$regs[1]);
 			$tpl->assign("to_mode",$regs[2]);
+			$tpl->assign("from_mode_cut",substr($regs[1],-4));
+			$tpl->assign("to_mode_cut",substr($regs[2],-4));
 			$tpl->assign("from_id",$regs[3]);
 			$tpl->assign("to_id",$regs[4]);
 			$tpl->assign("status",$regs[5]);

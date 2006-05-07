@@ -23,7 +23,7 @@
  
  {if $status == "A"}
   <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$to_id}&hb={$hash}&f={$file}" class="list">{$file}</a></td>
-  <td><span style="color: #008000;">[new {$to_filetype}{if $isreg} with mode: {$to_mode}{/if}</span></td>
+  <td><span style="color: #008000;">[new {$to_filetype}{if $isreg} with mode: {$to_mode_cut}{/if}]</span></td>
   <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$to_id}&hb={$hash}&f={$file}">blob</a></td>
  {elseif $status == "D"}
   <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$from_id}&hb={$hash}&f={$file}" class="list">{$file}</a></td>
