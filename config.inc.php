@@ -76,6 +76,19 @@ $gitphp_conf['title'] = "gitphp :: $gitphp_appstring";
  */
 $gitphp_conf['smarty_prefix'] = "smarty/";
 
+/*
+ * git_projects
+ * Two-dimensional array list of projects
+ * First array index is the name of the category the projects
+ * belong to, and the second array index is a human-readable
+ * name for the project (not used, just for organizational
+ * purposes), and the value is the path to the project
+ * (minus the projectroot).
+ * Any projects belonging to the special category "none"
+ * will be listed without a category.
+ * Comment out $git_projects (leave null) to attempt to read all
+ * projects in the projectroot.
+ */
 $git_projects['none']['Spring'] = "external/taspring.git";
 $git_projects['School']['CS135'] = "school/cs135.git";
 $git_projects['School']['CS150'] = "school/cs150.git";
