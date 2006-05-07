@@ -32,6 +32,6 @@
   {/if}
   </b>
   </td>
-  <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=committdiff&h={$commit}">commitdiff</a></td>
+  <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commit}">commitdiff</a></td>
   </tr>
  {/if}
