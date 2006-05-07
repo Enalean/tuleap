@@ -84,6 +84,10 @@
 				case "tags":
 					git_tags($gitphp_conf['projectroot'],$_GET['p']);
 					break;
+				case "opml":
+					$suppress_headers = TRUE;
+ 					git_opml($gitphp_conf['projectroot'],$git_projects);
+					break;
 				default:
 					echo "Unknown action";
 					break;

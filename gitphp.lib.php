@@ -861,7 +861,7 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 
 function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 {
-	global $gitphp_conf;
+	global $gitphp_conf,$tpl;
 	$ret = prep_tmpdir($gitphp_conf['gittmp']);
 	if ($ret !== TRUE) {
 		echo $ret;
@@ -890,16 +890,16 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 	header("Content-type: text/plain; charset=UTF-8");
 	header("Content-disposition: inline; filename=\"git-" . $hash . ".patch\"");
 	$ad = date_str($co['author_epoch'],$co['author_tz']);
-	echo "From: " . $co['author'] . "\n";
-	echo "Date: " . $ad['rfc2822'] . "\n";
-	echo "Subject: " . $co['title'] . "\n";
+	$tpl->clear_all_assign();
+	$tpl->assign("from",$co['author']);
+	$tpl->assign("date",$ad['rfc2822']);
+	$tpl->assign("subject",$co['title']);
 	if (isset($tagname))
-		echo "X-Git-Tag: " . $tagname . "\n";
-	echo "X-Git-Url: " . $gitphp_conf['self'] . "?p=" . $project . "&a=commitdiff&h=" . $hash . "\n";
-	echo "\n";
-	foreach ($co['comment'] as $i => $line)
-		echo $line . "\n";
-	echo "---\n\n";
+		$tpl->assign("tagname",$tagname);
+	$tpl->assign("url",$gitphp_conf['self'] . "?p=" . $project . "&a=commitdiff&h=" . $hash);
+	$tpl->assign("comment",$co['comment']);
+	$tpl->display("diff_plaintext.tpl");
+	echo "\n\n";
 	foreach ($difftree as $i => $line) {
 		if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs)) {
 			if ($regs[5] == "A")
@@ -1029,6 +1029,12 @@ function git_tags($projectroot,$project)
 	}
 	$tpl->clear_all_assign();
 	$tpl->display("tags_footer.tpl");
+}
+
+function git_opml($projectroot,$projectlist)
+{
+	$projlist = git_read_projects($projectroot,$projectlist);
+	header("Content-type: text/xml; charset=UTF-8");
 }
 
 ?>
