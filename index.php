@@ -78,6 +78,12 @@
 					$suppress_headers = TRUE;
 					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hp']);
 					break;
+				case "heads":
+					git_heads($gitphp_conf['projectroot'],$_GET['p']);
+					break;
+				case "tags":
+					git_tags($gitphp_conf['projectroot'],$_GET['p']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
