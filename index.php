@@ -72,6 +72,7 @@
  ob_end_clean();
 
  $tpl->clear_all_assign();
+ $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
  $tpl->assign("version",$version);
  $title = $gitphp_conf['title'];
  if ($rss_link) {

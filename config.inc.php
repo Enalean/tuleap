@@ -22,6 +22,12 @@
  */
 
 /*
+ * stylesheet
+ * Path to page stylesheet
+ */
+$gitphp_conf['stylesheet'] = "gitphp.css";
+
+/*
  * projectroot
  * Absolute filesystem path prepended to project paths
  * (don't forget trailing slash!)
