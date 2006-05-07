@@ -895,7 +895,7 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 	echo "Subject: " . $co['title'] . "\n";
 	if (isset($tagname))
 		echo "X-Git-Tag: " . $tagname . "\n";
-	echo "X-Git-Url: " . $_SERVER['HTTP_REFERER'] . "\n";
+	echo "X-Git-Url: " . $gitphp_conf['self'] . "?p=" . $project . "&a=commitdiff&h=" . $hash . "\n";
 	echo "\n";
 	foreach ($co['comment'] as $i => $line)
 		echo $line . "\n";

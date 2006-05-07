@@ -57,6 +57,16 @@ $gitphp_conf['gittmp'] = "/tmp/gitphp/";
 $gitphp_conf['title'] = "gitphp :: $gitphp_appstring";
 
 /*
+ * self
+ * This is the path to the script that will be inserted
+ * in urls.
+ * If only specifying the directory path (and omitting the
+ * index.php filename), make sure to include the trailing
+ * slash!
+ */
+$gitphp_conf['self'] = "http://centraldogma/gitphp/";
+
+/*
  * smarty_prefix
  * This is the prefix where smarty is installed.
  * (including trailing slash)
