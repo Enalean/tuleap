@@ -1065,4 +1065,49 @@ function git_opml($projectroot,$projectlist)
 	$tpl->display("opml_footer.tpl");
 }
 
+function git_rss($projectroot,$project)
+{
+	global $tpl,$gitphp_conf;
+	$head = git_read_head($projectroot . $project);
+	$revlist = git_read_revlist($projectroot . $project, $head, 150);
+	header("Content-type: text/xml; charset=utf-8");
+	$tpl->clear_all_assign();
+	$tpl->assign("self",$gitphp_conf['self']);
+	$tpl->assign("project",$project);
+	$tpl->display("rss_header.tpl");
+
+	for ($i = 0; $i <= count($revlist); $i++) {
+		$commit = $revlist[$i];
+		$co = git_read_commit($projectroot . $project, $commit);
+		if (($i >= 20) && ((time() - $co['committer_epoch']) > 48*60*60))
+			break;
+		$cd = date_str($co['committer_epoch']);
+		$difftree = array();
+		$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $co['parent'] . " " . $co['id']);
+		$tok = strtok($diffout,"\n");
+		while ($tok !== false) {
+			if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$",$tok,$regs))
+				$difftree[] = $regs[7];
+			$tok = strtok("\n");
+		}
+		$tpl->clear_all_assign();
+		$tpl->assign("cdmday",$cd['mday']);
+		$tpl->assign("cdmonth",$cd['month']);
+		$tpl->assign("cdhour",$cd['hour']);
+		$tpl->assign("cdminute",$cd['minute']);
+		$tpl->assign("title",htmlentities($co['title']));
+		$tpl->assign("author",htmlentities($co['author']));
+		$tpl->assign("cdrfc2822",$cd['rfc2822']);
+		$tpl->assign("self",$gitphp_conf['self']);
+		$tpl->assign("project",$project);
+		$tpl->assign("commit",$commit);
+		$tpl->assign("comment",$co['comment']);
+		$tpl->assign("difftree",$difftree);
+		$tpl->display("rss_item.tpl");
+	}
+
+	$tpl->clear_all_assign();
+	$tpl->display("rss_footer.tpl");
+}
+
 ?>

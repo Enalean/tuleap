@@ -87,6 +87,10 @@
 				case "tags":
 					git_tags($gitphp_conf['projectroot'],$_GET['p']);
 					break;
+				case "rss":
+					$suppress_headers = TRUE;
+					git_rss($gitphp_conf['projectroot'],$_GET['p']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
