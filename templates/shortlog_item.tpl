@@ -1,7 +1,7 @@
 {*
- *  project_nav.tpl
+ *  shortlog_item.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Project navbar template
+ *  Component: Shortlog view item template
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *
@@ -19,7 +19,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *}
- <div class="page_nav">
- summary | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree">tree</a>
- <br /><br />
- </div>
+ <tr class="{$class}">
+ <td title="{$agestringage}"><i>{$agestringdate}</i></td>
+ <td><i>{$authorname}</i></td>
+ <td>
+ <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commit}" class="list" {if $title}title="{$title}"{/if}><b>{$title_short}
+ {if $commitref}
+ <span class="tag">{$commitref}</span>
+ {/if}
+ </b>
+ </td>
+ <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commit}">commitdiff</a>
+ </td>
+ </tr>

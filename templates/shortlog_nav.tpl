@@ -1,7 +1,7 @@
 {*
- *  project_nav.tpl
+ *  shortlog_nav.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Project navbar template
+ *  Component: Shortlog view nav template
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *
@@ -20,6 +20,5 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *}
  <div class="page_nav">
- summary | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree">tree</a>
- <br /><br />
- </div>
+ <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | shortlog | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$hash}&hb={$hash}">tree</a>
+ <br />

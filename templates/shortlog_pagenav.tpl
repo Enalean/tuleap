@@ -1,7 +1,7 @@
 {*
- *  project_nav.tpl
+ *  shortlog_page.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Project navbar template
+ *  Component: Shortlog view page nav template
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *
@@ -19,7 +19,10 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *}
- <div class="page_nav">
- summary | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree">tree</a>
- <br /><br />
+ {if $headlink}<a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">{/if}HEAD{if $headlink}</a>{/if} &sdot; {if $prevlink}<a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}&pg={$prevpage}" accesskey="p" title="Alt-p">{/if}prev{if $prevlink}</a>{/if} &sdot; {if $nextlink}<a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}&pg={$nextpage}" accesskey="n" title="Alt-n">{/if}next{if $nextlink}</a>{/if}
+ <br />
  </div>
+ <div>
+ <a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="title">&nbsp;</a>
+ </div>
+ <table cellspacing="0">

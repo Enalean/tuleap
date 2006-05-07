@@ -61,6 +61,9 @@
 				case "tree":
 					git_tree($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f'],$_GET['hb']);
 					break;
+				case "shortlog":
+					git_shortlog($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['pg']);
+					break;
 				default:
 					echo "Unknown action";
 					break;

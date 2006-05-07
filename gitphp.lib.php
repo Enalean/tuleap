@@ -79,11 +79,11 @@ function git_read_head($proj)
 	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-parse --verify HEAD");
 }
 
-function git_read_revlist($proj,$head)
+function git_read_revlist($proj,$head,$count)
 {
 	global $gitphp_conf;
 	$revlist = array();
-	$revs = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --max-count=17 " . $head);
+	$revs = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --max-count=" . $count . " " . $head);
 	$tok = strtok($revs,"\n");
 	while ($tok !== false) {
 		$revlist[] = $tok;
@@ -479,7 +479,7 @@ function git_summary($projectroot,$project)
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->display("project_revlist_header.tpl");
-	$revlist = git_read_revlist($projectroot . $project, $head);
+	$revlist = git_read_revlist($projectroot . $project, $head, 17);
 	$alternate = FALSE;
 	foreach ($revlist as $i => $rev) {
 		$tpl->clear_all_assign();
@@ -566,6 +566,70 @@ function git_summary($projectroot,$project)
 		$tpl->clear_all_assign();
 		$tpl->display("project_headlist_footer.tpl");
 	}
+}
+
+function git_shortlog($projectroot,$project,$hash,$page)
+{
+	global $tpl,$gitphp_conf;
+	$head = git_read_head($projectroot . $project);
+	if (!isset($hash))
+		$hash = $head;
+	if (!isset($page))
+		$page = 0;
+	$refs = read_info_ref($projectroot . $project);
+	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->assign("hash",$hash);
+	$tpl->display("shortlog_nav.tpl");
+
+	$revlist = git_read_revlist($projectroot . $project, $hash, (100 * ($page+1)));
+
+	if (($hash != $head) || $page)
+		$tpl->assign("headlink",TRUE);
+	if ($page > 0) {
+		$tpl->assign("prevlink",TRUE);
+		$tpl->assign("prevpage",$page-1);
+	}
+	if (count($revlist) >= (100 * ($page+1)-1)) {
+		$tpl->assign("nextlink",TRUE);
+		$tpl->assign("nextpage",$page+1);
+	}
+	$tpl->display("shortlog_pagenav.tpl");
+
+	$alternate = FALSE;
+	for ($i = ($page * 100); $i <= count($revlist); $i++) {
+		$tpl->clear_all_assign();
+		$commit = $revlist[$i];
+		if (strlen(trim($commit)) > 0) {
+			if (isset($refs[$commit]))
+				$tpl->assign("commitref",$refs[$commit]);
+			$co = git_read_commit($projectroot . $project, $commit);
+			$ad = date_str($co['author_epoch']);
+			if ($alternate)
+				$tpl->assign("class","dark");
+			else
+				$tpl->assign("class","light");
+			$alternate = !$alternate;
+			$tpl->assign("project",$project);
+			$tpl->assign("commit",$commit);
+			$tpl->assign("agestringage",$co['age_string_age']);
+			$tpl->assign("agestringdate",$co['age_string_date']);
+			$tpl->assign("authorname",$co['author_name']);
+			$tpl->assign("title_short",$co['title_short']);
+			if (strlen($co['title_short']) < strlen($co['title']))
+				$tpl->assign("title",$co['title']);
+			$tpl->display("shortlog_item.tpl");
+		}
+	}
+
+	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->assign("hash",$hash);
+	if (count($revlist) >= (100 * ($page+1)-1)) {
+		$tpl->assign("nextlink",TRUE);
+		$tpl->assign("nextpage",$page+1);
+	}
+	$tpl->display("shortlog_footer.tpl");
 }
 
 ?>
