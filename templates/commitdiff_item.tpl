@@ -30,7 +30,7 @@
  {elseif $status == "M"}
    {if $from_id != $to_id}
      <div class="diff_info">
-     {$from_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$from_id}&hb={$hash}&f={$file}">{$from_id}</a> -> {$to_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$to_id}&hb={$hash}&f={$file}">{$to_id}</a>
+     {$from_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$from_id}&hb={$hash}&f={$file}">{$from_id}</a> -&gt; {$to_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$to_id}&hb={$hash}&f={$file}">{$to_id}</a>
      </div>
    {/if}
  {/if}
