@@ -242,13 +242,46 @@ function file_type($octmode)
 	return "unknown";
 }
 
+function git_get_hash_by_path($project,$base,$path,$type)
+{
+	global $gitphp_conf;
+	$tree = $base;
+	$parts = array();
+	$tok = strtok($path,"/");
+	while ($tok !== null) {
+		$parts[] = $tok;
+		$tok = strtok("/");
+	}
+	$partcount = count($parts);
+	foreach ($parts as $i => $part) {
+		$entries = array();
+		$lsout = shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-ls-tree " . $tree);
+		$tok = strtok($lsout,"\n");
+		while ($tok !== false) {
+			$entries[] = $tok;
+			$tok = strtok("\n");
+		}
+		foreach ($entries as $j => $line) {
+			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$tok,$regs)) {
+				if ($regs[4] == $part) {
+					if ($i == ($partcount)-1)
+						return $regs[3];
+					if ($regs[2] == "tree")
+						$tree = $regs[3];
+					break;
+				}
+			}
+		}
+	}
+}
+
 function git_tree($projectroot,$project,$hash,$file,$hashbase)
 {
 	global $gitphp_conf,$tpl;
 	if (!isset($hash)) {
 		$hash = git_read_head($projectroot . $project);
 		if (isset($file))
-			$hash = git_get_hash_by_path(($hashbase?$hashbase:$hash),$file,"tree");
+			$hash = git_get_hash_by_path($projectroot . $project, ($hashbase?$hashbase:$hash),$file,"tree");
 			if (!isset($hashbase))
 				$hashbase = $hash;
 	}
@@ -1108,6 +1141,62 @@ function git_rss($projectroot,$project)
 
 	$tpl->clear_all_assign();
 	$tpl->display("rss_footer.tpl");
+}
+
+function git_blob($projectroot, $project, $hash, $file, $hashbase)
+{
+	global $gitphp_conf,$tpl;
+	if (!isset($hash) && isset($file)) {
+		$base = $hashbase ? $hashbase : git_read_head($projectroot . $project);
+		$hash = git_get_hash_by_path($projectroot . $project, $base,$file,"blob");
+	}
+	$catout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $hash);
+	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
+		$tpl->clear_all_assign();
+		$tpl->assign("project",$project);
+		$tpl->assign("hashbase",$hashbase);
+		$tpl->assign("tree",$co['tree']);
+		$tpl->assign("hash",$hash);
+		if (isset($file))
+			$tpl->assign("file",$file);
+		$tpl->assign("title",$co['title']);
+		$tpl->display("blob_nav.tpl");
+	} else {
+		$tpl->clear_all_assign();
+		$tpl->assign("hash",$hash);
+		$tpl->display("blob_emptynav.tpl");
+	}
+	$tpl->clear_all_assign();
+	if (isset($file))
+		$tpl->assign("file",$file);
+	$tpl->display("blob_header.tpl");
+	$nr = 0;
+	$tok = strtok($catout,"\n");
+	while ($tok !== false) {
+		$nr++;
+		/*
+		 * TODO: Convert tabs to spaces
+		 */
+		$tpl->clear_all_assign();
+		$tpl->assign("nr",$nr);
+		$tpl->assign("line",htmlentities($tok));
+		$tpl->display("blob_line.tpl");
+		$tok = strtok("\n");
+	}
+	$tpl->clear_all_assign();
+	$tpl->display("blob_footer.tpl");
+}
+
+function git_blob_plain($projectroot,$project,$hash,$file)
+{
+	global $gitphp_conf;
+	if ($file)
+		$saveas = $file;
+	else
+		$saveas = $hash . ".txt";
+	header("Content-type: text/plain; charset=UTF-8");
+	header("Content-disposition: inline; filename=\"" . $saveas . "\"");
+	echo shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $hash);
 }
 
 ?>

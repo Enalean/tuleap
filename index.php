@@ -91,6 +91,13 @@
 					$suppress_headers = TRUE;
 					git_rss($gitphp_conf['projectroot'],$_GET['p']);
 					break;
+				case "blob":
+					git_blob($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f'],$_GET['hb']);
+					break;
+				case "blob_plain":
+					$suppress_headers = TRUE;
+					git_blob_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
