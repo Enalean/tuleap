@@ -1103,7 +1103,7 @@ function git_rss($projectroot,$project)
 	global $tpl,$gitphp_conf;
 	$head = git_read_head($projectroot . $project);
 	$revlist = git_read_revlist($projectroot . $project, $head, 150);
-	header("Content-type: text/xml; charset=utf-8");
+	header("Content-type: text/xml; charset=UTF-8");
 	$tpl->clear_all_assign();
 	$tpl->assign("self",$gitphp_conf['self']);
 	$tpl->assign("project",$project);
@@ -1197,6 +1197,54 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 	header("Content-type: text/plain; charset=UTF-8");
 	header("Content-disposition: inline; filename=\"" . $saveas . "\"");
 	echo shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $hash);
+}
+
+function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
+{
+	global $gitphp_conf,$tpl;
+	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	if ($ret !== TRUE) {
+		echo $ret;
+		return;
+	}
+	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
+		$tpl->clear_all_assign();
+		$tpl->assign("project",$project);
+		$tpl->assign("hash",$hash);
+		$tpl->assign("hashbase",$hashbase);
+		$tpl->assign("hashparent",$hashparent);
+		$tpl->assign("tree",$co['tree']);
+		$tpl->assign("title",$co['title']);
+		$tpl->display("blobdiff_nav.tpl");
+	} else {
+		$tpl->clear_all_assign();
+		$tpl->assign("hash",$hash);
+		$tpl->assign("hashparent",$hashparent);
+		$tpl->display("blobdiff_emptynav.tpl");
+	}
+	$tpl->clear_all_assign();
+	if (isset($file))
+		$tpl->assign("file",$file);
+	$tpl->assign("project",$project);
+	$tpl->assign("hashparent",$hashparent);
+	$tpl->assign("hashbase",$hashbase);
+	$tpl->assign("hash",$hash);
+	$tpl->display("blobdiff_header.tpl");
+	git_diff_print($projectroot . $project, $hashparent,($file?$file:$hashparent),$hash,($file?$file:$hash));
+	$tpl->clear_all_assign();
+	$tpl->display("blobdiff_footer.tpl");
+}
+
+function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent)
+{
+	global $gitphp_conf;
+	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	if ($ret !== TRUE) {
+		echo $ret;
+		return;
+	}
+	header("Content-type: text/plain; charset=UTF-8");
+	git_diff_print($projectroot . $project, $hashparent,($file?$file:$hashparent),$hash,($file?$file:$hash),"plain");
 }
 
 ?>
