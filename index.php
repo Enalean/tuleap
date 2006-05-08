@@ -105,6 +105,9 @@
 					$suppress_headers = TRUE;
 					git_blobdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],$_GET['f']);
 					break;
+				case "history":
+					git_history($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
