@@ -19,4 +19,4 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *}
- <div class="pre"><a id="l{$nr}" href="#l{$nr}" class="linenr">{$nr}</a> {$line}</div>
+ <div class="pre">{if $nr < 10} {/if}{if $nr < 100} {/if}{if $nr < 1000} {/if}<a id="l{$nr}" href="#l{$nr}" class="linenr">{$nr}</a> {$line}</div>

@@ -244,6 +244,7 @@ function file_type($octmode)
 
 function git_get_hash_by_path($project,$base,$path,$type = null)
 {
+	return null;
 	global $gitphp_conf;
 	$tree = $base;
 	$parts = array();
@@ -1170,18 +1171,15 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	if (isset($file))
 		$tpl->assign("file",$file);
 	$tpl->display("blob_header.tpl");
-	$nr = 0;
-	$tok = strtok($catout,"\n");
-	while ($tok !== false) {
-		$nr++;
+	$lines = explode("\n",$catout);
+	foreach ($lines as $i => $line) {
 		/*
 		 * TODO: Convert tabs to spaces
 		 */
 		$tpl->clear_all_assign();
-		$tpl->assign("nr",$nr);
-		$tpl->assign("line",htmlentities($tok));
+		$tpl->assign("nr",$i+1);
+		$tpl->assign("line",htmlentities($line));
 		$tpl->display("blob_line.tpl");
-		$tok = strtok("\n");
 	}
 	$tpl->clear_all_assign();
 	$tpl->display("blob_footer.tpl");
