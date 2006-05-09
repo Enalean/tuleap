@@ -114,6 +114,7 @@ class DB_mysql extends DB_common
         /// ++ MV add for CodeX: re-use codex DB connexion
         global $conn;
         $this->_db = 'sourceforge';
+        $this->dsn = $dsninfo;
         $this->connection = $conn;
         return DB_OK;
         /// -- MV add
