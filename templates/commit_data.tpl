@@ -44,6 +44,7 @@
  <tr><td>parent</td><td style="font-family:monospace"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}" class="list">{$par}</a></td>
  <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}&hp={$par}">commitdiff</a></td></tr>
  {/foreach}
+ <tr><td>snapshot</td><td style="font-family:monospace"><a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$hash}" class="list">{$hash}</a></td></tr>
  </table>
  </div>
  <div class="page_body">

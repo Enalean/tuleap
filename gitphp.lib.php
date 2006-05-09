@@ -35,6 +35,18 @@ function prep_tmpdir($dir)
 	return TRUE;
 }
 
+function git_snapshot($projectroot,$project,$hash)
+{
+	global $gitphp_conf;
+	if (!isset($hash))
+		$hash = "HEAD";
+	$rname = str_replace(array("/",".git"),array("-",""),$project);
+	$cmd = "env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-tar-tree " . $hash . " " . $rname . " | gzip -f";
+	header("Content-Type: application/x-gzip");
+	header("Content-Disposition: attachment; filename=" . $rname . ".tar.gz");
+	echo shell_exec($cmd);
+}
+
 function git_read_projects($projectroot,$projectlist)
 {
 	$projects = array();

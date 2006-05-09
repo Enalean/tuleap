@@ -28,7 +28,7 @@
  </div>
  <div class="title_text">
  <div class="log_link">
- <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commit}">commitdiff</a>
+ <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$commit}">snapshot</a>
  <br />
  </div>
  <i>{$authorname} [{$rfc2822}]</i><br />
