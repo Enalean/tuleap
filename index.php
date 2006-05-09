@@ -120,7 +120,7 @@
 	}
  } else {
  	$tpl->display("hometext.tpl");
- 	git_project_list($gitphp_conf['projectroot'],$git_projects);
+ 	git_project_list($gitphp_conf['projectroot'],$git_projects,$_GET['o']);
  }
  $main = ob_get_contents();
  ob_end_clean();
