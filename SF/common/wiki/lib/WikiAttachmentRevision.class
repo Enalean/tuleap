@@ -1,6 +1,6 @@
 <?php
 /* 
- * Copyright 2005, STMicroelectronics
+ * Copyright 2005, 2006, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
  *
@@ -87,8 +87,13 @@ class WikiAttachmentRevision {
         $dar =& $dao->getRevision($this->attachmentId, $this->revision);
 
         if($dar->rowCount() > 1) {
-            trigger_error("There are multiple identifier for an attachment."
-                          ."Please contact an administrator", E_USER_ERROR);
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev', 
+                                                        'err_multi_id',
+                                                        array($GLOBALS['sys_email_admin'],
+                                                              $this->attachmentId,
+                                                              $this->revision,
+                                                              $GLOBALS['sys_fullname']))
+                          ,E_USER_ERROR);
             return false;
         }
         else {
@@ -106,7 +111,10 @@ class WikiAttachmentRevision {
         $this->revision = $waIter->count();
 
         if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {		
-            trigger_error( "Uploading faild: ".$this->filename, E_USER_ERROR);
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
+                                                        'err_upl_mv',
+                                                        array($this->filename)) 
+                          E_USER_ERROR);
             return false;
         }
 
@@ -129,12 +137,14 @@ class WikiAttachmentRevision {
                             $this->size);
         
         if($res === false) {
-	  trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
-	  return false;
-	}
-	else {
-	  return true;
-	}
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
+                                                        'err_create')
+                          E_USER_ERROR);
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
 
@@ -204,7 +214,9 @@ class WikiAttachmentRevision {
         global $sys_max_size_upload;
 
         if ($s> $sys_max_size_upload) {
-            trigger_error("Sorry but this file is too big", E_USER_ERROR);
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
+                                                        'err_too_big'),
+                          E_USER_ERROR);
             return false;
         }
 

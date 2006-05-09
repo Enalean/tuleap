@@ -53,6 +53,14 @@ wiki_lib_attachment	err_create_file_dir	Unable to create file revision area
 wiki_lib_attachment	err_multi_id	There are multiple identifier for an attachment.Please contact an administrator
 #
 #-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiAttachmentRevision.class
+#
+wiki_lib_attachment_rev	err_multi_id	There are multiple identifier for an attachment. Please <a href="mailto:$1?Subject=Wiki Attachment Error (attch:$2,rev:$3)" title="Send a mail to $4 administrators">contact</a> a $4 administrator.
+wiki_lib_attachment_rev	err_upl_mv	Upload of '$1' faild.
+wiki_lib_attachment_rev	err_create	An error occured on attachment revision creation. Database entry not created.
+wiki_lib_attachment_rev	err_too_big	Sorry but this file is too big.
+#
+#-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
 #
 wiki_lib_wikientry	insert_err	Can not insert new wiki entry: $1
