@@ -22,6 +22,9 @@
  */
 
 require_once('common/collection/ArrayIterator.class');
+require_once('common/dao/CodexDataAccess.class');
+
+require_once('common/wiki/lib/WikiAttachmentRevisionDao.class');
 
 /**
  *
@@ -69,19 +72,27 @@ class WikiAttachmentRevision {
         }
     }
 
-    function dbFetch() {
-        $sql = 'SELECT * FROM wiki_attachment_revision'
-            .'    WHERE attachment_id="'.$this->attachmentId.'"'
-            .'    AND revision="'.$this->revision.'"';
-        $res = db_query($sql);
+    function getDao() {        
+        static $_codex_wikiattachmentrevisiondao_instance;
+        
+        if(!$_codex_wikiattachmentrevisiondao_instance) {
+            $_codex_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodexDataAccess::instance());
+        }
 
-        if(db_numrows($res) > 1) {
+        return $_codex_wikiattachmentrevisiondao_instance;
+    }
+
+    function dbFetch() {
+        $dao =& $this->getDao();
+        $dar =& $dao->getRevision($this->attachmentId, $this->revision);
+
+        if($dar->rowCount() > 1) {
             trigger_error("There are multiple identifier for an attachment."
                           ."Please contact an administrator", E_USER_ERROR);
             return false;
         }
         else {
-            $this->setFromRow(mysql_fetch_array($res));    
+            $this->setFromRow($dar->getRow());    
         }
     }
   
@@ -109,16 +120,14 @@ class WikiAttachmentRevision {
     }
   
     function dbadd() {
-        $sql = 'INSERT INTO wiki_attachment_revision SET'
-            .'  attachment_id="'.$this->attachmentId.'"'
-            .', user_id="'.$this->owner_id.'"'
-            .', date="'.$this->date.'"'
-            .', revision="'.$this->revision.'"'
-            .', mimetype="'.mysql_real_escape_string($this->mimeType).'"'
-            .', size="'.$this->size.'"';
-
-        $res = db_query($sql);
-
+        $dao =& $this->getDao();
+        $res = $dao->create($this->attachmentId, 
+                            $this->owner_id, 
+                            $this->date, 
+                            $this->revision, 
+                            $this->mimeType, 
+                            $this->size);
+        
         if($res === false) {
 	  trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
 	  return false;
@@ -160,18 +169,12 @@ class WikiAttachmentRevision {
 
 
     function log($userId) {
-        $_userId = (int) $userId;
-
-        $qry = 'INSERT INTO wiki_attachment_log'
-            .' (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)'
-            .' VALUES('.$_userId
-            .', '.$this->gid
-            .', '.$this->attachmentId
-            .', '.$this->id
-            .', '.time().')';
-            
-        db_query($qry);
-        
+        $dao =& $this->getDao();
+        $dao->log($this->attachmentId, 
+                  $this->id, 
+                  $this->gid, 
+                  $userId, 
+                  time());        
     }
 
 
@@ -246,17 +249,15 @@ class WikiAttachmentRevision {
     }
 
     /**
-     *
+     * 
      */
     function getFilename() {
         if(empty($this->filename)) {
-            if(is_numeric($this->attachmentId)) {
-                $sql = 'SELECT name FROM wiki_attachment'
-                    .'    WHERE id="'.$this->attachmentId.'"';
-                $res = db_query($sql);
-                $row = db_fetch_array($res);
-                $this->filename = $row['name'];
-            }
+            $wa = new WikiAttachment();
+            // @todo: catch error when wiki no attachementId is set.
+            $wa->initWithId($this->attachmentId);
+            // @todo: catch error when given attchId do not exist
+            $this->filename = $wa->getFilename();            
         }
         return $this->filename;
     }
@@ -298,7 +299,7 @@ class WikiAttachmentRevision {
     }
 
     /**
-     * @access public
+     * @access public static
      * @param  Iterator
      */
     function &getRevisionIterator($gid=null, $id=null) {
@@ -311,13 +312,9 @@ class WikiAttachmentRevision {
             $id  = $this->attachmentId;
         }
 
-        //@todo: transfer to a DAO
-        $qry = '  SELECT * FROM wiki_attachment_revision'
-            .' WHERE attachment_id="'.$id.'"'
-            .' ORDER BY date DESC';
-        
-        $res = db_query($qry);
-        while($row = db_fetch_array($res)) {
+        $dao =& WikiAttachmentRevision::getDao();
+        $dar =& $dao->getAllRevisions($id);        
+        while($row =& $dar->getRow()) {
             $war =& new WikiAttachmentRevision($gid);
             $war->setFromRow($row);
             $warArray[] =& $war;
