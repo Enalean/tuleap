@@ -21,7 +21,7 @@
  *}
 <tr class="{$class}">
 <td>
-{if $idt}<span style="white-space:pre;">  {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>{if $idt}</span>{/if}
+{if $idt}<span style="white-space:pre;">  {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="list">{$project}</a>{if $idt}</span>{/if}
 </td>
 <td>{$descr}</td>
 <td><i>{$owner}</i></td>
