@@ -111,6 +111,13 @@ class DB_mysql extends DB_common
      */
     function connect($dsninfo, $persistent = false)
     {
+        /// ++ MV add for CodeX: re-use codex DB connexion
+        global $conn;
+        $this->_db = 'sourceforge';
+        $this->connection = $conn;
+        return DB_OK;
+        /// -- MV add
+
         if (!DB::assertExtension('mysql')) {
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
         }
