@@ -21,7 +21,6 @@ if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
 }
 
-
 $constraint = "AND a.artifact_id IN ($export_aids)";
 $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_select,$export_from,$export_where,$multiple_queries,$all_queries,$constraint);
 
@@ -54,8 +53,19 @@ if (strstr($submitted_field->getLabel(),"ubmit")) {
 $col_list[] = 'follow_ups';
 $col_list[] = 'is_dependent_on';
 
-
 $eol = "\n";
+
+// If user asked to export only displayed fields (fields displayed in the current report)
+// The export is based on the arrays col_list and lbl_list, that contain the fields to export.
+// Basically, these arrays contain all the fields of the tracker,
+// so we simply remove the non-displayed fields from these arrays.
+if (isset($only_displayed_fields) && $only_displayed_fields == 'on') {
+    $artifact_report = new ArtifactReport($report_id, $atid);
+    $displayed_fields = $artifact_report->getResultFields();
+    // array_intersect_key is a PHP 5 function (implemented here in SF/www/include/utils.php)
+    $col_list = array_intersect_key($col_list, $displayed_fields);
+    $lbl_list = array_intersect_key($lbl_list, $displayed_fields);
+}
 
 //$sql = $export_select." ".$export_from." ".$export_where." AND a.artifact_id IN ($export_aids) group by a.artifact_id";
 
