@@ -41,9 +41,9 @@ function git_snapshot($projectroot,$project,$hash)
 	if (!isset($hash))
 		$hash = "HEAD";
 	$rname = str_replace(array("/",".git"),array("-",""),$project);
-	$cmd = "env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-tar-tree " . $hash . " " . $rname . " | gzip -f";
-	header("Content-Type: application/x-gzip");
-	header("Content-Disposition: attachment; filename=" . $rname . ".tar.gz");
+	$cmd = "env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-tar-tree " . $hash . " " . $rname;
+	header("Content-Type: application/x-tar");
+	header("Content-Disposition: attachment; filename=" . $rname . ".tar");
 	echo shell_exec($cmd);
 }
 
