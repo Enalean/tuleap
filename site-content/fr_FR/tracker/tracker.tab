@@ -360,6 +360,7 @@ tracker_include_report	rank_repo	Rang dans le rapport
 tracker_include_report	col_width	Largeur de la colonne (optionnelle)
 tracker_include_report	modify_report	Modifier le rapport
 tracker_include_report	btn_export	Exporter artefacts correspondants
+tracker_include_report	export_only_report_fields	Exporter uniquement les champs du rapport
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactTypeHtml.class

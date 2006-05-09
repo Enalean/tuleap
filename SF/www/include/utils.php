@@ -233,6 +233,26 @@ function merge_hashtable ($arr_1, $arr_2) {
     return $arr_2;
 }
 
+
+/**
+ * Implement the function array_intersect_key, available in PHP5 but not in PHP4
+ * See official php documentation for details.
+ */
+if (!function_exists('array_intersect_key')) {
+    function array_intersect_key ($array_intersect, $arr2) {
+        $numargs = func_num_args();
+        for ($i = 1; !empty($array_intersect) && $i < $numargs; $i++) {
+            $arr = func_get_arg($i);
+            foreach ($array_intersect as $k => $v) {
+                if (!isset($arr[$k])) {
+                    unset($array_intersect[$k]);
+                }
+            }
+        }
+        return $array_intersect;
+    }
+}
+
 function util_result_build_array($result, $col_id=0, $col_value=1) {
 	$rows=db_numrows($result);
 
