@@ -163,6 +163,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $res = db_query($qry);
 
         $i = 0;
+        $j = 0; // count viewable attch for offset
         $waArray = array();
         $stop = false;
         while(($row = db_fetch_array($res)) && !$stop) {
@@ -188,11 +189,12 @@ class WikiAttachment /* implements UGroupPermission */ {
             }
 
             if($isAllowedToSee) {
-                if($i >= $offset) {
+                if($j >= $offset) {
                     $wa->setRevisionCounter($row['nb']);
                     $waArray[] =& $wa;
                     $i++;
                 }
+                $j++;
             }
 
             unset($wa);
