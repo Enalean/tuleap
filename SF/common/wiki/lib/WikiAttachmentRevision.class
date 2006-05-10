@@ -110,10 +110,10 @@ class WikiAttachmentRevision {
         $waIter =& $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
-        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {		
+        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {	
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
                                                         'err_upl_mv',
-                                                        array($this->filename)) 
+                                                        array($this->filename)),
                           E_USER_ERROR);
             return false;
         }
@@ -138,7 +138,7 @@ class WikiAttachmentRevision {
         
         if($res === false) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
-                                                        'err_create')
+                                                        'err_create'),
                           E_USER_ERROR);
             return false;
         }
