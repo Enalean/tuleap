@@ -75,6 +75,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     var $id;
 
+    var $revisionCounter;
 
     /**
      * @access public
@@ -84,6 +85,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->setGid($gid);
         $this->filetype = null;
         $this->filesize = null;
+        $this->revisionCounter = null;
 
         /*
          * Check user
@@ -113,6 +115,86 @@ class WikiAttachment /* implements UGroupPermission */ {
             $wa =& new WikiAttachment($gid);
             $wa->setFromRow($row);
             $waArray[] =& $wa;
+            unset($wa);
+        }
+
+        return new ArrayIterator($waArray);
+    }
+
+    function getListWithCounter($gid=null, $uid=null, $limit=null) {
+        if($gid !== null) {
+            $gid = (int) $gid;
+        }
+        else {
+            $gid = $this->gid;
+        }
+
+        $uid = (int) $uid;
+
+        //@todo: transfer to a DAO
+        $qry = sprintf('SELECT wa.id, wa.group_id, wa.name, count(*) as nb, MAX(war.date) as max_date'
+                       .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
+                       .' WHERE wa.group_id=%d'
+                       .' AND war.attachment_id=wa.id'
+                       .' GROUP BY attachment_id'
+                       .' ORDER BY max_date DESC',
+                       $gid);
+        
+        $offset = 0;
+        $max    = null;
+        if(is_array($limit)) {
+            // Due to permissions, we cannot use SQL limit
+            // This will be possible when whe will have the
+            // possibility to join the permission table and
+            // the attachement table
+
+            /*$qry .= sprintf(' LIMIT %d,%d',
+                            $limit['offset'],
+                            $limit['nb']);*/
+            
+            if(array_key_exists('offset', $limit)) {
+                $offset = (int) $limit['offset'];
+            }
+            if(array_key_exists('nb', $limit)) {
+                $max = (int) $limit['nb'];
+            }
+        }
+
+        $res = db_query($qry);
+
+        $i = 0;
+        $waArray = array();
+        $stop = false;
+        while(($row = db_fetch_array($res)) && !$stop) {
+            if($max !== null) {
+                if($i >= $max) {
+                    $stop = true;
+                    break;
+                }
+            }
+
+            $wa =& new WikiAttachment($gid);
+            $wa->setFromRow($row);
+
+            // Check for user rights
+            $isAllowedToSee = false;
+            if($wa->permissionExist()) {
+                if($wa->isAutorized($uid)) {
+                    $isAllowedToSee = true;
+                }
+            }
+            else {
+                $isAllowedToSee = true;
+            }
+
+            if($isAllowedToSee) {
+                if($i >= $offset) {
+                    $wa->setRevisionCounter($row['nb']);
+                    $waArray[] =& $wa;
+                    $i++;
+                }
+            }
+
             unset($wa);
         }
 
@@ -393,6 +475,10 @@ ws[cfh]");
         $this->filename = $row['name'];
     }
 
+    function setRevisionCounter($nb) {
+        $this->revisionCounter = (int) $nb;
+    }
+    
     /**
      * @access
      * @param
@@ -420,9 +506,12 @@ ws[cfh]");
     }
 
     function count() {
-        $this->getId();
-        $waIter =& WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
-        return $waIter->count();
+        if($this->revisionCounter === null) {
+            $this->getId();
+            $waIter =& WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
+            $this->revisionCounter = $waIter->count();
+        }
+        return $this->revisionCounter;
     }
 
     /**

@@ -21,6 +21,10 @@ rcs_id('$Id: UpLoad.php,v 1.19 2005/04/11 19:40:15 rurban Exp $');
 
  */
 
+/// MV add
+/// Wiki attachments
+require_once('common/wiki/lib/WikiAttachment.class');
+
 /**
  * UpLoad:  Allow Administrator to upload files to a special directory,
  *          which should preferably be added to the InterWikiMap
@@ -143,10 +147,9 @@ ws[cfh]");
             $userfile_name = trim(basename($userfile_name));
             $userfile_tmpname = $userfile->getTmpName();
 	    $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
-        
+
             /// MV add
             /// Wiki attachments
-            require_once('common/wiki/lib/WikiAttachment.class');
             $wa  = new WikiAttachment(GROUP_ID);
             $rev = $wa->createRevision($userfile_name, $userfile->getSize(), 
                                        $userfile->getType(), $userfile->getTmpName());
@@ -185,10 +188,40 @@ ws[cfh]");
             $message->pushContent(HTML::br(),HTML::br());
         }
 
+        /// {{{ Codex Specific        
+        $attchTab  = HTML::table(array('border' => '1'));
+        $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
+                                        HTML::th(_("Number of revision"))));
+        $wai =& WikiAttachment::getListWithCounter(GROUP_ID,
+                                                   user_getid(),
+                                                   array('offset' => 0,
+                                                         'nb'     => 10));
+        $wai->rewind();
+        while($wai->valid()) {
+            $wa =& $wai->current();
+            
+            $filename = basename($wa->getFilename());
+            
+            $line = HTML::tr();
+            $line->pushContent(HTML::td(HTML::a(array('href' => ''),
+                                                "Attach:".$filename)));
+            $line->pushContent(HTML::td($wa->count()));
+            $attchTab->pushContent($line);                
+            
+            $wai->next();
+        }
+        $attchList = HTML();
+        $attchList->pushContent(HTML::hr(),
+                                HTML::h2(_("Last 10 attached files")));
+        $attchList->pushContent($attchTab);
+        /// }}}
+
+
         //$result = HTML::div( array( 'class' => 'wikiaction' ) );
         $result = HTML();
         $result->pushContent($form);
         $result->pushContent($message);
+        $result->pushContent($attchList);
         return $result;
     }
 
