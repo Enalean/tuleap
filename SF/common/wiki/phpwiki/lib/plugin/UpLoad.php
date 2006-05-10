@@ -189,13 +189,26 @@ ws[cfh]");
         }
 
         /// {{{ Codex Specific        
-        $attchTab  = HTML::table(array('border' => '1'));
+
+        // URL arguments
+        if(array_key_exists('offset', $_REQUEST))
+            $offset = $_REQUEST['offset'];
+        else
+            $offset = 0;
+
+        if(array_key_exists('limit', $_REQUEST))
+            $limit = $_REQUEST['limit'];
+        else
+            $limit = 10;
+                
+        $attchTab = HTML::table(array('border' => '1',
+                                      'width'  => '100%'));
         $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
                                         HTML::th(_("Number of revision"))));
         $wai =& WikiAttachment::getListWithCounter(GROUP_ID,
                                                    user_getid(),
-                                                   array('offset' => 0,
-                                                         'nb'     => 10));
+                                                   array('offset' => $offset,
+                                                         'nb'     => $limit));
         $wai->rewind();
         while($wai->valid()) {
             $wa =& $wai->current();
@@ -212,8 +225,18 @@ ws[cfh]");
         }
         $attchList = HTML();
         $attchList->pushContent(HTML::hr(),
-                                HTML::h2(_("Last 10 attached files")));
+                                HTML::h2(_("Attached files")));
         $attchList->pushContent($attchTab);
+        
+        $url = WikiURL("UpLoad");
+        if(!empty($_REQUEST['pv'])) {
+            $url .= '&pv='.$_REQUEST['pv'];
+        }
+        $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset-$limit)),
+                                        "<- Previous"));
+        $attchList->pushContent(" - ");
+        $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset+$limit)),
+                                        "Next ->"));
         /// }}}
 
 
