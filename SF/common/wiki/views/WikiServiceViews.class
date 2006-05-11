@@ -284,13 +284,13 @@ class WikiServiceViews extends WikiViews {
   }
 
 
-  if("wiki" == $this->view) {
-      print '
+
+  print '
       (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display').'">
       <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
-        $GLOBALS['Language']->getText('global','printer_version').'</A> ) 
+      $GLOBALS['Language']->getText('global','printer_version').'</A> ) 
       </li>';
-    }
+    
 
  
   print '
@@ -335,6 +335,8 @@ class WikiServiceViews extends WikiViews {
    * @access public
    */
   function display($view='') {
+      $GLOBALS['type_of_search'] = 'wiki';
+
     switch($view) {
     case 'empty':
       $this->wiki();
