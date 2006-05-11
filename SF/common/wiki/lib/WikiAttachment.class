@@ -375,8 +375,8 @@ ws[cfh]");
         if(!$created) {            
             $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 
-                                                        'err_insert')), 
-                          E_USER_ERROR);	  
+                                                        'err_insert'),
+                          E_USER_ERROR);
             return false;
         }
         else {
