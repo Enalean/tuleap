@@ -346,7 +346,7 @@ ws[cfh]");
       
             // @TODO: prevent usage of '?' and '&' as behind. But with a
             // generical functions, in utils.php for instance.
-            if(is_numeric($uriExp[5])) {
+            if(isset($uriExp[5]) && is_numeric($uriExp[5])) {
                 $rev = (int) $uriExp[5];
             }
             else {
@@ -417,7 +417,7 @@ ws[cfh]");
                 return -1;
             }
             else {
-                $row = $dar->getRow();
+                $row =& $dar->getRow();
                 $this->id = $row['id'];
             }
         }
