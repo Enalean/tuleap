@@ -374,12 +374,12 @@ ws[cfh]");
         $created = $dao->create($this->gid, $this->filename);
 
         if(!$created) {            
-	  trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);	  
-	  return false;
-	}
-	else {
-	  return true;
-	}
+            trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);	  
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     function create() {
