@@ -1254,7 +1254,7 @@ function SetupWiki (&$request)
         $request->_user = new WikiUser($request, _("The PhpWiki programming team"),
                                        WIKIAUTH_BOGO);
 
-    StartLoadDump($request, _("Loading up virgin wiki"));
+    StartLoadDump($request, _("Loading up virgin wiki. Please wait until the end of the process. This may takes few minutes."));
     echo "<dl>\n";
 
     $pgsrc = FindLocalizedFile(WIKI_PGSRC);

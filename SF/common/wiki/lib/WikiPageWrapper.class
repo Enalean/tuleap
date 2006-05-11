@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-define('PHPWIKI_DIR', dirname(__FILE__).'/../phpwiki');
+define('PHPWIKI_DIR', getenv('SF_LOCAL_INC_PREFIX').'/home/httpd/SF/common/wiki/phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
 
@@ -170,23 +170,19 @@ Upload:num_rev/filename
   /**
    * special install function
    */
-  function install() {    
-    if($this->gid == 1) {
-      if(!user_is_super_user()) {
-          $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
-          exit_error($GLOBALS['Language']->getText('global','error'),
-                     $GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 
-                                                   'right_error'));
+  function install() {
+      if($this->gid == 1) {
+          if(!user_is_super_user()) {
+              $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+              exit_error($GLOBALS['Language']->getText('global','error'),
+                         $GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 
+                                                       'right_error'));
+          }
       }
       define('WIKI_PGSRC', 'codexpgsrc');
       define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
-    }
-    else {
-      define('WIKI_PGSRC', 'projectpgsrc');
-      define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
-    }
-
-    $this->render();
+   
+      $this->render();
   }
 }
 ?>

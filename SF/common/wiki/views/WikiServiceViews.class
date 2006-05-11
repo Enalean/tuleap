@@ -341,6 +341,10 @@ class WikiServiceViews extends WikiViews {
     case 'empty':
       $this->wiki();
       break;
+      
+    case 'doinstall':
+        if(!empty($view)) $this->$view();
+        break;
 
     case 'browse':
     default:

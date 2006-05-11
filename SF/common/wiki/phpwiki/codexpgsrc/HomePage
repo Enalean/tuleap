@@ -9,8 +9,6 @@ Content-Type: application/x-phpwiki;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-* What is a WikiWikiWeb? A description of this application.
-* Learn HowToUseWiki and learn about AddingPages.
 * Use the SandBox page to experiment with Wiki pages.
 * See RecentChanges for the latest page additions and changes.
 * Find out which pages are MostPopular.
