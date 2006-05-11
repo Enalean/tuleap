@@ -27,8 +27,6 @@ require_once(dirname(__FILE__).'/../lib/WikiPage.class');
 require_once(dirname(__FILE__).'/../lib/WikiAttachment.class');
 require_once(dirname(__FILE__).'/../lib/Wiki.class');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 /**
  *
  * @package    WikiService
@@ -50,13 +48,14 @@ class WikiServiceAdminActions extends WikiActions {
   }
 
   function checkPage($page) {
-      global $feedback, $Language;
+      global $feedback;
 
     /**
      * Check if the given page name is not empty
      */
     if(empty($page)) {
-      $feedback = $Language->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+      $feedback = $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
       return false;
     }
     
@@ -134,32 +133,36 @@ class WikiServiceAdminActions extends WikiActions {
    *
    */
   function setWikiPerms() {
-      global $feedback, $Language;
+      global $feedback;
 
     $w = new Wiki($this->gid);
     if ($_POST['reset']) 
         $ret = $w->resetPermissions();
     else
         $ret = $w->setPermissions($_POST['ugroups']);
-    if(!$ret)
-      exit_error($Language->getText('global','error'),
-                 $Language->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
+    if(!$ret) {
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        exit_error($GLOBALS['Language']->getText('global','error'),
+                   $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
+    }
   }
 
   /**
    *
    */
   function setWikiPagePerms() {
-      global $feedback, $Language;
+      global $feedback;
 
     $wp = new WikiPage($_POST['object_id']);
     if ($_POST['reset']) 
         $ret = $wp->resetPermissions();
     else
         $ret = $wp->setPermissions($_POST['ugroups']);
-    if(!$ret)
-      exit_error($Language->getText('global','error'),
-                 $Language->getText('wiki_actions_wikiserviceadmin', 'update_page_perm_err', array($feedback)));
+    if(!$ret) {
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        exit_error($GLOBALS['Language']->getText('global','error'),
+                   $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_page_perm_err', array($feedback)));
+    }
   }
 
 
@@ -167,7 +170,7 @@ class WikiServiceAdminActions extends WikiActions {
      * Wrapper to set permissions on wiki attachments.
      */
     function setWikiAttachmentPerms() {
-        global $feedback, $Language;;
+        global $feedback;
  
         $wa = new WikiAttachment($this->gid);
         $wa->initWithId($_POST['object_id']);
@@ -178,8 +181,9 @@ class WikiServiceAdminActions extends WikiActions {
             $ret = $wa->setPermissions($_POST['ugroups']);
         }
         if(!$ret) {
-            exit_error($Language->getText('global','error'),
-                       $Language->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback)));
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+            exit_error($GLOBALS['Language']->getText('global','error'),
+                       $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback)));
         }
     }
 }

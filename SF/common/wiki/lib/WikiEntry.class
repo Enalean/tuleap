@@ -25,8 +25,6 @@ require_once('HTMLCleaner.class');
 require_once('WikiPage.class');
 require_once('common/collection/ArrayIterator.class');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 /**
  *
  * @package   WikiService
@@ -183,7 +181,6 @@ class WikiEntry {
    * Data handle
    */
   function add() {
-      global $Language;
     $res = db_query(' INSERT INTO wiki_group_list SET'.
 		    ' group_id='.$this->gid.','.
 		    ' rank='.$this->rank.','.
@@ -193,7 +190,8 @@ class WikiEntry {
 		    ' description="'.mysql_real_escape_string($this->desc).'"');
     
     if($res === false) {
-      trigger_error($Language->getText('wiki_lib_wikientry',
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+      trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
 				       'insert_err',
 				       db_error()), 
 		    E_USER_ERROR);
@@ -205,13 +203,13 @@ class WikiEntry {
   }
 
   function del() {
-      global $Language;
     $res = db_query(' DELETE FROM wiki_group_list'.
 		    ' WHERE id='.$this->id.
 		    ' AND group_id='.$this->gid);
 
     if($res === false) {
-      trigger_error($Language->getText('wiki_lib_wikientry',
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+      trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
 				       'delete_err', 
 				       db_error()), 
 		    E_USER_ERROR);
@@ -223,7 +221,7 @@ class WikiEntry {
   }
 
   function update() {
-      global $Language, $feedback;
+      global $feedback;
       $sql = ' UPDATE wiki_group_list SET'
           . ' group_id='.$this->gid.','
           . ' rank='.$this->rank.','
@@ -237,7 +235,8 @@ class WikiEntry {
       $err = db_error();
       
       if($res === false) {
-	trigger_error($Language->getText('wiki_lib_wikientry',
+          $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+	trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
 					 'update_err',
 					 db_error()),
 		      E_USER_ERROR);
@@ -245,7 +244,8 @@ class WikiEntry {
       }
       else {
 	if(db_affected_rows() === 0) {
-          $feedback .= $Language->getText('wiki_lib_wikientry',
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+          $feedback .= $GLOBALS['Language']->getText('wiki_lib_wikientry',
 					  'no_update',
 					  $this->name);
 	}

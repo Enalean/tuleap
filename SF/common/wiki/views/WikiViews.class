@@ -22,18 +22,18 @@
  */
 require_once('common/mvc/Views.class');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 function exit_wiki_empty() {
-    GLOBAL $HTML, $Language;
+    GLOBAL $HTML;
 	global $group_id;
 	
+    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+
 	$go = group_get_object($group_id);
 	$uname = $go->getUnixName();
 
-	$HTML->header(array('title'=>$Language->getText('wiki_views_wikiviews', 'title_error')));
-
-	print $Language->getText('wiki_views_wikiviews', 'not_activate', array($uname));
+	$HTML->header(array('title'=>$GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')));
+    
+	print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_activate', array($uname));
 
 	$HTML->footer(array());
 	exit;
@@ -148,17 +148,17 @@ class WikiViews extends Views {
    * pagePerms - public View
    */
   function _pagePerms($postUrl='') { 
-    global $Language;
+    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     $wp = new WikiPage($_REQUEST['id']);
     
-    print $Language->getText('wiki_views_wikiviews', 'set_perm_title');
+    print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');
     
     $pagename=$wp->getPagename();
     if(empty($pagename)) {
-        print $Language->getText('wiki_views_wikiviews', 'empty_page');
+        print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
     }
     else {
-      print $Language->getText('wiki_views_wikiviews', 'not_empty_page', array($pagename));
+      print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($pagename));
       permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
     }
   }

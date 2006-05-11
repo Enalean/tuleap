@@ -25,8 +25,6 @@ define('PHPWIKI_DIR', dirname(__FILE__).'/../phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 /**
  * Wrapper to access to PhpWiki WikiPage objects
  *
@@ -92,7 +90,7 @@ class WikiPageWrapper {
   }
 
   function addNewProjectPage($pagename) {
-    global $Language;
+    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     $projectPageName='ProjectWantedPages';
 
     // Dirty hack to 'give' a WikiRequest object to phpwiki
@@ -111,11 +109,15 @@ class WikiPageWrapper {
     else {
       // Create a new page (first use or page previously erased)
       $version = 0;
-      $text = $Language->getText('wiki_lib_wikipagewrap', 'new_page_text', array($projectPageName));
+      $text = $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                            'new_page_text',
+                                            array($projectPageName));
     }
 
     $text .= "\n* [$pagename]";
-    $meta['summary'] =  $Language->getText('wiki_lib_wikipagewrap', 'page_added', array($pagename));
+    $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                                      'page_added',
+                                                      array($pagename));
       $meta['author'] = user_getname();
     $pagehandle->save($text, $version + 1, $meta);
   }
@@ -168,11 +170,13 @@ Upload:num_rev/filename
   /**
    * special install function
    */
-  function install() {
-    global $Language;
+  function install() {    
     if($this->gid == 1) {
       if(!user_is_super_user()) {
-          exit_error($Language->getText('global','error'),$Language->getText('wiki_lib_wikipagewrap', 'right_error'));
+          $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+          exit_error($GLOBALS['Language']->getText('global','error'),
+                     $GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 
+                                                   'right_error'));
       }
       define('WIKI_PGSRC', 'codexpgsrc');
       define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');

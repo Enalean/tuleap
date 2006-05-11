@@ -25,8 +25,6 @@ require_once('WikiActions.class');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
 //require_once('InterWikiLink.class');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 /**
  *
  * @package WikiService

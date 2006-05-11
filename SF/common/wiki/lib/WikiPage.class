@@ -23,8 +23,6 @@
 require_once('WikiPageWrapper.class');
 require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 /**
  * CodeX manipulation of WikiPages
  *
@@ -71,13 +69,14 @@ class WikiPage {
    * @access private
    */
   function _findPageId() {
-    global $Language;
     $res = db_query(' SELECT id FROM wiki_page'.
 		    ' WHERE group_id="'.$this->gid.'"'.
 		    ' AND pagename="'.addslashes($this->pagename).'"');
     if(db_numrows($res) > 1) {
-        exit_error($Language->getText('global','error'), 
-                   $Language->getText('wiki_lib_wikipage', 'notunique_err'));
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        exit_error($GLOBALS['Language']->getText('global','error'), 
+                   $GLOBALS['Language']->getText('wiki_lib_wikipage', 
+                                                 'notunique_err'));
     }
     $row = db_fetch_array($res);
     $this->id =  $row['id'];
@@ -88,12 +87,13 @@ class WikiPage {
    * @access private
    */
   function _initFromDb() {
-      global $Language;
     $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
 		    ' WHERE id="'.$this->id.'"');
     if(db_numrows($res) > 1) {
-      exit_error($Language->getText('global','error'), 
-                 $Language->getText('wiki_lib_wikipage', 'notunique_err'));
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        exit_error($GLOBALS['Language']->getText('global','error'), 
+                   $GLOBALS['Language']->getText('wiki_lib_wikipage', 
+                                                 'notunique_err'));
     }
     $row = db_fetch_array($res);
 
