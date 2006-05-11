@@ -214,9 +214,10 @@ ws[cfh]");
             $wa =& $wai->current();
             
             $filename = basename($wa->getFilename());
-            
-            $line = HTML::tr();
-            $line->pushContent(HTML::td(HTML::a(array('href' => ''),
+            $url = getUploadDataPath().urlencode($filename);
+
+            $line = HTML::tr();            
+            $line->pushContent(HTML::td(HTML::a(array('href' => $url),
                                                 "Attach:".$filename)));
             $line->pushContent(HTML::td($wa->count()));
             $attchTab->pushContent($line);                
