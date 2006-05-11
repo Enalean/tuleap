@@ -44,13 +44,13 @@ extends _PassUser
         switch($this->_userid) {
         case '':
         case 'NA':
-            $this->_level = 0;
+            $this->_level = WIKIAUTH_ANON;
             break;
         case 'admin':
             $this->_level = WIKIAUTH_ADMIN;
             break;
         default:
-            $this->_level = AUTH_SESS_LEVEL;
+            $this->_level = WIKIAUTH_USER;
         }
      
         if(user_ismember(GROUP_ID, 'W2'))

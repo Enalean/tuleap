@@ -36,7 +36,7 @@ if (
     <?php } ?>
     <?php if ($user->isAdmin() or mayAccessPage('change', $page->getName())) { ?>
       <?=$SEP?><?= Button($page->get('locked') ? 'unlock' : 'lock') ?>
-    <?php if (ENABLE_PAGEPERM and mayAccessPage('change', $page->getName())) { ?>
+    <?php if (false && (ENABLE_PAGEPERM and mayAccessPage('change', $page->getName()))) { ?>
       <?=$SEP?><?= Button('chown') ?>
       <?=$SEP?><?= Button('setacl') ?>
     <?php }} ?>
