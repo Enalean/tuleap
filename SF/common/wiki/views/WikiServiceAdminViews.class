@@ -145,7 +145,8 @@ class WikiServiceAdminViews extends WikiViews {
                                   $this->wikiAdminLink,
                                   $this->wikiAdminLink,
                                   $this->wikiAdminLink,
-                                  $this->wikiname));
+                                  $this->wikiname,
+                                  $this->wikiLink));
   }
 
 
