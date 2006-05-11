@@ -23,7 +23,9 @@
 
 define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
+require_once('WikiAttachmentDao.class');
 require_once('www/project/admin/permissions.php');
+require_once('common/dao/CodexDataAccess.class');
 
 $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
@@ -94,6 +96,16 @@ class WikiAttachment /* implements UGroupPermission */ {
             exit_not_logged_in();
     }
 
+    function &getDao() {
+        static $_codex_wikiattachmentdao_instance;
+        
+        if(!$_codex_wikiattachmentdao_instance) {
+            $_codex_wikiattachmentdao_instance =& new WikiAttachmentDao(CodexDataAccess::instance());
+        }
+
+        return $_codex_wikiattachmentdao_instance;
+    }
+
     /**
      * @access public
      * @param  Iterator
@@ -106,12 +118,10 @@ class WikiAttachment /* implements UGroupPermission */ {
             $gid = $this->gid;
         }
 
-        //@todo: transfer to a DAO
-        $qry = '  SELECT * FROM wiki_attachment'
-            .' WHERE group_id='.$gid;
+        $dao =& WikiAttachment::getDao();
+        $dar =& $dao->getList($gid);
         
-        $res = db_query($qry);
-        while($row = db_fetch_array($res)) {
+        while($row = $dar->getRow()) {
             $wa =& new WikiAttachment($gid);
             $wa->setFromRow($row);
             $waArray[] =& $wa;
@@ -130,16 +140,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         }
 
         $uid = (int) $uid;
-
-        //@todo: transfer to a DAO
-        $qry = sprintf('SELECT wa.id, wa.group_id, wa.name, count(*) as nb, MAX(war.date) as max_date'
-                       .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
-                       .' WHERE wa.group_id=%d'
-                       .' AND war.attachment_id=wa.id'
-                       .' GROUP BY attachment_id'
-                       .' ORDER BY max_date DESC',
-                       $gid);
-        
+                        
         $offset = 0;
         $max    = null;
         if(is_array($limit)) {
@@ -159,14 +160,15 @@ class WikiAttachment /* implements UGroupPermission */ {
                 $max = (int) $limit['nb'];
             }
         }
-
-        $res = db_query($qry);
+        
+        $dao =& WikiAttachment::getDao();
+        $dar =& $dao->getListWithCounterOrderedByRevDate($gid);
 
         $i = 0;
         $j = 0; // count viewable attch for offset
         $waArray = array();
         $stop = false;
-        while(($row = db_fetch_array($res)) && !$stop) {
+        while(($row = $dar->getRow()) && !$stop) {
             if($max !== null) {
                 if($i >= $max) {
                     $stop = true;
@@ -367,14 +369,11 @@ ws[cfh]");
 
     function dbadd() {
         global $Language;
-        $sql = ('   INSERT INTO wiki_attachment SET'
-                .'  group_id="'.$this->gid.'"'
-                .', name="'.mysql_real_escape_string($this->filename).'"'	  
-                );
 
-        $res = db_query($sql);
+        $dao =& WikiAttachment::getDao();
+        $created = $dao->create($this->gid, $this->filename);
 
-        if($res === false) {            
+        if(!$created) {            
 	  trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);	  
 	  return false;
 	}
@@ -410,16 +409,15 @@ ws[cfh]");
     function getId() {
         global $Language;
         if(!is_numeric($this->id)) {
-            $sql = 'SELECT id FROM wiki_attachment'
-                .' WHERE name="'.$this->getFilename().'"'
-                .' AND group_id="'.$this->gid.'"';
-            $res = db_query($sql);
-            if(db_numrows($res) > 1) {
+            $dao =& WikiAttachment::getDao();
+            $dar =& $dao->getIdFromFilename($this->gid, $this->getFilename());
+
+            if($dar->rowCount() > 1) {
                 trigger_error($Language->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             }
             else {
-                $row = db_fetch_array($res);
+                $row = $dar->getRow();
                 $this->id = $row['id'];
             }
         }
@@ -464,11 +462,10 @@ ws[cfh]");
     }
   
     function initWithId($id=0) {
-        $this->id = $id;
-        $sql = 'SELECT * FROM wiki_attachment'
-            .' WHERE id="'.$this->id.'"';
-        $res = db_query($sql);
-        $this->setFromRow(db_fetch_array($res));
+        $this->id = (int) $id;
+        $dao =& WikiAttachment::getDao();
+        $dar =& $dao->read($this->id);
+        $this->setFromRow($dar->getRow());
     }
 
     function setFromRow($row) {
