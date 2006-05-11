@@ -72,7 +72,7 @@ class WikiAttachmentRevision {
         }
     }
 
-    function getDao() {        
+    function &getDao() {        
         static $_codex_wikiattachmentrevisiondao_instance;
         
         if(!$_codex_wikiattachmentrevisiondao_instance) {
