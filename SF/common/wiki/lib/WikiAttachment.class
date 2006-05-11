@@ -21,18 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
 require_once('WikiAttachmentDao.class');
 require_once('www/project/admin/permissions.php');
 require_once('common/dao/CodexDataAccess.class');
 
-$GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
-
 /**
  * Management of external ressources linked on a wiki
  *
- * This class allows to manage external ressources in wiki (non-text ressources)
+ * This class allows to manage external ressources in wiki (non-text
+ * ressources)
  * It's based on UpLoad plugin in PhpWiki and a CodeX layer in order to manage
  * versionning of files and permissions.
  * Every ressources (attachments) are stored in a directory. There is one
@@ -211,7 +209,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      */
     function setGid($id=0) {
         $this->gid      = (int) $id;
-        $this->basedir = ATTACHMENT_DATA_DIR.'/'.$this->gid;
+        $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
     }
   
     /**
@@ -219,7 +217,6 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @param  string $name File name
      */
     function setFilename($name="") {
-        global $Language;
         $disallowed_extensions = explode("\n",
                                          "ad[ep]
 asd
@@ -260,11 +257,15 @@ ws[cfh]");
 
         if (preg_match("/(\." . join("|\.", $disallowed_extensions) . ")\$/",
                        $name)) {
-            trigger_error($Language->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
             return false;
         }
         elseif (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
-            trigger_error($Language->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
         }
 
         $this->filename = $name;
@@ -368,13 +369,14 @@ ws[cfh]");
     }
 
     function dbadd() {
-        global $Language;
-
         $dao =& WikiAttachment::getDao();
         $created = $dao->create($this->gid, $this->filename);
 
         if(!$created) {            
-            trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);	  
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 
+                                                        'err_insert')), 
+                          E_USER_ERROR);	  
             return false;
         }
         else {
@@ -383,12 +385,12 @@ ws[cfh]");
     }
 
     function create() {
-        global $Language;
         // Create wiki attachment directory for current project
         if(!is_dir($this->basedir)){
             $res = mkdir($this->basedir, 0700);
             if(!$res) {
-                trigger_error($Language->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
+                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+                trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
                 return false;
             }
         }
@@ -397,7 +399,8 @@ ws[cfh]");
         if(!is_dir($this->basedir.'/'.$this->filename)){
             $res = mkdir($this->basedir.'/'.$this->filename, 0700);
             if(!$res) {
-                trigger_error($Language->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
+                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+                trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
             }
         }
@@ -407,13 +410,13 @@ ws[cfh]");
     }
 
     function getId() {
-        global $Language;
         if(!is_numeric($this->id)) {
             $dao =& WikiAttachment::getDao();
             $dar =& $dao->getIdFromFilename($this->gid, $this->getFilename());
 
             if($dar->rowCount() > 1) {
-                trigger_error($Language->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
+                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+                trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             }
             else {
