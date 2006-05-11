@@ -480,7 +480,8 @@ function IniConfig($file) {
         // will throw an error if not exists.
         define('PLUGIN_CACHED_CACHE_DIR', FindFile($rs['PLUGIN_CACHED_CACHE_DIR'],false,1)); 
     } else {
-        define('PLUGIN_CACHED_CACHE_DIR', $rs['PLUGIN_CACHED_CACHE_DIR']);
+        if(!defined('PLUGIN_CACHED_CACHE_DIR'))
+            define('PLUGIN_CACHED_CACHE_DIR', $rs['PLUGIN_CACHED_CACHE_DIR']);
         // will throw an error if not exists.
         FindFile(PLUGIN_CACHED_CACHE_DIR);
     }
