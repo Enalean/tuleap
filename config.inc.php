@@ -88,6 +88,23 @@ $gitphp_conf['self'] = "http://centraldogma/gitphp/";
 $gitphp_conf['smarty_prefix'] = "smarty/";
 
 /*
+ * geshi
+ * Run blob output through geshi syntax highlighting
+ * and line numbering
+ */
+$gitphp_conf['geshi'] = FALSE;
+
+/*
+ * geshiroot
+ * Directory where geshi is installed
+ * NOTE: this is the path to the base geshi.php file to include,
+ * NOT the various other geshi php source files!
+ * Leave blank if geshi.php is in the gitphp root
+ * (don't forget trailing slash!)
+ */
+$gitphp_conf['geshiroot'] = "geshi/";
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects

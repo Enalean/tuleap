@@ -1238,15 +1238,37 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	if (isset($file))
 		$tpl->assign("file",$file);
 	$tpl->display("blob_header.tpl");
-	$lines = explode("\n",$catout);
-	foreach ($lines as $i => $line) {
-		/*
-		 * TODO: Convert tabs to spaces
-		 */
-		$tpl->clear_all_assign();
-		$tpl->assign("nr",$i+1);
-		$tpl->assign("line",htmlentities($line));
-		$tpl->display("blob_line.tpl");
+
+	$usedgeshi = $gitphp_conf['geshi'];
+	if ($usedgeshi) {
+		$usedgeshi = FALSE;
+		include_once($gitphp_conf['geshiroot'] . "geshi.php");
+		$geshi = new GeSHi("",'php');
+		if ($geshi) {
+			$lang = "";
+			if (isset($file))
+				$lang = $geshi->get_language_name_from_extension(substr(strrchr($file,'.'),1));
+			if (isset($lang) && (strlen($lang) > 0)) {
+				$geshi->set_source($catout);
+				$geshi->set_language($lang);
+				$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
+				echo $geshi->parse_code();
+				$usedgeshi = TRUE;
+			}
+		}
+	}
+
+	if (!$usedgeshi) {
+		$lines = explode("\n",$catout);
+		foreach ($lines as $i => $line) {
+			/*
+			 * TODO: Convert tabs to spaces
+			 */
+			$tpl->clear_all_assign();
+			$tpl->assign("nr",$i+1);
+			$tpl->assign("line",htmlentities($line));
+			$tpl->display("blob_line.tpl");
+		}
 	}
 	$tpl->clear_all_assign();
 	$tpl->display("blob_footer.tpl");
