@@ -43,7 +43,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 <body>
 <div class="page_header">
 <a href="http://www.kernel.org/pub/software/scm/git/docs/" title="git documentation">
-<img src="images/git-logo.png" width="72" height="27" alt="git" style="float:right; border-width:0px;" />
+<img src="git-logo.png" width="72" height="27" alt="git" style="float:right; border-width:0px;" />
 </a>
 <a href="index.php">projects</a> / 
 {if $project}
