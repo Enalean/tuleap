@@ -80,12 +80,12 @@ class WikiPageWrapper {
     $dbi = $request->getDbh();
     $pagehandle = $dbi->getPage($page);
 
-    $links = $pagehandle->getLinks(false);
+    $links = $pagehandle->getPageLinks(true);
     $allPages=array();
     while ($link_handle = $links->next()) {
-        //    if(!$link_handle->exists()) {
-        //$allPages[]=$link_handle->getName();
-    // }
+        if (!$dbi->isWikiPage($linkname = $link_handle->getName())) {
+            $allPages[]=$link_handle->getName();
+        }
     }
     return $allPages;
   }
