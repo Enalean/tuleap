@@ -81,6 +81,10 @@ class ArtifactReport extends Error {
 		return true;
 	}
 	
+    function getReportId() {
+        return $this->report_id;
+    }
+    
 	/**
 	 *	recreate - use this to reset a Report in the database.
 	 *
