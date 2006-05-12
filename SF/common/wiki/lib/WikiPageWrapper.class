@@ -24,6 +24,7 @@
 define('PHPWIKI_DIR', getenv('SF_LOCAL_INC_PREFIX').'/home/httpd/SF/common/wiki/phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
+require_once('common/wiki/lib/WikiEntry.class');
 
 /**
  * Wrapper to access to PhpWiki WikiPage objects
@@ -171,9 +172,9 @@ Upload:num_rev/filename
    * special install function
    */
   function install() {
+      $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       if($this->gid == 1) {
-          if(!user_is_super_user()) {
-              $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+          if(!user_is_super_user()) {              
               exit_error($GLOBALS['Language']->getText('global','error'),
                          $GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 
                                                        'right_error'));
@@ -182,6 +183,17 @@ Upload:num_rev/filename
       define('WIKI_PGSRC', 'codexpgsrc');
       define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
    
+      $we = new WikiEntry();
+      $we->setGid($this->gid);
+      $we->setName($GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                                 'dfltentryname'));
+      $we->setPage($GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                                 'dfltentrypage'));
+      $we->setDesc($GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                                 'dfltentrydesc'));
+      $we->setLanguage_id($GLOBALS['language_id']);
+      $we->add();
+
       $this->render();
   }
 }

@@ -79,6 +79,9 @@ wiki_lib_wikipage	notunique_err	Wiki page is not unique. Please contact an admin
 wiki_lib_wikipagewrap	new_page_text	$1 store pages created with main interface:
 wiki_lib_wikipagewrap	page_added	Added $1
 wiki_lib_wikipagewrap	right_error	This operation require admin rights
+wiki_lib_wikipagewrap	dfltentryname	Wiki Home
+wiki_lib_wikipagewrap	dfltentrydesc	Initial Wiki Document
+wiki_lib_wikipagewrap	dfltentrypage	HomePage
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/actions/WikiServiceAdminActions.class
