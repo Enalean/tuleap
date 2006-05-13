@@ -256,26 +256,15 @@ function file_type($octmode)
 
 function git_get_hash_by_path($project,$base,$path,$type = null)
 {
-	return null;
 	global $gitphp_conf;
 	$tree = $base;
-	$parts = array();
-	$tok = strtok($path,"/");
-	while ($tok !== null) {
-		$parts[] = $tok;
-		$tok = strtok("/");
-	}
+	$parts = explode("/",$path);
 	$partcount = count($parts);
 	foreach ($parts as $i => $part) {
-		$entries = array();
 		$lsout = shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-ls-tree " . $tree);
-		$tok = strtok($lsout,"\n");
-		while ($tok !== false) {
-			$entries[] = $tok;
-			$tok = strtok("\n");
-		}
+		$entries = explode("\n",$lsout);
 		foreach ($entries as $j => $line) {
-			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$tok,$regs)) {
+			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$line,$regs)) {
 				if ($regs[4] == $part) {
 					if ($i == ($partcount)-1)
 						return $regs[3];
@@ -1351,12 +1340,11 @@ function git_history($projectroot,$project,$hash,$file)
 	$tpl->display("history_header.tpl");
 	$cmdout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-rev-list " . $hash . " | env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r --stdin '" . $file . "'");
 	$alternate = FALSE;
-	$tok = strtok($cmdout,"\n");
-	while ($tok !== false) {
-		if (ereg("^([0-9a-fA-F]{40})",$tok,$regs))
+	$lines = explode("\n",$cmdout);
+	foreach ($lines as $i => $line) {
+		if (ereg("^([0-9a-fA-F]{40})",$line,$regs))
 			$commit = $regs[1];
-		else {
-			if (ereg(":([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$tok,$regs) && isset($commit)) {
+		else if (ereg(":([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs) && isset($commit)) {
 				$co = git_read_commit($projectroot . $project, $commit);
 				$tpl->clear_all_assign();
 				if ($alternate)
@@ -1370,20 +1358,19 @@ function git_history($projectroot,$project,$hash,$file)
 				$tpl->assign("authorname",$co['author_name']);
 				$tpl->assign("commit",$commit);
 				$tpl->assign("file",$file);
+				$tpl->assign("title",$co['title_short']);
 				if (isset($refs[$commit]))
 					$tpl->assign("commitref",$refs[$commit]);
 				$blob = git_get_hash_by_path($projectroot . $project, $hash,$file);
 				$blob_parent = git_get_hash_by_path($projectroot . $project, $commit,$file);
-				if (isset($blob) && isset($blob_parent) && ($blob != $blob_parent)) {
+				if ($blob && $blob_parent && ($blob != $blob_parent)) {
 					$tpl->assign("blob",$blob);
 					$tpl->assign("blobparent",$blob_parent);
 					$tpl->assign("difftocurrent",TRUE);
 				}
 				$tpl->display("history_item.tpl");
 				unset($commit);
-			}
 		}
-		$tok = strtok("\n");
 	}
 	$tpl->clear_all_assign();
 	$tpl->display("history_footer.tpl");
