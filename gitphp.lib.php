@@ -327,24 +327,29 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 
 function projectcmp($a,$b)
 {
-	return strcmp($a['path'],$b['path']);
+	return strcmp($a,$b);
 }
 
 function descrcmp($a,$b)
 {
-	return strcmp($a['descr'],$b['descr']);
+	global $gitphp_conf;
+	return strcmp(git_project_descr($gitphp_conf['projectroot'],$b),git_project_descr($gitphp_conf['projectroot'],$b));
 }
 
 function ownercmp($a,$b)
 {
-	return strcmp($a['owner'],$b['owner']);
+	global $gitphp_conf;
+	return strcmp(git_project_owner($gitphp_conf['projectroot'],$a),git_project_owner($gitphp_conf['projectroot'],$b));
 }
 
 function agecmp($a,$b)
 {
-	if ($a['commit']['age'] == $b['commit']['age'])
+	global $gitphp_conf;
+	$ca = git_read_commit($gitphp_conf['projectroot'] . $a, git_read_head($gitphp_conf['projectroot'] . $a));
+	$cb = git_read_commit($gitphp_conf['projectroot'] . $b, git_read_head($gitphp_conf['projectroot'] . $b));
+	if ($ca['commit']['age'] == $cb['commit']['age'])
 		return 0;
-	return ($a['commit']['age'] < $b['commit']['age'] ? 1 : -1);
+	return ($ca['commit']['age'] < $cb['commit']['age'] ? 1 : -1);
 }
 
 function git_project_list($projectroot,$projectlist,$order)
