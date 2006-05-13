@@ -1,6 +1,6 @@
 <?php
  ob_start();
- $version = "v01a";
+ $version = "v01c";
  $gitphp_appstring = "gitphp $version";
 /*
  *  index.php
