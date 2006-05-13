@@ -108,13 +108,8 @@ function git_read_head($proj)
 function git_read_revlist($proj,$head,$count)
 {
 	global $gitphp_conf;
-	$revlist = array();
 	$revs = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --max-count=" . $count . " " . $head);
-	$tok = strtok($revs,"\n");
-	while ($tok !== false) {
-		$revlist[] = $tok;
-		$tok = strtok("\n");
-	}
+	$revlist = explode("\n",$revs);
 	return $revlist;
 }
 
@@ -141,12 +136,7 @@ function git_read_commit($proj,$head)
 {
 	global $gitphp_conf;
 	$revlist = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --header --parents --max-count=1 " . $head);
-	$lines = array();
-	$tok = strtok($revlist,"\n");
-	while ($tok !== false) {
-		$lines[] = $tok;
-		$tok = strtok("\n");
-	}
+	$lines = explode("\n",$revlist);
 	if (!($lines[0]) || !ereg("^[0-9a-fA-F]{40}",$lines[0]))
 		return null;
 	$commit = array();
@@ -816,13 +806,8 @@ function git_commit($projectroot,$project,$hash)
 		$root = "--root";
 		$parent = "";
 	}
-	$difftree = array();
 	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r -M " . $root . " " . $parent . " " . $hash);
-	$tok = strtok($diffout,"\n");
-	while ($tok !== false) {
-		$difftree[] = $tok;
-		$tok = strtok("\n");
-	}
+	$difftree = explode("\n",$diffout);
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
@@ -960,13 +945,8 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 	$co = git_read_commit($projectroot . $project, $hash);
 	if (!isset($hash_parent))
 		$hash_parent = $co['parent'];
-	$difftree = array();
 	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $hash_parent . " " . $hash);
-	$tok = strtok($diffout,"\n");
-	while ($tok !== false) {
-		$difftree[] = $tok;
-		$tok = strtok("\n");
-	}
+	$difftree = explode("\n",$diffout);
 	$refs = read_info_ref($projectroot . $project,"tags");
 	$listout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-rev-list HEAD");
 	$tok = strtok($listout,"\n");
@@ -1013,13 +993,8 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 	$co = git_read_commit($projectroot . $project, $hash);
 	if (!isset($hash_parent))
 		$hash_parent = $co['parent'];
-	$difftree = array();
 	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $hash_parent . " " . $hash);
-	$tok = strtok($diffout,"\n");
-	while ($tok !== false) {
-		$difftree[] = $tok;
-		$tok = strtok("\n");
-	}
+	$difftree = explode("\n",$diffout);
 	$refs = read_info_ref($projectroot . $project);
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
