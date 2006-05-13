@@ -21,102 +21,123 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-function prep_tmpdir($dir)
+define('GIT_CAT_FILE','git-cat-file');
+define('GIT_DIFF_TREE','git-diff-tree');
+define('GIT_LS_TREE','git-ls-tree');
+define('GIT_REV_LIST','git-rev-list');
+define('GIT_REV_PARSE','git-rev-parse');
+define('GIT_TAR_TREE','git-tar-tree');
+
+function projectcmp($a,$b)
 {
-	if (file_exists($dir)) {
-		if (is_dir($dir)) {
-			if (!is_writeable($dir))
-				return "Specified tmpdir is not writeable!";
-		} else
-			return "Specified tmpdir is not a directory";
-	} else
-		if (!mkdir($dir,0700))
-			return "Could not create tmpdir";
-	return TRUE;
+	return strcmp($a,$b);
 }
 
-function git_snapshot($projectroot,$project,$hash)
+function descrcmp($a,$b)
 {
 	global $gitphp_conf;
-	if (!isset($hash))
-		$hash = "HEAD";
-	$rname = str_replace(array("/",".git"),array("-",""),$project);
-	$cmd = "env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-tar-tree " . $hash . " " . $rname;
-	if ($gitphp_conf['bzsnapshots'] && function_exists("bzcompress")) {
-		header("Content-Type: application/x-bzip2");
-		header("Content-Disposition: attachment; filename=" . $rname . ".tar.bz2");
-		echo bzcompress(shell_exec($cmd),$gitphp_conf['bzblocksize']);
-	} else {
-		header("Content-Type: application/x-tar");
-		header("Content-Disposition: attachment; filename=" . $rname . ".tar");
-		echo shell_exec($cmd);
-	}
+	return strcmp(git_project_descr($gitphp_conf['projectroot'],$b),git_project_descr($gitphp_conf['projectroot'],$b));
 }
 
-function git_read_projects($projectroot,$projectlist)
+function ownercmp($a,$b)
 {
-	$projects = array();
-	if (isset($projectroot)) {
-		if (is_dir($projectroot)) {
-			if (isset($projectlist)) {
-				foreach ($projectlist as $cat => $plist) {
-					if (is_array($plist)) {
-						$projs = array();
-						foreach ($plist as $pname => $ppath) {
-							if (is_dir($projectroot . $ppath) && is_file($projectroot . $ppath . "/HEAD"))
-								$projs[] = $ppath;
-						}
-						if (count($projs) > 0) {
-							sort($projs);
-							$projects[$cat] = $projs;
-						}
-					}
-				}
-			} else {
-				if ($dh = opendir($projectroot)) {
-					while (($file = readdir($dh)) !== false) {
-						if ((strpos($file,'.') !== 0) && is_dir($projectroot . $file) && is_file($projectroot . $file . "/HEAD"))
-							$projects[] = $file;
-					}
-					closedir($dh);
-				} else
-					return "Could not read project directory";
-			}
-		} else
-			return "Projectroot is not a directory";
-	} else
-		return "No projectroot set";
-	return $projects;
+	global $gitphp_conf;
+	return strcmp(git_project_owner($gitphp_conf['projectroot'],$a),git_project_owner($gitphp_conf['projectroot'],$b));
 }
 
-function git_project_descr($projectroot,$project,$trim = FALSE)
+function agecmp($a,$b)
 {
-	$desc = file_get_contents($projectroot . $project . "/description");
-	if ($trim && (strlen($desc) > 50))
-		$desc = substr($desc,0,50) . " ...";
-	return $desc;
+	global $gitphp_conf;
+	$ca = git_read_commit($gitphp_conf['projectroot'] . $a, git_read_head($gitphp_conf['projectroot'] . $a));
+	$cb = git_read_commit($gitphp_conf['projectroot'] . $b, git_read_head($gitphp_conf['projectroot'] . $b));
+	if ($ca['commit']['age'] == $cb['commit']['age'])
+		return 0;
+	return ($ca['commit']['age'] < $cb['commit']['age'] ? 1 : -1);
 }
 
-function git_project_owner($projectroot,$project)
+function epochcmp($a,$b)
 {
-	$data = posix_getpwuid(fileowner($projectroot . $project));
-	if (isset($data['gecos']) && (strlen($data['gecos']) > 0))
-		return $data['gecos'];
-	return $data['name'];
+	if ($a['epoch'] == $b['epoch'])
+		return 0;
+	return ($a['epoch'] < $b['epoch']) ? 1 : -1;
+}
+
+function git_cat_file($proj,$hash,$pipeto = NULL, $type = "blob")
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_CAT_FILE . " " . $type . " " . $hash;
+	if ($pipeto)
+		$cmd .= " > " . $pipeto;
+	return shell_exec($cmd);
+}
+
+function git_diff_tree($proj,$hashes,$renames = FALSE)
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_DIFF_TREE . " -r ";
+	if ($renames)
+		$cmd .= "-M ";
+	return shell_exec($cmd . $hashes);
+}
+
+function git_get_type($project, $hash)
+{
+	return trim(git_cat_file($project,$hash,NULL,"-t"));
+}
+
+function git_history_list($proj,$hash,$file)
+{
+	global $gitphp_conf;
+	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_LIST . " " . $hash . " | env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_DIFF_TREE . " -r --stdin '" . $file . "'");
+}
+
+function git_ls_tree($proj,$hash,$nullterm = FALSE)
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_LS_TREE;
+	if ($nullterm)
+		$cmd .= " -z";
+	return shell_exec($cmd . " " . $hash);
+}
+
+function git_read_hash($path)
+{
+	return file_get_contents($path);
 }
 
 function git_read_head($proj)
 {
 	global $gitphp_conf;
-	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-parse --verify HEAD");
+	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_PARSE . " --verify HEAD");
 }
 
 function git_read_revlist($proj,$head,$count)
 {
-	global $gitphp_conf;
-	$revs = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --max-count=" . $count . " " . $head);
+	$revs = git_rev_list($proj,$head,$count);
 	$revlist = explode("\n",$revs);
 	return $revlist;
+}
+
+function git_rev_list($proj,$head,$count = NULL,$header = FALSE,$parents = FALSE)
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_LIST . " ";
+	if ($header)
+		$cmd .= "--header ";
+	if ($parents)
+		$cmd .= "--parents ";
+	if ($count)
+		$cmd .= "--max-count=" . $count;
+	return shell_exec($cmd . " " . $head);
+}
+
+function git_tar_tree($proj,$hash,$rname = NULL)
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_TAR_TREE . " " . $hash;
+	if ($rname)
+		$cmd .= " " . $rname;
+	return shell_exec($cmd);
 }
 
 function age_string($age)
@@ -138,10 +159,124 @@ function age_string($age)
 	return "right now";
 }
 
-function git_read_commit($proj,$head)
+function mode_str($octmode)
+{
+	$mode = octdec($octmode);
+	if (($mode & 0x4000) == 0x4000)
+		return "drwxr-xr-x";
+	else if (($mode & 0xA000) == 0xA000)
+		return "lrwxrwxrwx";
+	else if (($mode & 0x8000) == 0x8000) {
+		if (($mode & 0x0040) == 0x0040)
+			return "-rwxr-xr-x";
+		else
+			return "-rw-r--r--";
+	}
+	return "----------";
+}
+
+function file_type($octmode)
+{
+	$mode = octdec($octmode);
+	if (($mode & 0x4000) == 0x4000)
+		return "directory";
+	else if (($mode & 0xA000) == 0xA000)
+		return "symlink";
+	else if (($mode & 0x8000) == 0x8000)
+		return "file";
+	return "unknown";
+}
+
+function date_str($epoch,$tz = "-0000")
+{
+	$date = array();
+	$date['hour'] = date("H",$epoch);
+	$date['minute'] = date("i",$epoch);
+	$date['mday'] = date("d",$epoch);
+	$date['day'] = date("D",$epoch);
+	$date['month'] = date("M",$epoch);
+	$date['rfc2822'] = date("r",$epoch);
+	$date['mday-time'] = date("d M H:i",$epoch);
+	if (ereg("^([+\-][0-9][0-9])([0-9][0-9])$",$tz,$regs)) {
+		$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+		$date['hour_local'] = date("H",$local);
+		$date['minute_local'] = date("i",$local);
+		$date['tz_local'] = $tz;
+	}
+	return $date;
+}
+
+function prep_tmpdir()
 {
 	global $gitphp_conf;
-	$revlist = shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-rev-list --header --parents --max-count=1 " . $head);
+	if (file_exists($gitphp_conf['gittmp'])) {
+		if (is_dir($gitphp_conf['gittmp'])) {
+			if (!is_writeable($gitphp_conf['gittmp']))
+				return "Specified tmpdir is not writeable!";
+		} else
+			return "Specified tmpdir is not a directory";
+	} else
+		if (!mkdir($gitphp_conf['gittmp'],0700))
+			return "Could not create tmpdir";
+	return TRUE;
+}
+
+function git_project_descr($projectroot,$project,$trim = FALSE)
+{
+	$desc = file_get_contents($projectroot . $project . "/description");
+	if ($trim && (strlen($desc) > 50))
+		$desc = substr($desc,0,50) . " ...";
+	return $desc;
+}
+
+function git_project_owner($projectroot,$project)
+{
+	$data = posix_getpwuid(fileowner($projectroot . $project));
+	if (isset($data['gecos']) && (strlen($data['gecos']) > 0))
+		return $data['gecos'];
+	return $data['name'];
+}
+
+function git_get_hash_by_path($project,$base,$path,$type = null)
+{
+	$tree = $base;
+	$parts = explode("/",$path);
+	$partcount = count($parts);
+	foreach ($parts as $i => $part) {
+		$lsout = git_ls_tree($project, $tree);
+		$entries = explode("\n",$lsout);
+		foreach ($entries as $j => $line) {
+			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$line,$regs)) {
+				if ($regs[4] == $part) {
+					if ($i == ($partcount)-1)
+						return $regs[3];
+					if ($regs[2] == "tree")
+						$tree = $regs[3];
+					break;
+				}
+			}
+		}
+	}
+}
+
+function read_info_ref($project, $type = "")
+{
+	$refs = array();
+	$lines = file($project);
+	foreach ($lines as $no => $line) {
+		if (ereg("^([0-9a-fA-F]{40})\t.*" . $type . "/([^\^]+)",$line,$regs)) {
+			if ($isset($refs[$regs[1]]))
+				$refs[$regs[1]] .= " / " . $regs[2];
+			else
+				$refs[$regs[1]] = $regs[2];
+		}
+	}
+	return $refs;
+}
+
+function git_read_commit($proj,$head)
+{
+	$revlist = git_rev_list($proj,$head,1,TRUE,TRUE);
 	$lines = explode("\n",$revlist);
 	if (!($lines[0]) || !ereg("^[0-9a-fA-F]{40}",$lines[0]))
 		return null;
@@ -202,6 +337,212 @@ function git_read_commit($proj,$head)
 	return $commit;
 }
 
+function git_read_tag($project, $tag_id)
+{
+	$tag = array();
+	$tagout = git_cat_file($project, $tag_id, NULL, "tag");
+	$tag['id'] = $tag_id;
+	$comment = array();
+	$tok = strtok($tagout,"\n");
+	while ($tok !== false) {
+		if (ereg("^object ([0-9a-fA-F]{40})$",$tok,$regs))
+			$tag['object'] = $regs[1];
+		else if (ereg("^type (.+)$",$tok,$regs))
+			$tag['type'] = $regs[1];
+		else if (ereg("^tag (.+)$",$tok,$regs))
+			$tag['name'] = $regs[1];
+		else if (ereg("^tagger (.*) ([0-9]+) (.*)$",$tok,$regs)) {
+			$tag['author'] = $regs[1];
+			$tag['epoch'] = $regs[2];
+			$tag['tz'] = $regs[3];
+		} else if (ereg("--BEGIN",$tok)) {
+			while ($tok !== false) {
+				$comment[] = $tok;
+				$tok = strtok("\n");
+			}
+			break;
+		}
+		$tok = strtok("\n");
+	}
+	$tag['comment'] = $comment;
+	if (!isset($tag['name']))
+		return null;
+	return $tag;
+}
+
+function git_read_refs($projectroot,$project,$refdir)
+{
+	if (!is_dir($projectroot . $project . "/" . $refdir))
+		return null;
+	$refs = array();
+	if ($dh = opendir($projectroot . $project . "/" . $refdir)) {
+		while (($dir = readdir($dh)) !== false) {
+			if (strpos($dir,'.') !== 0) {
+				if (is_dir($projectroot . $project . "/" . $refdir . "/" . $dir)) {
+					if ($dh2 = opendir($projectroot . $project . "/" . $refdir . "/" . $dir)) {
+						while (($dir2 = readdir($dh2)) !== false) {
+							if (strpos($dir2,'.') !== 0)
+								$refs[] = $dir . "/" . $dir2;
+						}
+						closedir($dh2);
+					}
+				}
+				$refs[] = $dir;
+			}
+		}
+		closedir($dh);
+	} else
+		return null;
+	$reflist = array();
+	foreach ($refs as $i => $ref_file) {
+		$ref_id = git_read_hash($projectroot . $project . "/" . $refdir . "/" . $ref_file);
+		$type = git_get_type($projectroot . $project, $ref_id);
+		if ($type) {
+			$ref_item = array();
+			$ref_item['type'] = $type;
+			$ref_item['id'] = $ref_id;
+			$ref_item['epoch'] = 0;
+			$ref_item['age'] = "unknown";
+
+			if ($type == "tag") {
+				$tag = git_read_tag($projectroot . $project, $ref_id);
+				$ref_item['comment'] = $tag['comment'];
+				if ($tag['type'] == "commit") {
+					$co = git_read_commit($projectroot . $project, $tag['object']);
+					$ref_item['epoch'] = $co['committer_epoch'];
+					$ref_item['age'] = $co['age_string'];
+				} else if (isset($tag['epoch'])) {
+					$age = time() - $tag['epoch'];
+					$ref_item['epoch'] = $tag['epoch'];
+					$ref_item['age'] = age_string($age);
+				}
+				$ref_item['reftype'] = $tag['type'];
+				$ref_item['name'] = $tag['name'];
+				$ref_item['refid'] = $tag['object'];
+			} else if ($type == "commit") {
+				$co = git_read_commit($projectroot . $project, $ref_id);
+				$ref_item['reftype'] = "commit";
+				$ref_item['name'] = $ref_file;
+				$ref_item['title'] = $co['title'];
+				$ref_item['refid'] = $ref_id;
+				$ref_item['epoch'] = $co['committer_epoch'];
+				$ref_item['age'] = $co['age_string'];
+			}
+			$reflist[] = $ref_item;
+		}
+	}
+	usort($reflist,"epochcmp");
+	return $reflist;
+}
+
+function git_snapshot($projectroot,$project,$hash)
+{
+	global $gitphp_conf;
+	if (!isset($hash))
+		$hash = "HEAD";
+	$rname = str_replace(array("/",".git"),array("-",""),$project);
+	$cmd = git_tar_tree($projectroot . $project, $hash, $rname);
+	if ($gitphp_conf['bzsnapshots'] && function_exists("bzcompress")) {
+		header("Content-Type: application/x-bzip2");
+		header("Content-Disposition: attachment; filename=" . $rname . ".tar.bz2");
+		echo bzcompress(shell_exec($cmd),$gitphp_conf['bzblocksize']);
+	} else {
+		header("Content-Type: application/x-tar");
+		header("Content-Disposition: attachment; filename=" . $rname . ".tar");
+		echo shell_exec($cmd);
+	}
+}
+
+function git_read_projects($projectroot,$projectlist)
+{
+	$projects = array();
+	if (isset($projectroot)) {
+		if (is_dir($projectroot)) {
+			if (isset($projectlist)) {
+				foreach ($projectlist as $cat => $plist) {
+					if (is_array($plist)) {
+						$projs = array();
+						foreach ($plist as $pname => $ppath) {
+							if (is_dir($projectroot . $ppath) && is_file($projectroot . $ppath . "/HEAD"))
+								$projs[] = $ppath;
+						}
+						if (count($projs) > 0) {
+							sort($projs);
+							$projects[$cat] = $projs;
+						}
+					}
+				}
+			} else {
+				if ($dh = opendir($projectroot)) {
+					while (($file = readdir($dh)) !== false) {
+						if ((strpos($file,'.') !== 0) && is_dir($projectroot . $file) && is_file($projectroot . $file . "/HEAD"))
+							$projects[] = $file;
+					}
+					closedir($dh);
+				} else
+					return "Could not read project directory";
+			}
+		} else
+			return "Projectroot is not a directory";
+	} else
+		return "No projectroot set";
+	return $projects;
+}
+
+function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
+{
+	global $gitphp_conf,$tpl;
+	$from_tmp = "/dev/null";
+	$to_tmp = "/dev/null";
+	$pid = posix_getpid();
+	if (isset($from)) {
+		$from_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_from";
+		git_cat_file($proj,$from,$from_tmp);
+	}
+	if (isset($to)) {
+		$to_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_to";
+		git_cat_file($proj,$to,$to_tmp);
+	}
+	$diffout = shell_exec("diff -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
+	if ($format == "plain")
+		echo $diffout;
+	else {
+		$line = strtok($diffout,"\n");
+		while ($line !== false) {
+			$start = substr($line,0,1);
+			unset($color);
+			if ($start == "+")
+				$color = "#008800";
+			else if ($start == "-")
+				$color = "#cc0000";
+			else if ($start == "@")
+				$color = "#990099";
+			if ($start != "\\") {
+			/*
+				while (($pos = strpos($line,"\t")) !== false) {
+					if ($c = (8 - (($pos - 1) % 8))) {
+						$spaces = "";
+						for ($i = 0; $i < $c; $i++)
+							$spaces .= " ";
+						preg_replace('/\t/',$spaces,$line,1);
+					}
+				}
+			 */
+				$tpl->clear_all_assign();
+				$tpl->assign("line",htmlentities($line));
+				if (isset($color))
+					$tpl->assign("color",$color);
+				$tpl->display("diff_line.tpl");
+			}
+			$line = strtok("\n");
+		}
+	}
+	if (isset($from))
+		unlink($from_tmp);
+	if (isset($to))
+		unlink($to_tmp);
+}
+
 function git_project_listentry($projectroot,$project,$class,$indent)
 {
 	global $tpl;
@@ -222,60 +563,9 @@ function git_project_listentry($projectroot,$project,$class,$indent)
 	$tpl->display("projlist_item.tpl");
 }
 
-function mode_str($octmode)
-{
-	$mode = octdec($octmode);
-	if (($mode & 0x4000) == 0x4000)
-		return "drwxr-xr-x";
-	else if (($mode & 0xA000) == 0xA000)
-		return "lrwxrwxrwx";
-	else if (($mode & 0x8000) == 0x8000) {
-		if (($mode & 0x0040) == 0x0040)
-			return "-rwxr-xr-x";
-		else
-			return "-rw-r--r--";
-	}
-	return "----------";
-}
-
-function file_type($octmode)
-{
-	$mode = octdec($octmode);
-	if (($mode & 0x4000) == 0x4000)
-		return "directory";
-	else if (($mode & 0xA000) == 0xA000)
-		return "symlink";
-	else if (($mode & 0x8000) == 0x8000)
-		return "file";
-	return "unknown";
-}
-
-function git_get_hash_by_path($project,$base,$path,$type = null)
-{
-	global $gitphp_conf;
-	$tree = $base;
-	$parts = explode("/",$path);
-	$partcount = count($parts);
-	foreach ($parts as $i => $part) {
-		$lsout = shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-ls-tree " . $tree);
-		$entries = explode("\n",$lsout);
-		foreach ($entries as $j => $line) {
-			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$line,$regs)) {
-				if ($regs[4] == $part) {
-					if ($i == ($partcount)-1)
-						return $regs[3];
-					if ($regs[2] == "tree")
-						$tree = $regs[3];
-					break;
-				}
-			}
-		}
-	}
-}
-
 function git_tree($projectroot,$project,$hash,$file,$hashbase)
 {
-	global $gitphp_conf,$tpl;
+	global $tpl;
 	if (!isset($hash)) {
 		$hash = git_read_head($projectroot . $project);
 		if (isset($file))
@@ -283,7 +573,7 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 			if (!isset($hashbase))
 				$hashbase = $hash;
 	}
-	$lsout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-ls-tree -z " . $hash);
+	$lsout = git_ls_tree($projectroot . $project, $hash, TRUE);
 	$refs = read_info_ref($projectroot . $project);
 	$tpl->clear_all_assign();
 	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
@@ -329,33 +619,6 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 
 	$tpl->clear_all_assign();
 	$tpl->display("tree_filelist_footer.tpl");
-}
-
-function projectcmp($a,$b)
-{
-	return strcmp($a,$b);
-}
-
-function descrcmp($a,$b)
-{
-	global $gitphp_conf;
-	return strcmp(git_project_descr($gitphp_conf['projectroot'],$b),git_project_descr($gitphp_conf['projectroot'],$b));
-}
-
-function ownercmp($a,$b)
-{
-	global $gitphp_conf;
-	return strcmp(git_project_owner($gitphp_conf['projectroot'],$a),git_project_owner($gitphp_conf['projectroot'],$b));
-}
-
-function agecmp($a,$b)
-{
-	global $gitphp_conf;
-	$ca = git_read_commit($gitphp_conf['projectroot'] . $a, git_read_head($gitphp_conf['projectroot'] . $a));
-	$cb = git_read_commit($gitphp_conf['projectroot'] . $b, git_read_head($gitphp_conf['projectroot'] . $b));
-	if ($ca['commit']['age'] == $cb['commit']['age'])
-		return 0;
-	return ($ca['commit']['age'] < $cb['commit']['age'] ? 1 : -1);
 }
 
 function git_project_list($projectroot,$projectlist,$order)
@@ -422,157 +685,6 @@ function git_project_list($projectroot,$projectlist,$order)
 			echo "No projects found";
 	} else
 		echo $projects;
-}
-
-function read_info_ref($project, $type = "")
-{
-	$refs = array();
-	$lines = file($project);
-	foreach ($lines as $no => $line) {
-		if (ereg("^([0-9a-fA-F]{40})\t.*" . $type . "/([^\^]+)",$line,$regs)) {
-			if ($isset($refs[$regs[1]]))
-				$refs[$regs[1]] .= " / " . $regs[2];
-			else
-				$refs[$regs[1]] = $regs[2];
-		}
-	}
-	return $refs;
-}
-
-function date_str($epoch,$tz = "-0000")
-{
-	$date = array();
-	$date['hour'] = date("H",$epoch);
-	$date['minute'] = date("i",$epoch);
-	$date['mday'] = date("d",$epoch);
-	$date['day'] = date("D",$epoch);
-	$date['month'] = date("M",$epoch);
-	$date['rfc2822'] = date("r",$epoch);
-	$date['mday-time'] = date("d M H:i",$epoch);
-	if (ereg("^([+\-][0-9][0-9])([0-9][0-9])$",$tz,$regs)) {
-		$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
-		$date['hour_local'] = date("H",$local);
-		$date['minute_local'] = date("i",$local);
-		$date['tz_local'] = $tz;
-	}
-	return $date;
-}
-
-function git_read_tag($project, $tag_id)
-{
-	global $gitphp_conf;
-	$tag = array();
-	$tagout = shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file tag " . $tag_id);
-	$tag['id'] = $tag_id;
-	$comment = array();
-	$tok = strtok($tagout,"\n");
-	while ($tok !== false) {
-		if (ereg("^object ([0-9a-fA-F]{40})$",$tok,$regs))
-			$tag['object'] = $regs[1];
-		else if (ereg("^type (.+)$",$tok,$regs))
-			$tag['type'] = $regs[1];
-		else if (ereg("^tag (.+)$",$tok,$regs))
-			$tag['name'] = $regs[1];
-		else if (ereg("^tagger (.*) ([0-9]+) (.*)$",$tok,$regs)) {
-			$tag['author'] = $regs[1];
-			$tag['epoch'] = $regs[2];
-			$tag['tz'] = $regs[3];
-		} else if (ereg("--BEGIN",$tok)) {
-			while ($tok !== false) {
-				$comment[] = $tok;
-				$tok = strtok("\n");
-			}
-			break;
-		}
-		$tok = strtok("\n");
-	}
-	$tag['comment'] = $comment;
-	if (!isset($tag['name']))
-		return null;
-	return $tag;
-}
-
-function git_get_type($project, $hash)
-{
-	global $gitphp_conf;
-	return trim(shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file -t " . $hash));
-}
-
-function git_read_hash($path)
-{
-	return file_get_contents($path);
-}
-
-function epochcmp($a,$b)
-{
-	if ($a['epoch'] == $b['epoch'])
-		return 0;
-	return ($a['epoch'] < $b['epoch']) ? 1 : -1;
-}
-
-function git_read_refs($projectroot,$project,$refdir)
-{
-	if (!is_dir($projectroot . $project . "/" . $refdir))
-		return null;
-	$refs = array();
-	if ($dh = opendir($projectroot . $project . "/" . $refdir)) {
-		while (($dir = readdir($dh)) !== false) {
-			if (strpos($dir,'.') !== 0) {
-				if (is_dir($projectroot . $project . "/" . $refdir . "/" . $dir)) {
-					if ($dh2 = opendir($projectroot . $project . "/" . $refdir . "/" . $dir)) {
-						while (($dir2 = readdir($dh2)) !== false) {
-							if (strpos($dir2,'.') !== 0)
-								$refs[] = $dir . "/" . $dir2;
-						}
-						closedir($dh2);
-					}
-				}
-				$refs[] = $dir;
-			}
-		}
-		closedir($dh);
-	} else
-		return null;
-	$reflist = array();
-	foreach ($refs as $i => $ref_file) {
-		$ref_id = git_read_hash($projectroot . $project . "/" . $refdir . "/" . $ref_file);
-		$type = git_get_type($projectroot . $project, $ref_id);
-		if ($type) {
-			$ref_item = array();
-			$ref_item['type'] = $type;
-			$ref_item['id'] = $ref_id;
-			$ref_item['epoch'] = 0;
-			$ref_item['age'] = "unknown";
-
-			if ($type == "tag") {
-				$tag = git_read_tag($projectroot . $project, $ref_id);
-				$ref_item['comment'] = $tag['comment'];
-				if ($tag['type'] == "commit") {
-					$co = git_read_commit($projectroot . $project, $tag['object']);
-					$ref_item['epoch'] = $co['committer_epoch'];
-					$ref_item['age'] = $co['age_string'];
-				} else if (isset($tag['epoch'])) {
-					$age = time() - $tag['epoch'];
-					$ref_item['epoch'] = $tag['epoch'];
-					$ref_item['age'] = age_string($age);
-				}
-				$ref_item['reftype'] = $tag['type'];
-				$ref_item['name'] = $tag['name'];
-				$ref_item['refid'] = $tag['object'];
-			} else if ($type == "commit") {
-				$co = git_read_commit($projectroot . $project, $ref_id);
-				$ref_item['reftype'] = "commit";
-				$ref_item['name'] = $ref_file;
-				$ref_item['title'] = $co['title'];
-				$ref_item['refid'] = $ref_id;
-				$ref_item['epoch'] = $co['committer_epoch'];
-				$ref_item['age'] = $co['age_string'];
-			}
-			$reflist[] = $ref_item;
-		}
-	}
-	usort($reflist,"epochcmp");
-	return $reflist;
 }
 
 function git_summary($projectroot,$project)
@@ -687,7 +799,7 @@ function git_summary($projectroot,$project)
 
 function git_shortlog($projectroot,$project,$hash,$page)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl;
 	$head = git_read_head($projectroot . $project);
 	if (!isset($hash))
 		$hash = $head;
@@ -806,7 +918,7 @@ function git_log($projectroot,$project,$hash,$page)
 
 function git_commit($projectroot,$project,$hash)
 {
-	global $gitphp_conf,$tpl;
+	global $tpl;
 	$co = git_read_commit($projectroot . $project, $hash);
 	$ad = date_str($co['author_epoch'],$co['author_tz']);
 	$cd = date_str($co['committer_epoch'],$co['committer_tz']);
@@ -817,7 +929,7 @@ function git_commit($projectroot,$project,$hash)
 		$root = "--root";
 		$parent = "";
 	}
-	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r -M " . $root . " " . $parent . " " . $hash);
+	$diffout = git_diff_tree($projectroot . $project, $root . " " . $parent . " " . $hash, TRUE);
 	$difftree = explode("\n",$diffout);
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
@@ -891,64 +1003,10 @@ function git_commit($projectroot,$project,$hash)
 	$tpl->display("commit_footer.tpl");
 }
 
-function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
-{
-	global $gitphp_conf,$tpl;
-	$from_tmp = "/dev/null";
-	$to_tmp = "/dev/null";
-	$pid = posix_getpid();
-	if (isset($from)) {
-		$from_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_from";
-		shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $from . " > " . $from_tmp);
-	}
-	if (isset($to)) {
-		$to_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_to";
-		shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $to . " > " . $to_tmp);
-	}
-	$diffout = shell_exec("diff -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
-	if ($format == "plain")
-		echo $diffout;
-	else {
-		$line = strtok($diffout,"\n");
-		while ($line !== false) {
-			$start = substr($line,0,1);
-			unset($color);
-			if ($start == "+")
-				$color = "#008800";
-			else if ($start == "-")
-				$color = "#cc0000";
-			else if ($start == "@")
-				$color = "#990099";
-			if ($start != "\\") {
-			/*
-				while (($pos = strpos($line,"\t")) !== false) {
-					if ($c = (8 - (($pos - 1) % 8))) {
-						$spaces = "";
-						for ($i = 0; $i < $c; $i++)
-							$spaces .= " ";
-						preg_replace('/\t/',$spaces,$line,1);
-					}
-				}
-			 */
-				$tpl->clear_all_assign();
-				$tpl->assign("line",htmlentities($line));
-				if (isset($color))
-					$tpl->assign("color",$color);
-				$tpl->display("diff_line.tpl");
-			}
-			$line = strtok("\n");
-		}
-	}
-	if (isset($from))
-		unlink($from_tmp);
-	if (isset($to))
-		unlink($to_tmp);
-}
-
 function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 {
 	global $gitphp_conf,$tpl;
-	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	$ret = prep_tmpdir();
 	if ($ret !== TRUE) {
 		echo $ret;
 		return;
@@ -956,10 +1014,10 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 	$co = git_read_commit($projectroot . $project, $hash);
 	if (!isset($hash_parent))
 		$hash_parent = $co['parent'];
-	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $hash_parent . " " . $hash);
+	$diffout = git_diff_tree($projectroot . $project, $hash_parent . " " . $hash);
 	$difftree = explode("\n",$diffout);
 	$refs = read_info_ref($projectroot . $project,"tags");
-	$listout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-rev-list HEAD");
+	$listout = git_rev_list($projectroot . $project, "HEAD");
 	$tok = strtok($listout,"\n");
 	while ($tok !== false) {
 		if (isset($refs[$tok]))
@@ -995,8 +1053,8 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 
 function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 {
-	global $gitphp_conf,$tpl;
-	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	global $tpl;
+	$ret = prep_tmpdir();
 	if ($ret !== TRUE) {
 		echo $ret;
 		return;
@@ -1004,7 +1062,7 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 	$co = git_read_commit($projectroot . $project, $hash);
 	if (!isset($hash_parent))
 		$hash_parent = $co['parent'];
-	$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $hash_parent . " " . $hash);
+	$diffout = git_diff_tree($projectroot . $project, $hash_parent . " " . $hash);
 	$difftree = explode("\n",$diffout);
 	$refs = read_info_ref($projectroot . $project);
 	$tpl->clear_all_assign();
@@ -1159,7 +1217,7 @@ function git_rss($projectroot,$project)
 			break;
 		$cd = date_str($co['committer_epoch']);
 		$difftree = array();
-		$diffout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r " . $co['parent'] . " " . $co['id']);
+		$diffout = git_diff_tree($projectroot . $project, $co['parent'] . " " . $co['id']);
 		$tok = strtok($diffout,"\n");
 		while ($tok !== false) {
 			if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$",$tok,$regs))
@@ -1193,7 +1251,7 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		$base = $hashbase ? $hashbase : git_read_head($projectroot . $project);
 		$hash = git_get_hash_by_path($projectroot . $project, $base,$file,"blob");
 	}
-	$catout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $hash);
+	$catout = git_cat_file($projectroot . $project, $hash);
 	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
 		$tpl->clear_all_assign();
 		$tpl->assign("project",$project);
@@ -1251,20 +1309,19 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 
 function git_blob_plain($projectroot,$project,$hash,$file)
 {
-	global $gitphp_conf;
 	if ($file)
 		$saveas = $file;
 	else
 		$saveas = $hash . ".txt";
 	header("Content-type: text/plain; charset=UTF-8");
 	header("Content-disposition: inline; filename=\"" . $saveas . "\"");
-	echo shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-cat-file blob " . $hash);
+	echo git_cat_file($projectroot . $project, $hash);
 }
 
 function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 {
-	global $gitphp_conf,$tpl;
-	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	global $tpl;
+	$ret = prep_tmpdir();
 	if ($ret !== TRUE) {
 		echo $ret;
 		return;
@@ -1299,8 +1356,7 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 
 function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent)
 {
-	global $gitphp_conf;
-	$ret = prep_tmpdir($gitphp_conf['gittmp']);
+	$ret = prep_tmpdir();
 	if ($ret !== TRUE) {
 		echo $ret;
 		return;
@@ -1311,7 +1367,7 @@ function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent)
 
 function git_history($projectroot,$project,$hash,$file)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl;
 	if (!isset($hash))
 		$hash = git_read_head($projectroot . $project);
 	$co = git_read_commit($projectroot . $project, $hash);
@@ -1324,7 +1380,7 @@ function git_history($projectroot,$project,$hash,$file)
 	$tpl->assign("title",$co['title']);
 	$tpl->assign("file",$file);
 	$tpl->display("history_header.tpl");
-	$cmdout = shell_exec("env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-rev-list " . $hash . " | env GIT_DIR=" . $projectroot . $project . " " . $gitphp_conf['gitbin'] . "git-diff-tree -r --stdin '" . $file . "'");
+	$cmdout = git_history_list($projectroot . $project, $hash, $file);
 	$alternate = FALSE;
 	$lines = explode("\n",$cmdout);
 	foreach ($lines as $i => $line) {
