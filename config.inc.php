@@ -107,7 +107,7 @@ $gitphp_conf['bzblocksize'] = 9;
  * Run blob output through geshi syntax highlighting
  * and line numbering
  */
-$gitphp_conf['geshi'] = FALSE;
+$gitphp_conf['geshi'] = TRUE;
 
 /*
  * geshiroot
