@@ -88,6 +88,21 @@ $gitphp_conf['self'] = "http://centraldogma/gitphp/";
 $gitphp_conf['smarty_prefix'] = "smarty/";
 
 /*
+ * bzsnapshots
+ * If set to true, will bzcompress snapshot tars before sending them.
+ * Your PHP must have been compiled with bzip2 support!
+ */
+$gitphp_conf['bzsnapshots'] = TRUE;
+
+/*
+ * bzblocksize
+ * Sets the compression level for bzip2.  Ranges from 1-9, with
+ * 9 being the most compression but requiring the most processing
+ * (bzip defaults to 4)
+ */
+$gitphp_conf['bzblocksize'] = 9;
+
+/*
  * geshi
  * Run blob output through geshi syntax highlighting
  * and line numbering
