@@ -134,7 +134,7 @@ $gitphp_conf['geshiroot'] = "geshi/";
  */
 $git_projects['Core']['Codex'] = "core/codex.git";
 $git_projects['Core']['gitphp'] = "core/gitphp.git";
-$git_projects['Core']['Mvm'] = "core/Mvm.git";
+$git_projects['Core']['Mvm'] = "core/mvm.git";
 $git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
 $git_projects['Core']['Scripts'] = "core/scripts.git";
 $git_projects['Core']['Soulforge'] = "core/soulforge.git";
