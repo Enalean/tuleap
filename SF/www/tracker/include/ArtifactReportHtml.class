@@ -84,7 +84,7 @@ class ArtifactReportHtml extends ArtifactReport {
         function addSortCriteria($criteria_list, $order, $msort)
         {
             //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
-        
+            $found = false;
             if ($criteria_list) {
                         $arr = explode(',',$criteria_list);
                         $i = 0;
@@ -137,7 +137,7 @@ class ArtifactReportHtml extends ArtifactReport {
 	  if ($criteria_list) {
 	    
 	    $arr = explode(',',$criteria_list);
-	    
+	    $morder='';
 	    while (list(,$crit) = each($arr)) {
 	      
 	      $morder .= ($morder ? ",".$crit : $crit);
