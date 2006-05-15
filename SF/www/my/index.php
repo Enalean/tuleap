@@ -287,8 +287,7 @@ if (user_isloggedin()) {
 		$result2 = db_query($sql2);
 		$rows2 = db_numrows($result2);
 
-        $hide_frs = null;
-		list($hide_now,$count_diff,$hide_url) = 
+        list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
 
 		$html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
