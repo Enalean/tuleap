@@ -138,6 +138,7 @@ $git_projects['Core']['Mvm'] = "core/mvm.git";
 $git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
 $git_projects['Core']['Scripts'] = "core/scripts.git";
 $git_projects['Core']['Soulforge'] = "core/soulforge.git";
+$git_projects['Core']['Website'] = "core/website.git";
 $git_projects['Core']['XNSS'] = "core/xnss.git";
 $git_projects['School']['CS135'] = "school/cs135.git";
 $git_projects['School']['CS150'] = "school/cs150.git";
