@@ -96,7 +96,7 @@ function download_local(group_id,file_id,filename) {
 <tr><td>
 <span class="small">
 <div align="center">
-<?php echo $Language->getText('file_confirm_download','download_explain',array($GLOBALS['sys_org_name'],"/docman/display_doc.php?docid=16&group_id=1",$GLOBALS['sys_email_contact'])); ?><br>
+<?php echo $Language->getText('file_confirm_download','download_explain',array($GLOBALS['sys_org_name'],$GLOBALS['sys_email_contact'])); ?><br>
 
 <br><br>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
