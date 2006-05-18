@@ -37,7 +37,7 @@ if (svn_utils_svn_repo_exists($gname)) {
     $svn_accessfile = svn_utils_read_svn_access_file($gname);
 
     echo'
-       <FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
+       <FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
        <INPUT TYPE="HIDDEN" NAME="func" VALUE="access_control">
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
