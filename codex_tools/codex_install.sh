@@ -1184,13 +1184,7 @@ for i in $grplist
 do
         echo "    - /home/groups/$i"
 done
-                                                                               
-echo "Your project CVS root directories are in:"
-for i in $grplist
-do
-        echo "    - /cvsroot/$i"
-done
-                                                                               
+
 cat <<EOM
                                                                                
              *** IMPORTANT REMARK ***
