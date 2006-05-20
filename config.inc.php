@@ -54,7 +54,7 @@ $gitphp_conf['gittmp'] = "/tmp/gitphp/";
  * The variable '$gitphp_appstring' will expand to
  * the name (gitphp) and version
  */
-$gitphp_conf['title'] = "gitphp :: $gitphp_appstring";
+$gitphp_conf['title'] = "centraldogma :: $gitphp_appstring";
 
 /*
  * self
@@ -132,14 +132,15 @@ $gitphp_conf['geshiroot'] = "geshi/";
  * Comment out $git_projects (leave null) to attempt to read all
  * projects in the projectroot.
  */
-$git_projects['Core']['Codex'] = "core/codex.git";
-$git_projects['Core']['gitphp'] = "core/gitphp.git";
 $git_projects['Core']['Mvm'] = "core/mvm.git";
 $git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
 $git_projects['Core']['Scripts'] = "core/scripts.git";
 $git_projects['Core']['Soulforge'] = "core/soulforge.git";
-$git_projects['Core']['Website'] = "core/website.git";
 $git_projects['Core']['XNSS'] = "core/xnss.git";
+$git_projects['PHP']['Codex'] = "core/codex.git";
+$git_projects['PHP']['gitphp'] = "core/gitphp.git";
+$git_projects['PHP']['MDB'] = "core/mdb.git";
+$git_projects['PHP']['Website'] = "core/website.git";
 $git_projects['School']['CS135'] = "school/cs135.git";
 $git_projects['School']['CS150'] = "school/cs150.git";
 $git_projects['School']['CS151'] = "school/cs151.git";
