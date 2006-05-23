@@ -652,6 +652,8 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 // Clean up email address (remove starting and ending spaces) and put to lower
 // case
 function util_cleanup_emails ($addresses) {
+    $addresses=preg_replace("/\s+[,;]/",",", $addresses);
+    $addresses=preg_replace("/[,;]\s+/",",", $addresses);
     return strtolower(rtrim(trim($addresses)));
 }
 
@@ -669,7 +671,7 @@ function util_normalize_email ($address) {
 // Clean up email address (remove spaces...) and split comma or semi-colon separated emails
 function util_split_emails($addresses) {
     $addresses = util_cleanup_emails($addresses);
-    return split('[,;]',$addresses);
+    return split(',',$addresses);
 }
 
 // One Email Verification
