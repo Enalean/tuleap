@@ -185,6 +185,19 @@ function getMonth($month,&$ok) {
 
 }
 
+/**
+ * ISO8601 dates are used by subversion.
+ * It looks like YYYY-MM-DDTHH-mm-ss.ששששששZ
+ * where T separates date and time
+ * and Z ends the time.
+ * שששששש are milliseconds.
+ */
+function util_ISO8601_to_date($ISO8601_date) {
+    $date = str_replace("T", " ", $ISO8601_date);
+    $date = substr($date, 0, 16);
+    return $date;
+}
+
 function util_prep_string_for_sendmail($body) {
 	$body=str_replace("\\","\\\\",$body);
 	$body=str_replace("\"","\\\"",$body);
@@ -407,13 +420,16 @@ function show_priority_colors_key($msg='') {
 
 
 function get_priority_color ($index) {
-	/*
-		Return the color value for the index that was passed in
-		(defined in $sys_urlroot/<selected theme>/css/)
-	*/
-	global $bgpri;
-	
-	return $bgpri[$index];
+    /*
+        Return the color value for the index that was passed in
+        (defined in $sys_urlroot/<selected theme>/css/)
+    */
+    global $bgpri;
+    if (isset($index) && isset($bgpri[$index])) {
+        return $bgpri[$index];
+    } else {
+        return "";
+    }
 }
 
 function build_priority_select_box ($name='priority', $checked_val='5') {
