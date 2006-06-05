@@ -484,7 +484,9 @@ if (isset($submit)) {
 			"WHERE user.user_id=filemodule_monitor.user_id ".
 			"AND filemodule_monitor.filemodule_id=frs_package.package_id ".
 			"AND filemodule_monitor.filemodule_id='$package_id' ".
-			"AND frs_package.group_id='$group_id'";
+                        "AND frs_package.group_id='$group_id' ".
+                        "AND ( user.status='A' OR user.status='R' )";
+
 		
 		$result=db_query($sql);
 		echo db_error();
