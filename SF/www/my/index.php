@@ -287,6 +287,7 @@ if (user_isloggedin()) {
 		$result2 = db_query($sql2);
 		$rows2 = db_numrows($result2);
 
+        if (!isset($hide_frs)) $hide_frs = null;
         list($hide_now,$count_diff,$hide_url) = 
 		    my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
 
