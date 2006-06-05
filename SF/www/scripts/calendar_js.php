@@ -1,3 +1,14 @@
+<?php
+header("content-type: application/x-javascript");
+
+require_once('pre.php');
+$GLOBALS['Language']->loadLanguageMsg('calendar/calendar');
+
+$months = $GLOBALS['Language']->getText('calendar', 'months');
+$days   = $GLOBALS['Language']->getText('calendar', 'days');
+$start  = $GLOBALS['Language']->getText('calendar', 'week_start');
+
+?>
 // Title: Timestamp picker
 // Description: See the demo at url
 // URL: http://www.geocities.com/tspicker/
@@ -11,14 +22,15 @@
 //    for feature requests and/or donations
 //
 // Modified by Laurent Julliard for CodeX project
-// $Id$
+// $Id: calendar.js 2580 2006-02-17 14:26:26Z nterray $
+
+//alert('hello world!');
 
 function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path) {
-        var arr_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var week_days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-        var n_weekstart = 1; // day week starts from (normally 0 or 1)
-
+        var arr_months = <?php echo $months; ?>;
+        var week_days = <?php echo $days; ?>;
+        var n_weekstart = <?php echo $start; ?>; // day week starts from (normally 0 or 1)
+        
 	// If no date/time given then default to today at 00:00
 	if (str_datetime == null || str_datetime =="") {
 	//	var dt_datetime = str2dt(dt2dtstr(new Date()) + "00:00");
@@ -209,4 +221,5 @@ function dt2tmstr(dt_datetime) {
 	return (new String (
 			dt_datetime.getHours()+":"+dt_datetime.getMinutes()));
 }
+
 

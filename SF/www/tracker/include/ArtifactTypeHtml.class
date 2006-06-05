@@ -172,7 +172,8 @@ class ArtifactTypeHtml extends ArtifactType {
 		global $atf,$Language;
 		
 
-		echo "<form name=\"cal\"><script language=\"JavaScript\" src=\"/scripts/calendar.js\"></script>";		
+		echo "<form name=\"cal\">";
+        echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';		
 		// Get the artfact type list
 		$at_arr = $atf->getPendingArtifactTypes();
 		echo '<H2>'.$Language->getText('tracker_include_type','pending_removal').'</H2>';
@@ -2075,7 +2076,7 @@ EOS;
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
-		  <script language="JavaScript" src="/scripts/calendar.js"></script>';
+		  <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			echo $Language->getText('tracker_include_type','val').': ';
@@ -2328,7 +2329,7 @@ EOS;
             	echo '
             </TR>
             <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
-            <script language="JavaScript" src="/scripts/calendar.js"></script>';
+            <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
         
         
                 // Now display the variable part of the field list (depend on the project)

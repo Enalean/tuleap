@@ -101,7 +101,7 @@ class ArtifactHtml extends Artifact {
             echo '
             </TR>
             <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
-            <script language="JavaScript" src="/scripts/calendar.js"></script>';
+            <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
             
             // Now display the variable part of the field list (depend on the project)
             
@@ -341,7 +341,7 @@ class ArtifactHtml extends Artifact {
                     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
                     <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">
-                  <script language="JavaScript" src="/scripts/calendar.js"></script>';
+                  <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
 	  
 	  
 	  $summary = $this->getValue('summary');
@@ -1107,7 +1107,7 @@ class ArtifactHtml extends Artifact {
                         <TABLE cellpadding="0">
                         <TR><TD VALIGN="TOP" COLSPAN="'.(2*$fields_per_line).'">
                                   <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'.group_getname($group_id).'</TD></TR>
-                                 <script language="JavaScript" src="/scripts/calendar.js"></script>';
+                                 <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
                 
                 
                 
