@@ -29,7 +29,7 @@ php_flag magic_quotes_gpc on
 php_value include_path "/home/httpd/SF/www/include:/home/httpd/SF:."
 php_value memory_limit 30M
 php_value post_max_size 20M
-php_value upload_max_file_size 20M
+php_value upload_max_filesize 20M
 php_admin_value upload_tmp_dir /home/large_tmp
 
 # For phpwiki
