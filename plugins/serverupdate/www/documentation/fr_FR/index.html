@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<meta http-equiv="Content-Style-Type" content="text/css" />
+		<meta http-equiv="Content-Language" content="fr" />
+		<title>Documentation de ServerUpdate</title>
+		<link rel="stylesheet" href="../style.css" type="text/css" media="screen, print" />
+		<link rel="stylesheet" href="screenshots.css" type="text/css" media="screen" />
+	</head>
+	<body>
+		<div id="documentation">
+		    <h1>Documentation de ServerUpdate</h1>
+			<div class="section">
+				<h2><a name="introduction">Introduction</a></h2>
+				<div class="section">Ce plugin permet aux administrateurs de mettre à jour automatiquement le serveur CodeX via une interface web. Les fonctionnalités sont:
+					<dl>
+						<dt><a href="#view">Visualiser les mises à jour disponibles</a></dt>
+						<dd>Visualiser clairement et de manière graphique les mises à jour du serveur, avec leur niveau d'importance et leurs éventuelles interventions manuelles.</dd>
+						<dt><a href="#update">Effectuer une ou plusieurs mises à jour</a></dt>
+						<dd>Effectuer les mises à jour facilement en un clic en multipliant les contrôles de sécurité, et en informant l'administrateur des éventuelles opérations manuelles à effectuer.</dd>
+					</dl>
+				</div>
+				<!-- ################################################################# -->
+				<h2 id="view">Visualiser les mises à jour disponibles</h2>
+				<div class="section">
+					<div class="screenshot">
+						<div class="legend">Capture d'écran de l'interface 'Mises à jour disponibles'</div>
+						<img alt="Capture d'écran de l'interface 'Mises à jour disponibles'" src="serverupdate_noCSS.png" class="noCSS" />
+						<dl id="legendUpdateServer">
+							<dt id="revision">1. Révision</dt>
+							<dd id="revisionDef"><a href="#legendUpdateServer"><span>Révision correspondant à la mise à jour.</span></a></dd>
+							<dt id="date">2. Date</dt>
+							<dd id="dateDef"><a href="#legendUpdateServer"><span>Date de la révision.</span></a></dd>
+							<dt id="commitMessage">3. Message de commit</dt>
+							<dd id="commitMessageDef"><a href="#legendUpdateServer"><span>Message du commit associé à la révision. Peu contenir des informations importantes sur la mise à jour. Toujours les lire avant de lancer une mise à jour.</span></a></dd>
+                            <dt id="impactedFiles">4. Fichiers impactés par la mise à jour</dt>
+							<dd id="impactedFilesDef"><a href="#legendUpdateServer"><span>Fichiers impactés par la mise à jour, avec une indication sur la nature de la modification (se reporter aux spécification subversion plus plus de détails).</span></a></dd>
+                            <dt id="detailsLink">5. Lien vers le détail du commit</dt>
+							<dd id="detailsLinkDef"><a href="#legendUpdateServer"><span>Lien vers une interface web décrivant le détail de la mise à jour, avec possiblité de voir les modifications par fichier (diff).</span></a></dd>
+                            <dt id="needManualUpdate">6. Mise à jour manuelle</dt>
+							<dd id="needManualUpdateDef"><a href="#legendUpdateServer"><span>Indique qu'une mise à jour manuelle est nécessaire. Dans ce cas, la mise à jour automatique n'est pas autorisée. Des indications sur la marche à suivre se trouvent dans le message de commit.</span></a></dd>
+						</dl>
+					</div>
+					<p>Cette interface affiche les informations à propos des mises à jour disponibles. Chaque mise à jour correspond à une révision. Les mises à jours sont affichées dans l'ordre ascendant des révision. Pour chacune, les propriétés suivantes sont affichées :
+                        <ul>
+                            <li>Une indication sur l'importance de la mise à jour (de 0 --mise à jour mineure, peu importante-- à 9 --mise à jour critique, ou de sécurité, ou nécessitant une intervention humaine--). Voir le code couleur associé,</li>
+                            <li>Le numéro de la révision,</li>
+                            <li>La date à laquelle la révision a été effectuée,</li>
+                            <li>Le message associé à la révision (le message de commit). Celui-ci est important et donne des indications sur les modifications intervenue lors de la mise à jour et éventuellement donne plus d'informations sur les opérations manuelles à effectuer (lancement d'un script, mise à jour de base de données, etc.),</li>
+                            <li>Les fichiers impactés par cette révision,</li>
+                            <li>Un lien vers le détail de la révision,</li>
+                            <li>Une indication sur les éventuelles opérations manuelles liées à la mise à jour. Si tel est le cas, la mise à jour n'est pas autorisée, ceci pour vous 'forcer' à lire le message de commit et à effectuer les opérations associées.</li>
+                        </ul>
+                    </p>
+				</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+				<!-- ################################################################# -->
+				<h2 id="update">Effectuer une ou plusieurs mises à jour</h2>
+				<div class="section">
+					<div class="screenshot">
+						<div class="legend">Capture d'écran de l'interface 'Mises à jour automatique du serveur'</div>
+						<img alt="Capture d'écran de l'interface 'Mises à jour automatique du serveur'" src="InstallPlugins.png" />
+					</div>
+					<p>Pour mettre à jour automatiquement le serveur, cliquer sur l'icone de mise à jour à droite.
+                       Le système :
+                       <ul>
+                        <li>vérifie qu'aucune mise à jour manuelle n'est nécessaire</li>
+                        <li>simule la mise à jour du serveur et détecte les éventuels conflits</li>
+                        <li>lance la mise à jour incrémentalement en vérifiant les conflits à chaque fois.</li>
+                       </ul>
+                    </p>
+				</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+			</div>
+            <div class="copyright">Copyright &copy; Xerox Corporation, CodeX Team, 2001-2005. All Rights Reserved</div>
+		</div>
+	</body>
+</html>
