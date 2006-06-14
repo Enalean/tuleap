@@ -44,6 +44,10 @@ License
 <dt><a href="#BackgroundDaemons">Background Daemons</a></dt>
 <dt><a href="#Log_Files">Log Files</a></dt>
 <dt><a href="#CodeX_Code_Update">CodeX Code Update</a></dt>
+<dd><dl>
+<dt><a href="#ClassicUpdate">Classic update in console environment</a></dt>
+<dt><a href="#PluginUpdate">Web interface update mechanism</a></dt>
+</dl></dd>
 <dt><a href="#BackupRestore">Backup/Restore</a></dt>
 <dt><a href="#CodeXTestingEnvironment">CodeX Testing Environment</a></dt>
 <dt><a href="#CodeX_HowTo">CodeX HowTo</a></dt>
@@ -1828,7 +1832,16 @@ As a CodeX customer you will be entitled to receive the CodeX Subversion
 events by email. They are reports about the defect that have been
 solved and the new feature that have been implemented in CodeX.
 Benefiting from these new features is just a matter of update your
-CodeX working copy. Here is how you should proceed:<br>
+CodeX working copy.<br />
+CodeX offers two ways for updating your server :
+<ul>
+    <li><a href="#ClassicUpdate">Classic update in console environment</a></li>
+    <li><a href="#PluginUpdate">Web interface update mechanism</a></li>
+</ul>
+
+<h2>Classic update in console environment</h2>
+
+Here is how you should proceed:<br>
 <br>
 </p>
 <ul>
@@ -1934,6 +1947,108 @@ apply the Perl patch as well if there is one.</span><br>
 </ul>
 <p> </p>
 <p> </p>
+
+<h2>Web interface update mechanism</h2>
+<p>Another way to update your working copy is to use the plugin ServerUpdate.
+This plugin provide a secure and easy-to-use process to update your server,
+with web interface overview and lots of feedback about what happens.
+</p>
+<p>This section will focus on the automatic update process.
+For a user guide, please read the on-line plugin documentation.
+</p>
+
+<!-- ################################################################# -->
+<!-- #  Copy/paste from the plugin documentation                     # -->
+<!-- ################################################################# -->
+<h3 id="update">Process one or more updates</h3>
+<p>The plugin allows you to update automatically the CodeX server through the CodeX web interface.
+   The update is always processed from the current revsion of the working copy to the choosen revision
+   (greater than the current revision), by updating <strong>all</strong>
+   the between revisions.
+   To update the server, click the icon on the right of the wished revision.
+   The update will be processed in two steps:
+   <ol>
+    <li>Update simulation
+        <ul>
+            <li>The system simulate the update, checking that:
+                <ul>
+                    <li>there is no manual intervention required,</li>
+                    <li>there is no subversion conflict,</li>
+                    <li>there is no scripts conflict.</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Real update
+        <ul>
+            <li>If no conflict was detected during the update simulation,</li>
+            <li>After the administrator confirmation,</li>
+            <li>Incremental update (one revision by one)</li>
+            <li>Success test for each revision,</li>
+            <li>Action feedback given to the user, for every action done for each revision,</li>
+            <li>Details about upgrade scripts executions if so.</li>
+        </ul> 
+   </ol>
+</p>
+    
+<h4 id="strategy">Update Strategy</h4>
+<h5 id="simulationStrategy">Simulation strategy:</h5>
+<p>The system first checks if there is no <strong>manual intervention required</strong> between the current revision and the requested update.
+A manual intervention prohibits the update initially.
+It is indeed possible to enforce the update, but we would draw your attention in the danger of a such operation 
+(see section <a href="#force">Force mode</a> for details).
+</p>
+<p>Then, the system checks there is no <strong>subversion conflict</strong>.
+For doing this, the system simulate a <strong>global</strong> update from the current revision to the requested revision.
+(by using the subversion command <kbd>svn merge --dry-run -r &lt;working copy revision&gt;:&lt;requested revision&gt; &lt;subversion repository&gt; &lt;working copy directory&gt;</kbd>).
+</p>
+<p>The system then checks htere is no <strong>upgrade script conflict</strong>.
+
+An upgrade script will be executed if and only if:
+<ul>
+    <li>The script is added in the requested update <strong>and</strong></li>
+    <li>It is not deleted in a later revision <strong>and</strong></li>
+    <li>It is not modified after the last revision of the requested update.</li>
+</ul>
+In the case where the script would be modified, the only execution of the script will be processed durinf the last modification.<br /><br />
+
+An upgrade script will not be executed if:
+<ul>
+    <li>This script is deleted in a later revision. In this case, here is two options:
+        <ul>
+            <li>the requested update goes up to the script deletion: in this case, the script is just ignored (not executed), and the update is possible.</li>
+            <li>the requested update doesn't go up to the the script deletion: in this case, the update isnot allowed. Because if a script is deleted, 
+                it is possible that the revision between keep the server in an unstable state. There is so no other way but to update up to 
+                the script deletion.</li>
+        </ul>
+    </li>
+    <li>This script have been added before the current revision (the first appearance of this script in the requested update is a modification or a deletion). 
+        This extremely rare situation could happened if a script is wrong <strong>and</strong> if you updated your server before the fix. In this case,
+        the update is not allowed. We would manage the situation with individually.
+    </li>
+    <li>This script is modified in a later revision not included in the requested update. In this case, it is obligatory
+        to process anupdate up to the last script modification.
+    </li>
+</ul>
+</p>
+<h5 id="updateStrategy">Update strategy:</h5>
+After a simulation and after the update confirmation, the system will <em>almost</em> use the same strategy, except for the subversion update.
+Indeed, the update is done incrementally, analysing each time the subversion return for detecting the potential errors.
+The subversion command used is the following one: 
+<kbd>svn update -r &lt;requested revision&gt;</kbd>
+
+<h5 id="force">Manual intervention and Force mode:</h5>
+<p>Some updates may need special interventions, that would be better manually done.
+It would be operations to do <strong>in addition</strong> of the simple working copy update,
+such as a file system modification, needing root permissions for example, or also an intervention that would need a temporary server stop).
+In this case, the revision is labelled as needing a manual intervention and as we saw it explaining <a href="#simulationStrategy">simulation strategy</a>,
+such a situation is stoping regarding the automatic update. This to catch your attention about the special type of the update
+and to make you read the commit message that contains information about the the update.
+However, it is possible to enforce the update, but we wish to catch your attention about the danger of such an operation.
+If you don't respect the indication given in the commit message of such an update, you could find your server in an unstable state.
+So, only use the "<em>force</em>" mode only if you are sure of what you do.</p>
+<!-- ################################################################# -->
+
 <hr width="100%" size="2"><br>
 <h1><a name="BackupRestore"></a>Backup/Restore</h1>
 <h2>Backup</h2>
