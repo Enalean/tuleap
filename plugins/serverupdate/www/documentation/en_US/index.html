@@ -3,82 +3,212 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 		<meta http-equiv="Content-Style-Type" content="text/css" />
-		<meta http-equiv="Content-Language" content="fr" />
-		<title>PluginsAdministration Documentation</title>
+		<meta http-equiv="Content-Language" content="en" />
+		<title>ServerUpdate Documentation</title>
 		<link rel="stylesheet" href="../style.css" type="text/css" media="screen, print" />
 		<link rel="stylesheet" href="screenshots.css" type="text/css" media="screen" />
 	</head>
 	<body>
 		<div id="documentation">
-		    <h1>PluginsAdministration Documentation</h1>
+		    <h1>ServerUpdate Documentation</h1>
 			<div class="section">
 				<h2><a name="introduction">Introduction</a></h2>
-				<div class="section">This plugin allow administrators to manage plugins with a web-based interface. The features are:
+				<div class="section">This plugin allows the administrator to update the CodeX server automatically through the web interface. The functionalities are:
 					<dl>
-						<dt><a href="#manage">Manage Installed Plugins</a></dt>
-						<dd>Available/unavailable plugins, consult their properties, uninstall them.</dd>
-						<dt><a href="#install">Install a Plugin</a></dt>
-						<dd>Finish the installation of the plugin.</dd>
-						<dt><a href="#priorities">Manage Priorities</a></dt>
-						<dd>If you want your plugins to be waked up in a special order, priorities are for you.</dd>
+						<dt><a href="#view">Overview of availbale updates</a></dt>
+						<dd>View all the server updates in a clearly graphical way, with their imortance level, and eventually the manual interventions.</dd>
+						<dt><a href="#update">Process one or more updates</a></dt>
+						<dd>Process th eupdates easily in one click, with the maximum of security controls, while giving feedback to the administrator concerning the potential manual intervention to do.</dd>
+                        <dt><a href="#script">Overview of upgrade scripts and their executions</a></dt>
+						<dd>Some updates comes with upgrade scripts to process. This update plugin will manage itself to process these scripts, giving you a maximum feedback of the execution process and the execution success. You then have the opportunity to view the scripts executions.</dd>
+                        <dt><a href="#preferences">Preferences</a></dt>
+						<dd>View the plugin's preferences.</dd>
 					</dl>
 				</div>
 				<!-- ################################################################# -->
-				<h2 id="manage">Manage Installed Plugins</h2>
+				<h2 id="view">View the availble updates</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">Screenshot of panel 'Installed Plugins'</div>
-						<img alt="Screenshot of interface 'Installed Plugins'" src="InstalledPlugins_noCSS.png" class="noCSS" />
-						<dl id="legendInstalledPlugins">
-							<dt id="description">1. Plugin</dt>
-							<dd id="descriptionDef"><a href="#legendInstalledPlugins"><span>Description of the plugin.</span></a></dd>
-							<dt id="enable">2. Available?</dt>
-							<dd id="enableDef"><a href="#legendInstalledPlugins"><span>Make the plugin (un)available.</span></a></dd>
-							<dt id="actions">3. Actions</dt>
-							<dd id="actionsDef"><a href="#legendInstalledPlugins"><span>Special actions: show its properties, uninstall the plugin.</span></a></dd>
+						<div class="legend">'Available updates' interface screenshot</div>
+						<img alt="'Available updates' interface screenshot" src="serverupdate_noCSS.png" class="noCSS" />
+						<dl id="legendUpdateServer">
+							<dt id="revision">1. Revision</dt>
+							<dd id="revisionDef"><a href="#legendUpdateServer"><span>Revision related to the update.</span></a></dd>
+							<dt id="date">2. Date</dt>
+							<dd id="dateDef"><a href="#legendUpdateServer"><span>Date of the revision.</span></a></dd>
+							<dt id="commitMessage">3. Commit message</dt>
+							<dd id="commitMessageDef"><a href="#legendUpdateServer"><span>Commit message associated with the revision. Can contain precious information concerning the update. Always read it before processing an update.</span></a></dd>
+                            <dt id="impactedFiles">4. Files impacted by the update</dt>
+							<dd id="impactedFilesDef"><a href="#legendUpdateServer"><span>Files impacted by the update, with an indication of modification type (please see the subversion specification for more details).</span></a></dd>
+                            <dt id="detailsLink">5. Link to commit detail</dt>
+							<dd id="detailsLinkDef"><a href="#legendUpdateServer"><span>Link to the web interface that details the update, with the opportunity of watching the modifications file by file (diff).</span></a></dd>
+                            <dt id="needManualUpdate">6. Additional information</dt>
+							<dd id="needManualUpdateDef"><a href="#legendUpdateServer"><span>Show if a manual update is required, or if the update contains an upgrade script to process.</span></a></dd>
 						</dl>
 					</div>
-					<p>This panel displays informations about installed plugins. Those plugins can be available or unavailable and you can do others actions : uninstall them and show properties.</p>
-					<p>There is at least one plugin: PluginsAdministration itself, which cannot be uninstalled or unavailable.</p>
-					<p>Please note that uninstall or set a plugin unavailable through this interface <strong>does not prevent access</strong> to its web pages!</p>
-					<p>The properties for a plugin are:
-						<ul>
-							<li>FullName,</li>
-							<li>Version,</li>
-							<li>Description,</li>
-							<li>Listened Hooks,</li>
-							<li>Custom Properties, depending on the plugin itself.</li>
-						</ul>
-					</p>
+					<p>This interface display information about available updates. Each update is matching a revision. Updates are displayed by revision number respecting the ascendant order. For each, the following properties are displayed:
+                        <ul>
+                            <li>The importance level of the update (from 0 --minor update, not important-- to 9 --critical update, or security update--). See the associated color panel,</li>
+                            <li>Revision number,</li>
+                            <li>The date when the update have been done,</li>
+                            <li>The commit message associated to the revision. This message is really important, it gives you information about the modification operated within this update and can eventually give more information about manual intervention to do (script execution, database update, etc.),</li>
+                            <li>Files impacted by this revision,</li>
+                            <li>Link to the revision detail,</li>
+                            <li>Additional information about the update:
+                                <ul>
+                                    <li>Potential manual intervetion relied to this update. 
+                                        In this case, the automatic update is not allowed, to encourage you in reading the commit message and doing 
+                                        the associated operations (see section <a href="#force">Manual interventions and Force mode</a> for details).</li>
+                                    <li>Potential upgrade scripts that need to be processed. 
+                                        In this case, the script execution ispossible under some conditions 
+                                        (see section <a href="#strategy">Update strategy</a> for details).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </p>
+                    <h3>Filter the updates</h3>
+                    <div class="screenshot">
+                        <div class="legend">Filter screenshot</div>
+                        <img alt="Filter screenshot" src="serverupdate_noCSS.png" class="noCSS" />
+                    </div>
+                    <p>The filter let you browse the updates regarding criterias. For example, the updates requiring a manual intervention,
+                    and/or updates with a level of importance greater than 7, etc.
+                    </p>
+                    <p>The filter criterias are:
+                        <ul>
+                            <li>The update level of importance</li>
+                            <li>The presence of a manual intervention</li>
+                        </ul>
+                        Whatever the filter criteria is, the update are always sorted by revision order.
+                    </p>
 				</div>
-				<div class="go_to_top"><a href="#documentation" title="Go to top">top</a></div>
+				<div class="go_to_top"><a href="#documentation" title="Go to top">top page</a></div>
 				<!-- ################################################################# -->
-				<h2 id="install">Install a Plugin</h2>
+				<h2 id="update">Process one or more updates</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">Screenshot of panel 'Not Yet Installed Plugins'</div>
-						<img alt="Screenshot of interface 'Not Yet Installed Plugins'" src="InstallPlugins.png" />
+						<div class="legend">'Automatic server update' interface screenshot</div>
+						<img alt="'Automatic server update' interface screenshot" src="Update.png" />
 					</div>
-					<p>This panel lists all plugins that is not yet installed into CodeX. Their directories are here, but CodeX does not know about them. Select the plugin you want to install and it will be registered, if it contains a script <code>install.sql</code> in <code>db/</code> directory, it will be executed.</p>
+					<p>The plugin allows you to update automatically the CodeX server through the CodeX web interface.
+                       The update is always processed from the current revsion of the working copy to the choosen revision
+                       (greater than the current revision), by updating <strong>all</strong>
+                       the between revisions.
+                       To update the server, click the icon on the right of the wished revision.
+                       The update will be processed in two steps:
+                       <ol>
+                        <li>Update simulation
+                            <ul>
+                                <li>The system simulate the update, checking that:
+                                    <ul>
+                                        <li>there is no manual intervention required,</li>
+                                        <li>there is no subversion conflict,</li>
+                                        <li>there is no scripts conflict.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Real update
+                            <ul>
+                                <li>If no conflict was detected during the update simulation,</li>
+                                <li>After the administrator confirmation,</li>
+                                <li>Incremental update (one revision by one)</li>
+                                <li>Success test for each revision,</li>
+                                <li>Action feedback given to the user, for every action done for each revision,</li>
+                                <li>Details about upgrade scripts executions if so.</li>
+                            </ul> 
+                       </ol>
+                    </p>
+                    
+                    <h3 id="strategy">Update Strategy</h3>
+                    <h4 id="simulationStrategy">Simulation strategy:</h4>
+                    <p>The system first checks if there is no <strong>manual intervention required</strong> between the current revision and the requested update.
+                    A manual intervention prohibits the update initially.
+                    It is indeed possible to enforce the update, but we would draw your attention in the danger of a such operation 
+                    (see section <a href="#force">Force mode</a> for details).
+                    </p>
+                    <p>Then, the system checks there is no <strong>subversion conflict</strong>.
+                    For doing this, the system simulate a <strong>global</strong> update from the current revision to the requested revision.
+                    (by using the subversion command <kbd>svn merge --dry-run -r &lt;working copy revision&gt;:&lt;requested revision&gt; &lt;subversion repository&gt; &lt;working copy directory&gt;</kbd>).
+                    </p>
+                    <p>The system then checks htere is no <strong>upgrade script conflict</strong>.
+                    
+                    An upgrade script will be executed if and only if:
+                    <ul>
+                        <li>The script is added in the requested update <strong>and</strong></li>
+                        <li>It is not deleted in a later revision <strong>and</strong></li>
+                        <li>It is not modified after the last revision of the requested update.</li>
+                    </ul>
+                    In the case where the script would be modified, the only execution of the script will be processed durinf the last modification.<br /><br />
+                    
+                    An upgrade script will not be executed if:
+                    <ul>
+                        <li>This script is deleted in a later revision. In this case, here is two options:
+                            <ul>
+                                <li>the requested update goes up to the script deletion: in this case, the script is just ignored (not executed), and the update is possible.</li>
+                                <li>the requested update doesn't go up to the the script deletion: in this case, the update isnot allowed. Because if a script is deleted, 
+                                    it is possible that the revision between keep the server in an unstable state. There is so no other way but to update up to 
+                                    the script deletion.</li>
+                            </ul>
+                        </li>
+                        <li>This script have been added before the current revision (the first appearance of this script in the requested update is a modification or a deletion). 
+                            This extremely rare situation could happened if a script is wrong <strong>and</strong> if you updated your server before the fix. In this case,
+                            the update is not allowed. We would manage the situation with individually.
+                        </li>
+                        <li>This script is modified in a later revision not included in the requested update. In this case, it is obligatory
+                            to process anupdate up to the last script modification.
+                        </li>
+                    </ul>
+                    </p>
+                    <h4 id="updateStrategy">Update strategy:</h4>
+                    After a simulation and after the update confirmation, the system will <em>almost</em> use the same strategy, except for the subversion update.
+                    Indeed, the update is done incrementally, analysing each time the subversion return for detecting the potential errors.
+                    The subversion command used is the following one: 
+                    <kbd>svn update -r &lt;requested revision&gt;</kbd>
+                    
+                    <h4 id="force">Manual intervention and Force mode:</h4>
+                    <p>Some updates may need special interventions, that would be better manually done.
+                    It would be operations to do <strong>in addition</strong> of the simple working copy update,
+                    such as a file system modification, needing root permissions for example, or also an intervention that would need a temporary server stop).
+                    In this case, the revision is labelled as needing a manual intervention and as we saw it explaining <a href="#simulationStrategy">simulation strategy</a>,
+                    such a situation is stoping regarding the automatic update. This to catch your attention about the special type of the update
+                    and to make you read the commit message that contains information about the the update.
+                    However, it is possible to enforce the update, but we wish to catch your attention about the danger of such an operation.
+                    If you don't respect the indication given in the commit message of such an update, you could find your server in an unstable state.
+                    So, only use the "<em>force</em>" mode only if you are sure of what you do.</p>
 				</div>
-				<div class="go_to_top"><a href="#documentation" title="Go to top">top</a></div>
-				<!-- ################################################################# -->
-				<h2 id="priorities">Manage Priorities</h2>
+				<div class="go_to_top"><a href="#documentation" title="Go to top">top page</a></div>
+                <!-- ################################################################# -->
+				<h2 id="script">View the upgrades scripts</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">Screenshot of panel 'Priorities Between Plugins'</div>
-						<img alt="Screenshot of interface 'Installed Plugins'" src="Priorities_noCSS.png" class="noCSS" />
-						<dl id="legendPriorities">
-							<dt id="hook">1. Hook</dt>
-							<dd id="hookDef"><a href="#legendPriorities"><span>Select the hook.</span></a></dd>
-							<dt id="priorities">2. Priorities</dt>
-							<dd id="prioritiesDef"><a href="#legendPriorities"><span>Configure the priorities between plugins for the selected hook.</span></a></dd>
-						</dl>
+						<div class="legend">'Overview of upgrades scripts' interface screenshot</div>
+						<img alt="'Overview of upgrades scripts' interface screenshot" src="ScriptUpgrade.png" />
 					</div>
-					<p>This panel allows you to ajust priorities between plugins for a hook. The select box contains all listened hook, interesting hooks (those listened to by several plugins) are distinguished by a mark <abbr title="Asterisk"><code>*</code></abbr>.</p>
-					<p>Priorities are realized by integers. The plugins which have a priority bigger than the others will be waked up before them. In the figure above, this is the plugin 'Template' which will come first.</p>
+					<p>This interface display information about upgrades scripts.
+                    For each script, the status is displayed (Applyed, never been applyed, applyed but with errors),
+                    with the possibility of displaying details for every execution:
+                    <ul>
+                        <li>date and hour of the script execution,</li>
+                        <li>execution mode (web interface or console),</li>
+                        <li>execution status (success or error),</li>
+                        <li>error messages if so.</li>
+                    </ul>
+                    </p>
 				</div>
-				<div class="go_to_top"><a href="#documentation" title="Go to top">top</a></div>
+                <!-- ################################################################# -->
+                <h2><a name="preferences">Preferences</a></h2>
+				<div class="section">
+                    The following preferences of the plugin are viewable:
+                    <ul>
+                        <li>The Subversion repository</li>
+                        <li>Root directory of your server (the working copy)</li>
+                        <li>The scripts directory.</li>
+                    </ul>
+				</div>
+				
+			</div>
+				<div class="go_to_top"><a href="#documentation" title="Go to top">top page</a></div>
 			</div>
             <div class="copyright">Copyright &copy; Xerox Corporation, CodeX Team, 2001-2005. All Rights Reserved</div>
 		</div>
