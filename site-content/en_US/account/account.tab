@@ -126,6 +126,7 @@ account_login	secure	Secure
 account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account
 account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_login	need_approval	Your account is currently pending an approval from an administrator. You will be notified by email when your account is approved and active.
 account_login	resend_btn	Resend Confirmation Email
 account_login	cookies	Cookies must be enabled past this point
 account_login	name	Login Name
@@ -173,6 +174,7 @@ account_myprojectlist	grp_list	Group List for <B>$1</B>
 account_pending-resend	title	Account Pending Verification
 account_pending-resend	message	<B>Pending Account</B>\n\n<P>Your email confirmation has been resent. Visit the link \nin this email to complete the registration process.
 account_pending-resend	notpending	This account is not pending verification.
+account_pending-resend	needapproval	This account needs to be approved by an administrator.
 #
 #-----------------------------------------------
 # Script: SF/www/account/pending.php
