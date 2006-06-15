@@ -15,7 +15,11 @@ $res_user = db_query("SELECT * FROM user WHERE user_name='$form_user'");
 $row_user = db_fetch_array($res_user);
 
 // only mail if pending
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+if ($GLOBALS['sys_user_approval'] != 0) {
+    exit_error($Language->getText('include_exit', 'error'),
+               $Language->getText('account_pending-resend', 'needapproval'));
+ }
 if ($row_user[status] == 'P') {
     send_new_user_email($row_user['email'], $row_user['confirm_hash']);
     $HTML->header(array(title=>$Language->getText('account_pending-resend', 'title')));
