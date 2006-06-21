@@ -565,9 +565,9 @@ if (isset($params['group']) && $params['group']) {
 		}
 
 		$output = '
-		<form action="/search/" method="post">
-		<div>';
-		$output .= '<select name="type_of_search">';
+		<form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
+		';
+		$output .= '<select  style="font-size:0.8em" name="type_of_search">';
         if ($is_bug_page && $group_id) {
             $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
         } else if ($is_pm_page && $group_id) {
@@ -589,9 +589,8 @@ if (isset($params['group']) && $params['group']) {
                           array('type_of_search' => $type_of_search));        
         $output .= $GLOBALS['search_type_entry_output'];
 
-        $output .= "\t</select>&nbsp;";
+        $output .= "\t</select></td><td>";
 
-//         $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'>'.$Language->getText('include_menu','require_all_words');
         
 
 		if ( isset($atid) ) {
@@ -617,11 +616,12 @@ if (isset($params['group']) && $params['group']) {
         }
 		$output .= '';
         
-		$output .= '<input type="text" size="22" name="words" value="'.$words.'" />';
+		$output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="'.$words.'" /><br />';
+        $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'><span style="font-size:0.8em">'.$Language->getText('include_menu','require_all_words').'</span>';
 
-		$output .= '&nbsp;';
-		$output .= '<input type="submit" name="Search" value="'.$Language->getText('searchbox','search').'" />';
-		$output .= '</div></form>';
+		$output .= '</td><td>';
+		$output .= '<input style="font-size:0.8em" type="submit" name="Search" value="'.$Language->getText('searchbox','search').'" />';
+		$output .= '</td></tr></table></form>';
         return $output;
     }
     
