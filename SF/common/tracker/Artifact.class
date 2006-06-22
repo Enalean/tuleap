@@ -821,7 +821,7 @@ class Artifact extends Error {
             //
             //  Enter the timestamp if we are changing to closed or declined
             //
-            if ($this->isStatusClosed($vfl['status_id'])) {
+            if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
                 $now=time();
                 $upd_list .= "close_date='$now',";
                 $field = $art_field_fact->getFieldFromName('close_date');
