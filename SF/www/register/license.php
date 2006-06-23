@@ -21,7 +21,7 @@ if ($insert_group_name && $group_id && $rand_hash && $form_full_name && $form_un
     $form_unix_name=strtolower($form_unix_name);
 
 	if (!account_groupnamevalid($form_unix_name)) {
-		exit_error($Language->getText('register_license','invalid_g_name'),$register_error);
+		exit_error($Language->getText('register_license','invalid_short_name'),$Language->getText('register_license','nospace_in_short_name'));
 	}
 	/*
 		See if it's taken already

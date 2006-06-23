@@ -61,6 +61,8 @@ register_index	project_registration	Project Registration
 # Script: SF/www/register/license.php
 #
 register_license	invalid_g_name	Invalid Group Name
+register_license	invalid_short_name	Invalid Short Name
+register_license	nospace_in_short_name	There cannot be any spaces in the Short Name
 register_license	g_name_taken	Group Name Taken
 register_license	g_name_exist	That group name already exists.
 register_license	license	License
