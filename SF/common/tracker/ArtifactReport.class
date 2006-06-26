@@ -14,6 +14,7 @@ $Language->loadLanguageMsg('tracker/tracker');
 require_once('common/include/UserManager.class');
 require_once('common/dao/ArtifactFieldDao.class');
 require_once('common/dao/CodexDataAccess.class');
+require_once('common/tracker/ArtifactReportField.class');
 
 //
 // Sort functions - Must be outside the classes
@@ -1053,8 +1054,56 @@ class ArtifactReport extends Error {
 		
 		return $res;
 	}
-
-
+	
+	// getters for the ArtifactReport class
+	
+	/**
+	 *	  getID - get this ArtifactReportID.
+	 *
+	 *	  @return	int	The report_id #.
+	 */
+	
+	function getID() {
+		return $this->report_id;
+	}
+	
+	/**
+	 *	  getArtifactTypeID - get this ArtifactTypeID.
+	 *
+	 *	  @return	int	The group_artifact_id #.
+	 */
+	
+	function getArtifactTypeID() {
+		return $this->group_artifact_id;
+	}
+	
+	/**
+	 *	  getName - get Name of this report.
+	 *
+	 *	  @return	string	The report name.
+	 */
+	
+	function getName() {
+		return $this->name;
+	}
+	
+	/**
+	 *	  getDescription - get Description of this report.
+	 *
+	 *	  @return	string	The report description.
+	 */
+	function getDescription() {
+		return $this->description;
+	}
+	
+	/**
+	 *	  getScope - get Scope of this report. 
+	 *
+	 *	  @return	string	The report scope ('S': system, 'P': project).
+	 */
+	function getScope() {
+		return $this->scope;
+	}
 }
 
 ?>

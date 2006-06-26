@@ -101,7 +101,58 @@ class ArtifactFactory extends Error {
 
 		return $artifacts;
 	}
-
+	/**
+	 *  getArtifacts - get an array of Artifact objects
+	 *
+	 *   	@param $user_id  : the user id
+	 *	@param $criteria : array of items field => value
+	 *
+	 *	@return	array	The array of Artifact objects.
+	 */
+	function getArtifacts($user_id, $criteria) {
+		global $Language, $art_field_fact;
+		$artifacts = array();
+		$sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE ".
+			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id";
+		if (is_array($criteria) && count($criteria) > 0) {
+			foreach ($criteria as $c => $cr) {
+				$af = $art_field_fact->getFieldFromName($cr['field_name']);
+				if (!$af || !is_object($af)) {
+	        	    		$this->setError('Cannot Get ArtifactField From Name : '.$cr['field_name']);
+	        	    		return false;
+	   	      		} elseif ($art_field_fact->isError()) {
+	   	      			$this->setError($art_field_fact->getErrorMessage());
+	        	    		return false;
+	   	      		}
+				if ($af->isStandardField()) {
+					if (isset($cr['operator']))
+						$sql .= " AND (a.".$cr['field_name']." ".$cr['operator']." '".$cr['field_value']."')";
+					else
+						$sql .= " AND (a.".$cr['field_name']." = '".$cr['field_value']."')";
+				} else {
+					if (isset($cr['operator']))
+						$sql .= " AND (af.field_name = '".$cr['field_name']."' AND afv.".$af->getValueFieldName()." ".$cr['operator']." '".$cr['field_value']."')";
+					else
+						$sql .= " AND (af.field_name = '".$cr['field_name']."' AND afv.".$af->getValueFieldName()." = '".$cr['field_value']."')";
+				}
+			}
+		}
+		$sql .= " AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id" ;
+		$result=db_query($sql);
+		$rows = db_numrows($result);
+		$this->fetched_rows=$rows;
+		if (db_error()) {
+			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+			return false;
+		} else {
+			while ($arr = db_fetch_array($result)) {
+				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id']);
+				if ($artifact->userCanView($user_id))
+					$artifacts[$arr['artifact_id']] = $artifact;
+			}
+		}
+		
+		return $artifacts;
+	}
 }
-
 ?>

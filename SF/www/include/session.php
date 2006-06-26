@@ -280,4 +280,21 @@ function session_get_userid() {
 	return $G_USER['user_id'];
 }
 
+/**
+ *  session_continue - A utility method to carry on with an already established session with
+ *  sessionKey
+ * 
+ * @param string The session key
+ */
+function session_continue($sessionKey) {
+	$GLOBALS['session_hash'] = $sessionKey;
+	session_set();
+	$user_id = session_get_userid();
+	if (isset($user_id) && $user_id) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 ?>

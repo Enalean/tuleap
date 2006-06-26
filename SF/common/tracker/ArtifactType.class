@@ -507,7 +507,7 @@ class ArtifactType extends Error {
 	 */
 	function getCannedResponses() {
 		if (!isset($this->cannedresponses_res)) {
-			$sql="SELECT artifact_canned_id,title,body
+			$sql="SELECT artifact_canned_id,group_artifact_id,title,body
 				FROM artifact_canned_responses 
 				WHERE group_artifact_id='". $this->getID() ."'";
 			//echo $sql;

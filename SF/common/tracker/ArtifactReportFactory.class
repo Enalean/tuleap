@@ -7,8 +7,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class');
-//require_once('common/tracker/ArtifactReport.class');
+require_once('common/include/Error.class');
+require_once('common/tracker/ArtifactReport.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -155,6 +155,40 @@ class ArtifactReportFactory extends Error {
 	
 		return true;
 
+	}
+	
+	/**
+	 *  getReports - get an array of ArtifactReport objects
+	 *
+	 *	@param $group_artifact_id : the tracker id
+	 *	@param $user_id  : the user id
+	 *
+	 *	@return	array	The array of ArtifactReport objects.
+	 */
+	function getReports($group_artifact_id, $user_id) {
+	
+	    $artifactreports = array();
+	    $sql = 'SELECT report_id,name,description,scope FROM artifact_report WHERE ';
+	    if (!$user_id || ($user_id == 100)) {
+			$sql .= "(group_artifact_id=$group_artifact_id AND scope='P') OR scope='S' ".
+			    'ORDER BY report_id';
+	    } else {
+			$sql .= "(group_artifact_id=$group_artifact_id AND (user_id=$user_id OR scope='P')) OR ".
+			    "scope='S' ORDER BY scope,report_id";
+	    }
+	    
+	    $result = db_query($sql);
+	    $rows = db_numrows($result);
+	    if (db_error()) {
+			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+			return false;
+	    } else {
+			while ($arr = db_fetch_array($result)) {
+				$artifactreports[$arr['report_id']] = new ArtifactReport($arr['report_id'], $group_artifact_id);
+			}
+	    }
+	    return $artifactreports;
+	    
 	}
 }
 

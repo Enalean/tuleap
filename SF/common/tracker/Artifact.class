@@ -12,7 +12,7 @@
  * Written for CodeX by Stephane Bouhet
  *
  */
-//require_once('common/include/Error.class');
+require_once('common/tracker/ArtifactFile.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 $Language->loadLanguageMsg('include/include');
@@ -1253,7 +1253,7 @@ class Artifact extends Error {
         $field = $art_field_fact->getFieldFromName('comment_type_id');
         if ( $field ) {
             // Look for project specific values first
-	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
+	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
 	      "FROM artifact_history,artifact_field_value_list,artifact_field,user ".
 	      "WHERE artifact_history.artifact_id=".$this->getID()." ".
 	      "AND artifact_history.field_name = 'details' ".
@@ -1271,7 +1271,7 @@ class Artifact extends Error {
             //echo "sql=".$sql." - rows=".$rows."<br>";
         } else {
             // Look for project specific values first
-            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
+            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
                 "FROM artifact_history,user ".
                 "WHERE artifact_history.artifact_id=".$this->getID()." ".
                 "AND artifact_history.field_name = 'details' ".
@@ -1378,7 +1378,7 @@ class Artifact extends Error {
      */
     function getDependencies() {
                 
-        $sql="SELECT d.is_dependent_on_artifact_id, a.summary, ag.name, g.group_name ".
+    	$sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, ag.name, g.group_name ".
             "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
             "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
@@ -1434,7 +1434,7 @@ class Artifact extends Error {
      * @return array
      */
     function getAttachedFiles () {
-        $sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
+        $sql="SELECT id,artifact_id,filename,filesize,description,bin_data,adddate,user.user_name ".
             "FROM artifact_file,user ".
             "WHERE submitted_by=user.user_id ".
             "AND artifact_id=".$this->getID()." ORDER BY adddate DESC";
@@ -1458,7 +1458,6 @@ class Artifact extends Error {
         $res = db_query($sql);
         return db_fetch_array($res);
     }
-
 
     function checkAssignees ($field_name,$result,$art_field_fact,$changes,&$user_ids) {
 
@@ -1609,7 +1608,46 @@ class Artifact extends Error {
             }
         }
         return false;
-    }  
+    } 
+    
+    /**
+     *	getExtraFieldData - get an array of data for the extra fields associated with this artifact
+     *
+     *	@return	array	array of data
+     */
+    function &getExtraFieldData() {
+    	global $art_field_fact;
+    	$extrafielddata = array();
+    	
+    	// now get the values for generic fields if any
+        $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='".$this->getID()."'";
+        $res=db_query($sql);
+        if (!$res || db_numrows($res) < 1) {
+            // if no result then it is possible that there isn't any generic fields
+            return;
+        }
+        while ($row = db_fetch_array($res)) {
+            $data_fields[$row['field_id']] = $row;
+        }
+
+        // Get the list of all fields used by this tracker and append
+        // the values for these generic fields to data_array
+        $fields = $art_field_fact->getAllUsedFields();
+
+        while (list($key,$field) = each($fields) ) {
+            //echo $field->getName()."-".$field->getID()."<br>";
+            // Skip! Standard field values fectched in previous query
+            // and comment_type_id is not stored in artifact_field_value table
+            if ( $field->isStandardField() ||
+                 $field->getName() == "comment_type_id") {
+                continue;
+            }
+            $extrafielddata[$field->getID()] = $data_fields[$field->getID()][$field->getValueFieldName()];
+
+        }
+        
+        return $extrafielddata;
+    }
 
 
     /**
