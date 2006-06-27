@@ -185,3 +185,6 @@ textarea {
     background-color: #FFCC00;
 }
 
+/* field sets */
+.fieldset_separator { text-align: center; background-color: #CCCCCC; }
+td.artifact_spacer { width: 5%; }

@@ -65,6 +65,10 @@ class ArtifactField extends Error {
 	
 	// Default value
 	var $default_value;
+    
+    // Id of the fieldset that this field belong to
+	var $field_set_id;
+    
 	
 	// Constants for data_type
 	var $DATATYPE_TEXT = 1;
@@ -96,7 +100,7 @@ class ArtifactField extends Error {
 	    $sql="SELECT af.field_id, field_name, data_type, display_type, ".
 		"display_size,label, description,scope,required,empty_ok,keep_history,special, ".
 		"value_function, ".
-		"af.group_artifact_id, use_it, place, default_value ".
+		"af.group_artifact_id, use_it, place, default_value, af.field_set_id ".
 		"FROM artifact_field af, artifact_field_usage afu ".
 		"WHERE af.field_name='".$field_name."' and af.field_id = afu.field_id".
 		" and afu.group_artifact_id=".$group_artifact_id.
@@ -122,7 +126,7 @@ class ArtifactField extends Error {
 	 */
 	function setFromArray($field_array) {
 		//echo "setFromArray";
-		$this->field_id = $field_array['field_id'];
+        $this->field_id = $field_array['field_id'];
 		$this->field_name = $field_array['field_name'];
 		$this->data_type = $field_array['data_type'];
 		$this->display_type = $field_array['display_type'];
@@ -138,6 +142,7 @@ class ArtifactField extends Error {
 		$this->use_it = $field_array['use_it'];
 		$this->place = $field_array['place'];
 		$this->default_value = $field_array['default_value'];
+        $this->field_set_id = $field_array['field_set_id'];
 		
 		//echo $this->field_name."-".$this->data_type."<br>";
 	}
@@ -334,6 +339,12 @@ class ArtifactField extends Error {
 		return $this->default_value;
 	}
 
+    
+    function getFieldSetID() {
+        return $this->field_set_id;
+    }
+    
+    
 	/**
 	 *  Dump attribute values
 	 *
@@ -355,7 +366,8 @@ class ArtifactField extends Error {
 		 	   " - value_function=".$this->value_function.
 		 	   " - use_it=".$this->use_it.
 		 	   " - place=".$this->place.
-		 	   " - default_value=".$this->default_value;
+		 	   " - default_value=".$this->default_value.
+               " - field_set_id=".$this->field_set_id;
 	}	
 	
 	/**
@@ -1148,7 +1160,7 @@ class ArtifactField extends Error {
 	 */
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 $empty_ok,$keep_history,$special,$use_it) {
+						 $empty_ok,$keep_history,$special,$use_it, $fieldset_id) {
 	  global $Language;
 	 	
 		// Check arguments
@@ -1174,7 +1186,8 @@ class ArtifactField extends Error {
 			   "description='".$description."',".
 			   "empty_ok=".$empty_ok.",".
 			   "keep_history=".$keep_history.",".
-			   "special=".$special." ".
+			   "special=".$special.",".
+               "field_set_id=".$fieldset_id." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
 		$res = db_query($sql);

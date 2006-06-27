@@ -112,6 +112,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'">'.$Language->getText('tracker_include_type','admin').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=editoptions">'.$Language->getText('tracker_include_type','settings').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=permissions">'.$Language->getText('tracker_include_type','permissions').'</a>';
+        echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=fieldsets">'.$Language->getText('tracker_include_type','fieldsets').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_usage">'.$Language->getText('tracker_include_type','field_usage').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_values">'.$Language->getText('tracker_include_type','field_values').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&atid='. $this->getID() .'&func=field_dependencies">'.$Language->getText('tracker_include_type','field_dependencies').'</a>';
@@ -286,8 +287,10 @@ class ArtifactTypeHtml extends ArtifactType {
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=editoptions">'.$Language->getText('tracker_include_type','settings').'</a></H3>';
 			echo $Language->getText('tracker_include_type','define_title');
-                        echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a></H3>';
-                        echo $Language->getText('tracker_include_type','define_manage_permissions');
+            echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions">'.$Language->getText('tracker_include_type','manage_permissions').'</a></H3>';
+            echo $Language->getText('tracker_include_type','define_manage_permissions');
+            echo '<H3><a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=fieldsets">'.$Language->getText('tracker_include_type','manage_fieldsets').'</a></H3>';
+            echo $Language->getText('tracker_include_type','define_manage_fieldsets');
 			echo '<H3><a href="/tracker/admin/?func=field_usage&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_field_usage').'</a></H3>';
 			echo $Language->getText('tracker_include_type','define_use');
 			echo '<H3><a href="/tracker/admin/?func=field_values&group_id='.$group_id.'&atid='.$atid.'">'.$Language->getText('tracker_include_type','mng_field_values').'</a></H3>';
@@ -1045,7 +1048,7 @@ EOS;
 	 *  @return void
 	 */
 	function displayFieldUsageList() {
-		global $ath,$art_field_fact,$PHP_SELF,$Language;
+		global $ath,$art_field_fact,$art_fieldset_fact,$PHP_SELF,$Language;
 		
 		echo '<h3>'.$Language->getText('tracker_include_type','list_all_fields').'</h3>';
 		echo '<p>'.$Language->getText('tracker_include_report','mod');
@@ -1057,6 +1060,7 @@ EOS;
 		$title_arr[]=$Language->getText('tracker_include_report','field_label');
 		$title_arr[]=$Language->getText('tracker_include_type','type');
 		$title_arr[]=$Language->getText('tracker_include_artifact','desc');
+        $title_arr[]=$Language->getText('tracker_include_type','fieldset');
 		$title_arr[]=$Language->getText('tracker_include_type','rank_screen');
 		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('tracker_include_canned','delete');
@@ -1065,81 +1069,83 @@ EOS;
 		
 		// Build HTML ouput for  Used fields
 		$iu=0;
-		$fields = $art_field_fact->getAllUsedFields();
-		$html = "";
-		
-		while (list($field_name,$field) = each($fields)) {
-		
-		    $rank = ($field->getPlace()?$field->getPlace():"-");
-		    $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
-		
-			$html .= '<TR class="'. 
-			    util_get_alt_row_color($iu) .'">';
-		
-		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
-			'&func=display_field_update&field_id='.$field->getID().'">'.
-			$field->getLabel().'</A></td>'.
-			"\n<td>".$field->getLabelFieldType().'</td>'.
-			"\n<td>".$field->getDescription().'</td>'.
-			"\n<td align =\"center\">".$rank.'</td>'.
-			"\n<td align =\"center\">".$status.'</td>';
-			
-			if ( $field->isStandardField() ) {
-				// For standard, we can't delete them - Only unused them
-		    	$html .= "\n<td align =\"center\">-</td>";
-			} else {
-		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning_loose_data')."')\"></a></td>";
-		    }
-		
-			$html .= "<TR>";
-					    			
-			$iu++;
-		}
-		
-		// Now print the HTML table
+		$fieldsets_with_used_fields = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+        $fieldsets_with_unused_fields = $art_fieldset_fact->getAllFieldSetsContainingUnusedFields();
+        
+        $html = "";
+		$tracker_url = $PHP_SELF.'?group_id='.$this->Group->getID().'&atid='.$this->getID();
+        
+        while (list($fieldset_id, $fieldset) = each($fieldsets_with_used_fields)) {
+            $used_fields_in_fieldset = $fieldset->getAllUsedFields();
+            // separation between fieldsets
+            $html .= '<tr class="fieldset_separator"><td colspan="7">'.$fieldset->getName().'</td></tr>';
+            while (list($key, $field) = each($used_fields_in_fieldset) ) {
+                $rank = ($field->getPlace()?$field->getPlace():"-");
+                $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
+                
+                $html .= '<TR class="'.util_get_alt_row_color($iu) .'">';
+                $html .= '<TD><A HREF="'.$tracker_url.'&func=display_field_update&field_id='.$field->getID().'">'.
+                $field->getLabel().'</A></td>'.
+                "\n<td>".$field->getLabelFieldType().'</td>'.
+                "\n<td>".$field->getDescription().'</td>'.
+                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".$fieldset->getID()."\">".$fieldset->getName().'</td>'.
+                "\n<td align =\"center\">".$rank.'</td>'.
+                "\n<td align =\"center\">".$status.'</td>';
+                if ( $field->isStandardField() ) {
+                    // For standard, we can't delete them - Only unused them
+                    $html .= "\n<td align =\"center\">-</td>";
+                } else {
+                    $html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning_loose_data')."')\"></a></td>";
+                }
+            
+                $html .= "<TR>";
+                                        
+                $iu++;
+            }
+        }
+        // Now print the HTML table (for used fields)
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','no_field_in_use').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','no_field_in_use').'</b></center></tr>'.$html;  
 		} else {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','used_field').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','used_field').'</b></center></tr>'.$html;  
 		}
-
-		// Build HTML ouput for Unused fields
-		$iu=0;
-		$fields = $art_field_fact->getAllUnusedFields();
-		$html = "";
-		
-		while (list($field_name,$field) = each($fields)) {
-		
-		    $rank = ($field->getPlace()?$field->getPlace():"-");
-		    $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
-		
-			$html .= '<TR class="'. 
-			    util_get_alt_row_color($iu) .'">';
-		
-		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
-			'&func=display_field_update&field_id='.$field->getID().'">'.
-			$field->getLabel().'</A></td>'.
-			"\n<td>".$field->getLabelFieldType().'</td>'.
-			"\n<td>".$field->getDescription().'</td>'.
-			"\n<td align =\"center\">".$rank.'</td>'.
-			"\n<td align =\"center\">".$status.'</td>';
-			if ( $field->isStandardField() ) {
-				// For standard, we can't delete them - Only unused them
-		    	$html .= "\n<td align =\"center\">-</td>";
-			} else {
-			    $html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning_loose_data')."')\"></a></td>";
-			}
-		
-			$html .= "<TR>";
-					    			
-			$iu++;
-		}
-		
-		// Now print the HTML table
+        
+        $html = '';
+        
+        while (list($fieldset_id, $fieldset) = each($fieldsets_with_unused_fields)) {
+            $unused_fields_in_fieldset = $fieldset->getAllUnusedFields();
+            // separation between fieldsets
+            $html .= '<tr class="fieldset_separator"><td colspan="7">'.$fieldset->getName().'</td></tr>';
+            while (list($key, $field) = each($unused_fields_in_fieldset) ) {
+                $rank = ($field->getPlace()?$field->getPlace():"-");
+                $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
+                
+                $html .= '<TR class="'.util_get_alt_row_color($iu) .'">';
+                $html .= '<TD><A HREF="'.$tracker_url.'&func=display_field_update&field_id='.$field->getID().'">'.
+                $field->getLabel().'</A></td>'.
+                "\n<td>".$field->getLabelFieldType().'</td>'.
+                "\n<td>".$field->getDescription().'</td>'.
+                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".$fieldset->getID()."\">".$fieldset->getName().'</td>'.
+                "\n<td align =\"center\">".$rank.'</td>'.
+                "\n<td align =\"center\">".$status.'</td>';
+                if ( $field->isStandardField() ) {
+                    // For standard, we can't delete them - Only unused them
+                    $html .= "\n<td align =\"center\">-</td>";
+                } else {
+                    $html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=field_delete&group_id=".$this->Group->getID()."&atid=".$this->getID()."&field_id=".$field->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning_loose_data')."')\"></a></td>";
+                }
+            
+                $html .= "<TR>";
+                                        
+                $iu++;
+                
+            }
+        }
+        // Now print the HTML table (for unused fields)
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','no_unused_field').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','no_unused_field').'</b></center></tr>'.$html;  
 		} else {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','unused_field').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','unused_field').'</b></center></tr>'.$html;  
 		}
 
 		echo '</TABLE>';
@@ -1292,12 +1298,13 @@ EOS;
 	 *  @param special: is the field has special process
 	 *  @param use_it: this field is used or not
 	 *  @param show_use: boolean - display the checkbox for using or not this field
+     *  @param fieldset_id: int - the field set id that the field belong to
 	 *
 	 *  @return void
 	 */
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
 								   $display_size=false,$rank_on_screen=false,
-								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false) {
+								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
 		global $art_field_fact,$Language;
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
@@ -1370,7 +1377,7 @@ EOS;
 		echo'
                                 <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
-		      <td width="30%">'.$Language->getText('tracker_include_type','display_size').':&nbsp;';
+		      <td colspan="2">'.$Language->getText('tracker_include_type','display_size').':&nbsp;';
 		      
 		if ( $display_size ) {
 		  echo '<input type="text" name="display_size" size="7" maxlength="7" value="'.$display_size.'">';
@@ -1380,6 +1387,11 @@ EOS;
 			    
 	    echo '
 		      </td>
+            </tr>
+            <tr>
+              <td width="30%" >'.$Language->getText('tracker_include_type','fieldset').':&nbsp';
+              $this->displayFieldSetDropDownList($this->getID(), $fieldset_id);
+        echo '</td>
 		      <td>'.$Language->getText('tracker_include_type','rank_screen').':&nbsp;';
 		      
 		if ( $rank_on_screen ) {
@@ -1490,7 +1502,7 @@ EOS;
 	 *  @return void
 	 */
 	function displayFieldValuesEditList() {
-		global $ath,$art_field_fact,$Language;
+		global $ath,$art_field_fact,$art_fieldset_fact,$Language;
 		
 		echo '<p>'.$Language->getText('tracker_include_report','mod');
 		
@@ -1500,35 +1512,43 @@ EOS;
 		$title_arr=array();
 		$title_arr[]=$Language->getText('tracker_include_report','field_label');
 		$title_arr[]=$Language->getText('tracker_include_artifact','desc');
+        $title_arr[]=$Language->getText('tracker_include_type','fieldset');
 		
 		echo html_build_list_table_top ($title_arr);
 		
 		// Build HTML ouput for  Used fields
 		$iu=0;
-		$fields = $art_field_fact->getAllUsedFields();
+		//$fields = $art_field_fact->getAllUsedFields();
+        $fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 		$html = "";
-		
-		while (list($field_name,$field) = each($fields)) {
-		
-		  // Special case for special fields (excluded comment_type_id)
-		  if ( (($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
-		       (($field->getName() == "status_id") && !user_is_super_user()) ) {
-		    continue;
-		  }
-			
-			$html .= '<TR class="'. 
-			    util_get_alt_row_color($iu) .'">';
-		
-		    $html .= '<TD><A HREF="?group_id='.$this->Group->getID()."&atid=".$this->getID().
-			'&func=display_field_values&field_id='.$field->getID().'">'.
-			$field->getLabel().'</A></td>'.
-			"\n<td>".$field->getDescription().'</td>';
-		
-			$html .= "<TR>";
-
-			$iu++;
+		while (list($fieldset_id, $fieldset) = each($fieldsets)) {
+            
+            $html .= '<tr class="fieldset_separator"><td colspan="3">'.$fieldset->getName().'</td></tr>';
+            
+            $fields = $fieldset->getAllUsedFields();
+            while (list($field_name,$field) = each($fields)) {
+            
+              // Special case for special fields (excluded comment_type_id)
+              if ( (($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
+                   (($field->getName() == "status_id") && !user_is_super_user()) ) {
+                continue;
+              }
+                
+                $html .= '<TR class="'. 
+                    util_get_alt_row_color($iu) .'">';
+            
+                $html .= '<TD><A HREF="?group_id='.$this->Group->getID()."&atid=".$this->getID().
+                '&func=display_field_values&field_id='.$field->getID().'">'.
+                $field->getLabel().'</A></td>'.
+                "\n<td>".$field->getDescription().'</td>';
+                
+                $html .= '<td>'.$fieldset->getName().'</td>';
+            
+                $html .= "<TR>";
+    
+                $iu++;
+            }
 		}
-		
 		// Now print the HTML table
 		if ($iu == 0) {
 		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','no_used_field').'</b></center></tr>';
@@ -2688,6 +2708,177 @@ EOS;
         
             return($out);
         }
+
+
+
+
+	/**
+	 *  Display the fieldset creation or update form
+	 *
+	 *  @param string $func fieldset_create or fieldset_update
+	 *  @param int $fieldset_id the fieldset id
+	 *  @param string $fieldset_name the fieldset name
+	 *  @param string $description: the fieldset description
+	 *  @param int $rank rank on screen
+	 *
+	 *  @return void
+	 */
+    function displayFieldSetCreateForm($func="fieldset_create",$fieldset_id=false,$fieldset_name=false,$description=false,$rank=false) {
+        global $art_fieldset_fact,$Language;
+
+        $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+
+        $afs = new ArtifactFieldSet();
+
+        if ( $func == "fieldset_create" ) {
+            echo '<h3>'.$Language->getText('tracker_include_type','create_fieldset').'</h3>';
+            echo '
+              <form name="form_create" method="/tracker/admin/index.php">
+              <input type="hidden" name="func" value="'.$func.'">
+              <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
+              <input type="hidden" name="atid" value="'.$this->getID().'">
+              <input type="hidden" name="fieldset_id" value="">
+              <input type="hidden" name="fieldset_name" value="">
+              <input type="hidden" name="description" value="">
+              <input type="hidden" name="rank" value="">';
+        } else {
+            echo "<h3>".$Language->getText('tracker_include_type','update_fieldset',$fieldset_name)."</h3>";
+            echo '
+              <form name="form_create" method="/tracker/admin/index.php">
+              <input type="hidden" name="func" value="'.$func.'">
+              <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
+              <input type="hidden" name="atid" value="'.$this->getID().'">
+              <input type="hidden" name="fieldset_id" value="'.$fieldset_id.'">
+              <input type="hidden" name="fieldset_name" value="'.$fieldset_name.'">
+              <input type="hidden" name="description" value="'.$description.'">
+              <input type="hidden" name="rank" value="'.$rank.'">';
+        }
+        echo '<fieldset>';
+        echo '<legend>'.$Language->getText('tracker_include_type','fieldset_ident').'</legend>';
+        echo '<p>';
+        echo '<label for="name">'.$Language->getText('tracker_include_type','fieldset_name').': <font color="red">*</font></label> ';
+        echo '<input type="text" name="name" id="name" value="'.($fieldset_name?$fieldset_name:"").'" size="30" maxlength="40" />';
+        echo '</p>';
+        echo '<p>';
+        echo '<label for="description">'.$Language->getText('tracker_include_type','fieldset_desc').':</label>';
+        echo '<input type="text" name="description" id="description" value="'.($description?$description:"").'" size="70" maxlength="255" />';
+        echo '</p>';
+        echo '</fieldset>';
+        echo '<fieldset>';
+        echo '<legend>'.$Language->getText('tracker_include_type','fieldset_display').'</legend>';
+        echo '<p>';
+        echo '<label for="rank">'.$Language->getText('tracker_include_type','fieldset_rank').':</label>';
+        echo '<input type="text" name="rank" id="rank" value="'.($rank?$rank:"").'" size="5" maxlength="5" />';
+        echo '</p>';
+        echo '</fieldset>';
+
+        if ( $func == "fieldset_create" ) {
+            echo '<input type="submit" name="Submit" value="'.$Language->getText('global','btn_create').'">';
+        } else {
+            echo '<input type="submit" name="Submit" value="'.$Language->getText('global','btn_update').'">';
+        }
+
+        echo '</form>';
+        echo '<p><font color="red">*</font>: '.$Language->getText('tracker_include_type','fields_requ').'</p>';
+
+    }
+
+    /**
+     *  Display the field sets list
+     *
+     *  @return void
+     */
+    function displayFieldSetList() {
+        global $ath,$art_fieldset_fact,$PHP_SELF,$Language;
+        
+        echo '<h3>'.$Language->getText('tracker_include_type','list_all_fieldsets').'</h3>';
+        echo '<p>'.$Language->getText('tracker_include_report','mod');
+        
+        
+        // Show all the fields currently available in the system
+        $i=0;
+        $title_arr=array();
+        $title_arr[]=$Language->getText('tracker_include_type','fieldset_name');
+        $title_arr[]=$Language->getText('tracker_include_artifact','desc');
+        $title_arr[]=$Language->getText('tracker_include_type','fields_inside');
+        $title_arr[]=$Language->getText('tracker_include_type','rank_screen');
+        $title_arr[]=$Language->getText('tracker_include_canned','delete');
+        
+        echo html_build_list_table_top ($title_arr);
+        
+        // Build HTML ouput for  Used fields
+        $iu=0;
+        $fieldsets = $art_fieldset_fact->getAllFieldSets();
+        $html = "";
+        
+        foreach ($fieldsets as $fieldset) {
+            
+            $rank = ($fieldset->getRank())?$fieldset->getRank():"-";
+            
+            $html .= '<tr class="'.util_get_alt_row_color($iu) .'">';
+            $html .= '<td><a href="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().'&func=display_fieldset_update&fieldset_id='.$fieldset->getID().'">'.$fieldset->getName().'</A></td>';
+            $html .= '<td>'.$fieldset->getDescription().'</td>';
+            $html .= '<td>';
+            $fields_contained = $fieldset->getArtifactFields();
+            if (count($fields_contained) > 0) {
+                $html .= '<ul>';
+                foreach($fields_contained as $field_contained) {
+                    $html .= '<li>';
+                    if ($field_contained->getUseIt()) {
+                        $html .= '<strong>'.$field_contained->getLabel().'</strong>';
+                    } else {
+                        $html .= '<em>'.$field_contained->getLabel().'</em>';
+                    }
+                    $html .= '</li>';
+                }
+                $html .= '</ul>';
+            } else {
+                $html .= '- - -'; //$Language->getText('tracker_include_type','empty_fieldset');
+            }
+            $html .= '</td>';
+            $html .= '<td align="center">'.$rank.'</td>';
+            $html .= '<td align="center">';
+            // Only possible to delete empty field sets (containing no fields inside)
+            if (count($fields_contained) <= 0) {
+                $html .= '<a href="/tracker/admin/?func=fieldset_delete&group_id='.$this->Group->getID().'&atid='.$this->getID().'&fieldset_id='.$fieldset->getID().'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','warning_delete_fieldset').'\')"></a>';
+            }
+            $html .= '</td>';
+            $html .= '</tr>';
+                                    
+            $iu++;
+        }
+        echo $html;
+        echo '</table>';
+        echo '<hr>';
+        
+    }
+    
+    /**
+     * Display the dropdownlist (select list) of all available fieldsets of the tracker $artifact_group_id
+     *
+     * @param int $artifact_group_id the tracker id
+     * @param int $selected_field_set_id the id of the fieldset that must be selected, or false if no default fieldset is selected
+     */
+    function displayFieldSetDropDownList($artifact_group_id, $selected_fieldset_id = false) {
+        global $ath,$art_fieldset_fact;
+        
+        $fieldsets = $art_fieldset_fact->getArtifactFieldSetsFromId($artifact_group_id);
+        
+        $html = '<select name="field_set_id">';
+        foreach($fieldsets as $fieldset) {
+            $html .= '<option value="'.$fieldset->getID().'"';
+            if ($fieldset->getID() === $selected_fieldset_id) {
+                $html .= ' selected="selected"';
+            }
+            $html .= '>'.$fieldset->getName().'</option>';
+        }
+        
+        $html .= '</select>';
+        echo $html;
+    }
+
+
+
 }
 
 ?>

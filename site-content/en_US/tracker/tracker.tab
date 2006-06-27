@@ -203,6 +203,11 @@ tracker_admin_index	modify_usage_for	 - Modify Field Usage for '$1'
 tracker_admin_index	deletion_failed	Tracker '$1' - Deletion Failed - 
 tracker_admin_index	delete_success	Tracker '$1' - Successfully Deleted
 tracker_admin_index	tracker_deleted	<H2>Tracker '$1' - Deleted</H2> <p>In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:$2">Site Administrator</A> within the next 10 days.</p>
+tracker_admin_index	fieldset_created	Field Set created
+tracker_admin_index	fieldset_updated	Field Set updated
+tracker_admin_index	fieldset_deleted	Field Set deleted
+tracker_admin_index	modify_fieldset	 - Modify Field Set
+tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -514,6 +519,20 @@ tracker_include_type	field_dependencies	Field&nbsp;Dependencies
 tracker_include_type	mng_field_dependencies	Manage Field Dependencies
 tracker_include_type	mng_field_dependencies_title	 - Manage Field Dependencies
 tracker_include_type	define_field_dependencies	Define how values in one field depend upon other field values.
+tracker_include_type	manage_fieldsets	Manage Field Sets
+tracker_include_type	define_manage_fieldsets	Define field sets for the tracker.
+tracker_include_type	fieldsets	Field Sets
+tracker_include_type	fieldset	Field Set
+tracker_include_type	create_fieldset	Create a new field set
+tracker_include_type	list_all_fieldsets	List of all field sets
+tracker_include_type	fieldset_ident	Field set identification and description
+tracker_include_type	fieldset_name	Field set label
+tracker_include_type	fieldset_desc	Description
+tracker_include_type	fieldset_display	Display information
+tracker_include_type	fieldset_rank	Rank on screen
+tracker_include_type	fields_inside	Contained fields 
+tracker_include_type	update_fieldset	Update field set '$1'
+tracker_include_type	warning_delete_fieldset	** WARNING!! ** Delete this field set (no possible restore operation)?
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -736,4 +755,22 @@ tracker_field_dependencies	source	Source:
 tracker_field_dependencies	target	Target:
 tracker_field_dependencies	saved	Saved successfully
 tracker_field_dependencies	inline_help	Select a source field and a target field to edit dependencies between them.
-
+#
+#--------------------------------------
+# Tracker fieldsets
+# Script: SF/www/tracker/admin/fieldset.php
+#
+tracker_admin_fieldset	tracker_admin	Tracker Administration
+tracker_admin_fieldset	fieldset_admin	Field Sets Administration
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSet.class
+#
+tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
+tracker_common_fieldset	name_requ	Field set label is required.
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class
+#
+tracker_common_fieldset_factory	delete_only_empty_fieldset	Not allowed to delete non-empty field set.
+tracker_common_fieldset_factory	label_requ	Field set label is required.

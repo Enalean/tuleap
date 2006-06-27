@@ -208,6 +208,11 @@ tracker_admin_index	modify_usage_for	 - Modifier l'utilisation d'un champ pour '
 tracker_admin_index	deletion_failed	Outil de suivi '$1' - La destruction a échoué - 
 tracker_admin_index	delete_success	Outil de suivi '$1' - Destruction réussie
 tracker_admin_index	tracker_deleted	<H2>Outil de suivi '$1' - Détruit</H2> <p>Dans le cas où vous auriez détruit cet outil de suivi par inadvertance et que vous souhaitiez le restaurer, veuillez contacter l'<a href="mailto:$2">administrateur du site</A> dans les 10 jours qui viennent.</p>
+tracker_admin_index	fieldset_created	Groupe de champs créé avec les permissions par défaut
+tracker_admin_index	fieldset_updated	Groupe de champs mis à jour
+tracker_admin_index	fieldset_deleted	Groupe de champs détruit
+tracker_admin_index	modify_fieldset	 - Modifier le groupe de champs
+tracker_admin_index	modify_fieldset_for	 - Modifier le groupe de champs '$1'
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -521,6 +526,20 @@ tracker_include_type	field_dependencies	Dépendances&nbsp;entre&nbsp;champs
 tracker_include_type	mng_field_dependencies	Gérer les dépendances entre champs
 tracker_include_type	mng_field_dependencies_title	 - Gérer les dépendances entre champs
 tracker_include_type	define_field_dependencies	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ.
+tracker_include_type	manage_fieldsets	Gérer les groupes de champs
+tracker_include_type	define_manage_fieldsets	Définir les groupes de champs de l'outil de suivi.
+tracker_include_type	fieldsets	Groupes de champs
+tracker_include_type	fieldset	Groupe du champs
+tracker_include_type	create_fieldset	Créer un nouveau groupe de champs
+tracker_include_type	list_all_fieldsets	Liste de tous les groupes de champs
+tracker_include_type	fieldset_ident	Identification et description du groupe de champs
+tracker_include_type	fieldset_name	Nom du groupe de champs
+tracker_include_type	fieldset_desc	Description
+tracker_include_type	fieldset_display	Information d'affichage
+tracker_include_type	fieldset_rank	Rang d'affichage
+tracker_include_type	fields_inside	Champs du groupe
+tracker_include_type	update_fieldset	Modifier le groupe de champs '$1'
+tracker_include_type	warning_delete_fieldset	** ATTENTION!! ** Effacer ce groupe de champs (aucune récupération possible) ?
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -743,3 +762,22 @@ tracker_field_dependencies	source	Source&nbsp;:
 tracker_field_dependencies	target	Cible&nbsp;:
 tracker_field_dependencies	saved	Sauvegardé avec succès
 tracker_field_dependencies	inline_help	Selectionnez un champ source et un champ cible pour editer les dépendances entre ces champs.
+#
+#--------------------------------------
+# Tracker fieldsets
+# Script: SF/www/tracker/admin/fieldset.php
+#
+tracker_admin_fieldset	tracker_admin	Administration outil de suivi
+tracker_admin_fieldset	fieldset_admin	Administration des groupes de champs
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSet.class
+#
+tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
+tracker_common_fieldset	name_requ	Le nom du groupoe de champ est obligatoire.
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class
+#
+tracker_common_fieldset_factory	delete_only_empty_fieldset	Impossible de supprimer un groupe de champs non vide.
+tracker_common_fieldset_factory	label_requ	Le nom du groupe de champs est obligatoire.

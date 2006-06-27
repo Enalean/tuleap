@@ -21,6 +21,8 @@ require('./include/ArtifactTypeHtml.class');
 require('./include/ArtifactHtml.class');
 require_once('common/tracker/ArtifactCanned.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
+require_once('common/tracker/ArtifactFieldSet.class');
+require_once('common/tracker/ArtifactFieldSetFactory.class');
 require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactReportFactory.class');
@@ -104,6 +106,7 @@ if ( $func == 'gotoid' ) {
 
         // Create field factory
         $art_field_fact = new ArtifactFieldFactory($ath);
+        $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
         switch ($func) {
         case 'add' : {
@@ -797,7 +800,7 @@ if ( $func == 'gotoid' ) {
 
 	case 'copy': {
 	  $ah=new ArtifactHtml($ath,$aid);
-	  if (!$ah || !is_object($ah)) {
+      if (!$ah || !is_object($ah)) {
 	    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
 	  } else if ($ah->isError()) {
 	    exit_error($Language->getText('global','error'),$ah->getErrorMessage());

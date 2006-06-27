@@ -14,6 +14,8 @@ require_once('common/include/HTTPRequest.class');
 require_once('common/include/GroupFactory.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactFieldSetFactory.class');
+require_once('common/tracker/ArtifactFieldSet.class');
 require_once('common/tracker/ArtifactCanned.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
@@ -174,6 +176,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
 
 	$atf = new ArtifactTypeFactory($group);
 
+    // Create fieldset factory
+	$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($ath);
 
@@ -596,7 +600,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
                 $description = $sanitizer->sanitize($description);
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it) ) {
+						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it,$field_set_id) ) {
 			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
 		  $feedback = $Language->getText('tracker_admin_index','field_created');
@@ -621,7 +625,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
                      $description = $sanitizer->sanitize($description);
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,
-							 $empty_ok,$keep_history,$special,$use_it) ) {
+							 $empty_ok,$keep_history,$special,$use_it,$field_set_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 if (!(isset($use_it) && $use_it)) {
@@ -631,6 +635,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
                 }
 				// Reload the field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
+                // Reload the fieldset factory
+				$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
 				$feedback = $Language->getText('tracker_admin_index','field_updated');
 			}
@@ -693,7 +699,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 						    $field->getDisplaySize(),$field->getPlace(),
-						    $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true);
+						    $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
 			$ath->footer(array());
 		}
 		break;
@@ -758,6 +764,103 @@ if ($group_id && (!isset($atid) || !$atid)) {
             $armh->displayRules();
         }
         break;
+    case 'fieldsets':
+		require('./field_sets.php');
+		break;
+    case 'fieldset_create':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		$name = $sanitizer->sanitize($name);
+        $description = $sanitizer->sanitize($description);
+		if ( !$art_fieldset_fact->createFieldSet($name, $description, $rank) ) {
+			exit_error($Language->getText('global','error'),$art_fieldset_fact->getErrorMessage());
+		} else {
+		  $feedback = $Language->getText('tracker_admin_index','fieldset_created');
+		}
+		require('./field_sets.php');
+		break;
+    case 'display_fieldset_update':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
+		$fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+        
+		if ( $fieldset ) {
+			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_fieldset','tracker_admin').$Language->getText('tracker_admin_index','modify_fieldset'),
+						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerFieldSet'));
+			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
+			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' ".
+			  $Language->getText('tracker_admin_index','modify_fieldset_for',$fieldset->getName())."</H2>";
+			$ath->displayFieldSetCreateForm("fieldset_update",$fieldset->getID(),
+						    $fieldset->getName(),$fieldset->getDescription(),$fieldset->getRank());
+			$ath->footer(array());
+		}
+		break;
+    case 'fieldset_update':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
+		$fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+		if ( $fieldset ) {
+            $name = $sanitizer->sanitize($name);
+            $description = $sanitizer->sanitize($description);
+			if ( !$fieldset->update($name,$description,$rank) ) {
+				exit_error($Language->getText('global','error'),$fieldset->getErrorMessage());
+			} else {
+                // Reload the field factory
+				$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
+
+				$feedback = $Language->getText('tracker_admin_index','fieldset_updated');
+			}
+		}
+		require('./field_sets.php');
+		break;
+    case 'fieldset_delete':
+		if ( !user_isloggedin() ) {
+			exit_not_logged_in();
+			return;
+		}
+		
+	    if ( !$ath->userIsAdmin() ) {
+			exit_permission_denied();
+			return;
+		}
+		
+		$fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
+		if ( $fieldset ) {
+            
+            if ( !$art_fieldset_fact->deleteFieldSet($fieldset_id) ) {
+				exit_error($Language->getText('global','error'),$art_fieldset_fact->getErrorMessage());
+			} else {
+                // Reload the fieldset factory
+				$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
+				
+				$feedback = $Language->getText('tracker_admin_index','fieldset_deleted');
+			}
+		}
+		require('./field_sets.php');
+		break;
 	default:    
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();

@@ -26,6 +26,7 @@ if ( !$ath->isValid() ) {
 
 // Create factories
 $art_field_fact = new ArtifactFieldFactory($ath);
+$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
 // Printer version ?
 if ( !isset($pv) ) {

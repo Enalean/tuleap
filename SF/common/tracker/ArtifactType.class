@@ -232,11 +232,20 @@ class ArtifactType extends Error {
 				$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','load_fail'));
 				return false;
 			} else {
+                // Create fieldset factory
+                $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
+                // Then copy all the field sets.
+                $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
+                if ( ! $mapping_field_set_array) {
+					$this->setError('ArtifactType: '.$art_fieldset_fact->getErrorMessage());
+					return false;
+				}
+                                
 				// Create field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
 
 				// Then copy all the fields informations
-				if ( !$art_field_fact->copyFields($atid_template,$id) ) {
+				if ( !$art_field_fact->copyFields($atid_template,$id, $mapping_field_set_array) ) {
 					$this->setError('ArtifactType: '.$art_field_fact->getErrorMessage());
 					return false;
 				}

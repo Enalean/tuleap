@@ -227,3 +227,6 @@ a.tabsellink:hover {
     /* background-color: #8b4020; */
 }
 
+/* field sets */
+.fieldset_separator { text-align: center; background-color: #CCCCCC; }
+td.artifact_spacer { width: 5%; }
