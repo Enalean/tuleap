@@ -1372,13 +1372,14 @@ class ArtifactHtml extends Artifact {
 	 * create the mail body containing only fields that they have the permission to read
 	 */
 	function createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
-	  global $art_field_fact,$Language,$sys_lf,$sys_datefmt;
+	  global $art_field_fact,$art_fieldset_fact,$Language,$sys_lf,$sys_datefmt;
 
 	  $fmt_len = 40;
 	  $fmt_left = sprintf("%%-%ds ", $fmt_len-1);
 	  $fmt_right = "%s";
 	  $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
 	  $used_fields = $art_field_fact->getAllUsedFields();
+      $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 	  $ok = false;
 
 	  
@@ -1413,66 +1414,66 @@ class ArtifactHtml extends Artifact {
 	    $visible_snapshot = false;
 	    $full_snapshot = "";
 
-	    // Some special field first (group, submitted by/on)
-	    $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
-	    if ($field_perm && $field_perm['submitted_by'] && permission_can_read_field($field_perm['submitted_by'])) {
-	      $full_snapshot .= sprintf($fmt_left.$fmt_right."$sys_lf",
-			       $submitted_field->getLabel().': '.user_getname($this->getSubmittedBy()),
-			       $Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
-	      $visible_snapshot = true;
-	    }
-
-	    if ($field_perm && $field_perm['open_date'] && permission_can_read_field($field_perm['open_date'])) {
-	      $full_snapshot .= $used_fields['open_date']->getLabel().': '.format_date($sys_datefmt,$this->getOpenDate())."$sys_lf";
-	      $visible_snapshot = true;
-	    }
-
-	    // All other regular fields now          
+        // We write the name of the project
+        $full_snapshot .= sprintf($fmt_left."$sys_lf",$Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
+        
+	    // Write all the fields, grouped by fieldsetset and ordered by rank.
 	    $left = 1;
 	    
-	    // fetch list of used fields and the current field values
-	    // for this artifact
-	    
-	    while ( list($key, $field) = each($used_fields) ) {
-	      
-	      $field_name = $field->getName();
+	    $visible_fieldset = false;
+        // fetch list of used fieldsets for this artifact
+	    foreach ($used_fieldsets as $fieldset_id => $fieldset) {
+            $fieldset_snapshot = '';
+            $used_fields = $fieldset->getAllUsedFields();
+            // fetch list of used fields and the current field values
+            // for this artifact
+            while ( list($key, $field) = each($used_fields) ) {
 
-	      if ($field_perm && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name])) {
+                $field_name = $field->getName();
 
-		$field_html = new ArtifactFieldHtml($field);
-		// if the field is a special field 
-		// then skip it. Otherwise print it in ASCII format.
-		if ( !$field->isSpecial() ) {
-		
-		  $visible_snapshot = true;
+                if ($field_perm && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name])) {
+            
+                    $field_html = new ArtifactFieldHtml($field);
+                    
+                    $visible_fieldset = true;
+                    $visible_snapshot = true;
 
-		  // For multi select box, we need to retrieve all the values
-		  if ( $field->isMultiSelectBox() ) {
-		    $field_value = $field->getValues($this->getID());
-		  } else {
-		    $field_value = $this->getValue($field->getName());
-		  }
-		  $display = $field_html->display($group_artifact_id,
-						  $field_value,false,true,true,true);
-		  $item = sprintf(($left? $fmt_left : $fmt_right), $display);
-		  if (strlen($item) > $fmt_len) {
-		    if (! $left) {
-		      $full_snapshot .= "$sys_lf";
-		    }
-		    $full_snapshot .= sprintf($fmt_right, $display);
-		    $full_snapshot .= "$sys_lf";
-		    $left = 1;
-		  } else {
-		    $full_snapshot .= $item;
-		    $left = ! $left;
-		    if ($left) {
-		      $full_snapshot .= "$sys_lf";
-		    }
-		  }
-		}
-	      }
-
-	    } // while
+                    // For multi select box, we need to retrieve all the values
+                    if ( $field->isMultiSelectBox() ) {
+                      $field_value = $field->getValues($this->getID());
+                    } else {
+                      $field_value = $this->getValue($field->getName());
+                    }
+                    $display = $field_html->display($group_artifact_id,
+                                  $field_value,false,true,true,true);
+                    $item = sprintf(($left? $fmt_left : $fmt_right), $display);
+                    if (strlen($item) > $fmt_len) {
+                        if (! $left) {
+                          $fieldset_snapshot .= "$sys_lf";
+                        }
+                        $fieldset_snapshot .= sprintf($fmt_right, $display);
+                        $fieldset_snapshot .= "$sys_lf";
+                        $left = 1;
+                    } else {
+                        $fieldset_snapshot .= $item;
+                        $left = ! $left;
+                        if ($left) {
+                          $fieldset_snapshot .= "$sys_lf";
+                        }
+                    }
+              }
+            
+            } // while
+            
+            if ($visible_fieldset) {
+                $full_snapshot .= "$sys_lf";
+                $full_snapshot .= ($left?"":"$sys_lf");
+                $full_snapshot .= '--- '.$fieldset->getName().' ---';
+                $full_snapshot .= "$sys_lf";
+                $full_snapshot .= $fieldset_snapshot;
+                //$full_snapshot .= "$sys_lf------------------------------------------------------------------$sys_lf";
+            }
+        }
 
 	    if ($visible_snapshot) $full_snapshot .= "$sys_lf";
 
@@ -1486,8 +1487,8 @@ class ArtifactHtml extends Artifact {
 	    }
 	    
 	    // Now display other special fields
-            
-	    // Then output the history of bug details from newest to oldest
+        
+        // Then output the history of bug details from newest to oldest
 	    $body .= $this->showDetails($group_id, true);
 	    
 	    // Then output the CC list
