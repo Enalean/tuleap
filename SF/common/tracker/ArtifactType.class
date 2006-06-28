@@ -1778,19 +1778,26 @@ class ArtifactType extends Error {
 	 * @return string: the sql query
 	 */
 	function buildExportQuery(&$fields,&$col_list,&$lbl_list,&$dsc_list,&$select,&$from,&$where,&$multiple_queries,&$all_queries,$constraint=false) {
-	  global $art_field_fact;
+	  global $art_field_fact,$art_fieldset_fact;
 	  $sql = null;
 	  $all_queries = array();
-	  $fields = $art_field_fact->getAllUsedFields();
-	  
-	  reset($fields);
-	  while (list(,$field) = each($fields) ) {
-	    if ( $field->getName() != "comment_type_id" ) {
-	      $col_list[$field->getName()] = $field->getName();
-	      $lbl_list[$field->getName()] = $field->getLabel();
-	      $dsc_list[$field->getName()] = $field->getDescription();
-	    }
-	  }
+	  // this array will be filled with the fields to export, ordered by fieldset and rank,
+      // and send as an output argument of the function
+      $fields = array();
+	  $fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+      // fetch the fieldsets
+      foreach ($fieldsets as $fieldset) {
+          $fields_in_fieldset = $fieldset->getAllUsedFields();
+          // for each fieldset, fetch the used fields inside
+          while (list(,$field) = each($fields_in_fieldset) ) {
+            if ( $field->getName() != "comment_type_id" ) {
+                $fields[$field->getName()] = $field;
+                $col_list[$field->getName()] = $field->getName();
+                $lbl_list[$field->getName()] = $field->getLabel();
+                $dsc_list[$field->getName()] = $field->getDescription();
+            }
+          }
+      }
 	  
 	  //it gets a bit more complicated if we have more fields than SQL wants to treat in one single query
 	  if (count($fields) > $GLOBALS['sys_server_join']) {
