@@ -35,9 +35,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
  .bold {font-weight:bold;}
  .underline {text-decoration:underline;}
 /*]]>*/--></style>{/literal}
-<style type="text/css">
- @import url({$stylesheet});
-</style>
+<link rel="stylesheet" href="{$stylesheet}" type="text/css" />
 {$smarty.capture.header}
 </head>
 <body>
