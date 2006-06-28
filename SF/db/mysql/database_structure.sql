@@ -2555,6 +2555,21 @@ CREATE TABLE artifact_group_list (
 );
 
 #
+# Table structure for table 'artifact_field_set'
+#
+CREATE TABLE artifact_field_set (
+    field_set_id int(11) unsigned NOT NULL auto_increment,
+    group_artifact_id int(11) unsigned NOT NULL default '0',
+    name text NOT NULL,
+    description text NOT NULL,
+    rank int(11) unsigned NOT NULL default '0',
+    PRIMARY KEY  (field_set_id),
+    KEY idx_fk_group_artifact_id (group_artifact_id)
+);
+
+
+
+#
 # Table structure for table 'artifact'
 #
 CREATE TABLE artifact (
@@ -2628,6 +2643,7 @@ CREATE TABLE artifact_field_usage (
 CREATE TABLE artifact_field (
   field_id int(11) NOT NULL auto_increment,
   group_artifact_id int(11) NOT NULL,
+  field_set_id int(11) unsigned NOT NULL default '0'
   field_name varchar(255) NOT NULL default '',
   data_type int(11) NOT NULL default '0',
   display_type varchar(255) NOT NULL default '',
