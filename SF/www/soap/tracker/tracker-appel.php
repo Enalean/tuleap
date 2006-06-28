@@ -26,17 +26,17 @@ echo '<H2>Session : '.$user_id.'-------------'.$session_hash.'</H2>';
 
 $client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/tracker-service.php?wsdl', true, 'cornillon.grenoble.xrce.xerox.com', '8000');
 
-//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 120, 'user_id' => 131));
-//echo '<H2>Count : '.count($result).'-----------'.$user_id.'</H2>';
+//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 1, 'user_id' => 131));
 $group_id = 1;
-$group_artifact_id = 311;
+$group_artifact_id = 410;
 $user_id = 131;
+$result = $client->call('getFieldSets', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id));
 /*
 $criteria = array();
-
 $criteria[] = array ('field_name' => 'assigned_to' , 'field_value' => '132');
 $criteria[] = array ('field_name' => 'status_id' , 'field_value' => '1');
 $criteria[] = array ('field_name' => 'open_date' , 'field_value' => '1145366966', 'operator' => '=');
+
 $result = $client->call('getArtifacts', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => 410, 'user_id' => $user_id, 'criteria' => $criteria ));
 */
 // test d'insertion d'un artifact
@@ -59,8 +59,6 @@ $result = $client->call('getArtifactReports', array('sessionKey' => $session_has
 $ids = array();
 $ids[] = 103;
 $ids[] = 76;
-//$result = $client->call('getArtifactsByIds', array('sessionKey' => $session_hash, 'group_id' => 107, 'group_artifact_id' => 126, 'artifact_ids' => $ids));
-
 //$result = $client->call('getDependancies', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954));
 /*$result = $client->call('existSummary', array('sessionKey' => $session_hash, 'group_artifact_id' => 410, 'summary' => '3333'));
 echo '<H2>POP'.$result.'</H2>';

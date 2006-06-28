@@ -26,8 +26,11 @@
   require_once ('common/tracker/ArtifactFactory.class');
   require_once ('common/tracker/ArtifactField.class');
   require_once ('common/tracker/ArtifactFieldFactory.class');
+  require_once ('common/tracker/ArtifactFieldSet.class');
+  require_once ('common/tracker/ArtifactFieldSetFactory.class');
   require_once ('common/tracker/ArtifactReportFactory.class');
   require_once ('www/tracker/include/ArtifactFieldHtml.class');
+  
   
   // Create the server instance
   $server = new soap_server();
@@ -75,6 +78,7 @@
 	array(
 		'field_id' => array('name' => 'field_id', 'type' => 'xsd:int'),
 		'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
+		'field_set_id' => array('name'=>'field_set_id', 'type' => 'xsd:int'),
 		'field_name' => array('name' => 'field_name', 'type' => 'xsd:string'),
 		'data_type' => array('name' => 'data_type', 'type' => 'xsd:int'),
 		'display_type' => array('name' => 'display_type', 'type' => 'xsd:string'),
@@ -391,6 +395,32 @@
 	'xsd:int'
   );
   
+  $server->wsdl->addComplexType(
+	'ArtifactFieldSet',
+	'complexType',
+	'struct',
+	'sequence',
+	'',
+	array(   	     	  
+	'field_set_id' => array('name'=>'field_set_id', 'type' => 'xsd:int'),
+	'group_artifact_id'  => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
+	'name' => array('name'=>'name', 'type' => 'xsd:string'),
+	'description' => array('name'=>'description', 'type' => 'xsd:string'),
+	'rank' => array('name'=>'rank', 'type' => 'xsd:string') 
+	)
+  );
+  
+  $server->wsdl->addComplexType(
+	'ArrayOfArtifactFieldSet',
+	'complexType',
+	'array',
+	'',
+	'SOAP-ENC:Array',
+	array(),
+	array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldSet[]')),
+	'tns:ArtifactFieldSet'
+  );
+  
   // Register the methods to expose
   $server->register(
 	'getArtifactTypes',			      	              // method name
@@ -663,6 +693,21 @@
 	
   );
   
+  $server->register(
+	'getFieldSets',							// method name		
+	array(	'sessionKey' => 'xsd:string',				// input parameters	
+		'group_id' => 'xsd:int',
+		'group_artifact_id' => 'xsd:int',
+	),
+	array('return'=>'tns:ArrayOfArtifactFieldSet'),			// output parameters	
+	'urn:CodeXTrackerwsdl',						// namespace
+	'urn:CodeXTrackerwsdl#existSummary',				// soapaction
+	'rpc',								// style	
+	'encoded',							// use
+	'get field sets for this tracker'				// documentation	
+	
+  );
+  
   // Define the methods as a PHP function
   function &getArtifactTypes($sessionKey, $group_id) {
 	if (session_continue($sessionKey)){
@@ -737,9 +782,22 @@
 			    		'status' => ($cols > 2) ? db_result($result,$j,6) : ''
 			    	  );
 			      	}
+			      	if (($field->isMultiSelectBox() || $field->isSelectBox()) 
+			      		&& ($field->getValueFunction())) {
+			      		$availablevalues[] = array (
+			    		'field_id' => $field->getID(),
+			    		'group_artifact_id' => $at_arr[$i]->getID(),
+			    		'value_id' => 100,
+			    		'value' => 'None',
+			    		'description' => '',
+			    		'order_id' => 10,
+			    		'status' => 'P'
+			    	  );	
+			      	}
 		      	      	$extrafields[] = array(
 				      'field_id' => $field->getID(),
 				      'group_artifact_id' => $at_arr[$i]->getID(),
+				      'field_set_id' => $field->getFieldSetID(), 
 				      'field_name' => $field->getName(),
 				      'data_type' => $field->getDataType(),
 				      'display_type' => $field->getDisplayType(),
@@ -783,6 +841,53 @@
             }
 	}
 	return $return;
+  }
+  
+  function getFieldSets($sessionKey,$group_id,$group_artifact_id) {
+  	if (session_continue($sessionKey)){
+  		$group =& group_get_object($group_id);
+	   	if (!$group || !is_object($group)) {
+			return new soap_fault (get_group_fault,'getFieldSets','Could Not Get Group','Could Not Get Group');
+	   	} elseif ($group->isError()) {
+			return new soap_fault (get_group_fault, 'getFieldSets', '$group->getErrorMessage()',$group->getErrorMessage());
+	   	}
+	   	
+	   	$at = new ArtifactType($group,$group_artifact_id);
+	   	if (!$at || !is_object($at)) {
+			return new soap_fault (get_artifact_type_fault,'getFieldSets','Could Not Get ArtifactType','Could Not Get ArtifactType');
+	   	} elseif ($at->isError()) {
+			return new soap_fault (get_artifact_type_fault,'getFieldSets',$at->getErrorMessage(),$at->getErrorMessage());
+	   	}
+	   	
+	   	$art_fieldset_fact = new ArtifactFieldSetFactory($at);
+	   	if (!$art_fieldset_fact || !is_object($art_fieldset_fact)) {
+	        	return new soap_fault (get_artifact_field_factory_fault, 'getFieldSets', 'Could Not Get ArtifactFieldSetFactory','Could Not Get ArtifactFieldSetFactory');
+	   	} elseif ($art_fieldset_fact->isError()) {
+	        	return new soap_fault (get_artifact_field_factory_fault, 'getFieldSets', $art_fieldset_fact->getErrorMessage(),$art_fieldset_fact->getErrorMessage());
+	   	}
+	   	
+	   	return artifact_field_sets_to_soap($art_fieldset_fact->getAllFieldSetsContainingUsedFields());
+	   	
+  	} else
+    	   return new soap_fault (invalid_session_fault,'getFieldSets','Invalide Session ','');
+  }
+  
+  function artifact_field_sets_to_soap($result_fieldsets) {
+  	$return = array();
+  	foreach($result_fieldsets as $fieldset_id => $result_fieldset) {
+  		if ($result_fieldset->isError()) {
+		//skip if error
+	    	} else {
+	    		$return[] = array(
+				'field_set_id'=>$result_fieldset->getID(),
+				'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
+				'name'=>$result_fieldset->getName(),
+				'description'=>$result_fieldset->getDescription(),
+				'rank'=>$result_fieldset->getRank()
+		        );	
+	    	}
+  	}
+  	return $return;
   }
   
   function getArtifacts($sessionKey,$group_id,$group_artifact_id, $user_id, $criteria) {	
