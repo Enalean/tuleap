@@ -288,6 +288,27 @@ class ArtifactFieldSetFactory extends Error {
         return true;
 	}
 
+    /**
+	 *	Delete all the FieldSets of this ArtifactType, without checking if they are empty or not.
+	 *
+	 *	@return	boolean true if the deletion happen without problems, false otherwise
+	 */
+	function deleteFieldSets() {
+        //
+		// Delete artifact_field_set records
+		//
+        $artifact_type = $this->getArtifactType();
+	    $sql = 'DELETE FROM artifact_field_set WHERE group_artifact_id='.$artifact_type->getID();
+		
+		//echo $sql;
+		
+	    $res = db_query($sql);
+        if (!$res) {
+            return false;
+        }
+        return true;
+    }
+    
     
     /**
      * 

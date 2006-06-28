@@ -225,6 +225,32 @@ class ArtifactTypeFactory extends Error {
 			    WHERE group_artifact_id=". $atid;
 		db_query ($sql);
 		
+        
+        // We need to instanciate an artifactType to instanciate the factories
+        $artifactType = new ArtifactType($this->getGroup(), $atid, false);
+        $art_field_fact = new ArtifactFieldFactory($artifactType);
+        $art_fieldset_fact = new ArtifactFieldSetFactory($artifactType);
+
+        // Delete the fields of this tracker
+        $art_field_fact->deleteFields($atid);
+        // Delete the field sets of this tracker
+        $art_fieldset_fact->deleteFieldSets();
+
+        
+        // Delete the artifact_report
+        $art_report_fact = new ArtifactReportFactory();
+        $art_report_fact->deleteReports($atid);
+        
+        // Delete the artifact rules
+        $art_rule_fact = ArtifactRuleFactory::instance();
+        $art_rule_fact->deleteRulesByArtifactType($atid);
+        
+        // Delete artifact_watcher (be carefull, the column is named artifact_group_id)
+        $sql = "DELETE FROM artifact_watcher   
+			    WHERE artifact_group_id=". $atid;
+		db_query ($sql);
+        
+        
 		// Delete all records linked to artifact_id
 	    $sql_artifacts='SELECT artifact_id '.
 		'FROM artifact '.
@@ -261,8 +287,7 @@ class ArtifactTypeFactory extends Error {
 	    	$sql = "DELETE FROM artifact WHERE artifact_id = ".$id;
 	    	db_query($sql);
 
-		} // while
-		
+		} // while        
 
 		// Delete artifact_group_list
 		$sql = "DELETE FROM artifact_group_list
