@@ -26,11 +26,11 @@ echo '<H2>Session : '.$user_id.'-------------'.$session_hash.'</H2>';
 
 $client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/tracker-service.php?wsdl', true, 'cornillon.grenoble.xrce.xerox.com', '8000');
 
-//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 1, 'user_id' => 131));
+$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127, 'user_id' => 131));
 $group_id = 1;
 $group_artifact_id = 410;
 $user_id = 131;
-$result = $client->call('getFieldSets', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id));
+//$result = $client->call('getFieldSets', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id));
 /*
 $criteria = array();
 $criteria[] = array ('field_name' => 'assigned_to' , 'field_value' => '132');
