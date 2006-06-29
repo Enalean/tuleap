@@ -603,7 +603,11 @@ if ($group_id && (!isset($atid) || !$atid)) {
 						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it,$field_set_id) ) {
 			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
-		  $feedback = $Language->getText('tracker_admin_index','field_created');
+            // Reload the field factory
+            $art_field_fact = new ArtifactFieldFactory($ath);
+            // Reload the fieldset factory
+            $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
+            $feedback = $Language->getText('tracker_admin_index','field_created');
 		}
 		require('./field_usage.php');
 		break;
@@ -637,8 +641,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
 				$art_field_fact = new ArtifactFieldFactory($ath);
                 // Reload the fieldset factory
 				$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
-
-				$feedback = $Language->getText('tracker_admin_index','field_updated');
+                
+                $feedback = $Language->getText('tracker_admin_index','field_updated');
 			}
 		}
 		require('./field_usage.php');
@@ -670,7 +674,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
                 
 				// Reload the field factory
 				$art_field_fact = new ArtifactFieldFactory($ath);
-				
+				// Reload the fieldset factory
+				$art_fieldset_fact = new ArtifactFieldSetFactory($ath);
+                
 				$feedback = $Language->getText('tracker_admin_index','field_deleted');
 			}
 		}
