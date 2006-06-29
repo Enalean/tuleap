@@ -804,9 +804,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerFieldSet'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
 			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' ".
-			  $Language->getText('tracker_admin_index','modify_fieldset_for',$fieldset->getName())."</H2>";
+			  $Language->getText('tracker_admin_index','modify_fieldset_for',$fieldset->getLabel())."</H2>";
 			$ath->displayFieldSetCreateForm("fieldset_update",$fieldset->getID(),
-						    $fieldset->getName(),$fieldset->getDescription(),$fieldset->getRank());
+						    $fieldset->getLabel(),$fieldset->getDescriptionText(),$fieldset->getRank());
 			$ath->footer(array());
 		}
 		break;
@@ -825,6 +825,19 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		if ( $fieldset ) {
             $name = $sanitizer->sanitize($name);
             $description = $sanitizer->sanitize($description);
+            
+            // We check if there is a change with the name and description
+            // If there is no changes, we keep the internationalized key, because in the interface, 
+            // the user don't see the i18n key, but the associated value (the l10n value).
+            if ($name == $fieldset->getLabel()) {
+                // getName returns the key, getLabel returns the value (internationalized if so, same as name if not)
+                $name = $fieldset->getName();
+            }
+            if ($description == $fieldset->getDescriptionText()) {
+                // getDescription returns the key, getDescriptionText returns the value (internationalized if so, same as description if not)
+                $description = $fieldset->getDescription();
+            }
+            
 			if ( !$fieldset->update($name,$description,$rank) ) {
 				exit_error($Language->getText('global','error'),$fieldset->getErrorMessage());
 			} else {

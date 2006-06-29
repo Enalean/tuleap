@@ -1078,7 +1078,7 @@ EOS;
         while (list($fieldset_id, $fieldset) = each($fieldsets_with_used_fields)) {
             $used_fields_in_fieldset = $fieldset->getAllUsedFields();
             // separation between fieldsets
-            $html .= '<tr class="fieldset_separator"><td colspan="7">'.$fieldset->getName().'</td></tr>';
+            $html .= '<tr class="fieldset_separator"><td colspan="7">'.$fieldset->getLabel().'</td></tr>';
             while (list($key, $field) = each($used_fields_in_fieldset) ) {
                 $rank = ($field->getPlace()?$field->getPlace():"-");
                 $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
@@ -1088,7 +1088,7 @@ EOS;
                 $field->getLabel().'</A></td>'.
                 "\n<td>".$field->getLabelFieldType().'</td>'.
                 "\n<td>".$field->getDescription().'</td>'.
-                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".$fieldset->getID()."\">".$fieldset->getName().'</td>'.
+                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".$fieldset->getID()."\">".$fieldset->getLabel().'</td>'.
                 "\n<td align =\"center\">".$rank.'</td>'.
                 "\n<td align =\"center\">".$status.'</td>';
                 if ( $field->isStandardField() ) {
@@ -1115,7 +1115,7 @@ EOS;
         while (list($fieldset_id, $fieldset) = each($fieldsets_with_unused_fields)) {
             $unused_fields_in_fieldset = $fieldset->getAllUnusedFields();
             // separation between fieldsets
-            $html .= '<tr class="fieldset_separator"><td colspan="7">'.$fieldset->getName().'</td></tr>';
+            $html .= '<tr class="fieldset_separator"><td colspan="7">'.$fieldset->getLabel().'</td></tr>';
             while (list($key, $field) = each($unused_fields_in_fieldset) ) {
                 $rank = ($field->getPlace()?$field->getPlace():"-");
                 $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
@@ -1125,7 +1125,7 @@ EOS;
                 $field->getLabel().'</A></td>'.
                 "\n<td>".$field->getLabelFieldType().'</td>'.
                 "\n<td>".$field->getDescription().'</td>'.
-                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".$fieldset->getID()."\">".$fieldset->getName().'</td>'.
+                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".$fieldset->getID()."\">".$fieldset->getLabel().'</td>'.
                 "\n<td align =\"center\">".$rank.'</td>'.
                 "\n<td align =\"center\">".$status.'</td>';
                 if ( $field->isStandardField() ) {
@@ -1523,7 +1523,7 @@ EOS;
 		$html = "";
 		while (list($fieldset_id, $fieldset) = each($fieldsets)) {
             
-            $html .= '<tr class="fieldset_separator"><td colspan="3">'.$fieldset->getName().'</td></tr>';
+            $html .= '<tr class="fieldset_separator"><td colspan="3">'.$fieldset->getLabel().'</td></tr>';
             
             $fields = $fieldset->getAllUsedFields();
             while (list($field_name,$field) = each($fields)) {
@@ -1542,7 +1542,7 @@ EOS;
                 $field->getLabel().'</A></td>'.
                 "\n<td>".$field->getDescription().'</td>';
                 
-                $html .= '<td>'.$fieldset->getName().'</td>';
+                $html .= '<td>'.$fieldset->getLabel().'</td>';
             
                 $html .= "<TR>";
     
@@ -2816,8 +2816,8 @@ EOS;
             $rank = ($fieldset->getRank())?$fieldset->getRank():"-";
             
             $html .= '<tr class="'.util_get_alt_row_color($iu) .'">';
-            $html .= '<td><a href="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().'&func=display_fieldset_update&fieldset_id='.$fieldset->getID().'">'.$fieldset->getName().'</A></td>';
-            $html .= '<td>'.$fieldset->getDescription().'</td>';
+            $html .= '<td><a href="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().'&func=display_fieldset_update&fieldset_id='.$fieldset->getID().'">'.$fieldset->getLabel().'</A></td>';
+            $html .= '<td>'.$fieldset->getDescriptionText().'</td>';
             $html .= '<td>';
             $fields_contained = $fieldset->getArtifactFields();
             if (count($fields_contained) > 0) {
@@ -2870,7 +2870,7 @@ EOS;
             if ($fieldset->getID() === $selected_fieldset_id) {
                 $html .= ' selected="selected"';
             }
-            $html .= '>'.$fieldset->getName().'</option>';
+            $html .= '>'.$fieldset->getLabel().'</option>';
         }
         
         $html .= '</select>';

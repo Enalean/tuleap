@@ -171,6 +171,57 @@ class ArtifactFieldSet extends Error {
         return $this->rank;
     }
 
+    /**
+     * getLabel - the label of this ArtifactFieldSet
+     * The tracker label can be internationalized.
+     * To do this, fill the name field with the ad-hoc format.
+     *
+     * @return string label, the name if the name is not internationalized, or the localized text if so
+     */
+    function getLabel() {
+        global $Language;
+        if ($this->isNameMustBeLocalized()) {
+            return $Language->getText('tracker_common_fieldset', $this->getName());
+        } else {
+            return $this->getName();
+        }
+    }
+    
+    /**
+     * getDescriptionText - the text of the description of this ArtifactFieldSet
+     * The tracker descripiton can be internationalized.
+     * To do this, fill the description field with the ad-hoc format.
+     *
+     * @return string description, the description text if the description is not internationalized, or the localized text if so
+     */
+    function getDescriptionText() {
+        global $Language;
+        if ($this->isDescriptionMustBeLocalized()) {
+            return $Language->getText('tracker_common_fieldset', $this->getDescription());
+        } else {
+            return $this->getDescription();
+        }
+    }
+    
+    /**
+     * Returns if the fieldset name must be localized or not.
+     * The field set name must be localized if the name looks like fieldset_{$fieldset_id}_lbl_key
+     *
+     * @return true if the fieldset name must be localized, false otherwise.
+     */
+    function isNameMustBeLocalized() {
+        return ($this->getName() == 'fieldset_'.$this->getID().'_lbl_key');
+    }
+    
+    /**
+     * Returns if the fieldset description must be localized or not.
+     * The field set description must be localized if the name looks like fieldset_{$fieldset_id}_desc_key
+     *
+     * @return true if the fieldset description must be localized, false otherwise.
+     */
+    function isDescriptionMustBeLocalized() {
+        return ($this->description == 'fieldset_'.$this->getID().'_desc_key');
+    }
     
     /**
 	 *  Return all the fields used contained in this fieldset
@@ -244,10 +295,10 @@ class ArtifactFieldSet extends Error {
             $this->setError('ArtifactType: '.$Language->getText('tracker_common_fieldset','name_requ'));
             return false;
         }
-
+        
         $sql = "UPDATE artifact_field_set 
-                SET name='$name', 
-                    description='$description',
+                SET name='".$name."', 
+                    description='".$description."',
                     rank='$rank'
                 WHERE field_set_id='". $this->getID() ."'";
 

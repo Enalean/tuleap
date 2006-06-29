@@ -1471,7 +1471,6 @@ class ArtifactHtml extends Artifact {
                 $full_snapshot .= '--- '.$fieldset->getName().' ---';
                 $full_snapshot .= "$sys_lf";
                 $full_snapshot .= $fieldset_snapshot;
-                //$full_snapshot .= "$sys_lf------------------------------------------------------------------$sys_lf";
             }
         }
 
