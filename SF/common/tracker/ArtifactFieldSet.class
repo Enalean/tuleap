@@ -94,6 +94,7 @@ class ArtifactFieldSet extends Error {
 	 */
 	function setFromArray($fieldset_array) {
 		$this->field_set_id = $fieldset_array['field_set_id'];
+		$this->group_artifact_id = $fieldset_array['group_artifact_id'];
 		$this->name = $fieldset_array['name'];
 		$this->description = $fieldset_array['description'];
 		$this->rank = $fieldset_array['rank'];
