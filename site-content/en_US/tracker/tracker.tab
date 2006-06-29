@@ -768,6 +768,8 @@ tracker_admin_fieldset	fieldset_admin	Field Sets Administration
 #
 tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
 tracker_common_fieldset	name_requ	Field set label is required.
+tracker_common_fieldset	fieldset_default_lbl_key	Details
+tracker_common_fieldset	fieldset_default_desc_key	Details of the artifact
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class

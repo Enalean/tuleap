@@ -775,6 +775,8 @@ tracker_admin_fieldset	fieldset_admin	Administration des groupes de champs
 #
 tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
 tracker_common_fieldset	name_requ	Le nom du groupoe de champ est obligatoire.
+tracker_common_fieldset	fieldset_default_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_desc_key	Détails de l'artefact
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class

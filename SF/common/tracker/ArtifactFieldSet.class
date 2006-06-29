@@ -210,7 +210,8 @@ class ArtifactFieldSet extends Error {
      * @return true if the fieldset name must be localized, false otherwise.
      */
     function isNameMustBeLocalized() {
-        return ($this->getName() == 'fieldset_'.$this->getID().'_lbl_key');
+        $pattern = "fieldset_(.*)_lbl_key";
+        return ereg($pattern, $this->getName());
     }
     
     /**
@@ -220,7 +221,8 @@ class ArtifactFieldSet extends Error {
      * @return true if the fieldset description must be localized, false otherwise.
      */
     function isDescriptionMustBeLocalized() {
-        return ($this->description == 'fieldset_'.$this->getID().'_desc_key');
+        $pattern = "fieldset_(.*)_desc_key";
+        return ereg($pattern, $this->getDescription());
     }
     
     /**
