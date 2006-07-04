@@ -14,6 +14,8 @@ require_once('www/admin/admin_utils.php');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/ArtifactFieldSetFactory.class');
+require_once('common/tracker/ArtifactFieldSet.class');
 require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
 require_once('common/include/ReferenceManager.class');
