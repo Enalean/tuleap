@@ -145,7 +145,7 @@ class ArtifactHtml extends Artifact {
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
                     echo '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                    echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescription().'">'.$result_fieldset->getName().'</span></TD></TR>';
+                    echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
                     echo $fieldset_html;
                 }
 
@@ -446,7 +446,7 @@ class ArtifactHtml extends Artifact {
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
                 echo '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescription().'">'.$result_fieldset->getName().'</span></TD></TR>';
+                echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
                 echo $fieldset_html;
             }
             
@@ -1211,7 +1211,7 @@ class ArtifactHtml extends Artifact {
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
                 echo '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescription().'">'.$result_fieldset->getName().'</span></TD></TR>';
+                echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
                 echo $fieldset_html;
             }
             
@@ -1468,7 +1468,7 @@ class ArtifactHtml extends Artifact {
             if ($visible_fieldset) {
                 $full_snapshot .= "$sys_lf";
                 $full_snapshot .= ($left?"":"$sys_lf");
-                $full_snapshot .= '--- '.$fieldset->getName().' ---';
+                $full_snapshot .= '--- '.$fieldset->getLabel().' ---';
                 $full_snapshot .= "$sys_lf";
                 $full_snapshot .= $fieldset_snapshot;
             }
