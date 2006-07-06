@@ -434,7 +434,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 				//increment the parent's followup count if necessary
 				$res2=db_query("SELECT * FROM forum WHERE msg_id='$is_followup_to' AND thread_id='$thread_id' AND group_forum_id='$group_forum_id'");
 				if (db_numrows($res2) > 0) {
-					if (db_result($result,0,'has_followups') > 0) {
+					if (db_result($res2,0,'has_followups') > 0) {
 						//parent already is marked with followups
 					} else {
 						//mark the parent with followups as an optimization later
@@ -552,7 +552,7 @@ function handle_monitoring($forum_id,$msg_id) {
 	if ($result && $rows > 0) {
 		$tolist=implode(result_column_to_array($result),', ');
 
-		$sql="SELECT groups.unix_group_name,user.user_name,forum_group_list.forum_name,".
+		$sql="SELECT groups.unix_group_name,user.user_name,user.realname,forum_group_list.forum_name,".
 			"forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
 			"FROM forum,user,forum_group_list,groups ".
 			"WHERE user.user_id=forum.posted_by ".
@@ -565,14 +565,14 @@ function handle_monitoring($forum_id,$msg_id) {
 		if ($result && db_numrows($result) > 0) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
             $mail =& new Mail();
-            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setFrom($GLOBALS['sys_noreply'].' ['.db_result($result,0,'realname').']');
             $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
             $mail->setBcc($tolist);
             
 		    
 		    $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
 			"\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
-		      "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .
+		      "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .' ('.db_result($result,0, 'realname').')' .
 			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			"\n\n______________________________________________________________________".
 			"\n".$Language->getText('forum_forum_utils','stop_monitor_explain').": ".

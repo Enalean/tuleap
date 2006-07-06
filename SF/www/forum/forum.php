@@ -115,7 +115,7 @@ if ($forum_id) {
 	if (isset($post_message)&&($post_message == 'y')) {
         //
         // MV: add management on "on post monitoring"
-        if($_POST['enable_monitoring'] == 1) {
+        if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring'] == 1) {
             if(user_isloggedin()) {
                 if(!forum_is_monitored($forum_id, user_getid())) {
                     if (forum_add_monitor ($forum_id, user_getid()) ) {
