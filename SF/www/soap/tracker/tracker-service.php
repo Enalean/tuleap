@@ -597,7 +597,7 @@
 		'group_id'=>'xsd:int',
 		'group_artifact_id'=>'xsd:int',
 		'artifact_id'=>'xsd:int',
-		'encoded_data'=>'xsd:string',
+		'bin_data'=>'xsd:string',
 		'description'=>'xsd:string',
 		'filename'=>'xsd:string',
 		'filetype'=>'xsd:string'
@@ -685,7 +685,7 @@
 		'group_artifact_id' => 'xsd:int',
 		'summary' => 'xsd:string'
 	),
-	array('return'=>'xsd:boolean'),					// output parameters	
+	array('return'=>'xsd:int'),					// output parameters	
 	'urn:CodeXTrackerwsdl',						// namespace
 	'urn:CodeXTrackerwsdl#existSummary',				// soapaction
 	'rpc',								// style	
@@ -1393,7 +1393,7 @@
 	return $return;
   } 
   
-  function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
+  function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$bin_data,$description,$filename,$filetype) {
   	global $art_field_fact; 
 	if (session_continue($sessionKey)){
 	
@@ -1432,10 +1432,9 @@
 			return new soap_fault (get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
 		}
 
-		$bin_data = base64_decode($encoded_data);
 		$filesize = strlen($bin_data);
 	
-		$id = $af->create($filename,$filetype,$filesize,$bin_data,$description);
+		$id = $af->create($filename,$filetype,$filesize,$bin_data,$description, $changes);
 	
 		if (!$id) {
 			return new soap_fault (get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
@@ -1615,17 +1614,16 @@
   } 
   
   function existSummary($sessionKey, $group_artifact_id, $summary){
-  	$exist = false;
   	if (session_continue($sessionKey)){
   		$user = session_get_userid();
-  		$res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$group_artifact_id.
+  		$res=db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id = ".$group_artifact_id.
   			      " AND submitted_by=".$user. 
   			      " AND summary=\"".$summary."\""
   		     );
 	  	if ($res && db_numrows($res) > 0) {
-	  		$exist = true;
-	  	} 
-	  	return new soapval('return', 'xsd:boolean', $exist);
+	  		return new soapval('return', 'xsd:int', db_result($res, 0, 0));
+	  	} else
+	  		return new soapval('return', 'xsd:int', -1);
   	} else
     		return new soap_fault (invalid_session_fault, 'existSummary', 'Invalide Session', 'Invalide Session');
   }

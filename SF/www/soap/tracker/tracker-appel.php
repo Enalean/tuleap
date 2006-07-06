@@ -9,7 +9,7 @@ define ('password', 'test');
 // Create the client instance
 //$client = new soapclient('http://' . username . ':' . password . '@esparros.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
 //$client->setCredentials(username, password);
-$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
+$client = new soapclient('http://la-pierre.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
 // Check for an error
 $err = $client->getError();
 if ($err) {
@@ -41,10 +41,10 @@ $result = $client->call('getArtifacts', array('sessionKey' => $session_hash, 'gr
 */
 // test d'insertion d'un artifact
 
-$extra_fields = array();
+//$extra_fields = array();
 //$extra_fields[] = array ('field_id' => 9 , 'field_value' => 132);
 //$extra_fields[] = array ('field_id' => 182 , 'field_value' => '102,103' );
-$extra_fields[] = array ('field_id' => 181 , 'field_value' => 'test de mise a jour artifact' );
+//$extra_fields[] = array ('field_id' => 181 , 'field_value' => 'test de mise a jour artifact' );
 //$result = $client->call('addArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'severity' => 4, 'summary' => 'ceci est un  test pour abbadi 2', 'extra_fields' => $extra_fields));
 
 //$result = $client->call('updateArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'artifact_id' => 6974, 'severity' => 4));
@@ -60,12 +60,12 @@ $ids = array();
 $ids[] = 103;
 $ids[] = 76;
 //$result = $client->call('getDependancies', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954));
-/*$result = $client->call('existSummary', array('sessionKey' => $session_hash, 'group_artifact_id' => 410, 'summary' => '3333'));
+$result = $client->call('existSummary', array('sessionKey' => $session_hash, 'group_artifact_id' => 410, 'summary' => 'ata'));
 echo '<H2>POP'.$result.'</H2>';
-if ($result)
+if ($result != -1)
 	echo '<H2>FOUND</H2>';
 else 
-	echo '<H2>NOT FOUND</H2>';*/
+	echo '<H2>NOT FOUND</H2>';
 	
 //$result = $client->call('addFollowup', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'body' => 'test followup soap 1'));
 //$result = $client->call('deleteDependency', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'dependent_on_artifact_id' => 3));
@@ -90,6 +90,16 @@ for ($i=0;$i<count($result);$i++) {
 	  	 echo "File Retrieved Successfully<br/>";
 	}
 }
+*/
+/*
+$filename = "/home/tabbadi/CodeX/dev_client/CodeXProject/config/admin.xml";
+if (!($f = @fopen($filename, "rb"))) {
+     echo "Couldn't open file ".$filename." for reading<br/>";
+} else {
+     $bin_data = fread($f, filesize($filename));
+     fclose($f);
+}
+$result = $client->call('addArtifactFile', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 129, 'artifact_id' => 7026, 'encoded_data' => base64_encode($bin_data), 'description' => 'test client soap', 'filename' => 'admin.xml', 'filetype' => 'application/octet-stream')); 
 */
 // Check for a fault
 if ($client->fault) {
