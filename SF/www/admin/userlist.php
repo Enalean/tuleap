@@ -16,12 +16,16 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
 
-function show_users_list ($result) {
+function show_users_list ($result,$user_name_search="") {
     global $Language;
 	echo '<P>'.$Language->getText('admin_userlist','legend').'
 		<P>
 		<TABLE width=100% cellspacing=0 cellpadding=0 BORDER="1">';
     $odd_even = array('boxitem', 'boxitemalt');
+    if ($user_name_search != "") {
+        $user_name_param="&user_name_search=$user_name_search";
+    } else  $user_name_param="";
+
     $i = 0;
 	while ($usr = db_fetch_array($result)) {
 		print "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\"><TD><a href=\"usergroup.php?user_id=$usr[user_id]\">";
@@ -38,18 +42,18 @@ function show_users_list ($result) {
 		print "\n<TD><A HREF=\"/users/$usr[user_name]/\">[DevProfile]</A></TD>";
                 if ($usr['status'] == 'A') {
                     print "\n<TD>".$Language->getText('admin_userlist','active')."</TD>";
-                } else { print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','activate')."]</A></TD>"; }
+                } else { print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','activate')."]</A></TD>"; }
                 if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users']) {
                     if ($usr['status'] == 'R') {
                         print "\n<TD>".$Language->getText('admin_userlist','restricted')."</TD>";
-                    } else { print "\n<TD><A HREF=\"userlist.php?action=restrict&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','restrict')."]</A></TD>"; }
+                    } else { print "\n<TD><A HREF=\"userlist.php?action=restrict&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','restrict')."]</A></TD>"; }
                 }
                 if ($usr['status'] == 'D') {
                     print "\n<TD>".$Language->getText('admin_userlist','deleted')."</TD>";
-                } else { print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','delete')."]</A></TD>";}
+                } else { print "\n<TD><A HREF=\"userlist.php?action=delete&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','delete')."]</A></TD>";}
                 if ($usr['status'] == 'S') {
                     print "\n<TD>".$Language->getText('admin_userlist','suspended')."</TD>";
-                } else { print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]\">[".$Language->getText('admin_userlist','suspend')."]</A></TD>"; }
+                } else { print "\n<TD><A HREF=\"userlist.php?action=suspend&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','suspend')."]</A></TD>"; }
 		print "</TR>";
 	}
 	print "</TABLE>";
@@ -129,11 +133,12 @@ if (!$group_id) {
 	print "\n<p>";
 	
 	if (isset($user_name_search) && $user_name_search) {
-		$result = db_query("SELECT user_name,user_id,status FROM user WHERE user_name LIKE '$user_name_search%' ORDER BY user_name");
+            $result = db_query("SELECT user_name,user_id,status FROM user WHERE user_name LIKE '$user_name_search%' ORDER BY user_name");
 	} else {
-		$result = db_query("SELECT user_name,user_id,status FROM user ORDER BY user_name");
+            $user_name_search="";
+            $result = db_query("SELECT user_name,user_id,status FROM user ORDER BY user_name");
 	}
-	show_users_list ($result);
+	show_users_list ($result,$user_name_search);
 } else {
 	/*
 		Show list for one group
