@@ -1147,91 +1147,104 @@ INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description,
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, email_all_updates, email_address, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (100, 100, 'None', 'None', '', 0, 0, '', NULL, NULL, 0);
 
 --
+-- Dumping data for table 'artifact_field_set'
+--
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (1, 1, 'fieldset_default_bugs_lbl_key', 'fieldset_default_bugs_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (2, 1, 'fieldset_status_bugs_lbl_key', 'fieldset_status_bugs_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (3, 2, 'fieldset_default_tasks_lbl_key', 'fieldset_default_tasks_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (4, 2, 'fieldset_status_tasks_lbl_key', 'fieldset_status_tasks_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (5, 3, 'fieldset_default_SR_lbl_key', 'fieldset_default_SR_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (6, 3, 'fieldset_status_SR_lbl_key', 'fieldset_status_SR_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (7, 4, 'fieldset_default_lbl_key', 'fieldset_default_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (8, 5, 'fieldset_default_patches_lbl_key', 'fieldset_default_patches_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (9, 5, 'fieldset_patchtext_patches_lbl_key', 'fieldset_patchtext_patches_desc_key', 20);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (10, 5, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
+
+--
 -- Dumping data for table 'artifact_field'
 --
 
-
-INSERT INTO artifact_field VALUES (7,1,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
-INSERT INTO artifact_field VALUES (6,1,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (5,1,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (1,1,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (4,1,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
-INSERT INTO artifact_field VALUES (3,1,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (2,1,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (30,1,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (8,1,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
-INSERT INTO artifact_field VALUES (10,1,'comment_type_id',2,'SB','','Comment Type','Specify the nature of the  follow up comment attached to this artifact (Workaround, Test Case, Impacted Files,...)','',0,1,0,1,NULL,'100');
-INSERT INTO artifact_field VALUES (9,1,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (16,1,'resolution_id',2,'SB','','Resolution','How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (20,1,'bug_group_id',2,'SB','','Group','Characterizes the nature of the artifact (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (2,2,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'1000');
-INSERT INTO artifact_field VALUES (4,2,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
-INSERT INTO artifact_field VALUES (5,2,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (6,2,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (7,2,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (8,2,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (11,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (15,2,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (1,2,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (10,2,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (9,2,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
-INSERT INTO artifact_field VALUES (12,2,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (9,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
-INSERT INTO artifact_field VALUES (7,3,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (12,3,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (6,3,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
-INSERT INTO artifact_field VALUES (5,3,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (4,3,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (3,3,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (2,3,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (1,3,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-
-INSERT INTO artifact_field VALUES (11,1,'category_version_id',2,'SB','','Component Version','The version of the System Component (aka Category) impacted by the artifact','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (12,1,'platform_version_id',2,'SB','','Platform Version','The name and version of the platform your software was running on when the artifact occured (e.g. Solaris 2.8, Linux 2.4, Windows NT4 SP2,...)','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (13,1,'reproducibility_id',2,'SB','','Reproducibility','How easy is it to reproduce the artifact','S',0,0,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (14,1,'size_id',2,'SB','','Size (loc)','The size of the code you need to develop or rework in order to fix the artifact','S',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (15,1,'fix_release_id',2,'SB','','Fixed Release','The release in which the artifact was actually fixed','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (17,1,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (18,1,'plan_release_id',2,'SB','','Planned Release','The release in which you initially planned the artifact to be fixed','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (19,1,'component_version',1,'TF','10/40','Component Version','Version of the system component (or work product) impacted by the artifact. Same as the other Component Version field <u>except</u> this one is free text.','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (22,1,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','S',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (23,1,'keywords',1,'TF','60/120','Keywords','A list of comma separated keywords associated with a artifact','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (24,1,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (26,1,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (27,1,'originator_email',1,'TF','20/40','Originator Email','Email address of the person who reported the artifact. Automatically included in the artifact email notification process.','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (28,1,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (29,1,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
-
-INSERT INTO artifact_field VALUES (13,2,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
-INSERT INTO artifact_field VALUES (14,2,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
-
-INSERT INTO artifact_field VALUES (10,3,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (11,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
-
-INSERT INTO artifact_field VALUES (1,4,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
-INSERT INTO artifact_field VALUES (2,4,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (3,4,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (4,4,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (5,4,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (6,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (11,4,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (7,4,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
-INSERT INTO artifact_field VALUES (8,4,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (9,4,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
-INSERT INTO artifact_field VALUES (10,4,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
-
-INSERT INTO artifact_field VALUES (1,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
-INSERT INTO artifact_field VALUES (2,5,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (3,5,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (4,5,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (5,5,'plain_text',1,'TA','60/7','Paste the patch here (text only), <br> OR attach it as a file <br> in the \'Attachments\' section','Plain-text version of the patch','',0,1,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (6,5,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
-INSERT INTO artifact_field VALUES (7,5,'category_id',2,'SB','','Category','Patch categories (e.g. mail module,gant chart module,interface, etc)','',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (8,5,'details',1,'TA','60/7','Description','Description of functionality and application of the patch','',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (9,5,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (10,5,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
-INSERT INTO artifact_field VALUES (11,5,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
-INSERT INTO artifact_field VALUES (12,5,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100');
+-- Bugs tracker
+INSERT INTO artifact_field VALUES (7,1,1,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (6,1,1,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (5,1,1,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (1,1,1,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (4,1,2,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (3,1,1,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (2,1,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (30,1,2,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (8,1,1,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (10,1,1,'comment_type_id',2,'SB','','Comment Type','Specify the nature of the  follow up comment attached to this artifact (Workaround, Test Case, Impacted Files,...)','',0,1,0,1,NULL,'100');
+INSERT INTO artifact_field VALUES (9,1,1,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (16,1,2,'resolution_id',2,'SB','','Resolution','How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (20,1,1,'bug_group_id',2,'SB','','Group','Characterizes the nature of the artifact (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (11,1,1,'category_version_id',2,'SB','','Component Version','The version of the System Component (aka Category) impacted by the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (12,1,1,'platform_version_id',2,'SB','','Platform Version','The name and version of the platform your software was running on when the artifact occured (e.g. Solaris 2.8, Linux 2.4, Windows NT4 SP2,...)','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (13,1,2,'reproducibility_id',2,'SB','','Reproducibility','How easy is it to reproduce the artifact','S',0,0,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (14,1,2,'size_id',2,'SB','','Size (loc)','The size of the code you need to develop or rework in order to fix the artifact','S',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (15,1,2,'fix_release_id',2,'SB','','Fixed Release','The release in which the artifact was actually fixed','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (17,1,2,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (18,1,2,'plan_release_id',2,'SB','','Planned Release','The release in which you initially planned the artifact to be fixed','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (19,1,1,'component_version',1,'TF','10/40','Component Version','Version of the system component (or work product) impacted by the artifact. Same as the other Component Version field <u>except</u> this one is free text.','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (22,1,1,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','S',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (23,1,1,'keywords',1,'TF','60/120','Keywords','A list of comma separated keywords associated with a artifact','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (24,1,1,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (26,1,1,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (27,1,1,'originator_email',1,'TF','20/40','Originator Email','Email address of the person who reported the artifact. Automatically included in the artifact email notification process.','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (28,1,1,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (29,1,2,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+-- Tasks tracker
+INSERT INTO artifact_field VALUES (2,2,4,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'1000');
+INSERT INTO artifact_field VALUES (4,2,4,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
+INSERT INTO artifact_field VALUES (5,2,4,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (6,2,4,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (7,2,3,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (8,2,3,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (11,2,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (15,2,4,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (1,2,3,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (10,2,3,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (9,2,3,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (12,2,3,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (13,2,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (14,2,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
+-- SR tracker
+INSERT INTO artifact_field VALUES (9,3,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (7,3,6,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (12,3,6,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (6,3,6,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (5,3,5,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (4,3,5,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (3,3,5,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (2,3,5,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (1,3,5,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (10,3,6,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (11,3,5,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
+-- Empty tracker
+INSERT INTO artifact_field VALUES (1,4,7,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (2,4,7,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (3,4,7,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (4,4,7,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (5,4,7,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (6,4,7,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (11,4,7,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (7,4,7,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (8,4,7,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (9,4,7,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (10,4,7,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
+-- Patches tracker
+INSERT INTO artifact_field VALUES (1,5,8,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (2,5,8,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (3,5,8,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (4,5,8,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (5,5,9,'plain_text',1,'TA','60/7','Patch text','Plain-text version of the patch','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (6,5,10,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (7,5,8,'category_id',2,'SB','','Category','Patch categories (e.g. mail module,gant chart module,interface, etc)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (8,5,8,'details',1,'TA','60/7','Description','Description of functionality and application of the patch','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (9,5,10,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (10,5,8,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (11,5,8,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (12,5,10,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100');
 --
 -- Dumping data for table 'artifact_field_usage'
 --

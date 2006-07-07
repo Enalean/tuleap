@@ -620,11 +620,13 @@
       à un artefact. Comme le montre la figure <xref
       linkend="FigureHeaderOfArtifactUpdateScreen" />, certains champs
       disposent d'un jeu de valeurs prédéfinies, d'autres sont des
-      champs numériques (Effort) ou des champs texte (Résumé). Le jeu
+      champs numériques (Effort) ou des champs texte (Résumé). Pour plus de 
+      clarté, les champs sont regroupés en groupes de champs. Le jeu
       de champs utilisés pour un outil de suivi donné, ainsi que les valeurs
-      prédéfinies peuvent être entièrement configurés par les membres
-      du projet qui ont les droits d'administration sur cet outil de suivi (voir
-      <xref linkend="TrackerAdministration" /> à ce sujet).</para>
+      prédéfinies et les groupes de champs peuvent être entièrement configurés 
+      par les membres du projet qui ont les droits d'administration
+      sur cet outil de suivi (voir <xref linkend="TrackerAdministration" /> à ce sujet).
+      </para>
 
       <figure id="FigureHeaderOfArtifactUpdateScreen">
         <title>Entête d'un écran de modification d'un artefact (champs de l'outil de suivi)</title>
@@ -1742,6 +1744,10 @@ width="14.5cm" />
       d'accès différentes aux utilisateurs en fonction de leur
       rôle.</para>
       </listitem>
+      <listitem><para><emphasis role="bold">Gestion des
+      groupes de champs</emphasis> : définition des groupes de champs
+      utilisés dans cet outil de suivi.</para>
+      </listitem>
       <listitem><para><emphasis role="bold">Gestion de
       champs</emphasis> : définition des champs utilisés dans cet
       outil de suivi.</para>
@@ -2048,6 +2054,138 @@ width="14.5cm" />
       </section>
     </section>
     
+    <section id="TrackerFieldSetManagement">
+      <title>Gestion des groupes de champs</title>
+
+      <para>Pour améliorer la saisie et la visualisation des artefacts, 
+      les champs de l'outil de suivi sont regroupés en groupes de champs.
+      Cela permet d'aérer le formulaire de saisie de l'artefact, ou de grouper
+      des champs ayant une même sémantique, ou encore de grouper des champs
+      jouant un rôle particulier (par exemple, grouper les champs destinés 
+      à la personne qui fera le diagnostic de l'artefact, puis regrouper ceux 
+      destinés à la personne qui le résoudra, etc.).
+      </para>
+      <para>Tous les champs doivent appartenir à un groupe de champs, et un même 
+      champ ne peut appartenir qu'à un seul groupe de champs.
+      </para>
+      
+      <section id="TrackerFieldSetList">
+        <title>Liste des groupes de champs de l'outil de suivi</title>
+
+        <para>Pour configurer les groupes de champs de l'outil de suivi, 
+        sélectionnez l'item &#34;Gérer les groupes de champs&#34; sur la page 
+        d'accueil du module d'administration d'un outil de suivi. 
+        L'écran de gestion des groupes de champs (<xref
+        linkend="FigureTrackerFieldSetScreenOfACodeXHostedProject"
+        />) montre un exemple de groupes de champs disponibles dans un outil de suivi de
+        CodeX. Cet écran se divise en deux sections :</para>
+
+        <procedure>
+          <step>
+            <para>la liste des groupes de champs de l'outil de suivi en cours d'utilisation</para>
+          </step>
+          
+          <step>
+            <para>un formulaire permettant de créer de nouveaux groupes de champs
+            dans l'outil de suivi.</para>
+          </step>
+        </procedure>
+
+        <para>Les informations suivantes sont présentées sur la liste
+        des groupes de champs :</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">Label du groupe de champs</emphasis> : le
+            nom du groupe de champs. Pour ajuster les propriétés d'un groupe de champs il
+            faut cliquer sur le nom.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis> : la
+            description du groupe de champs.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Champs appartenant au groupe de champs</emphasis> : liste
+            des champs faisant partie de ce groupe de champs. Les champs utilisés sont affichés en police grasse, 
+            les champs inutilisés en italique.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Rang à l'écran</emphasis> : le
+            rang indique dans quel ordre les groupes de champs apparaîtront à
+            l'écran dans le formulaire de soumission ou dans le
+            formulaire de mise à jour. Les groupes de champs avec le plus petit
+            rang apparaissent en premier.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Détruire ?</emphasis> :
+            lorsqu'un groupe de champs est détruit il disparaît complètement de
+            la liste des groupes de champs disponibles. Seuls les groupes de champs
+            vides (ne contenant aucun champ) peuvent être détruit.</para>
+          </listitem>
+
+        </itemizedlist>
+
+
+        <figure id="FigureTrackerFieldSetScreenOfACodeXHostedProject">
+          <title>&Eacute;cran de gestion des groupes de champs dans un outil de suivi</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/fr_FR/sc_trackerfieldset.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+      
+      <section id="CreationandModificationofaTrackerFieldSet">
+        <title>Création et modification du groupe de champs d'un outil de suivi</title>
+
+        <para>&Eacute;tant donné que les formulaires de création et de
+        modification d'un groupe de champs sont très similaires ils sont tous
+        deux traités dans cette section.</para>
+
+        <para>L'écran de création d'un groupe de champs est disponible au bas de
+        la liste des groupes de champs alors que le formulaire de modification
+        d'un groupe de champs s'obtient un cliquant sur le label du groupe de champs à
+        modifier.</para>
+
+        <para>Les propriétés à définir pour un groupe de champs sont les
+        suivantes :</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Label du groupe de champs</emphasis>: il
+            s'agit du nom du groupe de champs.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis> : une
+            description plus longue du rôle de ce groupe de champs.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Rang à l'écran</emphasis> : ce
+            nombre entier de valeur quelconque vous permet de définir
+            la position des groupes de champs à l'écran dans les formulaires de
+            soumission et de modification par rapport aux autres groupes de champs. 
+            Les groupes de champs avec les valeurs les plus petites apparaissent 
+            en premier à l'écran. Les valeurs n'ont pas à être consécutives. Il est même
+            recommandé de les numéroter à intervalle régulier comme
+            10, 20, 30... pour pouvoir facilement insérer de nouveaux
+            groupes de champs sans avoir à renuméroter tous les autres.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      
+    </section>
+    
     <section id="TrackerFieldUsageManagement">
       <title>Gestion de l'utilisation des champs</title>
 
@@ -2188,11 +2326,19 @@ width="14.5cm" />
           </listitem>
 
           <listitem>
+            <para><emphasis role="bold">Groupe de champs</emphasis> : groupe
+            auquel le champ appartient.</para>
+          </listitem>
+          
+          <listitem>
             <para><emphasis role="bold">Rang à l'écran</emphasis> : le
             rang indique dans quel ordre les champs apparaîtront à
             l'écran dans le formulaire de soumission ou dans le
             formulaire de mise à jour. Les champs avec le plus petit
-            rang apparaissent en premier.</para>
+            rang apparaissent en premier. Les rangs sont relatifs au groupe de champs 
+            (les champs sont d'abod affichés par groupe de champs, puis par rang à l'intérieur
+            de leur propre groupe de champs).
+            </para>
           </listitem>
 
           <listitem>
@@ -2204,7 +2350,7 @@ width="14.5cm" />
               <listitem>
                 <para><emphasis role="underline">Inutilisé</emphasis> :
                 le champ n'est pas utilisé par l'outil de suivi. 
-                Notez qu'un champ inutilisé n'est rien d'autre champ 
+                Notez qu'un champ inutilisé n'est rien d'autre qu'un champ 
                 &#34;caché&#34;. Si vous changez le statut d'un champ 
                 de utilisé à inutilisé toutes les données associées 
                 à ce champ sont préservées.</para>
@@ -2363,6 +2509,15 @@ width="14.5cm" />
 
           </listitem>
 
+          <listitem>
+            <para><emphasis role="bold">Groupe de champs</emphasis> : 
+            il s'agit du groupe de champs auquel le champ appartient.
+            Tout champ doit appartenir à un groupe de champs, et un champ
+            ne peut pas appartenir à plus d'un groupe de champs (en d'autres
+            termes, un champ appartient à un et un seul groupe de champs).
+            </para>
+          </listitem>
+          
           <listitem>
             <para><emphasis role="bold">Rang à l'écran</emphasis> : ce
             nombre entier de valeur quelconque vous permet de définir

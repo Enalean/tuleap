@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
 <!--
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
@@ -566,9 +567,10 @@
       linkend="FigureHeaderOfArtifactUpdateScreen" />, many of these
       fields are assigned a set of predefined values (Status,
       Category, Resolution) while some others have a number format
-      (Effort) or a free text format (Summary). The set of fields used
-      in a given tracker, as well as the related set of predefined
-      values can be configured by project members who have
+      (Effort) or a free text format (Summary). For more clarity, 
+      the fields are grouped in field sets.
+      The set of fields used in a given tracker, as well as the related set of predefined
+      values and the field sets can be configured by project members who have
       administration permissions on this tracker. (see <xref
       linkend="TrackerAdministration" /> for more details on the
       Tracker configuration).</para>
@@ -1661,6 +1663,10 @@ width="14.5cm" />
       access permissions to different users depending on their
       role.</para>
       </listitem>
+      <listitem><para><emphasis role="bold">Manage Field Sets
+	</emphasis>: this is where you'll decide what field sets to
+	use in your tracker.</para>
+      </listitem>
       <listitem><para><emphasis role="bold">Manage Field
 	Usage</emphasis>: this is where you'll decide what fields to
 	use in your tracker.</para>
@@ -1950,6 +1956,128 @@ width="14.5cm" />
       </section>
     </section>
 
+    <section id="TrackerFieldSetManagement">
+      <title>Field Sets Management</title>
+
+      <para>In order to improve the input of the artifact submission form, 
+      the fields of the trackers are grouped in field sets.
+      This allows to open up the submission form, or to clusterize fields that have 
+      same semantics, or also to group fields that play a particular part 
+      (for instance, you could clusterize fields aimed to be filled by the one who is
+      responsible for the diagnosis of the artifact, and then group fields aimed to be filled
+      by the one who is in charge of fixing it, etc.).
+      </para>
+      <para>Each field must belong to a field set, and a single field 
+      can only belong to only one field set.
+      </para>
+      
+      <section id="TrackerFieldSetList">
+        <title>Tracker Field Set List</title>
+
+        <para>To manage the field sets for this tracker, 
+        select the item &#34;Manage field sets&#34; on the welcome page 
+        of any Tracker Administration screen. 
+        The Field Set screen (<xref
+        linkend="FigureTrackerFieldSetScreenOfACodeXHostedProject"
+        />) shows you a sample list of field sets available in the tracker of a CodeX project. The
+        screen is divided in 2 parts:</para>
+
+        <procedure>
+          <step>
+            <para>the list of tracker field sets currently in use</para>
+          </step>
+          
+          <step>
+            <para>a form to create new tracker field sets.</para>
+          </step>
+        </procedure>
+
+        <para>Information displayed on the Tracker Field Set list page are as follows:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">Field Set Label</emphasis>: the name of the field. 
+            To change the properties of a field set simply click on the field set name.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: the field set description</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Fields belonging to this field set</emphasis>: list
+            of the fields that belong to this field set. The used fields are displayed in bold,
+            the unused ones in italic.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Rank on screen</emphasis>: the rank number
+            indicates in which order the field sets will appear on the artifact 
+            submission form and the artifact update form. Field sets with a smaller 
+            rank number are displayed first.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Delete?</emphasis>: when a field set is deleted, 
+            it completely disappears from the list of available field sets.
+            Only empty field sets (that means not including any field) can be deleted.</para>
+          </listitem>
+        </itemizedlist>
+
+        <figure id="FigureTrackerFieldSetScreenOfACodeXHostedProject">
+          <title>Field Set screen of a project tracker</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/en_US/sc_trackerfieldset.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+      </section>
+      
+      <section id="CreationandModificationofaTrackerFieldSet">
+        <title>Creation and Modification of a Tracker Field Set</title>
+
+        <para>The forms used for the creation of a new tracker field set 
+        or the modification of an existing one being very similar both are 
+        covered in the same section.</para>
+
+        <para>The field set creation form is available at the bottom of the tracker 
+        field set list where as the field set update form can be accessed by clicking 
+        on the field set label located on the left hand side of the field set list.
+        </para>
+
+        <para>Properties that can be tuned for a tracker field set are as follows:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Field Set Label</emphasis>: 
+            this is the name of the field set.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Description</emphasis>: a
+            longer description of the purpose of this field set.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Rank on screen</emphasis>:
+            this arbitrary number allows you to define the position of this field set 
+            on the artifact submission form and the artifact update form relative to other field sets.
+            The field sets with smaller values will appear first on the screen. 
+            The rank values doesn't have to be consecutive values. It is a good idea to use 
+            values like 10,20,30,... so that it is easy for you to insert new field sets 
+            in the future without having to renumber all the field sets.
+            </para>
+          </listitem>
+        </itemizedlist>
+        
+      </section>
+      
+    </section>
+    
     <section id="TrackerFieldUsageManagement">
       <title>Field Usage Management</title>
 
@@ -2087,12 +2215,19 @@ width="14.5cm" />
 	    field description.</para>
 	  </listitem>
 
+      <listitem>
+        <para><emphasis role="bold">Field Set</emphasis> : field set the field will belong to.
+        </para>
+      </listitem>
+          
 	  <listitem>
 	    <para><emphasis role="bold">Rank on Screen</emphasis>:
 	      the rank number indicates in which order the fields will
 	      appear on the artifact submission form and the artifact
 	      update form. Fields with a smaller rank number are
-	      displayed first.</para>
+	      displayed first. The rank numbers are relatives regarding the field sets.
+          This means that the fields are first displayed by field sets, and then by
+          rank number, inside their own field set.</para>
 	  </listitem>
 
 	  <listitem>
@@ -2249,6 +2384,15 @@ width="14.5cm" />
 
 	  </listitem>
 
+      <listitem>
+        <para><emphasis role="bold">Field Set</emphasis> : 
+        it is the field set the field will belong to.
+        Each field must belong to a field set, and a field cannot belong 
+        to more than one field set (in other words, a field belong to one
+        and only one field set).
+        </para>
+      </listitem>
+      
 	  <listitem>
 	    <para><emphasis role="bold">Rank on screen</emphasis>:
 	    this arbitrary number allows you to define the position of

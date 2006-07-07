@@ -770,6 +770,24 @@ tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
 tracker_common_fieldset	name_requ	Field set label is required.
 tracker_common_fieldset	fieldset_default_lbl_key	Details
 tracker_common_fieldset	fieldset_default_desc_key	Details of the artifact
+tracker_common_fieldset	fieldset_default_bugs_lbl_key	Details
+tracker_common_fieldset	fieldset_default_bugs_desc_key	Details of the bug
+tracker_common_fieldset	fieldset_status_bugs_lbl_key	Status
+tracker_common_fieldset	fieldset_status_bugs_desc_key	Status of the bug
+tracker_common_fieldset	fieldset_default_patches_lbl_key	Details
+tracker_common_fieldset	fieldset_default_patches_desc_key	Details of the patch
+tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Past the patch here (text only)
+tracker_common_fieldset	fieldset_patchtext_patches_desc_key	Paste the patch here (text only) OR attach it as a file in the 'Attachments' section
+tracker_common_fieldset	fieldset_status_patches_lbl_key	Status
+tracker_common_fieldset	fieldset_status_patches_desc_key	Status of the patch
+tracker_common_fieldset	fieldset_default_SR_lbl_key	Details
+tracker_common_fieldset	fieldset_default_SR_desc_key	Details of the support request
+tracker_common_fieldset	fieldset_status_SR_lbl_key	Status
+tracker_common_fieldset	fieldset_status_SR_desc_key	Status of the support request
+tracker_common_fieldset	fieldset_default_tasks_lbl_key	Details
+tracker_common_fieldset	fieldset_default_tasks_desc_key	Details of the task
+tracker_common_fieldset	fieldset_status_tasks_lbl_key	Status
+tracker_common_fieldset	fieldset_status_tasks_desc_key	Status of the task
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class

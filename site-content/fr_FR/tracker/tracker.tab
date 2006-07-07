@@ -777,6 +777,24 @@ tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
 tracker_common_fieldset	name_requ	Le nom du groupoe de champ est obligatoire.
 tracker_common_fieldset	fieldset_default_lbl_key	Détails
 tracker_common_fieldset	fieldset_default_desc_key	Détails de l'artefact
+tracker_common_fieldset	fieldset_default_bugs_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_bugs_desc_key	Détails du bug
+tracker_common_fieldset	fieldset_status_bugs_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_bugs_desc_key	Etat d'avancement du bug
+tracker_common_fieldset	fieldset_default_patches_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_patches_desc_key	Détails du patch
+tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Coller le code du correctif ici (texte uniquement)
+tracker_common_fieldset	fieldset_patchtext_patches_desc_key	Coller le code du correctif ici (texte uniquement) OU joignez un fichier dans la section 'Fichiers attachés'
+tracker_common_fieldset	fieldset_status_patches_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_patches_desc_key	Etat d'avancement du patch
+tracker_common_fieldset	fieldset_default_SR_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_SR_desc_key	Détails de la demande de support
+tracker_common_fieldset	fieldset_status_SR_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_SR_desc_key	Etat d'avancement de la demande de support
+tracker_common_fieldset	fieldset_default_tasks_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_tasks_desc_key	Détails de la tâche
+tracker_common_fieldset	fieldset_status_tasks_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_tasks_desc_key	Etat d'avancement de la tâche
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class
