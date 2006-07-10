@@ -18,16 +18,8 @@ $yesterday_formatted = sprintf("%04d%02d%02d", $year, $month, $day);
 
 
    ## shuffle the activity log tables - we keep 3 days of data
-$sql = "DROP TABLE IF EXISTS activity_log_old_old";
-$rel = $dbh->do($sql);
-
-$sql = "ALTER TABLE activity_log_old RENAME AS activity_log_old_old";
-$rel = $dbh->do($sql);
-
-$sql = "ALTER TABLE activity_log RENAME AS activity_log_old";
-$rel = $dbh->do($sql);
-
-$sql = "CREATE TABLE activity_log (
+# Create table first, so that the process will not go further if the disk is full
+$sql = "CREATE TABLE activity_log_new (
 	day int(11) DEFAULT '0' NOT NULL,
 	hour int(11) DEFAULT '0' NOT NULL,
 	group_id int(11) DEFAULT '0' NOT NULL,
@@ -42,6 +34,24 @@ $sql = "CREATE TABLE activity_log (
 	KEY type_idx (type)
 )";
 $rel = $dbh->do($sql);
+if (!$rel) {
+  # Create table failed. No more space on device?
+  print "** CREATE TABLE failed for activity_log_new. Disk full? **\n";
+  exit 1;
+}
+
+$sql = "DROP TABLE IF EXISTS activity_log_old_old";
+$rel = $dbh->do($sql);
+
+$sql = "ALTER TABLE activity_log_old RENAME AS activity_log_old_old";
+$rel = $dbh->do($sql);
+
+$sql = "ALTER TABLE activity_log RENAME AS activity_log_old";
+$rel = $dbh->do($sql);
+
+$sql = "ALTER TABLE activity_log_new RENAME AS activity_log";
+$rel = $dbh->do($sql);
+
 
 
    ## Define today.
