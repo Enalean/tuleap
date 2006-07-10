@@ -85,6 +85,8 @@ class PermissionsManager {
     
     /**
     * Returns all permissions for ugroups for a given object
+    * WARNING: since object_ids are not unique, some permissions returned 
+    * might not be relevant for the given object
     * 
     * @access public
     * 
