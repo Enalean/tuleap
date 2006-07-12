@@ -278,6 +278,7 @@ if ($debug) {
 ######################################################################
 # Harvest data using svnlook.
 
+
 # Change into /tmp so that svnlook diff can create its .svnlook
 # directory.
 my $tmp_dir = '/tmp';
@@ -373,6 +374,7 @@ my @changed_files = ();
 foreach my $line (@svnlooklines)
   {
     my $path = '';
+    my $url_path = '';
     my $code = '';
     my $change_file = {};
 
@@ -382,6 +384,8 @@ foreach my $line (@svnlooklines)
       {
         $code = $1;
         $path = $2;
+        $url_path = $2;
+        $url_path =~ s/ /%20/g;
 	$change_file->{'path'} = $path;
       }
 
@@ -389,7 +393,7 @@ foreach my $line (@svnlooklines)
       {
 	$change_file->{'state'} = 'A';
         push(@adds, $path);
-	push(@difflines,sprintf($add_url,$path)) if ($no_diff);
+	push(@difflines,sprintf($add_url,$url_path)) if ($no_diff);
       }
     elsif ($code eq 'D')
       {
@@ -401,7 +405,7 @@ foreach my $line (@svnlooklines)
 	# Can be M or _
 	$change_file->{'state'} = 'M';
         push(@mods, $path);
-	push(@difflines,sprintf($mod_url,$path,$rev-1,$rev)) if ($no_diff);
+	push(@difflines,sprintf($mod_url,$url_path,$rev-1,$rev)) if ($no_diff);
       }
 
     push(@changed_files, $change_file) if ($change_file->{'path'});
@@ -471,7 +475,18 @@ if (!$rootchanged and @dirschanged > 1)
         @dirschanged = @new_dirschanged;
       }
   }
-my $dirlist = join(' ', @dirschanged);
+
+# reduce subject only to 3 dirs max (avoid never ending subject)
+my $dirlist = '';
+if (@dirschanged > 3)
+  {
+    $dirlist = $dirschanged[0]." ".$dirschanged[1]." ".$dirschanged[2]." ...";
+  }
+else
+  {
+    $dirlist = join(' ', @dirschanged);
+  }
+
 
 ######################################################################
 # Assembly of log message.
