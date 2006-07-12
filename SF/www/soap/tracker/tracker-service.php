@@ -443,7 +443,9 @@
 	      'group_id'=>'xsd:int',
 	      'group_artifact_id'=>'xsd:int',
 	      'user_id' => 'xsd:int',
-	      'criteria' => 'tns:ArrayOfCriteria'
+	      'criteria' => 'tns:ArrayOfCriteria',
+	      'offset' => 'xsd:int',
+	      'max_rows' => 'xsd:int'
 	),
 	array('return'=>'tns:ArrayOfArtifact'),                       // output parameters
 	'urn:CodeXTrackerwsdl',                                       // namespace
@@ -597,7 +599,7 @@
 		'group_id'=>'xsd:int',
 		'group_artifact_id'=>'xsd:int',
 		'artifact_id'=>'xsd:int',
-		'bin_data'=>'xsd:string',
+		'encoded_data'=>'xsd:string',
 		'description'=>'xsd:string',
 		'filename'=>'xsd:string',
 		'filetype'=>'xsd:string'
@@ -841,7 +843,7 @@
 	return $return;
   }
   
-  function getArtifacts($sessionKey,$group_id,$group_artifact_id, $user_id, $criteria) {	
+  function getArtifacts($sessionKey,$group_id,$group_artifact_id, $user_id, $criteria, $offset, $max_rows) {	
 	global $art_field_fact; 
 	if (session_continue($sessionKey)){
 
@@ -873,7 +875,7 @@
 		return new soap_fault (get_artifact_factory_fault,'getArtifacts',$atf->getErrorMessage(),$atf->getErrorMessage());
 	   }
 	   
-	   $artifacts = $af->getArtifacts($user_id, $criteria);
+	   $artifacts = $af->getArtifacts($user_id, $criteria, $offset, $max_rows);
 	   return artifacts_to_soap($artifacts); 
 	} else
     	   return new soap_fault (invalid_session_fault,'getArtifactTypes','Invalide Session ','');	
@@ -1393,7 +1395,7 @@
 	return $return;
   } 
   
-  function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$bin_data,$description,$filename,$filetype) {
+  function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
   	global $art_field_fact; 
 	if (session_continue($sessionKey)){
 	
@@ -1431,9 +1433,11 @@
 		} else if ($af->isError()) {
 			return new soap_fault (get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
 		}
-
-		$filesize = strlen($bin_data);
+		
+		$bin_data = addslashes(base64_decode($encoded_data));
 	
+		$filesize = strlen($bin_data);
+		
 		$id = $af->create($filename,$filetype,$filesize,$bin_data,$description, $changes);
 	
 		if (!$id) {

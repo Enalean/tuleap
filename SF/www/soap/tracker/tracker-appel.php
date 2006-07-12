@@ -26,19 +26,22 @@ echo '<H2>Session : '.$user_id.'-------------'.$session_hash.'</H2>';
 
 $client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/tracker-service.php?wsdl', true, 'cornillon.grenoble.xrce.xerox.com', '8000');
 
-$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127, 'user_id' => 131));
-$group_id = 1;
-$group_artifact_id = 410;
-$user_id = 131;
+//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127, 'user_id' => 131));
+$group_id = 127;
+$group_artifact_id = 263;
+$user_id = 101;
 //$result = $client->call('getFieldSets', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id));
-/*
-$criteria = array();
-$criteria[] = array ('field_name' => 'assigned_to' , 'field_value' => '132');
-$criteria[] = array ('field_name' => 'status_id' , 'field_value' => '1');
-$criteria[] = array ('field_name' => 'open_date' , 'field_value' => '1145366966', 'operator' => '=');
 
-$result = $client->call('getArtifacts', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => 410, 'user_id' => $user_id, 'criteria' => $criteria ));
-*/
+$criteria = array();
+
+//$criteria[] = array ('field_name' => 'assigned_to' , 'field_value' => '132');
+//$criteria[] = array ('field_name' => 'status_id' , 'field_value' => '1');
+//$criteria[] = array ('field_name' => 'open_date' , 'field_value' => '1145366966', 'operator' => '=');
+$offset = 0;
+$max_rows = 100;
+/*$result = $client->call('getArtifacts', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'criteria' => $criteria , 'offset' => $offset,
+'max_rows' => $max_rows));*/
+
 // test d'insertion d'un artifact
 
 //$extra_fields = array();
@@ -60,13 +63,14 @@ $ids = array();
 $ids[] = 103;
 $ids[] = 76;
 //$result = $client->call('getDependancies', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954));
+/*
 $result = $client->call('existSummary', array('sessionKey' => $session_hash, 'group_artifact_id' => 410, 'summary' => 'ata'));
 echo '<H2>POP'.$result.'</H2>';
 if ($result != -1)
 	echo '<H2>FOUND</H2>';
 else 
 	echo '<H2>NOT FOUND</H2>';
-	
+*/	
 //$result = $client->call('addFollowup', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'body' => 'test followup soap 1'));
 //$result = $client->call('deleteDependency', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'dependent_on_artifact_id' => 3));
 /*
@@ -91,16 +95,17 @@ for ($i=0;$i<count($result);$i++) {
 	}
 }
 */
-/*
-$filename = "/home/tabbadi/CodeX/dev_client/CodeXProject/config/admin.xml";
+
+$filename = "/home/moubouho/CodeX/dev_client/CodeXProject/language/english.xml";
 if (!($f = @fopen($filename, "rb"))) {
      echo "Couldn't open file ".$filename." for reading<br/>";
 } else {
      $bin_data = fread($f, filesize($filename));
      fclose($f);
 }
-$result = $client->call('addArtifactFile', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 129, 'artifact_id' => 7026, 'encoded_data' => base64_encode($bin_data), 'description' => 'test client soap', 'filename' => 'admin.xml', 'filetype' => 'application/octet-stream')); 
-*/
+
+$result = $client->call('addArtifactFile', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 129, 'artifact_id' => 7041, 'encoded_data' => base64_encode($bin_data), 'description' => 'test client soap xml', 'filename' => 'english.xml', 'filetype' => 'application/xml')); 
+
 // Check for a fault
 if ($client->fault) {
     echo '<h2>Fault</h2><pre>';
