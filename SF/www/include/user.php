@@ -226,7 +226,7 @@ function user_getemail($user_id) {
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
-		return $Language->getText('include_user','not_found');
+		return $Language->getText('include_user','email_not_found');
 	}
 }
 
@@ -247,7 +247,7 @@ function user_getemail_from_unix($user_name) {
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
-		return $Language->getText('include_user','not_found');
+		return $Language->getText('include_user','email_not_found');
 	}
 }
 
