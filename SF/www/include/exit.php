@@ -22,6 +22,11 @@ function exit_permission_denied() {
     exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','no_perm').'<p>'.$feedback);
 }
 
+function exit_restricted_user_permission_denied() {
+  global $feedback,$Language;
+    exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','restricted_user_no_perm').'<p>'.$feedback);
+}
+
 function exit_not_logged_in() {
   global $REQUEST_URI,$Language;
     //instead of a simple error page, now take them to the login page
