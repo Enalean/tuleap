@@ -1229,6 +1229,15 @@ function util_check_restricted_access($request_uri, $script_name) {
             }
         }
         
+        // Artifact attachment download...
+        if (strpos($req_uri,'/tracker/download.php') !== false) {
+            if (isset($_REQUEST['artifact_id'])) {
+                $result=db_query("SELECT group_id FROM artifact_group_list,artifact WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id AND artifact.artifact_id="
+                                 .$_REQUEST['artifact_id']);
+                $group_id=db_result($result,0,'group_id');
+            }
+        }
+
         // CodeX trackers
         if (strpos($req_uri,'/tracker/') !== false) {
             if ($allow_access_to_codex_trackers) {
@@ -1257,7 +1266,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         }
         
         // Now check group_id
-        if ($group_id) { 
+        if (isset($group_id)) { 
             if (!$user_is_allowed) { 
                 if (!user_ismember($group_id)) {
                     return false;
