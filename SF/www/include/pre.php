@@ -228,7 +228,7 @@ if ($SERVER_NAME != 'localhost' &&
 
 if (user_isrestricted()) {
     if (!util_check_restricted_access($REQUEST_URI,$SCRIPT_NAME)) {
-        exit_permission_denied();
+        exit_restricted_user_permission_denied();
     }
 }
 ?>
