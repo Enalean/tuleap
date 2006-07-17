@@ -2339,9 +2339,10 @@ The fastest and safest way (where xxx is the project name):
 <li>Delete the CVS or SVN tree: <br><tt>rm -rf  xxx</tt>
 <li>Force the cron update process to run now:
 <pre>
-$ cd ~sourceforge/utils
+$ cd ~sourceforge/SF/utils
 $./xerox_crontab.sh
 </pre>
+<li>Delete corresponding entries from cvs_checkins, cvs_commits and cvs_descs tables to prevent showing them while browsing commits with viewcvs.
 </ul>
 Now you have a fresh CVS or SVN repository and the team can start the import again.
 <hr>
