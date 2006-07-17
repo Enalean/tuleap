@@ -92,7 +92,8 @@ file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce pr
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit
 file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
-file_admin_editreleases	download_explain	Une nouvelle version de $1 vient d'être publié. \nVous pouvez la télécharger à&nbsp;: \n\n$2\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
+file_admin_editreleases	file_rel_notice_project	Projet $1
+file_admin_editreleases	download_explain	Une nouvelle version de $4 (paquet $1) vient d'être publié. \nVous pouvez la télécharger à : \n\n$2\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
 file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version
