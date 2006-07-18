@@ -234,7 +234,7 @@ if( isset($submit) ) {
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($list);
         $mail->setSubject($subject);
-        $mail->setBody($Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'], $file_name)).": ".
+        $mail->setBody($Language->getText('file_admin_editreleases','download_explain_modified_file', array(db_result($result,0,'name'), $file_name))." ".$Language->getText('file_admin_editreleases','download_explain',array("<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".
           "\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ");
         if ($mail->send()) {
             $feedback .= '| '.$Language->getText('file_admin_qrs','email_sent',db_numrows($result)).' ';
