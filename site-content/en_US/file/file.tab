@@ -87,7 +87,10 @@ file_admin_editreleases	filename_exists	FileName Already Exists For This Project
 file_admin_editreleases	no_files_selected	No Files Selected
 file_admin_editreleases	file_deleted	File Deleted
 file_admin_editreleases	file_rel_notice	File Release Notice
-file_admin_editreleases	download_explain	A new version of $1 has been released. \nYou can download it at: \n\n$2\n\nYou requested to be notified when new versions of this file \nwere released. If you don't wish to be notified in the \nfuture, please login to $3 and click this link
+file_admin_editreleases	file_rel_notice_project	Project $1
+file_admin_editreleases	download_explain_modified_file	A new version of $2 (package $1) has been released.
+file_admin_editreleases	download_explain_modified_package	A new version of package $1 has been released.
+file_admin_editreleases	download_explain	 \nYou can download it at: \n\n$1\n\nYou requested to be notified when new versions of this file \nwere released. If you don't wish to be notified in the \nfuture, please login to $2 and click this link
 file_admin_editreleases	email_sent	email sent - $1 users tracking
 file_admin_editreleases	rel_id_not_found	That release ID was not found in the database
 file_admin_editreleases	release_new_file_version	Release New File Version
