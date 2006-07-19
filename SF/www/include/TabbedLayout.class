@@ -253,7 +253,7 @@ if (isset($params['group']) && $params['group']) {
 	</tr>
     <?php echo $this->getCustomFooter(); ?>
 </table>
-    <!--div style="float:left;"><?php echo $this->getOsdnNavDropdown(); ?></div-->
+
 <?php
         $this->generic_footer($params);
 	}
