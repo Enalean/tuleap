@@ -174,7 +174,7 @@ if (isset($morder)) {
   Now see what type of artifact set is requested (set is one of none, 
   'my', 'open', 'custom'). 
     - if no set is passed in, see if a preference was set ('custom' set).
-    - if no preference and logged in then use 'my' set
+    - if no preference and logged in then use 'all' set (see all artifacts)
     - if no preference and not logged in the use 'open' set
      (Prefs is a string of the form  &field1[]=value_id1&field2[]=value_id2&.... )
   ================================================== */
@@ -207,7 +207,7 @@ if (!isset($set)) {
 		    $set='custom';
 	
 		} else {
-		    $set='my';
+		    $set = 'all';
 		}
 
     } else {
@@ -262,6 +262,12 @@ if ($set=='my') {
 		//echo "<br> DBG setting pref = $pref_stg";
 		user_set_preference('artifact_brow_cust'.$atid,$pref_stg);
     }
+
+} else if ($set=='all') {
+    // Any value for very field
+    $prefs['status_id'][]=0;
+    $prefs['assigned_to'][]=0;
+    $prefs['multi_assigned_to'][]=0;
 
 } else {
     // Open artifacts - backwards compat can be removed 9/10
