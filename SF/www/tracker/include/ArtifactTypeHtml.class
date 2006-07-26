@@ -2102,10 +2102,11 @@ EOS;
 			echo $Language->getText('tracker_include_type','val').': ';
 			echo html_build_select_box ($field->getFieldValues($this->getID(),"'A','P'"),"default_value",$default_value);
 		} else if ( $field->isDateField() ) {
-			echo $Language->getText('tracker_include_type','val').': <INPUT TYPE="text" name="default_value"'.
-			' size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
+            echo '<input type="radio" name="default_date_type" value="current_date"'.($default_value==""?" checked=\"checked\"":"").'>'.$Language->getText('tracker_include_type','current_date').'</input><br />';
+            echo '<input type="radio" name="default_date_type" value="selected_date"'.($default_value!=""?" checked=\"checked\"":"").'>'.$Language->getText('tracker_include_type','date_value').'</input> ';
+            echo '<INPUT TYPE="text" name="default_value" size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
 			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
+			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a><br />';
 		} else {
 	      	echo $Language->getText('tracker_include_type','val').': <INPUT TYPE="text" NAME="default_value" VALUE="'.$default_value.'">';
 		}

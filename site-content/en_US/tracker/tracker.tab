@@ -533,6 +533,8 @@ tracker_include_type	fieldset_rank	Rank on screen
 tracker_include_type	fields_inside	Contained fields 
 tracker_include_type	update_fieldset	Update field set '$1'
 tracker_include_type	warning_delete_fieldset	** WARNING!! ** Delete this field set (no possible restore operation)?
+tracker_include_type	current_date	Current date.
+tracker_include_type	date_value	Date value:
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class

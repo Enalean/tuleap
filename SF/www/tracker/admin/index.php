@@ -452,7 +452,13 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-			if ( !$field->updateDefaultValue($atid,$default_value) ) {
+            // For date fields, it is possible to give a computed default value (current date)
+            if ($field->isDateField() && $default_date_type=='current_date') {
+                $computed_value = 'current_date';
+            } else {
+                $computed_value = false;
+            }
+            if ( !$field->updateDefaultValue($atid,$default_value, $computed_value) ) {
 				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
 				$feedback = $Language->getText('tracker_admin_index','values_updated');

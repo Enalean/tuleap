@@ -540,6 +540,8 @@ tracker_include_type	fieldset_rank	Rang d'affichage
 tracker_include_type	fields_inside	Champs du groupe
 tracker_include_type	update_fieldset	Modifier le groupe de champs '$1'
 tracker_include_type	warning_delete_fieldset	** ATTENTION!! ** Effacer ce groupe de champs (aucune récupération possible) ?
+tracker_include_type	current_date	Date courante.
+tracker_include_type	date_value	Date particulière :
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class

@@ -1309,14 +1309,23 @@ class ArtifactField extends Error {
 	 *
 	 *  @param group_artifact_id: the group artifact id
 	 *  @param default_value: the default value
+     *  @param mixed computed_value: indication for computed field values (used for instance for current date field value)
 	 *
 	 *  @return boolean - succeed or failed
 	 */
-	function updateDefaultValue($group_artifact_id,$default_value) {
+	function updateDefaultValue($group_artifact_id,$default_value, $computed_value=false) {
 	  global $Language;
 
 		if ( $this->isDateField() ) {
-			list($value,$ok) = util_date_to_unixtime($default_value);
+            if ($computed_value != false) {
+                // value '' match with current date
+                if ($computed_value == 'current_date') {
+                    $value = '';
+                }
+            } else {
+                // value 0 match with empty date
+                list($value,$ok) = util_date_to_unixtime($default_value);
+            }
 		} else if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER) &&
 				is_array($default_value)) {
 			$value = implode(",",$default_value);
