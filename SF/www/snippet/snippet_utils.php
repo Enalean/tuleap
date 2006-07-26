@@ -50,7 +50,7 @@ function snippet_footer($params) {
 function snippet_show_package_snippets($version) {
   global $Language;
 	//show the latest version
-	$sql="SELECT snippet.snippet_id, snippet_package_item.snippet_version_id, snippet_version.version,snippet.name,user.user_name ".
+	$sql="SELECT snippet.snippet_id, snippet_package_item.snippet_version_id, snippet_version.version,snippet.name,user.user_name, snippet_version.filesize ".
 		"FROM snippet,snippet_version,snippet_package_item,user ".
 		"WHERE snippet.snippet_id=snippet_version.snippet_id ".
 		"AND user.user_id=snippet_version.submitted_by ".
@@ -86,9 +86,20 @@ function snippet_show_package_snippets($version) {
 			<TR class="'. util_get_alt_row_color($i) .'">
                             <TD><A HREF="/snippet/detail.php?type=snippet&id='.db_result($result,$i,'snippet_id').'"><b><center>'.
 				db_result($result,$i,'snippet_version_id').'</center></b></A></TD>
-                            <TD><A HREF="/snippet/download.php?type=snippet&id='.
+                            <TD>';
+            echo '<A HREF="/snippet/download.php?type=snippet&id='.
 				db_result($result,$i,'snippet_version_id').'"><b><center>'.
-				db_result($result,$i,'version').'</center></b></A></TD>
+				db_result($result,$i,'version').'</b></A>';
+            // For uploaded files, the user can choose between view or display the code snippet
+            if (db_result($result, $i, 'filesize') != 0) {
+                // View link : the file is forced to be displayed as a text
+                echo '&nbsp;<a href="/snippet/download.php?mode=view&type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
+                echo '<img src="'.util_get_image_theme("ic/view.png").'" border="0" alt="'.$Language->getText('snippet_details','view').'" title="'.$Language->getText('snippet_details','view').'"></a>';
+                // Download link : the file is forced to be downloaded
+                echo '&nbsp;<a href="/snippet/download.php?mode=download&type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
+                echo '<img src="'.util_get_image_theme("ic/download.png").'" border="0" alt="'.$Language->getText('snippet_details','download').'" title="'.$Language->getText('snippet_details','download').'"></a>';
+            }
+            echo '</center></TD>
                              <TD>'.db_result($result,$i,'name').'</TD><TD>'.
 				db_result($result,$i,'user_name').'</TD></TR>';
 		}

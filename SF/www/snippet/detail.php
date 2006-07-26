@@ -22,7 +22,7 @@ if ($type=='snippet') {
 
 
     // Snippet was updated?
-    if ($post_changes) {
+    if (isset($post_changes) && $post_changes) {
         // The author or site admin have updated the snippet
         if (snippet_data_can_modify_snippet($id)) {
             if ($snippet_license==100) {
@@ -69,7 +69,7 @@ if ($type=='snippet') {
 	/*
 		Get all the versions of this snippet
 	*/
-	$sql="SELECT user.user_name,snippet_version.snippet_version_id,snippet_version.version,snippet_version.date,snippet_version.changes ".
+	$sql="SELECT user.user_name,snippet_version.snippet_version_id,snippet_version.version,snippet_version.date,snippet_version.changes, snippet_version.filesize ".
 		"FROM snippet_version,user ".
 		"WHERE user.user_id=snippet_version.submitted_by AND snippet_id='$id' ".
 		"ORDER BY snippet_version.snippet_version_id DESC";
@@ -98,11 +98,22 @@ if ($type=='snippet') {
 		$newest_version=db_result($result,0,'snippet_version_id');
 
 		for ($i=0; $i<$rows; $i++) {
-			echo '
-				<TR class="'. html_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').
-				'</TD><TD><A HREF="/snippet/download.php?type=snippet&id='.
-				db_result($result,$i,'snippet_version_id').'"><B><center>'.
-				db_result($result,$i,'version').'</center></B></A></TD><TD>'. 
+			echo '<TR class="'. html_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'snippet_version_id').'</TD>';
+            echo '<TD><center>';
+            // Auto link : the browser manage how to open/save the file
+            echo '<A HREF="/snippet/download.php?type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
+            echo '<B>'.db_result($result,$i,'version').'</B></A>';
+            // For uploaded files, the user can choose between view or display the code snippet
+            if (db_result($result, $i, 'filesize') != 0) {
+                // View link : the file is forced to be displayed as a text
+                echo '&nbsp;<a href="/snippet/download.php?mode=view&type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
+                echo '<img src="'.util_get_image_theme("ic/view.png").'" border="0" alt="'.$Language->getText('snippet_details','view').'" title="'.$Language->getText('snippet_details','view').'"></a>';
+                // Download link : the file is forced to be downloaded
+                echo '&nbsp;<a href="/snippet/download.php?mode=download&type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
+                echo '<img src="'.util_get_image_theme("ic/download.png").'" border="0" alt="'.$Language->getText('snippet_details','download').'" title="'.$Language->getText('snippet_details','download').'"></a>';
+            }
+            echo '</center>
+                </TD><TD>'. 
 			        nl2br(db_result($result,$i,'changes')).'</TD><TD align="center">'.
 			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
@@ -134,7 +145,8 @@ if ($type=='snippet') {
 
 	    echo '<P> '.db_result($result,0,'filename').
 		' ('.sprintf('%d', db_result($result,0,'filesize')/1024).' KB)'.
-		'&nbsp;&nbsp;<a href="/snippet/download.php?type=snippet&id='.$newest_version.'"><b>'.$Language->getText('snippet_details','view_s').'</b></a>';
+		'&nbsp;&nbsp;<a href="/snippet/download.php?mode=view&type=snippet&id='.$newest_version.'"><b>'.$Language->getText('snippet_details','view_s').'</b></a>';
+        echo '<a href="/snippet/download.php?mode=download&type=snippet&id='.$newest_version.'"><b>'.$Language->getText('snippet_details','down_s').'</b></a>';
 
 	} else {
 	    echo '<P>
@@ -149,7 +161,7 @@ if ($type=='snippet') {
 
 
     // Snippet package was updated?
-    if ($post_changes) {
+    if (isset($post_changes) && $post_changes) {
         // The author or site admin have updated the snippet
         if (snippet_data_can_modify_snippet_package($id)) {
             if ($snippet_category==100) {

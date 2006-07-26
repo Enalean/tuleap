@@ -28,7 +28,13 @@ if ($result && db_numrows($result) > 0) {
    } else {
 	
 	// Download the patch with the correct filetype
-	header('Content-Type: '.db_result($result,0,'filetype'));
+	if (isset($mode) && $mode == 'view') {
+        header('Content-Type: text/plain');
+    } elseif (isset($mode) && $mode == 'download') {
+        header('Content-Type: application/octet-stream');
+    } else {
+        header('Content-Type: '.db_result($result,0,'filetype'));
+    }
 	header('Content-Length: '.db_result($result,0,'filesize'));
 	header('Content-Disposition: filename='.db_result($result,0,'filename'));
 

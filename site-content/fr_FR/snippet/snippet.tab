@@ -106,6 +106,7 @@ snippet_details	download_s	Cliquer sur le numéro de &quot;<B>version</B>&quot; p
 snippet_details	submit_s	- Vous pouvez <A HREF="$1"><b><u>soumettre une nouvelle version</u></b></A> de cet échantillon si vous l'avez modifié.
 snippet_details	latest_s_v	Version la plus récente de l'échantillon&nbsp;: $1
 snippet_details	view_s	[Voir l'échantillon]
+snippet_details	down_s	[Télécharger l'échantillon]
 snippet_details	p_upd_fail	ERREUR LORS DE LA MISE A JOUR DU PAQUET !
 snippet_details	p_upd_success	Paquet mis à jour avec succès
 snippet_details	versions_of_p	Versions de ce paquet&nbsp;:
@@ -113,6 +114,8 @@ snippet_details	p_version	Version du paquet
 snippet_details	edit	Modifier
 snippet_details	submit_p	Vous pouvez <A HREF="$1"><b><u>soumettre une nouvelle version</u></b></A> de ce paquet si vous l'avez modifié.
 snippet_details	latest_p_v	Version la plus récente du paquet&nbsp;: $1
+snippet_details	download	Télécharger l'échantillon
+snippet_details	view	Voir l'échantillon
 #
 #-----------------------------------------------
 # Script: SF/www/snippet/download.php
