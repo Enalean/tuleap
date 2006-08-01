@@ -106,15 +106,17 @@ class ArtifactFactory extends Error {
 	 *
 	 *   	@param $user_id  : the user id
 	 *	@param $criteria : array of items field => value
+	 *	@param $offset   : the index of artifact to begin
+	 *	@param $max_rows : number of artifacts to return
 	 *
 	 *	@return	array	The array of Artifact objects.
 	 */
-	function getArtifacts($user_id, $criteria) {
+	function getArtifacts($user_id, $criteria, $offset, $max_rows) {
 		global $Language, $art_field_fact;
 		$artifacts = array();
-		$sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE ".
-			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id";
 		if (is_array($criteria) && count($criteria) > 0) {
+			$sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE ".
+			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id";
 			foreach ($criteria as $c => $cr) {
 				$af = $art_field_fact->getFieldFromName($cr['field_name']);
 				if (!$af || !is_object($af)) {
@@ -136,8 +138,16 @@ class ArtifactFactory extends Error {
 						$sql .= " AND (af.field_name = '".$cr['field_name']."' AND afv.".$af->getValueFieldName()." = '".$cr['field_value']."')";
 				}
 			}
+			$sql .= " AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id" ;
+		} else
+			$sql = "SELECT a.artifact_id FROM artifact_group_list agl, artifact a WHERE ".
+			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id";
+		if ($max_rows > 0) {
+			if (!$offset || $offset < 0) {
+				$offset=0;
+			}
+			$sql .=" LIMIT $offset,$max_rows";
 		}
-		$sql .= " AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id" ;
 		$result=db_query($sql);
 		$rows = db_numrows($result);
 		$this->fetched_rows=$rows;
@@ -151,7 +161,6 @@ class ArtifactFactory extends Error {
 					$artifacts[$arr['artifact_id']] = $artifact;
 			}
 		}
-		
 		return $artifacts;
 	}
 }
