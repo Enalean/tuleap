@@ -1061,7 +1061,7 @@ EOS;
 		$title_arr[]=$Language->getText('tracker_include_type','type');
 		$title_arr[]=$Language->getText('tracker_include_artifact','desc');
         $title_arr[]=$Language->getText('tracker_include_type','fieldset');
-		$title_arr[]=$Language->getText('tracker_include_type','rank_screen');
+		$title_arr[]=$Language->getText('tracker_include_type','rank_in_fieldset');
 		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('tracker_include_canned','delete');
 		
@@ -2824,11 +2824,12 @@ EOS;
             if (count($fields_contained) > 0) {
                 $html .= '<ul>';
                 foreach($fields_contained as $field_contained) {
+                    $link_field_usage = '/tracker/admin/?func=display_field_update&group_id='.$this->Group->getID().'&atid='.$this->getID().'&field_id='.$field_contained->getID();
                     $html .= '<li>';
                     if ($field_contained->getUseIt()) {
-                        $html .= '<strong>'.$field_contained->getLabel().'</strong>';
+                        $html .= '<strong><a href="'.$link_field_usage.'">'.$field_contained->getLabel().'</a></strong>';
                     } else {
-                        $html .= '<em>'.$field_contained->getLabel().'</em>';
+                        $html .= '<em><a href="'.$link_field_usage.'">'.$field_contained->getLabel().'</a></em>';
                     }
                     $html .= '</li>';
                 }

@@ -86,7 +86,7 @@ $result_trackers->execute();
 # For each tracker ...
 while (my ($group_artifact_id) = $result_trackers->fetchrow()) {
     # Create a new fieldset with default name, and attach it to the current tracker
-    $insert_fieldset = "INSERT INTO artifact_field_set (group_artifact_id, name, description) VALUES ($group_artifact_id, 'fieldset_default_lbl_key', 'fieldset_default_desc_key')";
+    $insert_fieldset = "INSERT INTO artifact_field_set (group_artifact_id, name, description, rank) VALUES ($group_artifact_id, 'fieldset_default_lbl_key', 'fieldset_default_desc_key', 10)";
     $result_insert_fieldset = $dbh->prepare($insert_fieldset);
     $result_insert_fieldset->execute();
 
