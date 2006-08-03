@@ -584,7 +584,7 @@ class ArtifactImport extends Error {
 
     $comment = str_replace("'","\'",$arr['comment']);
 
-    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = $art_id AND field_name = 'details' AND old_value = '$comment'");
+    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = $art_id AND field_name = 'comment' AND old_value = '$comment'");
 
     if ($res && db_numrows($res) > 0) {
       return true;
@@ -594,18 +594,18 @@ class ArtifactImport extends Error {
   }
 
   /** assume that the 
-   * @param details (IN): details have the form that we get when exporting details in csv format
-   *                      (see ArtifactHtml->showDetails(ascii = true))
-   * @param parsed_details (OUT): an array (#detail => array2), where array2 is of the form
+   * @param followup_comments (IN): comments have the form that we get when exporting follow-up comments in csv format
+   *                      (see ArtifactHtml->showFollowUpComments(ascii = true))
+   * @param parsed_comments (OUT): an array (#detail => array2), where array2 is of the form
    *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
-   * @param for_parse_report (IN): if we parse the details to show them in the parse report then we keep the labels
+   * @param for_parse_report (IN): if we parse the follow-up comments to show them in the parse report then we keep the labels
    *                               for users and comment-types
    */
-  function parseDetails($details,&$parsed_details,&$errors,$art_id,$for_parse_report=false) {
+  function parseFollowUpComments($followup_comments,&$parsed_comments,&$errors,$art_id,$for_parse_report=false) {
     global $sys_lf, $sys_datefmt,$user_id,$Language;
     
     //echo "<br>\n";
-    $comments = split("------------------------------------------------------------------",$details);
+    $comments = split("------------------------------------------------------------------",$followup_comments);
     
     $i = 0;
     while (list(,$comment) = each($comments)) {
@@ -623,7 +623,7 @@ class ArtifactImport extends Error {
 	//if no date given, consider this whole string as the comment
 	
 	//try nevertheless if we can apply legacy Bug and Task export format
-	if ($this->parseLegacyDetails($details,$parsed_details,$errors,$for_parse_report)) {
+	if ($this->parseLegacyDetails($followup_comments,$parsed_comments,$errors,$for_parse_report)) {
 	  return true;
 	} else {
 	  if ($for_parse_report) {
@@ -639,7 +639,7 @@ class ArtifactImport extends Error {
 	  }
 	  $arr["comment"] = $comment;
 	  if (!$this->checkCommentExist($arr,$art_id)) {
-	    $parsed_details[] = $arr;
+	    $parsed_comments[] = $arr;
 	  }
 	  continue;
 	}
@@ -701,7 +701,7 @@ class ArtifactImport extends Error {
       $arr["type"] = $comment_type_id;
       $arr["comment"] = $comment;
       if (!$this->checkCommentExist($arr,$art_id)) {
-	$parsed_details[] = $arr;
+	$parsed_comments[] = $arr;
       }
       unset($comment_type_id);
     }
@@ -828,7 +828,7 @@ class ArtifactImport extends Error {
    * prepare our $data record so that we can use standard artifact methods to create, update, ...
    * the imported artifact
    */
-  function prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$details) {
+  function prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,&$artifact_depend_id,&$add_cc,&$cc_comment,&$comments) {
   global $Language;
   for ($c=0; $c < count($data); $c++) {
     $label = $parsed_labels[$c];
@@ -841,7 +841,7 @@ class ArtifactImport extends Error {
     if ($label == $this->lbl_list['follow_ups']) {
       //$field_name = "details";
       if ($data[$label] != "" && trim($data[$label]) != $Language->getText('tracker_import_utils','no_followups')) {
-	$details = $data[$label];
+	$comments = $data[$label];
       }
       continue;
       
@@ -870,9 +870,8 @@ class ArtifactImport extends Error {
 
     // ORIGINAL SUBMISSION
       //special treatment for "Original Submission" alias "details"
-      //in the import. The follow-up comments are also named "details"
-      //and in an import (in contrast to a normal create) we can
-      //have both information "original submission" AND "follow-up comments"
+      //in the import. To avoid confusion, the details field is renamed
+      //original_submission in the import
     } else if ($field_name == "details") {
       $vfl["original_submission"] = $data[$label];
       continue;
@@ -954,7 +953,7 @@ class ArtifactImport extends Error {
       exit_permission_denied();
     }
     
-    $vfl = $this->prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
+    $vfl = $this->prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$comments);
    
     // Artifact creation        
     if (!$ah->create($vfl,true,$row)) {
@@ -973,9 +972,9 @@ class ArtifactImport extends Error {
       }
     }
 
-    if ($details) {
-      if ($this->parseDetails($details,$parsed_details,$errors,'0') && $parsed_details && !empty($parsed_details)) {
-	if (!$ah->addDetails($parsed_details)) {
+    if ($comments) {
+      if ($this->parseFollowUpComments($comments,$parsed_comments,$errors,'0') && $parsed_comments && !empty($parsed_comments)) {
+	if (!$ah->addFollowUpComments($parsed_comments)) {
 	  $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
 	  return false;
 	}
@@ -1014,7 +1013,7 @@ class ArtifactImport extends Error {
     }
     
 
-    $vfl = $this->prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$details);
+    $vfl = $this->prepareVfl($data,$used_fields,$parsed_labels,$predefined_values,$artifact_depend_id,$add_cc,$cc_comment,$comments);
 
     //data control layer
     if (!$ah->handleUpdate($artifact_depend_id,100,$changes,false,$vfl,true)) {
@@ -1025,20 +1024,20 @@ class ArtifactImport extends Error {
 	$errors .= $Language->getText('tracker_import_utils','problem_add_cc',$ah->getID())." ";
       }
     }
-    $details_ok = false;
-    if ($details) {
-      if ($this->parseDetails($details,$parsed_details,$errors,$aid) && $parsed_details && !empty($parsed_details)) {
-            $details_ok = true;
-            if (!$ah->addDetails($parsed_details)) {
+    $comments_ok = false;
+    if ($comments) {
+      if ($this->parseFollowUpComments($comments,$parsed_comments,$errors,$aid) && $parsed_comments && !empty($parsed_comments)) {
+            $comments_ok = true;
+            if (!$ah->addFollowUpComments($parsed_comments)) {
                 $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
-                $details_ok = false;
+                $comments_ok = false;
                 return false;
             }
         } else {
             return false;
         }
     }
-    if($notify && (count($changes)>0 || $add_cc || $details_ok)) {
+    if($notify && (count($changes)>0 || $add_cc || $comments_ok)) {
         $ah->mailFollowupWithPermissions(explode(',',$this->ath->getEmailAddress()), $changes);
     }
   }  

@@ -107,5 +107,16 @@ while (my ($group_artifact_id) = $result_trackers->fetchrow()) {
 }
 EOF
 
+echo " DB - Artifact details Field and Follow-up comments update"
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
+################################################################################
+# artifact_history: updating values
+#
+UPDATE artifact_history 
+SET field_name='comment' 
+WHERE field_name='details' 
+
+EOF
 
 echo "End of main DB upgrade"

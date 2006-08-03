@@ -169,15 +169,15 @@ function showErrors($errors) {
 	  
 	  //FOLLOW_UP COMMENTS
 	  if ($parsed_labels[$c] == $this->lbl_list['follow_ups']) {
-	    unset($parsed_details);
+	    unset($parsed_comments);
 	    unset($parse_error);
 	    $art_id = (($aid_column != -1 && $aid != "") ? $aid : "0");
-	    if ($this->parseDetails($data[$c],$parsed_details,$parse_error,$art_id,true)) {
-	      if (count($parsed_details) > 0) {
+	    if ($this->parseFollowUpComments($data[$c],$parsed_comments,$parse_error,$art_id,true)) {
+	      if (count($parsed_comments) > 0) {
 		echo '<TD $width valign="top"><TABLE>';
 		echo '<TR class ="boxtable"><TD class="boxtitle">'.$Language->getText('tracker_import_utils','date').'</TD><TD class="boxtitle">'.$Language->getText('global','by').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','type').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','comment').'</TD></TR>';
-		for ($d=0; $d < count($parsed_details); $d++) {
-		  $arr = $parsed_details[$d];
+		for ($d=0; $d < count($parsed_comments); $d++) {
+		  $arr = $parsed_comments[$d];
 		  echo '<TR class="'.util_get_alt_row_color($d).'">';
 		  echo "<TD $width>".$arr['date']."</TD><TD $width>".$arr['by']."</TD><TD $width>".$arr['type']."</TD><TD $width>".$arr['comment']."</TD>";
 		  echo "</TR>\n";

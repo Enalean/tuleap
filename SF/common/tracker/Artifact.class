@@ -270,7 +270,7 @@ class Artifact extends Error {
      */
     function addHistory ($field,$old_value,$new_value,$type=false,$email=false) {
 	//MLS: add case where we add CC and file_attachment into history for task #240
-	if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by') {
+	if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by' || $field == 'comment') {
 	   $name = $field;
 	} else {
            // If field is not to be kept in bug change history then do nothing
@@ -294,13 +294,13 @@ class Artifact extends Error {
         }
         
         // If type has a value add it into the sql statement (this is only for
-        // the follow up comments (details field))
+        // the follow up comments (comment field))
         if ($type) {
             $fld_type = ',type'; $val_type = ",'$type'";
         } else {
             // No comment type specified for a followup comment
             // so force it to None (100)
-            if ($name == 'details') {
+            if ($name == 'comment') {
                 $fld_type = ',type'; $val_type = ",'100'";
             }
         }             
@@ -507,39 +507,35 @@ class Artifact extends Error {
     /**
      *  Add a followup comment
      *
-     * @param details: the comment
+     * @param comment: the comment
      * @param email: user email if the user is not logged in
      * @param changes (OUT): array of changes (for notifications)
      *
      *  @return boolean
      */
-    function addComment($details,$email=false,&$changes) {
+    function addComment($comment,$email=false,&$changes) {
                         
         global $feedback,$art_field_fact,$Language;
 
         // Add a new comment if there is one
-        if ($details != '') {
+        if ($comment != '') {
                 
-            $field = $art_field_fact->getFieldFromName('details');
-            if ( $field ) {
-                // For none project members force the comment type to None (100)
-                if ( !user_isloggedin() ) {
-                    if ( $email ) {
-                        $this->addHistory($field,htmlspecialchars($details), "", 100, $email);
-                    } else {
-		      $feedback .= $Language->getText('tracker_common_artifact','enter_email');
-                        return false;
-                    }
+            // For none project members force the comment type to None (100)
+            if ( !user_isloggedin() ) {
+                if ( $email ) {
+                    $this->addHistory('comment',htmlspecialchars($comment), "", 100, $email);
                 } else {
-                    $this->addHistory($field,htmlspecialchars($details), "", 100);
+                    $feedback .= $Language->getText('tracker_common_artifact','enter_email');
+                    return false;
                 }
-                $changes['details']['add'] = stripslashes($details);
-                $changes['details']['type'] = $Language->getText('global','none');
+            } else {
+                $this->addHistory('comment',htmlspecialchars($comment), "", 100);
+            }
+            $changes['comment']['add'] = stripslashes($comment);
+            $changes['comment']['type'] = $Language->getText('global','none');
                         
-                $feedback .= $Language->getText('tracker_common_artifact','add_comment');
-            }               
+            $feedback .= $Language->getText('tracker_common_artifact','add_comment');               
             return true;
-                        
         } else {
             return false;
         }
@@ -548,17 +544,16 @@ class Artifact extends Error {
 
     /** 
      * handle a simple follow-up comment
-     * Details field history is handled a little differently. Followup comments
-     * are added in the bug history along with the comment type.
+     * Followup comments are added in the bug history along with the comment type.
      * 
      * If a canned response is given it overrides anything typed in the followup
-     * comment text area (aka details area). 
+     * comment text area
      *
-     * @param details (IN) : the details that the user typed in
+     * @param comment (IN) : the comment that the user typed in
      * @param canned_response (IN) : the id of the canned response
      * @param feedback (OUT) : report if something went wrong or not
      */
-    function addDetail($details,$comment_type_id,$canned_response,&$changes,&$feedback) {
+    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes,&$feedback) {
       global $art_field_fact,$Language;
       if ($canned_response != 100) {
 	
@@ -566,7 +561,7 @@ class Artifact extends Error {
 	$res3=db_query($sql);
 	
 	if ($res3 && db_numrows($res3) > 0) {
-	  $details = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
+	  $comment = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
 	  $feedback .= $Language->getText('tracker_common_artifact','canned_used');
 	} else {
 	  $feedback .= $Language->getText('tracker_common_artifact','unable_canned');
@@ -574,16 +569,13 @@ class Artifact extends Error {
 	}
       }
       
-      if ($details != '') {
-	$field = $art_field_fact->getFieldFromName('details');
-	if ( $field ) {
-	  $this->addHistory($field,htmlspecialchars($details), '', $comment_type_id);
-	}
-	$changes['details']['add'] = stripslashes($details);
+      if ($comment != '') {
+          $this->addHistory('comment',htmlspecialchars($comment), '', $comment_type_id);
+          $changes['comment']['add'] = stripslashes($comment);
 
 	$field = $art_field_fact->getFieldFromName("comment_type_id");
 	if ( $field && isset($comment_type_id)) {
-	  $changes['details']['type'] =
+	  $changes['comment']['type'] =
 	    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
 	}
       }
@@ -592,14 +584,14 @@ class Artifact extends Error {
     /**
      *  Add a list of follow-up comments coming from the import facility
      *
-     * @param parsed_details (OUT): an array (#detail => array2), where array2 is of the form
+     * @param parsed_comments (IN): an array (#detail => array2), where array2 is of the form
      *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
      *  @return boolean
      */
-    function addDetails($parsed_details) {
+    function addFollowUpComments($parsed_comments) {
       global $Language;
 
-        while (list(,$arr) = each($parsed_details)) {        
+        while (list(,$arr) = each($parsed_comments)) {        
 	    $by = $arr['by'];
 	    if ($by == "100") {
 	      //this case should not exist in new trackers but
@@ -615,7 +607,7 @@ class Artifact extends Error {
 	    }	
 
 	    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-            		"VALUES (".$this->getID().",'details','".$arr['comment']."','','$user_id','$email','".$arr['date']."','".$arr['type']."')";
+            		"VALUES (".$this->getID().",'comment','".$arr['comment']."','','$user_id','$email','".$arr['date']."','".$arr['type']."')";
 	    //echo $sql."<br>\n";
 
             db_query($sql);
@@ -664,15 +656,15 @@ class Artifact extends Error {
             //  statement
             //
             $changes = array();
+            $upd_list = '';
             reset($vfl);
             while (list($field_name,$value) = each($vfl)) {
                 
-		
                 $field = $art_field_fact->getFieldFromName($field_name);
                 if ( $field && $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
                     // skip over special fields  except for details which in this 
                     // particular case can be processed normally
-                    if ($field->isSpecial() || ($field_name == 'details')) {
+                    if ($field->isSpecial()) {
                         continue; 
                     }
 
@@ -807,15 +799,15 @@ class Artifact extends Error {
 		}
 	    }
 
-            // Details field history is handled a little differently. Followup comments
+            // Comment field history is handled a little differently. Followup comments
             // are added in the bug history along with the comment type.
             // 
             // If a canned response is given it overrides anything typed in the followup
-            // comment text area (aka details area). 
-            $details = $vfl['details'];
+            // comment text area. 
+            $comment = $HTTP_POST_VARS['comment'];
 	    $comment_type_id = $vfl['comment_type_id'];
 
-	    $this->addDetail($details,$comment_type_id,$canned_response,$changes,$feedback);
+	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$feedback);
             
             
             //
@@ -1218,26 +1210,26 @@ class Artifact extends Error {
 
         
     /**
-     * Return the follow ups 
+     * Return the users that have posted follow ups 
      *
      * @return array
      */
     function getCommenters() {
         $sql="SELECT DISTINCT mod_by FROM artifact_history ".
 	  "WHERE artifact_id=".$this->getID()." ".
-            "AND field_name = 'details' AND mod_by != 100";
+            "AND field_name = 'comment' AND mod_by != 100";
         return db_query($sql);
     }
 
     /**
-     * Return the follow ups 
+     * Return the mails of anonymous users that have posted follow ups 
      *
      * @return array
      */
     function getAnonymousCommenters() {
         $sql="SELECT DISTINCT email FROM artifact_history ".
 	  "WHERE artifact_id=".$this->getID()." ".
-            "AND field_name = 'details' ".
+            "AND field_name = 'comment' ".
 	  "AND mod_by = 100";
         return db_query($sql);
     }
@@ -1256,7 +1248,7 @@ class Artifact extends Error {
 	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
 	      "FROM artifact_history,artifact_field_value_list,artifact_field,user ".
 	      "WHERE artifact_history.artifact_id=".$this->getID()." ".
-	      "AND artifact_history.field_name = 'details' ".
+	      "AND artifact_history.field_name = 'comment' ".
 	      "AND artifact_history.mod_by=user.user_id ".
 	      "AND artifact_history.type = artifact_field_value_list.value_id ".
 	      "AND artifact_field_value_list.field_id = artifact_field.field_id ".
@@ -1274,7 +1266,7 @@ class Artifact extends Error {
             $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
                 "FROM artifact_history,user ".
                 "WHERE artifact_history.artifact_id=".$this->getID()." ".
-                "AND artifact_history.field_name = 'details' ".
+                "AND artifact_history.field_name = 'comment' ".
                 "AND artifact_history.mod_by=user.user_id ".
                 "ORDER BY artifact_history.date DESC";
             //echo $sql;
@@ -1287,7 +1279,7 @@ class Artifact extends Error {
     }
         
     /**
-     * Return the history events for this artifact (excluded details events - See followups)
+     * Return the history events for this artifact (excluded comment events - See followups)
      *
      * @return array
      */
@@ -1295,7 +1287,7 @@ class Artifact extends Error {
         $sql="select artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,artifact_history.type,user.user_name ".
             "FROM artifact_history,user ".
             "WHERE artifact_history.mod_by=user.user_id ".
-            "AND artifact_history.field_name <> 'details' ".
+            "AND artifact_history.field_name <> 'comment' ".
             "AND artifact_id=".$this->getID()." ORDER BY artifact_history.date DESC";
         return db_query($sql);
     }

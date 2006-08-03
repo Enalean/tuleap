@@ -186,11 +186,11 @@ class ArtifactHtml extends Artifact {
                             echo '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                                  $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                     }
-                    echo '<TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+                    echo '<TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
             } else {
                     if (!$pv) {
                             echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
-                        <TEXTAREA NAME="details" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+                        <TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
                     }
             }
                             
@@ -199,7 +199,7 @@ class ArtifactHtml extends Artifact {
             echo '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
     
-            echo $this->showDetails($group_id);
+            echo $this->showFollowUpComments($group_id);
             echo '</td></tr>';
             
             //
@@ -316,9 +316,15 @@ class ArtifactHtml extends Artifact {
                 $label       = $field_html->labelDisplay(false,false,!$read_only);
                 $label      .= ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
                 
-                // original submission field must be displayed read-only
+                // original submission field must be displayed read-only,
+                // except for site admin, tracker admin and for the artifact submitter
                 if ($field->getName()=='details') {
-                    $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
+                    if (user_is_super_user() || $this->ArtifactType->userIsAdmin() || $this->getSubmittedBy()==$user_id ) {
+                        // original submission is editable
+                        $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                    } else {
+                        $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
+                    }
                 } else if ($field->getName() == 'submitted_by') {
                     $value = util_user_link(user_getname($field_value));
                 } else if ($field->getName() == 'open_date') {
@@ -581,7 +587,7 @@ class ArtifactHtml extends Artifact {
          */
         function showHistory ($group_id,$group_artifact_id) {
             //
-                //      show the artifact_history rows that are relevant to this artifact_id, excluding details
+                //      show the artifact_history rows that are relevant to this artifact_id, excluding comment (follow-up comments)
                 //
             global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
             $result=$this->getHistory();
@@ -1028,10 +1034,10 @@ class ArtifactHtml extends Artifact {
          *
          * @return void
          */
-        function showDetails($group_id, $ascii=false) {
+        function showFollowUpComments($group_id, $ascii=false) {
 
             //
-            //  Format the details rows from artifact_history
+            //  Format the comment rows from artifact_history
             //  
             global $sys_datefmt,$sys_lf,$Language;
             
@@ -1487,8 +1493,8 @@ class ArtifactHtml extends Artifact {
 	    
 	    // Now display other special fields
         
-        // Then output the history of bug details from newest to oldest
-	    $body .= $this->showDetails($group_id, true);
+        // Then output the history of bug comments from newest to oldest
+	    $body .= $this->showFollowUpComments($group_id, true);
 	    
 	    // Then output the CC list
 	    $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
@@ -1496,7 +1502,7 @@ class ArtifactHtml extends Artifact {
 	    // Then output the dependencies
 	    $body .= "$sys_lf$sys_lf".$this->showDependencies($group_id,$group_artifact_id,true);
 	    
-	    // Then output the history of details from newest to oldest
+	    // Then output the history of attached files from newest to oldest
 	    $body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
 	    
 	    // Finally output the message trailer
@@ -1539,15 +1545,15 @@ class ArtifactHtml extends Artifact {
 	      }
 	    }
             //Process special cases first: follow-up comment
-	    if ($changes['details']) {
+	    if ($changes['comment']) {
 	      $visible_change = true;
 	      $out_com = "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------$sys_lf";
 	    
-	      if (isset($changes['details']['type']) && $changes['details']['type'] != $Language->getText('global','none') && $changes['details']['type'] != '') {
-		$out_com .= "[".$changes['details']['type']."]$sys_lf";
+	      if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none') && $changes['comment']['type'] != '') {
+		$out_com .= "[".$changes['comment']['type']."]$sys_lf";
 	      }
-	      $out_com .= util_unconvert_htmlspecialchars($changes['details']['add']);
-	      unset($changes['details']);
+	      $out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
+	      unset($changes['comment']);
 	    }
         
             //Process special cases first: file attachment

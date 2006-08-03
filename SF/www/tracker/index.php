@@ -271,7 +271,7 @@ if ( $func == 'gotoid' ) {
 				}
 
 				// Add follow-up comments if any
-				$ah->addDetail($follow_up_comment,$comment_type_id,$canned_response,$changes,$feedback);
+				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$feedback);
 
                                 // send an email to notify the user of the artifact update
                                 //$ah->mailFollowup($ath->getEmailAddress());

@@ -284,7 +284,7 @@ class ArtifactField extends Error {
 	 * @return boolean
 	 */
 	function getKeepHistory() {
-		if ($this->field_name == 'cc' || $this->field_name == 'attachment' || $this->field_name == 'submitted_by') return true;
+		if ($this->field_name == 'cc' || $this->field_name == 'attachment' || $this->field_name == 'submitted_by' || $this->field_name == 'details') return true;
 		else return $this->keep_history;
 	}
 	

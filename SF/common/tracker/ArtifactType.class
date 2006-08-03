@@ -1472,7 +1472,7 @@ class ArtifactType extends Error {
 	    
 	    //----------------------------------------------------------
 	    // Check :  NEW_COMMENT  A new followup comment is added 
-	    if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['details'])) {
+	    if ($arr_notif[$role]['NEW_COMMENT'] && isset($changes['comment'])) {
 			// echo "DBG NEW_COMMENT notified<br>";
 			return true;
 	    }
@@ -1560,7 +1560,7 @@ class ArtifactType extends Error {
 	    
 	    // Delete all tested fields from the $changes array. If any remains then it
 	    // means a notification must be sent
-	    unset($changes['details']);
+	    unset($changes['comment']);
 	    unset($changes['attach']);
 	    unset($changes['priority']);
 	    unset($changes['severity']);

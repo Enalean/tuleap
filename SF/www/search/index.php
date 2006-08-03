@@ -448,7 +448,7 @@ if ($type_of_search == "soft") {
 		. "    artifact.group_artifact_id='$atid' "
 		. "    AND ((artifact.details LIKE '%$words1%') "
 		. "      OR (artifact.summary LIKE '%$words2%') "
-		. "      OR (artifact_history.field_name='details' "
+		. "      OR (artifact_history.field_name='comment' "
 		. "          AND (artifact_history.old_value LIKE '%$words3%'))) "
 		. "GROUP BY open_date DESC LIMIT $offset,999999999";
 
