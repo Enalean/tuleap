@@ -195,7 +195,7 @@ class ArtifactHtml extends Artifact {
             }
                             
             if (!user_isloggedin()&&!$pv) {
-                    echo $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($REQUEST_URI));
+                    echo $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
             echo '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
     

@@ -648,8 +648,8 @@ if ( $func == 'gotoid' ) {
                 exit_error($Language->getText('global','error'),$ah->getErrorMessage());
             }
 
-            if ($details) {
-                if (!$ah->addComment($details,$email,$changes)) {
+            if ($comment) {
+                if (!$ah->addComment($comment,$email,$changes)) {
                     exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment').' - '.$feedback );
                 }
             }

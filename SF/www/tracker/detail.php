@@ -31,7 +31,7 @@ $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 // Printer version ?
 if ( !isset($pv) ) {
 	$pv = false;
-	$ro = false;
+	$ro = !user_isloggedin();
 } else {
 	if ( $pv ) $ro = true;
 }
