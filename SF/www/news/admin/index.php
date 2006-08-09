@@ -42,7 +42,21 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			$sql="UPDATE news_bytes SET is_approved='$status', summary='".htmlspecialchars($summary)."', ".
 				"details='".htmlspecialchars($details)."' WHERE id='$id' AND group_id='$group_id'";
 			$result=db_query($sql);
-
+			
+			// update news permissions
+			$qry1="SELECT * FROM news_bytes WHERE id='$id'";
+			$res1=db_query($qry1);
+			$forum_id=db_result($res1,0,'forum_id');
+			$qry2="SELECT * FROM permissions where object_id='$forum_id'";
+			$res2=db_query($qry2);
+			if (db_numrows($res2) > 0) {
+			    $qry2="UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+			    $res2=db_query($qry2);
+			} else {
+			    $qry3="INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
+			    $res3=db_query($qry3);
+			}
+			
 			if (!$result || db_affected_rows($result) < 1) {
 				$feedback .= ' '.$Language->getText('news_admin_index','group_update_err').' ';
 			} else {
@@ -70,6 +84,19 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','not_found_err'));
 		}
                 $username=user_getname(db_result($result,0,'submitted_by'));
+		$forum_id=db_result($result,0,'forum_id');
+		$qry="SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+		$res=db_query($qry);
+		if (db_numrows($res) > 0) {
+		    $ugroup_id=db_result($res,0,'ugroup_id');
+		}
+		if ((db_numrows($res) < 1) || ($ugroup_id=="1") || ($ugroup_id=="2")) {
+		    $is_private="";
+		    $is_public="CHECKED";
+		} else {
+		    $is_private="CHECKED";
+		    $is_public="";
+		}    
 
 		echo '
 		<H3>'.$Language->getText('news_admin_index','approve_for',group_getname($group_id)).'</H3>
@@ -85,11 +112,15 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
  		<B>'.$Language->getText('global','status').':</B><BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="0" CHECKED> '.$Language->getText('news_admin_index','displayed').'<BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index','delete').'<BR>
- 
+	        
+		<B>'.$Language->getText('news_submit','news_privacy').':</B><BR> 
+		<INPUT TYPE="RADIO" NAME="permission" VALUE="2" '.$is_public.'> '.$Language->getText('news_submit','public_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="permission" VALUE="3" '.$is_private.'> '.$Language->getText('news_submit','private_news').'<BR>
+		
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="30" MAXLENGTH="60"><BR>
+		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="44" MAXLENGTH="60"><BR>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><P>
+		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><P>
 		<B>'.$Language->getText('news_admin_index','if_edit_delete',$GLOBALS['sys_name']).'</B><BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
@@ -196,9 +227,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		<INPUT TYPE="RADIO" NAME="status" VALUE="0"> '.$Language->getText('news_admin_index','do_nothing').'<BR>
 		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> '.$Language->getText('news_admin_index','delete').'<BR>
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="30" MAXLENGTH="60"><BR>
+		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="44" MAXLENGTH="60"><BR>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><BR>
+		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><BR>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
@@ -218,8 +249,17 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				<H4>'.$Language->getText('news_admin_index','need_approve').'</H4>
 				<P>';
 			for ($i=0; $i<$rows; $i++) {
-				echo '
-				<A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+			    //if the news is private, not display it in the list of news to be approved
+			    $forum_id=db_result($result,$i,'forum_id');  
+			    $qry="SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";   
+			    $res=db_query($qry);
+			    if (db_numrows($res) > 0) {
+			        $ugroup_id=db_result($res,0,'ugroup_id');
+			    }	
+			    if ((db_numrows($res) < 1) || ($ugroup_id=="1") || ($ugroup_id=="2")) {
+			        echo '
+				    <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+			    }
 			}
 		}
 

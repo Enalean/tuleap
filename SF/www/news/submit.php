@@ -28,7 +28,13 @@ if (user_isloggedin()) {
             $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
                 " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
             $result=db_query($sql);
-            if (!$result) {
+            
+	    $ugroup_id=$private_news;  
+	    $qry="INSERT INTO permissions (permission_type,object_id,ugroup_id)".
+		" VALUES ('NEWS_READ','$new_id','$ugroup_id')";
+	    $res=db_query($qry);	
+	    
+	    if (!$result) {
                 $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
             } else {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
@@ -61,10 +67,15 @@ if (user_isloggedin()) {
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<P>
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="" SIZE="30" MAXLENGTH="60">
+		<INPUT TYPE="TEXT" NAME="summary" VALUE="" SIZE="44" MAXLENGTH="60">
 		<P>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
-		<TEXTAREA NAME="details" ROWS="5" COLS="50" WRAP="SOFT"></TEXTAREA><BR>
+		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>
+		<P><TABLE BORDER=0>
+		<TR><TD><B>'.$Language->getText('news_submit','news_privacy').':</B></TD>
+		<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="2" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
+		<TR><TD></TD><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="3">'. $Language->getText('news_submit','private_news').'</TD></TR> 
+		</TABLE><P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
