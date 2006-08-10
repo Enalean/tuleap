@@ -67,6 +67,7 @@ news_utils	submit_news	Submit News
 # Script: SF/www/news/submit.php
 #
 news_submit	insert_err	ERROR doing insert
+news_submit	update_err	ERROR doing update
 news_submit	news_added	News Added.
 news_submit	only_admin_submits	Permission Denied. You cannot submit news for a project unless you are an admin on that project
 news_submit	submit_news_for	Submit News For $1
@@ -75,3 +76,5 @@ news_submit	for_project	For Project: $1
 news_submit	news_privacy	Privacy
 news_submit	public_news	<b>public</b> (everyone can see it)
 news_submit	private_news	<b>private</b> (only project members)
+news_submit	news_perm_update_success	Permissions updated successfully.
+news_submit	news_perm_create_success	Permissions created successfully.
