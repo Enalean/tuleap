@@ -52,9 +52,19 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			if (db_numrows($res2) > 0) {
 			    $qry2="UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
 			    $res2=db_query($qry2);
+			    if ($res2) {
+			        $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
+			    } else {
+			        $feedback .= ' '.$Language->getText('news_submit','update_err').' ';
+			    }
 			} else {
 			    $qry3="INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
 			    $res3=db_query($qry3);
+			    if ($res3) {
+			        $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
+			    } else {
+			        $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+			    }
 			}
 			
 			if (!$result || db_affected_rows($result) < 1) {
@@ -86,7 +96,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
                 $username=user_getname(db_result($result,0,'submitted_by'));
 		$forum_id=db_result($result,0,'forum_id');
 		$qry="SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
-		$res=db_query($qry);
+		$res=db_query($qry);		
 		if (db_numrows($res) > 0) {
 		    $ugroup_id=db_result($res,0,'ugroup_id');
 		}

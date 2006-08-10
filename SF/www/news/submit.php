@@ -28,16 +28,22 @@ if (user_isloggedin()) {
             $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
                 " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
             $result=db_query($sql);
-            
-	    $ugroup_id=$private_news;  
-	    $qry="INSERT INTO permissions (permission_type,object_id,ugroup_id)".
-		" VALUES ('NEWS_READ','$new_id','$ugroup_id')";
-	    $res=db_query($qry);	
-	    
+               
 	    if (!$result) {
                 $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
             } else {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
+		// set permissions on this piece of news
+		$ugroup_id=$private_news;  
+	        $qry="INSERT INTO permissions (permission_type,object_id,ugroup_id)".
+		     " VALUES ('NEWS_READ','$new_id','$ugroup_id')";
+	        $res=db_query($qry);
+		if ($res) {
+		    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
+		} else {
+		    $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+		}
+
             }
 	}
 
