@@ -45,7 +45,7 @@ print "  <language>en-us</language>\n";
 // ## item outputs
 while ($row = db_fetch_array($res)) {
 	$forum_id=$row['forum_id'];
-	if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+	if (news_check_permission($forum_id,$group_id)) {
 	    print "  <item>\n";
 	    print "   <title>".htmlspecialchars($row[summary])."</title>\n";
 	    // if news group, link is main page

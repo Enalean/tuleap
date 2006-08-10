@@ -59,7 +59,7 @@ if ($rows < 1) {
 
 	for ($j = 0; $j < $rows; $j++) { 
 	  $forum_id=db_result($result,$j,'forum_id');
-	  if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+	  if (news_check_permission($forum_id,$group_id)) {
 	      if ($group_id) {
 	      echo '
 		<A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').

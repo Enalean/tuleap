@@ -87,7 +87,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	for ($i=0; $i<$rows; $i++) {
 	    //check if the news is private (project members) or public (registered users)
 	    $forum_id=db_result($result,$i,'forum_id');
-	    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+	    if (news_check_permission($forum_id,$group_id)) {
 	
 	        if ($show_summaries && $limit) {
 		    //get the first paragraph of the story
@@ -238,6 +238,7 @@ function get_news_name($id) {
 		return db_result($result, 0, 'summary');
 	}
 }
+
 function get_news_name_from_forum_id($id) {
 	/*
 		Takes an ID and returns the corresponding forum name
@@ -249,6 +250,17 @@ function get_news_name_from_forum_id($id) {
 	} else {
 		return db_result($result, 0, 'summary');
 	}
+}
+
+function news_check_permission($forum_id,$group_id) {
+	/*
+		Takes a forum_id and checks if user is authorized to read the piece of news associated to this forum_id
+	*/
+	if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+	    return true;
+        } else {
+	    return false;
+	}    
 }
 
 ?>
