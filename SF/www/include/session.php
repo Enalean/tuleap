@@ -231,8 +231,8 @@ function session_set_new($user_id) {
 	// set global
 	$res=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
 	if (db_numrows($res) > 1) {
-		db_query("DELETE FROM session WHERE session_hash='$GLOBALS[session_hash]'");
-		exit_error($Language->getText('global','error'),$Language->getText('include_session','hash_err'));
+		session_delete($GLOBALS['session_hash']);
+        exit_error($Language->getText('global','error'),$Language->getText('include_session','hash_err'));
 	} else {
 		$G_SESSION = db_fetch_array($res);
 		session_setglobals($G_SESSION['user_id']);
@@ -295,6 +295,16 @@ function session_continue($sessionKey) {
 	} else {
 		return false;
 	}
+}
+
+/**
+ * session_delete - Delete from the database the session associated with the given session_hash
+ *
+ * @param string $sessionKey the session hash string associated with the session we want to delete
+ * @return boolean true if the session is deleted in the database, false otherwise
+ */
+function session_delete($sessionKey) {
+    return db_query("DELETE FROM session WHERE session_hash='$sessionKey'");
 }
 
 ?>

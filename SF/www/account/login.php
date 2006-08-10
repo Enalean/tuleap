@@ -32,7 +32,7 @@ if (isset($login) && $login) {
 if (isset($session_hash) && $session_hash) {
 	//nuke their old session
 	session_cookie('session_hash','');
-	db_query("DELETE FROM session WHERE session_hash='$session_hash'");
+    $session_delete($session_hash);
 }
 $HTML->header(array('title'=>$Language->getText('account_login', 'title')));
 
