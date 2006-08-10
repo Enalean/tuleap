@@ -263,4 +263,39 @@ function news_check_permission($forum_id,$group_id) {
 	}    
 }
 
+function news_insert_permissions($forum_id,$permission) {
+	
+	global $Language;
+	
+	/*
+		Takes forum_id and permission, and inserts a corresponding entry in 'permissions' table
+	*/
+		
+	$qry = "INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
+	$res = db_query($qry);
+	if ($res) {
+	    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
+	} else {
+	    $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+	}
+}
+
+function news_update_permissions($forum_id,$permission) {
+	
+	global $Language;
+	
+	/*
+		Takes forum_id and permission, and updates the permission of the corresponding entry in 'permissions' table
+	*/
+	
+	$qry = "UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+	$res = db_query($qry);
+	if ($res) {
+	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
+	} else {
+	    $feedback .= ' '.$Language->getText('news_submit','update_err').' ';
+	}	
+}
+
+
 ?>

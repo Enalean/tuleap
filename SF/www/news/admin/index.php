@@ -50,21 +50,23 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			$qry2="SELECT * FROM permissions where object_id='$forum_id'";
 			$res2=db_query($qry2);
 			if (db_numrows($res2) > 0) {
-			    $qry2="UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+			    /*$qry2="UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
 			    $res2=db_query($qry2);
 			    if ($res2) {
 			        $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
 			    } else {
 			        $feedback .= ' '.$Language->getText('news_submit','update_err').' ';
-			    }
+			    }*/
+			    news_update_permissions($forum_id,$permission);
 			} else {
-			    $qry3="INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
+			    /*$qry3="INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
 			    $res3=db_query($qry3);
 			    if ($res3) {
 			        $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
 			    } else {
 			        $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
-			    }
+			    }*/
+			    news_insert_permissions($forum_id,$permission);
 			}
 			
 			if (!$result || db_affected_rows($result) < 1) {

@@ -35,15 +35,15 @@ if (user_isloggedin()) {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
 		// set permissions on this piece of news
 		$ugroup_id=$private_news;  
-	        $qry="INSERT INTO permissions (permission_type,object_id,ugroup_id)".
+	        /*$qry="INSERT INTO permissions (permission_type,object_id,ugroup_id)".
 		     " VALUES ('NEWS_READ','$new_id','$ugroup_id')";
 	        $res=db_query($qry);
 		if ($res) {
 		    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
 		} else {
 		    $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
-		}
-
+		}*/
+		news_insert_permissions($new_id,$ugroup_id);
             }
 	}
 
