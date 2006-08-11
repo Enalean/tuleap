@@ -82,7 +82,7 @@ class ArtifactTypeFactory extends Error {
 			while ($arr = db_fetch_array($result)) {
 				if ( $arr['status_id'] == 1 ) {
 					$count_array['open_count'] = $arr[1];
-				} 
+				}
 				$count_array['count'] += $arr[1];
 			}
 			return $count_array;
@@ -118,7 +118,7 @@ class ArtifactTypeFactory extends Error {
 				// Retrieve status counts
 				$arr_count = $this->getStatusIdCount($arr['group_artifact_id']);
 				if ( $arr_count ) {
-					$arr['open_count'] = $arr_count['open_count'];
+					$arr['open_count'] = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:0;
 					$arr['count'] = $arr_count['count'];
 				}
                                 $new_at=new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
