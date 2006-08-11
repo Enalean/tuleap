@@ -270,8 +270,12 @@ function news_insert_permissions($forum_id,$permission) {
 	/*
 		Takes forum_id and permission, and inserts a corresponding entry in 'permissions' table
 	*/
-		
-	$qry = "INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
+	
+	// cast  inputs
+	$_forum_id = (int) $forum_id;
+	$_permission = (int) $permission;
+	
+	$qry = "INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$_forum_id','$_permission')";
 	$res = db_query($qry);
 	if ($res) {
 	    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
@@ -288,7 +292,11 @@ function news_update_permissions($forum_id,$permission) {
 		Takes forum_id and permission, and updates the permission of the corresponding entry in 'permissions' table
 	*/
 	
-	$qry = "UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+	// cast inputs
+	$_forum_id = (int) $forum_id;
+	$_permission = (int) $permission;
+	
+	$qry = "UPDATE permissions SET ugroup_id='$_permission' WHERE permission_type='NEWS_READ' AND object_id='$_forum_id'";
 	$res = db_query($qry);
 	if ($res) {
 	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
@@ -303,7 +311,10 @@ function news_read_permissions($forum_id) {
 		Takes forum_id and reads the permission of the corresponding news. Returns a result set.
 	*/
 	
-	$qry = "SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+	// cast inputs
+	$_forum_id = (int) $forum_id;
+
+	$qry = "SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$_forum_id'";
 	$res = db_query($qry);
 	
 	return $res;
