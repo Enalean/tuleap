@@ -88,7 +88,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		if (db_numrows($res) > 0) {
 		    $ugroup_id=db_result($res,0,'ugroup_id');
 		}
-		if ((db_numrows($res) < 1) || ($ugroup_id=="1") || ($ugroup_id=="2")) {
+		if ((db_numrows($res) < 1) || ($ugroup_id=="1")) {
 		    $is_private="";
 		    $is_public="CHECKED";
 		} else {
@@ -112,7 +112,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index','delete').'<BR>
 	        
 		<B>'.$Language->getText('news_submit','news_privacy').':</B><BR> 
-		<INPUT TYPE="RADIO" NAME="permission" VALUE="2" '.$is_public.'> '.$Language->getText('news_submit','public_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="permission" VALUE="1" '.$is_public.'> '.$Language->getText('news_submit','public_news').'<BR>
 		<INPUT TYPE="RADIO" NAME="permission" VALUE="3" '.$is_private.'> '.$Language->getText('news_submit','private_news').'<BR>
 		
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
@@ -253,7 +253,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			    if (db_numrows($res) > 0) {
 			        $ugroup_id=db_result($res,0,'ugroup_id');
 			    }	
-			    if ((db_numrows($res) < 1) || ($ugroup_id=="1") || ($ugroup_id=="2")) {
+			    if ((db_numrows($res) < 1) || ($ugroup_id=="1")) {
 			        echo '
 				    <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
 			    }

@@ -35,14 +35,6 @@ if (user_isloggedin()) {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
 		// set permissions on this piece of news
 		$ugroup_id=$private_news;  
-	        /*$qry="INSERT INTO permissions (permission_type,object_id,ugroup_id)".
-		     " VALUES ('NEWS_READ','$new_id','$ugroup_id')";
-	        $res=db_query($qry);
-		if ($res) {
-		    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
-		} else {
-		    $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
-		}*/
 		news_insert_permissions($new_id,$ugroup_id);
             }
 	}
@@ -79,7 +71,7 @@ if (user_isloggedin()) {
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>
 		<P><TABLE BORDER=0>
 		<TR><TD><B>'.$Language->getText('news_submit','news_privacy').':</B></TD>
-		<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="2" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
+		<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
 		<TR><TD></TD><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="3">'. $Language->getText('news_submit','private_news').'</TD></TR> 
 		</TABLE><P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
