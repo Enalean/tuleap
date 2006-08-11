@@ -297,5 +297,16 @@ function news_update_permissions($forum_id,$permission) {
 	}	
 }
 
+function news_read_permissions($forum_id) {
+	
+	/*
+		Takes forum_id and reads the permission of the corresponding news. Returns a result set.
+	*/
+	
+	$qry = "SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+	$res = db_query($qry);
+	
+	return $res;
+}
 
 ?>

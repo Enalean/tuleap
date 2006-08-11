@@ -43,29 +43,16 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				"details='".htmlspecialchars($details)."' WHERE id='$id' AND group_id='$group_id'";
 			$result=db_query($sql);
 			
-			// update news permissions
+			// update/create  news permissions
 			$qry1="SELECT * FROM news_bytes WHERE id='$id'";
 			$res1=db_query($qry1);
 			$forum_id=db_result($res1,0,'forum_id');
-			$qry2="SELECT * FROM permissions where object_id='$forum_id'";
-			$res2=db_query($qry2);
+			$res2 = news_read_permissions($forum_id);
 			if (db_numrows($res2) > 0) {
-			    /*$qry2="UPDATE permissions SET ugroup_id='$permission' WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
-			    $res2=db_query($qry2);
-			    if ($res2) {
-			        $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
-			    } else {
-			        $feedback .= ' '.$Language->getText('news_submit','update_err').' ';
-			    }*/
+			    // permission on this news is already defined, have to be updated
 			    news_update_permissions($forum_id,$permission);
 			} else {
-			    /*$qry3="INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$forum_id','$permission')";
-			    $res3=db_query($qry3);
-			    if ($res3) {
-			        $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
-			    } else {
-			        $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
-			    }*/
+			    // permission of this news not yet defined
 			    news_insert_permissions($forum_id,$permission);
 			}
 			
@@ -97,8 +84,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		}
                 $username=user_getname(db_result($result,0,'submitted_by'));
 		$forum_id=db_result($result,0,'forum_id');
-		$qry="SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
-		$res=db_query($qry);		
+		$res = news_read_permissions($forum_id);		
 		if (db_numrows($res) > 0) {
 		    $ugroup_id=db_result($res,0,'ugroup_id');
 		}
@@ -263,8 +249,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			for ($i=0; $i<$rows; $i++) {
 			    //if the news is private, not display it in the list of news to be approved
 			    $forum_id=db_result($result,$i,'forum_id');  
-			    $qry="SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";   
-			    $res=db_query($qry);
+			    $res = news_read_permissions($forum_id);
 			    if (db_numrows($res) > 0) {
 			        $ugroup_id=db_result($res,0,'ugroup_id');
 			    }	
