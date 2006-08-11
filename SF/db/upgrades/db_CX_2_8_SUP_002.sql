@@ -27,7 +27,7 @@
 #
 
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",100,0);
-INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",1,0);
-INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",2,0);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",3,0);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ("NEWS_READ",4,0);

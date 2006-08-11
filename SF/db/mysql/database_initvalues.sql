@@ -1803,8 +1803,8 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHME
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',4);
 
 -- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',100);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',1);
-INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('NEWS_READ',2,1);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('NEWS_READ',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',4);
 
