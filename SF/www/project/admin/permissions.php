@@ -580,11 +580,11 @@ EOS;
         $res=db_query($sql);
         if ($res) {
             //look for missing ugroups
-            $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE `object_id` = '$from' OR `object_id` LIKE '$from#%'";
+            $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE permission_type LIKE 'TRACKER_%' AND ( `object_id` = '$from' OR `object_id` LIKE '$from#%')";
             $res=db_query($sql);
             $row = db_fetch_array($res);
             $nb_ugroup_from = $row[0];
-            $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE `object_id` = '$to' OR `object_id` LIKE '$to#%'";
+            $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE permission_type LIKE 'TRACKER_%' AND ( `object_id` = '$to' OR `object_id` LIKE '$to#%')";
             $res=db_query($sql);
             $row = db_fetch_array($res);
             $nb_ugroup_to = $row[0];

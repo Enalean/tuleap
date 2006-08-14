@@ -218,8 +218,9 @@ if( isset($submit) ) {
 	"WHERE user.user_id=filemodule_monitor.user_id ".
 	"AND filemodule_monitor.filemodule_id=frs_package.package_id ".
 	"AND filemodule_monitor.filemodule_id='$package_id' ".
-	"AND frs_package.group_id='$group_id'";
-      
+	"AND frs_package.group_id='$group_id' ".
+ 	"AND ( user.status='A' OR user.status='R' )";
+     
       $result=db_query($sql);
       echo db_error();
       if ($result && db_numrows($result) > 0) {
@@ -227,13 +228,13 @@ if( isset($submit) ) {
         $array_emails=result_column_to_array($result);
         $list=implode($array_emails,', ');
         
-        $subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
+        $subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice').' '.$Language->getText('file_admin_editreleases','file_rel_notice_project', $group_unix_name);
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
         $mail =& new Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($list);
         $mail->setSubject($subject);
-        $mail->setBody($Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".
+        $mail->setBody($Language->getText('file_admin_editreleases','download_explain_modified_file', array(db_result($result,0,'name'), $file_name))." ".$Language->getText('file_admin_editreleases','download_explain',array("<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).": ".
           "\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ");
         if ($mail->send()) {
             $feedback .= '| '.$Language->getText('file_admin_qrs','email_sent',db_numrows($result)).' ';

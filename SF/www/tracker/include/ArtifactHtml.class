@@ -1460,7 +1460,8 @@ class ArtifactHtml extends Artifact {
 
 	    if ($field_perm && 
 		(($field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
-		 ($field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])))) {
+		 ($field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
+         (!$field_perm['assigned_to'] && !$field_perm['multi_assigned_to']))) {
 	      if (user_isloggedin()) {
 		$user_id = user_getid();
 		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";

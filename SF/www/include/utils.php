@@ -652,6 +652,8 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 // Clean up email address (remove starting and ending spaces) and put to lower
 // case
 function util_cleanup_emails ($addresses) {
+    $addresses=preg_replace("/\s+[,;]/",",", $addresses);
+    $addresses=preg_replace("/[,;]\s+/",",", $addresses);
     return strtolower(rtrim(trim($addresses)));
 }
 
@@ -669,7 +671,7 @@ function util_normalize_email ($address) {
 // Clean up email address (remove spaces...) and split comma or semi-colon separated emails
 function util_split_emails($addresses) {
     $addresses = util_cleanup_emails($addresses);
-    return split('[,;]',$addresses);
+    return split(',',$addresses);
 }
 
 // One Email Verification
@@ -1227,6 +1229,15 @@ function util_check_restricted_access($request_uri, $script_name) {
             }
         }
         
+        // Artifact attachment download...
+        if (strpos($req_uri,'/tracker/download.php') !== false) {
+            if (isset($_REQUEST['artifact_id'])) {
+                $result=db_query("SELECT group_id FROM artifact_group_list,artifact WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id AND artifact.artifact_id="
+                                 .$_REQUEST['artifact_id']);
+                $group_id=db_result($result,0,'group_id');
+            }
+        }
+
         // CodeX trackers
         if (strpos($req_uri,'/tracker/') !== false) {
             if ($allow_access_to_codex_trackers) {
@@ -1255,7 +1266,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         }
         
         // Now check group_id
-        if ($group_id) { 
+        if (isset($group_id)) { 
             if (!$user_is_allowed) { 
                 if (!user_ismember($group_id)) {
                     return false;

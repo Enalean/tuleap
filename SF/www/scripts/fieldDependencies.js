@@ -47,7 +47,7 @@ var selections        = {};
  * too heavy for a simple feature.
  */
 function xgs_debug(msg) {
-    d = $('debug_console');
+    var d = $('debug_console');
     if (!d) {
         d = document.createElement('textarea');
         d.rows = 50;
@@ -55,11 +55,11 @@ function xgs_debug(msg) {
         d.id = 'debug_console';
         document.body.appendChild(d);
     }
-    now = new Date();
-    h = now.getHours();
-    m = now.getMinutes();
-    s = now.getSeconds();
-    ms = now.getMilliseconds();
+    var now = new Date();
+    var h = now.getHours();
+    var m = now.getMinutes();
+    var s = now.getSeconds();
+    var ms = now.getMilliseconds();
     d.value += '['+h+':'+m+':'+s+'.'+ms+']\t'+msg+'\n';
 }
 //==============================================================================
@@ -154,12 +154,12 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
     *
     */
     update: function() {
-        has_changed = false;
-        el = $(this.name);
+        var has_changed = false;
+        var el = $(this.name);
         for(i = 0 ; i < el.options.length ; i++) {
             //search if the option i is a selectedOption
-            j = 0;
-            found = false;
+            var j = 0;
+            var found = false;
             while(j < this.selectedOptions.length && !found) {
                 if (this.selectedOptions[j] == el.options[i].value) {
                     found = this.selectedOptions[j];
@@ -204,11 +204,11 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
     * remove all actual options
     */
     clear: function() {
-        el = $(this.name);
+        var el = $(this.name);
         
         //clear actual options
         this.actualOptions = [];
-        len = el.options.length; 
+        var len = el.options.length; 
         for (i = len; i >= 0; i--) {
             el.options[i] = null;
         }
@@ -218,20 +218,20 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
     */
     reset: function() {
         var changed = true;
-        el = $(this.name);
+        var el = $(this.name);
         if (el.options.length == this.defaultOptions.length) {
             changed = false;
         } else {
             //clear actual options
             this.actualOptions = [];
-            len = el.options.length; 
+            var len = el.options.length; 
             for (i = len; i >= 0; i--) {
                 el.options[i] = null;
             }
             
             //fill new options
             for (i = 0 ; i < this.defaultOptions.length ; i++) {
-                opt = new Option(options[this.id][this.defaultOptions[i]].option.text, options[this.id][this.defaultOptions[i]].option.value);
+                var opt = new Option(options[this.id][this.defaultOptions[i]].option.text, options[this.id][this.defaultOptions[i]].option.value);
                 el.options[el.options.length] = opt;
                 el.options[el.options.length - 1] = opt.text; //html entities (cannot be done before in IE)
                 this.actualOptions.push(this.defaultOptions[i]);
@@ -239,9 +239,9 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
             
             //select options
             this.selectedOptions.each(function (option) {
-                i     = 0;
-                found = false;
-                len   = el.options.length;
+                var i     = 0;
+                var found = false;
+                var len   = el.options.length;
                 while(i < len && !found) {
                     if (el.options[i].value == option) {
                         el.options[i].selected = true;
@@ -260,14 +260,14 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
         if (arguments[0]) {
             this.selectedOptions = arguments[0];
         } else {
-            selectedOptions = this.selectedOptions;
+            var selectedOptions = this.selectedOptions;
             this.selectedOptions = this.actualOptions.findAll(function(element) {
                 return selectedOptions.find(function (option) {
                     return element == option;
                 });
             });
         }
-        el = $(this.name);
+        var el = $(this.name);
         if (el.options.length > 0) {
             if (this.selectedOptions.length < 1) {
                 this.selectedOptions.push(this.actualOptions[0]);
@@ -285,7 +285,7 @@ Object.extend(com.xerox.codex.tracker.Field.prototype, {
     */
     updateSelected: function() {
         this.selectedOptions = [];
-        el = $(this.name);
+        var el = $(this.name);
         if (el) {
             var len = el.options.length;
             for(var k = 0 ; k < len ; k++) {
@@ -313,7 +313,7 @@ Object.extend(com.xerox.codex.tracker.Rule.prototype, {
         this.selected        = [];
     },
     process: function(source_field) {
-        applied = false;
+        var applied = false;
         if (this.source_field_id == source_field.id) {
             fields[this.source_field_id].update();
             if (this.can_apply()) {
@@ -417,7 +417,7 @@ function applyRules(evt, name) {
                     
                     //...and save its actual state.
                     originals[field.id] = {field:field, options:[]};
-                    el = $(field.name);
+                    var el = $(field.name);
                     for(var k = 0 ; k < el.options.length ; k++) {
                             originals[field.id].options.push(options[field.id][el.options[k].value]);
                     }
@@ -430,8 +430,8 @@ function applyRules(evt, name) {
             
             //Now we look at original states of targets to see if there has been a change
             $H(originals).values().each(function(target) {
-                el = $(target.field.name);
-                found = false;
+                var el = $(target.field.name);
+                var found = false;
                 for (var k = 0 ; k < el.options.length && !found ; k++) {
                     found = target.options.find(function (element) {
                         return element.value == el.options[i].value && el.options[i].selected == element.selected;
@@ -463,10 +463,8 @@ function applyRules(evt, name) {
 }
 
 function registerFieldsEvents() {
-
     for(id in fields) {
-
-        el = document.getElementById(fields[id].name);
+        var el = document.getElementById(fields[id].name);
         if (el) {
             el.onchange = applyRules;
         }
@@ -530,7 +528,7 @@ function initFieldDependencies() {
         }
     });
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
+    var codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
     if (codex_field_dependencies_highlight_change && codex_field_dependencies_highlight_change != '') {
         HIGHLIGHT_STARTCOLOR = codex_field_dependencies_highlight_change;
     }
@@ -538,14 +536,14 @@ function initFieldDependencies() {
     function Dec2Hex (Dec) { 
         var a = Dec % 16; 
         var b = (Dec - a)/16; 
-        hex = "" + hexChars.charAt(b) + hexChars.charAt(a); 
+        var hex = "" + hexChars.charAt(b) + hexChars.charAt(a); 
         return hex;
     }
     var re = new RegExp(/rgb\([^0-9]*([0-9]+)[^0-9]*([0-9]+)[^0-9]*([0-9]+)\)/); //Fx returns rgb(123, 64, 32) instead of hexa color
     if (m = re.exec(HIGHLIGHT_STARTCOLOR)) {
-        r = m[1] || null;
-        g = m[2] || null;
-        b = m[3] || null;
+        var r = m[1] || null;
+        var g = m[2] || null;
+        var b = m[3] || null;
         if (r && g && b) {
             HIGHLIGHT_STARTCOLOR = '#'+Dec2Hex(r)+Dec2Hex(g)+Dec2Hex(b);
         }
@@ -607,11 +605,11 @@ function buildAdminUI() {
     $H(forbidden_sources).keys().each(function (id) {
             breadthFirstWalk(id, 
                 function(node){ 
-                    rules = $H(rules_definitions).values().findAll(
+                    var rules = $H(rules_definitions).values().findAll(
                             function (rule_definition) { 
                                 return rule_definition.source_field == node;
                             });
-                    children = [];
+                    var children = [];
                     rules.each(function (rule) {
                             if (!children.find(function(element) { return element == rule.target_field; })) {
                                 children.push(rule.target_field);
@@ -626,11 +624,11 @@ function buildAdminUI() {
     $H(forbidden_targets).keys().each(function (id) {
             breadthFirstWalk(id, 
                 function(node){ 
-                    rules = $H(rules_definitions).values().findAll(
+                    var rules = $H(rules_definitions).values().findAll(
                             function (rule_definition) { 
                                 return rule_definition.target_field == node;
                             });
-                    children = [];
+                    var children = [];
                     rules.each(function (rule) {
                             if (!children.find(function(element) { return element == rule.source_field; })) {
                                 children.push(rule.source_field);
@@ -643,7 +641,7 @@ function buildAdminUI() {
     });
     // We do not allow a relation A => C if B => C exists (sources)
     $H(forbidden_sources).keys().each(function (id) {
-            existing_sources_for_this_field = $H(rules_definitions).values().partition(function (rule_definition) {
+            var existing_sources_for_this_field = $H(rules_definitions).values().partition(function (rule_definition) {
                     return rule_definition.target_field == id;
             });
             existing_sources_for_this_field = existing_sources_for_this_field[0].pluck('source_field');
@@ -670,19 +668,19 @@ function buildAdminUI() {
     //}}}
     
     //{{{ Build Table
-    table = document.createElement('table');
+    var table = document.createElement('table');
     table.border      = 0;
     table.cellpadding = 2;
     table.cellspacing = 1;
     
-    header = document.createElement('thead');
-    header_row = document.createElement('tr');
+    var header = document.createElement('thead');
+    var header_row = document.createElement('tr');
     header_row.className = 'boxtable';
 
-    header_source = document.createElement('td');
+    var header_source = document.createElement('td');
     header_source.className = 'boxtitle';
 
-    header_target = document.createElement('td');
+    var header_target = document.createElement('td');
     header_target.className = 'boxtitle';
 
 
@@ -691,14 +689,14 @@ function buildAdminUI() {
     header.appendChild(header_row);
     table.appendChild(header);
     
-    tbody = document.createElement('tbody');
+    var tbody = document.createElement('tbody');
     table.appendChild(tbody);
     
     $('edit_rule').appendChild(table);
     //}}}
     
     //{{{ build source selectbox
-    select_source = document.createElement('select');
+    var select_source = document.createElement('select');
     select_source.id = 'source_field';
     select_source.appendChild(choose = document.createElement('option'));
     choose.value    = '-1';
@@ -714,7 +712,7 @@ function buildAdminUI() {
                         }) 
                     )
                 ) {
-                so = document.createElement('option');
+                var so = document.createElement('option');
                 so.value     = source_field.id;
                 so.selected  = (preselected_source_field == so.value);
                 so.innerHTML = source_field.label;
@@ -730,7 +728,7 @@ function buildAdminUI() {
     //}}}
     
     //{{{ build target selectbox
-    select_target = document.createElement('select');
+    var select_target = document.createElement('select');
     select_target.id = 'target_field';
     select_target.appendChild(choose = document.createElement('option'));
     choose.value = '-1';
@@ -746,7 +744,7 @@ function buildAdminUI() {
                     }) 
                 )
             ) {
-                to = document.createElement('option');
+                var to = document.createElement('option');
                 to.value     = target_field.id;
                 to.selected  = (preselected_target_field == to.value);
                 to.innerHTML = target_field.label;
@@ -766,7 +764,7 @@ function buildAdminUI() {
             $H(fields).values().each(function(target_field) {
                     //One row foreach pair (source_field, target_field)
                     if (target_field != source_field) {
-                        tr = document.createElement('tr');
+                        var tr = document.createElement('tr');
                         tr.id        = 'fields_'+source_field.id+'_'+target_field.id;
                         tr.className = 'boxitemalt';
                         tr.style.verticalAlign = 'top';
@@ -781,14 +779,14 @@ function buildAdminUI() {
                         inner_table.appendChild(inner_tbody = document.createElement('tbody'));
                         //Foreach option build an inner row
                         $H(options[source_field.id]).values().each(function(opt) {
-                            txt = opt['option'].text+' ';
-                            inner_tr = document.createElement('tr');
+                            var txt = opt['option'].text+' ';
+                            var inner_tr = document.createElement('tr');
                             inner_tr.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
                             
                             //{{{ The checkbox
-                            td_chk = document.createElement('td');
+                            var td_chk = document.createElement('td');
                             Element.setStyle(td_chk, {width:'1%'});
-                            chk = document.createElement('input');
+                            var chk = document.createElement('input');
                             chk.type = 'checkbox';
                             chk.name = chk.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
                             chk.style.visibility = 'hidden';
@@ -800,12 +798,12 @@ function buildAdminUI() {
                             //}}}
                             
                             //{{{ The label of the option
-                            td_txt = document.createElement('td');
+                            var td_txt = document.createElement('td');
                             td_txt.appendChild(espace_insecable = document.createElement('span'));
                             espace_insecable.innerHTML = '&nbsp;';
                             td_txt.appendChild(label = document.createElement('label'));
                             td_txt.onclick = function() {
-                                link = admin_getInfosFromId(this.parentNode.id);
+                                var link = admin_getInfosFromId(this.parentNode.id);
                                 admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
                                 return false;
                             };
@@ -839,7 +837,7 @@ function buildAdminUI() {
                         //}}}
                         
                         //{{{ Build target cell
-                        td_target = document.createElement('td');
+                        var td_target = document.createElement('td');
                         tr.appendChild(td_target);
                         td_target.appendChild(inner_table = document.createElement('table'));
                         Element.setStyle(inner_table, {width:'100%'});
@@ -848,8 +846,8 @@ function buildAdminUI() {
                         inner_table.appendChild(inner_tbody = document.createElement('tbody'));
                         //Foreach option build an inner row
                         $H(options[target_field.id]).values().each(function(opt) {
-                            txt = opt['option'].text+' ';
-                            inner_tr = document.createElement('tr');
+                            var txt = opt['option'].text+' ';
+                            var inner_tr = document.createElement('tr');
                             inner_tr.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
                             
                             //{{{ The very beautiful arrow 
@@ -862,9 +860,9 @@ function buildAdminUI() {
                             //}}}
                             
                             //{{{ The checkbox
-                            td_chk = document.createElement('td');
+                            var td_chk = document.createElement('td');
                             Element.setStyle(td_chk, {width:'1%'});
-                            chk = document.createElement('input');
+                            var chk = document.createElement('input');
                             chk.type = 'checkbox';
                             chk.name = chk.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
                             chk.style.visibility = 'hidden';
@@ -876,12 +874,12 @@ function buildAdminUI() {
                             //}}}
                             
                             //{{{ The label of the option
-                            td_txt = document.createElement('td');
+                            var td_txt = document.createElement('td');
                             td_txt.appendChild(espace_insecable = document.createElement('span'));
                             espace_insecable.innerHTML = '&nbsp;';
                             td_txt.appendChild(label = document.createElement('label'));
                             td_txt.onclick = function() {
-                                link = admin_getInfosFromId(this.parentNode.id);
+                                var link = admin_getInfosFromId(this.parentNode.id);
                                 admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
                                 return false;
                             };
@@ -933,7 +931,7 @@ function buildAdminUI() {
     Element.setStyle(td, {textAlign:'center'});
     
     //Save button
-    save_btn = document.createElement('input');
+    var save_btn = document.createElement('input');
     save_btn.type    = 'submit'; //Be careful with IE, the input cannot be in dom before changing its type
     save_btn.value   = messages['btn_save_rule'];
     save_btn.id      = 'save_btn';        
@@ -948,7 +946,8 @@ function buildAdminUI() {
         return true;
     };
     //Reset button
-    td.appendChild(reset_btn = document.createElement('button'));
+    var reset_btn = document.createElement('button');
+    td.appendChild(reset_btn);
     reset_btn.appendChild(document.createTextNode(messages['btn_reset']));
     reset_btn.id = 'reset_btn';
     reset_btn.onclick = function() {
@@ -976,7 +975,7 @@ function buildAdminUI() {
         }
         $('source_field').appendChild(choose = document.createElement('option'));
         choose.value = '-1';
-        choose.innerHTML = ['choose_field'];
+        choose.innerHTML = messages['choose_field'];
         $H(fields).values().each(function(source_field) {
                 //Don't add field if it is forbidden
                 if (forbidden_targets[source_field.id].length != $H(fields).keys().length
@@ -987,7 +986,7 @@ function buildAdminUI() {
                         }) 
                     )
                 ) {
-                    so = document.createElement('option');
+                    var so = document.createElement('option');
                     so.value     = source_field.id;
                     so.selected  = source_field.id == previous_selected ? 'selected' : '';
                     so.innerHTML = source_field.label;
@@ -1024,7 +1023,7 @@ function buildAdminUI() {
                         }) 
                     )
                 ) {
-                    to = document.createElement('option');
+                    var to = document.createElement('option');
                     to.value     = target_field.id;
                     to.selected  = target_field.id == previous_selected ? 'selected' : '';
                     to.innerHTML = target_field.label;
@@ -1073,10 +1072,10 @@ function buildAdminUI() {
 *        }
 */
 function admin_getInfosFromId(id) {
-    p1 = id.indexOf('_');
-    p2 = id.substring(p1+1).indexOf('_');
-    p3 = id.substring(p1+1+p2+1).indexOf('_');
-    p4 = id.substring(p1+1+p2+1+p3+1).indexOf('_');
+    var p1 = id.indexOf('_');
+    var p2 = id.substring(p1+1).indexOf('_');
+    var p3 = id.substring(p1+1+p2+1).indexOf('_');
+    var p4 = id.substring(p1+1+p2+1+p3+1).indexOf('_');
     var ret = {
         type:            id.substr(0, p1),
         source_field_id: id.substr(p1+1, p2),
@@ -1113,7 +1112,7 @@ function admin_removeFeedback() {
 */
 function admin_checked(id) {
     admin_removeFeedback();
-    checkbox = admin_getInfosFromId(id);
+    var checkbox = admin_getInfosFromId(id);
     //We're going to edit mode if we are not yet
     if (!admin_is_in_edit_mode) {
         $('source_field').disabled = 'disabled';
@@ -1123,7 +1122,7 @@ function admin_checked(id) {
         Element.show('save_panel');
     }
     
-    checked = $F(id);
+    var checked = $F(id);
     //boxitem and arrow follow the state of the corresponding checkbox
     if (checked) {
         Element.addClassName(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id'], 'boxhighlight');
@@ -1133,7 +1132,7 @@ function admin_checked(id) {
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'hidden'});        
     }
     //Does a rule exist ?
-    rule_exists = $H(rules_definitions).values().find(function (definition) {
+    var rule_exists = $H(rules_definitions).values().find(function (definition) {
         return definition.source_field == checkbox.source_field_id &&
                 definition.target_field == checkbox.target_field_id &&
                 definition.source_value == checkbox.source_value_id &&

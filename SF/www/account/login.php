@@ -40,8 +40,12 @@ if (isset($login) && $login && !$success) {
 
     if ($status == 'P') {
 	echo "<P><B>".$Language->getText('account_login', 'pending_title')."</B>";
-	echo "<P>".$Language->getText('account_login', 'pending_msg');
-	echo "<P><A href=\"pending-resend.php?form_user=$form_loginname \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
+        if ($GLOBALS['sys_user_approval'] != 0) {
+            echo "<P>".$Language->getText('account_login', 'need_approval');
+        } else {
+            echo "<P>".$Language->getText('account_login', 'pending_msg');
+            echo "<P><A href=\"pending-resend.php?form_user=". htmlentities($form_loginname, ENT_QUOTES) ." \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
+        }
     } else if ($status == 'S') {
 	echo "<P><B>".$Language->getText('account_suspended', 'title')."</B>";
 	echo "<P>".$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
@@ -70,10 +74,10 @@ print $Language->getText('account_login', 'title', array($GLOBALS['sys_Name']));
 <span class="highlight"><B><?php print $Language->getText('account_login', 'cookies'); ?>.</B></span>
 <P>
 <form action="<?php echo $form_url; ?>/account/login.php" method="post" name="form_login">
-<INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php if (isset($return_to)) { echo $return_to; } ?>">
+<INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php if (isset($return_to)) { echo htmlentities(strip_tags($return_to), ENT_QUOTES); } ?>">
 <p>
 <?php print $Language->getText('account_login', 'name'); ?>:
-<br><input type="text" name="form_loginname" VALUE="<?php if (isset($form_loginname)) { echo $form_loginname; } ?>">
+<br><input type="text" name="form_loginname" VALUE="<?php if (isset($form_loginname)) { echo htmlentities($form_loginname, ENT_QUOTES); } ?>">
 <p>
 <?php print $Language->getText('account_login', 'password'); ?>:
 <br><input type="password" name="form_pw">

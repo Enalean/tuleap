@@ -484,7 +484,9 @@ if (isset($submit)) {
 			"WHERE user.user_id=filemodule_monitor.user_id ".
 			"AND filemodule_monitor.filemodule_id=frs_package.package_id ".
 			"AND filemodule_monitor.filemodule_id='$package_id' ".
-			"AND frs_package.group_id='$group_id'";
+                        "AND frs_package.group_id='$group_id' ".
+                        "AND ( user.status='A' OR user.status='R' )";
+
 		
 		$result=db_query($sql);
 		echo db_error();
@@ -493,10 +495,10 @@ if (isset($submit)) {
 			$array_emails=result_column_to_array($result);
 			$list=implode($array_emails,', ');
 		
-			$subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice');
+			$subject=$GLOBALS['sys_name'].' '.$Language->getText('file_admin_editreleases','file_rel_notice').' '.$Language->getText('file_admin_editreleases','file_rel_notice_project', group_getunixname($group_id));
 		
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-			$body = $Language->getText('file_admin_editreleases','download_explain',array(db_result($result,0,'name'),"<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).
+			$body = $Language->getText('file_admin_editreleases','download_explain_modified_package', db_result($result,0,'name'))." ".$Language->getText('file_admin_editreleases','download_explain',array("<".get_server_url()."/file/showfiles.php?group_id=$group_id&release_id=$release_id> ",$GLOBALS['sys_name'])).
 				"\n<".get_server_url()."/file/filemodule_monitor.php?filemodule_id=$package_id> ";
 			
 			$mail =& new Mail();
@@ -628,14 +630,14 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 
 	echo '</TD></TR>
 		<TR><TD>
-		<HR NOSHADE>
+		<HR NOSHADE><a name="step2"></a>
 		<H2>'.$Language->getText('file_admin_editreleases','step_x',2).'</H2>
 		<P>
 		<H3>'.$Language->getText('file_admin_editreleases','attach_files').'</H3>';
 		
 	include($Language->getContent('file/editrelease_attach_file'));
 	
-	echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
+	echo '<FORM ACTION="'.$PHP_SELF.'#step2" METHOD="POST" enctype="multipart/form-data">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_files">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">';
@@ -680,7 +682,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 
 	echo '</TD></TR>
 		<TR><TD>
-		<HR NOSHADE>
+		<HR NOSHADE><a name="step3"></a>
 		<H2>'.$Language->getText('file_admin_editreleases','step_x',3).'</H2>
 		<P>
 		<H3>'.$Language->getText('file_admin_editreleases','edit_files').':</H3>
@@ -715,7 +717,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 		  $fname = $list[sizeof($list) - 1];
 
 		  echo '
-			<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
+			<FORM ACTION="'. $PHP_SELF .'#step3" METHOD="POST">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 			<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_file">
@@ -731,7 +733,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 				<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="release_time" VALUE="'. format_date('Y-m-d',db_result($res,$i,'release_time')) .'" SIZE="10" MAXLENGTH="10"></TD>
 				<TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','update_refresh').'"></TD>
 			</TR></FORM>
-			<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
+			<FORM ACTION="'. $PHP_SELF .'#step3" METHOD="POST">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 			<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
 			<INPUT TYPE="HIDDEN" NAME="func" VALUE="delete_file">
