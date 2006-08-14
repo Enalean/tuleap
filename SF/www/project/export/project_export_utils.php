@@ -796,7 +796,23 @@ echo '
 function db_project_query($dbname,$qstring,$print=0) {
   global $Language;
 	if ($print) print '<br>'.$Language->getText('project_export_utils','query_is',array($dbname,$qstring)).'<br>';
-	$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
+	//$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
+	
+	// Select the project database
+	$db = @mysql_select_db($dbname);
+	if (!$db){
+		die('Can\'t connect to ' . $dbname . 'database' . db_error());
+	} else{
+	
+	$GLOBALS['db_project_qhandle'] = db_query($qstring);
+	
+	// Switch back to system database
+	$dbname = $GLOBALS['sys_dbname']; 
+	$db = @mysql_select_db($dbname);
+	if (!$db) die ('Can\'t switch back to system database'. db_error());
+	}
+	
+	
 	return $GLOBALS['db_project_qhandle'];
 }
 
