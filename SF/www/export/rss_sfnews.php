@@ -1,7 +1,7 @@
 <?php
 // ## export sf front page news in RSS
 require_once('pre.php');
-require_once('www/project/admin/permissions.php');
+require_once('www/news/news_utils.php');
 require('./rss_utils.inc');
 $Language->loadLanguageMsg('export/export');
 

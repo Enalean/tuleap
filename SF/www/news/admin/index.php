@@ -43,24 +43,27 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				"details='".htmlspecialchars($details)."' WHERE id='$id' AND group_id='$group_id'";
 			$result=db_query($sql);
 			
-			// update/create  news permissions
-			$qry1="SELECT * FROM news_bytes WHERE id='$id'";
-			$res1=db_query($qry1);
-			$forum_id=db_result($res1,0,'forum_id');
-			$res2 = news_read_permissions($forum_id);
-			if (db_numrows($res2) > 0) {
-			    // permission on this news is already defined, have to be updated
-			    news_update_permissions($forum_id,$permission);
-			} else {
-			    // permission of this news not yet defined
-			    news_insert_permissions($forum_id,$permission);
-			}
-			
-			if (!$result || db_affected_rows($result) < 1) {
+			if (!$result) {
 				$feedback .= ' '.$Language->getText('news_admin_index','group_update_err').' ';
+				
 			} else {
 				$feedback .= ' '.$Language->getText('news_admin_index','project_newsbyte_updated').' ';
-			}
+				
+				// update/create  news permissions
+				$qry1="SELECT * FROM news_bytes WHERE id='$id'";
+				$res1=db_query($qry1);
+				$forum_id=db_result($res1,0,'forum_id');
+				$res2 = news_read_permissions($forum_id);
+				if (db_numrows($res2) > 0) {
+				    //permission on this news is already defined, have to be updated
+				    news_update_permissions($forum_id,$permission);
+				} else {
+				    //permission of this news not yet defined
+				    news_insert_permissions($forum_id,$permission);
+				}
+
+			}	
+								
 			/*
 				Show the list_queue
 			*/
