@@ -47,6 +47,7 @@ include_exit	info	Information
 include_exit	perm_denied	Permission refusée
 include_exit	exit_error	Sortie avec erreur
 include_exit	no_perm	Vous droits sont insuffisants pour effectuer cette opération.
+include_exit	restricted_user_no_perm	Vous possédez un compte restreint.<br> Celui-ci ne vous permet d'accéder qu'aux pages des projets dont vous êtes membre.<p><a href="/my/">Retourner à votre page personnelle.</a>
 include_exit	not_logged_in	Déconnecté
 include_exit	need_to_login	Désolé, vous devez <A HREF="/account/login.php">être connecté</A> pour visualiser cette page.
 include_exit	choose_proj_err	Erreur - Veuillez choisir un projet
@@ -436,6 +437,7 @@ include_user_home	fill_cc_list_msg	<b><u>Note&nbsp;:</b></u> pour les utilisateu
 # Script: SF/www/include/user.php
 #
 include_user	not_found	Erreur - Introuvable
+include_user	email_not_found	email-not-found
 include_user	invalid_u_id	ID utilisateur invalide
 #
 #-----------------------------------------------

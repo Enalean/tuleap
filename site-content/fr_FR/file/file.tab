@@ -92,7 +92,10 @@ file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce pr
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit
 file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
-file_admin_editreleases	download_explain	Une nouvelle version de $1 vient d'être publié. \nVous pouvez la télécharger à&nbsp;: \n\n$2\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $3 et suivez ce lien
+file_admin_editreleases	file_rel_notice_project	Projet $1
+file_admin_editreleases	download_explain_modified_file	Une nouvelle version de $2 (paquet $1) vient d'être publiée.
+file_admin_editreleases	download_explain_modified_package	Une nouvelle version du paquet $1 vient d'être publiée.
+file_admin_editreleases	download_explain	 \nVous pouvez la télécharger à : \n\n$1\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $2 et suivez ce lien
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
 file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version
@@ -175,7 +178,7 @@ file_admin_qrs	adding_file	Ajout du fichier
 # Script: SF/www/file/confirm_download.php
 #
 file_confirm_download	download_agreement	Accord de téléchargement CodeX
-file_confirm_download	download_explain	<h2>*** Accord de téléchargement CodeX ***</h2></center> \n</div> \n<p>Vous êtes sur le point de télécharger un logiciel depuis le site CodeX. Le partage et la réutilisation de logiciels <b>á l'intérieur</b> de $1 est soumis à la <a href="$2" target="_blank"><b>Politique d'échange de code</b></a>.</p> \n\n<p>En téléchargeant ce logiciel vous reconnaissez implicitement <a href="$2" target="_blank"><b>avoir lu cette politique d'échange de code</b></a> et être en accord avec son contenu. \n\n<p>Pour débuter le téléchargement, cliquer sur '<b>JE SUIS D'ACCORD</b>'. Si vous ne souhaitez pas télécharger le fichier cliquer sur '<b>JE REFUSE</b>' et <a href="mailto:$3"><b>contactez-nous</b></a> si vous avez besoin de clarifications ou si vous souhaitez expliquer les raisons de votre refus.
+file_confirm_download	download_explain	<h2>*** Accord de téléchargement CodeX ***</h2></center> \n</div> \n<p>Vous êtes sur le point de télécharger un logiciel depuis le site CodeX. Le partage et la réutilisation de logiciels <b>á l'intérieur</b> de $1 est soumis à la <a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><b>Politique d'échange de code</b></a>.</p> \n\n<p>En téléchargeant ce logiciel vous reconnaissez implicitement <a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><b>avoir lu cette politique d'échange de code</b></a> et être en accord avec son contenu. \n\n<p>Pour débuter le téléchargement, cliquer sur '<b>JE SUIS D'ACCORD</b>'. Si vous ne souhaitez pas télécharger le fichier cliquer sur '<b>JE REFUSE</b>' et <a href="mailto:$2"><b>contactez-nous</b></a> si vous avez besoin de clarifications ou si vous souhaitez expliquer les raisons de votre refus.
 file_confirm_download	agree	JE SUIS D'ACCORD
 file_confirm_download	decline	JE REFUSE
 file_confirm_download	back	Retour à la page précédente

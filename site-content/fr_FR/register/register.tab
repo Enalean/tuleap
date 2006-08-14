@@ -66,6 +66,8 @@ register_index	project_registration	Enregistrement d'un projet
 # Script: SF/www/register/license.php
 #
 register_license	invalid_g_name	Nom de projet (groupe) invalide
+register_license	invalid_short_name	Nom court du projet invalide
+register_license	nospace_in_short_name	Il ne doit pas y avoir d'espace dans le nom court du projet
 register_license	g_name_taken	Nom de projet (groupe) déjà utilisé
 register_license	g_name_exist	Ce nom de groupe existe déjà.
 register_license	license	Licence
