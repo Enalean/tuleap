@@ -632,4 +632,21 @@ function forum_utils_access_allowed($forum_id) {
     }
     return true;
 }
+
+function forum_utils_news_access($group_id,$forum_id) {
+
+    $sql = "SELECT ugroup_id FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+    $res = db_query($sql);
+    
+    if ($res && db_numrows($res) > 0) {
+        //the forum is really associated to a news
+	$ugroup_id = db_result($res,0,'ugroup_id');
+	if ($ugroup_id == '3' && (!user_ismember($group_id))) {
+	    //access to private news is denied for project non-members
+	    return false;
+	}
+    }
+    return true;
+}
+
 ?>
