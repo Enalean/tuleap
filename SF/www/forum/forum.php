@@ -113,7 +113,7 @@ if ($forum_id) {
         }
 	
 	//If the forum is associated to a news, check permissions on this news
-	if (!forum_utils_news_access($group_id,$forum_id)) {
+	if (!forum_utils_news_access($forum_id)) {	    
 	    exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
 	}
 
