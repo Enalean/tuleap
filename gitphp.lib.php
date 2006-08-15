@@ -137,7 +137,7 @@ function git_tar_tree($proj,$hash,$rname = NULL)
 	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_TAR_TREE . " " . $hash;
 	if ($rname)
 		$cmd .= " " . $rname;
-	return shell_exec($cmd);
+	return $cmd;
 }
 
 function age_string($age)
