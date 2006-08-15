@@ -140,6 +140,7 @@ $git_projects['Core']['XNSS'] = "core/xnss.git";
 $git_projects['PHP']['Codex'] = "core/codex.git";
 $git_projects['PHP']['gitphp'] = "core/gitphp.git";
 $git_projects['PHP']['MDB'] = "core/mdb.git";
+$git_projects['Nuclear']['Fusion'] = "nuclear/fusion.git";
 $git_projects['Websites']['lots'] = "core/lots.git";
 $git_projects['Websites']['bth'] = "core/bth.git";
 $git_projects['School']['CS135'] = "school/cs135.git";
@@ -151,6 +152,5 @@ $git_projects['School']['CS161'] = "school/cs161.git";
 $git_projects['School']['CS178'] = "school/cs178.git";
 $git_projects['School']['CS180'] = "school/cs180.git";
 $git_projects['School']['CS189'] = "school/cs189.git";
-$git_projects['none']['Spring'] = "external/taspring.git";
 
 ?>
