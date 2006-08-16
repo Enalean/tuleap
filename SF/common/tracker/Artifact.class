@@ -374,6 +374,8 @@ class Artifact extends Error {
         //  Create the insert statement for standard field
         //
         reset($vfl);
+        $vfl_cols = '';
+        $vfl_values = '';
         while (list($field_name,$value) = each($vfl)) {
                 
 	    //echo "<br>field_name=$field_name, value=$value";
@@ -448,7 +450,7 @@ class Artifact extends Error {
                     continue; 
                 }
                                 
-                if ( $vfl[$field_name] ) {
+                if ( array_key_exists($field_name, $vfl) && $vfl[$field_name] ) {
                     // The field has a value from the user input
 
                     $value = $vfl[$field_name];
