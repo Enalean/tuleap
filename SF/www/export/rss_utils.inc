@@ -19,7 +19,7 @@ function rss_description ($in) {
   global $Language;
 	// if description_maxlen is defined, then truncate appropriately
 	// added for netscape rss schema compat
-	if ($GLOBALS['description_maxlen'] &&
+	if (array_key_exists('description_maxlen', $GLOBALS) && $GLOBALS['description_maxlen'] &&
 		(strlen($in) > $GLOBALS['description_maxlen'])) {
 		$in = substr($in,0,$GLOBALS['description_maxlen']);
 	}

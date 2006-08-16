@@ -10,16 +10,15 @@ print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
 <rss version="0.91">
 ';
 // ## default limit
-if (!$limit) $limit = 10;
+if (!isset($limit) || !$limit) $limit = 10;
 if ($limit > 100) $limit = 100;
 
-if ($group_id) {
+$where_clause = " is_approved<>4 ";
+
+if (isset($group_id) && $group_id) {
     $project = new Project($group_id);
-    $where_clause = " group_id=$group_id ";
-} else {
-    $where_clause = " is_approved=1 ";
+    $where_clause .= " AND group_id=$group_id ";
 }
-    
 
 $res = db_query('SELECT forum_id,summary,date,details,group_id FROM news_bytes '
 	.'WHERE '.$where_clause.' ORDER BY date DESC LIMIT '.$limit);
@@ -44,9 +43,9 @@ print "  <language>en-us</language>\n";
 // ## item outputs
 while ($row = db_fetch_array($res)) {
 	print "  <item>\n";
-	print "   <title>".htmlspecialchars($row[summary])."</title>\n";
+	print "   <title>".htmlspecialchars($row['summary'])."</title>\n";
 	// if news group, link is main page
-	if ($row[group_id] != $GLOBALS['sys_news_group']) {
+	if ($row['group_id'] != $GLOBALS['sys_news_group']) {
 		print "   <link>".get_server_url()."/forum/forum.php?forum_id=$row[forum_id]</link>\n";
 	} else {
 		print "   <link>".get_server_url()."/</link>\n";
