@@ -26,8 +26,8 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			sf.net homepage.
 
 	*/
-	if ($post_changes) {
-		if ($approve) {
+	if (isset($post_changes) && $post_changes) {
+		if (isset($approve) && $approve) {
 			/*
 				Update the db so the item shows on the home page
 			*/
@@ -59,7 +59,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 	news_header(array('title'=>$Language->getText('news_admin_index','title'),
 			  'help'=>'NewsService.html'));
 
-	if ($approve) {
+	if (isset($approve) && $approve) {
 		/*
 			Show the submit form
 		*/
@@ -129,8 +129,8 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
                 can edit/change/approve news items
 
 	*/
-	if ($post_changes) {
-		if ($approve) {
+	if (isset($post_changes) && $post_changes) {
+		if (isset($approve) && $approve) {
 			if ($status==1) {
 				/*
 					Update the db so the item shows on the home page
@@ -167,7 +167,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 
 	news_header(array('title'=>$Language->getText('news_admin_index','title')));
 
-	if ($approve) {
+	if (isset($approve) && $approve) {
 		/*
 			Show the submit form
 		*/
