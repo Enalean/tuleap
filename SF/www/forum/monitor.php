@@ -22,6 +22,15 @@ if (user_isloggedin()) {
             if (!forum_utils_access_allowed($forum_id)) {
                 exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
             }
+	    
+	    //If the forum is associated to a private news, non-allowed users shouldn't be able to monitor this forum
+	    $qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+	    $res = db_query($qry);
+	    if (db_numrows($res) > 0) {
+	        if (!forum_utils_news_access($forum_id)) {	    
+	            exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
+	        }
+	    }
 
 		/*
 			First check to see if they are already monitoring
