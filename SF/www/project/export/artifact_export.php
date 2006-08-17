@@ -6,6 +6,7 @@
 //
 // $Id$
 
+require_once('common/tracker/ArtifactFieldSetFactory.class');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -45,6 +46,7 @@ if ( $atid ) {
 
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
+	$art_fieldset_fact = new ArtifactFieldSetFactory($at);
 	if ($art_field_fact->isError()) {
 		exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 	}
