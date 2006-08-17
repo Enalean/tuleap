@@ -61,6 +61,23 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				    //permission of this news not yet defined
 				    news_insert_permissions($forum_id,$permission);
 				}
+				
+				//if the news is declared as private, 'delete' users who were monitoring the forum
+				if ($permission == '3') {
+				    $qry3="SELECT * FROM forum_monitored_forums WHERE forum_id='$forum_id'";
+				    $res3=db_query($qry3);				    
+				    if (db_numrows($res3) > 0) {				        
+					while ($row=db_fetch_array($res3)) {
+					    $user_id=$row['user_id'];
+					    //check if the user_id is member of the project, if no : delete it from forum monitoring
+					    $qry4="SELECT * FROM user_group WHERE group_id='$group_id' AND user_id='$user_id'";
+					    $res4=db_query($qry4);
+					    if (db_numrows($res4) < 1) {					        
+						forum_delete_monitor($forum_id, $user_id);
+					    }
+					}
+				    }
+				}
 
 			}	
 								
