@@ -21,7 +21,15 @@ if (user_isloggedin()) {
                     exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
                 }
 
-
+		//If the forum is associated to a private news, non-allowed users shouldn't be able to save their places in this forum
+		$qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+		$res = db_query($qry);
+		if (db_numrows($res) > 0) {
+		    if (!forum_utils_news_access($forum_id)) {	    
+			exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
+		    }
+		}
+	
 		/*
 			First check to see if they already saved their place 
 			If they have NOT, then insert a row into the db
