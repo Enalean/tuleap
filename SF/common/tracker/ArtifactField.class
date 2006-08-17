@@ -42,7 +42,12 @@ class ArtifactField extends Error {
 	// The scope of the field: S: system or P:project
 	var $scope;
 	
-	// Is the field is required?
+	// @deprecated 
+    // Is the field is required? 
+    // !!! Caution !!!
+    // This field shouldn't be used (always 0)
+    // Use empty_ok (required <=> ! empty_ok)
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	var $required;
 	
 	// Is the field allowed to be empty?
@@ -134,7 +139,7 @@ class ArtifactField extends Error {
 		$this->label = $field_array['label'];
 		$this->description = $field_array['description'];
 		$this->scope = $field_array['scope'];
-		$this->required = $field_array['required'];
+		$this->required = $field_array['required'];    // don't use it : value always equal to 0
 		$this->empty_ok = $field_array['empty_ok'];
 		$this->keep_history = $field_array['keep_history'];
 		$this->special = $field_array['special'];
@@ -260,7 +265,8 @@ class ArtifactField extends Error {
 	}
 	
 	/**
-	 *  Get the required attribute value
+     * @deprecated Caution: don't use this function. Returned value always equal to 0. Use getEmptyOk (required <=> ! empty_ok)
+     * Get the required attribute value
 	 *
 	 * @return boolean
 	 */
