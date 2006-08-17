@@ -634,15 +634,21 @@ function forum_utils_access_allowed($forum_id) {
 }
 
 function forum_utils_news_access($forum_id) {
-
-    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'";
+    /*
+	Takes a forum_id (associated to a news) and checks if the user is allowed to access the corresponding forum   	 
+         */
+    
+    //cast input
+    $_forum_id = (int) $forum_id;
+    
+    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$_forum_id'";
     $res1 = db_query($qry1);
     
     if ($res1 && db_numrows($res1) > 0) {
     
         //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set 
 	$g_id = db_result($res1,0,'group_id');    
-        $sql = "SELECT ugroup_id FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$forum_id'";
+        $sql = "SELECT ugroup_id FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$_forum_id'";
         $res = db_query($sql);
     
         if ($res && db_numrows($res) > 0) {        

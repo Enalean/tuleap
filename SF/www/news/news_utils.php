@@ -256,7 +256,12 @@ function news_check_permission($forum_id,$group_id) {
 	/*
 		Takes a forum_id and checks if user is authorized to read the piece of news associated to this forum_id
 	*/
-	if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+	
+	//cast  input
+	$_forum_id = (int) $forum_id;
+	$_group_id = (int) $group_id;
+	
+	if (((permission_exist('NEWS_READ', $_forum_id)) && (permission_is_authorized('NEWS_READ',$_forum_id,user_getid(),$_group_id))) || (!permission_exist('NEWS_READ', $_forum_id))) {
 	    return true;
         } else {
 	    return false;
