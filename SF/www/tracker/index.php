@@ -711,9 +711,9 @@ if ( $func == 'gotoid' ) {
 	   if($group_id && $atid && $user_id) {
 
 	     $import = new ArtifactImportHtml($ath,$art_field_fact,$group);
-	     if ($mode == "parse") {
+	     if (isset($mode) && $mode == "parse") {
 	       $import->displayParse($csv_filename);
-	     } else if ($mode == "import") {
+	     } else if (isset($mode) && $mode == "import") {
 	       for ($i=0; $i < $count_artifacts; $i++) {
 		 for ($c=0; $c < count($parsed_labels); $c++) {
 		   $label = $parsed_labels[$c];
@@ -726,7 +726,7 @@ if ( $func == 'gotoid' ) {
 	       $import->displayImport($parsed_labels,$artifacts_data,$aid_column);
 	       require('./browse.php');
 
-	     } else if ($mode == "showformat") {
+	     } else if (isset($mode) && $mode == "showformat") {
 	       $import->displayShowFormat();
 	     } else {
 	       $import->displayCSVInput($atid,$user_id);

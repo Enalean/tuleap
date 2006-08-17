@@ -184,6 +184,7 @@ class ArtifactImport extends Error {
    */
   function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data,&$errors) {
     global $Language;
+
     if ($field->getDisplayType() == "MB") {
       $val_arr = explode(",",$val);
       while (list(,$name) = each($val_arr)) {
@@ -209,6 +210,7 @@ class ArtifactImport extends Error {
 	}
       }
     }
+    return true;
   }
 
 
@@ -231,7 +233,9 @@ class ArtifactImport extends Error {
       // check if val in predefined vals (if applicable)
       $predef_vals = $predefined_values[$c];
       if ($predef_vals) {
-	$this->checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data,$errors);
+	if (!$this->checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data,$errors)) {
+	  return false;
+	}
       }
       
       // check whether we specify None for a field which is mandatory
@@ -263,7 +267,7 @@ class ArtifactImport extends Error {
 	    $data[$c] = "";
 	  } else {
 	    list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
-	    if (!ok) {
+	    if (!$ok) {
 	      $errors .= $Language->getText('tracker_import_utils','incorrect_date',array($row+1,implode(",",$data),$val));
 	    }
 	    $date = format_date("Y-m-d",$unix_time);
