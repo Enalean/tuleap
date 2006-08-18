@@ -545,7 +545,12 @@ class ArtifactField extends Error {
 			// For now all of our value functions returns users so there is no need
 			// to make a test for the type of value function it is
 			// if ($value_func == '...')
-			return user_getname($value_id);
+            if(is_numeric($value_id)) {
+                return user_getname($value_id);
+            }
+            else {
+                return $Language->getText('tracker_common_field','not_found');
+            }
 	    } else if ( $this->isDateField() ) {
 			return format_date($sys_datefmt,$value_id);
 	    }
