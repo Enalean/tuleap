@@ -10,7 +10,7 @@ require("include.pl");  # Include all the predefined functions and variables
 my @ssh_key_file = open_array_file("/home/dummy/dumps/ssh_dump");
 my ($username, $ssh_keys, $ssh_dir);
 
-print("\n\n	Processing Users\n\n");
+print("\n\n	Processing SSH keys\n\n");
 while ($ln = pop(@ssh_key_file)) {
 	chop($ln);
 
