@@ -15,7 +15,7 @@
 #
 # MySQL dump 8.22
 #
-# Host: localhost    Database: sourceforge
+# Host: localhost    Database: codex
 #-------------------------------------------------------
 # Server version	3.23.51-log
 
@@ -303,7 +303,7 @@ CREATE TABLE bug_field_usage (
 #                   a value must appear
 # status          : A the value is active. It displays in select boxes
 #                   H the value is hidden (not shown in select boxes but
-#                   it's still here for old bugs using it
+#                   it is still here for old bugs using it
 #                   P the value is permanent. It means that it is active and
 #                   it cannot be changed to hidden by the project even if 
 #                   bug field has a 'project' scope (very useful to force
@@ -2373,7 +2373,7 @@ CREATE TABLE project_field_usage (
 #                   a value must appear
 # status          : A the value is active. It displays in select boxes
 #                   H the value is hidden (not shown in select boxes but
-#                   it's still here for old tasks using it
+#                   it is still here for old tasks using it
 #                   P the value is permanent. It means that it is active and
 #                   it cannot be changed to hidden by the project even if 
 #                   task field has a 'project' scope (very useful to force
@@ -2422,7 +2422,7 @@ CREATE TABLE cvs_checkins (
 ) TYPE=MyISAM;
 
 CREATE TABLE cvs_commits (
-  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  id mediumint(9) NOT NULL auto_increment,
   comm_when timestamp,
   whoid mediumint(9) DEFAULT '0' NOT NULL,
   KEY whoid (whoid),
@@ -2430,7 +2430,7 @@ CREATE TABLE cvs_commits (
 ) TYPE=MyISAM;
 
 CREATE TABLE cvs_descs (
-  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  id mediumint(9) NOT NULL auto_increment,
   description text,
   hash bigint(20) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id),
@@ -2438,21 +2438,21 @@ CREATE TABLE cvs_descs (
 ) TYPE=MyISAM;
 
 CREATE TABLE cvs_dirs (
-  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  id mediumint(9) NOT NULL auto_increment,
   dir varchar(128) binary DEFAULT '' NOT NULL,
   PRIMARY KEY (id),
   UNIQUE dir (dir)
 );
 
 CREATE TABLE cvs_files (
-  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  id mediumint(9) NOT NULL auto_increment,
   file varchar(128) binary DEFAULT '' NOT NULL,
   PRIMARY KEY (id),
   UNIQUE file (file)
 );
 
 CREATE TABLE cvs_repositories (
-  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  id mediumint(9) NOT NULL auto_increment,
   repository varchar(64) binary DEFAULT '' NOT NULL,
   PRIMARY KEY (id),
   UNIQUE repository (repository)
@@ -2471,7 +2471,7 @@ CREATE TABLE cvs_tags (
 );
 
 CREATE TABLE cvs_branches ( 
-  id mediumint(9) DEFAULT '0' NOT NULL auto_increment,
+  id mediumint(9) NOT NULL auto_increment,
   branch varchar(64) binary DEFAULT '' NOT NULL, 
   PRIMARY KEY (id), 
   UNIQUE branch (branch)  
@@ -2480,7 +2480,7 @@ CREATE TABLE cvs_branches (
 # CREATE SVN support tables
 
 CREATE TABLE svn_checkins (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   type enum('Change','Add','Delete'),
   commitid int(11) DEFAULT '0' NOT NULL,
   dirid int(11) DEFAULT '0' NOT NULL,
@@ -2494,7 +2494,7 @@ CREATE TABLE svn_checkins (
 );
 
 CREATE TABLE svn_commits (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   group_id int(11) DEFAULT '0' NOT NULL,
   repositoryid int(11) DEFAULT '0' NOT NULL,
   revision int(11) DEFAULT '0' NOT NULL,
@@ -2508,21 +2508,21 @@ CREATE TABLE svn_commits (
 );
 
 CREATE TABLE svn_dirs (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   dir varchar(255) binary DEFAULT '' NOT NULL,
   PRIMARY KEY (id),
   UNIQUE uniq_dir_idx (dir)
 );
 
 CREATE TABLE svn_files (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   file varchar(255) binary DEFAULT '' NOT NULL,
   PRIMARY KEY (id),
   UNIQUE uniq_file_idx (file)
 );
 
 CREATE TABLE svn_repositories (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  id int(11) NOT NULL auto_increment,
   repository varchar(255) binary DEFAULT '' NOT NULL,
   PRIMARY KEY (id),
   UNIQUE uniq_repository_idx (repository)
@@ -2643,7 +2643,7 @@ CREATE TABLE artifact_field_usage (
 CREATE TABLE artifact_field (
   field_id int(11) NOT NULL auto_increment,
   group_artifact_id int(11) NOT NULL,
-  field_set_id int(11) unsigned NOT NULL default '0'
+  field_set_id int(11) unsigned NOT NULL default '0',
   field_name varchar(255) NOT NULL default '',
   data_type int(11) NOT NULL default '0',
   display_type varchar(255) NOT NULL default '',
@@ -2681,7 +2681,7 @@ CREATE TABLE artifact_field_value (
 #
 # Notes: 
 # - scope='S' means a artifact report available to all projects
-# (defined by CodeX Site administrators, group_id =100)
+# (defined by site administrators, group_id =100)
 # - scope='P' means a artifact report available to all project members
 # of project group_id (defined by project admin)
 # - scope='I' means a personal (individual) artifact report only visible 
@@ -3207,7 +3207,7 @@ CREATE TABLE artifact_rule (
 --
 -- Notes: 
 --   - scope='S' means a reference available to all projects
--- (defined by CodeX Site administrators, group_id =100)
+-- (defined by site administrators, group_id =100)
 --   - scope='P' means a reference available to one project
 --
 CREATE TABLE reference (
