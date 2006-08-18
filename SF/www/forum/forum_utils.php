@@ -543,15 +543,26 @@ function handle_monitoring($forum_id,$msg_id) {
 		If someone is, it sends them the message in email format
 	*/
 
-	$sql="SELECT user.email from forum_monitored_forums,user ".
+	$res=news_read_permissions($forum_id);
+	if ((db_numrows($res) < 1) || (db_result($res,0,'ugroup_id') == '1')) {
+	    $sql="SELECT user.email from forum_monitored_forums,user ".
 		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
-
+	} else {
+	    //we are dealing with private news, only project members are allowed to monitor
+	    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'";
+	    $res1 = db_query($qry1);
+	    $gr_id = db_result($res1,0,'group_id');
+	    $sql = "SELECT user.email from forum_monitored_forums,user_group,user". 
+		    " WHERE forum_monitored_forums.forum_id='$forum_id' AND user_group.group_id='$gr_id'".
+		    " AND forum_monitored_forums.user_id=user_group.user_id AND user_group.user_id=user.user_id";		    		    
+	}
+		
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 
 	if ($result && $rows > 0) {
 		$tolist=implode(result_column_to_array($result),', ');
-
+		//echo $tolist;
 		$sql="SELECT groups.unix_group_name,user.user_name,forum_group_list.forum_name,".
 			"forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
 			"FROM forum,user,forum_group_list,groups ".
@@ -580,7 +591,7 @@ function handle_monitoring($forum_id,$msg_id) {
             $mail->setBody($body);
             
 			if ($mail->send()) {
-                $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');
+                $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');		
             } else {//ERROR
                 $feedback .= ' - '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])); 
             }
