@@ -278,15 +278,15 @@ if ($forum_id) {
 					'</TD><TD><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('forum_forum','change_view').'"></TD></TR></TABLE></FORM>';
                 }
 
-		if ($style == 'nested') {
+		if (($style == 'nested')||($style == 'flat')) {
 			/*
-				no top table row for nested threads
+				no top table row for nested threads or flat display
 			*/
 		} else {
 			/*
-				threaded, no comments, or flat display
+				threaded or no comments
 
-				different header for default threading and flat now
+				different header for default threading
 			*/
 
 			$title_arr=array();
@@ -366,16 +366,11 @@ if ($forum_id) {
 			$i++;
 		}
 
-        // Close table when not in nested mode
-        if ($style != 'nested') {
-            $ret_val .= '</TABLE>';
-        }
-
 		/*
 			This code puts the nice next/prev.
 		*/
             if (($offset != 0)||(db_numrows($result) > $i)) {
-                if ($style=='nested' || $style=='flat') {
+		if (($style == 'nested')||($style == 'flat')) {
                     $ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
                 }
                 $ret_val .= '
@@ -397,8 +392,17 @@ if ($forum_id) {
                     $ret_val .= '&nbsp;';
                 }
                 
-		$ret_val .= '</TABLE>';
+		if (($style == 'nested')||($style == 'flat')) {
+                    $ret_val .= '</TABLE>';
+                }
             }
+
+            // Close table when not in nested or flat mode
+            if (($style != 'nested')&&($style != 'flat')) {
+                    $ret_val .= '</TABLE>';
+            }
+
+
 	}
 
 	echo $ret_val;
