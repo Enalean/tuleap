@@ -46,17 +46,20 @@ def load_local_config():
     except IOError, (errno, strerror):
         print "Can't open %s: I/O error(%s): %s" % (db_include, errno, strerror)
     else:
-        comment_pat = re.compile("^\s*\/\/")
-        empty_pat   = re.compile("^\s*$")
-        assign_pat  = re.compile("^\s*\$(.*);\s*$")
+        comment_pat   = re.compile("^\s*\/\/")
+        empty_pat     = re.compile("^\s*$")
+        assign_pat    = re.compile("^\s*\$(.*);\s*$")
+        nodollar_pat  = re.compile("(\s+)\$")
+        dottoplus_pat = re.compile("(\s+)\.(\s+)")
         while True:
             line = f.readline()
             if not line: break
             if comment_pat.match(line) or empty_pat.match(line): continue
             m = assign_pat.match(line)
             if m is not None:
-                varname = string.split(m.group(1), '=')[0]
-                exec m.group(1) in globals()
+                n = nodollar_pat.sub(" ",m.group(1))
+                n = dottoplus_pat.sub(" + ",n)
+                exec n in globals()
         f.close()
 
 
