@@ -2060,120 +2060,7 @@ msgstr "Énumérez tous les utilisateurs une fois authentifiés."
 msgid "Authenticated users on this wiki (%d total):"
 msgstr "Utilisateurs connectés à ce wiki (%d au total) :"
 
-#: ../lib/plugin/AnalyseAccessLogSql.php:143
-#: ../lib/plugin/AnalyseAccessLogSql.php:168
-msgid "0 - last minute"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:144
-#: ../lib/plugin/AnalyseAccessLogSql.php:169
-msgid "1 - 1 minute to 1 hour"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:145
-#: ../lib/plugin/AnalyseAccessLogSql.php:170
-msgid "2 - 1 hour to 1 day"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:146
-#: ../lib/plugin/AnalyseAccessLogSql.php:171
-msgid "3 - 1 day to 1 week"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:147
-#: ../lib/plugin/AnalyseAccessLogSql.php:172
-msgid "4 - 1 week to 1 month"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:148
-#: ../lib/plugin/AnalyseAccessLogSql.php:173
-msgid "5 - 1 month to 1 year"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:149
-#: ../lib/plugin/AnalyseAccessLogSql.php:174
-msgid "6 - more than 1 year"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:193
-msgid "referring_urls"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:194
-msgid "external_referers"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:195
-msgid "referring_domains"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:196
-msgid "remote_hosts"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:197
-msgid "users"
-msgstr "utilisateurs"
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:198
-msgid "host_users"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:199
-msgid "search_bots"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:200
-msgid "search_bots_hits"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:202
-msgid "minutes"
-msgstr "minutes"
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:203
-msgid "hours"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:204 ../lib/plugin/VisualWiki.php:499
-msgid "days"
-msgstr "jours"
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:205
-msgid "weeks"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:223
-msgid "AnalyseAccessLogSql"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:227
-msgid "Show summary information from the access log table."
-msgstr "Montre l'index de la table access log."
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:240
-msgid "The requested information is available only to Administrators."
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:243
-msgid "The SQL_ACCESS_LOG is not enabled."
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:254
-#, php-format
-msgid "Unrecognised parameter 'mode=%s'"
-msgstr ""
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:273 ../lib/plugin/_BackendInfo.php:97
-msgid "<empty>"
-msgstr "<vide>"
-
-#: ../lib/plugin/AnalyseAccessLogSql.php:342
-msgid "mode"
-msgstr "mode"
-
 # lib/diff.php:1001 lib/diff.php:1019
-#: ../lib/plugin/AnalyseAccessLogSql.php:344
 msgid "period"
 msgstr "period"
 
@@ -2427,8 +2314,7 @@ msgid "Automatically create a Bibtex file from linked pages"
 msgstr ""
 
 #: ../lib/plugin/CreateBib.php:121 ../lib/plugin/CreateToc.php:300
-#: ../lib/plugin/IncludePage.php:77 ../lib/plugin/RateIt.php:208
-#: ../lib/plugin/Template.php:102
+#: ../lib/plugin/IncludePage.php:77 ../lib/plugin/Template.php:102
 msgid "no page specified"
 msgstr "aucune page indiquée"
 
@@ -2537,42 +2423,6 @@ msgstr ""
 #, php-format
 msgid "A required argument '%s' is missing."
 msgstr "Un argument requis '%s' est manquant."
-
-#: ../lib/plugin/FoafViewer.php:52
-msgid "FoafViewer"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:56
-msgid "Parse an RDF FOAF file and extract information to render as HTML"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:84
-msgid "required pear library XML/FOAF/Parser.php not found in include_path"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:90
-msgid "FOAF File URI"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:94
-msgid "Pretty HTML"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:96
-msgid "Original URL (Redirect)"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:98
-msgid "Parse FOAF"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:107
-msgid "foaf must be a URI starting with http://"
-msgstr ""
-
-#: ../lib/plugin/FoafViewer.php:130
-msgid "Title"
-msgstr "Titre"
 
 #: ../lib/plugin/FrameInclude.php:52
 msgid "FrameInclude"
@@ -2715,12 +2565,12 @@ msgstr ""
 msgid "GraphViz image or imagemap creation of directed graphs"
 msgstr ""
 
-#: ../lib/plugin/GraphViz.php:243 ../lib/plugin/Ploticus.php:249
+#: ../lib/plugin/GraphViz.php:243
 #: ../lib/plugin/SyntaxHighlighter.php:180
 msgid "empty source"
 msgstr "source vide"
 
-#: ../lib/plugin/GraphViz.php:269 ../lib/plugin/Ploticus.php:239
+#: ../lib/plugin/GraphViz.php:269
 #, php-format
 msgid "%s error: outputfile '%s' not created"
 msgstr ""
@@ -3288,54 +3138,6 @@ msgstr "Coloration syntaxique du PHP"
 msgid "Invalid color: %s"
 msgstr "Couleur non valable : %s"
 
-#: ../lib/plugin/PhpWeather.php:63
-msgid "PhpWeather"
-msgstr "MétéoPhp"
-
-#: ../lib/plugin/PhpWeather.php:67
-msgid "The PhpWeather plugin provides weather reports from the Internet."
-msgstr "Le plugin de météo importée d'internet."
-
-#: ../lib/plugin/PhpWeather.php:88
-msgid "You have to define PHPWEATHER_BASE_DIR before use. (config/config.ini)"
-msgstr ""
-"Vous devez définir PHPWEATHER_BASE_DIR avant de l'utiliser (config/config."
-"ini)"
-
-#: ../lib/plugin/PhpWeather.php:104
-#, php-format
-msgid "The ICAO '%s' wasn't recognized."
-msgstr "L'ICAO '%s' n'a pas été reconnu."
-
-#: ../lib/plugin/PhpWeather.php:115
-#, php-format
-msgid "%s does not know about the language '%s', using 'en' instead."
-msgstr "%s ne connait pas le langage '%s', utilisation de 'en' a la place."
-
-#: ../lib/plugin/PhpWeather.php:170
-msgid "Submit country"
-msgstr "Valider le pays"
-
-#: ../lib/plugin/PhpWeather.php:170
-msgid "Change country"
-msgstr "Changer le pays"
-
-#: ../lib/plugin/PhpWeather.php:189
-msgid "Submit location"
-msgstr "Valider la localisation"
-
-#: ../lib/plugin/Ploticus.php:93
-msgid "Ploticus"
-msgstr ""
-
-#: ../lib/plugin/Ploticus.php:96
-msgid "Ploticus image creation"
-msgstr ""
-
-#: ../lib/plugin/Ploticus.php:201
-msgid "shell commands not allowed in Ploticus"
-msgstr ""
-
 #: ../lib/plugin/PluginManager.php:31
 msgid "PluginManager"
 msgstr "GestionsDesPlugins"
@@ -3427,69 +3229,9 @@ msgstr "PageAléatoire"
 msgid "Displays a list of randomly chosen pages or redirects to a random page."
 msgstr "Affiche une liste de pages prises au hasard sur ce wiki."
 
-#: ../lib/plugin/RateIt.php:90 ../lib/plugin/RateIt.php:139
-#: ../lib/plugin/RateIt.php:146 ../lib/plugin/RateIt.php:291
 #: ../lib/upgrade.php:387
 msgid "RateIt"
 msgstr "ClassezLa"
-
-#: ../lib/plugin/RateIt.php:93
-msgid "Rating system. Store user ratings per page"
-msgstr "Système de vote. Stocke les votes d'utilisateur par page."
-
-#: ../lib/plugin/RateIt.php:117
-#, fuzzy
-msgid "Your rating "
-msgstr "Votre note "
-
-#: ../lib/plugin/RateIt.php:258
-#, php-format
-msgid "Rated by %d users | Average rating %.1f stars"
-msgstr "Noté par %d utilisateurs | Moyenne des notes %.1f étoiles."
-
-#: ../lib/plugin/RateIt.php:263
-#, php-format
-msgid "Your rating was %.1f"
-msgstr "Votre note est %.1f"
-
-#: ../lib/plugin/RateIt.php:268
-#, php-format
-msgid "%s prediction for you is %s stars"
-msgstr "La prédiction %s pour vous est de %s étoiles."
-
-#: ../lib/plugin/RateIt.php:271
-#, php-format
-msgid "%s prediction for you is %.1f stars"
-msgstr "la prédiction %s pour vous est de %.1f étoiles."
-
-#: ../lib/plugin/RateIt.php:291
-msgid "Rate It"
-msgstr "Classez la"
-
-#: ../lib/plugin/RateIt.php:358
-msgid "Rate the topic of this page"
-msgstr "Notez les sujets de cette page"
-
-#: ../lib/plugin/RateIt.php:370
-msgid "Cancel rating"
-msgstr "Annuler la notation"
-
-#: ../lib/plugin/RawHtml.php:57
-msgid "A plugin to provide for raw HTML within wiki pages."
-msgstr "Un Plugin pour intégrer du code HTML dans les WikiPages."
-
-#: ../lib/plugin/RawHtml.php:74
-msgid "Raw HTML is disabled in this wiki."
-msgstr "Le HTML est interdit sur ce wiki."
-
-#: ../lib/plugin/RawHtml.php:83 ../lib/plugin/RedirectTo.php:82
-#, php-format
-msgid "%s is only allowed in locked pages."
-msgstr "%s n'est autorisé que dans les pages verrouillées."
-
-#: ../lib/plugin/RawHtml.php:84
-msgid "Raw HTML"
-msgstr "HTML Pur"
 
 #: ../lib/plugin/RdfDefinition.php:42
 msgid "RdfDefinition"

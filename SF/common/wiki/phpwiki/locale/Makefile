@@ -194,7 +194,6 @@ ${POT_FILE}: ../lib/pdf.php
 ${POT_FILE}: ../lib/plugin/AddComment.php
 ${POT_FILE}: ../lib/plugin/AllPages.php
 ${POT_FILE}: ../lib/plugin/AllUsers.php
-${POT_FILE}: ../lib/plugin/AnalyseAccessLogSql.php
 ${POT_FILE}: ../lib/plugin/AppendText.php
 ${POT_FILE}: ../lib/plugin/AsciiMath.php
 ${POT_FILE}: ../lib/plugin/AuthorHistory.php
@@ -214,7 +213,6 @@ ${POT_FILE}: ../lib/plugin/Diff.php
 ${POT_FILE}: ../lib/plugin/EditMetaData.php
 ${POT_FILE}: ../lib/plugin/ExternalSearch.php
 ${POT_FILE}: ../lib/plugin/FileInfo.php
-${POT_FILE}: ../lib/plugin/FoafViewer.php
 ${POT_FILE}: ../lib/plugin/FrameInclude.php
 ${POT_FILE}: ../lib/plugin/FullTextSearch.php
 ${POT_FILE}: ../lib/plugin/FuzzyPages.php
@@ -234,7 +232,6 @@ ${POT_FILE}: ../lib/plugin/LikePages.php
 ${POT_FILE}: ../lib/plugin/LinkDatabase.php
 ${POT_FILE}: ../lib/plugin/ListPages.php
 ${POT_FILE}: ../lib/plugin/ListSubpages.php
-${POT_FILE}: ../lib/plugin/ModeratedPage.php
 ${POT_FILE}: ../lib/plugin/MostPopular.php
 ${POT_FILE}: ../lib/plugin/NoCache.php
 ${POT_FILE}: ../lib/plugin/OldStyleTable.php
@@ -246,15 +243,11 @@ ${POT_FILE}: ../lib/plugin/PageInfo.php
 ${POT_FILE}: ../lib/plugin/PageTrail.php
 ${POT_FILE}: ../lib/plugin/PhotoAlbum.php
 ${POT_FILE}: ../lib/plugin/PhpHighlight.php
-${POT_FILE}: ../lib/plugin/PhpWeather.php
-${POT_FILE}: ../lib/plugin/Ploticus.php
 ${POT_FILE}: ../lib/plugin/PluginManager.php
 ${POT_FILE}: ../lib/plugin/PopUp.php
 ${POT_FILE}: ../lib/plugin/PopularNearby.php
 ${POT_FILE}: ../lib/plugin/PrevNext.php
 ${POT_FILE}: ../lib/plugin/RandomPage.php
-${POT_FILE}: ../lib/plugin/RateIt.php
-${POT_FILE}: ../lib/plugin/RawHtml.php
 ${POT_FILE}: ../lib/plugin/RdfDefinition.php
 ${POT_FILE}: ../lib/plugin/RecentChanges.php
 ${POT_FILE}: ../lib/plugin/RecentChangesCached.php
