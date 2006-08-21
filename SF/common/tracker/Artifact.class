@@ -295,6 +295,8 @@ class Artifact extends Error {
         
         // If type has a value add it into the sql statement (this is only for
         // the follow up comments (comment field))
+        $fld_type = '';
+        $val_type = '';
         if ($type) {
             $fld_type = ',type'; $val_type = ",'$type'";
         } else {
@@ -689,7 +691,7 @@ class Artifact extends Error {
 						$temp[] = $v;
 					}
 				}
-				if ($unset) $values = $temp;
+				if (isset($unset) && $unset) $values = $temp;
 			}
 
                         $old_values = $field->getValues($this->getID());
@@ -806,8 +808,8 @@ class Artifact extends Error {
             // 
             // If a canned response is given it overrides anything typed in the followup
             // comment text area. 
-            $comment = $HTTP_POST_VARS['comment'];
-	    $comment_type_id = $vfl['comment_type_id'];
+            $comment = array_key_exists('comment', $HTTP_POST_VARS)?$HTTP_POST_VARS['comment']:'';
+            $comment_type_id = array_key_exists('comment_type_id', $vfl)?$vfl['comment_type_id']:'';
 
 	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$feedback);
             
@@ -855,7 +857,7 @@ class Artifact extends Error {
                 exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
                 return false;
             } else {
-                if (!masschange) $feedback .= $Language->getText('tracker_common_artifact','upd_success');
+                if (!$masschange) $feedback .= $Language->getText('tracker_common_artifact','upd_success');
                 return true;
             }
 
