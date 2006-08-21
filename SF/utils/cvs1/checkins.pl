@@ -12,7 +12,7 @@
 #
 # Purpose:
 #    This Perl include file mimics some of the fucntion in www/include/Group.class
-#    to allow Perl scripts to handle chackins tables in codex sourceforge db
+#    to allow Perl scripts to handle checkins tables in codex codex db
 
 sub cvs_db_connect {
 	my ($foo, $bar);
@@ -27,7 +27,7 @@ sub cvs_db_connect {
 	close(FILE);
 
 	# connect to the database
-	$dbvh ||= DBI->connect("DBI:mysql:sourceforge:$sys_dbhost", "$sys_dbuser", "$sys_dbpasswd");
+	$dbvh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost", "$sys_dbuser", "$sys_dbpasswd");
 }
 
 
