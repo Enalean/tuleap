@@ -62,6 +62,35 @@ CREATE TABLE artifact_field_set (
 
 ALTER TABLE artifact_field ADD field_set_id INT( 11 ) UNSIGNED NOT NULL AFTER group_artifact_id;
 
+
+###############################################################################
+# Survey Manager
+# 1- create a new table 'survey_radio_choices' to the survey manager database. 
+# This table contains all useful information about edited radio buttons, it has 
+# 4 columns : 'choice_id', 'question_id', 'radio_choice' and 'choice_rank'
+# 2- define a new question type 'Radio Buttons' in 'survey_question_types' table
+# 3- change type name of yes/no questions from 'Radio Button Yes/No' to 'Yes/No'
+# 
+# References:
+# request #391
+#
+
+## Create the new table 'survey_radio_choices'
+CREATE TABLE survey_radio_choices (
+  choice_id int(11) NOT NULL auto_increment,
+  question_id int(11) NOT NULL default '0',  
+  choice_rank int(11) NOT NULL default '0',
+  radio_choice text NOT NULL,
+  PRIMARY KEY  (choice_id),
+  KEY idx_survey_radio_choices_question_id (question_id)  
+) TYPE=MyISAM;
+
+## Add new type value 'Radio Buttons', id=6, in 'survey_question_types' table
+INSERT INTO survey_question_types (id, type) VALUES (6,'Radio Buttons');
+
+## Replace 'Radio Button Yes/No' value by 'Yes/No' in 'survey_question_types' table
+UPDATE survey_question_types SET type='Yes/No' WHERE id='3';
+
 EOF
 
 

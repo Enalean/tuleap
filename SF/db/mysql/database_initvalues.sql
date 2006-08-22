@@ -310,9 +310,10 @@ INSERT INTO project_task VALUES (100, 100, 'None', '', 0, 0, '0.00', 0, 0, 0, 0)
 
 INSERT INTO survey_question_types (id, type) VALUES (1,'Radio Buttons 1-5');
 INSERT INTO survey_question_types (id, type) VALUES (2,'Text Area');
-INSERT INTO survey_question_types (id, type) VALUES (3,'Radio Buttons Yes/No');
+INSERT INTO survey_question_types (id, type) VALUES (3,'Yes/No');
 INSERT INTO survey_question_types (id, type) VALUES (4,'Comment Only');
 INSERT INTO survey_question_types (id, type) VALUES (5,'Text Field');
+INSERT INTO survey_question_types (id, type) VALUES (6,'Radio Buttons');
 INSERT INTO survey_question_types (id, type) VALUES (100,'None');
 
 #

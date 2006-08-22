@@ -43,8 +43,30 @@ function show_questions() {
 
 <H2><?php echo $Language->getText('survey_admin_update_question','edit_a_q'); ?></H2>
 
-<H3><?php echo $Language->getText('survey_admin_update_question','warn'); ?></h3>
-<P>
+<H3>
+<?php
+
+// check if question is associated to an existing survey. If it is the case, display a warning.
+$sql="SELECT * FROM surveys WHERE group_id=".$group_id;
+$res=db_query($sql);
+$warn=false;
+$i=0;
+if (db_numrows($res) > 0) {
+    while (($i < db_numrows($res)) && (! $warn)) {
+        $question_list=db_result($res,$i,'survey_questions');
+        $question_array=explode(',', $question_list);
+        if (in_array($question_id,$question_array)) {
+            $warn=true;
+        }
+        $i++;
+    }
+}
+
+if ($warn) { 
+    echo $Language->getText('survey_admin_update_question','warn'); 
+} 
+
+?></H3><P>
 
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_question">
@@ -66,6 +88,11 @@ $sql="SELECT * FROM survey_question_types";
 $result=db_query($sql);
 echo html_build_select_box($result,'question_type',$question_type,false);
 
+// see if the question is a radio-button type
+$qry1="SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_id='$question_id'";
+$res1=db_query($qry1);
+$question_type=db_result($res1,0,'question_type');
+
 ?>
 <P>
 
@@ -79,7 +106,20 @@ echo html_build_select_box($result,'question_type',$question_type,false);
 
 <?php
 
-survey_footer(array());
+// for radio-button questions, display buttons list and form
+if ($question_type=="6") {   
+    
+    $sql="SELECT * ".
+    "FROM survey_radio_choices ".
+    "WHERE question_id='$question_id'".
+    "ORDER BY choice_rank";
+    $result=db_query($sql);
+    
+    echo "<P><HR><P>".$Language->getText('survey_admin_browse_radio','edit_r_msg'); 
+    survey_utils_show_radio_list($result);
+    survey_utils_show_radio_form($question_id,"");
+}
 
+survey_footer(array());
 
 ?>

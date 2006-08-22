@@ -294,6 +294,9 @@ $sys_session_lifetime = 3600*24*183;
 // (1 is mandatory, 0 is optional)
 $sys_frs_license_mandatory = 1;
 
+//
+// ID of the survey to be referenced in users personal pages ('my page')
+$sys_my_page_survey = 1;
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

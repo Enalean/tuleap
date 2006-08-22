@@ -7,7 +7,6 @@
 // $Id$
 
 require_once('pre.php');
-require('../survey/survey_utils.php');
 require('./my_utils.php');
 require_once('common/tracker/Artifact.class');
 require_once('common/tracker/ArtifactFile.class');
@@ -462,32 +461,34 @@ if (user_isloggedin()) {
 	*/
 
 
-        // Get developer survey id
-        $sql="SELECT * from surveys WHERE group_id=1 ORDER BY survey_id";
-
+        // Get id and title of the survey that will be promoted to user page. default = survey whose id=1
+	if ($GLOBALS['sys_my_page_survey']) {
+	    $developer_survey_id=$GLOBALS['sys_my_page_survey'];	
+	} else {
+	    $developer_survey_id="1";
+	}
+	
+        $sql="SELECT * from surveys WHERE survey_id=".$developer_survey_id;
 	$result=db_query($sql);
-        $developer_survey_id=db_result($result,0,'survey_id');
-
-        // Check that the survey is active
+        $group_id=db_result($result,0,'group_id');
+	$survey_title=db_result($result, 0, 'survey_title');
+        
+	// Check that the survey is active
         $devsurvey_is_active=db_result($result,0,'is_active');
 
         $html_my_survey = "";
         if ($devsurvey_is_active==1) {
 
-            $sql="SELECT * from survey_responses ".
+            $sql="SELECT * FROM survey_responses ".
 		"WHERE survey_id='".$developer_survey_id."' AND user_id='".user_getid()."'";
-
             $result=db_query($sql);
-
-            $html_my_survey .= $HTML->box1_top($Language->getText('my_index', 'my_survey'),0);
-
+	    
             if (db_numrows($result) < 1) {
-		$html_my_survey .= survey_utils_show_survey(1,$developer_survey_id,0);
-            } else {
-		$html_my_survey .= $Language->getText('my_index', 'survey_done');
-            }
-            $html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
-            $html_my_survey .= $HTML->box1_bottom(0);
+		$html_my_survey .= $HTML->box1_top($Language->getText('my_index', 'my_survey'),0);
+		$html_my_survey .= '<A HREF="http://'.$GLOBALS['sys_default_domain'].'/survey/survey.php?group_id='.$group_id.'&survey_id='.$developer_survey_id.'">'.$survey_title.'</A>';
+		$html_my_survey .= '<TR align=left><TD COLSPAN="2">&nbsp;</TD></TR>';
+                $html_my_survey .= $HTML->box1_bottom(0);
+            }             
         }
 
 
@@ -577,11 +578,11 @@ if (user_isloggedin()) {
 	<TABLE width="100%" border="0">
 	<TR><TD VALIGN="TOP" WIDTH="50%">
 <?
+	echo $html_my_survey;
 	echo $html_my_projects;
 	echo $html_my_bookmarks;
 	echo $html_my_monitored_forums;
-	echo $html_my_monitored_fp;
-	echo $html_my_survey;
+	echo $html_my_monitored_fp;	
 ?>
 	</TD><TD VALIGN="TOP" WIDTH="50%">
 <?

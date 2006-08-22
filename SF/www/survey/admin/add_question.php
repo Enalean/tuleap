@@ -13,18 +13,32 @@ require('../survey_utils.php');
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
+	survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
 
 if ($post_changes) {
-    survey_data_question_create($group_id,htmlspecialchars($question),$question_type);
+   survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
+
+   $quest = htmlspecialchars($question);
+   $qry = "SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_type='$question_type' AND question='$quest'";
+   $res = db_query($qry);   
+   $quest_id = db_result($res,0,'question_id');
+
+   // if radio-type question is created, redirect to Edit A Question page
+   if ($question_type=="6") {
+       session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$quest_id");       
+   }
 }
+
+survey_header(array('title'=>$Language->getText('survey_admin_add_question','add_q'),
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
+
 
 ?>
 <SCRIPT LANGUAGE="JavaScript">
@@ -41,7 +55,7 @@ function show_questions() {
 
 <H2><?php echo $Language->getText('survey_admin_add_question','add_q'); ?></H2>
 <P>
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION ="<?php echo $PHP_SELF ; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="Y">
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <?php echo $Language->getText('survey_admin_add_question','q_allowed'); ?><BR>

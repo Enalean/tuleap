@@ -1142,7 +1142,7 @@ class ArtifactType extends Error {
 		$sql="SELECT user.user_id,user.user_name ".
 			"FROM user,user_group ".
 			"WHERE (user.user_id=user_group.user_id ".
-			"AND user_group.group_id='$group_id') ".
+			"AND user_group.group_id='$group_id') OR user.user_id=100 ".
 		        "AND user_group.admin_flags = 'A' ".
 			"ORDER BY user.user_name";
 		return db_query($sql);

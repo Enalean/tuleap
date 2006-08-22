@@ -586,6 +586,9 @@ function prepare_survey_responses_record($group_id, &$record) {
 
     $record['date'] = format_date($datetime_fmt,$record['date']);
     $record['reponse'] = prepare_textarea($record['response']);
+    //compute artificial user_id to replace real user_id
+    $enc_user_id = bin2hex(md5($record['user_id']));  
+    $record['user_id'] = $enc_user_id;
  
 }
 

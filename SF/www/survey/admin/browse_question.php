@@ -16,10 +16,10 @@ survey_header(array('title'=>$Language->getText('survey_admin_browse_question','
 	Select all questions from the database
 */
 
-$sql="SELECT survey_questions.question_id,survey_questions.question,survey_question_types.type AS question_type ".
-	"FROM survey_questions,survey_question_types ".
-	"WHERE survey_question_types.id=survey_questions.question_type AND survey_questions.group_id='$group_id' ".
-"ORDER BY survey_questions.question_id DESC";
+$sql="SELECT survey_questions.question_id,survey_questions.question, survey_questions.question_type AS question_type_id,survey_question_types.type AS question_type ".
+    "FROM survey_questions,survey_question_types ".
+    "WHERE survey_question_types.id=survey_questions.question_type AND survey_questions.group_id='$group_id' ".
+    "ORDER BY survey_questions.question_id DESC";
 $result=db_query($sql);
 
 ?>
@@ -36,4 +36,4 @@ survey_footer(array());
 
 
 
-?>
+

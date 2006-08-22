@@ -102,6 +102,8 @@ function survey_data_question_delete($group_id,$question_id) {
     $feedback = '';
     // Delete first the responses associated with to the question  if any
     $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
+    // Delete the radio choices if it is a radio button question
+    $res = db_query("DELETE FROM survey_radio_choices WHERE question_id=$question_id");
     // Then delete the question itself
     $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
     if (db_affected_rows($res) <= 0) {
@@ -124,6 +126,117 @@ function survey_data_question_update($group_id,$question_id,$question,$question_
 	} else {
 		$feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
 	}
+}
+
+function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
+    
+    global $feedback,$Language;
+        
+    // cast inputs
+    $_question_id = (int) $question_id;
+    $_choice_id = (int) $choice_id;
+    $_rank = (int) $rank;
+    $_radio = htmlentities($radio);
+    
+    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
+    $res1=db_query($qry1);
+    $old_text=db_result($res1,0,'radio_choice');
+    $old_rank=db_result($res1,0,'choice_rank');
+    
+    if (($old_text==$_radio) && ($old_rank==$_rank)) {
+        $feedback .= " ".$Language->getText('survey_s_data','upd_fail');
+    } else {            
+        if ($old_text != $_radio) {            
+	    if (check_for_duplicata($_question_id,$_radio)) {
+	        $update=true;
+	    } else {
+	        $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
+	    }	    	
+        } else {
+	    $update=true;
+	}    	
+    }
+    
+    if ($update) {
+        $sql="UPDATE survey_radio_choices SET radio_choice='$_radio',choice_rank='$_rank'".
+            " WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
+        $result=db_query($sql);
+        if (db_affected_rows($result) < 1) {
+	    $feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
+        } else {
+	    $feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
+        }	   
+    }   
+}
+
+
+function survey_data_radio_create($question_id, $radio, $rank) {
+    
+    global $feedback,$Language;
+         		
+    // cast inputs
+    $_question_id = (int) $question_id;    
+    $_rank = (int) $rank;
+    $_radio = htmlentities($radio);
+    
+    if (check_for_duplicata($_question_id,$_radio)) {	
+	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
+            "VALUES ('$_question_id','$_radio','$_rank')";
+        $result=db_query($sql);
+        if ($result) {
+	    $feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
+        } else {
+	    $feedback .= " ".$Language->getText('survey_s_data','r_create_fail',db_error());
+        }
+    } else {
+        $feedback .= " ".$Language->getText('survey_s_data','r_create_duplicate');		    
+    }
+}
+
+function survey_data_radio_delete($question_id, $choice_id) {
+    
+    global $feedback,$Language;
+
+    // cast inputs
+    $_question_id = (int) $question_id;
+    $_choice_id = (int) $choice_id;
+    
+    $sql="DELETE FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
+    $result=db_query($sql);
+    if (db_affected_rows($result) <= 0) {
+	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));
+    } else {
+	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$_choice_id);
+    }    
+    
+}   
+
+function check_for_duplicata($question_id, $radio) {
+
+    global $feedback,$Language;
+        
+    //check if the radio button text is already existing. If so, creation or update fails
+    $update=false;
+    $qry2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
+    $res2=db_query($qry2);
+    
+    if (db_numrows($res2)>0) {
+        $duplicata="";
+        $i=0;
+        while ((strcmp($duplicata,$radio) != 0) && ($i <= db_numrows($res2))) {
+            $duplicata=db_result($res2,$i,'radio_choice');
+            $i++;
+        }
+        // check for upper/lower cases : same texts with different cases (uppercase/lowercase) are allowed
+        if ($i > db_numrows($res2)) {
+            $update=true;
+        } 
+    } else {
+        $update=true;
+    }
+    
+    return $update;
+
 }
 
 ?>
