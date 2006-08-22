@@ -359,9 +359,9 @@ function LinkBracketLink($bracketlink) {
     /* Relatives links by Joel Schaubert.
      * Recognize [../bla] or [/bla] as relative links, without needing http://
      */
-    if (preg_match('/^(\.\.\/|\/)/', $link)) {
+   /* if (preg_match('/^(\.\.\/|\/)/', $link)) {
         return new Cached_ExternalLink($link, $label);
-    }
+    }*/
     // [label|link]
     // if label looks like a url to an image, we want an image link.
     if (isImageLink($label)) {
