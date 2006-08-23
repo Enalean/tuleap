@@ -218,23 +218,23 @@ class User {
 	}
     
     var $_ugroups;
-    function getUgroups($instances) {
+    function getUgroups($group_id, $instances) {
         $hash = md5(serialize($instances));
         if (!isset($this->_ugroups)) {
             $this->_ugroups = array();
         }
         if (!isset($this->_ugroups[$hash])) {
-            $this->_ugroups[$hash] = array_merge($this->getDynamicUgroups($instances), $this->getStaticUgroups());
+            $this->_ugroups[$hash] = array_merge($this->getDynamicUgroups($group_id, $instances), $this->getStaticUgroups($group_id));
         }
         return $this->_ugroups[$hash];
     }
     
     var $_static_ugroups;
-    function getStaticUgroups() {
+    function getStaticUgroups($group_id) {
         if (!isset($this->_static_ugroups)) {
             $this->_static_ugroups = array();
             if (!$this->isSuperUser()) {
-                $res = ugroup_db_list_all_ugroups_for_user($GLOBALS['group_id'], $this->id);
+                $res = ugroup_db_list_all_ugroups_for_user($group_id, $this->id);
                 while ($row = db_fetch_array($res)) {
                     $this->_static_ugroups[] = $row['ugroup_id'];
                 }
@@ -244,13 +244,13 @@ class User {
     }
     
     var $_dynamics_ugroups;
-    function getDynamicUgroups($instances) {
+    function getDynamicUgroups($group_id, $instances) {
         $hash = md5(serialize($instances));
         if (!isset($this->_dynamics_ugroups)) {
             $this->_dynamics_ugroups = array();
         }
         if (!isset($this->_dynamics_ugroups[$hash])) {
-            $this->_dynamics_ugroups[$hash] = ugroup_db_list_dynamic_ugroups_for_user($GLOBALS['group_id'], $instances, $this->id);
+            $this->_dynamics_ugroups[$hash] = ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $this->id);
         }
         return $this->_dynamics_ugroups[$hash];
     }

@@ -388,7 +388,8 @@ class ArtifactReport extends Error {
             $um =& UserManager::instance();
             $u  =& $um->getCurrentUser();
             $instances = array('artifact_type' => $this->group_artifact_id);
-            $ugroups = $u->getUgroups($instances);
+            $group_id = $ath->Group->getID();
+            $ugroups = $u->getUgroups($group_id, $instances);
             
             $pm          =& PermissionsManager::instance();
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
@@ -403,8 +404,8 @@ class ArtifactReport extends Error {
                 $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
             } else {
             
-                $static_ugroups  = $u->getStaticUgroups();
-                $dynamic_ugroups = $u->getDynamicUgroups($instances);
+                $static_ugroups  = $u->getStaticUgroups($group_id);
+                $dynamic_ugroups = $u->getDynamicUgroups($group_id, $instances);
                 //Does the user member of at least one group which has ACCESS_SUBMITTER ?
                 if (isset($permissions['TRACKER_ACCESS_SUBMITTER']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_SUBMITTER'])) > 0) {
                     // {{{ The static ugroups
