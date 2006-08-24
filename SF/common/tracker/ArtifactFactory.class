@@ -104,14 +104,13 @@ class ArtifactFactory extends Error {
 	/**
 	 *  getArtifacts - get an array of Artifact objects
 	 *
-	 *   	@param $user_id  : the user id
 	 *	@param $criteria : array of items field => value
 	 *	@param $offset   : the index of artifact to begin
 	 *	@param $max_rows : number of artifacts to return
 	 *
 	 *	@return	array	The array of Artifact objects.
 	 */
-	function getArtifacts($user_id, $criteria, $offset, $max_rows) {
+	function getArtifacts($criteria, $offset, $max_rows) {
 		global $Language, $art_field_fact;
 		$artifacts = array();
 		if (is_array($criteria) && count($criteria) > 0) {
@@ -148,6 +147,7 @@ class ArtifactFactory extends Error {
 			}
 			$sql .=" LIMIT $offset,$max_rows";
 		}
+        
 		$result=db_query($sql);
 		$rows = db_numrows($result);
 		$this->fetched_rows=$rows;
@@ -157,7 +157,7 @@ class ArtifactFactory extends Error {
 		} else {
 			while ($arr = db_fetch_array($result)) {
 				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id']);
-				if ($artifact->userCanView($user_id))
+				if ($artifact->userCanView(user_getid()))
 					$artifacts[$arr['artifact_id']] = $artifact;
 			}
 		}
