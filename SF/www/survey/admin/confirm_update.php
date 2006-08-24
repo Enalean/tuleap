@@ -72,7 +72,7 @@ if (db_numrows($res) == 0) {
     survey_footer(array());
     exit;
 } else {
-    echo '<h2><font color=red>'.$Language->getText('survey_s_utils','warn_lose_button').'</font></h2>';    
+    echo '<h2><font color=red>'.$Language->getText('survey_s_utils','warn_loose_button').'</font></h2>';    
 }
 ?>
 

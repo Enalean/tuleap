@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require('./my_utils.php');
+require_once('common/survey/SurveySingleton.class');
 require_once('common/tracker/Artifact.class');
 require_once('common/tracker/ArtifactFile.class');
 require_once('common/tracker/ArtifactType.class');
@@ -468,10 +469,11 @@ if (user_isloggedin()) {
 	    $developer_survey_id="1";
 	}
 	
+	$survey =& SurveySingleton::instance();
         $sql="SELECT * from surveys WHERE survey_id=".$developer_survey_id;
 	$result=db_query($sql);
         $group_id=db_result($result,0,'group_id');
-	$survey_title=db_result($result, 0, 'survey_title');
+	$survey_title=$survey->getSurveyTitle(db_result($result, 0, 'survey_title'));
         
 	// Check that the survey is active
         $devsurvey_is_active=db_result($result,0,'is_active');

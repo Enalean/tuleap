@@ -227,7 +227,7 @@ class Layout extends Error {
                 echo '
 <body class="bg_help">
 ';
-                if ($params['title']) {
+                if (isset($params['title']) && $params['title']) {
                     echo '
 <H2>'.$params['title'].' - '.format_date($sys_datefmt,time()).'</H2>
 <HR>
@@ -251,9 +251,6 @@ class Layout extends Error {
         	//themable someday?
 	        $site_fonts='verdana,arial,helvetica,sans-serif';
 
-        ?>
-
- 	<?php
         $this->generic_header_end($params); 
 ?>
 

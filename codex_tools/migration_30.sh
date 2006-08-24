@@ -85,12 +85,22 @@ CREATE TABLE survey_radio_choices (
   KEY idx_survey_radio_choices_question_id (question_id)  
 ) TYPE=MyISAM;
 
+## Make it possible to show question types in the order we like
+ALTER TABLE survey_question_types ADD COLUMN rank int(11) NOT NULL default '0';
+## Localize question types
+UPDATE survey_question_types SET type='radio_buttons_1_5', rank='21' WHERE type='Radio Buttons 1-5';
+UPDATE survey_question_types SET type='text_area', rank='30' WHERE type='Text Area';
+UPDATE survey_question_types SET type='radio_buttons_yes_no', rank='22' WHERE type='Radio Buttons Yes/No' OR type='Yes/No';
+UPDATE survey_question_types SET type='comment_only', rank='10' WHERE type='Comment Only';
+UPDATE survey_question_types SET type='text_field', rank='31' WHERE type='Text Field';
+UPDATE survey_question_types SET type='none', rank='40' WHERE type='None';
+
 ## Add new type value 'Radio Buttons', id=6, in 'survey_question_types' table
-INSERT INTO survey_question_types (id, type) VALUES (6,'Radio Buttons');
+DELETE FROM survey_question_types WHERE id='6';
+INSERT INTO survey_question_types (id, type, rank) VALUES (6,'radio_buttons','20');
 
-## Replace 'Radio Button Yes/No' value by 'Yes/No' in 'survey_question_types' table
-UPDATE survey_question_types SET type='Yes/No' WHERE id='3';
-
+## Localize Developer Survey title
+UPDATE surveys SET survey_title = 'dev_survey_title_key' WHERE survey_id='1';
 EOF
 
 

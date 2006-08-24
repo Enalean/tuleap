@@ -16,6 +16,18 @@
 #  */
 #
 #-----------------------------------------------
+# Script: SF/common/survey/Survey.class
+#
+survey_common_survey	radio_buttons_1_5	Boutons Radio 1-5
+survey_common_survey	text_area	Zone texte
+survey_common_survey	radio_buttons_yes_no	Boutons Radio Oui/Non
+survey_common_survey	comment_only	Commentaire seulement
+survey_common_survey	text_field	Champ texte
+survey_common_survey	radio_buttons	Boutons Radio Spécifiques
+survey_common_survey	none	Aucun
+survey_common_survey	dev_survey_title_key	Sondage développeur
+#
+#-----------------------------------------------
 # Script: SF/www/survey/admin/add_question.php
 #
 survey_admin_add_question	add_q	Ajouter une question
@@ -42,25 +54,10 @@ survey_admin_browse_question	edit_q	Modifier les questions
 survey_admin_browse_question	edit_q_msg	Cliquer sur l'identifiant (ID) de la question pour la modifier
 #
 #-----------------------------------------------
-#
-# Script: SF/www/survey/admin/browse_radio.php
-#
-survey_admin_browse_radio	edit_r	Editer les boutons radio
-survey_admin_browse_radio	edit_r_msg	Cliquer sur l'identifiant (ID) du bouton radio pour le modifier
-#
-#-----------------------------------------------
 # Script: SF/www/survey/admin/browse_survey.php
 #
 survey_admin_browse_survey	edit_s	Modifier les sondages
 survey_admin_browse_survey	edit_s_msg	Cliquer sur l'identifiant (ID) du sondage pour le modifier
-#
-#-----------------------------------------------
-# Script: SF/www/survey/admin/edit_radio.php
-#
-survey_admin_edit_radio	text_r	Texte
-survey_admin_edit_radio	add_button	Ajouter un nouveau bouton
-survey_admin_edit_radio	button_id	ID Bouton
-survey_admin_edit_radio	rank	Rang
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/index.php
@@ -120,6 +117,9 @@ survey_admin_update_question	edit_a_q	Modifier une question
 survey_admin_update_question	warn	<span class="highlight">AVERTISSEMENT ! C'est une assez mauvaise idée de changer une question après qu'elle ait déjà reçu des réponses. Cela peut donner des résultats trompeurs ou incohérents.</span>
 survey_admin_update_question	q	Question&nbsp;:
 survey_admin_update_question	subm_changes	Valider
+survey_admin_update_question	edit_r	Editer les boutons radio
+survey_admin_update_question	existing_r	Boutons radio existants
+survey_admin_update_question	edit_r_msg	Cliquer sur l'identifiant (ID) du bouton radio pour le modifier
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_radio.php
@@ -184,7 +184,7 @@ survey_s_data	r_del_fail	Erreur lors de la suppression du bouton radio #$1: $2
 survey_s_data	r_del_succ	Bouton radio #$1 supprimé avec succès
 survey_s_data	r_create_duplicate	La création a échoué. Bouton radio dupliqué
 survey_s_data	r_update_duplicate	La mise à jour a échoué. Bouton radio dupliqué
-survey_s_data	r_rank_int	Echec de l'opération.Le type du champ Rang doit être entier.
+survey_s_data	r_rank_int	Echec de l'opération. Le type du champ Rang doit être entier.
 #
 #-----------------------------------------------
 # Script: SF/www/survey/survey.php
@@ -213,7 +213,6 @@ survey_s_utils	del	Détruire ?
 survey_s_utils	del_s	Détruire ce sondage ?\n\n** Important **\nSi vous détruisez ce sondage, toutes les réponses associées seront détruites.
 survey_s_utils	found	$1 trouvée(s)
 survey_s_utils	q_id	ID question
-survey_s_utils	del_q	Détruire cette question ?\n\n** Important **\nSi vous détruisez une question, toutes les réponses associées dans tous les sondages utilisant cette question seront perdues.
 survey_s_utils	del_txt	DETRUIRE
 survey_s_utils	resp	Réponse
 survey_s_utils	occ	Nombre d'occurences
@@ -222,8 +221,10 @@ survey_s_utils	total_no	Nombre total de réponses&nbsp;: $1
 survey_s_utils	create	Ajouter
 survey_s_utils	update	Modifier
 survey_s_utils	text_r	Texte
-survey_s_utils	add_button	Ajouter un nouveau bouton
+survey_s_utils	add_button	Créer un nouveau bouton
 survey_s_utils	button_id	ID Bouton
 survey_s_utils	rank	Rang
 survey_s_utils	warning_loose_data	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUS les boutons radio et TOUTES les réponses associées, Continuer?
 survey_s_utils	warning_loose_answers	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUTES les réponses associées, Continuer?
+survey_s_utils	warn_loose_button	** AVERTISSEMENT!! ** Si vous mettez à jour ce type de question, vous perdrez TOUS les boutons radio associés, Continuer?
+survey_s_utils	required_fields	Champs imposés	

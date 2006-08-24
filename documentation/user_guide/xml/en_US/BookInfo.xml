@@ -581,6 +581,17 @@
         <revremark>Added section on reference configuration
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.6</revnumber>
+
+        <date>24-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update Survey Manager section for ST enhancement
+	on custom radio buttons for surveys
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

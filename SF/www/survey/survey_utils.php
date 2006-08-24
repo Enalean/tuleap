@@ -12,6 +12,8 @@
 	Heavily refactored by Laurent Julliard, 2002
 */
 
+require_once('common/survey/SurveySingleton.class');
+
 $Language->loadLanguageMsg('survey/survey');
 
 function survey_header($params) {
@@ -68,7 +70,9 @@ function survey_footer($params) {
 function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
   global $Language;
 
-    $return = '<FORM ACTION="/survey/survey_resp.php" METHOD="POST">
+  $survey =& SurveySingleton::instance();
+ 
+  $return = '<FORM ACTION="/survey/survey_resp.php" METHOD="POST">
  <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
  <INPUT TYPE="HIDDEN" NAME="survey_id" VALUE="'.$survey_id.'">';
 
@@ -82,7 +86,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
     if (db_numrows($result) > 0) {
 	$return .= '
-		<H3>'.db_result($result, 0, 'survey_title').'</H3>';
+		<H3>'.$survey->getSurveyTitle(db_result($result, 0, 'survey_title')).'</H3>';
 	/*
 	  Select the questions for this survey
 	*/
@@ -113,7 +117,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
                     $response_exists=true;
                 }
             }
-	    if ($question_type == '4') {
+	    if ($question_type == $survey->COMMENT_ONLY) {
 		/*
 		  Don't show question number if it's just a comment
 		  and show the comment as bold by default
@@ -132,7 +136,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$return .= util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'<br>';
 	    }
 
-	    if ($question_type == "1") {
+	    if ($question_type == $survey->RADIO_BUTTON_1_5) {
 		/*
 		  This is a r�dio-button question. Values 1-5.
 		*/
@@ -143,14 +147,14 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		}
 		$return .= "&nbsp;&nbsp;<b>5</b>";
 
-	    } else if ($question_type == '2') {
+	    } else if ($question_type == $survey->TEXT_AREA) {
 		/*
 		  This is a text-area question.
 		*/
 		$return .= '
 				<textarea name="_'.$quest_array[$i].'" rows=5 cols=60 wrap="soft">'.($response_exists?$existing_response:"").'</textarea><br>';
 
-	    } else if ($question_type == '3') {
+	    } else if ($question_type == $survey->RADIO_BUTTON_YES_NO) {
 		/*
 		  This is a Yes/No question.
 		*/
@@ -160,7 +164,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$return .= '
 				 <b>'.$Language->getText('global','no').'</b><INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="5"'.($existing_response=="5"?" CHECKED ":"").'><br>';
 
-	    } else if ($question_type == '4') {
+	    } else if ($question_type == $survey->COMMENT_ONLY) {
 		/*
 		  This is a comment only.
 		*/
@@ -221,6 +225,8 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
     global $group_id,$Language;
     $rows  =  db_numrows($result);
     
+    $survey =& SurveySingleton::instance();
+
     $title_arr=array();
     $title_arr[]=$Language->getText('survey_index','s_id');
     $title_arr[]=$Language->getText('survey_s_utils','title');
@@ -237,7 +243,7 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
 	echo '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	echo "<TD><A HREF=\"/survey/admin/edit_survey.php?func=update_survey&group_id=$group_id&survey_id=$survey_id\">$survey_id</A></TD>".
-	    '<TD>'.db_result($result,$j,'survey_title')."</TD>\n".
+	  '<TD>'.$survey->getSurveyTitle(db_result($result,$j,'survey_title'))."</TD>\n".
 	    '<TD>'.str_replace(',',', ',db_result($result,$j,'survey_questions'))."</TD>\n";     
 
 	html_display_boolean(db_result($result,$j,'is_active'),"<TD align=center>".$Language->getText('global','yes')."</TD>","<TD align=center>".$Language->getText('global','no')."</TD>");
@@ -258,6 +264,7 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
 function  survey_utils_show_surveys_for_results($result) {
     global $group_id,$Language;
     $rows  =  db_numrows($result);
+    $survey =& SurveySingleton::instance();
     
     $title_arr=array();
     $title_arr[]=$Language->getText('survey_index','s_id');
@@ -271,7 +278,7 @@ function  survey_utils_show_surveys_for_results($result) {
 	echo '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	echo "<TD><A HREF=\"/survey/admin/show_results_aggregate.php?group_id=$group_id&survey_id=$survey_id\">$survey_id</A></TD>".
-	    '<TD width="90%">'.db_result($result,$j,'survey_title')."</TD>\n<tr>";
+	  '<TD width="90%">'.$survey->getSurveyTitle(db_result($result,$j,'survey_title'))."</TD>\n<tr>";
     }
     echo "</table>";
 }
@@ -280,6 +287,7 @@ function  survey_utils_show_surveys_for_results($result) {
 function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true) {
     global $group_id,$Language;
 
+    $survey =& SurveySingleton::instance();
     $rows  =  db_numrows($result);
 
     echo "<h3>".$Language->getText('survey_s_utils','found',$rows)."</h3>";
@@ -295,7 +303,6 @@ function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true
     for($j=0; $j<$rows; $j++)  {
 
 	$question_id = db_result($result,$j,'question_id');
-	$question_type = db_result($result,$j,'question_type');
 	$question_type_id = db_result($result,$j,'question_type_id');
 	
 	if ($question_type_id == 6) {
@@ -313,7 +320,7 @@ function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true
 	}
 	
 	echo '<TD>'.db_result($result,$j,'question')."</TD>\n".
-	     '<TD>'.$question_type."</TD>\n";     
+	  '<TD>'.$survey->getLabel($question_type_id)."</TD>\n";     
 		
 	if  ($show_delete) {
 	    echo '<TD align=center>'.
@@ -331,16 +338,20 @@ function  survey_utils_show_radio_list($result) {
     global $group_id,$question_id,$Language;
 
     $rows  =  db_numrows($result);
-    echo "<h3>".$Language->getText('survey_s_utils','found',$rows)."</h3>";
     
     $title_arr=array();
     $title_arr[]=$Language->getText('survey_s_utils','button_id');
     $title_arr[]=$Language->getText('survey_s_utils','text_r');
     $title_arr[]=$Language->getText('survey_s_utils','rank');
     $title_arr[]=$Language->getText('survey_s_utils','del');
-		
-    echo html_build_list_table_top ($title_arr);
-    
+
+    echo "<P><HR><P><H3>".$Language->getText('survey_admin_update_question','existing_r')."</H3>";
+    echo "<h3>".$Language->getText('survey_s_utils','found',$rows)."</h3>";
+    if ($rows) {
+      echo $Language->getText('survey_admin_update_question','edit_r_msg'); 
+      echo html_build_list_table_top ($title_arr);
+    }
+
     for($j=0; $j<$rows; $j++)  {
 
 	$choice_id = db_result($result, $j, 'choice_id');
@@ -354,7 +365,10 @@ function  survey_utils_show_radio_list($result) {
 		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('survey_s_utils','del_txt').'"></A></TD>';
 	echo "</tr>";
     }
-    echo "</table>";  
+
+    if ($rows) {
+      echo "</table>";  
+    }
 }
 
 function survey_utils_show_radio_form($question_id, $choice_id) {

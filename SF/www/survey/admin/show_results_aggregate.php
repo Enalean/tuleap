@@ -9,8 +9,10 @@
 require_once('pre.php');
 require_once('HTML_Graphs.php');
 require_once('www/survey/survey_utils.php');
+require_once('common/survey/SurveySingleton.class');
 
 $Language->loadLanguageMsg('survey/survey');
+$survey =& SurveySingleton::instance();
 
 $is_admin_page='y';
 survey_header(array('title'=>$Language->getText('survey_admin_show_r_aggregate','agg_res'),
@@ -31,7 +33,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 $sql="SELECT * FROM surveys WHERE survey_id='$survey_id' AND group_id='$group_id'";
 $result=db_query($sql);
 
-echo "<H2>".db_result($result, 0, "survey_title")."</H2><P>";
+echo "<H2>".$survey->getSurveyTitle(db_result($result, 0, "survey_title"))."</H2><P>";
 
 /*
 echo "<H3><A HREF=\"show_results_csv.php?survey_id=$survey_id&group_id=$group_id\">.CSV File</A></H3><P>";
@@ -77,7 +79,7 @@ for ($i=0; $i<$quest_count; $i++) {
 			number down a bit
 		*/
 
-		if (($question_type != $last_question_type) && (($question_type == "1") || ($question_type == "3"))) {
+		if ((isset($last_question_type) && $question_type != $last_question_type) && (($question_type == "1") || ($question_type == "3"))) {
 			echo "&nbsp;<P>";
 		}
 
@@ -144,7 +146,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		} else {    
 		    $type = " <B>Radio Button</B>\n";
 		}
-		if ($question_type != $last_question_type) {			
+		if (isset($last_question_type) && $question_type != $last_question_type) {			
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.
 			    $Language->getText('survey_admin_show_r_aggregate','type').$type;
 		}
@@ -236,7 +238,7 @@ for ($i=0; $i<$quest_count; $i++) {
 			Show the Yes/No only if this is the first in a series
 		*/
 
-		if ($question_type != $last_question_type) {
+		if (isset($last_question_type) && $question_type != $last_question_type) {
 			echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$Language->getText('survey_admin_show_r_aggregate','type')." <B>".$Language->getText('global','yes')." / ".$Language->getText('global','no')."</B><BR>\n";
 		}
 

@@ -76,6 +76,17 @@
 
         <revremark>Ajout d'une section concernant la gestion des références.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.6</revnumber>
+
+        <date>24-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Survey Manager suite à l'amélioration de ST 
+	des boutons radio spécifiques pour les sondages
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

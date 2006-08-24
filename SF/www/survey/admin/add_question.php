@@ -6,9 +6,10 @@
 //
 // $Id$
 
-require_once('pre.php');
-require('../survey_data.php');
-require('../survey_utils.php');
+require_once('www/include/pre.php');
+require_once('common/survey/SurveySingleton.class');
+require_once('www/survey/survey_data.php');
+require_once('www/survey/survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');
 
@@ -65,9 +66,9 @@ function show_questions() {
 <?php echo $Language->getText('survey_admin_add_question','q_type'); ?><BR>
 <?php
 
-$sql="SELECT * from survey_question_types";
-$result=db_query($sql);
-echo html_build_select_box($result,'question_type','xzxz',false);
+$survey =& SurveySingleton::instance();
+echo $survey->showTypeBox();
+
 
 ?>
 <P>

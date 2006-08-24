@@ -6,6 +6,8 @@
 //
 // $Id$
 
+require_once('common/survey/SurveySingleton.class');
+
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
@@ -35,7 +37,7 @@ var timerID2 = null;
 
 function show_questions() {
 	newWindow = open("","occursDialog","height=600,width=700,scrollbars=yes,resizable=yes");
-	newWindow.location=('show_questions.php?group_id=<?php echo $group_id; ?>');
+	newWindow.location=('show_questions.php?group_id=<?php echo $group_id; ?>&pv=1');
 }
 
 // -->
@@ -84,9 +86,9 @@ if ($warn) {
 <BR>
 <?php
 
-$sql="SELECT * FROM survey_question_types";
-$result=db_query($sql);
-echo html_build_select_box($result,'question_type',$question_type,false);
+$survey =& SurveySingleton::instance();
+echo $survey->showTypeBox('question_type',$question_type);
+
 
 // see if the question is a radio-button type
 $qry1="SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_id='$question_id'";
@@ -115,7 +117,6 @@ if ($question_type=="6") {
     "ORDER BY choice_rank";
     $result=db_query($sql);
     
-    echo "<P><HR><P>".$Language->getText('survey_admin_browse_radio','edit_r_msg'); 
     survey_utils_show_radio_list($result);
     survey_utils_show_radio_form($question_id,"");
 }

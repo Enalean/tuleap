@@ -12,8 +12,9 @@ require_once('www/survey/survey_utils.php');
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
+$params = array('title'=>$Language->getText('survey_admin_show_questions','s_quest'),'pv'=>'1','group'=>$group_id);
 
-$HTML->header(array('title'=>$Language->getText('survey_admin_show_questions','s_quest')));
+site_project_header($params);
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
@@ -36,7 +37,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Select this survey from the database
 */
 
-$sql="SELECT survey_questions.question_id,survey_questions.question,survey_question_types.type AS question_type ".
+$sql="SELECT survey_questions.question_id,survey_questions.question,survey_question_types.id AS question_type_id ".
 	"FROM survey_questions,survey_question_types ".
 	"WHERE survey_question_types.id=survey_questions.question_type AND survey_questions.group_id='$group_id' ".
 "ORDER BY survey_questions.question_id DESC";
@@ -45,6 +46,6 @@ $result=db_query($sql);
 
 survey_utils_show_questions($result, false, false);
 
-$HTML->footer(array());
+site_project_footer($params);
 
 ?>

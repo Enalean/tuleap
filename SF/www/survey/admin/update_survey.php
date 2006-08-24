@@ -11,6 +11,8 @@
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
+
+
 survey_header(array('title'=>$Language->getText('survey_admin_update_survey','edit_a_s')));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {

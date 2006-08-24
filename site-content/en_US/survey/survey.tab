@@ -11,6 +11,18 @@
 #  */
 #
 #-----------------------------------------------
+# Script: SF/common/survey/Survey.class
+#
+survey_common_survey	radio_buttons_1_5	Radio Buttons 1-5
+survey_common_survey	text_area	Text Area
+survey_common_survey	radio_buttons_yes_no	Radio Buttons Yes/No
+survey_common_survey	comment_only	Comment Only
+survey_common_survey	text_field	Text Field
+survey_common_survey	radio_buttons	Custom Radio Buttons
+survey_common_survey	none	None
+survey_common_survey	dev_survey_title_key	Developer Survey
+#
+#-----------------------------------------------
 # Script: SF/www/survey/admin/add_question.php
 #
 survey_admin_add_question	add_q	Add A Question
@@ -35,13 +47,6 @@ survey_admin_add_survey	active	Is Active?
 #
 survey_admin_browse_question	edit_q	Edit Questions
 survey_admin_browse_question	edit_q_msg	Click on the 'Question ID' to edit a question
-#
-#-----------------------------------------------
-#
-# Script: SF/www/survey/admin/browse_radio.php
-#
-survey_admin_browse_radio	edit_r	Edit Radio Buttons
-survey_admin_browse_radio	edit_r_msg	Click on the 'Button ID' to edit a radio button
 #
 #-----------------------------------------------
 #
@@ -109,6 +114,9 @@ survey_admin_update_question	edit_a_q	Edit A Question
 survey_admin_update_question	warn	<span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted. This can lead to misleading  or inconsistent results.</span>
 survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Submit Changes
+survey_admin_update_question	edit_r	Edit Radio Buttons
+survey_admin_update_question	existing_r	Existing Radio Button Choices
+survey_admin_update_question	edit_r_msg	Click on the 'Button ID' to edit a radio button
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_radio.php
@@ -210,10 +218,10 @@ survey_s_utils	total_no	Total number of answers: $1
 survey_s_utils	create	Create
 survey_s_utils	update	Update
 survey_s_utils	text_r	Text
-survey_s_utils	add_button	Add a new choice
+survey_s_utils	add_button	Create a New Radio Button Choice
 survey_s_utils	button_id	Button ID
 survey_s_utils	rank	Rank
 survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will loose ALL the associated radio buttons and responses in all surveys using this question.Continue?
 survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will loose responses in all surveys using this question.Continue?
-survey_s_utils	warn_lose_button	** WARNING!! ** You are about to lose all radio buttons associated to this question. Continue?
+survey_s_utils	warn_loose_button	** WARNING!! ** If you update this question type, you loose all radio buttons associated to this question. Continue?
 survey_s_utils	required_fields	fields required

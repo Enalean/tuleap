@@ -308,18 +308,18 @@ INSERT INTO project_task VALUES (100, 100, 'None', '', 0, 0, '0.00', 0, 0, 0, 0)
 # Default Data for Survey Manager
 #
 
-INSERT INTO survey_question_types (id, type) VALUES (1,'Radio Buttons 1-5');
-INSERT INTO survey_question_types (id, type) VALUES (2,'Text Area');
-INSERT INTO survey_question_types (id, type) VALUES (3,'Yes/No');
-INSERT INTO survey_question_types (id, type) VALUES (4,'Comment Only');
-INSERT INTO survey_question_types (id, type) VALUES (5,'Text Field');
-INSERT INTO survey_question_types (id, type) VALUES (6,'Radio Buttons');
-INSERT INTO survey_question_types (id, type) VALUES (100,'None');
+INSERT INTO survey_question_types (id, type, rank) VALUES (1,'radio_buttons_1_5', '21');
+INSERT INTO survey_question_types (id, type, rank) VALUES (2,'text_area', '30');
+INSERT INTO survey_question_types (id, type, rank) VALUES (3,'radio_buttons_yes_no', '22');
+INSERT INTO survey_question_types (id, type, rank) VALUES (4,'comment_only', '10');
+INSERT INTO survey_question_types (id, type, rank) VALUES (5,'text_field', '31');
+INSERT INTO survey_question_types (id, type, rank) VALUES (6,'radio_buttons', '20');
+INSERT INTO survey_question_types (id, type, rank) VALUES (100,'none', '40');
 
 #
 # Developer survey attached to project #1, default status is inactive
 #
-INSERT INTO surveys (survey_id, group_id, survey_title, is_active) VALUES (1,1,'Developer Survey',0);
+INSERT INTO surveys (survey_id, group_id, survey_title, is_active) VALUES (1,1,'dev_survey_title_key',0);
  
 
 #

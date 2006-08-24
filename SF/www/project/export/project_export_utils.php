@@ -573,7 +573,28 @@ function prepare_task_record($group_id, &$record) {
 
 }
 
-function prepare_survey_responses_record($group_id, &$record) {
+function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
+  switch($type) {
+   case 12:
+     $saltlen=8; $saltprefix='$1$'; $saltsuffix='$'; break;
+   case 2:
+   default: 
+     // by default, fall back on Standard DES (should work everywhere)
+     $saltlen=2; $saltprefix=''; $saltsuffix=''; break;
+   #
+  }
+  $salt='';
+  while(strlen($salt)<$saltlen) $salt.= chr(rand(64,126));
+  return $saltprefix.$salt.$saltsuffix;
+}
+
+
+
+function codex_crypt($id,$salt,$type=CRYPT_SALT_LENGTH) {
+  return substr(crypt($id,$salt),$type); 
+}
+
+function prepare_survey_responses_record($group_id, &$record, $salt) {
 
     global $datetime_fmt;
 
@@ -586,8 +607,9 @@ function prepare_survey_responses_record($group_id, &$record) {
 
     $record['date'] = format_date($datetime_fmt,$record['date']);
     $record['reponse'] = prepare_textarea($record['response']);
-    //compute artificial user_id to replace real user_id
-    $enc_user_id = bin2hex(md5($record['user_id']));  
+    
+    //compute encrypted user_id
+    $enc_user_id = codex_crypt($record['user_id'],$salt);  
     $record['user_id'] = $enc_user_id;
  
 }

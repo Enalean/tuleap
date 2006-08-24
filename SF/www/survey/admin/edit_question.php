@@ -39,8 +39,18 @@ switch ($func) {
 	 $old_quest_type = db_result($res,0,'question_type');
 	 	 
 	 // Delete radio buttons if the question type changes from radio-button	to anything else different
-	 if (($old_quest_type=="6") && ($question_type != "6")) {	   
+	 if (($old_quest_type=="6") && ($question_type != "6") && ($question_type != 100)) {
+	   // check first if really something to delete
+	   $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
+	   $result = db_query($sql);
+	   $rows = db_numrows($result);
+	   if ($rows > 0) {
 	     session_redirect("/survey/admin/confirm_update.php?group_id=$group_id&question_id=$question_id&question=$question&question_type=$question_type");
+	   } else {
+	     // Update the question	 
+	     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
+	     require('./update_question.php');
+	   }
 	 } else {
 	     // Update the question	 
 	     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);

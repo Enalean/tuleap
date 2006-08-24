@@ -1785,6 +1785,7 @@ CREATE TABLE support_status (
 CREATE TABLE survey_question_types (
   id int(11) NOT NULL auto_increment,
   type text NOT NULL,
+  rank int(11) NOT NULL default '0',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 

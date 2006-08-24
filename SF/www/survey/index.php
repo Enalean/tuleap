@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');
+require_once('common/survey/SurveySingleton.class');
 require('../survey/survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');
@@ -20,6 +21,9 @@ if (!$group_id) {
 
 function  ShowResultsGroupSurveys($result) {
 	global $group_id,$Language;
+
+	$survey =& SurveySingleton::instance();
+
 	$rows  =  db_numrows($result);
 	$cols  =  db_numfields($result);
 
@@ -36,9 +40,7 @@ function  ShowResultsGroupSurveys($result) {
 		echo "<TD><A HREF=\"survey.php?group_id=$group_id&survey_id=".db_result($result,$j,"survey_id")."\">".
 			db_result($result,$j,"survey_id")."</TD>";
 
-		for ($i=1; $i<$cols; $i++)  {
-			printf("<TD>%s</TD>\n",db_result($result,$j,$i));
-		}
+		printf("<TD>%s</TD>\n",$survey->getSurveyTitle(db_result($result,$j,'survey_title')));
 
 		echo "</tr>";
 	}

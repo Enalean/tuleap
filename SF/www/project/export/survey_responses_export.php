@@ -52,8 +52,9 @@ if ($export == 'survey_responses') {
 	
 	echo build_csv_header($col_list, $lbl_list).$eol;
 
+	$salt = project_export_makesalt();
 	while ($arr = db_fetch_array($result)) {    
-	    prepare_survey_responses_record($group_id,$arr);
+	  prepare_survey_responses_record($group_id,$arr,$salt);
 	    echo build_csv_record($col_list, $arr).$eol;
 	}
 
