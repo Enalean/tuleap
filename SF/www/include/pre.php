@@ -50,6 +50,7 @@ $plugin_manager =& PluginManager::instance();
 $plugin_manager->loadPlugins();
 
 $sys_datefmt = "Y-M-d H:i";
+$sys_datefmt_short = "Y-M-d";
 $feedback=''; // Initialize global var
 
 //library to determine browser settings

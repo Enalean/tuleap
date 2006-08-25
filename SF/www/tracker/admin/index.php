@@ -110,8 +110,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		}
             $name        = $sanitizer->sanitize($name);
             $description = $sanitizer->sanitize($description);
-		if ( !$ath->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
-            exit_error($Language->getText('global','error'),$ath->getErrorMessage());
+		if ( !$atf->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
+            exit_error($Language->getText('global','error'),$atf->getErrorMessage());
 		} else {
 			$feedback .= $Language->getText('tracker_admin_index','tracker_created');
                         // Create corresponding reference

@@ -27,6 +27,7 @@ function week_to_dates( $week, $year = 0 ) {
 
 function stats_util_sum_array( $sum, $add ) {
 	while( list( $key, $val ) = each( $add ) ) {
+	        if (!isset($sum[$key])) $sum[$key] = 0;
 		$sum[$key] += $val;
 	}
 	return $sum;
@@ -155,7 +156,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	$sql .= "WHERE ( ";
 
 	if ( $span != "All" ) {
-		$sql .= "( ( month = " . $year . $month . " AND day >= " . $day . " ) OR ( month > " . $year . $month . " ) )";
+		$sql .= "( ( month = " . $year . $month . " AND day >= " . $day . " ) OR ( month > " . $year . $month . " ) ) ";
 	}
 
 	$sql .= "AND ( s.group_id = g.group_id ) ";
@@ -163,7 +164,9 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 
 	if ( is_array( $projects ) ) {
 		$sql .= "AND ( s.group_id IN (" . implode(",", $projects ) . ") ) ";
-	} 
+	} else {
+	  $sql .= "AND g.type = 1 ";
+	}
 
 	$sql .= " ) ";
 	$sql .= "GROUP BY s.group_id ";
@@ -248,11 +251,12 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 			. '<TD align="right"><A HREF="' . $uri_string .'svn_access_count">'.$Language->getText('stats_site_stats_utils','access_cnt').'</TD>'
 			. '</TR>' . "\n";
 	
-		$i = $offset;	
+		$i = $offset;
+		$sum = array();
 		while ( $row = db_fetch_array($res) ) {
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . ($i + 1) . '. <A HREF="/project/stats/?group_id=' . $row["group_id"] . '">' . $row["group_name"] . '</A></TD>'
-				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["ranking"] ) . ' (' . $row["percentile"] . '%) </TD>'
+				. '<TD align="right">&nbsp;&nbsp;' . number_format( $i+1 ) . ' (' . $row["percentile"] . '%) </TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["site_views"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["subdomain_views"] ) . '</TD>'
 				. '<TD align="right">&nbsp;&nbsp;' . number_format( $row["downloads"] ) . '</TD>'
@@ -330,8 +334,9 @@ function stats_site_projects_daily( $span = 14 ) {
 		. "SUM(p.tasks_closed) AS tasks_closed, SUM(p.cvs_checkouts) AS cvs_checkouts, "
 		. "SUM(p.cvs_commits) AS cvs_commits, SUM(p.cvs_adds) AS cvs_adds, "
 		. "SUM(p.svn_access_count) AS svn_access_count "
-	        . "FROM stats_project AS p, stats_site AS s "
-		. "WHERE ( ( s.month = p.month AND s.day = p.day ) AND "
+	        . "FROM stats_project AS p, stats_site AS s, groups AS g "
+		. "WHERE g.group_id = p.group_id AND g.type = 1 AND " 
+	        . "( ( s.month = p.month AND s.day = p.day ) AND "
 		. "( ( p.month = " . $year . $month . " AND p.day >= " . $day . " ) OR "
 		. "( p.month > " . $year . $month . " ) ) ) "
 		. "GROUP BY month,day ORDER BY month DESC, day DESC";
@@ -359,6 +364,7 @@ function stats_site_projects_daily( $span = 14 ) {
 			. '<TD align="right"><B>'.$Language->getText('stats_site_stats_utils','svn').'</B></TD>'
 			. '</TR>' . "\n";
 
+		$i = 0;
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 
@@ -403,8 +409,9 @@ function stats_site_projects_weekly( $span = 14 ) {
 	$sql .= "SUM(msg_posted),SUM(bugs_opened),SUM(bugs_closed),SUM(support_opened),";
 	$sql .= "SUM(support_closed),SUM(patches_opened),SUM(patches_closed),SUM(tasks_opened),";
 	$sql .= "SUM(tasks_closed),SUM(cvs_commits),SUM(cvs_adds),SUM(svn_access_count)";
-	$sql .= "FROM stats_project ";
-	$sql .= "WHERE ( ( month = " . $year . $month . " AND day >= " . $day . " ) OR ";
+	$sql .= "FROM stats_project, groups ";
+	$sql .= "WHERE groups.groups_id = stats_project.group_id AND groups.type = 1 AND ";
+	$sql .= "( ( month = " . $year . $month . " AND day >= " . $day . " ) OR ";
 	$sql .= "( month > " . $year . $month . " ) ) ";
 	$sql .= "GROUP BY month,day ORDER BY month DESC, day DESC";
 
@@ -455,7 +462,7 @@ function stats_site_projects_weekly( $span = 14 ) {
 
 
    // stats_site_agregate
-function stats_site_agregate( $group_id ) {
+function stats_site_agregate() {
   global $Language;
 
 	$sql	= "SELECT COUNT(day) AS days,SUM(site_views) AS site_views,"
@@ -463,15 +470,6 @@ function stats_site_agregate( $group_id ) {
 		. "FROM stats_site";
 	$res = db_query( $sql );
 	$site_totals = db_fetch_array($res);
-
-	$sql	= "SELECT COUNT(*) AS count FROM groups WHERE status='A'";
-	$res = db_query( $sql );
-	$groups = db_fetch_array($res);
-
-	$sql	= "SELECT COUNT(*) AS count FROM user WHERE status='A' or status='R'";
-	$res = db_query( $sql );
-	$users = db_fetch_array($res);
-	
 
 	print "\n\n";
 	print '<P><B>'.$Language->getText('stats_site_stats_utils','curr_agg_stats').'</B></P>' . "\n";
@@ -491,12 +489,31 @@ function stats_site_agregate( $group_id ) {
 		. '<TD>' . number_format( $site_totals["site_views"] ) . '</TD>'
 		. '<TD>' . number_format( $site_totals["subdomain_views"] ) . '</TD>'
 		. '<TD>' . number_format( $site_totals["downloads"] ) . '</TD>'
-		. '<TD>' . number_format( $users["count"] ) . '</TD>'
-		. '<TD>' . number_format( $groups["count"] ) . '</TD>'
+		. '<TD>' . number_format( stats_getusers() ) . '</TD>'
+		. '<TD>' . number_format( stats_getprojects_active() ) . '</TD>'
 		. '</TR>' . "\n";
 
 	print '</TABLE>';
 }
 
+function stats_getprojects_active() {
+    $res_count = db_query("SELECT count(*) AS count FROM groups WHERE status='A' AND type='1'");
+    if (db_numrows($res_count) > 0) {
+        $row_count = db_fetch_array($res_count);
+        return $row_count['count'];
+    } else {
+        return "error";
+    }
+}
 
+
+function stats_getusers() {
+    $res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' OR status='R'");
+    if (db_numrows($res_count) > 0) {
+        $row_count = db_fetch_array($res_count);
+        return $row_count['count'];
+    } else {
+        return "error";
+    }
+}
 ?>

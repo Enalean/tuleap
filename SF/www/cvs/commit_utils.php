@@ -34,7 +34,7 @@ function commits_header($params) {
 	//only projects can use cvs, and only if they have it turned on
 	$project=project_get_object($group_id);
 
-	if (!$project->isProject()) {
+	if ($project->isFoundry()) {
 		exit_error($Language->getText('global', 'error'),
 			   $Language->getText('cvs_commit_utils', 'error_project'));
 	}
@@ -74,7 +74,7 @@ function commits_header_admin($params) {
     $project=project_get_object($group_id);
     
     //only projects can use the commits manager, and only if they have it turned on
-    if (!$project->isProject()) {
+    if ($project->isFoundry()) {
 	exit_error($Language->getText('global', 'error'),
 		   $Language->getText('cvs_commit_utils', 'error_project'));
     }

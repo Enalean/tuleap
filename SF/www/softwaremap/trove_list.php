@@ -236,6 +236,7 @@ if((isset($_GET['special_cat'])) && ($_GET['special_cat'] == 'none')) {
             . "WHERE "
             . "(groups.is_public=1) AND "
             . "(groups.type=1) AND "
+	    . "(groups.type=1) AND "
             . "(groups.status='A') "
             . $sql_list_categorized
             . "GROUP BY groups.group_id ORDER BY groups.group_name "
@@ -262,6 +263,7 @@ $query_projlist = "SELECT groups.group_id, "
 	. "WHERE trove_group_link.group_id=groups.group_id AND "
 	. "(groups.is_public=1) AND "
 	. "(groups.type=1) AND "
+        . "(groups.type=1) AND "
 	. "(groups.status='A') AND "
 	. "trove_group_link.trove_cat_id=$form_cat "
 	. $discrim_queryand

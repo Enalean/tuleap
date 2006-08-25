@@ -10,7 +10,7 @@ require('./site_stats_utils.php');
 
 $Language->loadLanguageMsg('stats/stats');
 
-$HTML->header(array(title=> $Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
+$HTML->header(array('title'=> $Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
 
 // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));

@@ -19,7 +19,7 @@ include($Language->getContent('register/tos'));
 
 echo '<BR><HR><BR>
 
-<P align=center>'.$Language->getText('register_tos','tos_agree','basicinfo.php');
+<P align=center>'.$Language->getText('register_tos','tos_agree','template.php');
 
 $HTML->footer(array());
 

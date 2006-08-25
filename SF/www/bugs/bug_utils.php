@@ -43,7 +43,7 @@ function bug_header($params) {
 	$project=project_get_object($group_id);
 
 	//only projects can use the bug tracker, and only if they have it turned on
-	if (!$project->isProject()) {
+	if ($project->isFoundry()) {
 		exit_error('Error','Only Projects Can Use The Bug Tracker');
 	}
 	if (!$project->usesBugs()) {
@@ -92,7 +92,7 @@ function bug_header_admin($params) {
     $project=project_get_object($group_id);
     
     //only projects can use the bug tracker, and only if they have it turned on
-    if (!$project->isProject()) {
+    if ($project->isFoundry()) {
 	exit_error('Error','Only Projects Can Use The Bug Tracker');
     }
     if (!$project->usesBugs()) {

@@ -11,6 +11,7 @@
 	Standard header to be used on all /project/admin/* pages
 
 */
+require_once('common/include/TemplateSingleton.class');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -159,6 +160,9 @@ function show_grouphistory ($group_id) {
 			      $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
 			    }
 			  }
+			} else if ($msg_key == "group_type") {
+			  $template =& TemplateSingleton::instance();
+			  $val = $template->getLabel($val);
 			}
 
 			echo $val;

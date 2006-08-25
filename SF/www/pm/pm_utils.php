@@ -41,7 +41,7 @@ function pm_header($params) {
 	//only projects can use the task tracker, and only if they have it turned on
 	$project=project_get_object($group_id);
 
-	if (!$project->isProject()) {
+	if ($project->isFoundry()) {
 		exit_error('Error','Only Projects Can Use The Task Manager');
 	}
 	if (!$project->usesPm()) {
@@ -94,7 +94,7 @@ function pm_header_admin($params) {
     $project=project_get_object($group_id);
     
     //only projects can use the task tracker, and only if they have it turned on
-    if (!$project->isProject()) {
+    if ($project->isFoundry()) {
 	exit_error('Error','Only Projects Can Use The Task Manager');
     }
     if (!$project->usesPm()) {

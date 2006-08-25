@@ -299,6 +299,24 @@ class ArtifactFieldFactory extends Error {
         }
         return $fields_contained_in_fieldset;
     }
+
+    
+    /**
+     * param $ug: the ugroup that we are searching for
+     * param $atid_dest: all groups that do not have this tracker are foreign groups
+     * return name of $ug if it is a foreign group else return false 
+     */ 
+    function _getForeignUgroupName($ug,$atid_dest) {
+      $db_res = db_query("SELECT ugroup.name FROM ugroup,artifact_group_list agl ".
+			 "WHERE ugroup.ugroup_id='$ug' ".
+			 "AND agl.group_artifact_id='$atid_dest' ".
+			 "AND ugroup.group_id!=agl.group_id");
+      if ($name_array = db_fetch_array($db_res)) {
+	return $name_array['name'];
+      } else {
+	return false;
+      }
+    }
     
     
 	/**
@@ -311,13 +329,13 @@ class ArtifactFieldFactory extends Error {
 	 *
 	 *	@return	boolean
 	 */
-	function copyFields($atid_source,$atid_dest, $mapping_fieldset_array) {
-	  global $Language;
+    function copyFields($atid_source,$atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
+	  global $Language,$feedback;
 
         //
 		// Copy artifact_field records
 		//
-	    $sql='SELECT field_id,field_name,data_type,display_type,display_size,label,description,scope,required,empty_ok,keep_history,special,value_function,default_value,field_set_id '.
+	    $sql='SELECT field_id,field_name,data_type,display_type,display_size,label,description,scope,required,empty_ok,keep_history,special,value_function,default_value,field_set_id,use_it,place '.
 		'FROM artifact_field '.
 		'WHERE group_artifact_id='.$atid_source;
 		
@@ -326,11 +344,44 @@ class ArtifactFieldFactory extends Error {
 	    $res = db_query($sql);
 	
 	    while ($field_array = db_fetch_array($res)) {
+
+	      $field = new ArtifactField();
+	      $field->setFromArray($field_array);
+
+
+	      //test if we got as value_function a ugroup that does not exist in the dest group
+	      $val_func = $field_array["value_function"];
+	      $ug = $field->hasUgroupValueFunction();
+	      if ($ug !== false) {
+
+		if ($ugroup_mapping==false) {
+
+		  $name = $this->_getForeignUgroupName($ug,$atid_dest);
+		  if ($name !== false) {
+		    $val_func = "";
+		    $feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field_array['label'],$name));
+		  }
+
+		} else {
+		  if (isset($ugroup_mapping[$ug])) {
+		    $dest_ug = $ugroup_mapping[$ug];
+		    $val_func = "ugroup_".$dest_ug;
+		  } else {
+		    $name = $this->_getForeignUgroupName($ug,$atid_dest);
+		    if ($name !== false) {
+		      $val_func = "";
+		      $feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field_array['label'],$name));
+		    }
+		    
+		  }
+		}
+	      }
+
 	    	$sql_insert = 'INSERT INTO artifact_field VALUES ('.$field_array["field_id"].','.$atid_dest.', '.$mapping_fieldset_array[$field_array["field_set_id"]].',"'.$field_array["field_name"].'",'.$field_array["data_type"].
 	    				  ',"'.$field_array["display_type"].'","'.$field_array["display_size"].'","'.addslashes($field_array["label"]).
 	    				  '","'.addslashes($field_array["description"]).'","'.$field_array["scope"].'",'.$field_array["required"].
 	    				  ','.$field_array["empty_ok"].','.$field_array["keep_history"].','.$field_array["special"].
-	    				  ',"'.$field_array["value_function"].'","'.$field_array["default_value"].'")';
+	    				  ',"'.$val_func.'","'.$field_array["default_value"].'")';
 	    				  
 			$res_insert = db_query($sql_insert);
 			//echo $sql_insert;

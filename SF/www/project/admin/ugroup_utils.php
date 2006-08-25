@@ -414,3 +414,49 @@ function ugroup_delete($group_id, $ugroup_id) {
 
     return true;
 }
+
+/** copy all ugroups from group $from_group to 
+ *  group to_group. Do not copy system-wide ugroups
+ *  return mapping from_ugroup_id to_ugroup_id
+ */
+function ugroup_copy_ugroups($from_group,$to_group,&$mapping) {
+  $mapping = array();
+  $result = db_query("SELECT ugroup_id from ugroup where group_id = '$from_group' AND ugroup_id > 100");
+  while ($row = db_fetch_array($result)) {
+    $err = ugroup_copy_ugroup($row['ugroup_id'],$to_group,$ugid);
+    if (isset($err) && $err !== false) {return $err;}
+    $mapping[$row['ugroup_id']] = $ugid;
+  }
+  return true;
+}
+
+/** copy ugoup ugroup_id with corresponding users to belong 
+ *  to $to_group 
+*/
+function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
+  $ugid = 0;
+  $err = false;
+
+  $result = db_query("INSERT INTO ugroup (name,description,group_id) ".
+		     "SELECT name,description,$to_group ".
+		     "FROM ugroup ".
+		     "WHERE ugroup_id='$ugroup_id'");
+  if ($result && db_affected_rows($result) > 0) {
+    $ugid=db_insertid($result);
+  } else {
+    return db_error();
+  }
+
+  $result = db_query("INSERT INTO ugroup_user (ugroup_id,user_id) ".
+		     "SELECT $ugid,user_id ".
+		     "FROM ugroup_user ".
+		     "WHERE ugroup_id='$ugroup_id'");
+  if (!$result || db_affected_rows($result) <= 0) {
+    return db_error();
+  }
+
+  return $err;
+
+}
+
+?>

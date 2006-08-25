@@ -50,11 +50,12 @@ class ArtifactReportFactory extends Error {
 	  global $Language;
 
 		//
-		// Copy artifact_report records
+		// Copy artifact_report records which are not individual/personal
 		//
-	    $sql='SELECT report_id,user_id,name,description,scope '.
-		'FROM artifact_report '.
-		'WHERE group_artifact_id='.$atid_source;
+	    $sql="SELECT report_id,user_id,name,description,scope ".
+		"FROM artifact_report ".
+		"WHERE group_artifact_id='$atid_source'" .
+	        "AND scope != 'I'";
 		
 		//echo $sql;
 		

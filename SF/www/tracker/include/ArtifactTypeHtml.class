@@ -238,12 +238,12 @@ class ArtifactTypeHtml extends ArtifactType {
 			$title_arr[]=$Language->getText('tracker_include_report','id');
 			$title_arr[]=$Language->getText('tracker_import_admin','tracker');
 			$title_arr[]=$Language->getText('tracker_include_artifact','desc');
-                        if ($this->Group->getID()==100) 
+                        if ($this->Group->isTemplate()) 
 			        $title_arr[]=$Language->getText('tracker_include_type','instantiate').'?';
 			$title_arr[]=$Language->getText('tracker_include_canned','delete');
 			echo html_build_list_table_top ($title_arr);
 		
-                        if ($this->Group->getID()==100) {
+                        if ($this->Group->isTemplate()) {
                             // Add an additional column 'Instantiate for new projects'
 			    $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td>%s</td><td align="center">%s</td>'.
 			    '<td align="center">%s</td></tr>';
@@ -252,7 +252,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			    '<td align="center">%s</td></tr>';
                         }
 			for ($i = 0; $i < count($at_arr); $i++) {
-                            if ($this->Group->getID()==100) {
+                            if ($this->Group->isTemplate()) {
 			       echo sprintf($fmt,
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".$this->Group->getID()."&atid=".$at_arr[$i]->getID()."\">".$at_arr[$i]->getID()."</a>",
@@ -831,7 +831,7 @@ EOS;
 		      </td>
 		    </tr>';
 
-		if ( $this->Group->getID()==100 ) { // Template group
+		if ( $this->Group->isTemplate() ) { // Template group
 		echo '	
 		    <tr> 
 		      <td width="21%"><b>'.$Language->getText('tracker_include_type','instantiate').':</b></td>
@@ -1627,13 +1627,13 @@ EOS;
 	    for($i=0;$i<$rows;$i++) {
 	      $ug = db_result($ugroup_res, $i,'ugroup_id');
 	      $selected = "";
-	      if ($ug == $GLOBALS['UGROUP_NONE'] || 
-		  $ug == $GLOBALS['UGROUP_ANONYMOUS'] || 
-		  $ug == $GLOBALS['UGROUP_PROJECT_MEMBERS'] || 
-		  $ug == $GLOBALS['UGROUP_PROJECT_ADMIN'] || 
-		  $ug == $GLOBALS['UGROUP_TRACKER_ADMIN']) continue;
+	      if (($ug == $GLOBALS['UGROUP_NONE']) || 
+		  ($ug == $GLOBALS['UGROUP_ANONYMOUS']) || 
+		  ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) || 
+		  ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) || 
+		  ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])) { continue; }
 	      
-	      if ( $value_function && $value_function == "ugroup_".$ug) {
+	      if ( $value_function && strcmp($value_function,"ugroup_".$ug) == 0 ) {
 		$selected = " selected";
 	      }
 	      echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
@@ -1644,7 +1644,9 @@ EOS;
 	      $rows = db_numrows($ugroup_res);
 	      for($i=0;$i<$rows;$i++) {
 		$ug = db_result($ugroup_res, $i,'ugroup_id');
-		$selected = "";
+		if ( $value_function && strcmp($value_function,"ugroup_".$ug) == 0 ) {
+		  $selected = " selected";
+		}
 		echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
 	      }
 	    }

@@ -252,7 +252,7 @@ function docman_header($params) {
 
 	$project=project_get_object($group_id);
 	
-	if (!$project->isProject()) {
+	if ($project->isFoundry()) {
 	    exit_error($Language->getText('global','error'),
 		       $Language->getText('docman_doc_utils','error_proj'));
 	}
@@ -291,7 +291,7 @@ function docman_header_admin($params) {
 
     $project=project_get_object($group_id);
     
-    if (!$project->isProject()) {
+    if ($project->isFoundry()) {
 	exit_error($Language->getText('global','error'),
 		   $Language->getText('docman_doc_utils','error_proj'));
     }

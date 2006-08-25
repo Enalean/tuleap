@@ -365,6 +365,135 @@ class ArtifactTypeFactory extends Error {
 	    return $res;
 	}
 
+
+	/**
+	 *  fetch all tracker templates that need to be instantiated for new projects.
+	 *
+	 *  @return query result.
+	 */
+	function getTrackerTemplatesForNewProjects() {
+	  $sql = "SELECT group_artifact_id FROM artifact_group_list WHERE group_id=".$this->Group->getGroupId()." AND instantiate_for_new_projects=1 AND status = 'A'";
+	    return db_query($sql);
+	}
+
+
+	/**
+	 *	create - use this to create a new ArtifactType in the database.
+	 *
+	 *  @param  group_id: the group id of the new tracker
+	 *	@param	group_id_template: the template group id (used for the copy)
+	 *	@param	atid_template: the template artfact type id 
+	 *	@param	name: the name of the new tracker
+	 *	@param	description: the description of the new tracker
+	 *	@param	itemname: the itemname of the new tracker
+	 *	@return id on success, false on failure.
+	 */
+	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false) {
+		global $feedback,$Language;
+
+		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','name_requ'));
+			return false;
+		}
+
+                // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
+                if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
+                    $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
+			return false;
+                }
+
+		//	get the template Group object
+		$template_group = group_get_object($group_id_template);
+		if (!$template_group || !is_object($template_group) || $template_group->isError()) {
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
+		}
+
+		// get the Group object of the new tracker
+		$group = group_get_object($group_id);
+		if (!$group || !is_object($group) || $group->isError()) {
+			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
+		}
+
+		// We retrieve allow_copy from template
+		$at_template = new ArtifactType($template_group,$atid_template);
+		
+		// First, we create a new ArtifactType into artifact_group_list
+		$sql="INSERT INTO 
+			artifact_group_list 
+			(group_id,
+			name,
+			description,
+			item_name,
+                        allow_copy) 
+			VALUES 
+			('". $group_id ."',
+			'". $name ."',
+			'". $description ."',
+			'". $itemname."',
+                        '". $at_template->allowsCopy()."')";
+		//echo $sql;
+		$res = db_query($sql);
+		if (!$res || db_affected_rows($res) <= 0) {
+			$this->setError('ArtifactType: '.db_error());
+			return false;
+		} else {
+			$id = db_insertid($res,'artifact_group_list','group_artifact_id');
+			$at_new = new ArtifactType($group,$id);
+			if (!$at_new->fetchData($id)) {
+				$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','load_fail'));
+				return false;
+			} else {
+                // Create fieldset factory
+                $art_fieldset_fact = new ArtifactFieldSetFactory($at_template);
+                // Then copy all the field sets.
+                $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
+                if ( ! $mapping_field_set_array) {
+		  $this->setError('ArtifactType: '.$art_fieldset_fact->getErrorMessage());
+		  return false;
+		}
+                
+		// Create field factory
+		$art_field_fact = new ArtifactFieldFactory($at_template);
+		
+		// Then copy all the fields informations
+		if ( !$art_field_fact->copyFields($atid_template,$id, $mapping_field_set_array,$ugroup_mapping) ) {
+		  $this->setError('ArtifactType: '.$art_field_fact->getErrorMessage());
+		  return false;
+		}
+		
+		// Then copy all the reports informations
+		// Create field factory
+		$art_report_fact = new ArtifactReportFactory();
+		
+		if ( !$art_report_fact->copyReports($atid_template,$id) ) {
+		  $this->setError('ArtifactType: '.$art_report_fact->getErrorMessage());
+		  return false;
+		}
+		
+		// Copy artifact_notification_event and artifact_notification_role
+		if ( !$at_new->copyNotificationEvent($id) ) {
+		  return false;
+		}
+		if ( !$at_new->copyNotificationRole($id) ) {
+		  return false;
+		}
+		
+		// Create user permissions: None for group members and Admin for group admin
+		if ( !$at_new->createUserPerms($id) ) {
+		  return false;
+		}
+                
+                //Copy template permission
+                permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id, $ugroup_mapping);
+                
+                //Copy Rules
+                require_once('ArtifactRulesManager.class');
+                $arm =& new ArtifactRulesManager();
+                $arm->copyRules($atid_template, $id);
+		return $id;
+			}
+		}
+	}
 }
 
 ?>

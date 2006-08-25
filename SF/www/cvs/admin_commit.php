@@ -48,8 +48,8 @@ echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
 '</H3><p>'.$Language->getText('cvs_admin_commit', 'tracking_msg',array($GLOBALS['sys_name'])).
         '<p>'.$Language->getText('cvs_admin_commit', 'tracking_lbl').
         '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="tracked"> '.
- 	'<OPTION VALUE="1"'.(($cvs_tracked == '1') ? ' SELECTED':'').'>on</OPTION>'.
- 	'<OPTION VALUE="0"'.(($cvs_tracked == '0') ? ' SELECTED':'').'>off</OPTION>'.
+ 	'<OPTION VALUE="1"'.(($cvs_tracked == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>'.
+ 	'<OPTION VALUE="0"'.(($cvs_tracked == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>'.
 	'</SELECT></p>'.
         '<H3>'.$Language->getText('cvs_admin_commit', 'notif_hdr').
         '</H3><p>'.$Language->getText('cvs_admin_commit', 'notif_msg').'</p>'.

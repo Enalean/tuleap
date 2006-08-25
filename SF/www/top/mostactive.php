@@ -11,7 +11,7 @@ require_once('pre.php');
 $Language->loadLanguageMsg('top/top');
 
 
-if (!$offset || $offset < 0) {
+if (!isset($offset) || $offset < 0) {
 	$offset=0;
 }
 
@@ -19,16 +19,16 @@ if ($type == 'week') {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_weekly_metric.ranking,project_weekly_metric.percentile ".
 		"FROM groups,project_weekly_metric ".
 		"WHERE groups.group_id=project_weekly_metric.group_id AND ".
-		"groups.is_public=1 ".
+		"groups.is_public=1 AND groups.type=1 ".
 		"ORDER BY ranking ASC LIMIT $offset,50";
 	$title = $Language->getText('top_index','act_week');
 } else {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_metric.ranking,project_metric.percentile ".
 		"FROM groups,project_metric ".
 		"WHERE groups.group_id=project_metric.group_id AND ".
-		"groups.is_public=1 ".
+		"groups.is_public=1 AND groups.type=1 ".
 		"ORDER BY ranking ASC LIMIT $offset,50";
-	$title = $Language->getText('top_index','act_week');
+	$title = $Language->getText('top_index','act_all_time');
 }
 
 
@@ -49,9 +49,13 @@ print '<P><B><FONT size="+1">'.$title.'</FONT></B>
 
 $res_top=db_query($sql);
 
+$i = $offset;
 while ($row_top = db_fetch_array($res_top)) {
 	$i++;
-	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$row_top['ranking']
+	//don't take real rank because template and test_projects are still in top_group table
+	//but we don't want to show them in the stats ...
+	//not very nice ...
+	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$i
 		.'</TD><TD><A href="/projects/'. strtolower($row_top['unix_group_name']) .'/">'
 		.$row_top['group_name']."</A>"
 		.'</TD><TD align="right">'.$row_top['percentile'].'</TD></TR>';

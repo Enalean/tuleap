@@ -592,6 +592,18 @@
 	on custom radio buttons for surveys
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.7</revnumber>
+
+        <date>25-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update chapters CodeX Site Overview,
+	Creating a new Project, and Project Administration
+	for project templates.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

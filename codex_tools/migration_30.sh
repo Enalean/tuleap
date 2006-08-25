@@ -63,6 +63,32 @@ CREATE TABLE artifact_field_set (
 ALTER TABLE artifact_field ADD field_set_id INT( 11 ) UNSIGNED NOT NULL AFTER group_artifact_id;
 
 
+
+###############################################################################
+# Project Templates
+#
+
+#
+#  Default data for project_type
+#
+DROP TABLE IF EXISTS group_type;
+CREATE TABLE group_type (
+  type_id int(11) NOT NULL,
+  name text NOT NULL default '',
+  PRIMARY KEY  (type_id)
+) TYPE=MyISAM;
+
+INSERT INTO group_type VALUES ('1','project');
+INSERT INTO group_type VALUES ('2','template');
+INSERT INTO group_type VALUES ('3','test_project');
+
+ALTER TABLE groups ADD built_from_template int(11) NOT NULL default '100' AFTER type;
+
+# mark project 100  as template created from itself (built-from-template = 100)
+UPDATE groups set type = '2', group_name = 'Default Site Template', short_description = 'The default CodeX template' where group_id = '100';
+
+
+
 ###############################################################################
 # Survey Manager
 # 1- create a new table 'survey_radio_choices' to the survey manager database. 

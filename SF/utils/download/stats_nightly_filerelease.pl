@@ -47,8 +47,8 @@ print "Running year $year, month $month, day $day.\n" if $verbose;
 # if one day we revert to the initial download process.
 #
 # Count all the downloads through direct HTTP access (group by project)
-$sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads "
-	. "WHERE ( day = '$today' ) GROUP BY group_id";
+$sql	= "SELECT dl.group_id,SUM(dl.downloads) FROM stats_http_downloads as dl ,groups "
+	. "WHERE ( dl.day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY dl.group_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
@@ -56,8 +56,8 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 }
 
 # Count all the downloads through direct HTTP access (group by project)
-$sql	= "SELECT group_id,SUM(downloads) FROM stats_ftp_downloads "
-	. "WHERE ( day = '$today' ) GROUP BY group_id";
+$sql	= "SELECT dl.group_id,SUM(dl.downloads) FROM stats_ftp_downloads as dl, groups "
+	. "WHERE ( day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY dl.group_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
@@ -68,11 +68,14 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 # (this used to be counted through HTTP downloads but access is now
 # managed thorugh a PHP script and there is special table storing download information
 $sql    = "SELECT frs_package.group_id AS group_id,COUNT(*) "
-        ."FROM frs_package,frs_release, frs_file, filedownload_log "
+        ."FROM frs_package,frs_release, frs_file, filedownload_log, groups "
         ."WHERE filedownload_log.filerelease_id = frs_file.file_id "
         ."AND (filedownload_log.time >  $time_begin AND filedownload_log.time <= $time_end) "
         ."AND frs_file.release_id = frs_release.release_id "
-        ."AND frs_release.package_id = frs_package.package_id  GROUP BY group_id";
+        ."AND frs_release.package_id = frs_package.package_id "
+        ."AND frs_package.group_id = groups.group_id "
+        ."AND groups.type = 1 "
+        ."GROUP BY group_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
@@ -104,8 +107,8 @@ $total_xfers = 0;
 # if one day we revert to the initial download process.
 
 ## Count all the downloads through direct HTTP access (group by file)
-$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads "
-	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
+$sql	= "SELECT dl.filerelease_id,SUM(dl.downloads) FROM stats_http_downloads as dl, groups "
+	. "WHERE ( day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
@@ -113,8 +116,8 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 }
 
 # Count all the downloads through direct FTP access (group by file)
-$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_ftp_downloads "
-	. "WHERE ( day = '$today' ) GROUP BY filerelease_id";
+$sql	= "SELECT dl.filerelease_id,SUM(dl.downloads) FROM stats_ftp_downloads as dl, groups "
+	. "WHERE ( day = '$today' ) AND dl.group_id = groups.group_id AND groups.type = 1 GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {
@@ -124,8 +127,12 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 # Count all the downloads through the CodeX Web Frontend  (group by file)
 # (this used to be counted through HTTP downloads but access is now
 # monitored on CodeX and there is special table storing download information
-$sql	= " SELECT filerelease_id,COUNT(*) AS downloads FROM filedownload_log "
-	. "WHERE ( time >= $time_begin AND time <= $time_end) GROUP BY filerelease_id";
+$sql	= "SELECT dl.filerelease_id,COUNT(*) AS downloads FROM filedownload_log as dl,groups,frs_release,frs_package,frs_file "
+	. "WHERE ( time >= $time_begin AND time <= $time_end) AND groups.type = 1 "
+        . "AND frs_package.group_id=groups.group_id "
+        . "AND frs_release.package_id=frs_package.package_id "
+        . "AND frs_file.release_id=frs_release.release_id "
+        . "AND dl.filerelease_id = frs_file.file_id GROUP BY filerelease_id";
 $rel = $dbh->prepare($sql) || die "SQL parse error: $!";
 $rel->execute() || die "SQL execute error: $!";
 while ( @tmp_ar = $rel->fetchrow_array() ) {

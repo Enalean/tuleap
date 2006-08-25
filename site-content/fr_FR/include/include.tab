@@ -179,6 +179,7 @@ include_layout	logo	Logo
 include_layout	counter	Compteur
 include_layout	Help	Aide
 include_layout	network_gallery	Galerie réseau
+include_layout	template_warning	Attention ce projet est un patron de projet
 #
 #-----------------------------------------------
 # Script: SF/www/include/license.php
@@ -477,6 +478,13 @@ include_common_error	no_err	Aucune erreur
 # Script: SF/www/common/include/GroupFactory.class
 #
 include_common_groupfactory	none_found	Rien n'a été trouvé
+#
+#-----------------------------------------------
+# Script: SF/common/include/Template.class
+#
+include_common_template	project	Projet
+include_common_template	template	Patron de projet
+include_common_template	test_project	Projet de test
 #
 #-----------------------------------------------
 # Script: SF/common/mvc/View.class

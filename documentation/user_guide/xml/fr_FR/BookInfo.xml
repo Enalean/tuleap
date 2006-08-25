@@ -87,6 +87,18 @@
 	des boutons radio spécifiques pour les sondages
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.7</revnumber>
+
+        <date>25-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour des chapitres Vue d'ensemble du site
+	CodeX, Créer un nouveau projet et Administration d'un projet
+	pour les patron de projets.
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

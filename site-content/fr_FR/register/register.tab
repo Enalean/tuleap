@@ -89,3 +89,9 @@ register_tos	tos_agree	En cliquant ci-dessous, vous reconnaissez avoir pris conn
 # Script: SF/www/register/why.php
 #
 register_why	why_register	Pourquoi enregistrer un projet ?
+#
+#-----------------------------------------------
+# Script: SF/www/register/template.php
+#
+register_template	choose	Choisir un patron de projet
+register_template	next_step	Etape 4&nbsp;: Informations Projet

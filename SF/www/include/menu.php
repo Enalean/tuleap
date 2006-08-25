@@ -212,7 +212,7 @@ function menu_print_sidebar($params) {
     
     if (isset($params['group']) && $params['group']) {
         $grp = project_get_object($params['group']);
-        if ($grp->isProject()) {
+        if (!$grp->isFoundry()) {
             //this is a project page
             //sf global choices
             //echo menu_project ($params['group']);

@@ -119,6 +119,77 @@
       CodeX.</para>
     </section>
 
+    <section id="ProjectType">
+      <title>Type de projet</title>
+
+      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+
+      <para>CodeX propose trois types de projets:</para>
+        
+      <itemizedlist mark="bullet">
+          <listitem> 
+	    <para><emphasis role="bold">Projet</emphasis>:
+	      C'est le type des projets standards sur CodeX.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Patron de projet</emphasis>:
+	      Si vous utilisez ce type de projet, des nouveaux projets
+	      peuvent réutiliser la configuration des services de ce 
+	      projet. En enrégistrant un nouveau projet
+	      (voir <xref linkend="ProjectRegistration" />) votre patron
+	      de projet est listé comme patron disponible. Quand vous
+	      choisissez votre projet comme patron le nouveau projet
+	      utilisera exactement la même configuration. Cela enclut
+	      que
+	      
+	      <itemizedlist spacing="compact">
+	        <listitem>
+	          <para>le nouveau projet est classé selon les
+		  mêmes critères que le projet de patron 
+		  (voir <xref linkend="SoftwareMap" />).</para>
+	        </listitem>
+	        <listitem>
+	          <para>les mêmes services sont activés (voir 
+		  <xref linkend="ServiceConfiguration" />).</para>
+	        </listitem>
+	        <listitem>
+	          <para>les mêmes references sont définies (voir 
+		  <xref linkend="ReferencePatternConfiguration" />).</para>
+	        </listitem>
+		<listitem>
+	          <para>les mêmes groupes d'utilisateurs éxistent
+		  (voir <xref linkend="UserGroups" />).</para>
+		</listitem>
+		<listitem>
+	          <para>tous les outils de suivi ayant l'option "instantier dans les nouveaux projets"
+		  sont copiés avec les champs associés et leurs valeurs ainsi 
+		  que les permissions (voir <xref linkend="TrackerAdministration" />).</para>
+		</listitem>
+	     
+	      </itemizedlist>
+	    
+	      Un projet de patron n'apparaît plus dans l'arbre des projets
+	      et est exclu des statistiques de projets du tableau de bord 
+	      de CodeX (see <xref linkend="TheCodeXDashboard" />) comme 
+	      les projets récents, les projets les plus actifs, etc.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Projet de test</emphasis>:
+	      Si vous voulez juste essayer tout ce qui est faisable avec
+	      un projet CodeX vous pouvez utiliser le type projet de test.
+	      En utilisant ce type de projet votre projet n'apparaît plus 
+	      dans l'arbre des projets ni dans les statistiques de projets 
+	      du tableau de bord de CodeX.
+	    </para>
+	  </listitem>
+       </itemizedlist>
+    </section>
+
+
+
     <section id="ServiceConfiguration">
       <title>Configuration des services</title>
 

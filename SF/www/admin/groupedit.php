@@ -10,36 +10,41 @@ require_once('pre.php');
 require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
+require_once('common/include/TemplateSingleton.class');
 
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
+$group = group_get_object($group_id,false,true);
 
 // group public choice
 if ($Update) {
 	$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
 	//audit trail
-	if (db_result($res_grp,0,'status') != $form_status)
-		{ group_add_history ('status',db_result($res_grp,0,'status'),$group_id);  }
-	if (db_result($res_grp,0,'is_public') != $form_public)
-		{ group_add_history ('is_public',db_result($res_grp,0,'is_public'),$group_id);  }
-	if (db_result($res_grp,0,'type') != $group_type)
-		{ group_add_history ('type',db_result($res_grp,0,'type'),$group_id);  }
-	if (db_result($res_grp,0,'http_domain') != $form_domain)
-		{ group_add_history ('http_domain',db_result($res_grp,0,'http_domain'),$group_id);  }
-	if (db_result($res_grp,0,'unix_box') != $form_box)
-		{ group_add_history ('unix_box',db_result($res_grp,0,'unix_box'),$group_id);  }
+        if ($group->getStatus() != $form_status)
+		{ group_add_history ('status',$group->getStatus(),$group_id);  }
+	if ($group->isPublic() != $form_public)
+		{ group_add_history ('is_public',$group->isPublic(),$group_id);  }
+	if ($group->getType() != $group_type)
+		{ group_add_history ('group_type',$group->getType(),$group_id);  }
+	if ($group->getHTTPDomain()!= $form_domain)
+		{ group_add_history ('http_domain',$group->getHTTPDomain(),$group_id);  }
+	if ($group->getUnixBox() != $form_box)
+		{ group_add_history ('unix_box',$group->getUnixBox(),$group_id);  }
 
 	db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
 		. "license='$form_license',type='$group_type',"
-		. "unix_box='$form_box',http_domain='$form_domain' WHERE group_id=$group_id");
+		. "unix_box='$form_box',http_domain='$form_domain', "
+		. "type='$group_type' WHERE group_id=$group_id");
 
 	$feedback .= $Language->getText('admin_groupedit','feedback_info');
 
+	$group = group_get_object($group_id,false,true);
+
 	/*
 		If this is a foundry, see if they have a preferences row, if not, create one
-	*/
+
 	if ($group_type=='2') {
 		$res=db_query("SELECT * FROM foundry_data WHERE foundry_id='$group_id'");
 		if (db_numrows($res) < 1) {
@@ -52,6 +57,7 @@ if ($Update) {
 			}
 		}
 	}
+	*/
 }
 
 // get current information
@@ -78,7 +84,8 @@ echo '<H2>'.$row_grp['group_name'].'</H2>' ;?>
 <B><?php echo $Language->getText('admin_groupedit','group_type'); ?>:</B>
 <?php
 
-echo show_group_type_box('group_type',$row_grp['type']);
+$template =& TemplateSingleton::instance();
+echo $template->showTypeBox('group_type',$group->getType());
 
 ?>
 
@@ -139,6 +146,9 @@ print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp
 print "<br><u>".$Language->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";
 
 print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
+
+$template_group = group_get_object($group->getTemplate());
+print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
 echo "<P><HR><P>";
 

@@ -10,17 +10,17 @@ require_once('pre.php');
 
 $Language->loadLanguageMsg('top/top'); 
 
-if ($GLOBALS[type] == 'downloads_week') {
+if ($GLOBALS['type'] == 'downloads_week') {
 	$rankfield = 'downloads_week';
 	$title = $Language->getText('top_toplist','downl_week');
 	$column1 = $Language->getText('top_toplist','downl');
 }
-else if ($GLOBALS[type] == 'pageviews_proj') {
+else if ($GLOBALS['type'] == 'pageviews_proj') {
 	$rankfield = 'pageviews_proj';
 	$title = $Language->getText('top_toplist','top_pageviews',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_name']));
 	$column1 = $Language->getText('top_toplist','pageviews');
 }
-else if ($GLOBALS[type] == 'forumposts_week') {
+else if ($GLOBALS['type'] == 'forumposts_week') {
 	$rankfield = 'forumposts_week';
 	$title = $Language->getText('top_toplist','forum_counts');
 	$column1 = $Language->getText('top_toplist','posts');
@@ -54,13 +54,18 @@ $res_top = db_query("SELECT groups.group_id,groups.group_name,groups.unix_group_
 	"FROM groups,top_group ".
 	"WHERE top_group.$rankfield > 0 ".
 	"AND top_group.group_id=groups.group_id ".
+        "AND groups.type=1 ".
 	"ORDER BY top_group.rank_$rankfield LIMIT 100");
 
 echo db_error();
 
+$i = 0;
 while ($row_top = db_fetch_array($res_top)) {
 	$i++;
-	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$row_top["rank_$rankfield"]
+	//don't take real rank because template and test_projects are still in top_group table
+	//but we don't want to show them in the stats ...
+	//not very nice ...
+	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$i
 		.'</TD><TD><A href="/projects/'. strtolower($row_top['unix_group_name']) .'/">'
 		.stripslashes($row_top['group_name'])."</A>"
 		.'</TD><TD align="right">'.$row_top["$rankfield"]
@@ -69,8 +74,8 @@ while ($row_top = db_fetch_array($res_top)) {
 		.'<TD align="right">';
 
 	// calculate change
-	$diff = $row_top["rank_$rankfield"."_old"] - $row_top["rank_$rankfield"];
-	if (($row_top["rank_$rankfield"."_old"] == 0) || ($row_top["rank_$rankfield"] == 0)) {
+	$diff = $row_top["rank_$rankfield"."_old"] - $i;
+	if ($row_top["rank_$rankfield"."_old"] == 0) {
 		print "N/A";
 	}
 	else if ($diff == 0) {

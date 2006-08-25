@@ -611,6 +611,7 @@ tracker_common_field_factory	use_ins_err	Erreur lors de l'insertion de artifact_
 tracker_common_field_factory	vl_ins_err	Erreur lors de l'insertion de artifact_field_value_list ($1-$2) : $3
 tracker_common_field_factory	label_requ	Le label du champ, son type de donnée et son type d'affichage sont obligatoires.
 tracker_common_field_factory	ins_err	Erreur lors de l'insertion de artifact_field ($1-$2) : $3
+tracker_common_field_factory	ugroup_not_exist	Le champ $1 n'a pu être associé au groupe inconnu $2
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFile.class

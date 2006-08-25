@@ -197,10 +197,11 @@ if (user_isloggedin()) {
 	$html_my_monitored_forums .= $HTML->box1_top($Language->getText('my_index', 'my_forums'),0);
 
 	$sql="SELECT groups.group_id, groups.group_name ".
-		"FROM groups,forum_group_list,forum_monitored_forums ".
-		"WHERE groups.group_id=forum_group_list.group_id ".
-		"AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-		"AND forum_monitored_forums.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
+	     "FROM groups,forum_group_list,forum_monitored_forums ".
+	     "WHERE groups.group_id=forum_group_list.group_id ".
+	     "AND groups.status = 'A' ".
+	     "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
+	     "AND forum_monitored_forums.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
@@ -537,7 +538,7 @@ if (user_isloggedin()) {
 		. "FROM groups,user_group "
 		. "WHERE groups.group_id=user_group.group_id "
 		. "AND user_group.user_id='". user_getid() ."' "
-		. "AND groups.type='1' AND groups.status='A' ORDER BY group_name");
+		. "AND groups.status='A' ORDER BY group_name");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		$html_my_projects .= $Language->getText('my_index', 'not_member');

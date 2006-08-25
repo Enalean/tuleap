@@ -12,7 +12,7 @@ require("../include.pl");  # Include all the predefined functions
 my @cat;
 
 # gather all releases 
-my $query = "SELECT group_id FROM groups WHERE is_public=1 AND (status='A')";
+my $query = "SELECT group_id FROM groups WHERE is_public=1 AND (status='A') AND type=1";
 my $grp = $dbh->prepare($query);
 $grp->execute();
 

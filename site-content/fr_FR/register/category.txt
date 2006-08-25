@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Etape 6&nbsp;: Catégories</H2>
+<H2>Etape 7&nbsp;: Catégories</H2>
 
 <p><strong>Catégorisation du projet</strong></p>
 

@@ -12,7 +12,12 @@ require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('news/news');
 
 if (!isset($pv)) $pv=false;
-$params=array('title'=>$Language->getText('news_index','news_for',group_getname($group_id)),
+if (isset($group_id)) {
+  $title = $Language->getText('news_index','news_for',group_getname($group_id));
+ } else {
+  $title = $Language->getText('news_index','news');
+ }
+$params=array('title'=>$title,
               'help'=>'NewsService.html',
               'pv'=>$pv);
 

@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('stats/stats');
 // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array(title=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
+$HTML->header(array('title'=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
 
 //
 // BEGIN PAGE CONTENT CODE
@@ -40,7 +40,7 @@ print '
 ';
 
 
-stats_site_agregate( $group_id );
+stats_site_agregate();
 print '<BR><BR>' . "\n";
 stats_site_projects_daily( 14 );
 print '<BR><BR>' . "\n";

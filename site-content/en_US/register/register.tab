@@ -84,3 +84,9 @@ register_tos	tos_agree	By clicking below, you acknowledge that you have read and
 # Script: SF/www/register/why.php
 #
 register_why	why_register	Why Register?
+#
+#-----------------------------------------------
+# Script: SF/www/register/template.php
+#
+register_template	choose	Choose A Project Template
+register_template	next_step	Step 4: Basic Project Information

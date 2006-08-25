@@ -16,8 +16,9 @@
   <title>Tracker Service</title>
 
   <para>The CodeX Tracker is one of the most powerful and versatile
-  services offered to CodeX hosted projects. It allows for the tracking of various artifacts like bugs, tasks, requirements, etc... and a project can create as many trackers as necessary can be instantiated the Tracker service as
-  many times as necessary in the context of a single project.</para>
+  services offered to CodeX hosted projects. It allows for the tracking 
+  of various artifacts like bugs, tasks, requirements, etc... and a 
+  project can create as many trackers as necessary.</para>
 
   <para>All trackers, whether predefined at the site level or created
   by a project can be fully customized. </para>

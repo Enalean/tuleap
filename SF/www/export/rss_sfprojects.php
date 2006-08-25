@@ -2,15 +2,26 @@
 // ## export sf front page news in RSS
 require_once('pre.php');
 require('./rss_utils.inc');
+require_once('www/new/new_utils.php');
 $Language->loadLanguageMsg('export/export');
 
+$server = get_server_url();
+
 if ($option == "newest") {
+  if (!isset($limit) || $limit == 0) {
+    $query = new_utils_get_new_projects(time(),0,10);
+  } else {
+    $query = new_utils_get_new_projects(time(),0,$limit);
+  }
+  /**
   $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
 		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ' 
 		  .'ORDER BY register_time DESC'.($limit?" LIMIT $limit":" LIMIT 10"));
+  **/
+  $res = db_query($query);
 } else {
   $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
-		  .'WHERE is_public=1 AND status=\'A\' ORDER BY group_id'.($limit?" LIMIT $limit":""));
+		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ORDER BY group_id'.($limit?" LIMIT $limit":""));
 }
 
 if ($type == "rss") {
@@ -21,7 +32,6 @@ print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
 <rss version="0.91">
 ';
 
-$server = get_server_url();
 
 // ## one time output
 print " <channel>\n";
@@ -39,7 +49,7 @@ print "  <language>en-us</language>\n";
 // ## item outputs
 while ($row = db_fetch_array($res)) {
 	print "  <item>\n";
-	print "   <title>".htmlspecialchars($row[group_name])."</title>\n";
+	print "   <title>".htmlspecialchars($row['group_name'])."</title>\n";
 	print "   <link>$server/project/?group_id=$row[group_id]</link>\n";
 	print "   <description>";
 	print ereg_replace(" *\r*\n *"," ",rss_description($row['short_description']));
@@ -71,7 +81,7 @@ print " </channel>\n";
 		       .'trove_cat.trove_cat_id AS trove_cat_id '
 		       .'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
 		       .'trove_group_link.trove_cat_id AND trove_group_link.group_id='
-		       .$row[group_id].' ORDER BY trove_cat.fullpath');
+		       .$row['group_id'].' ORDER BY trove_cat.fullpath');
 	$lang = $os = $devstate = array();
 
 	while ($row_trovecat = db_fetch_array($res_trovecat)) {
@@ -93,7 +103,7 @@ print " </channel>\n";
 	// Get Project admin as contacts
 	$res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname, user.email AS email "
 			      . "FROM user,user_group "
-			      . "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row[group_id]." AND "
+			      . "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row['group_id']." AND "
 			      . "user_group.admin_flags = 'A'");
 
 	$admins = array();

@@ -196,6 +196,9 @@ project_admin_index	quick_file_add	[Ajout rapide d'une version]
 project_admin_index	if_1_file_in_rel	Si vous avez juste un fichier à publier.
 project_admin_index	packages_available	Paquet(s) actuellement disponible(s)&nbsp;:
 project_admin_index	or	ou
+project_admin_index	changed_group_type	Type de projet modifié
+project_admin_index	group_type	Type de projet
+project_admin_index	built_from_template	Patron utilisé pour ce projet: $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
@@ -380,6 +383,7 @@ project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1
 project_admin_utils	menu_config	Configuration&nbsp;: 
 project_admin_utils	menu_permissions	Permissions&nbsp;: 
 project_admin_utils	menu_data	Données&nbsp;: 
+project_admin_utils	group_type	Type de projet modifié
 #... end of values
 #
 #-----------------------------------------------

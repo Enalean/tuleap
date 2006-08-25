@@ -498,15 +498,6 @@ class Artifact extends Error {
     }
 
 
-    /** 
-     * Copy an artifact
-     *
-     *
-     */
-    function copy() {
-
-    }
-
 
     /**
      *  Add a followup comment
@@ -941,7 +932,7 @@ class Artifact extends Error {
         if (!$ok) {
             $feedback .= ' - '.$Language->getText('tracker_common_artifact','cc_add_fail');
         } else {
-            if (!masschange) $feedback .= '- '.$Language->getText('tracker_common_artifact','cc_added');
+            if (!$masschange) $feedback .= '- '.$Language->getText('tracker_common_artifact','cc_added');
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }

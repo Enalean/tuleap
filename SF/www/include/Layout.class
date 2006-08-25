@@ -426,7 +426,7 @@ echo html_blankimage(5,100);
 	*/
 	function project_tabs($toptab,$group_id) {
 		
-            global $sys_default_domain;
+	  global $sys_default_domain,$Language;
             
             // get group info using the common result set
             $project=project_get_object($group_id);
@@ -436,8 +436,9 @@ echo html_blankimage(5,100);
             }
 
             print '<H2>'. $project->getPublicName() .' - '.$project->service_data_array[$toptab]['label'];
+            print '</H2>';
 
-            print '</H2>
+	    print '
         <P>
 	<HR SIZE="1" NoShade>';
             $tabs = $this->_getProjectTabs($toptab, $project);
@@ -449,6 +450,7 @@ echo html_blankimage(5,100);
 	}
 
     function _getProjectTabs($toptab,&$project) {
+      global $sys_default_domain;
         $tabs = array();
         $group_id = $project->getGroupId();
         reset($project->service_data_array);

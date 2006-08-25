@@ -7,11 +7,11 @@
 // $Id$
 
 function html_feedback_top($feedback) {
-	echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
+    echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
 function html_feedback_bottom($feedback) {
-	echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
+  echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
 }
 
 function html_a_group($grp) {
@@ -441,6 +441,14 @@ function site_header($params) {
                 Check to see if active user
                 Check to see if logged in
     */
+
+    if (isset($params['group'])) {
+	  $project=project_get_object($params['group']);
+	  if ($project->isTemplate()) {
+	    $warning = $GLOBALS['Language']->getText('include_layout','template_warning').'<BR>';
+	    $GLOBALS['feedback'] = $warning.$GLOBALS['feedback'];
+	  }
+	}
     echo $HTML->header($params);
     echo html_feedback_top($GLOBALS['feedback']);
 }

@@ -973,10 +973,11 @@ CREATE TABLE group_history (
 #
 
 CREATE TABLE group_type (
-  type_id int(11) NOT NULL auto_increment,
-  name text,
+  type_id int(11) NOT NULL,
+  name text NOT NULL default '',
   PRIMARY KEY  (type_id)
 ) TYPE=MyISAM;
+
 
 #
 # Table structure for table 'groups'
@@ -1007,6 +1008,7 @@ CREATE TABLE groups (
   new_support_address text NOT NULL,
   new_task_address text NOT NULL,
   type int(11) NOT NULL default '1',
+  built_from_template int(11) NOT NULL default '100',
   send_all_bugs int(11) NOT NULL default '0',
   send_all_patches int(11) NOT NULL default '0',
   send_all_support int(11) NOT NULL default '0',
@@ -2410,6 +2412,7 @@ CREATE TABLE project_field_value (
   KEY idx_project_fv_value_id (value_id),
   KEY idx_project_fv_status (status)
 ) TYPE=MyISAM;
+
 
 # CREATE cvs support tables
 

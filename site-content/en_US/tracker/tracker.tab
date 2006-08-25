@@ -604,6 +604,7 @@ tracker_common_field_factory	use_ins_err	Error during inserting artifact_field_u
 tracker_common_field_factory	vl_ins_err	Error during inserting artifact_field_value_list ($1-$2): $3
 tracker_common_field_factory	label_requ	Field label, data type or display type are required.
 tracker_common_field_factory	ins_err	Error during inserting artifact_field ($1-$2): $3
+tracker_common_field_factory	ugroup_not_exist	The field $1 could not be bound to the unkown user group $2
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFile.class

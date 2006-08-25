@@ -17,7 +17,7 @@ require_once('www/project/admin/permissions.php');
 $Language->loadLanguageMsg('include/include');
 
 //make sure this project is NOT a foundry
-if (!$project->isProject()) {
+if ($project->isFoundry()) {
 	header ("Location: /foundry/". $project->getUnixName() ."/");
 	exit;
 }       

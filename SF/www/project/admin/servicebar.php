@@ -16,7 +16,7 @@ require_once('common/include/ReferenceManager.class');
 $Language->loadLanguageMsg('project/project');
 
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su) {
-  global $Language;
+  global $Language,$PHP_SELF;
 
     // Normal projects should not see inactive services.
     if (!$su) {

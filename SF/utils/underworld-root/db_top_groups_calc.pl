@@ -32,7 +32,7 @@ $oneweekago_fmt = $year . $month . $mday;
 ################################### TOP DOWNLOADS
 
 # get all groups, and group_names
-my $query = "SELECT group_id,group_name FROM groups WHERE type=1 AND status='A' AND is_public='1'";
+my $query = "SELECT group_id,group_name FROM groups WHERE type=1 AND status='A' AND is_public='1' AND type='1'";
 my $rel = $dbh->prepare($query);
 $rel->execute();
 while(my ($group_id,$group_name) = $rel->fetchrow()) {
@@ -51,11 +51,13 @@ my $rel = $dbh->prepare($query);
 $rel->execute();
 while(my ($group_id,$downloads_all,$downloads_week,$userrank,$forumposts_week,$pageviews_proj,) 
 	= $rel->fetchrow()) {
+    if (isset($top[$group_id])) {
 	$top[$group_id][1] = $downloads_all;
 	$top[$group_id][2] = $downloads_week;
 	$top[$group_id][3] = $userrank;
 	$top[$group_id][4] = $forumposts_week;
 	$top[$group_id][9] = $pageviews_proj;
+    }
 }
 
 # get current download counts 
@@ -65,9 +67,11 @@ my $rel = $dbh->prepare($query);
 $rel->execute();
 $currentrank = 1;
 while(my ($group_id,$count) = $rel->fetchrow()) {
+    if (isset($top[$group_id])) {
 	$top[$group_id][5] = $count;
 	$top[$group_id][6] = $currentrank;
 	$currentrank++;
+    }
 }
 
 # get current weekly download counts 
@@ -78,9 +82,11 @@ my $rel = $dbh->prepare($query);
 $rel->execute();
 $currentrank = 1;
 while(my ($group_id,$count) = $rel->fetchrow()) {
+    if (isset($top[$group_id])) {
 	$top[$group_id][7] = $count;
 	$top[$group_id][8] = $currentrank;
 	$currentrank++;
+    }
 }
 
 # get current project pageview stats
@@ -90,9 +96,11 @@ my $rel = $dbh->prepare($query);
 $rel->execute();
 $currentrank = 1;
 while(my ($group_id,$count) = $rel->fetchrow()) {
+    if (isset($top[$group_id])) {
 	$top[$group_id][10] = $count;
 	$top[$group_id][11] = $currentrank;
 	$currentrank++;
+    }
 }
 
 # get forumposts_week stats
@@ -103,9 +111,11 @@ my $rel = $dbh->prepare($query);
 $rel->execute();
 $currentrank = 1;
 while(my ($group_id,$count) = $rel->fetchrow()) {
+    if (isset($top[$group_id])) {
 	$top[$group_id][12] = $count;
 	$top[$group_id][13] = $currentrank;
 	$currentrank++;
+    }
 }
 
 

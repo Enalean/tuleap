@@ -12,6 +12,7 @@ require_once('vars.php');
 require_once('www/forum/forum_utils.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/ArtifactFieldSetFactory.class');
@@ -32,7 +33,7 @@ if (isset($show_confirm) && $show_confirm) {
 	while (list($rootnode,$value) = each($root1)) {
 		// check for array, then clear each root node for group
 		db_query('DELETE FROM trove_group_link WHERE group_id='.$group_id
-			.' AND trove_cat_root='.$rootnode);
+			 .' AND trove_cat_root='.$rootnode);
 		
 		for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
 			$varname = 'root'.$i;
@@ -105,20 +106,47 @@ if (isset($show_confirm) && $show_confirm) {
 				  addslashes($Language->getText('register_confirmation','proj_dev_discussion')));
 	if ($fid != -1) forum_add_monitor($fid, user_getid());
 
-        // Instanciate all services from group 100 that are 'active'
-        $sql="SELECT * FROM service WHERE group_id=100 AND is_active=1";
+        
+	// Instanciate all services from the project template that are 'active'
+	$group = group_get_object($group_id);
+        if (!$group || !is_object($group) || $group->isError()) {
+            exit_no_group();
+        }
+
+	$template_id = $group->getTemplate();
+	$system_template = ($group->getStatus() == 's');
+
+	$template_group = group_get_object($template_id);
+	if (!$template_group || !is_object($template_group) || $template_group->isError()) {
+	  exit_no_group();
+        }
+	
+	if (!$system_template) {
+	  $template_name = $template_group->getUnixName();
+	}
+
+        $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
             // Convert link to real values
             // NOTE: if you change link variables here, change them also in SF/www/project/admin/servicebar.php and SF/www/include/Layout.class
             $link=$arr['link'];
-            $link=str_replace('$projectname',group_getunixname($group_id),$link);
-            $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
-            $link=str_replace('$group_id',$group_id,$link);
-            if ($GLOBALS['sys_force_ssl']) {
+
+	    if ($system_template) {
+	      
+	      $link=str_replace('$projectname',group_getunixname($group_id),$link);
+	      $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
+	      $link=str_replace('$group_id',$group_id,$link);
+	      if ($GLOBALS['sys_force_ssl']) {
                 $sys_default_protocol='https'; 
-            } else { $sys_default_protocol='http'; }
-            $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
+	      } else { $sys_default_protocol='http'; }
+	      $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
+	    
+	    } else {
+	      //for non-system templates
+	      $link=str_replace($template_name,$group->getUnixName(),$link);
+	      $link=str_replace($template_id,$group_id,$link);
+	    }
 
             $sql2 = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($group_id, '".$arr['label']."', '".$arr['description']."', '".$arr['short_name']."', '".$link."', ".$arr['is_active'].", ".$arr['is_used'].", '".$arr['scope']."', ".$arr['rank'].")";
             $result2=db_query($sql2);
@@ -129,7 +157,9 @@ if (isset($show_confirm) && $show_confirm) {
 
             // activate corresponding references
             $reference_manager =& ReferenceManager::instance();
-            $reference_manager->addSystemReferencesForService($group_id,$arr['short_name']);
+	    if ($arr['short_name'] != "") {
+	      $reference_manager->addSystemReferencesForService($group_id,$arr['short_name']);
+	    }
         }
 
         // Activate other system references not associated with any service
@@ -149,35 +179,37 @@ if (isset($show_confirm) && $show_confirm) {
             exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','cant_create_docgroup'));
         }
 
+	//Copy ugroups
+	ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
 
 	//Set up some mailing lists
 	//will be done at some point. needs to communicate with geocrawler
 	// TBD
 	
         // Generic Trackers Creation
-        $group_100 = group_get_object(100);
-        if (!$group_100 || !is_object($group_100) || $group_100->isError()) {
-            exit_no_group();
-        }
-        $group = group_get_object($group_id);
-        if (!$group || !is_object($group) || $group->isError()) {
-            exit_no_group();
-        }
-	
-        $ath = new ArtifactType($group);
         
-        $tracker_error = "";
-        
-        // Add all trackers from project 100 (tracker templates) that need to be instanciated for new trackers.
-        $res = $ath->getTrackerTemplatesForNewProjects();
+        $atf = new ArtifactTypeFactory($template_group);
+        //$tracker_error = "";
+        // Add all trackers from template project (tracker templates) that need to be instanciated for new trackers.
+        $res = $atf->getTrackerTemplatesForNewProjects();
         while ($arr_template = db_fetch_array($res)) {
-            $ath_new = new ArtifactType($group_100,$arr_template['group_artifact_id']);
-            if ( !$ath->create($group_id,100,$ath_new->getID(),$ath_new->getName(),$ath_new->getDescription(),$ath_new->getItemName()) ) {
-                $tracker_error .= $ath->getErrorMessage()."<br>";
+            $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
+	    $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),$ath_temp->getName(),$ath_temp->getDescription(),$ath_temp->getItemName(),$ugroup_mapping);
+            if ( !$new_at_id ) {
+                $feedback .= $ath_temp->getErrorMessage()."<br>";
             } else {
-                // Create corresponding reference
+
+	        // Copy all the artifacts from the template tracker to the new tracker
+	        $ath_new = new ArtifactType($group,$new_at_id);
+		
+		// not now. perhaps one day
+	        //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
+		//$feedback .= $ath_new->getErrorMessage()."<br>";
+		//}
+                
+		// Create corresponding reference
                 $ref=& new Reference(0, // no ID yet
-                                     strtolower($ath_new->getItemName()),
+                                     strtolower($ath_temp->getItemName()),
                                      $Language->getText('project_reference','reference_art_desc_key'), // description
                                      '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
                                      'P', // scope is 'project'
@@ -192,7 +224,7 @@ if (isset($show_confirm) && $show_confirm) {
 	// notification (it's all in the content part)
 	include($Language->getContent('register/complete'));
 	site_header(array('title'=>$Language->getText('register_confirmation','registration_complete')));
-    echo $content;
+	echo $content;
 	site_footer(array());
 
 } else if ($i_disagree && $group_id && $rand_hash) {
@@ -200,6 +232,8 @@ if (isset($show_confirm) && $show_confirm) {
 	$HTML->header(array('title'=>$Language->getText('register_confirmation','registration_deleted')));
 	$result=db_query("DELETE FROM groups ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
+
+	$result=db_query("DELETE FROM trove_group_link WHERE group_id='$group_id'");
 
 	echo '
 		<H2>'.$Language->getText('register_confirmation','project_deleted').'</H2>

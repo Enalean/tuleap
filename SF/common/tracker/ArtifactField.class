@@ -312,6 +312,7 @@ class ArtifactField extends Error {
 		return $this->value_function;
 	}
 	
+	
 	/**
 	 *  Get the use_it attribute value
 	 *
@@ -572,6 +573,22 @@ class ArtifactField extends Error {
 	    return $value_id.$Language->getText('tracker_common_field','not_found');
 	
 	}
+
+	/** return the id of the ugroup in the value function
+	 * false if the value function does not concern a special
+	 * ugroup (id > 100) 
+	 */
+	function hasUgroupValueFunction() {
+
+	  if (preg_match('/ugroup_([0-9]+)/', $this->getGlobalValueFunction(), $matches)) {
+	    if (strlen($matches[1]) > 2) {
+	      return $matches[1];	    
+	    }
+	  }
+	  return false;
+	}
+
+
 
 	/**
      * Return all possible values for a select box field

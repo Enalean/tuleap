@@ -7,6 +7,8 @@
   // $Id$
 
 require_once('www/project/admin/permissions.php');
+require_once('www/new/new_utils.php');
+require_once('www/stats/site_stats_utils.php');
 
 function show_features_boxes() {
     GLOBAL $HTML,$Language;
@@ -162,20 +164,8 @@ function show_newest_releases() {
     global $Language;
     $return  = "";
     // Fetch releases that are no more than 3 months old
-    $query	= "SELECT groups.group_name AS group_name,"
-	. "groups.group_id AS group_id,"
-	. "groups.unix_group_name AS unix_group_name,"
-	. "frs_release.release_id AS release_id,"
-	. "frs_release.name AS release_version,"
-	. "frs_package.package_id AS package_id, "
-	. "frs_release.release_date AS release_date "
-	. "FROM groups,frs_package,frs_release "
-	. "WHERE ( frs_release.release_date >  ".strval(time() - 3*30*24*3600)
-	. " AND frs_release.package_id = frs_package.package_id "
-	. "AND frs_package.group_id = groups.group_id "
-	. "AND frs_release.status_id=1 ) "
-	. "GROUP BY frs_release.release_id "
-	. "ORDER BY frs_release.release_date DESC";
+    $start_time = strval(time() - 3*30*24*3600);
+    $query	= new_utils_get_new_releases_short($start_time);
 
     $res_newrel = db_query($query);
 
@@ -203,35 +193,7 @@ function show_newest_releases() {
 
 }
 
-function stats_getprojects_active() {
-    $res_count = db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
-    if (db_numrows($res_count) > 0) {
-        $row_count = db_fetch_array($res_count);
-        return $row_count['count'];
-    } else {
-        return "error";
-    }
-}
 
-function stats_getprojects_total() {
-    $res_count = db_query("SELECT count(*) AS count FROM groups WHERE status='A' OR status='H'");
-    if (db_numrows($res_count) > 0) {
-        $row_count = db_fetch_array($res_count);
-        return $row_count['count'];
-    } else {
-        return "error";
-    }
-}
-
-function stats_getusers() {
-    $res_count = db_query("SELECT count(*) AS count FROM user WHERE status='A' OR status='R'");
-    if (db_numrows($res_count) > 0) {
-        $row_count = db_fetch_array($res_count);
-        return $row_count['count'];
-    } else {
-        return "error";
-    }
-}
 
 function stats_getpageviews_total() {
     $res_count = db_query("SELECT SUM(site_views) AS site, SUM(subdomain_views) AS subdomain FROM stats_site");
@@ -266,10 +228,9 @@ function show_sitestats() {
 function show_newest_projects() {
     global $Language;
     $return  = "";
-    $sql =	"SELECT group_id,unix_group_name,group_name,register_time FROM groups " .
-        "WHERE is_public=1 AND status='A' AND type=1 " .
-        "AND register_time < " . strval(time()-(24*3600)) . " " . 
-        "ORDER BY register_time DESC LIMIT 10";
+    $start_time = strval(time()-(24*3600));
+    $limit = 10;
+    $sql = new_utils_get_new_projects ($start_time,0,$limit);
     $res_newproj = db_query( $sql );
 
     if (!$res_newproj || db_numrows($res_newproj) < 1) {
@@ -290,11 +251,12 @@ function show_newest_projects() {
 function show_highest_ranked_projects() {
     global $Language;
     $return  = "";
+    //don't take into account test projects and template projects
     $sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,".
         "project_weekly_metric.ranking,project_weekly_metric.percentile ".
         "FROM groups,project_weekly_metric ".
         "WHERE groups.group_id=project_weekly_metric.group_id AND ".
-        "groups.is_public=1 AND groups.type=1 AND groups.status='A' ".
+        "groups.is_public=1 AND groups.type=1 AND groups.status='A' AND groups.type=1 ".
         "ORDER BY ranking ASC LIMIT 20";
     $result=db_query($sql);
     if (!$result || db_numrows($result) < 1) {

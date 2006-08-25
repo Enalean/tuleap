@@ -121,7 +121,7 @@ admin_groupedit	error_group	Invalid group was passed in.
 admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
-admin_groupedit	group_type	Group Type
+admin_groupedit	group_type	Project Type
 admin_groupedit	incomplete	Incomplete
 admin_groupedit	active	Active
 admin_groupedit	pending	Pending
@@ -139,6 +139,7 @@ admin_groupedit	grp_name	Group Name
 admin_groupedit	unix_grp	Unix Group Name
 admin_groupedit	description	Description
 admin_groupedit	license_other	License Other
+admin_groupedit	built_from_template	Built from template
 #
 #-----------------------------------------------
 # Script: SF/www/admin/grouplist.php

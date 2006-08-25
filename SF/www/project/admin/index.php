@@ -9,6 +9,7 @@
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');
 require_once('account.php');
+require_once('common/include/TemplateSingleton.class');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('www/project/admin/ugroup_utils.php');
@@ -17,9 +18,8 @@ $Language->loadLanguageMsg('project/project');
 
 // get current information
 $res_grp = group_get_result($group_id);
-
 if (db_numrows($res_grp) < 1) {
-    exit_error($Language->getText('project_admin_index','invalid_p'),$Language->getText('project_admin_index','p_not_found'));
+  exit_error($Language->getText('project_admin_index','invalid_p'),$Language->getText('project_admin_index','p_not_found'));
 }
 
 //if the project isn't active, require you to be a member of the super-admin group
@@ -29,6 +29,15 @@ if (!(db_result($res_grp,0,'status') == 'A')) {
 
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+
+//	  
+//  get the Group object
+//	  
+$group = group_get_object($group_id);
+if (!$group || !is_object($group) || $group->isError()) {
+  exit_no_group();
+}
+
 
 if (isset($func)) {
     /*
@@ -84,6 +93,30 @@ if (isset($func)) {
             $feedback .= ' '.$Language->getText('project_admin_index','user_removed').' ';
             group_add_history ('removed_user',user_getname($rm_id)." ($rm_id)",$group_id);
         }
+
+
+    } else if ($func == "change_group_type") {
+
+      if ($group->getType() != $form_project_type) {
+	group_add_history ('group_type',$group->getType(),$group_id);  
+
+	$template =& TemplateSingleton::instance();
+	$group->setType($form_project_type);
+
+	//set also flag on trackers to be copied or not on project instanciation
+	if ($template->isTemplate($form_project_type)) {
+	  db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='1' WHERE group_id='$group_id'");
+	} else {
+	  db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='0' WHERE group_id='$group_id'");
+	}
+
+	// get current information, force update on group and project objects
+	$group = group_get_object($group_id,false,true);
+	$project = project_get_object($group_id,true);
+
+	$feedback .= ' '.$Language->getText('project_admin_index','changed_group_type').' ';
+      }
+
     } /* else if ($func == "import") {
        session_require(array('group'=>$group_id,'admin_flags'=>'A'));
       
@@ -152,6 +185,34 @@ print '
 .'<B>'.$Language->getText('project_admin_index','edit_trove_cat').'</B></A>
 ';
 
+
+// list all possible project types
+// get current information
+$template =& TemplateSingleton::instance(); 
+
+
+print '
+<HR NoShade SIZE="1">
+<P>
+<TABLE WIDTH="100%" BORDER="0">
+ <TR>
+  <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectAdministration.html#ProjectType').' : </B>
+      <FORM action="'. $PHP_SELF .'" method="post">
+      <INPUT TYPE="HIDDEN" NAME="func" VALUE="change_group_type">
+      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
+  <TD valign="top">'.$template->showTypeBox('form_project_type',$group->getType()).'
+      <INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
+      </FORM></TD>
+ </TR>
+</TABLE>
+';
+
+$template_group = group_get_object($group->getTemplate());
+$template_name = $template_group->getPublicName();
+print '
+<HR NoShade SIZE="1">
+<P>
+'.$Language->getText('project_admin_index','built_from_template','<A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_name.' </B></A>');
 $HTML->box1_bottom(); 
 
 echo '

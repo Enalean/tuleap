@@ -102,13 +102,13 @@ if (isset($submit)) {
 				$atid = $at_arr[$j]->getID();
 				$perm_level = "tracker_user_$row_dev[user_id]_$atid";
 				//echo "Tracker ".$at_arr[$j]->getName()."(".$at_arr[$j]->getID()."): ".$perm_level."=".$$perm_level."<br>";
-				if ( $at_arr[$j]->existUser($row_dev[user_id]) ) {
-					if ( !$at_arr[$j]->updateUser($row_dev[user_id],$$perm_level) ) {
+				if ( $at_arr[$j]->existUser($row_dev['user_id']) ) {
+					if ( !$at_arr[$j]->updateUser($row_dev['user_id'],$$perm_level) ) {
 						echo $at_arr[$j]->getErrorMessage();
 						$tracker_error = true;
 					}
 				} else {
-					if ( !$at_arr[$j]->addUser($row_dev[user_id],$$perm_level) ) {
+					if ( !$at_arr[$j]->addUser($row_dev['user_id'],$$perm_level) ) {
 						$tracker_error = true;
 					}
 				}

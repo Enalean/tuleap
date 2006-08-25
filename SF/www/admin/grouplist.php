@@ -27,13 +27,13 @@ if ($form_catroot == 1) {
 
 	if (isset($group_name_search)) {
 	    print "<b>".$Language->getText('admin_grouplist','begins_with',array($group_name_search))."</b>\n";
-		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license "
+		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license,type "
 			. "FROM groups WHERE group_name LIKE '$group_name_search%' "
 			. ($form_pending?"AND WHERE status='P' ":"")
 			. " ORDER BY group_name");
 	} else {
 	    print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
-		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license "
+		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license,type "
 			. "FROM groups "
 			. ($status?"WHERE status='$status' ":"")
 			. "ORDER BY group_name");
@@ -45,6 +45,7 @@ if ($form_catroot == 1) {
 		. "groups.is_public,"
 		. "groups.license,"
 		. "groups.status "
+		. "groups.type "
 		. "FROM groups,group_category "
 		. "WHERE groups.group_id=group_category.group_id AND "
 		. "group_category.category_id=$GLOBALS[form_catroot] ORDER BY groups.group_name");
@@ -61,6 +62,7 @@ if ($form_catroot == 1) {
 <TD><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_grouplist','categ'); ?></b></TD>
 <TD><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TD>
+<TD><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TD>
 </TR>
 
 <?php
@@ -82,6 +84,9 @@ while ($grp = db_fetch_array($res)) {
 	// members
 	$res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$grp[group_id]");
 	print "<TD>" . db_numrows($res_count) . "</TD>";
+
+	// group type
+	print "<td>$grp[type]</td>";
 
 	print "</tr>\n";
 }

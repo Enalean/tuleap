@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Step 6: Categories</H2>
+<H2>Step 7: Categories</H2>
 
 <P><B>Project Categorization</B>
 

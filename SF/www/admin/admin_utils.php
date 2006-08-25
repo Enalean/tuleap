@@ -16,9 +16,5 @@ function site_admin_footer($vals=0) {
 	$HTML->footer(array());
 }
 
-function show_group_type_box($name='group_type',$checked_val='xzxz') {
-	$result=db_query("SELECT * FROM group_type");
-	return html_build_select_box ($result,'group_type',$checked_val,false);
-}
 
 ?>

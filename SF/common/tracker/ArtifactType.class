@@ -11,6 +11,7 @@
 //
 
 require_once('www/project/admin/permissions.php');
+require_once('common/tracker/ArtifactFieldSetFactory.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -173,128 +174,8 @@ class ArtifactType extends Error {
 
 	}
 
-	/**
-	 *	create - use this to create a new ArtifactType in the database.
-	 *
-	 *  @param  group_id: the group id of the new tracker
-	 *	@param	group_id_template: the template group id (used for the copy)
-	 *	@param	atid_template: the template artfact type id 
-	 *	@param	name: the name of the new tracker
-	 *	@param	description: the description of the new tracker
-	 *	@param	itemname: the itemname of the new tracker
-	 *	@return id on success, false on failure.
-	 */
-	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname) {
-		global $feedback,$ath,$Language;
-
-		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
-			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','name_requ'));
-			return false;
-		}
-
-                // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
-                if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
-                    $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
-			return false;
-                }
-
-		//	get the template Group object
-		$group = group_get_object($group_id_template);
-		if (!$group || !is_object($group) || $group->isError()) {
-			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
-		}
-
-		// We retrieve allow_copy from template
-		$at_template = new ArtifactType($group,$atid_template);
-		
-		// First, we create a new ArtifactType into artifact_group_list
-		$sql="INSERT INTO 
-			artifact_group_list 
-			(group_id,
-			name,
-			description,
-			item_name,
-                        allow_copy) 
-			VALUES 
-			('". $group_id ."',
-			'". $name ."',
-			'". $description ."',
-			'". $itemname."',
-            '". $at_template->allowsCopy()."')";
-		//echo $sql;
-		$res = db_query($sql);
-		if (!$res || db_affected_rows($res) <= 0) {
-			$this->setError('ArtifactType: '.db_error());
-			return false;
-		} else {
-			$id = db_insertid($res,'artifact_group_list','group_artifact_id');
-			if (!$this->fetchData($id)) {
-				$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','load_fail'));
-				return false;
-			} else {
-                // Create fieldset factory
-                $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
-                // Then copy all the field sets.
-                $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
-                if ( ! $mapping_field_set_array) {
-					$this->setError('ArtifactType: '.$art_fieldset_fact->getErrorMessage());
-					return false;
-				}
-                                
-				// Create field factory
-				$art_field_fact = new ArtifactFieldFactory($ath);
-
-				// Then copy all the fields informations
-				if ( !$art_field_fact->copyFields($atid_template,$id, $mapping_field_set_array) ) {
-					$this->setError('ArtifactType: '.$art_field_fact->getErrorMessage());
-					return false;
-				}
-				
-				// Then copy all the reports informations
-				// Create field factory
-				$art_report_fact = new ArtifactReportFactory();
-
-				if ( !$art_report_fact->copyReports($atid_template,$id) ) {
-					$this->setError('ArtifactType: '.$art_report_fact->getErrorMessage());
-					return false;
-				}
-
-				// Copy artifact_notification_event and artifact_notification_role
-				if ( !$this->copyNotificationEvent($id) ) {
-					return false;
-				}
-				if ( !$this->copyNotificationRole($id) ) {
-					return false;
-				}
-				
-				// Create user permissions: None for group members and Admin for group admin
-				if ( !$this->createUserPerms($id) ) {
-					return false;
-				}
-                
-                //Copy template permission
-                permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id);
-                
-                //Copy Rules
-                require_once('ArtifactRulesManager.class');
-                $arm =& new ArtifactRulesManager();
-                $arm->copyRules($atid_template, $id);
-				return $id;
-			}
-		}
-	}
 	
-
-	/**
-	 *  fetch all tracker templates that need to be instantiated for new projects.
-	 *
-	 *  @return query result.
-	 */
-	function getTrackerTemplatesForNewProjects() {
-	    $sql = 'SELECT group_artifact_id FROM artifact_group_list WHERE group_id=100 AND instantiate_for_new_projects=1;';
-	    return db_query($sql);
-	}
-
+	
 
 	/**
 	 *  fetch the notification roles for this ArtifactType from the database.
@@ -981,6 +862,8 @@ class ArtifactType extends Error {
 			return true;
 		}
 	}
+
+
 	/**
 	 *  updateNotificationSettings - use this to update this ArtifactType in the database.
 	 *
@@ -1972,6 +1855,71 @@ class ArtifactType extends Error {
 		return $changed;
         }	
 	
+
+	/**
+	 * @param group_id: the group id of the new tracker
+	 * @param group_id_template: the template group id (used for the copy)
+	 * @param atid_template: the template artfact type id 
+	 */
+	function copyArtifacts($from_atid) {
+	  $result = db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id='$from_atid'");
+	  while ($row = db_fetch_array($result)) {
+	    if (!$this->copyArtifact($from_atid,$row['artifact_id']) ) {return false;}
+	  }
+	  return true;
+	}
+	
+	
+	function copyArtifact($from_atid,$from_aid) {
+	  $aid = 0;
+	  $res = true;
+
+	   // copy common artifact fields
+	   $result = db_query("INSERT INTO artifact (group_artifact_id,status_id,submitted_by,open_date,close_date,summary,details,severity) ".
+	   "SELECT ".$this->getID().",status_id,submitted_by,".time().",close_date,summary,details,severity ".
+	   "FROM artifact ".
+	   "WHERE artifact_id='$from_aid' ".
+	   "AND group_artifact_id='$from_atid'");
+	   if ($result && db_affected_rows($result) > 0) {
+	     $aid=db_insertid($result);
+	   } else {
+	     $this->setError(db_error());
+	     return false;
+	   }
+	   
+	   
+	   // copy specific artifact fields
+	   $result = db_query("INSERT INTO artifact_field_value (field_id,artifact_id,valueInt,valueText,valueFloat,valueDate) ".
+	   "SELECT field_id,$aid,valueInt,valueText,valueFloat,valueDate ".
+	   "FROM artifact_field_value ".
+	   "WHERE artifact_id = '$from_aid'");
+	   if (!$result || db_affected_rows($result) <= 0) {
+	     $this->setError(db_error());
+	     $res = false;
+	   }
+
+	   //copy cc addresses
+	   $result = db_query("INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
+           "SELECT $aid,email,added_by,comment,date ".
+           "FROM artifact_cc ".
+           "WHERE artifact_id='$from_aid'");
+	   if (!$result || db_affected_rows($result) <= 0) {
+	     $this->setError(db_error());
+	     $res = false;
+	   }
+
+	   //copy artifact files
+	   db_query("INSERT INTO artifact_file (artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by) ".
+	   "SELECT $aid,description,bin_data,filename,filesize,filetype,adddate,submitted_by ".
+	   "FROM artifact_file ".
+	   "WHERE artifact_id='$from_aid'");
+	   if (!$result || db_affected_rows($result) <= 0) {
+	     $this->setError(db_error());
+	     $res = false;
+	   }
+
+	   return $res;
+	}
 }
 
 ?>

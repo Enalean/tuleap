@@ -191,6 +191,9 @@ project_admin_index	quick_file_add	[Quick Add File Release]
 project_admin_index	if_1_file_in_rel	if you have only one file to release.
 project_admin_index	packages_available	Package(s) currently available:
 project_admin_index	or	or
+project_admin_index	changed_group_type	Changed Project Type
+project_admin_index	group_type	Project Type
+project_admin_index	built_from_template	Template used for this Project: $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
@@ -375,6 +378,7 @@ project_admin_utils	perm_granted_for_object	Permission granted for object $1
 project_admin_utils	menu_config	Configuration: 
 project_admin_utils	menu_permissions	Permissions: 
 project_admin_utils	menu_data	Data: 
+project_admin_utils	group_type	Changed Project Type
 #... end of values
 #
 #-----------------------------------------------

@@ -70,6 +70,7 @@ INSERT INTO groups SET \
   patch_preamble = '', \
   pm_preamble = '', \
   xrx_export_ettm = '0', \
+  built_from_template = '100', \
   bug_allow_anon = '1', \
   cvs_tracker = '1', \
   cvs_events_mailing_list = '', \
@@ -112,6 +113,7 @@ INSERT INTO groups SET \
   patch_preamble = '', \
   pm_preamble = '', \
   xrx_export_ettm = '0', \
+  built_from_template = '100', \
   bug_allow_anon = '1', \
   cvs_tracker = '0', \
   cvs_events_mailing_list = '', \
@@ -125,13 +127,13 @@ INSERT INTO groups SET \
 
 INSERT INTO groups SET \
   group_id = '100', \
-  group_name = 'none', \
+  group_name = 'Default Site Template', \
   is_public = '0', \
   status = 's', \
   unix_group_name = 'none', \
   unix_box = 'shell1', \
   http_domain = '', \
-  short_description = 'Reserved project with group_id = 100 (None)', \
+  short_description = 'The default CodeX template', \
   cvs_box = '', \
   svn_box = '', \
   license = '', \
@@ -146,7 +148,7 @@ INSERT INTO groups SET \
   new_bug_address = '', \
   new_patch_address = '', \
   new_support_address = '', \
-  type = '1', \
+  type = '2', \
   send_all_bugs = '0', \
   send_all_patches = '0', \
   send_all_support = '0', \
@@ -155,6 +157,7 @@ INSERT INTO groups SET \
   patch_preamble = '', \
   pm_preamble = '', \
   xrx_export_ettm = '0', \
+  built_from_template = '100', \
   bug_allow_anon = '1', \
   cvs_tracker = '0', \
   cvs_events_mailing_list = '', \
@@ -181,8 +184,11 @@ INSERT INTO bug VALUES (100, 100, 3, 1, 100, 100, 100, 1058260700, 'None', '', 0
 #
 #  Default data for group_type
 #
-INSERT INTO group_type VALUES ('1','Project');
-#INSERT INTO group_type VALUES ('2','Foundry');
+INSERT INTO group_type VALUES ('1','project');
+INSERT INTO group_type VALUES ('2','template');
+INSERT INTO group_type VALUES ('3','test_project');
+#INSERT INTO group_type VALUES ('4','Foundry');
+
 
 #
 # Default data for Support Request Manager
