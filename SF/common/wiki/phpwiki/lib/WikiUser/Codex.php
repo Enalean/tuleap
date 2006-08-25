@@ -47,14 +47,14 @@ extends _PassUser
             $this->_level = WIKIAUTH_ANON;
             break;
         case 'admin':
-            $this->_level = WIKIAUTH_ADMIN;
+            $this->_level = WIKIAUTH_ADMIN; // admin codex
             break;
         default:
             $this->_level = WIKIAUTH_USER;
         }
      
         if(user_ismember(GROUP_ID, 'W2'))
-            $this->_level = WIKIAUTH_ADMIN;
+            $this->_level = WIKIAUTH_ADMIN; //admin wiki
 
         $this->_authmethod = 'Codex';
     }
