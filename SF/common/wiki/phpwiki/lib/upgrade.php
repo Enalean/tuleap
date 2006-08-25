@@ -861,6 +861,7 @@ class Upgrade_CheckDatabaseUpdate extends Upgrade {
 /** entry function from lib/main.php
  */
 function DoUpgrade($request) {
+	
 
     if (!$request->_user->isAdmin()) {
         $request->_notAuthorized(WIKIAUTH_ADMIN);
@@ -869,7 +870,9 @@ function DoUpgrade($request) {
                                    fmt("Upgrade disabled: user != isAdmin")));
         return;
     }
-
+    
+    //print("<br>This action is blocked by administrator. Sorry for the inconvenience !<br>");
+    exit("<br>This action is blocked by administrator. Sorry for the inconvenience !<br>");
     StartLoadDump($request, _("Upgrading this PhpWiki"));
     //CheckOldIndexUpdate($request); // to upgrade from < 1.3.10
     CheckDatabaseUpdate($request);   // first check cached_html and friends

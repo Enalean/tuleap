@@ -179,7 +179,8 @@ extends WikiPlugin
 
 
     function _do_convert_cached_html(&$request, $args) {
-
+        
+	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         require_once("lib/upgrade.php");
         $dbh = $request->_dbi;
         _upgrade_db_init($dbh);
@@ -203,6 +204,7 @@ extends WikiPlugin
     
     // pagelist with enable/disable button
     function _do_email_verification(&$request, &$args) {
+	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         $dbi = $request->getDbh();
         $pagelist = new PageList('pagename',0,$args);
         //$args['return_url'] = 'action=email-verification-verified';
