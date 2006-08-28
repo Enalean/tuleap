@@ -33,6 +33,7 @@ if ( $atid ) {
 		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
 	}
 
+
         //
         //      Create the ArtifactTypeHtml object - needed in ArtifactField.getFieldPredefinedValues() 
         //
@@ -46,9 +47,12 @@ if ( $atid ) {
 
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
-	$art_fieldset_fact = new ArtifactFieldSetFactory($at);
 	if ($art_field_fact->isError()) {
 		exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
+	}
+	$art_fieldset_fact = new ArtifactFieldSetFactory($at);
+	if ($art_fieldset_fact->isError()) {
+		exit_error($Language->getText('global','error'),$art_fieldset_fact->getErrorMessage());
 	}
 	
 	$sql = $at->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$select,$from,$where,$multiple_queries,$all_queries);
@@ -202,6 +206,10 @@ if ($export == 'artifact') {
 				$art_field_fact = new ArtifactFieldFactory($at);
 				if ($art_field_fact->isError()) {
 					exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
+				}
+				$art_fieldset_fact = new ArtifactFieldSetFactory($at);
+				if ($art_fieldset_fact->isError()) {
+					exit_error($Language->getText('global','error'),$art_fieldset_fact->getErrorMessage());
 				}
 
 				$col_list = array();
