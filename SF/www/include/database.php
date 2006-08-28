@@ -91,4 +91,16 @@ function db_error() {
 function db_reset_result($qhandle,$row=0) {
 	return mysql_data_seek($qhandle,$row);
 }
+
+function db_escape_string($string,$qhandle=false) {
+  if (function_exists('mysql_real_escape_string')) {
+    if ($qhandle) {
+      return mysql_real_escape_string($string,$qhandle);
+    } else {
+      return mysql_real_escape_string($string);
+    }
+  } else {
+    return mysql_escape_string($string);
+  }
+}
 ?>

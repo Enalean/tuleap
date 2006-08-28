@@ -114,12 +114,14 @@ if (isset($show_confirm) && $show_confirm) {
         }
 
 	$template_id = $group->getTemplate();
-	$system_template = ($group->getStatus() == 's');
 
 	$template_group = group_get_object($template_id);
 	if (!$template_group || !is_object($template_group) || $template_group->isError()) {
 	  exit_no_group();
         }
+
+	$system_template = ($template_group->getStatus() == 's');
+
 	
 	if (!$system_template) {
 	  $template_name = $template_group->getUnixName();
@@ -194,9 +196,9 @@ if (isset($show_confirm) && $show_confirm) {
         $res = $atf->getTrackerTemplatesForNewProjects();
         while ($arr_template = db_fetch_array($res)) {
             $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
-	    $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),$ath_temp->getName(),$ath_temp->getDescription(),$ath_temp->getItemName(),$ugroup_mapping);
+	    $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping);
             if ( !$new_at_id ) {
-                $feedback .= $ath_temp->getErrorMessage()."<br>";
+                $feedback .= $atf->getErrorMessage()."<br>";
             } else {
 
 	        // Copy all the artifacts from the template tracker to the new tracker

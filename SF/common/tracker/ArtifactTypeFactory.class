@@ -392,7 +392,7 @@ class ArtifactTypeFactory extends Error {
 		global $feedback,$Language;
 
 		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
-			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','name_requ'));
+			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','name_requ'));
 			return false;
 		}
 
@@ -405,13 +405,13 @@ class ArtifactTypeFactory extends Error {
 		//	get the template Group object
 		$template_group = group_get_object($group_id_template);
 		if (!$template_group || !is_object($template_group) || $template_group->isError()) {
-			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
+			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}
 
 		// get the Group object of the new tracker
 		$group = group_get_object($group_id);
 		if (!$group || !is_object($group) || $group->isError()) {
-			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','invalid_templ'));
+			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}
 
 		// We retrieve allow_copy from template
@@ -434,13 +434,13 @@ class ArtifactTypeFactory extends Error {
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
-			$this->setError('ArtifactType: '.db_error());
+			$this->setError('ArtifactTypeFactory: '.db_error());
 			return false;
 		} else {
 			$id = db_insertid($res,'artifact_group_list','group_artifact_id');
 			$at_new = new ArtifactType($group,$id);
 			if (!$at_new->fetchData($id)) {
-				$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','load_fail'));
+				$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','load_fail'));
 				return false;
 			} else {
                 // Create fieldset factory
@@ -448,7 +448,7 @@ class ArtifactTypeFactory extends Error {
                 // Then copy all the field sets.
                 $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
                 if ( ! $mapping_field_set_array) {
-		  $this->setError('ArtifactType: '.$art_fieldset_fact->getErrorMessage());
+		  $this->setError('ArtifactTypeFactory: '.$art_fieldset_fact->getErrorMessage());
 		  return false;
 		}
                 
@@ -457,7 +457,7 @@ class ArtifactTypeFactory extends Error {
 		
 		// Then copy all the fields informations
 		if ( !$art_field_fact->copyFields($atid_template,$id, $mapping_field_set_array,$ugroup_mapping) ) {
-		  $this->setError('ArtifactType: '.$art_field_fact->getErrorMessage());
+		  $this->setError('ArtifactTypeFactory: '.$art_field_fact->getErrorMessage());
 		  return false;
 		}
 		
@@ -466,7 +466,7 @@ class ArtifactTypeFactory extends Error {
 		$art_report_fact = new ArtifactReportFactory();
 		
 		if ( !$art_report_fact->copyReports($atid_template,$id) ) {
-		  $this->setError('ArtifactType: '.$art_report_fact->getErrorMessage());
+		  $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
 		  return false;
 		}
 		
