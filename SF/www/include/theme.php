@@ -19,7 +19,12 @@ if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_CO
     $row_user = db_fetch_array($res_user);
     if (!isset($row_user['theme']) || $row_user['theme'] == "" || $row_user['theme'] == "default") {
 	// Use the defaut theme
-	$theme = $sys_themedefault;
+        if (browser_is_netscape4() && array_key_exists('sys_themedefault_old', $GLOBALS)) {
+            $theme = $GLOBALS['sys_themedefault_old'];
+        }
+        else {
+            $theme = $GLOBALS['sys_themedefault'];
+        }
     } else {
 	$theme = $row_user['theme'];
     }
