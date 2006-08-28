@@ -1704,7 +1704,7 @@ function pm_delete_file($group_id=false,$project_task_id=false,$project_file_id=
 
     // Now delete the attachment
     $res = db_query("DELETE FROM project_file WHERE project_task_id=$project_task_id AND project_file_id=$project_file_id");
-    if (db_numrows($res) <= 0) {
+    if (db_affected_rows($res) <= 0) {
     	$feedback .= "Error deleting attachment #$project_file_id: ".db_error($res);
     } else {
     	$feedback .= "File successfully deleted";

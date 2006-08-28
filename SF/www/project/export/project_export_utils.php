@@ -821,13 +821,29 @@ echo '
 function db_project_query($dbname,$qstring,$print=0) {
   global $Language;
 	if ($print) print '<br>'.$Language->getText('project_export_utils','query_is',array($dbname,$qstring)).'<br>';
-	$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
+	//$GLOBALS['db_project_qhandle'] = @mysql_db_query($dbname,$qstring);
+	
+	// Changes by SL Enhance access to databases and project data
+	// mysql_db_query is now deprecated and has been replaced by 
+	//mysql_select_db then mysql_query
+	//
+	// Select the project database
+	$db = @mysql_select_db($dbname);
+	if (!$db){
+		die('Can\'t connect to ' . $dbname . 'database' . db_error());
+	} else{
+	$GLOBALS['db_project_qhandle'] = @mysql_query($qstring);
+	
+	// Switch back to system database
+	$dbname = $GLOBALS['sys_dbname']; 
+	$db = @mysql_select_db($dbname);
+	if (!$db) die ('Can\'t switch back to system database'. db_error());
+	}
 	return $GLOBALS['db_project_qhandle'];
 }
 
 
 function db_project_create($dbname) {
-
     /*
           Create the db if it does not exist and grant read access only
           to the user 'cxuser'

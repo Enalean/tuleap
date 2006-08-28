@@ -9,26 +9,32 @@
 //
 
 function db_connect() {
-	global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn;
-	$conn = @mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
-        unset($sys_dbpasswd);
-	#return $conn;
+    global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
+    $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
+    unset($sys_dbpasswd);
+    if (!$conn) {
+        die('Database Error - Could not connect. ' . mysql_error());
+    }    
+    $db_selected= mysql_select_db($sys_dbname, $conn);
+    if (!$db_selected) {
+        die ("Database Error - Can't use database $sys_dbname: " . mysql_error());
+    }
 }
 
 function db_query($qstring,$print=0) {
 //	global $QUERY_COUNT;
 //	$QUERY_COUNT++;
-	if ($print) print "<br>Query is: $qstring<br>";
 //	if ($GLOBALS[IS_DEBUG]) $GLOBALS[G_DEBUGQUERY] .= $qstring . "<BR>\n";
-	global $sys_dbname;
-	$GLOBALS['db_qhandle'] = @mysql($sys_dbname,$qstring);
-	return $GLOBALS['db_qhandle'];
+    global $conn;
+    if ($print) print "<br>Query is: $qstring<br>";
+    $GLOBALS['db_qhandle'] = @mysql_query($qstring, $conn);
+    return $GLOBALS['db_qhandle'];
 }
 
 function db_numrows($qhandle) {
 	// return only if qhandle exists, otherwise 0
 	if ($qhandle) {
-		return @mysql_numrows($qhandle);
+		return @mysql_num_rows($qhandle);
 	} else {
 		return 0;
 	}
@@ -43,11 +49,11 @@ function db_result($qhandle,$row,$field) {
 }
 
 function db_numfields($lhandle) {
-	return @mysql_numfields($lhandle);
+	return @mysql_num_fields($lhandle);
 }
 
 function db_fieldname($lhandle,$fnumber) {
-           return @mysql_fieldname($lhandle,$fnumber);
+           return @mysql_field_name($lhandle,$fnumber);
 }
 
 function db_affected_rows($qhandle) {
