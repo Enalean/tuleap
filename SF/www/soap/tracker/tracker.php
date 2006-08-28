@@ -795,7 +795,7 @@ function artifacttypes_to_soap($at_arr) {
                             $availablevalues = array();
                             $result = $field->getFieldPredefinedValues($at_arr[$i]->getID());
                             $rows=db_numrows($result);
-                            $cols=@mysql_num_fields($result);
+                            $cols=db_numfields($result);
                             for ($j=0; $j<$rows; $j++) {     
                                 $availablevalues[] = array (
                                     'field_id' => $field->getID(),
