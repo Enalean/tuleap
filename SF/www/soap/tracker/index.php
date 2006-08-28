@@ -9,14 +9,14 @@ $uri = 'http://'.$sys_default_domain;
 // Instantiate server object
 $server = new soap_server();
 //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
-$server->configureWSDL('CodeXAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
+$server->configureWSDL('CodeXTrackerAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
 
 //include the common TYPES API
 require_once('../common/types.php');
 
 // include the TRACKER API
-require_once('tracker.php');
+require_once('./tracker.php');
 
 
 // Call the service method to initiate the transaction and send the response
