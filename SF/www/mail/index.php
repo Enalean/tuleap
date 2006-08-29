@@ -72,7 +72,7 @@ if ($group_id) {
                 if ($list_is_public) {
                     echo ' <A HREF="'.$list_server.'/pipermail/'.$list_name.'">'.$Language->getText('mail_index','archive').'</A>';
                 } else {
-                    echo ' '.$Language->getText('mail_index','archive').': <A HREF="'.$list_server.'/pipermail/'.$list_name.'">'.$Language->getText('mail_index','public').'</A>/<A HREF="'.$list_server.'/mailman/private/'.$list_name.'">'.$Language->getText('mail_index','private').'</A>';
+                    echo ' '.$Language->getText('mail_index','archive').': <A HREF="'.$list_server.'/pipermail/'.$list_name.'/">'.$Language->getText('mail_index','public').'</A>/<A HREF="'.$list_server.'/mailman/private/'.$list_name.'/">'.$Language->getText('mail_index','private').'</A>';
                 }
 	  
 		echo ' | <A HREF="'.$list_server.'/mailman/listinfo/'.$list_name.'">'.$Language->getText('mail_index','unsubscribe').'</A>)';
