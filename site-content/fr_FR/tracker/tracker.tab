@@ -580,6 +580,8 @@ tracker_common_artifact	invalid_art	 Artefact invalide no. $1
 tracker_common_artifact	depend_add_fail	L'ajout de dépendances sur l'artefact no. $1 a échoué
 tracker_common_artifact	depend_add	Dépendances ajoutées
 tracker_common_artifact	depend_removed	Dépendances enlevées
+tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
+tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class
@@ -669,6 +671,7 @@ tracker_common_type	notif_fail	Erreur lors de l'insertion du rôle de la notifica
 tracker_common_type	del_err	Erreur lors de la destruction des dépendances $1 : $2
 tracker_common_type	none_found	Aucun trouvé 
 tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
+tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactTypes.class

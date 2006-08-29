@@ -241,8 +241,8 @@ class ArtifactFieldFactory extends Error {
 		    $is_empty = (implode(",",$val)=="100");
 		  } else {
 		    $is_empty = ( ($field->isSelectBox()) ? ($val==100) : ($val==''));
-		  }
-		  if ( $is_empty && !$field->isEmptyOk()) {
+		  } 
+          if ( $is_empty && !$field->isEmptyOk()) {
 		    $bad_fields[] = $field->getLabel();
 		  }
 		}
@@ -250,6 +250,7 @@ class ArtifactFieldFactory extends Error {
 	
 	    if (count($bad_fields) > 0) {
 	      $feedback = $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields));
+            $this->setError($Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
 			return false;
 	    } else {
 			return true;

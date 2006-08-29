@@ -365,6 +365,39 @@ class ArtifactTypeFactory extends Error {
 	    return $res;
 	}
 
+    /**
+     * Returns the ArtifactType named $tracker_name in the project of ID $gropup_id, or false if such a tracker does not exist or if the user can not view this tracker
+     *
+     * @param int $group_id th ID of the group
+     * @param string $tracker_name the name of the tracker we are lokking for
+     * @return the ArtifactType named $tracker_name in the project of ID $gropup_id, or false if such a tracker does not exist or if the user can not view this tracker
+     */
+    function getArtifactTypeFromName($group_id, $tracker_name) {
+        global $Language;
+
+        $sql = "SELECT group_artifact_id 
+                FROM artifact_group_list 
+                WHERE group_id='". $group_id ."' AND 
+                      item_name='".$tracker_name."' AND 
+                      status!='D'";
+        
+        $result = db_query($sql);
+        $rows = db_numrows($result);
+        if (!$result || $rows != 1) {
+            $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
+            return false;
+        } else {
+            while ($arr = db_fetch_array($result)) {
+                $new_at = new ArtifactType(group_get_object($group_id), $arr['group_artifact_id']);
+                if ($new_at->userCanView()) {
+                    return $new_at;
+                } else {
+                    $this->setError($Language->getText('tracker_common_type','no_view_permission').' '.db_error());
+                    return false;
+                }
+            }
+        }
+    }
 
 	/**
 	 *  fetch all tracker templates that need to be instantiated for new projects.
@@ -494,6 +527,7 @@ class ArtifactTypeFactory extends Error {
 			}
 		}
 	}
+
 }
 
 ?>

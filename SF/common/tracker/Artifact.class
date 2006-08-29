@@ -317,6 +317,9 @@ class Artifact extends Error {
     /**
      *  Create a new artifact (and its values) in the db
      *
+     * @param array $vfl the value-field-list. Array association pair of field_name => field_value. 
+     *              If the function is called by the web-site submission form, the $vfl is set to false, and will be filled by the function extractFieldList function retrieving the HTTP parameters.
+     *              If $vfl is not false, the fields expected in this array are *all* the fields of this tracker that are allowed to be submited by the user.
      *  @return boolean
      */
     function create($vfl=false,$import=false,$row=0) {
@@ -331,11 +334,26 @@ class Artifact extends Error {
 		$vfl = $art_field_fact->extractFieldList();
         }
 
-                
+        // We check the submitted fields to see if the user has the permissions to submit it
+        if (!$import) {
+            while ( list($key, $val) = each($vfl)) {
+                $field = $art_field_fact->getFieldFromName($key);
+                if ($field) {
+                    if (! $field->userCanSubmit($group->getID(),$group_artifact_id,user_getid())) {
+                        // The user does not have the permissions to update the current field,
+                        // we exit the function with an error message
+                        $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_submission', $field->getLabel()));
+                        return false;
+                    }
+                }
+            }
+        }
+        
 	if (!$import) {
 	  // make sure  required fields are not empty
 	  if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
-	    exit_missing_param();
+          $this->setError($art_field_fact->getErrorMessage());
+          exit_missing_param();
 	  }
 	}
 
@@ -656,7 +674,7 @@ class Artifact extends Error {
             while (list($field_name,$value) = each($vfl)) {
                 
                 $field = $art_field_fact->getFieldFromName($field_name);
-                if ( $field && $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
+                    
                     // skip over special fields  except for details which in this 
                     // particular case can be processed normally
                     if ($field->isSpecial()) {
@@ -744,39 +762,46 @@ class Artifact extends Error {
                             $differ = ($old_value != $value);
                         }
                         if ($differ) {
-                            if ($is_text) {
-                                if ( $field->isStandardField() ) {
-                                    $upd_list .= "$field_name='".htmlspecialchars($value)."',";                                                 
-                                } else {
-                                    $update_value = htmlspecialchars($value);
-                                }
-                                                
-                                $this->addHistory($field,addslashes($old_value),$value);
-                                $value = stripslashes($value);
-                            } else {
-                                if ( $field->isStandardField() ) {
-                                    $upd_list .= "$field_name='$value',";
-                                } else {
-                                    $update_value = $value;
-                                }
-                                $this->addHistory($field,$old_value,$value);
-                            }
+                            // The userCanUpdate test is only done on modified fields
+                            if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
                                 
-                            // Update the field value
-                            if ( !$field->isStandardField() ) {
-                                if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                    $feedback .= $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel());
+                                if ($is_text) {
+                                    if ( $field->isStandardField() ) {
+                                        $upd_list .= "$field_name='".htmlspecialchars($value)."',";                                                 
+                                    } else {
+                                        $update_value = htmlspecialchars($value);
+                                    }
+                                                    
+                                    $this->addHistory($field,addslashes($old_value),$value);
+                                    $value = stripslashes($value);
+                                } else {
+                                    if ( $field->isStandardField() ) {
+                                        $upd_list .= "$field_name='$value',";
+                                    } else {
+                                        $update_value = $value;
+                                    }
+                                    $this->addHistory($field,$old_value,$value);
                                 }
-                            }
                                     
-                            // Keep track of the change
-                            $field_html = new ArtifactFieldHtml($field);
-                            $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
-                            $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+                                // Update the field value
+                                if ( !$field->isStandardField() ) {
+                                    if ( !$field->updateValue($this->getID(),$update_value) ) {
+                                        $feedback .= $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel());
+                                    }
+                                }
+                                        
+                                // Keep track of the change
+                                $field_html = new ArtifactFieldHtml($field);
+                                $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
+                                $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+                            } else {
+                                // The user does not have the permissions to update the current field,
+                                // we exit the function with an error message
+                                $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+                                return false;
+                            }
                         }
                     }
-                }
-                        
             } // while
 
 	

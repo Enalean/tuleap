@@ -573,6 +573,8 @@ tracker_common_artifact	invalid_art	 Invalid artifact #$1
 tracker_common_artifact	depend_add_fail	Dependencies addition for artifact #$1 failed
 tracker_common_artifact	depend_add	Dependencies Added
 tracker_common_artifact	depend_removed	Dependency Removed
+tracker_common_artifact	bad_field_permission_submission	You are not allowed to submit the field $1.
+tracker_common_artifact	bad_field_permission_update	You are not allowed to update the field $1.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class
@@ -662,6 +664,7 @@ tracker_common_type	notif_fail	Error during inserting notification role
 tracker_common_type	del_err	Error deleting dependencies $1: $2
 tracker_common_type	none_found	None Found 
 tracker_common_type	invalid_mail	"$1" is not a valid email address
+tracker_common_type	no_view_permission	You don't have the permissions to view this tracker.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactTypes.class
