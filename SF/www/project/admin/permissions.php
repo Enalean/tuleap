@@ -11,6 +11,7 @@
 
 // Supported object types and related object_id:
 //
+//type='NEWS_READ'                id='forum_id'                table='news_bytes'
 // type='PACKAGE_READ'             id='package_id'                 table='frs_package'
 // type='RELEASE_READ'             id='release_id'                 table='frs_release'
 // type='DOCUMENT_READ'            id='docid"                      table='doc_data'
@@ -39,7 +40,9 @@ $Language->loadLanguageMsg('project/project');
  */
 function permission_get_name($permission_type) {
   global $Language;
-    if ($permission_type=='PACKAGE_READ') {
+    if ($permission_type=='NEWS_READ') {
+        return $Language->getText('project_admin_permissions','news_access');
+    } else if ($permission_type=='PACKAGE_READ') {
         return $Language->getText('project_admin_permissions','pack_download');
     } else if ($permission_type=='RELEASE_READ') {
         return $Language->getText('project_admin_permissions','rel_download');
@@ -72,7 +75,9 @@ function permission_get_name($permission_type) {
  * Return the type of a given object
  */
 function permission_get_object_type($permission_type,$object_id) {
-    if ($permission_type=='PACKAGE_READ') {
+    if ($permission_type=='NEWS_READ') {
+        return 'news';    
+    } else if ($permission_type=='PACKAGE_READ') {
         return 'package';
     } else if ($permission_type=='RELEASE_READ') {
         return 'release';
@@ -107,7 +112,9 @@ function permission_get_object_type($permission_type,$object_id) {
 function permission_get_object_name($permission_type,$object_id) {
     global $Language,$group_id;
 
-    if ($permission_type=='PACKAGE_READ') {
+    if ($permission_type=='NEWS_READ') {   
+        return get_news_name_from_forum_id($object_id);
+    } else if ($permission_type=='PACKAGE_READ') {
         return file_get_package_name_from_id($object_id);
     } else if ($permission_type=='RELEASE_READ') {
         return file_get_release_name_from_id($object_id);
@@ -166,7 +173,9 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
     // Super-user has all rights...
     if (user_is_super_user()) return true;
 
-    if ($permission_type=='PACKAGE_READ') {
+    if ($permission_type=='NEWS_READ') {  
+        return (user_ismember($group_id,'A'));
+    } else if ($permission_type=='PACKAGE_READ') {
         return (user_ismember($group_id,'R2'));
     } else if ($permission_type=='RELEASE_READ') {
         return (user_ismember($group_id,'R2'));

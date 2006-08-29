@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');
+require_once('www/project/admin/permissions.php');
 require('../forum/forum_utils.php');
 
 $Language->loadLanguageMsg('news/news');
@@ -62,20 +63,23 @@ if ($rows < 1) {
 		<TR><TD VALIGN="TOP">'; 
 
 	for ($j = 0; $j < $rows; $j++) { 
-	  if ($group_id) {
-	    echo '
+	  $forum_id=db_result($result,$j,'forum_id');
+	  if (news_check_permission($forum_id,$group_id)) {
+	      if ($group_id) {
+	      echo '
 		<A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
-	      '&group_id='.$group_id.'">'.
-	      '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
-	      stripslashes(db_result($result, $j, 'summary')).'</A> ';
-	  } else {
-	    echo '
-		<A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
-	      '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
-	      stripslashes(db_result($result, $j, 'summary')).'</A> ';
-	  }
+		'&group_id='.$group_id.'">'.
+	        '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+	        stripslashes(db_result($result, $j, 'summary')).'</A> ';
+	      } else {
+	        echo '
+		  <A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
+	          '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+	          stripslashes(db_result($result, $j, 'summary')).'</A> ';
+	      }
 		echo '
 		<BR>';
+	  }
 	}
 
 	echo '

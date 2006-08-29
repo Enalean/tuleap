@@ -29,6 +29,15 @@ if ($msg_id) {
         if (!forum_utils_access_allowed($forum_id)) {
             exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
         }
+	
+	//check if the message is a comment on a piece of news.  If so, check permissions on this news
+	$qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+	$res = db_query($qry);
+	if (db_numrows($res) > 0) {
+	    if (!forum_utils_news_access($forum_id)) {	    
+	        exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
+	    }
+	}   
 
 	forum_header(array('title'=>db_result($result,0,'subject')));
 

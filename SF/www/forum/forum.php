@@ -111,6 +111,11 @@ if ($forum_id) {
         if (!forum_utils_access_allowed($forum_id)) {
             exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
         }
+	
+	//If the forum is associated to a news, check permissions on this news
+	if (!forum_utils_news_access($forum_id)) {	    
+	    exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
+	}
 
 	if (isset($post_message)&&($post_message == 'y')) {
         //

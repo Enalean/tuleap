@@ -198,6 +198,7 @@ project_admin_index	built_from_template	Template used for this Project: $1
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
 #
+project_admin_permissions	news_access	News Read
 project_admin_permissions	pack_download	Package Download
 project_admin_permissions	rel_download	Release Download
 project_admin_permissions	doc_access	Document Access

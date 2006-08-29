@@ -2,6 +2,7 @@
 // ## export sf front page news in RSS
 
 require_once('pre.php');
+require_once('www/news/news_utils.php');
 require('./rss_utils.inc');
 $Language->loadLanguageMsg('export/export');
 
@@ -45,16 +46,19 @@ print "  <language>en-us</language>\n";
 // ## item outputs
 
 while ($row = db_fetch_array($res)) {
-	print "  <item>\n";
-	print "   <title>".htmlspecialchars($row['summary'])."</title>\n";
-	// if news group, link is main page
-	if ($row['group_id'] != $GLOBALS['sys_news_group']) {
+	$forum_id=$row['forum_id'];
+	if (news_check_permission($forum_id,$group_id)) {
+	    print "  <item>\n";
+	    print "   <title>".htmlspecialchars($row['summary'])."</title>\n";
+	    // if news group, link is main page
+	    if ($row['group_id'] != $GLOBALS['sys_news_group']) {
 		print "   <link>".get_server_url()."/forum/forum.php?forum_id=$row[forum_id]</link>\n";
-	} else {
+	    } else {
 		print "   <link>".get_server_url()."/</link>\n";
-	}
-	print "   <description>".rss_description($row['details'])."</description>\n";
-	print "  </item>\n";
+	    }
+	    print "   <description>".rss_description($row['details'])."</description>\n";
+	    print "  </item>\n";
+	}    
 }
 // ## end output
 print " </channel>\n";
