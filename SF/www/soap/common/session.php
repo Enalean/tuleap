@@ -66,7 +66,7 @@ function login($loginname, $passwd) {
         );
         return new soapval('return', 'tns:Session',$return);
     } else {
-        return new soap_fault(login_fault,'login','Unable to log with loginname of '.$loginname.' and password of '.$passwd, '');
+        return new soap_fault(login_fault,'login','Unable to log with loginname '.$loginname.' and given password', '');
     }
 }
 
