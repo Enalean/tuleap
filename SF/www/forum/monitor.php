@@ -24,10 +24,11 @@ if (user_isloggedin()) {
             }
 	    
 	    //If the forum is associated to a private news, non-allowed users shouldn't be able to monitor this forum
+	    // but they should be able to disable monitoring news that have been set from public to private
 	    $qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
 	    $res = db_query($qry);
 	    if (db_numrows($res) > 0) {
-	        if (!forum_utils_news_access($forum_id)) {	    
+	        if (!forum_utils_news_access($forum_id) && !forum_is_monitored($forum_id, user_getid())) {	    
 	            exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
 	        }
 	    }
