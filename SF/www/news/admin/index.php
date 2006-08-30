@@ -10,7 +10,7 @@ require_once('pre.php');
 
 //common forum tools which are used during the creation/editing of news items
 require_once('www/forum/forum_utils.php');
-
+require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
@@ -89,8 +89,10 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		}
                 $username=user_getname(db_result($result,0,'submitted_by'));
 		$forum_id=db_result($result,0,'forum_id');
-		$res = news_read_permissions($forum_id);		
-		if (db_numrows($res) < 1) {
+		$res = news_read_permissions($forum_id);
+		// check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
+		// with ST DB state
+		if (db_numrows($res) < 1 || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
 		    $check_private="";
 		    $check_public="CHECKED";
 		} else {
@@ -252,7 +254,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			    //if the news is private, not display it in the list of news to be approved
 			    $forum_id=db_result($result,$i,'forum_id');  
 			    $res = news_read_permissions($forum_id);
-			    if ((db_numrows($res) < 1)) {
+			    // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
+			    // with ST DB state
+			    if ((db_numrows($res) < 1) || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
 			        echo '
 				    <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
 			    }

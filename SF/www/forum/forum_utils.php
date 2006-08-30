@@ -660,7 +660,7 @@ function forum_utils_news_access($forum_id) {
         //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set 
 	$g_id = db_result($res1,0,'group_id');    
         
-	permission_is_authorized('NEWS_READ',$_forum_id, user_getid(), $g_id);
+	return permission_is_authorized('NEWS_READ',$_forum_id, user_getid(), $g_id);
     }
     
     return true;

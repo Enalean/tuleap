@@ -554,7 +554,7 @@ function permission_display_selection_form($permission_type, $object_id, $group_
 function permission_clear_all($group_id, $permission_type, $object_id, $log_permission_history=true) {
     if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "DELETE FROM permissions WHERE permission_type='$permission_type' AND object_id='$object_id'";
-    $res=db_query($sql,1);
+    $res=db_query($sql);
     if (!$res) { 
         return false;
     } else {
@@ -708,7 +708,7 @@ function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
 function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id) {
     if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('$permission_type', '$object_id', $ugroup_id)";
-    $res=db_query($sql,1);
+    $res=db_query($sql);
     if (!$res) {
         return false;
     } else {
