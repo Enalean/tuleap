@@ -122,9 +122,9 @@ class ArtifactTypeFactory extends Error {
 					$arr['count'] = $arr_count['count'];
 				}
                                 $new_at=new ArtifactType($this->Group, $arr['group_artifact_id'], $arr);
-                                //if ($new_at->userCanView()) {
+                                if ($new_at->userCanView()) {
                                     $this->ArtifactTypes[] = $new_at;
-                                    //}
+                                }
 			}
 		}
 		return $this->ArtifactTypes;
