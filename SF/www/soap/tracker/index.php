@@ -13,7 +13,7 @@ $server->configureWSDL('CodeXTrackerAPI',$uri,false,'rpc','http://schemas.xmlsoa
 
 
 //include the common TYPES API
-require_once('../common/types.php');
+//require_once('../common/types.php');
 
 // include the TRACKER API
 require_once('./tracker.php');

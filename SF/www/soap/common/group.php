@@ -1,5 +1,7 @@
 <?php
 
+require_once('user.php');
+
 //
 // Type definition
 //
@@ -104,7 +106,7 @@ function group_to_soap($group) {
     return $soap_group;
 }
 
-/*
+
 function getListOfGroupsByUser($sessionKey, $user_id) {
     if (session_continue($sessionKey)){
         $LIST_GROUP = array();
@@ -132,7 +134,30 @@ function getListOfGroupsByUser($sessionKey, $user_id) {
     } else {
         return new soap_fault(invalid_session_fault,'getListOfGroupsByUser','Invalid Session ','');
     }
-}*/
+}
+
+function row_group_to_soap($sessionKey, $row_group)
+  {
+     $return = array();
+     $group_admins = array();
+     $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name "
+	. "FROM user,user_group "
+	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row_group['group_id']." AND "
+	. "user_group.admin_flags = 'A'");
+     $rows=db_numrows($res_admin);
+     for ($i=0; $i<$rows; $i++) {
+     	$group_admins[] = getUserById($sessionKey, db_result($res_admin,$i,0));
+     }
+     $return = array(
+     			'group_id'    => $row_group['group_id'], 
+     			'group_name'  => $row_group['group_name'], 
+     			'admin_flags' => $row_group['admin_flags'],
+     			'description' => $row_group['short_description'],
+     			'group_admins' => $group_admins
+     			
+     );
+     return $return; 	
+  }
 
 /**
  * getGroupByName : returns the SOAPGroup associated with the given unix group name

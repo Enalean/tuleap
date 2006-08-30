@@ -9,7 +9,7 @@ define ('password', 'test');
 // Create the client instance
 //$client = new soapclient('http://' . username . ':' . password . '@esparros.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
 //$client->setCredentials(username, password);
-$client = new soapclient('http://la-pierre.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
+$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/common/index.php?wsdl', true);
 // Check for an error
 $err = $client->getError();
 if ($err) {
@@ -24,12 +24,17 @@ $user_id = $result['user_id'];
 $session_hash = $result['session_hash'];
 echo '<H2>Session : '.$user_id.'-------------'.$session_hash.'</H2>';
 
-$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/tracker-service.php?wsdl', true, 'cornillon.grenoble.xrce.xerox.com', '8000');
-
-//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127, 'user_id' => 131));
-$group_id = 127;
-$group_artifact_id = 263;
+//$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/tracker-service.php?wsdl', true, 'cornillon.grenoble.xrce.xerox.com', '8000');
+$compress=array('compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP);
+$client = new soapclient("http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/index.php?wsdl",$compress);
+$client->setHTTPEncoding('gzip, deflate');
+//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127, 'user_id' => $user_id));
+$group_id = 237;
+$group_artifact_id = 457;
+$artifact_id = 7027;
 $user_id = 101;
+
+//$result = $client->call('getArtifactById', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'artifact_id' => $artifact_id));
 //$result = $client->call('getFieldSets', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id));
 
 $criteria = array();
@@ -37,28 +42,30 @@ $criteria = array();
 //$criteria[] = array ('field_name' => 'assigned_to' , 'field_value' => '132');
 //$criteria[] = array ('field_name' => 'status_id' , 'field_value' => '1');
 //$criteria[] = array ('field_name' => 'open_date' , 'field_value' => '1145366966', 'operator' => '=');
+$criteria[] = array('' => '');
 $offset = 0;
-$max_rows = 100;
+$max_rows = 0;
 /*$result = $client->call('getArtifacts', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'criteria' => $criteria , 'offset' => $offset,
 'max_rows' => $max_rows));*/
 
 // test d'insertion d'un artifact
 
-//$extra_fields = array();
+$extra_fields = array();
 //$extra_fields[] = array ('field_id' => 9 , 'field_value' => 132);
 //$extra_fields[] = array ('field_id' => 182 , 'field_value' => '102,103' );
 //$extra_fields[] = array ('field_id' => 181 , 'field_value' => 'test de mise a jour artifact' );
-//$result = $client->call('addArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'severity' => 4, 'summary' => 'ceci est un  test pour abbadi 2', 'extra_fields' => $extra_fields));
+$extra_fields[] = array ('field_id' => 177 , 'field_value' => '2006-08-17' );
+//$result = $client->call('addArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'severity' => 4, 'summary' => 'ceci est un  test pour marc', 'extra_fields' => $extra_fields));
 
-//$result = $client->call('updateArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'artifact_id' => 6974, 'severity' => 4));
+$result = $client->call('updateArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'artifact_id' => $artifact_id, 'severity' => 2, 'extra_fields' => $extra_fields));
 
 //$result = $client->call('getArtifactCannedResponses', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => 409));
-//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 107));
+//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127));
 
 //$result = $client->call('getArtifactFollowups', array('sessionKey' => $session_hash, 'group_id' => 107, 'group_artifact_id' => 161, 'artifact_id' => 67));
-/*
-$result = $client->call('getArtifactReports', array('sessionKey' => $session_hash, 'group_id' => 107, 'group_artifact_id' => 125, 'user_id' => 101));
-*/
+
+//$result = $client->call('getArtifactReports', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'user_id' => 101));
+
 $ids = array();
 $ids[] = 103;
 $ids[] = 76;
@@ -71,7 +78,7 @@ if ($result != -1)
 else 
 	echo '<H2>NOT FOUND</H2>';
 */	
-//$result = $client->call('addFollowup', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'body' => 'test followup soap 1'));
+//$result = $client->call('addFollowup', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'body' => 'test refractor followup soap 1'));
 //$result = $client->call('deleteDependency', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 410, 'artifact_id' => 6954, 'dependent_on_artifact_id' => 3));
 /*
 $is_dependent_on_artifact_id = array(6955, 7010);
@@ -95,7 +102,7 @@ for ($i=0;$i<count($result);$i++) {
 	}
 }
 */
-
+/*
 $filename = "/home/moubouho/CodeX/dev_client/CodeXProject/language/english.xml";
 if (!($f = @fopen($filename, "rb"))) {
      echo "Couldn't open file ".$filename." for reading<br/>";
@@ -105,6 +112,9 @@ if (!($f = @fopen($filename, "rb"))) {
 }
 
 $result = $client->call('addArtifactFile', array('sessionKey' => $session_hash, 'group_id' => 1, 'group_artifact_id' => 129, 'artifact_id' => 7041, 'encoded_data' => base64_encode($bin_data), 'description' => 'test client soap xml', 'filename' => 'english.xml', 'filetype' => 'application/xml')); 
+*/
+
+
 
 // Check for a fault
 if ($client->fault) {

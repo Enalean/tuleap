@@ -12,9 +12,6 @@ $server = new soap_server();
 $server->configureWSDL('CodeXAccountAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
 
-//include the common TYPES API
-require_once('../common/types.php');
-
 // include the ACCOUNT API
 require_once('./account.php');
 

@@ -9,7 +9,7 @@ define ('password', 'test');
 // Create the client instance
 //$client = new soapclient('http://' . username . ':' . password . '@esparros.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
 //$client->setCredentials(username, password);
-$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
+$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/common/index.php?wsdl', true);
 // Check for an error
 $err = $client->getError();
 if ($err) {
@@ -18,7 +18,7 @@ if ($err) {
     // At this point, you know the call that follows will fail
 }
 // Call the SOAP method
-$result = $client->call('login', array('loginname' => 'admin', 'passwd' => 'siteadmin'));
+$result = $client->call('login', array('loginname' => 'moubouho', 'passwd' => '2pacmail'));
 print_r($result);
 $user_id = $result['user_id'];
 $session_hash = $result['session_hash'];
