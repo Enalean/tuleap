@@ -99,6 +99,18 @@
 	pour les patron de projets.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.8</revnumber>
+
+        <date>30-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Service d'annonces
+	pour inclure les amélioration de ST sur les annonces
+	privées (SR #265).
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

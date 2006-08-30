@@ -544,7 +544,7 @@ function handle_monitoring($forum_id,$msg_id) {
 	*/
 
 	$res=news_read_permissions($forum_id);
-	if ((db_numrows($res) < 1) || (db_result($res,0,'ugroup_id') == '1')) {
+	if ((db_numrows($res) < 1)) {
 	    $sql="SELECT user.email from forum_monitored_forums,user ".
 		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
 	} else {
@@ -659,16 +659,8 @@ function forum_utils_news_access($forum_id) {
     
         //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set 
 	$g_id = db_result($res1,0,'group_id');    
-        $sql = "SELECT ugroup_id FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$_forum_id'";
-        $res = db_query($sql);
-    
-        if ($res && db_numrows($res) > 0) {        
-	    $ugroup_id = db_result($res,0,'ugroup_id');
-	    if ($ugroup_id == '3' && !user_ismember($g_id)) {
-	        //access to private news is denied for project non-members
-	        return false;
-	    }
-        }
+        
+	permission_is_authorized('NEWS_READ',$_forum_id, user_getid(), $g_id);
     }
     
     return true;

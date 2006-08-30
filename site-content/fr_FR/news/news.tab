@@ -77,3 +77,8 @@ news_submit	only_admin_submits	Permission refusée. Vous ne pouvez soumettre une 
 news_submit	submit_news_for	Soumettre une annonce pour $1
 news_submit	post_explain	Vous pouvez publier une annonce concernant votre projet si vous en êtes l'administrateur.</p><p>Toutes les annonces <b>de votre projet</b> apparaîtront immédiatement sur la page de sommaire de votre projet. Les annonces d'intérêt général peuvent être sélectionnées par l'équipe de $1 pour apparaître sur la page d'accueil de $1.</p><p>Vous pouvez inclure des URLs dans vos annonces, mais pas de HTML. Les URLs seront automatiquement transformés en liens hypertextes lors de la visualisation.</p>
 news_submit	for_project	Pour le projet&nbsp;: $1
+news_submit	news_privacy	Confidentialité
+news_submit	public_news	<b>publique</b> (visible pour tous)
+news_submit	private_news	<b>privée</b> (membres du projet seulement)
+news_submit	news_perm_update_success	Permissions mises à jour avec succès.
+news_submit	news_perm_create_success	Permissions créées avec succès.

@@ -56,10 +56,12 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				$res2 = news_read_permissions($forum_id);
 				if (db_numrows($res2) > 0) {
 				    //permission on this news is already defined, have to be updated
-				    news_update_permissions($forum_id,$permission);
+				    news_update_permissions($forum_id,$is_private,$group_id);
 				} else {
 				    //permission of this news not yet defined
-				    news_insert_permissions($forum_id,$permission);
+				    if ($is_private) {
+				      news_insert_permissions($forum_id,$group_id);
+				    }
 				}
 							
 			}	
@@ -88,15 +90,12 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
                 $username=user_getname(db_result($result,0,'submitted_by'));
 		$forum_id=db_result($result,0,'forum_id');
 		$res = news_read_permissions($forum_id);		
-		if (db_numrows($res) > 0) {
-		    $ugroup_id=db_result($res,0,'ugroup_id');
-		}
-		if ((db_numrows($res) < 1) || ($ugroup_id=="1")) {
-		    $is_private="";
-		    $is_public="CHECKED";
+		if (db_numrows($res) < 1) {
+		    $check_private="";
+		    $check_public="CHECKED";
 		} else {
-		    $is_private="CHECKED";
-		    $is_public="";
+		    $check_private="CHECKED";
+		    $check_public="";
 		}    
 
 		echo '
@@ -115,8 +114,8 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index','delete').'<BR>
 	        
 		<B>'.$Language->getText('news_submit','news_privacy').':</B><BR> 
-		<INPUT TYPE="RADIO" NAME="permission" VALUE="1" '.$is_public.'> '.$Language->getText('news_submit','public_news').'<BR>
-		<INPUT TYPE="RADIO" NAME="permission" VALUE="3" '.$is_private.'> '.$Language->getText('news_submit','private_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="0" '.$check_public.'> '.$Language->getText('news_submit','public_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_private.'> '.$Language->getText('news_submit','private_news').'<BR>
 		
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="44" MAXLENGTH="60"><BR>
@@ -253,10 +252,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			    //if the news is private, not display it in the list of news to be approved
 			    $forum_id=db_result($result,$i,'forum_id');  
 			    $res = news_read_permissions($forum_id);
-			    if (db_numrows($res) > 0) {
-			        $ugroup_id=db_result($res,0,'ugroup_id');
-			    }	
-			    if ((db_numrows($res) < 1) || ($ugroup_id=="1")) {
+			    if ((db_numrows($res) < 1)) {
 			        echo '
 				    <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
 			    }

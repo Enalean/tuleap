@@ -1822,11 +1822,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('W
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKIATTACHMENT_READ',4);
 
--- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',100);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('NEWS_READ',1,1);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',2);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('NEWS_READ',4);
 
 -- INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ACCESS_FULL',100);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_ACCESS_FULL',1,1);

@@ -127,6 +127,17 @@ INSERT INTO survey_question_types (id, type, rank) VALUES (6,'radio_buttons','20
 
 ## Localize Developer Survey title
 UPDATE surveys SET survey_title = 'dev_survey_title_key' WHERE survey_id='1';
+
+
+###############################################################################
+# Private News
+# Add entries in permissions_values table, corresponding to 'News' item.
+# Default permission is 'read for anonymous users'
+#
+
+
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ('NEWS_READ',1,1);
+
 EOF
 
 

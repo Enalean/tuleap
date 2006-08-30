@@ -604,6 +604,17 @@
 	for project templates.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.8</revnumber>
+
+        <date>30-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update section News Service to include ST 
+	enhancement on private news (SR #265).
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

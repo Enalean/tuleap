@@ -203,6 +203,7 @@ project_admin_index	built_from_template	Patron utilisé pour ce projet: $1
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
 #
+project_admin_permissions	news_access	Lecture d'annonce
 project_admin_permissions	pack_download	Téléchargement de paquet
 project_admin_permissions	rel_download	Téléchargement de version
 project_admin_permissions	doc_access	Accès à un document

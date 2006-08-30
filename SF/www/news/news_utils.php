@@ -12,6 +12,7 @@
 */
 
 require_once('www/project/admin/permissions.php');
+require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
@@ -268,30 +269,27 @@ function news_check_permission($forum_id,$group_id) {
 	}    
 }
 
-function news_insert_permissions($forum_id,$permission) {
+/**
+ * insert for this forum_id a news_read permission for project members only 
+ */
+function news_insert_permissions($forum_id,$group_id) {
 	
-	global $Language;
+  global $Language,$UGROUP_PROJECT_MEMBERS;
 	
-	/*
-		Takes forum_id and permission, and inserts a corresponding entry in 'permissions' table
-	*/
 	
 	// cast  inputs
 	$_forum_id = (int) $forum_id;
-	$_permission = (int) $permission;
 	
-	$qry = "INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('NEWS_READ','$_forum_id','$_permission')";
-	$res = db_query($qry);
-	if ($res) {
+	if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
 	    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
 	} else {
 	    $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
 	}
 }
 
-function news_update_permissions($forum_id,$permission) {
+function news_update_permissions($forum_id,$is_private,$group_id) {
 	
-	global $Language;
+	global $Language,$UGROUP_PROJECT_MEMBERS;
 	
 	/*
 		Takes forum_id and permission, and updates the permission of the corresponding entry in 'permissions' table
@@ -299,15 +297,23 @@ function news_update_permissions($forum_id,$permission) {
 	
 	// cast inputs
 	$_forum_id = (int) $forum_id;
-	$_permission = (int) $permission;
+	$_is_private = (int) $is_private;
 	
-	$qry = "UPDATE permissions SET ugroup_id='$_permission' WHERE permission_type='NEWS_READ' AND object_id='$_forum_id'";
-	$res = db_query($qry);
-	if ($res) {
+	if ($_is_private) {
+	  permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false);
+	  if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
 	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
+	  } else {
+	    $feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
+	  }
 	} else {
-	    $feedback .= ' '.$Language->getText('news_submit','update_err').' ';
-	}	
+	  if (permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false)) {
+	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
+	  } else {
+	    $feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
+	  }	
+	}
+	
 }
 
 function news_read_permissions($forum_id) {
@@ -319,10 +325,7 @@ function news_read_permissions($forum_id) {
 	// cast inputs
 	$_forum_id = (int) $forum_id;
 
-	$qry = "SELECT * FROM permissions WHERE permission_type='NEWS_READ' AND object_id='$_forum_id'";
-	$res = db_query($qry);
-	
-	return $res;
+	return permission_db_authorized_ugroups('NEWS_READ',$_forum_id);
 }
 
 ?>
