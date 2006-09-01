@@ -21,15 +21,16 @@
 #
 
 use strict;
+use vars qw($sys_urlroot $sys_pluginsroot $sys_incdir);
 
-# No command line argument yet...
+require("include.pl");  # Include all the predefined functions and variables
 
 # Location of CodeX sources to analyse
-my $source_dir="../../SF";
-my $plugin_src_dir="../../plugins";
+my $source_dir="$sys_urlroot/..";
+my $plugin_src_dir="$sys_pluginsroot";
 # Language specific dir
-my $tab_dir="../../site-content/";
-my $plugin_tab_dir="../../plugins/*/site-content/";
+my $tab_dir="$sys_incdir";
+my $plugin_tab_dir="$sys_pluginsroot/*/site-content/";
 
 # end of configuration
 

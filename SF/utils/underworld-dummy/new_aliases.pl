@@ -2,6 +2,9 @@
 #
 # $Id$
 # new_aliases.pl - Updates virtusertable and /etc/sendmail.cw on mail1
+#
+# This script is currently NOT USED BY CODEX
+#
 
 use DBI;
 
@@ -45,4 +48,4 @@ while(($username, $email) = $c->fetchrow()) {
 }
 
 
-write_array_file($file_dir."alias_dump", @alias_array);
+write_array_file($dump_dir."/alias_dump", @alias_array);

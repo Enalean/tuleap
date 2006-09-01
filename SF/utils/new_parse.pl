@@ -23,7 +23,6 @@ umask 002;
 
 require("include.pl");  # Include all the predefined functions and variables
 
-&load_local_config();
 # This section is used to get the list of active users so that we can customize 
 # the SVN access rights... But it is not clear how!
 # &db_connect;
@@ -39,8 +38,8 @@ require("include.pl");  # Include all the predefined functions and variables
 # }
 
 
-my $user_file = $file_dir . "user_dump";
-my $group_file = $file_dir . "group_dump";
+my $user_file = $dump_dir . "/user_dump";
+my $group_file = $dump_dir . "/group_dump";
 my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
 my ($gname, $gstatus, $gid, $userlist, $ugrouplist);
 my $server_url;
@@ -71,18 +70,16 @@ my ($cxname) = get_codex_user();
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
-@smbpasswd_array = open_array_file("/etc/smbpasswd") if ($winaccount_on);
-@htpasswd_array = open_array_file($ENV{'SF_LOCAL_INC_PREFIX'}."/etc/httpd/conf/htpasswd");
+@smbpasswd_array = open_array_file("/etc/smbpasswd") if ($winaccount_on); # doesn't exist?? XXX
+@htpasswd_array = open_array_file($apache_htpasswd);
 
 #LJ The file containing all allowed root for CVS server
 #
-my $cvs_root_allow_file = "/etc/cvs_root_allow";
 @cvs_root_allow_array = open_array_file($cvs_root_allow_file);
 
 # Check CVS version (CVS or CVSNT)
-my $cvsversion=`cvs -v`;
+my $cvsversion=`$cvs_cmd -v`;
 my $use_cvsnt=0;
-my $cvsnt_config_file = "/etc/cvsnt/PServer";
 
 if ($cvsversion =~ /CVSNT/) {
   $use_cvsnt=1;
@@ -163,14 +160,14 @@ while ($ln = pop(@groupdump_array)) {
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
 
-	# Add sourceforge user to the group if it is a private project
+	# Add $sys_http_user user to the group if it is a private project
 	# otherwise Apache won't be able to access the document Root
 	# of the project web iste which is not world readable (see below)
 	$public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
 	if ($userlist eq "") {
-	  $userlist = "sourceforge" unless $public_grp;
+	  $userlist = $sys_http_user unless $public_grp;
 	} else {
-	  $userlist .= ",sourceforge" unless $public_grp;
+	  $userlist .= ",".$sys_http_user unless $public_grp;
 	}
 
 	# make all user names lower case.
@@ -205,7 +202,7 @@ while ($ln = pop(@groupdump_array)) {
 
 		# First create the repository
 		mkdir $cvs_dir, 0775;
-		system("/usr/bin/cvs -d$cvs_dir init");
+		system("$cvs_cmd -d$cvs_dir init");
 	
 		# turn off pserver writers, on anonymous readers
 		# LJ - See CVS writers update below. Just create an
@@ -291,9 +288,9 @@ while ($ln = pop(@groupdump_array)) {
 	    {
 	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
               if ($use_cvsnt) {
-                system("echo \"ALL /usr/local/bin/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
+                system("echo \"ALL $codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
               } else {
-                system("echo \"ALL (/usr/local/bin/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
+                system("echo \"ALL ($codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
               }	 
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
@@ -314,7 +311,7 @@ while ($ln = pop(@groupdump_array)) {
 	  if (! $blockispresent)
 	    {
 	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/commitinfo");
-	      system("echo \"ALL /usr/local/bin/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
+	      system("echo \"ALL $codex_bin_prefix/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
 	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
 	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
               system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
@@ -328,7 +325,7 @@ while ($ln = pop(@groupdump_array)) {
 
 	  # Let's create a subversion repository for this group
 	  mkdir $svn_dir, 0775;
-	  system("/usr/bin/svnadmin create $svn_dir --fs-type fsfs");
+	  system("$svnadmin_cmd create $svn_dir --fs-type fsfs");
 	  $group_modified = 1;
 
 	  # set group ownership, codex user
@@ -416,7 +413,7 @@ while ($ln = pop(@groupdump_array)) {
 	    print FD "#!/bin/sh\n";
 	    print FD "$MARKER_BEGIN\n";
 	    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
-	    print FD "/usr/local/bin/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
+	    print FD "$codex_bin_prefix/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
 	    print FD "$MARKER_END\n";
 	    system("chown -R $cxname:$gid $postcommit_file");
 	    system("chmod 775 $postcommit_file");
@@ -476,13 +473,13 @@ write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
 write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
-write_array_file($ENV{'SF_LOCAL_INC_PREFIX'}."/etc/httpd/conf/htpasswd", @htpasswd_array);
+write_array_file($apache_htpasswd, @htpasswd_array);
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
 if ($use_cvsnt) {
   # Write cvsroot list in CVSNT config file
   open FILE,">$cvsnt_config_file";
-  print FILE "# CodeX CVSROOT directory list: do not edit this list! modify /etc/cvs_root_allow instead\n";
+  print FILE "# CodeX CVSROOT directory list: do not edit this list! modify $cvs_root_allow_file instead\n";
   my $n=0;
   foreach(@cvs_root_allow_array) {
     print FILE "Repository$n=$_";
@@ -512,7 +509,7 @@ sub add_user {
 	my ($uid, $username, $realname, $shell, $passwd, $email) = @_;
 	my $skel_array = ();
 	
-	$home_dir = $homedir_prefix.$username;
+	$home_dir = $homedir_prefix."/".$username;
 
 	print("Making a User Account for : $username\n");
 		
@@ -525,8 +522,8 @@ sub add_user {
 	# /etc/skel_codex into it. The change the ownership
 	unless (-d "$home_dir") {
             mkdir $home_dir, 0751;
-	    if (-d "/etc/skel_codex") {
-	        system("cd /etc/skel_codex; tar cf - . | (cd  $home_dir ; tar xf - )");
+	    if (-d "$codex_shell_skel") {
+	        system("cd $codex_shell_skel; tar cf - . | (cd  $home_dir ; tar xf - )");
 	    }
             #chown $uid, $uid, $home_dir;
 	    system("chown -R $uid.$uid $home_dir");
@@ -690,7 +687,7 @@ sub delete_user {
         }
 	
 	print("Deleting User : $this_user\n");
-	system("cd $homedir_prefix ; /bin/tar -czf $tar_dir/$username.tar.gz $username");
+	system("cd $homedir_prefix ; /bin/tar -czf $tmp_dir/$username.tar.gz $username");
 	system("rm -fr $homedir_prefix/$username");
 }
 
@@ -795,14 +792,14 @@ sub suspend_httpuser {
 #############################
 sub add_group {  
 	my ($gid, $gname, $userlist) = @_;
-	my ($log_dir, $cgi_dir, $ht_dir, $cvs_dir, $cvs_id);
+	my ($cgi_dir, $ht_dir, $cvs_dir, $cvs_id);
 	
-	$group_dir = $grpdir_prefix.$gname;
-	$log_dir = $group_dir."/log";
+	$group_dir = $grpdir_prefix."/".$gname;
+	# $log_dir = $group_dir."/log";
 	$cgi_dir = $group_dir."/cgi-bin";
 	$ht_dir = $group_dir."/htdocs";
-	$ftp_frs_group_dir = $ftp_frs_dir_prefix.$gname;
-	$ftp_anon_group_dir = $ftp_anon_dir_prefix.$gname;
+	$ftp_frs_group_dir = $ftp_frs_dir_prefix."/".$gname;
+	$ftp_anon_group_dir = $ftp_anon_dir_prefix."/".$gname;
 
 	print("Making a Group for : $gname\n");
 		
@@ -821,15 +818,14 @@ sub add_group {
                 # For some reason setting the SGID bit in mkdir doesn't work
                 # (perl bug ?) hence the chmod
 		mkdir $group_dir, 0775;
-		mkdir $log_dir, 0775;
 		mkdir $cgi_dir, 0775;
 		mkdir $ht_dir, 0775;
-		chown $dummy_uid, $gid, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
-                chmod 02775, ($group_dir, $log_dir, $cgi_dir, $ht_dir);
+		chown $dummy_uid, $gid, ($group_dir, $cgi_dir, $ht_dir);
+                chmod 02775, ($group_dir, $cgi_dir, $ht_dir);
 
 		# Copy the default empty page for Web site
 		# Check if a custom page exists
-	$custom_homepage = $ENV{'SF_LOCAL_INC_PREFIX'}."/etc/codex/site-content/en_US/others/default_page.php";
+	$custom_homepage = $sys_custom_incdir."/en_US/others/default_page.php";
 	$homepage = $sys_incdir."/en_US/others/default_page.php";
 
         ($dev,$ino) = stat($custom_homepage);
@@ -916,11 +912,11 @@ sub delete_group {
 # LJ Comment. Useless on CodeX
 #	if (substr($hostname,0,3) ne "cvs") {
 		print("Deleting Group: $this_group\n");
-		system("cd $grpdir_prefix ; /bin/tar -czf $tar_dir/$this_group.tar.gz $this_group");
+		system("cd $grpdir_prefix ; /bin/tar -czf $tmp_dir/$this_group.tar.gz $this_group");
 		system("rm -fr $grpdir_prefix/$this_group");
 
 # LJ And do the same for the CVS directory
-		system("cd $cvs_prefix ; /bin/tar -czf $tar_dir/$this_group-cvs.tar.gz $this_group");
+		system("cd $cvs_prefix ; /bin/tar -czf $tmp_dir/$this_group-cvs.tar.gz $this_group");
 		system("rm -fr $cvs_prefix/$this_group");
 
 

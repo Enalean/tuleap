@@ -37,7 +37,7 @@ my ($logfile, $sql, $res, $temp, %groups, $group_id, $errors );
 my ($sql_del, $res_del, %users, $user_id);
 
 my $verbose = 1;
-my $chronolog_basedir = "/home/log";
+my $chronolog_basedir = $codex_log;
 
 ##
 ## Set begin and end times (in epoch seconds) of day to be run

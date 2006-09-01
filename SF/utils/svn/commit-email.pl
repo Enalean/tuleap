@@ -228,10 +228,10 @@ use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 
 
-my $root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
-require $root_path."httpd/SF/utils/include.pl";
-require $root_path."httpd/SF/utils/group.pl";
-require $root_path."httpd/SF/utils/svn/svn-checkins.pl";
+$utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/home/httpd/SF/utils";
+require $utils_path."/include.pl";
+require $utils_path."/group.pl";
+require $utils_path."/svn/svn-checkins.pl";
 
 &db_connect;
 
@@ -279,9 +279,8 @@ if ($debug) {
 # Harvest data using svnlook.
 
 
-# Change into /tmp so that svnlook diff can create its .svnlook
+# Change into /var/tmp so that svnlook diff can create its .svnlook
 # directory.
-my $tmp_dir = '/tmp';
 chdir($tmp_dir)
   or die "$0: cannot chdir `$tmp_dir': $!\n";
 

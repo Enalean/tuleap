@@ -8,24 +8,12 @@
 ##############################
 # Global Variables
 ##############################
-$db_include	=	($ENV{'SF_LOCAL_INC_PREFIX'} || "")."/etc/codex/conf/local.inc";	# Local Include file for database username and password
-$tar_dir	=	"/tmp";			# Place to put deleted user's accounts
+$db_include	=	($ENV{'CODEX_LOCAL_INC'} || "/etc/codex/conf/local.inc");	# Local Include file for database username and password
 $uid_add	=	"20000";		# How much to add to the database uid to get the unix uid
 $gid_add	=	"1000";			# How much to add to the database gid to get the unix uid
-$homedir_prefix =	"/home/users/";		# What prefix to add to the user's homedir
-$grpdir_prefix  =	"/home/groups/";	# What prefix to add to the project's homedir
-$cvs_prefix     =       "/cvsroot";             # What prefix to add to the cvs root directory
-$cvslock_prefix =       "/var/lock/cvs";        # What prefix to add to the cvs lock directory
-$svn_prefix     =       "/svnroot";             # What prefix to add to the subversion root directory
-$ftp_frs_dir_prefix  =  "/home/ftp/codex/";	# What prefix to add to the ftp project file release homedir
-$ftp_incoming_dir =     "/home/ftp/incoming/";  # Where files are placed when uploaded
-$ftp_anon_dir_prefix  =	"/home/ftp/pub/";	# What prefix to add to the anon ftp project homedir
-$file_dir	=	"/home/dummy/dumps/";	# Where should we stick files we're working with
-$dummy_uid      =       "103";                  # UserID of the dummy user that will own group's files
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
-$apache_conf    =       "/etc/httpd/conf/httpd.conf"; # Apache configuration file
 
-$conf_loaded=0;
+&load_local_config($db_include);
 1;
 
 ##############################
@@ -33,19 +21,20 @@ $conf_loaded=0;
 ##############################
 
 sub load_local_config {
+        my $filename = shift(@_);
 	my ($foo, $bar);
 	
-        if ($conf_loaded) { return 1; }
-
+        if (! $filename) {$filename=$db_include;} # backward compatibility
 	# open up database include file and get the database variables
-	open(FILE, $db_include) || die "Can't open $db_include: $!\n";
+	open(FILE, $filename) || die "Can't open $filename: $!\n";
 	while (<FILE>) {
 		next if ( /^\s*\/\// );
+                # remove trailing comment if any
+                s/\/\/.*//;
 		($foo, $bar) = split /=/;
 		if ($foo) { eval $_ };
 	}
 	close(FILE);
-        $conf_loaded=1;
 }
 
 
@@ -54,7 +43,7 @@ sub load_local_config {
 ##############################
 sub db_connect {
 
-        &load_local_config();
+        &load_local_config($db_config_file);
 	# connect to the database
 	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost", "$sys_dbuser", "$sys_dbpasswd");
 }
@@ -89,15 +78,15 @@ sub write_array_file {
 
     
 #############################
-# Get CodeX USer from the apache
-# configuration file
+# Get CodeX apache user from local.inc
 #############################
 sub get_codex_user {
 
-  open(APCONF, $apache_conf) or return;
+  return $sys_http_user;
 
-  while (<APCONF>) {
-    return $1 if /^\s*User\s+(.*)\s*/;
-  }
+  #open(APCONF, $apache_conf) or return;
+  #while (<APCONF>) {
+  #  return $1 if /^\s*User\s+(.*)\s*/;
+  #}
 
 }      

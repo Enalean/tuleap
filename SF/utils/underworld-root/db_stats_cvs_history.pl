@@ -60,7 +60,7 @@ $day_date = "$year$mon$day";
 # LJ In the current version we get the pre-processed CVS log file on the 
 # local machine (no separate CVS server
 
-$logfile = "/home/log/cvslogs/$year/$mon/cvs_traffic_$year$mon$day.log";
+$logfile = "$codex_log/cvslogs/$year/$mon/cvs_traffic_$year$mon$day.log";
 print "Pulling down preprocessed logfile from $logfile...\n" if $verbose;
 
 

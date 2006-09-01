@@ -1,6 +1,6 @@
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004-2006. All Rights Reserved
 # http://codex.xerox.com
 #
 # $Id$
@@ -124,8 +124,4 @@ def check_read_access(username, svnrepo, svnpath):
         return False
 
 #check_read_access('laurent','/svnroot/codex/', '/codex/trunk/SRC')
-#check_read_access('schneide','/svnroot/ngproj/', 'trunk/')
-#check_read_access('schneide','/svnroot/ngproj/', 'tags/')
-#check_read_access('guerin','/svnroot/ngproj/', 'trunk/')
-#check_read_access('guerin','/svnroot/ngproj/', 'tags/')
 #fetch_access_file('/svnroot/codex')

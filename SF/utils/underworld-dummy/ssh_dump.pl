@@ -28,4 +28,4 @@ while(my ($username, $ssh_key) = $c->fetchrow()) {
 
 
 # Now write out the files
-write_array_file($file_dir."ssh_dump", @ssh_array);
+write_array_file($dump_dir."/ssh_dump", @ssh_array);

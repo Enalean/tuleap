@@ -11,7 +11,7 @@ require("../include.pl");  # Include all the predefined functions
 ##  CONF VARS
 
 	my $verbose = 1;
-	my $chronolog_basedir = "/home/log";
+	my $chronolog_basedir = $codex_log;
 	my @webservers = ();
 
 ##

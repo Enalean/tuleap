@@ -12,9 +12,6 @@ use POSIX qw(strftime);
 
 require("../include.pl");  # Include all the predefined functions
 
-# CodeX
-$dns_master_file = "/var/named/codex.zone";
-
 &db_connect;
 
 @dns_zone = open_array_file($dns_master_file);
@@ -72,7 +69,5 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name,"IN\tCNAME\t" . "cvs1.$sys_default_domain."."\n");
 	push @dns_zone, sprintf("%-24s%-30s","svn.".$unix_group_name,"IN\tCNAME\t" . "svn1.$sys_default_domain."."\n\n");}
 
-# Retrieve the dummy's home directory
-($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam("dummy");
 
-write_array_file("$dir/dumps/dns_dump", @dns_zone);
+write_array_file("$dump_dir/dns_dump", @dns_zone);

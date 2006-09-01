@@ -11,14 +11,17 @@
 ##
 ## $Id$ 
 ##
-use strict;
+#use strict;
 use Time::Local;
 use POSIX qw( strftime );
+
+my $utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/home/httpd/SF/utils";
+require $utils_path."/include.pl";
 
 my ($year, $month, $day, $day_begin, $day_end);
 my ($group, $histline, $daily_log_file, $key, $verbose);
 my $verbose = 1;
-my $base_log_dir = "/home/log/cvslogs";
+my $base_log_dir = $codex_log."/cvslogs";
 
 $|=0 if $verbose;
 
@@ -65,9 +68,9 @@ if ( -d $base_log_dir ) {
 
 open(DAYS_LOG, "> $daily_log_file") || die "Unable to open the log file \'$daily_log_file\'";
 print "Opened log file at \'$daily_log_file\' for writing...\n";
-print "Running tree at /cvsroot/\n";
+print "Running tree at $cvs_prefix/\n";
 
-chdir( "/cvsroot" ) || die("Unable to make /cvsroot the working directory.\n");
+chdir( $cvs_prefix ) || die("Unable to make $cvs_prefix the working directory.\n");
 foreach $group ( glob("*") ) {
 	
 	next if ( ! -d "$group" || $group eq 'lost+found' );
@@ -76,7 +79,7 @@ foreach $group ( glob("*") ) {
 	# LJ New variable to keep track of users and number of checkouts
 	my (%usr_names, %usr_co);
 
-	open(HISTORY, "< /cvsroot/$group/CVSROOT/history") or print "E::Unable to open history for $group\n";
+	open(HISTORY, "< $cvs_prefix/$group/CVSROOT/history") or print "E::Unable to open history for $group\n";
 	while ( <HISTORY> ) {
 		my ($time_parsed, $type, $cvstime, $user, $curdir, $module, $rev, $file );
  

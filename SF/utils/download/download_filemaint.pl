@@ -10,12 +10,12 @@ require("../include.pl");  # Include all the predefined functions
 my ($deleting_files, $deleting_files_work, $file, $project, $time, $delete_dir);
 
 #  location of the download/upload directories
-$delete_dir = $ftp_frs_dir_prefix ."DELETED";
+$delete_dir = $ftp_frs_dir_prefix ."/DELETED";
 
 
 # list of files to be deleted
-$deleting_files = $ftp_incoming_dir .".delete_files";
-$deleting_files_work = $ftp_incoming_dir .".delete_files.work";
+$deleting_files = $ftp_incoming_dir ."/.delete_files";
+$deleting_files_work = $ftp_incoming_dir ."/.delete_files.work";
 
 
 #move the list of files to delete to a temp work file
@@ -34,8 +34,8 @@ while (<WAITING_FILES>) {
 
 	($file, $project, $time) = split("::", $_);
 
-	if ((!-f "$ftp_frs_dir_prefix$project/$file") && (!-d "$ftp_frs_dir_prefix$project/$file")) {
-		print "$ftp_frs_dir_prefix$project/$file doesn't exist\n";
+	if ((!-f "$ftp_frs_dir_prefix/$project/$file") && (!-d "$ftp_frs_dir_prefix/$project/$file")) {
+		print "$ftp_frs_dir_prefix/$project/$file doesn't exist\n";
 		next FILE
 	} else {
 	  my (@subdirs, $endfile, $dirs);
@@ -45,7 +45,7 @@ while (<WAITING_FILES>) {
           $dirs = "@subdirs";
           print `/bin/mkdir -p $delete_dir/$project/$dirs`;
 	  
-	  $filename = "$ftp_frs_dir_prefix$project/$file";
+	  $filename = "$ftp_frs_dir_prefix/$project/$file";
 	  $last_modified = (stat($filename))[9];
 	  $last_accessed = (stat($filename))[8];
 	  $last_ctime = (stat($filename))[10];
@@ -56,7 +56,7 @@ while (<WAITING_FILES>) {
 	    print "don't delete file $project/$file (modified since deletion)\n";
 	  } else {
 	    print "deleting file $project/$file\n";
-	    print `/bin/mv -f $ftp_frs_dir_prefix$project/$file $delete_dir/$project/$file-$time` ;
+	    print `/bin/mv -f $ftp_frs_dir_prefix/$project/$file $delete_dir/$project/$file-$time` ;
 	  } 
 	}
 }

@@ -19,7 +19,7 @@ my $c = $dbh->prepare($query);
 $c->execute();
 	
 while(my ($id, $status, $username, $shell, $passwd, $winpasswds, $email, $realname) = $c->fetchrow()) {
-	$home_dir = $homedir_prefix.$username;
+	$home_dir = $homedir_prefix."/".$username;
 	# need to split them because they might be empty
 	($winpw,$winntpw) = split(/:/,$winpasswds);
 
@@ -73,5 +73,5 @@ while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker, $svn_tracke
 }
 
 # Now write out the files
-write_array_file($file_dir."user_dump", @user_array);
-write_array_file($file_dir."group_dump", @group_array);
+write_array_file($dump_dir."/user_dump", @user_array);
+write_array_file($dump_dir."/group_dump", @group_array);

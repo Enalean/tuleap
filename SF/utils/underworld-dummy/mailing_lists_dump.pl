@@ -27,4 +27,4 @@ while(my ($list_admin, $list_admin_email, $list_name, $list_password, $list_is_p
 }
 
 # Now write out the files
-write_array_file($file_dir."list_dump", @list_array);
+write_array_file($dump_dir."/list_dump", @list_array);

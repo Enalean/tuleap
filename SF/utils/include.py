@@ -20,37 +20,30 @@ import Cookie
 # Global Variables
 ##############################
 
-db_include = os.getenv('SF_LOCAL_INC_PREFIX','')+"/etc/codex/conf/local.inc"	# Local Include file for database username and password
-tar_dir	= "/tmp"		# Place to put deleted user's accounts
-uid_add	= "20000"	# How much to add to the database uid to get the unix uid
-gid_add	= "1000"		# How much to add to the database gid to get the unix uid
-homedir_prefix = "/home/users/";	# What prefix to add to the user's homedir
-grpdir_prefix  = "/home/groups/"; # What prefix to add to the project's homedir
-cvs_prefix     = "/cvsroot"; # What prefix to add to the cvs root directory
-svn_prefix     = "/svnroot"; # What prefix to add to the subversion root directory
-ftp_frs_dir_prefix  = "/home/ftp/codex/" # What prefix to add to the ftp project file release homedir
-ftp_anon_dir_prefix  = "/home/ftp/pub/" # What prefix to add to the anon ftp project homedir
-file_dir = "/home/dummy/dumps/" # Where should we stick files we're working with
-dummy_uid = "103" # UserID of the dummy user that will own group's files
+db_include = os.getenv('CODEX_LOCAL_INC','')
+if db_include is None:
+    db_include = "/etc/codex/conf/local.inc"
+# Local Include file for database username and password
 date = int(time.time()/3600/24) # Get the number of days since 1/1/1970 for /etc/shadow
-apache_conf = "/etc/httpd/conf/httpd.conf" # Apache configuration file
+load_local_config(db_include)
 
 
 ##############################
 # Local Configuration Load
 ##############################
-def load_local_config():
+def load_local_config(filename):
     """Local Configuration Load"""
     try:
-        f = open(db_include)
+        f = open(filename)
     except IOError, (errno, strerror):
-        print "Can't open %s: I/O error(%s): %s" % (db_include, errno, strerror)
+        print "Can't open %s: I/O error(%s): %s" % (filename, errno, strerror)
     else:
         comment_pat   = re.compile("^\s*\/\/")
         empty_pat     = re.compile("^\s*$")
         assign_pat    = re.compile("^\s*\$(.*);\s*$")
         nodollar_pat  = re.compile("(\s+)\$")
         dottoplus_pat = re.compile("(\s+)\.(\s+)")
+        nocomment_pat = re.compile("\/\/.*")
         while True:
             line = f.readline()
             if not line: break
@@ -59,6 +52,7 @@ def load_local_config():
             if m is not None:
                 n = nodollar_pat.sub(" ",m.group(1))
                 n = dottoplus_pat.sub(" + ",n)
+                n = nocomment_pat.sub("",n)
                 exec n in globals()
         f.close()
 
@@ -69,7 +63,7 @@ def load_local_config():
 def db_connect():
     """Connect to CodeX database"""
     global dbh
-    load_local_config()
+    load_local_config(db_config_file)
     # connect to the database
     dbh = MySQLdb.connect(db=sys_dbname, host=sys_dbhost, user=sys_dbuser, passwd=sys_dbpasswd)
 
@@ -104,24 +98,25 @@ def write_array_file(filename, lines):
         f.close()
 
 #############################
-# Get CodeX User from the apache
-# configuration file
+# Get CodeX Apache User
 #############################
 def get_codex_user():
-    """Get CodeX user name from apache conf file."""
-    try:
-        f = open(apache_conf)
-    except IOError, (errno, strerror):
-        return None
-    else:
-        user_pat  = re.compile("^\s*User\s+(.*)\s*")
-        while True:
-            line = f.readline()
-            if not line: break
-            m = user_pat.match(line)
-            if m is not None:
-                return m.group(1)
-        f.close
+    """Get CodeX Apache user name"""
+    return sys_http_user
+#    """Get CodeX user name from apache conf file."""
+#    try:
+#        f = open(apache_conf)
+#    except IOError, (errno, strerror):
+#        return None
+#    else:
+#        user_pat  = re.compile("^\s*User\s+(.*)\s*")
+#        while True:
+#            line = f.readline()
+#            if not line: break
+#            m = user_pat.match(line)
+#            if m is not None:
+#                return m.group(1)
+#        f.close
         
 #############################
 # Create hyperlinks to project references

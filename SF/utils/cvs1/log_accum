@@ -13,6 +13,9 @@
 # Contributed by David Hampton <hampton@cisco.com>
 #
 # hacked greatly by Greg A. Woods <woods@web.net>
+#
+# Heavily modified for the CodeX project at Xerox
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004-2006. All Rights Reserved
 
 # Usage: log_accum.pl [-d] [-s] [-M module] [[-m mailto] ...] [-f logfile]
 #	-d		- turn on debugging
@@ -34,9 +37,9 @@
 
 # Codex specific
 #
-# Make sure that log_accum has the s flag and owned by sourceforge.sourceforge
+# Make sure that log_accum has the s flag and owned by codexadm.codexadm
 # Like this:
-# -rwsrwxr-x  sourcefo sourcefo
+# -rwsrwxr-x  codexadm codexadm
 #
 
 # Use LWP for CodeX HTTP API
@@ -46,12 +49,10 @@ use LWP::UserAgent;
 # DB connection
 use DBI;
 
-$root_path = $ENV{'SF_LOCAL_INC_PREFIX'} || "/home/";
-require $root_path."httpd/SF/utils/include.pl";
-require $root_path."httpd/SF/utils/group.pl";
-require $root_path."httpd/SF/utils/cvs1/checkins.pl";
-
-&load_local_config;
+$utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/home/httpd/SF/utils";
+require $utils_path."/include.pl";
+require $utils_path."/group.pl";
+require $utils_path."/cvs1/checkins.pl";
 
 my $codex_srv;
 if ($sys_force_ssl) {

@@ -11,7 +11,7 @@ require("../include.pl");  # Include all the predefined functions
 ##  CONF VARS
 
 	my $verbose = 1;
-	my $chronolog_basedir = "/home/log";
+	my $chronolog_basedir = $codex_log;
 
 ##
 #######################
@@ -70,7 +70,7 @@ while (<LOGFILE>) {
 # LJ	if ( $_ =~ m/\/home\/ftp\/mounts\/u3\/sourceforge/ ) {
 # LJ now a constant in include.pl
 #	if ( $_ =~ m/\/home\/ftp\/pub\/codex/ ) {
-	  if ( $_ =~ m/$ftp_frs_dir_prefix/ ) {
+	  if ( $_ =~ m/$ftp_frs_dir_prefix\// ) {
 		$_ =~ m/^(\w+) (\w+)\s+(\d+) (\d\d):(\d\d):(\d\d) (\d\d\d\d) (\d+) ([^\s]+) (\d+) ([^\s]+) /;
 		$bytes = $10;
 		$filepath = $11;
@@ -79,7 +79,7 @@ while (<LOGFILE>) {
 # LJ Update for Codex
 #		$filepath =~ m/^(\/home\/ftp\/mounts\/u3\/sourceforge\/)([^\/]+)\//;
 
-		$filepath =~ m/^($ftp_frs_dir_prefix)([^\/]+)\//;
+		$filepath =~ m/^($ftp_frs_dir_prefix\/)([^\/]+)\//;
 		$group_name = $2;
 
 		$filepath =~ m/\/([^\/]+)$/;

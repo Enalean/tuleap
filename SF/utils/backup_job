@@ -64,7 +64,7 @@ RM=/bin/rm
 # New archive directory
 oldBackupDir=${oldBackupDstDir}/`date +%m%d%y`
 
-/etc/init.d/mysql stop
+/etc/init.d/mysqld stop
 sleep 5
 
 # Move current bkp to old dir
@@ -90,4 +90,4 @@ if [ "${NOOLD}" == 1 ]; then
     ${RM} -rf ${oldBackupDir}
 fi
 
-/etc/init.d/mysql start
+/etc/init.d/mysqld start

@@ -19,10 +19,6 @@ my $query = "SELECT http_domain,unix_group_name,group_name,unix_box FROM groups 
 my $c = $dbh->prepare($query);
 $c->execute();
 
-# Determine Apache version installed
-$output = `/usr/sbin/httpd -v`;
-($apache_version) = ($output =~ /version:.*\/(\d)\.\d+\.\d+/);
-
 my $warn_noip=0;
 
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
@@ -65,87 +61,64 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	    $server_alias = "";
 	  }
 
-	if ($apache_version eq "1") {
-	  # Apache 1.x syntax
-	  push @apache_zone,
-	    ( "<VirtualHost $ip>\n",
-	      "$server_name",
-	      "$server_alias",
-	      "  User dummy\n",
-	      "  Group $unix_group_name\n",
-	      "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
-              "  php_admin_value open_basedir \"/home/groups/$unix_group_name/htdocs\"\n",
-              "  php_admin_value include_path \"/home/groups/$unix_group_name/htdocs/\"\n",
-              "  php_admin_flag safe_mode on\n",
-              "  php_admin_flag safe_mode_gid on\n",
-	      "  <Directory /home/groups/$unix_group_name/htdocs>\n",
-	      "    AllowOverride AuthConfig Limit Options Indexes\n",
-	      "  </Directory>\n",
-	      "  CustomLog logs/vhosts-access_log combined\n",
-	      "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
-	      "</VirtualHost>\n\n");
-	} else {
-	  # Apache 2.x syntax
+        # Apache 2.x syntax
 
-	  # Determine whether the virtual host can be accessed through
-	  # HTTP and/or HTTPS
-          # Name-based Virtual hosts are incompatible with HTTPS, so only use $ip:80 for now.
-          # (used to be $vhost = "$ip:80 $ip:443";)
-          # HTTPS and virtualhosts are compatible with IP-based vhosts.
+        # Determine whether the virtual host can be accessed through
+        # HTTP and/or HTTPS
+        # Name-based Virtual hosts are incompatible with HTTPS, so only use $ip:80 for now.
+        # (used to be $vhost = "$ip:80 $ip:443";)
+        # HTTPS and virtualhosts are compatible with IP-based vhosts.
 
-	  # Project Virtual Web site
-	  push @apache_zone,
-	    ( "<VirtualHost $ip:80>\n",
+        # Project Virtual Web site
+        push @apache_zone,
+          ( "<VirtualHost $ip:80>\n",
 	      "$server_name",
 	      "$server_alias",
 	      "  SuexecUserGroup dummy $unix_group_name\n",
-	      "  DocumentRoot /home/groups/$unix_group_name/htdocs/\n",
-              "  php_admin_value open_basedir \"/home/groups/$unix_group_name/htdocs\"\n",
-              "  php_admin_value include_path \"/home/groups/$unix_group_name/htdocs/\"\n",
+	      "  DocumentRoot $grpdir_prefix/$unix_group_name/htdocs/\n",
+              "  php_admin_value open_basedir \"$grpdir_prefix/$unix_group_name/htdocs\"\n",
+              "  php_admin_value include_path \"$grpdir_prefix/$unix_group_name/htdocs/\"\n",
               "  php_admin_flag safe_mode on\n",
               "  php_admin_flag safe_mode_gid on\n",
-	      "  <Directory /home/groups/$unix_group_name/htdocs>\n",
+	      "  <Directory $grpdir_prefix/$unix_group_name/htdocs>\n",
 	      "    AllowOverride AuthConfig Limit Options Indexes\n",
 	      "  </Directory>\n",
 	      "  CustomLog logs/vhosts-access_log combined\n",
-	      "  ScriptAlias /cgi-bin/ /home/groups/$unix_group_name/cgi-bin/\n",
+	      "  ScriptAlias /cgi-bin/ $grpdir_prefix/$unix_group_name/cgi-bin/\n",
 	      "</VirtualHost>\n\n");
 
-	  # Project Subversion repository
-          if ($sys_force_ssl != 1) {
-            push @subversion_zone,
-              ( "<VirtualHost $ip:80>\n",
+        # Project Subversion repository
+        if ($sys_force_ssl != 1) {
+          push @subversion_zone,
+            ( "<VirtualHost $ip:80>\n",
                 "  ServerName svn.$codex_domain\n",
-                "  <Location /svnroot/$unix_group_name>\n",
+                "  <Location $svn_prefix/$unix_group_name>\n",
                 "    DAV svn\n",
-                "    SVNPath /svnroot/$unix_group_name\n",
-                "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
+                "    SVNPath $svn_prefix/$unix_group_name\n",
+                "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
                 "    Require valid-user\n",
                 "    AuthType Basic\n",
                 "    AuthName \"Subversion Authorization ($group_name)\"\n",
-                "    AuthUserFile /etc/httpd/conf/htpasswd\n",
+                "    AuthUserFile $apache_htpasswd\n",
                 "  </Location>\n",
                 "</VirtualHost>\n\n");
-          }
-          if ($sys_https_host ne "") {
-            # For https, allow access without virtual host because they are not supported
-            push @subversion_ssl_zone,
-	      ( "<Location /svnroot/$unix_group_name>\n",
+        }
+        if ($sys_https_host ne "") {
+          # For https, allow access without virtual host because they are not supported
+          push @subversion_ssl_zone,
+            ( "<Location $svn_prefix/$unix_group_name>\n",
                 "    DAV svn\n",
-                "    SVNPath /svnroot/$unix_group_name\n",
-                "    AuthzSVNAccessFile /svnroot/$unix_group_name/.SVNAccessFile\n",
+                "    SVNPath $svn_prefix/$unix_group_name\n",
+                "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
                 "    Require valid-user\n",
                 "    AuthType Basic\n",
                 "    AuthName \"Subversion Authorization ($group_name)\n",
-                "    AuthUserFile /etc/httpd/conf/htpasswd\n",
+                "    AuthUserFile $apache_htpasswd\n",
                 "</Location>\n\n");
-          }
-	}
+        }
+	
 }
 
-# Retrieve the dummy's home directory
-($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell,$expire) = getpwnam("dummy");
-
-write_array_file("$dir/dumps/apache_dump", @apache_zone);
-write_array_file("$dir/dumps/subversion_dump", @subversion_zone);
-write_array_file("$dir/dumps/subversion_ssl_dump", @subversion_ssl_zone);
+write_array_file("$dump_dir/apache_dump", @apache_zone);
+write_array_file("$dump_dir/subversion_dump", @subversion_zone);
+write_array_file("$dump_dir/subversion_ssl_dump", @subversion_ssl_zone);
