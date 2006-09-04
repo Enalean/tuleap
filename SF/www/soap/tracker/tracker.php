@@ -905,7 +905,10 @@ function &getArtifactTypes($sessionKey, $group_id) {
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getArtifactTypes','Could Not Get Group','Could Not Get Group');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', '$group->getErrorMessage()',$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'getArtifactTypes', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
         $atf = new ArtifactTypeFactory($group);
@@ -1084,6 +1087,9 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifacts',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
             return new soap_fault(get_artifact_type_fault,'getArtifacts','Could Not Get ArtifactType','Could Not Get ArtifactType');
@@ -1130,6 +1136,9 @@ function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id)
             return new soap_fault(get_group_fault,'getArtifactById','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifactById',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
         $ath = new ArtifactType($grp, $group_artifact_id);
@@ -1305,6 +1314,9 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
         $ath = new ArtifactType($grp, $group_artifact_id);
@@ -1502,6 +1514,9 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'updateArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
         
         $ath = new ArtifactType($grp, $group_artifact_id);
         if (!$ath || !is_object($ath)) {
@@ -1642,6 +1657,10 @@ function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $arti
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifactFollowups',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
             return new soap_fault(get_artifact_type_fault,'getArtifactFollowups','Could Not Get ArtifactType','Could Not Get ArtifactType');
@@ -1703,6 +1722,9 @@ function &getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id)
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifactCannedResponses',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
         
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
@@ -1751,6 +1773,9 @@ function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_i
             return new soap_fault(get_group_fault,'getArtifactReports','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifactReports',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
         $at = new ArtifactType($grp,$group_artifact_id);
@@ -1829,6 +1854,9 @@ function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$art
             return new soap_fault(get_group_fault,'getArtifactAttachedFiles','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifactAttachedFiles',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
@@ -1910,6 +1938,9 @@ function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artif
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'getArtifactDependencies',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
@@ -1930,6 +1961,8 @@ function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artif
             return new soap_fault(get_artifact_fault,'getArtifactDependencies','Could Not Get Artifact','Could Not Get Artifact');
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault,'getArtifactDependencies',$a->getErrorMessage(),$a->getErrorMessage());
+        } elseif (! $a->userCanView()) {
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Permissions denied','Permissions denied');
         }
     
         return dependencies_to_soap($a->getDependencies());
@@ -1984,6 +2017,9 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
             return new soap_fault(get_group_fault,'addArtifactFile','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'addArtifactFile',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
@@ -2055,6 +2091,9 @@ function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_i
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'deleteArtifactFile',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
@@ -2116,6 +2155,9 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
             return new soap_fault(get_group_fault,'addArtifactDependencies','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'addArtifactDependencies',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
@@ -2181,6 +2223,9 @@ function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $a
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'deleteArtifactDependency',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
@@ -2243,6 +2288,9 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
             return new soap_fault(get_group_fault,'addArtifactFollowup','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
             return new soap_fault(get_group_fault,'addArtifactFollowup',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
