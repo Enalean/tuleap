@@ -229,7 +229,7 @@ function getGroupAdmins($sessionKey, $group_id) {
  * @return boolean true if the current session user has access to this project, false otherwise
  */
 function checkRestrictedAccess($group) {
-    if ($GLOBALS['sys_allow_restricted_users']) {
+    if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users']) {
         if ($group) {
             $user = new User(session_get_userid());
             if ($user) {
