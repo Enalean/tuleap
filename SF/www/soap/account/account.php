@@ -424,28 +424,6 @@ function getTimezoneBox($sessionKey) {
     }
 }
 
-function row_group_to_soap($sessionKey, $row_group) {
-    $return = array();
-    $group_admins = array();
-    $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name "
-                        . "FROM user,user_group "
-                        . "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row_group['group_id']." AND "
-                        . "user_group.admin_flags = 'A'");
-    $rows=db_numrows($res_admin);
-    for ($i=0; $i<$rows; $i++) {
-        $group_admins[] = getUserById($sessionKey, db_result($res_admin,$i,0));
-    }
-    $return = array(
-        'group_id'    => $row_group['group_id'], 
-        'group_name'  => $row_group['group_name'], 
-        'unix_group_name'  => $row_group['unix_group_name'], 
-        'admin_flags' => $row_group['admin_flags'], 
-        'description' => $row_group['description'], 
-        'group_admins' => $group_admins
-    );
-    return $return;
-}
-
 function user_skill_to_soap($result, $i) {
     $return = array();
     $return = array(

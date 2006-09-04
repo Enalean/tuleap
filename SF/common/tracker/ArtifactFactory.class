@@ -126,11 +126,17 @@ class ArtifactFactory extends Error {
 				$af = $art_field_fact->getFieldFromName($cr['field_name']);
 				if (!$af || !is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : '.$cr['field_name']);
-	        	    return false;
+                    return false;
                 } elseif ($art_field_fact->isError()) {
                     $this->setError($art_field_fact->getErrorMessage());
 	        	    return false;
                 }
+                
+                if ($af->isDateField()) {
+                    // The SQL query expects a timestamp, whereas the given date is in YYYY-MM-DD format
+                    $cr['field_value'] = strtotime($cr['field_value']);
+                }
+                
 				if ($af->isStandardField()) {
 					if (isset($cr['operator']) && in_array($cr['operator'], $ACCEPTED_OPERATORS)) {
 						$sql .= " AND (a.".$cr['field_name']." ".$cr['operator']." '".$cr['field_value']."')";
@@ -150,7 +156,7 @@ class ArtifactFactory extends Error {
 			$sql = "SELECT a.artifact_id FROM artifact_group_list agl, artifact a WHERE ".
 			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id";
         }
-		$offset = intval($offset);
+        $offset = intval($offset);
         $max_rows = intval($max_rows);
         if ($max_rows > 0) {
 			if (!$offset || $offset < 0) {
@@ -158,6 +164,7 @@ class ArtifactFactory extends Error {
 			}
 			$sql .=" LIMIT $offset,$max_rows";
 		}
+        
         $result=db_query($sql);
 		$rows = db_numrows($result);
 		$this->fetched_rows=$rows;

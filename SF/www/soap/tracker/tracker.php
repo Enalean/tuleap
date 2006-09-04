@@ -509,7 +509,7 @@ $server->register(
     'addArtifactWithFieldNames',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
-        'tracker_name'=>'xsd:string',
+        'group_artifact_id'=>'xsd:int',
         'status_id' =>'xsd:int',
         'close_date'=>'xsd:int',
         'summary' =>'xsd:string',
@@ -558,7 +558,7 @@ $server->register(
     'updateArtifactWithFieldNames',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
-        'tracker_name'=>'xsd:string',
+        'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'status_id'=>'xsd:int',
         'close_date'=>'xsd:int', 
@@ -1202,6 +1202,13 @@ function artifact_to_soap($artifact) {
         }
         
         // Check Permissions on standard fields (status_id, submitted_by, open_date, close_date, summary, details, severity)
+        // artifact_id
+        $field_artifact_id = $art_field_fact->getFieldFromName('artifact_id');
+        if ($field_artifact_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+                $return['artifact_id'] = $artifact->getID();
+        }
+        // group_artifact_id
+        $return['group_artifact_id'] = $artifact->ArtifactType->getID();
         // status_id
         $field_status_id = $art_field_fact->getFieldFromName('status_id');
         if ($field_status_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
@@ -1234,7 +1241,7 @@ function artifact_to_soap($artifact) {
         }
         // severity
         $field_severity = $art_field_fact->getFieldFromName('severity');
-        if ($field_status_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_severity->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['severity'] = $artifact->getSeverity();
         }
         $return['extra_fields'] = $extrafieldvalues;
@@ -1425,7 +1432,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
- * @param string $tracker_name the short name of the tracker we want to add the artifact
+ * @param int $group_artifact_id the ID of the tracker we want to add the artifact
  * @param int $status_id the ID of the status of the artifact
  * @param string $close_date the close date of the artifact. The format must be YYYY-MM-DD
  * @param string $summary the summary of the artifact
@@ -1440,11 +1447,19 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
  *              - the given values are breaking a field dependency rule
  *              - the artifact creation failed.
  */
-function addArtifactWithFieldNames($sessionKey, $group_id, $tracker_name, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
+function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        // Get the tracker_id with the tracker name
-        $at = ArtifactTypeFactory::getArtifactTypeFromName($group_id, $tracker_name);
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        $at = new ArtifactType($grp, $group_artifact_id);
         if (!$at || !is_object($at)) {
             return new soap_fault(get_artifact_type_fault, 'addArtifact', 'ArtifactType could not be created','ArtifactType could not be created');
         }
@@ -1574,7 +1589,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
- * @param string $tracker_name the name of the tracker we want to update the artifact
+ * @param int $group_artifact_id the ID of the tracker we want to update the artifact
  * @param int $artifact_id the ID of the artifact we want to update
  * @param int $status_id the ID of the status of the artifact
  * @param int $close_date the close date of the artifact. The date format is timestamp
@@ -1592,11 +1607,19 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-function updateArtifactWithFieldNames($sessionKey, $group_id, $tracker_name, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
+function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
     global $art_field_fact, $ath;
     if (session_continue($sessionKey)) {
-        // Get the tracker_id with the tracker name
-        $at = ArtifactTypeFactory::getArtifactTypeFromName($group_id, $tracker_name);
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        $at = new ArtifactType($grp, $group_artifact_id);
         if (!$at || !is_object($at)) {
             return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'ArtifactType could not be created','ArtifactType could not be created');
         }
