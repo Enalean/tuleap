@@ -259,7 +259,8 @@ class Group extends Error {
 	    }
 	    return $this->members_data_array;
 	}
-
+    
+    
 	/*
 
 		Basic user permissions that apply to all Groups
@@ -278,7 +279,7 @@ class Group extends Error {
 		return true;
 	    } else {
 		$arr=$this->getPermData();
-		if ($arr[$field] > $value) {
+		if (array_key_exists($field, $arr) && ($arr[$field] > $value)) {
 		    return true;
 		} else {
 		    return false;
@@ -301,7 +302,7 @@ class Group extends Error {
 			$this->is_admin = true;
 		    } else {
 			$arr=$this->getPermData();
-			if ($arr['admin_flags']=='A') {
+			if (array_key_exists('admin_flags', $arr) && $arr['admin_flags']=='A') {
 			    $this->is_admin = true;
 			} else {
 			    $this->is_admin = false;

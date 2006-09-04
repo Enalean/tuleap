@@ -209,7 +209,7 @@ function getGroupAdmins($sessionKey, $group_id) {
         if ($group->hideMembers()) {
             return new soap_fault('2002','getGroupAdmins','Could Not Get Groups Members','Could Not Get Groups Members');
         }
-        $admins = $group->getAdmins();
+        $admins = $group->getAdmins();  // TO DO: implement this function
         $row_admins = array();
         foreach ($admins as $admin) {
             $row_admin = user_to_soap($admin);
@@ -220,5 +220,29 @@ function getGroupAdmins($sessionKey, $group_id) {
         return new soap_fault(invalid_session_fault,'logout','Invalid Session','');
     }
 }*/
+
+/**
+ * Check if the user can access the project $group,
+ * regarding the restricted access
+ *
+ * @param Object{Group} $group the Group object
+ * @return boolean true if the current session user has access to this project, false otherwise
+ */
+function checkRestrictedAccess($group) {
+    if ($group) {
+        $user = new User(session_get_userid());
+        if ($user) {
+            if ($user->isRestricted()) {
+                return $group->userIsMember();
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
 
 ?>
