@@ -106,7 +106,7 @@ class PluginsAdministrationViews extends Views {
                 }
                 
                 $output  = '<h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_plugin', array($name)).'</h3>';
-                $output .= '<form action="?" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
+                $output .= '<form action="'. $_SERVER['REQUEST_URI'] .'" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
                 $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties">';
                 $output .= '<tbody>';
                 $output .=   '<tr>';

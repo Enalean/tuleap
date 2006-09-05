@@ -24,7 +24,11 @@
  */
 require_once('common/mvc/Views.class');
 require_once('common/include/HTTPRequest.class');
-require_once('ItemBo.class');
+require_once('Docman_ItemBo.class');
+require_once('Docman_Icons.class');
+require_once('Docman_ItemDetailsView.class');
+require_once('Docman_ItemDetailsSectionView.class');
+require_once('Docman_VersionFactory.class');
 
 class DocmanViews extends Views {
     var $rawDisplay;
@@ -32,7 +36,7 @@ class DocmanViews extends Views {
     function DocmanViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
-        $this->rawDisplay = array('ulsubfolder', 'rawDisplay');
+        $this->rawDisplay = array('ulsubfolder', 'getActions', 'show');
     }
     
     /**
@@ -42,7 +46,7 @@ class DocmanViews extends Views {
      */
     function display($view='') {
         if(!in_array($view, $this->rawDisplay))
-            $this->_header();
+            $this->_header($view);
 
         if(!empty($view)) $this->$view();
 
@@ -55,7 +59,9 @@ class DocmanViews extends Views {
      *
      * @access private
      */
-    function _header() {
+    function _header($view = null) {
+        header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
         $request =& HTTPRequest::instance();
         $htmlParams['title'] = $GLOBALS['Language']->getText('plugin_docman','title');
 
@@ -64,8 +70,17 @@ class DocmanViews extends Views {
 
         $GLOBALS['HTML']->header($htmlParams);
         
+        $this->_controler->feedback->display();
+        
         $this->_toolBar();
-
+        echo '<script type="text/javascript"> var docman = new com.xerox.codex.Docman('. $this->_controler->request->get('group_id') .', {';
+        $di =& $this->_getDocmanIcons();
+        echo 'folderSpinner:\''. $di->getFolderSpinner() .'\'';
+        if ($view == 'move') {
+            echo ', action:\'move\'  ';
+        }
+        echo ' }); </script>';
+        
     }
 
     /**
@@ -83,87 +98,284 @@ class DocmanViews extends Views {
      * @access private
      */
     function _toolBar() {
-        echo '<a href="'.$this->_controler->getDefaultUrl().'">Documents (Img)</a>';
-        echo ' | <a href="'.$this->_controler->getDefaultUrl().'&view=uldisplayFolder">Documents (UL/LI)</a>';
-        $user =& $this->_controler->getUser();
-        if($user->isMember($this->_controler->getGroupId(), 'D2')) {
-            echo ' | <a href="'.$this->_controler->getAdminUrl().'">Admin</a>';
+        $tools = array();
+        //$tools[] = '<a href="'.$this->_controler->getDefaultUrl().'">Documents (Img)</a>';
+        //$tools[] = '<a href="'.$this->_controler->getDefaultUrl().'&view=uldisplayFolder">Documents (UL/LI)</a>';
+        if($this->_controler->userCanAdminDocman()) {
+            //$tools[] = '<a href="'.$this->_controler->getAdminUrl().'">Admin</a>';
         }
+        echo implode(' | ', $tools);
         echo "\n";
     }
 
+    function redirectAfterPost() {
+        echo '<div>Docman updated</div>';
+        echo 'You will be redirect <a href="'. $this->_controler->getDefaultUrl() .'"> to docman</a>.';
+        echo '
+<script type="text/javascript"> 
+<!--
+function return_to_url() {
+  window.location.href = "'. $this->_controler->getDefaultUrl() .'";
+}
+
+setTimeout(return_to_url,1000);
+//--> 
+</script>
+';	 
+        
+    }
     //
     //
     // Definition of views
     // 
     //
-
-
-    /**
-     * Ouput image based view of folders.
-     *
-     * @access public
-     */
-    function displayFolder() {
-        require_once('DisplayItemTreeVisitor.class');        
-
-        $itemBo = new ItemBo($this->_controler->request->get('group_id'));
-        $itemTree =& $itemBo->getItemTree();
-
-        $displayItemTreeVisitor = new DisplayItemTreeVisitor();
-        $displayItemTreeVisitor->setParentList($itemBo->getParentList());
-
-        $itemTree->accept($displayItemTreeVisitor);      
-        print $displayItemTreeVisitor->toHtml();
+    function _getDocmanIcons() {
+        return new Docman_Icons($this->_controler->getThemePath() .'/images/ic/');
     }
+    function getActions() {
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($this->_controler->request->get('id'));
 
-    /**
-     * Ouput image based view of a subfolder.
-     *
-     * This method is related to displayFolder and is called via Ajax to
-     * render only a subtree of the folder view. The main difficulty of this
-     * view it to build the good list of images and, to be able to perform
-     * that, we have to know subtree ancestors.
-     *
-     * @see displayFolder
-     * @access public
-     */
-    function rawDisplay() {
-        require_once('DisplayItemTreeVisitor.class');
-        require_once('NodeToRootVisitor.class');
+        if ($item) {
+            $actions = $item->getActions();
+            foreach($actions as $key => $nop) {
+                echo $actions[$key]->fetch(array(
+                    'docman_icons' => $this->_getDocmanIcons(),
+                    'default_url'  => $this->_controler->getDefaultUrl()
+                ));
+            }
+        }
+    }
+    function move() {
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($this->_controler->request->get('id'));
+        echo '<h2>Move "'. $item->getTitle() .'"</h2>';
+        echo 'Choose the target folder :';
+        require_once('DisplayItemTreeUlVisitor.class');
+        
+        $itemBo = new Docman_ItemBo($this->_controler->request->get('group_id'));
 
-        $itemBo = new ItemBo($this->_controler->request->get('group_id'));
-        $itemTree =& $itemBo->getItemTree();
-
-        // Subtree ancestors
-        $parentNode =& $itemTree->searchNode($request->get('id'));
-        $nodeToRootVisitor = new NodeToRootVisitor();
-        $parentNode->accept($nodeToRootVisitor);
-        $path = $nodeToRootVisitor->getPath();
-
-        $displayItemTreeVisitor = new DisplayItemTreeVisitor();
-        $displayItemTreeVisitor->setParentList($itemBo->getParentList());
-        $displayItemTreeVisitor->setPath($path, true);
+        $itemTree =& $itemBo->getItemTree(0, array('ignore_collapse' => true, 'user' => $this->_controler->getUser()));
+        $user =& $this->_controler->getUser();
+        $displayItemTreeVisitor = new MoveItemTreeUlVisitor(array(
+            'docman_icons' => $this->_getDocmanIcons(),
+            'default_url'  => $this->_controler->getDefaultUrl(),
+            'show_options' => false,
+            'user'         => &$user,
+            'item_to_move' => $this->_controler->request->get('id')
+        ));
         $itemTree->accept($displayItemTreeVisitor);
         
-        print $displayItemTreeVisitor->toHtml();
+        echo $displayItemTreeVisitor->toHtml();
+    }
+    function _breadCrumbs(&$item) {
+        $current_item_title = $item->getTitle();
+        $user_actions       = $item->getActions();
+        $id                 = $item->getId();
+        $parents = array();
+        $item_factory =& $this->_getItemFactory();
+        while ($item->getParentId() != 0) {
+            $item =& $item_factory->getItemFromDb($item->getParentId());
+            $parents[] = array(
+                'id'    => $item->getId(),
+                'title' => $item->getTitle()
+            );
+        }
+        $parents = array_reverse($parents);
+        foreach($parents as $parent) {
+            echo '&nbsp;<a href="'. $this->_controler->getDefaultUrl() .'&amp;action=show&amp;id='. $parent['id'] .'">'. $parent['title'] .'</a>&nbsp;/';
+        }
+        echo '&nbsp;<a href="'. $this->_controler->getDefaultUrl() .'&amp;action=show&amp;id='. $id .'"><b>'. $current_item_title .'</b></a>';
+        echo '<span class="docman_item_options">';
+        foreach($user_actions as $key => $nop) {
+            echo $user_actions[$key]->fetch(array(
+                'docman_icons' => $this->_getDocmanIcons(),
+                'default_url'  => $this->_controler->getDefaultUrl()
+            ));
+        }
+        echo '</span>';
+        
+    }
+    function details($actions = null, $section = null) {
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($this->_controler->request->get('id'));
+        if ($item) {
+            $this->_breadCrumbs($item);
+            $url = $this->_controler->getDefaultUrl();
+            require_once('Docman_ItemDetailsSectionPropertiesView.class');
+            require_once('Docman_ItemDetailsSectionEditPropertiesView.class');
+            require_once('Docman_ItemDetailsSectionPermissionsView.class');
+            require_once('Docman_ItemDetailsSectionNotificationsView.class');
+            require_once('Docman_ItemDetailsSectionHistoryView.class');
+            
+            $user_can_admin = $this->_controler->userCanAdmin($item->getId());
+            $user_can_write = $user_can_admin || $this->_controler->userCanWrite($item->getId());
+            $user_can_read  = $user_can_write || $this->_controler->userCanRead($item->getId());
+            
+            $details =& new Docman_ItemDetailsView($item, $url);
+            $sections = array();
+            if ($user_can_read) {
+                $sections['properties'] = true;
+                $details->addSection(new Docman_ItemDetailsSectionPropertiesView($item, $url));
+            }
+            if ($user_can_write) {
+                $sections['edit'] = true;
+                $details->addSection(new Docman_ItemDetailsSectionEditPropertiesView($item, $url));
+            }
+            if ($user_can_write) {
+                if (!$actions) {
+                    require_once('Docman_ItemDetailsSectionActionsView.class');
+                    $actions =& new Docman_ItemDetailsSectionActionsView($item, $url, $item_factory->isMoveable($item));
+                }
+                $sections['actions'] = true;
+                $details->addSection($actions);
+            }
+            if ($user_can_admin) {
+                $sections['permissions'] = true;
+                $details->addSection(new Docman_ItemDetailsSectionPermissionsView($item, $url));
+            }
+            if ($user_can_read) {
+                $sections['notifications'] = true;
+                $details->addSection(new Docman_ItemDetailsSectionNotificationsView($item, $url));
+            }
+            if ($user_can_read) {
+                $sections['history'] = true;
+                $logger = null;
+                if ($user_can_admin) {
+                    $logger =& $this->_controler->getLogger();
+                }
+                $details->addSection(new Docman_ItemDetailsSectionHistoryView($item, $url, $logger));
+            }
+            if ($section && isset($sections[$section])) {
+                $details->setCurrentSection($section);
+            } else if ($this->_controler->request->exist('section') &&  isset($sections[$this->_controler->request->get('section')])) {
+                $details->setCurrentSection($this->_controler->request->get('section'));
+            } else if ($this->_controler->request->get('action') == 'permissions' &&  isset($sections['permissions'])) {
+                $details->setCurrentSection('permissions');
+            }
+            $details->display();
+        }
+    }
+
+    function delete() {
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($this->_controler->request->get('id'));
+        if ($item) {
+            require_once('Docman_ItemDetailsSectionDeleteView.class');
+            $this->details(new Docman_ItemDetailsSectionDeleteView($item, $this->_controler->getDefaultUrl()), 'actions');
+        }
     }
     
+    function newFolder() {
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($this->_controler->request->get('id'));
+
+        if ($item) {
+            $this->_breadCrumbs($item);
+            $html  = '<h2>New folder under '. $item->getTitle() .'</h2>';
+            $html .= '<form action="'. $this->_controler->getDefaultUrl() .'" method="POST">';
+            
+            //{{{ General Properties
+            $html .= '<fieldset><legend>General Properties</legend>';
+            $new_folder = new Docman_Folder($this->_controler->request->get('item'));
+            $fields = $new_folder->getFields();
+            $html .= '<table>';
+            foreach($fields as $field) {
+                $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+            }
+            $html .= '</table>';
+            $html .= '<input type="hidden" name="item[parent_id]" value="'. $item->getId() .'" />';
+            $html .= '<input type="hidden" name="action" value="createFolder" />';
+            $html .= '</fieldset>';
+            //}}}
+
+            $html .= '<input type="submit" value="Create folder" />';
+            $html .= '</form>';
+            echo $html;
+        }
+    }
+    
+    function newDocument() {
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($this->_controler->request->get('id'));
+
+        if ($item) {
+            $this->_breadCrumbs($item);
+            $html  = '<h2>New document under '. $item->getTitle() .'</h2>';
+            $html .= '<form action="'. $this->_controler->getDefaultUrl() .'" method="POST" enctype="multipart/form-data">';
+            
+            //{{{ General Properties
+            $html .= '<fieldset><legend>General Properties</legend>';
+            $new_document = new Docman_Document($this->_controler->request->get('item'));
+            $fields = $new_document->getFields();
+            $html .= '<table>';
+            foreach($fields as $field) {
+                $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+            }
+            $html .= '</table>';
+            $html .= '<input type="hidden" name="item[parent_id]" value="'. $item->getId() .'" />';
+            $html .= '<input type="hidden" name="action" value="createDocument" />';
+            $html .= '</fieldset>';
+            //}}}
+
+            //{{{ Specific Properties
+            $html .= '<fieldset><legend>Specific Properties</legend>';
+            $specifics = array(
+                array(
+                    'type'    =>  DOCMAN_ITEM_TYPE_LINK,
+                    'label'   => 'Web link',
+                    'obj'     => new Docman_Link(),
+                    'checked' => false
+                ),
+                array(
+                    'type'    =>  DOCMAN_ITEM_TYPE_WIKI,
+                    'label'   => 'Wiki Page',
+                    'obj'     => new Docman_Wiki(),
+                    'checked' => false
+                ),
+                array(
+                    'type'    =>  DOCMAN_ITEM_TYPE_FILE,
+                    'label'   => 'File',
+                    'obj'     => new Docman_File(),
+                    'checked' => true
+                ),
+                array(
+                    'type'    =>  DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                    'label'   => 'Embedded File',
+                    'obj'     => new Docman_EmbeddedFile(),
+                    'checked' => false
+                )
+            );
+            foreach ($specifics as $specific) {//Link
+                $html .= '<div><input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
+                $html .= '<label for="item_item_type_'. $specific['type'] .'">'. $specific['label'] .'</label></div>';
+                $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
+                $fields = $specific['obj']->getSpecificFields();
+                $html .= '<table>';
+                foreach($fields as $field) {
+                    $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+                }
+                $html .= '</table>';
+                $html .= '</div>';
+            }
+            $html .= '</fieldset>';
+            //}}}
+            
+            $html .= '<input type="submit" value="Create document" />';
+            $html .= '</form>';
+            echo $html;
+        }
+    }
     /**
      * Ouput ul/li view of folders.
      *
      * @access public
      */
     function uldisplayFolder() {
-        require_once('DisplayItemTreeUlVisitor.class');
-    
-        $itemBo = new ItemBo($this->_controler->request->get('group_id'));
-        $itemTree =& $itemBo->getItemTree();
-
-        $displayItemTreeVisitor = new DisplayItemTreeUlVisitor();       
-        $itemTree->accept($displayItemTreeVisitor);
-        
-        print '<div class="lidir">'.$displayItemTreeVisitor->toHtml().'</div><script>initEvents();</script>';       
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getRoot($this->_controler->request->get('group_id'));
+        $this->_breadCrumbs($item);
+        print '<div class="lidir">'. $this->_ul('getItemTree') .'</div>';
     }
 
     /**
@@ -176,15 +388,87 @@ class DocmanViews extends Views {
      * @access public
      */
     function ulsubfolder() {
+        print $this->_ul('getItemSubTree', null, false);
+    }
+    
+    function _ul($getItemTree_callback, $id = null, $display_description = true) {
         require_once('DisplayItemTreeUlVisitor.class');
         
-        $itemBo = new ItemBo($this->_controler->request->get('group_id'));        
-        $itemTree =& $itemBo->getItemSubTree($this->_controler->request->get('id'));
+        $itemBo = new Docman_ItemBo($this->_controler->request->get('group_id'));
 
-        $displayItemTreeVisitor = new DisplayItemTreeUlVisitor();
+        $itemTree =& $itemBo->$getItemTree_callback((!is_null($id) ? $id : $this->_controler->request->get('id')), 
+            array('user' => $this->_controler->getUser()));
+
+        $displayItemTreeVisitor = new DisplayItemTreeUlVisitor(array(
+            'docman_icons'           => $this->_getDocmanIcons(),
+            'default_url'            => $this->_controler->getDefaultUrl(),
+            'display_description'    => $display_description,
+            'show_options'           => ($this->_controler->request->exist('show_options') ? $this->_controler->request->get('show_options') : false)
+        ));
         $itemTree->accept($displayItemTreeVisitor);
-
-        print $displayItemTreeVisitor->toHtml();        
+        
+        return $displayItemTreeVisitor->toHtml();
+    }
+    var $item_factory;
+    function &_getItemFactory() {
+        if (!$this->item_factory) {
+            $this->item_factory =& new Docman_ItemFactory();
+        }
+        return $this->item_factory;
+    }
+    
+    function show() {
+        $item_factory =& $this->_getItemFactory();
+        if ($this->_controler->request->exist('id')) {
+            $id_info = explode('/', $this->_controler->request->get('id'));
+            $item =& $item_factory->getItemFromDb($id_info[0]);
+        } else {
+            $item =& $item_factory->getRoot($this->_controler->request->get('group_id'));
+            $id_info = array($item->getId());
+        }
+        if ($item) {
+            
+            if (is_a($item, 'Docman_File')) {
+                if (isset($id_info[1])) {
+                    $version_factory =& new Docman_VersionFactory();
+                    $version =& $version_factory->getSpecificVersion($item, $id_info[1]);
+                } else {
+                    $version =& $item->getCurrentVersion();
+                }
+                if ($version) {
+                    $user =& $this->_controler->getUser();
+                    $event_manager =& EventManager::instance();
+                    $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ACCESS, array(
+                        'group_id' => $this->_controler->request->get('group_id'),
+                        'item'     => $item->getId(),
+                        'version'  => $version->getNumber(),
+                        'user'     => $user->getId()
+                    ));
+                    if (!is_a($item, 'Docman_EmbeddedFile')) { //No download for embedded file
+                        header('Content-Type: '. $version->getFiletype());
+                        header('Content-Length: '. $version->getFilesize());
+                        //$parts = split('/', $version->getFiletype());
+                        //$force_download = !($parts[0] == 'image' || $parts[0] == 'text');
+                        //if ($force_download) {
+                            header('Content-Disposition: attachment; filename="'. $version->getFilename() .'"');
+                        //}
+                    } else {
+                        $this->_header();
+                    }
+                    readfile($version->getPath());
+                    if (is_a($item, 'Docman_EmbeddedFile')) {
+                        $this->_footer();
+                    }
+                }
+            } else if (is_a($item, 'Docman_Folder')) {
+                $this->_header();
+                $this->_breadCrumbs($item);
+                echo $this->_ul('getItemSubTree', $id_info[0]);
+                $this->_footer();
+            }
+        }
+    }
+    function none() {
     }
 }
 

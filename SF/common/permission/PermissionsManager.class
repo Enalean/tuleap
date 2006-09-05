@@ -152,5 +152,9 @@ class PermissionsManager {
             }
         }
     }
+    
+    function clonePermissions($source, $target) {
+        return $this->_permission_dao->clonePermissions($source, $target);
+    }
 }
 ?>

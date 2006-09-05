@@ -26,37 +26,407 @@
 require_once('common/mvc/Actions.class');
 require_once('common/include/HTTPRequest.class');
 
-require_once('Folder.class');
-require_once('FolderBo.class');
+require_once('Docman_Folder.class');
+require_once('Docman_FolderBo.class');
+require_once('Docman_ItemFactory.class');
+require_once('Docman_VersionFactory.class');
+require_once('Docman_FileStorage.class');
+
+require_once('common/permission/PermissionsManager.class');
+
+require_once('www/project/admin/permissions.php');
 
 class DocmanActions extends Actions {
     
+    var $event_manager;
+    
     function DocmanActions(&$controler, $view=null) {
         $this->Actions($controler);
+        $this->event_manager =& $this->_getEventManager();
 	}
-		
+	
+    function &_getEventManager() {
+        return EventManager::instance();
+    }
+    
     function expandFolder() {
         $request =& HTTPRequest::instance();
 
-        $folder = new Folder();
+        $folder = new Docman_Folder();
         $folder->setId($request->get('id'));
         $folder->setGroupId($request->get('group_id'));
 
-        $folderBo = new FolderBo();
+        $folderBo = new Docman_FolderBo();
         $folderBo->expand($folder);
     }
 
     function collapseFolder() {
         $request =& HTTPRequest::instance();
 
-        $folder = new Folder();
+        $folder = new Docman_Folder();
         $folder->setId($request->get('id'));
         $folder->setGroupId($request->get('group_id'));
 
-        $folderBo = new FolderBo();
+        $folderBo = new Docman_FolderBo();
         $folderBo->collapse($folder);
     }
+    
+    function createFolder() {
+        $request =& HTTPRequest::instance();
+        $item_factory =& $this->_getItemFactory();
+        if ($request->exist('item')) {
+            $item = $request->get('item');
+            $item['item_type'] = DOCMAN_ITEM_TYPE_FOLDER;
+            $user =& $this->_controler->getUser();
+            $item['user_id']  = $user->getId();
+            $item['group_id'] = $request->get('group_id');
+            $id = $item_factory->create($this->sanitizeItemData($item));
+            if ($id) {
+                var_dump($item);
+                if (isset($item['parent_id'])) {
+                    $pm =& PermissionsManager::instance();
+                    $pm->clonePermissions($item['parent_id'], $id);
+                }
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
+                    'group_id' => $request->get('group_id'),
+                    'item'     => $id,
+                    'user'     => $user->getId())
+                );
+            }
+        }
+    }
+    
+    function createDocument() {
+        $request =& HTTPRequest::instance();
+        $item_factory =& $this->_getItemFactory();
+        if ($request->exist('item')) {
+            $item = $request->get('item');
+            if (($item['item_type'] != DOCMAN_ITEM_TYPE_FILE || isset($_FILES['file'])) &&
+                $item['item_type'] != DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $request->exist('content'))
+            {
+                $user =& $this->_controler->getUser();
+                $item['user_id']  = $user->getId();
+                $item['group_id'] = $request->get('group_id');
+                $id = $item_factory->create($item);
+                if ($id) {
+                    if (isset($item['parent_id'])) {
+                        $pm =& PermissionsManager::instance();
+                        $pm->clonePermissions($item['parent_id'], $id);
+                    }
+                    $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
+                        'group_id' => $request->get('group_id'),
+                        'item'     => $id,
+                        'user'     => $user->getId())
+                    );
+                    switch ($item['item_type']) {
+                        case DOCMAN_ITEM_TYPE_FILE:
+                            $fs =& $this->_getFileStorage();
+                            if ($path = $fs->upload($_FILES['file'], $request->exist('group_id'), $id, 0)) {
+                                $version_factory =& $this->_getVersionFactory();
+                                $version_id = $version_factory->create(array(
+                                    'item_id'   => $id,
+                                    'number'    => 0,
+                                    'user_id'   => $user->getId(),
+                                    'label'     => '',
+                                    'changelog' => 'Initial version',
+                                    'filename'  => $_FILES['file']['name'],
+                                    'filesize'  => $_FILES['file']['size'],
+                                    'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
+                                    'path'      => $path)
+                                );
+                                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                                    'group_id' => $request->get('group_id'),
+                                    'item'     => $id, 
+                                    'version'  => $version_id,
+                                    'user'     => $user->getId())
+                                );
+                            } else {
+                                //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                                //Annulation du nouvel item ?
+                            }
+                            break;
+                        case DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                            $fs =& $this->_getFileStorage();
+                            if ($path = $fs->store($request->get('content'), $request->exist('group_id'), $id, 0)) {
+                                $version_factory =& $this->_getVersionFactory();
+                                $version_id = $version_factory->create(array(
+                                    'item_id'   => $id,
+                                    'number'    => 0,
+                                    'user_id'   => $user->getId(),
+                                    'label'     => '',
+                                    'changelog' => 'Initial version',
+                                    'filename'  => basename($path),
+                                    'filesize'  => filesize($path),
+                                    'filetype'  => 'text/html',     //TODO take mimetype once the file has been written ?
+                                    'path'      => $path)
+                                );
+                                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                                    'group_id' => $request->get('group_id'),
+                                    'item'     => $id, 
+                                    'version'  => $version_id,
+                                    'user'     => $user->getId())
+                                );
+                            } else {
+                                //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                                //Annulation du nouvel item ?
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    function update() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('item')) {
+            $user =& $this->_controler->getUser();
+            
+            $data = $request->get('item');
+            $item_factory =& $this->_getItemFactory();
+            $item_factory->update($this->sanitizeItemData($data));
+            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
+                'group_id' => $request->get('group_id'),
+                'item'     => $data['id'],
+                'user'     => $user->getId())
+            );
+        }
+    }
+    function new_version() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('id')) {
+            $user =& $this->_controler->getUser();
+            $item_factory =& $this->_getItemFactory();
+            $item =& $item_factory->getItemFromDb($request->get('id'));
+            $item_type = $item_factory->getItemTypeForItem($item);
+            if ($item_type == DOCMAN_ITEM_TYPE_FILE || $item_type == DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $label = $changelog = '';
+                $data_version = $request->get('version');
+                if ($data_version) {
+                    if (isset($data_version['label'])) {
+                        $label = $data_version['label'];
+                    }
+                    if (isset($data_version['changelog'])) {
+                        $changelog = $data_version['changelog'];
+                    }
+                }
+                $version =& $item->getCurrentVersion();
+                $number = $version->getNumber() + 1;
+                if ($item_type == DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
+                    $fs =& $this->_getFileStorage();
+                    if ($path = $fs->upload($_FILES['file'], $request->exist('group_id'), $request->get('id'), $number)) {
+                        
+                        $version_factory =& $this->_getVersionFactory();
+                        $version_id = $version_factory->create(array(
+                            'item_id'   => $request->get('id'),
+                            'number'    => $number,
+                            'user_id'   => $user->getId(),
+                            'label'     => $label,
+                            'changelog' => $changelog,
+                            'filename'  => $_FILES['file']['name'],
+                            'filesize'  => $_FILES['file']['size'],
+                            'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
+                            'path'      => $path)
+                        );
+                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                            'group_id' => $request->get('group_id'),
+                            'item'     => $request->get('id'),
+                            'version'  => $version_id,
+                            'user'     => $user->getId())
+                        );
+                    } else {
+                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                    }
+                } else if ($item_type == DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
+                    $fs =& $this->_getFileStorage();
+                    if ($path = $fs->store($request->get('content'), $request->exist('group_id'), $request->get('id'), $number)) {
+                        $version_factory =& $this->_getVersionFactory();
+                        $version_id = $version_factory->create(array(
+                            'item_id'   => $request->get('id'),
+                            'number'    => $number,
+                            'user_id'   => $user->getId(),
+                            'label'     => $label,
+                            'changelog' => $changelog,
+                            'filename'  => basename($path),
+                            'filesize'  => filesize($path),
+                            'filetype'  => 'text/html', //TODO take mimetype once the file has been written ?
+                            'path'      => $path)
+                        );
+                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                            'group_id' => $request->get('group_id'),
+                            'item'     => $request->get('id'), 
+                            'version'  => $version_id,
+                            'user'     => $user->getId())
+                        );
+                    } else {
+                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                    }
+                }
+            }
+        }
+    }
+    var $filestorage;
+    function &_getFileStorage() {
+        if (!$this->filestorage) {
+            $this->filestorage =& new Docman_FileStorage($this->_controler->getProperty('docman_root'));
+        }
+        return $this->filestorage;
+    }
+    var $item_factory;
+    function &_getItemFactory() {
+        if (!$this->item_factory) {
+            $this->item_factory =& new Docman_ItemFactory();
+        }
+        return $this->item_factory;
+    }
+    var $version_factory;
+    function &_getVersionFactory() {
+        if (!$this->version_factory) {
+            $this->version_factory =& new Docman_VersionFactory();
+        }
+        return $this->version_factory;
+    }
+    function sanitizeItemData($data) {
+        $sanitized_data = $data;
+        
+        $must_be_stripped = array('title', 'wiki_page', 'link_url', 'description');
+        foreach($must_be_stripped as $property) {
+            if (isset($sanitized_data[$property])) {
+                $sanitized_data[$property] = strip_tags($sanitized_data[$property]);
+            }
+        }
+        return $sanitized_data;
+    }
+    function move() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('id') && $request->exist('item_to_move')) {
+            $user =& $this->_controler->getUser();
+            
+            $item_factory =& $this->_getItemFactory();
+            $item_factory->setNewParent($request->get('item_to_move'), $request->get('id'));
+            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_MOVE, array(
+                'group_id' => $request->get('group_id'),
+                'item'    => $request->get('item_to_move'), 
+                'parent'  => $request->get('id'),
+                'user'    => $user->getId())
+            );
+        }
+    }
+    
+    function permissions() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('id') && $request->exist('permissions')) {
+            $user =& $this->_controler->getUser();
+            
+            $item_factory =& $this->_getItemFactory();
+            $item =& $item_factory->getItemFromDb($request->get('id'));
+            if ($item) {
+                $permission_definition = array(
+                    100 => array(
+                        'order' => 0, 
+                        'type'  => null,
+                        'label' => null,
+                        'previous' => null
+                    ),
+                    1 => array(
+                        'order' => 1, 
+                        'type'  => 'PLUGIN_DOCMAN_READ',
+                        'label' => 'Read',
+                        'previous' => 0
+                    ),
+                    2 => array(
+                        'order' => 2, 
+                        'type'  => 'PLUGIN_DOCMAN_WRITE',
+                        'label' => 'Write',
+                        'previous' => 1
+                    ),
+                    3 => array(
+                        'order' => 3, 
+                        'type'  => 'PLUGIN_DOCMAN_ADMIN',
+                        'label' => 'Admin',
+                        'previous' => 2
+                    )
+                );
+                $permissions = $request->get('permissions');
+                $old_permissions = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_ADMIN'), false);
+                $done_permissions = array();
+                $history = array(
+                    'PLUGIN_DOCMAN_READ'  => false,
+                    'PLUGIN_DOCMAN_WRITE' => false,
+                    'PLUGIN_DOCMAN_ADMIN' => false
+                );
+                foreach($permissions as $ugroup_id => $wanted_permission) {
+                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, &$history);
+                }
+                
+                $updated = false;
+                foreach($history as $perm => $put_in_history) {
+                    if ($put_in_history) {
+                        permission_add_history($item->getGroupId(), $perm, $item->getId());
+                        $updated = true;
+                    }
+                }
+                $this->_controler->feedback->log('info', 'Permissions successfully updated');
+                if ($this->_controler->request->get('recursive')) {
+                    $item_factory->breathFirst($item->getId(), 
+                        create_function('$data',' 
+                            $pm =& PermissionsManager::instance();
+                            $pm->clonePermissions('. $item->getId() .', $data["item_id"]);'
+                        )
+                    );
+                    $this->_controler->feedback->log('info', 'Permissions for subitems successfully updated');
+                }
+            }
+        }
+    }
+    function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history) {
+        if (!isset($done_permissions[$ugroup_id])) {
+            if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
+                $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history);
+                if ($parent = $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permissions[$ugroup_id])) {
+                    $this->_controler->feedback->log('warning', 'Permission for '. $old_permissions[$ugroup_id]['ugroup']['name'] .' has been ignored because '. $old_permissions[$parent]['ugroup']['name'] .' can '. $permission_definition[$done_permissions[$parent]]['label']);
+                    if (count($old_permissions[$ugroup_id]['permissions'])) {
+                        foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
+                            permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
+                            $history[$permission] = true;
+                        }
+                    }
+                    $done_permissions[$ugroup_id] = 100;
+                }
+            }
+            if (!isset($done_permissions[$ugroup_id])) {
+                //We clear if needed
+                if (count($old_permissions[$ugroup_id]['permissions'])) {
+                    foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
+                        permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
+                        $history[$permission] = true;
+                    }
+                }
+                $done_permissions[$ugroup_id] = 100;
+                if ($wanted_permissions[$ugroup_id] != 100){
+                    $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
+                    permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id);
+                    $history[$permission] = true;
+                    $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
+                }
+            }
+        }
+    }
+    function _getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission) {
+        if ($wanted_permission == 100) {
+            return false;
+        } else {
+            if ($permission_definition[$done_permissions[$parent]]['order'] >= $permission_definition[$wanted_permission]['order']) {
+                return $parent;
+            } else {
+                if (($parent = ugroup_get_parent($parent)) !== false) {
+                    return $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission);
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
 }
-
-
 ?>

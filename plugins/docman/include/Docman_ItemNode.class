@@ -30,7 +30,7 @@ class AvArrayIterator extends ArrayIterator {
     }
 }
 
-class ItemNode extends TreeNode {
+class Docman_ItemNode extends TreeNode {
 
     /**
      * Return an iterator on children.

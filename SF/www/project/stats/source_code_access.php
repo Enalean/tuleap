@@ -88,6 +88,7 @@ switch($view) {
     doc_logs_daily( $project, $span*30.5, $who);
     wiki_logs_daily( $project, $span*30.5, $who);
     wiki_attachments_logs_daily( $project, $span*30.5, $who);
+    plugins_logs_daily( $project, $span*30.5, $who);
     break;
 
     case "weekly":
@@ -98,6 +99,7 @@ switch($view) {
     doc_logs_daily( $project, $span*7, $who);
     wiki_logs_daily( $project, $span*7, $who);
     wiki_attachments_logs_daily( $project, $span*7, $who);
+    plugins_logs_daily( $project, $span*7, $who);
     break;
   
     case 'daily':
@@ -108,6 +110,7 @@ switch($view) {
     doc_logs_daily( $project, $span, $who);
     wiki_logs_daily( $project, $span, $who);
     wiki_attachments_logs_daily( $project, $span, $who);
+    plugins_logs_daily( $project, $span, $who);
 }
 
 

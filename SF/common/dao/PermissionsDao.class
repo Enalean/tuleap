@@ -78,6 +78,21 @@ class PermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function clonePermissions($source, $target) {
+        $sql = sprintf('DELETE FROM permissions '.
+                        ' WHERE object_id = %s ',
+                        $this->da->quoteSmart($target)
+        );
+        $this->update($sql);
+        $sql = sprintf('INSERT INTO permissions (object_id, permission_type, ugroup_id) '.
+                        ' SELECT %s, permission_type, ugroup_id '.
+                        ' FROM permissions '.
+                        ' WHERE object_id = %s ',
+                        $this->da->quoteSmart($target),
+                        $this->da->quoteSmart($source)
+        );
+        return $this->update($sql);
+    }
 }
 
 

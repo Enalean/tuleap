@@ -121,6 +121,17 @@ class PluginTest extends UnitTestCase {
         $this->assertNotEqual($p->getScope(), $p->SCOPE_PROJECT);
         $this->assertNotEqual($p->getScope(), $p->SCOPE_USER);
     }
+    function testGetPluginEtcRoot() {
+        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $shortname = 'shortname';
+        $pm =& new MockPluginManager($this);
+        $pm->setReturnValue('getNameForPlugin', $shortname);
+        $p =& new PluginTestVersion($this);
+        $p->setReturnReference('_getPluginManager', $pm);
+        $p->Plugin();
+        
+        $this->assertEqual($p->getPluginEtcRoot(), $GLOBALS['sys_custompluginsroot'].'/'.$shortname.'/etc');        
+     }
     function testGetPluginPath() {
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';

@@ -5,7 +5,7 @@
 // $Id$
 //
 //
-//  Written for CodeX by Nicolas Guérin
+//  Written for CodeX by Nicolas Guï¿½rin
 //
 
 require_once('pre.php');
@@ -63,7 +63,7 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
         if ($short_name) {
             $short= "&short_name=$short_name";
         } else $short='';
-        echo '<TD align="center"><A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&service_id='.$service_id.'&func=delete'.$short.'" onClick="return confirm(\'';
+        echo '<TD align="center"><A HREF="?group_id='.$group_id.'&service_id='.$service_id.'&func=delete'.$short.'" onClick="return confirm(\'';
         if ($group_id==100) {
              echo $Language->getText('project_admin_servicebar','warning_del_s',$label);
        } else {

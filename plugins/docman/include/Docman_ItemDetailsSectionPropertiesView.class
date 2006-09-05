@@ -1,0 +1,68 @@
+<?php
+/* 
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Nicolas Terray, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('Docman_ItemDetailsSectionView.class');
+
+class Docman_ItemDetailsSectionPropertiesView extends Docman_ItemDetailsSectionView {
+    function Docman_ItemDetailsSectionPropertiesView(&$item, $url, $id = null, $title = null) {
+        if (!$id) {
+            $id = 'properties';
+        }
+        if (!$title) {
+            $title = 'Properties';
+        }
+        parent::Docman_ItemDetailsSectionView($item, $url, $id, $title);
+    }
+    function getContent() {
+        
+        $html  = '<table>';
+        $html .= '<tr style="vertical-align:top;"><td>Title      </td><td>'. $this->_getTitle()       .'</td></tr>';
+        $html .= '<tr style="vertical-align:top;"><td>Description</td><td>'. $this->_getDescription() .'</td></tr>';
+        $html .= '<tr style="vertical-align:top;"><td>Rank       </td><td>'. $this->_getRank()        .'</td></tr>';
+        $html .= $this->_getAdditionalRows();
+        $html .= '</table>';
+        return $html;
+    }
+    function _getTitle() {
+        //$action = $this->item->getActionWhenUserClickOnTitle(array('default_url' => $this->url));
+        $action = false;
+        if ($action) {
+            $title = '<a href="'. $action .'">'. $this->item->getTitle() .'</a>';
+        } else {
+            $title = $this->item->getTitle();
+        }
+        return $title;
+    }
+    function _getRank() {
+        return $this->item->getRank();
+    }
+    function _getDescription() {
+        return $this->item->getDescription();
+    }
+    function _getAdditionalRows() {
+        return '';
+    }
+}
+
+?>

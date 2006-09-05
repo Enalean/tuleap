@@ -1,0 +1,58 @@
+<?php
+/* 
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Nicolas Terray, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('Docman_ItemDetailsSectionActionsView.class');
+
+class Docman_ItemDetailsSectionDeleteView extends Docman_ItemDetailsSectionActionsView {
+    function Docman_ItemDetailsSectionDeleteView(&$item, $url) {
+        parent::Docman_ItemDetailsSectionActionsView($item, $url, false);
+    }
+    function getContent() {
+        $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : 'document';
+        
+        $content = '';
+        
+        $content .= '<form action="http://not.yet.implemented" method="GET">';
+        $content .= '<div class="docman_confirm_delete">';
+        $content .= '<h3>Confirm deletion of '. $folder_or_document .' "'. $this->item->getTitle() .'"</h3>';
+        $content .= 'You are going to delete a '. $folder_or_document .'. ';
+        if (is_a($this->item, 'Docman_Folder')) {
+            $content .= 'Before confirming, please note that all subitems and their versions will be deleted.';
+        } else if (is_a($this->item, 'Docman_File')) {
+            $content .= 'Before confirming, please note that all versions will be deleted.';
+        }
+        $content .= '<p>Are you sure that you want to delete this '. $folder_or_document .'?</p>';
+        $content .= '<div class="docman_confirm_delete_buttons">';
+        $content .= '     <input type="hidden" name="action" value="delete" />';
+        $content .= '     <input type="hidden" name="id" value="'. $this->item->getId() .'" />';
+        $content .= '     <input type="submit" name="cancel" value="No, I do not want to delete it" />';
+        $content .= '     <input type="submit" name="confirm" value="Yes, I am sure !" />';
+        $content .= '</div>';
+        $content .= '</div>';
+        $content .= '</form>';
+        
+        return $content;
+    }
+}
+?>

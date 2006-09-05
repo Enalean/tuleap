@@ -67,6 +67,10 @@ class Plugin {
     function getScope() {
         return $this->_scope;
     }
+    function getPluginEtcRoot() {
+        $pm =& $this->_getPluginManager();
+        return $GLOBALS['sys_custompluginsroot'] . '/' . $pm->getNameForPlugin($this) .'/etc';
+    }
     function _getPluginPath() {
         $pm =& $this->_getPluginManager();
         if (isset($GLOBALS['sys_pluginspath']))

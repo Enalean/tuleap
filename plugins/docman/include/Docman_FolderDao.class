@@ -22,12 +22,12 @@
  *
  * $Id$
  */
-require_once('Item.class');
-require_once('ItemDao.class');
+require_once('Docman_Item.class');
+require_once('Docman_ItemDao.class');
 
-class FolderDao extends ItemDao {
+class Docman_FolderDao extends Docman_ItemDao {
 
-    function FolderDao(&$da) {
+    function Docman_FolderDao(&$da) {
         DataAccessObject::DataAccessObject($da);
     }
 
@@ -37,7 +37,7 @@ class FolderDao extends ItemDao {
      * @return DataAccessResult
      */
     function searchAllByType($group_id) {
-        return parent::searchAllByType($group_id, ITEM_FOLDER);
+        return parent::searchAllByType($group_id, DOCMAN_ITEM_TYPE_FOLDER);
     }
 
     /**
@@ -49,7 +49,7 @@ class FolderDao extends ItemDao {
         
         return parent::create($parent_id, $group_id, $title, $description, 
                               $create_date, $update_date, $user_id, $rank, 
-                              ITEM_FOLDER, null, null, null);		
+                              DOCMAN_ITEM_TYPE_FOLDER, null, null, null);		
     }
 
     /**

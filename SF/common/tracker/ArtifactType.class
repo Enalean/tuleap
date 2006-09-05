@@ -13,7 +13,7 @@
 require_once('www/project/admin/permissions.php');
 require_once('common/tracker/ArtifactFieldSetFactory.class');
 
-$Language->loadLanguageMsg('tracker/tracker');
+$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactType extends Error {
 

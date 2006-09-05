@@ -22,9 +22,12 @@
  *
  * $Id$
  */
-require_once('FolderDao.class');
-require_once('ItemBo.class');
-require_once('Folder.class');
+require_once('Docman_FolderDao.class');
+require_once('Docman_ItemBo.class');
+require_once('Docman_Folder.class');
+
+define('DOCMAN_COLLAPSE_FOLDER_PREF', 'docman_hide');
+define('DOCMAN_COLLAPSE_FOLDER', 2);
 
 /**
  * Folder Buisness object.
@@ -32,10 +35,10 @@ require_once('Folder.class');
  * This class aims to offer an high level access to 'Model' layer of the
  * application. 
  */
-class FolderBo extends ItemBo {
+class Docman_FolderBo extends Docman_ItemBo {
     
-    function FolderBo($groupId=0) {
-        $this->ItemBo($groupId);
+    function Docman_FolderBo($groupId=0) {
+        $this->Docman_ItemBo($groupId);
     }
 
     /**
@@ -44,7 +47,7 @@ class FolderBo extends ItemBo {
      * @param Folder
      */
     function create($folder) {
-        $folderDao =& new FolderDao(CodexDataAccess::instance());
+        $folderDao =& new Docman_FolderDao(CodexDataAccess::instance());
 
         $folderDao->create($folder->getParentId(), 
                            $folder->getGroupId(), 
@@ -62,7 +65,7 @@ class FolderBo extends ItemBo {
      * @param Folder
      */
     function update($folder) {
-        $folderDao =& new FolderDao(CodexDataAccess::instance());
+        $folderDao =& new Docman_FolderDao(CodexDataAccess::instance());
 
         $folderDao->updateById($folder->getId(),
                                $folder->getParentId(), 
@@ -81,7 +84,7 @@ class FolderBo extends ItemBo {
      * @param Folder
      */
     function delete($folder) {
-        $folderDao =& new FolderDao(CodexDataAccess::instance());
+        $folderDao =& new Docman_FolderDao(CodexDataAccess::instance());
 
         $folderDao->delete($folder->getId());
     }
@@ -92,7 +95,7 @@ class FolderBo extends ItemBo {
      * @return ArrayIterator
      */
     function &getList() {
-        $folderDao =& new FolderDao(CodexDataAccess::instance());
+        $folderDao =& new Docman_FolderDao(CodexDataAccess::instance());
 
         $flist = array();
 
@@ -100,7 +103,7 @@ class FolderBo extends ItemBo {
         while($dar->valid()) {
             $row =& $dar->current();
 
-            $folder = new Folder();
+            $folder = new Docman_Folder();
             $folder->initFromRow($row);
             $flist[$folder->getId()] =& $folder;
             unset($folder);
@@ -111,6 +114,16 @@ class FolderBo extends ItemBo {
         return new ArrayIterator($flist);
     }
 
+    /**
+    * @return Folder
+    */
+    function &findById($id) {
+        $item =& parent::findById($id);
+        if ($item && is_a($item, 'Docman_Folder')) {
+            return $folder;
+        }
+        return false;
+    }
     /**
      * Set a collapse preference for given folder for current (logged)
      * user. Stricly speaking, we should pass user in argument but there is no
@@ -131,6 +144,7 @@ class FolderBo extends ItemBo {
     function expand($folder) {
         user_del_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
     }
+    
 }
 
 ?>

@@ -29,73 +29,94 @@ class DisplayItemTreeUlVisitor extends Visitor {
     var $html;
     var $stripFirstNode;
     var $firstNodeStripped;
-
-    function DisplayItemTreeUlVisitor() {
-        $this->html  = '';
-        $this->stripFirstNode = true;
+    var $docmanIcons;
+    var $showOptions;
+    var $defaultUrl;
+    
+    function DisplayItemTreeUlVisitor($params = null) {
+        $this->html              = '';
+        $this->stripFirstNode    = true;
         $this->firstNodeStripped = false;
+        $this->params            = $params;
+        if (!isset($this->params['default_url'])) {
+            $this->params['default_url'] = null;
+        }
     }
 
     function toHtml() {
         return $this->html;
     }
   
-
-    function visit(&$itemNode) {        
+    function _canDisplayItem($item) {
+        return true;
+    }
+    function _canDisplaySubItems($item) {
+        return true;
+    }
+    
+    function visit(&$itemNode, $params = null) {        
         $item =& $itemNode->getData();        
-
-        $isCollapsed = false;
-        if(user_get_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) !== false) {
-            $isCollapsed = true;
-        }
 
         /*$hasChildren = false;
         if($itemNode->hasChildren() || in_array($item->getId(), $this->parentList)) {
             $hasChildren = true;
         }*/
 
-        $lidisplayed = false;
+        $li_displayed = false;
         if($this->stripFirstNode && !$this->firstNodeStripped) {
             $this->firstNodeStripped=true;
+            if (isset($this->params['display_description']) && $this->params['display_description']) {
+                $this->html .= '<p>'. $item->getDescription() .'</p>';
+            }
         }
         else {
-            if($item !== null) {
-                $liclass = '';
-                if($isCollapsed) {
-                    $liclass = ' class="collapsed"';
-                }
-                else {
-                    if($itemNode->hasChildren()) {
-                        $liclass = ' class="expanded"';
-                    }
-                }
-                $lidisplayed = true;
-                $this->html .= '<li id="li_'.$item->getId().'"'.$liclass.'>'.$item->getTitle();
+            if($item !== null && $this->_canDisplayItem($item)) {
+                $this->html .= '<li id="item_'.$item->getId().'" class="'. $item->getClasses($params) .'">';
+                $this->html .= $item->fetch($this->params);
+                $li_displayed = true;
             }
         }
               
-        if($itemNode->hasChildren()) {
-            $this->html .= '<ul id="ul_'.$item->getId().'">'."\n";
-
-            $ci =& $itemNode->getChildIterator();               
-            
-            while($ci->valid()) {
-                $child =& $ci->current();
+        if($this->_canDisplaySubItems($item)) {
+            if ($itemNode->hasChildren()) { 
+                $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
+    
+                $ci =& $itemNode->getChildIterator();               
                 
-                $child->accept($this);
+                while($ci->valid()) {
+                    $child =& $ci->current();
+                    
+                    $child->accept($this, array('is_last' => $ci->isLast()));
+                    
+                    $ci->next();
+                }
                 
-                $ci->next();
+                $this->html .= '</ul>'."\n";
+            } else {
+                if (is_a($item, 'Docman_Folder') && !$item->getNbOfChildren()) {
+                    $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
+                    $this->html .= '<li>This folder is empty</li>';
+                    $this->html .= '</ul>'."\n";
+                }
             }
-            
-            $this->html .= '</ul>'."\n";
         }
 
-        if($lidisplayed) {
+        if($li_displayed) {
             $this->html .= '</li>'."\n";
         }
         
     }
 }
 
-
+class MoveItemTreeUlVisitor extends DisplayItemTreeUlVisitor {
+    function MoveItemTreeUlVisitor($params = null) {
+        parent::DisplayItemTreeUlVisitor($params);
+    }
+    function _canDisplayItem($item) {
+        return is_a($item, 'Docman_Folder') || $this->params['item_to_move'] == $item->getId();
+    }
+    function _canDisplaySubItems($item) {
+        return $this->params['item_to_move'] != $item->getId();
+    }
+}
 ?>

@@ -28,12 +28,12 @@ require_once('DocmanAdminActions.class');
 
 class DocmanAdmin extends Docman {
    
-    function DocmanAdmin() {
-        $this->Docman();
+    function DocmanAdmin($pluginPath, $themePath) {
+        parent::Docman($pluginPath, $themePath);
 
         $user =& $this->getUser();
 
-        if(!$user->isMember($this->getGroupId(), 'D2')) {
+        if (!$this->userCanAdminDocman()) {
             exit_error($GLOBALS['Language']->getText('plugin_docman','error'),
                        $GLOBALS['Language']->getText('plugin_docman','err_notadmin'));
         }   

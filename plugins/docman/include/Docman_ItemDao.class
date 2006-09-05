@@ -24,9 +24,9 @@
  */
 require_once('common/dao/include/DataAccessObject.class');
 
-class ItemDao extends DataAccessObject {
+class Docman_ItemDao extends DataAccessObject {
 
-    function ItemDao(&$da) {
+    function Docman_ItemDao(&$da) {
         DataAccessObject::DataAccessObject($da);
     }
 
@@ -37,12 +37,7 @@ class ItemDao extends DataAccessObject {
      */
     function searchById($id) {
         $_id = (int) $id;
-        
-        $sql = 'SELECT * '
-            .' FROM plugin_docman_item'
-            .' WHERE item_id='.$_id;
-
-        return $this->retrieve($sql);
+        return $this->_searchWithCurrentVersion(' i.item_id = '.$_id, '', ' ORDER BY version_date DESC LIMIT 1');
     }
 
     /**
@@ -56,17 +51,25 @@ class ItemDao extends DataAccessObject {
 
         $sql_opt = '';
         if(is_array($collapsed) && count($collapsed) > 0) {
-            $sql_opt = ' AND parent_id NOT IN ('.implode(',', $collapsed).')';
+            $sql_opt = ' AND i.parent_id NOT IN ('.implode(',', $collapsed).')';
         }
-
-        $sql = 'SELECT * '
-            .' FROM plugin_docman_item'
-            .' WHERE group_id='.$_id
-            .$sql_opt;
-
-        return $this->retrieve($sql);
+        return $this->_searchWithCurrentVersion(' i.group_id='. $_id .' '. $sql_opt);
     }
 
+    function _searchWithCurrentVersion($where, $group = '', $order = '') {
+        $sql = 'SELECT i.*, '
+            .' v.id as version_id, v.number as version_number, v.user_id as version_user_id, v.label as version_label, '
+            .' v.changelog as version_changelog, v.date as version_date, v.filename as version_filename, v.filesize as version_filesize, '
+            .' v.filetype as version_filetype, v.path as version_path, '
+            .' count(child.item_id) as folder_nb_of_children '
+            .' FROM plugin_docman_item AS i LEFT JOIN plugin_docman_version AS v ON (i.item_id = v.item_id) '
+            .'       LEFT JOIN plugin_docman_item AS child ON (i.item_id = child.parent_id) '
+            .' WHERE '.$where
+            .' GROUP BY i.item_id '. ($group ? ', '.$group : '')
+            .$order;
+        return $this->retrieve($sql);
+    }
+    
     /**
      * Return the list of items that have children for givent group_id.
      *
@@ -193,7 +196,29 @@ class ItemDao extends DataAccessObject {
         $sql = 'INSERT INTO plugin_docman_item'
             .'('.implode(', ', $arg).')'
             .' VALUES ('.implode(', ', $values).')';
-        
+        return $this->_createAndReturnId($sql);
+    }
+    function createFromRow($row) {
+        $row['create_date'] = $row['update_date'] = time();
+        $arg    = array();
+        $values = array();
+        $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
+        foreach ($row as $key => $value) {
+            if (in_array($key, $cols)) {
+                $arg[]    = $key;
+                $values[] = $this->da->quoteSmart($value);
+            }
+        }
+        if (count($arg)) {
+            $sql = 'INSERT INTO plugin_docman_item '
+                .'('.implode(', ', $arg).')'
+                .' VALUES ('.implode(', ', $values).')';
+            return $this->_createAndReturnId($sql);
+        } else {
+            return false;
+        }
+    }
+    function _createAndReturnId($sql) {
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -205,7 +230,6 @@ class ItemDao extends DataAccessObject {
         }
         return $inserted;
     }
-
     /**
      * Update a row in the table plugin_docman_item 
      *
@@ -275,6 +299,30 @@ class ItemDao extends DataAccessObject {
         return $inserted;
     }
 
+    function updateFromRow($row) {
+        $updated = false;
+        if (isset($row['id'])) {
+            $dar =& $this->searchById($row['id']);
+            if (!$dar->isError() && $dar->valid()) {
+                $current =& $dar->current();
+                $set_array = array();
+                foreach($row as $key => $value) {
+                    if ($key != 'id' && $value != $current[$key]) {
+                        $set_array[] = $key .' = '. $this->da->quoteSmart($value);
+                    }
+                }
+                if (count($set_array)) {
+                    $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
+                    $sql = 'UPDATE plugin_docman_item'
+                        .' SET '.implode(' , ', $set_array)
+                        .' WHERE item_id='. $this->da->quoteSmart($row['id']);
+                    $updated = $this->update($sql);
+                }
+            }
+        }
+        return $updated;
+    }
+    
     /**
      * Delete entry that match $item_id in plugin_docman_item
      *
@@ -288,6 +336,50 @@ class ItemDao extends DataAccessObject {
         $deleted = $this->update($sql);
         
         return $deleted;
+    }
+    
+    /**
+    * @return boolean
+    */
+    function isItemTheOnlyChildOfRoot($group_id, $item_id) {
+        $sql = sprintf('SELECT parent_id FROM plugin_docman_item WHERE parent_id = 0 '.
+            ' AND group_id = %s '.
+            ' AND item_id <> %s '.
+            ' LIMIT 1',
+            $this->da->quoteSmart($group_id),
+            $this->da->quoteSmart($item_id)
+        );
+        $dar =& $this->retrieve($sql);
+        return !$dar->valid();
+    }
+    function setNewParent($item_id, $new_parent_id) {
+        $sql = sprintf('UPDATE plugin_docman_item SET parent_id = %s '.
+            ' WHERE  item_id = %s ',
+            $this->da->quoteSmart($new_parent_id),
+            $this->da->quoteSmart($item_id)
+        );
+        return $this->update($sql);
+    }
+    
+    function searchByParentsId($parents) {
+        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) ',
+            implode(', ', $parents)
+        );
+        return $this->retrieve($sql);
+    }
+    
+    function searchRootIdForGroupId($group_id) {
+        $sql = sprintf('SELECT item_id FROM plugin_docman_item WHERE parent_id = 0 '.
+            ' AND group_id = %s ',
+            $this->da->quoteSmart($group_id)
+        );
+        $dar =& $this->retrieve($sql);
+        $id = false;
+        if ($dar && $dar->valid()) {
+            $row = $dar->current();
+            $id = $row['item_id'];
+        }
+        return $id;
     }
 }
 

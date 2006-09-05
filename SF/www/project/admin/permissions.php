@@ -32,8 +32,9 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactField.class');
 #require_once('common/wiki/lib/WikiPage.class');
+require_once('common/event/EventManager.class');
 
-$Language->loadLanguageMsg('project/project');
+$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 /**
  * Return a printable name for a given permission type
@@ -68,7 +69,12 @@ function permission_get_name($permission_type) {
         return $Language->getText('project_admin_permissions','tracker_assignee_access');
     } else if ($permission_type=='TRACKER_ACCESS_FULL') {
         return $Language->getText('project_admin_permissions','tracker_full_access');
-    } else return $permission_type;
+    } else {
+        $em =& EventManager::instance();
+        $name = false;
+        $em->processEvent('permission_get_name', array('permission_type' => $permission_type, 'name' => &$name));
+        return $name ? $name : $permission_type;
+    }
 }
 
 /**
@@ -103,7 +109,16 @@ function permission_get_object_type($permission_type,$object_id) {
         return 'tracker';
     } else if ($permission_type=='TRACKER_ACCESS_FULL') {
         return 'tracker';
-    } else return 'object';
+    } else {
+        $em =& EventManager::instance();
+        $object_type = false;
+        $em->processEvent('permission_get_object_type', array(
+            'permission_type' => $permission_type, 
+            'object_id'       => $object_id, 
+            'object_type'     => &$object_type)
+        );
+        return $object_type ? $object_type : 'object';
+    }
 }
 
 /**
@@ -150,18 +165,35 @@ function permission_get_object_name($permission_type,$object_id) {
             }
         }
         return $ret;
-    } else return "$object_id";
+    } else {
+        $em =& EventManager::instance();
+        $object_name = false;
+        $em->processEvent('permission_get_object_name', array(
+            'permission_type' => $permission_type, 
+            'object_id'       => $object_id, 
+            'object_name'     => &$object_name)
+        );
+        return $object_name ? $object_name : $object_id;
+    }
 }
 
 /**
  * Return the full name for a given object
  */
 function permission_get_object_fullname($permission_type,$object_id) {
-  global $Language;
-  
-  $type = permission_get_object_type($permission_type,$object_id);
-  $name = permission_get_object_name($permission_type,$object_id);
-  return $Language->getText('project_admin_permissions',$type,$name);
+    $em =& EventManager::instance();
+    $object_fullname = false;
+    $em->processEvent('permission_get_object_fullname', array(
+        'permission_type' => $permission_type, 
+        'object_id'       => $object_id, 
+        'object_fullname' => &$object_fullname)
+    );
+    if (!$object_fullname) {
+        $type = permission_get_object_type($permission_type,$object_id);
+        $name = permission_get_object_name($permission_type,$object_id);
+        $object_fullname = $GLOBALS['Language']->getText('project_admin_permissions',$type,$name);
+    }
+    return $object_fullname;
 }
 
 /**
@@ -193,8 +225,17 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
         $group = group_get_object($group_id);	
         $at = new ArtifactType($group, $object_id);
         return $at->userIsAdmin();
+    } else {
+        $em =& EventManager::instance();
+        $allowed = false;
+        $em->processEvent('permission_user_allowed_to_change', array(
+            'group_id'        => $group_id,
+            'permission_type' => $permission_type, 
+            'object_id'       => $object_id, 
+            'allowed'         => &$allowed)
+        );
+        return $allowed;
     }
-    return false;
 }
 
 /**
@@ -496,9 +537,8 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
  *
  * For the list of supported permission_type and id, see above in file header.
  */
-
-function permission_display_selection_form($permission_type, $object_id, $group_id, $post_url) {
-  global $Language;
+function permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url) {
+    $html = '';
     if (!$post_url) $post_url=$_SERVER['PHP_SELF'];
 
     // Get ugroups already defined for this permission_type
@@ -511,8 +551,8 @@ function permission_display_selection_form($permission_type, $object_id, $group_
     $predefined_ugroups='';
     $default_values=array();
     if (db_numrows($res)<1) {
-        echo "<p><b>".$Language->getText('global','error')."</b>: ".$Language->getText('project_admin_permissions','perm_type_not_def',$permission_type);
-        return;
+        $html .= "<p><b>".$GLOBALS['Language']->getText('global','error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions','perm_type_not_def',$permission_type);
+        return $html;
     } else { 
         while ($row = db_fetch_array($res)) {
             if ($predefined_ugroups) { $predefined_ugroups.= ' ,';}
@@ -524,7 +564,7 @@ function permission_display_selection_form($permission_type, $object_id, $group_
     $res=db_query($sql);
 
     // Display form
-    echo '<FORM ACTION="'. $post_url .'" METHOD="POST">
+    $html .= '<FORM ACTION="'. $post_url .'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_permissions">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="'.$permission_type.'">
@@ -537,11 +577,16 @@ function permission_display_selection_form($permission_type, $object_id, $group_
             'text' => $name
         );
     }
-    echo html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
-    echo '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('project_admin_permissions','submit_perm').'">';
-    echo '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$Language->getText('project_admin_permissions','reset_to_def').'">';
-    echo '</FORM>';
-    echo '<p>'.$Language->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
+    $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
+    $html .= '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','submit_perm').'">';
+    $html .= '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def').'">';
+    $html .= '</FORM>';
+    $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
+    return $html;
+}
+     
+function permission_display_selection_form($permission_type, $object_id, $group_id, $post_url) {
+    echo permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url);
 }
 
 

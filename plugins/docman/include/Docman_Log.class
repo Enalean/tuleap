@@ -1,0 +1,133 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Nicolas Terray, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('Docman_LogDao.class');
+/**
+ * Log is a transport object (aka container) used to share data between
+ * Model/Controler and View layer of the application
+ */
+class Docman_Log { /* implements EventListener */
+    function Docman_Log() {
+        $this->_getDao();
+    }
+    
+    function log($event, $params) {
+        switch ($event) {
+            case PLUGIN_DOCMAN_EVENT_EDIT:
+                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, 'old', 'new');
+                break;
+            case PLUGIN_DOCMAN_EVENT_MOVE:
+                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, null, $params['parent']);
+                break;
+            case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
+                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, null, $params['version']);
+                break;
+            default:
+                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event);
+                break;
+        }
+    }
+    
+    function logsDaily($params) {
+        $params['logs'][] = array(
+            'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond'], PLUGIN_DOCMAN_EVENT_ACCESS),
+            'field' => 'Documents',       //TODO i18n
+            'title' => 'Document access'  //TODO i18n
+        );
+    }
+    
+    var $dao;
+    function _getDao() {
+        if (!$this->dao) {
+            $this->dao = new Docman_LogDao(CodexDataAccess::instance());
+        }
+        return  $this->dao;
+    }
+    
+    
+    function fetchLogsForItem($item_id) {
+        $html = '';
+        $html .= '<h3>Logs</h3>';
+        $dar =& $this->dao->searchByItemIdOrderByTimestamp($item_id);
+        if ($dar && !$dar->isError()) {
+            if ($dar->valid()) {
+                $titles = array();
+                $titles[] = 'when';
+                $titles[] = 'who';
+                $titles[] = 'what';
+                $html .= html_build_list_table_top($titles, false, false, false);
+                $odd_even = array('boxitem', 'boxitemalt');
+                $i = 0;
+                while ($dar->valid()) {
+                    $row = $dar->current();
+                    $user = $row['user_id'] ? user_getname($row['user_id']) : 'Anonymous'; //TODO i18n
+                    $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
+                    $html .= '<td>'. date('Y-m-d H:i:s', $row['time']) .'</td>';
+                    $html .= '<td>'. $user                             .'</td>';
+                    $html .= '<td>'. $this->getText($row['type'])      .'</td>';
+                    $html .= '</tr>';
+                    $dar->next();
+                }
+                $html .= '</table>';
+            } else {
+                $html .= '<div>There is no log yet</div>';
+            }
+        } else {
+            $html .= '<div>Error while searching logs!</div>';
+            $html .= $dar->isError();
+        }
+        return $html;
+    }
+    
+    //TODO => .tab
+    function getText($type) {
+        $txt = '';
+        switch($type) {
+            case PLUGIN_DOCMAN_EVENT_ADD:
+                $txt = 'Add';
+                break;
+            case PLUGIN_DOCMAN_EVENT_EDIT:
+                $txt = 'Edit';
+                break;
+            case PLUGIN_DOCMAN_EVENT_MOVE:
+                $txt = 'Move';
+                break;
+            case PLUGIN_DOCMAN_EVENT_DEL:
+                $txt = 'Delete';
+                break;
+            case PLUGIN_DOCMAN_EVENT_ACCESS:
+                $txt = 'Access';
+                break;
+            case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
+                $txt = 'New version';
+                break;
+            default:
+                break;
+        }
+        return $txt;
+    }
+
+}
+
+?>

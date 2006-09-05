@@ -1,8 +1,8 @@
 <?php
-/**
+/* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet, 2006
+ * Originally written by Nicolas Terray, 2006
  *
  * This file is a part of CodeX.
  *
@@ -22,32 +22,16 @@
  *
  * $Id$
  */
+require_once('Docman_ItemDetailsSectionView.class');
 
-require_once('common/collection/Visitor.class');
-
-class NodeToRootVisitor extends Visitor {
-    var $path;
-
-    function NodeToRootVisitor() {
-        $this->path = array();
+class Docman_ItemDetailsSectionNotificationsView extends Docman_ItemDetailsSectionView {
+    function Docman_ItemDetailsSectionNotificationsView(&$item, $url) {
+        parent::Docman_ItemDetailsSectionView($item, $url, 'notifications', 'Notifications');
     }
-
-    function getItemId(&$itemNode) {
-        $item =& $itemNode->getData();
-        return $item->getId();
+    function getContent() {
+        $content = 'Notifications of the document';
+        return $content;
     }
-
-    function getPath() {
-        return $this->path;
-    }
-
-    function visit(&$itemNode) {
-        while(($itemNodeId = $this->getItemId($itemNode)) != 0) {
-            array_push($this->path, $itemNodeId);
-            $itemNode =& $itemNode->getParentNode();
-        }
-        array_push($this->path, 0);
-    }
-
 }
+
 ?>

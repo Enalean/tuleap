@@ -1,0 +1,6 @@
+<?php
+
+// Where the documentation files are located
+$docman_root = '/tmp/docman';
+
+?>

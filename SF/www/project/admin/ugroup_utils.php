@@ -12,21 +12,48 @@
 //
 // Define various functions for user group management
 //
-
-$Language->loadLanguageMsg('project/project');
+$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
-$UGROUP_NONE=100;
-$UGROUP_ANONYMOUS=1;
-$UGROUP_REGISTERED=2;
-$UGROUP_PROJECT_MEMBERS=3;
-$UGROUP_PROJECT_ADMIN=4;
-$UGROUP_FILE_MANAGER_ADMIN=11;
-$UGROUP_DOCUMENT_TECH=12;
-$UGROUP_DOCUMENT_ADMIN=13;
-$UGROUP_WIKI_ADMIN=14;
-$UGROUP_TRACKER_ADMIN=15;
+$GLOBALS['UGROUP_NONE']               =100;
+$GLOBALS['UGROUP_ANONYMOUS']          =1;
+$GLOBALS['UGROUP_REGISTERED']         =2;
+$GLOBALS['UGROUP_PROJECT_MEMBERS']    =3;
+$GLOBALS['UGROUP_PROJECT_ADMIN']      =4;
+$GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] =11;
+$GLOBALS['UGROUP_DOCUMENT_TECH']      =12;
+$GLOBALS['UGROUP_DOCUMENT_ADMIN']     =13;
+$GLOBALS['UGROUP_WIKI_ADMIN']         =14;
+$GLOBALS['UGROUP_TRACKER_ADMIN']      =15;
 
+/*
+*      anonymous
+*          ^
+*          |
+*      registered
+*          ^
+*          |
+*     +----+-----+
+*     |          |
+*  statics    members
+*                ^
+*                |
+*         +------+-----+- - - -   -   -
+*         |            |
+*    tracker_tech   doc_admin
+*/
+function ugroup_get_parent($ugroup_id) {
+    if ($ugroup_id == $GLOBALS['UGROUP_NONE'] || $ugroup_id == $GLOBALS['UGROUP_ANONYMOUS']) {
+        $parent_id = false;
+    } else if ($ugroup_id == $GLOBALS['UGROUP_REGISTERED']) {
+        $parent_id = $GLOBALS['UGROUP_ANONYMOUS'];
+    } else if ($ugroup_id == $GLOBALS['UGROUP_PROJECT_MEMBERS'] || $ugroup_id > 100) {
+        $parent_id = $GLOBALS['UGROUP_REGISTERED'];
+    } else {
+        $parent_id = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
+    }
+    return $parent_id;
+}
 
 // Return members (user_id + user_name) of given user group
 function ugroup_db_get_members($ugroup_id) {	
@@ -73,15 +100,19 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 /** Return array of ugroup_id for all dynamic ugoups like 
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
-function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user_id) {
-  $user = new User($user_id);
+function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
+    
+    if (!is_a($user, 'User')) {
+        $user = new User($user);
+    }
   
-  if (!$user->isValid()) return array($GLOBALS['UGROUP_ANONYMOUS']);
+  if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);
 
   $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
 
   if ($user->isMember($group_id))  $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS']; 
   if ($user->isMember($group_id,'A'))  $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
+  if ($user->isMember($group_id,'D2'))  $res[] = $GLOBALS['UGROUP_DOCUMENT_ADMIN'];
   if (is_int($instances)) {
       if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
   } else if (is_array($instances)) {

@@ -39,28 +39,152 @@
 UL/LI Based
 */
 
-.lidir ul { 
-padding: 0;
-margin: 0;
-padding-left: 2em;
- }
-
-.lidir li { 
- list-style: url('/plugins/docman/gnome-fs-directory.png');
- border: 1px solid #F7F7F7;
- background-color: #F7F7F7;
+ul.docman_items {
+   list-style:none;
+   padding:0;
+   margin:0;
+   padding-left:24px;
+}
+li.docman_item {
+    background:transparent url(../images/line.gif) left top repeat-y;
+/*    padding:1px;                            HIGHLIGHT */
+}
+li.docman_item_last {
+    background-image:none;
+/*    padding:1px;                            HIGHLIGHT */
 }
 
-.lidir li.selected { 
-  list-style: url('/plugins/docman/gnome-fs-directory.png');
-  border: 1px solid black;
-  background-color: #FBFBFB;
-} 
+/*                                            HIGHLIGHT
+li.docman_item_highlight {
+    background-color:#f8f8f8;
+    border:1px solid #ccc;
+    background-position:-1px 0px;
+    padding:0px;
+}
+*/
+.docman_properties_navlist
+{
+    padding: 3px 0;
+    margin: 0;
+    border-bottom: 1px solid #bcbcad;
+    font: bold 12px Verdana, sans-serif;
+}
 
-.lidir li.collapsed { 
-list-style: url('/plugins/docman/20_join.gif');
- }
+.docman_properties_navlist li
+{
+    list-style: none;
+    margin: 0;
+    display: inline;
+}
 
-.hidden { 
-  display: none;
- }
+.docman_properties_navlist li a
+{
+    padding: 3px 0.5em;
+    margin-left: 3px;
+    border: 1px solid #bcbcad;
+    border-bottom: none;
+    background: #e8e8e0;
+    text-decoration: none;
+}
+
+
+.docman_properties_navlist li a:hover
+{
+    background-color:#e8e8e0;
+    color:#8b4020;
+}
+
+.docman_properties_navlist li a.docman_properties_navlist_current
+{
+    background: white;
+    border-bottom: 1px solid white;
+}
+.docman_properties_content {
+    border:1px solid #bcbcad;
+    border-top:none;
+    padding:10px 20px;
+    background: white;
+}
+.docman_properties_content dl dt {
+    font-weight:bold;
+    font-size:1.1em;
+}
+
+.docman_confirm_delete {
+    border:medium solid red; 
+	background:#FFC; 
+	padding:4px 10px;
+
+}
+.docman_confirm_delete_buttons {
+    text-align:center;
+}
+
+.docman_item_title {
+    padding-left:6px;
+}
+.docman_item_description {
+    margin-left:30px;
+    font-size:0.8em;
+    padding-bottom:6px;
+}
+.docman_item_icon {
+    vertical-align:middle;
+    margin-right:4px;
+}
+.docman_item_options {
+    margin-left:24px;
+}
+.docman_item_show_options {
+    margin-left:24px;
+    font-size:0.7em;
+}
+a.docman_item_show_options {
+    color:#ccc;
+}
+a.docman_item_show_options:hover {
+    color:red;
+}
+
+form {
+    margin:0;
+}
+a img {
+    border:none;
+}
+
+.docman_feedback_error, .docman_feedback_warning, .docman_feedback_info {
+        font-family:sans-serif;
+        background-color: #f7f7f7;
+        background-position: 20px 50%;
+        background-repeat:no-repeat;
+        margin-left:0px;
+        margin-bottom:10px;
+        list-style:none;
+        padding:10px 50px;
+}
+
+.docman_feedback_error {
+        border:thick solid #ff0000;
+        color:#ff0000;
+        font-weight:bold;
+        background-image: url(../images/error.png)
+}
+.docman_feedback_warning {
+        border:medium solid darkorange;
+        color:peru;
+        font-weight:normal;
+        background-image: url(../images/warning.png)
+}
+.docman_feedback_info {
+        border:thin solid darkblue;
+        color:darkblue;
+        font-weight:normal;
+        background-image: url(../images/info.png)
+}
+
+.feedback_error h3,
+.feedback_warning h3,
+.feedback_info h3 {
+        display:none;
+}

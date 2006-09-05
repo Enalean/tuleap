@@ -29,18 +29,57 @@ require_once('common/include/UserManager.class');
 require_once('DocmanViews.class');
 require_once('DocmanActions.class');
 
+require_once('Feedback.class');
+
+require_once('Docman_Log.class');
+require_once('common/event/EventManager.class');
+
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+
+define('PLUGIN_DOCMAN_EVENT_ADD',         1);
+define('PLUGIN_DOCMAN_EVENT_EDIT',        2);
+define('PLUGIN_DOCMAN_EVENT_MOVE',        3);
+define('PLUGIN_DOCMAN_EVENT_DEL',         4);
+define('PLUGIN_DOCMAN_EVENT_ACCESS',      5);
+define('PLUGIN_DOCMAN_EVENT_NEW_VERSION', 6);
 
 class Docman extends Controler {
     // variables
     var $request;
     var $user;
     var $groupId;
-
-    function Docman() {
-        $this->request = & HTTPRequest::instance();
-        $this->user    = null;
-        $this->groupId = null;        
+    var $themePath;
+    var $plugin;
+    var $logger;
+    var $feedback;
+    
+    function Docman(&$plugin, $pluginPath, $themePath) {
+        $this->request    = & HTTPRequest::instance();
+        $this->user       = null;
+        $this->groupId    = null;
+        $this->pluginPath = $pluginPath;
+        $this->themePath  = $themePath;
+        $this->plugin     = $plugin;
+        $this->feedback   =& new Feedback();
+        
+        $this->logger  =& new Docman_Log();
+        $event_manager =& $this->_getEventManager();
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD,          $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,         $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_MOVE,         $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_DEL,          $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ACCESS,       $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_NEW_VERSION,  $this->logger, 'log', true, 0);
+    }
+    function getLogger() {
+        return $this->logger;
+    }
+    function logsDaily($params) {
+        $this->logger->logsDaily($params);
+    }
+    
+    function &_getEventManager() {
+        return EventManager::instance();
     }
     
     function &getUser() {
@@ -50,7 +89,37 @@ class Docman extends Controler {
         }
         return $this->user;
     }
-
+    function userCanAdminDocman() {
+        $user =& $this->getUser();
+        return $user->isMember($this->getGroupId(), 'D2') || $user->isSuperUser();
+    }
+    
+    /***************** PERMISSIONS ************************/
+    function userCanRead($item_id) {
+        return $this->userHasPermission('PLUGIN_DOCMAN_READ', $item_id) || $this->userCanWrite($item_id);
+    }
+    function userCanWrite($item_id) {
+        return $this->userHasPermission('PLUGIN_DOCMAN_WRITE', $item_id) || $this->userCanAdmin($item_id);
+    }
+    function userCanAdmin($item_id) {
+        return $this->userHasPermission('PLUGIN_DOCMAN_ADMIN', $item_id);
+    }
+    function userHasPermission($permission_type, $object_id) {
+        $user =& $this->getUser();
+        // Super-user has all rights...
+        $has_permission = $user->isSuperUser();
+        if (!$has_permission) {
+            // permissions set for this object.
+            $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
+            while (!$has_permission && ($row = db_fetch_array($res))) {
+                // should work even for anonymous users
+                $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], (int)$this->request->get('group_id'));
+            }
+        }
+        return $has_permission;
+    }
+    /******************************************************/
+    
     function getGroupId() {
         if($this->groupId === null) {
             $_gid = (int) $this->request->get('group_id');
@@ -63,20 +132,91 @@ class Docman extends Controler {
 
     function getDefaultUrl() {
         $_gid = $this->getGroupId();
-        return '/plugins/docman/index.php?group_id='.$_gid;
+        return $this->pluginPath.'/?group_id='.$_gid;
     }
 
     function getAdminUrl() {
         $_gid = $this->getGroupId();
-        return '/plugins/docman/admin/index.php?group_id='.$_gid;
+        return $this->pluginPath.'/admin/?group_id='.$_gid;
     }
-
+    
+    function getThemePath() {
+        return $this->themePath;
+    }
+    
     function request() {
-        $this->action = $this->request->get('act');
-        $this->view = 'displayFolder';
+        
+        $this->view = 'show';
 
-        if($this->request->get('view'))
+        if ($this->request->exist('view')) {
             $this->view = $this->request->get('view');
+        }
+        switch ($this->request->get('action')) {
+            case 'show':
+            case 'details':
+                $item_factory =& $this->_getItemFactory();
+                if ($this->request->exist('id')) {
+                    $item =& $item_factory->getItemFromDb($this->request->get('id'));
+                } else {
+                    $item =& $item_factory->getRoot($this->request->get('group_id'));
+                }
+                if ($item) {
+                    $user     = $this->getUser();
+                    $can_read = $user->isSuperUser();
+                    if (!$can_read) {
+                        $can_read = $this->userCanRead($item->getId());
+                        if ($can_read) {
+                            $parent       = $item;
+                            $pm           =& PermissionsManager::instance();
+                            $user_ugroups =& $user->getUgroups();
+                            while ($can_read && $parent->getParentId() != 0) {
+                                $parent =& $item_factory->getItemFromDb($parent->getParentId());
+                                $can_read = $this->userCanRead($parent->getId());
+                            }
+                        }
+                    }
+                    if ($can_read) {
+                        $this->view = $this->request->get('action');
+                    } else {
+                        $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
+                        $this->feedback->log('error', 'You do not have sufficient access rights to view this '. $folder_or_document .'.');
+                        $this->view = 'none';
+                    }
+                }
+                break;
+            case 'move':
+            case 'newDocument':
+            case 'newFolder':
+                $this->view = $this->request->get('action');
+                break;
+            case 'move_here':
+                $this->action = 'move';
+                $this->view = 'redirectAfterPost';
+                break;
+            case 'permissions':
+                $this->action = 'permissions';
+                $this->view   = 'details';
+                break;
+            case 'createFolder':
+            case 'createDocument':
+            case 'update':
+            case 'new_version':
+                $this->view = 'redirectAfterPost';
+            default:
+                $this->action = $this->request->get('action');
+                break;
+        }
+    }
+    function getProperty($name) {
+        $info =& $this->plugin->getPluginInfo();
+        return $info->getPropertyValueForName($name);
+    }
+    var $item_factory;
+    function &_getItemFactory() {
+        if (!$this->item_factory) {
+            $this->item_factory =& new Docman_ItemFactory();
+        }
+        return $this->item_factory;
     }
 }
 

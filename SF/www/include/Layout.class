@@ -481,7 +481,7 @@ echo html_blankimage(5,100);
                     // When it is done here, the service bar will not appear updated on the current page
                     $link=str_replace('$projectname',group_getunixname($group_id),$link);
                 }
-                $link=str_replace('$sys_default_domain',$sys_default_domain,$link);
+                $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
                 if ($GLOBALS['sys_force_ssl']) {
                     $sys_default_protocol='https'; 
                 } else { $sys_default_protocol='http'; }

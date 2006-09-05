@@ -25,8 +25,8 @@
 
 require_once('common/mvc/Actions.class');
 
-require_once('Folder.class');
-require_once('FolderBo.class');
+require_once('Docman_Folder.class');
+require_once('Docman_FolderBo.class');
 
 class DocmanAdminActions extends Actions {
     
@@ -37,7 +37,7 @@ class DocmanAdminActions extends Actions {
     function create_folder() {
         $request =& HTTPRequest::instance();
 
-        $folder = new Folder();
+        $folder = new Docman_Folder();
         $folder->setGroupId($request->get('group_id'));
         $folder->setTitle($request->get('name'));
         //        $folder->setDescription($request->get(''));
@@ -48,7 +48,7 @@ class DocmanAdminActions extends Actions {
         $folder->setCreateDate(time());
         $folder->setUpdateDate(time());
 
-        $folderBo = new FolderBo();
+        $folderBo = new Docman_FolderBo();
         $folderBo->create($folder);
     }        
 
@@ -56,17 +56,17 @@ class DocmanAdminActions extends Actions {
     function delete_folder() {
         $request =& HTTPRequest::instance();
         
-        $folder = new Folder();
+        $folder = new Docman_Folder();
         $folder->setId($request->get('id'));        
 
-        $folderBo = new FolderBo();
+        $folderBo = new Docman_FolderBo();
         $folderBo->delete($folder);
     }
 
     function update_folder() {
         $request =& HTTPRequest::instance();
 
-        $folder = new Folder();
+        $folder = new Docman_Folder();
         $folder->setId($request->get('id'));
 
         if($request->get('name'))
@@ -83,7 +83,7 @@ class DocmanAdminActions extends Actions {
 
         $folder->setUpdateDate(time());
 
-        $folderBo = new FolderBo();
+        $folderBo = new Docman_FolderBo();
         $folderBo->update($folder);
     }
 

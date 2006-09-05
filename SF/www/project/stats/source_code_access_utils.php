@@ -67,7 +67,7 @@ function logs_display($sql, $span, $field, $title='') {
       . ' <th>'.$field.'</th>'."\n"
       . ' <th align="right">'.$Language->getText('project_stats_source_code_access_utils','time').'</th>'."\n"
       . '</tr>'."\n";
-		
+		$i = 0;
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
  
@@ -356,6 +356,20 @@ function wiki_attachments_logs_daily($project, $span = 7, $who="allusers") {
     
     logs_display($sql, $span, $Language->getText('project_stats_source_code_access_utils','wiki_attachment_title'),
                  $Language->getText('project_stats_source_code_access_utils','wiki_attachment_access'));
+}
+
+
+function plugins_logs_daily($project, $span = 7, $who = 'allusers') {
+    $event_manager =& EventManager::instance();
+    $logs = array();
+    $event_manager->processEvent('logs_daily', array(
+        'group_id'  => $project->getGroupId(),
+        'logs_cond' => logs_cond($project, $span, $who),
+        'logs'      => &$logs
+    ));
+    foreach($logs as $log) {
+        logs_display($log['sql'], $span, $log['field'], $log['title']);
+    }
 }
 
 ?>

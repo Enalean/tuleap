@@ -23,7 +23,8 @@
  * $Id$
  */
 require_once('DocmanViews.class');
-require_once('ItemBo.class');
+require_once('Docman_ItemBo.class');
+require_once('Docman_FolderBo.class');
 
 class DocmanAdminViews extends DocmanViews {
     
@@ -71,7 +72,7 @@ class DocmanAdminViews extends DocmanViews {
      */
     function main_menu() {
         echo '
-<h2><a href="'.$this->_controler->getAdminUrl().'&view=dflt_folder">'.$GLOBALS['Language']->getText('plugin_docman', 'main_menu_fldr_title').'</a></h2>
+<h3><a href="'.$this->_controler->getAdminUrl().'&view=dflt_folder">'.$GLOBALS['Language']->getText('plugin_docman', 'main_menu_fldr_title').'</a></h3>
 <p>'.$GLOBALS['Language']->getText('plugin_docman', 'main_menu_fldr_desc').'</p>';
     }
     
@@ -81,7 +82,7 @@ class DocmanAdminViews extends DocmanViews {
     function dflt_folder() {
         $groupId = $this->_controler->getGroupId();
         
-        $folderBo = new FolderBo($groupId);        
+        $folderBo = new Docman_FolderBo($groupId);        
         $fi =& $folderBo->getList();
 
         echo "<h2>".$GLOBALS['Language']->getText('plugin_docman', 'folder_list')."</h2>\n";
@@ -121,7 +122,7 @@ class DocmanAdminViews extends DocmanViews {
     function dflt_update_folder() {
         echo "<h2>".$GLOBALS['Language']->getText('plugin_docman', 'dflt_update_folder')."</h2>\n";
 
-        $folderBo = new FolderBo($this->_controler->getGroupId());        
+        $folderBo = new Docman_FolderBo($this->_controler->getGroupId());        
         $fi =& $folderBo->getList();
 
         // Fetch folder to update in previous list

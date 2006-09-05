@@ -10,7 +10,7 @@
 //require_once('common/include/Error.class');
   //require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
+$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 require_once('common/include/UserManager.class');
 require_once('common/permission/PermissionsManager.class');
 //
