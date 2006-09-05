@@ -44,11 +44,11 @@ function survey_header($params) {
 	echo " | <A HREF=\"/survey/admin/show_results.php?group_id=$group_id\">".$Language->getText('survey_s_utils','show_r')."</A>";
     }
     
-    if ($params['help']) {
+    if (isset($params['help'])) {
         if (user_ismember($group_id, 'A')) {
             echo ' | ';
         }
-	    echo help_button($params['help'],false,$Language->getText('global','help'));
+        echo help_button($params['help'],false,$Language->getText('global','help'));
     }
 
     echo "</B><P>";

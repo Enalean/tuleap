@@ -30,6 +30,9 @@ if (!isset($hide_item_id)) {
 if (!isset($hide_forum)) {
     $hide_forum = '';
 }
+if (!isset($hide_bug)) {
+    $hide_bug = '';
+}
 //
 if (user_isloggedin()) {
 
