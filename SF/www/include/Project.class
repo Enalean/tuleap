@@ -89,15 +89,22 @@ class Project extends Group {
                 $short_name=$res_row['short_name'];
                 if (!$short_name) { $short_name=$j;}
 
+                $em =& EventManager::instance();
+                $em->processEvent("plugin_load_language_file", null);
+
 		// needed for localisation
 		if ($res_row['description'] == "service_".$short_name."_desc_key") {
 		  $res_row['description'] = $Language->getText('project_admin_editservice',$res_row['description']);
 		}
-
+        elseif(preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
+            $res_row['description'] = $Language->getText($matches[1], $matches[2]);
+        }
 		if ($res_row['label'] == "service_".$short_name."_lbl_key") {
 		  $res_row['label'] = $Language->getText('project_admin_editservice',$res_row['label']);
 		}
-
+        elseif(preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
+            $res_row['label'] = $Language->getText($matches[1], $matches[2]);
+        }
                 $this->service_data_array[$short_name] = $res_row;
                 if ($short_name) {
                     $this->use_service[$short_name]= $res_row['is_used'];

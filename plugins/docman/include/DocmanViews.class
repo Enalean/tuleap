@@ -38,17 +38,24 @@ class DocmanViews extends Views {
     }
     
     function header() {
-        $title = $GLOBALS['Language']->getText('plugin_docman','title');
-        $GLOBALS['HTML']->header(array('title'=>$title));
-        echo '<h2>'.$title.'</h2>';
+        $request =& HTTPRequest::instance();
+        $htmlParams['title'] = $GLOBALS['Language']->getText('plugin_docman','title');
+
+        $htmlParams['group']  = $request->get('group_id');
+        $htmlParams['toptab'] = 'docman';
+
+        $GLOBALS['HTML']->header($htmlParams);
+        //echo '<h2>'.$htmlParams['title'].'</h2>';
     }
     function footer() {
         $GLOBALS['HTML']->footer(array());
     }
     
     function displayFolder() {
+        $request =& HTTPRequest::instance();
+
         $itemBo = new ItemBo();
-        $itemBo->groupId = 101;
+        $itemBo->groupId = $request->get('group_id');
 
         $itemTree =& $itemBo->getItemTree();
 
@@ -66,7 +73,7 @@ class DocmanViews extends Views {
         $request =& HTTPRequest::instance();
 
         $itemBo = new ItemBo();
-        $itemBo->groupId = 101;
+        $itemBo->groupId = $request->get('group_id');
 
         $itemTree =& $itemBo->getItemTree();
 

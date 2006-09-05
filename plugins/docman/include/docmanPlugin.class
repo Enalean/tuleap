@@ -31,6 +31,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('javascript_file', 'jsFile', false);
+        $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
 	}
 	
     function &getPluginInfo() {
@@ -61,6 +62,10 @@ class DocmanPlugin extends Plugin {
             //            echo '<script type="text/javascript" src="/include/scriptaculous/scriptaculous.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->_getPluginPath().'/js/folder.js"></script>'."\n";
         }
+    }
+
+    function loadPluginLanguageFile($params) {
+        $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
     }
 
 
