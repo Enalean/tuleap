@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionView.class');
+require_once('Docman_View_ItemDetailsSection.class');
 
 class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection {
     var $is_moveable;
@@ -47,7 +47,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         
         //{{{ Move
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
-        if (!$this->is_moveable || !$this->_controller->userCanWrite($this->item->getid())) {
+        if (!$this->is_moveable || !($this->_controller->userCanWrite($this->item->getId()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move_cannotmove_'.$folder_or_document);
         } else {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 
@@ -60,7 +60,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         
         //{{{ Delete
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
-        if (!$this->is_deleteable || !$this->_controller->userCanManage($this->item->getid())) {
+        if (!$this->is_deleteable || !($this->_controller->userCanWrite($this->item->getid()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete_cannotdelete_'.$folder_or_document);
         } else {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 
@@ -81,7 +81,15 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     function visitDocument(&$item, $params = array()) {
         $content = '';
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
-        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
+        if (!$this->_controller->userCanWrite($this->item->getid())) {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_cannot');
+        } else {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 
+                'details_actions_update_can', 
+                Docman_View_View::buildUrl($this->url, array('action' => 'action_update', 'id' => $this->item->getId()))
+            );
+        }
+        /*$content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
         
         require_once('Docman_View_GetSpecificFieldsVisitor.class');
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor());
@@ -91,10 +99,11 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         }
         $content .= '</table>';
         $content .= '<input type="hidden" name="item[id]" value="'. $item->getId() .'" />';
-        $content .= '<input type="hidden" name="action" value="update" />';
+        $content .= '<input type="hidden" name="action" value="update_wl" />';
         $content .= '<input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'" />';
         
         $content .= '</form>';
+        */
         $content .= '</dd>';
         return $content;
     }
@@ -107,25 +116,14 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     function visitFile(&$item, $params = array()) {
         $content = '';
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion') .'</dt><dd>';
-        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data">';
-        
-        $content .= '<table>';
-        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="" /></td></tr>';
-        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="5" cols="50"></textarea></td></tr>';
-        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_content') .'</td><td>';
-        if (isset($params['input_content'])) {
-            $content .= $params['input_content'];
+        if (!$this->_controller->userCanWrite($this->item->getid())) {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_cannotcreate');
         } else {
-            $content .= '<input name="file" type="file" />';
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 
+                'details_actions_newversion_cancreate', 
+                Docman_View_View::buildUrl($this->url, array('action' => 'action_new_version', 'id' => $this->item->getId()))
+            );
         }
-        $content .= '</td></tr>';
-        
-        $content .= '<input type="hidden" name="action" value="new_version" />';
-
-        $content .= '<tr style="vertical-align:top"><td></td><td><input type="submit" name="new_version" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_button').'" /></td></tr>';
-        $content .= '</table>';
-        
-        $content .= '</form>';
         $content .= '</dd>';
         return $content;
     }

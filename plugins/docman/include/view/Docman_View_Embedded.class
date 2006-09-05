@@ -9,7 +9,7 @@
 */
 
 require_once('Docman_View_Display.class');
-require_once('Docman_View_Error.class');
+require_once('Docman_View_DocmanError.class');
 
 
 class Docman_View_Embedded extends Docman_View_Display {
@@ -31,12 +31,18 @@ class Docman_View_Embedded extends Docman_View_Display {
                     'version'  => $version->getNumber(),
                     'user'     => $params['user']->getId()
                 ));
-                echo '<div style="clear:both">';
+                $mime = explode('/', $version->getFiletype());
+                if (in_array($mime[1], array('plain', 'css', 'javascript'))) {
+                    $balise = 'pre';
+                } else {
+                    $balise = 'div';
+                }
+                echo '<'. $balise .' style="clear:both">';
                 readfile($version->getPath());
-                echo '</div>';
+                echo '</'. $balise .'>';
             } else {
-                $this->_controller->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound');
-                $v =& new Docman_View_Error($this->_controller);
+                $this->_controller->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));
+                $v =& new Docman_View_DocmanError($this->_controller);
                 $v->display($params);
             }
         }

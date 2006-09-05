@@ -8,108 +8,32 @@
 * Docman_View_Move
 */
 
-require_once('Docman_View_Docman.class');
+require_once('Docman_View_Details.class');
 
-require_once(dirname(__FILE__).'/../Docman_ItemBo.class');
-class Docman_View_Move extends Docman_View_Docman {
+require_once('Docman_View_ItemDetailsSectionMove.class');
+
+
+class Docman_View_Move extends Docman_View_Details {
     
     function _getTitle($params) {
         return $GLOBALS['Language']->getText('plugin_docman', 'move', $params['item']->getTitle());
     }
     
     function _content($params) {
-        echo '<h2>'. $this->_getTitle($params) .'</h2>';
-        echo $GLOBALS['Language']->getText('plugin_docman', 'move_descr');
+        parent::_content(
+            $params, 
+            new Docman_View_ItemDetailsSectionMove(
+                $params['item'], 
+                $params['default_url'], 
+                $this->_controller, 
+                array_merge(
+                    array('docman_icons' => $this->_getDocmanIcons($params)),
+                    $params
+                )
+            ), 
+            'actions'
+        );
         
-        $itemBo = new Docman_ItemBo($params['group_id']);
-        
-        $item_factory =& $this->_getItemFactory($params);
-        $top = $item_factory->getRoot($params['group_id']);
-        $itemTree =& $itemBo->getItemTree($top->getId(), array('ignore_collapse' => true, 'user' => $params['user']));
-        
-        $move_tree = $itemTree->accept($this, array('item_to_move' => $params['item']->getId()));
-        echo $this->_fetchFolders(array($move_tree), $params);
-
-        //Cancel move
-        $href = $this->buildUrl($params['default_url'], array(
-            'action'  => 'details',
-            'section' => 'actions',
-            'id'      => $params['item']->getId()
-        ));
-        echo '<br /><a href="'. $href .'">&lt;&lt; '. $GLOBALS['Language']->getText('plugin_docman', 'move_cancel') .'</a>';
-    }
-    /* protected */ function _getJSDocmanParameters() {
-        return array('action' => 'move');
-    }
-    
-    function visitFolder(&$item, $params = array()) {
-        $subitems = array();
-        $items = $item->getAllItems();
-        foreach($items as $key => $nop) {
-            if ($this->_controller->userCanRead($items[$key]->getId())) {
-                $subitem = $items[$key]->accept($this, $params);
-                if ($subitem) {
-                    $subitems[] = $subitem;
-                }
-            }
-        }
-        return array('item' => &$item, 'subitems' => $subitems);
-    }
-    function visitDocument(&$item, $params = array()) {
-        return null;
-    }
-    function visitWiki(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
-    }
-    function visitLink(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
-    }
-    function visitFile(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
-    }
-    function visitEmbeddedFile(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
-    }
-
-    /* protected */ function _fetchFolders($folders, $params) {
-        $html = '<ul class="docman_items">';
-        $docman_icons =& $this->_getDocmanIcons($params);
-        $nb = count($folders);
-        $i = 0;
-        foreach($folders as $folder) {
-            $i++;
-            if ($params['item']->getId() != $folder['item']->getId()) {
-                $para = array('is_last' => ($i == $nb));
-                $html .= '<li class="'. Docman_View_Browse::getItemClasses($para) .'">';
-                
-                $icon_src = $docman_icons->getIconForItem($folder['item'], array('expanded' => true));
-                $html .= '<img src="'. $icon_src .'" class="docman_item_icon" />';
-                
-                $html .= $folder['item']->getTitle();
-                
-                $prefix = $GLOBALS['Language']->getText('plugin_docman', 'move_prefix');
-                if ($params['item']->getParentId() == $folder['item']->getId()) {
-                    $label = '<b>' . $prefix . $GLOBALS['Language']->getText('plugin_docman', 'move_actual') .'</b>';
-                } else {
-                    if ($this->_controller->userCanWrite($folder['item']->getId())) {
-                        $href = $this->buildUrl($params['default_url'], array(
-                            'action'       => 'move_here',
-                            'item_to_move' => $params['item']->getId(),
-                            'id'           => $folder['item']->getId()
-                        ));
-                        $label = '<a href="'. $href .'">'. $prefix . $GLOBALS['Language']->getText('plugin_docman', 'move_here') .'</a>';
-                    } else {
-                        $label = '';
-                    }
-                }
-                $html .= $label;
-                
-                $html .= $this->_fetchFolders($folder['subitems'], $params);
-                $html .= '</li>';
-            }
-        }
-        $html .= '</ul>';
-        return $html;
     }
 }
 

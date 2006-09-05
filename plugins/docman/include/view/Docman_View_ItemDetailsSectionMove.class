@@ -1,0 +1,132 @@
+<?php
+/* 
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Nicolas Terray, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('Docman_View_ItemDetailsSectionActions.class');
+
+require_once(dirname(__FILE__).'/../Docman_ItemBo.class');
+class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions {
+    
+    function Docman_View_ItemDetailsSectionMove(&$item, $url, &$controller, $params) {
+        parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+        $this->params = $params;
+    }
+    function getContent() {
+        $content = '';
+        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
+        $content .=  $GLOBALS['Language']->getText('plugin_docman', 'move_descr');
+        
+        $itemBo = new Docman_ItemBo($this->item->getGroupId());
+        
+        $item_factory =& new Docman_ItemFactory();
+        $top = $item_factory->getRoot($this->item->getGroupId());
+        $itemTree =& $itemBo->getItemTree($top->getId(), array('ignore_collapse' => true, 'user' => $this->_controller->getUser()));
+        
+        $move_tree = $itemTree->accept($this, array('item_to_move' => $this->item->getId()));
+        $content .=  $this->_fetchFolders(array($move_tree));
+
+        //Cancel move
+        $content .=  '<br /><form action="?" method="GET"><div>';
+        $content .= '<input type="hidden" name="group_id" value="'. $this->item->getGroupId() .'" />';
+        $content .= '<input type="hidden" name="action" value="details" />';
+        $content .= '<input type="hidden" name="section" value="actions" />';
+        $content .= '<input type="hidden" name="id" value="'. $this->item->getId() .'" />';
+        $content .= '<input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'move_cancel') .'" />';
+        $content .= '</div></form>';
+        $content .= '</dd></dl>';
+        return $content;
+    }
+    /* protected */ function _getJSDocmanParameters() {
+        return array('action' => 'move');
+    }
+    
+    function visitFolder(&$item, $params = array()) {
+        $subitems = array();
+        $items = $item->getAllItems();
+        foreach($items as $key => $nop) {
+            if ($this->_controller->userCanRead($items[$key]->getId())) {
+                $subitem = $items[$key]->accept($this, $params);
+                if ($subitem) {
+                    $subitems[] = $subitem;
+                }
+            }
+        }
+        return array('item' => &$item, 'subitems' => $subitems);
+    }
+    function visitDocument(&$item, $params = array()) {
+        return null;
+    }
+    function visitWiki(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitLink(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitFile(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitEmbeddedFile(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+
+    /* protected */ function _fetchFolders($folders) {
+        $html = '<ul class="docman_items">';
+        $nb = count($folders);
+        $i = 0;
+        foreach($folders as $folder) {
+            $i++;
+            if ($this->params['item']->getId() != $folder['item']->getId()) {
+                $para = array('is_last' => ($i == $nb));
+                $html .= '<li class="'. Docman_View_Browse::getItemClasses($para) .'">';
+                
+                $icon_src = $this->params['docman_icons']->getIconForItem($folder['item'], array('expanded' => true));
+                $html .= '<img src="'. $icon_src .'" class="docman_item_icon" />';
+                
+                $html .= $folder['item']->getTitle();
+                
+                $prefix = $GLOBALS['Language']->getText('plugin_docman', 'move_prefix');
+                if ($this->item->getParentId() == $folder['item']->getId()) {
+                    $label = '<b>' . $prefix . $GLOBALS['Language']->getText('plugin_docman', 'move_actual') .'</b>';
+                } else {
+                    if ($this->_controller->userCanWrite($folder['item']->getId())) {
+                        $href = Docman_View_View::buildUrl($this->url, array(
+                            'action'       => 'move_here',
+                            'item_to_move' => $this->item->getId(),
+                            'id'           => $folder['item']->getId()
+                        ));
+                        $label = '<a href="'. $href .'">'. $prefix . $GLOBALS['Language']->getText('plugin_docman', 'move_here') .'</a>';
+                    } else {
+                        $label = '';
+                    }
+                }
+                $html .= $label;
+                
+                $html .= $this->_fetchFolders($folder['subitems']);
+                $html .= '</li>';
+            }
+        }
+        $html .= '</ul>';
+        return $html;
+    }
+}
+?>

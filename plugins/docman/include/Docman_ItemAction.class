@@ -65,14 +65,6 @@ class Docman_ItemActionNewFolder extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_newfolder', $item->getTitle());
     }
 }
-class Docman_ItemActionShowFolder extends Docman_ItemAction {
-    function Docman_ItemActionShowFolder(&$item) {
-        parent::Docman_ItemAction($item);
-        $this->action           = 'show';
-        $this->classes          = 'docman_item_option_showfolder';
-        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_show', $item->getTitle());
-    }
-}
 class Docman_ItemActionNewDocument extends Docman_ItemAction {
     function Docman_ItemActionNewDocument(&$item) {
         parent::Docman_ItemAction($item);
@@ -87,14 +79,6 @@ class Docman_ItemActionDetails extends Docman_ItemAction {
         $this->action           = 'details';
         $this->classes          = 'docman_item_option_details';
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_details', $item->getTitle());
-    }
-}
-class Docman_ItemActionMove extends Docman_ItemAction {
-    function Docman_ItemActionMove(&$item) {
-        parent::Docman_ItemAction($item);
-        $this->action           = 'move';
-        $this->classes          = 'docman_item_option_move';
-        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_move', $item->getTitle());
     }
 }
 

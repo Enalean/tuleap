@@ -8,25 +8,20 @@
 * Docman_View_RedirectAfterCrud
 */
 
-require_once('Docman_View_Docman.class');
+require_once('Docman_View_View.class');
 
-/* abstract */ class Docman_View_RedirectAfterCrud extends Docman_View_Docman {
+/* abstract */ class Docman_View_RedirectAfterCrud extends Docman_View_View {
     
     function _content($params) {
-        echo $GLOBALS['Language']->getText('plugin_docman', 'redirect', $params['default_url']);
-        echo '
-<script type="text/javascript"> 
-<!--
-function return_to_url() {
-  window.location.href = "'. $params['default_url'] .'";
-}
-
-setTimeout(return_to_url,1000);
-
-//--> 
-</script>
-';	 
-        
+        if (isset($params['redirect_to'])) {
+            $url = $params['redirect_to'];
+        } else if (isset($params['default_url_params'])) {
+            $url = $this->buildUrl($params['default_url'], $params['default_url_params'], false);
+        } else {
+            $url = $params['default_url'];
+        }
+        user_set_preference('plugin_docman_flash', addslashes(serialize($this->_controller->feedback)));
+        header('Location: '. $url);
     }
 }
 

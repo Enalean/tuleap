@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionView.class');
+require_once('Docman_View_ItemDetailsSection.class');
 
 class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection {
     var $user_can_write;

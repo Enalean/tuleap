@@ -26,24 +26,34 @@ require_once('Docman_FileStorage.class');
 require_once('Docman_VersionFactory.class');
 class DocmanActionsDeleteVisitor /* implements Visitor */ {
     
-    function DocmanActionsDeleteVisitor(&$file_storage) {
+    function DocmanActionsDeleteVisitor(&$file_storage, &$docman) {
         $this->file_storage =& $file_storage;
+        $this->docman       =& $docman;
     }
     
     function visitFolder(&$item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
+        $one_item_has_not_been_deleted = false;
         if (count($items)) { 
             foreach($items as $key => $nop) {
-                $items[$key]->accept($this, $params);
+                if (!$items[$key]->accept($this, $params)) {
+                    $one_item_has_not_been_deleted = true;
+                }
             }
         }
-        //Mark the folder as deleted
-        $this->_deleteItem($item, $params);
+        
+        if ($one_item_has_not_been_deleted) {
+            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_delete_notempty', $item->getTitle()));
+            return false;
+        } else {
+            //Mark the folder as deleted
+            $this->_deleteItem($item, $params);
+        }
     }
     function visitDocument(&$item, $params = array()) {
         //Mark the document as deleted
-        $this->_deleteItem($item, $params);
+        return $this->_deleteItem($item, $params);
     }
     function visitWiki(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
@@ -52,31 +62,42 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
         return $this->visitDocument($item, $params);
     }
     function visitFile(&$item, $params = array()) {
-        //Delete all versions before
-        $version_factory =& $this->_getVersionFactory();
-        if ($versions = $version_factory->getAllVersionForItem($item)) {
-            if (count($versions)) {
-                foreach ($versions as $key => $nop) {
-                    $this->file_storage->delete($versions[$key]->getPath());
+        if ($this->docman->userCanWrite($item->getId())) {
+            //Delete all versions before
+            $version_factory =& $this->_getVersionFactory();
+            if ($versions = $version_factory->getAllVersionForItem($item)) {
+                if (count($versions)) {
+                    foreach ($versions as $key => $nop) {
+                        $this->file_storage->delete($versions[$key]->getPath());
+                    }
                 }
             }
+            return $this->visitDocument($item, $params);
+        } else {
+            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
+            return false;
         }
-        return $this->visitDocument($item, $params);
     }
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
     function _deleteItem($item, $params) {
-        $item->setDeleteDate(time());
-        $dao = $this->_getItemDao();
-        $dao->updateFromRow($item->toRow());
-        $em =& $this->_getEventManager();
-        $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
-            'group_id' => $item->getGroupId(),
-            'item'     => $item->getId(),
-            'user'     => $params['user']->getId())
-        );
+        if ($this->docman->userCanWrite($item->getId())) {
+            $item->setDeleteDate(time());
+            $dao = $this->_getItemDao();
+            $dao->updateFromRow($item->toRow());
+            $em =& $this->_getEventManager();
+            $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
+                'group_id' => $item->getGroupId(),
+                'item'     => $item->getId(),
+                'user'     => $params['user']->getId())
+            );
+            return true;
+        } else {
+            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
+            return false;
+        }
     }
     function &_getEventManager() {
         return EventManager::instance();

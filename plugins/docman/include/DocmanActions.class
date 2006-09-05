@@ -95,6 +95,7 @@ class DocmanActions extends Actions {
                     'item'     => $id,
                     'user'     => $user->getId())
                 );
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_folder_created'));
             }
         }
     }
@@ -136,10 +137,11 @@ class DocmanActions extends Actions {
                         'item'     => $id,
                         'user'     => $user->getId())
                     );
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
                     switch ($item['item_type']) {
                         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                             $fs =& $this->_getFileStorage();
-                            if ($path = $fs->upload($_FILES['file'], $request->exist('group_id'), $id, 0)) {
+                            if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $id, 0)) {
                                 $version_factory =& $this->_getVersionFactory();
                                 $version_id = $version_factory->create(array(
                                     'item_id'   => $id,
@@ -158,14 +160,16 @@ class DocmanActions extends Actions {
                                     'version'  => $version_id,
                                     'user'     => $user->getId())
                                 );
+                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion'));
                             } else {
                                 //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
                                 //Annulation du nouvel item ?
+                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_initversion'));
                             }
                             break;
                         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                             $fs =& $this->_getFileStorage();
-                            if ($path = $fs->store($request->get('content'), $request->exist('group_id'), $id, 0)) {
+                            if ($path = $fs->store($request->get('content'), $request->get('group_id'), $id, 0)) {
                                 $version_factory =& $this->_getVersionFactory();
                                 $version_id = $version_factory->create(array(
                                     'item_id'   => $id,
@@ -184,9 +188,11 @@ class DocmanActions extends Actions {
                                     'version'  => $version_id,
                                     'user'     => $user->getId())
                                 );
+                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion'));
                             } else {
                                 //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
                                 //Annulation du nouvel item ?
+                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_initversion'));
                             }
                             break;
                         default:
@@ -209,6 +215,7 @@ class DocmanActions extends Actions {
                 'item'     => $data['id'],
                 'user'     => $user->getId())
             );
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_updated'));
         }
     }
     function new_version() {
@@ -234,7 +241,7 @@ class DocmanActions extends Actions {
                 $number = $version->getNumber() + 1;
                 if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
                     $fs =& $this->_getFileStorage();
-                    if ($path = $fs->upload($_FILES['file'], $request->exist('group_id'), $request->get('id'), $number)) {
+                    if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $request->get('id'), $number)) {
                         
                         $version_factory =& $this->_getVersionFactory();
                         $version_id = $version_factory->create(array(
@@ -254,12 +261,14 @@ class DocmanActions extends Actions {
                             'version'  => $version_id,
                             'user'     => $user->getId())
                         );
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
                     } else {
                         //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
                     }
                 } else if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
                     $fs =& $this->_getFileStorage();
-                    if ($path = $fs->store($request->get('content'), $request->exist('group_id'), $request->get('id'), $number)) {
+                    if ($path = $fs->store($request->get('content'), $request->get('group_id'), $request->get('id'), $number)) {
                         $version_factory =& $this->_getVersionFactory();
                         $version_id = $version_factory->create(array(
                             'item_id'   => $request->get('id'),
@@ -278,8 +287,10 @@ class DocmanActions extends Actions {
                             'version'  => $version_id,
                             'user'     => $user->getId())
                         );
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
                     } else {
                         //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
                     }
                 }
             }
@@ -330,6 +341,7 @@ class DocmanActions extends Actions {
                 'parent'  => $request->get('id'),
                 'user'    => $user->getId())
             );
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved'));
         }
     }
     
@@ -386,7 +398,7 @@ class DocmanActions extends Actions {
                         $updated = true;
                     }
                 }
-                $this->_controler->feedback->log('info', 'Permissions successfully updated');
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
                 if ($this->_controler->request->get('recursive')) {
                     $item_factory->breathFirst($item->getId(), 
                         create_function('$data',' 
@@ -394,7 +406,7 @@ class DocmanActions extends Actions {
                             $pm->clonePermissions('. $item->getId() .', $data["item_id"]);'
                         )
                     );
-                    $this->_controler->feedback->log('info', 'Permissions for subitems successfully updated');
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
                 }
             }
         }
@@ -404,7 +416,7 @@ class DocmanActions extends Actions {
             if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
                 $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history);
                 if ($parent = $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permissions[$ugroup_id])) {
-                    $this->_controler->feedback->log('warning', 'Permission for '. $old_permissions[$ugroup_id]['ugroup']['name'] .' has been ignored because '. $old_permissions[$parent]['ugroup']['name'] .' can '. $permission_definition[$done_permissions[$parent]]['label']);
+                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_perms', array($old_permissions[$ugroup_id]['ugroup']['name'],$old_permissions[$parent]['ugroup']['name'],$permission_definition[$done_permissions[$parent]]['label'])));
                     if (count($old_permissions[$ugroup_id]['permissions'])) {
                         foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
                             permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
@@ -459,7 +471,6 @@ class DocmanActions extends Actions {
                     $request->get('selected_view')
                 );
                 $this->_controler->forceView($request->get('selected_view'));
-                $this->_controler->feedback->log('info', 'Your preferences have been saved.');
             }
         }
     }
@@ -470,8 +481,10 @@ class DocmanActions extends Actions {
         $item_bo =& new Docman_ItemBo($request->get('group_id'));
         $item =& $item_bo->getItemSubTree($request->get('id'), array('user' => &$user));
         if ($item) {
-            $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage());
-            $item->accept($deletor, array('user' => &$user));
+            $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+            if ($item->accept($deletor, array('user' => &$user))) {
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
+            }
         }
     }
 
@@ -481,9 +494,9 @@ class DocmanActions extends Actions {
             require_once('Docman_SettingsDao.class');
             $dao =& new Docman_SettingsDao(CodexDataAccess::instance());
             if ($dao->updateViewForGroupId($request->get('group_id'), $request->get('selected_view'))) {
-                $this->_controler->feedback->log('info', 'Settings have been updated.');
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_settings_updated'));
             } else {
-                $this->_controler->feedback->log('error', 'Settings cannot be updated.');
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_settings_updated'));
             }
         }
     }
@@ -496,7 +509,7 @@ class DocmanActions extends Actions {
             $this->_controler->feedback->log('error', 'Docman already installed.');
             $this->_controler->view = 'DocmanError';
         } else {
-            if ($item_factory->createRoot($request->get('group_id'), 'Project Documentation')) {
+            if ($item_factory->createRoot($request->get('group_id'), $GLOBALS['Language']->getText('plugin_docman', 'title'))) {
                 //{{{ Set default permissions
                 $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
                 $root =& $item_factory->getRoot($request->get('group_id'));
@@ -528,9 +541,9 @@ class DocmanActions extends Actions {
     function admin_set_permissions() {
         list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (!$return_code) {
-            $this->_controler->feedback->log('error', 'perm_update_err : '.$feedback);
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_updated', $feedback));
         } else {
-            $this->_controler->feedback->log('info', 'Permissions successfully updated');
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
         }
     }
 }

@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionActionsView.class');
+require_once('Docman_View_ItemDetailsSectionActions.class');
 
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
     function Docman_View_ItemDetailsSectionDelete(&$item, $url, &$controller) {
@@ -32,7 +32,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
         
         $content = '';
-        
+        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
         $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document, $this->item->getTitle());
@@ -45,7 +45,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '</div>';
         $content .= '</div>';
         $content .= '</form>';
-        
+        $content .= '</dd></dl>';
         return $content;
     }
 }

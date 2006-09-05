@@ -6,6 +6,9 @@
  *
  * HTTPRequest
  */
+
+require_once('browser.php');
+
 class HTTPRequest {
     
     function HTTPRequest() {    
@@ -40,6 +43,10 @@ class HTTPRequest {
             }
         }
         return $value;
+    }
+
+    function browserIsNetscape4() {
+        return browser_is_netscape4();
     }
 
     /** For debug only */

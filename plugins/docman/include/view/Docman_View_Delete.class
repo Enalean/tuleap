@@ -10,7 +10,7 @@
 
 require_once('Docman_View_Details.class');
 
-require_once('Docman_View_ItemDetailsSectionDeleteView.class');
+require_once('Docman_View_ItemDetailsSectionDelete.class');
 
 class Docman_View_Delete extends Docman_View_Details {
     

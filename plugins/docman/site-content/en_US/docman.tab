@@ -49,11 +49,14 @@ plugin_docman	details_actions_move_canmove_folder	You can <a href="$1">move this
 plugin_docman	details_actions_move_cannotmove_document	You cannot move this document.
 plugin_docman	details_actions_move_cannotmove_folder	You cannot move this folder.
 plugin_docman	details_actions_newversion	New Version
-plugin_docman	details_actions_newversion_button	Upload new version
-plugin_docman	details_actions_newversion_changelog	Changelog
-plugin_docman	details_actions_newversion_content	Content
-plugin_docman	details_actions_newversion_label	Label
+plugin_docman	details_actions_newversion_button	Create new version
+plugin_docman	details_actions_newversion_cancreate	You can <a href="$1">create a new version</a>.
+plugin_docman	details_actions_newversion_cannotcreate	You cannot create a new version.
+plugin_docman	details_actions_newversion_changelog	Changelog:
+plugin_docman	details_actions_newversion_label	Version Label:
 plugin_docman	details_actions_update	Update
+plugin_docman	details_actions_update_can	You can <a href="$1">update</a> this document.
+plugin_docman	details_actions_update_cannot	You cannot update this document.
 plugin_docman	details_delete	Delete
 plugin_docman	details_delete_cancel	No, I do not want to delete it
 plugin_docman	details_delete_confirm	Yes, I am sure!
@@ -78,6 +81,7 @@ plugin_docman	details_history_versions_error	Error while searching for old versi
 plugin_docman	details_history_versions_label	Label
 plugin_docman	details_history_versions_no	There is no version yet
 plugin_docman	details_history_versions_version	Version
+plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	User groups
 plugin_docman	details_permissions_perms	Access Permissions
@@ -85,16 +89,25 @@ plugin_docman	details_permissions_recursive	recursive (apply same permissions to
 plugin_docman	details_properties	Properties
 plugin_docman	details_properties_edit	Edit properties
 plugin_docman	details_title	Details of $1
+plugin_docman	details_update_title	Update $1
+
+plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guarranty the compatibility of the service with your browser.
 
 plugin_docman	error_alreadyinstalled	Docman already installed.
+plugin_docman	error_create_initversion	Error while creating initial version.
+plugin_docman	error_create_newversion	Error while creating new version.
+plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not empty.
 plugin_docman	error_filenotfound	The file cannot be found.
 plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the docman.
 plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
 plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.
 plugin_docman	error_perms_delete	You do not have sufficient access rights to delete this item.
+plugin_docman	error_perms_delete_item	You do not have sufficient access rights to delete $1.
 plugin_docman	error_perms_move	You do not have sufficient access rights to move this item.
 plugin_docman	error_perms_perms	You do not have sufficient access rights to set permissions for this item.
 plugin_docman	error_perms_view	You do not have sufficient access rights to view this item.
+plugin_docman	error_settings_updated	Settings cannot be updated.
+plugin_docman	error_perms_updated	$1
 
 plugin_docman	event_add	Create
 plugin_docman	event_edit	Edit
@@ -103,9 +116,9 @@ plugin_docman	event_del	Delete
 plugin_docman	event_access	Access
 plugin_docman	event_newversion	New version
 
-plugin_docman	field_descr	Description
-plugin_docman	field_rank	Rank
-plugin_docman	field_title	Title
+plugin_docman	field_descr	Description:
+plugin_docman	field_rank	Rank:
+plugin_docman	field_title	Title:
 
 plugin_docman	filters	Filters
 plugin_docman	filters_date_end	End Date
@@ -116,8 +129,21 @@ plugin_docman	filters_ordering_ascending	Ascending
 plugin_docman	filters_ordering_descending	Descending
 plugin_docman	filters_ordering_message	Value of $1 should be either "Ascending" or "Descending"
 
+plugin_docman	info_create_initversion	Initial version successfully created.
+plugin_docman	info_create_newversion	New version successfully created.
+plugin_docman	info_document_created	Document successfully created.
+plugin_docman	info_folder_created	Folder successfully created.
+plugin_docman	info_item_deleted	Item successfully deleted.
+plugin_docman	info_item_updated	Item successfully updated.
+plugin_docman	info_item_moved	Item successfully moved.
+plugin_docman	info_perms_updated	Permissions successfully updated.
+plugin_docman	info_perms_recursive_updated	Permissions for subitems successfully updated.
+plugin_docman	info_settings_updated	Settings have been updated.
+
 plugin_docman	logsdaily_field	Documents
 plugin_docman	logsdaily_title	Document Access
+
+plugin_docman	max_size_msg	(The maximum upload file size is $1 MByte)
 
 plugin_docman	move	Move $1
 plugin_docman	move_actual	The item is in this folder.
@@ -144,9 +170,9 @@ plugin_docman	permission_write	Writer
 
 plugin_docman	redirect	<div style="text-align:center"><p>Docman updated</p><p>You will be redirect <a href="$1"> to docman</a>.</p></div>
 
-plugin_docman	specificfield_embeddedcontent	Content
-plugin_docman	specificfield_pagename	Pagename
-plugin_docman	specificfield_url	Url
+plugin_docman	specificfield_embeddedcontent	Content:
+plugin_docman	specificfield_pagename	Pagename:
+plugin_docman	specificfield_url	Url:
 
 plugin_docman	toolbar_admin	Admin
 plugin_docman	toolbar_docman	Project Documentation
@@ -154,3 +180,5 @@ plugin_docman	toolbar_docman	Project Documentation
 plugin_docman	view_Icons	Icons
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
+
+plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.

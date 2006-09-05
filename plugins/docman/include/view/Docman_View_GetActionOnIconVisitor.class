@@ -4,14 +4,14 @@
 * 
 * $Id$
 *
-* Docman_View_GetActionOnTitleVisitor
+* Docman_View_GetActionOnIconVisitor
 */
 
 
-class Docman_View_GetActionOnTitleVisitor /* implements Visitor*/ {
+class Docman_View_GetActionOnIconVisitor /* implements Visitor*/ {
     
     function visitFolder(&$item, $params = array()) {
-        return $params['view']->getActionOnTitleForFolder($item, $params);
+        return $params['view']->getActionOnIconForFolder($item, $params);
     }
     
     function visitDocument($item, $params = array()) {

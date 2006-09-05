@@ -10,13 +10,13 @@
 
 require_once('Docman_View_Display.class');
 
-require_once('Docman_View_ItemDetailsView.class');
-require_once('Docman_View_ItemDetailsSectionPropertiesView.class');
-require_once('Docman_View_ItemDetailsSectionEditPropertiesView.class');
-require_once('Docman_View_ItemDetailsSectionPermissionsView.class');
-require_once('Docman_View_ItemDetailsSectionNotificationsView.class');
-require_once('Docman_View_ItemDetailsSectionHistoryView.class');
-require_once('Docman_View_ItemDetailsSectionActionsView.class');
+require_once('Docman_View_ItemDetails.class');
+require_once('Docman_View_ItemDetailsSectionProperties.class');
+require_once('Docman_View_ItemDetailsSectionEditProperties.class');
+require_once('Docman_View_ItemDetailsSectionPermissions.class');
+require_once('Docman_View_ItemDetailsSectionNotifications.class');
+require_once('Docman_View_ItemDetailsSectionHistory.class');
+require_once('Docman_View_ItemDetailsSectionActions.class');
 
 class Docman_View_Details extends Docman_View_Display {
     

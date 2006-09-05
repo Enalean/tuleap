@@ -31,6 +31,7 @@ require_once('common/include/UserManager.class');
 require_once('view/Docman_View_GetShowViewVisitor.class');
 
 require_once('DocmanActions.class');
+require_once('DocmanLastBrowseRequest.class');
 
 require_once('Feedback.class');
 
@@ -38,6 +39,7 @@ require_once('Docman_Log.class');
 require_once('common/event/EventManager.class');
 
 require_once('Docman_Filter.class');
+
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
 
@@ -76,7 +78,14 @@ class Docman extends Controler {
         $this->pluginPath = $pluginPath;
         $this->themePath  = $themePath;
         $this->plugin     = $plugin;
-        $this->feedback   =& new Feedback();
+        
+        $flash = user_get_preference('plugin_docman_flash');
+        if ($flash) {
+            user_del_preference('plugin_docman_flash');
+            $this->feedback = unserialize($flash);
+        } else {
+            $this->feedback =& new Feedback();
+        }
         
         $this->logger  =& new Docman_Log();
         $event_manager =& $this->_getEventManager();
@@ -240,6 +249,14 @@ class Docman extends Controler {
         unset($fd);       
     }
 
+
+    /*private*/ function _checkBrowserCompliance() {
+        if($this->request->browserIsNetscape4()) {
+            $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'docman_browserns4'));
+        }
+    }
+
+
     function request() {
         if (!$this->request->exist('group_id')) {
             $this->feedback->log('error', 'Project is missing.');
@@ -257,6 +274,9 @@ class Docman extends Controler {
                 $this->_viewParams['redirect_to'] = '/projects/'. $unix_name .'/';
                 $this->view = 'Redirect';
             } else {
+                // Browser alert
+                $this->_checkBrowserCompliance();
+
                 $this->_viewParams['user']        =& $this->getUser();
                 $this->_viewParams['default_url'] =  $this->getDefaultUrl();
                 $this->_viewParams['theme_path']  =  $this->getThemePath();
@@ -298,8 +318,15 @@ class Docman extends Controler {
                         $this->feedback->log('warning', 'Docman is not installed for this project.');
                     }
                 } else {
-                    if ($this->request->exist('id')) {
-                        $item =& $item_factory->getItemFromDb($this->request->get('id'));
+                    $id = $this->request->get('id');
+                    if (!$id && $this->request->exist('item')) {
+                        $i = $this->request->get('item');
+                        if (isset($i['id'])) {
+                            $id = $i['id'];
+                        }
+                    }
+                    if ($id) {
+                        $item =& $item_factory->getItemFromDb($id);
                         if (!$item) {
                             $this->feedback->log('error', 'Unable to retrieve item. Perhaps it was removed.');
                             $this->view = 'DocmanError';
@@ -333,10 +360,12 @@ class Docman extends Controler {
                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_admin'));
                                 $this->view = $item->accept($get_show_view);
                             } else {
+                                $last_browse_request =& new DocmanLastBrowseRequest();
                                 switch ($view) {
                                     case 'show':
                                         $this->_initFilters();
                                         $this->view = $item->accept($get_show_view);
+                                        $item->accept($last_browse_request);
                                         break;
                                     case 'expandFolder':
                                         $this->action = 'expandFolder';
@@ -371,7 +400,7 @@ class Docman extends Controler {
                                         $this->view = 'Admin_Permissions';
                                         break;
                                     case 'move':
-                                        if (!$this->userCanManage($item->getId())) {
+                                        if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
                                            $this->view = 'Details';
                                         } else {
@@ -392,11 +421,13 @@ class Docman extends Controler {
                                             $this->feedback->log('error', 'Missing parameter.');
                                             $this->view = 'DocmanError';
                                         } else {
-                                            if (!$this->userCanWrite($item->getId()) && !$this->userCanWrite($this->request->get('item_to_move'))) {
+                                            $item_to_move =& $item_factory->getItemFromDb($this->request->get('item_to_move'));
+                                            if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
                                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
                                                 $this->view = 'Details';
                                             } else {
                                                 $this->action = 'move';
+                                                $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
                                                 $this->view = 'RedirectAfterCrud';
                                             }
                                         }
@@ -411,11 +442,27 @@ class Docman extends Controler {
                                         }
                                         break;
                                     case 'confirmDelete':
-                                        if (!$this->userCanManage($item->getId())) {
+                                        if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
                                             $this->view = 'Details';
                                         } else {
                                             $this->view   = 'Delete';
+                                        }
+                                        break;
+                                    case 'action_new_version':
+                                        if (!$this->userCanWrite($item->getId())) {
+                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                                            $this->view = 'Details';
+                                        } else {
+                                            $this->view   = 'NewVersion';
+                                        }
+                                        break;
+                                    case 'action_update':
+                                        if (!$this->userCanWrite($item->getId())) {
+                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                                            $this->view = 'Details';
+                                        } else {
+                                            $this->view   = 'Update';
                                         }
                                         break;
                                     case 'edit':
@@ -427,11 +474,15 @@ class Docman extends Controler {
                                         }
                                         break;
                                     case 'delete':
-                                        if (!$this->userCanManage($item->getId())) {
+                                        if (!($this->userCanWrite($item->getId()) && $this->userCanWrite($item->getParentId()))) {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
                                             $this->view = 'Details';
                                         } else if ($this->request->exist('confirm')) {
                                             $this->action = $view;
+                                            $this->_viewParams['default_url_params'] = array(
+                                                'action'  => 'show',
+                                                'id'      => $item->getParentId()
+                                            );
                                             $this->view = 'RedirectAfterCrud';
                                         } else {
                                             $this->view = 'Details';
@@ -439,21 +490,46 @@ class Docman extends Controler {
                                         break;
                                     case 'createFolder':
                                     case 'createDocument':
-                                        if (!$this->userCanWrite($item->getId())) {
-                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
-                                            $this->view = $item->accept($get_show_view);
+                                        $i = $this->request->get('item');
+                                        if (!$i || !isset($i['parent_id'])) {
+                                            $this->feedback->log('error', 'Missing parameter.');
+                                            $this->view = 'DocmanError';
                                         } else {
-                                            $this->action = $view;
-                                            $this->view = 'RedirectAfterCrud';
+                                            $parent =& $item_factory->getItemFromDb($i['parent_id']);
+                                            if (!$parent || !$this->userCanWrite($parent->getId())) {
+                                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                                                $this->view = $item->accept($get_show_view);
+                                            } else {
+                                                $this->action = $view;
+                                                $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
+                                                $this->view = 'RedirectAfterCrud';
+                                            }
                                         }
                                         break;
                                     case 'update':
+                                    case 'update_wl':
                                     case 'new_version':
                                         if (!$this->userCanWrite($item->getId())) {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                                             $this->view = 'Details';
                                         } else {
-                                            $this->action = $view;
+                                            if ($this->request->exist('confirm')) {
+                                                if ($view == 'update_wl') {
+                                                    $this->action = 'update';
+                                                } else {
+                                                    $this->action = $view;
+                                                }
+                                            }
+                                            if ($view == 'update_wl' || $view == 'new_version') {
+                                                $section = 'actions';
+                                            } else {
+                                                $section = 'properties';
+                                            }
+                                            $this->_viewParams['default_url_params'] = array(
+                                                'action'  => 'details',
+                                                'section' => $section,
+                                                'id'      => $item->getId()
+                                            );
                                             $this->view = 'RedirectAfterCrud';
                                         }
                                         break;

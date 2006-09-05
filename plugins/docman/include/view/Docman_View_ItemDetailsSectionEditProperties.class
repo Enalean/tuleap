@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionPropertiesView.class');
+require_once('Docman_View_ItemDetailsSectionProperties.class');
 
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties {
     function Docman_View_ItemDetailsSectionEditProperties(&$item, $url) {
@@ -51,8 +51,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
         $html .= '<input type="hidden" name="action" value="update" />';
         $html .= '</td><td>';
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" />';
-        $html .= '&nbsp;<a href="'. $this->url .'&amp;action=details&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('global','btn_cancel') .'</a>';
+        $html .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" />';
+        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global','btn_cancel') .'" />';
         $html .= '</td></tr>';
         return $html;
     }

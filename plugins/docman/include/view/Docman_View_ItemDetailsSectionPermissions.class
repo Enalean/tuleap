@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionView.class');
+require_once('Docman_View_ItemDetailsSection.class');
 require_once('www/project/admin/permissions.php');
 
 class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsSection {

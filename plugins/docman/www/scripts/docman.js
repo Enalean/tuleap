@@ -254,7 +254,11 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                         new Ajax.Updater(target, expandUrl, {
                             asynchronous:true,
                             evalScripts:true,
-                            onComplete: (function() {
+                            onComplete: (function(transport) {
+                                if (!transport.responseText.length) {
+                                    fake = Builder.node('div', {id:'subitems_'+node.id.split('_')[1]});
+                                    target.appendChild(fake);
+                                }
                                 this._expandCollapse(target);    //
                                 this.initShowOptions();          //register events for new loaded items
                                 this._initItemHighlight(target); //

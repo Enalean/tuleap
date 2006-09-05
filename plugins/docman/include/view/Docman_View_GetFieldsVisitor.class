@@ -24,11 +24,11 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
             array(
                 'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_descr'),
                 'field' => '<textarea name="item[description]">'. $item->getDescription() .'</textarea>'
-            ),
+            )/*,
             array(
                 'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_rank'),
                 'field' => '<input type="text" name="item[rank]" value="'. htmlentities($item->getRank(), ENT_QUOTES) .'" size="3" maxlength="16" />'
-            )
+            )*/
         );
     }
     function visitFolder(&$item, $params = array()) {

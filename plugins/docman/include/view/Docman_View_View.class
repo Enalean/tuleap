@@ -62,8 +62,8 @@ require_once(dirname(__FILE__).'/../Docman_Icons.class');
     function &_getItemFactory($params) {
         return new Docman_ItemFactory();
     }
-    /* static */ function buildUrl($prefix, $parameters) {
-        $et = '&amp;';
+    /* static */ function buildUrl($prefix, $parameters, $amp = true) {
+        $et = $amp ? '&amp;' : '&';
         $url = '';
         if ($prefix) {
             $url = $prefix;
@@ -80,6 +80,18 @@ require_once(dirname(__FILE__).'/../Docman_Icons.class');
             }
         }
         return $url;
+    }
+    function isActionAllowed($action, &$item) {
+        switch ($action) {
+            case 'newFolder':
+            case 'newDocument':
+                $allowed = $this->_controller->userCanWrite($item->getId());
+                break;
+            default:
+                $allowed = true;
+                break;
+        }
+        return $allowed;
     }
 }
 

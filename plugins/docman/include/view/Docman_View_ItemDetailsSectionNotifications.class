@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionView.class');
+require_once('Docman_View_ItemDetailsSection.class');
 
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection {
     function Docman_View_ItemDetailsSectionNotifications(&$item, $url) {

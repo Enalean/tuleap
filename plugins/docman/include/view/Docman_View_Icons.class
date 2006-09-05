@@ -43,7 +43,7 @@ class Docman_View_Icons extends Docman_View_Browse {
             $cells = array_merge($folders, $documents);
             $rows = array_chunk($cells, $nb_of_columns);
             $item_parameters = array(
-                'get_action_on_title'    => new Docman_View_GetActionOnTitleVisitor(),
+                'get_action_on_icon'    => new Docman_View_GetActionOnIconVisitor(),
                 'docman_icons'           => $this->_getDocmanIcons($params),
                 'default_url'            => $params['default_url'],
                 //'display_description'    => isset($params['display_description']) ? $params['display_description'] : true,
@@ -88,8 +88,16 @@ class Docman_View_Icons extends Docman_View_Browse {
         $icon_src = $params['docman_icons']->getIconForItem($item, $params);
         $icon = '<img src="'. $icon_src .'" class="docman_item_icon" style="width:48px; height:48px; vertical-align:middle; text-decoration:none;" />';
         
-        $html .= '<div><a href="?group_id='. $item->getGroupId()    .'&amp;action='. $item->accept($params['get_action_on_title'], array('view' => $this)) .'&amp;id='. $item->getId() .'">';
-        $html .= $icon .'<span class="docman_item_title">'. $item->getTitle() .'</span>';
+        $icon_url = $this->buildUrl($params['default_url'], array(
+            'action' => $item->accept($params['get_action_on_icon'], array('view' => $this)),
+            'id'     => $item->getId()
+        ));
+        $title_url = $this->buildUrl($params['default_url'], array(
+            'action' => 'show',
+            'id'     => $item->getId()
+        ));
+        $html .= '<div><a href="'. $icon_url .'">'. $icon .'</a>';
+        $html .= '<span class="docman_item_title"><a href="'. $title_url .'">'. $item->getTitle() .'</a></span>';
         $html .= '</a>';
         //Show/hide options {{{
         $user_actions = $item->getActions();

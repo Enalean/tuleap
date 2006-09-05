@@ -34,7 +34,7 @@ require_once(dirname(__FILE__).'/../Docman_SettingsDao.class');
     /* protected */ function _filter($params) {
         echo '<!-- Filter -->';
     }
-    function getActionOnTitleForFolder() {
+    function getActionOnIconForFolder() {
         return 'show';
     }
     function getClassForFolderLink() {

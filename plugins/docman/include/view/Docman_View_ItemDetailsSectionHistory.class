@@ -22,8 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_ItemDetailsSectionView.class');
-require_once('Docman_View_GetActionOnTitleVisitor.class');
+require_once('Docman_View_ItemDetailsSection.class');
 require_once(dirname(__FILE__).'/../Docman_VersionFactory.class');
 
 class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSection {
@@ -48,10 +47,9 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $content .= html_build_list_table_top($titles, false, false, false);
                     $odd_even = array('boxitem', 'boxitemalt');
                     $i = 0;
-                    $get_action_on_title =& new Docman_View_GetActionOnTitleVisitor();
                     foreach ($versions as $key => $nop) {
                         $download = Docman_View_View::buildUrl($this->url, array(
-                            'action' => $this->item->accept($get_action_on_title),
+                            'action' => 'show',
                             'id'     => $this->item->getId(),
                             'version_number' => $versions[$key]->getNumber()
                         ));

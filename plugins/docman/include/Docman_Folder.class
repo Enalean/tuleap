@@ -33,7 +33,6 @@ class Docman_Folder extends Docman_Item {
     
     function Docman_Folder($data = null) {
         parent::Docman_Item($data);
-        $this->_addAction(new Docman_ItemActionShowFolder($this));
         $this->_addAction(new Docman_ItemActionNewFolder($this));
         $this->_addAction(new Docman_ItemActionNewDocument($this));
     }

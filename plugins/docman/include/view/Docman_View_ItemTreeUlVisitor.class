@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('Docman_View_GetActionOnTitleVisitor.class');
+require_once('Docman_View_GetActionOnIconVisitor.class');
 require_once('Docman_View_GetClassForLinkVisitor.class');
 
 class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
@@ -37,7 +37,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     
     function Docman_View_ItemTreeUlVisitor($view, $params = null) {
         $this->view                =& $view;
-        $this->get_action_on_title =& new Docman_View_GetActionOnTitleVisitor();
+        $this->get_action_on_icon =& new Docman_View_GetActionOnIconVisitor();
         $this->get_class_for_link  =& new Docman_View_GetClassForLinkVisitor();
         $this->html                = '';
         $this->stripFirstNode      = true;
@@ -123,7 +123,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $icon = '<img src="'. $icon_src .'" class="docman_item_icon" />';
                 
                 $this->html .= '<div>';
-                $action = isset($this->params['item_to_move']) ? false : $item->accept($this->get_action_on_title, array('view' => &$this->view));
+                $action = isset($this->params['item_to_move']) ? false : $item->accept($this->get_action_on_icon, array('view' => &$this->view));
                 if ($action) {
                     $class = $item->accept($this->get_class_for_link, array('view' => &$this->view));
                     if ($class) {
@@ -131,16 +131,27 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     }
                     $this->html .= '<a href="?group_id='. $item->getGroupId() .'&amp;action='. $action .'&amp;id='. $item->getId() .'" class="'. $class .'">';
                 }
-                $this->html .=  $icon .'<span class="docman_item_title">'. $item->getTitle() .'</span>';
+                $this->html .=  $icon;
                 if ($action) {
                     $this->html .= '</a>';
                 }
+                $this->html .=  '<span class="docman_item_title">';
+                if ($action) {
+                    $this->html .= '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
+                }
+                $this->html .=  $item->getTitle();
+                if ($action) {
+                    $this->html .= '</a>';
+                }
+                $this->html .=  '</span>';
                 //Show/hide options {{{
                 $user_actions = $item->getActions();
                 if ($show_options) {
                     $this->html .= '<span class="docman_item_options">';
                     foreach($user_actions as $key => $nop) {
-                        $this->html .= $user_actions[$key]->fetch($this->params);
+                        if ($this->view->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
+                            $this->html .= $user_actions[$key]->fetch($this->params);
+                        }
                     }
                     $this->html .= '</span>';
                 } else {
@@ -148,7 +159,9 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     //<!--
                     ';
                     foreach($user_actions as $key => $nop) {
-                        $this->html .= $user_actions[$key]->fetchAsJavascript($this->params);
+                        if ($this->view->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
+                            $this->html .= $user_actions[$key]->fetchAsJavascript($this->params);
+                        }
                     }
                     $this->html .= '
                     //-->

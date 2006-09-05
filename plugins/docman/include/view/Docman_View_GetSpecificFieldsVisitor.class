@@ -31,14 +31,15 @@ class Docman_View_GetSpecificFieldsVisitor {
     function visitFile(&$item, $params = array()) {
         return array(
             array(
-                'label' => '',
-                'field' => '<input type="file" name="file" />'
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent'),
+                'field' => '<input type="hidden" name="max_file_size" value="'. $GLOBALS['sys_max_size_upload'] .'" />'.
+                    '<input type="file" name="file" /><br /><em>'. $GLOBALS['Language']->getText('plugin_docman','max_size_msg',array(formatByteToMb($GLOBALS['sys_max_size_upload']))) .'</em>'
             )
         );
     }
     
     function visitEmbeddedFile(&$item, $params = array()) {
-        $content = '--';
+        $content = '';
         $version =& $item->getCurrentVersion();
         if ($version && is_file($version->getPath())) {
             $content = file_get_contents($version->getPath());

@@ -9,7 +9,7 @@
 */
 
 require_once('Docman_View_View.class');
-require_once('Docman_View_Error.class');
+require_once('Docman_View_DocmanError.class');
 
 class Docman_View_Download extends Docman_View_View {
     
@@ -35,7 +35,7 @@ class Docman_View_Download extends Docman_View_View {
                 readfile($version->getPath());
             } else {
                 $this->_controller->feedback->log('error', 'The file cannot be found.');
-                $v =& new Docman_View_Error($this->_controller);
+                $v =& new Docman_View_DocmanError($this->_controller);
                 $v->display($params);
             }
         }

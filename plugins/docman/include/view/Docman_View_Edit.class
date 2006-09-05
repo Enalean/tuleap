@@ -10,7 +10,7 @@
 
 require_once('Docman_View_Details.class');
 
-require_once('Docman_View_ItemDetailsSectionEditPropertiesView.class');
+require_once('Docman_View_ItemDetailsSectionEditProperties.class');
 
 class Docman_View_Edit extends Docman_View_Details {
     
