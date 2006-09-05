@@ -82,7 +82,6 @@ class DocmanActions extends Actions {
             $item['group_id'] = $request->get('group_id');
             $id = $item_factory->create($this->sanitizeItemData($item));
             if ($id) {
-                var_dump($item);
                 if (isset($item['parent_id'])) {
                     $pm =& PermissionsManager::instance();
                     $pm->clonePermissions($item['parent_id'], $id);

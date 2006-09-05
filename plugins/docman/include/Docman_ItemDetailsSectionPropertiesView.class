@@ -39,7 +39,7 @@ class Docman_ItemDetailsSectionPropertiesView extends Docman_ItemDetailsSectionV
         $html  = '<table>';
         $html .= '<tr style="vertical-align:top;"><td>Title      </td><td>'. $this->_getTitle()       .'</td></tr>';
         $html .= '<tr style="vertical-align:top;"><td>Description</td><td>'. $this->_getDescription() .'</td></tr>';
-        $html .= '<tr style="vertical-align:top;"><td>Rank       </td><td>'. $this->_getRank()        .'</td></tr>';
+        //$html .= '<tr style="vertical-align:top;"><td>Rank       </td><td>'. $this->_getRank()        .'</td></tr>';
         $html .= $this->_getAdditionalRows();
         $html .= '</table>';
         return $html;

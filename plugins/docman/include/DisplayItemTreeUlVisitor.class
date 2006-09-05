@@ -95,7 +95,6 @@ class DisplayItemTreeUlVisitor extends Visitor {
             } else {
                 if (is_a($item, 'Docman_Folder') && !$item->getNbOfChildren()) {
                     $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
-                    $this->html .= '<li>This folder is empty</li>';
                     $this->html .= '</ul>'."\n";
                 }
             }
