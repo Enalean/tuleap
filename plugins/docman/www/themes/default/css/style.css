@@ -1,0 +1,36 @@
+.dir, .subdir {
+ padding: 0;
+ margin: 0;
+ border: 0;
+}
+
+.dir img, .dir p, .dir form{
+ display: inline;
+ padding: 0;
+ margin: 0;
+ border:0px;
+}
+
+.dir img {
+ vertical-align: middle;
+}
+
+.dir p {
+ vertical-align: middle;
+}
+
+.newDocument {
+ background-color: CCCCCC;
+ border: 1px solid black;
+ padding: 0.5em;
+}
+
+.newDocument h4 {
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.5em;
+}
+
+.dir input {
+ border: 1px solid black;
+}

@@ -1,0 +1,152 @@
+<?php
+/* 
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+
+require_once('common/collection/TreeNode.class');
+
+define('ITEM_FOLDER', 1);
+define('ITEM_FILE', 2);
+define('ITEM_LINK', 3);
+define('ITEM_EMBEDFILE', 4);
+define('ITEM_WIKI', 5);
+
+class Item {
+
+    function Item() {
+        $this->id = null;
+        $this->title = null;
+        $this->description = null;
+        $this->createDate = null;
+        $this->updateDate = null;
+        $this->type = null;
+        $this->rank = null;
+        $this->parentId = null;
+        $this->groupId = null;
+        $this->ownerId = null;
+    }
+
+    var $id;
+    function setId($id) {
+        $this->id = (int) $id;
+    }
+
+    function getId() {
+        return $this->id;
+    }
+
+    var $title;
+    function setTitle($title) { 
+        $this->title = $title; 
+    }
+    function getTitle() { 
+        return $this->title; 
+    }
+
+    var $description;
+    function setDescription($description) { 
+        $this->description = $description;
+    }
+
+    function getDescription() {
+        return $this->description;
+    }
+
+    var $createDate;
+    function setCreateDate($date) {
+        $this->createDate = (int) $date;
+    }
+
+    function getCreateDate() {
+        return $this->createDate;
+    }
+
+    var $updateDate;
+    function setUpdateDate($date) {
+        $this->updateDate = (int) $date;
+    }
+
+    function getUpdateDate() {
+        return $this->updateDate;
+    }
+
+    var $type;
+    function setType($type) {
+        $this->type = (int) $type;
+    }
+
+    function getType() {
+        return $this->type;
+    }
+
+    var $rank;
+    function setRank($rank) {
+        $this->rank = (int) $rank;
+    }
+
+    function getRank() {
+        return $this->rank;
+    }
+
+    var $parentId;
+    function setParentId($id) {
+        $this->parentId = (int) $id;
+    }
+
+    function getParentId() {
+        return $this->parentId;
+    }
+
+    var $groupId;
+    function setGroupId($id) {
+        $this->groupId = (int) $id;
+    }
+
+    function getGroupId() {
+        return $this->groupId;
+    }
+
+    var $ownerId;
+    function setOwnerId($id) {
+        $this->ownerId = (int) $id;
+    }
+
+    function getOwnerId() {
+        return $this->ownerId;
+    }
+
+    function initFromRow(&$row) {
+        $this->setId($row['item_id']);
+        $this->setTitle($row['title']);
+        $this->setDescription($row['description']);
+        $this->setCreateDate($row['create_date']);
+        $this->setUpdateDate($row['update_date']);
+        $this->setType($row['item_type']);
+        $this->setRank($row['rank']);
+        $this->setParentId($row['parent_id']);
+        $this->setGroupId($row['group_id']);
+        $this->setOwnerId($row['user_id']);
+    }
+}
+
+?>

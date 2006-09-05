@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('common/plugin/Plugin.class');
+
+class DocmanPlugin extends Plugin {
+	
+	function DocmanPlugin($id) {
+		$this->Plugin($id);
+        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->_addHook('cssfile', 'cssFile', false);
+        $this->_addHook('javascript_file', 'jsFile', false);
+	}
+	
+    function &getPluginInfo() {
+        if (!is_a($this->pluginInfo, 'DocmanPluginInfo')) {
+            require_once('DocmanPluginInfo.class');
+            $this->pluginInfo =& new DocmanPluginInfo($this);
+        }
+        return $this->pluginInfo;
+    }
+    
+    function siteAdminHooks($params) {
+        echo '<li><a href="'.$this->_getPluginPath().'/">Docman</a></li>';
+    }
+    
+    function cssFile($params) {
+        // Only show the stylesheet if we're actually in the Docman pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />'."\n";
+        }
+    }
+    
+    function jsFile($params) {
+        // Only show the stylesheet if we're actually in the Docman pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="/include/scriptaculous/prototype.js"></script>'."\n";
+            //            echo '<script type="text/javascript" src="/include/scriptaculous/scriptaculous.js"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$this->_getPluginPath().'/js/folder.js"></script>'."\n";
+        }
+    }
+
+
+    function process() {
+        require_once('Docman.class');
+        $controler =& new Docman();
+        $controler->process();
+    }
+}
+
+?>

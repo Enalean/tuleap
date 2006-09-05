@@ -1,0 +1,142 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('common/dao/CodexDataAccess.class');
+require_once('ItemDao.class');
+require_once('ItemFactory.class');
+require_once('ItemNode.class');
+
+class ItemBo {
+    var $groupId;
+
+    /**
+     * Build a subtree from with the list of items
+     *
+     * This method have to make 2 passes on data because we cannot guarranty
+     * that rows will be extracted from DB in the "good order". Actually to
+     * build item tree properly, when we are about to add a node to the tree,
+     * the parent id have to already exist in the tree. Since, in the database,
+     * parent can be defined after children, we have to reorder data first.
+     *
+     * @param $parentId int Id of tree root.
+     * @return ItemNode
+     */
+    function &getItemSubTree($parentId) {
+        $_parentId = (int) $parentId;
+
+        $itemDao =& new ItemDao(CodexDataAccess::instance());
+
+        /*
+         * Part1: In order to optimize tree management, 
+         */
+
+        // Retreive list of collapsed items for current user
+        $dar =& $itemDao->searchCollapseUserPrefs($this->groupId, user_getid());
+        $collapsedItems = array();
+        while($dar->valid()) {
+            $row =& $dar->current();
+            $tmp = explode('_', $row['preference_name']);
+            $collapsedItems[]= $tmp[3];
+            $dar->next();
+        }
+        
+        
+
+        /*
+         * Part2: Fetch itmes
+         */
+        $dar =& $itemDao->searchByGroupId($this->groupId, $collapsedItems);
+
+        // First part: re-order data.
+        $parentArray = array();
+        while($dar->valid()) {
+            $row =& $dar->current();
+            $parentArray[$row['parent_id']][] =& ItemFactory::getItemFromRow($row);
+            $dar->next();
+        }
+
+        /*
+         * Part3: Build Tree
+         */
+
+        // Create "Root" node
+        $item = new Item();
+        $item->setId($_parentId);
+        $treeRoot =& new ItemNode($item);
+
+        $pidList = array($_parentId);
+        // Usage of each is mandatory because we are feeding pidList during
+        // pidList loop. Foreach only loop on the set of data that are in the
+        // array when the loop start (typicaly only with pid = 0).
+        while(list(,$pid) = each($pidList)) {
+            if(array_key_exists($pid, $parentArray)) {
+                $parentTree =& $treeRoot->searchNode($pid);
+                foreach($parentArray[$pid] as $item) {
+                    array_push($pidList, $item->getId());
+                    $node =& new ItemNode();
+                    $node->setData($item);                   
+                    $parentTree->addChild($node);
+                    unset($node);
+                }
+                unset($parentTree);
+            }            
+        }        
+
+        return $treeRoot;
+    }
+
+
+    // STOP: note for childrens, this is a big messy hack !
+    // this 'else' statement only happend a fake child to a node
+    // that contains child but for whom child was not fetched from
+    // database. We need to add a fake child to be able to detect
+    // this case on display to add a clickable 'plus'.
+    function &getParentList() {
+        $itemDao =& new ItemDao(CodexDataAccess::instance());
+
+        // Fetch list of items that contains that are parent of other items.
+        $dar =& $itemDao->searchAllParent($this->groupId);
+        $fakeParentList = array();
+        while($dar->valid()) {
+            $row =& $dar->current();
+            $fakeParentList[] = $row['parent_id'];
+            $dar->next();
+        }
+
+        return $fakeParentList;
+    }
+
+
+    /**
+     * Build a tree from with the list of items
+     *
+     * @return ItemNode
+     */
+    function &getItemTree() {
+        return $this->getItemSubTree(0);
+    }
+
+}
+
+?>

@@ -1,0 +1,191 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+
+require_once('common/collection/Visitor.class');
+
+class DisplayItemTreeVisitor extends Visitor {
+    var $level;
+    var $img;
+    var $html;
+    var $childIsLast;
+    var $childWasLast;
+    var $indent;
+
+    function DisplayItemTreeVisitor() {
+        $this->level = 0;
+        $this->html  = '';
+        $this->childIsLast = false;
+        $this->childWasLast = false;
+        $this->noPrefs = false;
+        $this->indent = array();
+        $this->hiddenFolders = array();
+        $this->path = array();
+        $this->parentList = array();
+        $this->img = array('line'    => '<img src="20_line.gif" width="20" height="20" />'
+                           ,'join'   => '<img src="20_join.gif" width="20" height="20" />'
+                           ,'join_plus'   => '<img src="20_join_plus.gif" width="20" height="20" onClick="folder_expand(this, $(\'subdir_%s\'));" />'
+                           ,'join_minus'   => '<img src="20_join_minus.gif" width="20" height="20" onClick="folder_collapse(this, $(\'subdir_%s\'));" />'
+                           ,'folder' => '<img src="gnome-fs-directory.png" width="20" height="20" />'
+                           ,'joinbottom' => '<img src="20_joinbottom.gif" width="20" height="20" />'
+                           ,'joinbottom_plus' => '<img src="20_joinbottom_plus.gif" width="20" height="20" onClick="folder_expand(this, $(\'subdir_%s\'));" />'
+                           ,'joinbottom_minus' => '<img src="20_joinbottom_minus.gif" width="20" height="20" onClick="folder_collapse(this, $(\'subdir_%s\'));" />'
+                           ,'empty' => '<img src="20_empty.gif" width="20" height="20" />');        
+    }
+
+    function toHtml() {
+        return $this->html;
+    }
+
+    function addFolderToHide($id) {
+        $this->hiddenFolders[] = (int) $id;
+    }
+    
+    function setParentList(&$a) {
+        $this->parentList =& $a;        
+    }
+
+    function setPath($a, $hide = false) {        
+        if($hide) {
+            $this->hiddenFolders = array_merge($this->hiddenFolders, $a);
+        }
+        if($a[count($a) - 1] === 0) {
+            array_pop($a);
+        }
+        $this->path = $a;
+    }
+
+    function displayFolder(&$item, $isLast, $isCollapsed, $hasChildren) {
+        $htm = '<div class="dir"` id="dir_'.$item->getId().'">';
+
+        foreach($this->indent as $img) {
+            $htm .= $img;
+        }
+        
+        $imgname = '';
+        if($hasChildren) {
+            if($isCollapsed) {
+                $imgname = '_plus';
+            }
+            else {
+                $imgname = '_minus';
+            }
+        }
+
+        if($this->level > 0) {
+            if($isLast) {
+                $htm .= sprintf($this->img['joinbottom'.$imgname], $item->getId());         
+            }
+            else {
+                $htm .= sprintf($this->img['join'.$imgname], $item->getId());
+            }
+        }
+
+        $htm .= $this->img['folder'];
+        $htm .= '<p>'.$item->getTitle().'</p>';
+        $htm .= '</div>'."\n";
+
+        return $htm;
+    }
+
+    function visit(&$itemNode) {        
+        $html = '';       
+
+        $item =& $itemNode->getData();
+
+        $isCollapsed = false;
+        if($this->noPrefs !== true && user_get_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) !== false) {
+            $isCollapsed = true;
+        }
+
+        $hasChildren = false;
+        if($itemNode->hasChildren() || in_array($item->getId(), $this->parentList)) {
+            $hasChildren = true;
+        }
+
+        if($item !== null && !in_array($item->getId(), $this->hiddenFolders)) {
+            $this->html .= $this->displayFolder($item,
+                                                $this->childIsLast,
+                                                $isCollapsed,
+                                                $hasChildren);
+        }
+              
+        if($hasChildren) {
+            $this->html .= '<div class="subdir" id="subdir_'.$item->getId().'">'."\n";
+            if($isCollapsed === false) {
+                $this->level++;
+          
+                if($this->level > 1) {
+                    if($this->childIsLast) {
+                        array_push($this->indent, $this->img['empty']);
+                        $this->childIsLast = false;
+                    }
+                    else {
+                        array_push($this->indent, $this->img['line']);
+                    }                                        
+                }
+
+                $ci =& $itemNode->getChildIterator();
+
+                $nextHop = null;
+                //print "Current:".$item->getId()."<br>";
+                if(count($this->path) > 0) {
+                    $nextHop = array_pop($this->path);
+                    //  print "nextHop:".$nextHop."<br>";
+                }
+
+                while($ci->valid()) {
+                    $child =& $ci->current();
+                
+                    // Test if last                  
+                    $this->childIsLast = $ci->isLast();
+
+                    $visit = true;
+                    if($nextHop !== null) {
+                        $citem =& $child->getData();
+                        //  print "-> ".$citem->getId();
+                        if($citem->getId() !== $nextHop) {
+                            $visit = false;
+                        }
+                    }
+
+                    if($visit) {
+                        $child->accept($this);
+                    }
+               
+                    $ci->next();
+                }
+            
+                $this->childIsLast  = false;
+                array_pop($this->indent);
+                $this->level--;
+            }
+            $this->html .= '</div>'."\n";
+        }
+        
+    }
+}
+
+
+?>
