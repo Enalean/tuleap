@@ -41,7 +41,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         
         $where_clause = '';
         if($onlyActive === true) {
-            $where_clause .= ' AND love.status="A"';
+            $where_clause .= ' AND love.status IN ("A", "P")';
         }
 
         $sql = sprintf('SELECT *'.
@@ -54,6 +54,54 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
                        $id);
 
         return $this->retrieve($sql);
+    }
+
+    function createElement($name, $description, $rank, $status) {
+        $sql = sprintf('INSERT INTO plugin_docman_metadata_love('.
+                       'name, description, rank, status'.
+                       ') VALUES ('.
+                       '%s, %s, %d, %s'.
+                       ')',
+                       $this->da->quoteSmart($name),
+                       $this->da->quoteSmart($description),
+                       $rank,
+                       $this->da->quoteSmart($status));
+        return $this->_createAndReturnId($sql);
+    }
+
+    function createMetadataElementBond($metadataId, $elementId) {
+        $sql = sprintf('INSERT INTO plugin_docman_metadata_love_md('.
+                       'field_id, value_id'.
+                       ') VALUES ('.
+                       '%d, %d'.
+                       ')',
+                       $metadataId,
+                       $elementId);
+        return $this->update($sql);
+    }
+
+    function create($metadataId, $name, $description, $rank, $status) {
+        $elementId = $this->createElement($name, $description, $rank, $status);
+        if($elementId !== false) {
+            $inserted = $this->createMetadataElementBond($metadataId, $elementId);
+            return $inserted;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function _createAndReturnId($sql) {
+        $inserted = $this->update($sql);
+        if ($inserted) {
+            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
+            }
+        }
+        return $inserted;
     }
 
 }

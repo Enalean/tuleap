@@ -20,7 +20,7 @@
 }
 
 .newDocument {
- background-color: CCCCCC;
+ background-color: #CCCCCC;
  border: 1px solid black;
  padding: 0.5em;
 }
@@ -47,11 +47,8 @@ ul.docman_items {
 }
 li.docman_item {
     background:transparent url(../images/line.gif) left top repeat-y;
-    position:relative;
 }
 li.docman_item_last {
-    background-image:none;
-    position:relative;
 }
 
 .docman_properties_navlist

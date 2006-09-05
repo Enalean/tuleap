@@ -13,7 +13,7 @@ require_once('Docman_View_Docman.class');
 class Docman_View_Extra extends Docman_View_Docman {
     
     /* protected */ function _addDocmanTool($params, &$array) {
-        $array[] = '<a href="'. $params['default_url'] .'">'. $GLOBALS['Language']->getText('plugin_docman', 'toolbar_docman') .'</a>';
+        $array[] = '<b><a href="'. $params['default_url'] .'">'. $GLOBALS['Language']->getText('plugin_docman', 'toolbar_docman') .'</a></b>';
     }
 }
 

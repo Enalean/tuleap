@@ -546,6 +546,28 @@ function html_trash_link($link, $warn, $alt) {
 }
 
 /**
+ * 
+ *  Returns a date operator field
+ * 
+ *  @param value: initial value
+ *  @param ro: if true, the field is read-only
+ *
+ *	@return	string
+ */
+function html_select_operator($name='', $value='', $ro=false) {    
+    if ($ro) {
+        $html = htmlspecialchars($value);
+    } else {
+        $html = '<select name="'.$name.'">'.
+			'<option value="1"'.(($value == '1') ? 'selected="selected"':'').'>&gt;</option>'.
+			'<option value="0"'.(($value == '0') ? 'selected="selected"':'').'>=</option>'.
+			'<option value="-1"'.(($value == '-1') ? 'selected="selected"':'').'>&lt;</option>'.
+			'</select>';
+    }
+    return($html);	
+}
+
+/**
  *  Returns a date field
  * 
  *  @param value: initial value

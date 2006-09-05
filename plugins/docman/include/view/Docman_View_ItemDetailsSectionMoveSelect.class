@@ -41,7 +41,7 @@ class Docman_View_ItemDetailsSectionMoveSelect extends Docman_View_ItemDetailsSe
         
         $content .= '<div style="padding-left:20px;"><select name="ordering">';
         $at_the_beginning = false;
-        $itemBo = new Docman_ItemBo($this->params['group_id']);
+        $itemBo = new Docman_ItemBo($this->params['docman'], $this->params['group_id']);
         $itemTree =& $itemBo->getItemSubTree($this->selected_parent->getId(), array('user' => $this->params['user']));
         $items =& $itemTree->getAllItems();
         $iter =& $items->iterator();

@@ -28,7 +28,7 @@ class Docman_View_NewFolder extends Docman_View_New {
         $html = '';
 
         $new_folder = new Docman_Folder($params['item']);
-        $mdFactory = new Docman_MetadataFactory($params['group_id']);
+        $mdFactory = new Docman_MetadataFactory($params['docman'], $params['group_id']);
         $new_folder->setMetadata($mdFactory->getOnSubmitFolderMetadataList());
 
         $get_fields = new Docman_View_GetFieldsVisitor();

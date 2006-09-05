@@ -1,4 +1,27 @@
 <?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
 
 class Docman_SqlFilterFactory {
     function Docman_SqlFilterFactory() {
@@ -37,28 +60,38 @@ class Docman_SqlFilterDate extends Docman_SqlFilter {
 
     function Docman_SqlFilterDate(&$filter) {
         parent::Docman_SqlFilter($filter);
-        $this->timestamp = null;
-    }
-
-    function _getTimestamp() {        
-        if($this->timestamp === null 
-           && $this->filter->getValue() != '') {
-            $a = explode('-', $this->filter->getValue());
-            $this->timestamp = mktime(0, 0, 0, $a[1], $a[2], $a[0]);
-        }
-        
-        return $this->timestamp;
     }
 
     function getWhereClause() {
-        $ts = $this->_getTimestamp();
-        if($ts !== null) {
-            $where = $this->filter->getTable().'.'.$this->filter->getField().' '.$this->filter->getOperator().' '.$ts;
-        }
-        else {
-            $where = '';
-        }
+        $where = '';
 
+        $value = $this->filter->getValue();
+        list($time, $ok) = util_date_to_unixtime($value);
+
+        if($ok) {
+            $field = $this->filter->getTable().'.'.$this->filter->getField();
+            list($year,$month,$day) = util_date_explode($value);
+            switch($this->filter->getOperator()) {
+            case '-1':
+                // '<'
+                $time_before = mktime(23, 59, 59, $month, $day-1, $year);
+                $where = $field." <= ".$time_before;
+                break;
+            case '0':
+                // '=' means that day between 00:00 and 23:59
+                $time_end = mktime(23, 59, 59, $month, $day, $year);
+                $where = $field." >= ".$time." AND ".$field." <= ".$time_end;
+                break;
+            case '1':
+            default:
+                // '>'
+                $time_after = mktime(0, 0, 0, $month, $day+1, $year);
+                $where = $field." >= ".$time_after;
+                break;
+            }
+            
+        }
+       
         return $where;
     }
 }

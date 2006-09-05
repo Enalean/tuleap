@@ -79,7 +79,7 @@ class Docman_View_NewDocument extends Docman_View_New {
         $html = '';
         
         $new_document = new Docman_Document($params['force_item']);
-        $mdFactory = new Docman_MetadataFactory($params['group_id']);
+        $mdFactory = new Docman_MetadataFactory($params['docman'], $params['group_id']);
         $new_document->setMetadata($mdFactory->getOnSubmitMetadataList());
 
         $get_fields = new Docman_View_GetFieldsVisitor();

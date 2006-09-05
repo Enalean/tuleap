@@ -440,8 +440,8 @@ class Docman_ItemDao extends DataAccessObject {
                 break;
             default:
                 $rank = $ordering?$ordering:0;
-                $sql = sprintf('UPDATE plugin_docman_item SET rank = rank - 1 '.
-                    ' WHERE  parent_id = %s AND rank <= %s',
+                $sql = sprintf('UPDATE plugin_docman_item SET rank = rank + 1 '.
+                    ' WHERE  parent_id = %s AND rank >= %s',
                     $this->da->quoteSmart($new_parent_id),
                     $this->da->quoteSmart($rank)
                 );

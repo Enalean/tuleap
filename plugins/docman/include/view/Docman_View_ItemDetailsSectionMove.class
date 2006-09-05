@@ -36,7 +36,7 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
-        $content .=  $GLOBALS['Language']->getText('plugin_docman', 'move_descr');
+        $content .=  $GLOBALS['Language']->getText('plugin_docman', 'move_descr', array($this->item->getTitle()));
         
         $parents_tree =& new Docman_View_ParentsTree($this->_controller);
         $content .= $parents_tree->fetch(array(

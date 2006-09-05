@@ -120,21 +120,7 @@ class PermissionsManager {
         return (user_isloggedin() && user_is_super_user());
     }
     
-    /**
-    * Store internally (in _permissions) all permissions for an object
-    * 
-    * @access protected
-    * 
-    * @param  int     $object_id  The id of the object
-    * @param  array   $ugroups    A list of ugroups we want to see in permissions
-    */
-    function _retrievePermissions($object_id, $ugroups = array()) {
-        $tracker_field_id = explode('#', $object_id); //An artifact field ?
-        if (count($tracker_field_id) > 1) {
-            $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
-        } else {
-            $dar =& $this->_permission_dao->searchPermissionsByObjectId($object_id);
-        }
+    function _buildPermissionsCache(&$dar, &$ugroups) {
         while ($row =& $dar->getRow()) {
             if (!isset($this->_permissions[$row['object_id']])) {
                 $this->_permissions[$row['object_id']] = array();
@@ -151,6 +137,34 @@ class PermissionsManager {
                 $this->_permissions[$row['object_id']][$row['ugroup_id']][] = $row['permission_type'];
             }
         }
+    }
+
+    /**
+    * Store internally (in _permissions) all permissions for an object
+    * 
+    * @access protected
+    * 
+    * @param  int     $object_id  The id of the object
+    * @param  array   $ugroups    A list of ugroups we want to see in permissions
+    */
+    function _retrievePermissions($object_id, $ugroups = array()) {
+        $tracker_field_id = explode('#', $object_id); //An artifact field ?
+        if (count($tracker_field_id) > 1) {
+            $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
+        } else {
+            $dar =& $this->_permission_dao->searchPermissionsByObjectId($object_id);
+        }
+        $this->_buildPermissionsCache($dar, $ugroups);
+    }
+
+    function _retrievePermissionsArray($object_id, $ptype, $ugroups = array()) {
+        //$tracker_field_id = explode('#', $object_id); //An artifact field ?
+        //if (count($tracker_field_id) > 1) {
+        //    $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
+        //} else {
+        $dar =& $this->_permission_dao->searchPermissionsByObjectId($object_id, $ptype);
+            //}
+        $this->_buildPermissionsCache($dar, $ugroups);
     }
     
     function clonePermissions($source, $target, $perms) {

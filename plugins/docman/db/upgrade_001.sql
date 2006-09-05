@@ -1,5 +1,5 @@
 ALTER TABLE plugin_docman_project_settings ADD COLUMN use_obsolescence_date TINYINT(4) DEFAULT 0 NOT NULL AFTER view;
-ALTER TABLE plugin_docman_project_settings ADD COLUMN use_status TINYINT(4) DEFAULT 0 NOT NULL AFTER use_obsolescence;
+ALTER TABLE plugin_docman_project_settings ADD COLUMN use_status TINYINT(4) DEFAULT 0 NOT NULL AFTER use_obsolescence_date;
 
 ALTER TABLE plugin_docman_log ADD COLUMN field TEXT DEFAULT NULL AFTER new_value;
 

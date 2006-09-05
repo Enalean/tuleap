@@ -45,8 +45,9 @@ class Docman_MetadataFactory {
     var $hardCodedMetadata;
     var $modifiableMetadata;
     var $groupId;
-
-    function Docman_MetadataFactory($groupId) {
+    var $docman;
+    
+    function Docman_MetadataFactory(&$docman, $groupId) {
         // Metadata hard coded as table columns
         $this->hardCodedMetadata = array('title', 'description', 'owner'
                                          , 'create_date', 'update_date'
@@ -61,6 +62,7 @@ class Docman_MetadataFactory {
                                           PLUGIN_DOCMAN_METADATA_TYPE_DATE);
 
         $this->groupId = $groupId;
+        $this->docman =& $docman;
     }
     
     /**
@@ -282,7 +284,7 @@ class Docman_MetadataFactory {
             $i++;
         }
         
-        $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
+        $mdvFactory = new Docman_MetadataValueFactory($this->docman, $this->groupId);
         $mdareal =& $this->getRealMetadataList(true);
         $j = 0;
         $nbMd = count($mdareal);
@@ -368,6 +370,58 @@ class Docman_MetadataFactory {
             return $this->updateHardCodedMetadata($md);
         }
         return false;
+    }
+
+    function create(&$md) {
+        $md->setGroupId($this->groupId);
+
+        $dao =& $this->getDao();
+        $mdId = $dao->create($this->groupId, 
+                             $md->getName(),
+                             $md->getType(),
+                             $md->getDescription(),
+                             $md->getIsRequired(),                                 
+                             $md->getIsEmptyAllowed(),
+                             $md->getSpecial(),
+                             $md->getDefaultValue(),
+                             $md->getUseIt());
+
+        if($mdId !== false) {
+            if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                $md->setDefaultValue(100);
+                // Insert 'none' value in the list (first value).
+                $loveFactory = new Docman_MetadataListOfValuesElementFactory($mdId);
+                $inserted = $loveFactory->createNoneValue();
+                if($inserted === false) {
+                    $mdId = false;
+                }
+            }
+            
+            if($mdId !== false) {
+                // Update existing items, and give them the default
+                // value of the metadata.
+                // *WARNING*: Only lists are fully implemented (be carful of
+                // default value for other fields).
+                $mdvFactory = new Docman_MetadataValueFactory($this->docman, $this->groupId);
+                
+                $itemBo = new Docman_ItemBo($this->docman, $this->groupId);
+                $itemIter =& $itemBo->getDocumentsIterator(); 
+
+                while($itemIter->valid()) {
+                    $item =& $itemIter->current();
+
+                    $mdv =& $mdvFactory->newMetadataValue($item->getId(), $mdId, $md->getType(), $md->getDefaultValue());
+                    $inserted = $mdvFactory->create($mdv);
+                    //@todo: we should catch an error here. But actually, the
+                    //best thing to do is to rollback the transaction and since
+                    //we do not use tables that support transactions...
+
+                    $itemIter->next();
+                }
+            }
+        }
+
+        return $mdId;
     }
 
     function &getHardCodedMetadataFromLabel($label, $value=null) {
@@ -460,6 +514,7 @@ class Docman_MetadataFactory {
             $md->setIsEmptyAllowed(true);
             $md->setKeepHistory(false);
             $md->setCanChangeValue(true);
+            $md->setDefaultValue(0);
             break;
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2006. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2006.
  * 
@@ -91,13 +91,19 @@ class Docman_MetadataHtml {
      */
     function getLabel() {
         $desc = $this->md->getDescription();
-        $html = '<a href="#" title="'.$desc.'"><img src="'.$this->formParams['theme_path'].'/images/help.png" width="12" height="12" /></a>&nbsp;';
+        $html = '';
+        $html .= '<span title="'. $desc .'">';
         if($this->md->isSpecial()) {
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_'.$this->md->getLabel());
         }
         else {
-            $html .= $this->md->getName().":";
-        }        
+            $html .= $this->md->getName() .":";
+        }
+        if($this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
+            $html .= '&nbsp;';
+            $html .= '<span class="highlight">*</span>';
+        }
+        $html .= '</span>';
         return $html;
     }
 
@@ -125,15 +131,11 @@ class Docman_MetadataHtml {
     function getField() {
         if($this->md->canChangeValue()) {
             $html = $this->_getField();
-            if(!$this->md->isEmptyAllowed()) {
-                $html .= '&nbsp;';
-                $html .= '<span class="highlight">*</span>';
-            }
-            return $html;
         }
         else {
-            return $this->getValue();
+            $html = $this->getValue();
         }
+        return $html;
     }
     
     /**
@@ -205,6 +207,31 @@ class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlList extends Docman_MetadataHtml {
 
+    function _getElementName(&$e) {
+        $name = '';
+        switch($e->getId()) {
+        case 100:
+            $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+            break;
+        default:
+            $name = $e->getName();
+        }
+        return $name;
+    }
+
+    function _getElementDescription(&$e) {
+        $name = '';
+        switch($e->getId()) {
+        case 100:
+            $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_desc_key');
+            break;
+        default:
+            $name = $e->getDescription();
+        }
+        return $name;
+    }
+    
+
     function getValue() {
         $vIter =& $this->md->getValue();
 
@@ -217,7 +244,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             if(!$first) {
                 $html .= ', ';
             }
-            $html .= $e->getName();
+            $html .= $this->_getElementName($e);
 
             $vIter->next();
         }
@@ -258,10 +285,10 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
                 $selected = ' selected="selected"';
             }
 
-            $html .= '<option value="'.$e->getId().'"'.$selected.'>'.$e->getName().'</option>'."\n";
+            $html .= '<option value="'.$e->getId().'"'.$selected.'>'.$this->_getElementName($e).'</option>'."\n";
             
             $vIter->next();
-        }
+        }        
         $html .= '</select>'."\n";
         return $html;
     }
@@ -297,32 +324,31 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
         $labels = array(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent'),
                         3 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_3_months'), 
                         6 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_6_months'), 
-                        12 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_12_months'));
+                        12 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_12_months'),
+                        100 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_fixed_date'),
+                        200 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_today'));
         
         $selected = $this->md->getValue();
+        $selectedInput = '';
         if($selected === null) {
             $selected = $this->md->getDefaultValue();
         }
-        else {            
-            if($selected == 0) {
-                $selectedInput = '';
-            }
-            else {
+        else {
+            if($selected != 0) {
                 $selectedInput = date("Y-n-j", $selected);
-            }
-            
-            $selected = 100;
-            $labels[100] = '-';
+                $selected = 100;
+            }            
         }
 
         $name = 'validity';
         $inputname = $this->md->getLabel();
      
+        $field = '';
         $field .= '<select name="'.$name.'" onchange="javascript:change_obsolescence_date(document.forms.'.$this->formParams['form_name'].')">'."\n";
         foreach($labels as $value => $label) {
             $select = '';
             if($value == $selected) {
-                $select = ' selected';
+                $select = ' select="selected"';
             }
             $field .= '<option value="'.$value.'"'.$select.'>'.$label.'</option>'."\n";
         }

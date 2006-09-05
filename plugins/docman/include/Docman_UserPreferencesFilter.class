@@ -1,0 +1,125 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+class Docman_UserPreferencesFilterFactory {
+    var $groupId;
+
+    function Docman_UserPreferencesFilterFactory($groupId) {
+        $this->groupId = (int) $groupId;
+    }
+
+    function getFromFilter(&$filter) {
+        if(is_a($filter, 'Docman_FilterDate')) {
+            return new Docman_UserPreferencesFilterDate($filter, $this->groupId);
+        }
+        if(is_a($filter, 'Docman_FilterOrdering')) {
+            return new Docman_UserPreferencesFilter($filter, $this->groupId);
+        }
+        return null;
+    }
+
+}
+
+class Docman_UserPreferencesFilter {
+    var $filter;
+    var $groupId;
+
+    function Docman_UserPreferencesFilter(&$filter, $groupId) {
+        $this->filter =& $filter;
+        $this->groupId = $groupId;
+    }
+
+    function _set($label, $value) {
+        user_set_preference(PLUGIN_DOCMAN_PREF
+                            .'_'.$label
+                            .'_'.$this->groupId,
+                            $value);
+    }
+
+    function _get($label) {
+        return user_get_preference(PLUGIN_DOCMAN_PREF
+                                   .'_'.$label
+                                   .'_'.$this->groupId);
+    }
+
+    function _del($label) {
+        user_del_preference(PLUGIN_DOCMAN_PREF
+                            .'_'.$label
+                            .'_'.$this->groupId);
+    }
+
+    function update() {
+        $this->save();
+    }
+
+    function save() {
+        $this->_set($this->filter->getName(), $this->filter->getValue());
+    }
+
+    function delete() {
+        $this->_del($this->filter->getName());
+    }   
+
+    function initFromPrefs() {
+        $this->filter->setValue($this->_get($this->filter->getName()));
+    }
+
+}
+
+class Docman_UserPreferencesFilterDate extends Docman_UserPreferencesFilter {
+
+    function update() {
+        $val = $this->filter->getValue();
+        if($val == '') {
+            $this->delete();
+        }
+        else {
+            $this->save();
+        }
+    }
+
+    function save() {
+        $this->_set($this->filter->getFieldValueName(), $this->filter->getValue());
+        $this->_set($this->filter->getFieldOperatorName(), $this->filter->getOperator());
+    }
+
+    function delete() {
+        $this->_del($this->filter->getFieldValueName());
+        $this->_del($this->filter->getFieldOperatorName());
+    }
+
+    function initFromPrefs() {
+        $val = $this->_get($this->filter->getFieldValueName());
+        if($val !== false) {
+            $this->filter->setValue($val);
+        }
+
+        $op = $this->_get($this->filter->getFieldOperatorName());
+        if($op !== false) {
+            $this->filter->setOperator($op);
+        }
+    }
+}
+?>

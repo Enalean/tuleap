@@ -1,4 +1,27 @@
 <?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
 
 require_once('Docman_Filter.class');
 require_once('Docman_ValidateFilter.class');
@@ -9,51 +32,23 @@ class Docman_FilterBo {
     var $filters;
 
     function Docman_FilterBo() {        
-        $this->filters['fltr_udate_from'] = new Docman_FilterDate();
-        $this->filters['fltr_udate_from']->setName('fltr_udate_from');
-        $this->filters['fltr_udate_from']->setTitle('From');
-        $this->filters['fltr_udate_from']->setOperator('>=');
-        $this->filters['fltr_udate_from']->setField('update_date');
-        $this->filters['fltr_udate_from']->setTable('i');
+        $this->filters['fltr_udate'] = new Docman_FilterDate();
+        $this->filters['fltr_udate']->setName('fltr_udate');
+        $this->filters['fltr_udate']->setTitle('Update date:');
+        $this->filters['fltr_udate']->setOperator('1');
+        $this->filters['fltr_udate']->setField('update_date');
+        $this->filters['fltr_udate']->setTable('i');
 
-        $this->filters['fltr_udate_to'] = new Docman_FilterDate();
-        $this->filters['fltr_udate_to']->setName('fltr_udate_to');
-        $this->filters['fltr_udate_to']->setTitle('To');
-        $this->filters['fltr_udate_to']->setOperator('<=');
-        $this->filters['fltr_udate_to']->setField('update_date');
-        $this->filters['fltr_udate_to']->setTable('i');
-
-        $this->filters['ordr_udate'] = new Docman_FilterOrdering();
-        $this->filters['ordr_udate']->setName('ordr_udate');
-        $this->filters['ordr_udate']->setTitle('Ordering');
-        $this->filters['ordr_udate']->setField('update_date');
-        $this->filters['ordr_udate']->setTable('i');
+        $this->filters['sort_update_date'] = new Docman_FilterOrdering();
+        $this->filters['sort_update_date']->setName('sort_update_date');
+        $this->filters['sort_update_date']->setTitle('Sort on update date');
+        $this->filters['sort_update_date']->setField('update_date');
+        $this->filters['sort_update_date']->setTable('i');
     }
 
     function &getFilterByName($name) {
         return $this->filters[$name];
     }
-
-
-    function setUserPreference(&$filter, $groupId) {
-        user_set_preference(PLUGIN_DOCMAN_PREF
-                            .'_'.$filter->getName()
-                            .'_'.$groupId,
-                            $filter->getValue());
-    }
-
-    function getUserPreference(&$filter, $groupId) {
-        return user_get_preference(PLUGIN_DOCMAN_PREF
-                            .'_'.$filter->getName()
-                            .'_'.$groupId);
-    }
-
-    function delUserPreference(&$filter, $groupId) {
-        user_del_preference(PLUGIN_DOCMAN_PREF
-                            .'_'.$filter->getName()
-                            .'_'.$groupId);
-    }
-
 }
 
 ?>

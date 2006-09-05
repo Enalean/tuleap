@@ -61,7 +61,7 @@ class DocmanActions extends Actions {
         $folder->setId($request->get('id'));
         $folder->setGroupId($request->get('group_id'));
 
-        $folderBo = new Docman_FolderBo();
+        $folderBo = new Docman_FolderBo($this->_controler);
         $folderBo->expand($folder);
     }
 
@@ -72,7 +72,7 @@ class DocmanActions extends Actions {
         $folder->setId($request->get('id'));
         $folder->setGroupId($request->get('group_id'));
 
-        $folderBo = new Docman_FolderBo();
+        $folderBo = new Docman_FolderBo($this->_controler);
         $folderBo->collapse($folder);
     }
 
@@ -274,7 +274,7 @@ class DocmanActions extends Actions {
                     // Create metatata
                     if($request->exist('metadata')) {
                         $metadata_array = $request->get('metadata');
-                        $mdvFactory = new Docman_MetadataValueFactory($request->get('group_id'));
+                        $mdvFactory = new Docman_MetadataValueFactory($this->_controler, $request->get('group_id'));
                         $mdvFactory->createFromRow($id, $metadata_array);
                         if($mdvFactory->isError()) {
                             $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
@@ -361,7 +361,7 @@ class DocmanActions extends Actions {
             // Update real metatata
             if($request->exist('metadata')) {
                 $metadata_array = $request->get('metadata');
-                $mdvFactory = new Docman_MetadataValueFactory($request->get('group_id'));
+                $mdvFactory = new Docman_MetadataValueFactory($this->_controler, $request->get('group_id'));
                 $mdvFactory->updateFromRow($data['id'], $metadata_array);
                 if($mdvFactory->isError()) {
                     $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
@@ -486,14 +486,23 @@ class DocmanActions extends Actions {
             $user =& $this->_controler->getUser();
             
             $item_factory =& $this->_getItemFactory();
-            if ($item_factory->setNewParent($request->get('item_to_move'), $request->get('id'), $request->get('ordering'))) {
+            $item =& $item_factory->getItemFromDb($request->get('item_to_move'));
+            $old_parent =& $item_factory->getItemFromDb($item->getParentId());
+            if ($item_factory->setNewParent($item->getId(), $request->get('id'), $request->get('ordering'))) {
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_MOVE, array(
                     'group_id' => $request->get('group_id'),
                     'item'    => $request->get('item_to_move'), 
                     'parent'  => $request->get('id'),
                     'user'    => $user->getId())
                 );
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved'));
+                $new_parent =& $item_factory->getItemFromDb($request->get('id'));
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
+                    $item->getGroupId(),
+                    $old_parent->getId(), 
+                    $old_parent->getTitle(),
+                    $new_parent->getId(), 
+                    $new_parent->getTitle()
+                )));
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
             }
@@ -664,7 +673,7 @@ class DocmanActions extends Actions {
         $item =& $item_factory->getItemFromDb($request->get('id'));
         if ($item) {
             if (!$item_factory->isRoot($item)) {
-                $item_bo =& new Docman_ItemBo($request->get('group_id'));
+                $item_bo =& new Docman_ItemBo($this->_controler, $request->get('group_id'));
                 $item =& $item_bo->getItemSubTree($request->get('id'), array('user' => &$user));
                 if ($item) {
                     $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
@@ -711,6 +720,24 @@ class DocmanActions extends Actions {
                 }
                 //}}}
                 $this->_controler->feedback->log('info', 'Docman successfully installed.');
+
+                //{{{ Default metadata
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_install_commentkeyword_name'));
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_install_commentkeyword_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+                $md->setIsRequired(false);
+                $md->setIsEmptyAllowed(true);
+                $md->setSpecial(false);
+                $md->setDefaultValue('');
+                $md->setUseIt(false);
+
+                $mdFactory = new Docman_MetadataFactory($this->_controler, $request->get('group_id'));                
+                $mdcreated = $mdFactory->create($md);
+                if($mdcreated === false) {
+                    $this->_controler->feedback->log('error', 'Fail to create "Comment / Keywords" metadata');
+                }
+                //}}}
                 //Add service
                 $service_created = false;
                 $sql="SELECT * FROM service WHERE group_id=100 AND is_active=1 AND short_name = 'docman'";
@@ -743,7 +770,7 @@ class DocmanActions extends Actions {
         $_useIt = (int) $request->get('use_it');
         $_gid = (int) $request->get('group_id');
 
-        $mdFactory = new Docman_MetadataFactory($_gid);
+        $mdFactory = new Docman_MetadataFactory($this->_controler, $_gid);
         $md =& $mdFactory->getFromLabel($_label);
 
         if($md !== null) {

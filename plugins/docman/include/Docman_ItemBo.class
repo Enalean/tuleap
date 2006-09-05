@@ -30,10 +30,13 @@ require_once('common/permission/PermissionsManager.class');
 class Docman_ItemBo {
     var $groupId;
     var $dao;
-
-    function Docman_ItemBo($groupId=0) {
+    var $docman;
+    
+    function Docman_ItemBo(&$docman, $groupId=0) {
         $this->groupId = (int) $groupId;
+        $this->docman =& $docman;
         $this->dao = new Docman_ItemDao(CodexDataAccess::instance());
+        $this->permCache = array();
     }       
 
     /**
@@ -63,18 +66,21 @@ class Docman_ItemBo {
     }
 
     function userHasPermission(&$user, &$item) {
-        $pm =& PermissionsManager::instance();
-        
-        if ($user->isSuperUser() 
-            || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_READ', $user->getUgroups(array())) 
-            || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_WRITE', $user->getUgroups(array())) 
-            || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups(array())) 
-            || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_ADMIN', $user->getUgroups(array()))) {
-            return true;
+        if(!isset($this->permCache[$user->getId()][$item->getId()])) {
+            
+            $pm =& PermissionsManager::instance();
+            if ($user->isSuperUser() 
+                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_READ', $user->getUgroups(array())) 
+                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_WRITE', $user->getUgroups(array())) 
+                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups(array())) 
+                || $this->docman->userCanAdmin()) {
+                $this->permCache[$user->getId()][$item->getId()] = true;
+            }
+            else {
+                $this->permCache[$user->getId()][$item->getId()] = false;
+            }
         }
-        else {
-            return false;
-        }
+        return $this->permCache[$user->getId()][$item->getId()];
     }
 
     /**
@@ -104,11 +110,24 @@ class Docman_ItemBo {
 
         $dar =& $this->dao->searchByGroupId($this->groupId, $filter);
         
+        // Preload perms
+        $objectsIds = array();
+        while($dar->valid()) {
+            $row = $dar->current();
+            $objectsIds[] = $row['item_id'];
+            
+            $dar->next();
+        }
+        $pm =& PermissionsManager::instance();
+        $ptype = array('"PLUGIN_DOCMAN_READ"', '"PLUGIN_DOCMAN_WRITE"', '"PLUGIN_DOCMAN_MANAGE"');
+        $pm->_retrievePermissionsArray($objectsIds, $ptype, $user->getUgroups(array()));
+
         $itemFactory =& new Docman_ItemFactory();
 
         $parentIdList = array();
         $itemList = array();
         $first = true;
+        $dar->rewind();
         while(count($parentIdList) > 0 || $first) {
             if(!$first) {
                 $dar =& $this->dao->searchByIdList($parentIdList);
@@ -267,6 +286,7 @@ class Docman_ItemBo {
 
         // Compute Item location in tree
         // And delete items that do not belong to $_parentId subtree
+        // And delete items that have parents unreadble by user.
         $itemToDelete = array();
 
         $itemIterator->rewind();
@@ -277,19 +297,54 @@ class Docman_ItemBo {
             $locationTitle = array();
             $locationId    = array();
             $i = 0;
-            while($pid != $_parentId && $pid != 0) {
+            $deleteCurrentItem = false;
+            while(!$deleteCurrentItem && $pid != $_parentId && $pid != 0) {
+                // @todo: on possible improvment is to check here the perms
+                // and that current pid is not in itemToDelete array.
+                if(!isset($itemLocationInList[$pid])) {
+                    // @todo: register in DB path to avoid such crapy "on the
+                    // fly" item search.
+                    $parentItem =& $this->findById($pid);
+                    $k = count($itemLocationInList);
+                    $itemLocationInList[$parentItem->getId()] = $k;
+                    $itemList[$k] =& $parentItem;
+                    unset($parentItem);
+                }
                 $itemOffset = $itemLocationInList[$pid];
-                $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
-                $locationId[$i]    = $itemList[$itemOffset]->getId();
-                $i++;
-                $pid = $itemList[$itemOffset]->getParentId();
+
+                if($this->userHasPermission($user, $itemList[$itemOffset])) {
+                    $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
+                    $locationId[$i]    = $itemList[$itemOffset]->getId();
+                    $i++;
+                    $pid = $itemList[$itemOffset]->getParentId();
+                }
+                else {
+                    // If current user don't have the right to read item's
+                    // parent: delete it and delete the parent.
+                    $itemToDelete[] = $itemList[$itemOffset]->getId();
+                    $deleteCurrentItem = true;
+                }
             }
             
-            if($pid != $_parentId) {
+            if($deleteCurrentItem || ($pid != $_parentId)) {
+                // Usuly it implies that $pid == 0.
+                // that mean we go until the root of the docman without
+                // crossing the current $_parentId. It implies that the current
+                // item is not a part of current $_parentId subtree so we can
+                // delete it.
                 $itemToDelete[] = $item->getId();
             }
             else {
                 if($pid != 0) {
+                    if(!isset($itemLocationInList[$pid])) {
+                        // @todo: register in DB path to avoid such crapy "on the
+                        // fly" item search.
+                        $parentItem =& $this->findById($pid);
+                        $k = count($itemLocationInList);
+                        $itemLocationInList[$parentItem->getId()] = $k;
+                        $itemList[$k] =& $parentItem;
+                        unset($parentItem);
+                    }
                     $itemOffset = $itemLocationInList[$pid];
                     $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
                     $locationId[$i]    = $itemList[$itemOffset]->getId();
@@ -352,6 +407,29 @@ class Docman_ItemBo {
         }
         return $this->getItemSubTreeAsList($id, $params);
     } 
+
+    function &getDocumentsIterator() {
+        $itemFactory =& new Docman_ItemFactory();
+
+        $filters = null;
+        $dar =& $this->dao->searchByGroupId($this->groupId, $filters);
+        $itemList = array();
+        while($dar->valid()) {
+            $row = $dar->current();
+
+            $item =& $itemFactory->getItemFromRow($row);
+            $type = $itemFactory->getItemTypeForItem($item);
+            if($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                if(!isset($itemList[$item->getId()])) {
+                    $itemList[$item->getId()] =& $item;
+                }
+            }
+
+            $dar->next();
+        }
+
+        return new ArrayIterator($itemList);
+    }
 
     /**
     * @return Item

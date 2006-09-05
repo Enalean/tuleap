@@ -17,7 +17,7 @@ class Docman_View_RawTree extends Docman_View_View {
     
     /* protected */ function _content($params) {
         
-        $itemBo = new Docman_ItemBo($params['group_id']);
+        $itemBo = new Docman_ItemBo($params['docman'], $params['group_id']);
 
         $itemTree =& $itemBo->getItemSubTree($params['item']->getId(), array('user' => $params['user']));
 

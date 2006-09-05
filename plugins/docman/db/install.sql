@@ -198,3 +198,4 @@ INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 2, 0);
 INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 3, 0);
 INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 1);
 
+INSERT INTO plugin_docman_metadata_love(value_id, name, description, rank, status) VALUES (100, 'love_special_none_name_key', 'love_special_none_desc_key', 0, 'P');

@@ -30,9 +30,10 @@ require_once('Docman_MetadataListOfValuesElementDao.class');
  * High level class to manipulate elements of ListOfValues. 
  */
 class Docman_MetadataListOfValuesElementFactory {
+    var $metadataId;
 
-    function Docman_MetadataListOfValuesElementFactory() {
-
+    function Docman_MetadataListOfValuesElementFactory($metadataId=null) {
+        $this->metadataId = $metadataId;
     }
 
     /**
@@ -44,6 +45,26 @@ class Docman_MetadataListOfValuesElementFactory {
             $_plugin_docman_metadata_love_dao_instance =& new Docman_MetadataListOfValuesElementDao(CodexDataAccess::instance());
         }
         return $_plugin_docman_metadata_love_dao_instance;
+    }
+
+    function create(&$love) {
+        $dao =& $this->getDao();
+        $dao->create($this->metadataId,
+                     $love->getName(),
+                     $love->getDescription(),
+                     $love->getRank(),
+                     'A');
+    }
+
+    function createNoneValue() {
+        $dao =& $this->getDao();
+        return $dao->createMetadataElementBond($this->metadataId, 100);
+    }
+
+    function &instanciateLove(&$row) {
+        $e = new Docman_MetadataListOfValuesElement();
+        $e->initFromRow($row);        
+        return $e;
     }
 
     /**
@@ -59,11 +80,8 @@ class Docman_MetadataListOfValuesElementFactory {
             $res = array();
             while($dar->valid()) {
                 $row = $dar->current();
-                
-                $e = new Docman_MetadataListOfValuesElement();            
-                $e->initFromRow($row);
-                $res[] =& $e;
-                unset($e);
+                                
+                $res[] =& $this->instanciateLove($row);
                 
                 $dar->next();
             }
@@ -85,9 +103,8 @@ class Docman_MetadataListOfValuesElementFactory {
         default:
             $dao =& $this->getDao();
             $dar =& $dao->serachByValueId($id);
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) { 
-                $e = new Docman_MetadataListOfValuesElement();            
-                $e->initFromRow($dar->current());
+            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                $e = $this->instanciateLove($dar->current());
             }
         }
         return $e;

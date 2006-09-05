@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyrightï¿½ STMicroelectronics, 2006
+ * Copyright © STMicroelectronics, 2006
  * Originally written by Manuel VACELET, STMicroelectronics, 2006
  *
  * This file is a part of CodeX.
@@ -71,10 +71,37 @@ class Docman_Filter {
     function getField() {
         return $this->field;
     }
+
+    function initFromRequest(&$request) {
+        if($request->exist($this->getName())) {
+            $this->setValue($request->get($this->getName()));
+        }
+    }
 }
 
 class Docman_FilterDate extends Docman_Filter {
     var $operator;
+    var $field_operator_name;
+    var $field_value_name;
+
+    function Docman_FilterDate() {
+        parent::Docman_Filter();
+        $this->operator = null;
+    }
+
+    function getFieldOperatorName() {
+        return $this->field_operator_name;
+    }
+
+    function getFieldValueName() {
+        return $this->field_value_name;
+    }
+
+    function setName($v) {
+        parent::setName($v);
+        $this->field_operator_name  = $v.'_operator';
+        $this->field_value_name     = $v.'_value';
+    }
 
     function setOperator($v) {
         $this->operator = $v;
@@ -82,6 +109,16 @@ class Docman_FilterDate extends Docman_Filter {
 
     function getOperator() {
         return $this->operator;
+    }
+
+    function initFromRequest(&$request) {
+        if($request->exist($this->getFieldValueName()) && $request->get($this->getFieldValueName()) != '') {
+            $this->setValue($request->get($this->getFieldValueName()));
+            
+            if($request->exist($this->getFieldOperatorName())) {
+                $this->setOperator($request->get($this->getFieldOperatorName()));
+            }
+        }
     }
 }
 

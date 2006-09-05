@@ -27,9 +27,11 @@ require_once(dirname(__FILE__).'/../Docman_VersionFactory.class');
 
 class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSection {
     var $logger;
-    function Docman_View_ItemDetailsSectionHistory(&$item, $url, &$logger) {
+    var $display_access_logs;
+    function Docman_View_ItemDetailsSectionHistory(&$item, $url, $display_access_logs, &$logger) {
         parent::Docman_View_ItemDetailsSection($item, $url, 'history', $GLOBALS['Language']->getText('plugin_docman','details_history'));
         $this->logger =& $logger;
+        $this->display_access_logs = $display_access_logs;
     }
     function getContent() {
         $content = '';
@@ -71,7 +73,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
             }
         }
         if ($this->logger) {
-            $content .= $this->logger->fetchLogsForItem($this->item->getId());
+            $content .= $this->logger->fetchLogsForItem($this->item->getId(), $this->display_access_logs);
         }
         return $content;
     }

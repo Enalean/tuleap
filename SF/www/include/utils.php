@@ -17,6 +17,11 @@ define("DEFAULT_CSV_SEPARATOR", ",");
 // array of allowed separators for CSV export
 $csv_separators = array("comma", "semicolon", "tab");
 
+function util_microtime_float($offset = null) {
+    list($usec, $sec) = explode(" ", microtime());
+    $now = ((float)$usec + (float)$sec);
+    return ($offset !== null) ? ($now - $offset) : $now;
+}
 
 // This function returns a string of the date $value with the format $format and
 // if this date is not set, return the default value $default_value
@@ -1333,7 +1338,7 @@ function util_make_return_to_url($url) {
         if (session_issecure()
             && ($GLOBALS['sys_force_ssl']
                 || !$GLOBALS['sys_stay_in_ssl']
-                || $_REQUEST['stay_in_ssl']
+                || (isset($_REQUEST['stay_in_ssl']) && $_REQUEST['stay_in_ssl'])
                 )) {
             $server_url = 'https://'.$GLOBALS['sys_https_host'];
         }

@@ -22,7 +22,9 @@
  *
  * $Id$
  */
+require_once('Docman.class');
 require_once('Docman_Item.class');
+require_once('Docman_ItemDao.class');
 require_once('Docman_Folder.class');
 require_once('Docman_File.class');
 require_once('Docman_Link.class');

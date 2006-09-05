@@ -55,7 +55,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
             }
             $h .= $this->fetchFolder($item, $params);
         }
-        return $h.'</ul>';
+        return $h.'</ul></li>';
     }
     
     function _itemCanBeFetched(&$item, $params) {

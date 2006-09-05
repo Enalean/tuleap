@@ -148,8 +148,8 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     frameborder:0,
                     scrolling:'no',
                     marginwidth:0,
-                    src:"",
-                    marginheight:0
+                    marginheight:0,
+                    src:'/'
             });
             document.body.appendChild(invisible_iframe);
         }
@@ -399,6 +399,8 @@ function change_obsolescence_date(form) {
     }
   }
 
+  var input = form.obsolescence_date;
+
   // Compute new date  
   var newdatestr = "";
   switch(selected) {
@@ -407,7 +409,18 @@ function change_obsolescence_date(form) {
       break;
   
     case "100":
-      newdatestr = init_obsolescence_date;
+      if(init_obsolescence_date == -1) {
+	input.focus();
+      }
+      else {
+        newdatestr = init_obsolescence_date;
+      }
+      break;
+
+    case "200":
+      var today = new Date();
+      var newDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+      newdatestr =  newDate.getFullYear()+"-"+(newDate.getMonth()+1)+"-"+newDate.getDate();
       break;
 
     default:
@@ -421,7 +434,6 @@ function change_obsolescence_date(form) {
     init_obsolescence_date = form.obsolescence_date.value;
   }
 
-  // Write new date
-  var input = form.obsolescence_date;
+  // Write new date  
   input.value = newdatestr;
 }

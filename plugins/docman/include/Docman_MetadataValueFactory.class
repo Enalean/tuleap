@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2006. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2006.
  * 
@@ -31,11 +31,13 @@ require_once('Docman_MetadataValueDao.class');
  */
 class Docman_MetadataValueFactory extends Error {
     var $groupId;
-
+    var $docman;
+    
     /**
      * Constructor
      */
-    function Docman_MetadataValueFactory($groupId) {
+    function Docman_MetadataValueFactory(&$docman, $groupId) {
+        $this->docman =& $docman;
         $this->groupId = $groupId;
     }
 
@@ -165,7 +167,7 @@ class Docman_MetadataValueFactory extends Error {
      * Create new MetadataValue record.
      */
     function createFromRow($id, $row) {
-        $mdFactory = new Docman_MetadataFactory($this->groupId);
+        $mdFactory = new Docman_MetadataFactory($this->docman, $this->groupId);
 
         foreach($row as $md_name => $md_v) {
             $md =& $mdFactory->getFromLabel($md_name);
@@ -239,7 +241,7 @@ class Docman_MetadataValueFactory extends Error {
      * Update an existing MetadataValue record.
      */
     function updateFromRow($id, $row) {
-        $mdFactory = new Docman_MetadataFactory($this->groupId);
+        $mdFactory = new Docman_MetadataFactory($this->docman, $this->groupId);
 
         foreach($row as $md_name => $md_v) {
             $md =& $mdFactory->getFromLabel($md_name);

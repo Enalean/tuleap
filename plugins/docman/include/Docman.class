@@ -47,6 +47,9 @@ require_once('Docman_MetadataFactory.class');
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
 
+define('PLUGIN_DOCMAN_DB_FALSE', 0);
+define('PLUGIN_DOCMAN_DB_TRUE',  1);
+
 define('PLUGIN_DOCMAN_EVENT_ADD',         1);
 define('PLUGIN_DOCMAN_EVENT_EDIT',        2);
 define('PLUGIN_DOCMAN_EVENT_MOVE',        3);
@@ -82,14 +85,16 @@ class Docman extends Controler {
     var $plugin;
     var $logger;
     var $feedback;
+    var $user_can_admin;
     
     function Docman(&$plugin, $pluginPath, $themePath) {
-        $this->request    = & HTTPRequest::instance();
-        $this->user       = null;
-        $this->groupId    = null;
-        $this->pluginPath = $pluginPath;
-        $this->themePath  = $themePath;
-        $this->plugin     = $plugin;
+        $this->request        = & HTTPRequest::instance();
+        $this->user           = null;
+        $this->groupId        = null;
+        $this->user_can_admin = null;
+        $this->pluginPath     = $pluginPath;
+        $this->themePath      = $themePath;
+        $this->plugin         = $plugin;
         
         $flash = user_get_preference('plugin_docman_flash');
         if ($flash) {
@@ -99,7 +104,7 @@ class Docman extends Controler {
             $this->feedback =& new Feedback();
         }
         
-        $this->logger  =& new Docman_Log();
+        $this->logger  =& new Docman_Log($this);
         $event_manager =& $this->_getEventManager();
         $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD,          $this->logger, 'log', true, 0);
         $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,         $this->logger, 'log', true, 0);
@@ -154,26 +159,29 @@ class Docman extends Controler {
             || $this->userCanAdmin($item_id); //There are default perms for admin
     }
     function userCanAdmin() {
-        //Todo: see if this code already exists in permission_xxx
-        $permission_type = 'PLUGIN_DOCMAN_ADMIN';
-        $object_id       = $this->request->get('group_id');
-        
-        $user =& $this->getUser();
-        // Super-user has all rights...
-        $has_permission = $user->isSuperUser();
-        if (!$has_permission) {
-            // permissions set for this object.
-            $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
-            if (db_numrows($res) < 1 && $permission_type == 'PLUGIN_DOCMAN_ADMIN') {
-                // No ugroup defined => no permissions set => get default permissions only for admin permission
-                $res=permission_db_get_defaults($permission_type);
-            } 
-            while (!$has_permission && ($row = db_fetch_array($res))) {
-                // should work even for anonymous users
-                $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], (int)$this->request->get('group_id'));
+        if ($this->user_can_admin === null) {
+            //Todo: see if this code already exists in permission_xxx
+            $permission_type = 'PLUGIN_DOCMAN_ADMIN';
+            $object_id       = $this->request->get('group_id');
+            
+            $user =& $this->getUser();
+            // Super-user has all rights...
+            $has_permission = $user->isSuperUser();
+            if (!$has_permission) {
+                // permissions set for this object.
+                $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
+                if (db_numrows($res) < 1 && $permission_type == 'PLUGIN_DOCMAN_ADMIN') {
+                    // No ugroup defined => no permissions set => get default permissions only for admin permission
+                    $res=permission_db_get_defaults($permission_type);
+                } 
+                while (!$has_permission && ($row = db_fetch_array($res))) {
+                    // should work even for anonymous users
+                    $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], (int)$this->request->get('group_id'));
+                }
             }
+            $this->user_can_admin = $has_permission;
         }
-        return $has_permission;
+        return $this->user_can_admin;
     }
     /******************************************************/
     
@@ -240,9 +248,10 @@ class Docman extends Controler {
                 // Browser alert
                 $this->_checkBrowserCompliance();
 
-                $this->_viewParams['user']        =& $this->getUser();
-                $this->_viewParams['default_url'] =  $this->getDefaultUrl();
-                $this->_viewParams['theme_path']  =  $this->getThemePath();
+                $this->_viewParams['docman']         =& $this;
+                $this->_viewParams['user']           =& $this->getUser();
+                $this->_viewParams['default_url']    =  $this->getDefaultUrl();
+                $this->_viewParams['theme_path']     =  $this->getThemePath();
                 $this->_viewParams['group_id']       = (int) $this->request->get('group_id');                
                 if($this->request->exist('version_number')) {
                     $this->_viewParams['version_number'] = (int) $this->request->get('version_number');
@@ -295,7 +304,7 @@ class Docman extends Controler {
                     }
                     if ($id) {
                         $item =& $item_factory->getItemFromDb($id);
-                        $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                        $mdFactory = new Docman_MetadataFactory($this, $this->_viewParams['group_id']);
                         $mdFactory->appendItemMetadataList($item);
 
                         if (!$item) {
@@ -325,17 +334,16 @@ class Docman extends Controler {
                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
                             $this->view = 'ProjectError';
                         } else {
+                            $itemBo                         = new Docman_ItemBo($this, $this->request->get('group_id'));
+                            $hierarchy                      =& $itemBo->getItemTree($root->getId(), array('ignore_collapse' => true, 'user' => $this->getUser()));
+                            $this->_viewParams['hierarchy'] =& $hierarchy;
+                                
                             $get_show_view =& new Docman_View_GetShowViewVisitor();
                             $this->_viewParams['item'] =& $item;
                             if (strpos($view, 'admin') === 0 && !$this->userCanAdmin()) {
                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_admin'));
                                 $this->view = $item->accept($get_show_view, $this->request->get('report'));
                             } else {
-                                
-                                $itemBo                         = new Docman_ItemBo($this->request->get('group_id'));
-                                $hierarchy                      =& $itemBo->getItemTree($root->getId(), array('ignore_collapse' => true, 'user' => $this->getUser()));
-                                $this->_viewParams['hierarchy'] =& $hierarchy;
-                                
                                 $last_browse_request =& new DocmanLastBrowseRequest();
                                 switch ($view) {
                                     case 'show':
@@ -377,14 +385,14 @@ class Docman extends Controler {
                                         break;
                                     case 'admin_metadata':
                                         $this->view = 'Admin_Metadata';
-                                        $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                                        $mdFactory = new Docman_MetadataFactory($this, $this->_viewParams['group_id']);
                                         $mdIter =& $mdFactory->getMetadataForGroup();
                                         $this->_viewParams['mdIter'] =& $mdIter;
                                         break;
                                     case 'admin_md_details':
                                         $this->view = 'Admin_MetadataDetails';
                                         $mdLabel = $this->request->get('md');
-                                        $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                                        $mdFactory = new Docman_MetadataFactory($this, $this->_viewParams['group_id']);
                                         $md =& $mdFactory->getFromLabel($mdLabel);
                                         $mdFactory->appendMetadataValueList($md, false);
                                         $this->_viewParams['md'] =& $md;
@@ -490,7 +498,7 @@ class Docman extends Controler {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                                             $this->view = 'Details';
                                         } else {
-                                            $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                                            $mdFactory = new Docman_MetadataFactory($this, $this->_viewParams['group_id']);
                                             $mdFactory->appendAllListOfValuesToItem($item);
                                             $this->view   = 'Edit';
                                         }
@@ -524,7 +532,7 @@ class Docman extends Controler {
                                             } else {
                                                 //Validations
                                                 $new_item = $item_factory->getItemFromRow($i);
-                                                $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                                                $mdFactory = new Docman_MetadataFactory($this, $this->_viewParams['group_id']);
                                                 $mdFactory->appendItemMetadataList($new_item);
 
                                                 $valid = $this->_validateRequest(array_merge(
@@ -561,7 +569,7 @@ class Docman extends Controler {
                                             if ($this->request->exist('confirm')) {
                                                 //Validations
                                                 if ($view == 'update') {
-                                                    $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
+                                                    $mdFactory = new Docman_MetadataFactory($this, $this->_viewParams['group_id']);
                                                     $mdFactory->appendItemMetadataList($item);
                                                     $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                                                 } else {

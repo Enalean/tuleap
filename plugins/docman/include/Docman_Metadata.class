@@ -122,14 +122,14 @@ class Docman_Metadata {
     function setIsRequired($v) {
         $this->isRequired = $v;
     }
-    function isRequired() {
+    function getIsRequired() {
         return $this->isRequired;
     }
 
     function setIsEmptyAllowed($v) {
         $this->isEmptyAllowed = $v;
     }
-    function isEmptyAllowed() {
+    function getIsEmptyAllowed() {
         return $this->isEmptyAllowed;
     }
 
@@ -163,6 +163,22 @@ class Docman_Metadata {
     ///}}} Accessors
  
     //{{{ Convenient accessors
+    function isEmptyAllowed() {
+        if($this->isEmptyAllowed == PLUGIN_DOCMAN_DB_TRUE) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function isRequired() {
+        if($this->isRequired == PLUGIN_DOCMAN_DB_TRUE) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     function isUsed() {
         if($this->useIt == PLUGIN_DOCMAN_METADATA_USED) {
             return true;

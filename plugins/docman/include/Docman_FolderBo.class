@@ -34,8 +34,8 @@ require_once('Docman_Folder.class');
  */
 class Docman_FolderBo extends Docman_ItemBo {
     
-    function Docman_FolderBo($groupId=0) {
-        $this->Docman_ItemBo($groupId);
+    function Docman_FolderBo(&$docman, $groupId=0) {
+        $this->Docman_ItemBo($docman, $groupId);
     }
 
     /**

@@ -29,7 +29,7 @@ $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
 class DocmanPluginDescriptor extends PluginDescriptor {
     
     function DocmanPluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docman', 'descriptor_name'), 'Alpha 1', $GLOBALS['Language']->getText('plugin_docman', 'descriptor_description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docman', 'descriptor_name'), 'Alpha 2', $GLOBALS['Language']->getText('plugin_docman', 'descriptor_description'));
     }
 }
 ?>

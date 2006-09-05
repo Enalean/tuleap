@@ -33,6 +33,7 @@ class Docman_View_Table extends Docman_View_Browse {
 <legend>'. $GLOBALS['Language']->getText('plugin_docman', 'filters') .'</legend>
 <form name="plugin_docman_filters" method="GET" action="?">
 <input type="hidden" name="group_id" value="'.$params['group_id'].'">
+<input type="hidden" name="id" value="'.$params['item']->getId().'">
 ';
         if($params['filter'] !== null) {
             $fi =& $params['filter']->getIterator();
@@ -56,12 +57,12 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
     }
 
     /* protected */ function _content($params) {      
-        $itemBo = new Docman_ItemBo($params['group_id']);
+        $itemBo = new Docman_ItemBo($params['docman'], $params['group_id']);
 
-        $itemIterator =& $itemBo->getItemSubTreeAsList($params['item']->getId(), 
-                                                       array('user' => $params['user'],
-                                                             'ignore_collapse' => true,
-                                                             'filter' => $params['filter']));             
+        $itemIterator =& $itemBo->getItemList($params['item']->getId(), 
+                                              array('user' => $params['user'],
+                                                    'ignore_collapse' => true,
+                                                    'filter' => $params['filter']));             
 
         $itemFactory =& new Docman_ItemFactory();
 
@@ -78,34 +79,38 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
         $itemCounter = 0;
                 
         /// {{{ Prepare "On column title click" sort
-        $lastUpdateTitle = "Click to toogle the table sort";
-        if(!isset($_REQUEST['ordr_udate'])) {
-            $toggleValue = '1';
-        } elseif($_REQUEST['ordr_udate'] == 0) {
-            $toggleValue = '1';
-        }
-        else {
-            $toggleValue = '0';
-        }        
-        $lastUpdateUrl = $currentViewUrl.'&amp;ordr_udate='.$toggleValue;
-        if($toggleValue == 0) {
-            $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
-        }
-        else {
-            $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
-        }
-        $lastUpdate = '<a href="'.$lastUpdateUrl.'" title="'.$lastUpdateTitle.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttablevisitor_lastupdate').'&nbsp;'.$toogleIcon.'</a>';
+        $si =& $params['filter']->getSortIterator();
+        $si->rewind();
+        while($si->valid()) {
+            $sort =& $si->current();
+            
+            if($sort->getValue() == 1) {
+                $toggleValue = '0';
+                $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
+            }
+            else {
+                $toggleValue = '1';
+                $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
+            }
+            
+            $url = $currentViewUrl.'&amp;'.$sort->getName().'='.$toggleValue;
+           
+            $sortableColumns[$sort->getField()] = '<a href="'.$url.'" title="'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_toggletitle').'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_'.$sort->getField()).'&nbsp;'.$toogleIcon.'</a>';
+ 
+            $si->next();
+
+        }       
         /// }}}
 
         $table = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_title'),
+                                                                              'view_documenttable_title'),
                                                 $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_desc'),
+                                                                              'view_documenttable_desc'),
                                                 $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_location'),
+                                                                              'view_documenttable_location'),
                                                 $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_owner'),
-                                                $lastUpdate));
+                                                                              'view_documenttable_owner'),
+                                                $sortableColumns['update_date']));
         
         $altRowClass = 0;
         $itemIterator->rewind();
@@ -118,10 +123,17 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
                     $table .=  "<tr class=\"".$trclass."\">\n";
             
                     // Title
+                    $docmanIcons =& $this->_getDocmanIcons($params);
+                    $icon_src = $docmanIcons->getIconForItem($item, $params);
+                    $icon = '<img src="'. $icon_src .'" class="docman_item_icon" />';
                     $table .=  "<td>";
+                    $table .= '<span style="white-space: nowrap;">';
+                    $table .= $icon;
                     $table .=  '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
-                    $table .=  $item->getTitle();
+                    $table .=  htmlentities($item->getTitle(), ENT_QUOTES);
                     $table .=  '</a>';
+                    $table .= $this->getItemMenu($item, $params);
+                    $table .= '</span>';
                     $table .=  "</td>\n";
 
                     // Description
@@ -151,7 +163,7 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
             
                     // Last Update
                     $table .=  "<td>";
-                    $table .=  strftime("%e %b %Y %H:%M", $item->getUpdateDate());
+                    $table .=  format_date("Y-m-j", $item->getUpdateDate());
                     $table .=  "</td>\n";
 
                     $table .=  "</tr>\n";
@@ -165,10 +177,10 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
         // Prepare Navigation Bar
         if($_low_limit > 0) {
             $firstUrl    = $currentViewUrl.'&amp;start=0';
-            $first       = '<a href="'.$firstUrl.'">&lt;&lt; Begin</a>';
+            $first       = '<a href="'.$firstUrl.'">&lt;&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_begin').'</a>';
         }
         else {
-            $first       = '&lt;&lt; Begin';
+            $first       = '&lt;&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_begin');
         }
    
         $previousOffset = $_low_limit - $offset;
@@ -177,27 +189,27 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
                 $previousOffset = 0;
             }
             $previousUrl = $currentViewUrl.'&amp;start='.$previousOffset;
-            $previous    = '<a href="'.$previousUrl.'">&lt; Previous '.$offset.'</a>';
+            $previous    = '<a href="'.$previousUrl.'">&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous').' '.$offset.'</a>';
         }
         else {
-            $previous    = '&lt; Previous '.$offset;
+            $previous    = '&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous').' '.$offset;
         }
 
         if($_high_limit < $itemCounter) {
             $nextUrl     = $currentViewUrl.'&amp;start='.$_high_limit;
-            $next        = '<a href="'.$nextUrl.'">Next '.$offset.' &gt;</a>';
+            $next        = '<a href="'.$nextUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next').' '.$offset.' &gt;</a>';
         }
         else {
-            $next        = 'Next '.$offset.' &gt;';
+            $next        = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next').' '.$offset.' &gt;';
         }
 
         if($_high_limit < $itemCounter) {
             $lastOffset  = $itemCounter - $offset;
             $lastUrl     = $currentViewUrl.'&amp;start='.$lastOffset;
-            $last        = '<a href="'.$lastUrl.'">End &gt;&gt;</a>';
+            $last        = '<a href="'.$lastUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_end').' &gt;&gt;</a>';
         }
         else {
-            $last        = 'End &gt;&gt';
+            $last        = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_end').' &gt;&gt';
         }
 
         $navbar = '<table border="0" width="100%"><tr><td width="50%" align="left">'.$first.' '.$previous.'</td><td width="50%" align="right">'.$next.' '.$last.'</td></tr></table>';

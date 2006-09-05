@@ -160,10 +160,10 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                 echo '<tr>';
                 
                 // Name
-                echo '<td>'.$e->getName().'</td>';
+                echo '<td>'.Docman_MetadataHtmlList::_getElementName($e).'</td>';
 
                 // Description
-                echo '<td>'.$e->getDescription().'</td>';
+                echo '<td>'.Docman_MetadataHtmlList::_getElementDescription($e).'</td>';
 
                 // Rank
                 echo '<td>'.$e->getRank().'</td>';
