@@ -97,17 +97,12 @@ class Docman_ItemBo {
         }
 
         // Prepare filters if any
-        $filter = array();
+        $filter = null;
         if(isset($params['filter'])) {
             $filter =& $params['filter'];
-        }
+        }  
 
-        $order = array();
-        if(isset($params['order'])) {
-            $order =& $params['order'];
-        }
-
-        $dar =& $this->dao->searchByGroupId($this->groupId, $filter, $order);
+        $dar =& $this->dao->searchByGroupId($this->groupId, $filter);
         
         $itemFactory =& new Docman_ItemFactory();
 
@@ -208,6 +203,68 @@ class Docman_ItemBo {
         return $itemList[$_parentId];     
     }
 
+    /**
+     *
+     */
+    function &getItemSubTreeAsList($parentId, $params = null) {
+        $_parentId = (int) $parentId;
+               
+        $user =& $params['user'];
+
+        // Prepare filters if any
+        $filter = null;
+        if(isset($params['filter'])) {
+            $filter =& $params['filter'];
+        }
+
+        $itemFactory =& new Docman_ItemFactory();
+        $itemList = array();
+        $itemLocationInList = array();
+
+        $dar =& $this->dao->searchByGroupId($this->groupId, $filter);
+        $i = 0;
+        while($dar->valid()) {
+            $row =& $dar->current();
+
+            $item =& $itemFactory->getItemFromRow($row);
+            if($this->userHasPermission($user, $item)) {
+                $insert = false;
+                $type = $itemFactory->getItemTypeForItem($item);
+                if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE 
+                    || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    // For items with history, we retreive all versions
+                    // of the item. The following keep only the more
+                    // recent version of the item
+                    if(isset($itemLocationInList[$item->getId()])) {
+                        $itemOffset = $itemLocationInList[$item->getId()];
+                        $oldVer =& $itemList[$itemOffset]->getCurrentVersion();
+                        $newVer =& $item->getCurrentVersion();
+                        if($oldVer->getDate() < $newVer->getDate()) {
+                            $itemList[$itemOffset] =& $item;
+                            $insert = false;
+                        }
+                    }
+                    else {
+                        $insert = true;
+                    }
+                }
+                else {
+                    $insert = true;
+                }
+                
+                if($insert) {
+                    $itemLocationInList[$item->getId()] = $i;
+                    $itemList[$i] =& $item;
+                    $i++;
+                }
+            }
+            unset($item);
+
+            $dar->next();
+        }
+
+        return new ArrayIterator($itemList);
+    }
 
     // STOP: note for childrens, this is a big messy hack !
     // this 'else' statement only happend a fake child to a node
@@ -239,6 +296,18 @@ class Docman_ItemBo {
         }
         return $this->getItemSubTree($id, $params);
     }
+
+    /**
+     * Build a list of items
+     *
+     * @return ItemNode
+     */
+    function &getItemList($id = 0, $params = null) {
+        if (!$id) {
+            $id = $this->dao->searchRootIdForGroupId($this->groupId);
+        }
+        return $this->getItemSubTreeAsList($id, $params);
+    } 
 
     /**
     * @return Item

@@ -1,7 +1,7 @@
 plugin_docman	descriptor_description	Advanced Document Manager
 plugin_docman	descriptor_name	Document Manager
 plugin_docman	title	Project Documentation
-plugin_docman	service_lbl_key	Docman
+plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Advanced Document Manager
 
 #
@@ -97,6 +97,9 @@ plugin_docman	error_alreadyinstalled	Docman already installed.
 plugin_docman	error_create_initversion	Error while creating initial version.
 plugin_docman	error_create_newversion	Error while creating new version.
 plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not empty.
+plugin_docman	error_field_link_required	The URL is required.
+plugin_docman	error_field_title_required	The Title is required.
+plugin_docman	error_field_wiki_required	The pagename is required.
 plugin_docman	error_filenotfound	The file cannot be found.
 plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the docman.
 plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
@@ -108,6 +111,11 @@ plugin_docman	error_perms_perms	You do not have sufficient access rights to set 
 plugin_docman	error_perms_view	You do not have sufficient access rights to view this item.
 plugin_docman	error_settings_updated	Settings cannot be updated.
 plugin_docman	error_perms_updated	$1
+plugin_docman	error_upload	File upload error. Please try again.
+plugin_docman	error_upload_nofile	File upload error($1). No file was uploaded. 
+plugin_docman	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
+plugin_docman	error_upload_size	File upload error($1). The uploaded file exceeds the max filesize.
+plugin_docman	error_upload_unknown	File upload error($1). Unknown error code.
 
 plugin_docman	event_add	Create
 plugin_docman	event_edit	Edit
@@ -152,15 +160,16 @@ plugin_docman	move_descr	Choose the target folder:
 plugin_docman	move_here	move here.
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
-plugin_docman	new_document	New document under $1
+plugin_docman	new_document	New document
 plugin_docman	new_document_action	Create document
 plugin_docman	new_document_embedded	Embedded File
 plugin_docman	new_document_file	File
 plugin_docman	new_document_link	Link
 plugin_docman	new_document_wiki	Wiki Page
-plugin_docman	new_folder	New folder under $1
+plugin_docman	new_folder	New folder
 plugin_docman	new_folder_action	Create folder
 plugin_docman	new_generalproperties	General properties
+plugin_docman	new_location	Location
 plugin_docman	new_specificproperties	Specific properties
 
 plugin_docman	permission_admin	Administrator

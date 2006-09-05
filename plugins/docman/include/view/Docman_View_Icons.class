@@ -43,6 +43,7 @@ class Docman_View_Icons extends Docman_View_Browse {
             $cells = array_merge($folders, $documents);
             $rows = array_chunk($cells, $nb_of_columns);
             $item_parameters = array(
+                'icon_width'            => '32',
                 'get_action_on_icon'    => new Docman_View_GetActionOnIconVisitor(),
                 'docman_icons'           => $this->_getDocmanIcons($params),
                 'default_url'            => $params['default_url'],
@@ -86,7 +87,7 @@ class Docman_View_Icons extends Docman_View_Browse {
         $show_options = isset($params['show_options']) && $params['show_options'] == $item->getId();
         
         $icon_src = $params['docman_icons']->getIconForItem($item, $params);
-        $icon = '<img src="'. $icon_src .'" class="docman_item_icon" style="width:48px; height:48px; vertical-align:middle; text-decoration:none;" />';
+        $icon = '<img src="'. $icon_src .'" class="docman_item_icon" style="vertical-align:middle; text-decoration:none;" />';
         
         $icon_url = $this->buildUrl($params['default_url'], array(
             'action' => $item->accept($params['get_action_on_icon'], array('view' => $this)),

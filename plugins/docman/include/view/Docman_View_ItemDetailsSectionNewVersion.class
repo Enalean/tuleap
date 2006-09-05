@@ -27,8 +27,10 @@ require_once('Docman_View_GetSpecificFieldsVisitor.class');
 
 class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions {
     
-    function Docman_View_ItemDetailsSectionNewVersion(&$item, $url, &$controller) {
+    var $force;
+    function Docman_View_ItemDetailsSectionNewVersion(&$item, $url, &$controller, $force) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+        $this->force    = $force;
     }
     function getContent() {
         return $this->item->accept($this);
@@ -53,10 +55,12 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         
         $content .= '<table>';
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="" /></td></tr>';
-        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="5" cols="50"></textarea></td></tr>';
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor());
+        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80"></textarea></td></tr>';
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force));
         foreach($fields as $field) {
-            $content .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+            $content .= '<tr style="vertical-align:top;">';
+            $content .= '<td><label>'. $field['label'] .'</label></td>';
+            $content .= '<td>'. $field['field'] .'</td></tr>';
         }
         $content .= '<tr style="vertical-align:top"><td></td><td>';
         $content .= '<input type="hidden" name="action" value="new_version" />';

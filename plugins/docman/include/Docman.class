@@ -29,6 +29,7 @@ require_once('common/include/HTTPRequest.class');
 require_once('common/include/UserManager.class');
 
 require_once('view/Docman_View_GetShowViewVisitor.class');
+require_once('view/Docman_View_GetFieldsVisitor.class');
 
 require_once('DocmanActions.class');
 require_once('DocmanLastBrowseRequest.class');
@@ -38,7 +39,7 @@ require_once('Feedback.class');
 require_once('Docman_Log.class');
 require_once('common/event/EventManager.class');
 
-require_once('Docman_Filter.class');
+require_once('Docman_ReportBo.class');
 
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
@@ -135,6 +136,10 @@ class Docman extends Controler {
         if (!$has_permission) {
             // permissions set for this object.
             $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
+            if (db_numrows($res) < 1 && $permission_type == 'PLUGIN_DOCMAN_ADMIN') {
+                // No ugroup defined => no permissions set => get default permissions only for admin permission
+                $res=permission_db_get_defaults($permission_type);
+            } 
             while (!$has_permission && ($row = db_fetch_array($res))) {
                 // should work even for anonymous users
                 $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], (int)$this->request->get('group_id'));
@@ -168,85 +173,15 @@ class Docman extends Controler {
         return $this->themePath;
     }
     
-    function _initFilters() {
-        $this->_viewParams['filter'] = array();
-        $this->_viewParams['order']  = array();
-                
-        $fd = new Docman_FilterDate('fltr_udate_from');
-        if($this->request->get('fltr_udate_from')) {
-            $fd->setValue($this->request->get('fltr_udate_from'));
-            if(!$fd->validate()) {
-                $this->feedback->log('error', $fd->getMessage());
-            }
-            else {
-                user_set_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId(),
-                                    $fd->getValue());
-            }
-        }
-        else {
-            $v = user_get_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId());
-            if($this->request->get('submit')) {
-                $v = '';
-                 user_del_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId());
-            }
-            $fd->setValue($v);
-        }
-        $fd->setHtmlFieldName($GLOBALS['Language']->getText('plugin_docman', 'filters_date_start'));
-        $fd->setHtmlFormName('plugin_docman_filters');
-        $fd->setSqlField('update_date');
-        $fd->setSqlOperator('>=');
-        $this->_viewParams['filter'][] =& $fd;
-        unset($fd);
+    function _initFilters($view) {        
+        $reportBo = new Docman_ReportBo();
 
-        $fd = new Docman_FilterDate('fltr_udate_to');
-        if($this->request->get('fltr_udate_to')) {
-            $fd->setValue($this->request->get('fltr_udate_to'));
-            if(!$fd->validate()) {
-                $this->feedback->log('error', $fd->getMessage());
-            }
-            else {
-                user_set_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId(),
-                                    $fd->getValue());
-            }
+        $report =& $reportBo->get($view);
+        if($report !== null) {
+            $reportBo->setup($report, $this->request, $this->getGroupId(), $this->feedback);
         }
-        else {
-            $v = user_get_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId());
-            if($this->request->get('submit')) {
-                $v = '';
-                 user_del_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId());
-            }
-            $fd->setValue($v);
-        }        
-        $fd->setHtmlFieldName($GLOBALS['Language']->getText('plugin_docman', 'filters_date_end'));
-        $fd->setHtmlFormName('plugin_docman_filters');
-        $fd->setSqlField('update_date');
-        $fd->setSqlOperator('<=');
-        $this->_viewParams['filter'][] =& $fd;
-        unset($fd);
 
-        $fd = new Docman_FilterOrdering('ordr_udate');
-        if($this->request->get('ordr_udate')) {
-            $fd->setValue($this->request->get('ordr_udate'));
-            if(!$fd->validate()) {
-                $this->feedback->log('error', $fd->getMessage());
-            }
-            else {
-                user_set_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId(),
-                                    $fd->getValue());
-            }
-        }
-        else {
-            $v = user_get_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId());
-            if($this->request->get('submit')) {
-                $v = '';
-                 user_del_preference(PLUGIN_DOCMAN_PREF.'_'.$fd->getShortName().'_'.$this->getGroupId());
-            }
-            $fd->setValue($v);
-        }
-        $fd->setHtmlFieldName($GLOBALS['Language']->getText('plugin_docman', 'filters_ordering'));
-        $fd->setSqlField('update_date');
-        $this->_viewParams['order'][] =& $fd;
-        unset($fd);       
+        $this->_viewParams['filter'] =& $report;            
     }
 
 
@@ -363,8 +298,8 @@ class Docman extends Controler {
                                 $last_browse_request =& new DocmanLastBrowseRequest();
                                 switch ($view) {
                                     case 'show':
-                                        $this->_initFilters();
                                         $this->view = $item->accept($get_show_view);
+                                        $this->_initFilters($this->view);
                                         $item->accept($last_browse_request);
                                         break;
                                     case 'expandFolder':
@@ -413,6 +348,7 @@ class Docman extends Controler {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
                                             $this->view = 'Details';
                                         } else {
+                                            $this->_viewParams['force_item'] = array();
                                             $this->view = ucfirst($view);
                                         }
                                         break;
@@ -513,30 +449,52 @@ class Docman extends Controler {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                                             $this->view = 'Details';
                                         } else {
+                                            $valid = true;
                                             if ($this->request->exist('confirm')) {
-                                                if ($view == 'update_wl') {
-                                                    $this->action = 'update';
+                                                //Validations
+                                                if ($view == 'update') {
+                                                    $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                                                 } else {
-                                                    $this->action = $view;
+                                                    $valid = $this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor()));
+                                                }
+                                                //Actions
+                                                if ($valid) {
+                                                    if ($view == 'update_wl') {
+                                                        $this->action = 'update';
+                                                    } else {
+                                                        $this->action = $view;
+                                                    }
                                                 }
                                             }
-                                            if ($view == 'update_wl' || $view == 'new_version') {
-                                                $section = 'actions';
+                                            //Views
+                                            if ($valid) {
+                                                if ($view == 'update_wl' || $view == 'new_version') {
+                                                    $section = 'actions';
+                                                } else {
+                                                    $section = 'properties';
+                                                }
+                                                $this->_viewParams['default_url_params'] = array(
+                                                    'action'  => 'details',
+                                                    'section' => $section,
+                                                    'id'      => $item->getId()
+                                                );
+                                                $this->view = 'RedirectAfterCrud';
                                             } else {
-                                                $section = 'properties';
+                                                $this->_viewParams['force_item'] = $this->request->get('item');
+                                                if ($view == 'update_wl') {
+                                                    $this->view = 'Update';
+                                                } else if ($view == 'new_version') {
+                                                    $this->view = 'NewVersion';
+                                                } else {
+                                                    $this->view = 'Edit';
+                                                }
                                             }
-                                            $this->_viewParams['default_url_params'] = array(
-                                                'action'  => 'details',
-                                                'section' => $section,
-                                                'id'      => $item->getId()
-                                            );
-                                            $this->view = 'RedirectAfterCrud';
                                         }
                                         break;
                                     case 'change_view':
-                                        $this->_initFilters();
                                         $this->action = $view;
                                         $this->view   = $item->accept($get_show_view);
+                                        $this->_initFilters($this->request->get('selected_view'));
                                         break;
                                     case 'install':
                                         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_alreadyinstalled'));
@@ -567,6 +525,26 @@ class Docman extends Controler {
     
     function forceView($view) {
         $this->view = $view;
+    }
+    
+    function _validateRequest($fields) {
+        $valid = true;
+        foreach($fields as $field) {
+            if (isset($field['validator'])) {
+                if (!is_array($field['validator'])) {
+                    $field['validator'] = array($field['validator']);
+                }
+                foreach($field['validator'] as $v) {
+                    if (!$v->isValid()) {
+                        $valid = false;
+                        foreach($v->getErrors() as $error) {
+                            $this->feedback->log('error', $error);
+                        }
+                    }
+                }
+            }
+        }
+        return $valid;
     }
     
     function viewsManagement() {

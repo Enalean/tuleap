@@ -1,0 +1,59 @@
+<?php
+
+require_once('Docman_Filter.class');
+require_once('Docman_ValidateFilter.class');
+require_once('Docman_SqlFilter.class');
+require_once('Docman_HtmlFilter.class');
+
+class Docman_FilterBo {
+    var $filters;
+
+    function Docman_FilterBo() {        
+        $this->filters['fltr_udate_from'] = new Docman_FilterDate();
+        $this->filters['fltr_udate_from']->setName('fltr_udate_from');
+        $this->filters['fltr_udate_from']->setTitle('From');
+        $this->filters['fltr_udate_from']->setOperator('>=');
+        $this->filters['fltr_udate_from']->setField('update_date');
+        $this->filters['fltr_udate_from']->setTable('i');
+
+        $this->filters['fltr_udate_to'] = new Docman_FilterDate();
+        $this->filters['fltr_udate_to']->setName('fltr_udate_to');
+        $this->filters['fltr_udate_to']->setTitle('To');
+        $this->filters['fltr_udate_to']->setOperator('<=');
+        $this->filters['fltr_udate_to']->setField('update_date');
+        $this->filters['fltr_udate_to']->setTable('i');
+
+        $this->filters['ordr_udate'] = new Docman_FilterOrdering();
+        $this->filters['ordr_udate']->setName('ordr_udate');
+        $this->filters['ordr_udate']->setTitle('Ordering');
+        $this->filters['ordr_udate']->setField('update_date');
+        $this->filters['ordr_udate']->setTable('i');
+    }
+
+    function &getFilterByName($name) {
+        return $this->filters[$name];
+    }
+
+
+    function setUserPreference(&$filter, $groupId) {
+        user_set_preference(PLUGIN_DOCMAN_PREF
+                            .'_'.$filter->getName()
+                            .'_'.$groupId,
+                            $filter->getValue());
+    }
+
+    function getUserPreference(&$filter, $groupId) {
+        return user_get_preference(PLUGIN_DOCMAN_PREF
+                            .'_'.$filter->getName()
+                            .'_'.$groupId);
+    }
+
+    function delUserPreference(&$filter, $groupId) {
+        user_del_preference(PLUGIN_DOCMAN_PREF
+                            .'_'.$filter->getName()
+                            .'_'.$groupId);
+    }
+
+}
+
+?>

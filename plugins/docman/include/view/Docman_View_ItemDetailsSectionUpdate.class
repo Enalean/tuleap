@@ -25,9 +25,11 @@
 require_once('Docman_View_ItemDetailsSectionActions.class');
 
 class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions {
-    
-    function Docman_View_ItemDetailsSectionUpdate(&$item, $url, &$controller) {
+    var $validate;
+    var $force;
+    function Docman_View_ItemDetailsSectionUpdate(&$item, $url, &$controller, $force) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+        $this->force = $force;
     }
     function getContent() {
         return $this->item->accept($this);
@@ -42,7 +44,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
         
         require_once('Docman_View_GetSpecificFieldsVisitor.class');
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor());
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force));
         $content .= '<table>';
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
@@ -70,5 +72,6 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
+    
 }
 ?>

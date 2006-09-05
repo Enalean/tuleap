@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../Docman_Document.class');
 class Docman_View_NewDocument extends Docman_View_New {
     
     function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman', 'new_document', $params['item']->getTitle());
+        return $GLOBALS['Language']->getText('plugin_docman', 'new_document');
     }
     function _getEnctype() {
         return ' enctype="multipart/form-data" ';
@@ -27,25 +27,25 @@ class Docman_View_NewDocument extends Docman_View_New {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_document_action');
     }
     
-    function _getSpecificProperties() {
+    function _getSpecificProperties($params) {
         $html = '';
         $specifics = array(
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
-                'obj'     => new Docman_Link(),
+                'obj'     => new Docman_Link($params['force_item']),
                 'checked' => false
             ),
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_wiki'),
-                'obj'     => new Docman_Wiki(),
+                'obj'     => new Docman_Wiki($params['force_item']),
                 'checked' => false
             ),
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_file'),
-                'obj'     => new Docman_File(),
+                'obj'     => new Docman_File($params['force_item']),
                 'checked' => true
             )
         );
@@ -53,7 +53,7 @@ class Docman_View_NewDocument extends Docman_View_New {
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_embedded'),
-                'obj'     => new Docman_EmbeddedFile(),
+                'obj'     => new Docman_EmbeddedFile($params['force_item']),
                 'checked' => false
             );
         }
@@ -76,7 +76,7 @@ class Docman_View_NewDocument extends Docman_View_New {
     
     function _getGeneralProperties($params) {
         $html = '';
-        $new_document = new Docman_Document($params['item']);
+        $new_document = new Docman_Document($params['force_item']);
         $get_fields = new Docman_View_GetFieldsVisitor();
         $fields = $new_document->accept($get_fields);
         $html .= '<table>';

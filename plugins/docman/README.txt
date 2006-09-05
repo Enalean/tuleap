@@ -1,3 +1,5 @@
+  DOCMAN ALPHA 1 RELEASE
+
 Installation Instructions
 -------------------------
 

@@ -1,7 +1,7 @@
 plugin_docman	descriptor_description	Gestionnaire de documents avancé
 plugin_docman	descriptor_name	Gestionnaire de Documents
 plugin_docman	title	Documentation du projet
-plugin_docman	service_lbl_key	Docman
+plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Gestionnaire de documents avancé
 
 #
@@ -97,6 +97,9 @@ plugin_docman	error_alreadyinstalled	Docman déjà installed.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
 plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle version.
 plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il n'est pas vide.
+plugin_docman	error_field_link_required	L'URL est requise.
+plugin_docman	error_field_title_required	Le titre est requis.
+plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
 plugin_docman	error_filenotfound	Le fichier ne peut-être trouvé.
 plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le docman.
 plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
@@ -108,6 +111,11 @@ plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour défin
 plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet élément.
 plugin_docman	error_settings_updated	Les paramêtres ne peuvent pas être mis à jour.
 plugin_docman	error_perms_updated	$1
+plugin_docman	error_upload	Error de chargement de fichier.
+plugin_docman	error_upload_nofile	Error de chargement de fichier($1). Aucun fichier chargé. 
+plugin_docman	error_upload_partial	Error de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+plugin_docman	error_upload_size	Error de chargement de fichier($1). Le fichier est trop gros.
+plugin_docman	error_upload_unknown	Error de chargement de fichier($1). Code d'erreur inconnu.
 
 plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition
@@ -152,15 +160,16 @@ plugin_docman	move_descr	Choisissez le nouveau dossier :
 plugin_docman	move_here	déplacer ici.
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
-plugin_docman	new_document	Nouveau document sous $1
+plugin_docman	new_document	Nouveau document
 plugin_docman	new_document_action	Créer le document
 plugin_docman	new_document_embedded	Fichier embarqué
 plugin_docman	new_document_file	Fichier
 plugin_docman	new_document_link	Lien
 plugin_docman	new_document_wiki	Page wiki
-plugin_docman	new_folder	Nouveau dossier sous $1
+plugin_docman	new_folder	Nouveau dossier
 plugin_docman	new_folder_action	Créer le dossier
 plugin_docman	new_generalproperties	Propriétés générales
+plugin_docman	new_location	Situation
 plugin_docman	new_specificproperties	Propriétés spécifiques
 
 plugin_docman	permission_admin	Administrateur

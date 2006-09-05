@@ -148,16 +148,16 @@ class Docman_Item {
     }
 
     function initFromRow(&$row) {
-        $this->setId($row['item_id']);
-        $this->setTitle($row['title']);
-        $this->setDescription($row['description']);
-        $this->setCreateDate($row['create_date']);
-        $this->setUpdateDate($row['update_date']);
-        $this->setDeleteDate($row['delete_date']);
-        $this->setRank($row['rank']);
-        $this->setParentId($row['parent_id']);
-        $this->setGroupId($row['group_id']);
-        $this->setOwnerId($row['user_id']);
+        if (isset($row['item_id']))     $this->setId($row['item_id']);
+        if (isset($row['title']))       $this->setTitle($row['title']);
+        if (isset($row['description'])) $this->setDescription($row['description']);
+        if (isset($row['create_date'])) $this->setCreateDate($row['create_date']);
+        if (isset($row['update_date'])) $this->setUpdateDate($row['update_date']);
+        if (isset($row['delete_date'])) $this->setDeleteDate($row['delete_date']);
+        if (isset($row['rank']))        $this->setRank($row['rank']);
+        if (isset($row['parent_id']))   $this->setParentId($row['parent_id']);
+        if (isset($row['group_id']))    $this->setGroupId($row['group_id']);
+        if (isset($row['user_id']))     $this->setOwnerId($row['user_id']);
         
         $this->_addAction(new Docman_ItemActionDetails($this));
     }

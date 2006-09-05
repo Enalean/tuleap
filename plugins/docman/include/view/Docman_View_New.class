@@ -10,7 +10,7 @@
 
 require_once('Docman_View_Display.class');
 
-/* abstract */ class Docman_View_New extends Docman_View_Display {
+/* abstract */ class Docman_View_New extends Docman_View_Display /* implements Visitor */ {
     
     /* protected abstract */ function _getEnctype() {
     }
@@ -24,7 +24,7 @@ require_once('Docman_View_Display.class');
     /* protected abstract */ function _getForm() {
     }
 
-    /* protected */ function _getSpecificProperties() {
+    /* protected */ function _getSpecificProperties($params) {
         return '';
     }
 
@@ -36,12 +36,11 @@ require_once('Docman_View_Display.class');
         $html .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</legend>';
         $html .= $this->_getGeneralProperties($params);
         //}}}
-        $html .= '<input type="hidden" name="item[parent_id]" value="'. $params['item']->getId() .'" />';
         $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';
         $html .= '</fieldset>';
         
         //{{{ Specific Properties
-        $specific = $this->_getSpecificProperties();
+        $specific = $this->_getSpecificProperties($params);
         if (trim($specific)) {
             $html .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</legend>';
             $html .= $specific;
@@ -49,10 +48,95 @@ require_once('Docman_View_Display.class');
         }
         //}}}
         
-
+        //{{{ Location
+        $html .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</legend>';
+        
+        $itemBo = new Docman_ItemBo($params['item']->getGroupId());
+        $item_factory =& new Docman_ItemFactory();
+        $top = $item_factory->getRoot($params['item']->getGroupId());
+        $itemTree =& $itemBo->getItemTree($top->getId(), array('ignore_collapse' => true, 'user' => $this->_controller->getUser()));
+        $folder = $itemTree->accept($this, array('docman_icons' => $this->_getDocmanIcons($params)));
+        
+        $size = 1;
+        $f = create_function('$v, $k, $params', '
+            if ($k == "items") {
+                $params["nb"] += count($v);
+                foreach($v as $f) {
+                    if ($params["nb"] < 7) {
+                        array_walk($f, $params["callback"], $params);
+                    }
+                }
+            }
+        ');
+        array_walk($folder, $f, array('callback' => $f, 'nb' => &$size));
+        if ($size > 7) {
+            $size = 7;
+        }
+        //$html .= '<select name="item[parent_id]" style="font-family:monospace;font-size:1.2em;" size="'. $size .'">';
+        $html .= '<ul class="docman_new_parentfolder docman_items">';
+        $html .= $this->fetchFolder($folder, array(
+            'is_last'      => true,
+            'selected'     => $params['item']->getId()
+        ));
+        $html .= '</ul>';
+        //$html .= '</select>';
+        $html .= '</fieldset>';
+        //}}}
+        
         $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
         $html .= '</form>';
         echo $html;
+    }
+    function fetchFolder($folder, $params) {
+        
+        $selected = $params['selected'] == $folder['id'] ? 'checked="checked"' : '';
+        
+        $h  = '<li  class="'. Docman_View_Browse::getItemClasses(array('is_last' => $params['is_last'])) .'">';
+        $h .= '<label for="item_parent_id_'. $folder['id'] .'">';
+        $h .= '<input type="radio" '. $selected .' name="item[parent_id]" value="'. $folder['id'] .'" id="item_parent_id_'. $folder['id'] .'" />';
+        $h .= '<img src="'. $folder['icon_src'] .'" class="docman_item_icon" />';
+        $h .= $folder['title'] .'</label><ul class="docman_items">';
+        
+        $params['is_last'] = false;
+        $nb = count($folder['items']);
+        $i = 0;
+        foreach($folder['items'] as $item) {
+            $i++;
+            if ($i == $nb) {
+                $params['is_last'] = true;
+            }
+            $h .= $this->fetchFolder($item, $params);
+        }
+        return $h.'</ul>';
+    }
+    function visitFolder(&$item, $params = array()) {
+        $t = array(
+            'id'    => $item->getId(),
+            'title' => $item->getTitle(),
+            'items' => array(),
+            'icon_src' => $params['docman_icons']->getIconForItem($item, array('expanded' => true))
+        );
+        
+        $items = $item->getAllItems();
+        foreach($items as $key => $nop) {
+            $r = $items[$key]->accept($this, $params);
+            if ($r) {
+                $t['items'][] = $r;
+            }
+        }
+        return $t;
+    }
+    function visitWiki(&$item, $params = array()) {
+        return '';
+    }
+    function visitLink(&$item, $params = array()) {
+        return '';
+    }
+    function visitFile(&$item, $params = array()) {
+        return '';
+    }
+    function visitEmbeddedFile(&$item, $params = array()) {
+        return '';
     }
 }
 

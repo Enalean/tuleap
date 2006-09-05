@@ -97,22 +97,26 @@ class DocmanPlugin extends Plugin {
             }
         }
     }
+    var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
-                require_once('Docman.class');
-                $docman =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
-                switch($params['permission_type']) {
-                    case 'PLUGIN_DOCMAN_READ':
-                    case 'PLUGIN_DOCMAN_WRITE':
-                    case 'PLUGIN_DOCMAN_MANAGE':
-                        $params['allowed'] = $docman->userCanManage($params['object_id']);
-                        break;
-                    default:
-                        $params['allowed'] = $docman->userCanAdmin();
-                        break;
+            if (!$this->_cached_permission_user_allowed_to_change) {
+                if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
+                    require_once('Docman.class');
+                    $docman =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+                    switch($params['permission_type']) {
+                        case 'PLUGIN_DOCMAN_READ':
+                        case 'PLUGIN_DOCMAN_WRITE':
+                        case 'PLUGIN_DOCMAN_MANAGE':
+                            $this->_cached_permission_user_allowed_to_change = $docman->userCanManage($params['object_id']);
+                            break;
+                        default:
+                            $this->_cached_permission_user_allowed_to_change = $docman->userCanAdmin();
+                            break;
+                    }
                 }
             }
+            $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
         }
     }
     function &getPluginInfo() {

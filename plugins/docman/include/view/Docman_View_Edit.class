@@ -20,7 +20,8 @@ class Docman_View_Edit extends Docman_View_Details {
     }
     
     /* protected */ function _content($params) {
-        parent::_content($params, new Docman_View_ItemDetailsSectionEditProperties($params['item'], $params['default_url']), 'properties');
+        $force    = isset($params['force_item']) ? $params['force_item'] : null;
+        parent::_content($params, new Docman_View_ItemDetailsSectionEditProperties($params['item'], $params['default_url'], $force), 'properties');
     }
 }
 

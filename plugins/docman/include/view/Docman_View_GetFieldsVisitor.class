@@ -8,26 +8,29 @@
 */
 
 require_once('Docman_View_GetSpecificFieldsVisitor.class');
+require_once(dirname(__FILE__).'/../Docman_ValidateTitle.class');
 
 class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
-    var $specific_fields;
-    function Docman_View_GetFieldsVisitor() {
-        $this->specific_fields =& new Docman_View_GetSpecificFieldsVisitor();
-    }
     
     function visitItem($item, $params = array()) {
+        $title       = isset($params['force_item']['title'])       ? $params['force_item']['title']       : $item->getTitle();
+        $description = isset($params['force_item']['description']) ? $params['force_item']['description'] : $item->getDescription();
         return array(
-            array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_title'),
-                'field' => '<input type="text" name="item[title]" value="'. htmlentities($item->getTitle(), ENT_QUOTES) .'" />'
+            'title' => array(
+                'label'     => $GLOBALS['Language']->getText('plugin_docman', 'field_title'),
+                'field'     => '<input type="text" name="item[title]" size="60" value="'. htmlentities($title, ENT_QUOTES) .'" />',
+                'value'     => $item->getTitle(),
+                'validator' => new Docman_ValidateTitle()
             ),
-            array(
+            'description' => array(
                 'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_descr'),
-                'field' => '<textarea name="item[description]">'. $item->getDescription() .'</textarea>'
+                'field' => '<textarea name="item[description]" rows="7" cols="80">'. htmlspecialchars($description) .'</textarea>',
+                'value' => $item->getDescription()
             )/*,
-            array(
+            'rank' => array(
                 'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_rank'),
-                'field' => '<input type="text" name="item[rank]" value="'. htmlentities($item->getRank(), ENT_QUOTES) .'" size="3" maxlength="16" />'
+                'field' => '<input type="text" name="item[rank]" value="'. htmlentities($item->getRank(), ENT_QUOTES) .'" size="3" maxlength="16" />',
+                'value' => $item->getRank()
             )*/
         );
     }
@@ -38,24 +41,16 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
         return $this->visitItem($item, $params);
     }
     function visitWiki(&$item, $params = array()) {
-        return $this->_visitConcreteDocument($item, $params);
+        return $this->visitItem($item, $params);
     }
     function visitLink(&$item, $params = array()) {
-        return $this->_visitConcreteDocument($item, $params);
+        return $this->visitItem($item, $params);
     }
     function visitFile(&$item, $params = array()) {
-        return $this->_visitConcreteDocument($item, $params);
+        return $this->visitItem($item, $params);
     }
     function visitEmbeddedFile(&$item, $params = array()) {
-        return $this->_visitConcreteDocument($item, $params);
+        return $this->visitItem($item, $params);
     }
-
-    /* protected */ function _visitConcreteDocument(&$item, $params) {
-        return array_merge(
-            $this->visitItem($item, $params),
-            $item->accept($this->specific_fields, $params)
-        );
-    }
-    
 }
 ?>

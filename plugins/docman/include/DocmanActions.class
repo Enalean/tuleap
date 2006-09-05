@@ -105,21 +105,14 @@ class DocmanActions extends Actions {
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
             $item = $request->get('item');
+            $fs =& $this->_getFileStorage();
             if (
+                    $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE 
+                    || 
                     (
-                            $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_FILE 
-                            || 
-                            isset($_FILES['file'])
-                    ) 
-                    &&
-                    (
-                        $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE 
-                        || 
-                        (
-                            $this->_controler->getProperty('embedded_are_allowed') 
-                            && 
-                            $request->exist('content')
-                        )
+                        $this->_controler->getProperty('embedded_are_allowed') 
+                        && 
+                        $request->exist('content')
                     )
                 )
             {
@@ -239,35 +232,36 @@ class DocmanActions extends Actions {
                 }
                 $version =& $item->getCurrentVersion();
                 $number = $version->getNumber() + 1;
+                $fs =& $this->_getFileStorage();
                 if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
-                    $fs =& $this->_getFileStorage();
-                    if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $request->get('id'), $number)) {
-                        
-                        $version_factory =& $this->_getVersionFactory();
-                        $version_id = $version_factory->create(array(
-                            'item_id'   => $request->get('id'),
-                            'number'    => $number,
-                            'user_id'   => $user->getId(),
-                            'label'     => $label,
-                            'changelog' => $changelog,
-                            'filename'  => $_FILES['file']['name'],
-                            'filesize'  => $_FILES['file']['size'],
-                            'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
-                            'path'      => $path)
-                        );
-                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
-                            'group_id' => $request->get('group_id'),
-                            'item'     => $request->get('id'),
-                            'version'  => $version_id,
-                            'user'     => $user->getId())
-                        );
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
-                    } else {
-                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
+                    if ($fs->checkUpload($_FILES['file'], $this->_controler->feedback)) {
+                        if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $request->get('id'), $number)) {
+                            
+                            $version_factory =& $this->_getVersionFactory();
+                            $version_id = $version_factory->create(array(
+                                'item_id'   => $request->get('id'),
+                                'number'    => $number,
+                                'user_id'   => $user->getId(),
+                                'label'     => $label,
+                                'changelog' => $changelog,
+                                'filename'  => $_FILES['file']['name'],
+                                'filesize'  => $_FILES['file']['size'],
+                                'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
+                                'path'      => $path)
+                            );
+                            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                                'group_id' => $request->get('group_id'),
+                                'item'     => $request->get('id'),
+                                'version'  => $version_id,
+                                'user'     => $user->getId())
+                            );
+                            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+                        } else {
+                            //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
+                        }
                     }
                 } else if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
-                    $fs =& $this->_getFileStorage();
                     if ($path = $fs->store($request->get('content'), $request->get('group_id'), $request->get('id'), $number)) {
                         $version_factory =& $this->_getVersionFactory();
                         $version_id = $version_factory->create(array(
@@ -344,7 +338,22 @@ class DocmanActions extends Actions {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved'));
         }
     }
-    
+    function _get_definition_index_for_permission($p) {
+        switch ($p) {
+            case 'PLUGIN_DOCMAN_READ':
+                return 1;
+                break;
+            case 'PLUGIN_DOCMAN_WRITE':
+                return 2;
+                break;
+            case 'PLUGIN_DOCMAN_MANAGE':
+                return 3;
+                break;
+            default:
+                return 100;
+                break;
+        }
+    }
     function permissions() {
         $request =& HTTPRequest::instance();
         if ($request->exist('id') && $request->exist('permissions')) {
@@ -428,18 +437,26 @@ class DocmanActions extends Actions {
             }
             if (!isset($done_permissions[$ugroup_id])) {
                 //We clear if needed
+                $perms_cleared = false;
                 if (count($old_permissions[$ugroup_id]['permissions'])) {
                     foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
-                        permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
-                        $history[$permission] = true;
+                        if ($permission != $permission_definition[$wanted_permissions[$ugroup_id]]['type']) {
+                            permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
+                            $history[$permission] = true;
+                            $perms_cleared = true;
+                            $done_permissions[$ugroup_id] = 100;
+                        } else {
+                            $done_permissions[$ugroup_id] = $this->_get_definition_index_for_permission($permission);
+                        }
                     }
                 }
-                $done_permissions[$ugroup_id] = 100;
-                if ($wanted_permissions[$ugroup_id] != 100){
+                if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
                     permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id);
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
+                } else {
+                    $done_permissions[$ugroup_id] = 100;
                 }
             }
         }

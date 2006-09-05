@@ -7,23 +7,30 @@
 * Docman_View_GetSpecificFieldsVisitor
 */
 
+require_once(dirname(__FILE__).'/../Docman_ValidateWiki.class');
+require_once(dirname(__FILE__).'/../Docman_ValidateLink.class');
+require_once(dirname(__FILE__).'/../Docman_ValidateUpload.class');
 
 class Docman_View_GetSpecificFieldsVisitor {
     
     function visitWiki(&$item, $params = array()) {
+        $pagename = isset($params['force_item']['wiki_page']) ? $params['force_item']['wiki_page'] : $item->getPagename();
         return array(
             array(
                 'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_pagename'),
-                'field' => '<input type="text" name="item[wiki_page]" value="'. htmlentities($item->getPagename(), ENT_QUOTES) .'" />'
+                'field' => '<input type="text" name="item[wiki_page]" size="40"value="'. htmlentities($pagename, ENT_QUOTES) .'" />',
+                'validator' => new Docman_ValidateWiki()
             )
         );
     }
     
     function visitLink(&$item, $params = array()) {
+        $link_url = isset($params['force_item']['link_url']) ? $params['force_item']['link_url'] : $item->getUrl();
         return array(
             array(
                 'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_url'),
-                'field' => '<input type="text" name="item[link_url]" value="'. htmlentities($item->getUrl(), ENT_QUOTES) .'" />'
+                'field' => '<input type="text" name="item[link_url]" size="40" value="'. htmlentities($link_url, ENT_QUOTES) .'" />',
+                'validator' => new Docman_ValidateLink()
             )
         );
     }
@@ -31,9 +38,10 @@ class Docman_View_GetSpecificFieldsVisitor {
     function visitFile(&$item, $params = array()) {
         return array(
             array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent'),
-                'field' => '<input type="hidden" name="max_file_size" value="'. $GLOBALS['sys_max_size_upload'] .'" />'.
-                    '<input type="file" name="file" /><br /><em>'. $GLOBALS['Language']->getText('plugin_docman','max_size_msg',array(formatByteToMb($GLOBALS['sys_max_size_upload']))) .'</em>'
+                'label'        => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent'),
+                'field'        => '<input type="hidden" name="max_file_size" value="'. $GLOBALS['sys_max_size_upload'] .'" /><input type="file" size="40" name="file" />',
+                'instructions' => '<br /><em>'. $GLOBALS['Language']->getText('plugin_docman','max_size_msg',array(formatByteToMb($GLOBALS['sys_max_size_upload']))) .'</em>',
+                'validator'    => new Docman_ValidateUpload()
             )
         );
     }

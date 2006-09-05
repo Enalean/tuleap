@@ -23,19 +23,6 @@
  *
  */
 require_once('Docman_View_Browse.class');
-require_once('Docman_View_DocumentTableVisitor.class');
-
-class Docman_FilterDateHtml {
-    var $f;
-
-    function Docman_FilterDateHtml($filter) {
-        $this->f =& $filter;
-    }
-
-    function toHtml() {
-
-    }
-}
 
 class Docman_View_Table extends Docman_View_Browse {
     
@@ -47,14 +34,21 @@ class Docman_View_Table extends Docman_View_Browse {
 <form name="plugin_docman_filters" method="GET" action="?">
 <input type="hidden" name="group_id" value="'.$params['group_id'].'">
 ';
-        foreach($params['filter'] as $f) {
-            echo $f->toHtml();
-            echo "&nbsp;\n";
-        }
-        foreach($params['order'] as $o) {
-            echo $o->toHtml();
-            echo "&nbsp;\n";
-        }        
+        if($params['filter'] !== null) {
+            $fi =& $params['filter']->getIterator();
+            $fi->rewind();
+            while($fi->valid()) {        
+                $f =& $fi->current();
+             
+                $htmlFilter =& Docman_HtmlFilterFactory::getFromFilter($f);
+                if($htmlFilter !== null) {
+                    print $htmlFilter->toHtml('plugin_docman_filters');
+                    echo "&nbsp;\n";
+                }
+                
+                $fi->next();
+            }
+        }              
 echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_browse') .'">
 </form>
 </fieldset>
@@ -64,16 +58,88 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
     /* protected */ function _content($params) {      
         $itemBo = new Docman_ItemBo($params['group_id']);
 
-        $itemTree =& $itemBo->getItemSubTree($params['item']->getId(), 
-                                             array('user' => $params['user'],
-                                                   'ignore_collapse' => true,
-                                                   'filter' => $params['filter'],
-                                                   'order' => $params['order']));
+        $itemIterator =& $itemBo->getItemSubTreeAsList($params['item']->getId(), 
+                                                       array('user' => $params['user'],
+                                                             'ignore_collapse' => true,
+                                                             'filter' => $params['filter'],
+                                                             'order' => $params['order']));             
 
-        $docTableVisitor = new Docman_View_DocumentTableVisitor($this);
-        $itemTree->accept($docTableVisitor);
-        
-        print $docTableVisitor->toHtml();        
+        $itemFactory =& new Docman_ItemFactory();
+
+        $html = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_title'),
+                                                $GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_desc'),
+                                                $GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_owner'),
+                                                $GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_subdate'),
+                                                $GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_lastauthor'),
+                                                $GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_lastupdate')));
+        $altRowClass = 0;
+
+        $itemIterator->rewind();
+        while($itemIterator->valid()) {
+            $item =& $itemIterator->current();
+
+            $type = $itemFactory->getItemTypeForItem($item);
+            if($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+
+                $trclass = html_get_alt_row_color($altRowClass++);
+                $html .=  "<tr class=\"".$trclass."\">\n";
+            
+                // Title
+                $html .=  "<td>";
+                $html .=  '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
+                $html .=  $item->getTitle();
+                $html .=  '</a>';
+                $html .=  "</td>\n";
+
+                // Description
+                $html .=  "<td>";
+                $html .=  $item->getDescription();
+                $html .=  "</td>\n";
+
+                // Owner
+                $html .=  "<td>";
+                $html .=  user_getname($item->getOwnerId());
+                $html .=  "</td>\n";
+
+                // Submission Date
+                $html .=  "<td>";
+                $html .=  strftime("%e %b %Y %H:%M", $item->getCreateDate());
+                $html .=  "</td>\n";
+
+                // Last Author
+                $html .=  "<td>";            
+                if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE 
+                    || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    $v =& $item->getCurrentVersion();
+                    $authorId = $v->getAuthorId();
+                    if($authorId == '') {
+                        $authorId = -1;
+                    }
+                }
+                else {
+                    $authorId = $item->getOwnerId();
+                }
+                $html .=  user_getname($authorId);
+                $html .=  "</td>\n";
+            
+                // Last Update
+                $html .=  "<td>";
+                $html .=  strftime("%e %b %Y %H:%M", $item->getUpdateDate());
+                $html .=  "</td>\n";
+
+                $html .=  "</tr>\n";
+            }
+            $itemIterator->next();
+        }
+        $html .= "</table>\n";        
+
+        print $html;        
     }
 }
 ?>

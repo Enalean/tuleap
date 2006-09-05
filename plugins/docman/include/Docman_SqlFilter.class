@@ -1,0 +1,84 @@
+<?php
+
+class Docman_SqlFilterFactory {
+    function Docman_SqlFilterFactory() {
+        
+    }
+
+    function getFromFilter(&$filter) {
+        if(is_a($filter, 'Docman_FilterDate')) {
+            return new Docman_SqlFilterDate($filter);
+        }
+        if(is_a($filter, 'Docman_FilterOrdering')) {
+            return new Docman_SqlFilterOrdering($filter);
+        }
+        return null;
+    }
+
+}
+
+class Docman_SqlFilter {
+    var $filter;
+
+    function Docman_SqlFilter(&$filter) {
+        $this->filter =& $filter;
+    }
+
+    function getWhereClause() {
+        return '';
+    }
+
+    function getOrderClause() {
+        return '';
+    }
+}
+
+class Docman_SqlFilterDate extends Docman_SqlFilter {
+
+    function Docman_SqlFilterDate(&$filter) {
+        parent::Docman_SqlFilter($filter);
+        $this->timestamp = null;
+    }
+
+    function _getTimestamp() {        
+        if($this->timestamp === null 
+           && $this->filter->getValue() != '') {
+            $a = explode('-', $this->filter->getValue());
+            $this->timestamp = mktime(0, 0, 0, $a[1], $a[2], $a[0]);
+        }
+        
+        return $this->timestamp;
+    }
+
+    function getWhereClause() {
+        $ts = $this->_getTimestamp();
+        if($ts !== null) {
+            $where = $this->filter->getTable().'.'.$this->filter->getField().' '.$this->filter->getOperator().' '.$ts;
+        }
+        else {
+            $where = '';
+        }
+
+        return $where;
+    }
+}
+
+class Docman_SqlFilterOrdering extends Docman_SqlFilter {
+
+    function Docman_SqlFilterOrdering(&$filter) {
+        parent::Docman_SqlFilter($filter);
+
+    }
+
+    function getOrderClause() {
+        $sql = $this->filter->getTable().'.'.$this->filter->getField()." ";
+        if($this->filter->getValue() == '1')
+            $sql .= 'ASC';
+        else 
+            $sql .= 'DESC';
+        
+        return $sql;
+    }
+}
+
+?>

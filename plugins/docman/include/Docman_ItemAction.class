@@ -39,6 +39,15 @@ class Docman_ItemAction {
         $this->classes          = '';
         $this->title            = '';
     }
+
+    function fetchAction($params) {
+        $url   = $params['default_url'].'&action='.$this->action.'&id='.$this->item->getId();
+        $title = $this->title;
+        $href  = '<a href="'.$url.'">'.$title.'</a>';
+        $html  = '<li>'.$href.'</li>';
+        return $html;
+    }
+
     function fetch($params) {
         $html  = '<a href="'. $params['default_url'] .'&amp;action='. $this->action .'&amp;id='. $this->item->getId() .'" class="'. $this->classes .'" title="'. $this->title .'">';
         $html .= '<img src="'. $params['docman_icons']->getActionIcon($this->action) .'" class="docman_item_icon" alt="['. $this->title .']" />';
@@ -46,6 +55,7 @@ class Docman_ItemAction {
         return $html;
     }
     function fetchAsJavascript($params) {
+        return '';
         $js = "
         docman.addActionForItem(". $this->item->getId() .", {
             href   :'". $params['default_url'] .'&action='. $this->action .'&id='. $this->item->getId() ."',

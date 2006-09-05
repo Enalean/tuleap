@@ -52,39 +52,53 @@ class Docman_ItemDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($id, $filter = array(), $order = array()) {
+    function searchByGroupId($id, &$filters) {
         // Where clause        
         // Select on group_id
         $_id = (int) $id;
         $sql_where = ' i.group_id = '.$_id;
                 
         //
-        // Filters
-        if(is_array($filter) and count($filter) > 0) {
-            foreach($filter as $f) {
-                if($f->validate()) {
-                    $sql_where .= $f->getSqlClause();
-                }
-            }    
-        }
-        
-        //
         // Order clause        
         $sql_order = '';
-        if(is_array($order) and count($order) > 0) {
-            $sql_order = ' ORDER BY ';
-            $valid = false;
-            foreach($order as $o) {
-                if($o->validate()) {
-                    $valid = true;
-                    $sql_order .= $o->getSqlClause();
+
+        //
+        // Filters
+        if($filters !== null) {
+            $fi =& $filters->getIterator();
+            $fi->rewind();
+            while($fi->valid()) {
+                $f =& $fi->current();
+
+                $sqlFilter =& Docman_SqlFilterFactory::getFromFilter($f);
+                
+                if($sqlFilter !== null) {                   
+                    // Handle 'where' clause                    
+                    $where = $sqlFilter->getWhereClause();
+                    if($where != '') {
+                        $sql_where .= ' AND '.$where;
+                    }
+
+                    // Handle 'order' clause
+                    $order = $sqlFilter->getOrderClause();
+                    if($order != '') {
+                        if($sql_order != '') {
+                            $sql_order .= ', ';
+                        }
+                        $sql_order .= $order;
+                    }
+
                 }
-            }
-            if(!$valid) {
-                $sql_order = '';
+                
+                $fi->next();
             }
         }
 
+        // Prepare 'order' clause if any
+        if($sql_order != '') {
+            $sql_order = ' ORDER BY '.$sql_order;
+        }
+             
         return $this->_searchWithCurrentVersion($sql_where, '', $sql_order);
 
     }
@@ -96,11 +110,9 @@ class Docman_ItemDao extends DataAccessObject {
             .' v.filetype as version_filetype, v.path as version_path, '
             .' 1 as folder_nb_of_children '
             .' FROM plugin_docman_item AS i LEFT JOIN plugin_docman_version AS v ON (i.item_id = v.item_id) '
-            .'       LEFT JOIN plugin_docman_item AS child ON (i.item_id = child.parent_id) '
             .' WHERE i.delete_date IS NULL AND '.$where
             .$group
             .$order;
-        
         return $this->retrieve($sql);
     }
     

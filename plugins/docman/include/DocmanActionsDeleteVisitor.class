@@ -48,7 +48,7 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
             return false;
         } else {
             //Mark the folder as deleted
-            $this->_deleteItem($item, $params);
+            return $this->_deleteItem($item, $params);
         }
     }
     function visitDocument(&$item, $params = array()) {

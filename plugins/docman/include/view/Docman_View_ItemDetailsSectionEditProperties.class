@@ -25,8 +25,8 @@
 require_once('Docman_View_ItemDetailsSectionProperties.class');
 
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties {
-    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url) {
-        parent::Docman_View_ItemDetailsSectionProperties($item, $url, true);
+    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $force) {
+        parent::Docman_View_ItemDetailsSectionProperties($item, $url, true, $force);
     }
     function getContent() {
         $html  = '<form action="'. $this->url .'" method="post">';
@@ -34,17 +34,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html .= '</form>';
         return $html;
     }
-    function _getEditLink() {
-        return '';
-    }
-    function _getTitle() {
-        return '<input type="text" name="item[title]" value="'. htmlentities($this->item->getTitle(), ENT_QUOTES) .'" />';
-    }
-    function _getRank() {
-        return '<input type="text" size="4" name="item[rank]" value="'. htmlentities($this->item->getRank(), ENT_QUOTES) .'" />';
-    }
-    function _getDescription() {
-        return '<textarea rows="3" cols="50" name="item[description]" >'. $this->item->getDescription() .'</textarea>';
+    function _showField($field) {
+        return $field['field'];
     }
     function _getAdditionalRows() {
         $html  = '<tr><td>';

@@ -33,7 +33,7 @@ class Docman_FileStorage {
     function Docman_FileStorage($root) {
         $this->root       = $root;
     }
-
+    
     function upload($file, $group_id, $item_id, $version_number) {
         $path = $this->_getPath($file['name'], $group_id, $item_id, $version_number);
         if (move_uploaded_file($file['tmp_name'], $path)) {

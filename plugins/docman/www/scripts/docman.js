@@ -296,3 +296,21 @@ Object.extend(com.xerox.codex.Docman.prototype, {
     //}}}
 });
 
+
+var openedPopup;
+function ishow(id) {
+  if(openedPopup) {
+    openedPopup.style.display='none';
+  }
+  var d = document.getElementById(id);  
+  if (d) {d.style.display='inline';}
+  openedPopup = d;
+}
+
+
+
+function ihide(id) {
+  if(openedPopup) {
+    openedPopup.style.display='none';
+  }
+}

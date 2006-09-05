@@ -153,7 +153,7 @@ a img {
     border:none;
 }
 
-.docman_feedback_error, .docman_feedback_warning, .docman_feedback_info {
+.docman_feedback_error, .docman_feedback_warning, .docman_feedback_info, .docman_feedback_debug {
         font-family:sans-serif;
         background-color: #f7f7f7;
         background-position: 20px 50%;
@@ -182,6 +182,14 @@ a img {
         font-weight:normal;
         background-image: url(../images/info.png)
 }
+.docman_feedback_debug {
+        font-family:monospace;
+        color:yellow;
+        font-weight:normal;
+        background-color:black;
+        display:none; 
+}
+
 
 .feedback_error h3,
 .feedback_warning h3,
@@ -196,4 +204,71 @@ fieldset.docman_filters {
 fieldset.docman_filters legend {
   font-size:1.3em; 
   font-weight:bold;
+}
+
+.plugin_docman_fielderror input,
+.plugin_docman_fielderror select {
+    border:medium solid red;
+}
+/* .plugin_docman_fielderror  {
+    padding:  4px;
+    background: red;
+    display:inline;
+}
+*/
+
+.docman_details_popup {
+  display: none;
+  margin-top: 5px;
+  border: 1px solid #bcbcad;
+  border-right: 2px solid #bcbcad;
+  border-bottom: 2px solid #bcbcad;
+  position: absolute;
+  z-index:100;
+}
+
+.docman_details_popup ul {
+ list-style: none;
+ margin: 0;
+ background-color: #e8e8e0;
+ padding: 0;
+}
+
+.docman_details_popup ul li {
+  clear: both;
+}
+
+.docman_details_popup ul li.head { 
+  width: 10em;
+}
+
+.docman_details_popup ul li.head span.title {
+  float: left;
+  text-align: left;
+  font-weight: bold;
+  font-size: x-small;
+}
+
+.docman_details_popup ul li.head span.close {
+  border:0;
+  padding:0;
+  margin: 0;
+  float: right;
+  text-align: right; 
+  font-size: x-small;
+
+}
+
+.docman_details_popup ul a { 
+  border: 0 none;
+  padding: 0 1em 0 1em;
+  text-decoration: none;
+  display: block;
+  
+}
+
+.docman_new_parentfolder {
+    max-height:250px;
+    height:expression(this.offsetHeight > 250 ? 250 : this.offsetHeight);
+    overflow:auto;
 }

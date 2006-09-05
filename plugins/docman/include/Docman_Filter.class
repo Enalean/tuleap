@@ -23,51 +23,15 @@
  *
  */
 
-/**
- *  Returns a date field
- * 
- *  @param value: initial value
- *  @param size: the field size
- *  @param maxlength: the max field size
- *  @param ro: if true, the field is read-only
- *
- *	@return	string
- */
-function html_field_date($field_name='',$value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
-    if ($ro)
-        $html = $value;
-    else {
-		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$field_name.'.value'); 
-	
-		$html = '<INPUT TYPE="text" name="'.$field_name.
-            '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
-            '<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-            '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="pick_date"></a>';
-    }
-    return($html);
-}
-
 class Docman_Filter {
-    var $shortName;
-    var $longName;
-    var $message;
-    var $isValid;
+    var $name;
+    var $title;        
     var $v;
 
-    function Docman_Filter($shortName) {
-        $this->shortName = $shortName;
-        $this->message = '';
-        $this->isValid = null;
+    function Docman_Filter() {  
         $this->v = null;
     }
-
-    /**
-     * @return boolean Are current data valid or not
-     */
-    function validate() {
-        return $this->isValid;
-    }
-
+  
     function setValue($v) {
         $this->v = $v;
     }
@@ -76,165 +40,55 @@ class Docman_Filter {
         return $this->v;
     }
 
-    function getShortName() {
-        return $this->shortName;
+    function setName($v) {
+        $this->name = $v;
     }
 
-    function setHtmlFieldName($name) {
-        $this->longName = $name;
+    function getName() {
+        return $this->name;
     }
 
-    function toHtml() {
+    function setTitle($v) {
+        $this->title = $v;
+    } 
 
+    function getTitle() {
+        return $this->title;
     }
 
-    function getMessage() {
-        return $this->message;
-    }
-    
-    // abstract
-    function getSqlClause() {
-        
-    }
-}
+    function setTable($v) {
+        $this->table = $v;
+    } 
 
-class Docman_FilterInt extends Docman_Filter {
-
-    function Docman_FilterInt($name) {
-        parent::Docman_Filter($name);        
-    }    
-
-    function validate() {
-        if($this->isValid === null) {
-            $this->isValid = true;
-            if(!is_numeric($this->v)) {
-                $this->isValid = false;                
-            }
-        }
-        return $this->isValid;
-    }
-}
-
-class Docman_FilterOrdering extends Docman_FilterInt {
-    var $sqlField;
-
-    function Docman_FilterOrdering($name) {
-        parent::Docman_FilterInt($name);
-        $this->v = 0;
-        $this->sqlField = '';
+    function getTable() {
+        return $this->table;
     }
 
-    function validate() {
-        if($this->isValid === null) {
-            if($this->v == '') {
-                $this->v = '0';
-                $this->isValid = true;
-            }
-        }
+    function setField($v) {
+        $this->field = $v;
+    } 
 
-        parent::validate();
-
-        if(!$this->isValid) {
-            $this->message = $GLOBALS['Language']->getText('plugin_docman', 'filters_ordering_message', $this->longName);
-        }
-
-        return parent::validate();
-    }
-
-    function toHtml() {
-        $html = $this->longName.': <select name="'.$this->shortName.'">'."\n"
-            .'<option value="0" '.(($this->v == '0') ? 'selected':'').'>'. $GLOBALS['Language']->getText('plugin_docman', 'filters_ordering_ascending') .'</option>'."\n"
-            .'<option value="1" '.(($this->v == '1') ? 'selected':'').'>'. $GLOBALS['Language']->getText('plugin_docman', 'filters_ordering_descending') .'</option>'."\n"
-            .'</select>'."\n";
-        return $html;
-    }
-
-    function setSqlField($field) {
-        $this->sqlField = $field;
-    }
-
-    function getSqlClause() {        
-        $sql = $this->sqlField." ";
-        if($this->v == '1')
-            $sql .= 'ASC';
-        else 
-            $sql .= 'DESC';
-        
-        return $sql;
+    function getField() {
+        return $this->field;
     }
 }
 
 class Docman_FilterDate extends Docman_Filter {
-    var $sqlField;
-    var $timestamp;
-    var $op;
-    var $formName;
+    var $operator;
 
-    function Docman_FilterDate($name) {
-        parent::Docman_Filter($name);
-        $this->op = '';
-        $this->timestamp = null;
-        $this->formName = '';
+    function setOperator($v) {
+        $this->operator = $v;
+    } 
+
+    function getOperator() {
+        return $this->operator;
     }
+}
 
-    function validate() {
-        if($this->isValid === null) {
-            $this->isValid = false;
-            if($this->v == '') {
-                $this->isValid = true;
-            }
-            elseif(preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',$this->v)) {
-                $this->isValid = true;                
-            }
-            else {
-                $today = date("Y-n-j");
-                $this->message = $GLOBALS['Language']->getText('plugin_docman', 'filters_date_message', array($this->longName, $today));
-            }
-        }
-        return $this->isValid;
-    }
+class Docman_FilterOrdering extends Docman_Filter {
 
-    function setSqlOperator($op) {
-        $this->op = $op;
-    }
-
-    function setSqlField($field) {
-        $this->sqlField = $field;      
-    }
-
-    function _getTimestamp() {
-        if($this->validate()) {
-            if($this->timestamp === null && $this->v != '') {
-                $a = explode('-', $this->v);
-                $this->timestamp = mktime(0, 0, 0, $a[1], $a[2], $a[0]);
-            }
-        }
-        return $this->timestamp;
-    }
-
-    function getSqlClause() {
-        $ts = $this->_getTimestamp();
-        if($ts !== null) {
-            $sql = ' AND i.update_date '.$this->op.' '.$this->_getTimestamp();
-        }
-        else {
-            $sql = '';
-        }
-        return $sql;
-    }
-
-    function setHtmlFormName($formName) {
-        $this->formName = $formName;
-    }
-
-    function toHtml() {
-        $v = '';
-        if($this->validate()) {
-            $v = $this->v;
-        }
-        $html = $this->longName.': '.html_field_date($this->shortName,$v,false,'10','10',$this->formName,false);
-
-        return $html;
+    function Docman_FilterOrdering() {
+        parent::Docman_Filter();
     }
 }
 

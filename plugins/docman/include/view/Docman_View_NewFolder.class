@@ -14,7 +14,7 @@ require_once('Docman_View_GetFieldsVisitor.class');
 class Docman_View_NewFolder extends Docman_View_New {
     
     function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman', 'new_folder', $params['item']->getTitle());
+        return $GLOBALS['Language']->getText('plugin_docman', 'new_folder');
     }
     
     function _getAction() {

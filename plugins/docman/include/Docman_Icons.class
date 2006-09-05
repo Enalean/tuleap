@@ -54,6 +54,9 @@ class Docman_Icons {
     
     function getIconForItem(&$item, $params = null) {
         $icon = $this->images_path;
+        if (isset($params['icon_width'])) {
+                $icon .= $params['icon_width'] . '/';
+        }
         switch(strtolower(get_class($item))) {
             case 'docman_folder':
                 $icon .= 'folder';

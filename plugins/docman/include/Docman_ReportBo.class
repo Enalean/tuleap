@@ -1,0 +1,110 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+
+require_once('Docman_FilterBo.class');
+
+class Docman_Report {
+    var $filters;
+    var $fi;
+
+    function Docman_Report() {
+        $this->filters = null;
+        $this->fi = null;
+    }
+
+    function add(&$f) {
+        $this->filters[] = $f;
+    }
+
+    function &getIterator() {
+        if($this->fi === null) {
+            $this->fi = new ArrayIterator($this->filters);
+        }
+        return $this->fi;
+    }
+
+}
+
+class Docman_ReportBo {
+
+    function Docman_ReportBo() {
+
+    }
+
+    function &get($id) {
+        if($id == 'Table') {
+            $report = new Docman_Report();
+            $filterBo = new Docman_FilterBo();        
+            $submitted_fields = array('fltr_udate_from', 'fltr_udate_to', 'ordr_udate');
+            foreach($submitted_fields as $fName) {            
+                $filter =& $filterBo->getFilterByName($fName);
+                $report->add($filter);
+            }
+            return $report;
+        }
+        return null;
+    }
+    
+    function setup(&$report, &$request, $groupId, &$feedback) {
+        $validateFilterFactory = new Docman_ValidateFilterFactory();
+ 
+        $fi =& $report->getIterator();
+        $fi->rewind();
+        while($fi->valid()) {
+            $filter =& $fi->current();
+
+            if($request->exist($filter->getName())) {
+                $filter->setValue($request->get($filter->getName()));
+                    
+                $validateFilter =& $validateFilterFactory->getFromFilter($filter);
+                
+                if(!$validateFilter->validate()) {
+                    $feedback->log('error', $validateFilter->getMessage());
+                }
+                else {
+                    if($request->exist('submit')) {
+                        Docman_FilterBo::setUserPreference($filter,
+                                                           $groupId);
+                    }
+                }
+            
+            }
+            else {
+                $value =& Docman_FilterBo::getUserPreference($filter,
+                                                       $groupId);
+                if($request->exist('submit')) {
+                    $value = '';
+                    Docman_FilterBo::delUserPreference($filter,
+                                                       $groupId);
+                }
+                $filter->setValue($value);
+            }            
+        
+            $fi->next();
+        }
+    }
+}
+
+?>
