@@ -74,7 +74,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         
         // ItemHighlight
         this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
-        //if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
+        if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
         
     },
     dispose: function() {
@@ -104,12 +104,10 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             }
             Event.observe(node, 'mouseover', function(event) {
                 Element.addClassName(node, 'docman_item_highlight');
-                Element.setStyle($('docman_item_options_'+node.id.split('_')[1]), {visibility:'visible'});
                 Event.stop(event);
             });
             Event.observe(node, 'mouseout', function(event) {
                 Element.removeClassName(node, 'docman_item_highlight');
-                Element.setStyle($('docman_item_options_'+node.id.split('_')[1]), {visibility:'hidden'});
                 Event.stop(event);
             });
         });
@@ -131,54 +129,38 @@ Object.extend(com.xerox.codex.Docman.prototype, {
     },
     initShowOptions: function() {
         this.initShowOptions_already_done = true;
-        $H(this.actionsForItem).keys().each((function (item_id) {
-            var actions_panel = $('docman_item_menu_'+item_id);
-            var ul = $('docman_item_menu_ul_'+item_id);
-            if (!actions_panel) {
-                actions_panel = Builder.node('div');
-                actions_panel.id = 'docman_item_menu_'+item_id;
-                Element.addClassName(actions_panel, 'docman_item_menu');
-                Element.hide(actions_panel);
-                Element.setStyle(actions_panel, {
-                    left:'0px',
-                    top:'0px'
-                });
-                $('item_'+item_id).appendChild(actions_panel);
-                ul = Builder.node('ul');
-                ul.id = 'docman_item_menu_ul_'+item_id
-                li = Builder.node('li', {
-                    'class':'docman_item_menu_close'
-                });
-                close = Builder.node('a', {
-                    href:'#close-menu'
-                });
-                close.appendChild(document.createTextNode('[close]'));
-                li.appendChild(close);
-                ul.appendChild(li);
-                menu = new com.xerox.codex.Menu(item_id);
-                Event.observe(close, 'click', menu.hide);
-            }
-            this.actionsForItem[item_id].actions.each(function (action) {
-                if (!action.created) {
-                    li = Builder.node('li');
-                    a = Builder.node('a', {
-                        href:action.action.href,
-                        'class':action.action.classes,
-                        title:action.action.title
-                    });
-                    /*img = Builder.node('img', {
-                        src:action.action.img,
-                        'class':'docman_item_icon',
-                        alt:'['+action.action.title+']'
-                    });
-                    a.appendChild(img);*/
-                    a.appendChild(document.createTextNode(action.action.title));
-                    li.appendChild(a);
-                    ul.appendChild(li);
-                    action.created = true;
-                }
+        //{{{ IE Hack
+        // Microsoft said:
+        //   All windowless elements are rendered on the same MSHTML plane, 
+        //   and windowed elements draw on a separate MSHTML plane. 
+        //   You can use z-index to manipulate elements on the same plane 
+        //   but not to mix and match with elements in different planes. 
+        //   You can rearrange the z-indexing of the elements on each plane, 
+        //   but the windowed plane always draws on the top of 
+        //   the windowless plane.
+        // Selectboxes are windowed therefore we need to put an invisible iframe 
+        // on top of them to be able to display menus.
+        var invisible_iframe = $('docman_item_menu_invisible_iframe');
+        if (!invisible_iframe) {
+            invisible_iframe = Builder.node('iframe', {
+                    id:'docman_item_menu_invisible_iframe',
+                    style:'position:absolute;display:none;z-index:1000;width:200px;height:100px;',
+                    frameborder:0,
+                    scrolling:'no',
+                    marginwidth:0,
+                    src:"",
+                    marginheight:0
             });
-            actions_panel.appendChild(ul);
+            document.body.appendChild(invisible_iframe);
+        }
+        //}}}
+        $H(this.actionsForItem).keys().each((function (item_id) {
+            if (!this.showOptions_Menus) {
+                this.showOptions_Menus = {};
+            }
+            if (!this.showOptions_Menus[item_id]) {
+                this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this);
+            }
         }).bind(this));
     },
     //}}}
@@ -323,30 +305,123 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 com.xerox.codex.openedMenu = null;
 com.xerox.codex.Menu = Class.create();
 Object.extend(com.xerox.codex.Menu.prototype, {
-    initialize:function(item_id, options) {
+    initialize:function(item_id, docman, options) {
         this.item_id = item_id;
-        Position.prepare();
-        this.offset = Position.cumulativeOffset($('item_'+item_id));
-        Event.observe($('docman_item_show_menu_'+item_id), 'mouseover', this.show.bind(this));
+        this.docman = docman;
+        Event.observe($('docman_item_show_menu_'+item_id), 'click', this.show.bind(this));
     },
     show:function(evt) {
-        if (!com.xerox.codex.openedMenu || com.xerox.codex.openedMenu != 'docman_item_menu_'+this.item_id) {
-            this.hide();
-            com.xerox.codex.openedMenu = 'docman_item_menu_'+this.item_id;
-            left = Event.pointerX(evt)-this.offset[0]+16;
-            Element.setStyle('docman_item_menu_'+this.item_id, {
-                left:left+'px'
+        var menu = 'docman_item_menu_'+this.item_id;
+        if (!$(menu)) {
+            //Save the offset
+            Position.prepare();
+            this.offset = Position.cumulativeOffset($('docman_item_show_menu_'+this.item_id));
+            
+            //Build the menu
+            var actions_panel = Builder.node('div', {
+                style:'display:none;top:0px;left:0px;z-index:1001',
+                id:menu,
+                'class':'docman_item_menu'
             });
-            Element.show('docman_item_menu_'+this.item_id);
+            
+            document.body.appendChild(actions_panel);
+            var ul = Builder.node('ul', {
+                id:'docman_item_menu_ul_'+this.item_id
+            });
+            var li = Builder.node('li', {
+                'class':'docman_item_menu_close'
+            });
+            var close = Builder.node('a', {
+                href:'#close-menu'
+            });
+            var close_txt = document.createTextNode('[close]');
+            close.appendChild(close_txt);
+            li.appendChild(close);
+            ul.appendChild(li);
+            this.hideEvent = this.hide.bindAsEventListener(this);
+            Event.observe(close, 'click', this.hideEvent);
+            docman.actionsForItem[this.item_id].actions.each((function (action) {
+                if (!action.created) {
+                    var li = Builder.node('li');
+                    var a = Builder.node('a', {
+                        href:action.action.href,
+                        'class':action.action.classes,
+                        title:action.action.title
+                    });
+                    var title_txt = document.createTextNode(action.action.title);
+                    a.appendChild(title_txt);
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                    action.created = true;
+                }
+            }).bind(this));
+            actions_panel.appendChild(ul);
+            
+            //dimensions
+            this.dimensions = Element.getDimensions(actions_panel);
+            
+        }
+        if (!com.xerox.codex.openedMenu || com.xerox.codex.openedMenu != menu) {
+            this.hide();
+            com.xerox.codex.openedMenu = menu;
+            Element.setStyle('docman_item_menu_invisible_iframe', {
+                width:this.dimensions.width+'px',
+                height:this.dimensions.height+'px'
+            });
+            var pos = {
+                left:Event.pointerX(evt)+'px',
+                top:Event.pointerY(evt)+'px'
+            };
+            ['docman_item_menu_invisible_iframe', menu].each(function (element) { 
+                Element.setStyle(element, pos); 
+                Element.show(element); 
+            });
         }
         Event.stop(evt);
         return false;
     },
     hide:function(evt) {
         if (com.xerox.codex.openedMenu) {
-            Element.hide(com.xerox.codex.openedMenu);
+            ['docman_item_menu_invisible_iframe', com.xerox.codex.openedMenu].each(function (element) { Element.hide(element); });
             com.xerox.codex.openedMenu = null;
         }
     }
 });
 
+if (!init_obsolescence_date) var init_obsolescence_date = -1;
+function change_obsolescence_date(form) {  
+  // Find selected value
+  var element = form.validity;  
+  var selected;
+  for(var i = 0; i < element.options.length; i++) {
+    if(element.options[i].selected) {
+      selected = element.options[i].value;
+    }
+  }
+
+  // Compute new date  
+  var newdatestr = "";
+  switch(selected) {
+    case "0":
+
+      break;
+  
+    case "100":
+      newdatestr = init_obsolescence_date;
+      break;
+
+    default:
+      var today = new Date();
+      var newDateMonth = parseInt(selected) + today.getMonth();
+      var newDate = new Date(today.getFullYear(), newDateMonth, today.getDate(), 0, 0, 0, 0);
+      newdatestr = newDate.getFullYear()+"-"+(newDate.getMonth()+1)+"-"+newDate.getDate();
+  }
+
+  if(init_obsolescence_date == -1) {
+    init_obsolescence_date = form.obsolescence_date.value;
+  }
+
+  // Write new date
+  var input = form.obsolescence_date;
+  input.value = newdatestr;
+}

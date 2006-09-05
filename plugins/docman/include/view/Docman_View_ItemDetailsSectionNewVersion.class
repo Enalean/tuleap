@@ -59,8 +59,8 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force));
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;">';
-            $content .= '<td><label>'. $field['label'] .'</label></td>';
-            $content .= '<td>'. $field['field'] .'</td></tr>';
+            $content .= '<td><label>'. $field->getLabel().'</label></td>';
+            $content .= '<td>'. $field->getField() .'</td></tr>';
         }
         $content .= '<tr style="vertical-align:top"><td></td><td>';
         $content .= '<input type="hidden" name="action" value="new_version" />';

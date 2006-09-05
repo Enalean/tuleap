@@ -43,6 +43,9 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
                 $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, null, $params['version']);
                 break;
+            case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
+                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, $params['old_value'], $params['new_value'], $params['field']);
+                break;
             default:
                 $this->dao->create($params['group_id'], $params['item'], $params['user'], $event);
                 break;
@@ -76,17 +79,56 @@ class Docman_Log { /* implements EventListener */
                 $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_when');
                 $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_who');
                 $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_what');
+                $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_old_value');
+                $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_new_value');
                 $html .= html_build_list_table_top($titles, false, false, false);
+
                 $odd_even = array('boxitem', 'boxitemalt');
                 $i = 0;
+                $_previous_date = -1;
+                $_previous_auth = -1;
                 while ($dar->valid()) {
                     $row = $dar->current();
                     $user = $row['user_id'] ? user_getname($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                     $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                    $html .= '<td>'. date('Y-m-d H:i:s', $row['time']) .'</td>';
-                    $html .= '<td>'. $user                             .'</td>';
-                    $html .= '<td>'. $this->getText($row['type'])      .'</td>';
+                    if($_previous_date != $row['time'] || $_previous_auth != $row['user_id']) {
+                        $html .= '<td>'. date('Y-m-d H:i:s', $row['time']) .'</td>';
+                        $html .= '<td>'. $user                             .'</td>';
+                    }
+                    else {
+                        $html .= '<td></td>';
+                        $html .= '<td></td>';
+                    }
+                    if($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
+                        $_old_v = $row['old_value'];
+                        $_new_v = $row['new_value'];
+
+                        $mdFactory = new Docman_MetadataFactory($row['group_id']);
+                        $md =& $mdFactory->getFromLabel($row['field']);
+                        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                            $mdlovebo = new Docman_MetadataListOfValuesElementFactory();
+                            $_old_e =& $mdlovebo->getByElementId($row['old_value'], $md->getLabel());
+                            $_new_e =& $mdlovebo->getByElementId($row['new_value'], $md->getLabel());
+                            if($_old_e !== null) {
+                                $_old_v = $_old_e->getName();
+                            }
+                            if($_new_e !== null) {
+                                $_new_v = $_new_e->getName();
+                            }                            
+                        }
+                        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman','details_history_logs_change_field', array($md->getName())).'</td>';
+                        $html .= '<td>'.$_old_v.'</td>';
+                        $html .= '<td>'.$_new_v.'</td>';
+
+                    }
+                    else {                        
+                        $html .= '<td colspan="3">'. $this->getText($row['type'])      .'</td>';
+                    }
                     $html .= '</tr>';
+
+                    $_previous_date = $row['time'];
+                    $_previous_auth = $row['user_id'];
+
                     $dar->next();
                 }
                 $html .= '</table>';
@@ -120,6 +162,9 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_newversion');
+                break;
+            case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_metadataupdate');
                 break;
             default:
                 break;

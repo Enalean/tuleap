@@ -545,4 +545,37 @@ function html_trash_link($link, $warn, $alt) {
     return '<a href="'.$link.'" onClick="return confirm(\''.$warn.'\')">'.html_trash_image($alt).'</a>';
 }
 
+/**
+ *  Returns a date field
+ * 
+ *  @param value: initial value
+ *  @param size: the field size
+ *  @param maxlength: the max field size
+ *  @param ro: if true, the field is read-only
+ *
+ *	@return	string
+ */
+function html_field_date($field_name='',
+                         $value='',
+                         $ro=false,
+                         $size='10',
+                         $maxlength='10',
+                         $form_name='artifact_form',
+                         $today=false) {
+    if ($ro) {
+        $html = $value;
+    }
+    else {
+		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$field_name.'.value'); 
+        
+		$html = '<input type="text" name="'.$field_name.'"'.
+            ' size="'.$size.'"'.
+            ' maxlength="'.$maxlength.'"'.
+            ' value="'.$value.'" />'.
+            '<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+            '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="pick_date"></a>';
+    }
+    return($html);
+}
+
 ?>

@@ -193,10 +193,17 @@ class PluginManager {
         $p = $plugin_factory->pluginIsCustom($plugin);
         return $p;
     }
+    
+    var $plugins_name;
     function getNameForPlugin(&$plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
-        $p = $plugin_factory->getNameForPlugin($plugin);
-        return $p;
+        if (!$this->plugins_name) {
+            $this->plugins_name = array();
+        }
+        if (!isset($this->plugins_name[$plugin->getId()])) {
+            $plugin_factory =& $this->_getPluginFactory();
+            $this->plugins_name[$plugin->getId()] = $plugin_factory->getNameForPlugin($plugin);
+        }
+        return $this->plugins_name[$plugin->getId()];
     }
 }
 ?>

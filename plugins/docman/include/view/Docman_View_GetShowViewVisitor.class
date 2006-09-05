@@ -11,7 +11,7 @@
 class Docman_View_GetShowViewVisitor /* implements Visitor*/ {
     
     function visitFolder(&$item, $params = array()) {
-        return Docman_View_Browse::getViewForCurrentUser($item->getGroupId());
+        return Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
     }
     function visitWiki(&$item, $params = array()) {
         return 'Redirect';

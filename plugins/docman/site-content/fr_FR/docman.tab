@@ -18,20 +18,29 @@ plugin_docman	view_documenttablevisitor_lastupdate	Dernière mise-à-jour
 
 
 
-plugin_docman	action_details	Details de $1
-plugin_docman	action_move	Déplacer $1
-plugin_docman	action_newdocument	Créer un nouveau document sous $1
-plugin_docman	action_newfolder	Créer un nouveau dossier sous $1
-plugin_docman	action_show	Afficher $1
+plugin_docman	action_delete	Supprimer
+plugin_docman	action_details	Proppriétés
+plugin_docman	action_history	Historique
+plugin_docman	action_move	Déplacer
+plugin_docman	action_newdocument	Nouveau document
+plugin_docman	action_newfolder	Nouveau dossier
+plugin_docman	action_newversion	Nouvelle version
+plugin_docman	action_permissions	Permissions
+plugin_docman	action_update	Mise à jour
+plugin_docman	action_show	Afficher
 plugin_docman	action_showactions	Afficher les options
 
 plugin_docman	admin_permissions_title	Gérer les permissions
 plugin_docman	admin_permissions_descr	Définir qui peut administrer le docman.
-plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le docman:
+plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le docman :
 plugin_docman	admin_title	Administration
 plugin_docman	admin_view_title	Gérer les préférence d'affichage
 plugin_docman	admin_view_descr	Définir la vue par défaut pour le docman.
 plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre peut être écrasé par les préférences utilisateurs.
+plugin_docman	admin_metadata_title	Gérer les metadata
+plugin_docman	admin_metadata_descr	Selectionnez les metadata que vous voulez pour vos documents.
+plugin_docman	admin_metadata_instructions	<p>Definnissez quelles metadata sont disponible dans votre gestionnaire de documents. Chaque metadata sera remplie lors de la soumission d'un document et sera visible dans les propriétés du document.</p><p><strong>Permissions :</strong> les permissions sur les metadata d'un document sont les mêmes que sur le document lui-même.</p>
+plugin_docman	admin_md_details_title	Details de la metadata "$1"
 
 plugin_docman	breadcrumbs_location	Situation :
 
@@ -73,6 +82,9 @@ plugin_docman	details_history_logs_no	Il n'y a pas encore de journaux.
 plugin_docman	details_history_logs_what	Quoi
 plugin_docman	details_history_logs_when	Quand
 plugin_docman	details_history_logs_who	Qui
+plugin_docman	details_history_logs_old_value	Ancienne valeur
+plugin_docman	details_history_logs_new_value	Nouvelle valeur
+plugin_docman	details_history_logs_change_field	Mise à joure de <em>$1</em>
 plugin_docman	details_history_versions	Versions
 plugin_docman	details_history_versions_author	Auteur
 plugin_docman	details_history_versions_changelog	Changement
@@ -90,6 +102,26 @@ plugin_docman	details_properties	Propriétés
 plugin_docman	details_properties_edit	Editer les propriétés
 plugin_docman	details_title	Détails de $1
 plugin_docman	details_update_title	Mise à jour de $1
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/view/Docman_View_Admin_MetadataDetails.class
+#
+plugin_docman	admin_md_detail_backtomenu	Retour au menu
+plugin_docman	admin_md_detail_param_title	Paramètres de Metadata
+plugin_docman	admin_md_detail_param_name	Nom :
+plugin_docman	admin_md_detail_param_desc	Description :
+plugin_docman	admin_md_detail_param_allowempty	Autorise la valeur vide :
+plugin_docman	admin_md_detail_param_keephistory	Garde l'historique :
+plugin_docman	admin_md_detail_param_useit	Utiliser cette metadata:
+plugin_docman	admin_md_detail_param_yes	Oui
+plugin_docman	admin_md_detail_param_no	Non
+plugin_docman	admin_md_detail_val_title	Valeurs de metadata
+plugin_docman	admin_md_detail_val_name	Nom
+plugin_docman	admin_md_detail_val_desc	Description
+plugin_docman	admin_md_detail_val_rank	Rang
+plugin_docman	admin_md_detail_val_status	Statut
+plugin_docman	admin_md_detail_val_inactive	Inactive
+plugin_docman	admin_md_detail_val_active	Active
 
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accèder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
@@ -123,10 +155,24 @@ plugin_docman	event_move	Déplacement
 plugin_docman	event_del	Suppression
 plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
-
-plugin_docman	field_descr	Description :
+plugin_docman	event_metadataupdate	Mise à jour de metadata
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataHtml.class
+#
+plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
 plugin_docman	field_title	Titre :
+plugin_docman	field_owner	Propriétaire :
+plugin_docman	field_status	Statut :
+plugin_docman	field_obsolescence_date	Validité :
+plugin_docman	field_create_date	Date de création :
+plugin_docman	field_update_date	Date de dernière mise à jour :
+plugin_docman	md_html_validity_permanent	Permanent
+plugin_docman	md_html_validity_3_months	3 Mois
+plugin_docman	md_html_validity_6_months	6 Mois
+plugin_docman	md_html_validity_12_months	12 Mois
+plugin_docman	md_html_validity_corresp_date	Date correspondante :
 
 plugin_docman	filters	Filtres
 plugin_docman	filters_date_end	Date de fin
@@ -155,9 +201,15 @@ plugin_docman	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 
 plugin_docman	move	Déplacement de $1
 plugin_docman	move_actual	L'élément est dans ce dossier.
+plugin_docman	move_after	Après $1
 plugin_docman	move_cancel	Annuler le déplacement.
-plugin_docman	move_descr	Choisissez le nouveau dossier :
+plugin_docman	move_descr	1. Choisissez le nouveau dossier :
+plugin_docman	move_descr2	2. Choisissez la position :
+plugin_docman	move_descr3	3. Sélectionnez la position de '$1' dans le dossier '$2' :
 plugin_docman	move_here	déplacer ici.
+plugin_docman	move_position_beginning	Au début
+plugin_docman	move_position_end	A la fin
+plugin_docman	move_position_select	Personnalisée <em>(prochaine étape)</em>
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
 plugin_docman	new_document	Nouveau document
@@ -170,7 +222,9 @@ plugin_docman	new_folder	Nouveau dossier
 plugin_docman	new_folder_action	Créer le dossier
 plugin_docman	new_generalproperties	Propriétés générales
 plugin_docman	new_location	Situation
+plugin_docman	new_position	Position :
 plugin_docman	new_specificproperties	Propriétés spécifiques
+plugin_docman	new_mandatory_help	* Champ obligatoire
 
 plugin_docman	permission_admin	Administrateur
 plugin_docman	permission_manage	Gestionnaire
@@ -192,3 +246,47 @@ plugin_docman	view_Tree	Arbre
 
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
 plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_Metadata.class
+#
+plugin_docman	md_title_name	Titre
+plugin_docman	md_title_desc	Titre du document.
+plugin_docman	md_desc_name	Description
+plugin_docman	md_desc_desc	Description du document.
+plugin_docman	md_owner_name	Propriétaire
+plugin_docman	md_owner_desc	Valeur par défaut: celui qui soumet. Correspond au propriétaire officiel du document.
+plugin_docman	md_cdate_name	Date de creation
+plugin_docman	md_cdate_desc	Date d'ajout du document dans le gestionnaire.
+plugin_docman	md_udate_name	Date de mise à jour
+plugin_docman	md_udate_desc	Dernière mise à jour du document ou de ses metadata.
+plugin_docman	md_status_name	Statut
+plugin_docman	md_status_desc	Statut du document.
+plugin_docman	md_odate_name	Date d'obsolescence
+plugin_docman	md_odate_desc	Definit une période de validité pour votre document. Il sera automatiquement archivé à la fin de la période.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataBo.class
+#
+plugin_docman	md_bo_badlabel	Label de metadata '$1' inconnu.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataValueBo.class
+#
+plugin_docman	mdv_bo_updateerror	Erreur lors de la mise à jour de la metadata '$1'
+plugin_docman	mdv_bo_updateunknown	Tentative de mise à jour d'une metadata inconnue '$1'
+plugin_docman	mdv_bo_errbadtype	Mauvais type de metadata
+plugin_docman	mdv_bo_createerror	Erreur de creation de la metadata '$1'
+plugin_docman	mdv_bo_createunknown	Tentative de création d'une metadata inconnue
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataValueBo.class
+#
+plugin_docman	md_love_status_none_name	Aucun
+plugin_docman	md_love_status_none_desc	Le statut de l'élément n'est pas géré.
+plugin_docman	md_love_status_draft_name	Brouillon
+plugin_docman	md_love_status_draft_desc	
+plugin_docman	md_love_status_approved_name	Approuvé
+plugin_docman	md_love_status_approved_desc	
+plugin_docman	md_love_status_rejected_name	Rejeté
+plugin_docman	md_love_status_rejected_desc	

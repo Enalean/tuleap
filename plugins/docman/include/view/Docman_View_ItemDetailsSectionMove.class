@@ -43,11 +43,21 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
             'docman_icons' => $this->params['docman_icons'],
             'current'      => $this->item->getParentId(),
             'hierarchy'    => $this->params['hierarchy'],
-            'input_name'   => 'id'
+            'input_name'   => 'id',
+            'excludes'     => array($this->item->getId())
         ));
         
-        //Cancel move
         $content .=  '<br />';
+        
+        //begin-end-select
+        $content .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'move_descr2');;
+        $content .= '<div style="padding-left:20px">';
+        $content .= '<input type="radio" name="ordering" id="docma_item_ordering_begin" value="beginning" checked="checked" /><label for="docma_item_ordering_begin">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</label><br />';
+        $content .= '<input type="radio" name="ordering" id="docma_item_ordering_end" value="end" /><label for="docma_item_ordering_end">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</label><br />';
+        $content .= '<input type="radio" name="ordering" id="docma_item_ordering_select" value="select" /><label for="docma_item_ordering_select">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_select') .'</label>';
+        $content .= '</div></div>';
+        
+        //submit
         $content .= '<div>';
         $content .= '<input type="hidden" name="action" value="move_here" />';
         $content .= '<input type="hidden" name="item_to_move" value="'. $this->item->getId() .'" />';

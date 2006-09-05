@@ -41,8 +41,13 @@ class Docman_Item {
         $this->parentId    = null;
         $this->groupId     = null;
         $this->ownerId     = null;
+        $this->status      = null;
+        $this->obsolescenceDate = null;
+
         $this->_actions    = array();
         $this->_metadata   = array();
+        $this->pathId      = array();
+        $this->pathTitle   = array();
 
         if ($data) {
             $this->initFromRow($data);
@@ -139,6 +144,22 @@ class Docman_Item {
         return $this->ownerId;
     }
 
+    var $status;
+    function setStatus($v) {
+        $this->status = (int) $v;
+    }
+    function getStatus() {
+        return $this->status;
+    }
+
+    var $obsolescenceDate;
+    function setObsolescenceDate($v) {
+        $this->obsolescenceDate = (int) $v;
+    }
+    function getObsolescenceDate() {
+        return $this->obsolescenceDate;
+    }
+
     function initFromRow(&$row) {
         if (isset($row['item_id']))     $this->setId($row['item_id']);
         if (isset($row['title']))       $this->setTitle($row['title']);
@@ -150,6 +171,8 @@ class Docman_Item {
         if (isset($row['parent_id']))   $this->setParentId($row['parent_id']);
         if (isset($row['group_id']))    $this->setGroupId($row['group_id']);
         if (isset($row['user_id']))     $this->setOwnerId($row['user_id']);
+        if (isset($row['status']))      $this->setStatus($row['status']);
+        if (isset($row['obsolescence_date'])) $this->setObsolescenceDate($row['obsolescence_date']);
     }
     
     function toRow() {
@@ -164,6 +187,8 @@ class Docman_Item {
         $row['parent_id']   = $this->getParentId();
         $row['group_id']    = $this->getGroupId();
         $row['user_id']     = $this->getOwnerId();
+        $row['status']      = $this->getStatus();
+        $row['obsolescence_date'] = $this->getObsolescenceDate();
         return $row;
     }
     //}}}
@@ -175,20 +200,18 @@ class Docman_Item {
     function _addMetadata(&$md) {
         $this->_metadata[] =& $md;
     }
+    function &setMetadata(&$mda) {
+        $this->_metadata =& $mda;
+    }
     function &getMetadata() {
         return $this->_metadata;
     }
-
-    function &getMetadataIterator() {
-        $hcmd = array('title', 'description', 'owner', 'status'
-                      , 'obsolescence_date');        
-        foreach($hcmd as $mdLabel) {
-            $md[] =& Docman_MetadataFactory::getFromLabel($mdLabel, $this->getMetadataValue($mdLabel));
-        }
-        return new ArrayIterator(array_merge($md, Docman_MetadataBo::getSoftMetadata()));
+   
+    function &getMetadataIterator() {        
+        return new ArrayIterator($this->_metadata);
     }
 
-    function getMetadataValue($label) {
+    function getHardCodedMetadataValue($label) {
         $value = null;
 
         switch($label) {
@@ -213,17 +236,63 @@ class Docman_Item {
             break;
 
         case 'status': 
-            $value = '';
+            $st = $this->getStatus();
+            $e = new Docman_MetadataListOfValuesElement();
+            $e->setId($st);
+            $statusLabels = array(PLUGIN_DOCMAN_ITEM_STATUS_NONE     => 'none',
+                                  PLUGIN_DOCMAN_ITEM_STATUS_DRAFT    => 'draft',
+                                  PLUGIN_DOCMAN_ITEM_STATUS_APPROVED => 'approved',
+                                  PLUGIN_DOCMAN_ITEM_STATUS_REJECTED => 'rejected');
+            $statusLabel = $statusLabels[$st];
+            $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_'.$statusLabel.'_name'));
+            $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_'.$statusLabel.'_desc'));
+            $e->setRank($st);
+            $e->setStatus('A');
+            $mdv = new Docman_MetadataValueList();
+            $ea = array($e);
+            $mdv->setValue($ea);
+            $value = $mdv->getValue();
             break;
 
         case 'obsolescence_date':
-            $value = '';
+            $value = $this->getObsolescenceDate();
             break;
-
-        default:
+            
+        case 'rank':
+            $value = $this->getRank();
+            break;
         }
 
         return $value;
     }
+
+    var $_categories;
+    function setCategories(&$mda) {
+        $this->_categories =& $mda;
+    }
+    function &getCategories() {
+        return $this->_categories;
+    }
+   
+    function &getCategoriesIterator() {        
+        return new ArrayIterator($this->_categories);
+    }
+
+    var $pathId;
+    function setPathId(&$p) {
+        $this->pathId =& $p;
+    }
+    function &getPathId() {
+        return $this->pathId;
+    }
+
+    var $pathTitle;
+    function setPathTitle(&$p) {
+        $this->pathTitle =& $p;
+    }
+    function &getPathTitle() {
+        return $this->pathTitle;
+    }
 }
+
 ?>

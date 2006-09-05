@@ -38,7 +38,7 @@ class Docman_View_Details extends Docman_View_Display {
             if ($view && $section == 'properties') {
                 $props =& $view;
             } else {
-                $props =& new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $user_can_write);
+                $props =& new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $params['theme_path'], $user_can_write);
             }
             $sections['properties'] = true;
             $details->addSection($props);

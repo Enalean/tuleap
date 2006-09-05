@@ -10,6 +10,7 @@
 
 require_once('Docman_View_New.class');
 require_once('Docman_View_GetFieldsVisitor.class');
+require_once('Docman_View_GetCategoriesFieldsVisitor.class');
 require_once(dirname(__FILE__).'/../Docman_Document.class');
 
 class Docman_View_NewDocument extends Docman_View_New {
@@ -66,7 +67,7 @@ class Docman_View_NewDocument extends Docman_View_New {
             $fields = $specific['obj']->accept($get_specific_fields);
             $html .= '<table>';
             foreach($fields as $field) {
-                $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+                $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
             }
             $html .= '</table>';
             $html .= '</div>';
@@ -76,16 +77,24 @@ class Docman_View_NewDocument extends Docman_View_New {
     
     function _getGeneralProperties($params) {
         $html = '';
+        
         $new_document = new Docman_Document($params['force_item']);
+        $mdFactory = new Docman_MetadataFactory($params['group_id']);
+        $new_document->setMetadata($mdFactory->getOnSubmitMetadataList());
+
         $get_fields = new Docman_View_GetFieldsVisitor();
-        $fields = $new_document->accept($get_fields);
-        $html .= '<table>';
+        $fields = $new_document->accept($get_fields, array('form_name'  => $params['form_name'],
+                                                           'theme_path' => $params['theme_path']));
         foreach($fields as $field) {
-            $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+            $html .= '<p>';
+            $html .= '<label>'. $field->getLabel().'</label>';
+            $html .= $field->getField();
+            $html .= '</p>';
         }
-        $html .= '</table>';
+
         return $html;
     }
+
 }
 
 ?>

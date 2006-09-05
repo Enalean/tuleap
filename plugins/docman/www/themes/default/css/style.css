@@ -211,7 +211,6 @@ fieldset.docman_filters legend {
 */
 
 .docman_item_menu {
-  margin-top: 5px;
   border: 1px solid #bcbcad;
   border-right: 2px solid #bcbcad;
   border-bottom: 2px solid #bcbcad;
@@ -236,17 +235,16 @@ fieldset.docman_filters legend {
   display: block;
   background-repeat:no-repeat;
   background-position:2px 1px;
-  height:18px;
 }
 .docman_item_menu ul li a:hover {
     border:1px solid #bcbcad;
     background-color: #f0f0e7;
 }
 .docman_item_menu_close {
-    
-  height:inherit;
-    font-size:0.8em;
     text-align:right;
+    height:inherit;
+    font-size:0.8em;
+    padding-left:2px;
 }
 .docman_item_option_details {
     background-image:url('../images/ic/item-details.png');
@@ -278,11 +276,87 @@ fieldset.docman_filters legend {
 
 /**********/
 .docman_new_parentfolder {
-    max-height:250px;
-    height:expression(this.offsetHeight > 250 ? 250 : this.offsetHeight);
+    max-height:170px;
+    height:expression(this.offsetHeight > 170 ? 170 : this.offsetHeight);
     overflow:auto;
 }
 
 .docman_item_actual_parent {
     font-weight: bold;
 }
+
+/*
+ * New item Layout
+ */
+.docman_new_item fieldset legend {
+  font-weight: bold;
+}
+
+.docman_new_item .properties { 
+  clear: both;
+}
+
+.docman_new_item .properties fieldset.general_properties {
+  float: left;
+  width: 49%;
+}
+
+/* Metadata form row */
+.docman_new_item .properties fieldset.general_properties p { 
+ clear: both;
+ padding-left: 0px;
+ padding-right: 0px;
+ margin-left: 0px;
+ margin-right: 0px;
+}
+
+/* Metadata form label */
+.docman_new_item .properties fieldset.general_properties label {
+ float: left;
+ width: 20%;
+ text-align: left;
+ margin: 0 0 0 0;
+ padding: 0 0 0 0;
+}
+
+.docman_new_item .properties fieldset.general_properties textarea {
+  width: 75%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+.docman_new_item .properties fieldset.general_properties input.text_field {
+  width: 75%;
+}
+
+.docman_new_item .properties fieldset.location { 
+}
+
+.docman_new_item .categorization {
+  clear: both;
+}
+
+.docman_new_item .docman_new_submit { 
+}
+
+/*
+ * Details view. Edit properties and view properties
+ * * Docman_View_ItemDetailsSectionProperties.class
+ * * Docman_View_ItemDetailsSectionEditProperties.class
+ */
+.docman_item_details_properties { 
+
+}
+
+.docman_item_details_properties td.label { 
+
+}
+
+.docman_item_details_properties td.value input.text_field { 
+  width: 30em;
+}
+
+.docman_item_details_properties td.value textarea { 
+  width: 40em;
+  height: 7em;
+}
+

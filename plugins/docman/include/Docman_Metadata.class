@@ -28,108 +28,28 @@ define('PLUGIN_DOCMAN_METADATA_TYPE_STRING', 6);
 define('PLUGIN_DOCMAN_METADATA_TYPE_DATE', 4);
 define('PLUGIN_DOCMAN_METADATA_TYPE_LIST', 5);
 
-class Docman_MetadataFactory {
-    
-    function &getFromLabel($label, $value=null) {
-        //    $hcmd = array('title', 'description', 'owner', 'create_date', 'status'
-        //              , 'obsolescence_date');
-        
-        $md = null;
+define('PLUGIN_DOCMAN_METADATA_UNUSED', 0);
+define('PLUGIN_DOCMAN_METADATA_USED', 1);
 
-        switch($label) {
-        case 'title':
-            $md = new Docman_Metadata();
-            $md->setName('Title');
-            $md->setLabel('title');
-            $md->setDescription('Title of the document. Always displayed to user.');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(false);
-            $md->setKeepHistory(false);
-            break;
-
-        case 'description':
-            $md = new Docman_Metadata();
-            $md->setName('Description');
-            $md->setLabel('description');
-            $md->setDescription('Description of the document. Always displayed to user.');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(false);
-            break;
-
-        case 'owner':
-            $md = new Docman_Metadata();
-            $md->setName('Owner');
-            $md->setLabel('owner');
-            $md->setDescription('The one who owns the document. May change.');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-            $md->setIsRequired(true);
-            $md->setIsEmptyAllowed(false);
-            $md->setKeepHistory(true);
-            break;
-
-        case 'create_date':
-            $md = new Docman_Metadata();
-            $md->setName('Creation Date');
-            $md->setLabel('create_date');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-            $md->setIsRequired(true);
-            break;
-
-        case 'update_date':
-            $md = new Docman_Metadata();
-            $md->setName('Update Date');
-            $md->setLabel('update_date');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-            $md->setIsRequired(true);
-            break;
-
-        case 'status': 
-            $md = new Docman_Metadata();
-            $md->setName('Status');
-            $md->setLabel('status');
-            $md->setDescription('Document status');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-            $md->setIsRequired(false);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(true);
-            //            $md->setDefaultValue()
-            break;
-
-        case 'obsolescence_date':
-            //$md = new Docman_MetadataValidity();
-            $md = new Docman_Metadata();
-            $md->setName('Obsolescence date');
-            $md->setLabel('obsolescence_date');
-            $md->setDescription('Define a period of validity for your document. It will automaticaly be archived at the end of the period.');
-            $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-            $md->setIsRequired(false);
-            $md->setIsEmptyAllowed(true);
-            $md->setKeepHistory(false);
-            break;
-        }
-
-        if($md !== null) {
-            $md->setValue($value);
-            $md->setSpecial(true);
-            $md->setCanChangeName(false);
-            $md->setCanChangeIsEmptyAllowed(false);
-            $md->setCanChangeDescription(false);
-        }
-
-        return $md;
-    }
-}
-
+/**
+ * Metadata container
+ *
+ * This class aims to give all informations about docman's metadata, even if
+ * the metadata are hard coded (such as title, create_date, ...).
+ * There is:
+ * * a set of accessors for values (useful for DB update);
+ * * a set of convenient accessors for code lisibility improvment.
+ *   eg. if($metadata->isSpecial()) vs. if($metadata->getSpecial() ===
+ *   IS_SPECIAL)
+ * * a set of functions to distinguish metadata parameters that may change. For
+ *   real metadata all parameters may change. But for HardCoded metadata, only
+ *   some parmaeters of some metadata may change (eg. 'use_it' for 'status').
+ */
 class Docman_Metadata {
     var $id;
     var $groupId;
     var $name;
     var $type;
-    //    var $displayType;
-    //    var $displaySize;
     var $label;
     var $description;
     var $isRequired;
@@ -144,8 +64,6 @@ class Docman_Metadata {
         $this->groupId = null;
         $this->name = null;
         $this->type = null;
-        //        $this->displayType = null;
-        //        $this->displaySize = null;
         $this->label = null;
         $this->description = null;
         $this->isRequired = null;
@@ -154,9 +72,11 @@ class Docman_Metadata {
         $this->special = null;
         $this->defaultValue = null;
         $this->useIt = null;
+
+        $this->value = null;
     }
 
-    //{{{
+    //{{{ Accessors
     function setId($v) {
         $this->id = $v;
     }
@@ -184,20 +104,6 @@ class Docman_Metadata {
     function getType() {
         return $this->type;
     }
-
-    //    function setDisplayType($v) {
-    //        $this->displayType = $v;
-    //    }
-    //    function getDisplayType() {
-    //        return $this->displayType;
-    //    }
-
-    //    function setDisplaySize($v) {
-    //        $this->displaySize = $v;
-    //    }
-    //    function getDisplaySize() {
-    //        return $this->displaySize;
-    //    }
 
     function setLabel($v) {
         $this->label = $v;
@@ -247,15 +153,36 @@ class Docman_Metadata {
     function getDefaultValue() {
         return $this->defaultValue;
     }
-    ///}}}
-
+   
     function setUseIt($v) {
         $this->useIt = $v;
     }
     function getUseIt() {
         return $this->useIt;
+    }    
+    ///}}} Accessors
+ 
+    //{{{ Convenient accessors
+    function isUsed() {
+        if($this->useIt == PLUGIN_DOCMAN_METADATA_USED) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-    
+
+    function isSpecial() {
+        if($this->special > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    //}}} Convenient accessors
+
+    //{{{ Changable parameters
     var $canChangeName;
     function setCanChangeName($v) {
         $this->canChangeName = $v;
@@ -296,6 +223,16 @@ class Docman_Metadata {
         return $this->canChangeDefaultValue;
     }
 
+    var $canChangeValue;
+    function setCanChangeValue($v) {
+        $this->canChangeValue = $v;
+    }
+    function canChangeValue() {
+        return $this->canChangeValue;
+    }
+
+    //}}}  Changable parameters
+
     var $value;
     function setValue($v) {
         $this->value = $v;
@@ -307,16 +244,29 @@ class Docman_Metadata {
     function initFromRow($row) {
         if(isset($row['field_id'])) $this->id = $row['field_id'];
         if(isset($row['group_id'])) $this->groupId = $row['group_id'];
-        if(isset($row['field_name'])) $this->name = $row['field_name'];
+        if(isset($row['name'])) $this->name = $row['name'];
         if(isset($row['data_type'])) $this->type = $row['data_type'];
-        //        if(isset($row['display_type'])) $this->displayType = $row['display_type'];
-        //        if(isset($row['display_size'])) $this->displaySize = $row['display_size'];
         if(isset($row['label'])) $this->label = $row['label'];
         if(isset($row['description'])) $this->description = $row['description'];
         if(isset($row['required'])) $this->isRequired = $row['required'];
         if(isset($row['empty_ok'])) $this->isEmptyAllowed = $row['empty_ok'];
         if(isset($row['special'])) $this->special = $row['special'];
         if(isset($row['default_value'])) $this->defaultValue = $row['default_value'];
+        if(isset($row['use_it'])) $this->useIt = $row['use_it'];
+
+        $this->setCanChangeValue(true);
     }
 }
+
+class Docman_ListMetadata extends Docman_Metadata {
+    var $listOfValue;
+    
+    function setListOfValueElements(&$l) {
+        $this->listOfValue =& $l;
+    }
+    function &getListOfValueIterator() {
+        return new ArrayIterator($this->listOfValue); 
+    }
+}
+
 ?>

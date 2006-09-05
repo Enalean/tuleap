@@ -10,7 +10,8 @@
 
 require_once('Docman_View_Display.class');
 
-require_once(dirname(__FILE__).'/../Docman_SettingsDao.class');
+require_once(dirname(__FILE__).'/../Docman_SettingsBo.class');
+
 /* abstract */ class Docman_View_Browse extends Docman_View_Display {
     
     /* protected */ function _mode($params) {
@@ -51,14 +52,15 @@ require_once(dirname(__FILE__).'/../Docman_SettingsDao.class');
     /* static */ function isViewAllowed($view) {
         return in_array($view, Docman_View_Browse::getAllViews());
     }
-    /* static */ function getViewForCurrentUser($group_id) {
-        $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF .'_'. $group_id);
-        if (!$pref) {
-            $dao =& new Docman_SettingsDao(CodexDataAccess::instance());
-            $dar =& $dao->searchViewByGroupId($group_id);
-            if ($dar && !$dar->isError() && $dar->valid()) {
-                $row = $dar->current();
-                $pref = $row['view'];
+    /* static */ function getViewForCurrentUser($group_id, $report = '') {
+        if($report != '') {
+            $pref = $report;
+        }
+        else {
+            $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF .'_'. $group_id);
+            if (!$pref) {
+                $sBo =& Docman_SettingsBo::instance($group_id);
+                $pref = $sBo->getView();            
             }
         }
         if (!$pref || !Docman_View_Browse::isViewAllowed($pref)) {

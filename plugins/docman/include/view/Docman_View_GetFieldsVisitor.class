@@ -13,31 +13,30 @@ require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class');
 
 class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
     
-    function visitItem(&$item, $params = array()) {
-        $title       = isset($params['force_item']['title'])       ? $params['force_item']['title']       : $item->getTitle();
-        $description = isset($params['force_item']['description']) ? $params['force_item']['description'] : $item->getDescription();
-
-        $fields = array();
-
-        /*  $mdBo =& new Docman_MetadataBo();
-        $mdIter =& $mdBo->getSubmissionMetadataForGroup($param['group_id']);*/
-
-        $mdIter =& $item->getMetadataIterator();
+    function _buildFieldArray(&$mdIter, $formName, $themePath) {        
         $mdIter->rewind();
         while($mdIter->valid()) {
-            $md =& $mdIter->current();
+            $md =& $mdIter->current();                      
             
-            $mdHtml =& Docman_MetadataHtmlFactory::getFromMetadata($md);
-
-            $fields[$md->getLabel()] = array('label'       => $mdHtml->getLabel()
-                                             , 'field'     => $mdHtml->getField()
-                                             , 'value'     => $mdHtml->getValue()
-                                             , 'validator' => $mdHtml->getValidator());
+            $fields[$md->getLabel()] = Docman_MetadataHtmlFactory::getFromMetadata($md, array('form_name' => $formName,
+                                                                                              'theme_path' => $themePath));
 
             $mdIter->next();
         }
-
         return $fields;       
+    }
+
+    function visitItem(&$item, $params = array()) {
+        $mdIter =& $item->getMetadataIterator();
+        $formName = '';
+        if(isset($params['form_name'])) {
+            $formName = $params['form_name'];
+        }
+        $themePath = '';
+        if(isset($params['theme_path'])) {
+            $themePath = $params['theme_path'];
+        }
+        return $this->_buildFieldArray($mdIter, $formName, $themePath);
     }
     function visitFolder(&$item, $params = array()) {
         return $this->visitItem($item, $params);

@@ -10,6 +10,92 @@
 require_once(dirname(__FILE__).'/../Docman_ValidateWiki.class');
 require_once(dirname(__FILE__).'/../Docman_ValidateLink.class');
 require_once(dirname(__FILE__).'/../Docman_ValidateUpload.class');
+require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class');
+
+class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
+    var $pagename;
+
+    function Docman_MetadataHtmlWiki($pagename) {
+        $this->pagename = $pagename;
+    }
+
+    function getLabel() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_pagename');
+    }
+    
+    function getField() {
+        return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" />';
+    }
+
+    function &getValidator() {
+        return new Docman_ValidateWiki();
+    }
+
+}
+
+class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
+    var $link_url;
+
+    function Docman_MetadataHtmlLink($link_url) {
+        $this->link_url = $link_url;
+    }
+
+    function getLabel() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_url');
+    }
+    
+    function getField() {
+        return '<input type="text" name="item[link_url]" value="'. htmlentities($this->link_url, ENT_QUOTES) .'" />';
+    }
+
+    function &getValidator() {
+        return new Docman_ValidateLink();
+    }
+
+}
+
+class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
+   
+    function Docman_MetadataHtmlFile() {
+        
+    }
+
+    function getLabel() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent');
+    }
+    
+    function getField() {
+        $html = '<input type="hidden" name="max_file_size" value="'. $GLOBALS['sys_max_size_upload'] .'" /><input type="file" name="file" />';
+        $html .= '<br /><em>'. $GLOBALS['Language']->getText('plugin_docman','max_size_msg',array(formatByteToMb($GLOBALS['sys_max_size_upload']))) .'</em>';
+
+        return $html;
+    }
+
+    function &getValidator() {
+        return new Docman_ValidateUpload();
+    }
+
+}
+
+class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
+    var $content;
+    function Docman_MetadataHtmlEmbeddedFile($content) {
+        $this->content = $content;
+    }
+
+    function getLabel() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent');
+    }
+    
+    function getField() {
+        return '<textarea name="content" cols="50" rows="15">'. $this->content .'</textarea>';
+    }
+
+    function &getValidator() {
+        return null;
+    }
+
+}
 
 class Docman_View_GetSpecificFieldsVisitor {
     
@@ -18,35 +104,16 @@ class Docman_View_GetSpecificFieldsVisitor {
     }
     function visitWiki(&$item, $params = array()) {
         $pagename = isset($params['force_item']['wiki_page']) ? $params['force_item']['wiki_page'] : $item->getPagename();
-        return array(
-            array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_pagename'),
-                'field' => '<input type="text" name="item[wiki_page]" size="40"value="'. htmlentities($pagename, ENT_QUOTES) .'" />',
-                'validator' => new Docman_ValidateWiki()
-            )
-        );
+        return array(new Docman_MetadataHtmlWiki($pagename));
     }
     
     function visitLink(&$item, $params = array()) {
         $link_url = isset($params['force_item']['link_url']) ? $params['force_item']['link_url'] : $item->getUrl();
-        return array(
-            array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_url'),
-                'field' => '<input type="text" name="item[link_url]" size="40" value="'. htmlentities($link_url, ENT_QUOTES) .'" />',
-                'validator' => new Docman_ValidateLink()
-            )
-        );
+        return array(new Docman_MetadataHtmlLink($link_url));
     }
     
     function visitFile(&$item, $params = array()) {
-        return array(
-            array(
-                'label'        => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent'),
-                'field'        => '<input type="hidden" name="max_file_size" value="'. $GLOBALS['sys_max_size_upload'] .'" /><input type="file" size="40" name="file" />',
-                'instructions' => '<br /><em>'. $GLOBALS['Language']->getText('plugin_docman','max_size_msg',array(formatByteToMb($GLOBALS['sys_max_size_upload']))) .'</em>',
-                'validator'    => new Docman_ValidateUpload()
-            )
-        );
+        return array(new Docman_MetadataHtmlFile());
     }
     
     function visitEmbeddedFile(&$item, $params = array()) {
@@ -55,12 +122,7 @@ class Docman_View_GetSpecificFieldsVisitor {
         if ($version && is_file($version->getPath())) {
             $content = file_get_contents($version->getPath());
         }
-        return array(
-            array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent'),
-                'field' => '<textarea name="content" cols="50" rows="15">'. $content .'</textarea>'
-            )
-        );    
+        return array(new Docman_MetadataHtmlEmbeddedFile($content));    
     }
 }
 ?>

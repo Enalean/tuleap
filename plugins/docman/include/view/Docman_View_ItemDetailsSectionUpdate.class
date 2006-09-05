@@ -47,7 +47,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force));
         $content .= '<table>';
         foreach($fields as $field) {
-            $content .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+            $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
         }
         $content .= '</table>';
         $content .= '<input type="hidden" name="item[id]" value="'. $item->getId() .'" />';

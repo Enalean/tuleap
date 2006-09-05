@@ -185,6 +185,7 @@ class Docman_ItemBo {
             $item =& $itemList[$i];
             if(in_array($item->getId(), $excludedItems)) {
                 // @todo: Delete all childrens
+                //$item->setNbOfChildren(0);
                 unset($item->_items);
                 $item->_items = array();
             }
@@ -261,6 +262,50 @@ class Docman_ItemBo {
 
             $dar->next();
         }
+
+        $itemIterator =& new ArrayIterator($itemList);
+
+        // Compute Item location in tree
+        // And delete items that do not belong to $_parentId subtree
+        $itemToDelete = array();
+
+        $itemIterator->rewind();
+        while($itemIterator->valid()) {
+            $item =& $itemIterator->current();
+
+            $pid = $item->getParentId();
+            $locationTitle = array();
+            $locationId    = array();
+            $i = 0;
+            while($pid != $_parentId && $pid != 0) {
+                $itemOffset = $itemLocationInList[$pid];
+                $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
+                $locationId[$i]    = $itemList[$itemOffset]->getId();
+                $i++;
+                $pid = $itemList[$itemOffset]->getParentId();
+            }
+            
+            if($pid != $_parentId) {
+                $itemToDelete[] = $item->getId();
+            }
+            else {
+                if($pid != 0) {
+                    $itemOffset = $itemLocationInList[$pid];
+                    $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
+                    $locationId[$i]    = $itemList[$itemOffset]->getId();
+                }
+                $item->setPathTitle(array_reverse($locationTitle));
+                $item->setPathId(array_reverse($locationId));
+            }
+
+            $itemIterator->next();
+        }
+
+        // Delete unneeded items
+        foreach($itemToDelete as $id) {
+            $itemOffset = $itemLocationInList[$id];
+            unset($itemList[$itemOffset]);
+        }        
 
         return new ArrayIterator($itemList);
     }

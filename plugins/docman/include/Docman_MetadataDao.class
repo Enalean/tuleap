@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+require_once('common/dao/include/DataAccessObject.class');
+
+class Docman_MetadataDao extends DataAccessObject {
+
+    function Docman_MetadataDao(&$da) {
+        DataAccessObject::DataAccessObject($da);
+    }
+
+    function searchById($id) {
+        $sql = sprintf('SELECT *'
+                       .' FROM plugin_docman_metadata'
+                       .' WHERE field_id = %d'
+                       , $id);
+        return $this->retrieve($sql);
+    }
+
+    function searchByGroupId($id, $onlyUsed, $type = array()) {
+        $where_clause = '';
+        if($onlyUsed) {
+            $where_clause .= ' AND use_it = '.PLUGIN_DOCMAN_METADATA_USED;
+        }
+
+        if(is_array($type) && count($type) > 0) {
+            $where_clause .= ' AND data_type IN ('.implode(',', $type).')';
+        }
+        
+        $sql = sprintf('SELECT *'
+                       .' FROM plugin_docman_metadata'
+                       .' WHERE group_id = %d'
+                       .$where_clause
+                       , $id);
+
+        return $this->retrieve($sql);
+    }
+
+    // Very limited implementation of update
+    // right now, only 'use_it' field is concerned by update
+    function updateById($id, $useIt) {
+        $sql = sprintf('UPDATE plugin_docman_metadata'
+                       .' SET use_it = %d'
+                       .' WHERE field_id = %d'
+                       , $useIt
+                       , $id);
+        $inserted = $this->update($sql);        
+        return $inserted;
+    }
+}
+
+?>

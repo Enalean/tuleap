@@ -37,10 +37,13 @@ class User {
 	//for each group_artifact_id (the user is part of) one array from the artifact-perm table
 	var $tracker_data;
 
+    // Keep super user info
+    var $isSuperUser;
 
 	function User($id) {
 	  global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
 
+      $this->isSuperUser = null;
 	  $this->id = $id;
 	  if (isset($ALL_USERS_DATA["user_$id"])) {
 	    $this->data_array = $ALL_USERS_DATA["user_$id"];
@@ -219,13 +222,18 @@ class User {
 
 
 	function isSuperUser() {
+        if($this->isSuperUser === null) {
 	  $sql="SELECT * FROM user_group WHERE user_id='". $this->data_array['user_id'] ."' AND group_id='1' AND admin_flags='A'";
 	  $result=db_query($sql);
 	  if ($result && db_numrows($result) > 0) {
-	    return true;
+	    $this->isSuperUser = true;
 	  } else {
-	    return false;
+	    $this->isSuperUser = false;
 	  }
+        }
+        else {
+            return $this->isSuperUser;
+        }
 	}
     
     var $_ugroups;

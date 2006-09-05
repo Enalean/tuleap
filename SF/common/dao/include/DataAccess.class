@@ -20,18 +20,32 @@ class DataAccess {
     * @param $db string database name
     */
     function DataAccess($host,$user,$pass,$db) {
+        $this->store = array();
         $this->db = @mysql_connect($host,$user,$pass);
         if ($this->db) {
             mysql_select_db($db,$this->db);
         }
     }
-
+    var $store;
+    
     /**
     * Fetches a query resources and stores it in a local member
     * @param $sql string the database query to run
     * @return object DataAccessResult
     */
     function &fetch($sql) {
+        /*$nb = isset($this->store[md5($sql)]) ? ($this->store[md5($sql)]['nb']+1) : 1;
+        $this->store[md5($sql)] = array('sql' => $sql, 'nb' => $nb);
+        if ($this->store[md5($sql)]['nb'] > 1) {
+            echo '<code>'. $this->store[md5($sql)]['sql'] .'</code> have been fetched for the '. $this->store[md5($sql)]['nb'] .'° times. <br>';
+            $traces = debug_backtrace();
+            foreach($traces as $trace) {
+                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
+            }
+            echo '<!-- ----------------------------------'."\n";
+            var_dump(debug_backtrace());
+            echo ' -->';
+        }*/
         return new DataAccessResult($this,mysql_query($sql,$this->db));
     }
 

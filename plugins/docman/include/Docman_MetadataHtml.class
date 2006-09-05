@@ -23,131 +23,328 @@
  * $Id$
  */
 
+require_once('Docman_Metadata.class');
+
 class Docman_MetadataHtmlFactory {
-    function getFromMetadata(&$md) {
+    
+    function &getFromMetadata(&$md, $formParams) {
+        $mdh = null;
 
-        if($md->getLabel() === 'status') {
-            return new Docman_MetadataHtmlStatus($md);
+        switch($md->getLabel()) {
+        case 'owner':
+            $mdh = new Docman_MetadataHtmlOwner($md, $formParams);;
+            break;
+
+        case 'obsolescence_date':
+            $mdh = new Docman_MetadataHtmlObsolescence($md, $formParams);;
+            break;
+
+        case 'title':
+            $mdh = new Docman_MetadataHtmlTitle($md, $formParams);
+            break;
         }
 
-        if($md->getLabel() === 'owner') {
-            return new Docman_MetadataHtmlOwner($md);
-        }
+        if($mdh === null) {
+            switch($md->getType()) {
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                $mdh = new Docman_MetadataHtmlText($md, $formParams);;
+                break;
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                $mdh = new Docman_MetadataHtmlString($md, $formParams);;
+                break;
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                $mdh = new Docman_MetadataHtmlDate($md, $formParams);;
+                break;
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                $mdh = new Docman_MetadataHtmlList($md, $formParams);;
+                break;
+            default:
+            }    
+        }      
 
-        if($md->getLabel() === 'obsolescence_date') {
-            return new Docman_MetadataHtmlObsolescence($md);
-        }
-
-
-        switch($md->getType()) {
-        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            return new Docman_MetadataHtmlText($md);
-            break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            return new Docman_MetadataHtmlString($md);
-            break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            return new Docman_MetadataHtmlDate($md);
-            break;
-        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            return new Docman_MetadataHtmlList($md);
-            break;
-        default:
-            die('bad metadata type');
-        }
+        return $mdh;
     }
 }
 
+/**
+ * Rendering of metadata using HTML language.
+ *
+ * This class aims to provide the elements to render metadata to final user in
+ * both read and write mode. This class is abstract and there is at least a
+ * subclass per metadata type. This class can also be overloaded for specific
+ * rendering of some fields (eg. obsolescence_date is stored as a date but it's
+ * more convenient for final user to display it as a select box with duration).
+ */
 class Docman_MetadataHtml {
     var $md;
+    var $formParams;
 
-    function Docman_MetadataHtml(&$md) {
+    function Docman_MetadataHtml(&$md, $formParams) {
         $this->md =& $md;
+        $this->formParams =& $formParams; 
     }
 
+    /**
+     * Return end user field title.
+     *
+     * @return string
+     */
     function getLabel() {
-        if($this->md->getSpecial() === false) {
-            return $this->md->getName().":";
+        $desc = $this->md->getDescription();
+        $html = '<a href="#" title="'.$desc.'"><img src="'.$this->formParams['theme_path'].'/images/help.png" width="12" height="12" /></a>&nbsp;';
+        if($this->md->isSpecial()) {
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_'.$this->md->getLabel());
         }
         else {
-            return $GLOBALS['Language']->getText('plugin_docman', 'field_'.$this->md->getLabel());
-        }
+            $html .= $this->md->getName().":";
+        }        
+        return $html;
     }
 
+    /**
+     * Return HTML field name.
+     *
+     * @return string
+     */
     function _getFieldName() {
-        $name  = 'item['.$this->md->getLabel().']';
+        $lbl = $this->md->getLabel();
+        if($this->md->isSpecial()) {
+            $name  = 'item['.$lbl.']';
+        }
+        else {
+            $name  = 'metadata['.$lbl.']';
+        }
         return $name;
     }
 
+    /**
+     * Return HTML form element corresponding to the metadata.
+     *
+     * @return string
+     */
     function getField() {
-
+        if($this->md->canChangeValue()) {
+            $html = $this->_getField();
+            if(!$this->md->isEmptyAllowed()) {
+                $html .= '&nbsp;';
+                $html .= '<span class="highlight">*</span>';
+            }
+            return $html;
+        }
+        else {
+            return $this->getValue();
+        }
     }
-
+    
+    /**
+     * Return metadata value.
+     *
+     * @return string
+     */
     function getValue() {
         return $this->md->getValue();
     }
 
+    /**
+     * Return field input validator.
+     *
+     * @return string
+     */
     function getValidator() {
         return null;
     }
 }
 
+/**
+ * HTML rendering for 'Text' metadata
+ */
 class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 
-    function getField() {
-        $name  = 'item['.$this->md->getLabel().']';
+    function _getField() {
+        $name  = $this->_getFieldName();
         $value = htmlentities($this->md->getValue(), ENT_QUOTES);
         $field = '<textarea name="'.$name.'">'.$value.'</textarea>';
         return $field;
     }
 }
 
+/**
+ * HTML rendering for 'String' metadata
+ */
 class Docman_MetadataHtmlString extends Docman_MetadataHtml {    
     function _getHtmlValue() {
         $value = htmlentities($this->md->getValue(), ENT_QUOTES);
         return $value;
     }
 
-    function getField() {
+    function _getField() {
         $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$this->_getHtmlValue().'" />';
         return $field;
     }
 }
 
+/**
+ * HTML rendering for 'Date' metadata
+ */
 class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
 
-    function getField() {
+    function _getField() {
 
+    }
+
+    function getValue() {
+        $v =& $this->md->getValue();
+        if($v != null && $v != '') {
+            return strftime("%e %b %Y %H:%M", $v);
+        }
     }
 }
 
+/**
+ * HTML rendering for 'List' metadata
+ */
 class Docman_MetadataHtmlList extends Docman_MetadataHtml {
 
-    function getField() {
+    function getValue() {
+        $vIter =& $this->md->getValue();
 
+        $html = '';
+        $first = true;
+        $vIter->rewind();
+        while($vIter->valid()) {
+            $e =& $vIter->current();
+
+            if(!$first) {
+                $html .= ', ';
+            }
+            $html .= $e->getName();
+
+            $vIter->next();
+        }
+
+        return $html;
+    }
+
+    function _getField() {
+        $html = '';
+        // First is their any value already selected
+        $selectedElements = array();
+        $eIter =& $this->md->getValue();
+        if($eIter != null) {
+            //@todo: a toArray() method in ArrayIterator maybe useful here.
+            $eIter->rewind();
+            while($eIter->valid()) {
+                $e =& $eIter->current();
+                $selectedElements[] = $e->getId();
+                $eIter->next();
+            }
+        }
+
+        // If no values selected, select the default value
+        if(count($selectedElements) == 0) {
+            $selectedElements[] = $this->md->getDefaultValue();
+        }
+
+        $name  = $this->_getFieldName();
+        $html .= '<select name="'.$name.'">'."\n";
+
+        $vIter =& $this->md->getListOfValueIterator();
+        $vIter->rewind();
+        while($vIter->valid()) {
+            $e =& $vIter->current();
+            
+            $selected = '';
+            if(in_array($e->getId(), $selectedElements)) {
+                $selected = ' selected="selected"';
+            }
+
+            $html .= '<option value="'.$e->getId().'"'.$selected.'>'.$e->getName().'</option>'."\n";
+            
+            $vIter->next();
+        }
+        $html .= '</select>'."\n";
+        return $html;
     }
 }
 
-class Docman_MetadataHtmlStatus extends Docman_MetadataHtmlList {
+/**
+ * Title has a dedicated validator.
+ */
+class Docman_MetadataHtmlTitle extends Docman_MetadataHtmlString {
 
-    function getField() {
-        $name  = 'item['.$this->md->getLabel().']';
-        $values = array('None', 'Draft', 'Approved', 'Rejected');
-        $field = html_build_select_box_from_array($values, $name);
+    function getValidator() {
+        return new Docman_ValidateTitle();
+    }
+}
+
+/**
+ * HTML rendering for special 'obsolescence_date' metadata
+ */
+class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
+
+    function getValue() {
+        $v =& $this->md->getValue();
+        switch($v) {
+        case PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT:
+            return $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent');
+            break;
+        default:
+            return strftime("%e %b %Y %H:%M", $v);
+        }
+    }
+
+    function _getField() {
+        $labels = array(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent'),
+                        3 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_3_months'), 
+                        6 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_6_months'), 
+                        12 => $GLOBALS['Language']->getText('plugin_docman','md_html_validity_12_months'));
+        
+        $selected = $this->md->getValue();
+        if($selected === null) {
+            $selected = $this->md->getDefaultValue();
+        }
+        else {            
+            if($selected == 0) {
+                $selectedInput = '';
+            }
+            else {
+                $selectedInput = date("Y-n-j", $selected);
+            }
+            
+            $selected = 100;
+            $labels[100] = '-';
+        }
+
+        $name = 'validity';
+        $inputname = $this->md->getLabel();
+     
+        $field .= '<select name="'.$name.'" onchange="javascript:change_obsolescence_date(document.forms.'.$this->formParams['form_name'].')">'."\n";
+        foreach($labels as $value => $label) {
+            $select = '';
+            if($value == $selected) {
+                $select = ' selected';
+            }
+            $field .= '<option value="'.$value.'"'.$select.'>'.$label.'</option>'."\n";
+        }
+        $field .= '</select>'."\n";
+
+        $field .= '&nbsp;<em>'.$GLOBALS['Language']->getText('plugin_docman','md_html_validity_corresp_date').'</em>';
+        
+        $field .= html_field_date($inputname,
+                                  $selectedInput,
+                                  false,
+                                  '10',
+                                  '10',
+                                  $this->formParams['form_name'],
+                                  false);        
+
         return $field;
     }
 }
 
-class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtmlList {
-
-    function getField() {
-        $name  = 'item['.$this->md->getLabel().']';
-        $values = array('3 Months', '6 Months', '12 Months', 'Permanent');
-        $field = html_build_select_box_from_array($values, $name);
-        return $field;
-    }
-}
-
+/**
+ * HTML rendering for special 'owner' metadata
+ */
 class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
 
     function getValue() {

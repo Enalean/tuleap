@@ -17,6 +17,7 @@ require_once('Docman_View_Docman.class');
     }
     function _breadCrumbs($params) {
         $item =& $params['item'];
+        $current_item       =& $item;
         $current_item_title = $item->getTitle();
         $user_actions       = $item->accept(new Docman_View_GetMenuItemsVisitor());
         $id                 = $item->getId();
@@ -36,7 +37,7 @@ require_once('Docman_View_Docman.class');
         }
         echo '&nbsp;<a href="'. $params['default_url'] .'&amp;action=show&amp;id='. $id .'"><b>'. $current_item_title .'</b></a>';
         
-        echo $this->getItemMenu($item, $params);
+        echo $this->getItemMenu($current_item, $params);
         echo '</div>';
     }
 }

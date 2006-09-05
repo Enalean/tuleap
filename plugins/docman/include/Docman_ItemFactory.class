@@ -132,17 +132,22 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         return $dao->updateFromRow($row);
     }
-    function create($row) {
+    function create($row, $ordering) {
         $dao =& $this->_getItemDao();
-        return $dao->createFromRow($row);
+        $id = $dao->createFromRow($row);
+        if ($id) {
+            $this->setNewParent($id, $row['parent_id'], $ordering?$ordering:'beginning');
+        }
+        return $id;
     }
     function isMoveable(&$item) {
         $dao =& $this->_getItemDao();
-        return $item->getParentId() != 0 || !$dao->isItemTheOnlyChildOfRoot($item->getGroupId(), $item->getId());
+        return $item->getParentId() != 0 && !$dao->isItemTheOnlyChildOfRoot($item->getGroupId(), $item->getId());
     }
-    function setNewParent($item_id, $new_parent_id) {
+    function setNewParent($item_id, $new_parent_id, $ordering) {
+        $item =& $this->getItemFromDb($item_id);
         $dao =& $this->_getItemDao();
-        return !$dao->setNewParent($item_id, $new_parent_id);
+        return $item && $this->isMoveable($item) && $dao->setNewParent($item_id, $new_parent_id, $ordering);
     }
     
     function breathFirst($item_id, $callback, $params) {

@@ -11,8 +11,8 @@ plugin_docman	service_desc_key	Advanced Document Manager
 plugin_docman	view_documenttablevisitor_title	Title
 plugin_docman	view_documenttablevisitor_desc	Description
 plugin_docman	view_documenttablevisitor_owner	Owner
-plugin_docman	view_documenttablevisitor_subdate	Submission Date
-plugin_docman	view_documenttablevisitor_lastauthor	Last Author
+plugin_docman	view_documenttablevisitor_subdate	Submission date
+plugin_docman	view_documenttablevisitor_location	Location
 plugin_docman	view_documenttablevisitor_lastupdate	Last Update
 
 
@@ -26,7 +26,7 @@ plugin_docman	action_newdocument	New document
 plugin_docman	action_newfolder	New folder
 plugin_docman	action_newversion	New version
 plugin_docman	action_permissions	Permissions
-plugin_docman	action_update	Update
+plugin_docman	action_update	Updateg
 plugin_docman	action_show	Show
 plugin_docman	action_showactions	Show options
 
@@ -82,6 +82,9 @@ plugin_docman	details_history_logs_no	There is no log yet
 plugin_docman	details_history_logs_what	What
 plugin_docman	details_history_logs_when	When
 plugin_docman	details_history_logs_who	Who
+plugin_docman	details_history_logs_old_value	Old Value
+plugin_docman	details_history_logs_new_value	New Value
+plugin_docman	details_history_logs_change_field	Change <em>$1</em>
 plugin_docman	details_history_versions	Versions
 plugin_docman	details_history_versions_author	Author
 plugin_docman	details_history_versions_changelog	Changelog
@@ -99,6 +102,26 @@ plugin_docman	details_properties	Properties
 plugin_docman	details_properties_edit	Edit properties
 plugin_docman	details_title	Details of $1
 plugin_docman	details_update_title	Update $1
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/view/Docman_View_Admin_MetadataDetails.class
+#
+plugin_docman	admin_md_detail_backtomenu	Back to Metadata menu
+plugin_docman	admin_md_detail_param_title	Metadata parameters
+plugin_docman	admin_md_detail_param_name	Name:
+plugin_docman	admin_md_detail_param_desc	Description:
+plugin_docman	admin_md_detail_param_allowempty	Allow empty value:
+plugin_docman	admin_md_detail_param_keephistory	Keep history:
+plugin_docman	admin_md_detail_param_useit	Use this metadata:
+plugin_docman	admin_md_detail_param_yes	Yes
+plugin_docman	admin_md_detail_param_no	No
+plugin_docman	admin_md_detail_val_title	Metadata values
+plugin_docman	admin_md_detail_val_name	Name
+plugin_docman	admin_md_detail_val_desc	Description
+plugin_docman	admin_md_detail_val_rank	Rank
+plugin_docman	admin_md_detail_val_status	Status
+plugin_docman	admin_md_detail_val_inactive	Inactive
+plugin_docman	admin_md_detail_val_active	Active
 
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guarranty the compatibility of the service with your browser.
 
@@ -132,13 +155,24 @@ plugin_docman	event_move	Move
 plugin_docman	event_del	Delete
 plugin_docman	event_access	Access
 plugin_docman	event_newversion	New version
-
+plugin_docman	event_metadataupdate	Metadata change
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataHtml.class
+#
 plugin_docman	field_description	Description:
 plugin_docman	field_rank	Rank:
 plugin_docman	field_title	Title:
 plugin_docman	field_owner	Owner:
 plugin_docman	field_status	Status:
 plugin_docman	field_obsolescence_date	Validity:
+plugin_docman	field_create_date	Creation date:
+plugin_docman	field_update_date	Last update date:
+plugin_docman	md_html_validity_permanent	Permanent
+plugin_docman	md_html_validity_3_months	3 Months
+plugin_docman	md_html_validity_6_months	6 Months
+plugin_docman	md_html_validity_12_months	12 Months
+plugin_docman	md_html_validity_corresp_date	Corresponding date:
 
 plugin_docman	filters	Filters
 plugin_docman	filters_date_end	End Date
@@ -167,9 +201,15 @@ plugin_docman	max_size_msg	(The maximum upload file size is $1 MByte)
 
 plugin_docman	move	Move $1
 plugin_docman	move_actual	The item is in this folder.
+plugin_docman	move_after	After $1
 plugin_docman	move_cancel	Cancel move.
-plugin_docman	move_descr	Choose the target folder:
+plugin_docman	move_descr	1. Choose the target folder:
+plugin_docman	move_descr2	2. Choose the position:
+plugin_docman	move_descr3	3. Select the position of '$1' in the folder '$2' :
 plugin_docman	move_here	move here.
+plugin_docman	move_position_beginning	At the beginning
+plugin_docman	move_position_end	At the end
+plugin_docman	move_position_select	Custom <em>(next step)</em>
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
 plugin_docman	new_document	New document
@@ -180,9 +220,11 @@ plugin_docman	new_document_link	Link
 plugin_docman	new_document_wiki	Wiki Page
 plugin_docman	new_folder	New folder
 plugin_docman	new_folder_action	Create folder
-plugin_docman	new_generalproperties	General properties
+plugin_docman	new_generalproperties	Metadata
 plugin_docman	new_location	Location
+plugin_docman	new_position	Position:
 plugin_docman	new_specificproperties	Document type
+plugin_docman	new_mandatory_help	* Mandatory field
 
 plugin_docman	permission_admin	Administrator
 plugin_docman	permission_manage	Manager
@@ -203,3 +245,48 @@ plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
 
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
+plugin_docman	warning_recursive_perms	you cannot change permissions for subitem $1 since you do not have sufficient permissions.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_Metadata.class
+#
+plugin_docman	md_title_name	Title
+plugin_docman	md_title_desc	Title of the document.
+plugin_docman	md_desc_name	Description
+plugin_docman	md_desc_desc	Description of the document.
+plugin_docman	md_owner_name	Owner
+plugin_docman	md_owner_desc	Default value: submitter. Correspond to official owner of the document.
+plugin_docman	md_cdate_name	Create Date
+plugin_docman	md_cdate_desc	When the document was added into the document manager.
+plugin_docman	md_udate_name	Update Date
+plugin_docman	md_udate_desc	Last update of the document content or metadata.
+plugin_docman	md_status_name	Status
+plugin_docman	md_status_desc	Document status.
+plugin_docman	md_odate_name	Obsolescence Date
+plugin_docman	md_odate_desc	Define a period of validity for your document. It will automaticaly be archived at the end of the period.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataBo.class
+#
+plugin_docman	md_bo_badlabel	Unknown metadata label '$1'.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataValueBo.class
+#
+plugin_docman	mdv_bo_updateerror	Error on update of metadata '$1'
+plugin_docman	mdv_bo_updateunknown	Try to update an unkown metadata '$1'
+plugin_docman	mdv_bo_errbadtype	Bad Metadata type
+plugin_docman	mdv_bo_createerror	Error on creation of metadata '$1'
+plugin_docman	mdv_bo_createunknown	Try to create an unkown metadata
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/Docman_MetadataValueBo.class
+#
+plugin_docman	md_love_status_none_name	None
+plugin_docman	md_love_status_none_desc	Status of item is not managed.
+plugin_docman	md_love_status_draft_name	Draft
+plugin_docman	md_love_status_draft_desc	
+plugin_docman	md_love_status_approved_name	Approved
+plugin_docman	md_love_status_approved_desc	
+plugin_docman	md_love_status_rejected_name	Rejected
+plugin_docman	md_love_status_rejected_desc	

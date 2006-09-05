@@ -22,19 +22,22 @@ class Docman_View_Icons extends Docman_View_Browse {
         $itemTree =& $itemBo->getItemSubTree($params['item']->getId(), array('user' => $params['user']));
         
         $items = $itemTree->getAllItems();
-        $nb = count($items);
+        $nb = $items->size();
         if ($nb) { 
             $html .= '<table border="0" cellpadding="0" cellspacing="4" width="100%">';
             $folders   = array();
             $documents = array();
-            foreach($items as $key => $nop) {
+            $it =& $items->iterator();
+            while($it->valid()) {
+                $o =& $it->current();
                 $this->is_folder = false;
-                $items[$key]->accept($this);
+                $o->accept($this);
                 if ($this->is_folder) {
-                    $folders[] =& $items[$key];
+                    $folders[] =& $o;
                 } else {
-                    $documents[] =& $items[$key];
+                    $documents[] =& $o;
                 }
+                $it->next();
             }
             $nb_of_columns = 4;
             $width = floor(100 / $nb_of_columns);

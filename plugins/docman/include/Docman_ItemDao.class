@@ -248,7 +248,7 @@ class Docman_ItemDao extends DataAccessObject {
         $row['create_date'] = $row['update_date'] = time();
         $arg    = array();
         $values = array();
-        $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
+        $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -410,20 +410,48 @@ class Docman_ItemDao extends DataAccessObject {
     * @return boolean
     */
     function isItemTheOnlyChildOfRoot($group_id, $item_id) {
-        $sql = sprintf('SELECT parent_id FROM plugin_docman_item WHERE parent_id = 0 '.
-            ' AND group_id = %s '.
-            ' AND item_id <> %s '.
-            ' LIMIT 1',
+        $sql = sprintf(' SELECT b.item_id '.
+                       ' FROM plugin_docman_item AS a '.
+                       '      INNER JOIN plugin_docman_item AS b '.
+                       '      ON ( a.item_id = b.parent_id ) '.
+                       ' WHERE a.parent_id = 0 '.
+                       '   AND b.group_id = %s '.
+                       '   AND b.item_id <> %s '.
+                       ' LIMIT 1 ',
             $this->da->quoteSmart($group_id),
             $this->da->quoteSmart($item_id)
         );
         $dar =& $this->retrieve($sql);
         return !$dar->valid();
     }
-    function setNewParent($item_id, $new_parent_id) {
-        $sql = sprintf('UPDATE plugin_docman_item SET parent_id = %s '.
+    function setNewParent($item_id, $new_parent_id, $ordering) {
+        $rank = 0;
+        switch ($ordering) {
+            case 'beginning':
+            case 'end':
+                $sql = sprintf('SELECT '.($ordering=='end'?'MAX(rank)+1':'MIN(rank)-1').' AS rank FROM plugin_docman_item WHERE parent_id = %s', 
+                    $this->da->quoteSmart($new_parent_id)
+                );
+                $dar =& $this->retrieve($sql);
+                if ($dar && $dar->valid()) {
+                    $row = $dar->current();
+                    $rank = $row['rank'];
+                }
+                break;
+            default:
+                $rank = $ordering?$ordering:0;
+                $sql = sprintf('UPDATE plugin_docman_item SET rank = rank - 1 '.
+                    ' WHERE  parent_id = %s AND rank <= %s',
+                    $this->da->quoteSmart($new_parent_id),
+                    $this->da->quoteSmart($rank)
+                );
+                $this->update($sql);
+                break;
+        }
+        $sql = sprintf('UPDATE plugin_docman_item SET parent_id = %s, rank = %s '.
             ' WHERE  item_id = %s ',
             $this->da->quoteSmart($new_parent_id),
+            $this->da->quoteSmart($rank),
             $this->da->quoteSmart($item_id)
         );
         return $this->update($sql);

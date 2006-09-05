@@ -58,9 +58,14 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         return $h.'</ul>';
     }
     
+    function _itemCanBeFetched(&$item, $params) {
+        $ok = !isset($params['excludes']) || !in_array($item->getId(), $params['excludes']);
+        return $ok;
+    }
+    
     function visitFolder(&$item, $params = array()) {
         $t = '';
-        if ($this->docman->userCanRead($item->getId())) {
+        if ($this->docman->userCanRead($item->getId()) && $this->_itemCanBeFetched($item, $params)) {
             $t = array(
                 'id'       => $item->getId(),
                 'title'    => $item->getTitle(),
@@ -69,11 +74,16 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
             );
             
             $items = $item->getAllItems();
-            foreach($items as $key => $nop) {
-                $r = $items[$key]->accept($this, $params);
-                if ($r) {
-                    $t['items'][] = $r;
+            $it =& $items->iterator();
+            while($it->valid()) {
+                $o =& $it->current();
+                if ($this->_itemCanBeFetched($o, $params)) {
+                    $r = $o->accept($this, $params);
+                    if ($r) {
+                        $t['items'][] = $r;
+                    }
                 }
+                $it->next();
             }
         }
         return $t;

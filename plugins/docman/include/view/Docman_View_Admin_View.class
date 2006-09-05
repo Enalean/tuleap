@@ -22,13 +22,10 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_view_instructions') .'</p>';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<select name="selected_view" onchange="this.form.submit()">';
-        $actual = false;
-        $dao =& $this->_getSettingsDao();
-        $dar =& $dao->searchViewByGroupId($params['group_id']);
-        if ($dar && !$dar->isError() && $dar->valid()) {
-            $row = $dar->current();
-            $actual = $row['view'];
-        }
+
+        $sBo =& Docman_SettingsBo::instance($params['group_id']);
+        $actual = $sBo->getView();
+
         $views  = Docman_View_Browse::getAllViews();
         foreach($views as $view) {
             $html .= '<option value="'. $view .'" '. ($actual == $view ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'view_'.$view) .'</option>';

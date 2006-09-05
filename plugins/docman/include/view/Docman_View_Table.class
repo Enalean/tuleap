@@ -61,85 +61,148 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
         $itemIterator =& $itemBo->getItemSubTreeAsList($params['item']->getId(), 
                                                        array('user' => $params['user'],
                                                              'ignore_collapse' => true,
-                                                             'filter' => $params['filter'],
-                                                             'order' => $params['order']));             
+                                                             'filter' => $params['filter']));             
 
         $itemFactory =& new Docman_ItemFactory();
 
-        $html = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman',
+
+        $currentViewUrl = '?group_id='.$params['group_id'].'&amp;action=show&amp;id='.$params['item']->getId();
+
+        // Limit browsing
+        $offset = 25;
+        $_low_limit  = 0;
+        if(isset($params['start'])) {
+            $_low_limit  = $params['start'];
+        }
+        $_high_limit = $_low_limit + $offset;
+        $itemCounter = 0;
+                
+        /// {{{ Prepare "On column title click" sort
+        $lastUpdateTitle = "Click to toogle the table sort";
+        if(!isset($_REQUEST['ordr_udate'])) {
+            $toggleValue = '1';
+        } elseif($_REQUEST['ordr_udate'] == 0) {
+            $toggleValue = '1';
+        }
+        else {
+            $toggleValue = '0';
+        }        
+        $lastUpdateUrl = $currentViewUrl.'&amp;ordr_udate='.$toggleValue;
+        if($toggleValue == 0) {
+            $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
+        }
+        else {
+            $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
+        }
+        $lastUpdate = '<a href="'.$lastUpdateUrl.'" title="'.$lastUpdateTitle.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttablevisitor_lastupdate').'&nbsp;'.$toogleIcon.'</a>';
+        /// }}}
+
+        $table = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman',
                                                                               'view_documenttablevisitor_title'),
                                                 $GLOBALS['Language']->getText('plugin_docman',
                                                                               'view_documenttablevisitor_desc'),
                                                 $GLOBALS['Language']->getText('plugin_docman',
+                                                                              'view_documenttablevisitor_location'),
+                                                $GLOBALS['Language']->getText('plugin_docman',
                                                                               'view_documenttablevisitor_owner'),
-                                                $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_subdate'),
-                                                $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_lastauthor'),
-                                                $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttablevisitor_lastupdate')));
+                                                $lastUpdate));
+        
         $altRowClass = 0;
-
         $itemIterator->rewind();
-        while($itemIterator->valid()) {
+        while($itemIterator->valid()) {            
             $item =& $itemIterator->current();
-
             $type = $itemFactory->getItemTypeForItem($item);
             if($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-
-                $trclass = html_get_alt_row_color($altRowClass++);
-                $html .=  "<tr class=\"".$trclass."\">\n";
+                if($itemCounter >= $_low_limit && $itemCounter < $_high_limit) {                    
+                    $trclass = html_get_alt_row_color($altRowClass++);
+                    $table .=  "<tr class=\"".$trclass."\">\n";
             
-                // Title
-                $html .=  "<td>";
-                $html .=  '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
-                $html .=  $item->getTitle();
-                $html .=  '</a>';
-                $html .=  "</td>\n";
+                    // Title
+                    $table .=  "<td>";
+                    $table .=  '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
+                    $table .=  $item->getTitle();
+                    $table .=  '</a>';
+                    $table .=  "</td>\n";
 
-                // Description
-                $html .=  "<td>";
-                $html .=  $item->getDescription();
-                $html .=  "</td>\n";
+                    // Description
+                    $table .=  "<td>";
+                    $table .=  $item->getDescription();
+                    $table .=  "</td>\n";
 
-                // Owner
-                $html .=  "<td>";
-                $html .=  user_getname($item->getOwnerId());
-                $html .=  "</td>\n";
-
-                // Submission Date
-                $html .=  "<td>";
-                $html .=  strftime("%e %b %Y %H:%M", $item->getCreateDate());
-                $html .=  "</td>\n";
-
-                // Last Author
-                $html .=  "<td>";            
-                if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE 
-                    || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                    $v =& $item->getCurrentVersion();
-                    $authorId = $v->getAuthorId();
-                    if($authorId == '') {
-                        $authorId = -1;
+                    // Location
+                    $table .=  "<td>";
+                    $pathTitle =& $item->getPathTitle();
+                    $pathId    =& $item->getPathId();
+                    $pathUrl   = array();
+                    foreach($pathTitle as $key => $title) {
+                        if($key != 0) {
+                            $id  = $pathId[$key];
+                            $url = '<a href="?group_id='.$item->getGroupId().'&amp;action=show&amp;id='.$id.'">'.$title.'</a>';
+                            $pathUrl[] = $url;
+                        }
                     }
-                }
-                else {
-                    $authorId = $item->getOwnerId();
-                }
-                $html .=  user_getname($authorId);
-                $html .=  "</td>\n";
+                    $table .= implode(' / ', $pathUrl);
+                    $table .=  "</td>\n";
+		 
+                    // Owner
+                    $table .=  "<td>";
+                    $table .=  user_getname($item->getOwnerId());
+                    $table .=  "</td>\n";          
             
-                // Last Update
-                $html .=  "<td>";
-                $html .=  strftime("%e %b %Y %H:%M", $item->getUpdateDate());
-                $html .=  "</td>\n";
+                    // Last Update
+                    $table .=  "<td>";
+                    $table .=  strftime("%e %b %Y %H:%M", $item->getUpdateDate());
+                    $table .=  "</td>\n";
 
-                $html .=  "</tr>\n";
+                    $table .=  "</tr>\n";
+                }
+                $itemCounter++;
             }
-            $itemIterator->next();
+            $itemIterator->next();            
         }
-        $html .= "</table>\n";        
+        $table .= "</table>\n";        
 
-        print $html;        
+        // Prepare Navigation Bar
+        if($_low_limit > 0) {
+            $firstUrl    = $currentViewUrl.'&amp;start=0';
+            $first       = '<a href="'.$firstUrl.'">&lt;&lt; Begin</a>';
+        }
+        else {
+            $first       = '&lt;&lt; Begin';
+        }
+   
+        $previousOffset = $_low_limit - $offset;
+        if($_low_limit > 0) {
+            if($previousOffset < 0) {
+                $previousOffset = 0;
+            }
+            $previousUrl = $currentViewUrl.'&amp;start='.$previousOffset;
+            $previous    = '<a href="'.$previousUrl.'">&lt; Previous '.$offset.'</a>';
+        }
+        else {
+            $previous    = '&lt; Previous '.$offset;
+        }
+
+        if($_high_limit < $itemCounter) {
+            $nextUrl     = $currentViewUrl.'&amp;start='.$_high_limit;
+            $next        = '<a href="'.$nextUrl.'">Next '.$offset.' &gt;</a>';
+        }
+        else {
+            $next        = 'Next '.$offset.' &gt;';
+        }
+
+        if($_high_limit < $itemCounter) {
+            $lastOffset  = $itemCounter - $offset;
+            $lastUrl     = $currentViewUrl.'&amp;start='.$lastOffset;
+            $last        = '<a href="'.$lastUrl.'">End &gt;&gt;</a>';
+        }
+        else {
+            $last        = 'End &gt;&gt';
+        }
+
+        $navbar = '<table border="0" width="100%"><tr><td width="50%" align="left">'.$first.' '.$previous.'</td><td width="50%" align="right">'.$next.' '.$last.'</td></tr></table>';
+
+        print $navbar.$table;        
     }
 }
 ?>

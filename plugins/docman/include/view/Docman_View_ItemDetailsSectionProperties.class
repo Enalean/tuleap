@@ -28,22 +28,27 @@ require_once('Docman_View_GetFieldsVisitor.class');
 class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection {
     var $user_can_write;
     var $force;
-    function Docman_View_ItemDetailsSectionProperties(&$item, $url, $user_can_write = false, $force = null) {
+    var $theme_path;
+
+    function Docman_View_ItemDetailsSectionProperties(&$item, $url, $theme_path, $user_can_write = false, $force = null) {
         $this->user_can_write = $user_can_write;
         $this->force = $force;
+        $this->theme_path = $theme_path;
         $id = 'properties';
         $title = $GLOBALS['Language']->getText('plugin_docman','details_properties');
         parent::Docman_View_ItemDetailsSection($item, $url, $id, $title);
     }
-    function getContent() {
-        $html  ='';
-        $html .= '<table>';
+    function getContent($params = array()) {
+        $html  = '';
+        $params['theme_path'] = $this->theme_path;
+        $html .= '<table class="docman_item_details_properties">';
         $get_fields =& new Docman_View_GetFieldsVisitor();
-        $fields = $this->item->accept($get_fields, array('force_item' => $this->force));
+        $params['force_item'] = $this->force;
+        $fields = $this->item->accept($get_fields, $params);
         foreach($fields as $field) {
             $html .= '<tr style="vertical-align:top;">';
-            $html .= '<td>'. $field['label'] .'</td>';
-            $html .= '<td>'. $this->_showField($field) .'</span></td>';
+            $html .= '<td class="label">'. $field->getLabel() .'</td>';
+            $html .= '<td class="value">'. $this->_showField($field) .'</span></td>';
             $html .= '</tr>';
         }
         $html .= $this->_getAdditionalRows();
@@ -51,8 +56,8 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html .= '</table>';
         return $html;
     }
-    function _showField($field) {
-        return $field['value'];
+    function _showField(&$field) {
+        return $field->getValue();
     }
     function _getAdditionalRows() {
         $html = '';

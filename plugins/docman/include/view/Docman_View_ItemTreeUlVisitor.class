@@ -63,16 +63,22 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         $li_displayed = $this->_displayItem($item, $params);
 
         if($this->_canDisplaySubItems($item)) {
-            $items = $item->getAllItems();
-            $nb = count($items);
-            if ($nb) { 
-                $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
-                $i = 0;
-                foreach($items as $key => $nop) {
-                    $items[$key]->accept($this, array('is_last' => (++$i == $nb)));
+            $items =& $item->getAllItems();
+            if ($items) {
+                $nb = $items->size();
+                if ($nb) { 
+                    $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
+                    $i = 0;
+                    $iter =& $items->iterator();
+                    $iter->rewind();
+                    while($iter->valid()) {
+                        $child =& $iter->current();
+                        $child->accept($this, array('is_last' => (++$i == $nb)));
+                        $iter->next();
+                    }
+                    
+                    $this->html .= '</ul>'."\n";
                 }
-                
-                $this->html .= '</ul>'."\n";
             }
         }
         

@@ -43,7 +43,7 @@ class Docman_LogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByItemId($itemId, $order = '') {
-        $sql = sprintf("SELECT time, group_id, user_id, type, old_value, new_value FROM plugin_docman_log WHERE item_id = %s ".$order,
+        $sql = sprintf("SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s ".$order,
 				$this->da->quoteSmart($itemId));
         return $this->retrieve($sql);
     }
@@ -100,7 +100,7 @@ class Docman_LogDao extends DataAccessObject {
     * create a row in the table plugin_docman_log 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null) {
+    function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null, $field = null) {
 		$sql = 'INSERT INTO plugin_docman_log (time, group_id, item_id, user_id, type';
         if (!is_null($old_value)) {
             $sql .= ', old_value';
@@ -108,12 +108,18 @@ class Docman_LogDao extends DataAccessObject {
         if (!is_null($new_value)) {
             $sql .= ', new_value';
         }
+        if (!is_null($field)) {
+            $sql .= ', field';
+        }
         $sql .= ') VALUES ('. $this->da->quoteSmart(gmmktime()) .', '. $this->da->quoteSmart($group_id) .', '. $this->da->quoteSmart($item_id) .', '. $this->da->quoteSmart($user_id) .', '. $this->da->quoteSmart($type) .'';
         if (!is_null($old_value)) {
             $sql .= ', '. $this->da->quoteSmart($old_value);
         }
         if (!is_null($new_value)) {
             $sql .= ', '. $this->da->quoteSmart($new_value);
+        }
+        if (!is_null($field)) {
+            $sql .= ', '. $this->da->quoteSmart($field);
         }
         $sql .= ')';
         $inserted = $this->update($sql);

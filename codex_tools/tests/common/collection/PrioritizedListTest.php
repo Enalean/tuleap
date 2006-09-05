@@ -120,6 +120,40 @@ class PrioritizedListTest extends LinkedListTestCase {
         $element =& $it->current();
         $this->assertReference($element, $b);
     }
+    
+    function testNegativeAndDefaultPriority2() {
+        $a = '#1 (10)';
+        $b = '#2 (-5)';
+        $c = '#3 (-5)';
+        $d = '#4 (-100)';
+        $e = '#5 (-100)';
+        $f = '#6 (-500)';
+        $l  =& new PrioritizedList();
+        $l->add($d, -100);
+        $l->add($b, -5);
+        $l->add($a, 10);
+        $l->add($e, -100);
+        $l->add($f, -500);
+        $l->add($c, -5);
+        $it =& $l->iterator();
+        $element =& $it->current();
+        $this->assertReference($element, $a);
+        $it->next();
+        $element =& $it->current();
+        $this->assertReference($element, $b);
+        $it->next();
+        $element =& $it->current();
+        $this->assertReference($element, $c);
+        $it->next();
+        $element =& $it->current();
+        $this->assertReference($element, $d);
+        $it->next();
+        $element =& $it->current();
+        $this->assertReference($element, $e);
+        $it->next();
+        $element =& $it->current();
+        $this->assertReference($element, $f);
+    }
 }
 
 if (CODEX_RUNNER === __FILE__) {
