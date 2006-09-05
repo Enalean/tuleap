@@ -409,15 +409,18 @@ class DocmanActions extends Actions {
                 }
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
                 if ($this->_controler->request->get('recursive')) {
-                    $item_factory->breathFirst($item->getId(), 
-                        create_function('$data',' 
-                            $pm =& PermissionsManager::instance();
-                            $pm->clonePermissions('. $item->getId() .', $data["item_id"]);'
-                        )
-                    );
+                    $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
                 }
             }
+        }
+    }
+    function recursivePermissions($data, $params) {
+        if ($this->_controler->userCanManage($data["item_id"])) {
+            $pm =& PermissionsManager::instance();
+            $pm->clonePermissions($params['id'], $data["item_id"]);
+        } else {
+            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
     }
     function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history) {

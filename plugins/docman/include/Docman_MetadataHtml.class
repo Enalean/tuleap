@@ -1,0 +1,168 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+class Docman_MetadataHtmlFactory {
+    function getFromMetadata(&$md) {
+
+        if($md->getLabel() === 'status') {
+            return new Docman_MetadataHtmlStatus($md);
+        }
+
+        if($md->getLabel() === 'owner') {
+            return new Docman_MetadataHtmlOwner($md);
+        }
+
+        if($md->getLabel() === 'obsolescence_date') {
+            return new Docman_MetadataHtmlObsolescence($md);
+        }
+
+
+        switch($md->getType()) {
+        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            return new Docman_MetadataHtmlText($md);
+            break;
+        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            return new Docman_MetadataHtmlString($md);
+            break;
+        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+            return new Docman_MetadataHtmlDate($md);
+            break;
+        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+            return new Docman_MetadataHtmlList($md);
+            break;
+        default:
+            die('bad metadata type');
+        }
+    }
+}
+
+class Docman_MetadataHtml {
+    var $md;
+
+    function Docman_MetadataHtml(&$md) {
+        $this->md =& $md;
+    }
+
+    function getLabel() {
+        if($this->md->getSpecial() === false) {
+            return $this->md->getName().":";
+        }
+        else {
+            return $GLOBALS['Language']->getText('plugin_docman', 'field_'.$this->md->getLabel());
+        }
+    }
+
+    function _getFieldName() {
+        $name  = 'item['.$this->md->getLabel().']';
+        return $name;
+    }
+
+    function getField() {
+
+    }
+
+    function getValue() {
+        return $this->md->getValue();
+    }
+
+    function getValidator() {
+        return null;
+    }
+}
+
+class Docman_MetadataHtmlText extends Docman_MetadataHtml {
+
+    function getField() {
+        $name  = 'item['.$this->md->getLabel().']';
+        $value = htmlentities($this->md->getValue(), ENT_QUOTES);
+        $field = '<textarea name="'.$name.'">'.$value.'</textarea>';
+        return $field;
+    }
+}
+
+class Docman_MetadataHtmlString extends Docman_MetadataHtml {    
+    function _getHtmlValue() {
+        $value = htmlentities($this->md->getValue(), ENT_QUOTES);
+        return $value;
+    }
+
+    function getField() {
+        $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$this->_getHtmlValue().'" />';
+        return $field;
+    }
+}
+
+class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
+
+    function getField() {
+
+    }
+}
+
+class Docman_MetadataHtmlList extends Docman_MetadataHtml {
+
+    function getField() {
+
+    }
+}
+
+class Docman_MetadataHtmlStatus extends Docman_MetadataHtmlList {
+
+    function getField() {
+        $name  = 'item['.$this->md->getLabel().']';
+        $values = array('None', 'Draft', 'Approved', 'Rejected');
+        $field = html_build_select_box_from_array($values, $name);
+        return $field;
+    }
+}
+
+class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtmlList {
+
+    function getField() {
+        $name  = 'item['.$this->md->getLabel().']';
+        $values = array('3 Months', '6 Months', '12 Months', 'Permanent');
+        $field = html_build_select_box_from_array($values, $name);
+        return $field;
+    }
+}
+
+class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
+
+    function getValue() {
+        $v =& $this->md->getValue();
+        if($v != null && $v != '') {
+            return user_getname($v);
+        }
+        else {
+            return '';
+        }
+    }
+
+    function _getHtmlValue() {
+        return $this->getValue();
+    }
+}
+
+?>

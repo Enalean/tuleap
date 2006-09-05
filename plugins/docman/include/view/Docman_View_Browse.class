@@ -14,7 +14,7 @@ require_once(dirname(__FILE__).'/../Docman_SettingsDao.class');
 /* abstract */ class Docman_View_Browse extends Docman_View_Display {
     
     /* protected */ function _mode($params) {
-        $html = '<div style="text-align:right;">';
+        $html = '<div style="text-align:right;float:right;">';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<select name="selected_view" onchange="this.form.submit()" style="font-family:monospace;">';
         $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .'</option>';

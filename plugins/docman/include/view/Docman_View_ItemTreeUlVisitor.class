@@ -111,8 +111,6 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         else {
             if($item !== null && $this->_canDisplayItem($item)) {
                 $this->html .= '<li id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'">';
-                //$show_options = isset($this->params['show_options']) && $this->params['show_options'] == $item->getId();
-                $show_options = true;
                 $params['expanded'] = true;
                 $open = '_open';
                 if(!isset($this->params['item_to_move']) && user_get_preference(PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) !== false) {
@@ -144,46 +142,11 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     $this->html .= '</a>';
                 }
                 $this->html .=  '</span>';
-                //Show/hide options {{{
-                $user_actions = $item->getActions();
-                if ($show_options) {
-                    $this->html .= '<span class="docman_item_options">';
-                    
-                    // Popup menu {{{
-                    $this->html .= '<a href="'. $this->params['default_url'] .'&amp;action=details&amp;id='. $item->getId() .'" class="docman_item_option_details">';
-                    $this->html .= '<img src="'. $this->params['docman_icons']->getActionIcon('details') .'" class="docman_item_icon" onmouseover="javascript:ishow(\'docman_details_popup_'.$item->getId().'\');"/>';
-                    $this->html .= '</a>';
-
-                    $this->html .= '<div id="docman_details_popup_'.$item->getId().'" class="docman_details_popup" ><ul>';
-                    $this->html .= '<li class="head"><span class="title">Item Details</span><span class="close"><a href="javascript:ihide(\'coin_'.$item->getId().'\');">x</a></span></li>';
-
-                    foreach($user_actions as $key => $nop) {
-                        if ($this->view->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
-                            $this->html .= $user_actions[$key]->fetchAction($this->params);
-                        }
-                    }
-                    
-                    $this->html .= '</ul></div>';
-                    // Popup menu }}} 
-                    $this->html .= '</span>';
-                } else {
-                    $this->html .= '<script type="text/javascript">
-                    //<!--
-                    ';
-                    foreach($user_actions as $key => $nop) {
-                        if ($this->view->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
-                            $this->html .= $user_actions[$key]->fetchAsJavascript($this->params);
-                        }
-                    }
-                    $this->html .= '
-                    //-->
-                    </script>';
-                    $this->html .= '<noscript id="docman_item_show_options_'. $item->getId() .'" ><a class="docman_item_show_options" href="'. $this->params['default_url'] .'&amp;show_options=' . $item->getId() .'#item_'. $item->getId() .'" title="'. $GLOBALS['Language']->getText('plugin_docman', 'action_showactions') .'">';
-                    $this->html .= '['. $GLOBALS['Language']->getText('plugin_docman', 'action_showactions') .']';
-                    $this->html .= '</a></noscript>';
-                }
-                //}}}
+                
+                $this->html .= $this->view->getItemMenu($item, $this->params);
+                
                 $this->html .= '</div>';
+                
                 if (trim($item->getDescription()) != '') {
                     $this->html .= '<div class="docman_item_description">'. $item->getDescription() .'</div>';
             }

@@ -61,20 +61,22 @@ class Docman_ItemFactory {
             return;
         }
         if ($row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-            $version = array(
-                'id'        => $row['version_id'],
-                'user_id'   => $row['version_user_id'],
-                'item_id'   => $item->getId(),
-                'number'    => $row['version_number'],
-                'label'     => $row['version_label'],
-                'changelog' => $row['version_changelog'],
-                'date'      => $row['version_date'],
-                'filename'  => $row['version_filename'],
-                'filesize'  => $row['version_filesize'],
-                'filetype'  => $row['version_filetype'],
-                'path'      => $row['version_path']
-            );
-            $item->setCurrentVersion(new Docman_Version($version));
+            if (isset($row['version_id'])) {
+                $version = array(
+                    'id'        => $row['version_id'],
+                    'user_id'   => $row['version_user_id'],
+                    'item_id'   => $item->getId(),
+                    'number'    => $row['version_number'],
+                    'label'     => $row['version_label'],
+                    'changelog' => $row['version_changelog'],
+                    'date'      => $row['version_date'],
+                    'filename'  => $row['version_filename'],
+                    'filesize'  => $row['version_filesize'],
+                    'filetype'  => $row['version_filetype'],
+                    'path'      => $row['version_path']
+                );
+                $item->setCurrentVersion(new Docman_Version($version));
+            }
         }
         return $item;
     }
@@ -143,7 +145,7 @@ class Docman_ItemFactory {
         return !$dao->setNewParent($item_id, $new_parent_id);
     }
     
-    function breathFirst($item_id, $callback) {
+    function breathFirst($item_id, $callback, $params) {
         $dao =& $this->_getItemDao();
         $parents = array($item_id);
         do {
@@ -152,7 +154,7 @@ class Docman_ItemFactory {
                 $parents = array();
                 while ($dar->valid()) {
                     $row = $dar->current();
-                    $callback($row);
+                    call_user_func_array($callback, array($row, $params));
                     if (PLUGIN_DOCMAN_ITEM_TYPE_FOLDER == $row['item_type']) {
                         $parents[] = $row['item_id'];
                     }

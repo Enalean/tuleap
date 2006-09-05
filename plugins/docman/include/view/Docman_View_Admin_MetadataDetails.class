@@ -1,0 +1,121 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+require_once('Docman_View_Extra.class');
+
+class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
+    
+    function _title($params) {
+        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_details_title', array($params['md']->getName())) .'</h2>';
+    }
+
+    function _content($params) {
+        $md =& $params['md'];
+
+        $sthCanChange = false;
+        $mdContent = '';
+
+        $mdContent .= 'Name: ';
+        if($md->canChangeName()) {
+            $sthCanChange = true;
+            $mdContent .= '<input type="text" name="name" value="'.$md->getName().'" />';
+        }
+        else {
+            $mdContent .= $md->getName();
+        }
+        $mdContent .= '<br />';
+
+        $mdContent .= 'Description: ';
+        if($md->canChangeDescription()) {
+            $sthCanChange = true;
+            $mdContent .= '<br /><textarea name="name">'.$md->getDescription().'</textarea>';
+        }
+        else {
+            $mdContent .= $md->getDescription();
+        }
+        $mdContent .= '<br />';
+      
+        $mdContent .= 'Allow empty value: ';
+        if($md->canChangeIsEmptyAllowed()) {
+            $sthCanChange = true;
+            $selected = '';
+            if($md->isEmptyAllowed()) {
+                $selected = 'selected="selected"';
+            }          
+            $mdContent .= '<input type="checkbox" name="empty_allowed" '.$selected.' />';
+        }
+        else {
+            if($md->isEmptyAllowed()) {
+                $mdContent .= "Yes";
+            }
+            else {
+                $mdContent .= "No";
+            }
+        }
+        $mdContent .= '<br />';
+
+        $mdContent .= 'Keep history: ';
+        if($md->getKeepHistory()) {
+            $mdContent .= "Yes";
+        }
+        else {
+            $mdContent .= "No";
+        }        
+        $mdContent .= '<br />';
+
+        $mdContent .= 'Use this metadata: ';
+        if(!$md->isRequired()) {
+            $sthCanChange = true;
+            $selected = '';
+            if($md->getUseIt()) {
+                $selected = 'selected="selected"';
+            }          
+            $mdContent .= '<input type="checkbox" name="use_it" '.$selected.' />';
+        }
+        else {
+            if($md->getUseIt()) {
+                $mdContent .= "Yes";
+            }
+            else {
+                $mdContent .= "No";
+            }
+        }
+        $mdContent .= '<br />';
+
+        if($sthCanChange) {
+            echo '<form name="md_details_update" method="POST" action="">';
+            echo $mdContent;
+            echo '<input type="submit" name="submit" value="Update" />';
+            echo '</form>';
+        }
+        else {
+            echo $mdContent;
+        }
+
+        $backUrl  = $this->buildUrl($params['default_url'],
+                                    array('action' => 'admin_metadata'));
+        echo '<p><a href="'.$backUrl.'">Back to Metadata menu</a></p>';
+    }
+}

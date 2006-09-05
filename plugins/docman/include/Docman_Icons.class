@@ -35,6 +35,9 @@ class Docman_Icons {
     
     function getActionIcon($action) {
         switch ($action) {
+            case 'popup': 
+                return $this->images_path. 'popup.png';
+                break;
             case 'newFolder': 
                 return $this->images_path. 'folder-new.png';
                 break;
@@ -73,7 +76,8 @@ class Docman_Icons {
             case 'docman_file':
             case 'docman_embeddedfile':
                 $v =& $item->getCurrentVersion();
-                $icon .= $this->getIconForMimeType($v->getFiletype());
+                $type = $v ? $v->getFiletype() : null;
+                $icon .= $this->getIconForMimeType($type);
                 break;
             default:
                 $icon .= 'binary';

@@ -9,30 +9,35 @@
 
 require_once('Docman_View_GetSpecificFieldsVisitor.class');
 require_once(dirname(__FILE__).'/../Docman_ValidateTitle.class');
+require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class');
 
 class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
     
-    function visitItem($item, $params = array()) {
+    function visitItem(&$item, $params = array()) {
         $title       = isset($params['force_item']['title'])       ? $params['force_item']['title']       : $item->getTitle();
         $description = isset($params['force_item']['description']) ? $params['force_item']['description'] : $item->getDescription();
-        return array(
-            'title' => array(
-                'label'     => $GLOBALS['Language']->getText('plugin_docman', 'field_title'),
-                'field'     => '<input type="text" name="item[title]" size="60" value="'. htmlentities($title, ENT_QUOTES) .'" />',
-                'value'     => $item->getTitle(),
-                'validator' => new Docman_ValidateTitle()
-            ),
-            'description' => array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_descr'),
-                'field' => '<textarea name="item[description]" rows="7" cols="80">'. htmlspecialchars($description) .'</textarea>',
-                'value' => $item->getDescription()
-            )/*,
-            'rank' => array(
-                'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_rank'),
-                'field' => '<input type="text" name="item[rank]" value="'. htmlentities($item->getRank(), ENT_QUOTES) .'" size="3" maxlength="16" />',
-                'value' => $item->getRank()
-            )*/
-        );
+
+        $fields = array();
+
+        /*  $mdBo =& new Docman_MetadataBo();
+        $mdIter =& $mdBo->getSubmissionMetadataForGroup($param['group_id']);*/
+
+        $mdIter =& $item->getMetadataIterator();
+        $mdIter->rewind();
+        while($mdIter->valid()) {
+            $md =& $mdIter->current();
+            
+            $mdHtml =& Docman_MetadataHtmlFactory::getFromMetadata($md);
+
+            $fields[$md->getLabel()] = array('label'       => $mdHtml->getLabel()
+                                             , 'field'     => $mdHtml->getField()
+                                             , 'value'     => $mdHtml->getValue()
+                                             , 'validator' => $mdHtml->getValidator());
+
+            $mdIter->next();
+        }
+
+        return $fields;       
     }
     function visitFolder(&$item, $params = array()) {
         return $this->visitItem($item, $params);

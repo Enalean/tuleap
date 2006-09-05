@@ -33,6 +33,7 @@ require_once('view/Docman_View_GetFieldsVisitor.class');
 
 require_once('DocmanActions.class');
 require_once('DocmanLastBrowseRequest.class');
+require_once('DocmanOneFolderIsWriteable.class');
 
 require_once('Feedback.class');
 
@@ -40,7 +41,7 @@ require_once('Docman_Log.class');
 require_once('common/event/EventManager.class');
 
 require_once('Docman_ReportBo.class');
-
+require_once('Docman_MetadataBo.class');
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
 
@@ -287,7 +288,7 @@ class Docman extends Controler {
                         $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                         if (!$can_read) {
                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
-                            $this->view = 'DocmanError';
+                            $this->view = 'ProjectError';
                         } else {
                             $get_show_view =& new Docman_View_GetShowViewVisitor();
                             $this->_viewParams['item'] =& $item;
@@ -295,6 +296,11 @@ class Docman extends Controler {
                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_admin'));
                                 $this->view = $item->accept($get_show_view);
                             } else {
+                                
+                                $itemBo                         = new Docman_ItemBo($this->request->get('group_id'));
+                                $hierarchy                      =& $itemBo->getItemTree($root->getId(), array('ignore_collapse' => true, 'user' => $this->getUser()));
+                                $this->_viewParams['hierarchy'] =& $hierarchy;
+                                
                                 $last_browse_request =& new DocmanLastBrowseRequest();
                                 switch ($view) {
                                     case 'show':
@@ -334,12 +340,30 @@ class Docman extends Controler {
                                     case 'admin_permissions':
                                         $this->view = 'Admin_Permissions';
                                         break;
+                                    case 'admin_metadata':
+                                        $this->view = 'Admin_Metadata';
+                                        break;
+                                    case 'admin_md_details':
+                                        $this->view = 'Admin_MetadataDetails';
+                                        $mdLabel = $this->request->get('md');
+                                        $md =& Docman_MetadataFactory::getFromLabel($mdLabel);
+                                        $this->_viewParams['md'] =& $md;
+                                        break;
                                     case 'move':
                                         if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
                                            $this->view = 'Details';
                                         } else {
                                            $this->view = ucfirst($view);
+                                        }
+                                        break;
+                                    case 'newGlobalDocument':
+                                        if ($hierarchy->accept(new DocmanOneFolderIsWriteable($this))) {
+                                            $this->_viewParams['force_item'] = array();
+                                            $this->view = 'NewDocument';
+                                        } else {
+                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                                            $this->view = $item->accept($get_show_view);
                                         }
                                         break;
                                     case 'newDocument':
@@ -358,12 +382,21 @@ class Docman extends Controler {
                                             $this->view = 'DocmanError';
                                         } else {
                                             $item_to_move =& $item_factory->getItemFromDb($this->request->get('item_to_move'));
-                                            if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
-                                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
-                                                $this->view = 'Details';
-                                            } else {
-                                                $this->action = 'move';
-                                                $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
+                                            $this->view = null;
+                                            if ($this->request->exist('confirm')) {
+                                                if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
+                                                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
+                                                    $this->view = 'Details';
+                                                } else {
+                                                    $this->action = 'move';
+                                                }
+                                            } 
+                                            if (!$this->view) {
+                                                $this->_viewParams['default_url_params'] = array(
+                                                    'action'  => 'details',
+                                                    'section' => 'actions',
+                                                    'id'      => $item_to_move->getId()
+                                                );
                                                 $this->view = 'RedirectAfterCrud';
                                             }
                                         }
@@ -436,9 +469,28 @@ class Docman extends Controler {
                                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
                                                 $this->view = $item->accept($get_show_view);
                                             } else {
-                                                $this->action = $view;
-                                                $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
-                                                $this->view = 'RedirectAfterCrud';
+                                                //Validations
+                                                $new_item = $item_factory->getItemFromRow($i);
+                                                $valid = $this->_validateRequest(array_merge(
+                                                    $new_item->accept(new Docman_View_GetFieldsVisitor()), 
+                                                    $new_item->accept(new Docman_View_GetSpecificFieldsVisitor())
+                                                ));
+                                                //Actions
+                                                if ($valid) {
+                                                    $this->action = $view;
+                                                }
+                                                //Views
+                                                if ($valid) {
+                                                    $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
+                                                    $this->view = 'RedirectAfterCrud';
+                                                } else {
+                                                    $this->_viewParams['force_item'] = $this->request->get('item');
+                                                    if ($view == 'createFolder') {
+                                                        $this->view = 'NewFolder';
+                                                    } else {
+                                                        $this->view = 'NewDocument';
+                                                    }
+                                                }
                                             }
                                         }
                                         break;

@@ -1,0 +1,82 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+require_once('Docman_Metadata.class');
+
+require_once('common/collection/ArrayIterator.class');
+
+class Docman_MetadataBo {
+
+    function Docman_MetadataBo() {
+        
+    }
+    
+    function getMetadataForItem() {
+
+    }
+
+    function getSoftMetadata() {
+        $md[0] = new Docman_Metadata();
+        $md[0]->setName('Comments / Keywords');
+        $md[0]->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $md[0]->setLabel('field_1');
+        $md[0]->setDescription('You can comment your document here.');
+        $md[0]->setIsRequired(false);
+        $md[0]->setIsEmptyAllowed(true);
+        $md[0]->setSpecial(false);
+
+        return $md;
+    }
+
+    function &getHardCodedMetadata() {
+        $hcmd = array('title', 'description', 'owner', 'create_date', 'status'
+                      , 'obsolescence_date');
+
+        foreach($hcmd as $mdLabel) {
+            $md[] =& Docman_MetadataFactory::getFromLabel($mdLabel);
+        }
+
+        return $md;
+    }
+
+    function &getMetadataForGroup($gid) {
+        //        $dao->getGroupMetadata();
+        return new ArrayIterator(array_merge($this->getHardCodedMetadata(),
+                                             $this->getSoftMetadata()));
+    }
+
+    function &getSubmissionMetadataForGroup($gid) {
+        $hcmd = array('title', 'description', 'owner', 'status'
+                      , 'obsolescence_date');
+
+        foreach($hcmd as $mdLabel) {
+            $md[] =& Docman_MetadataFactory::getFromLabel($mdLabel);
+        }
+
+        return new ArrayIterator(array_merge($md, $this->getSoftMetadata()));
+    }
+}
+
+?>

@@ -13,6 +13,9 @@ require_once(dirname(__FILE__).'/../Docman_ValidateUpload.class');
 
 class Docman_View_GetSpecificFieldsVisitor {
     
+    function visitFolder(&$item, $params = array()) {
+        return array();
+    }
     function visitWiki(&$item, $params = array()) {
         $pagename = isset($params['force_item']['wiki_page']) ? $params['force_item']['wiki_page'] : $item->getPagename();
         return array(

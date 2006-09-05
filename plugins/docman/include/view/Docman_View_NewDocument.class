@@ -34,19 +34,19 @@ class Docman_View_NewDocument extends Docman_View_New {
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
                 'obj'     => new Docman_Link($params['force_item']),
-                'checked' => false
+                'checked' => isset($params['force_item']['item_type']) ? $params['force_item']['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_LINK : false
             ),
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_wiki'),
                 'obj'     => new Docman_Wiki($params['force_item']),
-                'checked' => false
+                'checked' => isset($params['force_item']['item_type']) ? $params['force_item']['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_WIKI : false
             ),
             array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_file'),
                 'obj'     => new Docman_File($params['force_item']),
-                'checked' => true
+                'checked' => isset($params['force_item']['item_type']) ? $params['force_item']['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE : true
             )
         );
         if ($this->_controller->getProperty('embedded_are_allowed')) {
@@ -54,7 +54,7 @@ class Docman_View_NewDocument extends Docman_View_New {
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_embedded'),
                 'obj'     => new Docman_EmbeddedFile($params['force_item']),
-                'checked' => false
+                'checked' => isset($params['force_item']['item_type']) ? $params['force_item']['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE : false
             );
         }
         $get_specific_fields = new Docman_View_GetSpecificFieldsVisitor();

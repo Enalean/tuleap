@@ -49,7 +49,7 @@ class Docman_View_ItemDetails {
     function fetch() {
         $html = '';
         
-        $html .= '<br /><br />';
+        $html .= '<br />';
         if (count($this->sections)) {
             $html .= '<ul class="docman_properties_navlist">';
             foreach($this->sections as $section) {

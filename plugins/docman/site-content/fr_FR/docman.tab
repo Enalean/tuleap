@@ -191,3 +191,4 @@ plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Arbre
 
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
+plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.

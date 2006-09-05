@@ -27,12 +27,13 @@ class Docman_View_NewFolder extends Docman_View_New {
         $html = '';
         $new_folder = new Docman_Folder($params['item']);
         $get_fields = new Docman_View_GetFieldsVisitor();
-        $fields     = $new_folder->accept($get_fields);
+        $fields     = $new_folder->accept($get_fields, $params);
         $html .= '<table>';
         foreach($fields as $field) {
             $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
         }
         $html .= '</table>';
+        $html .= '<input type="hidden" name="item[item_type]" value="'. PLUGIN_DOCMAN_ITEM_TYPE_FOLDER .'" />';
         return $html;
     }
 }

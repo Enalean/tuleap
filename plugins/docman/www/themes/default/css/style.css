@@ -47,21 +47,13 @@ ul.docman_items {
 }
 li.docman_item {
     background:transparent url(../images/line.gif) left top repeat-y;
-/*    padding:1px;                            HIGHLIGHT */
+    position:relative;
 }
 li.docman_item_last {
     background-image:none;
-/*    padding:1px;                            HIGHLIGHT */
+    position:relative;
 }
 
-/*                                            HIGHLIGHT
-li.docman_item_highlight {
-    background-color:#f8f8f8;
-    border:1px solid #ccc;
-    background-position:-1px 0px;
-    padding:0px;
-}
-*/
 .docman_properties_navlist
 {
     padding: 3px 0;
@@ -121,6 +113,7 @@ li.docman_item_highlight {
 }
 
 .docman_item_title {
+    font-weight: bold;
     padding-left:6px;
 }
 .docman_item_description {
@@ -133,7 +126,7 @@ li.docman_item_highlight {
     margin-right:4px;
 }
 .docman_item_options {
-    margin-left:24px;
+    margin-left:4px;
 }
 .docman_item_show_options {
     margin-left:24px;
@@ -217,58 +210,79 @@ fieldset.docman_filters legend {
 }
 */
 
-.docman_details_popup {
-  display: none;
+.docman_item_menu {
   margin-top: 5px;
   border: 1px solid #bcbcad;
   border-right: 2px solid #bcbcad;
   border-bottom: 2px solid #bcbcad;
   position: absolute;
   z-index:100;
+  background:#e8e8e0;
+ /*background:#e8e8e0 url('../images/bg-menu.png') 0 0 repeat-y;*/
 }
 
-.docman_details_popup ul {
+.docman_item_menu ul {
  list-style: none;
  margin: 0;
- background-color: #e8e8e0;
  padding: 0;
 }
-
-.docman_details_popup ul li {
-  clear: both;
-}
-
-.docman_details_popup ul li.head { 
-  width: 10em;
-}
-
-.docman_details_popup ul li.head span.title {
-  float: left;
-  text-align: left;
-  font-weight: bold;
-  font-size: x-small;
-}
-
-.docman_details_popup ul li.head span.close {
-  border:0;
-  padding:0;
-  margin: 0;
-  float: right;
-  text-align: right; 
-  font-size: x-small;
-
-}
-
-.docman_details_popup ul a { 
-  border: 0 none;
-  padding: 0 1em 0 1em;
+.docman_item_menu ul li a { 
+  border:1px solid #e8e8e0;
+  padding-top: 0px;
+  padding-right: 1em;
+  padding-bottom: 0px;
+  padding-left: 24px;
   text-decoration: none;
   display: block;
-  
+  background-repeat:no-repeat;
+  background-position:2px 1px;
+  height:18px;
+}
+.docman_item_menu ul li a:hover {
+    border:1px solid #bcbcad;
+    background-color: #f0f0e7;
+}
+.docman_item_menu_close {
+    
+  height:inherit;
+    font-size:0.8em;
+    text-align:right;
+}
+.docman_item_option_details {
+    background-image:url('../images/ic/item-details.png');
+}
+.docman_item_option_newdocument {
+    background-image:url('../images/ic/document-new.png');
+}
+.docman_item_option_newfolder {
+    background-image:url('../images/ic/folder-new.png');
+}
+.docman_item_option_newversion {
+    background-image:url('../images/ic/file-newversion.png');
+}
+.docman_item_option_move {
+    background-image:url('../images/ic/item-move.png');
+}
+.docman_item_option_history {
+    background-image:url('../images/ic/history.png');
+}
+.docman_item_option_permissions {
+    background-image:url('../images/ic/permissions.png');
+}
+.docman_item_option_delete {
+    background-image:url('../images/ic/delete.png');
+}
+.docman_item_option_update {
+    background-image:url('../images/ic/file-newversion.png');
 }
 
+/**********/
 .docman_new_parentfolder {
     max-height:250px;
     height:expression(this.offsetHeight > 250 ? 250 : this.offsetHeight);
     overflow:auto;
+}
+
+.docman_item_actual_parent {
+    font-weight: bold;
 }

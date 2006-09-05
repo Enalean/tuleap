@@ -41,22 +41,14 @@ class Docman_Item {
         $this->parentId    = null;
         $this->groupId     = null;
         $this->ownerId     = null;
-        $this->_actions = array();
-        
+        $this->_actions    = array();
+        $this->_metadata   = array();
+
         if ($data) {
             $this->initFromRow($data);
         }
-        
-        
     }
-    
-    var $_actions;
-    function _addAction(&$action) {
-        $this->_actions[] =& $action;
-    }
-    function getActions() {
-        return $this->_actions;
-    }
+
     //{{{
     var $id;
     function setId($id) {
@@ -158,8 +150,6 @@ class Docman_Item {
         if (isset($row['parent_id']))   $this->setParentId($row['parent_id']);
         if (isset($row['group_id']))    $this->setGroupId($row['group_id']);
         if (isset($row['user_id']))     $this->setOwnerId($row['user_id']);
-        
-        $this->_addAction(new Docman_ItemActionDetails($this));
     }
     
     function toRow() {
@@ -179,6 +169,61 @@ class Docman_Item {
     //}}}
     
     /* abstract */function accept(&$visitor, $params = array()) {
+    }
+
+    var $_metadata;
+    function _addMetadata(&$md) {
+        $this->_metadata[] =& $md;
+    }
+    function &getMetadata() {
+        return $this->_metadata;
+    }
+
+    function &getMetadataIterator() {
+        $hcmd = array('title', 'description', 'owner', 'status'
+                      , 'obsolescence_date');        
+        foreach($hcmd as $mdLabel) {
+            $md[] =& Docman_MetadataFactory::getFromLabel($mdLabel, $this->getMetadataValue($mdLabel));
+        }
+        return new ArrayIterator(array_merge($md, Docman_MetadataBo::getSoftMetadata()));
+    }
+
+    function getMetadataValue($label) {
+        $value = null;
+
+        switch($label) {
+        case 'title':
+            $value = $this->getTitle();
+            break;
+
+        case 'description':
+            $value = $this->getDescription();
+            break;
+
+        case 'owner':
+            $value = $this->getOwnerId();
+            break;
+
+        case 'create_date':
+            $value = $this->getCreateDate();
+            break;
+
+        case 'update_date':
+            $value = $this->getUpdateDate();
+            break;
+
+        case 'status': 
+            $value = '';
+            break;
+
+        case 'obsolescence_date':
+            $value = '';
+            break;
+
+        default:
+        }
+
+        return $value;
     }
 }
 ?>

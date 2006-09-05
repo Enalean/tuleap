@@ -16,14 +16,16 @@ class Docman_View_Docman extends Docman_View_ProjectHeader {
         $tools = array();
         $this->_addDocmanTool($params, $tools);
         
-        $url_params = array('action' => 'newDocument');
-        if (isset($params['item'])) {
-            $url_params['id'] = $params['item']->accept(new Docman_View_ToolbarNewDocumentVisitor());
-        }
-        $tools[] = '<a href="'.$this->buildUrl($params['default_url'], $url_params).'">'. $GLOBALS['Language']->getText('plugin_docman', 'new_document') .'</a>';
-        
-        if($this->_controller->userCanAdmin()) {
-            $tools[] = '<a href="'. $params['default_url'] .'&amp;action=admin">'. $GLOBALS['Language']->getText('plugin_docman', 'toolbar_admin') .'</a>';
+        if ($params['hierarchy']->accept(new DocmanOneFolderIsWriteable($this->_controller))) {
+            $url_params = array('action' => 'newGlobalDocument');
+            if (isset($params['item'])) {
+                $url_params['id'] = $params['item']->accept(new Docman_View_ToolbarNewDocumentVisitor());
+            }
+            $tools[] = '<a href="'.$this->buildUrl($params['default_url'], $url_params).'">'. $GLOBALS['Language']->getText('plugin_docman', 'new_document') .'</a>';
+            
+            if($this->_controller->userCanAdmin()) {
+                $tools[] = '<a href="'. $params['default_url'] .'&amp;action=admin">'. $GLOBALS['Language']->getText('plugin_docman', 'toolbar_admin') .'</a>';
+            }
         }
         echo implode(' | ', $tools);
         echo "\n";

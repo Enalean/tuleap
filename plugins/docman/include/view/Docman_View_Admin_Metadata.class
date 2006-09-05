@@ -1,0 +1,88 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+require_once('Docman_View_Extra.class');
+
+class Docman_View_Admin_Metadata extends Docman_View_Extra {
+    
+    function _title($params) {
+        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_title') .'</h2>';
+    }
+    function _content($params) {
+        $mdBo = new Docman_MetadataBo();
+        $mdIter =& $mdBo->getMetadataForGroup($params['group_id']);
+        
+        $content = $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_instructions');
+        
+        $content .= html_build_list_table_top(array('Name'
+                                                    ,'Description'
+                                                    ,'Status'
+                                                    ,'Delete'
+                                                    ));
+        $altRowClass = 0;
+
+        $mdIter->rewind();
+        while($mdIter->valid()) {
+            $md =& $mdIter->current();
+            
+            $trclass = html_get_alt_row_color($altRowClass++);
+            $content .= '<tr class="'.$trclass.'">';
+
+            $nameUrl  = $this->buildUrl($params['default_url'],
+                                        array('action' => 'admin_md_details',
+                                              'md'     => $md->getLabel()));
+            $nameHref = '<a href="'.$nameUrl.'">'.$md->getName().'</a>';
+            $content .= '<td>'.$nameHref.'</td>';
+
+            $content .= '<td>'.$md->getDescription().'</td>';
+
+            $content .= '<td>';
+            if($md->isRequired()) {
+                $content .= "-";
+            }
+            else {
+                if($md->getUseIt()) {
+                    $content .= "Used";
+                }
+                else {
+                    $content .= "Unused";
+                }
+            }
+            $content .= '</td>';
+            
+            $content .= '<td>-</td>';
+            
+            $content .= '</tr>'."\n";
+
+            $mdIter->next();
+        }
+
+        $content .= '</table>'."\n";
+
+        print $content;
+    }
+}
+
+?>

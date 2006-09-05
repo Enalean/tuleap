@@ -185,7 +185,6 @@ class Docman_ItemBo {
             $item =& $itemList[$i];
             if(in_array($item->getId(), $excludedItems)) {
                 // @todo: Delete all childrens
-                $item->setNbOfChildren(0);
                 unset($item->_items);
                 $item->_items = array();
             }
