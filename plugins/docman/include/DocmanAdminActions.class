@@ -24,39 +24,68 @@
  */
 
 require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
 
 require_once('Folder.class');
 require_once('FolderBo.class');
 
-class DocmanActions extends Actions {
+class DocmanAdminActions extends Actions {
     
-    function DocmanActions(&$controler, $view=null) {
+    function DocmanAdminActions(&$controler, $view=null) {
         $this->Actions($controler);
 	}
-		
-    function expandFolder() {
+
+    function create_folder() {
+        $request =& HTTPRequest::instance();
+
+        $folder = new Folder();
+        $folder->setGroupId($request->get('group_id'));
+        $folder->setTitle($request->get('name'));
+        //        $folder->setDescription($request->get(''));
+        //        $folder->setType($request->get(''));
+        //        $folder->setRank($request->get(''));
+        $folder->setParentId($request->get('pid'));
+        $folder->setOwnerId(user_getid());
+        $folder->setCreateDate(time());
+        $folder->setUpdateDate(time());
+
+        $folderBo = new FolderBo();
+        $folderBo->create($folder);
+    }        
+
+
+    function delete_folder() {
+        $request =& HTTPRequest::instance();
+        
+        $folder = new Folder();
+        $folder->setId($request->get('id'));        
+
+        $folderBo = new FolderBo();
+        $folderBo->delete($folder);
+    }
+
+    function update_folder() {
         $request =& HTTPRequest::instance();
 
         $folder = new Folder();
         $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
+
+        if($request->get('name'))
+            $folder->setTitle($request->get('name'));
+
+        if($request->get('description'))
+            $folder->setDescription($request->get('description'));
+
+        if($request->get('rank'))
+            $folder->setRank($request->get('rank'));
+
+        if($request->get('pid'))
+            $folder->setParentId($request->get('pid'));
+
+        $folder->setUpdateDate(time());
 
         $folderBo = new FolderBo();
-        $folderBo->expand($folder);
+        $folderBo->update($folder);
     }
 
-    function collapseFolder() {
-        $request =& HTTPRequest::instance();
 
-        $folder = new Folder();
-        $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
-
-        $folderBo = new FolderBo();
-        $folderBo->collapse($folder);
-    }
 }
-
-
-?>

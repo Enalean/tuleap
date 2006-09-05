@@ -30,6 +30,11 @@ class ItemDao extends DataAccessObject {
         DataAccessObject::DataAccessObject($da);
     }
 
+    /**
+     * Return the row that match given id.
+     *
+     * @return DataAccessResult
+     */
     function searchById($id) {
         $_id = (int) $id;
         
@@ -40,6 +45,12 @@ class ItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Return the list of items for a given projet excluding ids mentionned in
+     * $collapsed array
+     *
+     * @return DataAccessResult
+     */
     function searchByGroupId($id, $collapsed = array()) {
         $_id = (int) $id;
 
@@ -56,34 +67,133 @@ class ItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Return the list of items that have children for givent group_id.
+     *
+     * @return DataAccessResult
+     */
     function searchAllParent($group_id) {
         $sql = sprintf('SELECT parent_id'
                        .' FROM plugin_docman_item'
-                       .' WHERE group_id=101'
-                       .' GROUP BY parent_id');
+                       .' WHERE group_id=%d'
+                       .' GROUP BY parent_id',
+                       $group_id);
 
         return $this->retrieve($sql);
     }
 
     /**
+     * Return the list of items for givent group and type.
+     *
+     * @return DataAccessResult
+     */
+    function searchAllByType($group_id, $type) {
+         $sql = sprintf('SELECT *'
+                        .' FROM plugin_docman_item'
+                        .' WHERE group_id=%d'
+                        .' AND item_type=%d',
+                        $group_id,
+                        $type);
+
+         return $this->retrieve($sql);
+    }
+
+    /**
+     * Return the list of user preferences regarding collapsed folders for
+     * given group_id and user_id.
+     *
+     * @return DataAccessResult
+     */
+    function searchCollapseUserPrefs($group_id, $user_id) {
+        $pref_base = DOCMAN_COLLAPSE_FOLDER_PREF.'_'.((int)$group_id);
+
+        $sql = sprintf('SELECT preference_name, preference_value'
+                       .' FROM user_preferences'
+                       .' WHERE user_id=%d'
+                       .' AND preference_name LIKE "%s"'
+                       ,$user_id
+                       ,$pref_base.'_%');
+
+        return $this->retrieve($sql);
+    }  
+
+    /**
      * create a row in the table plugin_docman_item
+     *
      * @return true or id(auto_increment) if there is no error
      */
-    function create($parent_id, $group_id, $title, $description, $create_date, $update_date, $user_id, $rank, $item_type, $link_url, $wiki_page, $file_is_embedded) {
-                $sql = sprintf("INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date,
-user_id, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (%d, %d, %s, %s, %d, %d, %d, %d, %d, %s, %s, %d)",
-                                $parent_id,
-                                $group_id,
-                                $this->da->quoteSmart($title),
-                                $this->da->quoteSmart($description),
-                                $create_date,
-                                $update_date,
-                                $user_id,
-                                $rank,
-                                $item_type,
-                                $link_url,
-                                $wiki_page,
-                                $file_is_embedded);
+    function create($parent_id=null, $group_id=null, $title=null, 
+                    $description=null, $create_date=null, $update_date=null, 
+                    $user_id=null, $rank=null, $item_type=null, $link_url=null,
+                    $wiki_page=null, $file_is_embedded=null) {
+
+        $arg    = array();
+        $values = array();
+
+        if($parent_id !== null) {
+            $arg[]    = 'parent_id';
+            $values[] = ((int) $parent_id);
+        }
+
+        if($group_id !== null) {
+            $arg[] = 'group_id';
+            $values[] = ((int) $group_id);
+        }
+
+        if($title !== null) {
+            $arg[] = 'title';
+            $values[] = $this->da->quoteSmart($title);
+        }
+
+        if($description !== null) {
+            $arg[] = 'description';
+            $values[] = $this->da->quoteSmart($description);
+        }
+
+        if($create_date !== null) {
+            $arg[] = 'create_date';
+            $values[] = ((int) $create_date);
+        }
+
+        if($update_date !== null) {
+            $arg[] = 'update_date';
+            $values[] = ((int) $update_date);
+        }
+
+        if($user_id !== null) {
+            $arg[] = 'user_id';
+            $values[] = ((int) $user_id);
+        }
+
+        if($rank !== null) {
+            $arg[] = 'rank';
+            $values[] = ((int) $rank);
+        }
+
+        if($item_type !== null) {
+            $arg[] = 'item_type';
+            $values[] = ((int) $item_type);
+        }
+
+        if($link_url !== null) {
+            $arg[] = 'link_url';
+            $values[] = $this->da->quoteSmart($link_url);
+        }
+
+        if($wiki_page !== null) {
+            $arg[] = 'wiki_page';
+            $values[] = $this->da->quoteSmart($wiki_page);
+        }
+
+        if($file_is_embedded !== null) {
+            $arg[] = 'file_is_embedded';
+            $values[] = ((int) $file_is_embedded);
+        }
+
+        $sql = 'INSERT INTO plugin_docman_item'
+            .'('.implode(', ', $arg).')'
+            .' VALUES ('.implode(', ', $values).')';
+        
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -97,8 +207,9 @@ user_id, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (%d, %d,
     }
 
     /**
-     * create a row in the table plugin_docman_item 
-     * @return true or id(auto_increment) if there is no error
+     * Update a row in the table plugin_docman_item 
+     *
+     * @return true if there is no error
      */
     function updateById($item_id, $parent_id=null, $group_id=null, $title=null,
                     $description=null, $create_date=null, $update_date=null, 
@@ -157,14 +268,18 @@ user_id, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (%d, %d,
         
         $sql = 'UPDATE plugin_docman_item'
             .' SET '.implode(', ', $argArray)
-            .' WHERE item_id='.((int) $item_id);;
+            .' WHERE item_id='.((int) $item_id);
 
         $inserted = $this->update($sql);
-        
+    
         return $inserted;
     }
 
     /**
+     * Delete entry that match $item_id in plugin_docman_item
+     *
+     * @param $item_id int
+     * @return true if there is no error
      */
     function delete($item_id) {
         $sql = sprintf("DELETE FROM plugin_docman_item WHERE item_id=%d",
@@ -174,19 +289,6 @@ user_id, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (%d, %d,
         
         return $deleted;
     }
-
-    function searchCollapseUserPrefs($group_id, $user_id) {
-        $pref_base = DOCMAN_COLLAPSE_FOLDER_PREF.'_'.((int)$group_id);
-
-        $sql = sprintf('SELECT preference_name, preference_value'
-                       .' FROM user_preferences'
-                       .' WHERE user_id=%d'
-                       .' AND preference_name LIKE "%s"'
-                       ,$user_id
-                       ,$pref_base.'_%');
-        return $this->retrieve($sql);
-    }
-
 }
 
 ?>

@@ -22,41 +22,30 @@
  *
  * $Id$
  */
+require_once('Docman.class');
+require_once('DocmanAdminViews.class');
+require_once('DocmanAdminActions.class');
 
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
+class DocmanAdmin extends Docman {
+   
+    function DocmanAdmin() {
+        $this->Docman();
 
-require_once('Folder.class');
-require_once('FolderBo.class');
+        $user =& $this->getUser();
 
-class DocmanActions extends Actions {
-    
-    function DocmanActions(&$controler, $view=null) {
-        $this->Actions($controler);
-	}
-		
-    function expandFolder() {
-        $request =& HTTPRequest::instance();
+        if(!$user->isMember($this->getGroupId(), 'D2')) {
+            exit_error($GLOBALS['Language']->getText('plugin_docman','error'),
+                       $GLOBALS['Language']->getText('plugin_docman','err_notadmin'));
+        }   
+    }    
 
-        $folder = new Folder();
-        $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
+    function request() {
+        $this->action = $this->request->get('act');
+        $this->view = 'main_menu';
 
-        $folderBo = new FolderBo();
-        $folderBo->expand($folder);
-    }
-
-    function collapseFolder() {
-        $request =& HTTPRequest::instance();
-
-        $folder = new Folder();
-        $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
-
-        $folderBo = new FolderBo();
-        $folderBo->collapse($folder);
+        if($this->request->get('view'))
+            $this->view = $this->request->get('view');
     }
 }
-
 
 ?>

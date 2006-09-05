@@ -24,22 +24,59 @@
  */
 require_once('common/mvc/Controler.class');
 require_once('common/include/HTTPRequest.class');
+require_once('common/include/UserManager.class');
+
 require_once('DocmanViews.class');
 require_once('DocmanActions.class');
 
+$GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+
 class Docman extends Controler {
-    
+    // variables
+    var $request;
+    var $user;
+    var $groupId;
+
     function Docman() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
+        $this->request = & HTTPRequest::instance();
+        $this->user    = null;
+        $this->groupId = null;        
     }
     
+    function &getUser() {
+        if($this->user === null) {
+            $um =& UserManager::instance();
+            $this->user = $um->getCurrentUser();
+        }
+        return $this->user;
+    }
+
+    function getGroupId() {
+        if($this->groupId === null) {
+            $_gid = (int) $this->request->get('group_id');
+            if($_gid > 0) {
+                $this->groupId = $_gid;
+            }
+        }
+        return $this->groupId;
+    }
+
+    function getDefaultUrl() {
+        $_gid = $this->getGroupId();
+        return '/plugins/docman/index.php?group_id='.$_gid;
+    }
+
+    function getAdminUrl() {
+        $_gid = $this->getGroupId();
+        return '/plugins/docman/admin/index.php?group_id='.$_gid;
+    }
+
     function request() {
-        $request =& HTTPRequest::instance();
-        $this->action = $request->get('action');
+        $this->action = $this->request->get('act');
         $this->view = 'displayFolder';
 
-        if($request->get('view'))
-            $this->view = $request->get('view');
+        if($this->request->get('view'))
+            $this->view = $this->request->get('view');
     }
 }
 

@@ -103,7 +103,10 @@ class DisplayItemTreeVisitor extends Visitor {
         }
 
         $htm .= $this->img['folder'];
-        $htm .= '<p>'.$item->getTitle().'</p>';
+        $htm .= '<p>';
+        $htm .= $item->getTitle();
+        //$htm .= '&nbsp;<a href="#" onClick="javascript: insert_new_subfolder_panel($(\'dir_'.$item->getId().'\'));">[N]</a>';
+        $htm .= '</p>';
         $htm .= '</div>'."\n";
 
         return $htm;

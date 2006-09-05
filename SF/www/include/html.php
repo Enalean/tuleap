@@ -536,4 +536,13 @@ function html_display_boolean($value,$true_value='Yes',$false_value='No') {
     }
 }
 
+function html_trash_image($alt) {
+    return '<img src="'.util_get_image_theme("ic/trash.png").'" '.
+        'height="16" width="16" border="0" alt="'.$alt.'" title="'.$alt.'">';
+}
+
+function html_trash_link($link, $warn, $alt) {
+    return '<a href="'.$link.'" onClick="return confirm(\''.$warn.'\')">'.html_trash_image($alt).'</a>';
+}
+
 ?>

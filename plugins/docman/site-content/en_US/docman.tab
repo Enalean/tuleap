@@ -3,3 +3,25 @@ plugin_docman	descriptor_name	Document Manager
 plugin_docman	title	Document Manager
 plugin_docman	service_lbl_key	Docman
 plugin_docman	service_desc_key	Advanced Document Manager
+plugin_docman	error	Error
+plugin_docman	err_notadmin	Permission Denied. You are not an administrator for 'Document Manager' service.
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/DocmanAdminViews.class
+#
+plugin_docman	main_menu_fldr_title	Folder Management
+plugin_docman	main_menu_fldr_desc	Create, update and delete folders.
+plugin_docman	folder_name	Name:
+plugin_docman	folder_desc	Description:
+plugin_docman	folder_parent	Parent:
+plugin_docman	folder_rank	Rank:
+plugin_docman	folder_create_folder	Create
+plugin_docman	folder_list	Folder List
+plugin_docman	new_folder	New Folder
+plugin_docman	fld_array_id	Id
+plugin_docman	fld_array_title	Name
+plugin_docman	fld_array_rank	Rank
+plugin_docman	fld_array_delete	Delete ?
+plugin_docman	dflt_update_folder	Update Folder
+plugin_docman	delete_folder_warn	** WARNING!! ** Please confirm you want to delete folder $1
+plugin_docman	delete_folder_alt	Delete folder $1

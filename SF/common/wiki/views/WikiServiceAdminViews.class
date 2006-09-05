@@ -222,8 +222,10 @@ class WikiServiceAdminViews extends WikiViews {
       print '<td align="center">'.$we->getRank().'</td>';
 
       print '<td align="center">';
-      print $this->getTrashLink($this->wikiAdminLink.'&view=wikiDocuments&action=delete&id='.$we->getId()
-				, $Language->getText('wiki_views_wkserviews', 'deletedoc', array($we->getName())));
+      $alt = $Language->getText('wiki_views_wkserviews', 'deletedoc', array($we->getName()));
+      print html_trash_link($this->wikiAdminLink.'&view=wikiDocuments&action=delete&id='.$we->getId(),
+                            $Language->getText('common_mvc_view','warn',$alt),
+                            $alt);
       print '</td>';
 
       print '</tr>';

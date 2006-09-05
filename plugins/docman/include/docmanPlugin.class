@@ -58,9 +58,10 @@ class DocmanPlugin extends Plugin {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="/include/scriptaculous/prototype.js"></script>'."\n";
-            //            echo '<script type="text/javascript" src="/include/scriptaculous/scriptaculous.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->_getPluginPath().'/js/folder.js"></script>'."\n";
+
         }
     }
 
@@ -72,6 +73,12 @@ class DocmanPlugin extends Plugin {
     function process() {
         require_once('Docman.class');
         $controler =& new Docman();
+        $controler->process();
+    }
+
+    function processAdmin() {
+        require_once('DocmanAdmin.class');
+        $controler =& new DocmanAdmin();
         $controler->process();
     }
 }

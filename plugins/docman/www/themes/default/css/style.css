@@ -34,3 +34,33 @@
 .dir input {
  border: 1px solid black;
 }
+
+/**
+UL/LI Based
+*/
+
+.lidir ul { 
+padding: 0;
+margin: 0;
+padding-left: 2em;
+ }
+
+.lidir li { 
+ list-style: url('/plugins/docman/gnome-fs-directory.png');
+ border: 1px solid #F7F7F7;
+ background-color: #F7F7F7;
+}
+
+.lidir li.selected { 
+  list-style: url('/plugins/docman/gnome-fs-directory.png');
+  border: 1px solid black;
+  background-color: #FBFBFB;
+} 
+
+.lidir li.collapsed { 
+list-style: url('/plugins/docman/20_join.gif');
+ }
+
+.hidden { 
+  display: none;
+ }

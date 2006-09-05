@@ -27,9 +27,13 @@ require_once('common/collection/Visitor.class');
 
 class DisplayItemTreeUlVisitor extends Visitor {
     var $html;
+    var $stripFirstNode;
+    var $firstNodeStripped;
 
-    function DisplayItemTreeVisitor() {
-        $this->html  = '';              
+    function DisplayItemTreeUlVisitor() {
+        $this->html  = '';
+        $this->stripFirstNode = true;
+        $this->firstNodeStripped = false;
     }
 
     function toHtml() {
@@ -40,12 +44,38 @@ class DisplayItemTreeUlVisitor extends Visitor {
     function visit(&$itemNode) {        
         $item =& $itemNode->getData();        
 
-        if($item !== null) {
-            $this->html .= '<li>'.$item->getTitle().'</li>'."\n";
+        $isCollapsed = false;
+        if(user_get_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) !== false) {
+            $isCollapsed = true;
+        }
+
+        /*$hasChildren = false;
+        if($itemNode->hasChildren() || in_array($item->getId(), $this->parentList)) {
+            $hasChildren = true;
+        }*/
+
+        $lidisplayed = false;
+        if($this->stripFirstNode && !$this->firstNodeStripped) {
+            $this->firstNodeStripped=true;
+        }
+        else {
+            if($item !== null) {
+                $liclass = '';
+                if($isCollapsed) {
+                    $liclass = ' class="collapsed"';
+                }
+                else {
+                    if($itemNode->hasChildren()) {
+                        $liclass = ' class="expanded"';
+                    }
+                }
+                $lidisplayed = true;
+                $this->html .= '<li id="li_'.$item->getId().'"'.$liclass.'>'.$item->getTitle();
+            }
         }
               
         if($itemNode->hasChildren()) {
-            $this->html .= '<ul>'."\n";
+            $this->html .= '<ul id="ul_'.$item->getId().'">'."\n";
 
             $ci =& $itemNode->getChildIterator();               
             
@@ -58,6 +88,10 @@ class DisplayItemTreeUlVisitor extends Visitor {
             }
             
             $this->html .= '</ul>'."\n";
+        }
+
+        if($lidisplayed) {
+            $this->html .= '</li>'."\n";
         }
         
     }

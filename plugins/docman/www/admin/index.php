@@ -23,40 +23,18 @@
  * $Id$
  */
 
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
+//apd_set_pprof_trace(); 
 
-require_once('Folder.class');
-require_once('FolderBo.class');
+require_once('pre.php');
+require_once('common/plugin/PluginManager.class');
 
-class DocmanActions extends Actions {
-    
-    function DocmanActions(&$controler, $view=null) {
-        $this->Actions($controler);
-	}
-		
-    function expandFolder() {
-        $request =& HTTPRequest::instance();
+$plugin_manager =& PluginManager::instance();
+$p =& $plugin_manager->getPluginByName('docman');
 
-        $folder = new Folder();
-        $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
-
-        $folderBo = new FolderBo();
-        $folderBo->expand($folder);
-    }
-
-    function collapseFolder() {
-        $request =& HTTPRequest::instance();
-
-        $folder = new Folder();
-        $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
-
-        $folderBo = new FolderBo();
-        $folderBo->collapse($folder);
-    }
+if ($p) {
+    $p->processAdmin();
+} else {
+    header('Location: '.get_server_url());
 }
-
 
 ?>

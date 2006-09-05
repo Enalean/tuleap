@@ -22,15 +22,27 @@
  *
  * $Id$
  */
-
 require_once('FolderDao.class');
+require_once('ItemBo.class');
+require_once('Folder.class');
 
+/**
+ * Folder Buisness object.
+ *
+ * This class aims to offer an high level access to 'Model' layer of the
+ * application. 
+ */
 class FolderBo extends ItemBo {
     
-    function FolderBo() {
-
+    function FolderBo($groupId=0) {
+        $this->ItemBo($groupId);
     }
 
+    /**
+     * Create a new folder
+     *
+     * @param Folder
+     */
     function create($folder) {
         $folderDao =& new FolderDao(CodexDataAccess::instance());
 
@@ -44,6 +56,11 @@ class FolderBo extends ItemBo {
                            $folder->getRank());        
     }
 
+    /**
+     * Update an existing folder
+     *
+     * @param Folder
+     */
     function update($folder) {
         $folderDao =& new FolderDao(CodexDataAccess::instance());
 
@@ -58,18 +75,59 @@ class FolderBo extends ItemBo {
                                $folder->getRank());
     }
 
+    /**
+     * Delete an existing folder
+     *
+     * @param Folder
+     */
     function delete($folder) {
         $folderDao =& new FolderDao(CodexDataAccess::instance());
 
         $folderDao->delete($folder->getId());
     }
 
+    /**
+     * Return an Iterator on the list of folders in the project
+     *
+     * @return ArrayIterator
+     */
+    function &getList() {
+        $folderDao =& new FolderDao(CodexDataAccess::instance());
 
+        $flist = array();
+
+        $dar =& $folderDao->searchAllByType($this->groupId);        
+        while($dar->valid()) {
+            $row =& $dar->current();
+
+            $folder = new Folder();
+            $folder->initFromRow($row);
+            $flist[$folder->getId()] =& $folder;
+            unset($folder);
+
+            $dar->next();
+        }
+
+        return new ArrayIterator($flist);
+    }
+
+    /**
+     * Set a collapse preference for given folder for current (logged)
+     * user. Stricly speaking, we should pass user in argument but there is no
+     * existing function that handle prefences in this way.
+     *
+     * @param Folder
+     */
     function collapse($folder) {
         user_set_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
                             DOCMAN_COLLAPSE_FOLDER);
     }
 
+    /**
+     * Set a expand preference for given folder for current user.
+     *
+     * @param Folder
+     */
     function expand($folder) {
         user_del_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
     }

@@ -1,0 +1,62 @@
+This document aims to give major keys of the architecture of the plugin.
+
+This document can be found here:
+*
+https://partners.xrce.xerox.com/wiki/index.php?pagename=DocmanImplementation&group_id=120 
+* SF/plugins/docman/doc/devel/README
+
+!!! Architecture
+
+Docman plugin is based on MVC (model/view/controler) pattern. This application
+layout is common and we won't detail it here. But we enhance this pattern with
+higher level approach toward Buisness Objects and Transport Objects.
+
+Bo: Buisness Object
+Dao: DataAccessObject
+
+The main principle are:
+* SQL and/or Filesystem access are made in Dao and *only* in Dao.
+* Buisness Object offer an high level view of the model.
+* Data are travelling in the application encapsulated in Transport Objects (also known as Containers).
+* When Views and Actions are dealing with Model Layer, they only talk with
+Buisness Objects.
+* Controler job is to receive request from user, perform Actions and display
+Views following the request.
+* Views and Actions should never directly access to requests parameters.
+
+!! Organisation of the code
+
+* Model
+  * FolderBo.class
+  * ItemBo.class
+  * FolderDao.class
+  * ItemDao.class
+  * NodeToRootVisitor.class
+
+* Transport object
+  * Folder.class
+  * Item.class
+  * ItemFactory.class
+  * ItemNode.class
+
+* View
+  * DisplayItemTreeUlVisitor.class
+  * DisplayItemTreeVisitor.class
+  * DocmanViews.class
+  * DocmanAdminViews.class
+
+* Controler
+  * Docman.class
+  * DocmanAdmin.class
+
+* Action
+  * DocmanActions.class
+  * DocmanAdminActions.class
+
+* Plugin
+  * docmanPlugin.class
+  * DocmanPluginDescriptor.class
+  * DocmanPluginInfo.class
+
+
+

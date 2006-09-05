@@ -31,36 +31,29 @@ class FolderDao extends ItemDao {
         DataAccessObject::DataAccessObject($da);
     }
 
+    
     /**
-     * create a row in the table plugin_docman_item 
-     * @return true or id(auto_increment) if there is no error
+     * Return all 'Folder' entries in plugin_docman_item for a given group_id
+     * @return DataAccessResult
      */
-    function create($parent_id, $group_id, $title, $description, $create_date, $update_date, $user_id, $rank) {        
-		$sql = sprintf("INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, user_id, rank, item_type) VALUES (%d, %d, %s, %s, %d, %d, %d, %d, %d)"
-                       ,$parent_id
-                       ,$group_id
-                       ,$this->da->quoteSmart($title)
-                       ,$this->da->quoteSmart($description)
-                       ,$create_date
-                       ,$update_date
-                       ,$user_id
-                       ,$rank
-                       ,ITEM_FOLDER);
-
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+    function searchAllByType($group_id) {
+        return parent::searchAllByType($group_id, ITEM_FOLDER);
     }
 
     /**
-     * create a row in the table plugin_docman_item 
+     * Create a row in the table plugin_docman_item 
+     * @return true or id(auto_increment) if there is no error
+     */
+    function create($parent_id, $group_id, $title, $description, $create_date, 
+                    $update_date, $user_id, $rank) {
+        
+        return parent::create($parent_id, $group_id, $title, $description, 
+                              $create_date, $update_date, $user_id, $rank, 
+                              ITEM_FOLDER, null, null, null);		
+    }
+
+    /**
+     * Update a row in the table plugin_docman_item
      * @return true or id(auto_increment) if there is no error
      */
     function updateById($item_id, $parent_id=null, $group_id=null, $title=null,
@@ -71,7 +64,6 @@ class FolderDao extends ItemDao {
                                   $description, $create_date, $update_date, 
                                   $user_id, $rank, null, null, null, null);
     }
-
 }
 
 ?>

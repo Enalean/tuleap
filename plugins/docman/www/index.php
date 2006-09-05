@@ -33,6 +33,4 @@ if ($p) {
     header('Location: '.get_server_url());
 }
 
-
-
 ?>

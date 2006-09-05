@@ -24,20 +24,38 @@
  */
 require_once('common/mvc/Views.class');
 require_once('common/include/HTTPRequest.class');
-
 require_once('ItemBo.class');
-require_once('DisplayItemTreeVisitor.class');
-//require_once('DisplayItemTreeUlVisitor.class');
-require_once('NodeToRootVisitor.class');
 
 class DocmanViews extends Views {
-    
+    var $rawDisplay;
+
     function DocmanViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+        $this->rawDisplay = array('ulsubfolder', 'rawDisplay');
     }
     
-    function header() {
+    /**
+     * Dispatch views
+     *
+     * @access public
+     */
+    function display($view='') {
+        if(!in_array($view, $this->rawDisplay))
+            $this->_header();
+
+        if(!empty($view)) $this->$view();
+
+        if(!in_array($view, $this->rawDisplay))
+            $this->_footer();
+    }
+
+    /**
+     * Display service header
+     *
+     * @access private
+     */
+    function _header() {
         $request =& HTTPRequest::instance();
         $htmlParams['title'] = $GLOBALS['Language']->getText('plugin_docman','title');
 
@@ -45,38 +63,79 @@ class DocmanViews extends Views {
         $htmlParams['toptab'] = 'docman';
 
         $GLOBALS['HTML']->header($htmlParams);
-        //echo '<h2>'.$htmlParams['title'].'</h2>';
+        
+        $this->_toolBar();
+
     }
-    function footer() {
+
+    /**
+     * Display service footer
+     *
+     * @access private
+     */
+    function _footer() {
         $GLOBALS['HTML']->footer(array());
     }
     
+    /**
+     * Display service toolbar
+     *
+     * @access private
+     */
+    function _toolBar() {
+        echo '<a href="'.$this->_controler->getDefaultUrl().'">Documents (Img)</a>';
+        echo ' | <a href="'.$this->_controler->getDefaultUrl().'&view=uldisplayFolder">Documents (UL/LI)</a>';
+        $user =& $this->_controler->getUser();
+        if($user->isMember($this->_controler->getGroupId(), 'D2')) {
+            echo ' | <a href="'.$this->_controler->getAdminUrl().'">Admin</a>';
+        }
+        echo "\n";
+    }
+
+    //
+    //
+    // Definition of views
+    // 
+    //
+
+
+    /**
+     * Ouput image based view of folders.
+     *
+     * @access public
+     */
     function displayFolder() {
-        $request =& HTTPRequest::instance();
+        require_once('DisplayItemTreeVisitor.class');        
 
-        $itemBo = new ItemBo();
-        $itemBo->groupId = $request->get('group_id');
-
+        $itemBo = new ItemBo($this->_controler->request->get('group_id'));
         $itemTree =& $itemBo->getItemTree();
-
-        //$displayItemTreeVisitor = new DisplayItemTreeUlVisitor();
 
         $displayItemTreeVisitor = new DisplayItemTreeVisitor();
         $displayItemTreeVisitor->setParentList($itemBo->getParentList());
 
-        $itemTree->accept($displayItemTreeVisitor);
-        
+        $itemTree->accept($displayItemTreeVisitor);      
         print $displayItemTreeVisitor->toHtml();
     }
- 
+
+    /**
+     * Ouput image based view of a subfolder.
+     *
+     * This method is related to displayFolder and is called via Ajax to
+     * render only a subtree of the folder view. The main difficulty of this
+     * view it to build the good list of images and, to be able to perform
+     * that, we have to know subtree ancestors.
+     *
+     * @see displayFolder
+     * @access public
+     */
     function rawDisplay() {
-        $request =& HTTPRequest::instance();
+        require_once('DisplayItemTreeVisitor.class');
+        require_once('NodeToRootVisitor.class');
 
-        $itemBo = new ItemBo();
-        $itemBo->groupId = $request->get('group_id');
-
+        $itemBo = new ItemBo($this->_controler->request->get('group_id'));
         $itemTree =& $itemBo->getItemTree();
 
+        // Subtree ancestors
         $parentNode =& $itemTree->searchNode($request->get('id'));
         $nodeToRootVisitor = new NodeToRootVisitor();
         $parentNode->accept($nodeToRootVisitor);
@@ -89,17 +148,44 @@ class DocmanViews extends Views {
         
         print $displayItemTreeVisitor->toHtml();
     }
+    
+    /**
+     * Ouput ul/li view of folders.
+     *
+     * @access public
+     */
+    function uldisplayFolder() {
+        require_once('DisplayItemTreeUlVisitor.class');
+    
+        $itemBo = new ItemBo($this->_controler->request->get('group_id'));
+        $itemTree =& $itemBo->getItemTree();
 
-    function display($view='') {
-        if($view != 'rawDisplay')
-            $this->header();
-
-        if(!empty($view)) $this->$view();
-
-        if($view != 'rawDisplay')
-            $this->footer();
+        $displayItemTreeVisitor = new DisplayItemTreeUlVisitor();       
+        $itemTree->accept($displayItemTreeVisitor);
+        
+        print '<div class="lidir">'.$displayItemTreeVisitor->toHtml().'</div><script>initEvents();</script>';       
     }
 
+    /**
+     * Ouput ul/li view of subfolders.
+     *
+     * This method is related to uldisplayFolderand is called via Ajax to
+     * render only a subtree of the folder view.
+     *
+     * @see uldisplayFolder
+     * @access public
+     */
+    function ulsubfolder() {
+        require_once('DisplayItemTreeUlVisitor.class');
+        
+        $itemBo = new ItemBo($this->_controler->request->get('group_id'));        
+        $itemTree =& $itemBo->getItemSubTree($this->_controler->request->get('id'));
+
+        $displayItemTreeVisitor = new DisplayItemTreeUlVisitor();
+        $itemTree->accept($displayItemTreeVisitor);
+
+        print $displayItemTreeVisitor->toHtml();        
+    }
 }
 
 

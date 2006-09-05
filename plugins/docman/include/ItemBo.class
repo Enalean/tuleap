@@ -30,6 +30,10 @@ require_once('ItemNode.class');
 class ItemBo {
     var $groupId;
 
+    function ItemBo($groupId=0) {
+        $this->groupId = (int) $groupId;
+    }
+
     /**
      * Build a subtree from with the list of items
      *

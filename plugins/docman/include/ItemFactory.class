@@ -23,16 +23,18 @@
  * $Id$
  */
 require_once('Folder.class');
-//require_once('Document.class');
 require_once('Item.class');
 
+/**
+ * 
+ */
 class ItemFactory {
 
     function ItemFactory() {
 
     }
 
-    function getItemFromRow(&$row) {
+    function &getItemFromRow(&$row) {
         $item = null;
         switch($row['item_type']) {
         case ITEM_FOLDER:
@@ -58,7 +60,7 @@ class ItemFactory {
         return $item;
     }
 
-    function getItemFromDb($id) {
+    function &getItemFromDb($id) {
         $_id = (int) $id;
         $dar =& $this->_dao->getItemById($id);
 
