@@ -502,7 +502,8 @@ $server->register(
     'Add an Artifact in the tracker group_artifact_id of the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.'
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -525,7 +526,8 @@ $server->register(
     'Add an Artifact in the tracker tracker_name of the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
-     Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.'
+     Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -551,7 +553,8 @@ $server->register(
     'Update the artifact $artifact_id of the tracker $group_artifact_id in the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifart_id is not a valid one, or if the update failed.'
+     if the artifart_id is not a valid one, or if the update failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -577,7 +580,8 @@ $server->register(
     'Update the artifact $artifact_id of the tracker $tracker_name in the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifart_id is not a valid one, or if the update failed.'
+     if the artifart_id is not a valid one, or if the update failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -731,7 +735,8 @@ $server->register(
      the name of the file and it type (the mimi-type -- plain/text, image/jpeg, etc ...). 
      Returns the ID of the attached file if the attachment succeed.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     or if the artifact_id is not a valid one, or if the attachment failed.'
+     or if the artifact_id is not a valid one, or if the attachment failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -750,7 +755,8 @@ $server->register(
     'Delete the attached file file_id from the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      Returns the ID of the deleted file if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.'
+     if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -770,7 +776,8 @@ $server->register(
      of the tracker group_artifact_id of the project group_id.
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, or if the add failed.'
+     if the artifact_id is not a valid one, or if the add failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -786,7 +793,7 @@ $server->register(
     $uri.'#addDependencies',
     'rpc',
     'encoded',
-    'Deprtecated. Please use addArtifactDependencies'
+    'Deprecated. Please use addArtifactDependencies'
 );
 
 $server->register(
@@ -805,7 +812,8 @@ $server->register(
     'Delete the dependence between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
      Returns the ID of the deleted dependency if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.'
+     if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -840,7 +848,8 @@ $server->register(
     'Add a follow-up body to the artifact artifact_id of the tracker group_artifact_id of the project group_id.
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, or if the add failed.'
+     if the artifact_id is not a valid one, or if the add failed.
+     NOTE : the mail notification system is not implemented with the SOAP API.'
 );
 
 $server->register(
@@ -1296,6 +1305,8 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
 /**
  * addArtifact - add an artifact in tracker $group_artifact_id of the project $group_id with given valuess
  *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
  * @param int $group_artifact_id the ID of the tracker we want to add the artifact
@@ -1430,6 +1441,8 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
 /**
  * addArtifactWithFieldNames - add an artifact in tracker $tracjer_name of the project $group_id with given valuess
  *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
  * @param int $group_artifact_id the ID of the tracker we want to add the artifact
@@ -1499,6 +1512,8 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
 
 /**
  * updateArtifact - update the artifact $artifact_id in tracker $group_artifact_id of the project $group_id with given values
+ *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
@@ -1586,6 +1601,8 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
 
 /**
  * updateArtifactWithFieldNames - update the artifact $artifact_id in tracker $tracker_name of the project $group_id with given values
+ *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
@@ -2017,6 +2034,8 @@ function dependencies_to_soap($dependancies) {
 /**
  * addArtifactFile - add an attached file to the artifact $artifact_id
  *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to attach the file
  * @param int $group_artifact_id the ID of the tracker we want to attach the file
@@ -2092,6 +2111,8 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
 /**
  * deleteArtifactFile - delete an attached file to the artifact $artifact_id
  *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to delete the file
  * @param int $group_artifact_id the ID of the tracker we want to delete the file
@@ -2159,6 +2180,8 @@ function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_i
 /**
  * addArtifactDependencies - add dependencies to the artifact $artifact_id
  *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the dependencies
  * @param int $group_artifact_id the ID of the tracker we want to add the dependencies
@@ -2224,6 +2247,8 @@ function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_i
 
 /**
  * deleteArtifactDependency - delete the dependency between $artifact_id and $dependent_on_artifact_id
+ *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to delete the dependency
@@ -2291,6 +2316,8 @@ function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_
 
 /**
  * addArtifactFollowup - add a followup to the artifact $artifact_id
+ *
+ * NOTE : the mail notification system is not implemented with the SOAP API.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the follow-up
