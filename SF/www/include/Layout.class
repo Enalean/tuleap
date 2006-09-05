@@ -435,7 +435,11 @@ echo html_blankimage(5,100);
                 return;
             }
 
-            print '<H2>'. $project->getPublicName() .' - '.$project->service_data_array[$toptab]['label'];
+            print '<H2>'. $project->getPublicName() .' - ';
+            
+            if (isset($project->service_data_array[$toptab])) {
+                echo $project->service_data_array[$toptab]['label'];
+            }
             print '</H2>';
 
 	    print '

@@ -62,7 +62,7 @@ class Docman_ItemActionNewFolder extends Docman_ItemAction {
         parent::Docman_ItemAction($item);
         $this->action           = 'newFolder';
         $this->classes          = 'docman_item_option_newfolder';
-        $this->title            = 'Create a new folder under '.$item->getTitle();
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_newfolder', $item->getTitle());
     }
 }
 class Docman_ItemActionShowFolder extends Docman_ItemAction {
@@ -70,7 +70,7 @@ class Docman_ItemActionShowFolder extends Docman_ItemAction {
         parent::Docman_ItemAction($item);
         $this->action           = 'show';
         $this->classes          = 'docman_item_option_showfolder';
-        $this->title            = 'Show '.$item->getTitle();
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_show', $item->getTitle());
     }
 }
 class Docman_ItemActionNewDocument extends Docman_ItemAction {
@@ -78,7 +78,7 @@ class Docman_ItemActionNewDocument extends Docman_ItemAction {
         parent::Docman_ItemAction($item);
         $this->action           = 'newDocument';
         $this->classes          = 'docman_item_option_newdocument';
-        $this->title            = 'Create a new document under '.$item->getTitle();
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_newdocument', $item->getTitle());
     }
 }
 class Docman_ItemActionDetails extends Docman_ItemAction {
@@ -86,7 +86,7 @@ class Docman_ItemActionDetails extends Docman_ItemAction {
         parent::Docman_ItemAction($item);
         $this->action           = 'details';
         $this->classes          = 'docman_item_option_details';
-        $this->title            = $item->getTitle().' Details';
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_details', $item->getTitle());
     }
 }
 class Docman_ItemActionMove extends Docman_ItemAction {
@@ -94,7 +94,7 @@ class Docman_ItemActionMove extends Docman_ItemAction {
         parent::Docman_ItemAction($item);
         $this->action           = 'move';
         $this->classes          = 'docman_item_option_move';
-        $this->title            = 'Move '.$item->getTitle();
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_move', $item->getTitle());
     }
 }
 

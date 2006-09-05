@@ -31,7 +31,7 @@ class Docman_FileStorage {
     
     var $root;
     function Docman_FileStorage($root) {
-        $this->root = $root;
+        $this->root       = $root;
     }
 
     function upload($file, $group_id, $item_id, $version_number) {
@@ -52,6 +52,10 @@ class Docman_FileStorage {
             return false;
         }
     }
+    
+    function delete($path) {
+        return unlink($path);
+    }
     /**
     *
     *  +----------------------------------------------------------------------------+
@@ -59,7 +63,7 @@ class Docman_FileStorage {
     *  |                 +------------------------------------------------+  |      |
     * _|__              _|_____    _|____________                         |  |      |
     * name              item_id    version_number                         v  v      v
-    * Fichier.doc       567        10                 =>  group_name/6/7/567/10/Fichier.doc
+    * Fichier.doc       567        10                 =>  group_name/6/7/567/10/Fichier_doc
     *                    ||                                          ^ ^
     *                    +-------------------------------------------+ |
     *                     +--------------------------------------------+
@@ -76,7 +80,7 @@ class Docman_FileStorage {
         foreach($path_elements as $elem) {
             $path .= $elem .'/';
             if (!is_dir($path)) {
-                mkdir($path);
+                mkdir($path, 0700);
             }
         }
         $path .= $name;

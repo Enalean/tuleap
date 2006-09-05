@@ -1,0 +1,86 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_View
+*/
+require_once(dirname(__FILE__).'/../Docman_VersionFactory.class');
+require_once(dirname(__FILE__).'/../Docman_Icons.class');
+
+/* abstract */ class Docman_View_View {
+    
+    var $_controller;
+    
+    function Docman_View_View(&$controller) {
+        $this->_controller = $controller;
+    }
+    
+    function display($params = array()) {
+        $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+        $this->_header($params);
+        $this->_scripts($params);
+        $this->_feedback($params);
+        $this->_toolbar($params);
+        $this->_title($params);
+        $this->_breadCrumbs($params);
+        $this->_mode($params);
+        $this->_filter($params);
+        $this->_content($params);
+        $this->_footer($params);
+    }
+    /* protected */ function _header($params) {
+    }
+    /* protected */ function _scripts($params) {
+    }
+    /* protected */ function _feedback($params) {
+    }
+    /* protected */ function _toolbar($params) {
+    }
+    /* protected */ function _title($params) {
+    }
+    /* protected */ function _breadCrumbs($params) {
+    }
+    /* protected */ function _mode($params) {
+    }
+    /* protected */ function _filter($params) {
+    }
+    /* protected */ function _content($params) {
+    }
+    /* protected */ function _footer($params) {
+    }
+    
+    
+    function &_getVersionFactory($params) {
+        return new Docman_VersionFactory();
+    }
+    function &_getDocmanIcons($params) {
+        return new Docman_Icons($params['theme_path'] .'/images/ic/');
+    }
+    function &_getItemFactory($params) {
+        return new Docman_ItemFactory();
+    }
+    /* static */ function buildUrl($prefix, $parameters) {
+        $et = '&amp;';
+        $url = '';
+        if ($prefix) {
+            $url = $prefix;
+        }
+        if (count($parameters)) {
+            if ($url) {
+                $url .= $et;
+            }
+            $i = 0;
+            $nb = count($parameters);
+            foreach($parameters as $key => $value) {
+                $i++;
+                $url .= $key .'='. $value . ($i == $nb ? '' : $et);
+            }
+        }
+        return $url;
+    }
+}
+
+?>

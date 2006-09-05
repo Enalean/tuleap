@@ -1,0 +1,40 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_NewFolder
+*/
+
+require_once('Docman_View_New.class');
+require_once('Docman_View_GetFieldsVisitor.class');
+
+class Docman_View_NewFolder extends Docman_View_New {
+    
+    function _getTitle($params) {
+        return $GLOBALS['Language']->getText('plugin_docman', 'new_folder', $params['item']->getTitle());
+    }
+    
+    function _getAction() {
+        return 'createFolder';
+    }
+    function _getActionText() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'new_folder_action');
+    }
+    function _getGeneralProperties($params) {
+        $html = '';
+        $new_folder = new Docman_Folder($params['item']);
+        $get_fields = new Docman_View_GetFieldsVisitor();
+        $fields     = $new_folder->accept($get_fields);
+        $html .= '<table>';
+        foreach($fields as $field) {
+            $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+        }
+        $html .= '</table>';
+        return $html;
+    }
+}
+
+?>

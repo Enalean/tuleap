@@ -1,0 +1,91 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_NewFolder
+*/
+
+require_once('Docman_View_New.class');
+require_once('Docman_View_GetFieldsVisitor.class');
+require_once(dirname(__FILE__).'/../Docman_Document.class');
+
+class Docman_View_NewDocument extends Docman_View_New {
+    
+    function _getTitle($params) {
+        return $GLOBALS['Language']->getText('plugin_docman', 'new_document', $params['item']->getTitle());
+    }
+    function _getEnctype() {
+        return ' enctype="multipart/form-data" ';
+    }
+    function _getAction() {
+        return 'createDocument';
+    }
+    function _getActionText() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'new_document_action');
+    }
+    
+    function _getSpecificProperties() {
+        $html = '';
+        $specifics = array(
+            array(
+                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
+                'obj'     => new Docman_Link(),
+                'checked' => false
+            ),
+            array(
+                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_wiki'),
+                'obj'     => new Docman_Wiki(),
+                'checked' => false
+            ),
+            array(
+                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
+                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_file'),
+                'obj'     => new Docman_File(),
+                'checked' => true
+            )
+        );
+        if ($this->_controller->getProperty('embedded_are_allowed')) {
+            $specifics[] = array(
+                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_embedded'),
+                'obj'     => new Docman_EmbeddedFile(),
+                'checked' => false
+            );
+        }
+        $get_specific_fields = new Docman_View_GetSpecificFieldsVisitor();
+        
+        foreach ($specifics as $specific) {
+            $html .= '<div><input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
+            $html .= '<label for="item_item_type_'. $specific['type'] .'">'. $specific['label'] .'</label></div>';
+            $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
+            $fields = $specific['obj']->accept($get_specific_fields);
+            $html .= '<table>';
+            foreach($fields as $field) {
+                $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+            }
+            $html .= '</table>';
+            $html .= '</div>';
+        }
+        return $html;
+    }
+    
+    function _getGeneralProperties($params) {
+        $html = '';
+        $new_document = new Docman_Document($params['item']);
+        $get_fields = new Docman_View_GetFieldsVisitor();
+        $fields = $new_document->accept($get_fields);
+        $html .= '<table>';
+        foreach($fields as $field) {
+            $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
+        }
+        $html .= '</table>';
+        return $html;
+    }
+}
+
+?>

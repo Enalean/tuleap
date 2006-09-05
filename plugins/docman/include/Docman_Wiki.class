@@ -46,17 +46,15 @@ class Docman_Wiki extends Docman_Document {
         parent::initFromRow($row);
         $this->setPagename($row['wiki_page']);
     }
-    function getSpecificFields() {
-        $fields = array(
-            array(
-                'label' => 'Pagename',
-                'field' => '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->getPagename(), ENT_QUOTES) .'" />'
-            )
-        );
-        return $fields;
+    function toRow() {
+        $row = parent::toRow();
+        $row['wiki_page'] = $this->getPagename();
+        $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
+        return $row;
     }
-    function getActionWhenUserClickOnTitle($params) {
-        return '/wiki/?group_id='. $this->getGroupId() .'&pagename='. $this->getPagename();
+
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitWiki($this, $params);
     }
 }
 

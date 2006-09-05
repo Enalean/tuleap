@@ -94,18 +94,20 @@ class PluginManager {
     }
     
     function &installPlugin($name) {
+        $plugin = false;
         if ($this->isNameValid($name)) {
             $plugin_factory =& $this->_getPluginFactory();
             if (!$plugin_factory->isPluginInstalled($name)) {
                 if (!$this->_executeSqlStatements('install', $name)) {
                     $plugin_factory =& $this->_getPluginFactory();
-                    return $plugin_factory->createPlugin($name);
+                    $plugin =& $plugin_factory->createPlugin($name);
+                    $this->_createEtc($name);
                 } else {
                     $GLOBALS['feedback'] .= 'DB may be corrupted';
                 }
             }
         }
-        return false;
+        return $plugin;
     }
     
     function uninstallPlugin(&$plugin) {
@@ -120,7 +122,37 @@ class PluginManager {
             return false;
         }
     }
-    
+    function getPostInstall($name) {
+        $path_to_file = '/'.$name.'/POSTINSTALL.txt';
+        return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ? 
+            file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) : 
+            false;
+    }
+    function getReadme($name) {
+        $path_to_file = '/'.$name.'/README.txt';
+        return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ? 
+            file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) : 
+            false;
+    }
+    function _createEtc($name) {
+        if (!is_dir($GLOBALS['sys_custompluginsroot'] .'/'. $name)) {
+            mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name, 0700);
+        }
+        if (is_dir($GLOBALS['sys_pluginsroot'] .'/'. $name .'/etc')) {
+            if (!is_dir($GLOBALS['sys_custompluginsroot'] .'/'. $name .'/etc')) {
+                mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc', 0700);
+            }
+            $etcs = glob($GLOBALS['sys_pluginsroot'] .'/'. $name .'/etc/*');
+            foreach($etcs as $etc) {
+                copy($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
+            }
+            $incdists = glob($GLOBALS['sys_custompluginsroot'] .'/'. $name .'/etc/*.dist');
+            foreach($incdists as $incdist) {
+                rename($incdist,  $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($incdist, '.dist'));
+            }
+        }
+    }
+        
     function _executeSqlStatements($file, $name) {
         $db_corrupted = false;
         $path_found   = false;

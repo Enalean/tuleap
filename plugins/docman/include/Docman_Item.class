@@ -22,12 +22,6 @@
  *
  * $Id$
  */
-define('DOCMAN_ITEM_TYPE_FOLDER',       1);
-define('DOCMAN_ITEM_TYPE_FILE',         2);
-define('DOCMAN_ITEM_TYPE_LINK',         3);
-define('DOCMAN_ITEM_TYPE_EMBEDDEDFILE', 4);
-define('DOCMAN_ITEM_TYPE_WIKI',         5);
-
 require_once('Docman_ItemAction.class');
 
 /**
@@ -42,6 +36,7 @@ class Docman_Item {
         $this->description = null;
         $this->createDate  = null;
         $this->updateDate  = null;
+        $this->deleteDate  = null;
         $this->rank        = null;
         $this->parentId    = null;
         $this->groupId     = null;
@@ -107,6 +102,15 @@ class Docman_Item {
         return $this->updateDate;
     }
 
+    var $deleteDate;
+    function setDeleteDate($date) {
+        $this->deleteDate = (int) $date;
+    }
+
+    function getDeleteDate() {
+        return $this->deleteDate;
+    }
+
     var $rank;
     function setRank($rank) {
         $this->rank = (int) $rank;
@@ -149,6 +153,7 @@ class Docman_Item {
         $this->setDescription($row['description']);
         $this->setCreateDate($row['create_date']);
         $this->setUpdateDate($row['update_date']);
+        $this->setDeleteDate($row['delete_date']);
         $this->setRank($row['rank']);
         $this->setParentId($row['parent_id']);
         $this->setGroupId($row['group_id']);
@@ -156,115 +161,24 @@ class Docman_Item {
         
         $this->_addAction(new Docman_ItemActionDetails($this));
     }
+    
+    function toRow() {
+        $row = array();
+        $row['item_id']     = $this->getId();
+        $row['title']       = $this->getTitle();
+        $row['description'] = $this->getDescription();
+        $row['create_date'] = $this->getCreateDate();
+        $row['update_date'] = $this->getUpdateDate();
+        $row['delete_date'] = $this->getDeleteDate();
+        $row['rank']        = $this->getRank();
+        $row['parent_id']   = $this->getParentId();
+        $row['group_id']    = $this->getGroupId();
+        $row['user_id']     = $this->getOwnerId();
+        return $row;
+    }
     //}}}
     
-    function getClasses($params) {
-        $li_classes = 'docman_item';
-        if (isset($params) && isset($params['is_last']) && $params['is_last']) {
-            $li_classes .= '_last';
-        }
-        return $li_classes;
-    }
-    
-    function fetch($params = null) {
-        
-        $show_options = isset($params['show_options']) && $params['show_options'] == $this->getId();
-        
-        $icon  = $this->getIcon($params);
-        
-        $html  = '<div>'. $icon .'<span class="docman_item_title">';
-        $action = isset($params['item_to_move']) ? false : $this->getActionWhenUserClickOnTitle($params);
-        if ($action) {
-            $html .= '<a href="'. $action .'">'. $this->getTitle() .'</a>';
-        } else {
-            $html .= $this->getTitle();
-        }
-        $html .= '</span>';
-        //Show/hide options {{{
-        if (!isset($params['item_to_move'])) {
-            $user_actions = $this->getActions();
-            if ($show_options) {
-                $html .= '<span class="docman_item_options">';
-                foreach($user_actions as $key => $nop) {
-                    $html .= $user_actions[$key]->fetch($params);
-                }
-                $html .= '</span>';
-            } else {
-                $html .= '<script type="text/javascript">
-                //<!--
-                ';
-                foreach($user_actions as $key => $nop) {
-                    $html .= $user_actions[$key]->fetchAsJavascript($params);
-                }
-                $html .= '
-                //-->
-                </script>';
-                $html .= '<noscript id="docman_item_show_options_'. $this->getId() .'" ><a class="docman_item_show_options" href="'. $params['default_url'] .'&amp;show_options=' . $this->getId() .'#item_'. $this->getId() .'" title="Show options">';
-                $html .= '[Show options]';
-                $html .= '</a></noscript>';
-            }
-        } else if ($params['item_to_move'] != $this->getId()) {
-            $pm =& PermissionsManager::instance();
-            if ($params['user']->isSuperUser() || $pm->userHasPermission($this->getId(), 'PLUGIN_DOCMAN_WRITE', $params['user']->getUgroups()) 
-                || $pm->userHasPermission($this->getId(), 'PLUGIN_DOCMAN_ADMIN', $params['user']->getUgroups())
-            ) {
-                $html .= '<a href="'. $params['default_url'] .'&amp;action=move_here&amp;item_to_move='. $params['item_to_move'] .'&amp;id='. $this->getId() .'">&larr; move here</a>';
-            }
-        }
-        //}}}
-        $html .= '</div>';
-        if (trim($this->getDescription()) != '') {
-            $html .= '<div class="docman_item_description">'. $this->getDescription() .'</div>';
-        }
-        return $html;
-    }
-    function getActionWhenUserClickOnTitle($params) {
-        return false;
-    }
-    function fetchForm($params) {
-    }
-    
-    function getIcon($params = null) {
-        $icon_src = $params['docman_icons']->getIconForItem($this, $params);
-        return '<img src="'. $icon_src .'" class="docman_item_icon"/>';
-    }
-    
-    function displayEditForm($params) {
-        $html  = '<form action="'. $params['default_url'] .'" method="POST" enctype="multipart/form-data">';
-        $fields = $this->getFields($params);
-        $html .= '<table>';
-        foreach($fields as $field) {
-            $html .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
-        }
-        $html .= '<tr><td>';
-        $html .= '<input type="hidden" name="item[id]" value="'. $this->getId() .'" />';
-        $html .= '<input type="hidden" name="action" value="'. $params['action'] .'" />';
-        $html .= '</td><td><input type="submit" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" /></td></tr>';
-        $html .= '</table>';
-        $html .= '</form>';
-        echo $html;
-    }
-    function getFields() {
-        return array_merge(
-            array(
-                array(
-                    'label' => 'Title',
-                    'field' => '<input type="text" name="item[title]" value="'. htmlentities($this->getTitle(), ENT_QUOTES) .'" />'
-                ),
-                array(
-                    'label' => 'Description',
-                    'field' => '<textarea name="item[description]">'. $this->getDescription() .'</textarea>'
-                ),
-                array(
-                    'label' => 'Rank',
-                    'field' => '<input type="text" name="item[rank]" value="'. htmlentities($this->getRank(), ENT_QUOTES) .'" size="3" maxlength="16" />'
-                )
-            ), 
-            $this->getSpecificFields()
-        );
-    }
-    function getSpecificFields() {
-        return array();
+    /* abstract */function accept(&$visitor, $params = array()) {
     }
 }
 ?>

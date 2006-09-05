@@ -40,33 +40,67 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->_searchWithCurrentVersion(' i.item_id = '.$_id, '', ' ORDER BY version_date DESC LIMIT 1');
     }
 
+    function searchByIdList($idList) {        
+        if(is_array($idList) && count($idList) > 0) {
+            $sql_where = sprintf(' i.item_id IN (%s)', implode(', ', $idList));
+        }
+        return $this->_searchWithCurrentVersion($sql_where, '', '');
+    }
+
     /**
-     * Return the list of items for a given projet excluding ids mentionned in
-     * $collapsed array
+     * Return the list of items for a given projet according to filters
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($id, $collapsed = array()) {
+    function searchByGroupId($id, $filter = array(), $order = array()) {
+        // Where clause        
+        // Select on group_id
         $_id = (int) $id;
-
-        $sql_opt = '';
-        if(is_array($collapsed) && count($collapsed) > 0) {
-            $sql_opt = ' AND i.parent_id NOT IN ('.implode(',', $collapsed).')';
+        $sql_where = ' i.group_id = '.$_id;
+                
+        //
+        // Filters
+        if(is_array($filter) and count($filter) > 0) {
+            foreach($filter as $f) {
+                if($f->validate()) {
+                    $sql_where .= $f->getSqlClause();
+                }
+            }    
         }
-        return $this->_searchWithCurrentVersion(' i.group_id='. $_id .' '. $sql_opt);
-    }
+        
+        //
+        // Order clause        
+        $sql_order = '';
+        if(is_array($order) and count($order) > 0) {
+            $sql_order = ' ORDER BY ';
+            $valid = false;
+            foreach($order as $o) {
+                if($o->validate()) {
+                    $valid = true;
+                    $sql_order .= $o->getSqlClause();
+                }
+            }
+            if(!$valid) {
+                $sql_order = '';
+            }
+        }
 
+        return $this->_searchWithCurrentVersion($sql_where, '', $sql_order);
+
+    }
+   
     function _searchWithCurrentVersion($where, $group = '', $order = '') {
         $sql = 'SELECT i.*, '
             .' v.id as version_id, v.number as version_number, v.user_id as version_user_id, v.label as version_label, '
             .' v.changelog as version_changelog, v.date as version_date, v.filename as version_filename, v.filesize as version_filesize, '
             .' v.filetype as version_filetype, v.path as version_path, '
-            .' count(child.item_id) as folder_nb_of_children '
+            .' 1 as folder_nb_of_children '
             .' FROM plugin_docman_item AS i LEFT JOIN plugin_docman_version AS v ON (i.item_id = v.item_id) '
             .'       LEFT JOIN plugin_docman_item AS child ON (i.item_id = child.parent_id) '
-            .' WHERE '.$where
-            .' GROUP BY i.item_id '. ($group ? ', '.$group : '')
+            .' WHERE i.delete_date IS NULL AND '.$where
+            .$group
             .$order;
+        
         return $this->retrieve($sql);
     }
     
@@ -108,7 +142,7 @@ class Docman_ItemDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function searchCollapseUserPrefs($group_id, $user_id) {
-        $pref_base = DOCMAN_COLLAPSE_FOLDER_PREF.'_'.((int)$group_id);
+        $pref_base = PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.((int)$group_id);
 
         $sql = sprintf('SELECT preference_name, preference_value'
                        .' FROM user_preferences'
@@ -196,7 +230,7 @@ class Docman_ItemDao extends DataAccessObject {
         $sql = 'INSERT INTO plugin_docman_item'
             .'('.implode(', ', $arg).')'
             .' VALUES ('.implode(', ', $values).')';
-        return $this->_createAndReturnId($sql);
+        return $this->_createAndReturnId($sql, $update_date);
     }
     function createFromRow($row) {
         $row['create_date'] = $row['update_date'] = time();
@@ -213,17 +247,20 @@ class Docman_ItemDao extends DataAccessObject {
             $sql = 'INSERT INTO plugin_docman_item '
                 .'('.implode(', ', $arg).')'
                 .' VALUES ('.implode(', ', $values).')';
-            return $this->_createAndReturnId($sql);
+            return $this->_createAndReturnId($sql, $row['create_date']);
         } else {
             return false;
         }
     }
-    function _createAndReturnId($sql) {
+    function _createAndReturnId($sql, $date) {
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
+                if ($inserted) {
+                    $this->_updateUpdateDateOfParent($row['id']);
+                }
             } else {
                 $inserted = $dar->isError();
             }
@@ -295,14 +332,22 @@ class Docman_ItemDao extends DataAccessObject {
             .' WHERE item_id='.((int) $item_id);
 
         $inserted = $this->update($sql);
-    
+        if ($inserted) {
+            $this->_updateUpdateDateOfParent($this->da->quoteSmart($item_id));
+        }
         return $inserted;
     }
 
     function updateFromRow($row) {
         $updated = false;
+        $id = false;
         if (isset($row['id'])) {
-            $dar =& $this->searchById($row['id']);
+            $id = $row['id'];
+        } else if (isset($row['item_id'])) {
+            $id = $row['item_id'];
+        }
+        if ($id) {
+            $dar =& $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
                 $current =& $dar->current();
                 $set_array = array();
@@ -315,14 +360,25 @@ class Docman_ItemDao extends DataAccessObject {
                     $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
                     $sql = 'UPDATE plugin_docman_item'
                         .' SET '.implode(' , ', $set_array)
-                        .' WHERE item_id='. $this->da->quoteSmart($row['id']);
+                        .' WHERE item_id='. $this->da->quoteSmart($id);
                     $updated = $this->update($sql);
+                    if ($updated) {
+                        $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
+                    }
                 }
             }
         }
         return $updated;
     }
-    
+    function _updateUpdateDateOfParent($item_id_quoted) {
+        $sql = 'SELECT parent_id, update_date FROM plugin_docman_item WHERE item_id = '. $item_id_quoted;
+        $dar =& $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->valid()) {
+            $item = $dar->current();
+            $sql = 'UPDATE plugin_docman_item SET update_date = '. $item['update_date'] .' WHERE item_id = '. $item['parent_id'];
+            $this->update($sql);
+        }
+    }
     /**
      * Delete entry that match $item_id in plugin_docman_item
      *
@@ -362,7 +418,7 @@ class Docman_ItemDao extends DataAccessObject {
     }
     
     function searchByParentsId($parents) {
-        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) ',
+        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL ',
             implode(', ', $parents)
         );
         return $this->retrieve($sql);
@@ -380,6 +436,23 @@ class Docman_ItemDao extends DataAccessObject {
             $id = $row['item_id'];
         }
         return $id;
+    }
+
+    function searchSubFolders($group_id, $parentIds = array()) {        
+        if(is_array($parentIds) && count($parentIds) > 0) {           
+            $sql = sprintf('SELECT item_id'
+                           .' FROM plugin_docman_item'
+                           .' WHERE group_id = %d'
+                           .' AND parent_id IN (%s)'
+                           .' AND item_type = %d'
+                           , $group_id
+                           , implode(',', $parentIds)
+                           , PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+            return $this->retrieve($sql);
+        }
+        else {
+            return null;
+        }
     }
 }
 

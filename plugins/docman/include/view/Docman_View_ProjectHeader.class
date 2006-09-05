@@ -1,0 +1,39 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_ProjectHeader
+*/
+
+require_once('Docman_View_Header.class');
+
+/* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header {
+    
+    /* protected */ function _scripts($params) {
+        echo '<script type="text/javascript"> var docman = new com.xerox.codex.Docman('. $params['group_id'] .', {';
+        $di =& $this->_getDocmanIcons($params);
+        echo 'folderSpinner:\''. $di->getFolderSpinner() .'\'';
+        $docman_params = $this->_getJSDocmanParameters();
+        foreach($docman_params as $name => $value) {
+            echo ', '. $name .': \''. $value .'\' ';
+        }
+        echo ' }); </script>';
+    }
+    
+    /* protected */ function _getAdditionalHtmlParams($params) {
+        return  array(
+            'group'  => $params['group_id'],
+            'toptab' => 'docman');
+    }
+
+    
+    /* protected */ function _getJSDocmanParameters() {
+        return array();
+    }
+    
+}
+
+?>

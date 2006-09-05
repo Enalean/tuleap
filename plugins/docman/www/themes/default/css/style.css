@@ -188,3 +188,12 @@ a img {
 .feedback_info h3 {
         display:none;
 }
+
+fieldset.docman_filters { 
+  margin-bottom:1em;
+}
+
+fieldset.docman_filters legend {
+  font-size:1.3em; 
+  font-weight:bold;
+}

@@ -33,21 +33,16 @@ class Docman_EmbeddedFile extends Docman_File {
     function Docman_EmbeddedFile($data = null) {
         parent::Docman_File($data);
     }
-    function getSpecificFields() {
-        $content = '--';
-        $version =& $this->getCurrentVersion();
-        if ($version && is_file($version->getPath())) {
-            $content = file_get_contents($version->getPath());
-        }
-        $fields = array(
-            array(
-                'label' => 'Content',
-                'field' => '<textarea name="content" cols="50" rows="15">'. $content .'</textarea>'
-            )
-        );
-        return $fields;
+    
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitEmbeddedFile($this, $params);
     }
-
+    
+    function toRow() {
+        $row = parent::toRow();
+        $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
+        return $row;
+    }
 }
 
 ?>

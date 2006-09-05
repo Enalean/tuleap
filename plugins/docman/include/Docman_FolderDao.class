@@ -37,7 +37,7 @@ class Docman_FolderDao extends Docman_ItemDao {
      * @return DataAccessResult
      */
     function searchAllByType($group_id) {
-        return parent::searchAllByType($group_id, DOCMAN_ITEM_TYPE_FOLDER);
+        return parent::searchAllByType($group_id, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
     }
 
     /**
@@ -49,7 +49,7 @@ class Docman_FolderDao extends Docman_ItemDao {
         
         return parent::create($parent_id, $group_id, $title, $description, 
                               $create_date, $update_date, $user_id, $rank, 
-                              DOCMAN_ITEM_TYPE_FOLDER, null, null, null);		
+                              PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null, null);		
     }
 
     /**

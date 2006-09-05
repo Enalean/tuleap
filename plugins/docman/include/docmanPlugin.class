@@ -28,7 +28,6 @@ class DocmanPlugin extends Plugin {
 	
 	function DocmanPlugin($id) {
 		$this->Plugin($id);
-        $this->_addHook('site_admin_option_hook',            'siteAdminHooks',                    false);
         $this->_addHook('cssfile',                           'cssFile',                           false);
         $this->_addHook('javascript_file',                   'jsFile',                            false);
         $this->_addHook('plugin_load_language_file',         'loadPluginLanguageFile',            false);
@@ -40,16 +39,20 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
 	}
 	function permission_get_name($params) {
+        $this->loadPluginLanguageFile($params);
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
-                    $params['name'] = 'Read';  //TODO i18n
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_read');
                     break;
                 case 'PLUGIN_DOCMAN_WRITE':
-                    $params['name'] = 'Write'; //TODO i18n
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_write');
+                    break;
+                case 'PLUGIN_DOCMAN_MANAGE':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_manage');
                     break;
                 case 'PLUGIN_DOCMAN_ADMIN':
-                    $params['name'] = 'Admin'; //TODO i18n
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_admin');
                     break;
                 default:
                     break;
@@ -58,7 +61,7 @@ class DocmanPlugin extends Plugin {
     }
     function permission_get_object_type($params) {
         if (!$params['object_type']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_ADMIN'))) {
+            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class');
                 $if =& new Docman_ItemFactory();
                 $item =& $if->getItemFromDb($params['object_id']);
@@ -70,7 +73,7 @@ class DocmanPlugin extends Plugin {
     }
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_ADMIN'))) {
+            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class');
                 $if =& new Docman_ItemFactory();
                 $item =& $if->getItemFromDb($params['object_id']);
@@ -82,7 +85,7 @@ class DocmanPlugin extends Plugin {
     }
     function permission_get_object_fullname($params) {
         if (!$params['object_fullname']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_ADMIN'))) {
+            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class');
                 $if =& new Docman_ItemFactory();
                 $item =& $if->getItemFromDb($params['object_id']);
@@ -96,10 +99,10 @@ class DocmanPlugin extends Plugin {
     }
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_ADMIN'))) {
+            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman.class');
                 $docman =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
-                $params['allowed'] = $docman->userCanAdminDocman();
+                $params['allowed'] = $docman->userCanAdmin();
             }
         }
     }
@@ -109,10 +112,6 @@ class DocmanPlugin extends Plugin {
             $this->pluginInfo =& new DocmanPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-    
-    function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/?group_id=101">Docman</a></li>';
     }
     
     function cssFile($params) {
@@ -130,6 +129,7 @@ class DocmanPlugin extends Plugin {
             echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/scripts/calendar.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->_getPluginPath().'/scripts/docman.js"></script>'."\n";
 
         }
@@ -148,12 +148,6 @@ class DocmanPlugin extends Plugin {
     function process() {
         require_once('Docman.class');
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
-        $controler->process();
-    }
-
-    function processAdmin() {
-        require_once('DocmanAdmin.class');
-        $controler =& new DocmanAdmin($this->_getPluginPath(), $this->_getThemePath());
         $controler->process();
     }
 }

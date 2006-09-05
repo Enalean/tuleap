@@ -27,7 +27,7 @@ require_once('pre.php');
 require_once('common/plugin/PluginManager.class');
 $plugin_manager =& PluginManager::instance();
 $p =& $plugin_manager->getPluginByName('docman');
-if ($p) {
+if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->process();
 } else {
     header('Location: '.get_server_url());

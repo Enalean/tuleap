@@ -104,12 +104,12 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             }
             Event.observe(node, 'mouseover', function(event) {
                 Element.addClassName(node, 'docman_item_highlight');
-                Element.show($('docman_item_options_'+node.id.split('_')[1]));
+                Element.setStyle($('docman_item_options_'+node.id.split('_')[1]), {visibility:'visible'});
                 Event.stop(event);
             });
             Event.observe(node, 'mouseout', function(event) {
                 Element.removeClassName(node, 'docman_item_highlight');
-                Element.hide($('docman_item_options_'+node.id.split('_')[1]));
+                Element.setStyle($('docman_item_options_'+node.id.split('_')[1]), {visibility:'hidden'});
                 Event.stop(event);
             });
         });
@@ -136,7 +136,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             if (!actions_panel) {
                 new Insertion.After($('docman_item_show_options_'+item_id), '<span class="docman_item_options" id="docman_item_options_'+item_id+'"></span>');
                 var actions_panel = $('docman_item_options_'+item_id);
-                Element.hide(actions_panel);
+                Element.setStyle(actions_panel, {visibility:'hidden'});
             }
             this.actionsForItem[item_id].actions.each(function (action) {
                 if (!action.created) {
@@ -229,10 +229,12 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     icon.src = icon.src.replace('folder.png', 'folder-open.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
-                        //Element.show(subitems);
+                        Element.show(subitems);
+                        /*
                         Effect.toggle(subitems, 'slide', {
                             duration:0.25
                         });
+                        /**/
                         new Ajax.Request('?group_id='+ this.group_id +'&action=expandFolder&view=none&id='+node.id.split('_')[1], {
                             asynchronous:true
                         });
@@ -271,10 +273,12 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     icon.src = icon.src.replace('folder-open.png', 'folder.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
-                        //Element.hide(subitems);
+                        Element.hide(subitems);
+                        /*
                         Effect.toggle(subitems, 'slide', {
                             duration:0.25
                         });
+                        /**/
                     }
                     new Ajax.Request('?group_id='+ this.group_id +'&action=collapseFolder&view=none&id='+node.id.split('_')[1], {
                         asynchronous:true

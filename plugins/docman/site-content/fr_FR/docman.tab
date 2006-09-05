@@ -1,5 +1,156 @@
 plugin_docman	descriptor_description	Gestionnaire de documents avancé
 plugin_docman	descriptor_name	Gestionnaire de Documents
+plugin_docman	title	Documentation du projet
+plugin_docman	service_lbl_key	Docman
+plugin_docman	service_desc_key	Gestionnaire de documents avancé
 
-plugin_docman	title	Gestionnaire de Documents
+#
+#-----------------------------------------------
+# Script: plugins/docman/include/view/Docman_View_DocumentTableVisitor.class
+#
+plugin_docman	view_documenttablevisitor_title	Titre
+plugin_docman	view_documenttablevisitor_desc	Description
+plugin_docman	view_documenttablevisitor_owner	Propriétaire
+plugin_docman	view_documenttablevisitor_subdate	Date de soumission
+plugin_docman	view_documenttablevisitor_lastauthor	Dernier auteur
+plugin_docman	view_documenttablevisitor_lastupdate	Dernière mise-à-jour
 
+
+
+
+plugin_docman	action_details	Details de $1
+plugin_docman	action_move	Déplacer $1
+plugin_docman	action_newdocument	Créer un nouveau document sous $1
+plugin_docman	action_newfolder	Créer un nouveau dossier sous $1
+plugin_docman	action_show	Afficher $1
+plugin_docman	action_showactions	Afficher les options
+
+plugin_docman	admin_permissions_title	Gérer les permissions
+plugin_docman	admin_permissions_descr	Définir qui peut administrer le docman.
+plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le docman:
+plugin_docman	admin_title	Administration
+plugin_docman	admin_view_title	Gérer les préférence d'affichage
+plugin_docman	admin_view_descr	Définir la vue par défaut pour le docman.
+plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre peut être écrasé par les préférences utilisateurs.
+
+plugin_docman	breadcrumbs_location	Situation :
+
+plugin_docman	browse_viewas	-- Vue:
+
+plugin_docman	details_actions	Actions
+plugin_docman	details_actions_delete	Suppression
+plugin_docman	details_actions_delete_candelete_document	Vous pouvez <a href="$1">supprimer ce document</a>.
+plugin_docman	details_actions_delete_candelete_folder	Vous pouvez <a href="$1">supprimer ce dossier</a>.
+plugin_docman	details_actions_delete_cannotdelete_document	Vous ne pouvez pas supprimer ce document.
+plugin_docman	details_actions_delete_cannotdelete_folder	Vous ne pouvez pas supprimer ce dossier.
+plugin_docman	details_actions_move	Déplacement
+plugin_docman	details_actions_move_canmove_document	Vous pouvez <a href="$1">déplacer ce document</a> dans un autre dossier.
+plugin_docman	details_actions_move_canmove_folder	Vous pouvez <a href="$1">déplacer ce dossier</a> dans un autre dossier.
+plugin_docman	details_actions_move_cannotmove_document	Vous ne pouvez pas déplacer ce document.
+plugin_docman	details_actions_move_cannotmove_folder	Vous ne pouvez pas déplacer ce dossier.
+plugin_docman	details_actions_newversion	Nouvelle version
+plugin_docman	details_actions_newversion_button	Créer une nouvelle version
+plugin_docman	details_actions_newversion_changelog	Changements
+plugin_docman	details_actions_newversion_content	Contenu
+plugin_docman	details_actions_newversion_label	Label
+plugin_docman	details_actions_update	Mise à jour
+plugin_docman	details_delete	Suppression
+plugin_docman	details_delete_cancel	Non, je ne veut pas le supprimer
+plugin_docman	details_delete_confirm	Oui, je suis sûr !
+plugin_docman	details_delete_title	Supprimer $1
+plugin_docman	details_delete_warning_document	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un document.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
+plugin_docman	details_delete_warning_file	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un fichier. Avant de confirmer, notez que toutes les versions seront supprimées.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
+plugin_docman	details_delete_warning_folder	<h3>Confirmez la suppression du dossier $1</h3><p>Vous êtes sur le point de supprimer un dossier. Avant de confirmer, notez que tous les sous-éléments et leurs versions seront supprimés.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
+plugin_docman	details_edit_title	Edition des propriétés de $1
+plugin_docman	details_history	Historique
+plugin_docman	details_history_anonymous	Anonyme
+plugin_docman	details_history_logs	Journeaux
+plugin_docman	details_history_logs_error	Erreur lors de la récupération des journaux !
+plugin_docman	details_history_logs_no	Il n'y a pas encore de journaux.
+plugin_docman	details_history_logs_what	Quoi
+plugin_docman	details_history_logs_when	Quand
+plugin_docman	details_history_logs_who	Qui
+plugin_docman	details_history_versions	Versions
+plugin_docman	details_history_versions_author	Auteur
+plugin_docman	details_history_versions_changelog	Changement
+plugin_docman	details_history_versions_date	Date
+plugin_docman	details_history_versions_error	Erreur lors de la récupération des versions
+plugin_docman	details_history_versions_label	Label
+plugin_docman	details_history_versions_no	Il n'y a pas encore de versions
+plugin_docman	details_history_versions_version	Version
+plugin_docman	details_permissions	Permissions
+plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
+plugin_docman	details_permissions_perms	Permissions d'accès
+plugin_docman	details_permissions_recursive	recursif (appliquer les mêmes permissions pour tous les sous-éléments de ce dossier)
+plugin_docman	details_properties	Propriétés
+plugin_docman	details_properties_edit	Editer les propriétés
+plugin_docman	details_title	Détails de $1
+
+plugin_docman	error_alreadyinstalled	Docman déjà installed.
+plugin_docman	error_filenotfound	Le fichier ne peut-être trouvé.
+plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le docman.
+plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
+plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour editer cet élément.
+plugin_docman	error_perms_delete	Vous n'avez pas les droits suffisants pour supprimer cet élément.
+plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour déplacer cet élément.
+plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour définir des permissions sur cet élément.
+plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet élément.
+
+plugin_docman	event_add	Création
+plugin_docman	event_edit	Edition
+plugin_docman	event_move	Déplacement
+plugin_docman	event_del	Suppression
+plugin_docman	event_access	Accès
+plugin_docman	event_newversion	Nouvelle version
+
+plugin_docman	field_descr	Description
+plugin_docman	field_rank	Rang
+plugin_docman	field_title	Titre
+
+plugin_docman	filters	Filtres
+plugin_docman	filters_date_end	Date de fin
+plugin_docman	filters_date_message	La date entrée dans le champ "$1" n'est pas valide. Le format de date valide est YYYY-M-D (ex. '$2' pour aujourd'hui) ou alors laissez le champ vide.
+plugin_docman	filters_date_start	Date de début
+plugin_docman	filters_ordering	Ordre
+plugin_docman	filters_ordering_ascending	Ascendant
+plugin_docman	filters_ordering_descending	Descendant
+plugin_docman	filters_ordering_message	La valeur de $1 devrait être soit "Ascendant", soit "Descendant"
+
+plugin_docman	logsdaily_field	Documents
+plugin_docman	logsdaily_title	Accès aux docduments
+
+plugin_docman	move	Déplacement de $1
+plugin_docman	move_actual	L'élément est dans ce dossier.
+plugin_docman	move_cancel	Annuler le déplacement.
+plugin_docman	move_descr	Choisissez le nouveau dossier :
+plugin_docman	move_here	déplacer ici.
+plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
+
+plugin_docman	new_document	Nouveau document sous $1
+plugin_docman	new_document_action	Créer le document
+plugin_docman	new_document_embedded	Fichier embarqué
+plugin_docman	new_document_file	Fichier
+plugin_docman	new_document_link	Lien
+plugin_docman	new_document_wiki	Page wiki
+plugin_docman	new_folder	Nouveau dossier sous $1
+plugin_docman	new_folder_action	Créer le dossier
+plugin_docman	new_generalproperties	Propriétés générales
+plugin_docman	new_specificproperties	Propriétés spécifiques
+
+plugin_docman	permission_admin	Administrateur
+plugin_docman	permission_manage	Gestionnaire
+plugin_docman	permission_read	Lecteur
+plugin_docman	permission_write	Contributeur
+
+plugin_docman	redirect	<div style="text-align:center"><p>Docman mis à jour</p><p>Vous allez être redirigé <a href="$1">sur le docman</a>.</p></div>
+
+plugin_docman	specificfield_embeddedcontent	Contenu
+plugin_docman	specificfield_pagename	Nom de la page
+plugin_docman	specificfield_url	Url
+
+plugin_docman	toolbar_admin	Admin
+plugin_docman	toolbar_docman	Documentation projet
+
+plugin_docman	view_Icons	Icônes
+plugin_docman	view_Table	Table
+plugin_docman	view_Tree	Arbre

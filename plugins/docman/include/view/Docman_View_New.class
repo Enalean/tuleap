@@ -1,0 +1,59 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_New
+*/
+
+require_once('Docman_View_Display.class');
+
+/* abstract */ class Docman_View_New extends Docman_View_Display {
+    
+    /* protected abstract */ function _getEnctype() {
+    }
+    
+    /* protected abstract */ function _getAction() {
+    }
+    
+    /* protected abstract */ function _getActionText() {
+    }
+    
+    /* protected abstract */ function _getForm() {
+    }
+
+    /* protected */ function _getSpecificProperties() {
+        return '';
+    }
+
+    function _content($params) {
+        $html  = '<br /><br />';
+        $html .= '<form action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .'>';
+        
+        //{{{ General Properties
+        $html .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</legend>';
+        $html .= $this->_getGeneralProperties($params);
+        //}}}
+        $html .= '<input type="hidden" name="item[parent_id]" value="'. $params['item']->getId() .'" />';
+        $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';
+        $html .= '</fieldset>';
+        
+        //{{{ Specific Properties
+        $specific = $this->_getSpecificProperties();
+        if (trim($specific)) {
+            $html .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</legend>';
+            $html .= $specific;
+            $html .= '</fieldset>';
+        }
+        //}}}
+        
+
+        $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
+        $html .= '</form>';
+        echo $html;
+    }
+}
+
+?>

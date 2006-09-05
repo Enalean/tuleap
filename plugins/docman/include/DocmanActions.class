@@ -22,15 +22,19 @@
  *
  * $Id$
  */
+require_once('service.php');
 
 require_once('common/mvc/Actions.class');
 require_once('common/include/HTTPRequest.class');
 
+require_once('DocmanActionsDeleteVisitor.class');
 require_once('Docman_Folder.class');
 require_once('Docman_FolderBo.class');
 require_once('Docman_ItemFactory.class');
 require_once('Docman_VersionFactory.class');
 require_once('Docman_FileStorage.class');
+
+require_once('view/Docman_View_Browse.class');
 
 require_once('common/permission/PermissionsManager.class');
 
@@ -41,7 +45,7 @@ class DocmanActions extends Actions {
     var $event_manager;
     
     function DocmanActions(&$controler, $view=null) {
-        $this->Actions($controler);
+        parent::Actions($controler);
         $this->event_manager =& $this->_getEventManager();
 	}
 	
@@ -76,7 +80,7 @@ class DocmanActions extends Actions {
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
             $item = $request->get('item');
-            $item['item_type'] = DOCMAN_ITEM_TYPE_FOLDER;
+            $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
             $user =& $this->_controler->getUser();
             $item['user_id']  = $user->getId();
             $item['group_id'] = $request->get('group_id');
@@ -100,8 +104,23 @@ class DocmanActions extends Actions {
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
             $item = $request->get('item');
-            if (($item['item_type'] != DOCMAN_ITEM_TYPE_FILE || isset($_FILES['file'])) &&
-                $item['item_type'] != DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $request->exist('content'))
+            if (
+                    (
+                            $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_FILE 
+                            || 
+                            isset($_FILES['file'])
+                    ) 
+                    &&
+                    (
+                        $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE 
+                        || 
+                        (
+                            $this->_controler->getProperty('embedded_are_allowed') 
+                            && 
+                            $request->exist('content')
+                        )
+                    )
+                )
             {
                 $user =& $this->_controler->getUser();
                 $item['user_id']  = $user->getId();
@@ -118,7 +137,7 @@ class DocmanActions extends Actions {
                         'user'     => $user->getId())
                     );
                     switch ($item['item_type']) {
-                        case DOCMAN_ITEM_TYPE_FILE:
+                        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                             $fs =& $this->_getFileStorage();
                             if ($path = $fs->upload($_FILES['file'], $request->exist('group_id'), $id, 0)) {
                                 $version_factory =& $this->_getVersionFactory();
@@ -144,7 +163,7 @@ class DocmanActions extends Actions {
                                 //Annulation du nouvel item ?
                             }
                             break;
-                        case DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                             $fs =& $this->_getFileStorage();
                             if ($path = $fs->store($request->get('content'), $request->exist('group_id'), $id, 0)) {
                                 $version_factory =& $this->_getVersionFactory();
@@ -199,8 +218,9 @@ class DocmanActions extends Actions {
             $item_factory =& $this->_getItemFactory();
             $item =& $item_factory->getItemFromDb($request->get('id'));
             $item_type = $item_factory->getItemTypeForItem($item);
-            if ($item_type == DOCMAN_ITEM_TYPE_FILE || $item_type == DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                $label = $changelog = '';
+            if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $label = '';
+                $changelog = '';
                 $data_version = $request->get('version');
                 if ($data_version) {
                     if (isset($data_version['label'])) {
@@ -212,7 +232,7 @@ class DocmanActions extends Actions {
                 }
                 $version =& $item->getCurrentVersion();
                 $number = $version->getNumber() + 1;
-                if ($item_type == DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
+                if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
                     $fs =& $this->_getFileStorage();
                     if ($path = $fs->upload($_FILES['file'], $request->exist('group_id'), $request->get('id'), $number)) {
                         
@@ -237,7 +257,7 @@ class DocmanActions extends Actions {
                     } else {
                         //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
                     }
-                } else if ($item_type == DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
+                } else if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
                     $fs =& $this->_getFileStorage();
                     if ($path = $fs->store($request->get('content'), $request->exist('group_id'), $request->get('id'), $number)) {
                         $version_factory =& $this->_getVersionFactory();
@@ -331,29 +351,29 @@ class DocmanActions extends Actions {
                     1 => array(
                         'order' => 1, 
                         'type'  => 'PLUGIN_DOCMAN_READ',
-                        'label' => 'Read',
+                        'label' => permission_get_name('PLUGIN_DOCMAN_READ'),
                         'previous' => 0
                     ),
                     2 => array(
                         'order' => 2, 
                         'type'  => 'PLUGIN_DOCMAN_WRITE',
-                        'label' => 'Write',
+                        'label' => permission_get_name('PLUGIN_DOCMAN_WRITE'),
                         'previous' => 1
                     ),
                     3 => array(
                         'order' => 3, 
-                        'type'  => 'PLUGIN_DOCMAN_ADMIN',
-                        'label' => 'Admin',
+                        'type'  => 'PLUGIN_DOCMAN_MANAGE',
+                        'label' => permission_get_name('PLUGIN_DOCMAN_MANAGE'),
                         'previous' => 2
                     )
                 );
                 $permissions = $request->get('permissions');
-                $old_permissions = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_ADMIN'), false);
+                $old_permissions = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_MANAGE'), false);
                 $done_permissions = array();
                 $history = array(
                     'PLUGIN_DOCMAN_READ'  => false,
                     'PLUGIN_DOCMAN_WRITE' => false,
-                    'PLUGIN_DOCMAN_ADMIN' => false
+                    'PLUGIN_DOCMAN_MANAGE' => false
                 );
                 foreach($permissions as $ugroup_id => $wanted_permission) {
                     $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, &$history);
@@ -425,6 +445,92 @@ class DocmanActions extends Actions {
                     return false;
                 }
             }
+        }
+    }
+    
+    function change_view() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
+            $item_factory =& $this->_getItemFactory();
+            $folder = $item_factory->getItemFromDb($request->get('id'));
+            if ($folder) {
+                user_set_preference(
+                    PLUGIN_DOCMAN_VIEW_PREF .'_'. $folder->getGroupId(),
+                    $request->get('selected_view')
+                );
+                $this->_controler->forceView($request->get('selected_view'));
+                $this->_controler->feedback->log('info', 'Your preferences have been saved.');
+            }
+        }
+    }
+    
+    function delete() {
+        $user =& $this->_controler->getUser();
+        $request =& HTTPRequest::instance();
+        $item_bo =& new Docman_ItemBo($request->get('group_id'));
+        $item =& $item_bo->getItemSubTree($request->get('id'), array('user' => &$user));
+        if ($item) {
+            $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage());
+            $item->accept($deletor, array('user' => &$user));
+        }
+    }
+
+    function admin_change_view() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
+            require_once('Docman_SettingsDao.class');
+            $dao =& new Docman_SettingsDao(CodexDataAccess::instance());
+            if ($dao->updateViewForGroupId($request->get('group_id'), $request->get('selected_view'))) {
+                $this->_controler->feedback->log('info', 'Settings have been updated.');
+            } else {
+                $this->_controler->feedback->log('error', 'Settings cannot be updated.');
+            }
+        }
+    }
+    
+    function install() {
+        $request =& HTTPRequest::instance();
+        $item_factory =& $this->_getItemFactory();
+        $root =& $item_factory->getRoot($request->get('group_id'));
+        if ($root) {
+            $this->_controler->feedback->log('error', 'Docman already installed.');
+            $this->_controler->view = 'DocmanError';
+        } else {
+            if ($item_factory->createRoot($request->get('group_id'), 'Project Documentation')) {
+                //{{{ Set default permissions
+                $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+                $root =& $item_factory->getRoot($request->get('group_id'));
+                foreach($perms as $perm) {
+                    $req = permission_db_get_defaults($perm);
+                    while ($row = db_fetch_array($req)) {
+                        permission_add_ugroup($request->get('group_id'), $perm, $root->getId(), $row['ugroup_id']);
+                    }
+                }
+                //}}}
+                $this->_controler->feedback->log('info', 'Docman successfully installed.');
+                //Add service
+                $service_created = false;
+                $sql="SELECT * FROM service WHERE group_id=100 AND is_active=1 AND short_name = 'docman'";
+                $result=db_query($sql);
+                if ($arr = db_fetch_array($result)) {
+                    $service_created = service_create_service($arr, $request->get('group_id'), array('system' => true), $force_enable = true);
+                }
+                if (!$service_created) {
+                    $this->_controler->feedback->log('error', 'cant_create_service');
+                }
+            } else {
+                $this->_controler->feedback->log('error', 'Unable to install docman.');
+                $this->_controler->view = 'ProjectError';
+            }
+        }
+    }
+    
+    function admin_set_permissions() {
+        list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
+        if (!$return_code) {
+            $this->_controler->feedback->log('error', 'perm_update_err : '.$feedback);
+        } else {
+            $this->_controler->feedback->log('info', 'Permissions successfully updated');
         }
     }
 }

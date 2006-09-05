@@ -35,13 +35,14 @@ class Controler {
   /* protected */ var $gid;
   /* protected */ var $view;
   /* protected */ var $action;
+  /* protected */ var $_viewParams = array();
 
   function request() {
   }
 
   function viewsManagement() {
     $className = get_class($this).'Views';
-    $wv = new $className($this, $this->gid, $this->view);
+    $wv = new $className($this, $this->gid, $this->view, $this->_viewParams);
     $wv->display($this->view);
   }
 

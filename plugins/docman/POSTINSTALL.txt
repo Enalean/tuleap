@@ -1,0 +1,16 @@
+To finish installation, please follow those last steps:
+
+1. Configure docman
+   a. Go to properties of plugin docman and configure the plugin
+   OR
+   b. Edit docman.inc in your custom directory (typically /etc/codex/plugins/docman/etc)
+   
+2. As root, create docman directory and set permissions
+   a. Create the root directory where docman will store documents. (see docman configuration)
+   b. Set sourceforge as user and group for this directory
+   c. Set full permissions for user and none for group and other
+   e.g.:
+     mkdir /home/data/docman
+     chown sourceforge.sourceforge /home/data/docman
+     chmod 700 /home/data/docman
+

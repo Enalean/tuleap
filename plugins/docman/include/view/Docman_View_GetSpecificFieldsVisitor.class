@@ -1,0 +1,54 @@
+<?php
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_GetSpecificFieldsVisitor
+*/
+
+
+class Docman_View_GetSpecificFieldsVisitor {
+    
+    function visitWiki(&$item, $params = array()) {
+        return array(
+            array(
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_pagename'),
+                'field' => '<input type="text" name="item[wiki_page]" value="'. htmlentities($item->getPagename(), ENT_QUOTES) .'" />'
+            )
+        );
+    }
+    
+    function visitLink(&$item, $params = array()) {
+        return array(
+            array(
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_url'),
+                'field' => '<input type="text" name="item[link_url]" value="'. htmlentities($item->getUrl(), ENT_QUOTES) .'" />'
+            )
+        );
+    }
+    
+    function visitFile(&$item, $params = array()) {
+        return array(
+            array(
+                'label' => '',
+                'field' => '<input type="file" name="file" />'
+            )
+        );
+    }
+    
+    function visitEmbeddedFile(&$item, $params = array()) {
+        $content = '--';
+        $version =& $item->getCurrentVersion();
+        if ($version && is_file($version->getPath())) {
+            $content = file_get_contents($version->getPath());
+        }
+        return array(
+            array(
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'specificfield_embeddedcontent'),
+                'field' => '<textarea name="content" cols="50" rows="15">'. $content .'</textarea>'
+            )
+        );    
+    }
+}
+?>

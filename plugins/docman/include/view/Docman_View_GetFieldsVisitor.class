@@ -1,0 +1,61 @@
+<?php
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_GetFieldsVisitor
+*/
+
+require_once('Docman_View_GetSpecificFieldsVisitor.class');
+
+class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
+    var $specific_fields;
+    function Docman_View_GetFieldsVisitor() {
+        $this->specific_fields =& new Docman_View_GetSpecificFieldsVisitor();
+    }
+    
+    function visitItem($item, $params = array()) {
+        return array(
+            array(
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_title'),
+                'field' => '<input type="text" name="item[title]" value="'. htmlentities($item->getTitle(), ENT_QUOTES) .'" />'
+            ),
+            array(
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_descr'),
+                'field' => '<textarea name="item[description]">'. $item->getDescription() .'</textarea>'
+            ),
+            array(
+                'label' => $GLOBALS['Language']->getText('plugin_docman', 'field_rank'),
+                'field' => '<input type="text" name="item[rank]" value="'. htmlentities($item->getRank(), ENT_QUOTES) .'" size="3" maxlength="16" />'
+            )
+        );
+    }
+    function visitFolder(&$item, $params = array()) {
+        return $this->visitItem($item, $params);
+    }
+    function visitDocument(&$item, $params = array()) {
+        return $this->visitItem($item, $params);
+    }
+    function visitWiki(&$item, $params = array()) {
+        return $this->_visitConcreteDocument($item, $params);
+    }
+    function visitLink(&$item, $params = array()) {
+        return $this->_visitConcreteDocument($item, $params);
+    }
+    function visitFile(&$item, $params = array()) {
+        return $this->_visitConcreteDocument($item, $params);
+    }
+    function visitEmbeddedFile(&$item, $params = array()) {
+        return $this->_visitConcreteDocument($item, $params);
+    }
+
+    /* protected */ function _visitConcreteDocument(&$item, $params) {
+        return array_merge(
+            $this->visitItem($item, $params),
+            $item->accept($this->specific_fields, $params)
+        );
+    }
+    
+}
+?>

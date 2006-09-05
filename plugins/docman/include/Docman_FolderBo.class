@@ -26,9 +26,6 @@ require_once('Docman_FolderDao.class');
 require_once('Docman_ItemBo.class');
 require_once('Docman_Folder.class');
 
-define('DOCMAN_COLLAPSE_FOLDER_PREF', 'docman_hide');
-define('DOCMAN_COLLAPSE_FOLDER', 2);
-
 /**
  * Folder Buisness object.
  *
@@ -132,8 +129,8 @@ class Docman_FolderBo extends Docman_ItemBo {
      * @param Folder
      */
     function collapse($folder) {
-        user_set_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
-                            DOCMAN_COLLAPSE_FOLDER);
+        user_set_preference(PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
+                            PLUGIN_DOCMAN_COLLAPSE_FOLDER);
     }
 
     /**
@@ -142,7 +139,7 @@ class Docman_FolderBo extends Docman_ItemBo {
      * @param Folder
      */
     function expand($folder) {
-        user_del_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
+        user_del_preference(PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
     }
     
 }

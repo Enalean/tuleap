@@ -1,0 +1,46 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_Details
+*/
+
+require_once('Docman_View_Display.class');
+require_once('Docman_View_Error.class');
+
+
+class Docman_View_Embedded extends Docman_View_Display {
+    
+    
+    function _content($params) {
+        if (isset($params['version_number'])) {
+            $version_factory =& $this->_getVersionFactory();
+            $version =& $version_factory->getSpecificVersion($params['item'], $params['version_number']);
+        } else {
+            $version =& $params['item']->getCurrentVersion();
+        }
+        if ($version) {
+            if (file_exists($version->getPath())) {
+                $event_manager =& EventManager::instance();
+                $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ACCESS, array(
+                    'group_id' => $params['group_id'],
+                    'item'     => $params['item']->getId(),
+                    'version'  => $version->getNumber(),
+                    'user'     => $params['user']->getId()
+                ));
+                echo '<div style="clear:both">';
+                readfile($version->getPath());
+                echo '</div>';
+            } else {
+                $this->_controller->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound');
+                $v =& new Docman_View_Error($this->_controller);
+                $v->display($params);
+            }
+        }
+    }
+}
+
+?>

@@ -52,8 +52,8 @@ class Docman_Log { /* implements EventListener */
     function logsDaily($params) {
         $params['logs'][] = array(
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond'], PLUGIN_DOCMAN_EVENT_ACCESS),
-            'field' => 'Documents',       //TODO i18n
-            'title' => 'Document access'  //TODO i18n
+            'field' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_field'),
+            'title' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_title')
         );
     }
     
@@ -68,20 +68,20 @@ class Docman_Log { /* implements EventListener */
     
     function fetchLogsForItem($item_id) {
         $html = '';
-        $html .= '<h3>Logs</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_logs') .'</h3>';
         $dar =& $this->dao->searchByItemIdOrderByTimestamp($item_id);
         if ($dar && !$dar->isError()) {
             if ($dar->valid()) {
                 $titles = array();
-                $titles[] = 'when';
-                $titles[] = 'who';
-                $titles[] = 'what';
+                $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_when');
+                $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_who');
+                $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_logs_what');
                 $html .= html_build_list_table_top($titles, false, false, false);
                 $odd_even = array('boxitem', 'boxitemalt');
                 $i = 0;
                 while ($dar->valid()) {
                     $row = $dar->current();
-                    $user = $row['user_id'] ? user_getname($row['user_id']) : 'Anonymous'; //TODO i18n
+                    $user = $row['user_id'] ? user_getname($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                     $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                     $html .= '<td>'. date('Y-m-d H:i:s', $row['time']) .'</td>';
                     $html .= '<td>'. $user                             .'</td>';
@@ -91,36 +91,35 @@ class Docman_Log { /* implements EventListener */
                 }
                 $html .= '</table>';
             } else {
-                $html .= '<div>There is no log yet</div>';
+                $html .= '<div>'. $GLOBALS['Language']->getText('plugin_docman','details_history_logs_no') .'</div>';
             }
         } else {
-            $html .= '<div>Error while searching logs!</div>';
+            $html .= '<div>'. $GLOBALS['Language']->getText('plugin_docman','details_history_logs_error') .'</div>';
             $html .= $dar->isError();
         }
         return $html;
     }
     
-    //TODO => .tab
     function getText($type) {
         $txt = '';
         switch($type) {
             case PLUGIN_DOCMAN_EVENT_ADD:
-                $txt = 'Add';
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_add');
                 break;
             case PLUGIN_DOCMAN_EVENT_EDIT:
-                $txt = 'Edit';
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_edit');
                 break;
             case PLUGIN_DOCMAN_EVENT_MOVE:
-                $txt = 'Move';
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_move');
                 break;
             case PLUGIN_DOCMAN_EVENT_DEL:
-                $txt = 'Delete';
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_delete');
                 break;
             case PLUGIN_DOCMAN_EVENT_ACCESS:
-                $txt = 'Access';
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_access');
                 break;
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
-                $txt = 'New version';
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_newversion');
                 break;
             default:
                 break;

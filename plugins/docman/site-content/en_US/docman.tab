@@ -1,27 +1,156 @@
 plugin_docman	descriptor_description	Advanced Document Manager
 plugin_docman	descriptor_name	Document Manager
-plugin_docman	title	Document Manager
+plugin_docman	title	Project Documentation
 plugin_docman	service_lbl_key	Docman
 plugin_docman	service_desc_key	Advanced Document Manager
-plugin_docman	error	Error
-plugin_docman	err_notadmin	Permission Denied. You are not an administrator for 'Document Manager' service.
+
 #
 #-----------------------------------------------
-# Script: plugins/docman/include/DocmanAdminViews.class
+# Script: plugins/docman/include/view/Docman_View_DocumentTableVisitor.class
 #
-plugin_docman	main_menu_fldr_title	Folder Management
-plugin_docman	main_menu_fldr_desc	Create, update and delete folders.
-plugin_docman	folder_name	Name:
-plugin_docman	folder_desc	Description:
-plugin_docman	folder_parent	Parent:
-plugin_docman	folder_rank	Rank:
-plugin_docman	folder_create_folder	Create
-plugin_docman	folder_list	Folder List
-plugin_docman	new_folder	New Folder
-plugin_docman	fld_array_id	Id
-plugin_docman	fld_array_title	Name
-plugin_docman	fld_array_rank	Rank
-plugin_docman	fld_array_delete	Delete ?
-plugin_docman	dflt_update_folder	Update Folder
-plugin_docman	delete_folder_warn	** WARNING!! ** Please confirm you want to delete folder $1
-plugin_docman	delete_folder_alt	Delete folder $1
+plugin_docman	view_documenttablevisitor_title	Title
+plugin_docman	view_documenttablevisitor_desc	Description
+plugin_docman	view_documenttablevisitor_owner	Owner
+plugin_docman	view_documenttablevisitor_subdate	Submission Date
+plugin_docman	view_documenttablevisitor_lastauthor	Last Author
+plugin_docman	view_documenttablevisitor_lastupdate	Last Update
+
+
+
+
+plugin_docman	action_details	Details of $1
+plugin_docman	action_move	Move $1
+plugin_docman	action_newdocument	Create a new document under $1
+plugin_docman	action_newfolder	Create a new folder under $1
+plugin_docman	action_show	Show $1
+plugin_docman	action_showactions	Show options
+
+plugin_docman	admin_permissions_title	Manages Permissions
+plugin_docman	admin_permissions_descr	Define who are able to administrate the docman.
+plugin_docman	admin_permissions_instructions	Please select ugroups who can administrate the docman:
+plugin_docman	admin_title	Administration
+plugin_docman	admin_view_title	Manage View Preferences
+plugin_docman	admin_view_descr	Define default view for the docman.
+plugin_docman	admin_view_instructions	Please select the default view for browsing documents. Please note that this setting can be overriden by user preferences.
+
+plugin_docman	breadcrumbs_location	Location:
+
+plugin_docman	browse_viewas	-- View as:
+
+plugin_docman	details_actions	Actions
+plugin_docman	details_actions_delete	Delete
+plugin_docman	details_actions_delete_candelete_document	You can <a href="$1">delete this document</a>.
+plugin_docman	details_actions_delete_candelete_folder	You can <a href="$1">delete this folder</a>.
+plugin_docman	details_actions_delete_cannotdelete_document	You cannot delete this document.
+plugin_docman	details_actions_delete_cannotdelete_folder	You cannot delete this folder.
+plugin_docman	details_actions_move	Move
+plugin_docman	details_actions_move_canmove_document	You can <a href="$1">move this document</a> to another folder.
+plugin_docman	details_actions_move_canmove_folder	You can <a href="$1">move this folder</a> to another folder.
+plugin_docman	details_actions_move_cannotmove_document	You cannot move this document.
+plugin_docman	details_actions_move_cannotmove_folder	You cannot move this folder.
+plugin_docman	details_actions_newversion	New Version
+plugin_docman	details_actions_newversion_button	Upload new version
+plugin_docman	details_actions_newversion_changelog	Changelog
+plugin_docman	details_actions_newversion_content	Content
+plugin_docman	details_actions_newversion_label	Label
+plugin_docman	details_actions_update	Update
+plugin_docman	details_delete	Delete
+plugin_docman	details_delete_cancel	No, I do not want to delete it
+plugin_docman	details_delete_confirm	Yes, I am sure!
+plugin_docman	details_delete_title	Delete $1
+plugin_docman	details_delete_warning_document	<h3>Confirm deletion of document $1</h3><p>You are going to delete a document. </p><p>Are you sure that you want to delete it?</p>
+plugin_docman	details_delete_warning_file	<h3>Confirm deletion of document $1</h3><p>You are going to delete a file. Before confirming, please note that all versions will be deleted.</p><p>Are you sure that you want to delete it?</p>
+plugin_docman	details_delete_warning_folder	<h3>Confirm deletion of folder $1</h3><p>You are going to delete a folder. Before confirming, please note that all subitems and their versions will be deleted.</p><p>Are you sure that you want to delete it?</p>
+plugin_docman	details_edit_title	Edit properties of $1
+plugin_docman	details_history	History
+plugin_docman	details_history_anonymous	Anonymous
+plugin_docman	details_history_logs	Logs
+plugin_docman	details_history_logs_error	Error while searching logs!
+plugin_docman	details_history_logs_no	There is no log yet
+plugin_docman	details_history_logs_what	What
+plugin_docman	details_history_logs_when	When
+plugin_docman	details_history_logs_who	Who
+plugin_docman	details_history_versions	Versions
+plugin_docman	details_history_versions_author	Author
+plugin_docman	details_history_versions_changelog	Changelog
+plugin_docman	details_history_versions_date	Date
+plugin_docman	details_history_versions_error	Error while searching for old versions
+plugin_docman	details_history_versions_label	Label
+plugin_docman	details_history_versions_no	There is no version yet
+plugin_docman	details_history_versions_version	Version
+plugin_docman	details_permissions	Permissions
+plugin_docman	details_permissions_ugroups	User groups
+plugin_docman	details_permissions_perms	Access Permissions
+plugin_docman	details_permissions_recursive	recursive (apply same permissions to all sub-items of this folder)
+plugin_docman	details_properties	Properties
+plugin_docman	details_properties_edit	Edit properties
+plugin_docman	details_title	Details of $1
+
+plugin_docman	error_alreadyinstalled	Docman already installed.
+plugin_docman	error_filenotfound	The file cannot be found.
+plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the docman.
+plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
+plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.
+plugin_docman	error_perms_delete	You do not have sufficient access rights to delete this item.
+plugin_docman	error_perms_move	You do not have sufficient access rights to move this item.
+plugin_docman	error_perms_perms	You do not have sufficient access rights to set permissions for this item.
+plugin_docman	error_perms_view	You do not have sufficient access rights to view this item.
+
+plugin_docman	event_add	Create
+plugin_docman	event_edit	Edit
+plugin_docman	event_move	Move
+plugin_docman	event_del	Delete
+plugin_docman	event_access	Access
+plugin_docman	event_newversion	New version
+
+plugin_docman	field_descr	Description
+plugin_docman	field_rank	Rank
+plugin_docman	field_title	Title
+
+plugin_docman	filters	Filters
+plugin_docman	filters_date_end	End Date
+plugin_docman	filters_date_message	The date entered in field "$1" is not valid. Valid date format is YYYY-M-D (eg. '$2' for today) or let the field blank.
+plugin_docman	filters_date_start	Start Date
+plugin_docman	filters_ordering	Ordering
+plugin_docman	filters_ordering_ascending	Ascending
+plugin_docman	filters_ordering_descending	Descending
+plugin_docman	filters_ordering_message	Value of $1 should be either "Ascending" or "Descending"
+
+plugin_docman	logsdaily_field	Documents
+plugin_docman	logsdaily_title	Document Access
+
+plugin_docman	move	Move $1
+plugin_docman	move_actual	The item is in this folder.
+plugin_docman	move_cancel	Cancel move.
+plugin_docman	move_descr	Choose the target folder:
+plugin_docman	move_here	move here.
+plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
+
+plugin_docman	new_document	New document under $1
+plugin_docman	new_document_action	Create document
+plugin_docman	new_document_embedded	Embedded File
+plugin_docman	new_document_file	File
+plugin_docman	new_document_link	Link
+plugin_docman	new_document_wiki	Wiki Page
+plugin_docman	new_folder	New folder under $1
+plugin_docman	new_folder_action	Create folder
+plugin_docman	new_generalproperties	General properties
+plugin_docman	new_specificproperties	Specific properties
+
+plugin_docman	permission_admin	Administrator
+plugin_docman	permission_manage	Manager
+plugin_docman	permission_read	Reader
+plugin_docman	permission_write	Writer
+
+plugin_docman	redirect	<div style="text-align:center"><p>Docman updated</p><p>You will be redirect <a href="$1"> to docman</a>.</p></div>
+
+plugin_docman	specificfield_embeddedcontent	Content
+plugin_docman	specificfield_pagename	Pagename
+plugin_docman	specificfield_url	Url
+
+plugin_docman	toolbar_admin	Admin
+plugin_docman	toolbar_docman	Project Documentation
+
+plugin_docman	view_Icons	Icons
+plugin_docman	view_Table	Table
+plugin_docman	view_Tree	Tree

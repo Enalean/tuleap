@@ -33,15 +33,6 @@ class Docman_File extends Docman_Document {
     function Docman_File($data = null) {
         parent::Docman_Document($data);
     }
-    function getSpecificFields() {
-        $fields = array(
-            array(
-                'label' => '',
-                'field' => '<input type="file" name="file" />'
-            )
-        );
-        return $fields;
-    }
     
     var $currentVersion;
     function setCurrentVersion(&$currentVersion) {
@@ -50,14 +41,15 @@ class Docman_File extends Docman_Document {
     function &getCurrentVersion() {
         return $this->currentVersion;
     }
-    function getActionWhenUserClickOnTitle($params) {
-        $action = $params['default_url'].'&action=show&id='.$this->getId();
-        if (isset($params['version_number'])) {
-            $action .= '/'. $params['version_number'];
-        }
-        return $action;
+    function toRow() {
+        $row = parent::toRow();
+        $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
+        return $row;
     }
 
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitFile($this, $params);
+    }
 }
 
 ?>

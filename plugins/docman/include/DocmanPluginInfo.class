@@ -66,9 +66,14 @@ class DocmanPluginInfo extends PluginInfo {
             $key   =& $iter->current();
             $desc  =& $descs->get($key);
             $desc_name =& $desc->getName();
+            if (is_bool($desc->getValue())) {
+                $replace = '$1'. ($desc->getValue() ? 'true' : 'false') .';';
+            } else {
+                $replace = '$1"'.addslashes($desc->getValue()).'";';
+            }
             $content = preg_replace(
                 '`((?:^|\n)\$'. preg_quote($desc_name->getInternalString()) .'\s*=\s*)(.*)\s*;`', 
-                '$1"'.addslashes($desc->getValue()).'";', 
+                $replace, 
                 $content
             );
             $iter->next();
@@ -82,7 +87,7 @@ class DocmanPluginInfo extends PluginInfo {
     
     function getPropertyValueForName($name) {
         $desc =& $this->getPropertyDescriptorForName($name);
-        return $desc->getValue();
+        return $desc ? $desc->getValue() : $desc;
     }
     
     function _getVariablesFromConfigurationFile($file) {
@@ -100,8 +105,15 @@ class DocmanPluginInfo extends PluginInfo {
                 case T_DNUMBER:
                 case T_LNUMBER:
                 case T_NUM_STRING:
-                    if (isset($variables[$current])) {
-                        $variables[$current]['value'] .= $token[1];
+                    if (T_STRING == $token[0] && (!strcasecmp($token[1], "false") || !strcasecmp($token[1], "true"))) {
+                        $val = (bool)strcasecmp($token[1], "false");
+                        if (isset($variables[$current])) {
+                            $variables[$current]['value'] = $val;
+                        }
+                    } else {
+                        if (isset($variables[$current])) {
+                            $variables[$current]['value'] .= $token[1];
+                        }
                     }
                     break;
                 case '*':

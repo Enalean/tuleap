@@ -1,0 +1,33 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_RedirectAfterCrud
+*/
+
+require_once('Docman_View_Docman.class');
+
+/* abstract */ class Docman_View_RedirectAfterCrud extends Docman_View_Docman {
+    
+    function _content($params) {
+        echo $GLOBALS['Language']->getText('plugin_docman', 'redirect', $params['default_url']);
+        echo '
+<script type="text/javascript"> 
+<!--
+function return_to_url() {
+  window.location.href = "'. $params['default_url'] .'";
+}
+
+setTimeout(return_to_url,1000);
+
+//--> 
+</script>
+';	 
+        
+    }
+}
+
+?>

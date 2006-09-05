@@ -1,0 +1,94 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('Docman_FileStorage.class');
+require_once('Docman_VersionFactory.class');
+class DocmanActionsDeleteVisitor /* implements Visitor */ {
+    
+    function DocmanActionsDeleteVisitor(&$file_storage) {
+        $this->file_storage =& $file_storage;
+    }
+    
+    function visitFolder(&$item, $params = array()) {
+        //delete all sub items before
+        $items = $item->getAllItems();
+        if (count($items)) { 
+            foreach($items as $key => $nop) {
+                $items[$key]->accept($this, $params);
+            }
+        }
+        //Mark the folder as deleted
+        $this->_deleteItem($item, $params);
+    }
+    function visitDocument(&$item, $params = array()) {
+        //Mark the document as deleted
+        $this->_deleteItem($item, $params);
+    }
+    function visitWiki(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitLink(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitFile(&$item, $params = array()) {
+        //Delete all versions before
+        $version_factory =& $this->_getVersionFactory();
+        if ($versions = $version_factory->getAllVersionForItem($item)) {
+            if (count($versions)) {
+                foreach ($versions as $key => $nop) {
+                    $this->file_storage->delete($versions[$key]->getPath());
+                }
+            }
+        }
+        return $this->visitDocument($item, $params);
+    }
+    function visitEmbeddedFile(&$item, $params = array()) {
+        return $this->visitFile($item, $params);
+    }
+
+    function _deleteItem($item, $params) {
+        $item->setDeleteDate(time());
+        $dao = $this->_getItemDao();
+        $dao->updateFromRow($item->toRow());
+        $em =& $this->_getEventManager();
+        $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
+            'group_id' => $item->getGroupId(),
+            'item'     => $item->getId(),
+            'user'     => $params['user']->getId())
+        );
+    }
+    function &_getEventManager() {
+        return EventManager::instance();
+    }
+    function &_getVersionFactory() {
+        return new Docman_VersionFactory();
+    }
+    function &_getFileStorage() {
+        return new Docman_FileStorage();
+    }
+    function &_getItemDao() {
+        return new Docman_ItemDao(CodexDataAccess::instance());
+    }
+}
+?>

@@ -23,6 +23,7 @@
  * $Id$
  */
 require_once('Docman_Item.class');
+require_once('view/Docman_View_Browse.class');
 
 /**
  * Folder is a transport object (aka container) used to share data between
@@ -49,36 +50,28 @@ class Docman_Folder extends Docman_Item {
         parent::initFromRow($row);
         $this->setNbOfChildren($row['folder_nb_of_children']);
     }
+    function toRow() {
+        $row = parent::toRow();
+        $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
+        $row['folder_nb_of_children'] = $this->getNbOfChildren();
+        return $row;
+    }
     
     function isRoot() {
         return $this->parent_id == 0;
     }
     
-    function getIcon($params = null) {
-        $params['expanded'] = true;
-        if (isset($params['item_to_move'])) {
-            $action = 'move_here&amp;item_to_move='.$params['item_to_move'];
-            return parent::getIcon($params);
-        } else {
-            $open   = '_open';
-            $action = 'collapseFolder';
-            if(user_get_preference(DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$this->getGroupId().'_'.$this->getId()) !== false) {
-                $params['expanded'] = false;
-                $open   = '';
-                $action = 'expandFolder';
-            }
-            $html  = '<a href="'. $params['default_url'] .'&amp;action='. $action .'&amp;id='. $this->getId() .'" class="docman_item_type_folder'. $open .'">';
-            $html .= parent::getIcon($params);
-            $html .= '</a>';
-            return $html;
-        }
+    var $_items = array();
+    function addItem(&$item) {
+        $this->_items[] =& $item;
     }
-    /*
-    function getActionWhenUserClickOnTitle($params) {
-        return $params['default_url'].'&action=show&id='.$this->getId();
-        
+    function getAllItems() {
+        return $this->_items;
     }
-    */
+    
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitFolder($this, $params);
+    }
 }
 
 ?>

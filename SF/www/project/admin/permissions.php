@@ -831,8 +831,9 @@ function permission_process_selection_form($group_id, $permission_type, $object_
     if (!$group_id) {
         return array(false,$Language->getText('project_admin_permissions','g_id_missed'));
     }
-  
-
+    $anon_selected = 0;
+    $any_selected  = 0;
+    
     // Check consistency of ugroup list
     $num_ugroups=0;
     while (list(,$selected_ugroup) = each($ugroups)) {

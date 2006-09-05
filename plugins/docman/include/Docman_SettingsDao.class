@@ -1,0 +1,25 @@
+<?php
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_SettingsDao
+*/
+
+require_once('common/dao/include/DataAccessObject.class');
+
+class Docman_SettingsDao extends DataAccessObject {
+    
+    function searchViewByGroupId($group_id) {
+        $sql = 'SELECT view FROM plugin_docman_project_settings WHERE group_id = '. $this->da->quoteSmart($group_id);
+        return $this->retrieve($sql);
+    }
+    
+    function updateViewForGroupId($group_id, $view) {
+        $sql = 'UPDATE plugin_docman_project_settings SET view = '. $this->da->quoteSmart($view) .' WHERE group_id = '. $this->da->quoteSmart($group_id);
+        return $this->update($sql);
+    }
+}
+
+?>

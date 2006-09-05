@@ -9,6 +9,7 @@
 require_once('pre.php');
 session_require(array('isloggedin'=>'1'));
 require_once('vars.php');
+require_once('service.php');
 require_once('www/forum/forum_utils.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/tracker/ArtifactType.class');
@@ -130,38 +131,13 @@ if (isset($show_confirm) && $show_confirm) {
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
-            // Convert link to real values
-            // NOTE: if you change link variables here, change them also in SF/www/project/admin/servicebar.php and SF/www/include/Layout.class
-            $link=$arr['link'];
-
-	    if ($system_template) {
-	      
-	      $link=str_replace('$projectname',group_getunixname($group_id),$link);
-	      $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
-	      $link=str_replace('$group_id',$group_id,$link);
-	      if ($GLOBALS['sys_force_ssl']) {
-                $sys_default_protocol='https'; 
-	      } else { $sys_default_protocol='http'; }
-	      $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
-	    
-	    } else {
-	      //for non-system templates
-	      $link=str_replace($template_name,$group->getUnixName(),$link);
-	      $link=str_replace($template_id,$group_id,$link);
-	    }
-
-            $sql2 = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($group_id, '".$arr['label']."', '".$arr['description']."', '".$arr['short_name']."', '".$link."', ".$arr['is_active'].", ".$arr['is_used'].", '".$arr['scope']."', ".$arr['rank'].")";
-            $result2=db_query($sql2);
-            
-            if (!$result2) {
+            if (!service_create_service($arr, $group_id, array(
+                'system' => $system_template,
+                'name'   => $system_template ? '' : $template_name,
+                'id'     => $system_template ? '' : $template_id
+            ))) {
                 exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','cant_create_service'));
             }
-
-            // activate corresponding references
-            $reference_manager =& ReferenceManager::instance();
-	    if ($arr['short_name'] != "") {
-	      $reference_manager->addSystemReferencesForService($group_id,$arr['short_name']);
-	    }
         }
 
         // Activate other system references not associated with any service

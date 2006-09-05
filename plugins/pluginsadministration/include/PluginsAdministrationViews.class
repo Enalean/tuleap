@@ -37,8 +37,55 @@ class PluginsAdministrationViews extends Views {
         echo $output;
     }
     
+    function postInstall() {
+        $request =& HTTPRequest::instance();
+        $name = $request->get('name');
+        if ($name) {
+            $plugin_manager =& PluginManager::instance();
+            $p =& $plugin_manager->getPluginByName($name);
+            if ($p) {
+                echo '<h2>Congratulations!</h2>';
+                echo '<p>You\'ve just installed '.$name.'</p>';
+                $pi = $plugin_manager->getPostInstall($name);
+                if ($pi) {
+                    echo '<p>Please read the following:</p>';
+                    echo '<pre style="border:1px solid black;">'. $pi .'</pre>';
+                }
+                echo '<a href="?"><< Go back to Plugins Administration</a>';
+            }
+        }
+    }
+    
+    function confirmInstall() {
+        $request =& HTTPRequest::instance();
+        $browse = true;
+        if ($request->exist('name')) {
+            $plugin_manager =& PluginManager::instance();
+            $plugin =& $plugin_manager->getPluginByName($request->get('name'));
+            if(!$plugin) {
+                echo '<p>You\'re about to install '. $request->get('name') .'.</p>';
+                $r = $plugin_manager->getReadme($request->get('name'));
+                if ($r) {
+                    echo '<p>Please read the following:</p>';
+                    echo '<pre style="border:1px solid black;">'. $r .'</pre>';
+                }
+                echo '<form action="?" method="GET">';
+                echo '<input type="hidden" name="action" value="install" />';
+                echo '<input type="hidden" name="name" value="'. $request->get('name') .'" />';
+                echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
+                echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
+                echo '</form>';
+                $browse = false;
+            }
+        }
+        if ($browse) {
+            $this->browse();
+        }
+    }
+    
     function confirmUninstall() {
         $request =& HTTPRequest::instance();
+        $browse = true;
         if ($request->exist('plugin_id')) {
             $plugin_manager =& PluginManager::instance();
             $plugin =& $plugin_manager->getPluginById((int)$request->get('plugin_id'));
@@ -53,9 +100,12 @@ class PluginsAdministrationViews extends Views {
                                                 $name,
                                                 $plugin->getId());
                 echo $output;
+                $browse = false;
             }
         }
-        $this->browse();
+        if ($browse) {
+            $this->browse();
+        }
     }
     
     function properties() {
@@ -101,7 +151,14 @@ class PluginsAdministrationViews extends Views {
                     $key   =& $iter->current();
                     $desc  =& $descs->get($key);
                     $prop_name = $desc->getName();
-                    $props .= sprintf('<tr><td class="pluginsadministration_label">%s</td><td><input type="text" size="%d" name="properties[%s]" value="%s" /></td></tr>', $prop_name->getInternalString(), strlen($desc->getValue()), $prop_name->getInternalString(), $desc->getValue());
+                    $props .= '<tr><td class="pluginsadministration_label">'. $prop_name->getInternalString() .'</td><td>';
+                    if (is_bool($desc->getValue())) {
+                        $props .= '<input type="hidden"   name="properties['. $prop_name->getInternalString() .']" value="0" />';
+                        $props .= '<input type="checkbox" name="properties['. $prop_name->getInternalString() .']" value="1" '. ($desc->getValue() ? 'checked="checked"' : '') .'/>';
+                    } else {
+                        $props .= sprintf('<input type="text" size="%d" name="properties[%s]" value="%s" />', strlen($desc->getValue()), $prop_name->getInternalString(), $desc->getValue());
+                    }
+                    $props .= '</td></tr>';
                     $iter->next();
                 }
                 

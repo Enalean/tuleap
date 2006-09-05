@@ -1,0 +1,29 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_Docman
+*/
+
+require_once('Docman_View_ProjectHeader.class');
+
+class Docman_View_Docman extends Docman_View_ProjectHeader {
+    /* protected */ function _toolbar($params) {
+        $tools = array();
+        $this->_addDocmanTool($params, $tools);
+        //$tools[] = '<a href="'.$this->_controler->getDefaultUrl().'">Documents (Img)</a>';
+        //$tools[] = '<a href="'.$this->_controler->getDefaultUrl().'&view=uldisplayFolder">Documents (UL/LI)</a>';
+        if($this->_controller->userCanAdmin()) {
+            $tools[] = '<a href="'. $params['default_url'] .'&amp;action=admin">'. $GLOBALS['Language']->getText('plugin_docman', 'toolbar_admin') .'</a>';
+        }
+        echo implode(' | ', $tools);
+        echo "\n";
+    }
+    /* protected */ function _addDocmanTool(&$array) {
+    }
+}
+
+?>

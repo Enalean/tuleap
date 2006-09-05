@@ -1,0 +1,79 @@
+<?php
+/*
+ * Copyright� STMicroelectronics, 2006
+ * Originally written by Manuel VACELET, STMicroelectronics, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ *
+ */
+require_once('Docman_View_Browse.class');
+require_once('Docman_View_DocumentTableVisitor.class');
+
+class Docman_FilterDateHtml {
+    var $f;
+
+    function Docman_FilterDateHtml($filter) {
+        $this->f =& $filter;
+    }
+
+    function toHtml() {
+
+    }
+}
+
+class Docman_View_Table extends Docman_View_Browse {
+    
+    /* protected */ function _filter($params) {   
+        echo '
+<!-- Filters -->
+<fieldset class="docman_filters">
+<legend>'. $GLOBALS['Language']->getText('plugin_docman', 'filters') .'</legend>
+<form name="plugin_docman_filters" method="GET" action="?">
+<input type="hidden" name="group_id" value="'.$params['group_id'].'">
+';
+        foreach($params['filter'] as $f) {
+            echo $f->toHtml();
+            echo "&nbsp;\n";
+        }
+        foreach($params['order'] as $o) {
+            echo $o->toHtml();
+            echo "&nbsp;\n";
+        }        
+echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_browse') .'">
+</form>
+</fieldset>
+';
+    }
+
+    /* protected */ function _content($params) {      
+        $itemBo = new Docman_ItemBo($params['group_id']);
+
+        $itemTree =& $itemBo->getItemSubTree($params['item']->getId(), 
+                                             array('user' => $params['user'],
+                                                   'ignore_collapse' => true,
+                                                   'filter' => $params['filter'],
+                                                   'order' => $params['order']));
+
+        $docTableVisitor = new Docman_View_DocumentTableVisitor($this);
+        $itemTree->accept($docTableVisitor);
+        
+        print $docTableVisitor->toHtml();        
+    }
+}
+?>

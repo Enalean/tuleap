@@ -46,17 +46,15 @@ class Docman_Link extends Docman_Document {
         parent::initFromRow($row);
         $this->setUrl($row['link_url']);
     }
-    function getSpecificFields() {
-        $fields = array(
-            array(
-                'label' => 'Url',
-                'field' => '<input type="text" name="item[link_url]" value="'. htmlentities($this->getUrl(), ENT_QUOTES) .'" />'
-            )
-        );
-        return $fields;
+    function toRow() {
+        $row = parent::toRow();
+        $row['link_url'] = $this->getUrl();
+        $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_LINK;
+        return $row;
     }
-    function getActionWhenUserClickOnTitle($params) {
-        return $this->getUrl();
+
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitLink($this, $params);
     }
 }
 

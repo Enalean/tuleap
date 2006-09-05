@@ -42,25 +42,25 @@ class Docman_ItemFactory {
     function &getItemFromRow(&$row) {
         $item = null;
         switch($row['item_type']) {
-        case DOCMAN_ITEM_TYPE_FOLDER:
+        case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
             $item = new Docman_Folder($row);
             break;
-        case DOCMAN_ITEM_TYPE_FILE:
+        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             $item = new Docman_File($row);
             break;
-        case DOCMAN_ITEM_TYPE_LINK:
+        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
             $item = new Docman_Link($row);
             break;
-        case DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             $item = new Docman_EmbeddedFile($row);
             break;
-        case DOCMAN_ITEM_TYPE_WIKI:
+        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
             $item = new Docman_Wiki($row);
             break;
         default:
             return;
         }
-        if ($row['item_type'] == DOCMAN_ITEM_TYPE_FILE || $row['item_type'] == DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+        if ($row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
             $version = array(
                 'id'        => $row['version_id'],
                 'user_id'   => $row['version_user_id'],
@@ -82,19 +82,19 @@ class Docman_ItemFactory {
         $type = false;
         switch(strtolower(get_class($item))) {
             case 'docman_folder':
-                $type = DOCMAN_ITEM_TYPE_FOLDER;
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
                 break;
             case 'docman_link':
-                $type = DOCMAN_ITEM_TYPE_LINK;
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_LINK;
                 break;
             case 'docman_wiki':
-               $type = DOCMAN_ITEM_TYPE_WIKI;
+               $type = PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
                 break;
             case 'docman_file':
-                $type = DOCMAN_ITEM_TYPE_FILE;
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
                 break;
             case 'docman_embeddedfile':
-                $type = DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
                 break;
             default:
                 break;
@@ -153,7 +153,7 @@ class Docman_ItemFactory {
                 while ($dar->valid()) {
                     $row = $dar->current();
                     $callback($row);
-                    if (DOCMAN_ITEM_TYPE_FOLDER == $row['item_type']) {
+                    if (PLUGIN_DOCMAN_ITEM_TYPE_FOLDER == $row['item_type']) {
                         $parents[] = $row['item_id'];
                     }
                     $dar->next();
@@ -166,7 +166,17 @@ class Docman_ItemFactory {
         $id = $dao->searchRootIdForGroupId($group_id);
         return $this->getItemFromDb($id);
     }
-
+    function isRoot(&$item) {
+        $root =& $this->getRoot($item->getGroupId());
+        return $item->getId() == $root->getId();
+    }
+    function &createRoot($group_id, $title) {
+        $dao =& $this->_getItemDao();
+        $root =& new Docman_Folder();
+        $root->setGroupId($group_id);
+        $root->setTitle($title);
+        return $dao->createFromRow($root->toRow());
+    }
 }
 
 ?>
