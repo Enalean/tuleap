@@ -16,7 +16,7 @@ define ('delete_dependency_fault', '3013');
 define ('create_followup_fault', '3014');
 define ('get_artifact_field_fault', '3015');
 
-require_once ('nusoap/lib/nusoap.php');
+require_once ('nusoap.php');
 require_once ('pre.php');
 require_once ('session.php');
 require_once ('common/include/Error.class');

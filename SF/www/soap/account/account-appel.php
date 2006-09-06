@@ -1,6 +1,6 @@
 <?php
 // Pull in the NuSOAP code
-require_once ('nusoap/lib/nusoap.php');
+require_once ('nusoap.php');
 
 // Http Authentication
 define ('username', 'test');

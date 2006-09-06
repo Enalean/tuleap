@@ -1,6 +1,6 @@
 <?php
 // Pull in the NuSOAP code
-require_once ('nusoap/lib/nusoap.php');
+require_once ('nusoap.php');
 
 // Http Authentication
 define ('username', 'test');
@@ -9,7 +9,8 @@ define ('password', 'test');
 // Create the client instance
 //$client = new soapclient('http://' . username . ':' . password . '@esparros.grenoble.xrce.xerox.com:8000/soap/account/account-service.php?wsdl', true);
 //$client->setCredentials(username, password);
-$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/common/index.php?wsdl', true);
+$client = new soapclient('http://lorzier.grenoble.xrce.xerox.com:8017/soap/index.php?wsdl', true);
+
 // Check for an error
 $err = $client->getError();
 if ($err) {
@@ -18,23 +19,27 @@ if ($err) {
     // At this point, you know the call that follows will fail
 }
 // Call the SOAP method
-$result = $client->call('login', array('loginname' => 'moubouho', 'passwd' => '2pacmail'));
+$result = $client->call('login', array('loginname' => 'admin', 'passwd' => 'siteadmin'));
 print_r($result);
 $user_id = $result['user_id'];
 $session_hash = $result['session_hash'];
 echo '<H2>Session : '.$user_id.'-------------'.$session_hash.'</H2>';
 
-//$client = new soapclient('http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/tracker-service.php?wsdl', true, 'cornillon.grenoble.xrce.xerox.com', '8000');
-$compress=array('compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP);
-$client = new soapclient("http://esparros.grenoble.xrce.xerox.com:8000/soap/tracker/index.php?wsdl",$compress);
-$client->setHTTPEncoding('gzip, deflate');
-//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127, 'user_id' => $user_id));
+//$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 237, 'user_id' => 101));
+
+/*$err = $client->getError();
+if ($err) {
+    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
+} else {
+    echo '<pre>';
+    print_r($result);
+    echo '</pre>';
+}*/
+
 $group_id = 237;
 $group_artifact_id = 457;
-$artifact_id = 7027;
 $user_id = 101;
 
-//$result = $client->call('getArtifactById', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'artifact_id' => $artifact_id));
 //$result = $client->call('getFieldSets', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id));
 
 $criteria = array();
@@ -54,10 +59,22 @@ $extra_fields = array();
 //$extra_fields[] = array ('field_id' => 9 , 'field_value' => 132);
 //$extra_fields[] = array ('field_id' => 182 , 'field_value' => '102,103' );
 //$extra_fields[] = array ('field_id' => 181 , 'field_value' => 'test de mise a jour artifact' );
-$extra_fields[] = array ('field_id' => 177 , 'field_value' => '2006-08-17' );
-//$result = $client->call('addArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'severity' => 4, 'summary' => 'ceci est un  test pour marc', 'extra_fields' => $extra_fields));
 
-$result = $client->call('updateArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'user_id' => $user_id, 'artifact_id' => $artifact_id, 'severity' => 2, 'extra_fields' => $extra_fields));
+//$result = $client->call('addArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'severity' => 4, 'summary' => 'ceci est un  test pour cli', 'extra_fields' => $extra_fields));
+/*$err = $client->getError();
+if ($err) {
+    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
+} else {
+    print_r($result);
+}*/
+
+$result = $client->call('updateArtifact', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => $group_artifact_id, 'artifact_id' => 7312, 'severity' => 4));
+$err = $client->getError();
+if ($err) {
+    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
+} else {
+    print_r($result);
+}
 
 //$result = $client->call('getArtifactCannedResponses', array('sessionKey' => $session_hash, 'group_id' => $group_id, 'group_artifact_id' => 409));
 //$result = $client->call('getArtifactTypes', array('sessionKey' => $session_hash, 'group_id' => 127));
@@ -134,6 +151,7 @@ if ($client->fault) {
     echo '</pre>';
     }
 }
+
 // Display the request and response
 echo '<h2>Request</h2>';
 echo '<pre>' . htmlspecialchars($client->request, ENT_QUOTES) . '</pre>';

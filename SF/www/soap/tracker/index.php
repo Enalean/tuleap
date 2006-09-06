@@ -1,10 +1,17 @@
 <?php
 require_once ('pre.php');
-require_once ('nusoap/lib/nusoap.php');
+require_once ('nusoap.php');
 
 define ('permission_denied_fault', '3016');
 
-$uri = 'http://'.$sys_default_domain;
+// Check if we the server is in secure mode or not.
+if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+    $protocol = "https";
+} else {
+    $protocol = "http";
+}
+
+$uri = $protocol.'://'.$sys_default_domain;
 
 // Instantiate server object
 $server = new soap_server();

@@ -19,7 +19,7 @@ define ('update_user_pwd_fault', '3014');
 define ('add_people_skill_fault', '3015');
 define ('get_groups_fault', '3017');
 
-require_once('nusoap/lib/nusoap.php');
+require_once('nusoap.php');
 require_once('pre.php');
 require_once('timezones.php');
 require_once('session.php'); 
