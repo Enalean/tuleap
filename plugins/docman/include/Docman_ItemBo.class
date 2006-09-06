@@ -70,9 +70,9 @@ class Docman_ItemBo {
             
             $pm =& PermissionsManager::instance();
             if ($user->isSuperUser() 
-                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_READ', $user->getUgroups(array())) 
-                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_WRITE', $user->getUgroups(array())) 
-                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups(array())) 
+                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_READ', $user->getUgroups($item->getGroupId(), array())) 
+                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_WRITE', $user->getUgroups($item->getGroupId(), array())) 
+                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups($item->getGroupId(), array())) 
                 || $this->docman->userCanAdmin()) {
                 $this->permCache[$user->getId()][$item->getId()] = true;
             }
@@ -120,7 +120,7 @@ class Docman_ItemBo {
         }
         $pm =& PermissionsManager::instance();
         $ptype = array('"PLUGIN_DOCMAN_READ"', '"PLUGIN_DOCMAN_WRITE"', '"PLUGIN_DOCMAN_MANAGE"');
-        $pm->_retrievePermissionsArray($objectsIds, $ptype, $user->getUgroups(array()));
+        $pm->_retrievePermissionsArray($objectsIds, $ptype, $user->getUgroups($this->groupId, array()));
 
         $itemFactory =& new Docman_ItemFactory();
 

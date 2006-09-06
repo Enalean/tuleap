@@ -7,7 +7,7 @@
 //  Written for CodeX by Marc Nazarian
 //
 
-$Language->loadLanguageMsg('tracker/tracker');
+$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactFieldSet extends Error {
 

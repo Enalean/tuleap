@@ -138,24 +138,24 @@ class Docman extends Controler {
         $pm =& PermissionsManager::instance();
         $user =& $this->getUser();
         return $user->isSuperUser() 
-            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups(array())) 
-            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups(array())) 
-            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups(array())) 
+            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups((int)$this->request->get('group_id'), array())) 
+            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups((int)$this->request->get('group_id'), array())) 
+            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups((int)$this->request->get('group_id'), array())) 
             || $this->userCanAdmin($item_id); //There are default perms for admin
     }
     function userCanWrite($item_id) {
         $pm =& PermissionsManager::instance();
         $user =& $this->getUser();
         return $user->isSuperUser() 
-            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups(array())) 
-            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups(array())) 
+            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups((int)$this->request->get('group_id'), array())) 
+            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups((int)$this->request->get('group_id'), array())) 
             || $this->userCanAdmin($item_id); //There are default perms for admin
     }
     function userCanManage($item_id) {
         $pm =& PermissionsManager::instance();
         $user =& $this->getUser();
         return $user->isSuperUser() 
-            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups(array())) 
+            || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups((int)$this->request->get('group_id'), array())) 
             || $this->userCanAdmin($item_id); //There are default perms for admin
     }
     function userCanAdmin() {
@@ -322,7 +322,7 @@ class Docman extends Controler {
                             if ($can_read) {
                                 $parent       = $item;
                                 $pm           =& PermissionsManager::instance();
-                                $user_ugroups =& $user->getUgroups();
+                                $user_ugroups =& $user->getUgroups((int)$this->request->get('group_id'), array());
                                 while ($can_read && $parent->getParentId() != 0) {
                                     $parent =& $item_factory->getItemFromDb($parent->getParentId());
                                     $can_read = $this->userCanRead($parent->getId());
