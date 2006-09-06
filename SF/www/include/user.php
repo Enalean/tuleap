@@ -363,4 +363,27 @@ function user_get_preference($preference_name) {
 	}
 }
 
+function user_del_preference($preference_name) {
+    GLOBAL $user_pref;
+    if (user_isloggedin()) {
+        if ($user_pref && array_key_exists($preference_name, $user_pref)) {
+            unset($user_pref[$preference_name]);
+        }
+        $sql = 'DELETE FROM user_preferences'
+            .' WHERE preference_name="'.$preference_name.'"'
+            .' AND user_id='.user_getid();
+        $res = db_query($sql);
+        if(db_affected_rows($res) != 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+
 ?>
