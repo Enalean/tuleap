@@ -35,7 +35,7 @@ http://www.nusphere.com
 /* load classes
 
 // necessary classes
-require_once('class.soapclient.php');
+require_once('class.soap_client.php');
 require_once('class.soap_val.php');
 require_once('class.soap_parser.php');
 require_once('class.soap_fault.php');
@@ -2824,7 +2824,7 @@ class soap_transport_http extends nusoap_base {
 			($http_status >= 400 && $http_status <= 417) ||
 			($http_status >= 501 && $http_status <= 505)
 		   ) {
-			$this->setError("Unsupported HTTP response status $http_status $http_reason (soapclient->response has contents of the response)");
+			$this->setError("Unsupported HTTP response status $http_status $http_reason (soap_client->response has contents of the response)");
 			return false;
 		}
 
@@ -4003,12 +4003,12 @@ class soap_server extends nusoap_base {
 			$SERVER_NAME = $_SERVER['SERVER_NAME'];
 			$SERVER_PORT = $_SERVER['SERVER_PORT'];
 			$SCRIPT_NAME = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-			$HTTPS = $_SERVER['HTTPS'];
+			$HTTPS = isset($_SERVER['HTTPS']) ? $_SERVER['HTTPS'] : '';
 		} elseif (isset($HTTP_SERVER_VARS)) {
 			$SERVER_NAME = $HTTP_SERVER_VARS['SERVER_NAME'];
 			$SERVER_PORT = $HTTP_SERVER_VARS['SERVER_PORT'];
 			$SCRIPT_NAME = isset($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : $HTTP_SERVER_VARS['SCRIPT_NAME'];
-			$HTTPS = $HTTP_SERVER_VARS['HTTPS'];
+			$HTTPS = isset($HTTP_SERVER_VARS['HTTPS']) ? $HTTP_SERVER_VARS['HTTPS'] : '';
 		} else {
 			$this->setError("Neither _SERVER nor HTTP_SERVER_VARS is available");
 		}
@@ -6387,24 +6387,24 @@ class soap_parser extends nusoap_base {
 
 /**
 *
-* soapclient higher level class for easy usage.
+* soap_client higher level class for easy usage.
 *
 * usage:
 *
 * // instantiate client with server info
-* $soapclient = new soapclient( string path [ ,boolean wsdl] );
+* $soap_client = new soap_client( string path [ ,boolean wsdl] );
 *
 * // call method, get results
-* echo $soapclient->call( string methodname [ ,array parameters] );
+* echo $soap_client->call( string methodname [ ,array parameters] );
 *
 * // bye bye client
-* unset($soapclient);
+* unset($soap_client);
 *
 * @author   Dietrich Ayala <dietrich@ganx4.com>
 * @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
-class soapclient extends nusoap_base  {
+class soap_client extends nusoap_base  {
 
 	var $username = '';
 	var $password = '';
@@ -6471,7 +6471,7 @@ class soapclient extends nusoap_base  {
 	* @param	integer $response_timeout set the response timeout
 	* @access   public
 	*/
-	function soapclient($endpoint,$wsdl = false,$proxyhost = false,$proxyport = false,$proxyusername = false, $proxypassword = false, $timeout = 0, $response_timeout = 30){
+	function soap_client($endpoint,$wsdl = false,$proxyhost = false,$proxyport = false,$proxyusername = false, $proxypassword = false, $timeout = 0, $response_timeout = 30){
 		parent::nusoap_base();
 		$this->endpoint = $endpoint;
 		$this->proxyhost = $proxyhost;
@@ -7051,7 +7051,7 @@ class soapclient extends nusoap_base  {
 				unset($paramCommentStr);
 			}
 		}
-		$evalStr = 'class soap_proxy_'.$r.' extends soapclient {
+		$evalStr = 'class soap_proxy_'.$r.' extends soap_client {
 	'.$evalStr.'
 }';
 		return $evalStr;
