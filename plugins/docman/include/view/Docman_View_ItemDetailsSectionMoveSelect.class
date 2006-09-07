@@ -51,7 +51,9 @@ class Docman_View_ItemDetailsSectionMoveSelect extends Docman_View_ItemDetailsSe
                 $content .= '<option value="'.($i->getRank()-1).'">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</option>'."\n";
                 $at_the_beginning = true;
             }
-            $content .= '<option value="'.($i->getRank()+1).'">'. $GLOBALS['Language']->getText('plugin_docman', 'move_after', array($i->getTitle())) .'</option>'."\n";
+            if ($i->getId() != $this->item->getId()) {
+                $content .= '<option value="'.($i->getRank()+1).'">'. $GLOBALS['Language']->getText('plugin_docman', 'move_after', array($i->getTitle())) .'</option>'."\n";
+            }
             $iter->next();
         }
         $content .= '</select></div>';
