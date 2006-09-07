@@ -6,7 +6,5 @@ $docman_root = '/home/data/docman';
 // Are embedded files allowed ?
 $embedded_are_allowed = true;
 
-// Restrited access
-$allowed_projects = "101,107";
 
 ?>
