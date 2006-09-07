@@ -259,29 +259,10 @@ class Docman extends Controler {
 
             $item_factory =& $this->_getItemFactory();
             $root =& $item_factory->getRoot($this->request->get('group_id'));
-            if (!$root) { //docman is not installed for this project
-                $feedback_not_installed = true;
-                if ($this->userCanAdmin()) {
-                    if ($view == 'install') {
-                        if ($this->request->exist('confirm')) {
-                            $this->action = 'install';
-                            $this->view   = 'Installed';
-                            $feedback_not_installed = false;
-                        } else {
-                            $g = group_get_object($this->request->get('group_id'));
-                            $unix_name = $g->getUnixName();
-                            $this->_viewParams['redirect_to'] = '/projects/'. $unix_name .'/';
-                            $this->view = 'Redirect';
-                        }
-                    } else {
-                        $this->view = 'Install';
-                    }
-                } else {
-                    $this->view = 'ProjectError';
-                }
-                if ($feedback_not_installed) {
-                    $this->feedback->log('warning', 'Docman is not installed for this project.');
-                }
+            if (!$root) {
+                $this->action = 'install';
+                $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
+                $this->view = 'Redirect';
             } else {
                 $id = $this->request->get('id');
                 if (!$id && $this->request->exist('item')) {
