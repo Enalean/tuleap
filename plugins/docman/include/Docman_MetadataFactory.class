@@ -182,7 +182,7 @@ class Docman_MetadataFactory {
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
     function &getOnSubmitHardCodedMetadataList() {
-        $mdOnSubmit = array('title', 'description', 'owner',
+        $mdOnSubmit = array('title', 'description', //'owner',
                             'status', 'obsolescence_date');
         return $this->_buildHardCodedMetadataList($mdOnSubmit, true);
     }

@@ -282,7 +282,7 @@ class DocmanActions extends Actions {
                     }
 
                     // Change owner if needed
-                    $this->_updateOwnerOnItemCreation($id, $item['group_id'], $item['owner'], $user);
+                    //$this->_updateOwnerOnItemCreation($id, $item['group_id'], $item['owner'], $user);
                 }
             }
         }
