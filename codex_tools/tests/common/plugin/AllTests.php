@@ -5,7 +5,7 @@ if (! defined('CODEX_RUNNER')) {
     require_once('tests/CodexReporter.class');
 }
 
-require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('CODEX_LOCAL_INC'));
 require_once('tests/simpletest/unit_tester.php');
 
 //We define a group of test

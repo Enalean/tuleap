@@ -40,7 +40,7 @@ class DaoTest extends UnitTestCase {
     }
     
     function testRealDao() {
-        require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+        require(getenv('CODEX_LOCAL_INC'));
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertFalse($da->isError());
         $dao =& new DataAccessObject($da);

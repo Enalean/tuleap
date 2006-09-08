@@ -23,7 +23,7 @@ require_once('common/event/EventManager.class');
 Mock::generate('EventManager');
 require_once('common/dao/include/DataAccessResult.class');
 Mock::generate('DataAccessResult');
-require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('CODEX_LOCAL_INC'));
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 

@@ -12,7 +12,7 @@ define('CODEX_RUNNER', true);
 
 require_once('tests/simpletest/unit_tester.php');
 require_once('tests/CodexReporter.class');	
-require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('CODEX_LOCAL_INC'));
 
 //We define a group of test
 $alltest = &new GroupTest('All CodeX tests');

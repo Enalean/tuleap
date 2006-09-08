@@ -32,7 +32,7 @@ class DataAccessTest extends UnitTestCase {
         $sys_dbname   = 'db';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertWantedPattern("/Unknown MySQL Server Host '".$sys_dbhost."'/",$da->isError());
-        require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+        require(getenv('CODEX_LOCAL_INC'));
         $sys_dbname_2 = 'db that does not exist';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname_2);
         $this->assertEqual($da->isError(), "Unknown database '".$sys_dbname_2."'");
@@ -42,7 +42,7 @@ class DataAccessTest extends UnitTestCase {
     }
     
     function testQuoteSmart() {
-        require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+        require(getenv('CODEX_LOCAL_INC'));
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertIdentical('123', $da->quoteSmart("123"), "An integer is not quoted");
         $this->assertIdentical('12.3', $da->quoteSmart("12.3"), "A float is not quoted");
