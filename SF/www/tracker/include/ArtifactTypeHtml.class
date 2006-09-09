@@ -769,7 +769,8 @@ EOS;
 	 *  @return void
 	 */
 	function displayGroupUsers() {
-	    $result=$this->getGroupMembers();
+	    $qry=$this->getGroupMembers();
+	    $result=db_query($qry);
 	    $rows=db_numrows($result);
 	
 		echo '<SELECT name="user_id">';
@@ -1549,7 +1550,7 @@ EOS;
 	 *
 	 *  @return void
 	 */
-	function displayValueFunctionForm($field_id,$value_function="",$or_label="") {
+	function displayValueFunctionForm($field_id,$value_function,$or_label="") {
 	  global $Language;
 	    if ( $or_label ) {
 	    	echo '<h3>'.$or_label.' '.$Language->getText('tracker_include_type','bind_to_list').' ';
@@ -1566,12 +1567,12 @@ EOS;
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
 	      '.$Language->getText('tracker_include_type','bind_to').': &nbsp; 
-	      <select name="value_function">
+	      <select multiple name="value_function[]">
 	          <option value="">'.$Language->getText('global','none').'</option>';
 
 	
 	    $selected = "";
-	    if ( $value_function && $value_function == "artifact_submitters" ) {
+	    if ( $value_function && in_array("artifact_submitters",$value_function)) {
 	      $selected = " selected";
 	    }
 	    echo '<option value="artifact_submitters"'.$selected.'>'.$Language->getText('tracker_include_type','submitters').'</option>';
@@ -1579,7 +1580,7 @@ EOS;
 	    $selected = "";
 	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
 	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
-	    if ( $value_function && $value_function == "group_members" ) {
+	    if ( $value_function && in_array("group_members",$value_function)) {
 	      $selected = " selected";
 	    }
 	    echo '<option value="group_members"'.$selected.'>'.$name.'</option>';
@@ -1587,7 +1588,7 @@ EOS;
 	    $selected = "";
 	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
 	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
-	    if ( $value_function && $value_function == "group_admins" ) {
+	    if ( $value_function && in_array("group_admins",$value_function)) {
 	      $selected = " selected";
 	    }
 	    echo '<option value="group_admins"'.$selected.'>'.$name.'</option>';
@@ -1595,7 +1596,7 @@ EOS;
 	    $selected = "";
 	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_TRACKER_ADMIN']);
 	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
-	    if ( $value_function && $value_function == "tracker_admins" ) {
+	    if ( $value_function && in_array("tracker_admins",$value_function)) {
 	      $selected = " selected";
 	    }
 	    echo '<option value="tracker_admins"'.$selected.'>'.$name.'</option>';
@@ -1612,10 +1613,11 @@ EOS;
 		  $ug == $GLOBALS['UGROUP_PROJECT_ADMIN'] || 
 		  $ug == $GLOBALS['UGROUP_TRACKER_ADMIN']) continue;
 	      
-	      if ( $value_function && $value_function == "ugroup_".$ug) {
+	      $ugr="ugroup_".$ug;
+	      if ( $value_function && in_array($ugr,$value_function)) {
 		$selected = " selected";
 	      }
-	      echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
+	      echo '<option value="'.$ugr.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';	      
 	    }
 	    
 	    if ($this->Group->getID() != 100) {
@@ -1624,7 +1626,11 @@ EOS;
 	      for($i=0;$i<$rows;$i++) {
 		$ug = db_result($ugroup_res, $i,'ugroup_id');
 		$selected = "";
-		echo '<option value="ugroup_'.$ug.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
+		$ugr="ugroup_".$ug;
+	        if ( $value_function && in_array($ugr,$value_function)) {
+		    $selected = " selected";
+	        }
+		echo '<option value="'.$ugr.'"'.$selected.'>'.util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')).'</option>';
 	      }
 	    }
 	    echo '

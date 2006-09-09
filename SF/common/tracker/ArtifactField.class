@@ -133,8 +133,8 @@ class ArtifactField extends Error {
 		$this->required = $field_array['required'];
 		$this->empty_ok = $field_array['empty_ok'];
 		$this->keep_history = $field_array['keep_history'];
-		$this->special = $field_array['special'];
-		$this->value_function = $field_array['value_function'];
+		$this->special = $field_array['special'];		
+		$this->value_function = explode(",",$field_array['value_function']);
 		$this->use_it = $field_array['use_it'];
 		$this->place = $field_array['place'];
 		$this->default_value = $field_array['default_value'];
@@ -295,7 +295,7 @@ class ArtifactField extends Error {
 	/**
 	 *  Get the value_function attribute value
 	 *
-	 * @return string
+	 * @return array
 	 */
 	function getValueFunction() {
 		return $this->value_function;
@@ -464,7 +464,7 @@ class ArtifactField extends Error {
 	/**
 	 *  Return value function field attribute value
 	 *
-	 * @return string
+	 * @return array
 	 */
 	function getGlobalValueFunction($by_field_id=false) {
 		global $art_field_fact;
@@ -523,11 +523,17 @@ class ArtifactField extends Error {
 	  global $Language;
 
 	    // close_date and assigned_to fields are special select box fields
-	    if ( $value_func = $this->getGlobalValueFunction() ) {
+	    $value_func = $this->getGlobalValueFunction();
+	    if ($value_func[0]) {
 			// For now all of our value functions returns users so there is no need
 			// to make a test for the type of value function it is
 			// if ($value_func == '...')
-			return user_getname($value_id);
+            if(is_numeric($value_id)) {
+                return user_getname($value_id);
+            }
+            else {
+                return $Language->getText('tracker_common_field','not_found');
+            }
 	    } else if ( $this->isDateField() ) {
 			return format_date($sys_datefmt,$value_id);
 	    }
@@ -564,24 +570,33 @@ class ArtifactField extends Error {
 
 	    // The "Assigned_to" box requires some special processing
 	    // because possible values  are project members) and they are
-	    // not stored in the artifact_field_value table but in the user_group table
-	    if ($value_func = $this->getGlobalValueFunction()) {
-			if ($value_func == 'group_members')
-			    $res_value = $ath->getGroupMembers();
-			else if ($value_func == 'group_admins')
-			    $res_value = $ath->getGroupAdmins();
-			else if ($value_func == 'tracker_admins')
-			    $res_value = $ath->getTrackerAdmins();
-			else if ($value_func == 'artifact_submitters')
-			    $res_value = $ath->getSubmitters();
-			else if (preg_match('/ugroup_([0-9]+)/', $value_func, $matches)) 
+	    // not stored in the artifact_field_value table but in the user_group table	    
+	    $value_func = $this->getGlobalValueFunction();
+	    if ($value_func[0]) {
+	        for ($i=0;$i<count($value_func);$i++) {
+			if ($value_func[$i] == 'group_members')
+			    $qry_value[$i] = $ath->getGroupMembers();
+			else if ($value_func[$i] == 'group_admins')
+			    $qry_value[$i] = $ath->getGroupAdmins();			    
+			else if ($value_func[$i] == 'tracker_admins')
+			    $qry_value[$i] = $ath->getTrackerAdmins();			    
+			else if ($value_func[$i] == 'artifact_submitters')
+			    $qry_value[$i] = $ath->getSubmitters();
+			else if (preg_match('/ugroup_([0-9]+)/', $value_func[$i], $matches))
 			  if (strlen($matches[1]) > 2)
-			    $res_value = ugroup_db_get_members($matches[1]);
-			  else
-			    $res_value = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID());
-			    
-	    } else {
+			    $qry_value[$i] = ugroup_db_get_members($matches[1]);			    
+			else
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID());			    			
+		}
+		$qry = $qry_value[0];
+		if (count($qry_value) > 1) {
+		    for ($i=1;$i<count($qry_value);$i++) {		        
+		        $qry = $qry." UNION ".$qry_value[$i];
+		    }
+		}		
+		$res_value = db_query($qry);
 		
+	    } else {
 			// If only active field
             $status_cond = "";
 			if ($active_only) {
@@ -631,7 +646,7 @@ class ArtifactField extends Error {
 	 * @return array
 	 */
 	function checkValueInPredefinedValues ($group_artifact_id,$value) {
-	
+		    
 	    $res = $this->getFieldPredefinedValues ($group_artifact_id);
 	    while ($res_array = db_fetch_array($res)) {
 	    	if ( $res_array[0] == $value ) {
@@ -653,7 +668,8 @@ class ArtifactField extends Error {
 	 */
 	function getFieldValues ($group_artifact_id,$status) {
         $res_value = false;
-	    if (!$this->getGlobalValueFunction()) {
+	$gvf = $this->getGlobalValueFunction();
+	    if (!$gvf[0]) {
 
 			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
 			    "FROM artifact_field_value_list ".
@@ -677,7 +693,8 @@ class ArtifactField extends Error {
 	 */
 	function getFieldValue ($group_artifact_id,$value_id) {
 	
-	    if (!$this->getGlobalValueFunction()) {
+	    $gvf = $this->getGlobalValueFunction();	
+	    if (!$gvf[0]) {
 
 			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
 			    "FROM artifact_field_value_list ".
@@ -1264,14 +1281,14 @@ class ArtifactField extends Error {
 	function updateValueFunction($group_artifact_id,$value_function) {
 	  global $Language;
 
-		if ($value_function == '') {
+		if ($value_function == NULL) {
 			$dtype = $this->DATATYPE_INT;
 		} else {
 			$dtype = $this->DATATYPE_USER;
 		}		 	
 		// Update the artifact_field
 		$sql = "UPDATE artifact_field SET ".
-			   "value_function='".$value_function."', ".
+			   "value_function='".implode(",",$value_function)."', ".			   
 			   "data_type=". $dtype." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 								

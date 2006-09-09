@@ -30,11 +30,11 @@ $UGROUP_TRACKER_ADMIN=15;
 
 // Return members (user_id + user_name) of given user group
 function ugroup_db_get_members($ugroup_id) {	
-  $sql="SELECT user.user_id, user.user_name ". 
+  $sql="(SELECT user.user_id, user.user_name ". 
     "FROM ugroup_user, user ".
     "WHERE user.user_id = ugroup_user.user_id ".
-    "AND ugroup_user.ugroup_id=".$ugroup_id;
-  return db_query($sql);
+    "AND ugroup_user.ugroup_id=".$ugroup_id.")";
+  return $sql;
 }
 
 // Return name and id (as DB result) of all ugroups belonging to a specific project.
@@ -167,28 +167,28 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id) {
         return;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
-        return db_query("SELECT user_id, user_name FROM user WHERE status = 'A'");
+        return "(SELECT user_id, user_name FROM user WHERE status = 'A')";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id");
+        return "(SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id)";
     } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
         // File manager admins
-        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2");
+        return "(SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2)";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
         // Document admin
-        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3)");
+        return "(SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3))";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
         // Document tech
-        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2)");
+        return "(SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2))";
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2'");
+        return "(SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2')";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return db_query("SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A'");
+        return "(SELECT u.user_id, u.user_name FROM user u, user_group ug WHERE u.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A')";
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
-        return db_query("SELECT u.user_id, u.user_name FROM artifact_perm ap, user u WHERE (u.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3)");
+        return "(SELECT u.user_id, u.user_name FROM artifact_perm ap, user u WHERE (u.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3))";
     } 
 }
 
