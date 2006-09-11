@@ -1253,8 +1253,12 @@ function SetupWiki (&$request)
     else
         $request->_user = new WikiUser($request, _("The PhpWiki programming team"),
                                        WIKIAUTH_BOGO);
-
-    StartLoadDump($request, _("Loading up virgin wiki. Please wait until the end of the process. This may takes few minutes."));
+    // Get the localised wiki loading message
+    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+    $message = $GLOBALS['Language']->getText('wiki_install_loadingvirginwiki', 
+                            'loading_wiki');
+    
+    StartLoadDump($request, $message);
     echo "<dl>\n";
 
     $pgsrc = FindLocalizedFile(WIKI_PGSRC);
