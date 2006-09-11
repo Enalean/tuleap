@@ -1,0 +1,509 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// Portion of this file is inspired from the  GForge Command-line Interface
+// contained in GForge.
+// Copyright 2005 GForge, LLC
+// http://gforge.org/
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+//
+// $Id$
+//
+// Written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+-->
+<chapter id="Modules">
+    <title>Fonctions et paramètres des modules</title>
+
+    <section id="CoreFunctions">
+        <title>Fonction du noyau</title>
+        
+        <para>Ces fonctions ne font pas paeties d'un module spécifique. Les voici :</para>
+        
+        <section id="CoreFunctionLogin">
+            <title>login</title>
+            <para>login: Connection et identification au serveur.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--username: Spécifie le nom d'utilisateur avec lequel vous allez travailler. 
+                        Le nom d'utilisateur est le même que celui que vous utilisez habituellement sur
+                        la page de connexion du site CodeX.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--password: Spécifie le mot de passe associé au username pour vous authentifier.
+                        Si le mot de passe n'est pas précisé, il vous sera demandé intéractivement.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du project sur lequel vous voulez travailler. 
+                        Si vous ne le spécifiez pas maintenant, chaque appel ultérieur de fonction 
+                        nécessitera de spécifier le projet auquel la fonction doit s'appliquer.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande de login</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php login --username=john --password=johnpass --project=myproject
+Logged in.
+(OR)
+[mnazaria@linux codex cli ]$ ./codex.php login --username=marc --project=myproject
+Password:
+Logged in.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="CoreFunctionLogout">
+            <title>logout</title>
+            <para>logout: Termine une session. Efface toutes les informations de session de votre ordinateur.
+                <para>
+                    <example>
+                        <title>commande de logout</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php logout
+Session terminated.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+    </section>
+
+    <section id="TrackerFunctions">
+        <title>Fonctions des trackers</title>
+        
+        <section id="TrackerFunctionTypeList">
+            <title>trackerlist</title>
+            <para>
+                trackerlist: Affiche une liste des trackers d'un projet.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande trackerlist</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker trackerlist --project=guineapig
+Array
+(
+    [0] => Array
+           (
+            [group_artifact_id] => 113
+            [group_id] => 5
+            [name] => Bugs
+            [description] => Bugs Tracker
+            [item_name] => bug
+            [open_count] => 3
+            [total_count] => 15
+            [field_sets] => Array
+            (... list of trackers, field sets and fields ...)
+                        </programlisting>
+                    </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionList">
+            <title>list</title>
+            <para>
+                list: Affiche la liste des artefacts appartenant au tracker spécifié.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--limit: Nombre maximum d'artefacts retournés.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--offset: Nombre d'artefacts qui seront "sautés" (ce paramètre ne peut pas être utilisé seul, il doit être accompagné du paramètre limit).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[nom du champ][opérateur][valeur]: critère de filtre pour les artefacts retournés. Fonctionne avec les champs standards et les champs utilisateurs.</para>
+                        <para>Exemple : "--open_date>2006-05-21" --assigned_to=135 --status_id=0.</para>
+                        <para>Les opérateurs autorisés sont &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande list</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker list --tracker_id=113 --status=0 --assigned_to=142
+Array
+(
+    [0] => Array
+            (
+                [artifact_id] => 7173
+                [group_artifact_id] => 113
+                [status_id] => 0
+                [submitted_by] => 102
+                [open_date] => 1115311786
+                [close_date ] => 1125064392
+                [summary] => New bug
+                [details] => small bug
+                [severity] => 3
+                [extra_fields] => Array
+                                    (
+                                        [0] => Array
+                                                (
+                                                    [field_id] => 128
+                                                    [field_value] => 142
+                                                )
+                                        [1] => Array
+                                                (
+                                                    [field_id] => 129
+                                                    [field_value] => 41
+                                                )
+                                        [2] => Array
+                                                (
+                                                    [field_id] => 130
+                                                    [field_value] => 42
+                                                )
+                                    )
+            )
+)
+                    </programlisting>
+                </example>
+                <note>Note: Dans cet exemple, "assigned_to" correspond à un champ utilisateur et 
+                      142 est la valeur recherchée pour ce champ. Nous retrouvons ce champs dans 
+                      la liste des "extra_fields" avec le field_id 128.
+                </note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAdd">
+            <title>add</title>
+            <para>
+                add: Ajoute un artefact au tracker.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker dans lequel le nouvel artefact sera ajouté.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--summary: Summary de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--details: Details de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--status_id: Status_id de l' artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--severity: Severity de l'artefact (1: basse, 9: haute).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[nom extra field]: Valeur de l'extra field. Le nom de l'extra field doit être le nom du champ (field_name). La valeur de l'extra_field dépend de son type. Pour les champs multi-valués, séparez les valeurs par une virgule.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande add</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker add --tracker_id=371 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=142
+Confirm you want to add a new tracker with the following information:
+group_id: 160
+group_artifact_id: 371
+summary: Back button is not working
+details: When I read my email and I press the back button, a blank page appears
+severity: 4
+assigned_to: 142
+Is this information correct? (y/n): y
+7374
+                    </programlisting>
+                </example>
+                <note>Note: Dans cet exemple, "assigned_to" correspond à un extra_field et 
+                      142 est une valeur valide pour ce champ.
+                      La valeur retournée (7374) est l'identifiant du nouvel artefact.
+                </note>
+                <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionUpdate">
+            <title>update</title>
+            <para>
+                update: Mise à jour de l'artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker auquel appartient l'artefact à modifier.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact à modifier.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--status_id: Nouveau status de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--summary: Summary de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--details: Details de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--severity: Severity de l'artefact (1: Basse, 9: Haute).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[nom extra_field]: Valeur de l'extra field. La valeur de l'extra field dépend de son type.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande update</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker update --tracker_id=371 --id=7374 --severity=6 --extra_field_notice_textfield="Increased priority"
+Confirm you want to update the tracker with the following information:
+group_id: 160
+group_artifact_id: 371
+severity: 6
+extra_field_notice_textfield="Increased priority"
+Is this information correct? (y/n): y
+7374
+                    </programlisting>
+                </example>
+                <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionComments">
+            <title>comments</title>
+            <para>
+                comments: Affiche tous les commentaires d'un artefatc.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande comments</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker comments --tracker_id=371 --id=7374
+Array
+(
+    [0] => Array
+        (
+        [artifact_id] => 7374
+        [comment] => we will keep them gray
+        [date] => 1117810766
+        [by] => 142
+        [comment_type_id] => 100
+        )
+    [1] => Array
+        (
+        [artifact_id] => 7374
+        [comment] => maybe we can add a gradient
+        [date] => 1117809234
+        [by] => 135
+        [comment_type_id] => 100
+        )
+    [2] => Array
+        (
+        [artifact_id] => 7374
+        [comment] => i think most buttons should be green
+        [date] => 1117723406
+        [by] => 1142
+        [comment_type_id] => 100
+        )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAddComment">
+            <title>addcomment</title>
+            <para>
+                addcomment: Ajoute un commentaire à un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker auquel appartient l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--message* : Message du commentaire.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande addcomment</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addcomment --tracker_id=371 --id=7374 --message="I agree with you"
+                    </programlisting>
+                </example>
+                <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
+                </para>
+            </para>
+        </section>
+
+<!--
+
+        <section id="TrackerFunctionFiles">
+            <title>files</title>
+            <para>
+                files: Show a list of files attached to the artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>__tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>files command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker files __tracker_id=116 __id=3
+Array
+(
+    [0] => Array
+        (
+            [id] => 11
+            [artifact_id] => 3
+            [name] => screenshot.jpg
+            [description] => 11
+            [filesize] => 364983
+            [filetype] => image/jpeg
+            [adddate] => 1124372802
+            [submitted_by] => 102
+        )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionGetFile">
+            <title>getfile</title>
+            <para>
+                getfile: Download a file from an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>__tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__file id* : ID of the file to download.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__output: File name to save the file as. If not specified, the contents of the file are outputted to the screen.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>getfile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker getfile __type=116 __id=3 __file_id=11 __output=/home/mnazaria/screenshot.jpg
+File retrieved successfully.
+                    </programlisting>
+                 </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAddFile">
+            <title>addfile</title>
+            <para>
+                addfile: Attach a file to an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>__tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__file* : Local file to attach.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__description: Description of the file.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>addfile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addfile __type=116 __id=3 __file=/home/mnazaria/image_patch.diff __description="This is the patch to apply"
+                    </programlisting>
+                </example>
+                <note>Note: The value returned (12) is the ID of the new file.</note>
+                <note>Note: The mail notification system is not implemented for the moment.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionTechnicians">
+            <para>
+                
+            </para>
+        </section>
+-->
+    </section>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+End:
+-->
+

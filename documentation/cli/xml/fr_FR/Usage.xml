@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// Portion of this file is inspired from the  GForge Command-line Interface
+// contained in GForge.
+// Copyright 2005 GForge, LLC
+// http://gforge.org/
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+//
+// $Id$
+//
+// Written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+
+-->
+  <chapter id="Usage">
+    <title>Utilisation</title>
+
+    <para>La ligne de commande type pour appeler le client est la suivante :
+        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+# ./codex.php [options du programme] [nom du module] [nom de la fonction] 
+[paramètres de la fonction]
+        </programlisting>
+        <itemizedlist mark="bullet" spacing="compact">
+         <listitem>
+          <para>Options du programme :
+           <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+                <para>-v : Verbose. Donne des détails en sortie sur ce qu'il se passe.</para>
+            </listitem>
+            <listitem>
+                <para>-h: Help. Affiche l'aide à propos de l'utilisation du programme.</para>
+            </listitem>
+           </itemizedlist>
+          </para>
+         </listitem>
+         <listitem>
+          <para>Nom du module : Un "module" est un groupe de fonctions qui agit
+                sur une partie spécifique du système codeX. Actuellement, les 
+                modules suivants sont disponibles :
+           <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+                <para>(vide): Si le nom du module est vide, les fonctions du noyau sont accessibles. (i.e., connection au serveur)</para>
+            </listitem>
+            <!--
+            <listitem>
+                <para>frs: File Release System module</para>
+            </listitem>
+            <listitem>
+                <para>project: Module that deals with project administration</para>
+            </listitem>
+            <listitem>
+                <para>task: Task management module</para>
+            </listitem>
+            -->
+             <listitem>
+                <para>tracker: Module de gestion des Trackers</para>
+             </listitem>
+           </itemizedlist>
+          </para>
+         </listitem>
+         <listitem>
+          <para>Nom de la fonction : Le nom de la fonction à invoquer dépend 
+                du module appelé. Pour plus de détails, voir <xref linkend="Modules" />.
+          </para>
+         </listitem>
+         <listitem>
+          <para>Paramètres de la fonction : Le paramètre de la fonction dépend 
+                également de la fonction appelée. Voir <xref linkend="Modules" />.
+          </para>
+         </listitem>
+        </itemizedlist>
+    </para>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+End:
+-->
+

@@ -1,0 +1,135 @@
+<!--
+//
+// Portion of this file is inspired from the  GForge Command-line Interface
+// contained in GForge.
+// Copyright 2005 GForge, LLC
+// http://gforge.org/
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+//
+// $Id$
+//
+// Written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+
+-->
+  <chapter id="Installation">
+    <title>Installation</title>
+
+    <para>In order to install CodeX's Command Line Interface (CLI), 
+    you must have PHP installed in your local machine. The latest 
+    PHP4 version or PHP 5 is highly recommended. Also, PHP must be 
+    compiled without the --disable-cli parameter in order to create 
+    the PHP binaries.</para>
+
+    <para>You must check in which directory you have your PHP binary 
+    installed. The directory is the prefix that was specified when 
+    compiling PHP (if no prefix was defined, it defaults to /usr, 
+    so the PHP binary is located in /usr/bin/php).
+    <tip>
+        <title>How to know where PHP binary is located ?</title>
+        <para>You can check in which directory it is installed by 
+            issuing the following command:
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+# which php
+/usr/bin/php
+            </programlisting>
+            In this case, the PHP binary is /usr/bin/php.
+        </para>
+    </tip>
+    </para>
+
+    <para><note>If you intend using the CLI for administering a CodeX 
+    installation via an HTTPS connection, you must compile PHP with 
+    the CURL extension (using the --with-curl option in the configure 
+    script).</note></para>
+
+    <para> Once you have PHP properly installed, you must download 
+    and uncompress the CLI to a directory in your local machine.</para>
+
+    <para>Once you've uncompressed the CLI, you must edit $PREFIX/codex.php 
+    (where $PREFIX is the directory in which the CLI was uncompressed) 
+    using your favorite editor and change the following:
+    <procedure>
+        <step>
+          <para>Change the first line which says: 
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+#!/usr/bin/php -q
+            </programlisting>
+            to make it point to the path of the PHP binary in your machine 
+            (if it is different from /usr/bin/php)
+          </para>
+        </step>
+        <step>
+          <para>Find the Configuration section in the script (marked between comments) 
+                and change the following constants:
+                <para>
+                <itemizedlist mark="bullet" spacing="compact">
+                 <listitem>
+                    <para>NUSOAP_DIR: Points to the installation directory of the 
+                        NuSOAP PHP Library. A copy of the library is located in 
+                        $PREFIX/nusoap/lib/.
+                    </para>
+                 </listitem>
+                 <listitem>
+                    <para>CODEX_CLI_DIR: Points to the directory where the CLI 
+                        auxiliary files are to be found. It usually is 
+                        $PREFIX/include/.
+                    </para>
+                 </listitem>
+                 <listitem>
+                    <para>WSDL_URL (optional): URL of the WSDL of your CodeX's SOAP server. 
+                        It is probably located in http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl. 
+                        You can see if the URL is correct by entering it in your browser, 
+                        you should get an XML file from the server as the result. If this variable 
+                        isn't set, the CLI will try to use the WSDL specified in the CODEX_WSDL 
+                        environment variable.
+                    </para>
+                 </listitem>
+                </itemizedlist>
+                </para>
+          </para>
+        </step>
+        <step>
+          <para>Make sure the codex.php script has execution permissions. 
+                If not, set the permission by issuing the following command:
+                <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+chmod +x $PREFIX/codex.php
+                </programlisting>
+          </para>
+        </step>
+    </procedure>
+    
+    <para>
+        After everything is properly set up, you must test the installation 
+        works correctly. For this, try logging into the server by issuing a 
+        "login" command. For this, change your current working directory to 
+        the directory in which you uncompressed the CLI and execute the following:
+        <example>
+            <title>login command</title>
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php --v login --username=(your user) --password=(your password)
+CodeXSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
+CodeXSOAP::Connected!
+CodeXSOAP::Executing command login...
+Logged in as user (your user) , using session string MTAyLSotMTEyMzA4Mjg5My0qLTEyNy4wLjAuMS0qLU51U09BUC8wLjYuOSAoMS4xLjEuMSk=824c9f9010931f7872f4b9826c460ed3
+Logged in.
+            </programlisting>
+        </example>
+     </para>
+    </para>
+
+    <para>The message you see may vary depending on the configuration of your server.
+        If you get an error like "Fatal error: wsdl error: HTTP ERROR: Couldn't open 
+        socket connection to server http://&SYS_DEFAULT_DOMAIN; prior to connect().",
+        it means that your computer can't connect to the CodeX server. In this case, 
+        you must make sure the address is written correctly and that you can access 
+        the server from your computer.
+    </para>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+End:
+-->
+
