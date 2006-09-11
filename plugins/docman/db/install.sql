@@ -181,6 +181,16 @@ CREATE TABLE plugin_docman_metadata_love_md (
 
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
 
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+SELECT DISTINCT group_id , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', CONCAT('/plugins/docman/?group_id=', group_id), 1 , 0 , 'system',  95
+FROM service
+WHERE group_id NOT IN SELECT group_id
+    FROM service
+    WHERE short_name
+    LIKE 'docman';
+
+
+
 INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 1, 0);
 INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 2, 1);
 INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 3, 0);
