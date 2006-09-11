@@ -156,6 +156,11 @@ wiki_views_wkserviews	doc_rank	Rank On Screen
 wiki_views_wkserviews	doc_delete	Delete ?
 #
 #-----------------------------------------------
-# Script: SF/www/wiki/upload
+# Script: SF/www/wiki/uploads
 #
 wiki_attachment_upload	err_not_exist	This attachment doesn't exist. Please Check the url.
+#
+#-----------------------------------------------
+#Script: SF/common/wiki/phpwiki/lib/loadsave.php
+#
+wiki_install_loadingvirginwiki	loading_wiki	Loading up virgin wiki. Please wait until the end of the process. This may takes few minutes.

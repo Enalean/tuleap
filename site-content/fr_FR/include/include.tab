@@ -215,6 +215,7 @@ include_menu	bugs	Bugs
 include_menu	tasks	Tâches
 include_menu	supp_requ	Demande de support
 include_menu	this_forum	Ce forum
+include_menu	wiki	Wiki
 include_menu	this_tracker	Cet outil de suivi
 include_menu	software_proj	Projets logiciel
 include_menu	code_snippets	Boîte à outils 
