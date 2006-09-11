@@ -2076,6 +2076,9 @@ INSERT INTO supported_languages VALUES \
 -- install and enable pluginsadministration
 INSERT INTO plugin (name, available) VALUES ('pluginsadministration', '1');
 
+-- install and enable docman
+INSERT INTO plugin (name, available) VALUES ('docman', '1');
+
 
 --
 -- Insert default references
