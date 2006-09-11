@@ -18,7 +18,7 @@
 stats_ftp_logparse.pl
 ---------------------
 Parse daily log files of the FTP daemon (they are in
-/home/log). Normally all downloads go through PHP now so there is
+$codex_log). Normally all downloads go through PHP now so there is
 nothing in the log but we keep it in case we reactivate ftp downloads
 some day.
 
@@ -29,7 +29,7 @@ Output: stats_ftp_downloads table
 stats_http_logparse.pl
 ---------------------
 Parse daily log files of the HTTP daemon (they are in
-/home/log). Normally all downloads go through PHP now so there is
+$codex_log). Normally all downloads go through PHP now so there is
 nothing in the log but we keep it in case we reactivate ftp downloads
 some day.
 
@@ -77,7 +77,7 @@ Output: frs_dlstats_filetotal_agg table
 
 db_dlstats_allagg.pl (** NOT USED AND OUTDATED **)
 --------------------
-Rescan all HTTP log files from the log dir (/home/log) and recompute the total number of HTTP downloads for each file release and for each day
+Rescan all HTTP log files from the log dir ($codex_log) and recompute the total number of HTTP downloads for each file release and for each day
 Input: HTTP log files
 Output: frs_dlstats_agg
 

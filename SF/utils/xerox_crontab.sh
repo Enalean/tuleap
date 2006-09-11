@@ -15,10 +15,16 @@
 #    Run a series of scripts in the right order for the periodic cron
 #    update of CodeX
 
-UTILSHOME="/home/httpd/SF/utils"
+# Read util directory location from local.inc
+if [ -z "$CODEX_LOCAL_INC" ]; then 
+    CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+fi
+CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+
+DNS_DIR=/var/named
 
 # First run the dump utility for users and groups
-cd $UTILSHOME/underworld-dummy
+cd $CODEX_UTILS_PREFIX/underworld-dummy
 ./dump_database.pl
 
 # Then dump the mailing list
@@ -59,7 +65,6 @@ cp ~dummy/dumps/aliases /etc/aliases.codex
 # generate the DNS zone file and restart the DNS daemon
 #
 ./dns_conf.pl
-DNS_DIR=/var/named
 cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
 cp -f ~dummy/dumps/dns_dump $DNS_DIR/codex_full.zone
 killall -HUP named
@@ -72,7 +77,7 @@ killall -HUP named
 # NOW THE REAL UPDATE
 #
 
-cd $UTILSHOME 
+cd $CODEX_UTILS_PREFIX 
 # update user and groups system files
 # as well as various repositories
 cp -f /etc/passwd /etc/passwd.backup
@@ -98,5 +103,5 @@ cp -f ~dummy/dumps/subversion_ssl_dump /etc/httpd/conf/codex_svnhosts_ssl.conf
 ./mailing_lists_create.pl
 
 # remove deleted releases and released files
-cd $UTILSHOME/download
+cd $CODEX_UTILS_PREFIX/download
 ./download_filemaint.pl

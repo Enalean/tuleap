@@ -876,7 +876,7 @@ function util_get_image_theme($fn, $the_theme=false, $absolute=false){
         if (strpos($path, '/custom') !== false) { 
             // Custom images are in /etc/codex/themes
             $path= preg_replace('/\/custom/','',$path);
-            $path = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes' . $path;
+            $path = $GLOBALS['sys_custom_themeroot'] . $path;
         } else {
             $path = $GLOBALS['sys_urlroot'] . $path;
         }

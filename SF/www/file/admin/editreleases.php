@@ -55,7 +55,7 @@ Third, delete it from the download server
 return 0 if file not deleted, 1 otherwise
 */
 function delete_file ($group_id,$file_id) {
-  GLOBAL $FTPINCOMING_DIR;
+  GLOBAL $ftp_incoming_dir;
 
   $res1=db_query("SELECT frs_file.filename FROM frs_package,frs_release,frs_file ".
 		 "WHERE frs_package.group_id='$group_id' ".
@@ -72,7 +72,7 @@ function delete_file ($group_id,$file_id) {
     db_query("DELETE FROM frs_file WHERE file_id='$file_id'");
     //append the filename and project name to a temp file for the root perl job to grab
     $time = time();
-    exec ("/bin/echo \"". db_result($res1,0,'filename') ."::". group_getunixname($group_id) ."::$time\" >> $FTPINCOMING_DIR/.delete_files");
+    exec ("/bin/echo \"". db_result($res1,0,'filename') ."::". group_getunixname($group_id) ."::$time\" >> $ftp_incoming_dir/.delete_files");
 
     return 1;
   }
@@ -92,7 +92,7 @@ Fourth, put it into the delete_files to be removed from the download server
 return 0 if release not deleted, 1 otherwise
 */
 function delete_release ($group_id,$release_id) {
-  GLOBAL $FTPINCOMING_DIR;
+  GLOBAL $ftp_incoming_dir;
   
   $res1=db_query("SELECT frs_release.name FROM frs_package,frs_release ".
 		 "WHERE frs_package.group_id='$group_id' ".
@@ -122,7 +122,7 @@ function delete_release ($group_id,$release_id) {
       } else {
 	$parentdir = substr($filename, 0, $pos);
 	$time = time();
-	exec ("/bin/echo \"$parentdir::". group_getunixname($group_id) ."::$time\" >> $FTPINCOMING_DIR/.delete_files");
+	exec ("/bin/echo \"$parentdir::". group_getunixname($group_id) ."::$time\" >> $ftp_incoming_dir/.delete_files");
       } 
     }
     
@@ -380,7 +380,7 @@ if (isset($submit)) {
 
 		*/
 		$group_unix_name=group_getunixname($group_id);
-		$project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
+		$project_files_dir=$ftp_frs_dir_prefix.'/'.$group_unix_name;
 
 		$count=count($file_list);
 		if ($count > 0) {
@@ -428,7 +428,7 @@ if (isset($submit)) {
 								move the file to the project's fileserver directory
 							*/
 							clearstatcache();
-							if (is_file($FTPINCOMING_DIR.'/'.$file_list[$i]) && file_exists($FTPINCOMING_DIR.'/'.$file_list[$i])) {
+							if (is_file($ftp_incoming_dir.'/'.$file_list[$i]) && file_exists($ftp_incoming_dir.'/'.$file_list[$i])) {
 							  //move the file to a its project page using a setuid program
 							  exec ("/bin/date > /tmp/".$group_unix_name."$group_id",$exec_res);
 							  exec ("/usr/local/bin/fileforge /tmp/".$group_unix_name."$group_id ".$group_unix_name, $exec_res); 
@@ -642,11 +642,11 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">';
 
-	$dirhandle = @opendir($FTPINCOMING_DIR);
+	$dirhandle = @opendir($ftp_incoming_dir);
 
 	//iterate and show the files in the upload directory
 	while ($file = @readdir($dirhandle)) {
-		if ((!ereg('^\.',$file[0])) && is_file($FTPINCOMING_DIR.'/'.$file)) {
+		if ((!ereg('^\.',$file[0])) && is_file($ftp_incoming_dir.'/'.$file)) {
 	       //file doesn't start with a .
 			$atleastone = 1;
 			print '

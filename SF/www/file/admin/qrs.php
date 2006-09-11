@@ -136,10 +136,10 @@ if( isset($submit) ) {
 			Fifth insert it into the database
     */
     $group_unix_name=group_getunixname($group_id);
-    $project_files_dir=$FTPFILES_DIR.'/'.$group_unix_name;
+    $project_files_dir=$ftp_frs_dir_prefix.'/'.$group_unix_name;
     
     if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
-        $uploaddir = $GLOBALS['FTPINCOMING_DIR'];
+        $uploaddir = $GLOBALS['ftp_incoming_dir'];
         $uploadfile = $uploaddir . "/". basename($_FILES['userfile']['name']);
         if (!move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
             $feedback .= ' | '.$Language->getText('file_admin_editreleases','add_rel_fail').": ".basename($_FILES['userfile']['name']);
@@ -181,7 +181,7 @@ if( isset($submit) ) {
        move the file to the project's fileserver directory
     */
     clearstatcache();
-    if (is_file($FTPINCOMING_DIR.'/'.$file_name) && file_exists($FTPINCOMING_DIR.'/'.$file_name)) {
+    if (is_file($ftp_incoming_dir.'/'.$file_name) && file_exists($ftp_incoming_dir.'/'.$file_name)) {
       //move the file to a its project page using a setuid program
       
       // force project subdir creation
@@ -305,13 +305,13 @@ if( isset($submit) ) {
 		</TD>
 		<TD>
 <?php
-	$dirhandle = @opendir($FTPINCOMING_DIR);
+	$dirhandle = @opendir($ftp_incoming_dir);
 
 	echo '<SELECT NAME="file_name">\n';
 	echo '	<OPTION VALUE="qrs_newfile">'.$Language->getText('file_admin_qrs','select_file').'</OPTION>';
 	//iterate and show the files in the upload directory
 	while ($file = @readdir($dirhandle)) {
-		if ((!ereg('^\.',$file[0])) && is_file($FTPINCOMING_DIR.'/'.$file)) {
+		if ((!ereg('^\.',$file[0])) && is_file($ftp_incoming_dir.'/'.$file)) {
 			$atleastone = 1;
 			print '<OPTION value="'.$file.'">'.$file.'</OPTION>';
 		}

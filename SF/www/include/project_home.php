@@ -451,9 +451,6 @@ if ( $project->usesTracker() ) {
 
 if ($project->isActive()) {
 	print '<HR SIZE="1" NoShade>';
-// LJ replace the hardcoded 'sourceforge.net' with the real domain name
-// LJ	print "<A href=\"ftp://" . $project->getUnixName() . ".sourceforge.net/pub/". $project->getUnixName() ."/\">";
-// LJ
 
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 	print "<A href=\"ftp://" . $project->getUnixName() . "." . $host ."/pub/". $project->getUnixName() ."/\">";

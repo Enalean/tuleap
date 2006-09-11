@@ -20,6 +20,7 @@
 #  ./bdb2fsfs.sh --verbose --convert --svnroot=/svnroot
 #
 debug=
+sys_http_user  = "codexadm"
 set -e${debug}
 
 function error {
@@ -112,7 +113,7 @@ function set_access_rights {
     root=$1
     repo=$2
 
-    ${CHOWN} -R sourceforge:${repo} ${root}
+    ${CHOWN} -R ${sys_http_user}:${repo} ${root}
 }
 
 function lock_repo {

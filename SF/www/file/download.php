@@ -59,7 +59,7 @@ if (user_isloggedin()) {
   //Build the URL to download the file
   $group_unix_name=group_getunixname($group_id);
   $basename = $file_release['filename'];
-  $file = $FTPFILES_DIR.'/'.$group_unix_name.'/'.$basename;
+  $file = $ftp_frs_dir_prefix.'/'.$group_unix_name.'/'.$basename;
 
   if ($fp=fopen($file,"r")) {
       $size = filesize($file);

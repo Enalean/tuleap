@@ -15,6 +15,18 @@ FORCE=0
 HELP=0
 VERBOSE=0
 
+CURRENTDIR=`pwd`
+# honor BASEDIR if defined
+if [ -z "$BASEDIR" ]; then 
+    if [ -z "$CODEX_LOCAL_INC" ]; then 
+        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    fi
+    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+
+    BASEDIR=$CODEX_DOCUMENTATION_PREFIX
+fi
+CMDDIR=$BASEDIR/programmer_guide/cmd
+
 # Check arguments
 while	((1))	# look for options
 do	case	"$1" in
@@ -43,12 +55,6 @@ then
     exit 2;
 fi
 
-CURRENTDIR=`pwd`
-# honor BASEDIR if defined
-if [ -z "$BASEDIR" ]; then 
-    BASEDIR=/home/httpd/documentation
-fi
-CMDDIR=$BASEDIR/programmer_guide/cmd
 cd $BASEDIR/programmer_guide/xml/en_US
 
 if [ ! -e $BASEDIR/programmer_guide/pdf/en_US/CodeX_Programmer_Guide.pdf ]; then

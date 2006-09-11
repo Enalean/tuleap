@@ -1,27 +1,38 @@
 <?php
 //
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// CodeX: Breaking Down the Barriers to Source Code Sharing
 // Copyright 1999-2000 (c) The SourceForge Crew
-// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// Copyright (c) Xerox Corporation, CodeX, 2001-2006. All Rights Reserved
 // http://codex.xerox.com
 //
 // $Id$
 //
 // CodeX Global Configuration File
-//
-// Really Important Safety Tip: --> DO NOT LEAVE ANY WHITE
-// SPACE AFTER THE CLOSING PHP TAG AT THE END OF THIS FILE!
-//
-// Doing so will really confuse the software and cause
-// 1) cookies to fail and 2) HTML page headers to fail
-// which will give you some preally hard-to-debug problems.
-// Why? PHP is a *pre-processor* -- anything that's not PHP gets
-// emitted as part of the HTML stream and processed by the browser,
-// so white space is meaningful!
+
+// Important note on file format
+// -----------------------------
+// This script is read/parsed in PHP, Python, Perl, and parts in Bash
+// For this reason it is important to follow the following syntax rules:
+// - variables start with a '$'
+// - lines end with ";"
+// - use at least one blank char before and after every equal sign (e.g. "$a = 1;" is valid, "$a=1;" is not)
+// - you can reuse one variable (not more) in a definition. 
+// - You can concatenate two strings (not more) with a " . ".
+// - some definitions may not contain variables (whenever precised)
+// Examples:
+// $a = 1;           -> valid
+// $a = $b . "/tmp"; -> valid
+// $a = $b."/tmp";   -> invalid (missing blanks around the dot)
+// $a =$b . "/tmp";  -> invalid (missing a blank after equal sign)
+// $a = $b . $c;     -> invalid (only one variable accepted)
+// $a = "/home" . $b . "/tmp"; -> invalid (only one concatenation per line)
+
+
 //
 //
 // PART I - CodeX hostnames
 //
+
 // Hostnames should be fully qualified domain names (FQDNs); using short names
 // would be prettier but would stop you from distributing your CodeX
 // implementation across multiple domains.
@@ -35,7 +46,7 @@
 // The default CodeX domain
 //
 // this is used where ever the "naked" form of the CodeX domain
-// might be used.  E.g., "mailto:admin@sourceforge.net"
+// might be used.
 // This is also used as the default name for the Web server using
 // the standard http protocol (for https see below). You can also 
 // define a specific port number (useful for test servers - default 80)
@@ -66,7 +77,7 @@ $sys_svn_host = "svn.%sys_default_domain%";
 $sys_download_host = "download.%sys_default_domain%";
  
 // Machine(s) that host users' shell accounts
-//  N.B. to the SourceForge Crew: What's the difference between the user
+//  N.B.: What's the difference between the user
 // host and the shell host?  They are clearly two different hostnames
 // in the source code, but they seem to serve the same purpose..?
 $sys_shell_host = "shell.%sys_default_domain%";
@@ -79,93 +90,164 @@ $sys_lists_host = "lists.%sys_default_domain%";
 // Windows Workgroup CodeX belog to (Samba)
 $sys_win_domain = "%sys_win_domain%";
 
+// Fully qualified name
+$sys_fullname = "%sys_fullname%";
 
-// Part II - Databases, html/php/other paths
-$sys_dbhost="localhost";
-$sys_dbname="sourceforge";
-$sys_dbuser="sourceforge";
-$sys_dbpasswd="%sys_dbpasswd%";
-$sys_server="mysql";
-$sys_server_join="30";
- 
-// Where files are placed when uploaded
-$FTPINCOMING_DIR = "/home/ftp/incoming";
 
-// Where the released files are located
-$FTPFILES_DIR = "/home/ftp/codex";
- 
-// Where wiki attachments are stored
-$sys_wiki_attachment_data_dir = "/home/data/wiki";
 
-// Where the SourceForge files are placed
-// *** IMPORTANT: sys_urlroot *MUST* be an ABSOLUTE FILEYSTEM PATH NAME
-//             that points to the www directory of the SourceForge
-//             installation.  If you use ANY form of relative path
-//             you will break the html_image function in include/html.php
 //
-$sys_urlroot="/home/httpd/SF/www/";
- 
+//
+// PART II - Paths and system settings
+//
+//
+
+
+// In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
+// Please update the following variables:
+// $codex_dir = "mydir/codex"
+// $sys_custom_dir = "mydir/etc/codex"
+// $sys_data_dir = "mydir/data"
+
+
+// CodeX directory (PHP pages, site-content, etc)
+$codex_dir = "/home/httpd";
+
+// Site specific settings are stored there:
+$sys_custom_dir = "/etc/codex";
+
+// CodeX binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
+$codex_bin_prefix = "/usr/local/bin";
+
+// CodeX database configuration file
+$db_config_file = $sys_custom_dir . "/conf/database.inc";
+
+// Data Directory
+$sys_data_dir = "/home/data";
+
+// Place to put temporary data: deleted user's accounts, etc
+$tmp_dir = "/var/tmp";		 
+
+// CodeX utils and documentation directories
+// WARNING: DO NOT USE VARIABLES in the two parameter definitions below.
+// For instance, do *not* use someting like
+//    **Don't** $codex_utils_prefix = $codex_dir . "codex/utils" **Don't**
+// this is because those variables will be read by shell scripts.
+$codex_utils_prefix = "/home/httpd/SF/utils"
+$codex_documentation_prefix = "/home/httpd/documentation"
+
+// Where wiki attachments are stored
+$sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
+
+// Where the CodeX files are placed
+$sys_urlroot = $codex_dir . "/SF/www/"; 
+
+// Site-content paths
+$sys_incdir = $codex_dir . '/site-content';// Directory which hosts the site content
+$sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts the customized site content
+
 // Cache location -- this is needed by include/cache.php
 // This directory must be world reachable, but writable only by the web-server
-$sf_cache_dir = "/home/sfcache";
- 
- 
-// Part III - GUI modifications (menu colors, etc.)
-//    See the top of the file include/html.php, this is where the menu colors
-//    and colors used throughout SourceForge are defined.
- 
-// Themeing related vars... Some of this needs to change in the session stuff
-// The theme base directory, everything else is handled by theme_sysinit()
-$sys_themeroot="/home/httpd/SF/www/themes/";
+$codex_cache_dir = $sys_data_dir . "/codex_cache";
 
-// Plugins related vars
-$sys_pluginsroot       ="/home/httpd/plugins/";
-$sys_custompluginsroot ="/etc/codex/plugins/";
-$sys_pluginspath       ="/plugins";
-$sys_custompluginspath ="/customplugins";
+$homedir_prefix = "/home/users"; // prefix to add to the user's homedir
+$grpdir_prefix  = "/home/groups";// prefix to add to the project's homedir
 
-// Specific to Xerox CodeX
+// CVS paths
+$cvs_prefix     = "/cvsroot";     // cvs root
+$cvslock_prefix = "/var/lock/cvs";// prefix to add to the cvs lock directory
+$cvs_root_allow_file = "/etc/cvs_root_allow";// File containing allowed cvs roots (regular CVS *and* CVSnt)
+$cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configuration
+$cvs_cmd             = "/usr/bin/cvs";       // CVS binary
+
+// Subversion paths
+$svn_prefix   = "/svnroot";         // prefix to add to the subversion root directory
+$svnadmin_cmd = "/usr/bin/svnadmin";// SVN Admin binary
+
+// FRS paths - do *not* use variables in the following parameters
+// If you change those paths, please run utils/compile_fileforge.sh
+$ftp_frs_dir_prefix  = "/home/ftp/codex";   // Where the released files are located
+$ftp_incoming_dir    = "/home/ftp/incoming";// Where files are placed when uploaded
+$ftp_anon_dir_prefix = "/home/ftp/pub";     // prefix to add to the anon ftp project homedir
+
+
+// Paths for backend scripts
+$dump_dir         = "/home/dummy/dumps";// Where should we stick files we're working with
+$codex_log        = "/home/log";        // CodeX log dir (cvslogs,)
+$codex_shell_skel = "/etc/skel_codex";  // CodeX Shell skeleton files directory
+$dns_master_file  = "/var/named/codex.zone";// DNS master file
+$apache_htpasswd  = "/etc/httpd/conf/htpasswd";// Apache htpasswd file
+
+// used as in: $mailman_dir/lists/$list_name $mailman_dir/bin/newlist $mailman_dir/mail/wrapper $mailman_dir/mail/mailman
+$mailman_dir = "/home/mailman";
+
+// Apache configuration file not used?
+//$apache_conf    = "/etc/httpd/conf/httpd.conf";
+
+// Plugins related paths
+$sys_pluginsroot       = $codex_dir . "/plugins/";
+$sys_custompluginsroot = $sys_custom_dir . "/plugins/";
+$sys_pluginspath       = "/plugins";
+$sys_custompluginspath = "/customplugins";
+
+// Themeing related paths
+$sys_themeroot = $codex_dir . "/SF/www/themes/";
+$sys_custom_themeroot = $sys_custom_dir . "/themes";
+
+
+// Users
+$sys_http_user  = "codexadm"; // Unix user running the HTTP server
+$dummy_uid      = "103";      // UserID of the dummy user that will own group's files
+
+
 //
+//
+// Part III - GUI modifications (menu colors, etc.) and other parameters
+//
+// 
+
+
 // Number of hours between two runs of background scripts
-$sys_crondelay=2;
+$sys_crondelay = 2;
 
-//
 // Group id corresponding to CodeX News group
 // (was group 714 in SourceForge - sfnews)
-$sys_news_group=46;
+$sys_news_group = 46;
 
-//
 // Default trove category in software map welcome page.
 // Default is 18 ('topic')
-$sys_default_trove_cat=18;
+$sys_default_trove_cat = 18;
+
+// ID of the survey to be referenced in users personal pages ('my page')
+$sys_my_page_survey = 1;
+
+// Linefeed characters: \r\n for Windows, \n for Linux/Unix
+$sys_lf = "\n";
+
 
 //
-// Authentication scheme:
+// Authentication scheme
+//
 // Should be either 'ldap' or 'codex'
-// WARNING: this is still experimental
-// DON'T USE LDAP ON A PRODUCTION SERVER YET
 $sys_auth_type = 'codex';
 
-//
 // LDAP server(s) to query for more information on CodeX users and 
 // for authentication.
 // You may use a comma-separated list if there are several servers available
 // (leave blank to disable LDAP lookup). 
 // To specify secure LDAP servers, use 'ldaps://servername' 
-$sys_ldap_server='%sys_ldap_server%';
-
+$sys_ldap_server = '%sys_ldap_server%';
 
 // To enable LDAP information on CodeX users, also define the DN 
 // (distinguised name) to use in LDAP queries.
 // The ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
-$sys_ldap_dn='o=XEROX, c=US';
-$sys_ldap_filter='mail=%email%';
+$sys_ldap_dn     = 'o=XEROX, c=US';
+$sys_ldap_filter = 'mail=%email%';
 
 // For LDAP systems that do not accept anonymous binding, define here
 // a valid DN and password:
-//$sys_ldap_bind_dn="ldapsearch";
-//$sys_ldap_bind_passwd="xxxxxxxxx";
+//$sys_ldap_bind_dn = "ldapsearch";
+//$sys_ldap_bind_passwd = "xxxxxxxxx";
 
 // LDAP authentication:
 // sys_ldap_auth_dn is used for binding to the LDAP server with the
@@ -181,104 +263,63 @@ $sys_ldap_filter='mail=%email%';
 //  $sys_ldap_auth_dn == $sys_ldap_dn )
 //
 // 1- Direct authentication:
-//$sys_ldap_auth_dn='dc=xerox, dc=com, cn=%ldap_name%';
+//$sys_ldap_auth_dn = 'dc=xerox, dc=com, cn=%ldap_name%';
 // 2- Two-step authentication (search, then bind):
-$sys_ldap_auth_dn='o=XEROX, c=US';
-$sys_ldap_auth_filter='uid=%ldap_name%';
+$sys_ldap_auth_dn     = 'o=XEROX, c=US';
+$sys_ldap_auth_filter = 'uid=%ldap_name%';
 
 
-//
+
 // System name to be used in Web pages, documentation,etc.
-$sys_name='CodeX';
+$sys_name = 'CodeX';
 
-//
 // Company/Organization running the system (short and long)
-$sys_org_name='%sys_org_name%';
-$sys_long_org_name='%sys_long_org_name%';
+$sys_org_name      = '%sys_org_name%';
+$sys_long_org_name = '%sys_long_org_name%';
 
-//
-// Fully qualified name
-$sys_fullname="%sys_fullname%";
-
-//
 // Email address pointing to the CodeX site administrators
 // for use Web pages, documentation,etc.
-$sys_email_admin='codex-admin@%sys_default_domain%';
+$sys_email_admin = 'codex-admin@%sys_default_domain%';
 
-//
 // Email address pointing to the CodeX contacts.
 // for use Web pages, documentation,etc.
-$sys_email_contact='codex-contact@%sys_default_domain%';
+$sys_email_contact = 'codex-contact@%sys_default_domain%';
 
-//
 // Address from which emails are sent
 $sys_noreply = '"CodeX" <noreply@%sys_default_domain%>';
 
-//
-// Directory which hosts the site content
-$sys_incdir='/home/httpd/site-content/';
 
-//
 // Default language for the system
-$sys_lang='en_US';
+$sys_lang = 'en_US';
 
-//
+// Default theme
+$sys_themedefault = 'CodeX';
+
+// Default theme for old browsers (currently netscape 4)
+$sys_themedefault_old = 'CodeX';
+
 // If set to 1 (one) the user can choose between
 // secure and unsecure connection after login
 // (checkbox on login page). If 0 she cannot choose.
-// 
 $sys_stay_in_ssl = 1;
 
-//
 // If set to 1 (one) it forces the server to operate
 // HTTPS (SSL connection). HTTP request are redirected
 // to HTTPS requests.
-//
 $sys_force_ssl = 0;
 
-//
-// If set to 1 (one) anonymous users can browse the
-// public part of the site without logging in. If 0
-// user must first login before going further.
-//
-$sys_allow_anon = 1;
-
-//
 // If set to 1 (one) the user registration must be approved by site 
 // admin. If 0 user can register by themselves
 $sys_user_approval = 0;
 
-//
-// Default theme
-$sys_themedefault = 'CodeX';
+// If set to 1 (one) anonymous users can browse the
+// public part of the site without logging in. If 0
+// user must first login before going further.
+$sys_allow_anon = 1;
 
-//
-// Default theme for old browsers (currently netscape 4)
-$sys_themedefault_old = 'CodeX';
-
-//
-//
-// Max upload size for quick release, documentation, patch and code snippet.
-// in bytes
-// e.g. 12*1024*1024 for 12 MB
-// Make sure that php.ini and mysql configuration file (/etc/my.cnf)
-// are also configured to allow this size.
-$sys_max_size_upload = 16*1024*1024;
-
-//
-// Max upload size for attachments (bugs, SR, artifacts, etc.)
-// in bytes
-$sys_max_size_attachment = 2*1024*1024;
-
-//
-// Linefeed characters: \r\n for Windows, \n for Linux/Unix
-$sys_lf = "\n";
-
-//
 // Project default privacy status (1 is public, 0 is private) 
 $sys_is_project_public = 1;
 
-//
 // Enable restricted users on this server
 // (restricted users only have access to the projects they belong to)
 // (0 no restricted users, 1 restricted users allowed)
@@ -287,20 +328,25 @@ $sys_is_project_public = 1;
 //          and $sys_allow_anon to 0 (or it is useless!)
 $sys_allow_restricted_users = 0;
 
-//
-// Default session duration when user select "Remember Me" option in user 
-// account maintainance.
-// Default value is about 6 months: 3600*24*183
-$sys_session_lifetime = 3600*24*183;
-
-//
 // Is license approval mandatory when downloading a file from the FRS?
 // (1 is mandatory, 0 is optional)
 $sys_frs_license_mandatory = 1;
 
-//
-// ID of the survey to be referenced in users personal pages ('my page')
-$sys_my_page_survey = 1;
+// Default session duration when user select "Remember Me" option in user 
+// account maintainance (in seconds)
+// Default value is about 6 months: 3600*24*183=15811200
+$sys_session_lifetime = 15811200;
+
+// Max upload size for quick release, documentation, patch and code snippet.
+// in bytes. E.g. 16777216 for 16 MB
+// Make sure that php.ini and mysql configuration file (/etc/my.cnf)
+// are also configured to allow this size.
+$sys_max_size_upload = 16777216;
+
+// Max upload size for attachments (bugs, SR, artifacts, etc.)
+// in bytes. E.g. 2097152 for 2 MB
+$sys_max_size_attachment = 2097152;
+
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

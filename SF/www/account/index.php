@@ -179,7 +179,7 @@ if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
 // Build the theme select box from directories in css and css/custom
 //$dir = opendir($GLOBALS['sys_themeroot']);
 $theme_list = array();
-$theme_dirs = array($GLOBALS['sys_themeroot'], getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/themes/");
+$theme_dirs = array($GLOBALS['sys_themeroot'], $GLOBALS['sys_custom_themeroot']);
 while (list(,$dirname) = each($theme_dirs)) {
     // before scanning the directory make sure it exists to avoid warning messages
     if (is_dir($dirname)) {
@@ -223,7 +223,7 @@ if ($u_separator = user_get_preference("user_csv_separator")) {
 }
 // build the CSV separator select box
 print '<select name="user_csv_separator">'."\n";
-// $csv_separators is defined in SF/www/include/utils.php
+// $csv_separators is defined in /www/include/utils.php
 foreach ($csv_separators as $separator) {
     print '<option value="'.$separator.'"';
     if ($u_separator == $separator) {

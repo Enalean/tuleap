@@ -56,16 +56,6 @@ ServerTokens OS
 ServerRoot "/etc/httpd"
 
 #
-# ScoreBoardFile: File used to store internal server process information.
-# If unspecified (the default), the scoreboard will be stored in an
-# anonymous shared memory segment, and will be unavailable to third-party
-# applications.
-# If specified, ensure that no two invocations of Apache share the same
-# scoreboard file. The scoreboard file MUST BE STORED ON A LOCAL DISK.lias/Alias
-#
-# ScoreBoardFile run/httpd.scoreboard
-
-#
 # PidFile: The file in which the server should record its process
 # identification number when it starts.
 #
@@ -103,14 +93,16 @@ KeepAliveTimeout 15
 # StartServers: number of server processes to start
 # MinSpareServers: minimum number of server processes which are kept spare
 # MaxSpareServers: maximum number of server processes which are kept spare
+# ServerLimit: maximum value for MaxClients for the lifetime of the server
 # MaxClients: maximum number of server processes allowed to start
 # MaxRequestsPerChild: maximum number of requests a server process serves
 <IfModule prefork.c>
 StartServers       8
 MinSpareServers    5
 MaxSpareServers   20
-MaxClients       150
-MaxRequestsPerChild  1000
+ServerLimit      256
+MaxClients       256
+MaxRequestsPerChild  4000
 </IfModule>
 
 # worker MPM
@@ -127,14 +119,6 @@ MinSpareThreads     25
 MaxSpareThreads     75 
 ThreadsPerChild     25
 MaxRequestsPerChild  0
-
-#
-# To reduce memory usage in the worker MPM, the thread guard page
-# can be disabled, at the expense of some protection against stack
-# overflow.
-#
-#ThreadGuardArea off
-
 </IfModule>
 
 #
@@ -144,9 +128,6 @@ MaxRequestsPerChild  0
 #
 # Change this to Listen on specific IP addresses as shown below to 
 # prevent Apache from glomming onto all bound IP addresses (0.0.0.0)
-# e.g. "Listen 12.34.56.78:80"
-#
-# To allow connections to IPv6 addresses add "Listen [::]:80"
 #
 Listen 80
 
@@ -167,6 +148,8 @@ LoadModule auth_module modules/mod_auth.so
 LoadModule auth_anon_module modules/mod_auth_anon.so
 LoadModule auth_dbm_module modules/mod_auth_dbm.so
 LoadModule auth_digest_module modules/mod_auth_digest.so
+LoadModule ldap_module modules/mod_ldap.so
+LoadModule auth_ldap_module modules/mod_auth_ldap.so
 LoadModule include_module modules/mod_include.so
 LoadModule log_config_module modules/mod_log_config.so
 LoadModule env_module modules/mod_env.so
@@ -176,7 +159,6 @@ LoadModule expires_module modules/mod_expires.so
 LoadModule deflate_module modules/mod_deflate.so
 LoadModule headers_module modules/mod_headers.so
 LoadModule usertrack_module modules/mod_usertrack.so
-LoadModule unique_id_module modules/mod_unique_id.so
 LoadModule setenvif_module modules/mod_setenvif.so
 LoadModule mime_module modules/mod_mime.so
 LoadModule dav_module modules/mod_dav.so
@@ -208,10 +190,7 @@ LoadModule cgi_module modules/mod_cgi.so
 #
 # Load config files from the config directory "/etc/httpd/conf.d".
 #
-Include conf.d/ssl.conf
-Include conf.d/php.conf
-Include conf.d/subversion.conf
-
+Include conf.d/*.conf
 
 #
 # ExtendedStatus controls whether Apache will generate "full" status
@@ -244,8 +223,8 @@ Include conf.d/subversion.conf
 #  when the value of (unsigned)Group is above 60000; 
 #  don't use Group #-1 on these systems!
 #
-User sourceforge
-Group sourceforge
+User codexadm
+Group codexadm
 
 #
 # ServerAdmin: Your address, where problems with the server should be
@@ -293,9 +272,8 @@ DocumentRoot "/home/httpd/SF/www"
 # First, we configure the "default" to be a very restrictive set of 
 # features.  
 #
-#
 <Directory />
-    Options FollowSymLinks Includes
+    Options FollowSymLinks
     AllowOverride None
 </Directory>
 
@@ -427,6 +405,7 @@ DefaultType text/plain
 # directive tells the module where the hint definitions are located.
 #
 <IfModule mod_mime_magic.c>
+#   MIMEMagicFile /usr/share/magic.mime
     MIMEMagicFile conf/magic
 </IfModule>
 
@@ -458,7 +437,6 @@ HostnameLookups Off
 # http://httpd.apache.org/docs-2.0/mod/core.html#enablesendfile
 #
 #EnableSendfile off
-#
 
 #
 # ErrorLog: The location of the error log file.
@@ -508,14 +486,11 @@ CustomLog logs/access_log common
 #
 #CustomLog logs/access_log combined
 
-
-#RewriteLog logs/rewrite.log 
-#RewriteLogLevel 9
-
 #
 # Optionally add a line containing the server version and virtual host
-# name to server-generated pages (error documents, FTP directory listings,
-# mod_status and mod_info output etc., but not CGI generated documents).
+# name to server-generated pages (internal error documents, FTP directory
+# listings, mod_status and mod_info output etc., but not CGI generated
+# documents or custom error documents).
 # Set to "EMail" to also include a mailto: link to the ServerAdmin.
 # Set to one of:  On | Off | EMail
 #
@@ -545,6 +520,14 @@ Alias /icons/ "/var/www/icons/"
 
 
 #
+# WebDAV module configuration section.
+# 
+<IfModule mod_dav_fs.c>
+    # Location of the WebDAV lock database.
+    DAVLockDB /var/lib/dav/lockdb
+</IfModule>
+
+#
 # Redirect allows you to tell clients about documents which used to exist in
 # your server's namespace, but do not anymore. This allows you to tell the
 # clients where to look for the relocated document.
@@ -556,10 +539,8 @@ Alias /icons/ "/var/www/icons/"
 #
 
 #
-# FancyIndexing is whether you want fancy directory indexing or standard.
-# VersionSort is whether files containing version numbers should be 
-# compared in the natural way, so that `apache-1.3.9.tar' is placed before
-# `apache-1.3.12.tar'.
+# IndexOptions: Controls the appearance of server-generated directory
+# listings.
 #
 IndexOptions FancyIndexing VersionSort NameWidth=*
 
@@ -629,15 +610,6 @@ HeaderName HEADER.html
 IndexIgnore .??* *~ *# HEADER* README* RCS CVS *,v *,t
 
 #
-# AddEncoding allows you to have certain browsers (Mosaic/X 2.1+) uncompress
-# information on the fly. Note: Not all browsers support this.
-# Despite the name similarity, the following Add* directives have nothing
-# to do with the FancyIndexing customization directives above.
-#
-AddEncoding x-compress Z
-AddEncoding x-gzip gz tgz
-
-#
 # DefaultLanguage and AddLanguage allows you to specify the language of 
 # a document. You can then use content negotiation to give a browser a 
 # file in a language the user can understand.
@@ -667,39 +639,40 @@ AddEncoding x-gzip gz tgz
 # specifier. There is 'work in progress' to fix this and get
 # the reference data for rfc1766 cleaned up.
 #
-# Danish (da) - Dutch (nl) - English (en) - Estonian (et)
-# French (fr) - German (de) - Greek-Modern (el)
-# Italian (it) - Norwegian (no) - Norwegian Nynorsk (nn) - Korean (ko) 
-# Portugese (pt) - Luxembourgeois* (ltz)
-# Spanish (es) - Swedish (sv) - Catalan (ca) - Czech(cs)
-# Polish (pl) - Brazilian Portuguese (pt-br) - Japanese (ja)
-# Russian (ru) - Croatian (hr)
+# Catalan (ca) - Croatian (hr) - Czech (cs) - Danish (da) - Dutch (nl)
+# English (en) - Esperanto (eo) - Estonian (et) - French (fr) - German (de)
+# Greek-Modern (el) - Hebrew (he) - Italian (it) - Japanese (ja)
+# Korean (ko) - Luxembourgeois* (ltz) - Norwegian Nynorsk (nn)
+# Norwegian (no) - Polish (pl) - Portugese (pt)
+# Brazilian Portuguese (pt-BR) - Russian (ru) - Swedish (sv)
+# Simplified Chinese (zh-CN) - Spanish (es) - Traditional Chinese (zh-TW)
 #
+AddLanguage ca .ca
+AddLanguage cs .cz .cs
 AddLanguage da .dk
-AddLanguage nl .nl
+AddLanguage de .de
+AddLanguage el .el
 AddLanguage en .en
+AddLanguage eo .eo
+AddLanguage es .es
 AddLanguage et .et
 AddLanguage fr .fr
-AddLanguage de .de
 AddLanguage he .he
-AddLanguage el .el
+AddLanguage hr .hr
 AddLanguage it .it
 AddLanguage ja .ja
-AddLanguage pl .po
 AddLanguage ko .ko
-AddLanguage pt .pt
+AddLanguage ltz .ltz
+AddLanguage nl .nl
 AddLanguage nn .nn
 AddLanguage no .no
-AddLanguage pt-br .pt-br
-AddLanguage ltz .ltz
-AddLanguage ca .ca
-AddLanguage es .es
-AddLanguage sv .sv
-AddLanguage cs .cz .cs
+AddLanguage pl .po
+AddLanguage pt .pt
+AddLanguage pt-BR .pt-br
 AddLanguage ru .ru
+AddLanguage sv .sv
 AddLanguage zh-CN .zh-cn
 AddLanguage zh-TW .zh-tw
-AddLanguage hr .hr
 
 #
 # LanguagePriority allows you to give precedence to some languages
@@ -708,7 +681,7 @@ AddLanguage hr .hr
 # Just list the languages in decreasing order of preference. We have
 # more or less alphabetized them here. You probably want to change this.
 #
-LanguagePriority en da nl et fr de el it ja ko no pl pt pt-br ltz ca es sv tw
+LanguagePriority en ca cs da de el eo es et fr he hr it ja ko ltz nl nn no pl pt pt-BR ru sv zh-CN zh-TW
 
 #
 # ForceLanguagePriority allows you to serve a result page rather than
@@ -734,7 +707,7 @@ AddDefaultCharset ISO-8859-1
 # want to avoid clashes with the language extensions, unless you
 # are good at carefully testing your setup after each change.
 # See http://www.iana.org/assignments/character-sets for the
-# official list of charset names and their respective RFCs
+# official list of charset names and their respective RFCs.
 #
 AddCharset ISO-8859-1  .iso8859-1  .latin1
 AddCharset ISO-8859-2  .iso8859-2  .latin2 .cen
@@ -779,7 +752,22 @@ AddCharset shift_jis   .sjis
 # AddType allows you to add to or override the MIME configuration
 # file mime.types for specific file types.
 #
-AddType application/x-tar .tgz
+#AddType application/x-tar .tgz
+
+#
+# AddEncoding allows you to have certain browsers uncompress
+# information on the fly. Note: Not all browsers support this.
+# Despite the name similarity, the following Add* directives have nothing
+# to do with the FancyIndexing customization directives above.
+#
+#AddEncoding x-compress .Z
+#AddEncoding x-gzip .gz .tgz
+
+# If the AddEncoding directives above are commented-out, then you
+# probably should define those extensions to indicate media types:
+#
+AddType application/x-compress .Z
+AddType application/x-gzip .gz .tgz
 
 #
 # AddHandler allows you to map certain file extensions to "handlers":
@@ -808,11 +796,13 @@ AddHandler imap-file map
 #
 AddHandler type-map var
 
+#
 # Filters allow you to process content before it is sent to the client.
 #
 # To parse .shtml files for server-side includes (SSI):
 # (You will also need to add "Includes" to the "Options" directive.)
 #
+AddType text/html .shtml
 AddOutputFilter INCLUDES .shtml
 
 #
@@ -839,14 +829,14 @@ ErrorDocument 404 "Sorry, page not found"
 ErrorDocument 403 "Sorry, you can't access this page"
 
 #
-# Putting this all together, we can Internationalize error responses.
+# Putting this all together, we can internationalize error responses.
 #
 # We use Alias to redirect any /error/HTTP_<error>.html.var response to
 # our collection of by-error message multi-language collections.  We use 
 # includes to substitute the appropriate text.
 #
 # You can modify the messages' appearance without changing any of the
-# default HTTP_<error>.html.var files by adding the line;
+# default HTTP_<error>.html.var files by adding the line:
 #
 #   Alias /error/include/ "/your/include/path/"
 #
@@ -881,7 +871,7 @@ Alias /error/ "/var/www/error/"
 #    ErrorDocument 412 /error/HTTP_PRECONDITION_FAILED.html.var
 #    ErrorDocument 413 /error/HTTP_REQUEST_ENTITY_TOO_LARGE.html.var
 #    ErrorDocument 414 /error/HTTP_REQUEST_URI_TOO_LARGE.html.var
-#    ErrorDocument 415 /error/HTTP_SERVICE_UNAVAILABLE.html.var
+#    ErrorDocument 415 /error/HTTP_UNSUPPORTED_MEDIA_TYPE.html.var
 #    ErrorDocument 500 /error/HTTP_INTERNAL_SERVER_ERROR.html.var
 #    ErrorDocument 501 /error/HTTP_NOT_IMPLEMENTED.html.var
 #    ErrorDocument 502 /error/HTTP_BAD_GATEWAY.html.var
@@ -914,8 +904,9 @@ BrowserMatch "^WebDAVFS/1.[012]" redirect-carefully
 BrowserMatch "^gnome-vfs" redirect-carefully
 
 #
-# Allow server status reports, with the URL of http://servername/server-status
-# Change the ".your-domain.com" to match your domain to enable.
+# Allow server status reports generated by mod_status,
+# with the URL of http://servername/server-status
+# Change the ".example.com" to match your domain to enable.
 #
 #<Location /server-status>
 #    SetHandler server-status
@@ -929,12 +920,12 @@ BrowserMatch "^gnome-vfs" redirect-carefully
 #  http://servername/server-info (requires that mod_info.c be loaded).
 # Change the ".example.com" to match your domain to enable.
 #
-# <Location /server-info>
-#     SetHandler server-info
-#     Order deny,allow
-#     Deny from all
-#     Allow from all
-# </Location>
+#<Location /server-info>
+#    SetHandler server-info
+#    Order deny,allow
+#    Deny from all
+#    Allow from .example.com
+#</Location>
 
 #
 # Proxy Server directives. Uncomment the following lines to
@@ -987,6 +978,11 @@ BrowserMatch "^gnome-vfs" redirect-carefully
 # Use name-based virtual hosting.
 #
 #NameVirtualHost *:80
+#
+# NOTE: NameVirtualHost cannot be used without a port specifier 
+# (e.g. :80) if mod_ssl is being used, due to the nature of the
+# SSL protocol.
+#
 
 #
 # VirtualHost example:
@@ -1053,8 +1049,8 @@ Include conf/codex_vhosts.conf
 Include conf/codex_svnhosts.conf
                                              
 #
-# On the production server the local.inc file is in /etc/codex/conf
+# On the production server the local.inc file is in /etc/codex/conf/local.inc
 # because it contains sensitive data
 #
-SetEnv SF_LOCAL_INC_PREFIX ""
+SetEnv CODEX_LOCAL_INC ""
 

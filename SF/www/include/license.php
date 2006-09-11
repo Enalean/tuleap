@@ -9,8 +9,8 @@
 // Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
-$FILE_ACCEPTED = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/CODEX_LICENSE_ACCEPTED';
-$FILE_DECLINED = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/CODEX_LICENSE_DECLINED';
+$FILE_ACCEPTED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_ACCEPTED';
+$FILE_DECLINED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_DECLINED';
 
 $Language->loadLanguageMsg('include/include');
 

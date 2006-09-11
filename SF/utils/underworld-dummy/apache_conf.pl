@@ -43,7 +43,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 
 	# LJ Custom log used to be on a per project basis but is now
 	# in one single file
-	#    "  CustomLog /home/groups/$unix_group_name/log/combined_log combined\n",
+	#    "  CustomLog $grpdir_prefix/$unix_group_name/log/combined_log combined\n",
 	# if the HTTP domain given in CodeX is a customized one then use it 
 	# as the Server name and create an alias for projectname.codex.xerox.com
 	# Note: the DNS entry for the customized HTTP domain must exist somewhere

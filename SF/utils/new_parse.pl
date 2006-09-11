@@ -261,7 +261,7 @@ while ($ln = pop(@groupdump_array)) {
 	# writer file
 
 	if ($group_modified) {
-	  # LJ On atlas writers go through pserver as well so put
+	  # On CodeX writers go through pserver as well so put
 	  # group members in writers file. Do not write anything
 	  # in the CVS passwd file. The pserver protocol will fallback
 	  # on /etc/passwd for user authentication

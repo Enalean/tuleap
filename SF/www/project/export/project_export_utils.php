@@ -847,10 +847,10 @@ function db_project_create($dbname) {
     /*
           Create the db if it does not exist and grant read access only
           to the user 'cxuser'
-          CAUTION!! The sourceforge user must have GRANT privilege granted 
+          CAUTION!! The codexadm user must have GRANT privilege granted 
           for this to work. This can be done from the mysql shell with:
              $ mysql -u root mysql -p
-             mysql> UPDATE user SET Grant_priv='Y' where User='sourceforge';
+             mysql> UPDATE user SET Grant_priv='Y' where User='codexadm';
              mysql> FLUSH PRIVILEGES;
      */
 

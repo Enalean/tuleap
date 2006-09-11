@@ -9,9 +9,9 @@
 //
 
 // define the theme
-if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_THEME"],0,6))) ) {
+if (isset($HTTP_COOKIE_VARS["CODEX_THEME"])&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["CODEX_THEME"],0,6))) ) {
     // define the global var $theme
-    $theme = substr($HTTP_COOKIE_VARS["SF_THEME"],6);
+    $theme = substr($HTTP_COOKIE_VARS["CODEX_THEME"],6);
 } else {
     // No cookie defined
     // Read the user preferences
@@ -29,18 +29,18 @@ if (isset($HTTP_COOKIE_VARS["SF_THEME"])&&(user_getid() == (int)(substr($HTTP_CO
 	$theme = $row_user['theme'];
     }
     // Define the cookie to improve the performance for the next access
-    setcookie("SF_THEME", sprintf("%06d%s",user_getid(),$theme), time() + 60*60*24*365, "/");
+    setcookie("CODEX_THEME", sprintf("%06d%s",user_getid(),$theme), time() + 60*60*24*365, "/");
 }
 // Initialize the global sys_user_theme variable
 $GLOBALS['sys_user_theme'] = $theme;
 
 // Find where the path is located
-$GLOBALS['sys_is_theme_custom'] = is_dir(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$theme);
+$GLOBALS['sys_is_theme_custom'] = is_dir($GLOBALS['sys_custom_themeroot'].'/'.$theme);
 
 // define the font size cookie for performance
-if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],0,6))) ) {
+if ( (isset($HTTP_COOKIE_VARS["CODEX_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["CODEX_FONTSIZE"],0,6))) ) {
     // define the global var $font_size
-    $font_size = (int)(substr($HTTP_COOKIE_VARS["SF_FONTSIZE"],6));
+    $font_size = (int)(substr($HTTP_COOKIE_VARS["CODEX_FONTSIZE"],6));
 } else {
     // No cookie defined
     // Read the user preferences
@@ -69,7 +69,7 @@ if ( (isset($HTTP_COOKIE_VARS["SF_FONTSIZE"]))&&(user_getid() == (int)(substr($H
 	}
     }
     // Define the cookie to improve the performance for the next access
-    setcookie("SF_FONTSIZE", sprintf("%06d%d",user_getid(),$font_size), time() + 60*60*24*365, "/");      
+    setcookie("CODEX_FONTSIZE", sprintf("%06d%d",user_getid(),$font_size), time() + 60*60*24*365, "/");      
     }
 // Initialize the global sys_user_font_size variable
 $GLOBALS['sys_user_font_size'] = $font_size;

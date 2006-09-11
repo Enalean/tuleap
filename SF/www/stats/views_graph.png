@@ -36,7 +36,7 @@ $data1 = $graph->AddData( $xdata, $ydata1, $xlabel );
 
 $graph->DrawGrid('gray');
 $graph->LineGraph($data1,'red');
-$graph->SetTitle( "Sourceforge Page Views" );
+$graph->SetTitle( "CodeX Page Views" );
 $graph->SetSubTitle("Page Views (RED) since beginning of time ( $i days )");
 $graph->SetxTitle('Date');
 $graph->SetyTitle('Views (RED)');

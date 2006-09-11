@@ -1,7 +1,5 @@
 #!/bin/sh
 
-cd /home/httpd/SF/utils/download
-
 ## parse each logfile set 
 ./stats_ftp_logparse.pl $*
 ./stats_http_logparse.pl $*

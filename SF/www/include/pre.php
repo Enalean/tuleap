@@ -11,7 +11,8 @@
 */
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
-require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
+require($GLOBALS['db_config_file']);
 
 //{{{ define undefined variables
 if (!isset($GLOBALS['feedback'])) {
@@ -162,7 +163,7 @@ require_once('theme.php');
 // HTML layout class, may be overriden by the Theme class
 
 if ($GLOBALS['sys_is_theme_custom']) {
-    $GLOBALS['path_to_theme'] = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$GLOBALS['sys_user_theme'];
+    $GLOBALS['path_to_theme'] = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
 } else {
     $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
 }
@@ -178,7 +179,7 @@ if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
         $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
     } else {
         $GLOBALS['sys_is_theme_custom'] = true;
-        $GLOBALS['path_to_theme']       = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/'.$GLOBALS['sys_user_theme'];
+        $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
     }
 }
 require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class');

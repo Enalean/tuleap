@@ -11,7 +11,13 @@
 
 function cache_display($name,$function,$time) {
   global $Language;
-  $filename = $GLOBALS['sf_cache_dir']."/sfcache_".$GLOBALS['sys_user_theme']."_".$name."_".$Language->getLanguageCode().".sf";
+
+  if (!file_exists($GLOBALS['codex_cache_dir'])) {
+      // This directory must be world reachable, but writable only by the web-server
+      mkdir($GLOBALS['codex_cache_dir'], 0755);
+  }
+
+  $filename = $GLOBALS['codex_cache_dir']."/codex_cache_".$GLOBALS['sys_user_theme']."_".$name."_".$Language->getLanguageCode().".sf";
 
 	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
 		// file is non-existant or expired, must redo, or wait for someone else to

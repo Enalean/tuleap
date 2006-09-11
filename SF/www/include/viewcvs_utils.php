@@ -82,7 +82,7 @@ global $DOCUMENT_ROOT;
            'PATH="'.getStringFromServer('PATH').'" '.
            'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
            'DOCUMENT_ROOT="'.$DOCUMENT_ROOT.'" '.
-           'SF_LOCAL_INC_PREFIX="'.getStringFromServer('SF_LOCAL_INC_PREFIX').'" '. 
+           'CODEX_LOCAL_INC="'.getStringFromServer('CODEX_LOCAL_INC').'" '. 
            $DOCUMENT_ROOT.'/../../cgi-bin/viewcvs.cgi 2>&1';
 
   ob_start();

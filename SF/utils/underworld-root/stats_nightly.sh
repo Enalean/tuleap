@@ -4,8 +4,6 @@ script=`basename $0`
 
 echo "--- Beginning of $script ---"
 
-cd /home/httpd/SF/utils/underworld-root/
-
 # LJ - Many comments added
 # If arguments are omitted the scripts covers
 # statistics for the day before
@@ -43,7 +41,8 @@ cd /home/httpd/SF/utils/underworld-root/
 # text output to a file in the dumpt directory
 # LJ note: I was unable to find where and when this
 # output file is used !!
-./db_top_groups_calc.pl $* > ~dummy/dumps/db_top_groups_calc_output
+# $dump_dir is defined in xerox_all_daily_stats.sh
+./db_top_groups_calc.pl $* > $dump_dir/db_top_groups_calc_output
 
 
 # NOW RUN THIS SECTION

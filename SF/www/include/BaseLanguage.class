@@ -71,7 +71,7 @@ class BaseLanguage {
         
         // load site-local customizations
         if (is_null($plugin_name)) {
-            $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/site-content/'.'/'.$this->lang.'/'.$fname.'.tab' ;
+            $ftname = $GLOBALS['sys_custom_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
         } else {
             if (isset($GLOBALS['sys_custompluginsroot']))
                 $ftname = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
@@ -87,7 +87,7 @@ class BaseLanguage {
         }
         
         //load site-local customizations by theme
-        $ftname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/themes/messages/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
+        $ftname = $GLOBALS['sys_custom_themeroot'].'/messages/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
         if (file_exists ($ftname)) {
             $this->loadLanguageFile($ftname) ;
         }
@@ -129,7 +129,7 @@ class BaseLanguage {
 		$fname = $GLOBALS['sys_incdir'].'/'.$lang.'/'.$lang.'.tab' ;
 		$this->loadLanguageFile($fname) ;
 		// Site-local customizations
-		$fname = getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/site-content/'.$lang.'/'.$lang.'.tab' ;
+		$fname = $GLOBALS['sys_custom_incdir'].'/'.$lang.'/'.$lang.'.tab' ;
 		if (file_exists ($fname)) {
 			$this->loadLanguageFile($fname) ;
 		}
@@ -175,7 +175,7 @@ class BaseLanguage {
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
-            $custom_fn = getenv('SF_LOCAL_INC_PREFIX')."/etc/codex/site-content/".$lang_code."/".$file.".txt";
+            $custom_fn = $GLOBALS['sys_custom_incdir']."/".$lang_code."/".$file.".txt";
         } else {
             $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
         }
@@ -186,7 +186,7 @@ class BaseLanguage {
 		// Use the default file
 		// Check first if exist
         if (is_null($plugin_name)) {
-            $fn = $GLOBALS['sys_incdir'].$lang_code."/".$file.".txt";
+            $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.".txt";
         } else {
             $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.".txt";
         }
@@ -196,7 +196,7 @@ class BaseLanguage {
 		} else {
 		    if ($lang_code == "en_US")
 			// return empty content to avoid include error
-			return $GLOBALS['sys_incdir'].$lang_code."/others/empty.txt";
+			return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
 		    else
 			// else try to find the file in the en_US directory
 			return $this->getContent($file, "en_US");

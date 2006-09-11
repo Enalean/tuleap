@@ -15,8 +15,7 @@
 use Time::Local;
 use POSIX qw( strftime );
 
-my $utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/home/httpd/SF/utils";
-require $utils_path."/include.pl";
+require("../include.pl");
 
 my ($year, $month, $day, $day_begin, $day_end);
 my ($group, $histline, $daily_log_file, $key, $verbose);
