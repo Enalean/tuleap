@@ -12,7 +12,7 @@
 //
 -->
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-"file:/home/mnazaria/CodeX/tools/docbook-dtd/docbookx.dtd"
+"file:/usr/local/docbook-dtd/docbookx.dtd"
 [
 <!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
 <!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/cli/xml/ParametersLocal.dtd">
