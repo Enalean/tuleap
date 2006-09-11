@@ -208,6 +208,42 @@ cd &FTPFILES_DIR;/projectname
       <para>Needless to say all read and write permissions put in place by
       CodeX to protect your data still apply to these shared resources.</para>
     </section>
+    
+    <section id="SoapAPI">
+      <title>SOAP API</title>
+      <para>CodeX provides a SOAP API to access CodeX through web-services.
+            This is the foundation, so lot's of CodeX functions are not yet
+            implemented. At this time, only session (login/logout) and tracker 
+            services are available.
+            <para>
+                <note>Note: the mail notification is not active with the SOAP API</note>
+            </para>
+      </para>
+      <para>A human-friendly description of the services is available at 
+        <literal>http://&SYS_DEFAULT_DOMAIN;/soap/</literal>. It is a list of
+        services, with foreach function, its input, ouput and documentation</para>
+      <para>A more detailed description of the services is also available with 
+      the more formal WSDL language at <literal>http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</literal>.
+      The WSDL includes also the types definition.
+      </para>
+    </section>
+    
+    <section id="CodeXCLI">
+      <title>CodeX Command Line Interface (CLI)</title>
+      <para>Another way to use CodeX is to use the command line interface (CLI).
+        It's a client application that use the SOAP API to interact with the 
+        CodeX server. It's the foundation, so some services are not available 
+        for the moment. For instance, at this time, only session (login/logout) 
+        and tracker services are available. The CLI is currently missing a few 
+        features of the SOAP API (e.g. it is not possible to attach a file, 
+        a CC address or a dependency to an artifact, and the mail notification is 
+        not active with the CLI).
+      </para>
+      <para>The CLI documentation is available at 
+        <literal>http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</literal>
+      </para>
+    </section>
+    
   </chapter>
 <!--
 Local Variables:

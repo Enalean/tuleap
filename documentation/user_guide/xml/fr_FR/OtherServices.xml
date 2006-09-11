@@ -211,6 +211,45 @@ cd &FTPFILES_DIR;/nom_projet
 		<para>Inutile de préciser que les permissions en écriture et en lecture mises en
 			place par CodeX pour protéger vos données s'appliquent à toutes ces ressources partagées.</para>
 	</section>
+    
+    <section id="SoapAPI">
+      <title>API SOAP</title>
+      <para>CodeX fournit une API SOAP pour accéder à CodeX avec les web services.
+            Il s'agit des fondations de l'API SOAP, toutes les fonctions de CodeX
+            ne sont donc pas encore implémentées. Actuellement, seuls les sessions 
+            (login/logout) et le service Outil de suivi sont disponibles.
+            <para>
+                <note>Note : la notification par mail n'est pas active avec l'API SOAP.</note>
+            </para>
+      </para>
+      <para>Une description des services facilement lisible est disponible à l'adresse 
+        <literal>http://&SYS_DEFAULT_DOMAIN;/soap/</literal> Il s'agit d'une liste de services,
+        avec pour chaque fonction, ses paramètres d'entrée, de sortie et une documentation.
+      </para>
+      <para>Une description plus détaillée des services est également disponible dans le language 
+      formel WSDL à l'adresse 
+      <literal>http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</literal>
+      Le WSDL contient en plus la définition des type.
+      </para>
+    </section>
+    
+    <section id="CodeXCLI">
+      <title>Client en Ligne de Commande CodeX (Command Line Interface, CLI)</title>
+      <para>Une autre manière d'utiliser CodeX est d'utiliser le client en ligne 
+        de commande (CLI). Il s'agit d'une application cliente qui utilise l'API
+        SOAP pour communiquer avec le serveur CodeX.
+        Il s'agit des fondations du client, donc certains services ne sont pas encore 
+        disponibles. Par exemple, pour l'instant, seuls les sessions (login/logout) 
+        et le service des Outils de suivi sont disopnibles. 
+        Le client en ligne de commande n'implémente pas non plus certaines fonctions 
+        de l'API SOAP (par exemple, il n'est pas possible d'attacher un fichier, une adresse 
+        en copie CC ou une dependance à un artefact, et la notification par mail n'est pas active.
+      </para>
+      <para>La documentation du client en ligne de commande est disponible à l'adresse : 
+        <literal>http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</literal>
+      </para>
+    </section>
+    
   </chapter>
 <!--
 Local Variables:
