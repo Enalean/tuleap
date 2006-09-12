@@ -1217,6 +1217,12 @@ $CHKCONFIG mailman on
 
 
 ##############################################
+# *Last* step: install plugins
+#
+$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL $pass_opt sourceforge
+
+
+##############################################
 # End of installation
 #
 todo "To customize the network gallery, copy /home/httpd/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
