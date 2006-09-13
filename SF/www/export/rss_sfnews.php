@@ -13,11 +13,21 @@ print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
 if (!isset($limit) || !$limit) $limit = 10;
 if ($limit > 100) $limit = 100;
 
-$where_clause = " is_approved<>4 ";
-
+//
+// Database news_bytes table:
+// column is_approved value:
+// 0 => viewable within the project
+// 1 => approved (viewable within the project AND on the web-site front page)
+// 4 => deleted (not viewable at all)
+// Private news and public news are managed with permissions (stored in permissions table)
+//
 if (isset($group_id) && $group_id) {
     $project = new Project($group_id);
-    $where_clause .= " AND group_id=$group_id ";
+    // We want only project news, not deleted
+    $where_clause = " is_approved<>4 AND group_id=$group_id ";
+} else {
+    // We want only approved news (=1 => automatically <>4)
+    $where_clause = " is_approved = 1 ";
 }
 
 $res = db_query('SELECT forum_id,summary,date,details,group_id FROM news_bytes '
