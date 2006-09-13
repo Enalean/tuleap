@@ -39,6 +39,7 @@ if (array_key_exists("CODEX_WSDL", $_ENV)) {
 
 /**** END OF CONFIGURATION SECTION ****/
 
+$CLI_VERSION = "0.1";
 
 error_reporting(E_ALL);
 
@@ -74,6 +75,12 @@ for ($i = 1; $i <= $argc-1; $i++) {
 	else if ($argv[$i] == "--verbose" || $argv[$i] == "-v") {
 		// Increase verbose level
 		$LOG->setLevel(1);
+	}
+    
+    // Version
+	else if ($argv[$i] == "--version" || $argv[$i] == "-version") {
+		echo "CodeX Command Line Interface: version ".$CLI_VERSION."\n";
+        exit(0);
 	}
 	
     // Interactive
@@ -144,6 +151,7 @@ Syntax:
 codex [options] [module name] [function] [parameters]
 * Options:
     -h or --help    Display this screen
+    --version       Display the software version
     -v              Verbose
 
 Available modules:
