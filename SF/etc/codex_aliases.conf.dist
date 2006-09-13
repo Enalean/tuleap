@@ -33,6 +33,17 @@ Alias /documentation/ "/home/httpd/documentation/"
     Allow from all
 </Directory>
 
+#
+# CodeX downloads
+Alias /downloads/ "/home/httpd/downloads/"
+
+<Directory "/home/httpd/downloads">
+    Options MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
 # CodeX custom themes
 Alias /custom/ "/etc/codex/themes/"
 <Directory "/etc/codex/themes/">

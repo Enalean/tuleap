@@ -128,12 +128,14 @@ $sys_data_dir = "/home/data";
 $tmp_dir = "/var/tmp";		 
 
 // CodeX utils and documentation directories
-// WARNING: DO NOT USE VARIABLES in the two parameter definitions below.
+// WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
 //    **Don't** $codex_utils_prefix = $codex_dir . "codex/utils" **Don't**
 // this is because those variables will be read by shell scripts.
 $codex_utils_prefix = "/home/httpd/SF/utils"
 $codex_documentation_prefix = "/home/httpd/documentation"
+// CodeX extra-file downloads directory (eg: CLI archive)
+$codex_downloads_dir = "/home/httpd/downloads";
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";

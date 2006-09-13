@@ -69,20 +69,23 @@ do	case	"$1" in
 	shift # next argument
 done
 
+# honor DESTDIR if defined
+if [ -z "$DESTDIR" ]; then
+    if [ -z "$CODEX_LOCAL_INC" ]; then
+        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    fi
+    DEST_DIR=`/bin/grep '^\$codex_downloads_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/'`
+    DESTDIR=$DEST_DIR
+fi
+
 
 if [ $HELP == 1 ]
 then
     echo "Usage: generate_cli_package.sh [-f] [-v] [-h]";
     echo "  -f : force to generate the package without checking file dates";
     echo "  -v : verbose";
-    echo "  -d : target directory where the archive will be stored";
+    echo "  -d : target directory where the archive will be stored (optional, default is $DESTDIR)";
     echo "  -h : help";
-    exit 2;
-fi
-
-if [ -z "$DESTDIR" ]; then 
-    echo "Please set the target repertory with the -d option";
-    echo "Use -h flag to see all the valid options";
     exit 2;
 fi
 
