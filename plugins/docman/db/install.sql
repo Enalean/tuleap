@@ -179,33 +179,70 @@ CREATE TABLE plugin_docman_metadata_love_md (
   PRIMARY KEY  (field_id, value_id)
 );
 
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 1 , 'system',  95 );
 
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
 SELECT DISTINCT group_id , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', CONCAT('/plugins/docman/?group_id=', group_id), 1 , 0 , 'system',  95
 FROM service
-WHERE group_id NOT IN SELECT group_id
+WHERE group_id NOT IN (SELECT group_id
     FROM service
     WHERE short_name
-    LIKE 'docman';
+    LIKE 'docman');
 
 
-
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 1, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 2, 1);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 3, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_READ', 4, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_WRITE', 1, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_WRITE', 2, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_WRITE', 3, 1);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_WRITE', 4, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_MANAGE', 1, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_MANAGE', 2, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_MANAGE', 3, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_MANAGE', 4, 1);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 1, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 2, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 3, 0);
-INSERT INTO `permissions_values` VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 1);
+                              
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 1, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 2, 1);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 3, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_READ', 4, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_WRITE', 1, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_WRITE', 2, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_WRITE', 3, 1);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_WRITE', 4, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_MANAGE', 1, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_MANAGE', 2, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_MANAGE', 3, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_MANAGE', 4, 1);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 1, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 2, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 3, 0);
+INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 1);
 
 INSERT INTO plugin_docman_metadata_love(value_id, name, description, rank, status) VALUES (100, 'love_special_none_name_key', 'love_special_none_desc_key', 0, 'P');
+
+-- Install CodeX documentation
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (0, 1, 'Documentation du projet', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
+
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (1, 1, 'English Documentation', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
+
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (2, 1, 'CodeX User Guide', 'A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently.', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, -1, 1, NULL, NULL, NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (3, 1, 'PDF Version', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, -1, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (3, 1, 'Multi-page HTML Version', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 1, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/user_guide/html/en_US/index.html', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (3, 1, 'Single-page HTML (2.7 MB) Version', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 2, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/user_guide/html/en_US/index.html', '', NULL);
+
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (2, 1, 'Command-Line Interface', 'A comprehensive guide describing all the functions of the CodeX Command-Line Interface.', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 1, 1, NULL, NULL, NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (7, 1, 'PDF Version', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, -3, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/cli/pdf/en_US/CodeX_CLI.pdf', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (7, 1, 'Multi-page HTML Version', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, -2, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/cli/html/en_US/index.html', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (7, 1, 'Single-page HTML Version', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/cli/html/en_US/index.html', '', NULL);
+
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (1, 1, 'Documentation en français', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 1, 1, NULL, NULL, NULL);
+
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (11, 1, 'Guide de l\'Utilisateur CodeX', 'Un guide complet décrivant tous les services de CodeX et comment les utiliser de manière optimale. Fournit également de nombreuses astuces et explications pour gérer efficacement votre projet CodeX.', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, -1, 1, NULL, NULL, NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (12, 1, 'Version PDF', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, -1, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (12, 1, 'Version HTML multi-pages', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 1, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/user_guide/html/fr_FR/index.html', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (12, 1, 'Version HTML une page (4,2 Mo)', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 2, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html', '', NULL);
+
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (11, 1, 'Interface de Commande en Ligne', 'Un guide complet décrivant toutes les fonctions de l\'Interface de Commande en Ligne de CodeX.', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (16, 1, 'Version PDF', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 3, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/cli/pdf/fr_FR/CodeX_CLI.pdf', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (16, 1, 'Version HTML multi-pages', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 4, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/cli/html/fr_FR/index.html', '', NULL);
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (16, 1, 'Version HTML une page', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 5, 3, 'https://brame-farine.grenoble.xrce.xerox.com:8443/documentation/cli/html/fr_FR/CodeX_CLI.html', '', NULL);
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+SELECT 'PLUGIN_DOCMAN_READ', 1, item_id
+FROM plugin_docman_item;
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+SELECT 'PLUGIN_DOCMAN_MANAGE', 3, item_id
+FROM plugin_docman_item;
+
+
