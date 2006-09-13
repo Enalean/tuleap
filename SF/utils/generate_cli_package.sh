@@ -21,6 +21,36 @@ HELP=0
 VERBOSE=0
 EXIST_CHANGE=0
 
+CURRENTDIR=`pwd`
+# honor BASEDOCDIR if defined
+if [ -z "$BASEDOCDIR" ]; then
+    if [ -z "$CODEX_LOCAL_INC" ]; then
+        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    fi
+    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+    BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
+fi
+CMDDOCDIR=$BASEDOCDIR/cli/cmd
+
+# honor BASESRCDIR if defined
+if [ -z "$BASESRCDIR" ]; then
+    if [ -z "$CODEX_LOCAL_INC" ]; then
+        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    fi
+    CODEX_DIR=`/bin/grep '^\$codex_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_dir\s*=\s*\(.*\);\(.*\)/\1/'`
+    BASESRCDIR=$CODEX_DIR/cli
+fi
+
+# honor TMPDIR if defined
+if [ -z "$TMPDIR" ]; then
+    if [ -z "$CODEX_LOCAL_INC" ]; then
+        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    fi
+    TMP_DIR=`/bin/grep '^\$tmp_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/'`
+    TMPDIR=$TMP_DIR
+fi
+
+
 # Check arguments
 while	((1))	# look for options
 do	case	"$1" in
@@ -54,18 +84,6 @@ if [ -z "$DESTDIR" ]; then
     echo "Please set the target repertory with the -d option";
     echo "Use -h flag to see all the valid options";
     exit 2;
-fi
-
-CURRENTDIR=`pwd`
-# honor BASEDOCDIR if defined
-if [ -z "$BASEDOCDIR" ]; then 
-    BASEDOCDIR=/home/httpd/documentation
-fi
-CMDDOCDIR=$BASEDOCDIR/cli/cmd
-
-# honor BASESRCDIR if defined
-if [ -z "$BASESRCDIR" ]; then 
-    BASESRCDIR=/home/httpd/cli
 fi
 
 # Check if the package exists. If not, we force the generation
@@ -143,10 +161,10 @@ then
 fi
 
 # Use the tar command to make a complex copy :
-# we copy the file contained in cli, documentation/cli/pdf, documentation/cli/html into /var/tmp,
+# we copy the file contained in cli, documentation/cli/pdf, documentation/cli/html into $TMPDIR,
 # excluding the files .svn (subversion admin files) and *_old (old pdf documentation)
-(cd /home/mnazaria/CodeX/dev_server/httpd; tar --exclude '.svn' --exclude "*_old.*" -h -cf - cli/ documentation/cli/pdf documentation/cli/html) | (cd /var/tmp; tar xf -)
-cd /var/tmp
+(cd $CODEX_DIR; tar --exclude '.svn' --exclude "*_old.*" -h -cf - cli/ documentation/cli/pdf documentation/cli/html) | (cd $TMPDIR; tar xf -)
+cd $TMPDIR
 # We reorganize the files to fit the archive organization we want
 mv documentation/cli cli/documentation
 # We remove documentation (empty now)
