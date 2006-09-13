@@ -13,7 +13,7 @@ require_once('Docman_View_Extra.class');
 class Docman_View_Admin extends Docman_View_Extra {
     
     function _title($params) {
-        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .'</h2>';
+        echo '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .'</h2>';
     }
     function _content($params) {
         $html = '';
