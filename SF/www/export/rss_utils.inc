@@ -24,7 +24,7 @@ function rss_description ($in) {
 		$in = substr($in,0,$GLOBALS['description_maxlen']);
 	}
 	// according to netscape, this cannot be blank
-	if ((strlen($in)==0) && $GLOBALS['description_notnull']) {
+	if ((strlen($in)==0) && array_key_exists('description_notnull', $GLOBALS) && $GLOBALS['description_notnull']) {
 		$in = $Language->getText('export_rss_utils','no_desc_available');
 	}
 	return htmlspecialchars($in);
