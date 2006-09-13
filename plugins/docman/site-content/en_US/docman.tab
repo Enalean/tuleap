@@ -10,39 +10,39 @@ plugin_docman	action_update	Update
 plugin_docman	action_show	Show
 plugin_docman	action_showactions	Show options
 
-plugin_docman	admin_md_details_title	"$1" Metadata details
-plugin_docman	admin_md_detail_backtomenu	Back to Metadata menu
-plugin_docman	admin_md_detail_param_title	Metadata parameters
+plugin_docman	admin_md_details_title	"$1" Property details
+plugin_docman	admin_md_detail_backtomenu	Back to Properties menu
+plugin_docman	admin_md_detail_param_title	Property parameters
 plugin_docman	admin_md_detail_param_name	Name:
 plugin_docman	admin_md_detail_param_desc	Description:
 plugin_docman	admin_md_detail_param_allowempty	Allow empty value:
 plugin_docman	admin_md_detail_param_keephistory	Keep history:
-plugin_docman	admin_md_detail_param_useit	Use this metadata:
+plugin_docman	admin_md_detail_param_useit	Use this property:
 plugin_docman	admin_md_detail_param_yes	Yes
 plugin_docman	admin_md_detail_param_no	No
-plugin_docman	admin_md_detail_val_title	Metadata values
+plugin_docman	admin_md_detail_val_title	Property values
 plugin_docman	admin_md_detail_val_name	Name
 plugin_docman	admin_md_detail_val_desc	Description
 plugin_docman	admin_md_detail_val_rank	Rank
 plugin_docman	admin_md_detail_val_status	Status
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
-plugin_docman	admin_metadata_title	Manage Metadata
-plugin_docman	admin_metadata_descr	Select the metadata you want for your documents.
-plugin_docman	admin_metadata_instructions	<p>Define which metadata are available in your documentation manager. Each metadata will be available (for filling) during document submission and readable in document properties panel.</p><p><strong>Permissions:</strong> same permissions are applied on the metadata of a given document and the document itself.</p>
-plugin_docman	admin_permissions_title	Manages Permissions
-plugin_docman	admin_permissions_descr	Define who are able to administrate the docman.
-plugin_docman	admin_permissions_instructions	Please select ugroups who can administrate the docman:
+plugin_docman	admin_metadata_title	Manage Properties
+plugin_docman	admin_metadata_descr	Define the properties of your documents.
+plugin_docman	admin_metadata_instructions	<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>
+plugin_docman	admin_permissions_title	Manage Permissions
+plugin_docman	admin_permissions_descr	Define who can administrate the document manager.
+plugin_docman	admin_permissions_instructions	Please select user groups that can administrate the document manager:
 plugin_docman	admin_title	Administration
-plugin_docman	admin_view_title	Manage View Preferences
-plugin_docman	admin_view_descr	Define default view for the docman.
-plugin_docman	admin_view_instructions	Please select the default view for browsing documents. Please note that this setting can be overriden by user preferences.
+plugin_docman	admin_view_title	Manage Display Preferences
+plugin_docman	admin_view_descr	Define the default view for the document manager.
+plugin_docman	admin_view_instructions	Please select the default view for browsing documents. Please note that this setting can be overridden by user preferences.
 
 plugin_docman	breadcrumbs_location	Location:
 
 plugin_docman	browse_viewas	-- View as:
 
-plugin_docman	descriptor_description	Advanced Document Manager
+plugin_docman	descriptor_description	Document Manager
 plugin_docman	descriptor_name	Document Manager
 
 plugin_docman	details_actions	Actions
@@ -52,15 +52,15 @@ plugin_docman	details_actions_delete_candelete_folder	You can <a href="$1">delet
 plugin_docman	details_actions_delete_cannotdelete_document	You cannot delete this document.
 plugin_docman	details_actions_delete_cannotdelete_folder	You cannot delete this folder.
 plugin_docman	details_actions_move	Move
-plugin_docman	details_actions_move_canmove_document	You can <a href="$1">move this document</a> to another folder.
-plugin_docman	details_actions_move_canmove_folder	You can <a href="$1">move this folder</a> to another folder.
+plugin_docman	details_actions_move_canmove_document	You can <a href="$1">move this document</a> to another folder or inside the current folder.
+plugin_docman	details_actions_move_canmove_folder	You can <a href="$1">move this folder</a> to another folder or inside the current folder.
 plugin_docman	details_actions_move_cannotmove_document	You cannot move this document.
 plugin_docman	details_actions_move_cannotmove_folder	You cannot move this folder.
 plugin_docman	details_actions_newversion	New Version
 plugin_docman	details_actions_newversion_button	Create new version
 plugin_docman	details_actions_newversion_cancreate	You can <a href="$1">create a new version</a>.
 plugin_docman	details_actions_newversion_cannotcreate	You cannot create a new version.
-plugin_docman	details_actions_newversion_changelog	Changelog:
+plugin_docman	details_actions_newversion_changelog	Change Log:
 plugin_docman	details_actions_newversion_label	Version Label:
 plugin_docman	details_actions_update	Update
 plugin_docman	details_actions_update_can	You can <a href="$1">update</a> this document.
@@ -69,15 +69,15 @@ plugin_docman	details_delete	Delete
 plugin_docman	details_delete_cancel	No, I do not want to delete it
 plugin_docman	details_delete_confirm	Yes, I am sure!
 plugin_docman	details_delete_title	Delete $1
-plugin_docman	details_delete_warning_document	<h3>Confirm deletion of document $1</h3><p>You are going to delete a document. </p><p>Are you sure that you want to delete it?</p>
-plugin_docman	details_delete_warning_file	<h3>Confirm deletion of document $1</h3><p>You are going to delete a file. Before confirming, please note that all versions will be deleted.</p><p>Are you sure that you want to delete it?</p>
-plugin_docman	details_delete_warning_folder	<h3>Confirm deletion of folder $1</h3><p>You are going to delete a folder. Before confirming, please note that all subitems and their versions will be deleted.</p><p>Are you sure that you want to delete it?</p>
+plugin_docman	details_delete_warning_document	<h3>Confirm deletion of document $1</h3><p>You are going to delete a document. </p><p>Are you sure that you want to delete this document?</p>
+plugin_docman	details_delete_warning_file	<h3>Confirm deletion of document $1</h3><p>You are going to delete a file. Please note that all versions will be deleted.</p><p>Are you sure that you want to delete this file?</p>
+plugin_docman	details_delete_warning_folder	<h3>Confirm deletion of folder $1</h3><p>You are going to delete a folder. Please note that all sub-items and their versions will be deleted.</p><p>Are you sure that you want to delete this folder?</p>
 plugin_docman	details_edit_title	Edit properties of $1
 plugin_docman	details_history	History
 plugin_docman	details_history_anonymous	Anonymous
-plugin_docman	details_history_logs	Logs
-plugin_docman	details_history_logs_error	Error while searching logs!
-plugin_docman	details_history_logs_no	There is no log yet
+plugin_docman	details_history_logs	Document History
+plugin_docman	details_history_logs_error	Error while searching document history!
+plugin_docman	details_history_logs_no	There is no history yet
 plugin_docman	details_history_logs_what	What
 plugin_docman	details_history_logs_when	When
 plugin_docman	details_history_logs_who	Who
@@ -86,7 +86,7 @@ plugin_docman	details_history_logs_new_value	New Value
 plugin_docman	details_history_logs_change_field	Change <em>$1</em>
 plugin_docman	details_history_versions	Versions
 plugin_docman	details_history_versions_author	Author
-plugin_docman	details_history_versions_changelog	Changelog
+plugin_docman	details_history_versions_changelog	Change Log
 plugin_docman	details_history_versions_date	Date
 plugin_docman	details_history_versions_error	Error while searching for old versions
 plugin_docman	details_history_versions_label	Label
@@ -102,17 +102,17 @@ plugin_docman	details_properties_edit	Edit properties
 plugin_docman	details_title	Details of $1
 plugin_docman	details_update_title	Update $1
 
-plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guarranty the compatibility of the service with your browser.
+plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
-plugin_docman	error_alreadyinstalled	Docman already installed.
+plugin_docman	error_alreadyinstalled	Document Manager already installed.
 plugin_docman	error_create_initversion	Error while creating initial version.
 plugin_docman	error_create_newversion	Error while creating new version.
 plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not empty.
 plugin_docman	error_field_link_required	The URL is required.
 plugin_docman	error_field_title_required	The Title is required.
-plugin_docman	error_field_wiki_required	The pagename is required.
+plugin_docman	error_field_wiki_required	The page name is required.
 plugin_docman	error_filenotfound	The file cannot be found.
-plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the docman.
+plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the document manager.
 plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
 plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.
 plugin_docman	error_perms_delete	You do not have sufficient access rights to delete this item.
@@ -125,7 +125,7 @@ plugin_docman	error_perms_updated	$1
 plugin_docman	error_upload	File upload error. Please try again.
 plugin_docman	error_upload_nofile	File upload error($1). No file was uploaded. 
 plugin_docman	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
-plugin_docman	error_upload_size	File upload error($1). The uploaded file exceeds the max filesize.
+plugin_docman	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
 plugin_docman	error_upload_unknown	File upload error($1). Unknown error code.
 
 plugin_docman	event_add	Create
@@ -134,7 +134,7 @@ plugin_docman	event_move	Move
 plugin_docman	event_del	Delete
 plugin_docman	event_access	Access
 plugin_docman	event_newversion	New version
-plugin_docman	event_metadataupdate	Metadata change
+plugin_docman	event_metadataupdate	Property change
 
 plugin_docman	field_description	Description:
 plugin_docman	field_rank	Rank:
@@ -147,7 +147,7 @@ plugin_docman	field_update_date	Last update date:
 
 plugin_docman	filters	Filters
 plugin_docman	filters_date_end	End Date
-plugin_docman	filters_date_message	The date entered in field "$1" is not valid. Valid date format is YYYY-M-D (eg. '$2' for today) or let the field blank.
+plugin_docman	filters_date_message	The date entered in field "$1" is not valid. Valid date format is YYYY-M-D (e.g. '$2' for today) or let the field blank.
 plugin_docman	filters_date_start	Start Date
 plugin_docman	filters_ordering	Ordering
 plugin_docman	filters_ordering_ascending	Ascending
@@ -162,7 +162,7 @@ plugin_docman	info_item_deleted	Item successfully deleted.
 plugin_docman	info_item_updated	Item successfully updated.
 plugin_docman	info_item_moved	Item successfully moved form <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> to <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
 plugin_docman	info_perms_updated	Permissions successfully updated.
-plugin_docman	info_perms_recursive_updated	Permissions for subitems successfully updated.
+plugin_docman	info_perms_recursive_updated	Permissions for sub-items successfully updated.
 plugin_docman	info_settings_updated	Settings have been updated.
 
 plugin_docman	logsdaily_field	Documents
@@ -173,7 +173,7 @@ plugin_docman	love_special_none_desc_key	None
 
 plugin_docman	max_size_msg	(The maximum upload file size is $1 MByte)
 
-plugin_docman	md_bo_badlabel	Unknown metadata label '$1'.
+plugin_docman	md_bo_badlabel	Unknown property label '$1'.
 plugin_docman	md_cdate_name	Create Date
 plugin_docman	md_cdate_desc	When the document was added into the document manager.
 plugin_docman	md_desc_name	Description
@@ -196,7 +196,7 @@ plugin_docman	md_love_status_approved_desc
 plugin_docman	md_love_status_rejected_name	Rejected
 plugin_docman	md_love_status_rejected_desc	
 plugin_docman	md_odate_name	Obsolescence Date
-plugin_docman	md_odate_desc	Define a period of validity for your document. It will automaticaly be archived at the end of the period.
+plugin_docman	md_odate_desc	Define a period of validity for your document. It will automatically be archived at the end of the period.
 plugin_docman	md_owner_name	Owner
 plugin_docman	md_owner_desc	Default value: submitter. Correspond to official owner of the document.
 plugin_docman	md_status_name	Status
@@ -204,25 +204,25 @@ plugin_docman	md_status_desc	Document status.
 plugin_docman	md_title_name	Title
 plugin_docman	md_title_desc	Title of the document.
 plugin_docman	md_udate_name	Update Date
-plugin_docman	md_udate_desc	Last update of the document content or metadata.
+plugin_docman	md_udate_desc	Last update of the document content or properties.
 
-plugin_docman	mdv_bo_updateerror	Error on update of metadata '$1'
-plugin_docman	mdv_bo_updateunknown	Try to update an unkown metadata '$1'
-plugin_docman	mdv_bo_errbadtype	Bad Metadata type
-plugin_docman	mdv_bo_createerror	Error on creation of metadata '$1'
-plugin_docman	mdv_bo_createunknown	Try to create an unkown metadata
+plugin_docman	mdv_bo_updateerror	Error on update of property '$1'
+plugin_docman	mdv_bo_updateunknown	Try to update an unknown property '$1'
+plugin_docman	mdv_bo_errbadtype	Bad property type
+plugin_docman	mdv_bo_createerror	Error on creation of property '$1'
+plugin_docman	mdv_bo_createunknown	Try to create an unknown property
 
 plugin_docman	move	Move $1
 plugin_docman	move_actual	The item is in this folder.
 plugin_docman	move_after	After $1
 plugin_docman	move_cancel	Cancel move.
-plugin_docman	move_descr	<big><strong>First,</strong></big> choose the target folder to move '$1' within:
-plugin_docman	move_descr2	<big><strong>Then,</strong></big> you can to select precisly the position within the selected folder:
-plugin_docman	move_descr3	<big><strong>Finally,</strong></big> select the position of '$1' in the folder '$2':
+plugin_docman	move_descr	<big><strong>First,</strong></big> choose the target folder where '$1' will be moved:
+plugin_docman	move_descr2	<big><strong>Then,</strong></big> select the position within the selected folder:
+plugin_docman	move_descr3	<big><strong>Finally,</strong></big> select the exact position of '$1' in the folder '$2':
 plugin_docman	move_here	move here.
 plugin_docman	move_position_beginning	At the beginning
 plugin_docman	move_position_end	At the end
-plugin_docman	move_position_select	Custom <em>(require a second step)</em>
+plugin_docman	move_position_select	Custom <em>(requires a second step)</em>
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
 plugin_docman	new_document	New document
@@ -233,7 +233,7 @@ plugin_docman	new_document_link	Link
 plugin_docman	new_document_wiki	Wiki Page
 plugin_docman	new_folder	New folder
 plugin_docman	new_folder_action	Create folder
-plugin_docman	new_generalproperties	Metadata
+plugin_docman	new_generalproperties	Properties
 plugin_docman	new_location	Location
 plugin_docman	new_position	Position:
 plugin_docman	new_specificproperties	Document type
@@ -244,13 +244,13 @@ plugin_docman	permission_manage	Manager
 plugin_docman	permission_read	Reader
 plugin_docman	permission_write	Writer
 
-plugin_docman	redirect	<div style="text-align:center"><p>Docman updated</p><p>You will be redirect <a href="$1"> to docman</a>.</p></div>
+plugin_docman	redirect	<div style="text-align:center"><p>Document Manager updated</p><p>You will be redirected <a href="$1"> to the document manager</a>.</p></div>
 
 plugin_docman	service_lbl_key	Documents
-plugin_docman	service_desc_key	Advanced Document Manager
+plugin_docman	service_desc_key	Document Manager
 
 plugin_docman	specificfield_embeddedcontent	Content:
-plugin_docman	specificfield_pagename	Pagename:
+plugin_docman	specificfield_pagename	Page Name:
 plugin_docman	specificfield_url	Url:
 
 plugin_docman	title	Project Documentation
@@ -275,4 +275,4 @@ plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
 
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
-plugin_docman	warning_recursive_perms	you cannot change permissions for subitem $1 since you do not have sufficient permissions.
+plugin_docman	warning_recursive_perms	you cannot change permissions for sub-item $1 since you do not have sufficient permissions.

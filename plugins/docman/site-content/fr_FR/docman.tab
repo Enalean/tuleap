@@ -11,38 +11,38 @@ plugin_docman	action_show	Afficher
 plugin_docman	action_showactions	Afficher les options
 
 plugin_docman	admin_md_detail_backtomenu	Retour au menu
-plugin_docman	admin_md_detail_param_title	Paramètres de Metadata
+plugin_docman	admin_md_detail_param_title	Paramètres de la propriété
 plugin_docman	admin_md_detail_param_name	Nom :
 plugin_docman	admin_md_detail_param_desc	Description :
 plugin_docman	admin_md_detail_param_allowempty	Autorise la valeur vide :
 plugin_docman	admin_md_detail_param_keephistory	Garde l'historique :
-plugin_docman	admin_md_detail_param_useit	Utiliser cette metadata:
+plugin_docman	admin_md_detail_param_useit	Utiliser cette propriété:
 plugin_docman	admin_md_detail_param_yes	Oui
 plugin_docman	admin_md_detail_param_no	Non
-plugin_docman	admin_md_details_title	Details de la metadata "$1"
-plugin_docman	admin_md_detail_val_title	Valeurs de metadata
+plugin_docman	admin_md_details_title	Détails de la propriété "$1"
+plugin_docman	admin_md_detail_val_title	Valeurs de la propriété
 plugin_docman	admin_md_detail_val_name	Nom
 plugin_docman	admin_md_detail_val_desc	Description
 plugin_docman	admin_md_detail_val_rank	Rang
 plugin_docman	admin_md_detail_val_status	Statut
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
-plugin_docman	admin_metadata_title	Gérer les metadata
-plugin_docman	admin_metadata_descr	Selectionnez les metadata que vous voulez pour vos documents.
-plugin_docman	admin_metadata_instructions	<p>Definnissez quelles metadata sont disponible dans votre gestionnaire de documents. Chaque metadata sera remplie lors de la soumission d'un document et sera visible dans les propriétés du document.</p><p><strong>Permissions :</strong> les permissions sur les metadata d'un document sont les mêmes que sur le document lui-même.</p>
+plugin_docman	admin_metadata_title	Gérer les propriétés
+plugin_docman	admin_metadata_descr	Sélectionnez les propriétés que vous voulez pour vos documents.
+plugin_docman	admin_metadata_instructions	<p>Définissez quelles propriétés sont disponibles dans votre gestionnaire de documents. Chaque propriété sera remplie lors de la soumission d'un document et sera visible dans les propriétés du document.</p><p><strong>Permissions :</strong> les permissions sur les propriétés d'un document sont les mêmes que sur le document lui-même.</p>
 plugin_docman	admin_permissions_title	Gérer les permissions
-plugin_docman	admin_permissions_descr	Définir qui peut administrer le docman.
-plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le docman :
+plugin_docman	admin_permissions_descr	Définir qui peut administrer le gestionnaire de documents.
+plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
 plugin_docman	admin_title	Administration
 plugin_docman	admin_view_title	Gérer les préférence d'affichage
-plugin_docman	admin_view_descr	Définir la vue par défaut pour le docman.
-plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre peut être écrasé par les préférences utilisateurs.
+plugin_docman	admin_view_descr	Définir la vue par défaut pour le gestionnaire de documents.
+plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre pourra être ignoré selon les préférences utilisateurs.
 
 plugin_docman	breadcrumbs_location	Situation :
 
 plugin_docman	browse_viewas	-- Vue:
 
-plugin_docman	descriptor_description	Gestionnaire de documents avancé
+plugin_docman	descriptor_description	Gestionnaire de documents
 plugin_docman	descriptor_name	Gestionnaire de Documents
 
 plugin_docman	details_actions	Actions
@@ -52,21 +52,21 @@ plugin_docman	details_actions_delete_candelete_folder	Vous pouvez <a href="$1">s
 plugin_docman	details_actions_delete_cannotdelete_document	Vous ne pouvez pas supprimer ce document.
 plugin_docman	details_actions_delete_cannotdelete_folder	Vous ne pouvez pas supprimer ce dossier.
 plugin_docman	details_actions_move	Déplacement
-plugin_docman	details_actions_move_canmove_document	Vous pouvez <a href="$1">déplacer ce document</a> dans un autre dossier.
-plugin_docman	details_actions_move_canmove_folder	Vous pouvez <a href="$1">déplacer ce dossier</a> dans un autre dossier.
+plugin_docman	details_actions_move_canmove_document	Vous pouvez <a href="$1">déplacer ce document</a> dans un autre dossier ou au sein de son dossier actuel.
+plugin_docman	details_actions_move_canmove_folder	Vous pouvez <a href="$1">déplacer ce dossier</a> dans un autre dossier ou au sein de son dossier actuel.
 plugin_docman	details_actions_move_cannotmove_document	Vous ne pouvez pas déplacer ce document.
 plugin_docman	details_actions_move_cannotmove_folder	Vous ne pouvez pas déplacer ce dossier.
 plugin_docman	details_actions_newversion	Nouvelle version
 plugin_docman	details_actions_newversion_button	Créer une nouvelle version
 plugin_docman	details_actions_newversion_cancreate	Vous pouvez <a href="$1">créer une nouvelle version</a>.
 plugin_docman	details_actions_newversion_cannotcreate	Vous ne pouvez pas créer une nouvelle version.
-plugin_docman	details_actions_newversion_changelog	Changements :
-plugin_docman	details_actions_newversion_label	Label de version :
+plugin_docman	details_actions_newversion_changelog	Description des changements :
+plugin_docman	details_actions_newversion_label	Nom de version :
 plugin_docman	details_actions_update	Mise à jour
 plugin_docman	details_actions_update_can	Vous pouvez <a href="$1">mettre à jour</a> ce document.
 plugin_docman	details_actions_update_cannot	Vous ne pouvez pas mettre à jour ce document.
 plugin_docman	details_delete	Suppression
-plugin_docman	details_delete_cancel	Non, je ne veut pas le supprimer
+plugin_docman	details_delete_cancel	Non, je ne veux pas le supprimer
 plugin_docman	details_delete_confirm	Oui, je suis sûr !
 plugin_docman	details_delete_title	Supprimer $1
 plugin_docman	details_delete_warning_document	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un document.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
@@ -75,58 +75,58 @@ plugin_docman	details_delete_warning_folder	<h3>Confirmez la suppression du doss
 plugin_docman	details_edit_title	Edition des propriétés de $1
 plugin_docman	details_history	Historique
 plugin_docman	details_history_anonymous	Anonyme
-plugin_docman	details_history_logs	Journeaux
-plugin_docman	details_history_logs_error	Erreur lors de la récupération des journaux !
-plugin_docman	details_history_logs_no	Il n'y a pas encore de journaux.
+plugin_docman	details_history_logs	Historique du document
+plugin_docman	details_history_logs_error	Erreur lors de la récupération de l'historique !
+plugin_docman	details_history_logs_no	Il n'y a pas encore d'historique.
 plugin_docman	details_history_logs_what	Quoi
 plugin_docman	details_history_logs_when	Quand
 plugin_docman	details_history_logs_who	Qui
 plugin_docman	details_history_logs_old_value	Ancienne valeur
 plugin_docman	details_history_logs_new_value	Nouvelle valeur
-plugin_docman	details_history_logs_change_field	Mise à joure de <em>$1</em>
+plugin_docman	details_history_logs_change_field	Mise à jour de <em>$1</em>
 plugin_docman	details_history_versions	Versions
 plugin_docman	details_history_versions_author	Auteur
 plugin_docman	details_history_versions_changelog	Changement
 plugin_docman	details_history_versions_date	Date
 plugin_docman	details_history_versions_error	Erreur lors de la récupération des versions
-plugin_docman	details_history_versions_label	Label
+plugin_docman	details_history_versions_label	Nom
 plugin_docman	details_history_versions_no	Il n'y a pas encore de versions
 plugin_docman	details_history_versions_version	Version
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
 plugin_docman	details_permissions_perms	Permissions d'accès
-plugin_docman	details_permissions_recursive	recursif (appliquer les mêmes permissions pour tous les sous-éléments de ce dossier)
+plugin_docman	details_permissions_recursive	récursif (appliquer les mêmes permissions pour tous les sous-éléments de ce dossier)
 plugin_docman	details_properties	Propriétés
 plugin_docman	details_properties_edit	Editer les propriétés
 plugin_docman	details_title	Détails de $1
 plugin_docman	details_update_title	Mise à jour de $1
 
-plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accèder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
+plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
-plugin_docman	error_alreadyinstalled	Docman déjà installed.
+plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
 plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle version.
 plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il n'est pas vide.
 plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
-plugin_docman	error_filenotfound	Le fichier ne peut-être trouvé.
-plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le docman.
+plugin_docman	error_filenotfound	Le fichier ne peut être trouvé.
+plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le gestionnaire de documents.
 plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
-plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour editer cet élément.
+plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.
 plugin_docman	error_perms_delete	Vous n'avez pas les droits suffisants pour supprimer cet élément.
 plugin_docman	error_perms_delete_item	Vous n'avez pas les droits suffisants pour supprimer $1.
 plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour déplacer cet élément.
 plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour définir des permissions sur cet élément.
 plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet élément.
-plugin_docman	error_settings_updated	Les paramêtres ne peuvent pas être mis à jour.
+plugin_docman	error_settings_updated	Les paramètres ne peuvent pas être mis à jour.
 plugin_docman	error_perms_updated	$1
-plugin_docman	error_upload	Error de chargement de fichier.
-plugin_docman	error_upload_nofile	Error de chargement de fichier($1). Aucun fichier chargé. 
-plugin_docman	error_upload_partial	Error de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
-plugin_docman	error_upload_size	Error de chargement de fichier($1). Le fichier est trop gros.
-plugin_docman	error_upload_unknown	Error de chargement de fichier($1). Code d'erreur inconnu.
+plugin_docman	error_upload	Erreur de chargement de fichier.
+plugin_docman	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
+plugin_docman	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+plugin_docman	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
+plugin_docman	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
 
 plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition
@@ -134,7 +134,7 @@ plugin_docman	event_move	Déplacement
 plugin_docman	event_del	Suppression
 plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
-plugin_docman	event_metadataupdate	Mise à jour de metadata
+plugin_docman	event_metadataupdate	Mise à jour de propriété
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
@@ -158,25 +158,25 @@ plugin_docman	info_create_initversion	Version initiale créée.
 plugin_docman	info_create_newversion	Nouvelle version créée.
 plugin_docman	info_document_created	Document créé.
 plugin_docman	info_folder_created	Dossier créé.
-plugin_docman	info_item_deleted	Element supprimé.
-plugin_docman	info_item_updated	Element mis à jour.
-plugin_docman	info_item_moved	Element déplacé de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
+plugin_docman	info_item_deleted	Elément supprimé.
+plugin_docman	info_item_updated	Elément mis à jour.
+plugin_docman	info_item_moved	Elément déplacé de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
 plugin_docman	info_perms_updated	Permissions mises à jour.
 plugin_docman	info_perms_recursive_updated	Permissions pour les sous-éléments mises à jour.
-plugin_docman	info_settings_updated	Paramêtres mis à jour.
+plugin_docman	info_settings_updated	Paramètres mis à jour.
 
 plugin_docman	logsdaily_field	Documents
-plugin_docman	logsdaily_title	Accès aux docduments
+plugin_docman	logsdaily_title	Accès aux documents
 
 plugin_docman	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 
-plugin_docman	md_bo_badlabel	Label de metadata '$1' inconnu.
-plugin_docman	md_cdate_name	Date de creation
+plugin_docman	md_bo_badlabel	Nom de propriété '$1' inconnu.
+plugin_docman	md_cdate_name	Date de création
 plugin_docman	md_cdate_desc	Date d'ajout du document dans le gestionnaire.
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description du document.
 plugin_docman	md_install_commentkeyword_name	Commentaires / Mots clefs
-plugin_docman	md_install_commentkeyword_desc	Information complémentaires sur le document.
+plugin_docman	md_install_commentkeyword_desc	Informations complémentaires sur le document.
 plugin_docman	md_html_validity_permanent	Permanent
 plugin_docman	md_html_validity_3_months	3 Mois
 plugin_docman	md_html_validity_6_months	6 Mois
@@ -193,7 +193,7 @@ plugin_docman	md_love_status_approved_desc
 plugin_docman	md_love_status_rejected_name	Rejeté
 plugin_docman	md_love_status_rejected_desc	
 plugin_docman	md_odate_name	Date d'obsolescence
-plugin_docman	md_odate_desc	Definit une période de validité pour votre document. Il sera automatiquement archivé à la fin de la période.
+plugin_docman	md_odate_desc	Définit une période de validité pour votre document. Il sera automatiquement archivé à la fin de la période.
 plugin_docman	md_owner_name	Propriétaire
 plugin_docman	md_owner_desc	Valeur par défaut: celui qui soumet. Correspond au propriétaire officiel du document.
 plugin_docman	md_status_name	Statut
@@ -201,13 +201,13 @@ plugin_docman	md_status_desc	Statut du document.
 plugin_docman	md_title_name	Titre
 plugin_docman	md_title_desc	Titre du document.
 plugin_docman	md_udate_name	Date de mise à jour
-plugin_docman	md_udate_desc	Dernière mise à jour du document ou de ses metadata.
+plugin_docman	md_udate_desc	Dernière mise à jour du document ou de ses propriétés.
 
-plugin_docman	mdv_bo_updateerror	Erreur lors de la mise à jour de la metadata '$1'
-plugin_docman	mdv_bo_updateunknown	Tentative de mise à jour d'une metadata inconnue '$1'
-plugin_docman	mdv_bo_errbadtype	Mauvais type de metadata
-plugin_docman	mdv_bo_createerror	Erreur de creation de la metadata '$1'
-plugin_docman	mdv_bo_createunknown	Tentative de création d'une metadata inconnue
+plugin_docman	mdv_bo_updateerror	Erreur lors de la mise à jour de la propriété '$1'
+plugin_docman	mdv_bo_updateunknown	Tentative de mise à jour d'une propriété inconnue '$1'
+plugin_docman	mdv_bo_errbadtype	Mauvais type de propriété
+plugin_docman	mdv_bo_createerror	Erreur de création de la propriété '$1'
+plugin_docman	mdv_bo_createunknown	Tentative de création d'une propriété inconnue
 
 plugin_docman	move	Déplacement de $1
 plugin_docman	move_actual	L'élément est dans ce dossier.
@@ -230,21 +230,21 @@ plugin_docman	new_document_link	Lien
 plugin_docman	new_document_wiki	Page wiki
 plugin_docman	new_folder	Nouveau dossier
 plugin_docman	new_folder_action	Créer le dossier
-plugin_docman	new_generalproperties	Propriétés générales
+plugin_docman	new_generalproperties	Propriétés
 plugin_docman	new_location	Situation
 plugin_docman	new_position	Position :
-plugin_docman	new_specificproperties	Propriétés spécifiques
+plugin_docman	new_specificproperties	Nature du document
 plugin_docman	new_mandatory_help	* Champ obligatoire
 
 plugin_docman	permission_admin	Administrateur
 plugin_docman	permission_manage	Gestionnaire
 plugin_docman	permission_read	Lecteur
-plugin_docman	permission_write	Contributeur
+plugin_docman	permission_write	Rédacteur
 
-plugin_docman	redirect	<div style="text-align:center"><p>Docman mis à jour</p><p>Vous allez être redirigé <a href="$1">sur le docman</a>.</p></div>
+plugin_docman	redirect	<div style="text-align:center"><p>Gestionnaire de documents mis à jour</p><p>Vous allez être redirigé <a href="$1">vers le gestionnaire de documents</a>.</p></div>
 
 plugin_docman	service_lbl_key	Documents
-plugin_docman	service_desc_key	Gestionnaire de documents avancé
+plugin_docman	service_desc_key	Gestionnaire de documents
 
 plugin_docman	specificfield_embeddedcontent	Contenu :
 plugin_docman	specificfield_pagename	Nom de la page :
