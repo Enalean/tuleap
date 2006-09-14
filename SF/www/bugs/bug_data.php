@@ -1213,8 +1213,22 @@ function bug_data_update_dependent_tasks($group_id,$array,$bug_id) {
     bug_data_insert_dependent_tasks($group_id,$array,$bug_id);
 }
 
-function bug_data_create_bug($group_id,$vfl) {
-    global $feedback;
+/**
+ * Create a bug (submit a new bug)
+ * 
+ * Warning : this function does not add the CC neither the files in the database. It just make some checks on the validity of the values.
+ *
+ * @global int $sys_max_size_attachment the max size of an attached file
+ * @global string $feedback the feedback string
+ * @param int $group_id the ID of the group the bug will be added in
+ * @param array $vfl the array of value <-> field pair.
+ * @param string $add_cc the string of added cc names or emails (here for checks to stop the bug creation before inserting in the DB if needed)
+ * @param boolean $add_file a boolean to say if there is an attached file or not (here for checks to stop the bug creation before inserting in the DB if needed)
+ * @param string $attached_file the path of the attached file (here for checks to stop the bug creation before inserting in the DB if needed)
+ * @return int the bug ID if the creation is a success
+ */
+function bug_data_create_bug($group_id,$vfl, $add_cc=false, $add_file=false, $attached_file=false) {
+    global $feedback, $sys_max_size_attachment;
 
     //we don't force them to be logged in to submit a bug
     if (!user_isloggedin()) {
@@ -1235,6 +1249,22 @@ function bug_data_create_bug($group_id,$vfl) {
 	return;		
     }
 
+    if ($add_cc) {
+        // check that the CC adress are correct
+        $arr_email = util_split_emails($add_cc);
+        if (! bug_validate_cc_list($arr_email, $message)) {
+            exit_error("Error - The CC list is invalid", $message);
+        }
+    }
+    if ($add_file && $attached_file) {
+        // check that the attached files are correct
+        $data_attached_file = addslashes(fread( fopen($attached_file, 'r'), filesize($attached_file)));
+        if ((strlen($data_attached_file) < 1) || (strlen($data_attached_file) > $sys_max_size_attachment)) {
+            $feedback .= " - File not attached: File size must be less than ".formatByteToMb($sys_max_size_attachment)." Mbytes";
+            return false;
+        }
+    }
+    
     // Finally, create the bug itself
     // Remark: this SQL query only sets up the values for fields used by
     // this project. For other unused fields we assume that the DB will set
