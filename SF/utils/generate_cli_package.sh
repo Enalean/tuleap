@@ -14,6 +14,10 @@
 progname=$0
 if [ -z "$scriptdir" ]; then 
     scriptdir=`dirname $progname`
+    cd $scriptdir;
+    # we need the complete path to the script directory, in order to call the doc generation
+    TOP_SCRIPT_DIR=`pwd`;
+    cd - > /dev/null; # redirect to /dev/null to remove display of folder (RHEL4 only)
 fi
 
 FORCE=0
@@ -132,9 +136,9 @@ then
         then
             echo "Changes found in the documentation";
             echo "Generating documentation";
-            $scriptdir/generate_cli_doc.sh -v -f
+            $TOP_SCRIPT_DIR/generate_cli_doc.sh -v -f
         else
-            $scriptdir/generate_cli_doc.sh -f
+            $TOP_SCRIPT_DIR/generate_cli_doc.sh -f
         fi
         EXIST_CHANGE=1;
     fi
@@ -143,9 +147,9 @@ else
     if [ $VERBOSE == 1 ]
     then
         echo "Generating documentation";
-        $scriptdir/generate_cli_doc.sh -v -f
+        $TOP_SCRIPT_DIR/generate_cli_doc.sh -v -f
     else
-        $scriptdir/generate_cli_doc.sh -f
+        $TOP_SCRIPT_DIR/generate_cli_doc.sh -f
     fi
 fi
 
