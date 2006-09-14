@@ -116,13 +116,13 @@ class ArtifactHtml extends Artifact {
                         if ($sz > $max_size || $field->getName()=='details') {
                             echo "\n<TR>".
                               '<TD valign="top">'.$field_html['label'].'</td>'.
-                              '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.$field_html['value'].'</TD>'.                     
+                              '<TD valign="top" colspan="'.(2*$fields_per_line-1).'">'.$field_html['value'].'</TD>'.                     
                               "\n</TR>";
                             $i=0;
                         } else {
                             echo ($i % $fields_per_line ? '':"\n<TR>");
-                            echo '<TD valign="middle">'.$field_html['label'].'</td>'.
-                            '<TD valign="middle">'.$field_html['value'].'</TD>';
+                            echo '<TD valign="top">'.$field_html['label'].'</td>'.
+                            '<TD valign="top">'.$field_html['value'].'</TD>';
                             $i++;
                             echo ($i % $fields_per_line ? '':"\n</TR>");
                         }
@@ -397,15 +397,15 @@ class ArtifactHtml extends Artifact {
 	      // Details field must be on one row
 	      if ($sz > $max_size || $field->getName()=='details') {
 		echo "\n<TR>".
-		  '<TD valign="middle">'.$label.$star.'</td>'.
-		  '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+		  '<TD valign="top">'.$label.$star.'</td>'.
+		  '<TD valign="top" colspan="'.(2*$fields_per_line-1).'">'.
 		  $value.'</TD>'.                     
 		  "\n</TR>";
 		$i=0;
 	      } else {
 		echo ($i % $fields_per_line ? '':"\n<TR>");
-		echo '<TD valign="middle">'.$label.$star.'</td>'.
-		  '<TD valign="middle">'.$value.'</TD>';
+		echo '<TD valign="top">'.$label.$star.'</td>'.
+		  '<TD valign="top">'.$value.'</TD>';
 		$i++;
 		echo ($i % $fields_per_line ? '':"\n</TR>");
 	      }
@@ -1138,14 +1138,14 @@ class ArtifactHtml extends Artifact {
                                     if ( ($sz > $max_size) || ($field->getName()=='details') ) {
                                                 echo "\n<TR>".
                                                     '<TD valign="top"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
-                                                    '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+                                                    '<TD valign="top" colspan="'.(2*$fields_per_line-1).'">'.
                                                     $value.'</TD>'.                   
                                                     "\n</TR>";
                                                 $i=0;
                                     } else {
                                                 echo ($i % $fields_per_line ? '':"\n<TR>");
-                                                  echo '<TD valign="middle"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
-                                                      '<TD valign="middle">'.$value.'</TD>';
+                                                  echo '<TD valign="top"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
+                                                      '<TD valign="top">'.$value.'</TD>';
                                                 $i++;
                                                 echo ($i % $fields_per_line ? '':"\n</TR>");
                                     }

@@ -67,15 +67,15 @@ while ( $field_name = bug_list_all_fields() ) {
 
 	    if ($sz > $max_size) {
 		echo "\n<TR>".
-		    '<TD valign="middle">'.$label.$star.'</td>'.
-		    '<TD valign="middle" colspan="'.(2*$fields_per_line-1).'">'.
+		    '<TD valign="top">'.$label.$star.'</td>'.
+		    '<TD valign="top" colspan="'.(2*$fields_per_line-1).'">'.
 		    $value.'</TD>'.		      
 		    "\n</TR>";
 		$i=0;
 	    } else {
 		echo ($i % $fields_per_line ? '':"\n<TR>");
-		  echo '<TD valign="middle">'.$label.$star.'</td>'.
-		      '<TD valign="middle">'.$value.'</TD>';
+		  echo '<TD valign="top">'.$label.$star.'</td>'.
+		      '<TD valign="top">'.$value.'</TD>';
 		$i++;
 		echo ($i % $fields_per_line ? '':"\n</TR>");
 	    }
