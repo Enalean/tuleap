@@ -32,7 +32,7 @@ if ($group_id) {
 	$vfl = bug_extract_field_list();       
 
 	//data control layer
-	$bug_id=bug_data_create_bug($group_id,$vfl);
+	$bug_id=bug_data_create_bug($group_id,$vfl, $add_cc, $add_file, $input_file);
 
 	// Attach new file if there is one
 	if ($bug_id && $add_file && $input_file) {
@@ -43,7 +43,7 @@ if ($group_id) {
 	}
 
 	// Add new cc if any
-	if ($add_cc) {
+	if ($bug_id && $add_cc) {
 	    bug_add_cc($bug_id,$group_id,$add_cc,$cc_comment,$changes);
 	}
 
