@@ -127,13 +127,13 @@ class ArtifactHtml extends Artifact {
                             if ($sz > $max_size || $field->getName()=='details') {
                                 $fieldset_html .= "\n<TR>".
                                   '<TD align="left" valign="top">'.$field_html['label'].'</td>'.
-                                  '<TD valign="middle" colspan="'.($columns_number-1).'">'.$field_html['value'].'</TD>'.                     
+                                  '<TD valign="top" colspan="'.($columns_number-1).'">'.$field_html['value'].'</TD>'.                     
                                   "\n</TR>";
                                 $i=0;
                             } else {
                                 $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
-                                $fieldset_html .= '<TD align="left" valign="middle">'.$field_html['label'].'</td>'.
-                                '<TD valign="middle">'.$field_html['value'].'</TD>';
+                                $fieldset_html .= '<TD align="left" valign="top">'.$field_html['label'].'</td>'.
+                                '<TD valign="top">'.$field_html['value'].'</TD>';
                                 $i++;
                                 // if the line is not full, we add a additional column to give more space
                                 $fieldset_html .= ($i % $fields_per_line) ? '<td class="artifact_spacer">&nbsp;</td>':"\n</TR>";
@@ -457,7 +457,7 @@ class ArtifactHtml extends Artifact {
             }
             
         }
-          
+        
         echo '</TABLE>';
           
         echo '<table cellspacing="0">';
@@ -1175,7 +1175,7 @@ class ArtifactHtml extends Artifact {
             $i = 0;
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();
             while ( list($key, $field) = each($fields_in_fieldset) ) {
-                
+
                 $field_html = new ArtifactFieldHtml($field);
         
                 // if the field is a special field (except summary and original description)
