@@ -333,11 +333,13 @@ class DocmanActions extends Actions {
             }
 
             $item_factory->update($this->sanitizeItemData($data));
-            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
-                'group_id' => $request->get('group_id'),
-                'item'     => $data['id'],
-                'user'     => $user->getId())
-            );
+            if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
+                    'group_id' => $request->get('group_id'),
+                    'item'     => $data['id'],
+                    'user'     => $user->getId())
+                );
+            }
 
             if($ownerChanged) {
                 $this->_raiseOwnerChangeEvent($user,

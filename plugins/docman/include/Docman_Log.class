@@ -94,14 +94,8 @@ class Docman_Log { /* implements EventListener */
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? user_getname($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                        if($_previous_date != $row['time'] || $_previous_auth != $row['user_id']) {
-                            $html .= '<td>'. date('Y-m-d H:i:s', $row['time']) .'</td>';
-                            $html .= '<td>'. $user                             .'</td>';
-                        }
-                        else {
-                            $html .= '<td></td>';
-                            $html .= '<td></td>';
-                        }
+                        $html .= '<td>'. date('Y-m-d H:i:s', $row['time']) .'</td>';
+                        $html .= '<td>'. $user                             .'</td>';
                         if($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];
                             $_new_v = $row['new_value'];
