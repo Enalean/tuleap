@@ -1482,7 +1482,8 @@ class Artifact extends Error {
 		if ($field->getDisplayType() == "MB") {
             		$field_value = $field->getValues($this->getID());
 			if ($field_value && (count($field_value) > 0) ) {
-				if ($field->getValueFunction() != "") {
+				$val_func = $field->getValueFunction();
+				if ( $val_func[0] != "") {
                 			while (list (,$user_id)=each ($field_value)) {
                     				if ( ($user_id) && ($user_id != 100) ) {
 						  if (!$user_ids[$user_id] && 
@@ -1514,7 +1515,8 @@ class Artifact extends Error {
 		} else {
 			// display type is SB
         		$user_id = $result[$field_name];
-			if ($field->getValueFunction() == "") {
+			$val_func = $field->getValueFunction();
+			if ($val_func[0] == "") {
 				// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
 				// we accept only names that correspond to codex user names
 				// so: this user_id is not a user_id but a value_id

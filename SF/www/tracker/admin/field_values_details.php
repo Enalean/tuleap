@@ -34,9 +34,10 @@ $Language->getText('tracker_admin_field_values_details','manage_for',$field->get
 if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 	$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 } else {
-	if ( $field->getValueFunction() ) {
-	  $ath->displayValueFunctionForm($field_id,$field->getValueFunction());
-	  $ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$field->getValueFunction());
+        $val_func = $field->getValueFunction();	
+	if ( $val_func[0] ) {	  
+	  $ath->displayValueFunctionForm($field_id,$val_func);
+	  $ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$val_func);
 	} else {
 		$ath->displayFieldValuesList($field_id);
 		$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
@@ -44,7 +45,7 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 		if ( ($field->getName() != "severity" && $field->getName() != "status_id") || user_is_super_user()) {
 		  echo '<hr>';
 			$ath->displayFieldValueForm("value_create",$field_id);
-			$ath->displayValueFunctionForm($field_id,"",$Language->getText('global','or'));
+			$ath->displayValueFunctionForm($field_id,NULL,$Language->getText('global','or'));
 		}
 	}
 }
