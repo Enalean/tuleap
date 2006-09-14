@@ -38,7 +38,7 @@ plugin_docman	admin_view_title	Gérer les préférence d'affichage
 plugin_docman	admin_view_descr	Définir la vue par défaut pour le gestionnaire de documents.
 plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre pourra être ignoré selon les préférences utilisateurs.
 
-plugin_docman	breadcrumbs_location	Situation :
+plugin_docman	breadcrumbs_location	Chemin :
 
 plugin_docman	browse_viewas	-- Vue:
 
@@ -175,7 +175,7 @@ plugin_docman	md_cdate_name	Date de création
 plugin_docman	md_cdate_desc	Date d'ajout du document dans le gestionnaire.
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description du document.
-plugin_docman	md_install_commentkeyword_name	Commentaires / Mots clefs
+plugin_docman	md_install_commentkeyword_name	Commentaires
 plugin_docman	md_install_commentkeyword_desc	Informations complémentaires sur le document.
 plugin_docman	md_html_validity_permanent	Permanent
 plugin_docman	md_html_validity_3_months	3 Mois
@@ -231,7 +231,7 @@ plugin_docman	new_document_wiki	Page wiki
 plugin_docman	new_folder	Nouveau dossier
 plugin_docman	new_folder_action	Créer le dossier
 plugin_docman	new_generalproperties	Propriétés
-plugin_docman	new_location	Situation
+plugin_docman	new_location	Chemin
 plugin_docman	new_position	Position :
 plugin_docman	new_specificproperties	Nature du document
 plugin_docman	new_mandatory_help	* Champ obligatoire
@@ -259,7 +259,7 @@ plugin_docman	view_documenttable_title	Titre
 plugin_docman	view_documenttable_desc	Description
 plugin_docman	view_documenttable_owner	Propriétaire
 plugin_docman	view_documenttable_subdate	Date de soumission
-plugin_docman	view_documenttable_location	Situation
+plugin_docman	view_documenttable_location	Chemin
 plugin_docman	view_documenttable_update_date	Dernière mise-à-jour
 plugin_docman	view_documenttable_toggletitle	Cliquez sur le titre pour inverser le tri du tableau
 plugin_docman	view_documenttable_begin	Début

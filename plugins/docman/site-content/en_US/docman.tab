@@ -178,7 +178,7 @@ plugin_docman	md_cdate_name	Create Date
 plugin_docman	md_cdate_desc	When the document was added into the document manager.
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description of the document.
-plugin_docman	md_install_commentkeyword_name	Comment / Keywords
+plugin_docman	md_install_commentkeyword_name	Comments
 plugin_docman	md_install_commentkeyword_desc	Additional information on the document.
 plugin_docman	md_html_validity_permanent	Permanent
 plugin_docman	md_html_validity_3_months	3 Months from today
