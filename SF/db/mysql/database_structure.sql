@@ -231,7 +231,7 @@ CREATE TABLE bug_field (
   keep_history int(11) NOT NULL default '0',
   special int(11) NOT NULL default '0',
   custom int(11) NOT NULL default '0',
-  value_function varchar(255) default NULL,
+  value_function TEXT,
   PRIMARY KEY  (bug_field_id),
   KEY idx_bug_field_name (field_name)
 ) TYPE=MyISAM;

@@ -336,7 +336,9 @@ class ArtifactField extends Error {
 	 *
 	 * @return string
 	 */
-	function getDefaultValue() {
+	function getDefaultValue($for_insert=false) {
+	        if ($for_insert) return $this->default_value;
+
 		$def_val = $this->default_value;
 		if ( ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER) 
 			&&($this->display_type == "MB") ) {
@@ -579,9 +581,9 @@ class ArtifactField extends Error {
 	 * false if the value function does not concern a special
 	 * ugroup (id > 100) 
 	 */
-	function hasUgroupValueFunction() {
+	function isUgroupValueFunction($value) {
 
-	  if (preg_match('/ugroup_([0-9]+)/', $this->getGlobalValueFunction(), $matches)) {
+	  if (preg_match('/ugroup_([0-9]+)/', $value, $matches)) {
 	    if (strlen($matches[1]) > 2) {
 	      return $matches[1];	    
 	    }
@@ -1317,7 +1319,7 @@ class ArtifactField extends Error {
 	function updateValueFunction($group_artifact_id,$value_function) {
 	  global $Language;
 
-		if ($value_function == NULL) {
+		if ($value_function == "") {
 			$dtype = $this->DATATYPE_INT;
 		} else {
 			$dtype = $this->DATATYPE_USER;
@@ -1338,7 +1340,7 @@ class ArtifactField extends Error {
 		$this->data_type = $dtype;
 		
 		// Reload the field
-		$this->fetchData($group_artifact_id,$field_name);
+		$this->fetchData($group_artifact_id,$this->field_name);
 
 		return true;
 		
@@ -1385,7 +1387,7 @@ class ArtifactField extends Error {
 		}
 		
 		// Reload the field
-		$this->fetchData($group_artifact_id,$field_name);
+		$this->fetchData($group_artifact_id,$this->field_name);
 
 		return true;
 		

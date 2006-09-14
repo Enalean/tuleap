@@ -322,7 +322,7 @@ class ArtifactFieldFactory extends Error {
     
 	/**
 	 * 
-	 *  Copy all the fields informations from a tracker to another.
+	 *  Copy all the fields informations from this artifacttype to another.
 	 *
 	 *  @param atid_source: source tracker
 	 *  @param atid_dest: destination tracker
@@ -330,98 +330,101 @@ class ArtifactFieldFactory extends Error {
 	 *
 	 *	@return	boolean
 	 */
-    function copyFields($atid_source,$atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
+    function copyFields($atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
 	  global $Language,$feedback;
 
-        //
-		// Copy artifact_field records
-		//
-	    $sql='SELECT * '.
-		'FROM artifact_field '.
-		'WHERE group_artifact_id='.$atid_source;
-		
-		//echo $sql;
-        
-	    $res = db_query($sql);
+	  reset($this->USAGE_BY_NAME);
 	
-	    while ($field_array = db_fetch_array($res)) {
-
-	      $field = new ArtifactField();
-	      $field->setFromArray($field_array);
-
-
+	  while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+	      //$field = new ArtifactField();
+	      //$field->setFromArray($field_array);
+	      
+	      
 	      //test if we got as value_function a ugroup that does not exist in the dest group
-	      $val_func = $field_array["value_function"];
-	      $ug = $field->hasUgroupValueFunction();
-	      if ($ug !== false) {
+	      $val_function = $field->getValueFunction();
+	      $dest_val_func = array();
 
-		if ($ugroup_mapping==false || empty($ugroup_mapping)) {
-
-		  $name = $this->_getForeignUgroupName($ug,$atid_dest);
-		  if ($name !== false) {
-		    $val_func = "";
-		    $feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field_array['label'],$name));
-		  }
-
-		} else {
-		  if (isset($ugroup_mapping[$ug])) {
-		    $dest_ug = $ugroup_mapping[$ug];
-		    $val_func = "ugroup_".$dest_ug;
-		  } else {
-		    $name = $this->_getForeignUgroupName($ug,$atid_dest);
-		    if ($name !== false) {
-		      $val_func = "";
-		      $feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field_array['label'],$name));
-		    }
+	      //go through all group binds
+	      if (!empty($val_function)) {
+		
+		foreach ($val_function as $val_func) {
+		  $ug = $field->isUgroupValueFunction($val_func);
+		  if ($ug !== false) {
 		    
+		    if ($ugroup_mapping==false || empty($ugroup_mapping)) {
+		      
+		      //avoid that when copying a tracker only (not copying a template with all trackers)
+		      //that we use ugroups from foreign groups in the value_function 
+		      $name = $this->_getForeignUgroupName($ug,$atid_dest);
+		      if ($name !== false) {
+			//don't copy this ugroup
+			$feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field->getLabel(),$name));
+		      } else {
+			$dest_val_func[] = "ugroup_$ug";
+		      }
+		      
+		    } else {
+		      if (isset($ugroup_mapping[$ug])) {
+			$dest_ug = $ugroup_mapping[$ug];
+			$dest_val_func[] = "ugroup_".$dest_ug;
+		      } else {
+			$name = $this->_getForeignUgroupName($ug,$atid_dest);
+			if ($name !== false) {
+			  //don't copy this ugroup
+			  $feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field->getLabel(),$name));
+			}
+			
+		      }
+		    }
+		  } else {
+		    //this is the case where we have 
+		    //artifact_submitters,group_members,group_admins,tracker_admins
+		    $dest_val_func[] = $val_func;
 		  }
 		}
 	      }
 
-	    	$sql_insert = 'INSERT INTO artifact_field VALUES ('.$field_array["field_id"].','.$atid_dest.', '.$mapping_fieldset_array[$field_array["field_set_id"]].',"'.$field_array["field_name"].'",'.$field_array["data_type"].
-	    				  ',"'.$field_array["display_type"].'","'.$field_array["display_size"].'","'.addslashes($field_array["label"]).
-	    				  '","'.addslashes($field_array["description"]).'","'.$field_array["scope"].'",'.$field_array["required"].
-	    				  ','.$field_array["empty_ok"].','.$field_array["keep_history"].','.$field_array["special"].
-	    				  ',"'.$val_func.'","'.$field_array["default_value"].'")';
-	    				  
-		$res_insert = db_query($sql_insert);
-			//echo $sql_insert;
-			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($field_array["field_id"],$atid_dest,db_error())));
-				return false;
-			}
-		} // while
+	      
+	      $sql_insert = 'INSERT INTO artifact_field VALUES 
+                 ('.$field->getID().','.$atid_dest.', '.$mapping_fieldset_array[$field->getFieldSetID()].
+		',"'.$field->getName().'",'.$field->getDataType().
+		',"'.$field->getDisplayType().'","'.$field->getDisplaySize().'","'.addslashes($field->getLabel()).
+		'","'.addslashes($field->getDescription()).'","'.$field->getScope().'",'.$field->getRequired().
+		','.$field->getEmptyOk().','.$field->getKeepHistory().','.$field->getSpecial().
+		',"'.implode(",",$dest_val_func).'","'.$field->getDefaultValue(true).'")';
+	      
+	      $res_insert = db_query($sql_insert);
+	      //echo $sql_insert;
+	      if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+		$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($field_array["field_id"],$atid_dest,db_error())));
+		return false;
+	      }
+
+
+	      //
+	      // Copy artifact_field_usage records
+	      //
+	      $place = ($field->getPlace() == ""?"null":$field->getPlace());
+	      $sql_insert = 'INSERT INTO artifact_field_usage VALUES ('.$field->getID().','.$atid_dest.','.$field->getUseIt().
+		','.$place.')';
+	      
+	      //echo $sql_insert;
+	      $res_insert = db_query($sql_insert);
+	      if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+		$this->setError($Language->getText('tracker_common_field_factory','use_ins_err',array($field->getID(),$atid_dest,db_error())));
+		return false;
+	      }
+	      
+	    } // while
 	
-		//
-		// Copy artifact_field_usage records
-		//
-	    $sql='SELECT field_id,use_it,place '.
-		'FROM artifact_field_usage '.
-		'WHERE group_artifact_id='.$atid_source;
 		
-		//echo $sql;
-		
-	    $res = db_query($sql);
-	
-	    while ($field_array = db_fetch_array($res)) {
-	    	$place = ($field_array["place"] == ""?"null":$field_array["place"]);
-	    	$sql_insert = 'INSERT INTO artifact_field_usage VALUES ('.$field_array["field_id"].','.$atid_dest.','.$field_array["use_it"].
-	    				  ','.$place.')';
-	    				  
-			//echo $sql_insert;
-			$res_insert = db_query($sql_insert);
-			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($Language->getText('tracker_common_field_factory','use_ins_err',array($field_array["field_id"],$atid_dest,db_error())));
-				return false;
-			}
-		} // while
 		
 		//
 		// Copy artifact_field_value_list records
 		//
 	    $sql='SELECT field_id,value_id,value,description,order_id,status '.
 		'FROM artifact_field_value_list '.
-		'WHERE group_artifact_id='.$atid_source;
+		'WHERE group_artifact_id='.$this->ArtifactType->getID();
 		
 		//echo $sql;
 		

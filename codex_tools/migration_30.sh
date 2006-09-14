@@ -138,6 +138,13 @@ UPDATE surveys SET survey_title = 'dev_survey_title_key' WHERE survey_id='1';
 
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ('NEWS_READ',1,1);
 
+
+###############################################################################
+# Multiple ugroup bind of tracker field value_function
+#
+
+ALTER TABLE artifact_field MODIFY value_function TEXT;
+
 EOF
 
 

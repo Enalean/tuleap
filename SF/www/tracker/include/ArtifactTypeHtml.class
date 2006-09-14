@@ -1645,10 +1645,8 @@ EOS;
 	      $ugroup_res = ugroup_db_get_existing_ugroups($this->Group->getID());
 	      $rows = db_numrows($ugroup_res);
 	      for($i=0;$i<$rows;$i++) {
+		$selected = "";
 		$ug = db_result($ugroup_res, $i,'ugroup_id');
-		if ( $value_function && strcmp($value_function,"ugroup_".$ug) == 0 ) {
-		  $selected = " selected";
-		}
 		$ugr="ugroup_".$ug;
 	        if ( $value_function && in_array($ugr,$value_function)) {
 		    $selected = " selected";

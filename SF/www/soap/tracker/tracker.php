@@ -1027,7 +1027,7 @@ function artifacttypes_to_soap($at_arr) {
                                 'empty_ok' => $field->getEmptyOk(),
                                 'keep_history' => $field->getKeepHistory(),
                                 'special' => $field->getSpecial(),
-                                'value_function' => $field->getValueFunction(),
+                                'value_function' => implode(",", $field->getValueFunction()),
                                 'available_values' => $availablevalues,
                                 'default_value' => $defaultvalue,
                                 'user_can_submit' => $field->userCanSubmit($group_id,$group_artifact_id,$user_id),

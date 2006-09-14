@@ -489,7 +489,7 @@ class ArtifactTypeFactory extends Error {
 		$art_field_fact = new ArtifactFieldFactory($at_template);
 		
 		// Then copy all the fields informations
-		if ( !$art_field_fact->copyFields($atid_template,$id, $mapping_field_set_array,$ugroup_mapping) ) {
+		if ( !$art_field_fact->copyFields($id, $mapping_field_set_array,$ugroup_mapping) ) {
 		  $this->setError('ArtifactTypeFactory: '.$art_field_fact->getErrorMessage());
 		  return false;
 		}
