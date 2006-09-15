@@ -22,7 +22,7 @@ fi
 CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 
-DNS_DIR=/var/named
+DNS_DIR=/var/named/chroot/var/named
 
 # First run the dump utility for users and groups
 cd $CODEX_UTILS_PREFIX/underworld-dummy

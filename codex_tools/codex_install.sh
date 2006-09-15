@@ -521,7 +521,7 @@ make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
 /etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
-/etc/codex/conf/local.inc /etc/httpd/conf/codex_aliases.conf; do
+/etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf/codex_aliases.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -576,12 +576,14 @@ $CHMOD 644 /etc/httpd/conf/htpasswd
 
 # replace string patterns in local.inc
 substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codex/conf/local.inc' '%sys_dbpasswd%' "$codexadm_passwd" 
 substitute '/etc/codex/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
 substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
 substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain" 
+
+# replace string patterns in database.inc
+substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd" 
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
@@ -601,7 +603,7 @@ substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
 substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 
-todo "Customize /etc/codex/conf/local.inc"
+todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
 todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /usr/lib/codex/bin/backup_job and /usr/lib/codex/bin/backup_subversion.sh"
 
@@ -913,7 +915,7 @@ fi
 #
 todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
 todo "- update /var/named/codex.zone - replace all words starting with %%"
-todo "- cp /var/named/codex.zone /var/named/codex_full.zone"
+todo "- cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
 todo "- edit /etc/named.conf :"
 todo "   - add DNS forwarders"
 todo "   - make sure the dns cache file exists (or 'touch' it)"
