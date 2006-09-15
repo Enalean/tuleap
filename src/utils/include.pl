@@ -8,8 +8,7 @@
 ##############################
 # Global Variables
 ##############################
-$db_include	=	$ENV{'CODEX_LOCAL_INC'};# Local Include file for database username and password
-if ($db_include eq "") { $db_include = "/etc/codex/conf/local.inc"};
+$db_include	=	$ENV{'CODEX_LOCAL_INC'} || "/etc/codex/conf/local.inc"; # Local Include file for database username and password
 $uid_add	=	"20000";		# How much to add to the database uid to get the unix uid
 $gid_add	=	"1000";			# How much to add to the database gid to get the unix uid
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
