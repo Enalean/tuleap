@@ -33,6 +33,46 @@ function format_date($format,$value,$default_value = '-') {
     }
 }
 
+/**
+* Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
+* into the user defined format.
+* This format is depending on the choosen language, and is defined
+* in the site-content file <language>.tab
+*
+* @global $sys_datefmt the user preference date format defined in the language file, and set by pre.php
+*
+* @param string $date the date in the sys_datefmt format (Y-M-d H:i ex: 2004-Feb-03 16:13)
+* @return string the date in the user format, or null if the conversion was not possible or wrong
+*/
+function util_sysdatefmt_to_userdateformat($date) {
+    global $sys_datefmt;
+
+    $user_date = null;
+    $unix_timestamp = util_sysdatefmt_to_unixtime($date);
+    if ($unix_timestamp[1]) {
+        $user_date = format_date($sys_datefmt, $unix_timestamp[0], null);
+    } else {
+        $user_date = null;
+    }
+    return $user_date;
+}
+
+/**
+* Convert a timestamp unix into the user defined format.
+* This format is depending on the choosen language, and is defined
+* in the site-content file <language>.tab
+*
+* @global $sys_datefmt the user preference date format defined in the language file, and set by pre.php
+*
+* @param string $date the date in the unix timestamp format
+* @return string the date in the user format, or null if the conversion was not possible or wrong
+*/
+function util_timestamp_to_userdateformat($date) {
+    global $sys_datefmt;
+
+    $user_date = format_date($sys_datefmt, $date, null);
+    return $user_date;
+}
 
 // Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
 // into a Unix time. if string is empty return 0 (Epoch time)
