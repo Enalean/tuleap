@@ -47,14 +47,17 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $fields = $this->item->accept($get_fields, $params);
         foreach($fields as $field) {
             $html .= '<tr style="vertical-align:top;">';
-            $html .= '<td class="label">'. $field->getLabel() .'</td>';
-            $html .= '<td class="value">'. $this->_showField($field) .'</span></td>';
+            $html .= '<td class="label">'. $this->_getFieldLabel($field) .'</td>';
+            $html .= '<td class="value">'. $this->_showField($field)     .'</span></td>';
             $html .= '</tr>';
         }
         $html .= $this->_getAdditionalRows();
         
         $html .= '</table>';
         return $html;
+    }
+    function _getFieldLabel(&$field) {
+        return $field->getLabel(false);
     }
     function _showField(&$field) {
         return $field->getValue();

@@ -89,7 +89,7 @@ class Docman_MetadataHtml {
      *
      * @return string
      */
-    function getLabel() {
+    function getLabel($show_mandatory_information = true) {
         $desc = $this->md->getDescription();
         $html = '';
         $html .= '<span title="'. $desc .'">';
@@ -99,7 +99,7 @@ class Docman_MetadataHtml {
         else {
             $html .= $this->md->getName() .":";
         }
-        if($this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
+        if($show_mandatory_information && $this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
             $html .= '&nbsp;';
             $html .= '<span class="highlight">*</span>';
         }
