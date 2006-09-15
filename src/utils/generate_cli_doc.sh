@@ -24,7 +24,7 @@ if [ -z "$BASEDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     
     BASEDIR=$CODEX_DOCUMENTATION_PREFIX
 fi
