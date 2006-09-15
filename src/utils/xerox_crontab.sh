@@ -20,6 +20,7 @@ if [ -z "$CODEX_LOCAL_INC" ]; then
     CODEX_LOCAL_INC=/etc/codex/conf/local.inc
 fi
 CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+dump_dir=`/bin/grep '^\$dump_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 
 DNS_DIR=/var/named
 
@@ -45,14 +46,14 @@ cd $CODEX_UTILS_PREFIX/underworld-dummy
 ./mail_aliases.pl
 
 # we also need to copy the CodeX aliases file in /etc
-# because the ~dummy dir has perm 700 which is not
+# because the $dump_dir dir has perm 700 which is not
 # enough for newaliases to operate correctly
 # and run the newaliases command to update sendmail
 #
 # NOTE: the newaliases command is not necessary because
 # sendmail automagically detects the change of the aliases
 # file. But just in case...
-cp ~dummy/dumps/aliases /etc/aliases.codex
+cp $dump_dir/aliases /etc/aliases.codex
 /usr/bin/newaliases
 
 # and restart sendmail to be sure the new aliases DB
@@ -66,7 +67,7 @@ cp ~dummy/dumps/aliases /etc/aliases.codex
 #
 ./dns_conf.pl
 cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
-cp -f ~dummy/dumps/dns_dump $DNS_DIR/codex_full.zone
+cp -f $dump_dir/dns_dump $DNS_DIR/codex_full.zone
 killall -HUP named
 
 # generate the list of CodeX virtual hosts
@@ -89,11 +90,11 @@ cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 # Apache must be restarted after user/group update because
 # Unix Groups are used in Apache Virtual Hosts declaration
 cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
-cp -f ~dummy/dumps/apache_dump /etc/httpd/conf/codex_vhosts.conf
+cp -f $dump_dir/apache_dump /etc/httpd/conf/codex_vhosts.conf
 cp -f /etc/httpd/conf/codex_svnhosts.conf /etc/httpd/conf/codex_svnhosts.conf.backup
-cp -f ~dummy/dumps/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
+cp -f $dump_dir/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
 cp -f /etc/httpd/conf/codex_svnhosts_ssl.conf /etc/httpd/conf/codex_svnhosts_ssl.conf.backup
-cp -f ~dummy/dumps/subversion_ssl_dump /etc/httpd/conf/codex_svnhosts_ssl.conf
+cp -f $dump_dir/subversion_ssl_dump /etc/httpd/conf/codex_svnhosts_ssl.conf
 /usr/sbin/apachectl graceful
 
 # update authorized SSH keys in home dir
