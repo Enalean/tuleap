@@ -149,7 +149,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     scrolling:'no',
                     marginwidth:0,
                     marginheight:0,
-                    src:'/'
+                    src:'/plugins/docman/blank.htm'
             });
             document.body.appendChild(invisible_iframe);
         }
