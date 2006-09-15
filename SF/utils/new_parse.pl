@@ -368,7 +368,7 @@ while ($ln = pop(@groupdump_array)) {
             open(SVNACCESS,">$svnaccess_file")
               or croak "Can't open Subversion access file $svnaccess_file: $!";
             # if you change these block markers also change them in
-            # SF/www/svn/svn_utils.php
+            # src/www/svn/svn_utils.php
             print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
             print SVNACCESS "[groups]\n";
             print SVNACCESS "members = ",$userlist,"\n";
@@ -688,6 +688,7 @@ sub delete_user {
 	
 	print("Deleting User : $this_user\n");
 	system("cd $homedir_prefix ; /bin/tar -czf $tmp_dir/$username.tar.gz $username");
+        chmod 0600, "$tmp_dir/$username.tar.gz";
 	system("rm -fr $homedir_prefix/$username");
 }
 
@@ -913,11 +914,18 @@ sub delete_group {
 #	if (substr($hostname,0,3) ne "cvs") {
 		print("Deleting Group: $this_group\n");
 		system("cd $grpdir_prefix ; /bin/tar -czf $tmp_dir/$this_group.tar.gz $this_group");
+		chmod 0600, "$tmp_dir/$this_group.tar.gz";
 		system("rm -fr $grpdir_prefix/$this_group");
 
-# LJ And do the same for the CVS directory
+
+# And do the same for the CVS and SVN directories
 		system("cd $cvs_prefix ; /bin/tar -czf $tmp_dir/$this_group-cvs.tar.gz $this_group");
 		system("rm -fr $cvs_prefix/$this_group");
+		chmod 0600, "$tmp_dir/$this_group-cvs.tar.gz";
+
+		system("cd $svn_prefix ; /bin/tar -czf $tmp_dir/$this_group-svn.tar.gz $this_group");
+		system("rm -fr $svn_prefix/$this_group");
+		chmod 0600, "$tmp_dir/$this_group-svn.tar.gz";
 
 
 #	}

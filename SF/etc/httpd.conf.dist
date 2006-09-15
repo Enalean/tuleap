@@ -262,7 +262,7 @@ UseCanonicalName Off
 # documents. By default, all requests are taken from this directory, but
 # symbolic links and aliases may be used to point to other locations.
 #
-DocumentRoot "/home/httpd/SF/www"
+DocumentRoot "/usr/share/codex/src/www"
 
 #
 # Each directory to which Apache has access can be configured with respect
@@ -287,7 +287,7 @@ DocumentRoot "/home/httpd/SF/www"
 #
 # This should be changed to whatever you set DocumentRoot to.
 #
-<Directory "/home/httpd/SF/www">
+<Directory "/usr/share/codex/src/www">
     Options Includes FollowSymLinks MultiViews
     AllowOverride All
     AcceptPathInfo On
@@ -299,7 +299,7 @@ DocumentRoot "/home/httpd/SF/www"
 # Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
 # For better security, you can filter on the server IP address
 SetEnvIf User-Agent ^CodeX let_me_in
-<Directory "/home/httpd/SF/www/api">
+<Directory "/usr/share/codex/src/www/api">
     # API scrips do not end with ".php"
     ForceType application/x-httpd-php
     Order Deny,Allow
@@ -526,6 +526,27 @@ Alias /icons/ "/var/www/icons/"
     # Location of the WebDAV lock database.
     DAVLockDB /var/lib/dav/lockdb
 </IfModule>
+
+#
+# ScriptAlias: This controls which directories contain server scripts.
+# ScriptAliases are essentially the same as Aliases, except that
+# documents in the realname directory are treated as applications and
+# run by the server when requested rather than as documents sent to the client.
+# The same rules about trailing "/" apply to ScriptAlias directives as to
+# Alias.
+#
+ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+
+#
+# "/var/www/cgi-bin" should be changed to whatever your ScriptAliased
+# CGI directory exists, if you have that configured.
+#
+<Directory "/var/www/cgi-bin">
+    AllowOverride None
+    Options None
+    Order allow,deny
+    Allow from all
+</Directory>
 
 #
 # Redirect allows you to tell clients about documents which used to exist in
@@ -1008,7 +1029,7 @@ NameVirtualHost %sys_ip_address%:80
 # to be sure they are treated the right way
 <VirtualHost %sys_ip_address%:80>
  ServerName %sys_default_domain%
- ServerAlias xww.%sys_default_domain% www.%sys_default_domain%
+ ServerAlias www.%sys_default_domain%
 
  # Include CodeX alias definitions (also included in conf.d/ssl.conf)
  Include conf/codex_aliases.conf
@@ -1026,8 +1047,8 @@ NameVirtualHost %sys_ip_address%:80
 # (see utils/download/stats_http_parselog.pl)
 <VirtualHost %sys_ip_address%:80>
   ServerName download.%sys_default_domain%
-  DocumentRoot /home/ftp/codex
-  <Directory "/home/ftp/codex">
+  DocumentRoot /var/lib/codex/ftp/codex
+  <Directory "/var/lib/codex/ftp/codex">
      Options Includes FollowSymLinks MultiViews
      IndexOptions FancyIndexing
      AllowOverride FileInfo

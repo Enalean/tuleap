@@ -15,7 +15,7 @@ To attach your files to this release you must first upload them to the '.$GLOBAL
 <li><b>ftp</b>: with an ftp client, log on to <b>'.$sys_download_host.'</b> (login "ftp" / password is your email address) and put your files in the <B>/incoming</B> directory
 <li><b>scp</b>: simply type:
 <pre>
-scp your_file '.$username.'@'.$sys_download_host.':'.$GLOBALS['FTPINCOMING_DIR'].'
+scp your_file '.$username.'@'.$sys_download_host.':'.$GLOBALS['ftp_incoming_dir'].'
 </pre>
 </ul>
 When you 

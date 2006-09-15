@@ -24,9 +24,9 @@
 
 #
 # CodeX documentation
-Alias /documentation/ "/home/httpd/documentation/"
+Alias /documentation/ "/usr/share/codex/documentation"
 
-<Directory "/home/httpd/documentation">
+<Directory "/usr/share/codex/documentation">
     Options MultiViews
     AllowOverride None
     Order allow,deny
@@ -35,9 +35,9 @@ Alias /documentation/ "/home/httpd/documentation/"
 
 #
 # CodeX downloads
-Alias /downloads/ "/home/httpd/downloads/"
+Alias /downloads/ "/usr/share/codex/downloads/"
 
-<Directory "/home/httpd/downloads">
+<Directory "/usr/share/codex/downloads">
     Options MultiViews
     AllowOverride None
     Order allow,deny
@@ -55,8 +55,8 @@ Alias /custom/ "/etc/codex/themes/"
 
 
 # phpWiki themes
-Alias /wiki/themes "/home/httpd/SF/common/wiki/phpwiki/themes"
-<Directory "/home/httpd/SF/common/wiki/phpwiki/themes">
+Alias /wiki/themes "/usr/share/codex/src/common/wiki/phpwiki/themes"
+<Directory "/usr/share/codex/src/common/wiki/phpwiki/themes">
     Options None
     AllowOverride None
     Order allow,deny
@@ -84,16 +84,16 @@ Alias /phpMyAdmin /home/httpd/phpMyAdmin
 </Directory>
 
 # Plugins directory
-ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/home/httpd/plugins/$1"
-<Directory "/home/httpd/plugins/[^/]*/cgi-bin">
+ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codex/plugins/$1"
+<Directory "/usr/share/codex/plugins/[^/]*/cgi-bin">
     AllowOverride None
     Options ExecCGI
     Order allow,deny
     Allow from all
 </Directory>
 
-AliasMatch ^/plugins/([^/]*)/(.*) /home/httpd/plugins/$1/www/$2
-<DirectoryMatch "/home/httpd/plugins/([^/]*)/www/">
+AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codex/plugins/$1/www/$2
+<DirectoryMatch "/usr/share/codex/plugins/([^/]*)/www/">
     Options Indexes MultiViews
     AllowOverride None
     Order allow,deny

@@ -62,9 +62,9 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_log_xml .= '  <author>guerin</author>';
         $svn_log_xml .= '  <date>2006-04-11T16:14:52.159548Z</date>';
         $svn_log_xml .= '  <paths>';
-        $svn_log_xml .= '   <path action="M">/dev/trunk/SF/www/include/trove.php</path>';
-        $svn_log_xml .= '   <path action="M">/dev/trunk/SF/www/softwaremap/trove_list.php</path>';
-        $svn_log_xml .= '   <path action="M">/dev/trunk/SF/etc/local.inc.dist</path>';
+        $svn_log_xml .= '   <path action="M">/dev/trunk/src/www/include/trove.php</path>';
+        $svn_log_xml .= '   <path action="M">/dev/trunk/src/www/softwaremap/trove_list.php</path>';
+        $svn_log_xml .= '   <path action="M">/dev/trunk/src/etc/local.inc.dist</path>';
         $svn_log_xml .= '  </paths>';
         $svn_log_xml .= '  <msg>Add parameter in local.inc to specify the default trove category displayed\n';
         $svn_log_xml .= '       in the Software Map welcome page.\n';
@@ -74,7 +74,7 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_log_xml .= '  <author>guerin</author>';
         $svn_log_xml .= '  <date>2006-04-11T16:03:41.273381Z</date>';
         $svn_log_xml .= '  <paths>';
-        $svn_log_xml .= '   <path action="M">/dev/trunk/SF/db/mysql/database_initvalues.sql</path>';
+        $svn_log_xml .= '   <path action="M">/dev/trunk/src/db/mysql/database_initvalues.sql</path>';
         $svn_log_xml .= '  </paths>';
         $svn_log_xml .= '  <msg>Fixed typo</msg>';
         $svn_log_xml .= ' </logentry>';

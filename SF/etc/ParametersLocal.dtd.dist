@@ -30,8 +30,8 @@ etc...
 <!ENTITY SYS_DOWNLOAD_HOST "download.%sys_default_domain%">
 <!ENTITY SYS_SHELL_HOST "shell.%sys_default_domain%">
 <!ENTITY SYS_LISTS_HOST "lists.%sys_default_domain%">
-<!ENTITY FTPINCOMING_DIR "/home/ftp/incoming">
-<!ENTITY FTPFILES_DIR "/home/ftp/codex">
+<!ENTITY FTPINCOMING_DIR "/var/lib/codex/ftp/incoming">
+<!ENTITY FTPFILES_DIR "/var/lib/codex/ftp/codex">
 <!ENTITY SYS_ORG_NAME "%sys_org_name%">
 <!ENTITY SYS_LONG_ORG_NAME "%sys_long_org_name%">
 <!ENTITY SYS_EMAIL_ADMIN  "codex-admin@%sys_default_domain%">
@@ -52,3 +52,4 @@ etc...
 <!ENTITY ChapterTaskManager "">
 <!ENTITY ChapterPatchManager "">
 <!ENTITY ChapterSupportRequestManager "">
+<!ENTITY ChapterDocumentManager "">

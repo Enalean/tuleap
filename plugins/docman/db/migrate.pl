@@ -32,7 +32,7 @@
 
 use DBI;
 
-$root_path = "../../../SF/";
+$root_path = "../../../src/";
 require $root_path."utils/include.pl";
 
 &db_connect;

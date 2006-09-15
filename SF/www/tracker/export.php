@@ -62,7 +62,7 @@ $eol = "\n";
 if (isset($only_displayed_fields) && $only_displayed_fields == 'on') {
     $artifact_report = new ArtifactReport($report_id, $atid);
     $displayed_fields = $artifact_report->getResultFields();
-    // array_intersect_key is a PHP 5 function (implemented here in SF/www/include/utils.php)
+    // array_intersect_key is a PHP 5 function (implemented here in src/www/include/utils.php)
     $col_list = array_intersect_key($col_list, $displayed_fields);
     $lbl_list = array_intersect_key($lbl_list, $displayed_fields);
 }

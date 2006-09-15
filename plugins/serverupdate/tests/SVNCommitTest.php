@@ -4,7 +4,7 @@ if (! defined('CODEX_RUNNER')) {
     require_once('../../codex_tools/tests/CodexReporter.class');
 }
 
-require_once('../include/SVNCommit.class');
+require_once('../include/SVNComit.class');
 
 
 require_once('tests/simpletest/unit_tester.php');
@@ -38,7 +38,7 @@ class SVNCommitTest extends UnitTestCase {
         $cf2 =& new MockSVNCommitedFile($this);
         $cf2->setReturnValue('getPath', "/upgrades/scripts/CodeXUpgrade_002.class");
         $cf3 =& new MockSVNCommitedFile($this);
-        $cf3->setReturnValue('getPath', "/SF/www/include/mail/mail.php");
+        $cf3->setReturnValue('getPath', "/src/www/include/mail/mail.php");
         
         $c =& new SVNCommit();
         $c->setFiles(array($cf1, $cf2, $cf3));

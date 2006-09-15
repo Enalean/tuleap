@@ -13,7 +13,7 @@
 
   /********************************************************************
    * WARNING *
-   *    Please note that this script has been replaced by SF/www/goto
+   *    Please note that this script has been replaced by src/www/goto
    *    We only keep it for compatibility with existing commit messages and legacy trackers
    ********************************************************************/
 

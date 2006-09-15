@@ -13,13 +13,73 @@ Done in 2.8 support branch:
 TODO in migration_30
 - when moving httpd to httpd_28, don t forget to move the '.subversion' directory back
 - Convert BDB to FSFS?
-
+- /usr/local/bin/log_accum and commit_prep called from CVS hooks... commit-email called from SVN post-commit. -> create links or update?
 
 RHEL4 Testing:
 
 /usr/sbin/groupadd -g "104" sourceforge
 /usr/sbin/groupadd -g "96" ftpadmin
 /usr/sbin/useradd  -c 'Owner of CodeX directories' -M -d '/home/httpd' -p "$1$h67e4niB$xUTI.9DkGdpV.B65r1NVl/" -u 104 -g 104 -s '/bin/bash' -G ftpadmin sourceforge
+
+don t need perl-CGI
+'mysql' service is now called 'mysqld' -> update install guide.
+remove --force and --nodeps?
+
+
+[root@malaval RPMS]# ls -Za /home/httpd
+drwxrwxr-x  sourcefo sourcefo root:object_r:user_home_dir_t    .
+drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
+-rw-------  sourcefo sourcefo user_u:object_r:user_home_t      .bash_history
+drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        cgi-bin
+drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        documentation
+drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        plugins
+drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        SF
+drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        site-content
+
+
+chcon -R -h -t httpd_sys_content_t /home/httpd
+
+[root@malaval RPMS]# ls -Za /home/httpd
+drwxrwxr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t .
+drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
+-rw-------  sourcefo sourcefo user_u:object_r:httpd_sys_content_t .bash_history
+drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t cgi-bin
+drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t documentation
+drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t plugins
+drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t SF
+drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t site-content
+
+
+[root@malaval RPMS]# ls -Za /home/ftp/codex/
+drwxr-xr-x  root     root     root:object_r:user_home_t        .
+drwxr-xr-x  root     root     root:object_r:user_home_dir_t    ..
+
+chcon -R -h -t httpd_sys_content_t /home/ftp/codex/
+
+
+PHPMyAdmin:
+[root@malaval scripts]# ls -Z /var/lib/php
+drwxrwx---  root     apache   system_u:object_r:httpd_var_run_t session
+[root@malaval scripts]# chmod 777 /var/lib/php/session
+
+Add question: do you wish to use HTTPS
+-> ssl.conf
+-> phpMyadmin conf
+-> generate certificate (optional)
+
+
+
+chcon -R -h -t httpd_sys_content_t /home/groups
+chcon -R -h -t httpd_sys_content_t /home/sfcache
+chcon -R -h -t httpd_sys_content_t /etc/codex
+
+
+RPMs mandatory:
+#mrtg ?
+# munin needs perl-DateManip and sysstat + external RPMs: perl-HTML-Template perl-Net-Server rrdtool perl-rrdtool
+# cp /usr/share/doc/munin-1.2.4/README-apache-cgi /etc/httpd/conf.d/munin.conf + edit to add alias
+# /usr/sbin/munin-node-configure -> useless
+Add option: install munin?
 
 
 
@@ -49,6 +109,7 @@ $CAT <<EOF | $MYSQL $pass_opt sourceforge
 ###############################################################################
 # Fieldset: create tables
 #
+
 DROP TABLE IF EXISTS artifact_field_set;
 CREATE TABLE artifact_field_set (
     field_set_id int(11) unsigned NOT NULL auto_increment,

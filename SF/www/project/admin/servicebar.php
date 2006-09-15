@@ -145,7 +145,7 @@ if (($func=='do_create')||($func=='do_update')) {
     }
     // Substitute variables in link
     if ($group_id!=100) {
-        // NOTE: if you change link variables here, change them also below, and  in SF/www/register/confirmation.php and SF/www/include/Layout.class
+        // NOTE: if you change link variables here, change them also below, and  in src/www/register/confirmation.php and src/www/include/Layout.class
         if (strstr($link,'$projectname')) {
             // Don't check project name if not needed.
             // When it is done here, the service bar will not appear updated on the current page

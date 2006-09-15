@@ -110,19 +110,19 @@ $sys_fullname = "%sys_fullname%";
 
 
 // CodeX directory (PHP pages, site-content, etc)
-$codex_dir = "/home/httpd";
+$codex_dir = "/usr/share/codex";
 
 // Site specific settings are stored there:
 $sys_custom_dir = "/etc/codex";
 
 // CodeX binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
-$codex_bin_prefix = "/usr/local/bin";
+$codex_bin_prefix = "/usr/lib/codex/bin";
 
 // CodeX database configuration file
 $db_config_file = $sys_custom_dir . "/conf/database.inc";
 
 // Data Directory
-$sys_data_dir = "/home/data";
+$sys_data_dir = "/var/lib/codex";
 
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = "/var/tmp";		 
@@ -130,18 +130,17 @@ $tmp_dir = "/var/tmp";
 // CodeX utils and documentation directories
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
-//    **Don't** $codex_utils_prefix = $codex_dir . "codex/utils" **Don't**
+//    *wrong* $codex_utils_prefix = $codex_dir . "codex/utils" *wrong*
 // this is because those variables will be read by shell scripts.
-$codex_utils_prefix = "/home/httpd/SF/utils"
-$codex_documentation_prefix = "/home/httpd/documentation"
-// CodeX extra-file downloads directory (eg: CLI archive)
-$codex_downloads_dir = "/home/httpd/downloads";
+$codex_utils_prefix         = "/usr/share/codex/src/utils";
+$codex_documentation_prefix = "/usr/share/codex/documentation";
+$codex_downloads_dir        = "/usr/share/codex/downloads";// CodeX extra files download directory (eg: CLI archive)
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
 
 // Where the CodeX files are placed
-$sys_urlroot = $codex_dir . "/SF/www/"; 
+$sys_urlroot = $codex_dir . "/src/www/"; 
 
 // Site-content paths
 $sys_incdir = $codex_dir . '/site-content';// Directory which hosts the site content
@@ -149,41 +148,39 @@ $sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts 
 
 // Cache location -- this is needed by include/cache.php
 // This directory must be world reachable, but writable only by the web-server
-$codex_cache_dir = $sys_data_dir . "/codex_cache";
+$codex_cache_dir = $tmp_dir . "/codex_cache";
 
 $homedir_prefix = "/home/users"; // prefix to add to the user's homedir
 $grpdir_prefix  = "/home/groups";// prefix to add to the project's homedir
 
 // CVS paths
-$cvs_prefix     = "/cvsroot";     // cvs root
-$cvslock_prefix = "/var/lock/cvs";// prefix to add to the cvs lock directory
+$cvs_prefix     = "/var/lib/codex/cvsroot";  // cvs root
+$cvslock_prefix = "/var/lock/cvs";           // prefix to add to the cvs lock directory
 $cvs_root_allow_file = "/etc/cvs_root_allow";// File containing allowed cvs roots (regular CVS *and* CVSnt)
 $cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configuration
 $cvs_cmd             = "/usr/bin/cvs";       // CVS binary
 
 // Subversion paths
-$svn_prefix   = "/svnroot";         // prefix to add to the subversion root directory
-$svnadmin_cmd = "/usr/bin/svnadmin";// SVN Admin binary
+$svn_prefix   = "/var/lib/codex/svnroot";// prefix to add to the subversion root directory
+$svnadmin_cmd = "/usr/bin/svnadmin";     // SVN Admin binary
 
 // FRS paths - do *not* use variables in the following parameters
 // If you change those paths, please run utils/compile_fileforge.sh
-$ftp_frs_dir_prefix  = "/home/ftp/codex";   // Where the released files are located
-$ftp_incoming_dir    = "/home/ftp/incoming";// Where files are placed when uploaded
-$ftp_anon_dir_prefix = "/home/ftp/pub";     // prefix to add to the anon ftp project homedir
+$ftp_frs_dir_prefix  = "/var/lib/codex/ftp/codex";   // Where the released files are located
+$ftp_incoming_dir    = "/var/lib/codex/ftp/incoming";// Where files are placed when uploaded
+$ftp_anon_dir_prefix = "/var/lib/codex/ftp/pub";     // prefix to add to the anon ftp project homedir
 
+// Path for DB sumps. Do *not* use variables in this parameter
+$dump_dir         = "/var/lib/codex/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
-$dump_dir         = "/home/dummy/dumps";// Where should we stick files we're working with
-$codex_log        = "/home/log";        // CodeX log dir (cvslogs,)
+$codex_log        = "/var/log/codex";   // CodeX log dir (cvslogs,)
 $codex_shell_skel = "/etc/skel_codex";  // CodeX Shell skeleton files directory
 $dns_master_file  = "/var/named/codex.zone";// DNS master file
 $apache_htpasswd  = "/etc/httpd/conf/htpasswd";// Apache htpasswd file
 
 // used as in: $mailman_dir/lists/$list_name $mailman_dir/bin/newlist $mailman_dir/mail/wrapper $mailman_dir/mail/mailman
 $mailman_dir = "/home/mailman";
-
-// Apache configuration file not used?
-//$apache_conf    = "/etc/httpd/conf/httpd.conf";
 
 // Plugins related paths
 $sys_pluginsroot       = $codex_dir . "/plugins/";
@@ -192,7 +189,7 @@ $sys_pluginspath       = "/plugins";
 $sys_custompluginspath = "/customplugins";
 
 // Themeing related paths
-$sys_themeroot = $codex_dir . "/SF/www/themes/";
+$sys_themeroot = $codex_dir . "/src/www/themes/";
 $sys_custom_themeroot = $sys_custom_dir . "/themes";
 
 

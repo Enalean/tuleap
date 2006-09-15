@@ -372,9 +372,9 @@ class SVNUpdate {
 //   <author>guerin</author>
 //   <date>2006-04-11T16:14:52.159548Z</date>
 //   <paths>
-//    <path action="M">/dev/trunk/SF/www/include/trove.php</path>
-//    <path action="M">/dev/trunk/SF/www/softwaremap/trove_list.php</path>
-//    <path action="M">/dev/trunk/SF/etc/local.inc.dist</path>
+//    <path action="M">/dev/trunk/src/www/include/trove.php</path>
+//    <path action="M">/dev/trunk/src/www/softwaremap/trove_list.php</path>
+//    <path action="M">/dev/trunk/src/etc/local.inc.dist</path>
 //   </paths>
 //   <msg>Add parameter in local.inc to specify the default trove category displayed
 //        in the Software Map welcome page.
@@ -384,7 +384,7 @@ class SVNUpdate {
 //   <author>guerin</author>
 //   <date>2006-04-11T16:03:41.273381Z</date>
 //   <paths>
-//    <path action="M">/dev/trunk/SF/db/mysql/database_initvalues.sql</path>
+//    <path action="M">/dev/trunk/src/db/mysql/database_initvalues.sql</path>
 //   </paths>
 //   <msg>Fixed typo</msg>
 //  </logentry>

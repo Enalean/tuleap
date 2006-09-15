@@ -38,9 +38,10 @@ set -e
 # configuration variables
 
 # SvnParentPath is the directory where project repositories are found
-SvnParentPath=/svnroot
+#SvnParentPath=/var/lib/codex/svnroot
+SvnParentPath=/svnroot # We can use the symbolic link
 
-SvnBackupPath=/home/subversion_backup
+SvnBackupPath=/var/lib/codex/backup/subversion
 # SvnIncrBackupPath is the directory where incremental backups are created
 SvnIncrBackupPath=${SvnBackupPath}/incr
 # SvnFullBackupPath is the directory where full backups are created

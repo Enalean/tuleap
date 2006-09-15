@@ -1,8 +1,8 @@
 #!/bin/sh
-PACKAGE_DIR=/root/packages-rhel3
+PACKAGE_DIR=/root/packages-rhel4
 BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 2.8sup"
-ISO_FILE="/tmp/codex-2.8sup.iso"
+ISO_LABEL="CodeX 3.0 sup"
+ISO_FILE="/tmp/codex-3.0.sup.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -12,6 +12,9 @@ TAIL='/usr/bin/tail'
 MKDIR='/bin/mkdir'
 CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
+RSYNC='/usr/bin/rsync'
+GREP='/bin/grep'
+RM='/bin/rm'
 
 # Misc functions
 die() {
@@ -25,7 +28,10 @@ die() {
 
 # Clean up build dir
 echo "Creating clean build directory..."
-rm -rf $BUILD_DIR; mkdir -p $BUILD_DIR
+#rm -rf $BUILD_DIR; 
+$MKDIR -p $BUILD_DIR
+cd $BUILD_DIR
+$RM codex_install.sh INSTALL migration_*.sh README  RELEASE_NOTES
 
 # Copy the install script at the top directory
 echo "Copying the CodeX installation script..."
@@ -33,16 +39,17 @@ cd $PACKAGE_DIR
 $CP -af $PACKAGE_DIR/CodeX/src/codex_tools/codex_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codex_install.sh
 
-# Copy the 2.6 to 2.8 migration script at the top directory
-echo "Copying the CodeX 2.6 to 2.8 migration script..."
+# Copy the migration script at the top directory
+echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_28.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_28.sh
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_30.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
-$CP -af $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
-$CP -af $PACKAGE_DIR/CodeX $BUILD_DIR
+$RSYNC -av --delete $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
+mkdir -p $BUILD_DIR/CodeX
+$RSYNC -a --delete $PACKAGE_DIR/CodeX/src $BUILD_DIR/CodeX
 
 # Only copy the latest RPMs from RPMS CodeX
 echo "Copying the CodeX RPMS packages..."
@@ -54,7 +61,26 @@ do
     cd $PACKAGE_DIR/RPMS_CodeX/$i
     newest_rpm=`$LS -1 -I old | $TAIL -1`
     $MKDIR -p $BUILD_DIR/RPMS_CodeX/$i
-    $CP -af $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
+    $RSYNC -a --delete $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
+    cd $BUILD_DIR/RPMS_CodeX/$i
+    old_rpms=`$LS -1 | $GREP -v $newest_rpm`
+    for j in $old_rpms
+    do
+      echo "deleting $i/$j from build dir"
+      $RM -rf $j
+    done
+done
+
+# Remove deprecated packages
+cd $BUILD_DIR/RPMS_CodeX 
+RPM_LIST=`ls -1`
+for i in $RPM_LIST
+do
+    if [ ! -e $PACKAGE_DIR/RPMS_CodeX/$i ];
+    then
+        echo "Removing depracted package: $i"
+        echo $RM -rf $BUILD_DIR/RPMS_CodeX/$i
+    fi
 done
 
 # Change ownership of everything
@@ -132,7 +158,7 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.6 to 2.8 run the migration script ./migration_28.sh 
+- For an update from 2.8 to 3.0 run the migration script ./migration_30.sh 
 - Follow the instructions of the migration script
 
 -- The CodeX Team
@@ -141,11 +167,11 @@ EOF
 
 # create a RELEASE_NOTES file at the top
 cat <<'EOF' >RELEASE_NOTES
-CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+CodeX: Breaking Down the Barriers to Source Code Sharing
 Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
-http://codex.xerox.com
+http://codex.xrce.xerox.com
 
-This is CodeX 2.8.
+This is CodeX 3.0.
 
 After downloading the file, read the README and INSTALL files
 carefully. And get in touch with us at codex-contact@codex.xerox.com

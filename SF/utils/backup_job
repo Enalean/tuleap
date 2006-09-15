@@ -31,8 +31,8 @@ set -e
 
 
 ## Global definitions
-oldBackupDstDir=/cvsroot/.mysql_backup/old
-currentBackupDstDir=/cvsroot/.mysql_backup
+oldBackupDstDir=/var/lib/codex/backup/mysql/old
+currentBackupDstDir=/var/lib/codex/backup/mysql
 mysqlDataDir=/var/lib/mysql
 
 #

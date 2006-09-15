@@ -1060,8 +1060,8 @@ function util_get_group_from_commit_id($cid) {
   $repository = db_result($res, 0, 'repository');
   if (!$repository) return 0;
 
-  // Remove "/cvsroot/" to get the project unix name
-  $projname=eregi_replace("/cvsroot/","",$repository);
+  // Remove ".*/cvsroot/" to get the project unix name
+  $projname=eregi_replace(".*/cvsroot/","",$repository);
   if (!$projname) return 0;
 
   $sql = "SELECT group_id FROM groups WHERE unix_group_name='$projname'";
