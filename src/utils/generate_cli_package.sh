@@ -31,7 +31,7 @@ if [ -z "$BASEDOCDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
 fi
 CMDDOCDIR=$BASEDOCDIR/cli/cmd
@@ -41,7 +41,7 @@ if [ -z "$BASESRCDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DIR=`/bin/grep '^\$codex_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_dir\s*=\s*\(.*\);\(.*\)/\1/'`
+    CODEX_DIR=`/bin/grep '^\$codex_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     BASESRCDIR=$CODEX_DIR/cli
 fi
 
@@ -50,7 +50,7 @@ if [ -z "$TMPDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    TMP_DIR=`/bin/grep '^\$tmp_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/'`
+    TMP_DIR=`/bin/grep '^\$tmp_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     TMPDIR=$TMP_DIR
 fi
 
@@ -78,7 +78,7 @@ if [ -z "$DESTDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    DEST_DIR=`/bin/grep '^\$codex_downloads_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/'`
+    DEST_DIR=`/bin/grep '^\$codex_downloads_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     DESTDIR=$DEST_DIR
 fi
 

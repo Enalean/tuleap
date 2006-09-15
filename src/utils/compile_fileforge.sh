@@ -14,9 +14,9 @@ PERL='/usr/bin/perl'
 if [ -z "$CODEX_LOCAL_INC" ]; then 
     CODEX_LOCAL_INC=/etc/codex/conf/local.inc
 fi
-ftp_incoming_dir=`/bin/grep '^\$ftp_incoming_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$ftp_incoming_dir\s*=\s*\(.*\);\(.*\)/\1/'`
-ftp_frs_dir_prefix=`/bin/grep '^\$ftp_frs_dir_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$ftp_frs_dir_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
-codex_bin_prefix=`/bin/grep '^\$codex_bin_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_bin_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+ftp_incoming_dir=`/bin/grep '^\$ftp_incoming_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$ftp_incoming_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
+ftp_frs_dir_prefix=`/bin/grep '^\$ftp_frs_dir_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$ftp_frs_dir_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
+codex_bin_prefix=`/bin/grep '^\$codex_bin_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_bin_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
 
 
 substitute() {
@@ -25,8 +25,8 @@ substitute() {
 }
 
 cp fileforge.c fileforge_custom.c
-substitute fileforge_custom.c '"/var/lib/codex/ftp/incoming/"' "$ftp_incoming_dir" 
-substitute fileforge_custom.c '"/var/lib/codex/ftp/codex/"' "$ftp_frs_dir_prefix" 
+substitute fileforge_custom.c '/var/lib/codex/ftp/incoming/' "$ftp_incoming_dir" 
+substitute fileforge_custom.c '/var/lib/codex/ftp/codex/' "$ftp_frs_dir_prefix" 
 
 gcc fileforge_custom.c -o fileforge
 chown root.root fileforge

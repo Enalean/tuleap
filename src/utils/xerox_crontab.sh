@@ -19,7 +19,7 @@
 if [ -z "$CODEX_LOCAL_INC" ]; then 
     CODEX_LOCAL_INC=/etc/codex/conf/local.inc
 fi
-CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/'`
+CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 
 DNS_DIR=/var/named
 
