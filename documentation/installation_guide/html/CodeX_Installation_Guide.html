@@ -6,9 +6,7 @@
   <meta content="text/html; charset=ISO-8859-1"
  http-equiv="content-type">
   <meta content="Laurent Julliard" name="author">
-  <meta
- content="Mozilla/4.77 [en] (X11; U; Linux 2.2.17-21mdk i686) [Netscape]"
- name="GENERATOR">
+  <meta content="Nicolas Guerin" name="author">
   <title>CodeX Installation Guide</title>
 </head>
 <body>
@@ -19,7 +17,7 @@
 <p>$Revision$ - $Date$<br>
 <br>
 <font size="-1"> Copyright &copy; Xerox Corporation, CodeX Team,
-2001-2004. All Rights Reserved<br>
+2001-2006. All Rights Reserved<br>
 This documentation is licensed under the Codex Component Software
 License
 </font><br>
@@ -46,7 +44,7 @@ completion the installation script will inform you of the remaining
 configuration that must be done manually.<br>
 <h1><a name="Linux_OS_Installation"></a>Linux OS Installation</h1>
 CodeX is designed to run on on a PC server (Intel x86 CPU or
-compatible) running Linux RedHat Linux Enterprise Server 3.0 wether WS,
+compatible) running Linux RedHat Linux Enterprise Server 4.0 wether WS,
 ES or AS version. Other distributions are not supported by Xerox.<br>
 <br>
 <br>
@@ -76,13 +74,13 @@ software installation<br>
       </b></td>
     </tr>
     <tr>
-      <td valign="top">sourceforge</td>
+      <td valign="top">codexadm</td>
       <td valign="top">104<br>
       </td>
       <td valign="top">104<br>
       </td>
-      <td valign="top">SourceForge/CodeX user</td>
-      <td valign="top">/home/httpd</td>
+      <td valign="top">Owner of CodeX directories</td>
+      <td valign="top">/home/codexadm</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">Set a password<br>
       </td>
@@ -97,7 +95,7 @@ software installation<br>
       </td>
       <td valign="top">/home/dummy</td>
       <td valign="top">/bin/bash</td>
-      <td valign="top">Set same password as sourceforge<br>
+      <td valign="top">Set same password as codexadm<br>
       </td>
     </tr>
     <tr>
@@ -110,7 +108,7 @@ software installation<br>
       <td valign="top">/home/mailman</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">- shell login not allowed<br>
-- Set same password as sourceforge<br>
+- Set same password as codexadm<br>
       </td>
     </tr>
     <tr>
@@ -120,7 +118,7 @@ software installation<br>
       <td valign="top">96<br>
       </td>
       <td valign="top">FTP Administrator</td>
-      <td valign="top">/home/ftp</td>
+      <td valign="top">/home/ftp</td> XXX
       <td valign="top">&nbsp;-<br>
       </td>
       <td valign="top">shell login not allowed</td>
@@ -134,7 +132,7 @@ software installation<br>
       </td>
       <td style="vertical-align: top;">FTP User<br>
       </td>
-      <td style="vertical-align: top;">/home/ftp</td>
+      <td style="vertical-align: top;">/home/ftp</td>XXX
       <td style="vertical-align: top;">-<br>
       </td>
       <td style="vertical-align: top;">shell login not allowed<br>
@@ -160,7 +158,7 @@ software installation<br>
       </b></td>
     </tr>
     <tr>
-      <td valign="top">sourceforge</td>
+      <td valign="top">codexadm</td>
       <td valign="top">104<br>
       </td>
       <td valign="top">-<br>
@@ -190,7 +188,7 @@ software installation<br>
       <td valign="top">ftpadmin</td>
       <td valign="top">96<br>
       </td>
-      <td valign="top">ftpadmin, sourceforge</td>
+      <td valign="top">ftpadmin, codexadm</td>
       <td valign="top"><br>
       </td>
     </tr>
@@ -237,7 +235,7 @@ Projects Directories</b><br>
     </tr>
     <tr>
       <td valign="top">/home/users</td>
-      <td valign="top">sourceforge.sourceforge<br>
+      <td valign="top">codexadm.codexadm<br>
       </td>
       <td valign="top">drwxrwxr-x<br>
       </td>
@@ -246,7 +244,7 @@ Projects Directories</b><br>
     </tr>
     <tr>
       <td valign="top">/home/groups</td>
-      <td valign="top">sourceforge.sourceforge </td>
+      <td valign="top">codexadm.codexadm </td>
       <td valign="top">drwxrwxr-x </td>
       <td valign="top"><br>
       </td>
@@ -266,7 +264,7 @@ database dumps</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/dummy/dumps</td>
+      <td valign="top">/var/lib/codex/dumps</td>
       <td valign="top">dummy.dummy </td>
       <td valign="top">drwxr-xr-x</td>
       <td valign="top"><br>
@@ -278,7 +276,7 @@ database dumps</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp<br>
+      <td valign="top">/var/lib/codex/ftp<br>
       </td>
       <td valign="top">root.ftp<br>
       </td>
@@ -291,8 +289,8 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/bin<br>
-/home/ftp/etc<br>
+      <td valign="top">/var/lib/codex/ftp/bin<br>
+/var/lib/codex/ftp/etc<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -302,7 +300,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/frp/lib<br>
+      <td valign="top">/var/lib/codex/ftp/lib<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin</td>
       <td valign="top">drwxr-xr-x<br>
@@ -311,7 +309,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/codex<br>
+      <td valign="top">/var/lib/codex/ftp/codex<br>
       </td>
       <td valign="top">root.root<br>
       </td>
@@ -321,7 +319,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/pub<br>
+      <td valign="top">/var/lib/codex/ftp/pub<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -331,7 +329,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/incoming<br>
+      <td valign="top">/var/lib/codex/ftp/incoming<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -345,7 +343,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/large_tmp<br>
+      <td valign="top">/var/tmp<br>
       </td>
       <td valign="top">&nbsp;root.root<br>
       </td>
@@ -369,7 +367,7 @@ cvs tracking script that feed the CodeX database<br>
     <tr>
       <td valign="top">/cvsroot<br>
       </td>
-      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top">Where all CVS repo reside.<br>
@@ -382,7 +380,7 @@ cvs tracking script that feed the CodeX database<br>
     <tr>
       <td valign="top">/svnroot<br>
       </td>
-      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top">Where all Subversion repositories reside.<br>
@@ -394,18 +392,18 @@ cvs tracking script that feed the CodeX database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/log/<br>
+      <td valign="top">/var/log/codex/<br>
       </td>
-      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top"><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/log/cvslogs<br>
+      <td valign="top">/var/log/codex/cvslogs<br>
       </td>
-      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxrwxr-x<br>
       </td>
       <td style="vertical-align: top;">Daily generated log files of all
@@ -430,9 +428,9 @@ HTML</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/sfcache<br>
+      <td valign="top">/var/tmp/codex_cache<br>
       </td>
-      <td valign="top">sourceforge.sourceforge</td>
+      <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top"><br>
@@ -444,8 +442,8 @@ HTML</b><br>
     </tr>
     <tr>
       <td valign="top">/home/var<br>
-/home/var/lib<br>
-/home/var/lib/mysql<br>
+/var/lib<br>
+/var/lib/mysql<br>
       </td>
       <td valign="top">root.root<br>
 root.root<br>
@@ -494,10 +492,10 @@ telnet/shell account.<br>
 <h1><a name="Specific_Software_Packages"></a>Specific Software Packages</h1>
 <h2><a name="RPM_Packages"></a>RPM Packages</h2>
 CodeX requires a number of specific packages to operate properly.
-Theses packages are provided either through the RedHat Linux Enterprise
-Server distribution or by Xerox as part of your support contract. it is
-the responsibility of the CodeX Administrators to make sure that hey
-keep RPMs uptodate with lates version provided by RedHat or by Xerox
+These packages are provided either through the RedHat Linux Enterprise
+Server distribution or by Xerox as part of your support contract. It is
+the responsibility of the CodeX Administrators to make sure that they
+keep RPMs up-to-date with latest versions provided by RedHat or by Xerox
 for the CodeX specific RPMs.<br>
 <br>
 <table width="80%" border="1" cellspacing="2" cellpadding="2">
@@ -527,14 +525,14 @@ optional. This is a patched version of Apache 2.0: do not use a standard package
       <td style="vertical-align: top;">cvsgraph<br>
       </td>
       <td style="vertical-align: top;">Install the cvsgraph package
-(used by viewcvs to build a graphical view of CVS branches)<br>
+(used by viewvc to build a graphical view of CVS branches)<br>
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">subversion<br>
       </td>
       <td style="vertical-align: top;">Install the subversion,
-subversion-server, neon, apr, apr-util, db42 and db42-utils packages<br>
+mod_dav-svn, subversion-tools, subversion-perl and subversion-python packages<br>
       </td>
     </tr>
     <tr>
@@ -552,35 +550,9 @@ DocBook processing chain to generate the CodeX User Guide.<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">mysql<br>
+      <td style="vertical-align: top;">viewvc<br>
       </td>
-      <td valign="top">These are the official packages from the MySQL
-company. Those provided by RedHat are not used<br>
-To check whether Redhat mysql packages are already installed type: 'rpm
--qa | grep -i mysql'. If redhat packages are installed make sure you
-first remove them with an 'rpm -e' command<br>
-      <br>
-Install the following packages: MySQL, MySQL-client and MySQL-shared<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">mysql-python<br>
-      </td>
-      <td style="vertical-align: top;">Install the MySQL-python RPM
-(needed by viewcvs to access the CodeX database)<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">perl-dbd-mysql<br>
-      </td>
-      <td style="vertical-align: top;">Install the perl-DBD-MySQL RPM
-(used by all backend Perl scripts to access the CodeX database)<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">viewcvs<br>
-      </td>
-      <td style="vertical-align: top;">Install the viewcvs package.<br>
+      <td style="vertical-align: top;">Install the viewvc package.<br>
       </td>
     </tr>
     <tr>
@@ -699,7 +671,7 @@ CodeX has its own domain name and the name server for the CodeX
 domain is hosted on the central CodeX server. <br>
 <h2>DNS Zone file</h2>
 Your DNS zone (called codex.zone) definition file must be placed in <tt>/var/named/</tt>
-because this path is hardcoded in the <tt>/home/httpd/SF/utils/underworld-dummy/dns_conf.pl</tt>
+because this path is hardcoded in the <tt>/usr/share/codex/src/utils/underworld-dummy/dns_conf.pl</tt>
 script that is used to automatically generate the DNS aliases for
 project sites and per project CVS and SVN servers. <br>
 <br>
@@ -861,11 +833,11 @@ include "/etc/rndc.key";<br>
 <h1><a name="Apache_Configuration"></a>Apache Configuration</h1>
 <ul>
   <li>A sample Apache configuration file is available in the CodeX code
-in <tt>/home/httpd/SF/etc/http.conf.dist</tt>. Edit this file to
+in <tt>/usr/share/codex/src/etc/http.conf.dist</tt>. Edit this file to
 reflect your site settings and place it in <tt>/etc/httpd/conf/httpd.conf</tt>.</li>
   <li>Starting with Apache 2.0 and RHEL 3, modules configuration must
 be placed in <tt>/etc/httpd/conf.d/</tt> . CodeX comes with a number
-of Apache modules configuration files that must be copied from <tt>/home/httpd/SF/etc/</tt>
+of Apache modules configuration files that must be copied from <tt>/usr/share/codex/src/etc/</tt>
 to <tt>/etc/httpd/conf.d/ (e.g. php.conf, ssl.conf,etc.)<br>
     </tt></li>
   <li>Start or restart the Apache web server (from the root account
@@ -890,7 +862,7 @@ while rebooting the CodeX system to type the password when the Apache
 server is started. This prevent from doing an unattended reboot.<br>
 <br>
 To activate SSL on your CodeX server simply copy the sample <span
- style="font-family: monospace;">/home/httpd/SF/etc/ssl.conf.dist</span>
+ style="font-family: monospace;">/usr/share/codex/src/etc/ssl.conf.dist</span>
 file to <tt>/etc/httpd/conf.d/. It </tt>contains all the necessary
 Apache directives
 to enable secured HTTP. Then do the following:<br>
@@ -934,10 +906,10 @@ guidelines and tips. In addition remember that the CodeX code is
 subject
 to the GNU GPL license.&nbsp;</font></li>
 </ul>
-To check out the CodeX source code: login as Unix user 'sourceforge'
-and go to /home/httpd/. From there checkout the CodeX code,
+To check out the CodeX source code: login as Unix user 'codexadm'
+and go to /usr/share/codex/. From there checkout the CodeX code,
 documentation and site content modules:<br>
-<pre>	svn co --username your_codex_login http://svn.codex.codex.xerox.com/svnroot/codex/dev/trunk /home/httpd<br></pre>
+<pre>	svn co --username your_codex_login http://svn.codex.codex.xerox.com/svnroot/codex/dev/trunk /usr/share/codex<br></pre>
 where <span style="font-family: monospace;">your_codex_login</span> is
 the CodeX user name of the user who is going to checkout the CodeX
 source code.<br>
@@ -947,10 +919,10 @@ source code.<br>
 Software</h1>
 As user root:<br>
 <ul>
-  <li>copy /home/httpd/SF/etc/local.inc.dist in
+  <li>copy /usr/share/codex/src/etc/local.inc.dist in
 /etc/codex/conf/local.inc&nbsp;</li>
   <li>change /etc/codex/conf/local.inc ownership (chown
-sourceforge.sourceforge
+codexadm.codexadm
 /etc/codex/conf/local.inc)</li>
   <li>change permission (chmod 640 /etc/codex/conf/local.inc) <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b></li>
@@ -974,7 +946,7 @@ adress to what used to be a simple alias will automagically redirect
 all
 the traffic for this service to the right machine.</li>
   <li><b>Database parameters</b> ($sys_dbxxx) : you'll have to provide
-the password for the MySQL sourceforge user here so make sure you have
+the password for the MySQL codexadm user here so make sure you have
 set the file permission of local.inc correctly (see above)</li>
   <li><b>CodeX News group</b> ($sys_news_group): this is a reserved
 CodeX group_id. Leave this value unchanged.</li>
@@ -993,16 +965,16 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
     <pre>   php_value register_globals on</pre>
   </li>
   <li>Update the include_path variable to the following value:<br>
-    <pre>   php_value include_path "/home/httpd/SF/www/include:/home/httpd/SF:."</pre>
+    <pre>   php_value include_path "/usr/share/codex/src/www/include:/usr/share/codex/src:."</pre>
   </li>
   <li>Also set/tune some additional variable for upload size:<br>
     <pre>   php_value memory_limit 30M
    php_value post_max_size 20M
    php_value upload_max_file_size 20M
-   php_value upload_tmp_dir /home/large_tmp</pre>
+   php_value upload_tmp_dir /var/tmp</pre>
   </li>
-  <li>Use /home/large_tmp as temporary directory to store uploaded file:
-   <pre>   php_admin_value upload_tmp_dir /home/large_tmp</pre>
+  <li>Use /var/tmp as temporary directory to store uploaded file:
+   <pre>   php_admin_value upload_tmp_dir /var/tmp</pre>
   </li>
   <li>phpWiki also needs this parameter to avoid warnings:<br>
     <pre>   php_value allow_call_time_pass_reference on</pre>
@@ -1118,30 +1090,30 @@ start')</li>
 </ul>
 <h2>Create CodeX database</h2>
 <p>As root, run in a shell </p>
-<pre>		mysql -e "create database sourceforge"<br><br></pre>
+<pre>		mysql -e "create database codex"<br><br></pre>
 <h2>Define access permission</h2>
 <ul>
-  <li>Choose distinct&nbsp; passwords for the MySQL 'sourceforge'
+  <li>Choose distinct&nbsp; passwords for the MySQL 'codexadm'
 account &nbsp;<b>and</b> 'root' account. We recommend that you use the
-same passwords as those you chose for the sourceforge Unix account and
+same passwords as those you chose for the codexadm Unix account and
 root Unix account created earlier.&nbsp;</li>
   <li>Then run mysql on the mysql database: </li>
 </ul>
-<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to sourceforge@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
+<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to codexadm@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
 From now onwards if you want to use the mysql shell to interact with
 the CodeX database (think twice before doing any change by hand in the
 database !!!) you'll have to run the following command and type the
-sourceforge password when prompted:<br>
+codexadm password when prompted:<br>
 <br>
-<pre>		# mysql -u sourceforge sourceforge -p<br></pre>
+<pre>		# mysql -u codexadm codex -p<br></pre>
 <br>
 <h2>Populate the database</h2>
 To create the tables in the CodeX database and populate the database
 with the initial values run the script in <span
- style="font-family: monospace;">SF/utils/mksql.sh</span>. You can also
+ style="font-family: monospace;">src/utils/mksql.sh</span>. You can also
 decide to run the 2 operations separately using the following commands:
-<pre>cd /home/httpd/SF/db/mysql/<br>mysql -u sourceforge sourceforge -p &lt; database_structure.sql   # create the DB<br>mysql -u sourceforge sourceforge -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
-<pre>mysql -e "drop database sourceforge"<br><br></pre>
+<pre>cd /usr/share/codex/src/db/mysql/<br>mysql -u codexadm codex -p &lt; database_structure.sql   # create the DB<br>mysql -u codexadm codex -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
+<pre>mysql -e "drop database codex"<br><br></pre>
 <h2>MySQL configuration file</h2>
 The /etc/my.cnf configuration file is here to specify a number of
 configuration items that are going to be used by the MySQL engine at
@@ -1208,7 +1180,7 @@ below) and contains the aliases for all the mailing lists in the
 @lists.codex.xerox.com domain and the email aliases for users. **Never
 edit this file by hand**<br>
 <br>
-<u>/home/httpd/SF/utils/underworld-dummy/aliases.zone</u><br>
+<u>/usr/share/codex/src/utils/underworld-dummy/aliases.zone</u><br>
 <br>
 This is where you can define CodeX level aliases like codex-contact,
 codex-admin, etc. This file is currently under version control so if you
@@ -1238,7 +1210,7 @@ UPGRADING files (in case of an upgrade). Then compile and install it in
 /home/mailman .<br>
 <br>
 Also setup a mailman admin password once the installation is done (we
-recommend that you use the same password as the sourceforge account).
+recommend that you use the same password as the codexadm account).
 To
 this end use the 'mmsitepass' script in /home/mailman/bin.<br>
 <br>
@@ -1246,7 +1218,7 @@ You must also configure the Apache configuration <tt>httpd.conf</tt>
 to
 instruct Apache on how to access the Web based mailing manager and
 archiver. A sample configuration file is provided in the CodeX source
-code at <tt>SF/etc/mailman.conf.dist</tt> . Place this file in the
+code at <tt>src/etc/mailman.conf.dist</tt> . Place this file in the
 same
 directory as your <tt>httpd.conf</tt> file and include it at the end
 of <tt>httpd.conf</tt>.<br>
@@ -1289,12 +1261,12 @@ provided at <a
 <h2>fileforge</h2>
 <p>This is a small utility which is called by the Apache server to move
 files from the incoming ftp directory to the project file release space</p>
-<p>Go to /home/httpd/SF/utils. In fileforge.c, modify the following
+<p>Go to /usr/share/codex/src/utils. In fileforge.c, modify the following
 lines if need be </p>
-<pre>  char * src_dir   = "/home/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/home/ftp/codex/"; /* the file release space for CodeX projects */<br></pre>
+<pre>  char * src_dir   = "/var/lib/codex/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/codex/ftp/codex/"; /* the file release space for CodeX projects */<br></pre>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
-<pre>	# cd /usr/local/bin<br>	# chown root.sourceforge fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
+<pre>	# cd /usr/local/bin<br>	# chown root.codexadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
 <h2>gensmbpasswd</h2>
 This is a small utility called by CodeX login creation or change
 password script to generate the MD4 encoding of the user password that
@@ -1347,7 +1319,7 @@ CODEX because it is the name of the central site)<br>
     <br>
     </i></li>
   <li>Define the following shared resources:<br>
-    <pre>[homes]<br>   comment = User Home Directories<br>   browseable = no<br>   writable = yes<br><br>[Projects]<br>   comment = CodeX Project Directories<br>   path = /home/groups<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0775<br>   force directory mode = 2775<br>   map archive = no<br><br>[Ftp_Incoming]<br>   comment = Anonymous FTP Incoming Space for File Releases<br>   path = /home/ftp/incoming<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0644<br>   map archive = no</pre>
+    <pre>[homes]<br>   comment = User Home Directories<br>   browseable = no<br>   writable = yes<br><br>[Projects]<br>   comment = CodeX Project Directories<br>   path = /home/groups<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0775<br>   force directory mode = 2775<br>   map archive = no<br><br>[Ftp_Incoming]<br>   comment = Anonymous FTP Incoming Space for File Releases<br>   path = /var/lib/codex/ftp/incoming<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0644<br>   map archive = no</pre>
   </li>
 </ul>
 <br>
@@ -1363,10 +1335,10 @@ Packages</a>)</li>
 follows:<br>
     <br>
     <tt># mkdir /svnroot<br>
-# chown sourceforge.sourceforge /svnroot</tt><tt><br>
+# chown codexadm.codexadm /svnroot</tt><tt><br>
 # chmod 775 /svnroot</tt><tt><br>
 # touch </tt><span style="font-family: monospace;">/etc/httpd/conf/htpasswd</span><br>
-    <tt># chown sourceforge.sourceforge </tt><span
+    <tt># chown codexadm.codexadm </tt><span
  style="font-family: monospace;">/etc/httpd/conf/htpasswd</span><tt><br>
 # chmod 644 </tt><span style="font-family: monospace;">/etc/httpd/conf/htpasswd</span></li>
 </ul>
@@ -1388,7 +1360,7 @@ Packages</a>)</li>
   <li>Create the <tt>/etc/cvs_root_allow</tt> file as follows:<br>
     <br>
     <tt># touch /etc/cvs_root_allow<br>
-# chown sourceforge.sourceforge /etc/cvs</tt><tt>_root</tt><tt>_allow<br>
+# chown codexadm.codexadm /etc/cvs</tt><tt>_root</tt><tt>_allow<br>
 # chmod 644 /etc/cvs</tt><tt>_root</tt><tt>_allow</tt></li>
 </ul>
 Then you have to decide what type of CVS access you want to offer to
@@ -1425,7 +1397,7 @@ server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 = /usr/bin/cvs<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 server_args&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = -f -z3
--T/home/large_tmp --allow-root-file=/etc/cvs_root_allow pserver<br>
+-T/var/tmp --allow-root-file=/etc/cvs_root_allow pserver<br>
 }</tt></li>
 </ul>
 The benefit of using the pserver approach is that you can define who
@@ -1454,7 +1426,7 @@ service cvspserver
        group           = root
        log_type        = FILE /var/log/cvspserver
        server          = /usr/bin/cvsnt
-       server_args     = -f -z3 -T/home/large_tmp authserver
+       server_args     = -f -z3 -T/var/tmp authserver
        groups          = yes
        log_on_failure  += USERID
        mdns            = no # Lockserver handles mdns broadcast
@@ -1465,10 +1437,10 @@ service cvspserver
 chkconfig --add cvslockd
 service cvslockd start
 </pre>
-<li>Copy '/home/httpd/SF/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
+<li>Copy '/usr/share/codex/src/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
 Note that the sserver protocol uses the same SSL certificates as the https protocol.
 If your CodeX server is not yet configured for HTTPS, you need to generate a certificate.
-<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /home/httpd/SF/utils/cvs1/cvs2cvsnt.pl.
+<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /usr/share/codex/src/utils/cvs1/cvs2cvsnt.pl.
 
 </ul>
 <h2>The SSH approach</h2>
@@ -1502,24 +1474,24 @@ This feature is activated in the CVS Web interface of the CodeX Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; # cd /</tt><tt>home/httpd/SF/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/local/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/local/bin</tt></pre>
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /</tt><tt>home/httpd/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/local/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/local/bin</tt></pre>
 The log_accum script in requires the
-sourceforge group ownership to execute properly. <b><font
+codexadm group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
-<pre>	# cd /usr/local/bin<br>	# chown sourceforge.sourceforge log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
+<pre>	# cd /usr/local/bin<br>	# chown codexadm.codexadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
 Be careful that you must set the uid bit again whenever the log_accum
 script is updated from CVS and copied again into the /usr/local/bin
 directory.<br>
 <tt><br>
 </tt>
 <h2>Browsing the CVS Trees</h2>
-The ViewCVS package is delivered as part of the CodeX software and
+The ViewVC package is delivered as part of the CodeX software and
 allows CodeX users to browse both CVS and Subversion repositories from
-their Webbrowser. After installing the ViewCVS RPM package (see&nbsp;<a
+their Web browser. After installing the ViewVC RPM package (see&nbsp;<a
  href="#Installing_the_CodeX_Software">#Installing_the_CodeX_Software</a>
-), a cgi-bin directory is created with the viewcvs.cgi script in it.
-The ViewCVS configuration file is at <span
- style="font-family: monospace;">/etc/codex/conf/viewcvs.conf</span>.<br>
+), a cgi-bin directory is created with the viewvc.cgi script in it.
+The ViewVC configuration file is at <span
+ style="font-family: monospace;">/etc/codex/conf/viewvc.conf</span>.<br>
 <br>
 <hr>
 <h1><a name="FTP_Configuration"></a>FTP Configuration</h1>
@@ -1558,14 +1530,14 @@ nice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
     <tt>class&nbsp;&nbsp; all&nbsp;&nbsp; real,guest,anonymous&nbsp; *<br>
 class anonftp anonymous *<br>
     <br>
-upload /home/ftp * no<br>
-upload /home/ftp /bin no<br>
-upload /home/ftp /etc no<br>
-upload /home/ftp /lib no<br>
+upload /var/lib/codex/ftp * no<br>
+upload /var/lib/codex/ftp /bin no<br>
+upload /var/lib/codex/ftp /etc no<br>
+upload /var/lib/codex/ftp /lib no<br>
 noretrieve .notar<br>
-upload /home/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs<br>
-noretrieve /home/ftp/incoming<br>
-noretrieve /home/ftp/codex<br>
+upload /var/lib/codex/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs<br>
+noretrieve /var/lib/codex/ftp/incoming<br>
+noretrieve /var/lib/codex/ftp/codex<br>
     <br>
 email root@localhost<br>
     <br>
@@ -1603,7 +1575,7 @@ shutdown /etc/shutmsg<br>
 passwd-check rfc822 warn<br>
     <br>
     </tt></li>
-  <li>Under /home/ftp, create the exact same hierarchy and files as on
+  <li>Under /var/lib/codex/ftp, create the exact same hierarchy and files as on
 the CodeX production server.<tt><br>
     </tt></li>
 </ul>
@@ -1645,7 +1617,7 @@ cron job s/he will have /bin/bash as a shell and therefore s/he will be
 given full shell capabilities. You can later decide to change the shell
 of a given user through the user admin interface of the CodeX Web site
 and use a restricted shell like the ones CodeX provide in
-SF/utils/cvs1/:
+src/utils/cvs1/:
 <ul>
 <li><b>cvssh</b>: This is a little script that simply check the
 command that are remotely executed through ssh by the user (it can be
@@ -1667,7 +1639,7 @@ interface. Note: This is already done for you on CodeX versions after 2.4</li>
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
-    <pre>$ mysql -u sourceforge sourceforge -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/local/bin/cvssh' ;</pre>
+    <pre>$ mysql -u codexadm codex -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/local/bin/cvssh' ;</pre>
   </li>
 </ul>
 <br>
@@ -1680,7 +1652,7 @@ The procedure is as follows:<br>
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
-    <pre>$ mysql -u sourceforge sourceforge -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/bin/false' ;</pre>
+    <pre>$ mysql -u codexadm codex -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/bin/false' ;</pre>
   </li>
 </ul>
 Note: if you do this then you must use the pserver or sserver protocols to access
@@ -1719,7 +1691,7 @@ configuration file (local.inc)</h2>
 The PHP scripts take many values from a configuration file located in <span
  style="font-family: monospace;">/etc/codex/conf/local.inc</span>. This
 file must
-be initially copied from the <span style="font-family: monospace;">SF/etc/local.inc.dist</span>
+be initially copied from the <span style="font-family: monospace;">src/etc/local.inc.dist</span>
 file and the values must be changed accordingly for your site. Make
 sure that you read this file where the role of each variable is well
 documented.<br>
@@ -1729,7 +1701,7 @@ Sheets (CSS). &nbsp;Therefore CodeX UI is customizable to large extent.
 The Graphical user interface elements of CodeX come in the following
 directory:
 <dl>
-	<dt><tt>SF/www/themes/</tt></dt>
+	<dt><tt>src/www/themes/</tt></dt>
 	<dd>
 		<div>Each sub-directory in this place contains a given theme which name 
 		is the sub-directory name. By default CodeX comes with the 'CodeX', 
@@ -1776,23 +1748,23 @@ they are all placed under the top directory <tt>'site-content'</tt>.
 &nbsp;The file path to the content of a given script (or part of a
 script) follows the following pattern:<br>
 <br>
-<tt>site-content/<i>LANG_COUNTRY</i>/<i>SF_path</i>/<i>whattext</i>.txt</tt><br>
+<tt>site-content/<i>LANG_COUNTRY</i>/<i>src_path</i>/<i>whattext</i>.txt</tt><br>
 <br>
 where:<br>
 <ul>
   <li>LANG_COUNTRY is the standard ISO naming for language and
 countries: Currently CodeX supports two languages: en_US (American English) and fr_FR (French).</li>
-  <li>SF_path is the name of the directory under SF which contains the
+  <li>src_path is the name of the directory under src which contains the
 script the text belongs to.</li>
   <li>whattext.txt is a file name that contains the piece of text itself<br>
   </li>
 </ul>
 By default the site-content directory should be stored in the same
-place as the SF directory (PHP scripts). &nbsp;Make sure you update the
+place as the src directory (PHP scripts). &nbsp;Make sure you update the
 <tt>$sys_incdir</tt>
 variable in <tt>/etc/codex/conf/local.inc</tt> to reflect the path to
 the <tt>site-content</tt>
-directory (default is <tt>/home/httpd/site-content</tt>).<br>
+directory (default is <tt>/usr/share/codex/site-content</tt>).<br>
 <br>
 To customize the content of a given script for your site go through the
 following steps:<br>
@@ -1804,7 +1776,7 @@ directory if it doesn't exist.</li>
 original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/codex/site-content/<i></i></tt>
 with the exact same path. For instance if you want to customize the
 introductory text of the CodeX home page, copy <span
- style="font-family: monospace;">/home/httpd/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
+ style="font-family: monospace;">/usr/share/codex/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
 into and <span style="font-family: monospace;">/etc/site-content/en_US/homepage/welcome_intro.txt</span>
 edit it as you like.<br>
     <br>
@@ -1824,7 +1796,7 @@ Currently, CodeX supports the English and French languages.
 <br>The format of the message files is very simple: one line per message, with the following format:<br>
 <pre>   key1[tab]key2[tab]your message here</pre>
 <p>As with other site-content files, you may customize the language files, so that you can change a few specific messages:
-<ol><li>Copy the language file you need to customize from the /home/httpd/site-content subdirectory to the corresponding subdirectory in /etc/codex/site-content (see <a href="#Site_content">Site content</a> above)
+<ol><li>Copy the language file you need to customize from the /usr/share/codex/site-content subdirectory to the corresponding subdirectory in /etc/codex/site-content (see <a href="#Site_content">Site content</a> above)
 <li>Remove all lines that you don't need to change, and only keep the lines you will modify.
 <li>Change the messages
 <li>Repeat the operation for all the languages you need to support on your CodeX server.
@@ -1833,8 +1805,8 @@ Currently, CodeX supports the English and French languages.
 <p>When looking for a message to display, CodeX will look successively in the following directories, stopping as soon as the message is found:
 <ol><li>Theme-specific message file
 <li>/etc/codex/site-content/<i>user_lang</i> directory
-<li>/home/httpd/site-content/<i>user_lang</i> directory
-<li>/home/httpd/site-content/en_US directory (if the message file does not exist in the selected language)
+<li>/usr/share/codex/site-content/<i>user_lang</i> directory
+<li>/usr/share/codex/site-content/en_US directory (if the message file does not exist in the selected language)
 </ol>
 
 <h2>Site Documentation</h2>
@@ -1863,39 +1835,39 @@ is
 stored under the top level '<tt>documentation</tt>' directory in the
 CodeX source repository. To activate the on-line help simply check out the
 <tt>documentation</tt> directory
-at the same place as the <tt>SF</tt> and <tt>site-content</tt>
+at the same place as the <tt>src</tt> and <tt>site-content</tt>
 directories.<br>
 <font style="font-weight: bold;" color="#ff0000"><br>
 **IMPORTANT REMARK**</font><br>
 The User Guide contain references to the company name, server name
 running CodeX,etc. These pieces of information vary from one site to
 another. Therefore a specific file has been introduced at <span
- style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/ParametersLocal.dtd</span>
+ style="font-family: monospace;">/usr/share/codex/documentation/user_guide/xml/ParametersLocal.dtd</span>
 that you can use to customize the&nbsp; content of the CodeX User
 Guide. To do so:<br>
 <ul>
-  <li>Copy <span style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/ParametersLocal.dtd
+  <li>Copy <span style="font-family: monospace;">/usr/share/codex/documentation/user_guide/xml/ParametersLocal.dtd
 to </span><span style="font-family: monospace;"><span
  style="font-family: monospace;">/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
   <li>Edit the file you just copied and redefine the XML entities that
 govern
 the site specific information. For a list of the available XML entities
 that you can redefine see the <span style="font-family: monospace;"><span
- style="font-family: monospace;">/home/httpd/documentation/user_guide/xml/en_US/</span></span><span
+ style="font-family: monospace;">/usr/share/codex/documentation/user_guide/xml/en_US/</span></span><span
  style="font-family: monospace;">ParametersDefault.dtd</span> . <br>
   </li>
   <li>Regenerate the documentation by running <span
  style="font-family: monospace;">the script
-/home/httpd/SF/utils/generate_doc.sh</span></li>
+/usr/share/codex/src/utils/generate_doc.sh</span></li>
 </ul>
 <br>
 Also notice that the HTML and PDF versions of the CUG are <b>not</b>
 stored in the source repository. They are generated from the XML files
-using the script&nbsp; <span style="font-family: monospace;">/home/httpd/SF/utils/generate_doc.sh</span>.
+using the script&nbsp; <span style="font-family: monospace;">/usr/share/codex/src/utils/generate_doc.sh</span>.
 You can run this
 script
-by hand from the sourceforge Linux account and our advice is also to
-include it in the sourceforge crontab so that it runs once a day and
+by hand from the codexadm Linux account and our advice is also to
+include it in the codexadm crontab so that it runs once a day and
 automatiacally regenerate the documentation when needed.<br>
 <br>
 For the script to work properly you must have the JRE (Java Runtime
@@ -1905,10 +1877,10 @@ software packages to install</a>.<br>
 <h2>Project Web Site</h2>
 When a project is registered on CodeX a new web site is created for
 that project. A default home page is installed for that project from
-the <span style="font-family: monospace;">/home/httpd/site-content/en_US/others/default_page.php</span>
+the <span style="font-family: monospace;">/usr/share/codex/site-content/en_US/others/default_page.php</span>
 file. You may want to create your own custom
 file for your own CodeX site. To do so, copy the <span style="font-family: monospace;">
-/home/httpd/site-content/en_US/others/default_page.php</span> file
+/usr/share/codex/site-content/en_US/others/default_page.php</span> file
 in the <span style="font-family: monospace;">/etc/codex/site-content/en_US/others/</span>
 directory if not already
 there. Then, edit the custom file and customize it to your liking<br>
@@ -1992,7 +1964,7 @@ multiple directories or mirrors by using a comma separated list of servers. To s
 <h1><a name="Backend_Scripts"></a>Backend Scripts<br>
 </h1>
 Most of the backend scripts used by the CodeX system are writen in Perl
-and are located in <tt>/home/httpd/SF/utils</tt>. Many of these script
+and are located in <tt>/usr/share/codex/src/utils</tt>. Many of these script
 use the<tt> include.pl</tt> file and, in case you did not follow the
 standard installation process explained in this document, you may have
 to customize the content of this include file to match your site
@@ -2019,18 +1991,18 @@ server (including the CVS repo). <br>
 <blockquote><tt># run the Codex crontab script once every 2 hours</tt><br>
   <tt># this script synchronizes user, groups, cvs repo, </tt><br>
   <tt># directories, mailing lists, etc...</tt><br>
-  <tt>0 0-23/2 * * * /home/httpd/SF/utils/xerox_crontab.sh </tt><br>
+  <tt>0 0-23/2 * * * /usr/share/codex/src/utils/xerox_crontab.sh </tt><br>
   <tt>#</tt><br>
   <tt># run the daily statistics script just a little bit after</tt><br>
   <tt># midnight so that it computes stats for the day before</tt><br>
   <tt># Run at 0:30 am</tt><br>
-  <tt>30 0 * * * /home/httpd/SF/utils/xerox_all_daily_stats.sh</tt><br>
+  <tt>30 0 * * * /usr/share/codex/src/utils/xerox_all_daily_stats.sh</tt><br>
   <tt>#</tt><br>
   <tt># run the weekly stats for projects. Run it on Monday morning so
 that</tt><br>
   <tt># it computes the stats for the week before</tt><br>
   <tt># Run on Monday at 1am</tt><br>
-  <tt>0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root;
+  <tt>0 1 * * Mon (cd /usr/share/codex/src/utils/underworld-root;
 ./db_project_weekly_metric</tt><tt>.pl)</tt><br>
   <tt># daily incremental backup of subversion repositories</tt><br>
   <tt>45 23 * * 1-6 /home/tools/backup_subversion.sh -i</tt><br>
@@ -2044,7 +2016,7 @@ that</tt><br>
   <tt># Delete all files in FTP incoming that are older than 2 weeks
 (336 hours)</tt><br>
   <tt>#</tt><br>
-  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming</tt><br>
+  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codex/ftp/incoming</tt><br>
   <tt>#</tt><br>
   <tt>#</tt><br>
   <tt># Once a minute make sure that the setuid bit is set on some critical files</tt><br>
@@ -2054,9 +2026,9 @@ that</tt><br>
 Please note that your own root crontab should probably contain some
 additional jobs like may be stopping the mysql engine before starting
 your backup procedure or something similar.<br>
-<h2>SourceForge crontab</h2>
+<h2>Codexadm crontab</h2>
 <blockquote><tt># Re-generate the CodeX User Guide on a daily basis</tt><br>
-  <tt>00 03 * * * /home/httpd/SF/utils/generate_doc.sh</tt><br>
+  <tt>00 03 * * * /usr/share/codex/src/utils/generate_doc.sh</tt><br>
   <br>
 </blockquote>
 <br>
@@ -2093,7 +2065,7 @@ month=`date +%m`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 day=`date +%d`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-destdir="/home/log/$year/$month"</span><br
+destdir="/var/log/codex/$year/$month"</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 destfile="http_combined_$year$month$day.log"</span><br
@@ -2135,7 +2107,7 @@ day=`date +%d`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 server=`hostname`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-destdir="/home/log/$server/$year/$month"</span><br
+destdir="/var/log/codex/$server/$year/$month"</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 destfile="vhosts-access_$year$month$day.log"</span><br
@@ -2234,7 +2206,7 @@ month=`date +%m`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 day=`date +%d`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-destdir="/home/log/$year/$month"</span><br
+destdir="/var/log/codex/$year/$month"</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 destfile="ftp_xferlog_$year$month$day.log"</span><br
@@ -2262,10 +2234,10 @@ CodeX site adminstrator. Installation is really easy:<br>
  href="http://www.phpwizard.net/projects/phpMyAdmin/">http://www.phpwizard.net/projects/phpMyAdmin/</a>
 . <br>
   </li>
-  <li>Uncompressed the file in <span style="font-family: monospace;">/home/httpd</span>.
+  <li>Uncompressed the file in <span style="font-family: monospace;">/usr/share/codex</span>.
 You should see a new
 directory called phpMyAdmin-X.Y.Z (where X.Y.Z is the version number)</li>
-  <li>In <span style="font-family: monospace;">/home/httpd</span>,
+  <li>In <span style="font-family: monospace;">/usr/share/codex</span>,
 create a symbolic link called phpMyAdmin to the
 phpMyAdmin-X.Y.Z directory</li>
   <li>Edit config.inc.php and change the following lines to reflect
@@ -2301,14 +2273,14 @@ $cfgServers[$i]['auth_type']&nbsp;&nbsp;&nbsp;&nbsp; =
 'http';&nbsp;&nbsp;&nbsp; // Authentication method (config, <br>
 http or cookie based)?<br>
 $cfgServers[$i]['user']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= 'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
+= 'codexadm';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
 $cfgServers[$i]['password']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
 '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
 password (only needed<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 // with 'config' auth_type)<br>
 $cfgServers[$i]['only_db']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'sourceforge';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+'codex';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
 $cfgServers[$i]['verbose']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
 '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Verbose
 name for this host -<br>
@@ -2332,7 +2304,7 @@ describe the relation between links (see doc)<br>
   <li>When you access the phpMyAdmin GUI at
 http://<span style="font-style: italic;">your.codex.domain</span>/phpMyAdmin
 you'll be prompted for a
-user name and password. Use the MySQL 'sourceforge' login and password.<tt><br>
+user name and password. Use the MySQL 'codexadm' login and password.<tt><br>
     </tt></li>
 </ul>
 <p> </p>
