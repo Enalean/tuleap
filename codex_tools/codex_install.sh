@@ -30,7 +30,7 @@ cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
-TODO_FILE=/tmp/todo_codex.txt
+TODO_FILE=/root/todo_codex.txt
 INSTALL_DIR="/usr/share/codex"
 
 # path to command line tools
@@ -150,7 +150,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql mysql MySQL-python php-mbstring \
-   perl-DateManip sysstat
+   perl-DateManip sysstat curl aspell
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -255,6 +255,7 @@ build_dir /home/users codexadm codexadm 775
 build_dir /home/groups codexadm codexadm 775
 
 build_dir /home/dummy dummy dummy 700 #XXX
+build_dir /home/codexadm codexadm codexadm 700 #XXX
 
 build_dir /var/lib/codex codexadm codexadm 700
 build_dir /var/lib/codex/dumps dummy dummy 755
@@ -267,7 +268,6 @@ build_dir /var/lib/codex/ftp/codex root root 755
 build_dir /var/lib/codex/ftp/pub ftpadmin ftpadmin 755
 build_dir /var/lib/codex/ftp/incoming ftpadmin ftpadmin 3777
 
-#build_dir /home/large_tmp root root 1777
 build_dir /var/log/codex codexadm codexadm 755
 build_dir /var/log/codex/cvslogs codexadm codexadm 775
 build_dir /home/mailman mailman mailman 2775 #XXX
@@ -319,6 +319,7 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 755
 # SELinux specific
 chcon -R -h -t httpd_sys_content_t /usr/share/codex
 chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
+chcon -R -h -t httpd_sys_content_t /etc/codex
 chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
 
 ######
@@ -372,11 +373,11 @@ echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 #$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
-$RPM -Uvh --force ${newest_rpm}/mod_dav_svn*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-perl*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
+$RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
 
 # Restart Apache after subversion is installed
 # so that mod_dav_svn module is taken into account
@@ -1234,7 +1235,7 @@ todo "This TODO list is available in $TODO_FILE"
 
 # End of it
 echo "=============================================="
-echo "Installation completed succesfully!"
+echo "Installation completed successfully!"
 $CAT $TODO_FILE
 
 exit 0
