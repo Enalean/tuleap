@@ -24,7 +24,7 @@
 
 #
 # CodeX documentation
-Alias /documentation/ "/usr/share/codex/documentation"
+Alias /documentation/ "/usr/share/codex/documentation/"
 
 <Directory "/usr/share/codex/documentation">
     Options MultiViews
