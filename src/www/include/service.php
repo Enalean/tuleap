@@ -21,7 +21,7 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
     } else {
       //for non-system templates
-      $link=str_replace($template['name'],$group->getUnixName(),$link);
+      $link=str_replace($template['name'],group_getunixname($group_id),$link);
       $link=str_replace($template['id'],$group_id,$link);
     }
 
