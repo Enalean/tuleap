@@ -82,7 +82,7 @@ if ( $field->isSelectBox() ) {
 
 
 // Display the customized help frame at the top with info for this specific field
-if ($field_info) {
+if (isset($field_info) && $field_info) {
 
     // Show the artifact field info in the top frame
     help_header($Language->getText('help_browse_tracker_query_field','art_search_criteria'));
