@@ -740,16 +740,6 @@ class DocmanActions extends Actions {
                     $this->_controler->feedback->log('error', 'Fail to create "Comment / Keywords" metadata');
                 }
                 //}}}
-                //Add service
-                $service_created = false;
-                $sql="SELECT * FROM service WHERE group_id=100 AND is_active=1 AND short_name = 'docman'";
-                $result=db_query($sql);
-                if ($arr = db_fetch_array($result)) {
-                    $service_created = service_create_service($arr, $request->get('group_id'), array('system' => true), $force_enable = true);
-                }
-                if (!$service_created) {
-                    $this->_controler->feedback->log('error', 'cant_create_service');
-                }
             } else {
                 $this->_controler->feedback->log('error', 'Unable to install docman.');
                 $this->_controler->view = 'ProjectError';
