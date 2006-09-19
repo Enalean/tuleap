@@ -10,11 +10,6 @@ require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
 
 require_once('common/tracker/ArtifactRuleFactory.class');
 
-//require_once('common/tracker/ArtifactType.class'); //We cannot mock directly ArtifactType because this file cannot be directly included
-class ArtifactType {
-    function getId() {}
-}
-Mock::generate('ArtifactType');
 require_once('common/dao/ArtifactRuleDao.class');
 Mock::generate('ArtifactRuleDao');
 require_once('common/dao/include/DataAccessResult.class');

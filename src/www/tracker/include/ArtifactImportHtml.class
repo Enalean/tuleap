@@ -52,10 +52,8 @@ class ArtifactImportHtml extends ArtifactImport {
     }
     
     $ok = $this->parse($csv_filename,$is_tmp,
-		$used_fields,$fields,$artifacts_data,
-		$aid_column,$submitted_by_column,$submitted_on_column,
-		$number_inserts,$number_updates,
-		$errors);
+		$artifacts_data,
+		$number_inserts,$number_updates);
     
       $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			  'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
@@ -63,32 +61,28 @@ class ArtifactImportHtml extends ArtifactImport {
       
       echo '<h2>'.$Language->getText('tracker_import','parse_report').'</h2>';
       if (!$ok) {
-	$this->showErrors($errors);
+	$this->showErrors();
       } else {
 	echo $Language->getText('tracker_import','ready',array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
-	$this->showParseResults($used_fields,$fields,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column);
+	$this->showParseResults($this->parsed_labels,$artifacts_data);
       }
       
       $this->ath->footer(array());
   }
   
 
-function showErrors($errors) {
-  echo $errors." <br>\n";
+function showErrors() {
+  echo $this->getErrorMessage()." <br>\n";
 }
 
 
   /**
  * create the html output to visualize what has been parsed
- * @param $used_fields: array containing all the fields that are used in this tracker
  * @param $parsed_labels: array of the form (column_number => field_label) containing
  *                        all the fields parsed from $data
  * @param $artifacts_data: array containing the records for each artifact to be imported
- * @param $aid_column: the column in the csv file that contains the arifact id (-1 if not given)
- * @param $submitted_by_column: the column in the csv file that contains the Submitter (-1 if not given)
- * @param $submitted_on_column: the column in the csv file that contains the artifact creation date (-1 if not given)
  */
-  function showParseResults($used_fields,$parsed_labels,$artifacts_data,$aid_column,$submitted_by_column,$submitted_on_column) {
+  function showParseResults($parsed_labels,$artifacts_data) {
     global $PHP_SELF,$sys_datefmt,$Language;
 
     $this->getImportUser($sub_user_id,$sub_user_name);
@@ -98,13 +92,13 @@ function showErrors($errors) {
     //add submitted_by and submitted_on columns only when 
     //artifact_id is not given otherwise the artifacts should
     //only be updated and we don't need to touch sub_on and sub_by
-    if ($aid_column == -1 && $submitted_by_column == -1) {
+    if ($this->aid_column == -1 && $this->submitted_by_column == -1) {
       $new_sub_by_col = count($parsed_labels);
       $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
       $parsed_labels[] = $submitted_by_field->getLabel();
     }
     
-    if ($aid_column == -1 && $submitted_on_column == -1) {
+    if ($this->aid_column == -1 && $submitted_on_column == -1) {
       $new_sub_on_col = count($parsed_labels);
       $open_date_field = $this->art_field_fact->getFieldFromName('open_date');
       $parsed_labels[] = $open_date_field->getLabel();
@@ -121,7 +115,7 @@ function showErrors($errors) {
     for ($i=0; $i < count($artifacts_data) ; $i++) {
       
       $data = $artifacts_data[$i];
-      if ($aid_column != -1) $aid = $data[$aid_column];
+      if ($this->aid_column != -1) $aid = $data[$this->aid_column];
       
       echo '<TR class="'.util_get_alt_row_color($i).'">'."\n";
       
@@ -138,7 +132,7 @@ function showErrors($errors) {
 	//SUBMITTED_ON
 	if ($parsed_labels[$c] == $open_date_field->getLabel()) {
 	  //if insert show default value
-	  if ($aid_column == -1 || $aid == "") {
+	  if ($this->aid_column == -1 || $aid == "") {
 	    if ($value == "") {
 	      echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
 	    } else {
@@ -151,7 +145,7 @@ function showErrors($errors) {
 	  
 	  //SUBMITTED_BY
 	} else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
-	  if ($aid_column == -1 || $aid == "") {
+	  if ($this->aid_column == -1 || $aid == "") {
 	    if ($value == "") {
 	      echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
 	    } else {
@@ -170,9 +164,9 @@ function showErrors($errors) {
 	  //FOLLOW_UP COMMENTS
 	  if ($parsed_labels[$c] == $this->lbl_list['follow_ups']) {
 	    unset($parsed_comments);
-	    unset($parse_error);
-	    $art_id = (($aid_column != -1 && $aid != "") ? $aid : "0");
-	    if ($this->parseFollowUpComments($data[$c],$parsed_comments,$parse_error,$art_id,true)) {
+	    $this->clearError();
+	    $art_id = (($this->aid_column != -1 && $aid != "") ? $aid : "0");
+	    if ($this->parseFollowUpComments($data[$c],$parsed_comments,$art_id,true)) {
 	      if (count($parsed_comments) > 0) {
 		echo '<TD $width valign="top"><TABLE>';
 		echo '<TR class ="boxtable"><TD class="boxtitle">'.$Language->getText('tracker_import_utils','date').'</TD><TD class="boxtitle">'.$Language->getText('global','by').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','type').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','comment').'</TD></TR>';
@@ -187,7 +181,7 @@ function showErrors($errors) {
 		echo "<TD $width align=\"center\">-</TD>\n";
 	      }
 	    } else {
-	      echo "<TD $width><I>".$Language->getText('tracker_import_utils','comment_parse_error',$parse_error)."</I></TD>\n";
+	      echo "<TD $width><I>".$Language->getText('tracker_import_utils','comment_parse_error',$this->getErrorMessage())."</I></TD>\n";
 	    }
 	    
 	    //DEFAULT
@@ -217,7 +211,7 @@ function showErrors($errors) {
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->group->group_id.'">
         <INPUT TYPE="HIDDEN" NAME="func" VALUE="import">
         <INPUT TYPE="HIDDEN" NAME="mode" VALUE="import">
-        <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="'.$aid_column.'">
+        <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="'.$this->aid_column.'">
         <INPUT TYPE="HIDDEN" NAME="count_artifacts" VALUE="'.count($artifacts_data).'">';
     
     while (list(,$label) = each($parsed_labels)) {
@@ -244,14 +238,15 @@ function showErrors($errors) {
    *
    *
    */
-  function displayImport($parsed_labels,$artifacts_data,$aid_column) {
+  function displayImport($parsed_labels,$artifacts_data,$aid_column,$count_artifacts) {
     global $feedback,$Language;
-    
+
     $notify = false;
     if(user_get_preference('tracker_import_notify_'.$this->ath->getID()) == '1') {
         $notify = true;
     }
 
+    $errors = "";
     $ok = $this->updateDB($parsed_labels,$artifacts_data,$aid_column,$errors, $notify);
     
     if ($ok) $feedback = $Language->getText('tracker_import','success_import',$count_artifacts)." ";

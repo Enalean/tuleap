@@ -726,7 +726,7 @@ if ( $func == 'gotoid' ) {
 		 }
 		 $artifacts_data[] = $data;
 	       }
-	       $import->displayImport($parsed_labels,$artifacts_data,$aid_column);
+	       $import->displayImport($parsed_labels,$artifacts_data,$aid_column,$count_artifacts);
 	       require('./browse.php');
 
 	     } else if (isset($mode) && $mode == "showformat") {
