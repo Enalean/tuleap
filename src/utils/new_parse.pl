@@ -823,6 +823,8 @@ sub add_group {
 		mkdir $ht_dir, 0775;
 		chown $dummy_uid, $gid, ($group_dir, $cgi_dir, $ht_dir);
                 chmod 02775, ($group_dir, $cgi_dir, $ht_dir);
+                chcon -R -h -t httpd_sys_content_t $cgi_dir
+                chcon -R -h -t httpd_sys_content_t $ht_dir
 
 		# Copy the default empty page for Web site
 		# Check if a custom page exists
