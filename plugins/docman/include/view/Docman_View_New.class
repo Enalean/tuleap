@@ -43,7 +43,7 @@ require_once('Docman_View_ParentsTree.class');
 
         $html .= '<div class="properties">'."\n";
         //{{{ General Properties
-        $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</legend>';
+        $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') . help_button('DocumentManager') .'</legend>';
         $html .= $this->_getGeneralProperties($params);
         $html .= '<p><span class="highlight"><em>'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</em></span></p>';
         //}}}
@@ -52,7 +52,7 @@ require_once('Docman_View_ParentsTree.class');
 
         
         //{{{ Location
-        $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</legend>';
+        $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') . help_button('DocumentManager') .'</legend>';
         
         $potential_parent_id = isset($params['force_item']['parent_id']) ? $params['force_item']['parent_id'] : $params['item']->getId();
         $potential_parent_id = $this->_controller->userCanWrite($potential_parent_id) ? $potential_parent_id : false;
@@ -75,7 +75,7 @@ require_once('Docman_View_ParentsTree.class');
         //{{{ Specific Properties
         $specific = $this->_getSpecificProperties($params);
         if (trim($specific)) {
-            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</legend>';
+            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') . help_button('DocumentManager') .'</legend>';
             $html .= $specific;
             $html .= '</fieldset>';
         }
