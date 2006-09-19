@@ -30,7 +30,7 @@ wiki_views_wikiserviceviews	menuadmin	Admin
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
 wiki_views_wikiserviceviews	menuattch	Joindre un fichier
-wiki_views_wikiserviceviews	menuprefs       Préférences
+wiki_views_wikiserviceviews	menuprefs	Préférences
 wiki_views_wikiserviceviews	lock_title_spec	Il y a des permissions sur cette Page Wiki
 wiki_views_wikiserviceviews	lock_title_set	Il y a des permissions sur ce Wiki
 wiki_views_wikiserviceviews	lock_alt	Verrou
@@ -53,7 +53,6 @@ wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécif
 wiki_lib_attachment_rev	err_multi_id	Plusieurs identificateurs pour le même fichier joint. Prière de <a href="mailto:$1?Subject=Wiki Attachment Error (attch:$2,rev:$3)" title="envoyer un mail à l'administrateur de $4">contacter</a> l'administrateur de $4.
 wiki_lib_attachment_rev	err_upl_mv	L'upload de '$1' a échoué.
 wiki_lib_attachment_rev	err_create	Une erreur est survenue lors de la création du numéro de révision du fichier joint. Enregistrement non crée dans la base de données
-wiki_lib_attachment_rev	err_too_big	Sorry but this file is too big.
 wiki_lib_attachment_rev	err_too_big	Désolé, ce fichier est très volumineux.
 #
 #
