@@ -94,7 +94,7 @@ textarea {
 .contenttable { background-color: #FFFFFF; vertical-align: top; width: 99%; border-spacing: 0; border: 0; }
 
 /* left menu specific */
-.menuframe { background-color: #f4d495; vertical-align: top; horitontal-align: left; width: 60px; }
+.menuframe { background-color: #f4d495; vertical-align: top; text-align: left; width: 60px; }
 .menutable { background-color: #f4d495; vertical-align: top; width: 150px; border-spacing: 0; border: 0;  font-size: small;}
 .menutitle { vertical-align: top; font-weight: bold; text-align: left; color: #333333; }
 .menuitem { vertical-align: top; text-align: right; color: #333333; }
