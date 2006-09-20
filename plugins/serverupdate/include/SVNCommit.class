@@ -96,6 +96,9 @@ class SVNCommit {
     function needManualUpdate() {
         return $this->metaData->getNeedManualUpdate();
     }
+    function containsDBUpdate() {
+        return $this->metaData->containsDBUpdate();
+    }
     
     /**
      * Returns the commited files that are "upgrade scripts"

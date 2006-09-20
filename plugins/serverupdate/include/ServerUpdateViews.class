@@ -438,9 +438,7 @@ class ServerUpdateViews extends Views {
         $filter = new SVNUpdateFilter();
         
         if (isset($GLOBALS['sort'])) {
-            $filter->addCriteria('level_op', $GLOBALS['level_op']);
             $filter->addCriteria('level', $GLOBALS['level']);
-            $filter->addCriteria('manualupdate', $GLOBALS['manualupdate']);
         }
         
         $output .= $filter->getHtmlForm();
@@ -487,9 +485,7 @@ class ServerUpdateViews extends Views {
         
         if (isset($GLOBALS['sort'])) {
             $filter = new SVNUpdateFilter();
-            $filter->addCriteria('level_op', $GLOBALS['level_op']);
             $filter->addCriteria('level', $GLOBALS['level']);
-            $filter->addCriteria('manualupdate', $GLOBALS['manualupdate']);
             $commits = $filter->apply($commits);
         }
         
@@ -510,8 +506,7 @@ class ServerUpdateViews extends Views {
             foreach($commits as $commit) {
                 //$output .= '<tr class="'.util_get_alt_row_color($i).'" >';
                 $metadata = $commit->getMetaData();
-                //$output .= '<tr class="'.$metadata->getLevelClass().'" >';
-                $output .= '<tr class="'.get_priority_color($metadata->getLevel()).'" >';
+                $output .= '<tr class="'.$metadata->getLevelClass().'" >';
                 //Revision
                 $output .= '<td class="pluginsadministration_plugin_descriptor"><span class="pluginsadministration_name_of_plugin">'.$commit->getRevision().'</span></td>';
                 //Date
@@ -539,6 +534,9 @@ class ServerUpdateViews extends Views {
                 if ($commit->needManualUpdate()) {
                     //$output .= '<img src="'.util_get_image_theme("ic/tools.png").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate','NeedManualUpdate').'"/>';
                     $output .= '<img src="'.util_get_image_theme("ic/stop.gif").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'"/>';
+                }
+                if ($commit->containsDBUpdate()) {
+                    $output .= '<img src="'.util_get_image_theme("ic/database_refresh.png").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'"/>';
                 }
                 foreach ($files as $file) {
                     if ($svnupdate->getRevisionInWhichFileMustBeExecuted($file->getPath()) == $commit->getRevision()) {

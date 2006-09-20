@@ -43,7 +43,8 @@ plugin_serverupdate_update	Actions	Actions
 plugin_serverupdate_update	ChangedFiles	Fichiers modifiés
 plugin_serverupdate_update	detail_link	détails
 plugin_serverupdate_update	UpdateAction	Mettre à jour jusqu'à cette révision
-plugin_serverupdate_update	NeedManualUpdate	Nécessite une mise à jour manuelle. Merci de lire le message de commit pour plus de détails
+plugin_serverupdate_update	NeedManualUpdate	Nécessite une mise à jour manuelle. Merci de lire le message de commit pour plus de détails.
+plugin_serverupdate_update	ContainsDBUpdate	Contient un script de mise à jour de la base de données. Merci de lire le message de commit pour plus de détails.
 plugin_serverupdate_update	prio_colors	Importance des mises à jour
 plugin_serverupdate_update	UpToDate	Serveur à jour !
 plugin_serverupdate_update	NoCommitsCriteria	Aucune mise à jour ne répond aux critères de tri.

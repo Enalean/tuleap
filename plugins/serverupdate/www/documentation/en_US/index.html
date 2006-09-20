@@ -26,7 +26,7 @@
 					</dl>
 				</div>
 				<!-- ################################################################# -->
-				<h2 id="view">View the availble updates</h2>
+				<h2 id="view">View the available updates</h2>
 				<div class="section">
 					<div class="screenshot">
 						<div class="legend">'Available updates' interface screenshot</div>
@@ -48,7 +48,7 @@
 					</div>
 					<p>This interface display information about available updates. Each update is matching a revision. Updates are displayed by revision number respecting the ascendant order. For each, the following properties are displayed:
                         <ul>
-                            <li>The importance level of the update (from 0 --minor update, not important-- to 9 --critical update, or security update--). See the associated color panel,</li>
+                            <li>The importance level of the update (between authorized values: <strong>minor</strong>, <strong>normal</strong> and <strong>critical</strong>). See the associated color panel,</li>
                             <li>Revision number,</li>
                             <li>The date when the update have been done,</li>
                             <li>The commit message associated to the revision. This message is really important, it gives you information about the modification operated within this update and can eventually give more information about manual intervention to do (script execution, database update, etc.),</li>
@@ -60,8 +60,10 @@
                                         In this case, the automatic update is not allowed, to encourage you in reading the commit message and doing 
                                         the associated operations (see section <a href="#force">Manual interventions and Force mode</a> for details).</li>
                                     <li>Potential upgrade scripts that need to be processed. 
-                                        In this case, the script execution ispossible under some conditions 
+                                        In this case, the script execution is possible under some conditions 
                                         (see section <a href="#strategy">Update strategy</a> for details).</li>
+                                    <li>If there is an update with the database. 
+                                        In this case, it is highly recommanded to read the commit message and follow the instructions.</li>
                                 </ul>
                             </li>
                         </ul>
@@ -72,7 +74,7 @@
                         <img alt="Filter screenshot" src="serverupdate_noCSS.png" class="noCSS" />
                     </div>
                     <p>The filter let you browse the updates regarding criterias. For example, the updates requiring a manual intervention,
-                    and/or updates with a level of importance greater than 7, etc.
+                    and/or updates with a level of critical, etc.
                     </p>
                     <p>The filter criterias are:
                         <ul>

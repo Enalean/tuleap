@@ -4,7 +4,7 @@ if (! defined('CODEX_RUNNER')) {
     require_once('../../codex_tools/tests/CodexReporter.class');
 }
 
-require_once('../include/SVNComit.class');
+require_once('../include/SVNCommit.class');
 
 
 require_once('tests/simpletest/unit_tester.php');

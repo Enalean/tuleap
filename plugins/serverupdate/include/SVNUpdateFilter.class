@@ -12,20 +12,12 @@
 
 require_once("SVNCommit.class");
 
-define("LEVEL_OPERATOR_CRITERIA", "level_op");
 define("LEVEL_CRITERIA", "level");
-define("NEED_MANUAL_UPDATE_CRITERIA", "manualupdate");
 
-define("GREATER_THAN", "gt");
-define("GREATER_OR_EQUAL", "ge");
-define("EQUAL", "eq");
-define("LESS_THAN", "lt");
-define("LESS_OR_EQUAL", "le");
-
-define("NEED_MANUAL_UPDATE", "need");
-define("DONT_NEED_MANUAL_UPDATE", "donotneed");
-define("ANY_MANUAL_UPDATE", "any");
-
+define("LEVEL_VALUE_ANY", "any");
+define("LEVEL_VALUE_MINOR", "minor");
+define("LEVEL_VALUE_NORMAL", "normal");
+define("LEVEL_VALUE_CRITICAL", "critical");
 
 class SVNUpdateFilter {
     
@@ -40,9 +32,7 @@ class SVNUpdateFilter {
      */
     function SVNUpdateFilter() {
         $this->filter = array();
-        $this->filter[LEVEL_OPERATOR_CRITERIA] = GREATER_OR_EQUAL;
-        $this->filter[LEVEL_CRITERIA] = "1";
-        $this->filter[NEED_MANUAL_UPDATE_CRITERIA] = ANY_MANUAL_UPDATE;
+        $this->filter[LEVEL_CRITERIA] = LEVEL_VALUE_ANY;
     }
     
     /**
@@ -93,46 +83,10 @@ class SVNUpdateFilter {
      */
     function accept($commit) {
         $accept = false;
-        if ($this->_compare($commit->getLevel(), $this->getCriteria(LEVEL_CRITERIA), $this->getCriteria(LEVEL_OPERATOR_CRITERIA))) {
-            if ( ($this->getCriteria(NEED_MANUAL_UPDATE_CRITERIA) == ANY_MANUAL_UPDATE) || 
-                 ($commit->needManualUpdate() && $this->getCriteria(NEED_MANUAL_UPDATE_CRITERIA) == NEED_MANUAL_UPDATE) || 
-                 (!$commit->needManualUpdate() && $this->getCriteria(NEED_MANUAL_UPDATE_CRITERIA) == DONT_NEED_MANUAL_UPDATE)) {
-                        $accept = true;
-            }
+        if ($this->getCriteria(LEVEL_CRITERIA) == LEVEL_VALUE_ANY || $commit->getLevel() == $this->getCriteria(LEVEL_CRITERIA)) {
+            $accept = true;
         }
         return $accept;
-    }
-    
-    /**
-     * Compare $left and $right regarding to the operator $operator
-     *
-     * @static
-     * @param int $left the left operand
-     * @param int $right the right operand
-     * @param string $operator the operator
-     * @return boolean true if ($left $operator $right), false otherwise
-     */
-    function _compare($left, $right, $operator) {
-        switch ($operator) {
-            case LESS_OR_EQUAL:
-                return ($left <= $right);
-                break;
-            case LESS_THAN:
-                return ($left < $right);
-                break;
-            case EQUAL:
-                return ($left == $right);
-                break;
-            case GREATER_THAN:
-                return ($left > $right);
-                break;
-            case GREATER_OR_EQUAL:
-                return ($left >= $right);
-                break;
-            default:
-                return false;
-                break;
-        }
     }
     
     /**
@@ -148,47 +102,24 @@ class SVNUpdateFilter {
         $output .= ' <input type="hidden" name="action" value="browse" />';
         $output .= ' <input type="hidden" name="sort" value="yes" />';
         $output .= '  level';
-        $output .= '  <select name="'.LEVEL_OPERATOR_CRITERIA.'">';
-        $output .= '   <option value="'.LESS_OR_EQUAL.'"';
-        if ($this->getCriteria(LEVEL_OPERATOR_CRITERIA) == LESS_OR_EQUAL) {
-            $output .= ' selected="selected"';
-        }
-        $output .= '>&lt;=</option>';
-        $output .= '   <option value="'.EQUAL.'"';
-        if ($this->getCriteria(LEVEL_OPERATOR_CRITERIA) == EQUAL) {
-            $output .= ' selected="selected"';
-        }
-        $output .= '>=</option>';
-        $output .= '   <option value="'.GREATER_OR_EQUAL.'"';
-        if ($this->getCriteria(LEVEL_OPERATOR_CRITERIA) == GREATER_OR_EQUAL) {
-            $output .= ' selected="selected"';
-        }
-        $output .= '>&gt;=</option>';
-        $output .= '  </select>';
         $output .= '  <select name="'.LEVEL_CRITERIA.'">';
-        for ($i=1; $i<=9; $i++) {
-            $output .= '   <option value="'.$i.'"';
-            if ($i == $this->getCriteria(LEVEL_CRITERIA)) {
-                $output .= ' selected="selected"';
-            }
-            $output .= '>'.$i.'</option>';
-        }
-        $output .= '  </select>';
-        $output .= '  and ';
-        $output .= '  <select name="'.NEED_MANUAL_UPDATE_CRITERIA.'">';
-        $output .= '   <option value="'.ANY_MANUAL_UPDATE.'">any</option>';
-        $output .= '   <option value="'.NEED_MANUAL_UPDATE.'"';
-        if ($this->getCriteria(NEED_MANUAL_UPDATE_CRITERIA) == NEED_MANUAL_UPDATE) {
+        $output .= '   <option value="'.LEVEL_VALUE_ANY.'">'.LEVEL_VALUE_ANY.'</option>';
+        $output .= '   <option value="'.LEVEL_VALUE_MINOR.'"';
+        if (LEVEL_VALUE_MINOR == $this->getCriteria(LEVEL_CRITERIA)) {
             $output .= ' selected="selected"';
         }
-        $output .= '>need</option>';
-        $output .= '   <option value="'.DONT_NEED_MANUAL_UPDATE.'"';
-        if ($this->getCriteria(NEED_MANUAL_UPDATE_CRITERIA) == DONT_NEED_MANUAL_UPDATE) {
+        $output .= '>'.LEVEL_VALUE_MINOR.'</option>';
+        $output .= '   <option value="'.LEVEL_VALUE_NORMAL.'"';
+        if (LEVEL_VALUE_NORMAL == $this->getCriteria(LEVEL_CRITERIA)) {
             $output .= ' selected="selected"';
         }
-        $output .= '>don\'t need</option>';
+        $output .= '>'.LEVEL_VALUE_NORMAL.'</option>';
+        $output .= '   <option value="'.LEVEL_VALUE_CRITICAL.'"';
+        if (LEVEL_VALUE_CRITICAL == $this->getCriteria(LEVEL_CRITERIA)) {
+            $output .= ' selected="selected"';
+        }
+        $output .= '>'.LEVEL_VALUE_CRITICAL.'</option>';
         $output .= '  </select>';
-        $output .= 'manual update ';
         $output .= '  <input type="submit" value="Go" />';
         $output .= '</fieldset>';
         $output .= '</form>';

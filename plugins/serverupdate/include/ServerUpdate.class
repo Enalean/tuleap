@@ -15,7 +15,7 @@ require_once('ServerUpdateActions.class');
 
 // Waiting PHP 5, we use define as 'class constant'
 //define("WORKING_DIRECTORY", "/home/mnazaria/CodeX/dev_server/httpd/");
-define("WORKING_DIRECTORY", "/home/mnazaria/CodeX/test_svn/loremipsum/");
+define("WORKING_DIRECTORY", "/home/mnazaria/CodeX/test_svn/");
 
 $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
 
@@ -29,7 +29,8 @@ class ServerUpdate extends Controler {
     
     function ServerUpdate() {
         session_require(array('group'=>'1','admin_flags'=>'A'));
-        //$this->svnupdate = new SVNUpdate(realpath($GLOBALS['sys_urlroot']."../.."));
+        ////$this->svnupdate = new SVNUpdate(realpath($GLOBALS['sys_urlroot']."../.."));
+        //$this->svnupdate = new SVNUpdate($GLOBALS['codex_dir']);
         $this->svnupdate = new SVNUpdate(WORKING_DIRECTORY);
     }
     

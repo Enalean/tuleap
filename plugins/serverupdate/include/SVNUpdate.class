@@ -31,7 +31,7 @@ define("XML_COMMIT_PATH", "path");
 define("XML_COMMIT_ACTION_PATH", "action");
 define("XML_COMMIT_MESSAGE", "msg");
 
-define("UPGRADE_SCRIPT_PATH", "upgrades/scripts/");
+define("UPGRADE_SCRIPT_PATH", "updates/scripts/");
 
 class SVNUpdate {
     
@@ -309,8 +309,6 @@ class SVNUpdate {
         }
         return $scriptsLifeCycle;
     }
-    
-    
     
     
     /** 

@@ -21,6 +21,20 @@ function db_connect() {
     }
 }
 
+/**
+ * Returns the connection object, or null if there is no connection
+ *
+ * @return {resource} the connection, or null if no connection
+ */
+function getConnection() {
+    global $conn;
+    if (isset($conn) && $conn) {
+        return $conn;
+    } else {
+        return null;
+    }
+}
+
 function db_query($qstring,$print=0) {
 //	global $QUERY_COUNT;
 //	$QUERY_COUNT++;

@@ -8,7 +8,7 @@
   <meta name="author" content="Laurent Julliard">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (X11; U; Linux 2.2.17-21mdk i686) [Netscape]">
-  <title>CodeX Adminstration Guide</title>
+  <title>CodeX Administration Guide</title>
 </head>
 <body>
 &nbsp;
@@ -1950,7 +1950,7 @@ apply the Perl patch as well if there is one.</span><br>
 
 <h2>Web interface update mechanism</h2>
 <p>Another way to update your working copy is to use the plugin ServerUpdate.
-This plugin provide a secure and easy-to-use process to update your server,
+This plugin provides a secure and easy-to-use process to update your server,
 with web interface overview and lots of feedback about what happens.
 </p>
 <p>This section will focus on the automatic update process.
@@ -1962,9 +1962,9 @@ For a user guide, please read the on-line plugin documentation.
 <!-- ################################################################# -->
 <h3 id="update">Process one or more updates</h3>
 <p>The plugin allows you to update automatically the CodeX server through the CodeX web interface.
-   The update is always processed from the current revsion of the working copy to the choosen revision
+   The update is always processed from the current revision of the working copy to the choosen revision
    (greater than the current revision), by updating <strong>all</strong>
-   the between revisions.
+   the revisions between.
    To update the server, click the icon on the right of the wished revision.
    The update will be processed in two steps:
    <ol>
@@ -1995,14 +1995,14 @@ For a user guide, please read the on-line plugin documentation.
 <h5 id="simulationStrategy">Simulation strategy:</h5>
 <p>The system first checks if there is no <strong>manual intervention required</strong> between the current revision and the requested update.
 A manual intervention prohibits the update initially.
-It is indeed possible to enforce the update, but we would draw your attention in the danger of a such operation 
+It is indeed possible to enforce the update, but we would draw your attention in the danger of such an operation 
 (see section <a href="#force">Force mode</a> for details).
 </p>
 <p>Then, the system checks there is no <strong>subversion conflict</strong>.
 For doing this, the system simulate a <strong>global</strong> update from the current revision to the requested revision.
 (by using the subversion command <kbd>svn merge --dry-run -r &lt;working copy revision&gt;:&lt;requested revision&gt; &lt;subversion repository&gt; &lt;working copy directory&gt;</kbd>).
 </p>
-<p>The system then checks htere is no <strong>upgrade script conflict</strong>.
+<p>The system then checks there is no <strong>upgrade script conflict</strong>.
 
 An upgrade script will be executed if and only if:
 <ul>
@@ -2010,14 +2010,14 @@ An upgrade script will be executed if and only if:
     <li>It is not deleted in a later revision <strong>and</strong></li>
     <li>It is not modified after the last revision of the requested update.</li>
 </ul>
-In the case where the script would be modified, the only execution of the script will be processed durinf the last modification.<br /><br />
+In the case where the script would be modified, the only execution of the script will be processed during the last modification.<br /><br />
 
 An upgrade script will not be executed if:
 <ul>
-    <li>This script is deleted in a later revision. In this case, here is two options:
+    <li>This script is deleted in a later revision. In this case, there is two options:
         <ul>
             <li>the requested update goes up to the script deletion: in this case, the script is just ignored (not executed), and the update is possible.</li>
-            <li>the requested update doesn't go up to the the script deletion: in this case, the update isnot allowed. Because if a script is deleted, 
+            <li>the requested update doesn't go up to the the script deletion: in this case, the update is not allowed. Because if a script is deleted, 
                 it is possible that the revision between keep the server in an unstable state. There is so no other way but to update up to 
                 the script deletion.</li>
         </ul>
@@ -2027,7 +2027,7 @@ An upgrade script will not be executed if:
         the update is not allowed. We would manage the situation with individually.
     </li>
     <li>This script is modified in a later revision not included in the requested update. In this case, it is obligatory
-        to process anupdate up to the last script modification.
+        to process an update up to the last script modification.
     </li>
 </ul>
 </p>

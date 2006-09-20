@@ -29,140 +29,97 @@ class SVNUpdateFilterTest extends UnitTestCase {
         $this->UnitTestCase($name);
     }
     
-    function testCompare() {
-        $this->assertTrue(SVNUpdateFilter::_compare(0, 0, "eq"));
-        $this->assertTrue(SVNUpdateFilter::_compare(0, 0, "ge"));
-        $this->assertTrue(SVNUpdateFilter::_compare(0, 0, "le"));
-        $this->assertFalse(SVNUpdateFilter::_compare(0, 0.0001, "eq"));
-        $this->assertTrue(SVNUpdateFilter::_compare(1, 0, "ge"));
-        $this->assertTrue(SVNUpdateFilter::_compare(1, 0, "gt"));
-        $this->assertTrue(SVNUpdateFilter::_compare(-1.9, 1.2, "le"));
-        $this->assertTrue(SVNUpdateFilter::_compare(-10, 9.9, "lt"));
-    }
-    
-    
-    
     function testAccept() {
         // 
-        // Commit #1 : level 1, don't need a manual update
+        // Commit #1 : level minor
         //
         $c1 =& new MockSVNCommit($this);
-        $c1->setReturnValue('getLevel', 1);
-        $c1->setReturnValue('needManualUpdate', false);
+        $c1->setReturnValue('getLevel', LEVEL_VALUE_MINOR);
         $uf1 =& new SVNUpdateFilter();
         
         // default filter should accept every commit
         $this->assertTrue($uf1->accept($c1));
         
-        $uf1->addCriteria(LEVEL_CRITERIA, 4);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_THAN);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, ANY_MANUAL_UPDATE);
+        $uf1->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_MINOR);
+        $this->assertTrue($uf1->accept($c1));
+        
+        $uf1->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_NORMAL);
         $this->assertFalse($uf1->accept($c1));
         
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, LESS_THAN);
-        $this->assertTrue($uf1->accept($c1));
-        
-        $uf1->addCriteria(LEVEL_CRITERIA, 1);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, EQUAL);
-        $this->assertTrue($uf1->accept($c1));
-        
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_OR_EQUAL);
-        $this->assertTrue($uf1->accept($c1));
+        $uf1->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_CRITICAL);
+        $this->assertFalse($uf1->accept($c1));
         
         //
-        // Commit #2 : level 4, need a manual update
+        // Commit #2 : level normal
         //
         $c2 =& new MockSVNCommit($this);
-        $c2->setReturnValue('getLevel', 4);
-        $c2->setReturnValue('needManualUpdate', true);
+        $c2->setReturnValue('getLevel', LEVEL_VALUE_NORMAL);
         $uf2 =& new SVNUpdateFilter();
         // default filter should accept every commit
         $this->assertTrue($uf2->accept($c2));
         
-        $uf2->addCriteria(LEVEL_CRITERIA, 4);
-        $uf2->addCriteria(LEVEL_OPERATOR_CRITERIA, EQUAL);
-        $uf2->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, DONT_NEED_MANUAL_UPDATE);
+        $uf2->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_MINOR);
         $this->assertFalse($uf2->accept($c2));
         
-        $uf2->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, ANY_MANUAL_UPDATE);
+        $uf2->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_NORMAL);
         $this->assertTrue($uf2->accept($c2));
         
-        $uf2->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, NEED_MANUAL_UPDATE);
-        $this->assertTrue($uf2->accept($c2));
+        $uf2->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_CRITICAL);
+        $this->assertFalse($uf2->accept($c2));
         
-        $uf2->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_OR_EQUAL);
-        $this->assertTrue($uf2->accept($c2));
+        //
+        // Commit #3 : level critical
+        //
+        $c3 =& new MockSVNCommit($this);
+        $c3->setReturnValue('getLevel', LEVEL_VALUE_CRITICAL);
+        $uf3 =& new SVNUpdateFilter();
+        // default filter should accept every commit
+        $this->assertTrue($uf3->accept($c3));
         
-        $uf2->addCriteria(LEVEL_OPERATOR_CRITERIA, LESS_OR_EQUAL);
-        $this->assertTrue($uf2->accept($c2));
+        $uf3->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_MINOR);
+        $this->assertFalse($uf3->accept($c3));
+        
+        $uf3->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_NORMAL);
+        $this->assertFalse($uf3->accept($c3));
+        
+        $uf3->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_CRITICAL);
+        $this->assertTrue($uf3->accept($c3));
         
     }
     
     function testApply() {
-        // Commit #1 : level 1, don't need a manual update
+        // Commit #1 : level minor
         $c1 =& new MockSVNCommit($this);
-        $c1->setReturnValue('getLevel', 1);
-        $c1->setReturnValue('needManualUpdate', false);
-        // Commit #2 : level 1, need a manual update
+        $c1->setReturnValue('getLevel', LEVEL_VALUE_MINOR);
+        // Commit #2 : level minor
         $c2 =& new MockSVNCommit($this);
-        $c2->setReturnValue('getLevel', 1);
-        $c2->setReturnValue('needManualUpdate', true);
-        // Commit #3 : level 3, don't need a manual update
+        $c2->setReturnValue('getLevel', LEVEL_VALUE_MINOR);
+        // Commit #3 : level normal
         $c3 =& new MockSVNCommit($this);
-        $c3->setReturnValue('getLevel', 3);
-        $c3->setReturnValue('needManualUpdate', false);
-        // Commit #4 : level 9, need a manual update
+        $c3->setReturnValue('getLevel', LEVEL_VALUE_NORMAL);
+        // Commit #4 : level critical
         $c4 =& new MockSVNCommit($this);
-        $c4->setReturnValue('getLevel', 9);
-        $c4->setReturnValue('needManualUpdate', true);
-        // Commit #5 : level 9, don't need a manual update
+        $c4->setReturnValue('getLevel', LEVEL_VALUE_CRITICAL);
+        // Commit #5 : level critical
         $c5 =& new MockSVNCommit($this);
-        $c5->setReturnValue('getLevel', 9);
-        $c5->setReturnValue('needManualUpdate', false);
-        // Commit #6 : level 4, need a manual update
+        $c5->setReturnValue('getLevel', LEVEL_VALUE_CRITICAL);
+        // Commit #6 : level normal
         $c6 =& new MockSVNCommit($this);
-        $c6->setReturnValue('getLevel', 4);
-        $c6->setReturnValue('needManualUpdate', true);
+        $c6->setReturnValue('getLevel', LEVEL_VALUE_NORMAL);
         
         $commits = array($c1, $c2, $c3, $c4, $c5, $c6);
         
         $uf1 =& new SVNUpdateFilter();
         $this->assertEqual($uf1->apply($commits), $commits);
         
-        $uf1->addCriteria(LEVEL_CRITERIA, 1);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_THAN);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, ANY_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c3, $c4, $c5, $c6));
+        $uf1->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_MINOR);
+        $this->assertEqual($uf1->apply($commits), array($c1, $c2));
         
-        $uf1->addCriteria(LEVEL_CRITERIA, 1);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_THAN);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, NEED_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c4, $c6));
+        $uf1->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_NORMAL);
+        $this->assertEqual($uf1->apply($commits), array($c3, $c6));
         
-        $uf1->addCriteria(LEVEL_CRITERIA, 1);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_THAN);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, NEED_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c4, $c6));
-        
-        $uf1->addCriteria(LEVEL_CRITERIA, 4);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, GREATER_OR_EQUAL);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, NEED_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c4, $c6));
-        
-        $uf1->addCriteria(LEVEL_CRITERIA, 9);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, LESS_THAN);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, NEED_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c2, $c6));
-        
-        $uf1->addCriteria(LEVEL_CRITERIA, 9);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, LESS_THAN);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, ANY_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c1, $c2, $c3, $c6));
-        
-        $uf1->addCriteria(LEVEL_CRITERIA, 9);
-        $uf1->addCriteria(LEVEL_OPERATOR_CRITERIA, LESS_OR_EQUAL);
-        $uf1->addCriteria(NEED_MANUAL_UPDATE_CRITERIA, ANY_MANUAL_UPDATE);
-        $this->assertEqual($uf1->apply($commits), array($c1, $c2, $c3, $c4, $c5, $c6));
+        $uf1->addCriteria(LEVEL_CRITERIA, LEVEL_VALUE_CRITICAL);
+        $this->assertEqual($uf1->apply($commits), array($c4, $c5));
         
     }
     

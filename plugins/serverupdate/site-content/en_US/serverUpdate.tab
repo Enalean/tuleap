@@ -38,6 +38,7 @@ plugin_serverupdate_update	ChangedFiles	Changed Files
 plugin_serverupdate_update	detail_link	details
 plugin_serverupdate_update	UpdateAction	Update up to this revision
 plugin_serverupdate_update	NeedManualUpdate	Need a manual update. Please read the commit message for details.
+plugin_serverupdate_update	ContainsDBUpdate	Contains a script with a database update. Please read the commit message for details.
 plugin_serverupdate_update	prio_colors	Update level
 plugin_serverupdate_update	UpToDate	Server up to date!
 plugin_serverupdate_update	NoCommitsCriteria	No updates matching
