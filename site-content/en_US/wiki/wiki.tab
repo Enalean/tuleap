@@ -116,7 +116,8 @@ wiki_views_wkserviews	menudocs	Wiki Documents
 wiki_views_wkserviews	menupage	Wiki Pages
 wiki_views_wkserviews	menuattch	Wiki Attachments
 wiki_views_wkserviews	menuperm	Wiki Permissions
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p><h3><a href="$3&view=wikiPages">Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p><h3><a href="$4&view=wikiAttachments">Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p><h3><a href="$5&view=wikiPerms">Set Wiki Permissions</a></h3><p>Set permissions on whole $6 Wiki.</p><h3><a href="$7&pagename=PhpWikiAdministration">PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>
+wiki_views_wkserviews	wiki_admin_panel_page	PhpWikiAdministration
+wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p><h3><a href="$3&view=wikiPages">Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p><h3><a href="$4&view=wikiAttachments">Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p><h3><a href="$5&view=wikiPerms">Set Wiki Permissions</a></h3><p>Set permissions on whole $6 Wiki.</p><h3><a href="$7&pagename=$8">PhpWiki Administration</a></h3><p>Administration panel of the wiki engine. This propose a set of tools to delete and rename pages.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Manage Wiki Documents</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Create a new Wiki Document</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Wiki Documents</h3>

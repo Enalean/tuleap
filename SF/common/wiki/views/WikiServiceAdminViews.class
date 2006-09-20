@@ -138,6 +138,7 @@ class WikiServiceAdminViews extends WikiViews {
    */
   function main() {
     $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+    $admin_panel_page = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wiki_admin_panel_page');
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 
                             'main', 
                             array($this->wikiname,
@@ -146,7 +147,8 @@ class WikiServiceAdminViews extends WikiViews {
                                   $this->wikiAdminLink,
                                   $this->wikiAdminLink,
                                   $this->wikiname,
-                                  $this->wikiLink));
+                                  $this->wikiLink,
+				  $admin_panel_page));
   }
 
 

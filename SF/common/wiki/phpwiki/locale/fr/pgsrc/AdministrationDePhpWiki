@@ -25,33 +25,12 @@ D'abord choississez une ou plusieurs pages et ensuite définissez une action :
 
 ou appelez directement les actions ~WikiAdmin disponibles :
 
-[/Supprimer] |
-  [/Renommer] |
-    [/Remplacer] |
-      [/DéfinirAcl] |
-        [/Chown] |
-          [/Droits]
+[Supprimer | AdministrationDePhpWiki/Supprimer] |
+  [Renommer | AdministrationDePhpWiki/Renommer] |
+    [Remplacer | AdministrationDePhpWiki/Remplacer]
+      
 
 ----
-!!! Gestionnaire d'utilisateur
-
-PhpWiki:EmailVerification est habituellement non-strict laissant ainsi des trous possibles qui peuvent être administrés ci-dessous.
-
-Ce bouton affichera la liste de tous les utilisateurs qui ont une adresse reconnue et les boutons pour effectuer une vérification manuelle.
-
-  <?plugin WikiAdminUtils
-           action=email-verification
-           label="Vérification de l'email"
-   ?>
-
-Pour prévenir des robots occupant toutes les ressources en un court temps, bloquant depuis certaines adresses IP ou ayant un mauvais comportement, les agents utilisateurs peuvent être définis ci-dessous. Voir PhpWiki:HowToBlockRobots et MeatBall:SurgeProtector. _Note : Pas encore activé._
-
-  <?plugin WikiAdminUtils
-           action=access-restrictions
-           label="Restrictions d'accès"
-   ?>
-
-----------
 !!! Nettoyage
 
 Le [BacÀSable] Wiki est très simple à nettoyer. Vous pouvez ici le restaurer 
@@ -80,47 +59,6 @@ Ici vous pouvez enregistrer les pages de votre Wiki dans le répertoire de votre 
 
 La version la plus récente de chaque page sera écrite dans le répertoire, à raison d'une page par fichier. Votre serveur doit avoir le droit d'écrire dans le répertoire !
 
------------
-!!! Restauration
-
-Si vous avez sauvegardé un ensemble de pages de PhpWiki, vous pouvez les recharger ici. Notez que les pages dans votre base de données seront écrasées ; ainsi, si vous avez récupéré votre [PageAccueil], lorsque vous le rechargerez depuis ce formulaire, il écrasera celui qui est actuellement dans votre base de données. Si vous désirez être sélectif, effacez juste du répertoire (ou du fichier zip) les pages que vous ne voulez pas charger.
-
-!! Déposer un fichier sur le serveur
-
-Ici vous pouvez déposer des archives Zip ou des fichiers simples depuis votre machine cliente.
-
-<?plugin WikiForm action=upload?>
-
-!! Télécharger un fichier
-
-Ici vous pouvez télécharger des archives ZIP, des fichiers individuels ou des répertoires entiers. Le fichier ou le répertoire doit être local au serveur http. Vous pouvez aussi utiliser ce formulaire pour charger les données d'un URL http: ou ftp:.
-
-<?plugin WikiForm action=loadfile?>
-
-!! Mise à jour
-
-Fait quelques vérifications et mises à jours automatiquement après avoir installé un nouveau moteur phpwiki de mise à jour 
-* Met à jour les nouvelles pages ou les pages révisées depuis pgsrc
-* Met à jour la base de données (mysql _page.id auto_increment_, ADD _session.sess_ip_),
-
-;:[ Mise à jour | phpwiki:HomePage?action=upgrade ]
-
------------
-!!! Format des fichiers
-
-Actuellement, les pages sont stockées, une par fichier, sous forme de messages électronique (RFC:822) MIME (RFC:2045). Le content-type utilisé est ''application/x-phpwiki'', et les métadonnées de chaque page sont codées dans les paramètres du content-type. Si le fichier contient plusieurs versions d'une page, il aura comme type ''multipart/mixed'', et contiendra plusieurs sous-parties, chacune de type ''application/x-phpwiki''. Le corps du message contient le texte de la page.
-
-!! Anciens formats
-
-__Fichiers sérialisés__
-
-La commande de sauvegarde dans un répertoire récupérait les pages en tant que chaînes php ''serialized()''. Cela rendait les fichiers très difficiles à lire pour les humains, et presque impossibles à éditer.
-
-__Fichiers simples__
-
-Avant cela, le texte des pages était simplement enregistré dans un fichier -- ce qui signifie que toutes les métadonnées des pages étaient perdues. Notez que lorsqu'on charge des ''fichiers simples'', le nom de la page est déduit du nom du fichier.
-
-Les fonctions de téléchargement et de chargement reconnaîtront automatiquement chacun de ces trois types de fichiers, et les géreront convenablement.
 
 ----
 
@@ -150,6 +88,16 @@ Une pression sur ce bouton effacera tout le cache. Le contenu de chaque page ser
   <?plugin WikiAdminUtils
            action=purge-cache
            label="Purge du cache"
+   ?>
+   
+!! Suppression des pages vides et non référencées
+
+ *Attention!* en appuyant sur ce bouton toutes les pages vides et non référencées seront supprimées sans aucune possiblité de les restaurer.
+ Ceci supprimera toute possibilité de retrouver les page ainsi supprimées.
+ 
+ <?plugin WikiAdminUtils
+           action=purge-empty-pages
+           label="Purge all empty unreferenced pages"
    ?>
 
 !! Suppression des pages indésirables dans la base des données wiki
