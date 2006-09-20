@@ -71,6 +71,8 @@
          </listitem>
         </itemizedlist>
     </para>
+    
+    <para><note>NOTE : les caractères accentués ne sont pas supportés dans le client en ligne de commande.</note></para>
 
   </chapter>
 <!--

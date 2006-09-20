@@ -70,6 +70,8 @@
          </listitem>
         </itemizedlist>
     </para>
+    
+    <para><note>NOTE: the accentuated letters are not supported in the CLI.</note></para>
 
   </chapter>
 <!--
