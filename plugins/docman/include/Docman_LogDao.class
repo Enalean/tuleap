@@ -111,7 +111,7 @@ class Docman_LogDao extends DataAccessObject {
         if (!is_null($field)) {
             $sql .= ', field';
         }
-        $sql .= ') VALUES ('. $this->da->quoteSmart(gmmktime()) .', '. $this->da->quoteSmart($group_id) .', '. $this->da->quoteSmart($item_id) .', '. $this->da->quoteSmart($user_id) .', '. $this->da->quoteSmart($type) .'';
+        $sql .= ') VALUES ('. $this->da->quoteSmart(time()) .', '. $this->da->quoteSmart($group_id) .', '. $this->da->quoteSmart($item_id) .', '. $this->da->quoteSmart($user_id) .', '. $this->da->quoteSmart($type) .'';
         if (!is_null($old_value)) {
             $sql .= ', '. $this->da->quoteSmart($old_value);
         }
