@@ -25,6 +25,7 @@ wiki_views_wikiserviceviews	menuadmin	Admin
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
 wiki_views_wikiserviceviews	menuattch	Attach a file
+wiki_views_wikiserviceviews	attatch_page	UpLoad
 wiki_views_wikiserviceviews	menuprefs	Preferences
 wiki_views_wikiserviceviews	preferences_page	UserPreferences
 wiki_views_wikiserviceviews	lock_title_spec	There are specific permissions on this Wiki Page
