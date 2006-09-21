@@ -137,6 +137,7 @@ if (user_isloggedin()) {
 setlocale (LC_TIME, $Language->getText('system','locale'));
 $sys_strftimefmt = $Language->getText('system','strftimefmt');
 $sys_datefmt = $Language->getText('system','datefmt');
+$sys_datefmt_short = $Language->getText('system','datefmt_short');
 
 $Language->loadLanguageMsg('include/include');
 
