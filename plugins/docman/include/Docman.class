@@ -340,7 +340,11 @@ class Docman extends Controler {
                                     break;
                                 case 'admin_change_view':
                                     $this->action = $view;
-                                    $this->view   = 'Admin_View';
+                                    $this->_viewParams['default_url_params'] = array(
+                                        'action'  => 'admin_view',
+                                        'id'      => $item->getParentId()
+                                    );
+                                    $this->view = 'RedirectAfterCrud';
                                     break;
                                 case 'admin':
                                 case 'details':
