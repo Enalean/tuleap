@@ -363,6 +363,7 @@ project_admin_utils	perm_reset_for_tracker	Permission reset for tracker $1
 project_admin_utils	perm_reset_for_package	Permission reset for package $1
 project_admin_utils	perm_reset_for_release	Permission reset for release $1
 project_admin_utils	perm_reset_for_document	Permission reset for document $1
+project_admin_utils	perm_reset_for_folder	Permission reset for folder $1
 project_admin_utils	perm_reset_for_docgroup	Permission reset for document group $1
 project_admin_utils	perm_reset_for_wiki	Permission reset for wiki $1
 project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
@@ -372,6 +373,7 @@ project_admin_utils	perm_granted_for_tracker	Permission granted for tracker $1
 project_admin_utils	perm_granted_for_package	Permission granted for package $1
 project_admin_utils	perm_granted_for_release	Permission granted for release $1
 project_admin_utils	perm_granted_for_document	Permission granted for document $1
+project_admin_utils	perm_granted_for_folder	Permission granted for folder $1
 project_admin_utils	perm_granted_for_docgroup	Permission granted for document group  $1
 project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
 project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1

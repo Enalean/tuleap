@@ -368,6 +368,7 @@ project_admin_utils	perm_reset_for_tracker	Réinitialisation des permissions pour
 project_admin_utils	perm_reset_for_package	Réinitialisation des permissions pour le paquet $1
 project_admin_utils	perm_reset_for_release	Réinitialisation des permissions pour la version $1
 project_admin_utils	perm_reset_for_document	Réinitialisation des permissions pour le document $1
+project_admin_utils	perm_reset_for_folder	Réinitialisation des permissions pour le dossier $1
 project_admin_utils	perm_reset_for_docgroup	Réinitialisation des permissions pour le groupe de documents $1
 project_admin_utils	perm_reset_for_wiki	Réinitialisation des permissions pour le wiki $1
 project_admin_utils	perm_reset_for_wikipage	Réinitialisation des permissions pour la page wiki $1
@@ -377,6 +378,7 @@ project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de
 project_admin_utils	perm_granted_for_package	Permission accordée pour le paquet $1
 project_admin_utils	perm_granted_for_release	Permission accordée pour la version $1
 project_admin_utils	perm_granted_for_document	Permission accordée pour le document $1
+project_admin_utils	perm_granted_for_folder	Permission accordée pour le dossier $1
 project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le groupe de documents  $1
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
