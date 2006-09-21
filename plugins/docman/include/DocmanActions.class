@@ -82,7 +82,7 @@ class DocmanActions extends Actions {
 
         $_owner = util_user_finder($owner);
         if($_owner == "") {
-            $this->_controler->feedback->log('warning', 'Specified owner does not exist. You last item owner. You can change owner in Item properties.');
+            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner'));
             $ret_id = $user->getId();
         }
         else {
@@ -91,7 +91,7 @@ class DocmanActions extends Actions {
             $_owner_status = db_result($dbresults, 0, 'status');
             
             if($_owner_id === false || $_owner_id < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
-                $this->_controler->feedback->log('warning', 'Specified owner is not a valid Codex user. You last item owner. You can change owner in Item properties.');
+                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner'));
                 $ret_id = $user->getId();
             }
             else {

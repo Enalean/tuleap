@@ -271,5 +271,7 @@ plugin_docman	view_Icons	Icônes
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Arbre
 
+plugin_docman	warning_missingowner	Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
+plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
 plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.

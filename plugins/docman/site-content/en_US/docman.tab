@@ -274,5 +274,7 @@ plugin_docman	view_Icons	Icons
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
 
+plugin_docman	warning_missingowner	Specified owner does not exist. You are now the item owner. You can change owner in Item properties.
+plugin_docman	warning_invalidowner	Specified owner is not a valid Codex user. You are now the item owner. You can change owner in Item properties.
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
 plugin_docman	warning_recursive_perms	you cannot change permissions for sub-item $1 since you do not have sufficient permissions.
