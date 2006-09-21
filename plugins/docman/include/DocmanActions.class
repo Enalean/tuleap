@@ -393,7 +393,7 @@ class DocmanActions extends Actions {
                     }
                 }
                 $version =& $item->getCurrentVersion();
-                $number = $version->getNumber() + 1;
+                $number = ($version ? $version->getNumber() : 0) + 1;
                 $fs =& $this->_getFileStorage();
                 if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
                     if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $request->get('id'), $number)) {
