@@ -92,7 +92,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
           push @subversion_zone,
             ( "<VirtualHost $ip:80>\n",
                 "  ServerName svn.$codex_domain\n",
-                "  <Location $svn_prefix/$unix_group_name>\n",
+                "  <Location /svnroot/$unix_group_name>\n",
                 "    DAV svn\n",
                 "    SVNPath $svn_prefix/$unix_group_name\n",
                 "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
@@ -106,7 +106,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
         if ($sys_https_host ne "") {
           # For https, allow access without virtual host because they are not supported
           push @subversion_ssl_zone,
-            ( "<Location $svn_prefix/$unix_group_name>\n",
+            ( "<Location /svnroot/$unix_group_name>\n",
                 "    DAV svn\n",
                 "    SVNPath $svn_prefix/$unix_group_name\n",
                 "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
