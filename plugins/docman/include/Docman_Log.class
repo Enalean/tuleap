@@ -119,7 +119,7 @@ class Docman_Log { /* implements EventListener */
     
                         }
                         else {                        
-                            $html .= '<td colspan="3">'. $this->getText($row['type'])      .'</td>';
+                            $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
                         $html .= '</tr>';
     
