@@ -111,6 +111,18 @@
 	privées (SR #265).
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.9</revnumber>
+
+        <date>21-Sep-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Dans paragraphe type de projet : correction 
+	du lien sur références et ajout de détails sur la création de
+	projets à partir d'un projet de patron. 
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

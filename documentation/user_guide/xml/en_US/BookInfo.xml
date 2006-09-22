@@ -615,6 +615,18 @@
 	enhancement on private news (SR #265).
         </revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.9</revnumber>
+
+        <date>21-Sep-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>In the paragraph type of project : correct 
+	link to references and add details about the creation of
+	new projects from a template project. 
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
