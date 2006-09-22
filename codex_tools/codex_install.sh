@@ -254,8 +254,10 @@ build_dir $INSTALL_DIR codexadm codexadm 775
 build_dir /home/users codexadm codexadm 775
 build_dir /home/groups codexadm codexadm 775
 
+# home directories
 build_dir /home/dummy dummy dummy 700 #XXX
 build_dir /home/codexadm codexadm codexadm 700 #XXX
+build_dir /home/codexadm/.subversion codexadm codexadm 700 #XXX
 
 build_dir /var/lib/codex codexadm codexadm 700
 build_dir /var/lib/codex/dumps dummy dummy 755
@@ -277,11 +279,10 @@ build_dir /usr/lib/codex codexadm codexadm 700
 build_dir /usr/lib/codex/bin codexadm codexadm 700
 #build_dir /usr/lib/codex/bin root root 755
 
-build_dir /var/lib/codex root root 755 # root? XXX
 build_dir /var/lib/codex/wiki codexadm codexadm 700
-build_dir /var/lib/codex/backup codexadm codexadm 700
-build_dir /var/lib/codex/backup/mysql mysql mysql 755 
-build_dir /var/lib/codex/backup/mysql/old root root 775 
+build_dir /var/lib/codex/backup codexadm codexadm 711
+build_dir /var/lib/codex/backup/mysql mysql mysql 770 
+build_dir /var/lib/codex/backup/mysql/old root root 700
 build_dir /var/lib/codex/backup/subversion root root 700
 
 build_dir /etc/skel_codex root root 755
@@ -318,9 +319,14 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 755
 
 # SELinux specific
 chcon -R -h -t httpd_sys_content_t /usr/share/codex
-chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
+#chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
 chcon -R -h -t httpd_sys_content_t /etc/codex
+chcon -R -h -t httpd_sys_content_t /var/lib/codex
 chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
+chcon -R -h -t httpd_sys_content_t /home/codexadm/.subversion
+chcon -h -t httpd_sys_content_t /svnroot
+chcon -R -h -t httpd_sys_content_t /home/groups
+
 
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
