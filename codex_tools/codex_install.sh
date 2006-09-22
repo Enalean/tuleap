@@ -319,9 +319,9 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 755
 
 # SELinux specific
 chcon -R -h -t httpd_sys_content_t /usr/share/codex
-#chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
 chcon -R -h -t httpd_sys_content_t /etc/codex
 chcon -R -h -t httpd_sys_content_t /var/lib/codex
+#chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
 chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
 chcon -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 chcon -h -t httpd_sys_content_t /svnroot

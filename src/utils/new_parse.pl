@@ -58,9 +58,9 @@ my $MARKER_BEGIN = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)
 my $MARKER_END   = "# END OF NEEDED CODEX BLOCK";
 
 # See under which user this script is running. It is the user that is
-# also going to be used to run viewcvs.cgi. And we need to make it the
+# also going to be used to run viewvc.cgi. And we need to make it the
 # owner of all CVS root directories so the CGI script can browse all
-# CVS roots including private ones.  For private groups the viewcvs.cgi
+# CVS roots including private ones.  For private groups the viewvc.cgi
 # script will implement its own access control.
 my ($cxname) = get_codex_user();
 

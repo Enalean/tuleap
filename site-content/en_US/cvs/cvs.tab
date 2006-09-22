@@ -100,11 +100,11 @@ cvs_commit_utils	added_line	Added Lines
 cvs_commit_utils	removed_line	Removed Lines
 #
 #-----------------------------------------------
-# Script: SF/www/cvs/viewcvs.php
+# Script: SF/www/cvs/viewvc.php
 #
-cvs_viewcvs	title	Browse CVS Tree	
-cvs_viewcvs	error_noaccess	Access Denied	
-cvs_viewcvs	error_noaccess_msg	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
+cvs_viewvc	title	Browse CVS Tree	
+cvs_viewvc	error_noaccess	Access Denied	
+cvs_viewvc	error_noaccess_msg	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
 
 
 

@@ -125,20 +125,20 @@ AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codex/plugins/$1/www/$2
 # The same rules about trailing "/" apply to ScriptAlias directives as to
 # Alias.
 #
-ScriptAlias /cgi-bin/ "/home/httpd/cgi-bin/"
+ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
 
 # FollowSymLinks is needed here because of the rewrite rule (otherwise, other CGIs are forbidden...)
-<Directory "/home/httpd/cgi-bin">
+<Directory "/var/www/cgi-bin">
     AllowOverride None
     Options ExecCGI FollowSymLinks
     Order allow,deny
     Allow from all
-    RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewcvs.php/$1
+    RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewvc.php/$1
     <IfModule mod_rewrite.c>
       RewriteEngine on
       RewriteCond %{QUERY_STRING} roottype=svn
-      RewriteRule viewcvs.cgi/(.*) /svn/viewcvs.php/$1 [R]
+      RewriteRule viewcvs.cgi/(.*) /svn/viewvc.php/$1 [R]
 
-      RewriteRule viewcvs.cgi/(.*) /cvs/viewcvs.php/$1 [R]
+      RewriteRule viewcvs.cgi/(.*) /cvs/viewvc.php/$1 [R]
     </IfModule>
 </Directory>

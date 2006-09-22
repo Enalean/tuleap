@@ -10,7 +10,7 @@
 /**
  * return the file name that is part of the request_uri
  */
-function viewcvs_utils_getfile($script_name) {
+function viewvc_utils_getfile($script_name) {
   $request_uri = getStringFromServer('REQUEST_URI');
   $query_string = getStringFromServer('QUERY_STRING');
 
@@ -29,9 +29,9 @@ function viewcvs_utils_getfile($script_name) {
 
 /**
  * return true if we have to display the codex header
- * and footer around the viewcvs output
+ * and footer around the viewvc output
  */
-function viewcvs_utils_display_header() {
+function viewvc_utils_display_header() {
   $request_uri = getStringFromServer('REQUEST_URI');
   $query_string = getStringFromServer('QUERY_STRING');
 
@@ -48,12 +48,12 @@ function viewcvs_utils_display_header() {
 }  
 
 /**
- * call the viewcvs.cgi and echo the parsed output
+ * call the viewvc.cgi and echo the parsed output
  */
-function viewcvs_utils_passcommand() {
+function viewvc_utils_passcommand() {
 global $DOCUMENT_ROOT;
 
-  $parse = viewcvs_utils_display_header();
+  $parse = viewvc_utils_display_header();
   $request_uri = getStringFromServer('REQUEST_URI');
 
   //this is very important ...
@@ -83,7 +83,7 @@ global $DOCUMENT_ROOT;
            'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
            'DOCUMENT_ROOT="'.$DOCUMENT_ROOT.'" '.
            'CODEX_LOCAL_INC="'.getStringFromServer('CODEX_LOCAL_INC').'" '. 
-           $DOCUMENT_ROOT.'/../../cgi-bin/viewcvs.cgi 2>&1';
+           '/var/www/cgi-bin/viewvc.cgi 2>&1';
 
   ob_start();
   passthru($command);
@@ -93,7 +93,7 @@ global $DOCUMENT_ROOT;
 
 
   if ($parse) {
-    //parse the html doc that we get from viewcvs.
+    //parse the html doc that we get from viewvc.
     //remove the http header part as well as the html header and
     //html body tags
     $begin_body = strpos($content,"<body");
@@ -106,7 +106,7 @@ global $DOCUMENT_ROOT;
     }
     $length = strpos($content, "</body></html>") - $begin_doc;
 
-    // little 'ruse' because viewcvs html is not really proper
+    // little 'ruse' because viewvc html is not really proper
     // accept everything between the </head> tag and <body ..>
     // tag
     $end_head = strpos($content, "</head>");
@@ -139,7 +139,7 @@ global $DOCUMENT_ROOT;
 }
 
 
-function viewcvs_utils_track_browsing($group_id, $type) {
+function viewvc_utils_track_browsing($group_id, $type) {
   $query_string = getStringFromServer('QUERY_STRING');
   $request_uri = getStringFromServer('REQUEST_URI');
 

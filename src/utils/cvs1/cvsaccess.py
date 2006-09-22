@@ -43,7 +43,7 @@ def check_read_access(username, cvsrepo, cvspath):
     #print user.user_is_member(group_id, '0')
     
     # A directory that is not world readable can only be viewed
-    # through viewcvs if the user is a project member
+    # through viewvc if the user is a project member
     if group_id and (mode & stat.S_IROTH) == 0 and not user.user_is_member(group_id, '0'):
         return False
     else:

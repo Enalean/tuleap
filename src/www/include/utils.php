@@ -1243,7 +1243,7 @@ function util_check_restricted_access($request_uri, $script_name) {
 
         // Get group_id for project pages that don't have it
         
-        // /projects/ and /viewcvs/
+        // /projects/ and /viewvc/
         if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewcvs.php/') !== false)){
             // Check that the user is a member of this project
             if (strpos($req_uri,'/projects/') !== false){
