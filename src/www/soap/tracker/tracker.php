@@ -1784,7 +1784,6 @@ function artifactcannedresponses_to_soap($cannedresponses_res) {
     for ($i=0; $i < $rows; $i++) {
         $return[] = array (
             'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
-            'group_artifact_id' => db_result($cannedresponses_res, $i, 'group_artifact_id'),
             'title' => db_result($cannedresponses_res, $i, 'title'),
             'body' => db_result($cannedresponses_res, $i, 'body')
         );
