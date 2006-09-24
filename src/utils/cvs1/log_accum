@@ -62,8 +62,8 @@ if ($sys_force_ssl) {
 }
 $codex_http_srv="http://$sys_default_domain";
 
-# Base name of viewcvs specification (note: used to be cvsweb)
-$CVSWEB_URL = "$codex_srv/cvs/viewcvs.php/";
+# Base name of viewvc specification (note: used to be cvsweb)
+$CVSWEB_URL = "$codex_srv/cvs/viewvc.php/";
 $TMPDIR = "/var/run/log_accum";
 
 # Set this to something that takes "-s".
@@ -447,7 +447,7 @@ sub write_commitlog {
     close(FILE);
 }
 
-# Return a list of all viewcvs URLs for this commit.
+# Return a list of all ViewVC URLs for this commit.
 sub generate_cvsweb_urls {
     local ($dir, $branch, @files) = @_;
     local (@sp, @result);

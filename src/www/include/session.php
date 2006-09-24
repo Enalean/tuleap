@@ -135,7 +135,7 @@ function session_cookie($n,$v, $expire = 0) {
     } else {
         $cookie_host=".".$host;
     }
-    setcookie($n,$v,$expire,'/',$cookie_host);
+    setcookie($n,$v,$expire,'/');
 }
 
 function session_make_url($loc) {

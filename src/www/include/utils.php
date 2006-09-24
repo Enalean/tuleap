@@ -1244,12 +1244,12 @@ function util_check_restricted_access($request_uri, $script_name) {
         // Get group_id for project pages that don't have it
         
         // /projects/ and /viewvc/
-        if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewcvs.php/') !== false)){
+        if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewvc.php/') !== false)){
             // Check that the user is a member of this project
             if (strpos($req_uri,'/projects/') !== false){
                 $pieces = explode("/", $request_uri);
                 $this_proj_name=$pieces[2];
-            } else if (strpos($req_uri,'/viewcvs.php/') !== false) {
+            } else if (strpos($req_uri,'/viewvc.php/') !== false) {
                 preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
                 $this_proj_name=$matches[1];
             }

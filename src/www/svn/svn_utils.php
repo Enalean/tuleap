@@ -31,7 +31,7 @@ function svn_header($params) {
 	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_info').'</A>';
 
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="/svn/viewcvs.php/?roottype=svn&root='.$project->getUnixName().'">'.$Language->getText('svn_utils','browse_tree').'</A>';
+	  echo ' | <A HREF="/svn/viewvc.php/?roottype=svn&root='.$project->getUnixName().'">'.$Language->getText('svn_utils','browse_tree').'</A>';
 	}
 	
     if (user_isloggedin()) {
@@ -231,7 +231,7 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 }
 
 function svn_utils_make_viewlink($group_name, $filename, $text, $view_params) {
-    return '<A href="/svn/viewcvs.php/'.$filename.'?root='.$group_name.'&roottype=svn'.$view_params.'"><B>'.$text.'</B></A>';
+    return '<A href="/svn/viewvc.php/'.$filename.'?root='.$group_name.'&roottype=svn'.$view_params.'"><B>'.$text.'</B></A>';
 }
 
 

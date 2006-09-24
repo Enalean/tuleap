@@ -47,7 +47,7 @@ function commits_header($params) {
 	echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_info').'</A>';
 
 	if ($project->isPublic() || user_isloggedin()) {
-	    $uri = session_make_url('/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs');
+	    $uri = session_make_url('/cvs/viewvc.php/?root='.$project->getUnixName().'&roottype=cvs');
 	    echo ' | <A HREF="'.$uri.'">'.$Language->getText('cvs_commit_utils', 'menu_browse').'</A>';
 	}
 	if (user_isloggedin()) {
@@ -325,14 +325,14 @@ function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
 
   $row_grp = db_fetch_array($res_grp);
   $group_name = $row_grp['unix_group_name'];
-  return '<A HREF="/cvs/viewcvs.php/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str.'"><B>'.$text."</B></A>";
+  return '<A HREF="/cvs/viewvc.php/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str.'"><B>'.$text."</B></A>";
 }
 
 function makeCvsDirLink($group_id, $filename='', $text, $dir='') {
   $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
   $row_grp = db_fetch_array($res_grp);
   $group_name = $row_grp['unix_group_name'];
-  return '<A HREF="/cvs/viewcvs.php/'.$dir.'?root='.$group_name.'&roottype=cvs"><B>'.$text.'</B></A>';
+  return '<A HREF="/cvs/viewvc.php/'.$dir.'?root='.$group_name.'&roottype=cvs"><B>'.$text.'</B></A>';
 
 }
 
@@ -652,7 +652,7 @@ function check_cvs_access($username, $group_name, $cvspath) {
   $mode_top = fileperms("/cvsroot/".$group_name);
 
   // A directory that is not world readable can only be viewed
-  // through viewcvs if the user is a project member
+  // through viewvc if the user is a project member
   if ($group_id && (($mode_top & 0x0004) == 0 || ($mode & 0x0004) == 0) && !user_ismember($group_id, '0')) {
     return false;
   } else {

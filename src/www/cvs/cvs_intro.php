@@ -38,7 +38,7 @@ echo format_cvs_history($group_id);
 
 
 // CVS Browsing Box
-$uri = session_make_url('/cvs/viewcvs.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
+$uri = session_make_url('/cvs/viewvc.php/?root='.$row_grp['unix_group_name'].'&roottype=cvs');
 print '<HR><B>'.$Language->getText('cvs_intro', 'browse_title').'</B>
 <P>'.$Language->getText('cvs_intro', 'browse_msg').'
 <UL>

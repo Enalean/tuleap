@@ -376,7 +376,7 @@ if ($project->usesCVS()) {
         if (!$cvs_commit_num) $cvs_commit_num=0;
         if (!$cvs_add_num) $cvs_add_num=0;
         if (!$cvs_co_num) $cvs_co_num=0;
-	$uri = session_make_url('/cvs/viewcvs.php/?root='.$project->getUnixName().'&roottype=cvs');
+	$uri = session_make_url('/cvs/viewvc.php/?root='.$project->getUnixName().'&roottype=cvs');
 
         echo ' ( '.$Language->getText('include_project_home','commits',$cvs_commit_num).', '.$Language->getText('include_project_home','adds',$cvs_add_num).', '.$Language->getText('include_project_home','co',$cvs_co_num).' )';
         if ($cvs_commit_num || $cvs_add_num || $cvs_co_num) {
@@ -398,7 +398,7 @@ if ($project->usesService('svn')) {
 
         echo ' ( '.$Language->getText('include_project_home','accesses',$svn_accesses).' )';
         if ($svn_accesses) {
-	    $uri = session_make_url('/svn/viewcvs.php/?root='.$project->getUnixName().'&roottype=svn');
+	    $uri = session_make_url('/svn/viewvc.php/?root='.$project->getUnixName().'&roottype=svn');
             echo '<br> &nbsp; - <a href="'.$uri.'">'.$Language->getText('include_project_home','browse_svn').'</a>';
         }
 }
