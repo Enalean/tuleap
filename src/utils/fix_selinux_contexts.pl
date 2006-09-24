@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/perl
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 # Copyright (c) Xerox Corporation, CodeX, 2001-2006. All Rights Reserved
