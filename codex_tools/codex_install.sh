@@ -322,7 +322,7 @@ chcon -R -h -t httpd_sys_content_t /usr/share/codex
 chcon -R -h -t httpd_sys_content_t /etc/codex
 chcon -R -h -t httpd_sys_content_t /var/lib/codex
 #chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
-chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
+#chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
 chcon -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 chcon -h -t httpd_sys_content_t /svnroot
 chcon -R -h -t httpd_sys_content_t /home/groups
@@ -669,7 +669,7 @@ fi
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
 [mysqld]
-log-bin=/var/lib/codex/backup/mysql/codex-bin
+log-bin=codex-bin
 skip-innodb
 # file attachment can be 16M in size so take a bit of slack
 # on the mysql packet size

@@ -33,6 +33,7 @@ set -e
 ## Global definitions
 oldBackupDstDir=/var/lib/codex/backup/mysql/old
 currentBackupDstDir=/var/lib/codex/backup/mysql
+binaryLogDir=/var/lib/mysql
 mysqlDataDir=/var/lib/mysql
 
 #
@@ -71,10 +72,10 @@ sleep 5
 ${MKDIR} -p ${oldBackupDir}
 
 # Because of -e flag, we need to make sure the files exist before moving them
-binfiles=`ls ${currentBackupDstDir} | grep codex-bin | head -1`
+binfiles=`ls ${binaryLogDir} | grep codex-bin | head -1`
 if [ $binfiles ];
 then
-    ${MV} ${currentBackupDstDir}/codex-bin.* ${oldBackupDir}
+    ${MV} ${binaryLogDir}/codex-bin.* ${oldBackupDir}
 fi
 dumpfiles=`ls ${currentBackupDstDir} | grep sqldump | head -1`
 if [ $dumpfiles ];
