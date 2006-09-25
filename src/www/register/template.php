@@ -41,12 +41,17 @@ if ($rows > 0) {
     
     $group_id = db_result($db_templates,$i,'group_id');
     $check = "";
-    if ($group_id == '100') $check = "checked";
+    $title = '<B>'.db_result($db_templates,$i,'group_name').
+	'</B> (' . date($GLOBALS['sys_datefmt_short'],db_result($db_templates,$i,'register_time')) . ')';
+    if ($group_id == '100') {
+      $check = "checked";
+    } else {
+      $title = '<A href="/projects/'.db_result($db_templates,$i,'unix_group_name').'" > '.$title.' </A>';
+    }
 
     print '
         <TD><input type="radio" name="built_from_template" value="'.$group_id.'" '.$check.'></TD>
-        <TD><A href="/projects/'.db_result($db_templates,$i,'unix_group_name').'" > <B>'.db_result($db_templates,$i,'group_name').
-	'</B> (' . date($sys_datefmt_short,db_result($db_templates,$i,'register_time')) . ') </A>
+        <TD>'.$title.'
         <TD rowspan="2" align="left" valign="top"><I>'.db_result($db_templates,$i,'short_description').'</I></TD>
       </TR>
 ';
