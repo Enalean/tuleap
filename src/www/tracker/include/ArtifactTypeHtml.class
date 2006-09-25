@@ -2774,7 +2774,7 @@ EOS;
         echo '<fieldset>';
         echo '<legend>'.$Language->getText('tracker_include_type','fieldset_display').'</legend>';
         echo '<p>';
-        echo '<label for="rank">'.$Language->getText('tracker_include_type','fieldset_rank').':</label>';
+        echo '<label for="rank">'.$Language->getText('tracker_include_type','rank_screen').':</label>';
         echo '<input type="text" name="rank" id="rank" value="'.($rank?$rank:"").'" size="5" maxlength="5" />';
         echo '</p>';
         echo '</fieldset>';

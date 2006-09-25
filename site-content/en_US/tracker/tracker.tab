@@ -529,7 +529,6 @@ tracker_include_type	fieldset_ident	Field set identification and description
 tracker_include_type	fieldset_name	Field set label
 tracker_include_type	fieldset_desc	Description
 tracker_include_type	fieldset_display	Display information
-tracker_include_type	fieldset_rank	Rank on screen
 tracker_include_type	fields_inside	Fields
 tracker_include_type	update_fieldset	Update field set '$1'
 tracker_include_type	warning_delete_fieldset	** WARNING!! ** Delete this field set (no possible restore operation)?
