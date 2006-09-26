@@ -114,7 +114,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		    $answers_cnt=db_result($result2, 0, 'count');
 		    $blank_cnt=db_result($result3, 0, 'count');
 		    echo "<B>$answers_cnt</B> ".$Language->getText('survey_admin_show_r_aggregate','resp');
-		    if ($blank_cnt) { echo "  (+ $blank_cnt blank)"; }
+		    if ($blank_cnt) { echo "  (+ $blank_cnt ".$Language->getText('survey_admin_show_r_aggregate','blank').")"; }
 		}
 
 		/*
@@ -184,7 +184,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$Language->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
 		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo ($answers_cnt ? "$answers_cnt ".$Language->getText('survey_admin_show_r_aggregate','cmmts') : $Language->getText('global','none'));
-		echo ($blank_cnt ? " (+ $blank_cnt blank)" : '');
+		echo ($blank_cnt ? " (+ $blank_cnt ".$Language->getText('survey_admin_show_r_aggregate','blank').")" : '');
 		echo '<br>';
 
 	} else if ($question_type == "3") {
@@ -212,7 +212,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		    $answers_cnt=db_result($result2, 0, 'count');
 		    $blank_cnt=db_result($result3, 0, 'count');
 		    echo "<B>$answers_cnt</B> ".$Language->getText('survey_admin_show_r_aggregate','resp');
-		    if ($blank_cnt) { echo "  (+ $blank_cnt blank)"; }
+		    if ($blank_cnt) { echo "  (+ $blank_cnt ".$Language->getText('survey_admin_show_r_aggregate','blank').")"; }
 		}
 
 		/*
@@ -305,7 +305,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$Language->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
 		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo ($answers_cnt ? "$answers_cnt ".$Language->getText('survey_admin_show_r_aggregate','cmmts') : $Language->getText('global','none'));
-		echo ($blank_cnt ? " (+ $blank_cnt blank)" : '');
+		echo ($blank_cnt ? " (+ $blank_cnt ".$Language->getText('survey_admin_show_r_aggregate','blank').")" : '');
 		echo '<br>';
 
 

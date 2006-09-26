@@ -90,6 +90,7 @@ survey_admin_show_r_aggregate	avg	Average:
 survey_admin_show_r_aggregate	type	Type:
 survey_admin_show_r_aggregate	cmmts	Comments
 survey_admin_show_r_aggregate	view_cmmts	View Comments
+survey_admin_show_r_aggregate	blank	blank
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/show_results_comments.php
