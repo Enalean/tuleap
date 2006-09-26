@@ -278,10 +278,26 @@
     <section><title>Delete</title>
       <para>Documents or folders can be deleted. If the user wants to delete a 
       folder, he will be warned that all subitems will be deleted (if the user has enough permissions).</para>
+      <para>To be able to delete an item, the user must have write permissions on the parent folder.</para>
     </section>
   </section>
   
-  
+  <section><title>Administration</title>
+    <section>
+      <title>Permissions</title>
+      <para>This section defines who can administrate the document manager.</para>
+      <para>Document manager administrators have all access to all items of the manager.</para>
+    </section>
+    <section>
+      <title>Display preferences</title>
+      <para>This section allows you to define the default view for the document manager. The settings will be overridden by user preferences.</para>
+    </section>
+    <section>
+      <title>Properties</title>
+      <para>This section manage the properties of documents. Each property can be edited during document submission and updated in the document properties panel.</para>
+      <para>There is no specific permissions. If a user can read(modify) a document, he can read(modify) all of its properties.</para>
+    </section>
+  </section>
 </chapter>
 <!--
 Local Variables:
