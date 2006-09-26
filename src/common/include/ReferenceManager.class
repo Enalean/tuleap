@@ -209,23 +209,23 @@ class ReferenceManager {
     }
 
     /** Add all system references associated to the given service */
-    function addSystemReferencesForService($group_id,$short_name) {
-        $reference_dao =& $this->_getReferenceDao();
-        $dar = $reference_dao->searchByServiceShortName($short_name);
-        while ($row = $dar->getRow()) {
-            $this->createSystemReferenceGroup($group_id,$row['id']);
-        }
-        return true;
+    function addSystemReferencesForService($template_id,$group_id,$short_name) {
+      $reference_dao =& $this->_getReferenceDao();
+      $dar = $reference_dao->searchByServiceShortName($short_name);
+      while ($row = $dar->getRow()) {
+	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
+      }
+      return true;
     }
 
     /** Add all system references not associated to any service */
-    function addSystemReferencesWithoutService($group_id) {
-        $reference_dao =& $this->_getReferenceDao();
-        $dar = $reference_dao->searchByScopeAndServiceShortName('S',"");
-        while ($row = $dar->getRow()) {
-            $this->createSystemReferenceGroup($group_id,$row['id']);
-        }
-        return true;
+    function addSystemReferencesWithoutService($template_id, $group_id) {
+      $reference_dao =& $this->_getReferenceDao();
+      $dar = $reference_dao->searchByScopeAndServiceShortName('S',"");
+      while ($row = $dar->getRow()) {
+	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
+      }
+      return true;
     }
 
     /** update reference associated to the given service and group_id */
@@ -238,11 +238,12 @@ class ReferenceManager {
         return true;
     }
 
-    function createSystemReferenceGroup($group_id,$refid) {
+    function createSystemReferenceGroup($template_id,$group_id,$refid) {
         $reference_dao =& $this->_getReferenceDao();
-        $sys_ref=& $this->loadReference($refid,100);// Is it active in project 100?
+	$proj_ref=& $this->loadReference($refid, $template_id);// Is it active in template project ?
+        $sys_ref=& $this->loadReference($refid,'100');// Is it active in project 100 ?
         $rgid = $reference_dao->create_ref_group($refid,
-                                                 $sys_ref->isActive(),
+                                                 ($proj_ref->isActive() && $sys_ref->isActive()),
                                                  $group_id);
     }
        

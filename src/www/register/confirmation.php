@@ -142,7 +142,7 @@ if (isset($show_confirm) && $show_confirm) {
 
         // Activate other system references not associated with any service
         $reference_manager =& ReferenceManager::instance();
-        $reference_manager->addSystemReferencesWithoutService($group_id);
+        $reference_manager->addSystemReferencesWithoutService($template_id,$group_id);
 
 
         // Create default document group

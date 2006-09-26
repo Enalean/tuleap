@@ -32,7 +32,7 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
         // activate corresponding references
         $reference_manager =& ReferenceManager::instance();
 	    if ($arr['short_name'] != "") {
-            $reference_manager->addSystemReferencesForService($group_id,$arr['short_name']);
+	      $reference_manager->addSystemReferencesForService($template['id'],$group_id,$arr['short_name']);
         }
         return true;
     } else {
