@@ -21,7 +21,7 @@ class DataAccess {
     */
     function DataAccess($host,$user,$pass,$db) {
         $this->store = array();
-        $this->db = @mysql_connect($host,$user,$pass);
+        $this->db = mysql_connect($host,$user,$pass) or die('Unable to access the CodeX database. Please contact your administrator.');
         if ($this->db) {
             mysql_select_db($db,$this->db);
         }
