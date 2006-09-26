@@ -50,7 +50,7 @@ def load_local_config(filename):
 ##############################
 
 db_include = os.getenv('CODEX_LOCAL_INC','')
-if db_include is None:
+if db_include is "":
     db_include = "/etc/codex/conf/local.inc"
 # Local Include file for database username and password
 date = int(time.time()/3600/24) # Get the number of days since 1/1/1970 for /etc/shadow
