@@ -32,5 +32,5 @@ $MySQLBackupDir="/var/lib/codex/backup/mysql";
 # /home/groups -> project web sites
 `chcon -R -h -t httpd_sys_content_t $grpdir_prefix`;
 
-chcon -h -t httpd_sys_content_t /svnroot
-chcon -h -t httpd_sys_content_t /cvsroot
+`chcon -h -t httpd_sys_content_t /svnroot`;
+`chcon -h -t httpd_sys_content_t /cvsroot`;
