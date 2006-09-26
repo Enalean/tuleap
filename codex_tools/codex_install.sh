@@ -150,7 +150,8 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql mysql MySQL-python php-mbstring \
-   perl-DateManip sysstat curl aspell
+   perl-DateManip sysstat curl aspell \
+   gd-devel freetype-devel libpng-devel libjpeg-devel
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -325,6 +326,7 @@ chcon -R -h -t httpd_sys_content_t /var/lib/codex
 #chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
 chcon -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 chcon -h -t httpd_sys_content_t /svnroot
+chcon -h -t httpd_sys_content_t /cvsroot
 chcon -R -h -t httpd_sys_content_t /home/groups
 
 

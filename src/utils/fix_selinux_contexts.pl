@@ -24,7 +24,7 @@ $MySQLBackupDir="/var/lib/codex/backup/mysql";
 
 # /var/lib/codex/backup/mysql -> for MySQL bin log files 
 # Note: this should be set AFTER $sys_data_dir, because it is a subdirectory
-`chcon -R -h -t mysqld_var_run_t $MySQLBackupDir`;
+#`chcon -R -h -t mysqld_var_run_t $MySQLBackupDir`;
 
 # /home/codexadm/.subversion -> SVN needs access to codexadm subversion settings
 `chcon -R -h -t httpd_sys_content_t /home/$sys_http_user/.subversion`;
@@ -32,4 +32,5 @@ $MySQLBackupDir="/var/lib/codex/backup/mysql";
 # /home/groups -> project web sites
 `chcon -R -h -t httpd_sys_content_t $grpdir_prefix`;
 
-#chcon -h -t httpd_sys_content_t /svnroot
+chcon -h -t httpd_sys_content_t /svnroot
+chcon -h -t httpd_sys_content_t /cvsroot
