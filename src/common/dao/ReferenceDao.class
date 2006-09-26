@@ -105,6 +105,20 @@ class ReferenceDao extends DataAccessObject {
 
 
     /**
+    * Searches Reference by scope and service short name 
+    * Don't return reference 100 (empty reference)
+    * @return DataAccessResult
+    */
+    function & searchByScopeAndServiceShortNameAndGroupId($scope,$service,$group_id) {
+        $sql = sprintf("SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100",
+                       $this->da->quoteSmart($scope),
+                       $this->da->quoteSmart($service),
+		       $this->da->quoteSmart($group_id));
+        return $this->retrieve($sql);
+    }
+
+
+    /**
     * Searches Reference by keyword and group_id 
     * @return DataAccessResult with one field ('reference_id')
     */
@@ -115,6 +129,30 @@ class ReferenceDao extends DataAccessObject {
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($group_id));
+        return $this->retrieve($sql);
+    }
+
+
+    /**
+    * Searches Reference by keyword and group_id 
+    * @return DataAccessResult with one field ('reference_id')
+    */
+    function & searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword,$group_id,$description,$link,$scope) {
+        # Order by scope to return 'P'roject references before 'S'ystem references
+        # This may happen for old tracker created before Reference management.
+        # Otherwise, there should not be both S and P reference with the same keyword...
+        $sql = sprintf("SELECT * FROM reference r,reference_group rg WHERE ".
+		       "r.keyword = %s AND ".
+		       "r.id=rg.reference_id AND ".
+		       "rg.group_id=%s AND ".
+		       "r.description = %s AND ".
+		       "r.link = %s AND ".
+		       "r.scope = %s",
+                       $this->da->quoteSmart($keyword),
+                       $this->da->quoteSmart($group_id),
+		       $this->da->quoteSmart($description),
+		       $this->da->quoteSmart($link),
+		       $this->da->quoteSmart($scope));
         return $this->retrieve($sql);
     }
 

@@ -228,6 +228,30 @@ class ReferenceManager {
       return true;
     }
 
+    /** Add project references which are not system references.
+     Make sure that references for trackers that have been added
+     separately in register/confirmation script are not created twice
+    */
+    function addProjectReferences($template_id, $group_id) {
+      $reference_dao =& $this->_getReferenceDao();
+      $dar = $reference_dao->searchByScopeAndServiceShortNameAndGroupId('P',"",$template_id);
+      while ($row = $dar->getRow()) {
+	$dares = $reference_dao->searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($row['keyword'],$group_id,$row['description'],$row['link'],$row['scope']);
+	if ($dares && $dares->rowCount() > 0) {continue;}
+	// Create corresponding reference
+	$ref=& new Reference(0, // no ID yet
+			     $row['keyword'],
+			     $row['description'],
+			     $row['link'], // link
+			     'P', // scope is 'project'
+			     '',  // service ID - N/A
+			     $row['is_active'], // is_used
+			     $group_id);
+	$this->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
+      }
+      return true;
+    }
+
     /** update reference associated to the given service and group_id */
     function updateReferenceForService($group_id,$short_name,$is_active) {
         $reference_dao =& $this->_getReferenceDao();

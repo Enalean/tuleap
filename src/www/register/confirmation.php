@@ -197,6 +197,12 @@ if (isset($show_confirm) && $show_confirm) {
                 $result=$reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
            }
         }
+
+	//Create project specific references if template is not default site template
+	if (!$system_template) {
+	  $reference_manager =& ReferenceManager::instance();
+	  $reference_manager->addProjectReferences($template_id,$group_id);
+	}
 	
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)
