@@ -61,7 +61,7 @@ def session_set():
     id_is_good = False
 
     # get cookies
-    c = Cookie.Cookie()
+    c = Cookie.SimpleCookie()
     c.load(os.environ["HTTP_COOKIE"])
 
     #print "Content-type: text/html\n"
