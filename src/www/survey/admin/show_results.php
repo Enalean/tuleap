@@ -25,7 +25,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 
 echo '<h2>'.$Language->getText('survey_admin_show_r_comments','s_res').'</h2>';
 
-if (!$survey_id) {
+if (!isset($survey_id) || !$survey_id) {
 
 	/*
 		Select a list of surveys, so they can click in and view a particular set of responses

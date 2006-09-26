@@ -128,7 +128,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
 		$return .= '<b>'.util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</b><br>';
 
-	    } else {
+	    } else if ($question_type && $question_type != $survey->NONE){
 		$return .= '
 				<TR><TD VALIGN=TOP><B>';
 		$return .= $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
@@ -171,14 +171,14 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$return .= '
 				<INPUT TYPE="HIDDEN" NAME="_'.$quest_array[$i].'" VALUE="-666">';
 
-	    } else if ($question_type == '5') {
+	    } else if ($question_type == $survey->TEXT_FIELD) {
 		/*
 		  This is a text-field question.
 		*/
 		$return .= '
 				<INPUT TYPE="TEXT" name="_'.$quest_array[$i].'" SIZE=30 MAXLENGTH=100 '.($response_exists?" VALUE='".$existing_response."'":"").'><br>';
 
-	    } else if ($question_type == "6") {
+	    } else if ($question_type == $survey->RADIO_BUTTON) {
 		/*
 		  This is a radio-button question.
 		*/
@@ -192,22 +192,31 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' <BR>';
 		    $j++;
 		}    
-	    }		
-	    
-	    $return .= '<br></TD></TR>';
-
+	    }	
+	
+	    if ($q_num > 1) {
+	      $return .= '<br></TD></TR>';
+	    }
 	    $last_question_type=$question_type;
 	}
 
-	$return .= '
-	<TR><TD ALIGN="center" COLSPAN="2">
 
+	if ($q_num > 1) {
+	  $return .= '
+	<TR><TD ALIGN="center" COLSPAN="2">
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 	<BR>
-	<A HREF="/survey/privacy.php?group_id='.$group_id.'&survey_id='.$survey_id.'">'.$Language->getText('survey_s_utils','privacy').'</A>
+	<A HREF="/survey/privacy.php?group_id='.$group_id.'&survey_id='.$survey_id.'">'.$Language->getText('survey_s_utils','privacy').'</A>';
+	}
+
+	$return .= '
 	</TD></TR>
 	</FORM>
 	</TABLE>';
+
+	if ($q_num == 1) {
+	  $return .= $Language->getText('survey_admin_show_r_aggregate','no_active_question');
+	}
 
     } else {
 	$return .= "<H3>".$Language->getText('survey_s_utils','not_found')."</H3>";

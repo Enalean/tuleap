@@ -63,14 +63,14 @@ for ($i=0; $i<$quest_count; $i++) {
 
 	$question_type=db_result($result, 0, "question_type");
 
-	if ($question_type == "4") {
+	if ($question_type == $survey->COMMENT_ONLY) {
 		/*
 			Don't show question number if it's just a comment
 		*/
 
 		echo "\n<TR><TD VALIGN=TOP>&nbsp;</TD>\n<TD>"; 
 
-	} else {
+	} else if ($question_type && $question_type != $survey->NONE){
 
 		echo "\n<TR><TD VALIGN=TOP><B>";
 
@@ -88,7 +88,7 @@ for ($i=0; $i<$quest_count; $i++) {
 
 	}
 	
-	if (($question_type == "1") || ($question_type == "6")) {
+	if (($question_type == $survey->RADIO_BUTTON_1_5) || ($question_type == $survey->RADIO_BUTTON)) {
 
 		/*
 			This is a radio-button question.	
@@ -311,13 +311,20 @@ for ($i=0; $i<$quest_count; $i++) {
 
 	}
 
-	echo "<br></TD></TR>";
-
+	if ($question_type && $question_type != $survey->NONE) {
+	  echo "<br></TD></TR>";
+	}
 	$last_question_type=$question_type;
 
 }
 
 echo "\n\n</TABLE>";
+
+//if no valid question in this survey
+if ($q_num == 1) {
+  echo $Language->getText('survey_admin_show_r_aggregate','no_active_question');
+ }
+
 
 survey_footer(array());
 
