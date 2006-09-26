@@ -694,6 +694,20 @@ class Artifact extends Error {
                     if ($field->isSpecial()) {
                         continue; 
                     }
+                    
+                    // we check if the given value is authorized for this field (for select box fields only)
+                    if (! $masschange && $field->isSelectBox() && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $value)) {
+                            $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
+                            return false;
+                    }                    
+                    if (! $masschange && $field->isMultiSelectBox()) {
+                        foreach ($value as $a_value) {
+                            if (! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
+                                $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
+                                return false;
+                            }
+                        }
+                    }
 
                     if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
 
