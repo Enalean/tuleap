@@ -171,8 +171,3 @@ wiki_views_wkserviews	doc_delete	Détruire ?
 # Script: SF/www/wiki/upload
 #
 wiki_attachment_upload	err_not_exist	Ce fichier joint n'existe pas. Veuillez vérifier l'adresse.
-#
-#-----------------------------------------------
-#Script: SF/common/wiki/phpwiki/lib/loadsave.php
-#
-wiki_install_loadingvirginwiki	loading_wiki	Chargement d'un wiki neuf en cours. Prière d'attendre jusqu'à la fin de l'opération. Ceci ne prendra que quelques minutes.
