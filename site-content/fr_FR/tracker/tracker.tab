@@ -581,6 +581,7 @@ tracker_common_artifact	depend_add	Dépendances ajoutées
 tracker_common_artifact	depend_removed	Dépendances enlevées
 tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
 tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.
+tracker_common_artifact	bad_field_value	La valeur $2 n'est pas autorisée pour le champ $1.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class
