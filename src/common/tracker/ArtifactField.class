@@ -142,8 +142,13 @@ class ArtifactField extends Error {
 		$this->required = $field_array['required'];    // don't use it : value always equal to 0
 		$this->empty_ok = $field_array['empty_ok'];
 		$this->keep_history = $field_array['keep_history'];
-		$this->special = $field_array['special'];		
-		$this->value_function = explode(",",$field_array['value_function']);
+		$this->special = $field_array['special'];
+		// if value_function == "", the result of explode will be: array([0] => "") and that's not what we want.
+		if ($field_array['value_function'] != "") {
+			$this->value_function = explode(",",$field_array['value_function']);
+		} else {
+			$this->value_function = array();
+		}
 		$this->use_it = $field_array['use_it'];
 		$this->place = $field_array['place'];
 		$this->default_value = $field_array['default_value'];
@@ -481,6 +486,14 @@ class ArtifactField extends Error {
 		 	return false;
 		 }
 	}
+
+     /**
+     * Returns true if the field is bound (to a function like group_members, etc ...)
+     * @return boolean true if the field values are bound to a function, false otherwise
+     */
+    function isBound() {
+        return count($this->getValueFunction()) > 0;
+    }
 
 	/**
 	 *  Return value function field attribute value

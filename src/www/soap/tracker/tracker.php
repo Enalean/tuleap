@@ -996,7 +996,8 @@ function artifacttypes_to_soap($at_arr) {
                                     'status' => ($cols > 2) ? db_result($result,$j,6) : ''
                                 );
                             }
-                            if (($field->isMultiSelectBox() || $field->isSelectBox()) && ($field->getValueFunction())) {
+                            // For bound-values select boxes, we add the none value.
+                            if (($field->isMultiSelectBox() || $field->isSelectBox()) && ($field->isBound())) {
                                 $availablevalues[] = array (
                                     'field_id' => $field->getID(),
                                     'group_artifact_id' => $at_arr[$i]->getID(),
