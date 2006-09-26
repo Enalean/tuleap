@@ -27,6 +27,8 @@ a:hover { text-decoration: underline; color: #ff0000; }
 a:visited { text-decoration:none; color: #8b4020}
 a:active { text-decoration:none; color: #000000}
 
+a img { border: none; }
+
 .smaller { font-size: small; }
 .small { font-size: medium; }
 .normal { font-size: large; }

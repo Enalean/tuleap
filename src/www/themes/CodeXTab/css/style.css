@@ -46,6 +46,8 @@ a:hover {
 	color:#ff0000; 
 }
 
+a img { border: none; }
+
 /******** priorities **********/
 .priora { background-color: #dadada; }
 .priorb { background-color: #dad0d0; }
