@@ -28,7 +28,7 @@ if (user_isloggedin()) {
   $display_header_footer = viewvc_utils_display_header();
 
   if ($display_header_footer) {
-    svn_header(array ('title'=>$Language->getText('svn_utils','browse_tree')));
+    svn_header(array ('title'=>$Language->getText('svn_utils','browse_tree'),'stylesheet'=>(array('/viewvc-static/styles.css'))));
   }
 
   viewvc_utils_passcommand();

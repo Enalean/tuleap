@@ -104,7 +104,7 @@ global $DOCUMENT_ROOT;
     } else {
       $begin_doc = strpos($content,">",$begin_body)+1;
     }
-    $length = strpos($content, "</body></html>") - $begin_doc;
+    $length = strpos($content, "</body>\n</html>") - $begin_doc;
 
     // little 'ruse' because viewvc html is not really proper
     // accept everything between the </head> tag and <body ..>
@@ -115,7 +115,6 @@ global $DOCUMENT_ROOT;
     } else {
       $end_head += strlen("</HEAD>");
     }
-
     echo substr($content,$end_head+1,$begin_body-$end_head-1).substr($content,$begin_doc,$length);
 
   } else {

@@ -30,7 +30,7 @@ if (user_isloggedin()) {
   $display_header_footer = viewvc_utils_display_header();
 
   if ($display_header_footer) {
-    commits_header(array ('title'=>$Language->getText('cvs_viewvc', 'title')));
+    commits_header(array ('title'=>$Language->getText('cvs_viewvc', 'title'),'stylesheet'=>(array('/viewvc-static/styles.css'))));
   }
 
   viewvc_utils_passcommand();
