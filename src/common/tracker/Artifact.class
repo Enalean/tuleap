@@ -716,6 +716,14 @@ class Artifact extends Error {
 			}
                         // The field is a multi values field and it has multi assigned values
                         $values = $value;
+                        
+                        // check if the user can update the field or not
+                        if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
+                            // The user does not have the permissions to update the current field,
+                            // we exit the function with an error message
+                            $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+                            return false;
+                        }
 
 			//don't take into account the none value if there are several values selected
 			if (count($values) > 1) {
