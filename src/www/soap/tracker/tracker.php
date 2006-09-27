@@ -1103,6 +1103,8 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
             return new soap_fault(get_artifact_type_fault,'getArtifacts','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif (! $at->userCanView()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifacts','Permission Denied','You are not granted sufficient permission to perform this operation.');
         } elseif ($at->isError()) {
             return new soap_fault(get_artifact_type_fault,'getArtifacts',$at->getErrorMessage(),$at->getErrorMessage());
         }
