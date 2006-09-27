@@ -173,8 +173,11 @@ class ArtifactFactory extends Error {
 			return false;
 		} else {
 			while ($arr = db_fetch_array($result)) {
-				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id'], true, true);
-				$artifacts[$arr['artifact_id']] = $artifact;
+				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id'], true);
+                // artifact is not added if the user can't view it
+                if ($artifact->userCanView()) {
+                    $artifacts[$arr['artifact_id']] = $artifact;
+                }
 			}
 		}
 		return $artifacts;
