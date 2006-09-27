@@ -404,21 +404,23 @@ while ($ln = pop(@groupdump_array)) {
 	# if not present (if the file does not exist it is created)
 	$postcommit_file = "$svn_dir/hooks/post-commit";
 	if (($svn_tracker) && ($gstatus eq 'A')) {
-	  open (FD, "+>>$postcommit_file") ;
+	  open (FD, "$postcommit_file") ;
 	  $blockispresent = 0;
 	  while (<FD>) {
 	    if ($_ eq "$MARKER_BEGIN\n") { $blockispresent = 1; last; }
 	  }
+	  close(FD);
 	  if (! $blockispresent) {
+	    open (FD, ">>$postcommit_file") ;
 	    print FD "#!/bin/sh\n";
 	    print FD "$MARKER_BEGIN\n";
 	    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
 	    print FD "$codex_bin_prefix/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
 	    print FD "$MARKER_END\n";
+            close(FD);
 	    system("chown -R $cxname:$gid $postcommit_file");
 	    system("chmod 775 $postcommit_file");
 	  }
-	  close(FD);
 	}
 
 
