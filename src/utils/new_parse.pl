@@ -807,7 +807,7 @@ sub add_group {
 	push @group_array, "$gname:x:$gid:$userlist\n";
 
 # LJ Add the CVS repo in the allowed root for CVS server
-	push @cvs_root_allow_array, "$cvs_prefix/$gname\n";
+	push @cvs_root_allow_array, "/cvsroot/$gname\n";
 	
 # LJ Comment the if. Does not apply on CodeX
 #	if (substr($hostname,0,3) ne "cvs") {
