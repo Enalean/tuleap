@@ -1059,8 +1059,8 @@ function artifacttypes_to_soap($at_arr) {
                     'name'=>$at_arr[$i]->data_array['name'],
                     'description'=>$at_arr[$i]->data_array['description'],
                     'item_name'=>$at_arr[$i]->data_array['item_name'],
-                    'open_count' => $at_arr[$i]->getOpenCount(),
-                    'total_count' => $at_arr[$i]->getTotalCount(),
+                    'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():NULL),
+                    'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():NULL),
                     'total_file_size' => db_result($result, 0, 0),
                     'field_sets' => $field_sets
                 );
