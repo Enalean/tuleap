@@ -236,7 +236,8 @@ require $utils_path."/svn/svn-checkins.pl";
 &db_connect;
 
 # retrieve the group_id
-my ($rootnull, $root, $gname) = split ('/', $repos);
+my $gname = $repos;
+$gname =~ s|.*/||; # Remove everything until the last slash
 my $group_id = &set_group_info_from_name($gname);
 
 my $codex_srv;
