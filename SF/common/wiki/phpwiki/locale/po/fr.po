@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-26 08:34+0100\n"
+"POT-Creation-Date: 2006-09-28 11:32+0100\n"
 "PO-Revision-Date: 2004-06-22 21:10+0200\n"
 "Last-Translator: Pierrick Meignen <meignen.pierrick@wanadoo.fr>, Roland "
 "Trique <roland.trique@free.fr>, Stéphane Gourichon <stephane.gourichon@lip6."
@@ -234,7 +234,7 @@ msgid "External links contain blocked domains:"
 msgstr ""
 
 #: ../lib/editpage.php:397
-#, fuzzy, php-format
+#, php-format
 msgid "%s is listed at %s"
 msgstr "%s pages pointent vers %s :"
 
@@ -579,7 +579,6 @@ msgid "Edited by: %s"
 msgstr "Édité par : %s"
 
 #: ../lib/loadsave.php:95 ../lib/loadsave.php:96
-#, fuzzy
 msgid "LoadDump"
 msgstr "RécupérationDeLaPage"
 
@@ -821,10 +820,12 @@ msgid "Loading '%s'"
 msgstr "Chargement ' %s '"
 
 #: ../lib/loadsave.php:1257
-msgid "Loading up virgin wiki"
+msgid ""
+"Loading up virgin wiki. Please wait until the end of the process, this will "
+"take few minutes."
 msgstr ""
-"Chargement d'un wiki vierge. Prière d'attendre jusqu'à la fin de "
-"l'opération. Ceci ne prendra que quelques instants."
+"Chargement d'un wiki vierge en cours. Prière d'attendre jusqu'à la fin de "
+"l'opération, Ceci ne prendra que quelques instants. "
 
 #: ../lib/loadsave.php:1305
 msgid "No uploaded file to upload?"
@@ -1754,7 +1755,6 @@ msgid "Embed hidden comments in WikiPages."
 msgstr "Cacher des commentaires dans une PageWiki."
 
 #: ../lib/plugin/CreateBib.php:36
-#, fuzzy
 msgid "CreateBib"
 msgstr "CréerUneTdm"
 
@@ -2186,7 +2186,7 @@ msgid "Links"
 msgstr "Liens"
 
 #: ../lib/plugin/LinkDatabase.php:169
-#, fuzzy, php-format
+#, php-format
 msgid "Unsupported format argument %s"
 msgstr "Les gestionnaires supportés sont : %s"
 
@@ -2305,7 +2305,6 @@ msgid "Download for backup"
 msgstr "Télécharger pour sauvegarder"
 
 #: ../lib/plugin/PageDump.php:138
-#, fuzzy
 msgid "Download all revisions for backup"
 msgstr "Télécharger pour sauvegarder"
 
@@ -2315,13 +2314,11 @@ msgid "Preview: Page dump of %s"
 msgstr "Prévisualisation : récupération de %s"
 
 #: ../lib/plugin/PageDump.php:148
-#, fuzzy
 msgid ""
 "(formatted for PhpWiki developers as pgsrc template, not for backing up)"
 msgstr "(format pour les développeurs, pas pour la sauvegarde)"
 
 #: ../lib/plugin/PageDump.php:151 ../lib/plugin/PageDump.php:171
-#, fuzzy
 msgid "Preview as normal format"
 msgstr "Prévisualisation au format de sauvegarde"
 
@@ -2330,7 +2327,6 @@ msgid "Preview as backup format"
 msgstr "Prévisualisation au format de sauvegarde"
 
 #: ../lib/plugin/PageDump.php:161
-#, fuzzy
 msgid "(formatted for backing up: all revisions)"
 msgstr "(format de sauvegarde)"
 
@@ -2506,7 +2502,7 @@ msgid "File extension for csv file has to be '.csv'"
 msgstr ""
 
 #: ../lib/plugin/PhotoAlbum.php:605
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to find src='%s'"
 msgstr "Impossible de lire src=%s"
 
@@ -3125,7 +3121,6 @@ msgid "Supported themes"
 msgstr "Thèmes supportés"
 
 #: ../lib/plugin/Template.php:61
-#, fuzzy
 msgid "Template"
 msgstr "Thème"
 
@@ -3355,12 +3350,10 @@ msgid "Attachment"
 msgstr ""
 
 #: ../lib/plugin/UpLoad.php:207
-#, fuzzy
 msgid "Number of revision"
 msgstr "révision précédente"
 
 #: ../lib/plugin/UpLoad.php:229
-#, fuzzy
 msgid "Attached files"
 msgstr "le fichier %s"
 
@@ -3450,7 +3443,6 @@ msgid "UserRatings"
 msgstr "Statistiques d'utilisateur"
 
 #: ../lib/plugin/UserRatings.php:51
-#, fuzzy
 msgid "List the user's ratings."
 msgstr "Affiche la listes des pages les plus populaires."
 
@@ -3495,7 +3487,6 @@ msgid "Legend"
 msgstr "Légende"
 
 #: ../lib/plugin/VisualWiki.php:499
-#, fuzzy
 msgid "days"
 msgstr "%s jours"
 
@@ -3706,12 +3697,10 @@ msgid "to"
 msgstr "à"
 
 #: ../lib/plugin/WikiAdminMarkup.php:37
-#, fuzzy
 msgid "WikiAdminMarkup"
 msgstr "WikiAdminRenommer"
 
 #: ../lib/plugin/WikiAdminMarkup.php:41
-#, fuzzy
 msgid "Change the markup type of selected pages."
 msgstr "Changer le propriétaire des pages selectionnées."
 
@@ -3721,22 +3710,20 @@ msgid "WikiAdminMarkup from %s to %s"
 msgstr "WikiAdminMarkup %s par %s"
 
 #: ../lib/plugin/WikiAdminMarkup.php:82
-#, fuzzy, php-format
+#, php-format
 msgid "change page '%s' to markup type '%s'."
 msgstr "Changement de propriétaire %s à %s."
 
 #: ../lib/plugin/WikiAdminMarkup.php:86
-#, fuzzy, php-format
+#, php-format
 msgid "Couldn't change page '%s' to markup type '%s'."
 msgstr "Impossible de changer le propriétaire '%s' à '%s'."
 
 #: ../lib/plugin/WikiAdminMarkup.php:103
-#, fuzzy
 msgid "PhpWikiAdministration/Markup"
 msgstr "AdministrationDePhpWiki"
 
 #: ../lib/plugin/WikiAdminMarkup.php:152
-#, fuzzy
 msgid ""
 "Are you sure you want to permanently change the markup type of the selected "
 "files?"
@@ -3745,17 +3732,14 @@ msgstr ""
 "sélectionnés ?"
 
 #: ../lib/plugin/WikiAdminMarkup.php:156
-#, fuzzy
 msgid "Change markup type"
 msgstr "Changer le pays"
 
 #: ../lib/plugin/WikiAdminMarkup.php:157
-#, fuzzy
 msgid "Select the pages to change the markup type:"
 msgstr "Sélectionnez les pages qui vont chnager de propriétaire :"
 
 #: ../lib/plugin/WikiAdminMarkup.php:179
-#, fuzzy
 msgid "Change markup"
 msgstr "Changer le Mot de passe"
 
@@ -4934,7 +4918,6 @@ msgstr "recherche une nouvelle colonne session.sess_ip"
 # lib/diff.php:1003 lib/diff.php:1021
 #: ../lib/upgrade.php:432 ../lib/upgrade.php:437 ../lib/upgrade.php:469
 #: ../lib/upgrade.php:478
-#, fuzzy
 msgid "fixed"
 msgstr "Dernière modification"
 
@@ -6547,6 +6530,11 @@ msgstr "(Utilisateur : %s)"
 msgid "Sidebar"
 msgstr "Barre verticale"
 
+#~ msgid "Loading up virgin wiki"
+#~ msgstr ""
+#~ "Chargement d'un wiki vierge. Prière d'attendre jusqu'à la fin de "
+#~ "l'opération. Ceci ne prendra que quelques instants."
+
 # lib/diff.php:1001 lib/diff.php:1019
 #~ msgid "period"
 #~ msgstr "period"
@@ -6613,7 +6601,7 @@ msgstr "Barre verticale"
 #~ msgstr "Quels liens ici"
 
 #~ msgid "Signed as %s"
-#~ msgstr "Connecté comme %s"
+#~ msgstr "Connecté comfuzzyme %s"
 
 #~ msgid "EditText"
 #~ msgstr "ÉditerLeContenu"
@@ -6643,7 +6631,6 @@ msgstr "Barre verticale"
 #~ msgstr "Photos"
 
 # lib/pageinfo.php:10 lib/stdlib.php:239
-#, fuzzy
 #~ msgid "HowTo"
 #~ msgstr "AllerVers"
 
@@ -6687,7 +6674,6 @@ msgstr "Barre verticale"
 #~ msgid "timeout:"
 #~ msgstr "temps mort :"
 
-#, fuzzy
 #~ msgid "Replaced link in %s."
 #~ msgstr "Lien remplacé dans %s."
 
@@ -6703,18 +6689,15 @@ msgstr "Barre verticale"
 #~ msgid "Description: "
 #~ msgstr "Description: "
 
-#, fuzzy
 #~ msgid "PgrsrcTranslation"
 #~ msgstr "TraductionPgsrc"
 
 #~ msgid "version <em>%s</em> <b>FIXED</b>"
 #~ msgstr "version <em>%s</em> <b>RÉSOLU</b>"
 
-#, fuzzy
 #~ msgid "BlockQuote"
 #~ msgstr "verrouillée"
 
-#, fuzzy
 #~ msgid "PreferenceApp"
 #~ msgstr "Préférences"
 
@@ -6728,11 +6711,9 @@ msgstr "Barre verticale"
 #~ msgid "Author:"
 #~ msgstr "Auteur :"
 
-#, fuzzy
 #~ msgid "The PhpWiki Programming Team"
 #~ msgstr "L'équipe de développement de PhpWiki"
 
-#, fuzzy
 #~ msgid "';' and ':' are deprecated"
 #~ msgstr "';' et ':' dans les noms de page est désapprouvé"
 
@@ -6745,59 +6726,47 @@ msgstr "Barre verticale"
 #~ msgid "New Page"
 #~ msgstr "Nouvelle page."
 
-#, fuzzy
 #~ msgid "Invalid username"
 #~ msgstr "Mot de identifiant d'utilisateur invalide."
 
-#, fuzzy
 #~ msgid "PageChange Notification sent to %s"
 #~ msgstr "Les notifications de changement de la page %s ont été envoyés à %s"
 
-#, fuzzy
 #~ msgid "PageChange Notification Error: Couldn't send to %s"
 #~ msgstr ""
 #~ "Erreur lors des notifications de changements de page: Impossible "
 #~ "d'envoyer %s à %s"
 
 # lib/editpage.php:19
-#, fuzzy
 #~ msgid "Welcome to %s"
 #~ msgstr "... copié à %s"
 
-#, fuzzy
 #~ msgid "Are you sure you want to save these access restrictions?"
 #~ msgstr ""
 #~ "Ëtes-vous sûr de vouloir définitivement modifier l'accès aux fichiers "
 #~ "sélectionnés ?"
 
-#, fuzzy
 #~ msgid "Continue"
 #~ msgstr "Contenu"
 
-#, fuzzy
 #~ msgid "WikiAdminSetAclSimple"
 #~ msgstr "WikiAdminSetAcl"
 
-#, fuzzy
 #~ msgid "PhpWikiAdministration/SetAclSimple"
 #~ msgstr "AdministrationDePhpWiki/DéfinirAcl"
 
-#, fuzzy
 #~ msgid "Selected Pages: %s"
 #~ msgstr "Pages sélectionnées : "
 
-#, fuzzy
 #~ msgid ""
 #~ "Description: Selected Grant checkboxes allow access, unselected "
 #~ "checkboxes deny access."
 #~ msgstr ""
 #~ "Les cases sélectionnées autorisent l'accès, sinon elles l'interdisent."
 
-#, fuzzy
 #~ msgid "Existing settings for %s:"
 #~ msgstr "Il manque %s pour %s"
 
-#, fuzzy
 #~ msgid "Update Settings"
 #~ msgstr "Préférences générales d'auteur."
 
