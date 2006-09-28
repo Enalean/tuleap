@@ -61,6 +61,9 @@ class SVNCommitMetaData {
     function containsDBUpdate() {
         return (is_array($this->getUpdateType()) && array_key_exists("db", array_flip($this->getUpdateType())));
     }
+    function getAvailableLevels() {
+        return array('minor', 'normal', 'critical');
+    }
     
     /**
      * Get the CSS class regarding to the level of criticality for this CommitMetaData

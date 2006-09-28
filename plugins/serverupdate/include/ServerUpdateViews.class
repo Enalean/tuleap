@@ -560,8 +560,11 @@ class ServerUpdateViews extends Views {
             
             $output .= '<p class="small"><strong>'.$Language->getText('plugin_serverupdate_update','prio_colors').'</strong>';
             $output .= '<table><tr>';
-            for ($i=1; $i<10; $i++) {
-                $output .=  '<td class="'.get_priority_color($i).'">'.$i.'</td>';
+            $svn_meta_data = new SVNCommitMetaData();
+            $levels = $svn_meta_data->getAvailableLevels();
+            foreach($levels as $level) {
+                $svn_meta_data->setLevel($level);
+                $output .=  '<td class="'.$svn_meta_data->getLevelClass().'">&nbsp;'.$level.'&nbsp;</td>';
             }
             $output .=  '</tr></table>';
             
