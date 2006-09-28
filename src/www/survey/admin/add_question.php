@@ -23,7 +23,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-if ($post_changes) {
+if (isset($post_changes) && $post_changes) {
    $question_id = survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
 
    // if radio-type question is created, redirect to Edit A Question page

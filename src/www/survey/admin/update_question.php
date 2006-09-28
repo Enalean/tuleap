@@ -11,7 +11,7 @@ require_once('common/survey/SurveySingleton.class');
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$Language->getText('survey_admin_update_question','edit_a_q')));
+survey_header(array('title'=>$Language->getText('survey_admin_update_question','edit_a_q'), 'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
