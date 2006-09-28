@@ -57,7 +57,7 @@ class BaseLanguage {
         
         if (is_null($plugin_name)) {
             // load default message file
-            $ftname = $GLOBALS['sys_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
+            $ftname = $GLOBALS['sys_incdir']. $this->lang.'/'.$fname.'.tab' ;
         } else {
             // load default message file for plugin
             $ftname = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
