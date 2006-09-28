@@ -126,8 +126,9 @@ global $DOCUMENT_ROOT;
       $begin_doc = strpos($content,">",$begin_body)+1;
     }
     $length = strpos($content, "</body>\n</html>") - $begin_doc;
-
-    echo substr($content,$begin_doc,$length);
+   
+    // Now insert references, and display
+    echo util_make_reference_links(substr($content,$begin_doc,$length),$GLOBALS['group_id']);
 
   } else {
     header('Content-Type:' . $viewvc_content_type);

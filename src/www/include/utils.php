@@ -385,7 +385,7 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 	return implode($break, $result);
 }
 
-function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
+function util_make_links ($data='',$group_id = 0) {
     if(empty($data)) { return $data; }
     
     // www.yahoo.com => http://www.yahoo.com
@@ -397,6 +397,13 @@ function util_make_links ($data='',$group_id = 0, $group_artifact_id = 0) {
     // john.doe@yahoo.com => <a href="mailto:...">...</a>
     $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
+    if ($group_id)
+      return util_make_reference_links ($data,$group_id);
+    else return $data;
+}
+
+function util_make_reference_links ($data,$group_id) {
+    if(empty($data)) { return $data; }
     $reference_manager =& ReferenceManager::instance();
     if ($group_id)
         $reference_manager->insertReferences($data,$group_id);
