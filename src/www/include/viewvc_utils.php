@@ -45,7 +45,8 @@ function viewvc_utils_display_header() {
        strpos($request_uri,"annotate=") === false &&
        strpos($request_uri,"&r1=") === false &&
        (strpos($request_uri,"view=") === false ||
-	 strpos($request_uri,"view=co") !== false ||
+         strpos($request_uri,"view=co") !== false ||
+	 strpos($request_uri,"view=graphimg") !== false ||
          strpos($request_uri,"view=patch") !== false) ) {
     return false;
   } else {
