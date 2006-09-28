@@ -320,7 +320,7 @@ function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='') {
 
   $view_str=$displayfunc;
   if ($rev) {
-    $view_str.='&rev='.$rev;
+    $view_str.='&revision='.$rev;
   }
 
   $row_grp = db_fetch_array($res_grp);
@@ -523,11 +523,11 @@ function show_commit_details ($result) {
 		    }
 		    $previous = join('.', $new_prev);
 		  }
-		  $type = makeCvsLink($group_id, $filename, $type_text, '', '&r1=text&tr1='.$previous.'&r2=text&tr2='.$revision);
+		  $type = makeCvsLink($group_id, $filename, $type_text, '', '&r1='.$previous.'&r2='.$revision);
 		}
 
-		$rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&content-type=text/x-cvsweb-markup');
-		$filename = makeCvsLink($group_id, $filename, $filename);
+		$rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&view=markup');
+		$filename = makeCvsLink($group_id, $filename, $filename,'','&view=log');
 	      }
 	    }
 	    ##$commits_url = '<A HREF="/commits/download.php/Commits'.$commit_id.'.txt?commit_id='.$id.'">'.$filename.'</a>';
