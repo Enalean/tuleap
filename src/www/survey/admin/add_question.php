@@ -24,16 +24,11 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 if ($post_changes) {
-   survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
-
-   $quest = htmlspecialchars($question);
-   $qry = "SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_type='$question_type' AND question='$quest'";
-   $res = db_query($qry);   
-   $quest_id = db_result($res,0,'question_id');
+   $question_id = survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
 
    // if radio-type question is created, redirect to Edit A Question page
-   if ($question_type=="6") {
-       session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$quest_id");       
+   if ($question_type=="6" && isset($question_id)) {
+       session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id");       
    }
 }
 

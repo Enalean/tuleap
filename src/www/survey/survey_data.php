@@ -89,9 +89,11 @@ function survey_data_question_create($group_id,$question,$question_type)
 	"VALUES ('$group_id','$question','$question_type')";
     $result=db_query($sql);
     if ($result) {
-	$feedback .= " ".$Language->getText('survey_s_data','q_create_succ',db_insertid($result))." ";
+        $question_id = db_insertid($result);
+        $feedback .= " ".$Language->getText('survey_s_data','q_create_succ',$question_id)." ";
+        return $question_id;
     } else {
-	$feedback .= " ".$Language->getText('survey_s_data','q_create_fail',db_error());
+        $feedback .= " ".$Language->getText('survey_s_data','q_create_fail',db_error());
     }
 }
 
