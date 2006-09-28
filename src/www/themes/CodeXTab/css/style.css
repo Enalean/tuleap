@@ -30,6 +30,8 @@ body {
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: #F7F7F7; }
 
+img { border: none; }
+
 PRE,TT { font-family: courier,sans-serif; }
 
 /********   links    **********/
@@ -46,7 +48,6 @@ a:hover {
 	color:#ff0000; 
 }
 
-a img { border: none; }
 
 /******** priorities **********/
 .priora { background-color: #dadada; }
