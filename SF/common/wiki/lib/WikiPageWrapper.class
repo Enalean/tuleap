@@ -183,27 +183,39 @@ Upload:num_rev/filename
       }
       $we = new WikiEntry();
       $we->setGid($this->gid);
-      $we->setLanguage_id($GLOBALS['language_id']);
-      
+      $we->setLanguage_id($_REQUEST['language_id']);
+
+      $name_fr = "Page d'accueil";
+      $page_fr = "PageAccueil";
+      $desc_fr = "Document initial du Wiki";
+      $name_en = "Home Page";
+      $page_en = "HomePage";
+      $desc_en = "Initial wiki document";
       switch ($we->getLanguage_id()){
               // English
 	      case 1:   define('WIKI_PGSRC', 'codexpgsrc');
 			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+			$we->setName($name_en);
+		        $we->setPage($page_en);
+			$we->setDesc($desc_en);
 			break;
 	      // French   
 	      case 2:   define('WIKI_PGSRC', 'pgsrc');
 			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/locale/fr/pgsrc');
+			$we->setName($name_fr);
+		        $we->setPage($page_fr);
+			$we->setDesc($desc_fr);
 			break;
 	      
 	      default : define('WIKI_PGSRC', 'codexpgsrc');
 			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+			$we->setName($name_en);
+		        $we->setPage($page_en);
+			$we->setDesc($desc_en);
+
+			
       }
-
-      $we->setName($GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 'dfltentryname'));
-      $we->setPage($GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 'dfltentrypage'));
-      $we->setDesc($GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 'dfltentrydesc'));
       $we->add();
-
       $this->render();
   }
 }
