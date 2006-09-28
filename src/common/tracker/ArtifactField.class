@@ -558,7 +558,7 @@ class ArtifactField extends Error {
 
 	    // close_date and assigned_to fields are special select box fields
 	    $value_func = $this->getGlobalValueFunction();
-	    if ($value_func[0]) {
+	    if (count($value_func) > 0) {
 			// For now all of our value functions returns users so there is no need
 			// to make a test for the type of value function it is
 			// if ($value_func == '...')
