@@ -44,6 +44,7 @@ function viewvc_utils_display_header() {
   if ( strpos($request_uri,"/?") === false && 
        strpos($request_uri,"annotate=") === false &&
        strpos($request_uri,"&r1=") === false &&
+       strpos($request_uri,"&r2=") === false &&
        (strpos($request_uri,"view=") === false ||
          strpos($request_uri,"view=co") !== false ||
 	 strpos($request_uri,"view=graphimg") !== false ||

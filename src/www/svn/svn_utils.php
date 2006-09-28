@@ -362,20 +362,20 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 
 	if ($filename) {
 	    // It' a file
-	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'');
-	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&rev=$revision&view=markup");
+	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'&view=log');
+	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&revision=$revision&view=markup");
 
 	} else {
 	    // It' a directory
 	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'');
-	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&rev=$revision");
+	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&view=log");
 	}
 
 	if ($type == 'Change') {	    
 
 	    $viewtype_url = svn_utils_make_viewlink($group_name, $fullpath, 
                             $Language->getText('svn_utils','change'),
-			   "&r1=text&tr1=$revision&r2=text&tr2=".($revision-1)."&diff_format=h");
+			   "&r1=$revision&r2=".($revision-1)."&diff_format=h");
 
 	} else if ($type == 'Add') {
 	    $viewtype_url = $Language->getText('svn_utils','add');
