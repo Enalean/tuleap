@@ -1254,7 +1254,7 @@ function SetupWiki (&$request)
         $request->_user = new WikiUser($request, _("The PhpWiki programming team"),
                                        WIKIAUTH_BOGO);
     // Get the localised wiki loading message
-    $message = _("Loading up virgin wiki");
+    $message = _("Loading up virgin wiki. Please wait until the end of the process, this will take few minutes.");
     
     StartLoadDump($request, $message);
     echo "<dl>\n";
