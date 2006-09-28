@@ -74,8 +74,7 @@ wiki_lib_attachment	err_multi_id	Il existe plusieurs identifiants pour un fichie
 wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki&nbsp;: $1
 wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki&nbsp;: $1
 wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki&nbsp;: $1
-wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été mo      <li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
-difiée
+wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été modifiée<li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiPage.class
@@ -115,20 +114,11 @@ wiki_views_wkserviews	entry_em	<em>Affichée dans la page par défaut du service w
 wiki_views_wkserviews	entry_name	Nom du document&nbsp;:
 wiki_views_wkserviews	wikipage	PageWiki&nbsp;:
 wiki_views_wkserviews	givename	Ou donnez un nom de page&nbsp;      <li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
-:
 wiki_views_wkserviews	wikipage_em	<em>Sélectionnez une <a href="$1&view=wikiPages">Page de Projet Wiki</a> ou entrez un autre nom de PageWiki (Si la page n'existe pas, elle sera créée).</em>
 wiki_views_wkserviews	description	Description&nbsp;:	
 wiki_views_wkserviews	description_em	<em>Description du document Wiki</em>
 wiki_views_wkserviews	rank_screen	Rang à l'écran&nbsp;:
 wiki_views_wkserviews	rank_screen_em	<em>Les documents sont affiché en fonction de cette référence</em>
-wiki_views_wkserviews	menuview	Parcourir
-wiki_views_wkserviews	menuadmin	Admin
-wiki_views_wkserviews	menudocs	Documents Wiki
-wiki_views_wkserviews	menupage	Pages Wiki
-wiki_views_wkserviews	menuattch	Fichiers joints
-wiki_views_wkserviews	menuperm	Permissions Wiki
-wiki_views_wkserviews	wiki_admin_panel_page	AdministrationDePhpWiki
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p><h3><a href="$3&view=wikiPages">Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p><h3><a href="$4&view=wikiAttachments">Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p><h3><a href="$4&view=wikiPerms">Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki $6.</p><h3><a href="$7&pagename=$8">Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Gérer les Documents Wiki</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Créer un nouveau Document Wiki</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Documents Wiki</h3>
