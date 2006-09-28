@@ -246,17 +246,37 @@ class WikiServiceViews extends WikiViews {
     <table class="ServiceMenu">
       <tr>
         <td>';
+    switch(DEFAULT_LANGUAGE){
+	    case 'en_US': $attatch_page = 'UpLoad';
+			 $attatch_menu = 'Attach a file';   
+			 $preferences_page = 'UserPreferences';
+			 $preferences_menu = 'Preferences';
+			 $help_menu = 'Help';
+			 break;
+	    case 'fr_FR': $attatch_page = "DéposerUnFichier";
+			 $attatch_menu = "Joindre un fichier";
+			 $preferences_page = "PréférencesUtilisateurs";   
+			 $preferences_menu = "Préférences";
+			 $help_menu = 'Aide';
+			 break;   
+	    default :     $attatch_page = 'UpLoad';
+			 $attatch_menu = 'Attach a file';   
+			 $preferences_page = 'UserPreferences';
+			 $preferences_menu = 'Preferences';
+ 			 $help_menu = 'Help';
+    }	
+    
     print '
     <ul class="ServiceMenu">
-      <li><a href="'.$this->wikiLink.'">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menudocuments').'</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiLink.'">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menudocuments') . '</a>&nbsp;|&nbsp;</li>
       <li><a href="'.$this->wikiLink.'&view=browsePages">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="javascript:help_window(\''.$this->wikiLink.'&pagename='. $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'attatch_page') .'&pv=1\')">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuattch').'</a>&nbsp;|&nbsp;</li>
-      <li><a href="'.$this->wikiLink.'&pagename='. $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'preferences_page') .'">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuprefs').'</a>&nbsp;|&nbsp;</li>';
+      <li><a href="javascript:help_window(\''.$this->wikiLink.'&pagename='. $attatch_page .'&pv=1\')">'.$attatch_menu.'</a>&nbsp;|&nbsp;</li>
+      <li><a href="'.$this->wikiLink.'&pagename='. $preferences_page .'">'.$preferences_menu.'</a>&nbsp;|&nbsp;</li>';
     if(user_ismember($this->gid, 'W2')) {
         print '<li><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>';
     }
     
-    print '<li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
+    print '<li>'.help_button('WikiService.html', false, $help_menu).'</li>
    </ul>';
     
   print '
