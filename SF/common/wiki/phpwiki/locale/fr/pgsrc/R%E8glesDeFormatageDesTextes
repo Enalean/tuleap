@@ -202,7 +202,7 @@ _Terme<b>:</b>~<nouvelle ligne> définition_ pour les listes de définitions.%%%
   donne
   <?plugin BackLinks page=PageAccueil info=hits ?>
 
-* pour plus d'informations sur les plugins, voir PluginWiki, et GestionPlugin pour 
+* pour plus d'informations sur les plugins, voir PluginWiki, et GestionDesPlugins pour 
   la liste des plugins.
 
 ----
