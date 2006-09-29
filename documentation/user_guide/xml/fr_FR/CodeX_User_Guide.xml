@@ -39,6 +39,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterVersionControlWithSubversion SYSTEM "VersionControlWithSubversion.xml">
 <!ENTITY ChapterPatchManager SYSTEM "PatchManager.xml">
 <!ENTITY ChapterDocumentManager SYSTEM "DocumentManager.xml">
+<!ENTITY ChapterDocumentManager2 SYSTEM "DocumentManager2.xml">
 <!ENTITY ChapterWiki SYSTEM "Wiki.xml">
 <!ENTITY ChapterSupportRequestManager SYSTEM "SupportRequestManager.xml">
 <!ENTITY ChapterCommunicationServices SYSTEM "CommunicationServices.xml">
@@ -74,6 +75,7 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterVersionControlWithCVS;
   &ChapterVersionControlWithSubversion;
   &ChapterDocumentManager;
+  &ChapterDocumentManager2;
   &ChapterWiki;
   &ChapterCommunicationServices;
   &ChapterSurveyManager;
