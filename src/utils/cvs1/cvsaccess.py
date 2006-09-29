@@ -24,11 +24,14 @@ import string
 import group
 import user
 
+
+
 def check_read_access(username, cvsrepo, cvspath):
- 
+
     # extract project unix name (group name) and fetch
     # the group information from DB
-    group_name = string.split(cvsrepo,'/')[2]
+    path_elements = string.split(cvsrepo,'/')
+    group_name = path_elements[len(path_elements)-1]
     group_id = group.set_group_info_from_name(group_name)
 
     # if the file path exists as such then it's a directory
@@ -38,14 +41,16 @@ def check_read_access(username, cvsrepo, cvspath):
         path = path+',v'
 
     mode = os.stat(path)[stat.ST_MODE]
+    mode_repo = os.stat(cvsrepo)[stat.ST_MODE]
 
     #print "Content-type: text/html\n"
     #print user.user_is_member(group_id, '0')
-    
+
     # A directory that is not world readable can only be viewed
     # through viewvc if the user is a project member
-    if group_id and (mode & stat.S_IROTH) == 0 and not user.user_is_member(group_id, '0'):
+    # Since .CODEX_PRIVATE only removes read access on top directory,
+    # we need to also check it.
+    if group_id and ((mode & stat.S_IROTH) == 0 or (mode_repo & stat.S_IROTH) == 0) and not user.user_is_member(group_id, '0'):
         return False
     else:
         return True
-
