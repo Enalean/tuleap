@@ -501,10 +501,8 @@ class ServerUpdateViews extends Views {
             $titles[] = $Language->getText('plugin_serverupdate_update','Actions');
             $output .= html_build_list_table_top($titles);
             
-            //for($i = 0; $i < count($this->_updates) ; $i++) {
             $i=0; // for color alternance
             foreach($commits as $commit) {
-                //$output .= '<tr class="'.util_get_alt_row_color($i).'" >';
                 $metadata = $commit->getMetaData();
                 $output .= '<tr class="'.$metadata->getLevelClass().'" >';
                 //Revision
