@@ -16,7 +16,7 @@
     <title>Installation</title>
 
     <para>In order to install CodeX's Command Line Interface (CLI), 
-    you must have PHP installed in your local machine. The latest 
+    you must have PHP installed on your local machine. The latest 
     PHP4 version or PHP 5 is highly recommended. Also, PHP must be 
     compiled without the --disable-cli parameter in order to create 
     the PHP binaries.</para>
@@ -67,7 +67,7 @@
                  <listitem>
                     <para>NUSOAP_DIR: Points to the installation directory of the 
                         NuSOAP PHP Library. A copy of the library is located in 
-                        $PREFIX/nusoap/lib/.
+                        $PREFIX/nusoap/.
                     </para>
                  </listitem>
                  <listitem>
@@ -107,7 +107,7 @@ chmod +x $PREFIX/codex.php
         <example>
             <title>login command</title>
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php --v login --username=(your user) --password=(your password)
+[mnazaria@linux codex cli ]$ ./codex.php -v login --username=(your user) --password=(your password)
 CodeXSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
 CodeXSOAP::Connected!
 CodeXSOAP::Executing command login...

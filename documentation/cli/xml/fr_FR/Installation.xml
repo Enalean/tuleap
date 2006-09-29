@@ -71,7 +71,7 @@
                  <listitem>
                     <para>NUSOAP_DIR: Pointe vers le répertoire d'installation 
                         de la librairie PHP NuSOAP. Une copie de cette librairie 
-                        se trouve dans le répertoire $PREFIX/nusoap/lib/.
+                        se trouve dans le répertoire $PREFIX/nusoap/.
                     </para>
                  </listitem>
                  <listitem>
@@ -112,7 +112,7 @@ chmod +x $PREFIX/codex.php
         <example>
             <title>commande de login</title>
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php --v login --username=(votre nom d'utilisateur) --password=(votre mot de passe)
+[mnazaria@linux codex cli ]$ ./codex.php -v login --username=(votre nom d'utilisateur) --password=(votre mot de passe)
 CodeXSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
 CodeXSOAP::Connected!
 CodeXSOAP::Executing command login...
