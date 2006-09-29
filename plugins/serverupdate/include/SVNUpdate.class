@@ -31,7 +31,7 @@ define("XML_COMMIT_PATH", "path");
 define("XML_COMMIT_ACTION_PATH", "action");
 define("XML_COMMIT_MESSAGE", "msg");
 
-define("UPGRADE_SCRIPT_PATH", "updates/scripts/");
+define("UPGRADE_SCRIPT_PATH", "/src/updates/scripts/");
 
 class SVNUpdate {
     
@@ -43,6 +43,7 @@ class SVNUpdate {
      * @var string the repository
      */
     var $repository;
+    var $branch;
     /**
      * @var string the actual revision of the working copy
      */
@@ -80,6 +81,12 @@ class SVNUpdate {
     }
     function setRepository($repository) {
         $this->repository = $repository;
+        $url = parse_url($repository);
+        // we remove /svnroot/codex from path to retrieve the branch
+        $this->branch = substr($url['path'], 14);
+    }
+    function getBranch() {
+        return $this->branch;
     }
     function getWorkingCopyRevision() {
         return $this->revision;
@@ -125,18 +132,19 @@ class SVNUpdate {
                 $files_under_subversion_control = $this->_getFilesUnderSVNControl($script_path);
                 // walk the files found in the directory
                 while (($file = readdir($dir_handle)) !== false) {
-                    if ($file != "." && $file != "..") {
+                    if (!in_array($file, array('.', '..', 'CodeXUpgrade.class.php'))) {
                         $path_parts = pathinfo($file);
-                        if ($path_parts['extension'] == 'class') {
+                        if ($path_parts['extension'] == 'php') {
                             // To avoid the case where another file would be here (not a so called script)
                             // we test if the file is under version control
                             if (in_array($file, $files_under_subversion_control)) {
                                 $classname = UpgradeScript::className($file);
-                                $current_script = new UpgradeScript();
+                                $current_script = new UpgradeScript($this->getBranch());
+                                $current_script->setPath($this->getBranch() . UPGRADE_SCRIPT_PATH . $file);
                                 $current_script->setClassname($classname);
                                 if ($current_script->isWellImplemented()) {
                                     $current_script->_setAllExecutions();
-                                    $upgrades[] = $current_script;    
+                                    $upgrades[$file] = $current_script;    
                                 } else {
                                     unset($current_script);
                                 }
@@ -147,6 +155,7 @@ class SVNUpdate {
                 closedir($dir_handle);
             }
         }
+        ksort($upgrades);
         return $upgrades;
     }
     
@@ -452,8 +461,8 @@ class SVNUpdate {
                 break;
             case XML_COMMIT_PATH:
                 // a file can be a simple file or a script
-                if (UpgradeScript::isInScriptDirectory($current_data)) {
-                    $current_script = new UpgradeScript();
+                if (UpgradeScript::isInScriptDirectory($this->getBranch(), $current_data)) {
+                    $current_script = new UpgradeScript($this->getBranch());
                     $current_script->setAction($current_file->getAction());
                     $current_script->setPath($current_data);
                     $current_script->setClassname(UpgradeScript::getClassNameFromPath($current_data));

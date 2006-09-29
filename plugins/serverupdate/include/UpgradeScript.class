@@ -23,12 +23,13 @@ class UpgradeScript extends SVNCommitedFile {
     * @var array $_executions array of {UpgradeScriptExecution}
      */
     var $_executions;
-    
+    var $branch;
     
     /**
      * Upgrade constructor
      */
-    function UpgradeScript() {
+    function UpgradeScript($branch) {
+        $this->branch = $branch;
     }
     
     function getClassname() {
@@ -57,7 +58,7 @@ class UpgradeScript extends SVNCommitedFile {
      */
     function className($file) {
         //return substr($file, 0, (strlen($file) - 6));
-        return basename($file, ".class");
+        return 'Update_'. substr(basename($file, '.class.php'), 0, 3);
     }
     
     /**
@@ -85,7 +86,7 @@ class UpgradeScript extends SVNCommitedFile {
     
     function _setAllExecutions() {
         $executions = array();
-        $sql = "SELECT * FROM upgrade WHERE script = '".$this->getClassname()."' ORDER BY DATE ASC";
+        $sql = "SELECT * FROM plugin_serverupdate_upgrade WHERE script = '".$this->getClassname()."' ORDER BY DATE ASC";
         $resource = db_query($sql);
         while ($exec = db_fetch_array($resource)) {
             $current_exec = new UpgradeScriptExecution($exec['script']);
@@ -104,7 +105,7 @@ class UpgradeScript extends SVNCommitedFile {
         // Check if the file is a class file that extends CodeXUpgrade
         $classname = $this->getClassname();
         
-        include_once(UPGRADE_SCRIPT_PATH.$classname.".class");
+        include_once($GLOBALS['codex_dir'].substr($this->getPath(), strlen($this->branch)));
         
         $obj = new $classname();
         if (is_a($obj, 'CodeXUpgrade')) {
@@ -119,9 +120,9 @@ class UpgradeScript extends SVNCommitedFile {
     /**
      * @static
      */
-    function isInScriptDirectory($path) {
+    function isInScriptDirectory($branch, $path) {
         // Check if the file is located in the script directory
-        if (substr($path, 1, strlen(UPGRADE_SCRIPT_PATH)) == UPGRADE_SCRIPT_PATH) {
+        if (substr($path, 0, strlen($branch.UPGRADE_SCRIPT_PATH)) == $branch.UPGRADE_SCRIPT_PATH) {
             return true;
         }
         return false;
@@ -135,7 +136,7 @@ class UpgradeScript extends SVNCommitedFile {
     function execute() {
         $classname = $this->getClassname();
         
-        include_once(UPGRADE_SCRIPT_PATH.$classname.".class");
+        include_once($GLOBALS['codex_dir'].substr($this->getPath(), strlen($this->branch)));
         
         $upgrade = new $classname();
         $upgrade->apply();

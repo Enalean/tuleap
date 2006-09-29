@@ -669,7 +669,6 @@ class ServerUpdateViews extends Views {
             //$titles[] = 'level';
             $titles[] = $Language->getText('plugin_serverupdate_script','Scripts');
             $titles[] = $Language->getText('plugin_serverupdate_script','Status');
-            $titles[] = $Language->getText('plugin_serverupdate_script','Actions');
             $output .= html_build_list_table_top($titles);
             
             $i=0; // for color alternance
@@ -747,16 +746,6 @@ class ServerUpdateViews extends Views {
                     }
                 }
                 $output .= $status;
-                $output .= '</td>';
-                //Actions
-                $output .= '<td>';
-                    //Test Update
-                if (! $upgrade->hasBeenSuccessfullyApplied()) {
-                    $output .=   '<a class="serverupdate_action" href="?action=executescript&scriptname='.$upgrade->getClassname().'" title="'.$Language->getText('plugin_serverupdate_script','apply_script').'">';
-                    $output .=     '<img src="'.util_get_image_theme("ic/convert.gif").'" border="0" alt="'.$Language->getText('plugin_serverupdate_script','apply_script').'" />';
-                    $output .=   '</a>';
-                }
-                
                 $output .= '</td>';
                 $output .= '</tr>';
                 $i++;
