@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-28 11:32+0100\n"
+"POT-Creation-Date: 2006-09-29 10:07+0100\n"
 "PO-Revision-Date: 2002-12-14 17:51-0500\n"
 "Last-Translator: Reini Urban <rurban@users.sf.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5081,17 +5081,23 @@ msgstr ""
 msgid "Plugin %s disabled."
 msgstr ""
 
-#: ../lib/WikiPlugin.php:532
+#: ../lib/WikiPlugin.php:516
+#, php-format
+msgid ""
+"The '%s' plugin is blocked by administrator. Sorry for the inconvenience"
+msgstr ""
+
+#: ../lib/WikiPlugin.php:531
 #, php-format
 msgid "Include of '%s' failed."
 msgstr ""
 
-#: ../lib/WikiPlugin.php:534
+#: ../lib/WikiPlugin.php:533
 #, php-format
 msgid "%s: no such class"
 msgstr ""
 
-#: ../lib/WikiPlugin.php:540
+#: ../lib/WikiPlugin.php:539
 #, php-format
 msgid "%s: not a subclass of WikiPlugin."
 msgstr ""

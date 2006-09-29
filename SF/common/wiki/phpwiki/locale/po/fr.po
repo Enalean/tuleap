@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-28 11:32+0100\n"
+"POT-Creation-Date: 2006-09-29 10:07+0100\n"
 "PO-Revision-Date: 2004-06-22 21:10+0200\n"
 "Last-Translator: Pierrick Meignen <meignen.pierrick@wanadoo.fr>, Roland "
 "Trique <roland.trique@free.fr>, Stéphane Gourichon <stephane.gourichon@lip6."
@@ -5252,18 +5252,24 @@ msgstr "Plugin %s a échoué."
 msgid "Plugin %s disabled."
 msgstr "Plugin %s désactivé."
 
+#: ../lib/WikiPlugin.php:516
+#, php-format
+msgid ""
+"The '%s' plugin is blocked by administrator. Sorry for the inconvenience"
+msgstr "Désolé, le plugin '%s' est désactivé par l'administrateur."
+
 # lib/msql.php:237 lib/msql.php:312
-#: ../lib/WikiPlugin.php:532
+#: ../lib/WikiPlugin.php:531
 #, php-format
 msgid "Include of '%s' failed."
 msgstr "L'insertion de '%s' a échoué."
 
-#: ../lib/WikiPlugin.php:534
+#: ../lib/WikiPlugin.php:533
 #, php-format
 msgid "%s: no such class"
 msgstr "<%s : pas de section de ce type>"
 
-#: ../lib/WikiPlugin.php:540
+#: ../lib/WikiPlugin.php:539
 #, php-format
 msgid "%s: not a subclass of WikiPlugin."
 msgstr "%s n'est pas une sous classe de WikiPlugin."
