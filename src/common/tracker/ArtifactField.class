@@ -1676,8 +1676,41 @@ class ArtifactField extends Error {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
         $user =& $um->getUserById($user_id);
-        $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
+	$ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;
+	}
+
+
+	/** return true if users in ugroups have Submit permission on this field 
+	 * @param ugroups: the ugroups users are part of
+	 * @param group_artifact_id: the trackers id this field is in
+	**/ 
+	function ugroupsCanRead($ugroups,$group_artifact_id) {
+	  $pm =& PermissionsManager::instance();
+	  $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $ugroups);
+	  return $ok;
+	}
+
+
+	/** return true if users in ugroups have Submit permission on this field 
+	 * @param ugroups: the ugroups users are part of
+	 * @param group_artifact_id: the trackers id this field is in
+	**/ 
+	function ugroupsCanUpdate($ugroups,$group_artifact_id) {
+	  $pm =& PermissionsManager::instance();
+	  $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $ugroups);
+	  return $ok;
+	}
+
+
+	/** return true if users in ugroups have Submit permission on this field 
+	 * @param ugroups: the ugroups users are part of
+	 * @param group_artifact_id: the trackers id this field is in
+	**/ 
+	function ugroupsCanSubmit($ugroups,$group_artifact_id) {
+	  $pm =& PermissionsManager::instance();
+	  $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $ugroups);
+	  return $ok;
 	}
 
 
@@ -1685,16 +1718,16 @@ class ArtifactField extends Error {
 	/**
 	 * Retrieve users permissions (TRACKER_FIELD_SUBMIT, -UPDATE, -READ)
 	 * on this field.
-	 * @param group_id: the project this field is in
+	 * @param ugroups: the ugroups users are part of (called from ArtifactHtml createMailForUsers)
 	 * @param group_artifact_id: the trackers id this field is in
-	 * @param user_id: if  not given or 0 take the current user
 	 * return array of all associated permissions
 	 */
-	function getPermission($ugroups,$group_artifact_id,$user_id=0) {
+	function getPermissionForUgroups($ugroups,$group_artifact_id) {
         $perms = array();
-        if ($this->userCanRead($ugroups,$group_artifact_id,$user_id)) $perms[] = 'TRACKER_FIELD_READ';
-        if ($this->userCanUpdate($ugroups,$group_artifact_id,$user_id)) $perms[] = 'TRACKER_FIELD_UPDATE';
-        if ($this->userCanSubmit($ugroups,$group_artifact_id,$user_id)) $perms[] = 'TRACKER_FIELD_SUBMIT';
+
+        if ($this->ugroupsCanRead($ugroups,$group_artifact_id)) $perms[] = 'TRACKER_FIELD_READ';
+        if ($this->ugroupsCanUpdate($ugroups,$group_artifact_id)) $perms[] = 'TRACKER_FIELD_UPDATE';
+        if ($this->ugroupsCanSubmit($ugroups,$group_artifact_id)) $perms[] = 'TRACKER_FIELD_SUBMIT';
         return $perms;
 	}
 

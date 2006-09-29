@@ -800,12 +800,11 @@ class ArtifactType extends Error {
 
 	  reset($used_fields);
 	  foreach ($used_fields as $field) {
-	    $perm = $field->getPermission($ugroups,$this->getID());
+	    $perm = $field->getPermissionForUgroups($ugroups,$this->getID());
 	    if ($perm && !empty($perm)) {
 	      $field_perm[$field->getName()] = $perm;
 	    }
 	  }
-
 	  return $field_perm;
 	}
 
