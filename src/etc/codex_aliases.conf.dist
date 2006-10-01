@@ -7,23 +7,9 @@
 # other virtualhosts, like project web sites).
 #
 
-
-#
-# Aliases: Add here as many aliases as you need (with no limit). The format is 
-# Alias fakename realname
-#
-# Note that if you include a trailing / on fakename then the server will
-# require it to be present in the URL.  So "/icons" isn't aliased in this
-# example, only "/icons/".  If the fakename is slash-terminated, then the 
-# realname must also be slash terminated, and if the fakename omits the 
-# trailing slash, the realname must also omit it.
-#
-#
-
-
-
 #
 # CodeX documentation
+#
 Alias /documentation/ "/usr/share/codex/documentation/"
 
 <Directory "/usr/share/codex/documentation">
@@ -35,6 +21,7 @@ Alias /documentation/ "/usr/share/codex/documentation/"
 
 #
 # CodeX downloads
+#
 Alias /downloads/ "/usr/share/codex/downloads/"
 
 <Directory "/usr/share/codex/downloads">
@@ -44,7 +31,9 @@ Alias /downloads/ "/usr/share/codex/downloads/"
     Allow from all
 </Directory>
 
+#
 # CodeX custom themes
+#
 Alias /custom/ "/etc/codex/themes/"
 <Directory "/etc/codex/themes/">
     Options None
@@ -54,7 +43,9 @@ Alias /custom/ "/etc/codex/themes/"
 </Directory>
 
 
+#
 # phpWiki themes
+#
 Alias /wiki/themes "/usr/share/codex/src/common/wiki/phpwiki/themes"
 <Directory "/usr/share/codex/src/common/wiki/phpwiki/themes">
     Options None
@@ -63,27 +54,12 @@ Alias /wiki/themes "/usr/share/codex/src/common/wiki/phpwiki/themes"
     Allow from all
 </Directory>
 
-# MRTG (Multi Router Traffic Grapher) - Monitor System
-Alias /mrtg/ "/home/httpd/mrtg/"
 
-<Directory "/home/httpd/mrtg">
-    Options MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
+#
+# Plugins directories
+#
 
-# The PHP interface to MySQL administration
-Alias /phpMyAdmin /home/httpd/phpMyAdmin
-
-<Directory "/home/httpd/phpMyAdmin">
-    Options MultiViews
-    AllowOverride None
-    Order allow,deny
-    Allow from all
-</Directory>
-
-# Plugins directory
+# 1- plugins CGI scripts
 ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codex/plugins/$1"
 <Directory "/usr/share/codex/plugins/[^/]*/cgi-bin">
     AllowOverride None
@@ -92,6 +68,7 @@ ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codex/plugins/$1"
     Allow from all
 </Directory>
 
+# 2- plugins web/php pages 
 AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codex/plugins/$1/www/$2
 <DirectoryMatch "/usr/share/codex/plugins/([^/]*)/www/">
     Options Indexes MultiViews
@@ -117,14 +94,11 @@ AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codex/plugins/$1/www/$2
     Allow from all
 </DirectoryMatch>
 
+
 #
-# ScriptAlias: This controls which directories contain server scripts.
-# ScriptAliases are essentially the same as Aliases, except that
-# documents in the realname directory are treated as applications and
-# run by the server when requested rather than as documents sent to the client.
-# The same rules about trailing "/" apply to ScriptAlias directives as to
-# Alias.
+# CGI scripts
 #
+
 ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
 
 # FollowSymLinks is needed here because of the rewrite rule (otherwise, other CGIs are forbidden...)

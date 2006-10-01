@@ -263,8 +263,8 @@ CustomLog logs/ssl_request_log \
 # Include per project secure Subversion repository (automatically generated)
 Include conf/codex_svnhosts_ssl.conf
 
-# Include CodeX alias definitions
-Include conf/codex_aliases.conf
+# Include all other aliases definitions
+Include conf.d/*.conf
 
 # Error message for 404 errors
 ErrorDocument 404 "Sorry, page not found."

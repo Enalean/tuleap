@@ -517,6 +517,27 @@ $CHOWN root.root /usr/lib/codex/bin/fileforge
 $CHMOD u+s /usr/lib/codex/bin/fileforge
 
 ##############################################
+# Move away useless Apache configuration files
+#
+for f in auth_kerb.conf auth_mysql.conf auth_pgsql.conf \
+      authz_ldap.conf manual.conf perl.conf python.conf \
+      squirrelmail.conf ssl.conf php.conf subversion.conf; do
+# htdig.conf mailman.conf mrtg.conf ?
+    yn="0"
+    current_name="/etc/httpd/conf.d/$f"
+    orig_name="/etc/httpd/conf.d/$f.rhel"
+    [ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
+
+    if [ "$yn" != "n" ]; then
+	$MV -f $current_name $orig_name
+    fi
+
+    if [ "$yn" = "n" ]; then
+	$RM -f $current_name
+    fi
+done
+
+##############################################
 # Install the CodeX software 
 #
 echo "Installing the CodeX software..."
@@ -528,9 +549,9 @@ $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
-/etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
+/etc/httpd/conf/mailman.conf /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
-/etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf/codex_aliases.conf; do
+/etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf.d/codex_aliases.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -546,6 +567,7 @@ for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
     $CHOWN codexadm.codexadm $f
     $CHMOD 640 $f
 done
+    
 
 # CodeX User Guide
 # a) copy the local parameters file in custom area and customize it

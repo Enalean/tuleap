@@ -3,7 +3,9 @@
 # easy for developers to write dynamically generated webpages.
 #
 
-LoadModule php4_module modules/libphp4.so
+<IfModule !sapi_apache2.c>
+  LoadModule php4_module modules/libphp4.so
+</IfModule>
 
 #
 # Cause the PHP interpreter handle files with a .php extension.

@@ -190,7 +190,7 @@ LoadModule cgi_module modules/mod_cgi.so
 #
 # Load config files from the config directory "/etc/httpd/conf.d".
 #
-Include conf.d/*.conf
+# Include conf.d/*.conf # This is now done per virtual host
 
 #
 # ExtendedStatus controls whether Apache will generate "full" status
@@ -1031,9 +1031,9 @@ NameVirtualHost %sys_ip_address%:80
  ServerName %sys_default_domain%
  ServerAlias www.%sys_default_domain%
 
- # Include CodeX alias definitions (also included in conf.d/ssl.conf)
- Include conf/codex_aliases.conf
-
+ # Include all configuration files from conf.d (php, subversion, etc.)
+ # (also included from conf/ssl.conf)
+ Include conf.d/*.conf
 </VirtualHost>
 
                                                                                 
@@ -1060,7 +1060,7 @@ NameVirtualHost %sys_ip_address%:80
 
 
 # Include support for Gnu/Mailman
-Include conf/mailman.conf
+#Include conf/mailman.conf
                                                       
 # Include per project virtual hosts (automatically generated)
 Include conf/codex_vhosts.conf
@@ -1068,6 +1068,9 @@ Include conf/codex_vhosts.conf
 # Include per project Subversion repository (automatically generated)
 # A second file is included in ssl.conf for secure Subversion servers.
 Include conf/codex_svnhosts.conf
+
+# Include SSL related configuration
+Include conf/ssl.conf
                                              
 #
 # On the production server the local.inc file is in /etc/codex/conf/local.inc
