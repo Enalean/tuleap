@@ -37,7 +37,11 @@ class WikiServiceAdmin extends Controler {
   /* private Wiki*/ var $wiki;
   
   function WikiServiceAdmin($id) {
-    global $LANG;
+    global $LANG, $is_wiki_page;
+    
+    //used so the search box will add the necessary element to the pop-up box
+    $is_wiki_page = 1;
+    
     $this->gid = (int) $id;
     
     if(empty($this->gid)) 

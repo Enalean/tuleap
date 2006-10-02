@@ -214,6 +214,7 @@ include_menu	this_tracker	This Tracker
 include_menu	software_proj	Software Projects
 include_menu	code_snippets	Code Snippets 
 include_menu	people	People
+include_menu	this_wiki	This Wiki
 include_menu	wiki	Wiki
 include_menu	require_all_words	Require All Words
 include_menu	search	Search

@@ -514,7 +514,19 @@ if ($type_of_search == "soft") {
 		echo "</TABLE>\n";
 	}
 } else if ($type_of_search == 'wiki') {
-    util_return_to('/wiki/index.php?group_id='.$_REQUEST['group_id'].'&pagename=FullTextSearch&s='.urlencode($_REQUEST['words']));
+	//get the group-id
+	$group_id = $_REQUEST['group_id'];
+	//Wiki language extraction
+	$sql =	"SELECT DISTINCT wiki_group_list.language_id"
+		." FROM wiki_group_list"
+		." WHERE wiki_group_list.group_id=".$group_id;
+	$result = db_query($sql);
+	$language_id = mysql_fetch_array($result);
+	//Build the search pagename in the wiki language
+	if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
+	else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+	$GLOBALS['sys_force_ssl'] = 1;
+	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));
 } else {
     $GLOBALS['search_type'] = false;
     $em =& EventManager::instance();
@@ -527,7 +539,7 @@ if ($type_of_search == "soft") {
     }
     else {
         $rows_returned = $GLOBALS['rows_returned'];
-        $rows          = $GLOBALS['rows'];
+        $rows = $GLOBALS['rows'];
     }
 }
 
@@ -551,7 +563,7 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 		echo "<A HREF=\"/search/?type_of_search=$type_of_search&words=".urlencode($words)."&offset=".($offset+$rows);
 		if ( $type_of_search == 'bugs' ) {
 			echo "&group_id=$group_id&is_bug_page=1";
-		} 
+		}
 		if ( $type_of_search == 'forums' ) {
 			echo "&forum_id=$forum_id&is_forum_page=1";
 		}

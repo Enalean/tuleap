@@ -220,6 +220,7 @@ include_menu	this_tracker	Cet outil de suivi
 include_menu	software_proj	Projets logiciel
 include_menu	code_snippets	Boîte à outils 
 include_menu	people	Utilisateurs
+include_menu	this_wiki	Ce wiki
 include_menu	require_all_words	Tous les mots
 include_menu	search	Chercher
 include_menu	software_map	Arbre des projets
