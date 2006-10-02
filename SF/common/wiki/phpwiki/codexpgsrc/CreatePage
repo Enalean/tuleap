@@ -8,4 +8,4 @@ Content-Type: application/x-phpwiki;
  charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-<?plugin CreatePage ?>
+<?plugin-form CreatePage ?>
