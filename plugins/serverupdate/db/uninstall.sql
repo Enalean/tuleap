@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS upgrade;
+DROP TABLE IF EXISTS plugin_serverupdate_upgrade;
