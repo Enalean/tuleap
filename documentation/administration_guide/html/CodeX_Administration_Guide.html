@@ -1921,27 +1921,21 @@ then do the real update as above.<br>
     <br>
   </li>
   <li>Similarly, if <span style="font-family: monospace;">SF/etc/httpd.conf.dist</span> is in the list of files to be updated, you should look at the differences with your own httpd.conf.dist, then merge them in your <span style="font-family: monospace;">/etc/httpd/conf/httpd.conf</span>.
-  <li>If one or several <span style="font-family: monospace;">SF/db/upgrades/dbxxxx.sql</span>
-or <span style="font-family: monospace;">SF/db/upgrades/dbxxxx.pl</span>
-(where xxxx is a four digit number) are listed then it means you have
-to perform some update on the CodeX database structure. You must first
+  <li>If one or several <span style="font-family: monospace;">src/updates/scripts/XXX_&lt;script_description&gt;.class.php</span>
+(where XXX is a three digit number) are listed then it means you have
+to perform some script update (on the CodeX database structure for instance). You must first
 do the real update and then <span
  style="text-decoration: underline; font-weight: bold;">apply each
-database patch in order starting with the smallest xxxx number first
+update script in order starting with the smallest XXX number first
 and growing</span><br
  style="text-decoration: underline; font-weight: bold;">
     <br>
     <span style="font-family: monospace;">svn update --username  <span style="font-style: italic;">username </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # do the real update<br>
     </span><span style="font-family: monospace;"><span
- style="font-family: monospace;">cd SF/db/upgrades</span></span><span
- style="font-family: monospace;">; mysql -u sourceforge sourceforge
-&lt; dbxxxx.sql &nbsp; &nbsp; &nbsp; &nbsp; # apply a SQL patch<br>
-    </span><span style="font-family: monospace;"><span
- style="font-family: monospace;"><span style="font-family: monospace;">cd
-SF/db/upgrades</span></span><span style="font-family: monospace;">; </span></span><span
- style="font-family: monospace;">perl &lt; dbxxxx.pl&nbsp;&nbsp; #
-apply the Perl patch as well if there is one.</span><br>
+ style="font-family: monospace;">cd src/updates</span></span><span
+ style="font-family: monospace;">; sh upgrade.sh XXX_&lt;script_description&gt; &nbsp; &nbsp; &nbsp; &nbsp; # apply the script XXX_&lt;patch_description&gt;.class.php<br>
+    </span><br>
     <br>
   </li>
 </ul>
