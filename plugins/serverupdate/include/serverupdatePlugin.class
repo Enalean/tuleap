@@ -53,7 +53,7 @@ class ServerUpdatePlugin extends Plugin {
     
     function process() {
         require_once('ServerUpdate.class');
-        $controler =& new ServerUpdate();
+        $controler =& new ServerUpdate($this->_getThemePath());
         $controler->process();
     }
 }

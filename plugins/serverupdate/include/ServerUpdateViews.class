@@ -19,9 +19,19 @@ define("URL_REPOSITORY_SHOW_DETAILS", "https://partners.xrce.xerox.com/svn/?func
 
 class ServerUpdateViews extends Views {
     
+    /**
+     * @var string path to plugin icons
+     */
+    var $iconsPath;
+    
     function ServerUpdateViews(&$controler, $view=null) {
         $this->View($controler, $view);
+        $this->iconsPath = $controler->getThemePath().'/images/ic/';
         $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
+    }
+    
+    function getIconsPath() {
+        return $this->iconsPath;
     }
     
     function header() {
@@ -413,7 +423,7 @@ class ServerUpdateViews extends Views {
      * Call the Javascript function to display the progressBar animation
      */
     function _displayWaitingImage() {
-        $this->_displayTemporaryImage("progressBar", util_get_image_theme("ic/CodeXProgressBar.gif"), $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'), $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'));
+        $this->_displayTemporaryImage("progressBar", $this->getIconsPath()."CodeXProgressBar.gif", $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'), $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'));
     }
     /**
      * Call the Javascript function to hide the progressBar animation
@@ -530,15 +540,14 @@ class ServerUpdateViews extends Views {
                 //Specials
                 $output .= '<td>';
                 if ($commit->needManualUpdate()) {
-                    //$output .= '<img src="'.util_get_image_theme("ic/tools.png").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate','NeedManualUpdate').'"/>';
-                    $output .= '<img src="'.util_get_image_theme("ic/stop.gif").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'"/>';
+                    $output .= '<img src="'.$this->getIconsPath().'manual_update.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'"/>';
                 }
                 if ($commit->containsDBUpdate()) {
                     $output .= '<img src="'.util_get_image_theme("ic/database_refresh.png").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'"/>';
                 }
                 foreach ($files as $file) {
                     if ($svnupdate->getRevisionInWhichFileMustBeExecuted($file->getPath()) == $commit->getRevision()) {
-                        $output .= $file->showSpecials();
+                        $output .= $file->showSpecials($this->getIconsPath());
                     }
                 }
                 $output .= '</td>';
@@ -546,7 +555,7 @@ class ServerUpdateViews extends Views {
                 $output .= '<td>';
                     //Test Update
                 $output .=   '<a class="serverupdate_action" href="?action=testupdate&revision='.$commit->getRevision().'" title="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'">';
-                $output .=     '<img src="'.util_get_image_theme("ic/convert.gif").'" border="0" alt="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'" />';
+                $output .=     '<img src="'.$this->getIconsPath().'convert.gif" border="0" alt="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'" />';
                 $output .=   '</a>';
                 
                 $output .= '</td>';
@@ -706,9 +715,9 @@ class ServerUpdateViews extends Views {
                         $output .= '<tr class="'.util_get_alt_row_color($j).'" >';
                         // Status icon (success or error)
                         if ($exec->getSuccessfullyApplied()) {
-                            $output .= ' <td><img src="'.util_get_image_theme("ic/success.png").'" alt="Success" /></td>';
+                            $output .= ' <td><img src="'.$this->getIconsPath().'success.png" alt="Success" /></td>';
                         } else {
-                            $output .= ' <td><img src="'.util_get_image_theme("ic/error.png").'" alt="Error" /></td>';
+                            $output .= ' <td><img src="'.$this->getIconsPath().'error.png" alt="Error" /></td>';
                         }
                         // date
                         $output .= ' <td>'.util_timestamp_to_userdateformat($exec->getDate()).' </td>';

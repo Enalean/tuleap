@@ -129,8 +129,8 @@ class UpgradeScript extends SVNCommitedFile {
     }
     
     
-    function showSpecials() {
-        return '<img src="'.util_get_image_theme("ic/gear_doc2.png").'" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_script','Script_Upgrades').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_script','Script_Upgrades').'"/>';
+    function showSpecials($iconsPath) {
+        return '<img src="'.$iconsPath.'script_update.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_script','Script_Upgrades').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_script','Script_Upgrades').'"/>';
     }
     
     function execute() {

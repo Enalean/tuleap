@@ -22,9 +22,12 @@ class ServerUpdate extends Controler {
      */
     var $svnupdate;
     
-    function ServerUpdate() {
+    var $themePath;
+    
+    function ServerUpdate($themePath) {
         session_require(array('group'=>'1','admin_flags'=>'A'));
         $this->svnupdate = new SVNUpdate($GLOBALS['codex_dir']);
+        $this->themePath = $themePath;
     }
     
     function getSVNUpdate() {
@@ -32,6 +35,10 @@ class ServerUpdate extends Controler {
     }
     function setSVNUpdate($svnupdate) {
         $this->svnupdate = $svnupdate;
+    }
+    
+    function getThemePath() {
+        return $this->themePath;
     }
     
     function request() {
