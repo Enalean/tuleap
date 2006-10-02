@@ -493,10 +493,9 @@ else
 
 # Put together the body of the log message.
 my @body;
-push(@body, sprintf("SVN Repository:\t%s\n",$repos));
-push(@body, sprintf("Changes by:\t%s\t%s\n","$fullname <$mailname>", $date));
-push(@body, sprintf("New Revision: \t%s\n",$rev));
-push(@body, sprintf("%s/goto?key=rev&val=%s&group_id=%s\n", $codex_srv, $rev, $group_id));
+push(@body, sprintf("SVN Repository: %s\n",$repos));
+push(@body, sprintf("Changes by:     %s  on %s\n","$fullname <$mailname>", $date));
+push(@body, sprintf("New Revision:   %s   %s/goto?key=rev&val=%s&group_id=%s\n", $rev, $codex_srv, $rev, $group_id));
 push(@body, "\n");
 if (@adds)
   {
