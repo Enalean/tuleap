@@ -1,0 +1,35 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the Codex Component Software License
+// http://cxtst.xrce.xerox.com
+//
+// $Id: ParametersLocal.dtd,v 1.3 2004/04/07 14:16:34 ljulliar Exp $
+//
+// Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
+-->
+<!-- 
+
+This file will be copied at the installation into the 
+/etc/codex/documentation/cli/xml directory and 
+the values between %% will be changed by the ones given
+during the installation procedure.
+This is to customize the content of the CodeX User Guide
+
+For instance:
+
+<!ENTITY SYS_DEFAULT_DOMAIN "my.domain.here">
+etc...
+-->
+<!ENTITY SYS_DEFAULT_DOMAIN "%sys_default_domain%">
+
+<!-- 
+Redefine here (with the blank string "") the chapters you don't want to be included in the book (and only these ones) 
+Don't put the SYSTEM keyword after the ENTITY because it is for files. So as "" is not a file, this would cause an error
+
+For instance:
+<!ENTITY ChapterVersionControlWithCVS "">
+etc...
+-->

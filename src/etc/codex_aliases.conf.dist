@@ -77,7 +77,7 @@ AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codex/plugins/$1/www/$2
     Allow from all
 </DirectoryMatch>
 
-# Custom plugins directory
+# 3- Custom plugins CGI scripts
 ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codex/plugins/$1"
 <Directory "/etc/codex/plugins/[^/]*/cgi-bin">
     AllowOverride None
@@ -86,6 +86,7 @@ ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codex/plugins/$1"
     Allow from all
 </Directory>
 
+# 4- Custom plugins web/php pages
 AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codex/plugins/$1/www/$2
 <DirectoryMatch "/etc/codex/plugins/([^/]*)/www/">
     Options Indexes MultiViews

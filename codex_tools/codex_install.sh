@@ -146,7 +146,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd gcc \
-   sendmail telnet bind ntp samba python enscript perl-suidperl \
+   sendmail telnet bind ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql mysql MySQL-python php-mbstring \
@@ -276,8 +276,8 @@ build_dir /var/log/codex/cvslogs codexadm codexadm 775
 build_dir /home/mailman mailman mailman 2775 #XXX
 build_dir /var/tmp/codex_cache codexadm codexadm 755
 
-build_dir /usr/lib/codex codexadm codexadm 700
-build_dir /usr/lib/codex/bin codexadm codexadm 700
+build_dir /usr/lib/codex codexadm codexadm 755
+build_dir /usr/lib/codex/bin codexadm codexadm 755
 #build_dir /usr/lib/codex/bin root root 755
 
 build_dir /var/lib/codex/wiki codexadm codexadm 700
@@ -292,6 +292,8 @@ build_dir /etc/codex/conf codexadm codexadm 755
 build_dir /etc/codex/documentation codexadm codexadm 755
 build_dir /etc/codex/documentation/user_guide codexadm codexadm 755
 build_dir /etc/codex/documentation/user_guide/xml codexadm codexadm 755
+build_dir /etc/codex/documentation/cli codexadm codexadm 755
+build_dir /etc/codex/documentation/cli/xml codexadm codexadm 755
 build_dir /etc/codex/site-content codexadm codexadm 755
 build_dir /etc/codex/site-content/en_US codexadm codexadm 755
 build_dir /etc/codex/site-content/en_US/others codexadm codexadm 755
@@ -329,6 +331,29 @@ chcon -h -t httpd_sys_content_t /svnroot
 chcon -h -t httpd_sys_content_t /cvsroot
 chcon -R -h -t httpd_sys_content_t /home/groups
 
+
+##############################################
+# Move away useless Apache configuration files
+# before installing our own config files.
+#
+echo "Renaming existing Apache configuration files..."
+cd /etc/httpd/conf.d/
+for f in *.conf
+do
+    yn="0"
+    current_name="$f"
+    orig_name="$f.rhel"
+    [ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
+
+    if [ "$yn" != "n" ]; then
+	$MV -f $current_name $orig_name
+    fi
+
+    if [ "$yn" = "n" ]; then
+	$RM -f $current_name
+    fi
+done
+cd - > /dev/null
 
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
@@ -392,7 +417,7 @@ $RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
 #$SERVICE httpd restart
 $SERVICE mysqld start
 
-# -> cvsgraph
+# -> cvsgraph + enscript!!! XXX
 #$RPM -e cvsgraph 2>/dev/null
 #echo "Installing cvsgraph RPM for CodeX...."
 #cd ${RPMS_DIR}/cvsgraph
@@ -517,27 +542,6 @@ $CHOWN root.root /usr/lib/codex/bin/fileforge
 $CHMOD u+s /usr/lib/codex/bin/fileforge
 
 ##############################################
-# Move away useless Apache configuration files
-#
-for f in auth_kerb.conf auth_mysql.conf auth_pgsql.conf \
-      authz_ldap.conf manual.conf perl.conf python.conf \
-      squirrelmail.conf ssl.conf php.conf subversion.conf; do
-# htdig.conf mailman.conf mrtg.conf ?
-    yn="0"
-    current_name="/etc/httpd/conf.d/$f"
-    orig_name="/etc/httpd/conf.d/$f.rhel"
-    [ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
-
-    if [ "$yn" != "n" ]; then
-	$MV -f $current_name $orig_name
-    fi
-
-    if [ "$yn" = "n" ]; then
-	$RM -f $current_name
-    fi
-done
-
-##############################################
 # Install the CodeX software 
 #
 echo "Installing the CodeX software..."
@@ -576,19 +580,25 @@ done
 #
 
 $CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+$CP $INSTALL_DIR/src/etc/ParametersLocal.cli.dtd.dist /etc/codex/documentation/cli/xml/ParametersLocal.dtd
 # replace string patterns in ParametersLocal.dtd
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' "$sys_win_domain" 
+# For CLI: only one parameter
+substitute '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 
 for lang in en_US fr_FR
 do
     $MKDIR -p  /etc/codex/documentation/user_guide/xml/$lang
+    $MKDIR -p  /etc/codex/documentation/cli/xml/$lang
     $CHOWN -R codexadm.codexadm /etc/codex/documentation
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/cli/html/$lang
     $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation/user_guide/html/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/cli/pdf/$lang
     $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation/user_guide/pdf/$lang
 done
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
@@ -635,7 +645,7 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 
 todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
-todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd"
+todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codex/documentation/cli/xml/ParametersLocal.dtd"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /usr/lib/codex/bin/backup_job and /usr/lib/codex/bin/backup_subversion.sh"
 
 ##############################################
@@ -793,7 +803,7 @@ cat <<EOF >/etc/mail/local-host-names
 # local-host-names - include all aliases for your machine here.
 $sys_default_domain
 lists.$sys_default_domain
-users.$s0ys_default_domain
+users.$sys_default_domain
 EOF
 
 todo "Finish sendmail settings (see installation Guide) and create codex-contact and codex-admin aliases in /etc/aliases"
@@ -852,7 +862,7 @@ $CP commit-email.pl /usr/lib/codex/bin
 cd /usr/lib/codex/bin
 $CHOWN codexadm.codexadm commit-email.pl
 $CHMOD 755 commit-email.pl
-$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x)
+#$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x) NG: useless? and issue with SELinux
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
@@ -995,7 +1005,7 @@ $CAT <<'EOF' >/tmp/cronfile
 50 0 * * Sun /etc/rc.d/init.d/httpd restart
 #
 # Once a minute make sure that the setuid bit is set on some critical files
-* * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s commit-email.pl log_accum fileforge)
+* * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s log_accum fileforge)
 EOF
 crontab -u root /tmp/cronfile
 
