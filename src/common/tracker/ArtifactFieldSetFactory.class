@@ -117,7 +117,7 @@ class ArtifactFieldSetFactory extends Error {
         $myArtifactFieldSets = array();
         
         if (!$result || $rows < 1) {
-            $this->setError($Language->getText('tracker_common_fieldset','none_found').' '.db_error());
+            $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {

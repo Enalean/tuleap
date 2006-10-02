@@ -808,3 +808,4 @@ tracker_common_fieldset	fieldset_status_tasks_desc_key	Etat d'avancement de la t
 #
 tracker_common_fieldset_factory	delete_only_empty_fieldset	Impossible de supprimer un groupe de champs non vide.
 tracker_common_fieldset_factory	label_requ	Le nom du groupe de champs est obligatoire.
+tracker_common_fieldset_factory	ins_err	Erreur lors de l'insertion de artifact_field_set ($1-$2) : $3
