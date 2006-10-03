@@ -134,7 +134,7 @@ if (isset($show_confirm) && $show_confirm) {
             if (!service_create_service($arr, $group_id, array(
                 'system' => $system_template,
                 'name'   => $system_template ? '' : $template_name,
-                'id'     => $system_template ? '' : $template_id
+                'id'     => $template_id
             ))) {
                 exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','cant_create_service'));
             }
