@@ -83,6 +83,8 @@ plugin_serverupdate_update	ErrorDuringUpdate	Une erreur est survenue lors de la 
 plugin_serverupdate_update	ReturnToUpdates	Retour vers les mises à jour
 plugin_serverupdate_update	UpdateFailed	Mise à jour non effectuée.
 plugin_serverupdate_update	NoReverseUpdate	La Mise à jour vers une révision antérieure n'est pas autorisée par l'intermédiaire de l'interface web.
+plugin_serverupdate_update	filter	Filtre :
+plugin_serverupdate_update	level	Niveau d'importance
 #
 # Script Upgrades
 #
@@ -106,6 +108,7 @@ plugin_serverupdate_script	UpgradeSuccessfullyApplied	Script $1 appliqué avec su
 plugin_serverupdate_script	UpgradeScriptFailed	Script $1 non appliqué.
 plugin_serverupdate_script	ExecutionErrors	Erreurs d'exécution :
 plugin_serverupdate_script	ScriptNotFound	Script $1 non trouvé dans le répertoire des scripts ($2)
+plugin_serverupdate_script	show_hide_execs	montrer/cacher les exécutions
 #
 # Preferences
 #

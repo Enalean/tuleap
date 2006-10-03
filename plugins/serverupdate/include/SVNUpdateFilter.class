@@ -98,10 +98,10 @@ class SVNUpdateFilter {
         
         $output .= '<form action="'.$_SERVER['PHP_SELF'].'" method="post" name="serverupdate_formfilter">';
         $output .= ' <fieldset name="filter">';
-        $output .= ' <legend>Filter:</legend>';
+        $output .= ' <legend>'.$Language->getText('plugin_serverupdate_update', 'filter').'</legend>';
         $output .= ' <input type="hidden" name="action" value="browse" />';
         $output .= ' <input type="hidden" name="sort" value="yes" />';
-        $output .= '  level';
+        $output .= '  '.$Language->getText('plugin_serverupdate_update', 'level');
         $output .= '  <select name="'.LEVEL_CRITERIA.'">';
         $output .= '   <option value="'.LEVEL_VALUE_ANY.'">'.LEVEL_VALUE_ANY.'</option>';
         $output .= '   <option value="'.LEVEL_VALUE_MINOR.'"';

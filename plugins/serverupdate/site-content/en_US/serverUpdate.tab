@@ -77,6 +77,8 @@ plugin_serverupdate_update	ErrorDuringUpdate	An error occured during the update.
 plugin_serverupdate_update	ReturnToUpdates	Return to other updates.
 plugin_serverupdate_update	UpdateFailed	Update failed.
 plugin_serverupdate_update	NoReverseUpdate	Update to older revision is not possible with the web-interface.
+plugin_serverupdate_update	filter	Filter:
+plugin_serverupdate_update	level	level
 #
 # Script Upgrades
 #
@@ -100,6 +102,7 @@ plugin_serverupdate_script	UpgradeSuccessfullyApplied	Upgrade $1 successfully ap
 plugin_serverupdate_script	UpgradeScriptFailed	Upgrade $1 not applied.
 plugin_serverupdate_script	ExecutionErrors	Execution errors:
 plugin_serverupdate_script	ScriptNotFound	Script $1 not found in the scripts directory ($2)
+plugin_serverupdate_script	show_hide_execs	show/hide executions
 #
 # Preferences
 #

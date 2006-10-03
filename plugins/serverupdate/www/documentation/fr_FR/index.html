@@ -20,7 +20,7 @@
 						<dt><a href="#update">Effectuer une ou plusieurs mises à jour</a></dt>
 						<dd>Effectuer les mises à jour facilement en un clic en multipliant les contrôles de sécurité, et en informant l'administrateur des éventuelles opérations manuelles à effectuer.</dd>
                         <dt><a href="#script">Visualiser les scripts de mises à jour et leurs exécutions</a></dt>
-						<dd>Certaines mises à jour sont accompagnées de scripts de mises à jour qu'il est nécessaire d'exécuter. Le plugin de mise à jour du serveur s'occupe lui-même d'exécuter ses scripts, en vous informant du déroulement et du succès de l'exécution. Vous avez par la suite la possiblité de consulter l'ensemble des exécutions des scripts.</dd>
+						<dd>Certaines mises à jour sont accompagnées de scripts de mises à jour qu'il est nécessaire d'exécuter. Le plugin de mise à jour du serveur s'occupe lui-même d'exécuter ces scripts, en vous informant du déroulement et du succès de l'exécution. Vous avez par la suite la possiblité de consulter l'ensemble des exécutions des scripts.</dd>
                         <dt><a href="#preferences">Préférences</a></dt>
 						<dd>Visualisation des préférences du plugin.</dd>
 					</dl>
@@ -29,26 +29,12 @@
 				<h2 id="view">Visualiser les mises à jour disponibles</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">Capture d'écran de l'interface 'Mises à jour disponibles'</div>
-						<img alt="Capture d'écran de l'interface 'Mises à jour disponibles'" src="serverupdate_noCSS.png" class="noCSS" />
-						<dl id="legendUpdateServer">
-							<dt id="revision">1. Révision</dt>
-							<dd id="revisionDef"><a href="#legendUpdateServer"><span>Révision correspondant à la mise à jour.</span></a></dd>
-							<dt id="date">2. Date</dt>
-							<dd id="dateDef"><a href="#legendUpdateServer"><span>Date de la révision.</span></a></dd>
-							<dt id="commitMessage">3. Message de commit</dt>
-							<dd id="commitMessageDef"><a href="#legendUpdateServer"><span>Message du commit associé à la révision. Peu contenir des informations importantes sur la mise à jour. Toujours les lire avant de lancer une mise à jour.</span></a></dd>
-                            <dt id="impactedFiles">4. Fichiers impactés par la mise à jour</dt>
-							<dd id="impactedFilesDef"><a href="#legendUpdateServer"><span>Fichiers impactés par la mise à jour, avec une indication sur la nature de la modification (se reporter aux spécification subversion plus plus de détails).</span></a></dd>
-                            <dt id="detailsLink">5. Lien vers le détail du commit</dt>
-							<dd id="detailsLinkDef"><a href="#legendUpdateServer"><span>Lien vers une interface web décrivant le détail de la mise à jour, avec possiblité de voir les modifications par fichier (diff).</span></a></dd>
-                            <dt id="needManualUpdate">6. Indications complémentaires</dt>
-							<dd id="needManualUpdateDef"><a href="#legendUpdateServer"><span>Indique si une mise à jour manuelle est nécessaire, ou si la mise à jour comporte un script de mise à jour.</span></a></dd>
-						</dl>
+						<img alt="Capture d'écran de l'interface 'Mises à jour disponibles'" src="updates.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Mises à jour disponibles'</div>
 					</div>
 					<p>Cette interface affiche les informations à propos des mises à jour disponibles. Chaque mise à jour correspond à une révision. Les mises à jours sont affichées dans l'ordre ascendant des révision. Pour chacune, les propriétés suivantes sont affichées :
                         <ul>
-                            <li>Une indication sur l'importance de la mise à jour (de 0 --mise à jour mineure, peu importante-- à 9 --mise à jour critique, ou de sécurité--). Voir le code couleur associé,</li>
+                            <li>Une indication sur l'importance de la mise à jour (minor, normal, critical). Voir le code couleur associé,</li>
                             <li>Le numéro de la révision,</li>
                             <li>La date à laquelle la révision a été effectuée,</li>
                             <li>Le message associé à la révision (le message de commit). Celui-ci est important et donne des indications sur les modifications intervenue lors de la mise à jour et éventuellement donne plus d'informations sur les opérations manuelles à effectuer (lancement d'un script, mise à jour de base de données, etc.),</li>
@@ -59,7 +45,7 @@
                                     <li>Une indication sur les éventuelles opérations manuelles liées à la mise à jour. 
                                         Si tel est le cas, la mise à jour n'est pas autorisée, ceci pour vous 'forcer' à lire le message de commit et à effectuer 
                                         les opérations associées (voir la section <a href="#force">Interventions manuelles et Mode force</a> pour plus de détails).</li>
-                                    <li>Une indication sur la résence éventuelle d'un script de mise à jour à exécuter. 
+                                    <li>Une indication sur la présence éventuelle d'un script de mise à jour à exécuter. 
                                         Si tel est le cas, l'exécution du script est possible sous certaines conditions 
                                         (voir la section <a href="#strategy">Stratégie de mise à jour</a> pour plus de détails).</li>
                                     <li>Une indication sur une  éventuelle modification de la base données. 
@@ -70,8 +56,8 @@
                     </p>
                     <h3>Filtrer les mises à jour</h3>
                     <div class="screenshot">
+                        <img alt="Capture d'écran du filtre" src="filter.png" />
                         <div class="legend">Capture d'écran du filtre</div>
-                        <img alt="Capture d'écran du filtre" src="serverupdate_noCSS.png" class="noCSS" />
                     </div>
                     <p>Le filtre vous permet de consulter les mises à jour selon leur niveau d'importance.
                        Les mises à jours sont toujours triées par révision.</p>
@@ -81,8 +67,8 @@
 				<h2 id="update">Effectuer une ou plusieurs mises à jour</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">Capture d'écran de l'interface 'Mises à jour automatique du serveur'</div>
-						<img alt="Capture d'écran de l'interface 'Mises à jour automatique du serveur'" src="Update.png" />
+						<img alt="Capture d'écran de l'interface 'Mises à jour automatique du serveur'" src="update_process.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Mises à jour automatique du serveur'</div>
 					</div>
 					<p>Le plugin permet de mettre à jour le serveur automatiquement via l'interface web de CodeX.
                        La mise à jour du serveur s'effectue toujours de la révision courante de votre copie de travail
@@ -150,7 +136,7 @@
                             la mise à jour du serveur n'est pas autorisée. Il faudra traiter la situation au cas par cas.
                         </li>
                         <li>Ce script est modifié dans une révision ultérieure ne faisant pas partie de la mise à jour demandée. Dans ce cas, il est obligatoire
-                            d'effectuer la mise à jour jusqu'à le dernière modification du script.
+                            d'effectuer la mise à jour jusqu'à la dernière modification du script.
                         </li>
                     </ul>
                     </p>
@@ -176,8 +162,8 @@
 				<h2 id="script">Visualiser les scripts de mise à jour</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">Capture d'écran de l'interface 'Consultation des scripts de mises à jour'</div>
-						<img alt="Capture d'écran de l'interface 'Consultation des scripts de mises à jour'" src="ScriptUpgrade.png" />
+						<img alt="Capture d'écran de l'interface 'Consultation des scripts de mises à jour'" src="scripts.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Consultation des scripts de mises à jour'</div>
 					</div>
 					<p>Cette interface affiche les informations concernant les scripts de mise à jour.
                     Pour chaque script, le statut du script est affiché (Appliqué, Jamais appliqué, Appliqué avec des erreurs),

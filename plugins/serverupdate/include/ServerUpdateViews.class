@@ -689,7 +689,7 @@ class ServerUpdateViews extends Views {
                     
                     $output .= ' <a href="?view=upgrades&open='.$upgrade->getClassname().'&opens='.(isset($GLOBALS['opens'])?$GLOBALS['opens']:"").'" onclick="showHide(';
                     $output .= "'executions".$upgrade->getClassname()."'); return false;";
-                    $output .= '">show/hide executions</a>';
+                    $output .= '">'.$Language->getText('plugin_serverupdate_script','show_hide_execs').'</a>';
                     //Executions
                     $output .= '<div id="executions'.$upgrade->getClassname().'" ';
                     if (isset($GLOBALS['opens'])) {

@@ -29,22 +29,8 @@
 				<h2 id="view">View the available updates</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">'Available updates' interface screenshot</div>
-						<img alt="'Available updates' interface screenshot" src="serverupdate_noCSS.png" class="noCSS" />
-						<dl id="legendUpdateServer">
-							<dt id="revision">1. Revision</dt>
-							<dd id="revisionDef"><a href="#legendUpdateServer"><span>Revision related to the update.</span></a></dd>
-							<dt id="date">2. Date</dt>
-							<dd id="dateDef"><a href="#legendUpdateServer"><span>Date of the revision.</span></a></dd>
-							<dt id="commitMessage">3. Commit message</dt>
-							<dd id="commitMessageDef"><a href="#legendUpdateServer"><span>Commit message associated with the revision. Can contain precious information concerning the update. Always read it before processing an update.</span></a></dd>
-                            <dt id="impactedFiles">4. Files impacted by the update</dt>
-							<dd id="impactedFilesDef"><a href="#legendUpdateServer"><span>Files impacted by the update, with an indication of modification type (please see the subversion specification for more details).</span></a></dd>
-                            <dt id="detailsLink">5. Link to commit detail</dt>
-							<dd id="detailsLinkDef"><a href="#legendUpdateServer"><span>Link to the web interface that details the update, with the opportunity of watching the modifications file by file (diff).</span></a></dd>
-                            <dt id="needManualUpdate">6. Additional information</dt>
-							<dd id="needManualUpdateDef"><a href="#legendUpdateServer"><span>Show if a manual update is required, or if the update contains an upgrade script to process.</span></a></dd>
-						</dl>
+						<img alt="'Available updates' interface screenshot" src="updates.png" />
+                        <div class="legend">'Available updates' interface screenshot</div>
 					</div>
 					<p>This interface display information about available updates. Each update is matching a revision. Updates are displayed by revision number respecting the ascendant order. For each, the following properties are displayed:
                         <ul>
@@ -70,8 +56,8 @@
                     </p>
                     <h3>Filter the updates</h3>
                     <div class="screenshot">
+                        <img alt="Filter screenshot" src="filter.png" />
                         <div class="legend">Filter screenshot</div>
-                        <img alt="Filter screenshot" src="serverupdate_noCSS.png" class="noCSS" />
                     </div>
                     <p>The filter let you browse the updates regarding their level.
                        The updates are always sorted by revision order.</p>
@@ -81,8 +67,8 @@
 				<h2 id="update">Process one or more updates</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">'Automatic server update' interface screenshot</div>
-						<img alt="'Automatic server update' interface screenshot" src="Update.png" />
+						<img alt="'Automatic server update' interface screenshot" src="update_process.png" />
+                        <div class="legend">'Automatic server update' interface screenshot</div>
 					</div>
 					<p>The plugin allows you to update automatically the CodeX server through the CodeX web interface.
                        The update is always processed from the current revsion of the working copy to the choosen revision
@@ -176,8 +162,8 @@
 				<h2 id="script">View the upgrades scripts</h2>
 				<div class="section">
 					<div class="screenshot">
-						<div class="legend">'Overview of upgrades scripts' interface screenshot</div>
-						<img alt="'Overview of upgrades scripts' interface screenshot" src="ScriptUpgrade.png" />
+						<img alt="'Overview of upgrades scripts' interface screenshot" src="scripts.png" />
+                        <div class="legend">'Overview of upgrades scripts' interface screenshot</div>
 					</div>
 					<p>This interface display information about upgrades scripts.
                     For each script, the status is displayed (Applyed, never been applyed, applyed but with errors),
