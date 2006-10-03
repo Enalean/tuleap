@@ -22,7 +22,7 @@ while ($ln = pop(@listfile_array)) {
   chop $ln; #remove newline
   ($list_name, $list_admin, $list_admin_email, $list_password, $list_is_public, $list_status, $list_desc) = split(":", $ln);
 
-  $list_dir = "$mailman_dir/lists/$list_name";
+  $list_dir = "$mailman_list_dir/$list_name";
 
   # if the email of the administrator is empty then forge it with the
   # admin user name and the domain name
@@ -40,17 +40,17 @@ while ($ln = pop(@listfile_array)) {
     # Create the list if it doesn't exist and status is not 'Deleted'
     print ("Creating Mailing List: $list_name\n");
 
-    system("$mailman_dir/bin/newlist -q $list_name $list_admin_email $list_password >/dev/null");
+    system("$mailman_bin_dir/newlist -q $list_name $list_admin_email $list_password >/dev/null");
 
      # Setup the description and deactivate monthly reminders by default
     system("echo \"send_reminders = 0\n\" > $tmp_dir/send_reminders.in");
     system("echo \"description = '$list_desc'\n\" >> $tmp_dir/send_reminders.in");
 
-    system("$mailman_dir/bin/config_list -i $tmp_dir/send_reminders.in $list_name");
+    system("$mailman_bin_dir/config_list -i $tmp_dir/send_reminders.in $list_name");
 
   } elsif ( -d $list_dir && $list_is_public == 9 ) {
      # Delete the mailing list if asked to and the mailing exists (archive deleted as well)
      print ("Deleting Mailing List: $list_name\n");
-     system("$mailman_dir/bin/rmlist -a $list_name >/dev/null");
+     system("$mailman_bin_dir/rmlist -a $list_name >/dev/null");
   }
 }

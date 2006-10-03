@@ -22,12 +22,7 @@ push @alias_array, "webmaster:             codex-admin\n\n";
 push @alias_array, "\n\n### Begin Mailing List Aliases ###\n\n";
 
 # Determine the name of the mailman wrapper
-# Before 2.1  the name is wrapper, after it's mailman
-if ( -x "$mailman_dir/mail/wrapper") {
-  $mm_wrapper = "$mailman_dir/mail/wrapper";
-} else {
-  $mm_wrapper = "$mailman_dir/mail/mailman";
-}
+$mm_wrapper = "$mailman_wrapper";
 
 # Select mailing list that public or private but not 'Deleted'
 $query = "SELECT list_name from mail_group_list where is_public IN (0,1)";
