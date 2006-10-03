@@ -1059,6 +1059,11 @@ NameVirtualHost %sys_ip_address%:80
 </VirtualHost>
 
 
+# Include php.conf file outside of any virtual host to make sure
+# it is available everywhere. 
+# Without it, there is an issue with the write_cache.php script
+Include conf.d/php.conf
+
 # Include support for Gnu/Mailman
 #Include conf/mailman.conf
                                                       
