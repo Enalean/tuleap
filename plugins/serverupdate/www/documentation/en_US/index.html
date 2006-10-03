@@ -16,9 +16,9 @@
 				<div class="section">This plugin allows the administrator to update the CodeX server automatically through the web interface. The functionalities are:
 					<dl>
 						<dt><a href="#view">Overview of availbale updates</a></dt>
-						<dd>View all the server updates in a clearly graphical way, with their imortance level, and eventually the manual interventions.</dd>
+						<dd>View all the server updates in a clearly graphical way, with their importance level, and eventually the manual interventions.</dd>
 						<dt><a href="#update">Process one or more updates</a></dt>
-						<dd>Process th eupdates easily in one click, with the maximum of security controls, while giving feedback to the administrator concerning the potential manual intervention to do.</dd>
+						<dd>Process the updates easily in one click, with the maximum of security controls, while giving feedback to the administrator concerning potential manual interventions to do.</dd>
                         <dt><a href="#script">Overview of upgrade scripts and their executions</a></dt>
 						<dd>Some updates comes with upgrade scripts to process. This update plugin will manage itself to process these scripts, giving you a maximum feedback of the execution process and the execution success. You then have the opportunity to view the scripts executions.</dd>
                         <dt><a href="#preferences">Preferences</a></dt>
@@ -42,7 +42,7 @@
                             <li>Link to the revision detail,</li>
                             <li>Additional information about the update:
                                 <ul>
-                                    <li>Potential manual intervetion relied to this update. 
+                                    <li>Potential manual intervention relied to this update. 
                                         In this case, the automatic update is not allowed, to encourage you in reading the commit message and doing 
                                         the associated operations (see section <a href="#force">Manual interventions and Force mode</a> for details).</li>
                                     <li>Potential upgrade scripts that need to be processed. 
@@ -71,7 +71,7 @@
                         <div class="legend">'Automatic server update' interface screenshot</div>
 					</div>
 					<p>The plugin allows you to update automatically the CodeX server through the CodeX web interface.
-                       The update is always processed from the current revsion of the working copy to the choosen revision
+                       The update is always processed from the current revision of the working copy to the choosen revision
                        (greater than the current revision), by updating <strong>all</strong>
                        the between revisions.
                        To update the server, click the icon on the right of the wished revision.
@@ -79,7 +79,7 @@
                        <ol>
                         <li>Update simulation
                             <ul>
-                                <li>The system simulate the update, checking that:
+                                <li>The system simulates the update, checking that:
                                     <ul>
                                         <li>there is no manual intervention required,</li>
                                         <li>there is no subversion conflict,</li>
@@ -111,7 +111,7 @@
                     For doing this, the system simulate a <strong>global</strong> update from the current revision to the requested revision.
                     (by using the subversion command <kbd>svn merge --dry-run -r &lt;working copy revision&gt;:&lt;requested revision&gt; &lt;subversion repository&gt; &lt;working copy directory&gt;</kbd>).
                     </p>
-                    <p>The system then checks htere is no <strong>upgrade script conflict</strong>.
+                    <p>The system then checks there is no <strong>upgrade script conflict</strong>.
                     
                     An upgrade script will be executed if and only if:
                     <ul>
@@ -119,14 +119,14 @@
                         <li>It is not deleted in a later revision <strong>and</strong></li>
                         <li>It is not modified after the last revision of the requested update.</li>
                     </ul>
-                    In the case where the script would be modified, the only execution of the script will be processed durinf the last modification.<br /><br />
+                    In the case where the script would be modified, the only execution of the script will be processed during the last modification.<br /><br />
                     
                     An upgrade script will not be executed if:
                     <ul>
                         <li>This script is deleted in a later revision. In this case, here is two options:
                             <ul>
                                 <li>the requested update goes up to the script deletion: in this case, the script is just ignored (not executed), and the update is possible.</li>
-                                <li>the requested update doesn't go up to the the script deletion: in this case, the update isnot allowed. Because if a script is deleted, 
+                                <li>the requested update doesn't go up to the script deletion: in this case, the update is not allowed. Because if a script is deleted, 
                                     it is possible that the revision between keep the server in an unstable state. There is so no other way but to update up to 
                                     the script deletion.</li>
                             </ul>
@@ -136,7 +136,7 @@
                             the update is not allowed. We would manage the situation with individually.
                         </li>
                         <li>This script is modified in a later revision not included in the requested update. In this case, it is obligatory
-                            to process anupdate up to the last script modification.
+                            to process an update up to the last script modification.
                         </li>
                     </ul>
                     </p>
@@ -152,7 +152,7 @@
                     such as a file system modification, needing root permissions for example, or also an intervention that would need a temporary server stop).
                     In this case, the revision is labelled as needing a manual intervention and as we saw it explaining <a href="#simulationStrategy">simulation strategy</a>,
                     such a situation is stoping regarding the automatic update. This to catch your attention about the special type of the update
-                    and to make you read the commit message that contains information about the the update.
+                    and to make you read the commit message that contains information about the update.
                     However, it is possible to enforce the update, but we wish to catch your attention about the danger of such an operation.
                     If you don't respect the indication given in the commit message of such an update, you could find your server in an unstable state.
                     So, only use the "<em>force</em>" mode only if you are sure of what you do.</p>
@@ -165,7 +165,7 @@
 						<img alt="'Overview of upgrades scripts' interface screenshot" src="scripts.png" />
                         <div class="legend">'Overview of upgrades scripts' interface screenshot</div>
 					</div>
-					<p>This interface display information about upgrades scripts.
+					<p>This interface displays information about upgrades scripts.
                     For each script, the status is displayed (Applyed, never been applyed, applyed but with errors),
                     with the possibility of displaying details for every execution:
                     <ul>
