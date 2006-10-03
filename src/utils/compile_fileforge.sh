@@ -25,8 +25,8 @@ substitute() {
 }
 
 cp fileforge.c fileforge_custom.c
-substitute fileforge_custom.c '/var/lib/codex/ftp/incoming/' "$ftp_incoming_dir" 
-substitute fileforge_custom.c '/var/lib/codex/ftp/codex/' "$ftp_frs_dir_prefix" 
+substitute fileforge_custom.c '/var/lib/codex/ftp/incoming' "$ftp_incoming_dir" 
+substitute fileforge_custom.c '/var/lib/codex/ftp/codex' "$ftp_frs_dir_prefix" 
 
 gcc fileforge_custom.c -o fileforge
 chown root.root fileforge
