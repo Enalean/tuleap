@@ -335,6 +335,7 @@ include_proj_email	account_register	$1 Account Registration
 # Script: SF/www/include/session.php
 #
 include_session	missing_pwd	Missing Password Or User Name
+include_session	invalid_pwd	Invalid Password Or User Name
 include_session	invalid_ldap_name	Invalid LDAP User Name
 include_session	dir_authent	Directory Authentication
 include_session	use_ldap_login	Please use your ldap login

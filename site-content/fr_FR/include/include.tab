@@ -340,6 +340,7 @@ include_proj_email	account_register	Création du compte utilisateur $1
 # Script: SF/www/include/session.php
 #
 include_session	missing_pwd	Mot de passe ou nom d'utilisateur manquant
+include_session	invalid_pwd	Mot de passe ou nom d'utilisateur invalide
 include_session	invalid_ldap_name	Nom d'utilisateur LDAP invalide
 include_session	dir_authent	Authentification annuaire
 include_session	use_ldap_login	Veuillez utiliser votre login LDAP

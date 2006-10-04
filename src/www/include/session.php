@@ -70,7 +70,7 @@ function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
                     . "AND user_pw='" . md5($form_pw) . "'");
 	if (!$res || db_numrows($res) < 1) {
 		//invalid password or user_name
-		$feedback .= $Language->getText('include_session','missing_pwd');
+		$feedback .= $Language->getText('include_session','invalid_pwd');
 		return false;
 	} 
     else {
