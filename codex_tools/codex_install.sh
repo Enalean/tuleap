@@ -491,7 +491,7 @@ $CHMOD 644 /etc/httpd/conf/codex_htpasswd
 # -> saxon
 
 echo "Installing Saxon...."
-cd /usr/local
+cd /usr/lib/codex
 $RM -rf saxon*
 $TAR xfz ${nonRPMS_DIR}/docbook/saxon-*.tgz
 dir_entry=`$LS -1d saxon-*`
@@ -499,7 +499,7 @@ $LN -sf ${dir_entry} saxon
 
 # -> fop
 echo "Installing FOP...."
-cd /usr/local
+cd /usr/lib/codex
 $RM -rf fop*
 $TAR xfz ${nonRPMS_DIR}/docbook/fop-*.tgz
 dir_entry=`$LS -1d fop-*`
@@ -507,7 +507,7 @@ $LN -sf ${dir_entry} fop
 
 # -> Jimi
 echo "Installing Jimi...."
-cd /usr/local
+cd /usr/lib/codex
 $RM -rf [jJ]imi*
 $TAR xfz ${nonRPMS_DIR}/docbook/Jimi-*.tgz
 dir_entry=`$LS -1d [jJ]imi-*`
@@ -515,7 +515,7 @@ $LN -sf ${dir_entry} jimi
 
 # -> Docbook DTD
 echo "Installing DocBook DTD...."
-cd /usr/local
+cd /usr/lib/codex
 $RM -rf docbook-dtd*
 $TAR xfz ${nonRPMS_DIR}/docbook/docbook-dtd-*.tgz
 dir_entry=`$LS -1d docbook-dtd-*`
@@ -523,7 +523,7 @@ $LN -sf ${dir_entry} docbook-dtd
 
 # -> Docbook XSL
 echo "Installing DocBook XSL...."
-cd /usr/local
+cd /usr/lib/codex
 $RM -rf docbook-xsl*
 $TAR xfz ${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz
 dir_entry=`$LS -1d docbook-xsl-*`
@@ -1011,14 +1011,14 @@ crontab -u root /tmp/cronfile
 
 echo "Installing  codexadm user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# Re-generate the CodeX User and Programmer Guides on a daily basis
+# Re-generate the CodeX User Guides on a daily basis
 00 03 * * * /usr/share/codex/src/utils/generate_doc.sh
 30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh
 45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh
 EOF
 crontab -u codexadm /tmp/cronfile
 
-echo "Installing  mailman user crontab..."
+echo "Installing  mailman user crontab... XXX"
 $CAT <<'EOF' >/tmp/cronfile
 # At 8AM every day, mail reminders to admins as to pending requests.
 # They are less likely to ignore these reminders if they're mailed
