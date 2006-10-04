@@ -76,6 +76,10 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
         if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
         
+        //Focus
+        this.focusEvent = this.focus.bindAsEventListener(this);
+        Event.observe(window, 'load', this.focusEvent, true);
+        
     },
     dispose: function() {
         // ShowOptions
@@ -89,6 +93,11 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         Event.stopObserving(window, 'load', this.initExpandCollapseEvent, true);
         // ItemHighlight
         Event.stopObserving(window, 'load', this.initItemHighlightEvent, true);
+    },
+    focus: function() {
+        if ($('docman_new_form')) {
+            Form.focusFirstElement('docman_new_form');
+        }
     },
     //{{{------------------------------ ItemHighlight
     initItemHighlight: function() {

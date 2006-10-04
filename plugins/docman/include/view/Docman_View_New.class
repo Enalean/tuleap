@@ -37,7 +37,7 @@ require_once('Docman_View_ParentsTree.class');
         $params['form_name'] = 'new_item';
 
         $html  = '<br />';
-        $html .= '<form name="'.$params['form_name'].'" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .'>';                
+        $html .= '<form name="'.$params['form_name'].'" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .'>';                
 
         $html .= '<div class="docman_new_item">'."\n";
 
