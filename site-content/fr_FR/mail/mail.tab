@@ -19,6 +19,7 @@
 # Script: SF/www/mail/admin/index.php
 #
 mail_admin_index	provide_correct_list_name	Le nom de la liste doit comporter au moins 4 caractères
+mail_admin_index	list_name_unauthorized_char	Le nom de la liste contient des caractères non autorisés. Les caractères autorisés sont : lettres, nombres, -, _, .
 mail_admin_index	list_exists_err	ERREUR - La liste existe déjà
 mail_admin_index	add_list_err	Erreur lors de la création de la liste
 mail_admin_index	list_added	Liste créée avec succès

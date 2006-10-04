@@ -14,6 +14,7 @@
 # Script: SF/www/mail/admin/index.php
 #
 mail_admin_index	provide_correct_list_name	Must Provide List Name That Is 4 or More Characters Long
+mail_admin_index	list_name_unauthorized_char	List Name Contains Bad Characters. Authorized Characters are : letters, numbers, -, _, .
 mail_admin_index	list_exists_err	ERROR - List Already Exists
 mail_admin_index	add_list_err	Error Adding List
 mail_admin_index	list_added	List Added

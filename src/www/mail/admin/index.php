@@ -25,6 +25,9 @@ if ($group_id && user_ismember($group_id,'A')) {
 			if (!$list_name || strlen($list_name) < 4) {
 				exit_error($Language->getText('global','error'),$Language->getText('mail_admin_index','provide_correct_list_name'));
 			}
+            if (! ereg('(^([a-zA-Z\_0-9\.-]*))$' , $list_name)) {
+                exit_error($Language->getText('global','error'),$Language->getText('mail_admin_index','list_name_unauthorized_char'));
+            }
 			if (user_is_super_user())
 			    $new_list_name = strtolower($list_name);
 			else
