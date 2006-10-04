@@ -42,18 +42,40 @@ installation script provided by Xerox as part of the CodeX software
 takes care of most of the installation process described below. After
 completion the installation script will inform you of the remaining
 configuration that must be done manually.<br>
+
 <h1><a name="Linux_OS_Installation"></a>Linux OS Installation</h1>
+
 CodeX is designed to run on on a PC server (Intel x86 CPU or
-compatible) running Linux RedHat Linux Enterprise Server 4.0 wether WS,
-ES or AS version. Other distributions are not supported by Xerox.<br>
+compatible) running Linux RedHat Linux Enterprise Server 4.0 (RHEL4) wether WS,
+ES or AS version. 
+<br>This Linux version is only available with paid-for support. If you
+don't need a fully supported server (e.g. a test server or development
+server), you may use a free <a href="http://en.wikipedia.org/wiki/RedHat_Enterprise_Linux_clones">RHEL clone distribution</a>.
+While those distributions are supposed to be fully binary compatible with
+RHEL, they are not tested, nor supported by Xerox.<br>
 <br>
 <br>
+<h2>OS Installation options</h2>
+<p>You are free to choose a full, partial, or minimum installation. The CodeX server does not need an X server, KDE, Gnome, etc. But you might find it useful if you intend to use the graphical administration tools. The CodeX installation script will ask for missing RPMs.
+<p>CodeX fully supports the <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/selinux-guide/">SELinux targeted policy</a> implemented in RHEL4. Feel free to enable it ("enforcing") during the installation.
+<h2>Disk Partitioning</h2>
+<p>Before choosing a partitioning scheme, it is important to know where CodeX
+data will be located.
+<br>The following table shows the main directories used by CodeX:
+<table border="1">
+<tr><th>Top Directory</th><th>Content</th></tr>
+<tr><td><pre>/usr</pre></td><td>CodeX source code is installed in /usr/share/codex. Size around 300 MB. Total size for the whole /usr directory: up to 8 GB for a full RHEL4 installation.</td></tr>
+<tr><td><pre>/home</pre></td><td>Contains CodeX users home directories, and project directories (including project web sites). Size depends on CodeX usage (login shell allowed, web site usage).</td></tr>
+<tr><td><pre>/var</pre></td><td>/var/lib/mysql contains the CodeX database, and /var/lib/codex is CodeX main data directory. It contains CVS and Subversion repositories, file releases, backups . Size: as much as the projects need. This directory should be located in the biggest disk or disk partition.</td></tr>
+</table>
+<p>Whatever the partitioning scheme chosen, it is always possible to move directories from a partition to another, and create links from their original location. Be warned, though, of potential issues with SELinux: you might need to change security contexts.
 <hr size="2" width="100%">
 <h1><a name="User_Accounts_and_Group_Settings"></a>User Accounts and
 Group Settings</h1>
 Specific user accounts and groups that must be created prior to any
-software installation<br>
+manual software installation<br>
 <br>
+XXXX todo
 <table align="center" width="80%" border="1" cellspacing="2"
  cellpadding="2">
   <tbody>
@@ -205,16 +227,6 @@ the
  href="/documentation/administration_guide/html/CodeX_Administration_Guide.html">CodeX
 Administration Guide</a>.<br>
 <br>
-When you setup your filesystem make sure that the followind top
-directories are located on file system with enough storage space:<br>
-<ul>
-  <li>/cvsroot and /svnroot: where the CVS and SVN repositories reside (if you want to place
-them elsewhere make sure /cvsroot or /svnroot is a link pointing to the real location)</li>
-  <li>/home : this one holds the user personal directories, project
-directories (project web site), ftp spaces (file release and anonymous
-storage space).&nbsp; </li>
-</ul>
-<br>
 <table align="center" width="80%" border="1" cellspacing="2"
  cellpadding="2">
   <tbody>
@@ -365,7 +377,7 @@ cvs tracking script that feed the CodeX database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/cvsroot<br>
+      <td valign="top">/var/lib/codex/cvsroot<br>
       </td>
       <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxr-xr-x<br>
@@ -374,16 +386,34 @@ cvs tracking script that feed the CodeX database<br>
       </td>
     </tr>
     <tr>
+      <td valign="top">/cvsroot<br>
+      </td>
+      <td valign="top">root.root</td>
+      <td valign="top">lrwxrwxrwx<br>
+      </td>
+      <td valign="top">Link to /var/lib/codex/cvsroot.<br>
+      </td>
+    </tr>
+    <tr>
       <td colspan="4" rowspan="1" valign="top"><b>Subversion directory</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/svnroot<br>
+      <td valign="top">/var/lib/codex/svnroot<br>
       </td>
       <td valign="top">codexadm.codexadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top">Where all Subversion repositories reside.<br>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">/svnroot<br>
+      </td>
+      <td valign="top">root.root</td>
+      <td valign="top">lrwxrwxrwx<br>
+      </td>
+      <td valign="top">Link to /var/lib/codex/svnroot.<br>
       </td>
     </tr>
     <tr>
@@ -411,18 +441,6 @@ CVS repo hosted on CodeX (used for stattistics purposes)<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/mailman<br>
-      </td>
-      <td valign="top">mailman .mailman<br>
-      </td>
-      <td valign="top">drwxrwsr-x<br>
-      </td>
-      <td valign="top">/usr/local/mailman/private directory point
-(symbolic link) to this directory in case there is not enough space on
-the / file system<br>
-      </td>
-    </tr>
-    <tr>
       <td colspan="4" rowspan="1" valign="top"><b>Cache for generated
 HTML</b><br>
       </td>
@@ -441,17 +459,13 @@ HTML</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/home/var<br>
-/var/lib<br>
-/var/lib/mysql<br>
+      <td valign="top">
+/var/lib/mysql
       </td>
-      <td valign="top">root.root<br>
-root.root<br>
-mysql.bin<br>
+      <td valign="top">
+mysql.mysql
       </td>
-      <td valign="top">drwxr-xr-x<br>
-drwxr-xr-x<br>
-drwxr-xr-x<br>
+      <td valign="top">drwxr-xr-x
       </td>
       <td valign="top">In case you have not enough space in /var you
 can move the /var/lib/mysql directory to /home/var/lib/mysql and create
@@ -508,7 +522,7 @@ Packages<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">apache<br>
+      <td valign="top">apache XXX remove?<br>
       </td>
       <td valign="top">Install httpd and mod_ssl RPMs.&nbsp;
 httpd-devel and httpd-manual RPMs are
@@ -556,11 +570,16 @@ DocBook processing chain to generate the CodeX User Guide.<br>
       </td>
     </tr>
     <tr>
+      <td style="vertical-align: top;">Mailman<br>
+      </td>
+      <td style="vertical-align: top;">Install the customized Mailman package. It is configured specifically for CodeX (with the proper group IDs defined at compile time)<br>
+      </td>
+    </tr>
+    <tr>
       <td valign="top">others<br>
       </td>
-      <td valign="top">The following RPMs must be installed <br>
+      <td valign="top">The following non-RHEL RPMs must also be installed <br>
       <ul>
-        <li>perl-suidperl</li>
         <li>perl-Crypt-SmbHash</li>
         <li>wu-ftpd</li>
         </li>
@@ -575,21 +594,23 @@ RedHat CDROM. Please make sure they have been installed by the RedHat
 installation process. If not then install them directly from the CDROM
 with an 'rpm -Uvh' command.<br>
       <br>
-Packages to install:<br>
+Packages to install:XXX to complete<br>
       <ul>
+        <li>apache httpd-2.0</li>
+        <li>mysql</li>
         <li>openssh-server,&nbsp;openssh, openssh-clients,
 openssh-askpass</li>
         <li>openssl (if you intend to allow secure HTTP access)</li>
         <li>openldap</li>
         <li>perl, perl-DBI, perl-DBD-MySQL,
 perl-suidperl, perl-CGI</li>
-        <li>python (for mailman)<br>
+        <li>python (for mailman and ViewVC)<br>
         </li>
         <li>sendmail (8.x with x&gt;=9)<br>
         </li>
         <li>telnet, named, ntp</li>
         <li>samba (if you want to activate windows connectivity to the
-project Web site storage space and software release space)</li>
+project Web site storage space)</li>
         <li>compat-glibc-x.y.z and compat-libstdc++-x.y.z (needed by
 the SUN JRE)<br>
           <br>
@@ -642,12 +663,6 @@ fop -&gt; fop-x.y.z<br>
 jimi -&gt; Jimi-x.y.z (Caution!! symbolic link uses lower case only)<br>
 etc...<br>
       </blockquote>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">mailman<br>
-      </td>
-      <td style="vertical-align: top;">The CodeX mailing list manager<br>
       </td>
     </tr>
     <tr>
@@ -838,7 +853,13 @@ reflect your site settings and place it in <tt>/etc/httpd/conf/httpd.conf</tt>.<
   <li>Starting with Apache 2.0 and RHEL 3, modules configuration must
 be placed in <tt>/etc/httpd/conf.d/</tt> . CodeX comes with a number
 of Apache modules configuration files that must be copied from <tt>/usr/share/codex/src/etc/</tt>
-to <tt>/etc/httpd/conf.d/ (e.g. php.conf, ssl.conf,etc.)<br>
+to <tt>/etc/httpd/conf.d/</tt> (e.g. php.conf, ssl.conf,etc.). 
+  <li>Please not that, by default, <b>all</b> 
+configuration files (ending with .conf) located in <tt>/etc/httpd/conf.d/</tt> are included in both httpd.conf and ssl.conf.
+For this reason, you may want to remove or delete useless configuration files (e.g. perl.conf, python.conf, etc).
+  <li>Directory aliases (e.g. '/documentation', or '/phpMyAdmin') used to be defined in httpd.conf top level. This caused potential issues with virtual hosts defined for CodeX. For instance, the URL http://guineapig.codex.xerox.com/documentation did not point to a "documentation" directory located in the Guinea Pig htroot directory, but to the main CodeX documentation tree. For this reason, CodeX aliases are defined per virtualhost. This is why configuration files are loaded in both the main virtual host, and the secure (HTTPS) virtual host.
+  <li>For the same reason, the ssl.conf file is moved from 'conf.d' to 'conf' (so that it does not include itself).
+<br>
     </tt></li>
   <li>Start or restart the Apache web server (from the root account
 type the command: 'service httpd restart')<br>
@@ -849,25 +870,27 @@ Before you activate SSL in Apache make sure the standard RedHat openssl
 package is installed. Then you must either generate your own test
 certificate or you must get one from a certified company and install it
 in the right place. The RedHat Manual has excellent instructions on how
-to do that. See the section called 'Apache Secure Server
-Configuration' in RHEL3 manual. It is at <a
- href="http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/ch-httpd-secure-server.html">http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/ch-httpd-secure-server.html</a>
+to do generate a self-signed certificate. See the section called 'Apache Secure Server
+Configuration' in RHEL manual. It is at <a
+ href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/sysadmin-guide/ch-httpd-secure-server.html">http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/sysadmin-guide/ch-httpd-secure-server.html</a>
 .
-And more precisely, it details how to <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/s1-secureserver-generatingkey.html">generate a new key</a> and <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-3-Manual/sysadmin-guide/s1-secureserver-selfsigned.html"> a new certificate</a>.
+And more precisely, it details how to <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/sysadmin-guide/s1-secureserver-generatingkey.html">generate a new key</a> and <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/sysadmin-guide/s1-secureserver-selfsigned.html"> a new certificate</a>.
+<p>
+You will also find a script that will automate these tasks for you (/usr/share/codex/src/utils/generate_ssl_certificate.sh)
 <p>
 Note: although RedHat recommends that you generate a password protected
 key for your certificate it has some serious implications. The most
 noticeable is that a system administrator must be physically present
 while rebooting the CodeX system to type the password when the Apache
-server is started. This prevent from doing an unattended reboot.<br>
+server is started. This prevents from doing an unattended reboot.<br>
 <br>
 To activate SSL on your CodeX server simply copy the sample <span
  style="font-family: monospace;">/usr/share/codex/src/etc/ssl.conf.dist</span>
-file to <tt>/etc/httpd/conf.d/. It </tt>contains all the necessary
+file to <tt>/etc/httpd/conf/</tt>. It contains all the necessary
 Apache directives
 to enable secured HTTP. Then do the following:<br>
 <ul>
-  <li>Edit <tt>/etc/httpd/conf.d/ssl.conf</tt> and replace the <tt>%sys_ip_address%
+  <li>Edit <tt>/etc/httpd/conf/ssl.conf</tt> and replace the <tt>%sys_ip_address%
     </tt>and <tt>%sys_default_domain% </tt>patterns with the
 appropriate values for your site.<tt><br>
     </tt></li>
@@ -892,7 +915,7 @@ the CodeX Subversion repository. This will make it easy for you to keep up to
 date with &nbsp;subsequent new features or bug fix. <br>
 <ul>
   <li>Before you install the CodeX software make sure you have a user
-account on the central CodeX server. You'll need this user account to
+account on the Partners or central CodeX server. You'll need this user account to
 check out the source code from the CodeX Subversion repository.</li>
   <li>Ask us (<a href="mailto:codex-contact@codex.xerox.com">codex-contact@codex.xerox.com</a>)
 to add you to the codex-svnevents mailing list to automatically receive
@@ -920,18 +943,19 @@ Software</h1>
 As user root:<br>
 <ul>
   <li>copy /usr/share/codex/src/etc/local.inc.dist in
-/etc/codex/conf/local.inc&nbsp;</li>
-  <li>change /etc/codex/conf/local.inc ownership (chown
+/etc/codex/conf/local.inc and /usr/share/codex/src/etc/database.inc.dist in
+/etc/codex/conf/database.inc</li>
+  <li>change local.inc and database.inc ownership (e.g. chown
 codexadm.codexadm
 /etc/codex/conf/local.inc)</li>
-  <li>change permission (chmod 640 /etc/codex/conf/local.inc) <b><font
+  <li>change permission (e.g. chmod 640 /etc/codex/conf/local.inc) <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b></li>
 </ul>
 A couple of remarks on the some the variables in local.inc:<br>
 <ul>
-  <li><b>Machine names</b>: The local.inc file is included by all CodeX
+  <li><b>Machine names</b>: The local.inc and database.inc files are included by all CodeX
 PHP scripts and contains global variables that are used throughout the
-site. This file is also read by the backend Perl scripts and Python scripts (see below).
+site. These files are also read by the backend Perl scripts and Python scripts (see below).
 &nbsp;You'll see that CodeX allows you to give distinct machine names
 that will be in charge of the various CodeX services (Web front end,
 CVS, Shell account, list manager,etc.). Even if you run all those
@@ -947,7 +971,7 @@ all
 the traffic for this service to the right machine.</li>
   <li><b>Database parameters</b> ($sys_dbxxx) : you'll have to provide
 the password for the MySQL codexadm user here so make sure you have
-set the file permission of local.inc correctly (see above)</li>
+set the file permission of database.inc correctly (see above)</li>
   <li><b>CodeX News group</b> ($sys_news_group): this is a reserved
 CodeX group_id. Leave this value unchanged.</li>
   <li><b>Site language</b> ($sys_lang): right now, CodeX supports two languages: English (en_US) and French (fr_FR).</li>
@@ -1000,7 +1024,7 @@ file release. The default value is 16MB. </li>
 If you wish to go over 16MB you might also have to modify the following
 files:
 <ul>
-  <li>/etc/php.ini as described above </li>
+  <li>/etc/httpd/conf.d/php.conf as described above </li>
   <li>/etc/my.cnf i.e. the MySQL configuration file. Specify a <span
  style="font-family: monospace;">max_allowed_packet</span> value above
 the maximum size you chose. </li>
@@ -1034,7 +1058,7 @@ the maximum size you chose. </li>
     <tr>
       <td valign="top">upload_max_file_size<br>
       </td>
-      <td valign="top">/etc/php.ini<br>
+      <td valign="top">/etc/httpd/conf.d/php.conf<br>
       </td>
       <td valign="top">N<br>
       </td>
@@ -1044,7 +1068,7 @@ the maximum size you chose. </li>
     <tr>
       <td valign="top">post_max_size<br>
       </td>
-      <td valign="top">/etc/php.ini<br>
+      <td valign="top">/etc/httpd/conf.d/php.conf<br>
       </td>
       <td valign="top">N+1<br>
       </td>
@@ -1054,11 +1078,11 @@ the maximum size you chose. </li>
     <tr>
       <td valign="top">memory_limit<br>
       </td>
-      <td valign="top">/etc/php.ini<br>
+      <td valign="top">/etc/httpd/conf.d/php.conf<br>
       </td>
       <td valign="top">4*N<br>
       </td>
-      <td valign="top">We have to multiply by 4 because of the document manager which stores the document in the database. We first have to escape the file data before building the SQL query. This in the worst case can double the size. And then we have to build the SQL query, which doubles the amount of memory again.<br>
+      <td valign="top">We have to multiply by 4 because of the (legacy) document manager which stores the document in the database. We first have to escape the file data before building the SQL query. This in the worst case can double the size. And then we have to build the SQL query, which doubles the amount of memory again.<br>
       </td>
     </tr>
     <tr>
@@ -1081,10 +1105,6 @@ As user root go through the following steps:<br>
 <h2>Move the mysql data directoy</h2>
 <ul>
   <li>Make sure the official MySQL RPMs are installed (see above)</li>
-  <li>If your root file system where /var/lib/mysql resides has not
-enough space move this directory (and only this one) to another place
-with plenty of space (e.g. /home/var/lib/mysql). Stop the mysql engine
-before doing this (command is 'service mysql stop')</li>
   <li>Make sure the mysql engine is started (command is 'service mysql
 start')</li>
 </ul>
@@ -1124,7 +1144,7 @@ time.&nbsp; Right now the configuration file looks like this<br>
  style="font-family: monospace;">
 <span style="font-family: monospace;">[mysqld]</span><br
  style="font-family: monospace;">
-<span style="font-family: monospace;">log-bin=/cvsroot/.mysql_backup/codex-bin</span><br
+<span style="font-family: monospace;">log-bin=codex-bin</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">skip-innodb</span><br
  style="font-family: monospace;">
@@ -1196,32 +1216,23 @@ used in pipe commands in the aliases file. These shell wrappers must be
 explicitely delcared in the /etc/smrsh directory in order to execute
 properly. You should create the following links:<br>
 <br>
-<pre>	# cd /etc/smrsh<br>	# ln -sf /usr/local/bin/gotohell<br>	# ln -sf /home/mailman/mail/mailman<br></pre>
+<pre>	# cd /etc/smrsh<br>	# ln -sf /usr/local/bin/gotohell<br>	# ln -sf /usr/lib/mailman/mail/mailman<br></pre>
 <br>
 <hr>
 <h1><a name="Mailman_Installation_and_Configuration"></a>Mailman
 Installation and Configuration</h1>
-For historical reasons CodeX do not use the RedHat mailman RPMs but the
-stock archive directly from the Mailman Web site. You can get mailman
-at <a href="http://www.gnu.org/software/mailman/">http://www.gnu.org/software/mailman/</a>
-(CodeX uses the 2.1.x version). Unarchive the tar file and make sure
-your read the README, INSTALL and
-UPGRADING files (in case of an upgrade). Then compile and install it in
-/home/mailman .<br>
+CodeX now use a modified version of RedHat mailman RPMs.
+Only the RPM SPEC file and mailman configuration files have been changed.
 <br>
-Also setup a mailman admin password once the installation is done (we
+You need to setup a mailman admin password once the installation is done (we
 recommend that you use the same password as the codexadm account).
 To
-this end use the 'mmsitepass' script in /home/mailman/bin.<br>
+this end use the 'mmsitepass' script in /usr/lib/mailman/bin.<br>
 <br>
 You must also configure the Apache configuration <tt>httpd.conf</tt>
 to
 instruct Apache on how to access the Web based mailing manager and
-archiver. A sample configuration file is provided in the CodeX source
-code at <tt>src/etc/mailman.conf.dist</tt> . Place this file in the
-same
-directory as your <tt>httpd.conf</tt> file and include it at the end
-of <tt>httpd.conf</tt>.<br>
+archiver. A sample configuration file is provided with the RPM.<br>
 <br>
 Create a "site-wide" mailing list. This is the one that password
 reminders will appear to come from.
@@ -1234,14 +1245,14 @@ You must also override some Mailman variable settings, most notably set
 the
 DEFAULT_EMAIL_HOST and&nbsp; DEFAULT_URL_HOST to lists.codex.xerox.com.
 Look at their original
-definition in <span style="font-family: monospace;">/home/mailman/Mailman/Defaults.py</span>
-and redefine them in <span style="font-family: monospace;">/home/mailman/Mailman/mm_cfg.py.</span>
+definition in <span style="font-family: monospace;">/usr/lib/mailman/Mailman/Defaults.py</span>
+and redefine them in <span style="font-family: monospace;">/usr/lib/mailman/Mailman/mm_cfg.py.</span>
 When you change either variable in your mm_cfg.py, then be sure to also
 include the following:
 <pre>     add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)<br></pre>
 <p>
 If you wish to run Mailman with HTTPS (secure server), you need to add two more lines to
- <span style="font-family: monospace;">/home/mailman/Mailman/mm_cfg.py.</span>:
+ <span style="font-family: monospace;">/usr/lib/mailman/Mailman/mm_cfg.py.</span>:
 <pre>
 DEFAULT_URL_PATTERN = 'https://%s/mailman/'
 PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
@@ -1267,6 +1278,7 @@ lines if need be </p>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
 <pre>	# cd /usr/local/bin<br>	# chown root.codexadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
+<p>Alternatively, use the compile_fileforge.sh script located in src/utils: it will perform all those steps for you.
 <h2>gensmbpasswd</h2>
 This is a small utility called by CodeX login creation or change
 password script to generate the MD4 encoding of the user password that
@@ -1278,7 +1290,7 @@ personal directory and the project directory the user belong to.<br>
 This file used to be quite difficult to compile, but it has been rewritten as a Perl script.
 Ownership and permission
 must be:<br>
-<pre>&nbsp;&nbsp;&nbsp; 	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 892963 Oct&nbsp; 7 21:37 /usr/local/bin/gensmbpasswd</pre>
+<pre>&nbsp;&nbsp;&nbsp; 	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 892963 Oct&nbsp; 7 21:37 /usr/lib/codex/bin/gensmbpasswd</pre>
 <h2>gotohell</h2>
 A simple shell script to discard all the messages sent to the
 noreply@codex.xerox.com messages. The file must contain:<br>
@@ -1288,7 +1300,7 @@ noreply@codex.xerox.com messages. The file must contain:<br>
   <pre>cat - &gt;/dev/null</pre>
 </blockquote>
 Ownership and permission must be:<br>
-<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/local/bin/gotohell</pre>
+<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/lib/codex/bin/gotohell</pre>
 <br>
 <br>
 <hr>
@@ -1299,7 +1311,7 @@ directory and FTP Incoming space through Windows network drives. To
 enable this feature you just need to:<br>
 <ul>
   <li>&nbsp;Install the Samba rpms</li>
-  <li>Make sure the gensmbpasswd program is installed in /usr/local/bin</li>
+  <li>Make sure the gensmbpasswd program is installed in /usr/lib/codex/bin</li>
   <li>Create a symbolic link from /etc/smbpasswd to
 /etc/samba/smbpasswd (the password file will be automatically generated
 by the CodeX cron job)</li>
@@ -1330,13 +1342,14 @@ CODEX because it is the name of the central site)<br>
 your CodeX server (see the section on <a
  href="#RPM_Packages">RPM
 Packages</a>)</li>
-  <li>Create the <tt>/svnroot</tt> directory and the <span
+  <li>Create the <tt>/var/lib/codex/svnroot</tt> directory, the <tt>/svnroot</tt> link and the <span
  style="font-family: monospace;">/etc/httpd/conf/htpasswd</span> as
 follows:<br>
     <br>
-    <tt># mkdir /svnroot<br>
-# chown codexadm.codexadm /svnroot</tt><tt><br>
+    <tt># mkdir /var/lib/codex/svnroot<br>
+# chown codexadm.codexadm /var/lib/codex/svnroot</tt><tt><br>
 # chmod 775 /svnroot</tt><tt><br>
+# ln -s /var/lib/codex/svnroot /svnroot</tt><tt><br>
 # touch </tt><span style="font-family: monospace;">/etc/httpd/conf/htpasswd</span><br>
     <tt># chown codexadm.codexadm </tt><span
  style="font-family: monospace;">/etc/httpd/conf/htpasswd</span><tt><br>
@@ -1474,13 +1487,13 @@ This feature is activated in the CVS Web interface of the CodeX Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; # cd /</tt><tt>home/httpd/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/local/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/local/bin</tt></pre>
-The log_accum script in requires the
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/codex/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/codex/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/codex/bin</tt></pre>
+The log_accum script requires the
 codexadm group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
-<pre>	# cd /usr/local/bin<br>	# chown codexadm.codexadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
+<pre>	# cd /usr/lib/codex/bin<br>	# chown codexadm.codexadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
 Be careful that you must set the uid bit again whenever the log_accum
-script is updated from CVS and copied again into the /usr/local/bin
+script is updated from CVS and copied again into the /usr/lib/codex/bin
 directory.<br>
 <tt><br>
 </tt>
@@ -1630,7 +1643,7 @@ CodeX restricted users (status 'R')
 <br>
 To activate these pseudo shells:<br>
 <ul>
-  <li>copy the file cvssh (or cvssh-restricted) in /usr/local/bin,
+  <li>copy the file cvssh (or cvssh-restricted) in /usr/lib/codex/bin,
 make sure it is executable and also add the file to the list of
 authorized shells in /etc/shells. Adding cvssh to /etc/shells will make
 it appear in the list of possible shells in the CodeX user admin
@@ -1639,7 +1652,7 @@ interface. Note: This is already done for you on CodeX versions after 2.4</li>
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
-    <pre>$ mysql -u codexadm codex -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/local/bin/cvssh' ;</pre>
+    <pre>$ mysql -u codexadm codex -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/lib/codex/bin/cvssh' ;</pre>
   </li>
 </ul>
 <br>
@@ -1812,7 +1825,7 @@ Currently, CodeX supports the English and French languages.
 <h2>Site Documentation</h2>
 CodeX has an entry called 'Site Documentation' &nbsp;in the left hand
 side menu. This menu entry actually points to the Document Manager of
-the CodeX project called 'Admin Project'. &nbsp;This project is
+the CodeX project ('Admin Project'). &nbsp;This project is
 automatically defined when the CodeX database is initialized. It comes
 with group_id 1 (ONE) and you can acces it at
 http://your.codex_site.url/projects/codex.<br>
@@ -1821,10 +1834,7 @@ All documents stored in the document manager of the 'Admin Project'
 will automatically appear under 'Site Documentation' (except those
 documents marked 'private' or hidden'. See the <a
  href="/documentation/user_guide/html/en_US/DocumentManager.html">CodeX
-User Guide</a> for more details on the Document Manager service. This
-is
-also why you will not find the Site Documentation of the CodeX central
-site in the CodeX source code repository.<br>
+User Guide</a> for more details on the Document Manager service. XXX update<br>
 <br>
 <h2>User Guide and On-line Help <br>
 </h2>
@@ -1868,7 +1878,7 @@ You can run this
 script
 by hand from the codexadm Linux account and our advice is also to
 include it in the codexadm crontab so that it runs once a day and
-automatiacally regenerate the documentation when needed.<br>
+automatically regenerate the documentation when needed.<br>
 <br>
 For the script to work properly you must have the JRE (Java Runtime
 Environment) and the DocBook processing chain installed properly. See
@@ -1887,7 +1897,7 @@ there. Then, edit the custom file and customize it to your liking<br>
 <hr>
 <h1>LDAP Authentication and Querying</h1>
 <p><b>NOTE: LDAP settings have changed in CodeX 2.8.</b>
-<br><b>This documentation is only valid for CodeX 2.6. It will be updated soon</b>
+<br><b>This documentation is only valid for CodeX 2.6.</b>
 <h2>LDAP information from the company directory</h2>
 <p>
 While visiting a user information page on CodeX, you have the ability
@@ -2005,13 +2015,13 @@ that</tt><br>
   <tt>0 1 * * Mon (cd /usr/share/codex/src/utils/underworld-root;
 ./db_project_weekly_metric</tt><tt>.pl)</tt><br>
   <tt># daily incremental backup of subversion repositories</tt><br>
-  <tt>45 23 * * 1-6 /home/tools/backup_subversion.sh -i</tt><br>
+  <tt>45 23 * * 1-6 /usr/lib/codex/bin/backup_subversion.sh -i</tt><br>
   <tt>#</tt><br>
   <tt># weekly full backup of subversion repositories (0:15 on Sunday)</tt><br>
-  <tt>15 0 * * Sun /home/tools/backup_subversion.sh</tt><br>
+  <tt>15 0 * * Sun /usr/lib/codex/bin/backup_subversion.sh</tt><br>
   <tt>#</tt><br>
   <tt># weekly backup preparation (mysql shutdown, file dump and restart)</tt><br>
-  <tt>45 0 * * Sun /home/tools/backup_job</tt><br>
+  <tt>45 0 * * Sun /usr/lib/codex/bin/backup_job</tt><br>
   <tt>#</tt><br>
   <tt># Delete all files in FTP incoming that are older than 2 weeks
 (336 hours)</tt><br>
@@ -2020,15 +2030,17 @@ that</tt><br>
   <tt>#</tt><br>
   <tt>#</tt><br>
   <tt># Once a minute make sure that the setuid bit is set on some critical files</tt><br>
-  <tt>* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum fileforge)</tt><br>
+  <tt>* * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s log_accum fileforge)</tt><br>
   <br>
 </blockquote>
 Please note that your own root crontab should probably contain some
 additional jobs like may be stopping the mysql engine before starting
 your backup procedure or something similar.<br>
 <h2>Codexadm crontab</h2>
-<blockquote><tt># Re-generate the CodeX User Guide on a daily basis</tt><br>
+<blockquote><tt># Re-generate the CodeX User Guides on a daily basis</tt><br>
   <tt>00 03 * * * /usr/share/codex/src/utils/generate_doc.sh</tt><br>
+  <tt>30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh</tt><br>
+  <tt>45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh</tt><br>
   <br>
 </blockquote>
 <br>
@@ -2227,87 +2239,13 @@ $destdir</span><br style="font-family: monospace;">
 </h1>
 phpMyAdmin is a Web based GUI to manage MySQL database. Although
 installing phpMyAdmin is not mandatory it is a very convenient for a
-CodeX site adminstrator. Installation is really easy:<br>
+CodeX site adminstrator.<br>
+phpMyAdmin is now provided with CodeX as a customized RPM package.
 <br>
-<ul>
-  <li>Get phpMyAdmin from <a
- href="http://www.phpwizard.net/projects/phpMyAdmin/">http://www.phpwizard.net/projects/phpMyAdmin/</a>
-. <br>
-  </li>
-  <li>Uncompressed the file in <span style="font-family: monospace;">/usr/share/codex</span>.
-You should see a new
-directory called phpMyAdmin-X.Y.Z (where X.Y.Z is the version number)</li>
-  <li>In <span style="font-family: monospace;">/usr/share/codex</span>,
-create a symbolic link called phpMyAdmin to the
-phpMyAdmin-X.Y.Z directory</li>
-  <li>Edit config.inc.php and change the following lines to reflect
-your own site configuration:<br>
-    <br>
-    <tt>$cfgPmaAbsoluteUri = 'http://your_codex_domain_here/phpMyAdmin'; (or 'https' if you want to use SSL only)<br>
-$cfgServers[$i]['host']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= 'localhost'; // MySQL hostname<br>
-$cfgServers[$i]['port']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= '';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
-port - leave blank for <br>
-default port<br>
-$cfgServers[$i]['socket']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Path to
-the
-socket - leave bl<br>
-ank for default socket<br>
-$cfgServers[$i]['connect_type']&nbsp; =
-'tcp';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // How to connect to MySQL
-serve<br>
-r ('tcp' or 'socket')<br>
-$cfgServers[$i]['controluser']&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
-control user settings<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// (this user must have read-only<br>
-$cfgServers[$i]['controlpass']&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // access to
-the "mysql/user"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// and "mysql/db" tables)<br>
-$cfgServers[$i]['auth_type']&nbsp;&nbsp;&nbsp;&nbsp; =
-'http';&nbsp;&nbsp;&nbsp; // Authentication method (config, <br>
-http or cookie based)?<br>
-$cfgServers[$i]['user']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= 'codexadm';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL user<br>
-$cfgServers[$i]['password']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MySQL
-password (only needed<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// with 'config' auth_type)<br>
-$cfgServers[$i]['only_db']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'codex';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-$cfgServers[$i]['verbose']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Verbose
-name for this host -<br>
-leave blank to show the hostname<br>
-$cfgServers[$i]['bookmarkdb']&nbsp;&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Bookmark
-db
-- leave blank for<br>
-&nbsp;no bookmark support<br>
-$cfgServers[$i]['bookmarktable'] =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Bookmark
-table - leave blank <br>
-for no bookmark support<br>
-$cfgServers[$i]['relation']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-'';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // table to
-describe the relation between links (see doc)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-//&nbsp;&nbsp; - leave blank for no relation-links support</tt><br>
-    <br>
-  </li>
-  <li>When you access the phpMyAdmin GUI at
+When you access the phpMyAdmin GUI at
 http://<span style="font-style: italic;">your.codex.domain</span>/phpMyAdmin
 you'll be prompted for a
-user name and password. Use the MySQL 'codexadm' login and password.<tt><br>
-    </tt></li>
-</ul>
-<p> </p>
+user name and password. Use the MySQL 'codexadm' login and password.
 <br>
 <hr>
 <h1><a name="First_Things_To_Do_to_run_the_site"></a>First Things To Do
@@ -2325,14 +2263,10 @@ Page' of the Site Administration menu.</li>
 member of the Admin Project (group_id=1) so that you are considered as
 a super user on the entire site. Set permissions for this new account.<br>
   </li>
-  <li>You probably want to rename this 'Admin Project' to 'CodeX
-Project' and use this project to create a bug tracker and a support
-request tracker that will be used by user to get help from your CodeX
-Team.</li>
   <li>Create the trackers you need (bug and support requests most
 likely)</li>
   <li>From your own account create a new project 'Guinea Pig'
-(shortname: gpig)&nbsp; that you will use as a test project for anybody
+(shortname: gpig) that you will use as a test project for anybody
 who wants to experiment with the site. Setup the project completely,
 approve it and then set up the CVS or SVN repository with some sample code,
 create a release, download it,etc...</li>
@@ -2341,14 +2275,6 @@ launch of the CodeX site and promote the news to the front page.<br>
   </li>
 </ul>
 <br>
-<p> </p>
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 </body>
 </html>
