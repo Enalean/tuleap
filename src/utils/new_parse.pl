@@ -11,6 +11,8 @@
 use Sys::Hostname;
 use Carp;
 
+
+
 $hostname = hostname();
 
 
@@ -22,6 +24,7 @@ $hostname = hostname();
 umask 002;
 
 require("include.pl");  # Include all the predefined functions and variables
+
 
 # This section is used to get the list of active users so that we can customize 
 # the SVN access rights... But it is not clear how!
@@ -38,6 +41,7 @@ require("include.pl");  # Include all the predefined functions and variables
 # }
 
 
+my $verbose=0;
 my $user_file = $dump_dir . "/user_dump";
 my $group_file = $dump_dir . "/group_dump";
 my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
@@ -63,6 +67,11 @@ my $MARKER_END   = "# END OF NEEDED CODEX BLOCK";
 # CVS roots including private ones.  For private groups the viewvc.cgi
 # script will implement its own access control.
 my ($cxname) = get_codex_user();
+
+# PK new variables for simple final abstract
+#
+my ($up_user, $new_user, $del_user, $suspend_user, $error_user) = ("0","0","0","0","0");
+my ($up_group, $new_group, $del_group) = ("0","0","0");
 
 # Open up all the files that we need.
 @userdump_array = open_array_file($user_file);
@@ -118,11 +127,13 @@ while ($ln = pop(@userdump_array)) {
                 update_user_group($uid, $username);
 		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		update_httpuser($username, $passwd);
+		++$up_user;
 
 	} elsif ($status eq 'A' && !$user_exists) {
 		add_user($uid, $username, $realname, $shell, $passwd, $email);
 		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		add_httpuser($username, $passwd);
+		++$new_user;
 	
 	} elsif ($status eq 'D') {
 
@@ -132,22 +143,32 @@ while ($ln = pop(@userdump_array)) {
 		  delete_user($username);
 		  delete_winuser($username);
 		  delete_httpuser($username);
+		  ++$del_user;
 		}
 		
 	} elsif ($status eq 'S' && $user_exists) {
 		suspend_user($username);
 		suspend_winuser($username);
 		suspend_httpuser($username);
+		++$suspend_user;
 		
 	} elsif ($status eq 'S' && !$user_exists) {
 		print("Error trying to suspend user: $username\n");
+		++$error_user;
 		
 	} elsif ($username eq 'none') {
 		# simply ignore: this is a dummy user
 	} else {
 		print("Unknown Status Flag: $username\n");
+		++$error_user;
 	}
 }
+print ("\n	User Processing Results\n\n");
+print "New users accounts      : $new_user\n";
+print "Updated user accounts   : $up_user\n";
+print "Deleted user accounts   : $del_user\n";
+print "Suspended user accounts : $del_user\n";
+print "User account problems   : $error_user\n";
 
 #
 # Loop through @groupdump_array and deal w/ users.
@@ -179,18 +200,18 @@ while ($ln = pop(@groupdump_array)) {
 	my $group_modified = 0;
 	if ($gstatus eq 'A' && $group_exists) {
 	        $group_modified = update_group($gid, $gname, $userlist);
+                ++$up_group;
 	
 	} elsif ($gstatus eq 'A' && !$group_exists) {
 		add_group($gid, $gname, $userlist);
+                ++$new_group;
 		
 	} elsif ($gstatus eq 'D' && $group_exists) {
 		delete_group($gname);
+		++$del_group;
 
 	} elsif ($gstatus eq 'D' && !$group_exists) {
-# LJ Why print an error here ? The delete user function leave the D flag in place
-# LJ so this error msg always appear when a project has been deleted
-#		print("Error trying to delete group: $gname\n");
-	  print("Deleted Group: $gname\n");
+	  print("Deleted Group: $gname\n") if $verbose;
 	}
 
 # LJ Do not test if we are on the CVS machine. It's all on atlas
@@ -466,7 +487,81 @@ while ($ln = pop(@groupdump_array)) {
 	  chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
         }
 
+        $group_dir = $grpdir_prefix."/".$gname;
+        # $log_dir = $group_dir."/log";
+        $cgi_dir = $group_dir."/cgi-bin";
+        $ht_dir = $group_dir."/htdocs";
+        $ftp_frs_group_dir = $ftp_frs_dir_prefix."/".$gname;
+        $ftp_anon_group_dir = $ftp_anon_dir_prefix."/".$gname;
+        
+        # Now lets create the group's homedir.
+        # (put the SGID sticky bit on all dir so that all files
+        # in there are owned by the project group and not
+        # the user own group
+        # For some reason setting the SGID bit in mkdir doesn't work
+        # (perl bug ?) hence the chmod
+        if ( $gstatus eq 'A' && !(-e "$group_dir")) {
+          
+          mkdir $group_dir, 0775;
+          chown $dummy_uid, $gid, ($group_dir);
+          chmod 02775, ($group_dir);
+        }
+        if ( $gstatus eq 'A' && !(-e "$cgi_dir")) {
+          mkdir $cgi_dir, 0775;
+          chown $dummy_uid, $gid, ($cgi_dir);
+          chmod 02775, ($cgi_dir);
+        }
+        if ( $gstatus eq 'A' && !(-e "$ht_dir")) {
+          mkdir $ht_dir, 0775;
+          chown $dummy_uid, $gid, ($ht_dir);
+          chmod 02775, ($ht_dir);
+          
+          # Copy the default empty page for Web site
+          # Check if a custom page exists
+          $custom_homepage = $sys_custom_incdir."/en_US/others/default_page.php";
+          $homepage = $sys_incdir."/en_US/others/default_page.php";
+          
+          ($dev,$ino) = stat($custom_homepage);
+          if ( $ino ) {
+            # A custom file exists
+            system("cp $custom_homepage $ht_dir/index.php");
+          } else {
+            # Use the standard file
+            system("cp $homepage $ht_dir/index.php");
+          }
+  
+          chown $dummy_uid, $gid, "$ht_dir/index.php";
+          chmod 0664, "$ht_dir/index.php";
+        }
+
+        if ( $gstatus eq 'A' && !(-e "$ftp_anon_group_dir")) {
+          
+          # Now lets create the group's ftp homedir for anonymous ftp space
+          # This one must be owned by the project gid so that all project
+          # admins can work on it (upload, delete, etc...)
+          mkdir $ftp_anon_group_dir, 0775;
+          chown $dummy_uid, $gid, "$ftp_anon_group_dir";
+        }
+        
+        
+        if ( $gstatus eq 'A' && !(-e "$ftp_frs_group_dir")) {
+          # Now lets create the group's ftp homedir for file release space
+          # (this one has limited write access to project members and read
+          # read is also for project members as well (download has to go
+          # through the Web for accounting and traceability purpose)
+          mkdir $ftp_frs_group_dir, 0771;
+          chown $dummy_uid, $gid, "$ftp_frs_group_dir";
+        }
+
+
       }
+
+
+
+print ("\n      Groups processing Results\n\n");
+print "New groups       : $new_group\n";
+print "Updated groups   : $up_group\n";
+print "Deleted groups   : $del_group\n";
 
 #
 # Now write out the new files
@@ -513,13 +608,12 @@ sub add_user {
 	
 	$home_dir = $homedir_prefix."/".$username;
 
-	print("Making a User Account for : $username\n");
+	print("Making a User Account for: $username\n");
 		
 	push @passwd_array, "$username:x:$uid:$uid:$realname <$email>:$home_dir:$shell\n";
 	push @shadow_array, "$username:$passwd:$date:0:99999:7:::\n";
 	push @group_array, "$username:x:$uid:\n";
 
-	# LJ Couple of modifications here
 	# Now lets create the homedir and copy the contents of
 	# /etc/skel_codex into it. The change the ownership
 	unless (-d "$home_dir") {
@@ -557,7 +651,7 @@ sub update_user {
 	my ($p_username, $p_junk, $p_uid, $p_gid, $p_realname, $p_homedir, $p_shell);
 	my ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv, $counter);
 	
-	print("Updating Account for: $username\n");
+	print("Updating Account for: $username\n") if $verbose;
 	
 	$counter = 0;
 	my $found   = 0;
@@ -795,69 +889,14 @@ sub suspend_httpuser {
 #############################
 sub add_group {  
 	my ($gid, $gname, $userlist) = @_;
-	my ($cgi_dir, $ht_dir, $cvs_dir, $cvs_id);
-	
-	$group_dir = $grpdir_prefix."/".$gname;
-	# $log_dir = $group_dir."/log";
-	$cgi_dir = $group_dir."/cgi-bin";
-	$ht_dir = $group_dir."/htdocs";
-	$ftp_frs_group_dir = $ftp_frs_dir_prefix."/".$gname;
-	$ftp_anon_group_dir = $ftp_anon_dir_prefix."/".$gname;
 
 	print("Making a Group for : $gname\n");
 		
 	push @group_array, "$gname:x:$gid:$userlist\n";
 
-# LJ Add the CVS repo in the allowed root for CVS server
+        # Add the CVS repo in the allowed root for CVS server
 	push @cvs_root_allow_array, "/cvsroot/$gname\n";
 	
-# LJ Comment the if. Does not apply on CodeX
-#	if (substr($hostname,0,3) ne "cvs") {
-
-		# Now lets create the group's homedir.
-                # (put the SGID sticky bit on all dir so that all files
-                # in there are owned by the project group and not
-                # the user own group
-                # For some reason setting the SGID bit in mkdir doesn't work
-                # (perl bug ?) hence the chmod
-		mkdir $group_dir, 0775;
-		mkdir $cgi_dir, 0775;
-		mkdir $ht_dir, 0775;
-		chown $dummy_uid, $gid, ($group_dir, $cgi_dir, $ht_dir);
-                chmod 02775, ($group_dir, $cgi_dir, $ht_dir);
-
-		# Copy the default empty page for Web site
-		# Check if a custom page exists
-	$custom_homepage = $sys_custom_incdir."/en_US/others/default_page.php";
-	$homepage = $sys_incdir."/en_US/others/default_page.php";
-
-        ($dev,$ino) = stat($custom_homepage);
-        if ( $ino ) {
-            # A custom file exists
-    		system("cp $custom_homepage $ht_dir/index.php");
-        } else {
-            # Use the standard file
-    		system("cp $homepage $ht_dir/index.php");
-        }
-		
-		chown $dummy_uid, $gid, "$ht_dir/index.php";
-		chmod 0664, "$ht_dir/index.php";
-
-		# Now lets create the group's ftp homedir for anonymous ftp space
-   	        # (this one must be owned by the project gid so that all project
-                # admins can work on it (upload, delete, etc...)
-		mkdir $ftp_anon_group_dir, 0775;
-		chown $dummy_uid, $gid, "$ftp_anon_group_dir";
-
-		# Now lets create the group's ftp homedir for file release space
-   	        # (this one has limited write access to project members and read
-	        # read is also for project members as well (download has to go
-	        # through the Web for accounting and traceability purpose)
-		mkdir $ftp_frs_group_dir, 0771;
-		chown $dummy_uid, $gid, "$ftp_frs_group_dir";
-		
-#	 }
-
 }
 
 #############################
@@ -866,11 +905,10 @@ sub add_group {
 sub update_group {
 	my ($gid, $gname, $userlist) = @_;
 	my ($p_gname, $p_junk, $p_gid, $p_userlist);
-# LJ modification to return TRUE if user list has changed
 	my $modified = 0;
         my $counter = 0;
 
-	print("Updating Group: $gname\n");
+	print("Updating Group: $gname\n") if $verbose;
 	
 	foreach (@group_array) {
 		($p_gname, $p_junk, $p_gid, $p_userlist) = split(":", $_);
