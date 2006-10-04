@@ -974,6 +974,22 @@ width="14.5cm" />
       </section>
     </section>
   
+    <section id="TrackerArtifactDuplication">
+      <title>Artifact Duplication</title>
+      
+      <para>If artifact duplication is allowed for the tracker (see section 
+      <xref linkend="TrackerGeneralSettings" />), 
+      project members can duplicate an artifact. To duplicate an artifact, 
+      select an existing artifact (as though you want to update it) and click 
+      the "Copy this artifact" link. Then, you are in an artifact submission 
+      screen, with all the values of the duplicated artifact. As summary must be 
+      unique, a copy information is just appended to the original summary.
+      By default, a follow-up comment is pre-filled with an indication of the 
+      duplication, and a dependent is also pre-filled with a reference to the 
+      original artifact.
+      Of course, you are free to modify the values of the duplicated artifact.</para>
+      <para>Only project members are allowed to duplicate artifacts.</para>
+    </section>
 
   <section id="TrackerEmailNotification">
     <title>E-mail Notification</title>
@@ -1727,6 +1743,12 @@ width="14.5cm" />
 	  Requirements, bug for Bugs&hellip;</para>
 	</listitem>
 
+    <listitem id="TrackerGeneralSettingsAllowArtifactDuplication">
+	  <para><emphasis role="bold">Allow artifact duplication</emphasis>: 
+      if artifact duplication is allowed or not. If it is, only project members
+      are able to duplicate artifacts.</para>
+	</listitem>
+    
 	<listitem id="TrackerGeneralSettingsSubmitInstructions">
 	  <para><emphasis role="bold">Submit instructions</emphasis>:
 	  an introductory message that displays at the top of the
@@ -3123,7 +3145,7 @@ width="14.5cm" />
       </section>
 
     </section>
-
+    
     <section id="TrackerEmailNotificationSettings">
       <title>Email Notification Settings</title>
 

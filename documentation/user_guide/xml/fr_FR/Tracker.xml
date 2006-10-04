@@ -1060,6 +1060,24 @@ width="14.5cm" />
       </section>
     </section>
   
+    <section id="TrackerArtifactDuplication">
+      <title>Dupliquer un artefact</title>
+      
+      <para>Si la duplication d'artefacts est activée pour le tracker (voir la section 
+      <xref linkend="TrackerGeneralSettings" />), 
+      les membres du projets peuvent dupliquer un artefact. Pour ce faire, 
+      sélectionnez un artefact existant (comme si vous vouliez le modifier) et cliquez
+      sur le lien "Dupliquer cet artefact". Vous arrivez alors sur une page de soumission 
+      d'artefact, avec toutes les valeurs de l'artefact dupliqué déjà remplies. 
+      Comme le champ Summary est unique, une indication de la duplication est 
+      simplement ajoutée à sa valeur originale. 
+      Par défaut, un commentaire est également pré-rempli, avec une indication de la 
+      duplication, et une dépendance est également pré-remplie, avec une référence vers 
+      l'artefact original.
+      Bien entendu, vous êtes libre de modifier le nouvel artefact dupliqué.
+      </para>
+      <para>Seuls les membres du projet sont autorisés à dupliquer les artefacts.</para>
+    </section>
 
   <section id="TrackerEmailNotification">
     <title>Notification email</title>
@@ -1819,6 +1837,13 @@ width="14.5cm" />
         être : fonc, tache, anom,&hellip;</para>
         </listitem>
 
+        <listitem id="TrackerGeneralSettingsAllowArtifactDuplication">
+          <para><emphasis role="bold">Autoriser la copie d'artefacts</emphasis>: 
+        si la copie d'artefacts est autorisée ou non. Si la copie d'artefatcs
+        est autorisée, seuls les membres du projet sont autorisés à copier des
+        artefacts.</para>
+        </listitem>
+        
         <listitem id="TrackerGeneralSettingsSubmitInstructions">
           <para><emphasis role="bold">Instructions de
           soumission</emphasis> : un message d'introduction qui
