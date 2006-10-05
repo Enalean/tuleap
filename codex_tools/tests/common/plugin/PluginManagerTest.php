@@ -157,6 +157,7 @@ class PluginManagerTest extends UnitTestCase {
     }
     
     function testGetAllPlugins() {
+        
         //The plugins
         $plugins        =& new MockCollection($this);
         
@@ -220,7 +221,27 @@ class PluginManagerTest extends UnitTestCase {
         
         $plugin_factory->tally();
     }
+    function _remove_directory($dir) {
+      if ($handle = opendir("$dir")) {
+       while (false !== ($item = readdir($handle))) {
+         if ($item != "." && $item != "..") {
+           if (is_dir("$dir/$item")) {
+             $this->_remove_directory("$dir/$item");
+           } else {
+             unlink("$dir/$item");
+           }
+         }
+       }
+       closedir($handle);
+       rmdir($dir);
+      }
+    }
+
     function testInstallPlugin() {
+        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        mkdir(dirname(__FILE__).'/test');
+        mkdir(dirname(__FILE__).'/test/custom');
+        
         //The plugins
         $plugin =& new MockPlugin($this);
         
@@ -235,7 +256,7 @@ class PluginManagerTest extends UnitTestCase {
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
 
         $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
-        
+        $this->_remove_directory(dirname(__FILE__).'/test');
     }
     function testIsNameValide() {
         $pm =& new PluginManager();

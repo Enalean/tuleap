@@ -26,12 +26,14 @@ class DataAccessTest extends UnitTestCase {
     }
 
     function testConnection() {
+        /*
         $sys_dbhost   = 'host';
         $sys_dbuser   = 'user';
         $sys_dbpasswd = 'pass';
         $sys_dbname   = 'db';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertWantedPattern("/Unknown MySQL Server Host '".$sys_dbhost."'/",$da->isError());
+        */
         require(getenv('CODEX_LOCAL_INC'));
         require($GLOBALS['db_config_file']);
         $sys_dbname_2 = 'db that does not exist';
