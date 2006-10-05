@@ -99,7 +99,9 @@ die() {
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
-  $PERL -pi -e "s/$2/$3/g" $1
+  # Allow '/' is $3, so we need to double-escape the string
+  replacement=`echo $3 | sed "s|/|\\\\\/|g"`
+  perl -pi -e "s/$2/$replacement/g" $1
 }
 
 ##############################################
@@ -141,11 +143,11 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 
 ##############################################
 # Check Required Stock RedHat RPMs are installed
-# (note: gcc is required to recompile mailman)
 #
+# gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-DBD-MySQL gd gcc \
+   openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
@@ -235,10 +237,11 @@ mm_encpasswd=`python -c "$py_cmd"`
 $USERMOD -p "$rt_encpasswd" root
 
 $USERDEL codexadm 2>/dev/null 1>&2
-$USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin codexadm
+$USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin codexadm mailman
+# mailman group needed to write in /var/log/mailman/ directory
 
 $USERDEL mailman 2>/dev/null 1>&2
-$USERADD -c 'Owner of Mailman directories' -M -d '/home/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/bin/bash' mailman
+$USERADD -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/sbin/nologin' mailman
 
 $USERDEL ftpadmin 2>/dev/null 1>&2
 $USERADD -c 'FTP Administrator' -M -d '/home/ftp' -u 96 -g 96 ftpadmin
@@ -252,6 +255,7 @@ $USERADD -c 'Dummy CodeX User' -M -d '/home/dummy' -u 103 -g 103 dummy
 # Build file structure
 
 build_dir $INSTALL_DIR codexadm codexadm 775
+build_dir $INSTALL_DIR/downloads codexadm codexadm 775
 build_dir /home/users codexadm codexadm 775
 build_dir /home/groups codexadm codexadm 775
 
@@ -260,9 +264,9 @@ build_dir /home/dummy dummy dummy 700 #XXX
 build_dir /home/codexadm codexadm codexadm 700 #XXX
 build_dir /home/codexadm/.subversion codexadm codexadm 700 #XXX
 
+# data dirs
 build_dir /var/lib/codex codexadm codexadm 700
 build_dir /var/lib/codex/dumps dummy dummy 755
-
 build_dir /var/lib/codex/ftp root ftp 755
 #build_dir /var/lib/codex/ftp/bin ftpadmin ftpadmin 111
 #build_dir /var/lib/codex/ftp/etc ftpadmin ftpadmin 111
@@ -270,21 +274,18 @@ build_dir /var/lib/codex/ftp root ftp 755
 build_dir /var/lib/codex/ftp/codex root root 755
 build_dir /var/lib/codex/ftp/pub ftpadmin ftpadmin 755
 build_dir /var/lib/codex/ftp/incoming ftpadmin ftpadmin 3777
-
-build_dir /var/log/codex codexadm codexadm 755
-build_dir /var/log/codex/cvslogs codexadm codexadm 775
-build_dir /home/mailman mailman mailman 2775 #XXX
-build_dir /var/tmp/codex_cache codexadm codexadm 755
-
-build_dir /usr/lib/codex codexadm codexadm 755
-build_dir /usr/lib/codex/bin codexadm codexadm 755
-#build_dir /usr/lib/codex/bin root root 755
-
 build_dir /var/lib/codex/wiki codexadm codexadm 700
 build_dir /var/lib/codex/backup codexadm codexadm 711
 build_dir /var/lib/codex/backup/mysql mysql mysql 770 
 build_dir /var/lib/codex/backup/mysql/old root root 700
 build_dir /var/lib/codex/backup/subversion root root 700
+
+build_dir /var/log/codex codexadm codexadm 755
+build_dir /var/log/codex/cvslogs codexadm codexadm 775
+build_dir /var/tmp/codex_cache codexadm codexadm 755
+
+build_dir /usr/lib/codex codexadm codexadm 755
+build_dir /usr/lib/codex/bin codexadm codexadm 755
 
 build_dir /etc/skel_codex root root 755
 build_dir /etc/codex codexadm codexadm 755
@@ -360,14 +361,14 @@ cd - > /dev/null
 #
 
 # -> wu-ftpd
-#echo "Removing Redhat vsftp daemon.."
-#$RPM -e --nodeps vsftpd 2>/dev/null
-#echo "Removing existing wu-ftp daemon.."
-#$RPM -e --nodeps wu-ftpd 2>/dev/null
-#echo "Installing wu-ftpd..."
-#cd ${RPMS_DIR}/wu-ftpd
-#newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
+echo "Removing Redhat vsftp daemon.."
+$RPM -e --nodeps vsftpd 2>/dev/null
+echo "Removing existing wu-ftp daemon.."
+$RPM -e --nodeps wu-ftpd 2>/dev/null
+echo "Installing wu-ftpd..."
+cd ${RPMS_DIR}/wu-ftpd
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
 
 
 # perl-Crypt-SmbHash needed by gensmbpasswd
@@ -400,7 +401,7 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 
 # -> subversion
-#echo "Removing RedHat subversion .."
+echo "Removing RedHat subversion .."
 $RPM -e `rpm -qa 'subversion*' mod_dav_svn` 2>/dev/null
 echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
@@ -412,33 +413,45 @@ $RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
 
-# Restart Apache after subversion is installed
-# so that mod_dav_svn module is taken into account
-#$SERVICE httpd restart
-$SERVICE mysqld start
 
-# -> cvsgraph + enscript!!! XXX
-#$RPM -e cvsgraph 2>/dev/null
-#echo "Installing cvsgraph RPM for CodeX...."
-#cd ${RPMS_DIR}/cvsgraph
-#newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#$RPM -Uvh --force ${newest_rpm}/cvsgraph-*i?86.rpm
+# -> cvsgraph 
+$RPM -e cvsgraph 2>/dev/null
+echo "Installing cvsgraph RPM for CodeX...."
+cd ${RPMS_DIR}/cvsgraph
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/cvsgraph-1*i?86.rpm
 
-# -> viewcvs 
-#echo "Removing installed viewcvs if any .."
-#$RPM -e --nodeps viewcvs 2>/dev/null
-#echo "Installing viewcvs RPM for CodeX...."
-#cd ${RPMS_DIR}/viewcvs
-#newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#$RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
+# -> enscript
+$RPM -e enscript 2>/dev/null
+echo "Installing enscript RPM for CodeX...."
+cd ${RPMS_DIR}/enscript
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/enscript-1*i?86.rpm
 
-# phpMyAdmin
+# -> ViewVC
+echo "Removing installed viewcvs/viewvc if any .."
+$RPM -e --nodeps viewcvs 2>/dev/null
+$RPM -e --nodeps viewvc 2>/dev/null
+echo "Installing viewvc RPM for CodeX...."
+cd ${RPMS_DIR}/viewvc
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
+
+# -> phpMyAdmin
 echo "Removing installed phpMyAdmin if any .."
 $RPM -e phpMyAdmin 2>/dev/null
 echo "Installing phpMyAdmin RPM for CodeX...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/phpMyAdmin-*.noarch.rpm
+
+# -> mailman
+echo "Removing installed mailman if any .."
+$RPM -e mailman 2>/dev/null
+echo "Installing mailman RPM for CodeX...."
+cd ${RPMS_DIR}/mailman
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
 
 # Munin
 echo "Removing installed Munin if any .."
@@ -529,6 +542,11 @@ $TAR xfz ${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz
 dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
+
+# Start database
+$SERVICE mysqld start
+
+
 ##############################################
 # Now install various precompiled utilities
 #
@@ -553,7 +571,7 @@ $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
-/etc/httpd/conf/mailman.conf /etc/httpd/conf/ssl.conf \
+/etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 /etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf.d/codex_aliases.conf; do
     yn="0"
@@ -643,10 +661,13 @@ substitute '/var/named/codex.zone' '%sys_ip_address%' "$sys_ip_address"
 substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
 substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
+# Make sure SELinux contexts are valid
+chcon -R -h -t httpd_sys_content_t /usr/share/codex
+
 
 todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
 todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codex/documentation/cli/xml/ParametersLocal.dtd"
-todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /usr/lib/codex/bin/backup_job and /usr/lib/codex/bin/backup_subversion.sh"
+todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/bin/backup_job and /usr/lib/codex/bin/backup_subversion.sh"
 
 ##############################################
 # Installing phpMyAdmin
@@ -796,7 +817,7 @@ echo "##############################################"
 echo "Installing sendmail shell wrappers and configuring sendmail..."
 cd /etc/smrsh
 $LN -sf /usr/lib/codex/bin/gotohell
-$LN -sf $MAILMAN_DIR/mail/mailman
+#$LN -sf $MAILMAN_DIR/mail/mailman XXX
 
 $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codex:' /etc/mail/sendmail.cf
 cat <<EOF >/etc/mail/local-host-names
@@ -1018,34 +1039,34 @@ $CAT <<'EOF' >/tmp/cronfile
 EOF
 crontab -u codexadm /tmp/cronfile
 
-echo "Installing  mailman user crontab... XXX"
-$CAT <<'EOF' >/tmp/cronfile
-# At 8AM every day, mail reminders to admins as to pending requests.
-# They are less likely to ignore these reminders if they're mailed
-# early in the morning, but of course, this is local time... ;)
-0 8 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
-#
-# At 9AM, send notifications to disabled members that are due to be
-# reminded to re-enable their accounts.
-0 9 * * * /usr/bin/python -S /home/mailman/cron/disabled
-#
-# Noon, mail digests for lists that do periodic as well as threshhold delivery.
-0 12 * * * /usr/bin/python -S /home/mailman/cron/senddigests
-#
-# 5 AM on the first of each month, mail out password reminders.
-0 5 1 * * /usr/bin/python -S /home/mailman/cron/mailpasswds
-#
-# Every 5 mins, try to gate news to mail.  You can comment this one out
-# if you don't want to allow gating, or don't have any going on right now,
-# or want to exclusively use a callback strategy instead of polling.
-#0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python -S /home/mailman/cron/gate_news
-#
-# At 3:27am every night, regenerate the gzip'd archive file.  Only
-# turn this on if the internal archiver is used and
-# GZIP_ARCHIVE_TXT_FILES is false in mm_cfg.py
-27 3 * * * /usr/bin/python -S /home/mailman/cron/nightly_gzip
-EOF
-crontab -u mailman /tmp/cronfile
+### echo "Installing  mailman user crontab... XXX"
+### $CAT <<'EOF' >/tmp/cronfile
+### # At 8AM every day, mail reminders to admins as to pending requests.
+### # They are less likely to ignore these reminders if they're mailed
+### # early in the morning, but of course, this is local time... ;)
+### 0 8 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
+### #
+### # At 9AM, send notifications to disabled members that are due to be
+### # reminded to re-enable their accounts.
+### 0 9 * * * /usr/bin/python -S /home/mailman/cron/disabled
+### #
+### # Noon, mail digests for lists that do periodic as well as threshhold delivery.
+### 0 12 * * * /usr/bin/python -S /home/mailman/cron/senddigests
+### #
+### # 5 AM on the first of each month, mail out password reminders.
+### 0 5 1 * * /usr/bin/python -S /home/mailman/cron/mailpasswds
+### #
+### # Every 5 mins, try to gate news to mail.  You can comment this one out
+### # if you don't want to allow gating, or don't have any going on right now,
+### # or want to exclusively use a callback strategy instead of polling.
+### #0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python -S /home/mailman/cron/gate_news
+### #
+### # At 3:27am every night, regenerate the gzip'd archive file.  Only
+### # turn this on if the internal archiver is used and
+### # GZIP_ARCHIVE_TXT_FILES is false in mm_cfg.py
+### 27 3 * * * /usr/bin/python -S /home/mailman/cron/nightly_gzip
+### EOF
+### crontab -u mailman /tmp/cronfile
 
 ##############################################
 # Make ISO latin characters the default charset for the
