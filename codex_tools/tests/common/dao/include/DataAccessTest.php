@@ -12,7 +12,7 @@ require_once('common/dao/include/DataAccess.class');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: DataAccessTest.php,v 1.2 2005/08/01 14:29:51 nterray Exp $
+ * $Id$
  *
  * Tests the class DataAccess
  */
@@ -33,6 +33,7 @@ class DataAccessTest extends UnitTestCase {
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertWantedPattern("/Unknown MySQL Server Host '".$sys_dbhost."'/",$da->isError());
         require(getenv('CODEX_LOCAL_INC'));
+        require($GLOBALS['db_config_file']);
         $sys_dbname_2 = 'db that does not exist';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname_2);
         $this->assertEqual($da->isError(), "Unknown database '".$sys_dbname_2."'");
@@ -43,6 +44,7 @@ class DataAccessTest extends UnitTestCase {
     
     function testQuoteSmart() {
         require(getenv('CODEX_LOCAL_INC'));
+        require($GLOBALS['db_config_file']);
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertIdentical('123', $da->quoteSmart("123"), "An integer is not quoted");
         $this->assertIdentical('12.3', $da->quoteSmart("12.3"), "A float is not quoted");

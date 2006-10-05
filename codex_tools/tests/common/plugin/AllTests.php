@@ -6,6 +6,7 @@ if (! defined('CODEX_RUNNER')) {
 }
 
 require(getenv('CODEX_LOCAL_INC'));
+require($GLOBALS['db_config_file']);
 require_once('tests/simpletest/unit_tester.php');
 
 //We define a group of test
