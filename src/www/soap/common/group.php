@@ -74,6 +74,7 @@ $server->register(
     'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
 );
 
+/*
 $server->register(
     'getGroupAdmins',
     array('sessionKey'=>'xsd:string',
@@ -85,6 +86,7 @@ $server->register(
     'encoded',
     'Returns an array of User that are admin of the Group of ID group_id'
 );
+*/
 
 //
 // Function implementation
@@ -151,6 +153,7 @@ function row_group_to_soap($sessionKey, $row_group)
      $return = array(
      			'group_id'    => $row_group['group_id'], 
      			'group_name'  => $row_group['group_name'], 
+                'unix_group_name'  => $row_group['unix_group_name'],
      			'admin_flags' => $row_group['admin_flags'],
      			'description' => $row_group['short_description'],
      			'group_admins' => $group_admins
