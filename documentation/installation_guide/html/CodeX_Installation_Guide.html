@@ -1334,7 +1334,7 @@ CODEX because it is the name of the central site)<br>
     <pre>testparm /etc/samba/smb.conf</pre>
   </li>
   <li>Start (or restart if it is already started) the samba service, in order to take your configuration file into account:
-    <pre>/etc/rc.d/init.d/smb start<br />(or)<br />/etc/rc.d/init.d/smb restart</pre>
+    <pre>service smb start<br />(or)<br />service smb restart</pre>
   </li>
   <li>Create a symbolic link from /etc/smbpasswd to 
 /etc/samba/smbpasswd:

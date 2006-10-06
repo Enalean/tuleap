@@ -873,6 +873,7 @@ cd /usr/lib/codex/bin
 $CP $INSTALL_DIR/src/utils/gensmbpasswd.pl gensmbpasswd
 $CHOWN codexadm.codexadm gensmbpasswd
 $CHMOD 755 gensmbpasswd
+$SERVICE smb start
 
 ##############################################
 # Subversion configuration
@@ -1272,7 +1273,7 @@ $CHKCONFIG mysqld on
 $CHKCONFIG cvs on
 $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
-
+$CHKCONFIG smb on
 
 ##############################################
 # *Last* step: install plugins
