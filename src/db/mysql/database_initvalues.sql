@@ -1688,7 +1688,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (7, 100, 'service_patch_lbl_key', 'service_patch_desc_key', 'patch', '/patch/?group_id=$group_id', 0, 0, 'system', 70);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (8, 100, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=$group_id', 1, 1, 'system', 80);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (9, 100, 'service_task_lbl_key', 'service_task_desc_key', 'task', '/pm/?group_id=$group_id', 0, 0, 'system', 90);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (10, 100, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=$group_id', 1, 1, 'system', 100);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (10, 100, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=$group_id', 0, 0, 'system', 100);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (11, 100, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=$group_id', 1, 1, 'system', 110);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130);
@@ -1703,7 +1703,7 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://codex._DOMAIN_NAME_', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 1, 1, 'system', 80);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (36, 1, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=1', 1, 1, 'system', 100);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (36, 1, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=1', 0, 0, 'system', 100);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (37, 1, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=1', 1, 1, 'system', 110);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (38, 1, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=1', 1, 1, 'system', 120);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (39, 1, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=1', 1, 1, 'system', 130);
@@ -1727,20 +1727,6 @@ insert into service (service_id, group_id, label, description, short_name, link,
 -- 100 is a special value (None value)
 --
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (100, 0, 'None', 'None', '', '', 0, 0, 'project', 0);
-
-
-
----
---- Add user guide in CodeX site documents
----
-
--- create document group
-insert into doc_groups(groupname,group_id,group_rank) values ('Documents','1','10');
-
--- insert User Guide (english and french versions)
-insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,description,filename,filesize,filetype) values('&lt;a href=&quot;/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf&quot;&gt;&lt;b&gt;CodeX User Guide&lt;/b&gt;&lt;/a&gt;','','1095756374','1095756374','101','1','10','A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently. Available in <a href=\"/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf\">PDF </a>, <a href=\"/documentation/user_guide/html/en_US/index.html\">multi-page HTML </a> and <a href=\"/documentation/user_guide/html/en_US/CodeX_User_Guide.html\">single-page HTML (3 MB)</a> format. [English Version]','',0,'text/html');
-insert into doc_data(title,data,createdate,updatedate,created_by,doc_group,rank,description,filename,filesize,filetype) values('&lt;a href=&quot;/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf&quot;&gt;&lt;b&gt;Guide de l\'Utilisateur CodeX&lt;/b&gt;&lt;/a&gt;','','1095756374','1095756374','101','1','20','Un guide complet décrivant tous les services de CodeX et comment les utiliser de manière optimale. Fournit également de nombreuses astuces et explications pour gérer efficacement votre projet CodeX. Disponible au format <a href=\"/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf\">PDF </a>, <a href=\"/documentation/user_guide/html/fr_FR/index.html\">HTML (multi-fichiers)</a> et <a href=\"/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html\">HTML (une page, 4 Mo)</a>. [Version française]','',0,'text/html');
-
 
 
 --
