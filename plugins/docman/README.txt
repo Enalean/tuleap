@@ -3,7 +3,7 @@
 Installation Instructions
 -------------------------
 
-1. Put docman directory under your /home/httpd/plugins/ directory
+1. Put docman directory under your /usr/share/codex/plugins/ directory
 2. Go to PluginsAdministartion
 3. Install docman plugin
 

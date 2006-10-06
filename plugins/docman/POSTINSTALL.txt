@@ -10,7 +10,9 @@ To finish installation, please follow those last steps:
    b. Set sourceforge as user and group for this directory
    c. Set full permissions for user and none for group and other
    e.g.:
-     mkdir /home/data/docman
-     chown sourceforge.sourceforge /home/data/docman
-     chmod 700 /home/data/docman
+     mkdir /var/lib/codex/docman
+     chown sourceforge.sourceforge /var/lib/codex/docman
+     chmod 700 /var/lib/codex/docman
+     chcon -R -h -t httpd_sys_content_t /var/lib/codex/docman
+
 

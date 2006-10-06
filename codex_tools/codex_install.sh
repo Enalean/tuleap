@@ -147,7 +147,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   httpd httpd-suexec mod_ssl
+   httpd httpd-suexec mod_ssl \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
@@ -306,6 +306,7 @@ build_dir /etc/codex/plugins codexadm codexadm 755
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
 
 build_dir /var/run/log_accum root root 1777
+build_dir /var/lib/codex/docman codexadm codexadm 755
 build_dir /var/lib/codex/cvsroot codexadm codexadm 755
 build_dir /var/lib/codex/svnroot codexadm codexadm 755
 build_dir /var/lock/cvs root root 751
