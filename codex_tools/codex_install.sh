@@ -127,7 +127,7 @@ if [ $? -eq 1 ]; then
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
 script may cause data loss or corruption.
 EOF
-read -p "Continue? [yn]: " yn
+read -p "Continue? [y|n]: " yn
 else
     echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
