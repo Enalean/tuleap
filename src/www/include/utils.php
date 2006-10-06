@@ -232,10 +232,10 @@ function getMonth($month,&$ok) {
 
 /**
  * ISO8601 dates are used by subversion.
- * It looks like YYYY-MM-DDTHH-mm-ss.ùùùùùùZ
+ * It looks like YYYY-MM-DDTHH-mm-ss.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Z
  * where T separates date and time
  * and Z ends the time.
- * ùùùùùù are milliseconds.
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ are milliseconds.
  */
 function util_ISO8601_to_date($ISO8601_date) {
     $date = str_replace("T", " ", $ISO8601_date);
@@ -1316,7 +1316,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         }
 
         // CodeX documents
-        if (strpos($req_uri,'/docman/') !== false) {
+        if ((strpos($req_uri,'/docman/') !== false) || (strpos($req_uri,'/plugins/docman/') !== false)) {
             if ($allow_access_to_codex_docs) {
                 if ($group_id==1) {
                     $user_is_allowed=true;
