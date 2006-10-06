@@ -1278,7 +1278,7 @@ $CHKCONFIG smb on
 ##############################################
 # *Last* step: install plugins
 #
-$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL $pass_opt codex
+$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 
 ##############################################
