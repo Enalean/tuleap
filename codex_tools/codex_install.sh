@@ -504,7 +504,7 @@ $CHMOD 644 /etc/httpd/conf/codex_htpasswd
 # -> saxon
 
 echo "Installing Saxon...."
-cd /usr/lib/codex
+cd /usr/local
 $RM -rf saxon*
 $TAR xfz ${nonRPMS_DIR}/docbook/saxon-*.tgz
 dir_entry=`$LS -1d saxon-*`
@@ -512,7 +512,7 @@ $LN -sf ${dir_entry} saxon
 
 # -> fop
 echo "Installing FOP...."
-cd /usr/lib/codex
+cd /usr/local
 $RM -rf fop*
 $TAR xfz ${nonRPMS_DIR}/docbook/fop-*.tgz
 dir_entry=`$LS -1d fop-*`
@@ -520,7 +520,7 @@ $LN -sf ${dir_entry} fop
 
 # -> Jimi
 echo "Installing Jimi...."
-cd /usr/lib/codex
+cd /usr/local
 $RM -rf [jJ]imi*
 $TAR xfz ${nonRPMS_DIR}/docbook/Jimi-*.tgz
 dir_entry=`$LS -1d [jJ]imi-*`
@@ -528,7 +528,7 @@ $LN -sf ${dir_entry} jimi
 
 # -> Docbook DTD
 echo "Installing DocBook DTD...."
-cd /usr/lib/codex
+cd /usr/local
 $RM -rf docbook-dtd*
 $TAR xfz ${nonRPMS_DIR}/docbook/docbook-dtd-*.tgz
 dir_entry=`$LS -1d docbook-dtd-*`
@@ -536,7 +536,7 @@ $LN -sf ${dir_entry} docbook-dtd
 
 # -> Docbook XSL
 echo "Installing DocBook XSL...."
-cd /usr/lib/codex
+cd /usr/local
 $RM -rf docbook-xsl*
 $TAR xfz ${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz
 dir_entry=`$LS -1d docbook-xsl-*`
