@@ -303,6 +303,7 @@ build_dir /etc/codex/site-content/fr_FR codexadm codexadm 755
 build_dir /etc/codex/site-content/fr_FR/others codexadm codexadm 755
 build_dir /etc/codex/themes codexadm codexadm 755
 build_dir /etc/codex/plugins codexadm codexadm 755
+build_dir /etc/codex/plugins/docman codexadm codexadm 755
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
 
 build_dir /var/run/log_accum root root 1777
@@ -1256,7 +1257,10 @@ $CHKCONFIG smb on
 # *Last* step: install plugins
 #
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-
+build_dir /etc/codex/plugins/docman/etc codexadm codexadm 755
+$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codex/plugins/docman/etc/docman.inc
+$CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/docman.inc
+$CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
 
 ##############################################
 # End of installation
