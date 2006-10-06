@@ -237,7 +237,7 @@ mm_encpasswd=`python -c "$py_cmd"`
 $USERMOD -p "$rt_encpasswd" root
 
 $USERDEL codexadm 2>/dev/null 1>&2
-$USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin codexadm mailman
+$USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin,codexadm mailman
 # mailman group needed to write in /var/log/mailman/ directory
 
 $USERDEL mailman 2>/dev/null 1>&2
