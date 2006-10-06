@@ -220,7 +220,7 @@ function account_genunixpw($plainpw) {
 
 // generate the 2 windows passwords (win_passwd:winNT_passwd)
 function account_genwinpw($plainpw) {
-    $command = "/usr/local/bin/gensmbpasswd";
+    $command = $GLOBALS['codex_bin_prefix']."/gensmbpasswd";
     $output = array();
     if (is_executable($command)) {
 	$command .= ' "'.escapeshellcmd($plainpw).'"';

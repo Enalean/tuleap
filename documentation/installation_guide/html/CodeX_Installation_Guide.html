@@ -1311,10 +1311,7 @@ directory and FTP Incoming space through Windows network drives. To
 enable this feature you just need to:<br>
 <ul>
   <li>&nbsp;Install the Samba rpms</li>
-  <li>Make sure the gensmbpasswd program is installed in /usr/lib/codex/bin</li>
-  <li>Create a symbolic link from /etc/smbpasswd to
-/etc/samba/smbpasswd (the password file will be automatically generated
-by the CodeX cron job)</li>
+  <li>Make sure the gensmbpasswd program is installed in /usr/lib/codex/bin (or in $codex_bin_prefix if your relocalized it)</li>
   <li>Edit /etc/samba/smb.conf to accomodate your site configuration.
 here are the parameters you must change<br>
 &nbsp; workgroup = <i>The Windows domain name you belong to</i><br>
@@ -1333,6 +1330,17 @@ CODEX because it is the name of the central site)<br>
   <li>Define the following shared resources:<br>
     <pre>[homes]<br>   comment = User Home Directories<br>   browseable = no<br>   writable = yes<br><br>[Projects]<br>   comment = CodeX Project Directories<br>   path = /home/groups<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0775<br>   force directory mode = 2775<br>   map archive = no<br><br>[Ftp_Incoming]<br>   comment = Anonymous FTP Incoming Space for File Releases<br>   path = /var/lib/codex/ftp/incoming<br>   browseable = yes<br>   writable = yes<br>   printable = no<br>   force create mode = 0644<br>   map archive = no</pre>
   </li>
+  <li>Test your configuration file syntax: (optionnal)
+    <pre>testparm /etc/samba/smb.conf</pre>
+  </li>
+  <li>Start (or restart if it is already started) the samba service, in order to take your configuration file into account:
+    <pre>/etc/rc.d/init.d/smb start<br />(or)<br />/etc/rc.d/init.d/smb restart</pre>
+  </li>
+  <li>Create a symbolic link from /etc/smbpasswd to 
+/etc/samba/smbpasswd:
+   <pre>ln -s /etc/samba/smbpasswd /etc/smbpasswd</pre>
+   (the password file -- /etc/samba/smbpasswd -- will be automatically re-generated 
+by the CodeX cron job, and initially created by the samba service at the first start)</li>
 </ul>
 <br>
 <hr style="width: 100%; height: 2px;">
