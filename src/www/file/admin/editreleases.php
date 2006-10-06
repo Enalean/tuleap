@@ -431,8 +431,8 @@ if (isset($submit)) {
 							if (is_file($ftp_incoming_dir.'/'.$file_list[$i]) && file_exists($ftp_incoming_dir.'/'.$file_list[$i])) {
 							  //move the file to a its project page using a setuid program
 							  exec ("/bin/date > /tmp/".$group_unix_name."$group_id",$exec_res);
-							  exec ("/usr/local/bin/fileforge /tmp/".$group_unix_name."$group_id ".$group_unix_name, $exec_res); 
-							  exec ("/usr/local/bin/fileforge ".$file_list[$i]." ".$group_unix_name."/".$upload_subdir,$exec_res);
+							  exec ($GLOBALS['codex_bin_prefix'] . "/fileforge /tmp/".$group_unix_name."$group_id ".$group_unix_name, $exec_res); 
+							  exec ($GLOBALS['codex_bin_prefix'] . "/fileforge ".$file_list[$i]." ".$group_unix_name."/".$upload_subdir,$exec_res);
 							  if ($exec_res[0]) {
 							    echo '<h3>'.$exec_res[0],$exec_res[1].'</H3><P>';
 							  }
