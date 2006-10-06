@@ -101,7 +101,7 @@ if (($action=='restrict')&&(isset($GLOBALS['sys_allow_restricted_users']) && $GL
         if (($user_shell != "/bin/false")
             &&($user_shell != "/sbin/nologin")
             &&($user_shell != "")) {
-            $shell=",shell='/usr/local/bin/cvssh-restricted'";
+            $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
         }
     }
     db_query("UPDATE user SET status='R'$shell WHERE user_id='$user_id'");

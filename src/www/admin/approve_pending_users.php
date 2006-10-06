@@ -25,7 +25,7 @@ if (($action=='activate') || ($action=='activate_restricted')) {
     $shell="";
     if ($action=='activate_restricted') {
         $newstatus='R';
-        $shell=",shell='/usr/local/bin/cvssh-restricted'";
+        $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
     } else $newstatus='A';
 
     // update the user status flag to active

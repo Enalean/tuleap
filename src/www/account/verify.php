@@ -62,7 +62,7 @@ if (isset($Login)){
               $shell="";
               if ($newstatus=='R') {
                   // Set restricted shell for restricted users.
-                  $shell=",shell='/usr/local/bin/cvssh-restricted'";
+                  $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
               }
 	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A',unix_uid=". account_nextuid().$shell."  WHERE user_name='$GLOBALS[form_loginname]'");
 	  } else {
