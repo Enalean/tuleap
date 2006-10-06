@@ -649,8 +649,8 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_dom
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
 # replace string patterns in ssl.conf
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
+substitute '/etc/httpd/conf/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
 # replace string patterns in codex.zone
 sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
