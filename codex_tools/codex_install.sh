@@ -101,7 +101,7 @@ substitute() {
   # $1: filename, $2: string to match, $3: replacement string
   # Allow '/' is $3, so we need to double-escape the string
   replacement=`echo $3 | sed "s|/|\\\\\/|g"`
-  perl -pi -e "s/$2/$replacement/g" $1
+  $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
 ##############################################
@@ -147,11 +147,12 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
+   httpd httpd-suexec mod_ssl
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql mysql MySQL-python php-mbstring \
+   mysql MySQL-python php-mbstring \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel
 do
@@ -244,13 +245,13 @@ $USERDEL mailman 2>/dev/null 1>&2
 $USERADD -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/sbin/nologin' mailman
 
 $USERDEL ftpadmin 2>/dev/null 1>&2
-$USERADD -c 'FTP Administrator' -M -d '/home/ftp' -u 96 -g 96 ftpadmin
+$USERADD -c 'FTP Administrator' -M -d '/var/lib/codex/ftp' -u 96 -g 96 ftpadmin
 
 $USERDEL ftp 2>/dev/null 1>&2
-$USERADD -c 'FTP User' -M -d '/home/ftp' -u 14 -g 50 ftp
+$USERADD -c 'FTP User' -M -d '/var/lib/codex/ftp' -u 14 -g 50 ftp
 
 $USERDEL dummy 2>/dev/null 1>&2
-$USERADD -c 'Dummy CodeX User' -M -d '/home/dummy' -u 103 -g 103 dummy
+$USERADD -c 'Dummy CodeX User' -M -d '/var/lib/codex/dumps' -u 103 -g 103 dummy
 
 # Build file structure
 
@@ -260,9 +261,9 @@ build_dir /home/users codexadm codexadm 775
 build_dir /home/groups codexadm codexadm 775
 
 # home directories
-build_dir /home/dummy dummy dummy 700 #XXX
-build_dir /home/codexadm codexadm codexadm 700 #XXX
-build_dir /home/codexadm/.subversion codexadm codexadm 700 #XXX
+#build_dir /home/dummy dummy dummy 700
+build_dir /home/codexadm codexadm codexadm 700
+build_dir /home/codexadm/.subversion codexadm codexadm 700
 
 # data dirs
 build_dir /var/lib/codex codexadm codexadm 700
@@ -755,60 +756,63 @@ fi
 
 
 ##############################################
-# Mailman installation
+# Mailman configuration
+# RPM was intalled previously
 #
-# - First make sure any mailman RPM is deleted
-# - Compile and install our own version
-#
-### ### echo "Removing installed mailman RPM if any .."
-### ### $RPM -e --nodeps mailman 2>/dev/null
-### ### MAILMAN_DIR="/home/mailman"
-### ### echo "Installing the mailman software in $MAILMAN_DIR..."
-### ### yn="-"
-### ### [ -d "$MAILMAN_DIR/bin" ] && read -p "Mailman already installed. Overwrite? [y|n]:" yn
-### ### 
-### ### if [ "$yn" = "y" -o "$yn" = "-" ]; then
-### ###     $RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
-### ###     $RM -rf $MAILMAN_DIR/*
-### ###     $TAR xfz $nonRPMS_DIR/mailman/mailman-*.tgz
-### ###     newest_ver=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-### ###     cd $newest_ver
-### ###     mail_gid=`id -g mail`
-### ###     cgi_gid=`id -g codexadm`
-### ###     ./configure --prefix=$MAILMAN_DIR --with-mail-gid=$mail_gid --with-cgi-gid=$cgi_gid
-### ###     $MAKE install
-### ### fi
-### ### $CHOWN -R mailman.mailman $MAILMAN_DIR
-### ### $CHMOD a+rx,g+ws $MAILMAN_DIR
-### ### # make sure permissions are OK
-### ### $MAILMAN_DIR/bin/check_perms -f
-### ### #... a second time!
-### ### $MAILMAN_DIR/bin/check_perms -f
-### ### $MAILMAN_DIR/bin/mmsitepass $mm_passwd
-### ### $LN -sf $MAILMAN_DIR /usr/local/mailman
-### ### 
-### ### # Update Mailman config
-### ### $CAT <<EOF >> $MAILMAN_DIR/Mailman/mm_cfg.py
-### ### DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
-### ### DEFAULT_URL_HOST = 'lists.$sys_default_domain'
-### ### add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
-### ### 
-### ### # Remove images from Mailman pages (GNU, Python and Mailman logos)
-### ### IMAGE_LOGOS = 0
-### ### 
-### ### # Uncomment to run Mailman on secure server only
-### ### #DEFAULT_URL_PATTERN = 'https://%s/mailman/'
-### ### #PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
-### ### 
-### ### EOF
-### ### # Compile file
-### ### `python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
-### ### 
-### ### # install service
-### ### $CP $MAILMAN_DIR/scripts/mailman /etc/init.d/mailman
-### ### $CHKCONFIG --add mailman
-### ### 
-### ### todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman'. Update /etc/aliases as precised (remove existing mailman aliases!), and run newaliases. Last, don't forget to subscribe to this ML: 'echo \"your.email@address.com\" | bin/add_members -r - mailman'"
+echo "Configuring Mailman..."
+
+# Setup admin password
+/usr/lib/mailman/bin/mmsitepass $mm_passwd
+
+#$LN -sf $MAILMAN_DIR /usr/local/mailman ???
+
+# Update Mailman config
+$CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
+DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
+DEFAULT_URL_HOST = 'lists.$sys_default_domain'
+add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+
+# Remove images from Mailman pages (GNU, Python and Mailman logos)
+IMAGE_LOGOS = 0
+
+# Uncomment to run Mailman on secure server only
+#DEFAULT_URL_PATTERN = 'https://%s/mailman/'
+#PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
+
+EOF
+# Compile file
+`python -O /usr/lib/mailman/Mailman/mm_cfg.py`
+
+# Create site wide ML
+/usr/lib/mailman/bin/newlist -q mailman codex-admin@$sys_default_domain $mm_passwd > /dev/null
+
+# Comment existing mailman aliases in /etc/aliases
+$PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
+
+
+# Add new aliases
+cat << EOF >> /etc/aliases
+
+## mailman mailing list
+mailman:              "|/usr/lib/mailman/mail/mailman post mailman"
+mailman-admin:        "|/usr/lib/mailman/mail/mailman admin mailman"
+mailman-bounces:      "|/usr/lib/mailman/mail/mailman bounces mailman"
+mailman-confirm:      "|/usr/lib/mailman/mail/mailman confirm mailman"
+mailman-join:         "|/usr/lib/mailman/mail/mailman join mailman"
+mailman-leave:        "|/usr/lib/mailman/mail/mailman leave mailman"
+mailman-owner:        "|/usr/lib/mailman/mail/mailman owner mailman"
+mailman-request:      "|/usr/lib/mailman/mail/mailman request mailman"
+mailman-subscribe:    "|/usr/lib/mailman/mail/mailman subscribe mailman"
+mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
+
+EOF
+
+# Run newaliases
+/usr/bin/newaliases
+
+# Subscribe codex-admin to this ML
+echo \"codex-admin@$sys_default_domain\" | /usr/lib/mailman/bin/add_members -r - mailman
+
 
 ##############################################
 # Installing and configuring Sendmail
@@ -817,7 +821,7 @@ echo "##############################################"
 echo "Installing sendmail shell wrappers and configuring sendmail..."
 cd /etc/smrsh
 $LN -sf /usr/lib/codex/bin/gotohell
-#$LN -sf $MAILMAN_DIR/mail/mailman XXX
+#$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
 $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codex:' /etc/mail/sendmail.cf
 cat <<EOF >/etc/mail/local-host-names
@@ -1040,34 +1044,6 @@ $CAT <<'EOF' >/tmp/cronfile
 EOF
 crontab -u codexadm /tmp/cronfile
 
-### echo "Installing  mailman user crontab... XXX"
-### $CAT <<'EOF' >/tmp/cronfile
-### # At 8AM every day, mail reminders to admins as to pending requests.
-### # They are less likely to ignore these reminders if they're mailed
-### # early in the morning, but of course, this is local time... ;)
-### 0 8 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
-### #
-### # At 9AM, send notifications to disabled members that are due to be
-### # reminded to re-enable their accounts.
-### 0 9 * * * /usr/bin/python -S /home/mailman/cron/disabled
-### #
-### # Noon, mail digests for lists that do periodic as well as threshhold delivery.
-### 0 12 * * * /usr/bin/python -S /home/mailman/cron/senddigests
-### #
-### # 5 AM on the first of each month, mail out password reminders.
-### 0 5 1 * * /usr/bin/python -S /home/mailman/cron/mailpasswds
-### #
-### # Every 5 mins, try to gate news to mail.  You can comment this one out
-### # if you don't want to allow gating, or don't have any going on right now,
-### # or want to exclusively use a callback strategy instead of polling.
-### #0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python -S /home/mailman/cron/gate_news
-### #
-### # At 3:27am every night, regenerate the gzip'd archive file.  Only
-### # turn this on if the internal archiver is used and
-### # GZIP_ARCHIVE_TXT_FILES is false in mm_cfg.py
-### 27 3 * * * /usr/bin/python -S /home/mailman/cron/nightly_gzip
-### EOF
-### crontab -u mailman /tmp/cronfile
 
 ##############################################
 # Make ISO latin characters the default charset for the
