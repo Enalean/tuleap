@@ -223,7 +223,7 @@ EOF
 echo "Building ISO image in $ISO_FILE..."
 mkisofs -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -o "$ISO_FILE" $BUILD_DIR
 
-echo "CodeX ISO image available at $ISO_FILE..."
+echo "CodeX ISO image available at $ISO_FILE ..."
 echo "Done!"
 exit 0
 # end of it
