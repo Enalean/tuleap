@@ -147,7 +147,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   httpd httpd-suexec mod_ssl \
+   httpd httpd-suexec mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
@@ -317,11 +317,11 @@ $LN -sf /var/lib/codex/svnroot /svnroot
 
 $TOUCH /var/lib/codex/ftp/incoming/.delete_files
 $CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files
-$CHMOD 755 /var/lib/codex/ftp/incoming/.delete_files
+$CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files
 $TOUCH /var/lib/codex/ftp/incoming/.delete_files.work
 $CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files.work
-$CHMOD 755 /var/lib/codex/ftp/incoming/.delete_files.work
-build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 755
+$CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files.work
+build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
 
 
 # SELinux specific
@@ -364,14 +364,14 @@ cd - > /dev/null
 #
 
 # -> wu-ftpd
-echo "Removing Redhat vsftp daemon.."
-$RPM -e --nodeps vsftpd 2>/dev/null
-echo "Removing existing wu-ftp daemon.."
-$RPM -e --nodeps wu-ftpd 2>/dev/null
-echo "Installing wu-ftpd..."
-cd ${RPMS_DIR}/wu-ftpd
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
+#echo "Removing Redhat vsftp daemon.."
+#$RPM -e --nodeps vsftpd 2>/dev/null
+#echo "Removing existing wu-ftp daemon.."
+#$RPM -e --nodeps wu-ftpd 2>/dev/null
+#echo "Installing wu-ftpd..."
+#cd ${RPMS_DIR}/wu-ftpd
+#newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+#$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
 
 
 # perl-Crypt-SmbHash needed by gensmbpasswd
