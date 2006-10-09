@@ -75,21 +75,17 @@ newgrp nom_projet
     </section>
     
     <section id="FTPStorageSpaces">
-      <title>Espaces de stockage FTP</title>
+      <title>Espaces de stockage FTP anonyme</title>
 
-		<para>Chaque projet dispose de son propre espace de stockage FTP qui est constitué de
-			deux zones distinctes : l'espace FTP anonyme et l'espace FTP de publication de
-			version.</para>
+	<para>Chaque projet dispose de son propre espace de stockage FTP anonyme. Si vous souhaitez controller les accès à vos fichiers, utilisez plutôt le gestionnaire de fichiers (<xref
+        linkend="FileRelease" />)</para>
 
-      <section id="TheAnonymousFTPSpace">
-        <title>L'espace FTP anonyme</title>
-
-		<para>L'espace FTP anonyme peut être utilisé par les membres du projet pour
-			télécharger tout type de documents, données ou délivrables du projet. Cet
-			espace de stockage est accessible en lecture à tous les utilisateurs CodeX et
-			tous les fichiers placés dans cet espace peuvent donc être librement
-			téléchargés. En conséquence, assurez-vous d'utiliser cet espace de stockage
-			uniquement pour des fichiers lisibles par tous.</para>
+	<para>L'espace FTP anonyme peut être utilisé par les membres du projet pour
+		télécharger tout type de documents, données ou délivrables du projet. Cet
+		espace de stockage est accessible en lecture à tous les utilisateurs CodeX et
+		tous les fichiers placés dans cet espace peuvent donc être librement
+		téléchargés. En conséquence, assurez-vous d'utiliser cet espace de stockage
+		uniquement pour des fichiers lisibles par tous.</para>
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
@@ -104,7 +100,7 @@ newgrp nom_projet
 			<para>Accès pour les membres du projet : utilisez un client ftp pour vous
 				connecter à <literal>&SYS_DOWNLOAD_HOST;</literal>. utilisez votre
 				nom d'utilisateur et mot de passe CodeX pour vous identifier, puis tapez la
-				commande <literal>cd /pub/nom_projet</literal> pour accéder à l'espace
+				commande <literal>cd /var/lib/codex/ftp/pub/nom_projet</literal> pour accéder à l'espace
 				FTP anonyme. A partir de là les membres du projet ont accès en lecture et en
 				écriture et peuvent télécharger des fichiers dans les deux sens.</para>
 
@@ -115,41 +111,6 @@ newgrp nom_projet
 
           </listitem>
         </itemizedlist>
-      </section>
-
-      <section id="TheFileReleaseFTPSpace">
-        <title>L'espace FTP de publication de fichiers</title>
-
-		<para>C'est à cet endroit que CodeX stocke les nouvelles versions de fichiers
-			récemment publiés via le service de publication de fichiers de CodeX (voir <xref
-				linkend="FileRelease"/>). L'accès est autorisé uniquement pour les
-			membres du projet au cas où ils souhaiteraient intervenir directement et
-			manuellement dans cet espace. <emphasis role="bold">Nous recommandons
-			vivement de ne pas toucher à cet espace puisqu'il est entièrement géré depuis
-			l'interface Web de CodeX.</emphasis> Si vous avez des questions à propos de la
-			publication de vos fichiers, veuillez contacter l'équipe CodeX.</para>
-
-        <para>Les membres du projet peuvent accéder à cet espace FTP de la façon suivante :</para>
-
-        <itemizedlist mark="bullet"
-                      spacing="compact">
-          <listitem>
-            <para>Via leur compte Shell (SSH ou Telnet vers <literal>&SYS_SHELL_HOST;</literal>).</para>
-          </listitem>
-
-          <listitem>
-            <para>Via un client FTP en se connectant à <literal>&SYS_DOWNLOAD_HOST;</literal>.</para>
-          </listitem>
-        </itemizedlist>
-
-		<para>Dans les deux cas, il faut faire usage de vos nom d'utilisateur et mot de passe de
-			CodeX pour vous identifier et utiliser la commande suivante pour accéder à
-			l'espace FTP de publication de fichiers :</para>
-
-<programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cd &FTPFILES_DIR;/nom_projet
-</programlisting>
-      </section>
     </section>
 
 	<section id="MSWindowsSharedResources">
@@ -214,21 +175,22 @@ cd &FTPFILES_DIR;/nom_projet
     
     <section id="SoapAPI">
       <title>API SOAP</title>
-      <para>CodeX fournit une API SOAP pour accéder à CodeX avec les web services.
-            Il s'agit des fondations de l'API SOAP, toutes les fonctions de CodeX
-            ne sont donc pas encore implémentées. Actuellement, seuls les sessions 
-            (login/logout) et le service Outil de suivi sont disponibles.
+      <para>CodeX fournit une API SOAP pour accéder à CodeX avec les 'web services'.
+            Actuellement, seuls les sessions 
+            (login/logout) et le service Outil de suivi sont disponibles via l'API.
             <para>
                 <note>Note : la notification par mail n'est pas active avec l'API SOAP.</note>
             </para>
       </para>
-      <para>Une description des services facilement lisible est disponible à l'adresse 
-        <literal>http://&SYS_DEFAULT_DOMAIN;/soap/</literal> Il s'agit d'une liste de services,
+      <para>Une description des services est disponible à l'adresse 
+        <ulink url="/soap/">
+         http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>.
+        Il s'agit d'une liste de services,
         avec pour chaque fonction, ses paramètres d'entrée, de sortie et une documentation.
       </para>
       <para>Une description plus détaillée des services est également disponible dans le language 
       formel WSDL à l'adresse 
-      <literal>http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</literal>
+      <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>
       Le WSDL contient en plus la définition des type.
       </para>
     </section>
@@ -238,15 +200,14 @@ cd &FTPFILES_DIR;/nom_projet
       <para>Une autre manière d'utiliser CodeX est d'utiliser le client en ligne 
         de commande (CLI). Il s'agit d'une application cliente qui utilise l'API
         SOAP pour communiquer avec le serveur CodeX.
-        Il s'agit des fondations du client, donc certains services ne sont pas encore 
-        disponibles. Par exemple, pour l'instant, seuls les sessions (login/logout) 
+        Pour l'instant, seuls les sessions (login/logout) 
         et le service des Outils de suivi sont disopnibles. 
         Le client en ligne de commande n'implémente pas non plus certaines fonctions 
         de l'API SOAP (par exemple, il n'est pas possible d'attacher un fichier, une adresse 
-        en copie CC ou une dependance à un artefact, et la notification par mail n'est pas active.
+        en copie CC ou une dependance à un artefact), et la notification par mail n'est pas active.
       </para>
       <para>La documentation du client en ligne de commande est disponible à l'adresse : 
-        <literal>http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</literal>
+        <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
       </para>
     </section>
     

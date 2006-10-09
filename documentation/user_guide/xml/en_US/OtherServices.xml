@@ -73,22 +73,21 @@ newgrp projectname
     </section>
     
     <section id="FTPStorageSpaces">
-      <title>FTP Storage Spaces</title>
+      <title>FTP Anonymous Storage Space</title>
 
-      <para>Each project receives its own FTP storage which is made of 2
-      distinct zones. The Anonymous FTP Space and the File Release FTP space.</para>
+      <para>Each project receives its own FTP storage, the Anonymous FTP Space.
+      If you need a controlled access to your files, it is recommended to use 
+      the web-based File Release System (<xref
+        linkend="FileRelease" />).</para>
 
-      <section id="TheAnonymousFTPSpace">
-        <title>The Anonymous FTP Space</title>
-
-        <para>The anonymous FTP space can be used by the project
+      <para>The anonymous FTP space can be used by the project
         members to upload any kind of documents or project data and
         deliverables they want. This storage will then be visible to
         any CodeX users and all files placed in this directory can be
         freely downloaded. So make sure that you use this storage
         space for world readable files only.</para>
 
-        <itemizedlist mark="bullet" spacing="compact">
+      <itemizedlist mark="bullet" spacing="compact">
           <listitem>
             <para>Anonymous Users access: use an ftp client to connect
             to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use
@@ -102,7 +101,7 @@ newgrp projectname
             <para>Project Members access: use an ftp client to connect
             to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use CodeX
             login and password and then type <literal>cd
-            /home/ftp/pub/projectname</literal>
+            /var/lib/codex/ftp/pub/projectname</literal>
             to access the FTP Anonymous space. From there project
             members have both read and write access which means that
             they can upload files.</para>
@@ -114,40 +113,7 @@ newgrp projectname
             <para><literal>ftp://projectname.&SYS_DEFAULT_DOMAIN;:/pub/projectname</literal></para>
 
           </listitem>
-        </itemizedlist>
-      </section>
-
-      <section id="TheFileReleaseFTPSpace">
-        <title>The File Release FTP Space</title>
-
-        <para>This is where CodeX stores the new file releases uploaded and
-        registered through the CodeX File Release service (see <xref
-        linkend="FileRelease" />). Access is granted to project members only
-        in case they want to make modifications by hand. <emphasis role="bold">We
-        highly recommend you do not touch this space since it is entirely
-        managed through the CodeX Web interface</emphasis>. If you have
-        questions about your file releases please contact the CodeX Team.</para>
-
-        <para>Project members can access this ftp space as follows:</para>
-
-        <itemizedlist mark="bullet"
-                      spacing="compact">
-          <listitem>
-            <para>Via your shell account (SSH or Telnet to <literal>&SYS_SHELL_HOST;</literal>).</para>
-          </listitem>
-
-          <listitem>
-            <para>Via ftp by connecting to <literal>&SYS_DOWNLOAD_HOST;</literal>.</para>
-          </listitem>
-        </itemizedlist>
-
-        <para>In both cases use your CodeX login/password to login and type
-        the following command to go to the FTP Release Space directory:</para>
-
-<programlisting format="linespecific" linenumbering="unnumbered" width="80">
-cd &FTPFILES_DIR;/projectname
-</programlisting>
-      </section>
+      </itemizedlist>
     </section>
 
     <section id="MSWindowsSharedResources">
@@ -212,19 +178,18 @@ cd &FTPFILES_DIR;/projectname
     <section id="SoapAPI">
       <title>SOAP API</title>
       <para>CodeX provides a SOAP API to access CodeX through web-services.
-            This is the foundation, so lot's of CodeX functions are not yet
-            implemented. At this time, only session (login/logout) and tracker 
+            At this time, only session (login/logout) and tracker 
             services are available.
             <para>
                 <note>Note: the mail notification is not active with the SOAP API</note>
             </para>
       </para>
-      <para>A human-friendly description of the services is available at 
-        <literal>http://&SYS_DEFAULT_DOMAIN;/soap/</literal>. It is a list of
-        services, with foreach function, its input, ouput and documentation</para>
+      <para>A human-friendly description of the services is available at <ulink url="/soap/">
+        http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>. It is a list of
+        services, with a description of each function, its input, ouput and documentation</para>
       <para>A more detailed description of the services is also available with 
-      the more formal WSDL language at <literal>http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</literal>.
-      The WSDL includes also the types definition.
+      the more formal WSDL language at <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>.
+      The WSDL also includes the types definition.
       </para>
     </section>
     
@@ -232,15 +197,13 @@ cd &FTPFILES_DIR;/projectname
       <title>CodeX Command Line Interface (CLI)</title>
       <para>Another way to use CodeX is to use the command line interface (CLI).
         It's a client application that use the SOAP API to interact with the 
-        CodeX server. It's the foundation, so some services are not available 
-        for the moment. For instance, at this time, only session (login/logout) 
+        CodeX server. At this time, only session (login/logout) 
         and tracker services are available. The CLI is currently missing a few 
         features of the SOAP API (e.g. it is not possible to attach a file, 
-        a CC address or a dependency to an artifact, and the mail notification is 
-        not active with the CLI).
+        a CC address or a dependency to an artifact), and the mail notification is 
+        not active with the CLI.
       </para>
-      <para>The CLI documentation is available at 
-        <literal>http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</literal>
+      <para>The full CLI documentation is available at <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
       </para>
     </section>
     
