@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='ISO-8859-1'?>
 <!--
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
@@ -11,49 +10,52 @@
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
 //
 -->
-<chapter id="DocumentManager2">
-  <title>Document Manager 2</title>
+<chapter id="DocumentManagerPlugin">
+  <title>Document Manager</title>
 
-  <para>La documentation est probablement le délivrable le plus
-  important d'un projet après le logiciel lui-même. CodeX propose un
-  service spécifique pour la gestion de la documentation.</para>
+  <para>Documentation is probably the second most important deliverable in a
+    software project after the software work products themselves. CodeX
+    provides a specific service to manage your project documents.</para>
 
-  <para>Bien que le gestionnaire de documents de CodeX ne soit pas
-  comparable à un système de gestion documentaire dédié, il est
-  cependant extrêmement pratique pour gérer les documents critiques
-  pour votre communauté d'utilisateurs. Quelques exemples : manuel
-  d'installation, d'administration ou d'utilisation, documentation des
-  API, Foire aux Questions, etc...</para>
+  <para>Although the CodeX Document Manager cannot be compared
+    with dedicated document management systems, it
+    is however very handy to publish documents that are critical to
+    your community of users. Examples are: Installation, Administration
+    or User Guide, API documentation, Frequently Asked Questions,
+    etc...</para>
 
-  <para>Les fonctionnalités du gestionnaire de documents sont les suivantes :</para>
+  <para>The Document Manager features are as follows:</para>
 
   <itemizedlist mark="bullet" spacing="compact">
     <listitem>
-      <para>Le gestionnaire peut gérer n'importe quel type de document.</para>
+      <para>The CodeX Document Manager can handle any type of
+      document.</para>
     </listitem>
 
     <listitem>
-      <para>Les documents sont stockés dans des dossiers. Vous pouvez avoir des sous-dossiers dans un dossier.</para>
+      <para>Documents are stored in folders. You can have subfolders in a
+        folder.</para>
     </listitem>
 
     <listitem>
-      <para>Les documents peuvent être édités en ligne (si ils sont embarqués au format text ou html).</para>
+      <para>Documents can be edited on line (if in text or HTML format).</para>
     </listitem>
 
     <listitem>
-      <para>Les règles de droits d'accès peuvent être définies pour chaque dossier ou document.</para>
+      <para>Access control rules can be defined for each document or folder.</para>
     </listitem>
 
     <listitem>
-        <para>Les documents possèdent des propriétés.</para>
+        <para>Documents have properties and searchable metadata.</para>
     </listitem>
   </itemizedlist>
 
   <section>
     <title>Structure</title>
-    <para>Vous pouvez structurer comme vous voulez votre gestionnaire de document en créant des dossiers et sous-dossiers pour classer vos documents.</para>
+    <para>You can structure as you want your document manager by creating folders 
+    and subfolders to classify your documents.</para>
     <figure id="docman2_folders">
-        <title>Dossiers et sous-dossiers</title>
+        <title>Folders and subfolders</title>
         <mediaobject>
           <imageobject>
             <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_folders.png" />
@@ -64,7 +66,10 @@
   
   <section>
     <title>Actions</title>
-    <para>Le gestionnaire de document permet certaines actions sur les dossiers ou documents. Ces action sont disponible ou pas suivant les permissions. Pour afficher le paneau des actions, il vous suffit de cliquer sur l'icône en forme de crayon à côté du titre de l'élément.</para>
+    <para>The Document Manager allows some actions on folders or documents. Those 
+    actions are available or not depending on permissions. In order to display the 
+    action panel, you must click on the pencil icon next to the document or folder 
+    name.</para>
     <figure id="docman2_actions">
         <title>Actions</title>
         <mediaobject>
@@ -73,9 +78,13 @@
           </imageobject>
         </mediaobject>
     </figure>
-    <para>Nous allons maintenant décrire toutes les actions qui peuvent être effectuées :</para>
-    <section><title>Nouveau Document</title>
-      <para>Cette action est seulement disponible pour les dossiers et permet à l'utilisateur de créer un nouveau document. Quand vous selectionnez cette action, une fenêtre "Nouveau document" est affichée, où vous pouvez entrer les informations concernant le nouveau document.</para>
+    <para>We will now describe all the actions that can be performed on a folder
+    or document.</para>
+    <section><title>New Document</title>
+      <para>This action is only available for folders and allow the user to create 
+      a new document in a folder. When you select this action, a "new document" 
+      window is displayed, where you can enter information concerning the new 
+      document.</para>
       <figure id="docman2_newdocument">
           <title>Create a new document</title>
           <mediaobject>
@@ -84,62 +93,82 @@
             </imageobject>
           </mediaobject>
       </figure>
-      <para>Le nouveau document hérite des permissions du dossier parent.</para>
+      <para>The new document inherits the permissions of the parent folder.</para>
       <section>
-        <title>Propriétés</title>
-        <para>Le titre du document est obligatoire. L'utilisateur peut fournir une description. En fonction du projet, il peut y avoir des propriétés supplémentaires requise pour définir le document.</para>
+        <title>Metadata</title>
+        <para>The title of the document is mandatory. The user can provide a description 
+        wich will be displayed on the browse view. Owner corresponds to official
+        owner of the document. Depending on the project, there 
+        may be additionnal metadata required to classify the document.</para>
       </section>
       <section>
-        <title>Type de document</title>
-        <para>4 types de documents sont disponibles :</para>
+        <title>Document Type</title>
+        <para>4 types of documents are available :</para>
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-            <para><emphasis>Lien:</emphasis> autorise l'utilisateur de pointer un document avec une URL. Le document ne sera pas stocker localement dans le manager.</para>
+            <para><emphasis>Link:</emphasis> allow the user to target a document 
+            with a URL. The document will not be stored locally in the docman.</para>
           </listitem>
           <listitem>
-            <para><emphasis>Wiki:</emphasis> le document peut être créer avec le service wiki.Entrez juste le nom correspondant la nouvelle page wiki. Vous pouvez également utiliser une page wiki existante.
+            <para><emphasis>Wiki:</emphasis> the document could be created with 
+            the wiki service. Just enter the name of the corresponding wiki page.
+            You can also use an existing wiki page name.
             </para>
           </listitem>
           <listitem>
-            <para><emphasis>Fichier:</emphasis> n'importe quel type de documents peut être chargé. Depuis une présentation PowerPoint à une simple image ou un document office. Les fichiers sont versionnés ainsi vous pouvez ajouter de nouvelles versions sur les documents existants.</para>
+            <para><emphasis>File:</emphasis> any type of document could be uploaded.
+            From a powerpoint presentation, to a simple picture or a full office 
+            document. Files are versionned, so you can add new versions on existing 
+            document.</para>
           </listitem>
           <listitem>
-            <para><emphasis>Fichier embarqués:</emphasis> les documents de type texte ou html peuvent être édités en ligne et sont versionnés.</para>
+            <para><emphasis>Embedded file:</emphasis> html or plain text can be 
+            edited online. Embedded files are versionned.</para>
           </listitem>
         </itemizedlist>
       </section>
       
       <section>
-        <title>Chemin</title>
-        <para>Par défaut, le sytème crée un document dans le dossier qui a été sélectionné. L'utilisateur peut aussi choisir un autre dossier. Il peut également sélectionner la position du nouveau document dans le dossier : au début ou à la fin.</para>
+        <title>Location</title>
+        <para>By default, the system creates a document in the folder that was selected.
+        The user can also choose another folder. He can also select the position 
+        of the new document in the folder: at the beginning or at the end.</para>
       </section>
     </section>
     
-    <section><title>Nouveau Dossier</title>
-      <para>Cette action est seulement disponible pour les dossiers et permet à l'utilisateur de créer un sous-dossier.</para>
+    <section><title>New Folder</title>
+      <para>This action is only available for folders and allow the user to create 
+      a sub folder in a folder.</para>
       <figure id="docman2_newfolder">
-          <title>Créer un nouveau dossier</title>
+          <title>Create a new folder</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_newfolder.png" />
             </imageobject>
           </mediaobject>
       </figure>
-      <para>Le nouveau dossier hérite des permissions du dossier parent.</para>
+      <para>The new folder inherits the permissions of the parent folder.</para>
       <section>
-        <title>Propriétés</title>
-        <para>Comme pour les documents, le titre des dossier est obligatoire. L'utilisateur peut fournir une description. Le champ propriétaire désigne le propriétaire officiel du dossier. Selon les projets, il peut y avoir des propriétés supplémentaires requises pour définir les dossiers.</para>
+        <title>Metadata</title>
+        <para>Like for documents, the title of the folder is mandatory. The user can 
+        provide a description wich will be displayed on the browse view. 
+        Owner corresponds to official owner of the folder. Depending 
+        on the project, there may be additionnal metadata required to classify 
+        the document.</para>
       </section>
       <section>
-        <title>Chemin</title>
-        <para>Comme pour les documents, par défaut, le système crée un dossier dans le dossier qui a été sélectionné. L'utilisateur peut aussi choisir un autre dossier. Il peut également sélectionner la position du nouveau dossier : au début ou à la fin.</para>
+        <title>Location</title>
+        <para>Like for documents, by default, the system creates a folder in the folder 
+        that was selected. The user can choose another folder. He can also select 
+        the position of the new folder in the parent folder: at the beginning or at the end.</para>
       </section>
     </section>
     
-    <section><title>Propriétés</title>
-      <para>Cette action permet à l'utilisateur de voir les propriétés d'un document ou d'un dossier, si il en a les droits. Si il a les permissions requises, il sera capable de modifier ces propriétés.</para>
+    <section><title>Properties</title>
+      <para>This action allows the user to view the properties of a document or
+      folder. If he has enough permissions, he will be able to modify those properties.</para>
       <figure id="docman2_properties">
-          <title>Afficher et editer les propriétés</title>
+          <title>Display and edit properties</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_properties.png" />
@@ -147,12 +176,14 @@
           </mediaobject>
       </figure>
     </section>
-    <para>Depuis le paneau des propriétés, il est possible de voir/éditer les permissions, voir l'historique et d'accèder aux actions (mise à jour/déplacement/suppression).</para>
+    <para>From the property panel, it is possible to view/edit permissions, history 
+    and actions. There are also shortcuts to these panels in the initial "Actions" 
+    window.</para>
     
-    <section><title>Historique</title>
-      <para>Cette action permet à l'utilisateur de voir les journeaux et les anciennes versions (si disponibles).</para>
+    <section><title>History</title>
+      <para>This action allows the user to see logs and old versions (if available).</para>
       <figure id="docman2_history">
-          <title>Historique</title>
+          <title>Update a link</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_history.png" />
@@ -161,10 +192,10 @@
       </figure>
     </section>
     
-    <section><title>Mise à jour</title>
-      <para>Cette action permet à l'utilisateur de mettre à jour le nom d'une page wiki ou l'url d'un lien.</para>
+    <section><title>Update</title>
+      <para>This action allows the user to update the name of a wiki page or the url of a link.</para>
       <figure id="docman2_update">
-          <title>Mise à jour d'un lien</title>
+          <title>Update a link</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_update.png" />
@@ -173,10 +204,10 @@
       </figure>
     </section>
     
-    <section><title>Nouvelle version</title>
-      <para>Cette action permet à l'utilisateur de mettre à jour un document de type fichier ou fichier embarqué.</para>
+    <section><title>New version</title>
+      <para>This action allows the user to update a new version of a file or an embedded file.</para>
       <figure id="docman2_newversion">
-          <title>Créer une nouvelle version d'un fichier embarqué</title>
+          <title>Create a new version for embedded file</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_newversion.png" />
@@ -186,7 +217,8 @@
     </section>
     
     <section><title>Permissions</title>
-      <para>Cette action permet à l'utilisateur de gérer les permissions d'un document ou d'un dossier. les permissions d'un dossier peuvent être appliquées recursivement à sa sous-hiérarchie.</para>
+      <para>This action allows the user to manage the permissions of a document 
+      or folder. Permissions for folders can be applied recusively to its hierarchy.</para>
       <figure id="docman2_permissions">
           <title>Define permissions</title>
           <mediaobject>
