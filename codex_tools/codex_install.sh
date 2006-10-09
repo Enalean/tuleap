@@ -364,6 +364,16 @@ cd - > /dev/null
 #
 
 
+# SELinux CodeX-specific policy
+echo "Removing existing SELinux policy .."
+$RPM -e selinux-policy-targeted selinux-policy-targeted-sources 2>/dev/null
+echo "Installing SELinux targeted policy for CodeX...."
+cd ${RPMS_DIR}/selinux-policy-targeted
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
+
+
+
 # perl-Crypt-SmbHash needed by gensmbpasswd
 echo "Removing existing perl-Crypt-SmbHash..."
 $RPM -e perl-Crypt-SmbHash 2>/dev/null
@@ -896,6 +906,26 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
 $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
 
+# Add welcome messages
+$CAT <<'EOF' > /var/lib/codex/ftp/.message
+********************************************************************
+Welcome to CodeX FTP server
+
+On This Site:
+/incoming           Place where to upload your new file release
+/pub/xxx            Anonymous FTP space of project xxx
+*********************************************************************
+
+EOF
+$CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/.message
+
+# Add welcome messages
+$CAT <<'EOF' >/var/lib/codex/ftp/incoming/.message
+
+Upload new file releases here
+
+EOF
+$CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/incoming/.message
 
 ##############################################
 # Create the custom default page for the project Web sites
@@ -1091,12 +1121,11 @@ $CHOWN root.root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
 
-#make_backup "/etc/logrotate.d/ftpd" # don't make backup, or both backup and original will be used.
-$CAT <<'EOF' >/etc/logrotate.d/ftpd
+$CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
 /var/log/xferlog {
     # ftpd doesn't handle SIGHUP properly
     nocompress
-    # LJ Modified for codex
+    missingok
     daily
     postrotate
      year=`date +%Y`
@@ -1109,8 +1138,8 @@ $CAT <<'EOF' >/etc/logrotate.d/ftpd
     endscript
 }
 EOF
-$CHOWN root.root /etc/logrotate.d/ftpd
-$CHMOD 644 /etc/logrotate.d/ftpd
+$CHOWN root.root /etc/logrotate.d/vsftpd.log
+$CHMOD 644 /etc/logrotate.d/vsftpd.log
 
 ##############################################
 # Create CodeX profile script
