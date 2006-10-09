@@ -75,7 +75,6 @@ Group Settings</h1>
 Specific user accounts and groups that must be created prior to any
 manual software installation<br>
 <br>
-XXXX todo
 <table align="center" width="80%" border="1" cellspacing="2"
  cellpadding="2">
   <tbody>
@@ -115,7 +114,7 @@ XXXX todo
       </td>
       <td valign="top">Dummy CodeX user<br>
       </td>
-      <td valign="top">/home/dummy</td>
+      <td valign="top">/var/lib/codex/dumps</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">Set same password as codexadm<br>
       </td>
@@ -127,7 +126,7 @@ XXXX todo
       <td valign="top">106<br>
       </td>
       <td valign="top">Owner of Mailman directories</td>
-      <td valign="top">/home/mailman</td>
+      <td valign="top">/usr/lib/mailman</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">- shell login not allowed<br>
 - Set same password as codexadm<br>
@@ -140,24 +139,24 @@ XXXX todo
       <td valign="top">96<br>
       </td>
       <td valign="top">FTP Administrator</td>
-      <td valign="top">/home/ftp</td> XXX
+      <td valign="top">/var/lib/codex/ftp</td>
       <td valign="top">&nbsp;-<br>
       </td>
       <td valign="top">shell login not allowed</td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">ftp<br>
+      <td valign="top">ftp<br>
       </td>
-      <td style="vertical-align: top;">14<br>
+      <td valign="top">14<br>
       </td>
-      <td style="vertical-align: top;">50<br>
+      <td valign="top">50<br>
       </td>
-      <td style="vertical-align: top;">FTP User<br>
+      <td valign="top">FTP User<br>
       </td>
-      <td style="vertical-align: top;">/home/ftp</td>XXX
-      <td style="vertical-align: top;">-<br>
+      <td valign="top">/var/lib/codex/ftp</td>
+      <td valign="top">-<br>
       </td>
-      <td style="vertical-align: top;">shell login not allowed<br>
+      <td valign="top">shell login not allowed<br>
       </td>
     </tr>
   </tbody>
@@ -522,11 +521,11 @@ Packages<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">apache XXX remove?<br>
+      <td valign="top">apache<br>
       </td>
       <td valign="top">Install httpd and mod_ssl RPMs.&nbsp;
 httpd-devel and httpd-manual RPMs are
-optional. This is a patched version of Apache 2.0: do not use a standard package.<br>
+optional. This is no longer a patched version of Apache 2.0: you can use the standard package.<br>
       </td>
     </tr>
     <tr>
@@ -594,20 +593,20 @@ RedHat CDROM. Please make sure they have been installed by the RedHat
 installation process. If not then install them directly from the CDROM
 with an 'rpm -Uvh' command.<br>
       <br>
-Packages to install:XXX to complete<br>
+Packages to install:<br>
       <ul>
-        <li>apache httpd-2.0</li>
-        <li>mysql</li>
+        <li>apache httpd-2.0, mod_ssl, httpd-suexec</li>
+        <li>php php-ldap php-mysql php-mbstring</li>
+        <li>mysql-server mysql MySQL-python</li>
+        <li>gd-devel freetype-devel libpng-devel libjpeg-devel</li>
+        <li>sysstat curl aspell</li>
         <li>openssh-server,&nbsp;openssh, openssh-clients,
 openssh-askpass</li>
         <li>openssl (if you intend to allow secure HTTP access)</li>
         <li>openldap</li>
-        <li>perl, perl-DBI, perl-DBD-MySQL,
-perl-suidperl, perl-CGI</li>
-        <li>python (for mailman and ViewVC)<br>
-        </li>
-        <li>sendmail (8.x with x&gt;=9)<br>
-        </li>
+        <li>perl, perl-DBI, perl-DBD-MySQL,perl-suidperl, perl-CGI perl-DateManip perl-URI perl-HTML-Tagset perl-HTML-Parser perl-libwww-perl</li>
+        <li>python (for mailman and ViewVC) python-devel</li>
+        <li>sendmail (8.x with x&gt;=9) sendmail-cf</li>
         <li>telnet, named, ntp</li>
         <li>samba (if you want to activate windows connectivity to the
 project Web site storage space)</li>
@@ -1129,9 +1128,7 @@ codexadm password when prompted:<br>
 <br>
 <h2>Populate the database</h2>
 To create the tables in the CodeX database and populate the database
-with the initial values run the script in <span
- style="font-family: monospace;">src/utils/mksql.sh</span>. You can also
-decide to run the 2 operations separately using the following commands:
+with the initial values one needs to type a few commands:
 <pre>cd /usr/share/codex/src/db/mysql/<br>mysql -u codexadm codex -p &lt; database_structure.sql   # create the DB<br>mysql -u codexadm codex -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
 <pre>mysql -e "drop database codex"<br><br></pre>
 <h2>MySQL configuration file</h2>
@@ -1175,18 +1172,30 @@ any other MTA like Postfix, Exim or other. You need to setup <br>
 <ul>
   <li>Set Cw to codex.xerox.com (or change the domain name to your own)</li>
   <li>Set DM to codex.xerox.com (this is what we masquerade as)</li>
+<li>To modify sendmail to accept remote connections in the sendmail.cf file, comment out (or deletd) the following line:
+<pre>O DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA</pre>
+The commented out version of this line would then look like so:
+<pre>#O DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA</pre>
   <li>Aliases files should have been automatically set up. They are:<br>
     <pre>O AliasFile=/etc/aliases,/etc/aliases.codex</pre>
   </li>
 </ul>
-<u>In /etc/sendmail.cw (or /etc/mail/local-host-names if using sendmail
-8.10 or higher):</u><br>
+<u>In /etc/mail/local-host-names:</u><br>
 <ul>
   <li>Say that you are serving the various codex sub-domains as follows:<br>
-    <pre># sendmail.cw (or local-host-names)- include all aliases for your machine here.<br>codex.xerox.com<br>lists.codex.xerox.com<br>users.codex.xerox.com<br></pre>
+    <pre># local-host-names - include all aliases for your machine here.<br>codex.xerox.com<br>lists.codex.xerox.com<br>users.codex.xerox.com<br></pre>
     <pre><br></pre>
   </li>
 </ul>
+<p>To check your configuration, you can try to send an email from the root account to an external email address. If the message comes back with this error:
+<pre>(reason: 553 5.1.8 <root@localhost.localdomain>... Domain of sender address root@localhost.localdomain does not exist)
+</pre>
+It probably means that the machine host name is not properly configured. Try:
+<pre>hostname atlas.codex.xerox.com
+service sendmail restart
+</pre>
+Or edit /etc/sysconfig/network and enter the machine fully qualified name as HOSTNAME.
+
 <h2>Aliases</h2>
 <u>/etc/aliases</u><br>
 <br>
@@ -1221,7 +1230,7 @@ properly. You should create the following links:<br>
 <hr>
 <h1><a name="Mailman_Installation_and_Configuration"></a>Mailman
 Installation and Configuration</h1>
-CodeX now use a modified version of RedHat mailman RPMs.
+CodeX now uses a modified version of RedHat mailman RPMs.
 Only the RPM SPEC file and mailman configuration files have been changed.
 <br>
 You need to setup a mailman admin password once the installation is done (we
@@ -1840,9 +1849,9 @@ http://your.codex_site.url/projects/codex.<br>
 <br>
 All documents stored in the document manager of the 'Admin Project'
 will automatically appear under 'Site Documentation' (except those
-documents marked 'private' or hidden'. See the <a
- href="/documentation/user_guide/html/en_US/DocumentManager.html">CodeX
-User Guide</a> for more details on the Document Manager service. XXX update<br>
+with restricted access. See the <a
+ href="/documentation/user_guide/html/en_US/DocumentManager2.html">CodeX
+User Guide</a> for more details on the Document Manager service.<br>
 <br>
 <h2>User Guide and On-line Help <br>
 </h2>
