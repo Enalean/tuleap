@@ -145,6 +145,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # Check Required Stock RedHat RPMs are installed
 #
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
+# xorg-x11-deprecated-libs -> docbook/java
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd httpd-suexec mod_ssl vsftpd \
@@ -154,7 +155,8 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql MySQL-python php-mbstring \
    perl-DateManip sysstat curl aspell \
-   gd-devel freetype-devel libpng-devel libjpeg-devel
+   gd-devel freetype-devel libpng-devel libjpeg-devel \
+   xorg-x11-deprecated-libs
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -614,14 +616,13 @@ for lang in en_US fr_FR
 do
     $MKDIR -p  /etc/codex/documentation/user_guide/xml/$lang
     $MKDIR -p  /etc/codex/documentation/cli/xml/$lang
-    $CHOWN -R codexadm.codexadm /etc/codex/documentation
-    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
-    $MKDIR -p  $INSTALL_DIR/documentation/cli/html/$lang
-    $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation/user_guide/html/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/cli/pdf/$lang
-    $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation/user_guide/pdf/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/cli/html/$lang
 done
+$CHOWN -R codexadm.codexadm /etc/codex/documentation
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
