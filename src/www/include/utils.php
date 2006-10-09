@@ -1270,7 +1270,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         
         // File downloads. It might be a good idea to restrict access to shownotes.php too...
         if (strpos($req_uri,'/file/download.php') !== false) {
-            list(,$group_id, $file_id) = explode('/', $PATH_INFO);
+            list(,$group_id, $file_id) = explode('/', $GLOBALS['PATH_INFO']);
         }
         
         // Now check special cases
@@ -1278,9 +1278,9 @@ function util_check_restricted_access($request_uri, $script_name) {
         
         // Forum and news. Each published news is a special forum of project 'news'
         if (strpos($req_uri,'/forum/') !== false) {
-            if ($forum_id) {
+            if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
                 // Get corresponding project
-                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='$forum_id'");
+                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".$_REQUEST['forum_id']."'");
                 $group_id=db_result($result,0,'group_id');
                 // News
                 if ($allow_news_browsing) {
@@ -1337,6 +1337,12 @@ function util_check_restricted_access($request_uri, $script_name) {
         if (isset($group_id)) { 
             if (!$user_is_allowed) { 
                 if (!user_ismember($group_id)) {
+                    return false;
+                }
+            }
+        } elseif (array_key_exists('group_id', $_REQUEST)) {
+            if (!$user_is_allowed) {
+                if (!user_ismember($_REQUEST['group_id'])) {
                     return false;
                 }
             }
