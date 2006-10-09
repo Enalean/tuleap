@@ -455,9 +455,9 @@ Samba password file.
 </ol>
 There are specific user account you must know about:
 <ul>
-  <li> <b>sourceforge:</b> this is the user that owns the entire CodeX
+  <li> <b>codexadm:</b> this is the user that owns the entire CodeX
 Web
-site hierarchy under /home/httpd</li>
+site hierarchy under /usr/share/codex</li>
   <li> <b>dummy:</b> a "dummy" user that is generally used whenever a
 file
 belongs to a given group but to no specific user in particular. More or
@@ -519,20 +519,20 @@ the user can access its own home directory.</li>
 </ol>
 There are specific group accounts you must know about:
 <ul>
-  <li> <b>sourceforge:</b> group created to own the CodeX Web
+  <li> <b>codexadm:</b> group created to own the CodeX Web
 hierarchy
-under <span style="font-family: monospace;">/home/httpd</span>.</li>
+under <span style="font-family: monospace;">/usr/share/codex</span>.</li>
   <li><span style="font-weight: bold;">mailman:</span> group owner of
-all the Mailman directories (<span style="font-family: monospace;">/home/mailman</span>)</li>
+all the Mailman directories</li>
 </ul>
 <h1> <a name="CodeXFileStructure"></a>CodeX File Structure</h1>
 <h2> Web site</h2>
 The CodeX Web front end files are all under <b><span
- style="font-family: monospace;">/home/httpd</span>.</b> Except
+ style="font-family: monospace;">/usr/share/codex</span>.</b> Except
 otherwise
 specified this directories and all the files and directories under it
 belongs
-to user.group: <b>sourceforge.sourceforge</b> (rwxr-xr-x) <br>
+to user.group: <b>codexadm.codexadm</b> (rwxr-xr-x) <br>
 &nbsp; <br>
 <table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
@@ -543,13 +543,13 @@ to user.group: <b>sourceforge.sourceforge</b> (rwxr-xr-x) <br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">SF</td>
+      <td valign="top">src</td>
       <td valign="top">The directory where all PHP scripts of the Web
 front end as well as backend scripts reside.<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">SF /www</td>
+      <td valign="top">src /www</td>
       <td valign="top">This is where all the PHP scripts are. Most
 of them ends with a .php extension except for a few o them that
 are used as shortcuts to projects and users information:
@@ -560,7 +560,7 @@ are used as shortcuts to projects and users information:
       </td>
     </tr>
     <tr>
-      <td valign="top">SF/www/include</td>
+      <td valign="top">src/www/include</td>
       <td valign="top">There are many PHP files in there used by all
 other
 scripts. They are sort of small modules providing user/login/session
@@ -569,12 +569,12 @@ HTML formatting, DB connection. <br>
       <tt>pre.php</tt> is the top include file used by all others.</td>
     </tr>
     <tr>
-      <td valign="top">SF/utils</td>
+      <td valign="top">src/utils</td>
       <td valign="top">This is where all the backend Perl scripts
 are located.&nbsp;</td>
     </tr>
     <tr>
-      <td valign="top">SF/db</td>
+      <td valign="top">src/db</td>
       <td valign="top">Contains the SQL batch files to create and
 populate
 the CodeX database. it also contains all the database patch file
@@ -583,30 +583,30 @@ published by Xerox&nbsp; to correct CodeX defects or add new features.
 information).&nbsp;</td>
     </tr>
     <tr>
-      <td valign="top">SF/backend</td>
+      <td valign="top">src/backend</td>
       <td valign="top">This subdirectory is not used by CodeX because
 all
 the configuration files contained in this directory are elsewhere on
 the
-file system. See the SF/backend/zones/README for more information</td>
+file system. See the src/backend/zones/README for more information</td>
     </tr>
     <tr>
-      <td valign="top">SF/etc</td>
+      <td valign="top">src/etc</td>
       <td valign="top">This is the directory where a number of CodeX
 configuration files are located. These template files (hence the .dist
 extension) are instanciated by the CodeX installation script,
 customized at installation time and
 copied over to the target directories. <br>
-      <b><font color="#ff0000">Remark:</font></b> the local.inc
-configuration file stored in /etc/codex/conf/local.inc contains
+      <b><font color="#ff0000">Remark:</font></b> the database.inc
+configuration file stored in /etc/codex/conf/database.inc contains
 the CodeX database password in clear so it must be readable only for
-the sourceforge user/group
+the codexadm user/group
 only (rw-r-----)</td>
     </tr>
     <tr>
-      <td valign="top">cgi-bin</td>
-      <td valign="top">This directory in empty. CGI scripts may appear
-in this directory in future CodeX releases.<br>
+      <td valign="top"><br>
+      </td>
+      <td valign="top"><br>
       </td>
     </tr>
     <tr>
@@ -616,24 +616,7 @@ in this directory in future CodeX releases.<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">phpMyAdmin</td>
-      <td valign="top">This is the graphical PHP interface to the
-administration of MySQL
-databases.
-The config file is <tt>config.inc.php</tt> in the same
-directory. It
-is configured to give access to the CodeX database only. <b><font
- color="#ff0000"><br>
-      </font></b></td>
-    </tr>
-    <tr>
-      <td valign="top"><br>
-      </td>
-      <td valign="top"><br>
-      </td>
-    </tr>
-    <tr>
-      <td valign="top">/usr/local/bin</td>
+      <td valign="top">/usr/lib/codex/bin</td>
       <td valign="top">There are a couple of executables in this
 directory
 that work in cooperation with the CodeX WEB Site:
@@ -682,11 +665,13 @@ CodeX.</li>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/cvsroot</td>
+      <td valign="top">/var/lib/codex/cvsroot and link from /cvsroot</td>
       <td valign="top">The CVS repositories of all CodeX projects are
 created
-under the <span style="font-family: monospace;">/cvsroot</span>
-directory. /cvsroot/<i>ProjectName</i> is the CVS repository
+under the <span style="font-family: monospace;">/var/lib/codex/cvsroot</span>
+directory. This directory is linked from <span style="font-family: monospace;">/cvsroot</span>
+in the top directory.
+ /var/lib/codex/<i>ProjectName</i> is the CVS repository
 of
 project <i>ProjectName</i>. By default all files belong to user nobody
 and
@@ -711,7 +696,7 @@ CVS repository must have the executable flag set <br>
         <li> The CVS lock dir is now created in /var/lock/cvs/<i>ProjectName</i>. It is world writable (drwxrwxrwx) so that all users even those
 not
 part of the project team can checkout a working copy of the CVS tree.</li>
-        <li>The CVS repository for each project is owned by the user <i>sourceforge.</i>
+        <li>The CVS repository for each project is owned by the user <i>codexadm.</i>
 This allows the CVS web interface, which implements its own access
 control,
 to access the directory even if the directory is not world readable.<br>
@@ -750,12 +735,14 @@ must not be touched).</td>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/svnroot</td>
+      <td valign="top">/var/lib/codex/svnroot and link from /svnroot</td>
       <td valign="top">The Subversion repositories of all CodeX&nbsp;
 projects are
 created
-under the <span style="font-family: monospace;">/svnroot</span>
-directory. /svnsroot/<i>ProjectName</i> is the Subversion repository
+under the <span style="font-family: monospace;">/var/lib/codex/svnroot</span>
+directory.  This directory is linked from <span style="font-family: monospace;">/svnroot</span>
+in the top directory.
+/var/lib/codex/svnsroot/<i>ProjectName</i> is the Subversion repository
 of
 project <i>ProjectName</i>. As opposed to CVS, Subversion manages the
 repository in a database acting as a virtual filesystem. Therefore
@@ -808,7 +795,7 @@ on the server.<br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/home/log</td>
+      <td valign="top">/var/log/codex</td>
       <td valign="top">The directory where log files used for
 statistics
 are archived. Archiving takes place each day.</td>
@@ -818,14 +805,14 @@ are archived. Archiving takes place each day.</td>
       <td valign="top">File name pattern: <tt>cvs_traffic_YYYYMMDD.log</tt>
       <p>A daily log of the CVS history files for all CodeX projects.
 The
-script <tt>/home/httpd/SF/utils/cvs1/cvs_history_parse.pl </tt>runs
+script <tt>/usr/share/codex/src/utils/cvs1/cvs_history_parse.pl </tt>runs
 daily
 and is responsible for extracting the CVS log information of that day
 for
 all <tt>/cvsroot/ProjectName/CVSROOT/history</tt> file and assemble
 them all
 in a single log file. </p>
-      <p>This global log file is later processed by the script <tt>/home/httpd/SF/utils/underworld-root/db_stats_cvs_history.pl</tt>
+      <p>This global log file is later processed by the script <tt>/usr/share/codex/src/utils/underworld-root/db_stats_cvs_history.pl</tt>
 which feeds the CodeX database with statistical figures about the CVS
 activity
 of each project (like the number of&nbsp; CVS checkout/add/commit
@@ -883,7 +870,7 @@ Files </a>section). It is basically a copy of the FTP log file <span
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/home/dummy/dumps</td>
+      <td valign="top">/var/lib/codex/dumps</td>
       <td valign="top">As we will see later in this document there is a
 bunch
 of background script running on CodeX on a regular basis. The default
@@ -911,7 +898,7 @@ automatically
 updated.</li>
 All user aliases and mailing list aliases are actually appended to the
 master
-file <tt>/home/httpd/SF/utils/underworld-dummy/aliases.zone</tt>. This
+file <tt>/usr/share/codex/src/utils/underworld-dummy/aliases.zone</tt>. This
 file
 contains codex wide aliases like codex-admin or codex-contact. If you
 want
@@ -957,7 +944,7 @@ default
 admin password for the list.</li>
         <li> <b>ssh_dump:</b> dump of the SSH shared keys entered by
 the
-users. Shared keys will be automatically installed int he user home
+users. Shared keys will be automatically installed in the user home
 directory to let her login through ssh without having to type her
 password. <br>
         </li>
@@ -1066,7 +1053,7 @@ or the project directory contains a file named <tt>.CODEX_PRIVATE.</tt><br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/codex/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/codex/ftp/codex/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is where all the uploaded files associated
 with a given release of project <span style="font-style: italic;">ProjectName</span>
 (see the <a
@@ -1074,25 +1061,21 @@ with a given release of project <span style="font-style: italic;">ProjectName</s
 File Release
 Service</a>) are actually
 stored. Normally neither the CodeX Administration Team nor the Project
-Admin
-Team should
-mess
-up with this area by hand using their shell account. Files are
-deposited here
-by the <a
+Admin Team should mess up with this area by hand using their shell account. Files are
+deposited here by the <a
  href="#fileforge">fileforge</a>
 utility. This directory belongs to the project group ID of course and
 is group
 writable.&nbsp;</td>
     </tr>
     <tr nosave="">
-      <td valign="top" nosave="">/home/ftp/incoming</td>
+      <td valign="top" nosave="">/var/lib/codex/ftp/incoming</td>
       <td>The FTP incoming directory is used by the project members
 to upload the software packages to be associated with new software
 releases in the CodeX File Release Service.
 This
 is a temporary storage area as the uploaded files move to the final
-release space&nbsp; /home/ftp/codex/<span style="font-style: italic;">ProjectName</span>
+release space&nbsp; /var/lib/codex/ftp/codex/<span style="font-style: italic;">ProjectName</span>
 (see
 above) when a new software release is created.&nbsp;
       <p><b><font color="#ff0000">Remark: </font></b>There is a script
@@ -1120,13 +1103,11 @@ we don't want that ghost files stay here for too long.<br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/home/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/codex/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is the anonymous FTP space assigned to
 project <span style="font-style: italic;">ProjectName</span> at
-creation time. It can be used by the
-project
-team for any purpose (well... of course it must have something to do
-with
+creation time. It can be used by the project
+team for any purpose (well... of course it must have something to do with
 the project). Ownership is dummy.<span style="font-style: italic;">ProjectName</span>
 and permission drwxrwxr-x)</td>
     </tr>
@@ -1143,7 +1124,7 @@ MySQL is fast, lightweight and very robust. <br>
 <h3> Database Creation</h3>
 The CodeX database is created once when the CodeX software is first
 installed. The scripts used to create and populate the database are
-located in <span style="font-family: monospace;">SF/db/mysql</span>. <br>
+located in <span style="font-family: monospace;">src/db/mysql</span>. <br>
 <b><font color="#ff0000">Remark:</font></b> NEVER EVER run these SQL
 scripts
 once the DB has been created or it will destroy all of your existing
@@ -1156,7 +1137,7 @@ corrections that you may wan to install on your site (see the <a
  href="#CodeX_Code_Update">CodeX Code Update</a> section below). Some
 of the changes may impact the database structure in which case a
 database patch named dbxxxx.sql or dbxxxx.pl will appear under <span
- style="font-family: monospace;">SF/db/upgrades</span>.<br>
+ style="font-family: monospace;">src/db/upgrades</span>.<br>
 <br>
 <h3>Database Access Permissions</h3>
 MySQL has its own access permission
@@ -1178,9 +1159,9 @@ must use
 this user whenever you want to grant/revoke new permission to a given
 user
 or network domain, etc...</li>
-  <li> <b>sourceforge</b>: the user that was specifically created to
+  <li> <b>codexadm</b>: the user that was specifically created to
 have
-read/write access to the sourceforge database. It can only interact
+read/write access to the codex database. It can only interact
 with
 the database from the local host and not from a remote machine. All the
 CodeX PHP scripts run under this user name to
@@ -1221,7 +1202,7 @@ From any Unix account, type:
  style="font-style: italic;">database_name</span> -p</tt> </p>
 <p>where database_name is the name of the database you want to connect
 to
-(e.g. "sourceforge" for the CodeX master database) and the user_name is
+(e.g. "codex" for the CodeX master database) and the user_name is
 the MySQL user name you
 pretend
 to be (type -p if there is a password associated with this user but
@@ -1262,7 +1243,7 @@ the CodeX database only. You can access phpMyAdmin at
 <p>http://<span style="font-style: italic;">your.codex.domain</span>/phpMyAdmin</p>
 </center>
 <p>This is password protected at the HTTP level. Authenticate with the
-sourceforge
+codexadm
 user
 name and password. <br>
 &nbsp; </p>
@@ -1282,7 +1263,7 @@ xww.<span style="font-style: italic;">your.codex.domain</span>, www.<span
 that you may have defined yoursefl in the file <span
  style="font-family: monospace;">/var/named/codex.zone</span>. The
 Apache Document
-Root is at <span style="font-family: monospace;">/home/httpd/SF/www</span>
+Root is at <span style="font-family: monospace;">/usr/share/codex/src/www</span>
 where all the PHP scripts are located.
 <h2> Virtual Servers</h2>
 Each project has its own project Web server. The config file for these
@@ -1302,27 +1283,12 @@ use
 PHP in their HTML pages and access session information like who is
 browsing
 the site, whether it is an anonymous user or not, etc.
-<p><span style="font-weight: bold; color: rgb(255, 0, 0);">Remark</span>:
-for the User/Group directive to work in a Virtual Web server,
-Apache has to go through the suexec utility delivered with Apache. This
-utility
-has been modified for CodeX and recompiled because the security checks
-made by the original version are too restrictive to work properly in
-the
-CodeX environment.&nbsp; Even though these security checks have been
-relaxed the suexec program is still very safe given the CodeX context. </p>
-<p>The modifications are available in&nbsp; <tt>/home./httpd/SF/utils/apache_1.3.19-suexec.patch
-</tt>in the form of a diff file which applies to both apache 1.3.x and
-Apache 2.0.x. As a Codex customer you'll never have to apply this patch
-to new version of Apache as the CodeX team at Xerox will provide with
-ready to install Apache RPMs when needed.<br>
-&nbsp; </p>
 <p> </p>
 <h1>
 <hr width="100%"></h1>
 <h1><a name="FTP"></a>FTP</h1>
 The FTP server configuration file is in <span
- style="font-family: monospace;">/etc/ftpaccess</span> and it has been
+ style="font-family: monospace;">/etc/vsftpd/vsftpd.conf</span> and it has been
 configured
 to work with CodeX. The default configuration allows access to both
 anonymous
@@ -1398,7 +1364,7 @@ located in:<br>
   <li><tt>/var/named/codex.zone</tt>: this is
 where&nbsp;the
 codex.xerox.com domain is defined.&nbsp;</li>
-  <li><tt>/var/named/codex_full.zone</tt>: this
+  <li><tt>/var/named/chroot/var/named/codex_full.zone</tt>: this
 file
 is automatically generated by the CodeX daemon scripts&nbsp;</li>
 </ul>
@@ -1455,7 +1421,7 @@ more information)
 configuration
 file with the dynamic part of it and store in the actual configuration
 that
-is going to be used by the DNS server bind. This file is at <tt>/var/named/codex_full.zone</tt>
+is going to be used by the DNS server bind. This file is at <tt>/var/named/chroot/var/named/codex_full.zone</tt>
 . </p>
 <p><span style="font-weight: bold; color: rgb(255, 0, 0);">Remarks</span>:
 </p>
@@ -1507,7 +1473,7 @@ the CodeX server:</font>
 your
 personal CodeX account (e.g. ssh <span style="font-style: italic;">username</span>@codex.xerox.com)</font></li>
   <li> <font color="#ff0000">Then if you must act as root or
-sourceforge
+codexadm
 user use the su command (su - root) and type the appropriate password</font></li>
 </ol>
 <font color="#ff0000">The reason for the 2-step process is to be able
@@ -1587,8 +1553,6 @@ through the Mailman Web interface. Mailman has a super user password
 allowing CodeX site administrators to access the administration
 interface of any mailing lists created by CodeX projects.<br>
 <br>
-Mailman is installed in <span style="font-family: monospace;">/home/mailman</span>.
-<br>
 <br>
 <hr width="100%" size="2">
 <h1><a name="BackgroundDaemons"></a>Background daemons</h1>
@@ -1600,7 +1564,7 @@ crontab.
 <table border="1" width="100%" nosave="">
   <tbody>
     <tr nosave="">
-      <td style="font-family: monospace;" valign="top" nosave="">/home/httpd/SF/utils/xerox_crontab.sh</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/usr/share/codex/src/utils/xerox_crontab.sh</td>
       <td>This is the master daemon script for the CodeX site. It runs
 once every 2 hours and update all the user/group accounts, initialize
 CVS repository,
@@ -1609,24 +1573,24 @@ and groups
 (projects) have a fully functional environment from a Unix perspective</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/home/httpd/SF/utils/xerox_all_daily_stats.sh</td>
+      <td style="font-family: monospace;">/usr/share/codex/src/utils/xerox_all_daily_stats.sh</td>
       <td>As the name says it this the master script that compute all
 the
 daily statistics about the CodeX site globally and also for individual
 projects</td>
     </tr>
     <tr>
-      <td><span style="font-family: monospace;">/home/httpd/SF/utils/underworld-root/...
+      <td><span style="font-family: monospace;">/usr/share/codex/src/utils/underworld-root/...
       </span><br>
       <span style="font-family: monospace;">db_project_weekly_metric.pl</span></td>
       <td>Same as above but this time it is for weekly statistics</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/home/tools/backup_job</td>
+      <td style="font-family: monospace;">/usr/lib/codex/bin/backup_job</td>
       <td>Backup of all CodeX file system.</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/home/tools/backup_subversion.sh</td>
+      <td style="font-family: monospace;">/usr/lib/codex/bin/backup_subversion.sh</td>
       <td>Backup of all CodeX subversion repositories.</td>
     </tr>
   </tbody>
@@ -1635,7 +1599,7 @@ projects</td>
 &nbsp; </p>
 <h2> The scripts</h2>
 It is beyond the scope of this document to review all the scripts under
-<span style="font-family: monospace;">/home/httpd/SF/utils</span>. The
+<span style="font-family: monospace;">/usr/share/codex/src/utils</span>. The
 most important scripts a CodeX administrator must know about are:<br>
 <p><b><u>xerox_crontab.sh</u></b> </p>
 <p>This is an orchestrator script in charge of running many others in
@@ -1654,7 +1618,7 @@ the rest of the script.<br>
  style="font-style: italic;">your.codex.domain</span>)
 and for the users (<span style="font-style: italic;">username</span>@users.<span
  style="font-style: italic;">your.codex.domain</span>) and store them
-in the&nbsp; <span style="font-family: monospace;">/home/dummy/dumps/aliases</span>
+in the&nbsp; <span style="font-family: monospace;">/var/lib/codex/dumps/aliases</span>
 file.</li>
   <li> Copy the freshly dumped file into /etc/aliases.codex and force
 sendmail
@@ -1716,7 +1680,7 @@ Project Web site in the project home directory</li>
 when
 you access the project Web site it displays something clever (We copy
 this
-default home from the master copy in SF/utils/default_page.php)</li>
+default home from the master copy in src/utils/default_page.php)</li>
     <li> Create the FTP release space and the Anonymous FTP space.</li>
     <li> Initialize a new CVS repository for this project with the "cvs
 init"
@@ -1738,7 +1702,7 @@ the
 right one. The setuid bit on the group should probably work as well but
 it
 has not been tested. This method works so let's keep it.</li>
-    <li> Change the user ownership of the entire CVS repo to <i>sourceforge</i>
+    <li> Change the user ownership of the entire CVS repo to <i>codexadm</i>
 to start with</li>
     <li> Create the anoncvs_xxxx user in case we want to activate the
 anonymous
@@ -1807,7 +1771,7 @@ scripts.
 <p>The logrotate configuration files located in <span
  style="font-family: monospace;">/etc/logrotate.d/apache</span>
 and&nbsp;
-<span style="font-family: monospace;">/etc/logrotate.d/ftp</span> have
+<span style="font-family: monospace;">/etc/logrotate.d/vsftpd.log</span> have
 been customized for CodeX.
 The customization consists in the execution of a post rotation script
 that
@@ -1823,7 +1787,7 @@ CodeX offers a continuous update process to CodeX site administrators
 to quickly and easily put in place new bug fixes, new features while
 minimizing the server downtime. The CodeX software is made of PHP and
 Perl code that is delivered in source form to our customers. The CodeX
-software resides in the <span style="font-family: monospace;">/home/httpd</span>
+software resides in the <span style="font-family: monospace;">/usr/share/codex</span>
 directory and it is formatted in such a way that it behaves like a Subversion
 working copy that can be remotely updated when ever the system
 administrator decide to do so.<br>
@@ -1881,9 +1845,9 @@ repository pointer<br>
 <br>
 </div>
 <ul>
-  <li>Log to the 'sourceforge' CodeX shell account on the CodeX server</li>
+  <li>Log to the 'codexadm' CodeX shell account on the CodeX server</li>
   <li>Go to the CodeX top directory: <span
- style="font-family: monospace;">cd /home/httpd</span></li>
+ style="font-family: monospace;">cd /usr/share/codex</span></li>
   <li>Launch an SVN status command to get a list of all the
 files that needs to be updated on your local CodeX directory<br>
     <br>
@@ -1893,7 +1857,7 @@ CodeX support site given to you when your support contract was activated)<br>
     <br>
     </span></li>
   <li>At that stage you must carefully review the file list and look if
-the files SF/etc/local.inc.dist, SF/etc/httpd.conf.dist or SF/db/upgrades/dbxxxx.sql
+the files src/etc/local.inc.dist, src/etc/httpd.conf.dist or src/db/upgrades/dbxxxx.sql
 are mentioned in the list. If this is so go to the next step. If not
 then it 's a normal update operation that you can do with a simple:<br>
     <br>
@@ -1902,25 +1866,25 @@ then it 's a normal update operation that you can do with a simple:<br>
     </span>... and that's all you have to do!!<br>
     <br>
   </li>
-  <li>If <span style="font-family: monospace;">SF/etc/local.inc.dist</span>
+  <li>If <span style="font-family: monospace;">src/etc/local.inc.dist</span>
 is in the list of files to be updated then you must look at the
 differences with your own local.inc.dist and make the changes in your <span
- style="font-family: monospace;">/etc/local.inc</span> file
+ style="font-family: monospace;">/etc/codex/conf/local.inc</span> file
 accordingly. To see what has changed in the local.inc.dist file type:<br>
     <br>
     <span style="font-family: monospace;">svn diff --username  <span style="font-style: italic;">username </span>
-SF/etc/local.inc.dist # look at the changes and keep them in a safe
+src/etc/local.inc.dist # look at the changes and keep them in a safe
 place<br>
 svn update --username  <span style="font-style: italic;">username</span>&nbsp;
 # do the real update<br>
 vi
-/etc/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/etc/codex/conf/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # edit your CodeX configuration file and merge the changes<br>
     </span><br>
 then do the real update as above.<br>
     <br>
   </li>
-  <li>Similarly, if <span style="font-family: monospace;">SF/etc/httpd.conf.dist</span> is in the list of files to be updated, you should look at the differences with your own httpd.conf.dist, then merge them in your <span style="font-family: monospace;">/etc/httpd/conf/httpd.conf</span>.
+  <li>Similarly, if <span style="font-family: monospace;">src/etc/httpd.conf.dist</span> is in the list of files to be updated, you should look at the differences with your own httpd.conf.dist, then merge them in your <span style="font-family: monospace;">/etc/httpd/conf/httpd.conf</span>.
   <li>If one or several <span style="font-family: monospace;">src/updates/scripts/XXX_&lt;script_description&gt;.class.php</span>
 (where XXX is a three digit number) are listed then it means you have
 to perform some script update (on the CodeX database structure for instance). You must first
@@ -2062,9 +2026,9 @@ data is backed up to disk.&nbsp; The sequence is as follows: </p>
     <li> move old codex-bin.index, codex-bin.001, sqldump.&lt;last
 week's date/time&gt; to</li>
     <br>
-/cvsroot/.mysql_backup/old directory <li> dump&nbsp; 0f&nbsp;&nbsp;
-/cvsroot/.mysql_backup/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp;
-/home/var/lib/mysql</li>
+/var/lib/codex/backup/mysql/old directory <li> dump&nbsp; 0f&nbsp;&nbsp;
+/var/lib/codex/backup/mysql/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp;
+/var/lib/mysql</li>
     <li> /etc/rc.d/init.d/mysql start</li>
   </ul>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2078,7 +2042,7 @@ week's date/time&gt; to</li>
 The whole MySQL data backup process takes less than 15 seconds
 <p>
 </li>
-<li>Subversion repositories: a specific subversion backup script (/home/httpd/utils/subversion_backup.sh) is run in the root crontab. 
+<li>Subversion repositories: a specific subversion backup script (/usr/share/codex/utils/subversion_backup.sh) is run in the root crontab. 
 <br>The script offers two backup mechanisms: full backup, and incremental backup (with '-i' flag). Currently, full backups are run weekly, while incremental ones are run daily.
 <li>
 <p>Disk Partitions - Using Legato software, a full backup of all disks (except
@@ -2094,7 +2058,7 @@ days of the week (Monday - Saturday) run incremental backups. </p>
 <li>
 2 files are needed to rebuild.  Find the most recent "dump" and "bin" files:
 <pre>
-cd  /cvsroot/.mysql_backup
+cd  /var/lib/codex/backup/mysql
 ls  -lt
   Example: 
   sqldump.080502.004501	(created from cron "dump" every Sunday; mysql is shut down prior to "dump")
@@ -2107,7 +2071,7 @@ mv  mysql  mysql.bck
 <li>Then restore the mysql databases from sqldump.080502.004501, either in interactive or automatic mode.
 <ul><li>Interactive mode:
 <pre>
-/sbin/restore  -ivf   /cvsroot/.mysql_backup/sqldump.080502.004501
+/sbin/restore  -ivf   /var/lib/codex/backup/mysql/sqldump.080502.004501
 /sbin/restore >  cd  var/lib
 /sbin/restore >  verbose
 /sbin/restore >  add mysql
@@ -2118,7 +2082,7 @@ set owner/mode for '.'? [yn]  n
 </pre>
 <li>Automatic mode:
 <pre>
-restore -r -f /cvsroot/.mysql_backup/sqldump.080502.004501
+restore -r -f /var/lib/codex/backup/mysql/sqldump.080502.004501
 </pre>
 You can safely ignore the 'not found on tape' messages (they correspond to files that are not in the dump)
 </li>
@@ -2129,7 +2093,7 @@ Boot system in single user mode:
 We don't want anyone trying to update the mysql database before everything has been restored.
 <pre>
 /etc/rc.d/init.d/mysql  start
-cd  /cvsroot/.mysql_backup
+cd  /var/lib/codex/backup/mysql
 /usr/bin/mysqlbinlog  codex-bin.001  |  mysql --user=root  -p
 password: (enter root password)
 </pre>
@@ -2147,7 +2111,7 @@ Rebuild is complete.
       <td><b>Description</b></td>
     </tr>
     <tr>
-      <td>/cvsroot/.mysql_backup <br>
+      <td>/var/lib/codex/backup/mysql <br>
 &nbsp; <br>
 &nbsp; <br>
 &nbsp; <br>
@@ -2160,14 +2124,14 @@ Rebuild is complete.
       <td>The three most current files found in this directory are:
       <ul>
         <li><b>sqldump.&lt;date&gt;.&lt;time&gt;:</b>&nbsp; dump of
-/home/var/lib/mysql</li>
+/var/lib/mysql</li>
         <li><b>codex-bin.index:</b> Text file indicating file name to
 use
 when restoring mysql data</li>
         <li><b>codex-bin.001:&nbsp;</b> Binary log file used for
 viewing or piping into a mysql command if rebuilding database</li>
       </ul>
-Older files are stored in /cvsroot/.mysql_backup/old</td>
+Older files are stored in /var/lib/codex/backup/mysql/old</td>
     </tr>
     <tr>
       <td>/etc <br>
@@ -2183,11 +2147,11 @@ starts.&nbsp; MySQL variables are set here.</li>
       </td>
     </tr>
     <tr>
-      <td>/home/tools <br>
+      <td>/usr/lib/codex/bin <br>
 &nbsp;
       <p>&nbsp;</p>
       </td>
-      <td>The file found in this directory is:
+      <td>The files found in this directory are:
       <ul>
         <li><b>backup_job:</b>&nbsp; The script that runs from cron at
 00:45
@@ -2333,7 +2297,7 @@ The fastest and safest way (where xxx is the project name):
 <li>Delete the CVS or SVN tree: <br><tt>rm -rf  xxx</tt>
 <li>Force the cron update process to run now:
 <pre>
-$ cd ~sourceforge/SF/utils
+$ cd /usr/share/codex/src/utils
 $./xerox_crontab.sh
 </pre>
 <li>Delete corresponding entries from cvs_checkins, cvs_commits and cvs_descs tables to prevent showing them while browsing commits with viewcvs.
@@ -2403,8 +2367,8 @@ on the CodeX server. Here is the procedure to follow to change a group name (ass
 <li> First log as root
 <li>Change the old project name 'xxx' in the following directories:
 <ul><tt>
-<li>/home/ftp/pub 
-<li>/home/ftp/codex 
+<li>/var/lib/codex/ftp/pub 
+<li>/var/lib/codex/ftp/codex 
 <li>/home/groups 
 <li>/cvsroot
 <li>/svnroot
@@ -2419,7 +2383,7 @@ on the CodeX server. Here is the procedure to follow to change a group name (ass
 <tt>cvs -d:pserver:username@codex.xerox.com:/cvsroot/projectname co CVSROOT</tt>.
 Then edit the 'config' and  'commitinfo' files and change the project name wherever it appears. Last, commit the changes. (you may also directly edit those files in the /cvsroot/projectname/CVSROOT directory, but don't forget to also edit the ',v' files then).
 
-<li>Edit the 'groups' table of the SourceForge DB with phpMyAdmin and change
+<li>Edit the 'groups' table of the Codex DB with phpMyAdmin and change
 the name (2 occurences in 2 columns: <tt>unix_group_name,
 http_domain</tt>). Then edit the 'service' table, and change the link to the 'Project Summary' and potentially to the 'Project Home Page'. All other fields can be changed by the project admin via the Web interface.
 
@@ -2427,7 +2391,7 @@ http_domain</tt>). Then edit the 'service' table, and change the link to the 'Pr
 wait for the next cron update. If this is really urgent run the cron job by hand
 like this
 <br><tt>
-$ cd ~sourceforge/utils<br>
+$ cd /usr/share/codex/utils<br>
 $ ./xerox_crontab.sh
 </tt>
 
@@ -2623,7 +2587,7 @@ deleted as well.
 <ol>
 <li>Have a CodeX Web page ready and open on the Search people box. Type part of people's name in the box and determine the login name from the result list
 <li>Have a terminal session open on the CodeX server and connect to the database with:<br><br>
-<tt>mysql -u sourceforge sourceforge -p</tt><br><br>
+<tt>mysql -u codexadm codex -p</tt><br><br>
 then use the following SQL statement for Suspend/Delete scenario: <br><br>
 
 <tt> update user set unix_status='S',status='D' where user_name='fmarcus';</tt>
@@ -2686,14 +2650,14 @@ Passwords, for details. (Intranet)
 <br>
 <b>root</b>
 <br>
-<b>sourceforge</b>
+<b>codexadm</b>
 <br>
 <b>admin</b>
 <br>
 <b>mailman</b>
 <br>
 
-2) Change the sourceforge password in /etc/local.inc. (Restarting
+2) Change the codexadm password in /etc/codex/conf/local.inc. (Restarting
 services is not necessary.)
 <br>
 3) Send note to codex-admin@lists.codex.xerox.com
@@ -2719,10 +2683,10 @@ their privileged personal account.
 <br>
 enter password: [enter old password]
 </p>
-<p><b>sourceforge</b> account:
+<p><b>codexadm</b> account:
 
 <br>
-1) Change <i>unix</i> password from <b>sourceforge</b>
+1) Change <i>unix</i> password from <b>codexadm</b>
 account:
 <br>
 - password (cr)
@@ -2734,14 +2698,14 @@ account:
 2) Change <i>mysql </i>password:
 
 <br>
-- mysqladmin - -user=sourceforge -p password [enter new password]
+- mysqladmin - -user=codexadm -p password [enter new password]
 <br>
 enter password: [enter old password]
 <br>
-3) Modify /etc/local.inc - change <b>sourceforge</b>
+3) Modify /etc/codex/conf/local.inc - change <b>codexadm</b>
 password<br>
 4) Modify htpasswd for phpMyAdmin:<br>
-/usr/bin/htpasswd -c /etc/httpd/conf/passwd sourceforge<br>
+/usr/bin/htpasswd -c /etc/httpd/conf/passwd codexadm<br>
 </p>
 <p><b>admin</b> account:
 
@@ -2784,7 +2748,7 @@ for mailing lists.
 <br>
 2) su mailman
 <br>
-3) cd /usr/local/mailman/bin
+3) cd /usr/lib/mailman/bin
 <br>
 4) <b>.</b>/mmsitepass
 <br>
@@ -2843,7 +2807,7 @@ of the selected mailing list, then it is OK.
     </p>
 
 <p>Save this script for instance as <tt>del_bug.sql</tt> and launch it with <br>
-      <tt>mysql -u sourceforge -v -v -v -p sourceforge &lt; del_bug.sql &gt; out</tt>
+      <tt>mysql -u codexadm -v -v -v -p codex &lt; del_bug.sql &gt; out</tt>
 </p>
 
 
@@ -2879,7 +2843,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 <h4>Restricted Shell</h4>
 <p>By default, restricted users do not have a regular shell access: they are given a restricted shell access that only supports a few command (only 'cvs' today).
-<p>The default shell is '/usr/local/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
+<p>The default shell is '/usr/lib/codex/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
 <p>If you need to completely remove shell access (and forbid CVS), you need to modify the shell manually in the administration interface for each user: set it to /sbin/nologin.
 <p>Setup: in order to use CVS, the restricted user must do the following:
 <ul><li>Set the 'CVS_RSH' environment variable to 'ssh'
@@ -2887,7 +2851,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 See also 'CodeX Installation Guide'.
 <h3>Setting restricted users privileges</h3>
-<p>You may fine tune the priviledges of restricted users on your system. Simply copy /home/httpd/site-content/en_US/include/restricted_user_permissions.txt in /etc/codex/site-content/en_US/include/ and edit it. This is a sample configuration file:
+<p>You may fine tune the priviledges of restricted users on your system. Simply copy /usr/share/codex/site-content/en_US/include/restricted_user_permissions.txt in /etc/codex/site-content/en_US/include/ and edit it. This is a sample configuration file:
 <pre>
 // comment/uncomment forbidden URLs
 $forbidden_url = array(
@@ -2973,22 +2937,22 @@ To select a set of historical data, please read: <a href="http://cvs2svn.tigris.
 <p>
 Subversion repositories are backed up every day. So it is always possible to restore the repository as it was the day before.
 <br>There are two Subversion backup directories:
-<ul><li>/home1/subversion_backup/full contains the full backups performed weekly
-<li>/home1/subversion_backup/incr contains the incremental backups performed daily.
+<ul><li>/var/lib/codex/backup/subversion/full contains the full backups performed weekly
+<li>/var/lib/codex/backup/subversion/incr contains the incremental backups performed daily.
 </ul>
 In order to restore the most recent version of the repository, you need:
 <ul><li>to restore the most recent full backup: 
-<br>simply copy /home1/subversion_backup/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
+<br>simply copy /var/lib/codex/backup/subversion/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
 <li>then restore the incremental backups starting with 'rev1+1':
 <pre>
-cd /home1/subversion_backup/incr/projectname
+cd /var/lib/codex/backup/subversion/incr/projectname
 bunzip2 < projectname.incr.rev1+1:rev2.bz2 | svnadmin load /svnroot/projectname 
 bunzip2 < projectname.incr.rev2+1:rev3.bz2 | svnadmin load /svnroot/projectname 
 etc.
 </pre>
 <li>Last, restore appropriate permissions:
 <pre>
-chown -R sourceforge.projectname /svnroot/projectname
+chown -R codexadm.projectname /svnroot/projectname
 </pre>
 </ul>
 
@@ -3005,13 +2969,13 @@ In this case, you need to recover the repository.
 <br>As root, run the following commands:
 <pre>
 svnadmin recover /svnroot/projectname
-chown -R sourceforge.projectname /svnroot/projectname
+chown -R codexadm.projectname /svnroot/projectname
 </pre>
 <p>In case the "svnadmin recover" command still fails you can use the low level repair utility of Berkeley DB:
 <pre>
 cd /svnroot/projectname/db
 db_recover -c -v
-chown -R sourceforge.projectname /svnroot/projectname
+chown -R codexadm.projectname /svnroot/projectname
 </pre>
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
