@@ -870,6 +870,7 @@ $CP $INSTALL_DIR/src/utils/gensmbpasswd.pl gensmbpasswd
 $CHOWN codexadm.codexadm gensmbpasswd
 $CHMOD 755 gensmbpasswd
 $SERVICE smb start
+todo "Samba service is started. If you want to use it, please configure it (procedure is detailed in the Installation Guide)."
 
 ##############################################
 # Subversion configuration
