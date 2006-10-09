@@ -13,6 +13,11 @@
 <chapter id="DocumentManager">
   <title>Document Manager</title>
 
+  <para><tip><title>** The Document Manager is DEPRECATED
+  **</title> <para>In CodeX version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManager2"/>). This chapter
+  is included in the CodeX User Guide for projects that originally
+  used the legacy Document Manager.</para></tip></para>
+
   <para>Documentation is probably the second most important deliverable in a
     software project after the software work products themselves. CodeX
     provides a specific service to manage your project documents.</para>
