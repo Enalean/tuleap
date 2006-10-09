@@ -272,7 +272,7 @@ build_dir /var/lib/codex/ftp root ftp 755
 #build_dir /var/lib/codex/ftp/bin ftpadmin ftpadmin 111
 #build_dir /var/lib/codex/ftp/etc ftpadmin ftpadmin 111
 #build_dir /var/lib/codex/ftp/lib ftpadmin ftpadmin 755
-build_dir /var/lib/codex/ftp/codex root root 755
+build_dir /var/lib/codex/ftp/codex root root 711
 build_dir /var/lib/codex/ftp/pub ftpadmin ftpadmin 755
 build_dir /var/lib/codex/ftp/incoming ftpadmin ftpadmin 3777
 build_dir /var/lib/codex/wiki codexadm codexadm 700
@@ -362,16 +362,6 @@ cd - > /dev/null
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
-
-# -> wu-ftpd
-#echo "Removing Redhat vsftp daemon.."
-#$RPM -e --nodeps vsftpd 2>/dev/null
-#echo "Removing existing wu-ftp daemon.."
-#$RPM -e --nodeps wu-ftpd 2>/dev/null
-#echo "Installing wu-ftpd..."
-#cd ${RPMS_DIR}/wu-ftpd
-#newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
 
 
 # perl-Crypt-SmbHash needed by gensmbpasswd
@@ -900,59 +890,11 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 ##############################################
 # FTP server configuration
 #
-make_backup "/etc/xinetd.d/wu-ftpd"
-echo "Configuring FTP servers and directories..."
-$CAT <<EOF >/etc/xinetd.d/wu-ftpd
-service ftp
-{
-        disable = no
-        socket_type             = stream
-        wait                    = no
-        user                    = root
-        server                  = /usr/sbin/in.ftpd
-        server_args             = -l -a
-        log_on_success          += DURATION
-        nice                    = 10
-}
-EOF
 
-make_backup "/etc/ftpaccess"
-$CAT <<EOF >/etc/ftpaccess
-class   all   real,guest,anonymous  *
-class anonftp anonymous *
+# Configure vsftpd
+$PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
+$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
 
-upload /var/lib/codex/ftp * no
-upload /var/lib/codex/ftp /bin no
-upload /var/lib/codex/ftp /etc no
-upload /var/lib/codex/ftp /lib no
-noretrieve .notar
-upload /var/lib/codex/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs
-noretrieve /var/lib/codex/ftp/incoming
-noretrieve /var/lib/codex/ftp/codex
-
-email root@localhost
-
-loginfails 5
-
-readme  README*    login
-readme  README*    cwd=*
-
-message /welcome.msg            login
-message .message                cwd=*
-
-compress        yes             all
-tar             yes             all
-chmod        no        guest,anonymous
-delete        no        guest,anonymous
-overwrite    no        guest,anonymous
-rename        no        guest,anonymous
-
-log transfers anonymous,real inbound,outbound
-
-shutdown /etc/shutmsg
-
-passwd-check rfc822 warn
-EOF
 
 ##############################################
 # Create the custom default page for the project Web sites
@@ -1252,6 +1194,7 @@ $CHKCONFIG cvs on
 $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG smb on
+$CHKCONFIG vsftpd on
 
 ##############################################
 # *Last* step: install plugins
