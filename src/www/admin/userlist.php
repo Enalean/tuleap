@@ -27,19 +27,29 @@ function show_users_list ($result,$user_name_search="") {
     } else  $user_name_param="";
 
     $i = 0;
+    echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
+    echo "<th>".$Language->getText('include_user_home','real_name')."</th>";
+    echo "<th>Profile</th><th>".$Language->getText('admin_userlist','active')."</th>\n";
+    if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users']) {
+        echo "<th>".$Language->getText('admin_userlist','restricted')."</th>";
+    }
+    echo "<th>".$Language->getText('admin_userlist','deleted')."</th>";
+    echo "<th>".$Language->getText('admin_userlist','suspended')."</th>\n";
+
 	while ($usr = db_fetch_array($result)) {
-		print "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\"><TD><a href=\"usergroup.php?user_id=$usr[user_id]\">";
+		print "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\"><TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">";
 		if ($usr['status'] == 'A') print "<B>";
 		if ($usr['status'] == 'R') print "<u>";
 		if ($usr['status'] == 'D') print "<I>";
 		if ($usr['status'] == 'P') print "*";
-		print "$usr[user_name]</A>";
+		print $usr['user_name']."</A>";
 		if ($usr['status'] == 'A') print "</B></TD>";
 		if ($usr['status'] == 'R') print "</u></TD>";
 		if ($usr['status'] == 'D') print "</I></TD>";
 		if ($usr['status'] == 'S') print "</TD>";
 		if ($usr['status'] == 'P') print "</TD>";
-		print "\n<TD><A HREF=\"/users/$usr[user_name]/\">[DevProfile]</A></TD>";
+		print "\n<TD><A HREF=\"usergroup.php?user_id=".$usr['user_id']."\">".$usr['realname']."</A></TD>";
+		print "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
                 if ($usr['status'] == 'A') {
                     print "\n<TD>".$Language->getText('admin_userlist','active')."</TD>";
                 } else { print "\n<TD><A HREF=\"userlist.php?action=activate&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','activate')."]</A></TD>"; }
@@ -133,10 +143,10 @@ if (!$group_id) {
 	print "\n<p>";
 	
 	if (isset($user_name_search) && $user_name_search) {
-            $result = db_query("SELECT user_name,user_id,status FROM user WHERE user_name LIKE '$user_name_search%' ORDER BY user_name");
+            $result = db_query("SELECT user_name,realname,user_id,status FROM user WHERE user_name LIKE '$user_name_search%' ORDER BY user_name");
 	} else {
             $user_name_search="";
-            $result = db_query("SELECT user_name,user_id,status FROM user ORDER BY user_name");
+            $result = db_query("SELECT user_name,realname,user_id,status FROM user ORDER BY user_name");
 	}
 	show_users_list ($result,$user_name_search);
 } else {
@@ -147,7 +157,7 @@ if (!$group_id) {
 	
 	print "\n<p>";
 
-	$result = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name,user.status AS status "
+	$result = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname AS realname,user.status AS status "
 		. "FROM user,user_group "
 		. "WHERE user.user_id=user_group.user_id AND "
 		. "user_group.group_id=$group_id ORDER BY user.user_name");
