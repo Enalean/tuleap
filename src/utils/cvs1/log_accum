@@ -26,9 +26,9 @@
 #	-f logfile	- write commit messages to logfile too
 #	-s		- *don't* run "cvs status -v" for each file
 #       -T text         - use TEXT in temp file names.
-#       -C [reponame]   - Generate cvsweb URLS; must be run using %{sVv}
+#       -C [reponame]   - Generate viewvc URLS; must be run using %{sVv}
 #                         format string.
-# (DEPRECATED)      -U URL          - Base URL for cvsweb if -C option (above) is used.
+# (DEPRECATED)      -U URL          - Base URL for viewvc if -C option (above) is used.
 #       -D              - generate diffs as part of the notification mail
 
 #
@@ -62,8 +62,8 @@ if ($sys_force_ssl) {
 }
 $codex_http_srv="http://$sys_default_domain";
 
-# Base name of viewvc specification (note: used to be cvsweb)
-$CVSWEB_URL = "$codex_srv/cvs/viewvc.php/";
+# Base name of viewvc specification
+$VIEWVC_URL = "$codex_srv/cvs/viewvc.php/";
 $TMPDIR = "/var/run/log_accum";
 
 # Set this to something that takes "-s".
@@ -448,31 +448,31 @@ sub write_commitlog {
 }
 
 # Return a list of all ViewVC URLs for this commit.
-sub generate_cvsweb_urls {
+sub generate_viewvc_urls {
     local ($dir, $branch, @files) = @_;
     local (@sp, @result);
-    local ($start) = $CVSWEB_URL;
+    local ($start) = $VIEWVC_URL;
     local ($args) = '?';
     local ($need_amp) = 0;
 
 # This next if assumes that if a repository name is not given with the
-# -C option, we then have to append the project name to the CVSWEB_URL
+# -C option, we then have to append the project name to the VIEWVC_URL
 # and the project name has been defined by the -T option
 # (this works for the particular setup in savannah.gnu.org and CodeX
 # but will have to be changed in other sites.)
-    if ($cvsweb_name eq '')
+    if ($viewvc_name eq '')
     {
 	$start .= $temp_name . '/';
     }
     else
     {
-	$args .= 'root=' . $cvsweb_name;
+	$args .= 'root=' . $viewvc_name;
 	$need_amp = 1;
     }
     $start .= $dir . '/';
     if ($branch ne '') {
 	$args .= '&' if ($need_amp);
-	$args .= 'only_with_tag=' . $branch;
+	$args .= 'pathrev=' . $branch;
 	$need_amp = 1;
     }
 
@@ -489,14 +489,14 @@ sub generate_cvsweb_urls {
 	if ($r1 eq 'NONE')
         # If it's a new file, it is listed completely
 	{
-	    push (@result, ($start . $sp[0] . $args. 'rev=' . $r2));
+	    push (@result, ($start . $sp[0] . $args. 'revision=' . $r2 . '&view=markup'));
 	}
         # If it's a file update, differences are shown. A value of NONE
         # for NEW-REV indicates a file removed and no URL is generated.
 	elsif ($r2 ne 'NONE')
 	{
-	    push (@result, ($start . $sp[0] . $args. 'tr1=' . $r1
-			 . '&tr2=' . $r2 . '&r1=text&r2=text&roottype=cvs'));
+	    push (@result, ($start . $sp[0] . $args. 'r1=' . $r1
+			 . '&r2=' . $r2 . '&roottype=cvs'));
 	}
     }
     return @result;
@@ -537,7 +537,7 @@ sub get_branch {
 }
 
 
-# Return a list of all cvsweb URLs for this commit.
+# Return a list of all viewvc URLs for this commit.
 sub generate_checkins {
     local ($dir, @files) = @_;
     local (@sp, @result);
@@ -664,8 +664,8 @@ $cvsroot = $ENV{'CVSROOT'};
 $do_status = 1;
 $modulename = "";
 $temp_name = "temp";
-$do_cvsweb = 0;
-$cvsweb_name = '';
+$do_viewvc = 0;
+$viewvc_name = '';
 $do_diffs = 0;
 $codexdb = 1;
 %diffmon = ();
@@ -695,11 +695,11 @@ while (@ARGV) {
     } elsif ($arg eq '-T') {
 	$temp_name = shift @ARGV;
     } elsif ($arg eq '-C') {
-	$do_cvsweb = 1;
-	$cvsweb_name = shift @ARGV
+	$do_viewvc = 1;
+	$viewvc_name = shift @ARGV
 	    if ($#ARGV >= 0 && $ARGV[0] !~ /^-/);
     } elsif ($arg eq '-U') { 
-	my $OLD_CVSWEB_URL = shift @ARGV; #DEPRACATED: URL is now computed
+	my $OLD_VIEWVC_URL = shift @ARGV; #DEPRACATED: URL is now computed
     } elsif ($arg eq '-D') {
 	$do_diffs = 2;
     } elsif ($arg =~ /^-D=(.*)$/) {
@@ -988,9 +988,9 @@ if ($files[2] =~ /Imported/ && $files[3] =~ /sources/) {
     exit 0;
 }
 
-# Compute the list of cvsweb URLs if necessary.
-if ($do_cvsweb) {
-    @urls = &generate_cvsweb_urls (join ('/', @path), $branch,
+# Compute the list of viewvc URLs if necessary.
+if ($do_viewvc) {
+    @urls = &generate_viewvc_urls (join ('/', @path), $branch,
 				   @files[1 .. $#files]);
 }
 
