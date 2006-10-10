@@ -19,7 +19,7 @@ categories that are most appropriate to your project's purpose.
 (1) it is approved and (2) you have categorized it just below.
 
 <?php
-print '<P>'.$Language->getText('project_admin_grouptrove','select_3_classifs',$GLOBALS['sys_name']);
+print '<P>'.$Language->getText('register_category','select_3_classifs',$GLOBALS['sys_name']);
 ?>
 
 <FONT size=-1>
