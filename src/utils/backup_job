@@ -12,7 +12,7 @@
 #    license. See the file COPYING in the main directory of this archive for
 #    more details.
 #
-# /home/tools/backup_job
+# /usr/lib/codex/bin/backup_job
 #
 #      Originally written by Vicki Tuttle 2001- 2003, CodeX Team, Xerox
 #      This job shuts down mysql and copies mysql database files to

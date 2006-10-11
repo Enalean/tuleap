@@ -20,7 +20,11 @@
 #  ./bdb2fsfs.sh --verbose --convert --svnroot=/svnroot
 #
 debug=
-sys_http_user  = "codexadm"
+
+sys_http_user="codexadm"
+BKPDIR=/var/lib/codex/__tmp_svn__backup__
+
+
 set -e${debug}
 
 function error {
@@ -181,7 +185,6 @@ function convert {
 }
 
 
-BKPDIR=/home/backup/__tmp_svn__backup__
 
 LS=/bin/ls
 CP=/bin/cp
