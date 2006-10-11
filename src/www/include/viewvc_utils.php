@@ -35,20 +35,15 @@ function viewvc_utils_display_header() {
   $request_uri = getStringFromServer('REQUEST_URI');
   $query_string = getStringFromServer('QUERY_STRING');
 
-#  if (strpos($request_uri,"*checkout*") === false && 
-#      strpos($query_string,"view=graphimg") === false &&
-#      strpos($request_uri,"*docroot*") === false &&
-#      strpos($request_uri,"diff_format=u") === false &&
-#      strpos($request_uri,"diff_format=c") === false &&
-#     strpos($request_uri,"diff_format=s") === false) {
+  if (strpos($request_uri,"view=patch") !== false) return false;
+  if (strpos($request_uri,"view=graphimg") !== false) return false;
+  if (strpos($request_uri,"annotate=") !== false) return true;
+
   if ( strpos($request_uri,"/?") === false && 
-       strpos($request_uri,"annotate=") === false &&
        strpos($request_uri,"&r1=") === false &&
        strpos($request_uri,"&r2=") === false &&
        (strpos($request_uri,"view=") === false ||
-         strpos($request_uri,"view=co") !== false ||
-	 strpos($request_uri,"view=graphimg") !== false ||
-         strpos($request_uri,"view=patch") !== false) ) {
+         strpos($request_uri,"view=co") !== false ) ) {
     return false;
   } else {
     return true;
