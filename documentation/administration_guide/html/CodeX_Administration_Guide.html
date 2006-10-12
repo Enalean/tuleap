@@ -2307,11 +2307,12 @@ Now you have a fresh CVS or SVN repository and the team can start the import aga
 <h2><a name="HowTo_Change_User_Name"></a>Changing a User Name on CodeX</h2>
 <em>How a CodeX administrator can change a user's login name</em>
 <UL>
+<li>First of all, make sure that the new login name is not already used!</li>
 <LI> First log as root on the codex server</LI>
 
 <LI> Edit the following files and change the old user name with the new one
 <BR>  /etc/passwd (2 occurences on the same line: login and home directory)
-<BR>  /etc/shadow (1 occurence)
+<BR>  /etc/shadow (1 occurence) (this file is read only, you can force the modification)
 <BR>  /etc/group (1 occurence for the user's own group plus as many
 occurences as projects the user is a member of - take note of these
 project for re-use later in this howto)</LI>
