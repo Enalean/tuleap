@@ -112,6 +112,8 @@ plugin_docman	error_field_link_required	The URL is required.
 plugin_docman	error_field_title_required	The Title is required.
 plugin_docman	error_field_wiki_required	The page name is required.
 plugin_docman	error_filenotfound	The file cannot be found.
+plugin_docman	error_item_not_deleted	Can't delete item.
+plugin_docman	error_item_not_moved	Can't move item.
 plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the document manager.
 plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
 plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.
@@ -180,13 +182,13 @@ plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description of the document.
 plugin_docman	md_install_commentkeyword_name	Comments
 plugin_docman	md_install_commentkeyword_desc	Additional information on the document.
-plugin_docman	md_html_validity_permanent	Permanent
 plugin_docman	md_html_validity_3_months	3 Months from today
 plugin_docman	md_html_validity_6_months	6 Months from today
 plugin_docman	md_html_validity_12_months	12 Months from today
-plugin_docman	md_html_validity_fixed_date	Fixed date
-plugin_docman	md_html_validity_today	Obsolete today
 plugin_docman	md_html_validity_corresp_date	Corresponding date:
+plugin_docman	md_html_validity_fixed_date	Fixed date
+plugin_docman	md_html_validity_permanent	Permanent
+plugin_docman	md_html_validity_today	Obsolete today
 plugin_docman	md_love_status_none_name	None
 plugin_docman	md_love_status_none_desc	Status of item is not managed.
 plugin_docman	md_love_status_draft_name	Draft

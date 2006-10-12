@@ -152,7 +152,7 @@ class Docman_Log { /* implements EventListener */
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_move');
                 break;
             case PLUGIN_DOCMAN_EVENT_DEL:
-                $txt = $GLOBALS['Language']->getText('plugin_docman','event_delete');
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_del');
                 break;
             case PLUGIN_DOCMAN_EVENT_ACCESS:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_access');

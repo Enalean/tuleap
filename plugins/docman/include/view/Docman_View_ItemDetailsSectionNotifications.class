@@ -26,7 +26,7 @@ require_once('Docman_View_ItemDetailsSection.class');
 
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection {
     function Docman_View_ItemDetailsSectionNotifications(&$item, $url) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'notifications', $GLOBALS['Language']->getText('plugin_docman','details_notifications'));
+        parent::Docman_View_ItemDetailsSection($item, $url, 'notifications', 'details_notifications');
     }
     function getContent() {
         $content = 'Notifications of the document';

@@ -2841,7 +2841,7 @@ EOS;
                 }
                 $html .= '</ul>';
             } else {
-                $html .= '- - -'; //$Language->getText('tracker_include_type','empty_fieldset');
+                $html .= '- - -'; // $Language-> getText('tracker_include_type','empty_fieldset');
             }
             $html .= '</td>';
             $html .= '<td align="center">'.$rank.'</td>';

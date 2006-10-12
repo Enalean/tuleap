@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2006. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2006.
  * 
@@ -125,7 +125,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_draft_name'));
-        //        $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_draft_desc'));
+        //        $e->setDescription('md_love_status_draft_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
         $e->setStatus('A');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_DRAFT] =& $e;
@@ -134,7 +134,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_approved_name'));
-        //        $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_approved_desc'));
+        //        $e->setDescription('md_love_status_approved_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
         $e->setStatus('A');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_APPROVED] =& $e;
@@ -143,7 +143,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e = new Docman_MetadataListOfValuesElement();
         $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_rejected_name'));
-        //        $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_rejected_desc'));
+        //        $e->setDescription('md_love_status_rejected_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
         $e->setStatus('A');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_REJECTED] =& $e;

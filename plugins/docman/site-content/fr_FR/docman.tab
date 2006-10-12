@@ -112,6 +112,8 @@ plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
 plugin_docman	error_filenotfound	Le fichier ne peut être trouvé.
+plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
+plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
 plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le gestionnaire de documents.
 plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
 plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.
@@ -168,6 +170,9 @@ plugin_docman	info_settings_updated	Paramètres mis à jour.
 plugin_docman	logsdaily_field	Documents
 plugin_docman	logsdaily_title	Accès aux documents
 
+plugin_docman	love_special_none_name_key	Aucun
+plugin_docman	love_special_none_desc_key	Aucun
+
 plugin_docman	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 
 plugin_docman	md_bo_badlabel	Nom de propriété '$1' inconnu.
@@ -177,13 +182,13 @@ plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description du document.
 plugin_docman	md_install_commentkeyword_name	Commentaires
 plugin_docman	md_install_commentkeyword_desc	Informations complémentaires sur le document.
-plugin_docman	md_html_validity_permanent	Permanent
 plugin_docman	md_html_validity_3_months	3 Mois
 plugin_docman	md_html_validity_6_months	6 Mois
 plugin_docman	md_html_validity_12_months	12 Mois
 plugin_docman	md_html_validity_corresp_date	Date correspondante :
+plugin_docman	md_html_validity_fixed_date	Date fixe
+plugin_docman	md_html_validity_permanent	Permanent
 plugin_docman	md_html_validity_today	Aujourd'hui obsolète
-plugin_docman	md_html_validity_corresp_date	Date correspondante :
 plugin_docman	md_love_status_none_name	Aucun
 plugin_docman	md_love_status_none_desc	Le statut de l'élément n'est pas géré.
 plugin_docman	md_love_status_draft_name	Brouillon
