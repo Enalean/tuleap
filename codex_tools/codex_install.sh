@@ -49,6 +49,7 @@ MKDIR='/bin/mkdir'
 RPM='/bin/rpm'
 CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
+CHCON='/usr/bin/chcon'
 FIND='/usr/bin/find'
 MYSQL='/usr/bin/mysql'
 TOUCH='/bin/touch'
@@ -327,15 +328,13 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
 
 
 # SELinux specific
-chcon -R -h -t httpd_sys_content_t /usr/share/codex
-chcon -R -h -t httpd_sys_content_t /etc/codex
-chcon -R -h -t httpd_sys_content_t /var/lib/codex
-#chcon -R -h -t httpd_sys_content_t /var/lib/codex/ftp/codex/
-#chcon -R -h -t mysqld_var_run_t /var/lib/codex/backup/mysql
-chcon -R -h -t httpd_sys_content_t /home/codexadm/.subversion
-chcon -h -t httpd_sys_content_t /svnroot
-chcon -h -t httpd_sys_content_t /cvsroot
-chcon -R -h -t httpd_sys_content_t /home/groups
+$CHCON -R -h -t httpd_sys_content_t /usr/share/codex
+$CHCON -R -h -t httpd_sys_content_t /etc/codex
+$CHCON -R -h -t httpd_sys_content_t /var/lib/codex
+$CHCON -R -h -t httpd_sys_content_t /home/codexadm/.subversion
+$CHCON -R -h -t httpd_sys_content_t /home/groups
+$CHCON -h -t httpd_sys_content_t /svnroot
+$CHCON -h -t httpd_sys_content_t /cvsroot
 
 
 ##############################################
@@ -368,7 +367,8 @@ cd - > /dev/null
 
 # SELinux CodeX-specific policy
 echo "Removing existing SELinux policy .."
-$RPM -e selinux-policy-targeted selinux-policy-targeted-sources 2>/dev/null
+$RPM -e selinux-policy-targeted-sources 2>/dev/null
+$RPM -e selinux-policy-targeted 2>/dev/null
 echo "Installing SELinux targeted policy for CodeX...."
 cd ${RPMS_DIR}/selinux-policy-targeted
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -816,6 +816,7 @@ EOF
 # Subscribe codex-admin to this ML
 echo \"codex-admin@$sys_default_domain\" | /usr/lib/mailman/bin/add_members -r - mailman
 
+$SERVICE mailman start
 
 ##############################################
 # Installing and configuring Sendmail
@@ -913,8 +914,8 @@ $CAT <<'EOF' > /var/lib/codex/ftp/.message
 Welcome to CodeX FTP server
 
 On This Site:
-/incoming           Place where to upload your new file release
-/pub/xxx            Anonymous FTP space of project xxx
+/incoming          Place where to upload your new file release
+/pub               Projects Anonymous FTP space
 *********************************************************************
 
 EOF
@@ -927,6 +928,8 @@ Upload new file releases here
 
 EOF
 $CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/incoming/.message
+
+$SERVICE vsftpd start
 
 ##############################################
 # Create the custom default page for the project Web sites
@@ -1239,10 +1242,10 @@ $CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
 ##############################################
 # End of installation
 #
+todo "Project web site CGIs are currently disabled. If you want to use them, you should install the custom httpd-suexec RPM provided (e.g. 'rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm')."
 todo "To customize the network gallery, copy /usr/share/codex/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codex/bin/cvssh, etc.)"
-#todo "Create an SSL certificate for Apache to support encryption (https) (see CodeX installation guide)."
 todo "Last, run the main crontab script manually: /usr/share/codex/src/utils/xerox_crontab.sh"
 
 todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."

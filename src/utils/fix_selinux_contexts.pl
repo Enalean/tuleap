@@ -11,26 +11,22 @@
 #
 
 require("include.pl");  # Include all the predefined functions and variables
-$MySQLBackupDir="/var/lib/codex/backup/mysql";
+export CHCON='/usr/bin/chcon'
 
 # /usr/share/codex -> CodeX main Web tree, documentation, plugins, etc.
-`chcon -R -h -t httpd_sys_content_t $codex_dir`;
+`$CHCON -R -h -t httpd_sys_content_t $codex_dir`;
 
 # /etc/codex -> for licence, site-content...
-`chcon -R -h -t httpd_sys_content_t $sys_custom_dir`;
+`$CHCON -R -h -t httpd_sys_content_t $sys_custom_dir`;
 
 # /var/lib/codex -> for ftp, etc.
-`chcon -R -h -t httpd_sys_content_t $sys_data_dir`;
-
-# /var/lib/codex/backup/mysql -> for MySQL bin log files 
-# Note: this should be set AFTER $sys_data_dir, because it is a subdirectory
-#`chcon -R -h -t mysqld_var_run_t $MySQLBackupDir`;
+`$CHCON -R -h -t httpd_sys_content_t $sys_data_dir`;
 
 # /home/codexadm/.subversion -> SVN needs access to codexadm subversion settings
-`chcon -R -h -t httpd_sys_content_t /home/$sys_http_user/.subversion`;
+`$CHCON -R -h -t httpd_sys_content_t /home/$sys_http_user/.subversion`;
 
 # /home/groups -> project web sites
-`chcon -R -h -t httpd_sys_content_t $grpdir_prefix`;
+`$CHCON -R -h -t httpd_sys_content_t $grpdir_prefix`;
 
-`chcon -h -t httpd_sys_content_t /svnroot`;
-`chcon -h -t httpd_sys_content_t /cvsroot`;
+`$CHCON -h -t httpd_sys_content_t /svnroot`;
+`$CHCON -h -t httpd_sys_content_t /cvsroot`;
