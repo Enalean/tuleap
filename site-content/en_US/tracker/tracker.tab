@@ -706,7 +706,7 @@ tracker_common_types	event_NEW_FILE_short_desc	New attachment
 tracker_common_types	event_CC_CHANGE_short_desc	CC Change
 tracker_common_types	event_CLOSED_short_desc	artifact closed
 tracker_common_types	event_PSS_CHANGE_short_desc	PSS change
-tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Any other Changes	
+tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Any other Changes
 tracker_common_types	event_I_MADE_IT_short_desc	I did it
 tracker_common_types	event_NEW_ARTIFACT_short_desc	New artifact
 tracker_common_types	event_ROLE_CHANGE_desc	I'm added to or removed from this role

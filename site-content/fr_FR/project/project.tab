@@ -343,7 +343,7 @@ project_admin_utils	feedback_history	Historique du retour d'information
 project_admin_utils	changed_personal_email_notif	Modification de la configuration de la notification e-mail personnelle
 project_admin_utils	changed_bts_form_message	Modification du message du formulaire du BTS
 project_admin_utils	changed_bts_allow_anon	Modification du BTS, soumission permise aux anonymes
-project_admin_utils	doc_deleted	Document détruit ($1)	
+project_admin_utils	doc_deleted	Document détruit ($1)
 project_admin_utils	removed_project	Projet enlevé
 project_admin_utils	added_user	Utilisateur ajouté ($1)
 project_admin_utils	removed_user	Utilisateur enlevé

@@ -409,8 +409,6 @@ tracker_include_type	user	Utilisateur
 tracker_include_type	perm	Permissions
 tracker_include_type	del_user	Détruire cet utilisateur ?
 tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
-tracker_include_type	public_tracker	Outil de suivi public&nbsp;:
-tracker_include_type	allow_anon	Autoriser les soumissions anonymes&nbsp;:
 tracker_include_type	allow_copy	Autoriser la copie d'artefacts&nbsp;:
 tracker_include_type	submit_instr	<b>Instructions de soumissions</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	browse_instr	<b>Instructions de navigation</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
@@ -713,7 +711,7 @@ tracker_common_types	event_NEW_FILE_short_desc	Nouvel attachement
 tracker_common_types	event_CC_CHANGE_short_desc	Changement des CC
 tracker_common_types	event_CLOSED_short_desc	L'artefact est fermé
 tracker_common_types	event_PSS_CHANGE_short_desc	Changement PSS
-tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Tout autre changement	
+tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Tout autre changement
 tracker_common_types	event_I_MADE_IT_short_desc	Je l'ai fais
 tracker_common_types	event_NEW_ARTIFACT_short_desc	Nouvel artefact
 tracker_common_types	event_ROLE_CHANGE_desc	On me donne ou on m'enlève ce rôle
