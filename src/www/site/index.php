@@ -11,7 +11,7 @@ site_header(array('title' => $title));
 echo '<h2>',$title,'</h2>';
 echo '<ul>';
 echo '<li><a href="/documentation/user_guide/html/en_US/"><b>'.$Language->getText('include_menu','help_index').'</b></a></li>';
-echo '<li><a href="/docs/site/">'.$Language->getText('include_menu','site_doc').'</b></a></li>';
+echo '<li><a href="/plugins/docman/?group_id=1">'.$Language->getText('include_menu','site_doc').'</b></a></li>';
 echo '<li><a href="/mail/?group_id=1">'.$Language->getText('include_menu','dev_channel').'</b></a></li>';
 echo '<li><a href="/forum/?group_id=1">'.$Language->getText('include_menu','discussion_forum').'</b></a><br /></li>';
 echo '</ul>';
