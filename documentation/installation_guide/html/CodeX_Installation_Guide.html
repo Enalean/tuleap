@@ -502,8 +502,90 @@ telnet/shell account.<br>
 </div>
 <br>
 <hr size="2" width="100%">
-<h1><a name="Specific_Software_Packages"></a>Specific Software Packages</h1>
-<h2><a name="RPM_Packages"></a>RPM Packages</h2>
+<h1><a name="SELinux"></a>SELinux Support</h1>
+<p>
+CodeX is compatible with the SELinux targeted policy defined in RedHat Enterprise Linux 4.
+SELinux enforcement is not required by CodeX, but it is recommended for servers accessible from the internet.
+<p>In order to run CodeX when SELinux is in 'enforcing' state, it is required to make some specific adjustements to both directory contexts and SELinux policy.
+<h3>SELinux directory contexts</h3>
+The 'httpd' daemon needs to access paths that are not defined in the standard RHEL4 installation: 
+CodeX installation directory, custom directory, data directory (for file packages, documents) ,
+codexadm subversion directory (for server update plugin),
+project directories (for project web sites) and source code repositories (for ViewVC).
+<br>This is the list of commands you will need to type to set-up the correct contexts: 
+<pre>
+chcon -R -h -t httpd_sys_content_t /usr/share/codex
+chcon -R -h -t httpd_sys_content_t /etc/codex
+chcon -R -h -t httpd_sys_content_t /var/lib/codex
+chcon -R -h -t httpd_sys_content_t /home/codexadm/.subversion
+chcon -R -h -t httpd_sys_content_t /home/groups
+chcon -h -t httpd_sys_content_t /svnroot
+chcon -h -t httpd_sys_content_t /cvsroot
+</pre> 
+You can also execute the 'fix_selinux_contexts.pl' Perl script located in src/utils. 
+It will execute all these commands automatically.
+<h3>New SELinux targeted policy rules</h3>
+<p>CodeX also needs specific rules that must be added to the RedHat default
+targeted policy.
+<br>In order to install the CodeX rules, you need to either:
+<ul><li>Install the provided CodeX binary policy package, or
+</li><li>Add textual rules, and recompile the policy on the server
+</li></ul>
+ <h4>Install binary policy</h4>
+ <p>In order to install CodeX binary policy, simply install the RPM. Example:
+ <pre>
+rpm -e selinux-policy-targeted-sources 
+rpm -e selinux-policy-targeted 
+rpm -Uvh selinux-policy-targeted-1.17.30-2.140.codex.noarch.rpm
+</pre>
+<h4>Compile new policy</h4>
+<p>In order to compile the CodeX policy, you need the RHEL4 policy sources.
+You should install the 'selinux-policy-targeted-sources' RPM provided with RHEL.
+<p>
+You need to edit the file: <pre> 
+domains/misc/local.te</pre>, and add the following rules:
+<pre>
+# Needed for File Release System (fileforge execution)
+allow httpd_sys_script_t httpd_sys_content_t:file execute_no_trans;
+allow httpd_sys_script_t self:capability { dac_override dac_read_search };
+allow httpd_sys_script_t httpd_tmp_t:file { getattr setattr };
+allow httpd_sys_script_t self:capability fowner;
+allow httpd_sys_script_t httpd_tmp_t:file rename;
+# For viewvc
+allow httpd_sys_script_t var_t:dir getattr;
+# For server update plugin
+allow httpd_sys_script_t krb5_conf_t:file getattr;
+allow httpd_sys_script_t krb5_conf_t:file read;
+allow httpd_sys_script_t self:netlink_route_socket create;
+allow httpd_sys_script_t self:netlink_route_socket bind;
+allow httpd_sys_script_t self:netlink_route_socket getattr;
+allow httpd_sys_script_t self:netlink_route_socket write;
+allow httpd_sys_script_t self:netlink_route_socket nlmsg_read;
+allow httpd_sys_script_t self:netlink_route_socket read;
+</pre>
+Then compile and install the new policy:
+<pre>
+cd /etc/selinux/targeted/src/policy/
+make load
+</pre>
+<p>
+If you run into SELinux problems, you can easily enrich the local.te file with new rules.
+Simply watch the system log file (/var/log/messages): if you detect 'avc: denied' messages, it means that SELinux denied access to some ressource.
+If you want to add a rule to allow this access, simply do the following:
+<pre>
+cd /etc/selinux/targeted/src/policy/
+audit2allow -d -l -o domains/misc/local.te
+# Check new rule
+more domains/misc/local.te
+# compile and install new rule 
+make load
+</pre>
+<p>
+To learn more about SELinux policy writing, please see 
+<a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/selinux-guide/selg-chapter-0071.html" >Customizing and Writing Policy</a>
+In the <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/selinux-guide/" >RedHat SELinux Guide</a>.
+<hr size="2" width="100%">
+<h1><a name="Specific_Software_Packages"></a>Specific Software Packages</h1><h2><a name="RPM_Packages"></a>RPM Packages</h2>
 CodeX requires a number of specific packages to operate properly.
 These packages are provided either through the RedHat Linux Enterprise
 Server distribution or by Xerox as part of your support contract. It is
@@ -526,6 +608,15 @@ Packages<br>
       <td valign="top">Install httpd and mod_ssl RPMs.&nbsp;
 httpd-devel and httpd-manual RPMs are
 optional. This is no longer a patched version of Apache 2.0: you can use the standard package.<br>
+However, if you wish to support cgi-bins in project web sites, you still need to install a custom httpd-suexec RPM. 
+This package is provided with the CodeX software. In order to install it, you will probably need to use the '--nodeps' RPM flag, 
+because it might not match exactly with your apache version number. 
+<br>Example:
+<pre>
+rpm -e --nodeps httpd-suexec
+rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm 
+service httpd restart 
+</pre>
       </td>
     </tr>
     <tr>
