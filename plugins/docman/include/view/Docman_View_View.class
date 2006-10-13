@@ -90,10 +90,10 @@ require_once('Docman_View_GetMenuItemsVisitor.class');
                 $allowed = $this->_controller->userCanRead($item->getId());
                 break;
             case 'move':
-                $allowed = $if->isMoveable($item) && $this->_controller->userCanWrite($item->getId());
+                $allowed = $if->isMoveable($item) && $this->_controller->userCanWrite($item->getId()) && $this->_controller->userCanWrite($item->getParentId());
                 break;
             case 'confirmDelete':
-                $allowed = !$if->isRoot($item) && $this->_controller->userCanWrite($item->getId());
+                $allowed = !$if->isRoot($item) && $this->_controller->userCanWrite($item->getId()) && $this->_controller->userCanWrite($item->getParentId());
                 break;
             case 'action_update':
             case 'action_new_version':
