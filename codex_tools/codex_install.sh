@@ -677,7 +677,13 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/b
 # Installing phpMyAdmin
 #
 
-todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
+# Sometimes, PHP does not seem to set the proper access rights on /var/lib/php/session.
+# This is needed by phpMyAdmin
+$CHMOD o+rwx /var/lib/php/session
+
+# Add PmaAbsoluteUri parameter? seems useless now
+#$PERL -i'.orig' -p -e "s/(\?\>)/\\\$cfg['PmaAbsoluteUri'] = 'http:\/\/$sys_default_domain\/phpMyAdmin'\;\n\1/;" /var/www/phpMyAdmin/config.inc.php
+#todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
 
 ##############################################
 # Installing the CodeX database
