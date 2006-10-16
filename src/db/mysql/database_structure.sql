@@ -3189,7 +3189,7 @@ CREATE TABLE plugin (
   name varchar(100) NOT NULL,
   available tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (id),
-  UNIQUE name (name),
+  UNIQUE name (name)
 );
 CREATE TABLE project_plugin (
 project_id INT NOT NULL ,
