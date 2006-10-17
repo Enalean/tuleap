@@ -263,4 +263,112 @@ WHERE field_name='details'
 
 EOF
 
+
+################################################################################
+# PLUGIN Docman
+#
+
+#Does the plugin already installed ?
+$result_docman = $dbh->prepare("SHOW TABLES LIKE 'plugin_docman_item'");
+$result_docman->execute();
+if (result_trackers->fetchrow()) {
+    
+    $permissions = $dbh->prepare("INSERT INTO permissions(permission_type, ugroup_id, object_id) VALUES ('PLUGIN_DOCMAN_READ', 1, ?), ('PLUGIN_DOCMAN_MANAGE', 1, ?)");
+    $insert = $dbh->prepare("INSERT INTO plugin_docman_item (parent_id, group_id, title, description,           create_date,           update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) 
+                                                     VALUES (        ?,        1,     ?,           ?, UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()),        NULL,     101,      0,                 0,    ?,         ?,        ?,         ?,             NULL);");
+    
+    #Docman is already installed
+    $insert->execute(0, 'Documentation du projet', '', 0, 1, undef, undef);
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $root = $id;
+
+    $insert = $dbh->prepare($root, 'English Documentation', '', 0, 1, undef, undef);
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $en = $id;
+    
+    $insert = $dbh->prepare($en, 'CodeX User Guide', 'A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently.', -1, 1, undef, undef);
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $cug = $id;
+    $insert = $dbh->prepare($cug, 'PDF Version', '', -1, 3, '/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cug, 'Multi-page HTML Version', '', 1, 3, '/documentation/user_guide/html/en_US/index.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cug, 'Single-page HTML (2.7 MB) Version', '', 2, 3, '/documentation/user_guide/html/en_US/CodeX_User_Guide.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    
+    $insert = $dbh->prepare($en, 'Command-Line Interface', 'A comprehensive guide describing all the functions of the CodeX Command-Line Interface.', 1, 1, undef, undef);
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $cli = $id;
+    $insert = $dbh->prepare($cli, 'PDF Version', '', -3, 3, '/documentation/cli/pdf/en_US/CodeX_CLI.pdf', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cli, 'Multi-page HTML Version', '', -2, 3, '/documentation/cli/html/en_US/index.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cli, 'Single-page HTML Version', '', 0, 3, '/documentation/cli/html/en_US/CodeX_CLI.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    
+    $insert = $dbh->prepare(1, 'Documentation en fran�ais', '', 1, 1, undef, undef);
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $fr = $id;
+    
+    $insert = $dbh->prepare($fr, 'Guide de l\'Utilisateur CodeX', 'Un guide complet d�crivant tous les services de CodeX et comment les utiliser de mani�re optimale. Fournit �galement de nombreuses astuces et explications pour g�rer efficacement votre projet CodeX.', -1, 1, undef, undef);
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $cug = $id;
+    $insert = $dbh->prepare($cug, 'Version PDF', '', -1, 3, '/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cug, 'Version HTML multi-pages', '', 1, 3, '/documentation/user_guide/html/fr_FR/index.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cug, 'Version HTML une page (4,2 Mo)', '', 2, 3, '/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    
+    $insert = $dbh->prepare($fr, 'Interface de Commande en Ligne', 'Un guide complet d�crivant toutes les fonctions de l\'Interface de Commande en Ligne de CodeX.', 0, 1, undef, undef);
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $cli = $id;
+    $insert = $dbh->prepare($cli, 'Version PDF', '', 3, 3, '/documentation/cli/pdf/fr_FR/CodeX_CLI.pdf', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cli, 'Version HTML multi-pages', '', 4, 3, '/documentation/cli/html/fr_FR/index.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+    $insert = $dbh->prepare($cli, 'Version HTML une page', '', 5, 3, '/documentation/cli/html/fr_FR/CodeX_CLI.html', '');
+    $insert->execute();
+    $id = $dh->last_insert_id();
+    $permissions->execute($id, $id);
+} else {
+    #Docman must be installed
+    $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd # SH !
+}
+
 echo "End of main DB upgrade"
