@@ -549,6 +549,41 @@ INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ('N
 
 ALTER TABLE artifact_field MODIFY value_function TEXT;
 
+###############################################################################
+# name of plugin is unique
+#
+
+ALTER TABLE plugin ADD UNIQUE ( name );
+
+
+###############################################################################
+# typo in trove_cat
+#
+
+UPDATE trove_cat SET shortname = 'communications' WHERE trove_cat_id = 20;
+
+
+###############################################################################
+# Old document manager is now legacy
+#
+
+UPDATE service SET is_active = 0, is_used = 0 WHERE group_id = 100 AND short_name = 'doc';
+REPLACE INTO plugin (name, available) VALUES ('docman', '1');
+
+###############################################################################
+# Add permissions for 'stage' field
+#
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','1#30',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','1#30',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','2#15',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#15',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','3#12',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','3#12',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#11',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','4#11',3);
+
+
 EOF
 
 
