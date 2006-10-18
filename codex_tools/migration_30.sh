@@ -9,7 +9,7 @@
 # COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
 # PUBLIC LICENSE.
 #
-#  $Id: migration_24.sh 1776 2005-06-23 14:29:05Z guerin $
+#  $Id$
 #
 #      Originally written by Laurent Julliard 2004-2006, CodeX Team, Xerox
 #
@@ -22,15 +22,15 @@
 
 
 progname=$0
+#scriptdir=/mnt/cdrom
 if [ -z "$scriptdir" ]; then 
     scriptdir=`dirname $progname`
 fi
-cd ${scriptdir};TOP_DIR=`pwd`;cd -
+cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
-TODO_FILE=/tmp/todo_codex.txt
-CODEX_TOPDIRS="src site-content documentation cgi-bin codex_tools"
+TODO_FILE=/root/todo_codex_upgrade.txt
 export INSTALL_DIR="/usr/share/codex"
 
 # path to command line tools
@@ -99,19 +99,29 @@ die() {
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
-  $PERL -pi -e "s/$2/$3/g" $1
+  # Allow '/' is $3, so we need to double-escape the string
+  replacement=`echo $3 | sed "s|/|\\\\\/|g"`
+  $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
 ##############################################
 # CodeX 2.8 to 3.0 migration
 ##############################################
-echo "Migration script from CodeX 2.8 to CodeX 3.0"
+echo "Migration script from CodeX 2.8 data to CodeX 3.0"
+echo "This script must be run AFTER a clean CodeX 3.0 installation, and copy of CodeX 2.8 data."
+echo "Read migration_30.README.FIRST for details"
 echo
+yn="y"
+read -p "Continue? [yn]: " yn
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
 
 ##############################################
-# Check the machine is running CodeX 2.8
+# Check the machine is running CodeX 3.0
 #
-OLD_CX_RELEASE='2.8'
+OLD_CX_RELEASE='3.0'
 yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
 if [ $? -ne 0 ]; then
@@ -136,25 +146,6 @@ for cmd in `echo ${CMD_LIST}`
 do
     [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
 done
-
-##############################################
-# Warn user about upgrade
-#
-
-yn="y"
-$CAT <<EOF
-This script will reinstall some configuration files:
-/etc/httpd/conf/httpd.conf
-/etc/httpd/conf.d/php.conf
-If you have customized these files for your special needs, you should backup them before starting the migration.
-
-EOF
-read -p "Continue? [yn]: " yn
-
-if [ "$yn" = "n" ]; then
-    echo "Bye now!"
-    exit 1
-fi
 
 ##############################################
 # Check we are running on RHEL 4
@@ -187,223 +178,30 @@ echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
 $SERVICE crond stop
 $SERVICE apache stop
 $SERVICE httpd stop
-$SERVICE mysql stop
+$SERVICE mysqld stop
 $SERVICE sendmail stop
 $SERVICE postfix stop
 $SERVICE mailman stop
-
-
-##############################################
-# Check Required Stock RedHat RPMs are installed
-# perl libwww is required for log_accum (reference extraction...)
-
-rpms_ok=1
-for rpm in perl-URI perl-HTML-Tagset \
-   perl-HTML-Parser perl-libwww-perl
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ $? -eq 1 ]; then
-	rpms_ok=0
-	missing_rpms="$missing_rpms $rpm"
-    fi
-done
-if [ $rpms_ok -eq 0 ]; then
-    msg="The following Redhat Linux RPMs must be installed first:\n"
-    msg="${msg}$missing_rpms\n"
-    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the migration script"
-    die "$msg"
-fi
-echo "All requested RedHat RPMS installed... good!"
-
-##############################################
-# Ask for domain name and other installation parameters
-#
-sys_default_domain=`grep ServerName /etc/httpd/conf/httpd.conf | grep -v '#' | head -1 | cut -d " " -f 2 ;`
-if [ -z $sys_default_domain ]; then
-  read -p "CodeX Domain name: " sys_default_domain
-fi
-sys_ip_address=`grep NameVirtualHost /etc/httpd/conf/httpd.conf | grep -v '#' | cut -d " " -f 2 | cut -d ":" -f 1`
-if [ -z $sys_ip_address ]; then
-  read -p "Codex Server IP address: " sys_ip_address
-fi
-
-##############################################
-
-##############################################
-# Update local.inc  
-#
-
-make_backup /etc/codex/conf/local.inc codex28
-
-$PERL -i'.orig' -p -e's:^(\$sys_show_project_type.*)://\1 DEPRECATED in CodeX 3.0:' /etc/codex/conf/local.inc
-
-$GREP -q "sys_server_join" /etc/codex/conf/local.inc
-if [ $? -ne 0 ]; then
-   # Not a maintained 2.8 release...
-   $PERL -i'.orig2' -p -e's:^(\$sys_server.*):\1\n\$sys_server_join="30";\n:' /etc/codex/conf/local.inc
-fi
-
-$PERL -i'.orig3' -p -e's:(sys_pluginsroot.*):\1\n\$sys_custompluginsroot ="/etc/codex/plugins/";\n\$sys_pluginspath="/plugins";\n\$sys_custompluginspath ="/customplugins";:' /etc/codex/conf/local.inc
-
-$PERL -i'.orig4' -p -e's:(sys_email_contact.*):\1\n\n\/\/\n\/\/ Address from which emails are sent\n\$sys_noreply = @@"CodeX" <noreply@%sys_default_domain%>@@;\n:' /etc/codex/conf/local.inc
-# This is just because we have pbs using quotes in the perl command
-substitute '/etc/codex/conf/local.inc' '@@' "'" 
-substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-
-$PERL -i'.orig5' -p -e's:(sys_session_lifetime.*):\1\n\n\/\/\n\/\/ Is license approval mandatory when downloading a file from the FRS?\n\/\/ (1 is mandatory, 0 is optional)\n\$sys_frs_license_mandatory = 1;\n:' /etc/codex/conf/local.inc
-
-
-##############################################
-# Now install CodeX specific RPMS (and remove RedHat RPMs)
-#
+$SERVICE smb stop
 
 
 
-
-
-##############################################
-# Update the CodeX software
-
-echo "Installing the CodeX software..."
-$MV $INSTALL_DIR $INSTALL_DIR.'_28'
-$MKDIR $INSTALL_DIR;
-cd $INSTALL_DIR
-$TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R codexadm.codexadm $INSTALL_DIR
-
-# copy some configuration files 
-make_backup /etc/httpd/conf/httpd.conf codex28
-make_backup /etc/httpd/conf.d/php.conf codex28
-$CP $INSTALL_DIR/src/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
-$CP $INSTALL_DIR/src/etc/php.conf.dist /etc/httpd/conf.d/php.conf
-$CP $INSTALL_DIR/src/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
-$CP $INSTALL_DIR/src/etc/codex_aliases.conf.dist /etc/httpd/conf/codex_aliases.conf
-
-# replace string patterns in httpd.conf
-substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
-# replace string patterns in ssl.conf
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
-
-todo "Edit the new /etc/httpd/conf/httpd.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf.d/php.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
-todo "Edit the new /etc/httpd/conf/codex_aliases.conf file and update it if needed"
-
-# Re-copy phpMyAdmin and viewcvs installations
-$CP -af $INSTALL_DIR_28/phpMyAdmin* $INSTALL_DIR
-$CP -af $INSTALL_DIR
-_28/cgi-bin/viewcvs.cgi $INSTALL_DIR/cgi-bin
-
-
-
-##############################################
-# French documentation
-echo "Preparing directories for French documentation"
-$CHOWN -R sourceforge.sourceforge /etc/codex/documentation
-$MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/fr_FR
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/fr_FR
-$MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/fr_FR
-
-# Moved local documentation parameters
-if [ -f "/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd" ]; then
-    $MV /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
-else
-    $CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
-    # replace string patterns in ParametersLocal.dtd
-    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
-    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "Xerox" 
-    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "Xerox Corporation" 
-    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' " "
-    todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd"
-fi
-
-##############################################
-# Database Structure and initvalues upgrade
-#
-echo "Updating the CodeX database..."
-
-$SERVICE mysql start
-sleep 5
-
-pass_opt=""
-# See if MySQL root account is password protected
-mysqlshow 2>&1 | grep password
-while [ $? -eq 0 ]; do
-    read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
-    echo
-    mysqlshow --password=$old_passwd 2>&1 | grep password
-done
-[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
-
-echo "Starting DB update for CodeX 3.0. This might take a few minutes."
 
 ################################################################################
-echo " Upgrading 2.8 if needed"
-
 
 Various Notes concerning CodeX 2.8 to 3.0 upgrade.
 
 
 Done in 2.8 support branch:
-- copy new backup_job in /home/tools
-- add sys_default_trove_cat in local.inc
 - redirect commit-email.pl to /dev/null
 
 
 TODO in migration_30
-- when moving httpd to httpd_28, don t forget to move the '.subversion' directory back
 - Convert BDB to FSFS?
 - /usr/local/bin/log_accum and commit_prep called from CVS hooks... commit-email called from SVN post-commit. -> create links or update?
-
-RHEL4 Testing:
-
-/usr/sbin/groupadd -g "104" sourceforge
-/usr/sbin/groupadd -g "96" ftpadmin
-/usr/sbin/useradd  -c 'Owner of CodeX directories' -M -d '/home/httpd' -p "$1$h67e4niB$xUTI.9DkGdpV.B65r1NVl/" -u 104 -g 104 -s '/bin/bash' -G ftpadmin sourceforge
-
-don t need perl-CGI
-'mysql' service is now called 'mysqld' -> update install guide.
-remove --force and --nodeps?
-
-
-[root@malaval RPMS]# ls -Za /home/httpd
-drwxrwxr-x  sourcefo sourcefo root:object_r:user_home_dir_t    .
-drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
--rw-------  sourcefo sourcefo user_u:object_r:user_home_t      .bash_history
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        cgi-bin
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        documentation
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        plugins
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        src
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        site-content
-
-
-chcon -R -h -t httpd_sys_content_t /home/httpd
-
-[root@malaval RPMS]# ls -Za /home/httpd
-drwxrwxr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t .
-drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
--rw-------  sourcefo sourcefo user_u:object_r:httpd_sys_content_t .bash_history
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t cgi-bin
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t documentation
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t plugins
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t src
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t site-content
-
-
-[root@malaval RPMS]# ls -Za /home/ftp/codex/
-drwxr-xr-x  root     root     root:object_r:user_home_t        .
-drwxr-xr-x  root     root     root:object_r:user_home_dir_t    ..
-
-chcon -R -h -t httpd_sys_content_t /home/ftp/codex/
-
-
-PHPMyAdmin:
-[root@malaval scripts]# ls -Z /var/lib/php
-drwxrwx---  root     apache   system_u:object_r:httpd_var_run_t session
-[root@malaval scripts]# chmod 777 /var/lib/php/session
+- /etc/aliases.codex: /home/mailman/mail/mailman
+- mailman public archive links to private...
+- server update plugin instanciation at install time...
 
 Add question: do you wish to use HTTPS
 -> ssl.conf
@@ -411,27 +209,12 @@ Add question: do you wish to use HTTPS
 -> generate certificate (optional)
 
 
-
-chcon -R -h -t httpd_sys_content_t /home/groups
-chcon -R -h -t httpd_sys_content_t /home/sfcache
-chcon -R -h -t httpd_sys_content_t /etc/codex
-
-
-RPMs mandatory:
-#mrtg ?
-# munin needs perl-DateManip and sysstat + external RPMs: perl-HTML-Template perl-Net-Server rrdtool perl-rrdtool
-# cp /usr/share/doc/munin-1.2.4/README-apache-cgi /etc/httpd/conf.d/munin.conf + edit to add alias
-# /usr/sbin/munin-node-configure -> useless
-Add option: install munin?
-
-
-
 ##############################################
 # Database Structure and initvalues upgrade
 #
 echo "Updating the CodeX database..."
 
-$SERVICE mysql start
+$SERVICE mysqld start
 sleep 5
 
 pass_opt=""
@@ -446,7 +229,6 @@ done
 
 echo "Starting DB update for CodeX 3.0. This might take a few minutes."
 
-echo " DB - Fieldset update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
 ###############################################################################
@@ -560,7 +342,7 @@ ALTER TABLE plugin ADD UNIQUE ( name );
 # typo in trove_cat
 #
 
-UPDATE trove_cat SET shortname = 'communications' WHERE trove_cat_id = 20;
+UPDATE trove_cat SET shortname = 'communications' WHERE shortname = 'coomunications';
 
 
 ###############################################################################
@@ -588,7 +370,7 @@ EOF
 
 
 ################################################################################
-echo " Upgrading 2.8 if needed"
+echo " DB - Fieldset update"
 
 $PERL <<'EOF'
 use DBI;
@@ -630,11 +412,11 @@ while (my ($group_artifact_id) = $result_trackers->fetchrow()) {
 EOF
 
 echo " DB - Artifact details Field and Follow-up comments update"
-$CAT <<EOF | $MYSQL $pass_opt sourceforge
-
 ################################################################################
 # artifact_history: updating values
 #
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
 UPDATE artifact_history 
 SET field_name='comment' 
 WHERE field_name='details' 
@@ -644,6 +426,7 @@ EOF
 
 ################################################################################
 # PLUGIN Docman
+# Insert CodeX documentation in Project 1 docman
 #
 
 $PERL <<'EOF'
@@ -748,35 +531,6 @@ EOF
 echo "End of main DB upgrade"
 
 
-##############################################
-# Reinstall modified shell scripts
-#
-echo "Copying updated /usr/local/bin/commit-email.pl"
-$CP $INSTALL_DIR/src/utils/svn/commit-email.pl /usr/local/bin
-$CHOWN sourceforge.sourceforge /usr/local/bin/commit-email.pl
-$CHMOD 775 /usr/local/bin/commit-email.pl
-$CHMOD u+s /usr/local/bin/commit-email.pl
-
-echo "Copying updated /usr/local/bin/log_accum"
-$CP $INSTALL_DIR/src/utils/cvs1/log_accum /usr/local/bin
-$CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
-$CHMOD 775 /usr/local/bin/log_accum
-$CHMOD u+s /usr/local/bin/log_accum
-
-echo "Copying updated /usr/local/bin/fileforge"
-$CP -a ${nonRPMS_DIR}/utilities/fileforge /usr/local/bin
-$CHOWN root.root /usr/local/bin/fileforge
-$CHMOD u+s /usr/local/bin/fileforge
-
-
-echo "Copying updated /home/tools/backup_subversion.sh"
-$CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /home/tools
-$CHOWN root.root /home/tools/backup_subversion.sh
-$CHMOD 740 /home/tools/backup_subversion.sh
-todo "Customize backup directories in /home/tools/backup_subversion.sh."
-todo "You may also want to add the '-noarchives' flag to backup_subversion when used in full backup (see root crontab). This will delete previous backups once the full backup is completed."
-
-
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
@@ -793,33 +547,13 @@ $SERVICE crond start
 $SERVICE httpd start
 $SERVICE sendmail start
 $SERVICE mailman start
+$SERVICE smb start
 
 
-##############################################
-# Generate Documentation
-#
-echo "Updating the User Manual. This might take a few minutes."
-$INSTALL_DIR/src/utils/generate_doc.sh -f
-$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
+
 todo "..."
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
-
-
-##############################################
-# Make sure all major services are on
-#
-$CHKCONFIG named on
-$CHKCONFIG sshd on
-$CHKCONFIG httpd on
-$CHKCONFIG mysql on
-$CHKCONFIG cvs on
-$CHKCONFIG mailman on
-
-##############################################
-# More things to do
-
 
 
 # End of it
