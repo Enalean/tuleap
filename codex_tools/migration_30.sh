@@ -30,8 +30,8 @@ RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
 TODO_FILE=/tmp/todo_codex.txt
-CODEX_TOPDIRS="SF site-content documentation cgi-bin codex_tools"
-INSTALL_DIR="/home/httpd"
+CODEX_TOPDIRS="src site-content documentation cgi-bin codex_tools"
+export INSTALL_DIR="/usr/share/codex"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -50,7 +50,7 @@ RPM='/bin/rpm'
 CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
 FIND='/usr/bin/find'
-MYSQL='/usr/bin/mysql'
+export MYSQL='/usr/bin/mysql'
 TOUCH='/bin/touch'
 CAT='/bin/cat'
 MAKE='/usr/bin/make'
@@ -113,7 +113,7 @@ echo
 #
 OLD_CX_RELEASE='2.8'
 yn="y"
-$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/SF/www/VERSION
+$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
 if [ $? -ne 0 ]; then
     $CAT <<EOF
 This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
@@ -233,7 +233,7 @@ fi
 # Update local.inc  
 #
 
-make_backup /etc/codex/conf/local.inc codex26
+make_backup /etc/codex/conf/local.inc codex28
 
 $PERL -i'.orig' -p -e's:^(\$sys_show_project_type.*)://\1 DEPRECATED in CodeX 3.0:' /etc/codex/conf/local.inc
 
@@ -265,20 +265,19 @@ $PERL -i'.orig5' -p -e's:(sys_session_lifetime.*):\1\n\n\/\/\n\/\/ Is license ap
 # Update the CodeX software
 
 echo "Installing the CodeX software..."
-cd /home
-$MV httpd httpd_26
-$MKDIR httpd;
-cd httpd
+$MV $INSTALL_DIR $INSTALL_DIR.'_28'
+$MKDIR $INSTALL_DIR;
+cd $INSTALL_DIR
 $TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
+$CHOWN -R codexadm.codexadm $INSTALL_DIR
 
 # copy some configuration files 
-make_backup /etc/httpd/conf/httpd.conf codex26
-make_backup /etc/httpd/conf.d/php.conf codex26
-$CP $INSTALL_DIR/SF/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
-$CP $INSTALL_DIR/SF/etc/php.conf.dist /etc/httpd/conf.d/php.conf
-$CP $INSTALL_DIR/SF/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
-$CP $INSTALL_DIR/SF/etc/codex_aliases.conf.dist /etc/httpd/conf/codex_aliases.conf
+make_backup /etc/httpd/conf/httpd.conf codex28
+make_backup /etc/httpd/conf.d/php.conf codex28
+$CP $INSTALL_DIR/src/etc/httpd.conf.dist /etc/httpd/conf/httpd.conf
+$CP $INSTALL_DIR/src/etc/php.conf.dist /etc/httpd/conf.d/php.conf
+$CP $INSTALL_DIR/src/etc/ssl.conf.dist /etc/httpd/conf.d/ssl.conf
+$CP $INSTALL_DIR/src/etc/codex_aliases.conf.dist /etc/httpd/conf/codex_aliases.conf
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
@@ -293,8 +292,9 @@ todo "Edit the new /etc/httpd/conf.d/ssl.conf file and update it if needed"
 todo "Edit the new /etc/httpd/conf/codex_aliases.conf file and update it if needed"
 
 # Re-copy phpMyAdmin and viewcvs installations
-$CP -af /home/httpd_26/phpMyAdmin* /home/httpd
-$CP -af /home/httpd_26/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
+$CP -af $INSTALL_DIR_28/phpMyAdmin* $INSTALL_DIR
+$CP -af $INSTALL_DIR
+_28/cgi-bin/viewcvs.cgi $INSTALL_DIR/cgi-bin
 
 
 
@@ -311,7 +311,7 @@ $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/fr_F
 if [ -f "/etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd" ]; then
     $MV /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
 else
-    $CP $INSTALL_DIR/SF/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+    $CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
     # replace string patterns in ParametersLocal.dtd
     substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
     substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "Xerox" 
@@ -376,7 +376,7 @@ drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
 drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        cgi-bin
 drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        documentation
 drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        plugins
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        SF
+drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        src
 drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        site-content
 
 
@@ -389,7 +389,7 @@ drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
 drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t cgi-bin
 drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t documentation
 drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t plugins
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t SF
+drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t src
 drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t site-content
 
 
@@ -595,7 +595,7 @@ use DBI;
 use Sys::Hostname;
 use Carp;
 
-require "/home/httpd/SF/utils/include.pl";  # Include all the predefined functions
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
 
 &load_local_config();
 
@@ -752,13 +752,13 @@ echo "End of main DB upgrade"
 # Reinstall modified shell scripts
 #
 echo "Copying updated /usr/local/bin/commit-email.pl"
-$CP $INSTALL_DIR/SF/utils/svn/commit-email.pl /usr/local/bin
+$CP $INSTALL_DIR/src/utils/svn/commit-email.pl /usr/local/bin
 $CHOWN sourceforge.sourceforge /usr/local/bin/commit-email.pl
 $CHMOD 775 /usr/local/bin/commit-email.pl
 $CHMOD u+s /usr/local/bin/commit-email.pl
 
 echo "Copying updated /usr/local/bin/log_accum"
-$CP $INSTALL_DIR/SF/utils/cvs1/log_accum /usr/local/bin
+$CP $INSTALL_DIR/src/utils/cvs1/log_accum /usr/local/bin
 $CHOWN sourceforge.sourceforge /usr/local/bin/log_accum
 $CHMOD 775 /usr/local/bin/log_accum
 $CHMOD u+s /usr/local/bin/log_accum
@@ -770,7 +770,7 @@ $CHMOD u+s /usr/local/bin/fileforge
 
 
 echo "Copying updated /home/tools/backup_subversion.sh"
-$CP $INSTALL_DIR/SF/utils/svn/backup_subversion.sh /home/tools
+$CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /home/tools
 $CHOWN root.root /home/tools/backup_subversion.sh
 $CHMOD 740 /home/tools/backup_subversion.sh
 todo "Customize backup directories in /home/tools/backup_subversion.sh."
@@ -799,8 +799,8 @@ $SERVICE mailman start
 # Generate Documentation
 #
 echo "Updating the User Manual. This might take a few minutes."
-/home/httpd/SF/utils/generate_doc.sh -f
-/home/httpd/SF/utils/generate_programmer_doc.sh -f
+$INSTALL_DIR/src/utils/generate_doc.sh -f
+$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
 $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
 todo "..."
 todo "-----------------------------------------"
