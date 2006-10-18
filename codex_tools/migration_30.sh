@@ -353,6 +353,11 @@ UPDATE service SET is_active = 0, is_used = 0 WHERE group_id = 100 AND short_nam
 REPLACE INTO plugin (name, available) VALUES ('docman', '1');
 
 ###############################################################################
+# Active plugin serverupdate
+#
+INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
+
+###############################################################################
 # Add permissions for 'stage' field
 #
 
@@ -527,6 +532,11 @@ if ($result_docman->fetchrow()) {
     `$ENV{MYSQL} -h $sys_dbhost -u $sys_dbuser $sys_dbname --password=$sys_dbpasswd < $ENV{INSTALL_DIR}/plugins/docman/db/install.sql`
 }
 EOF
+
+################################################################################
+# install PLUGIN serverupdate
+#
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 echo "End of main DB upgrade"
 

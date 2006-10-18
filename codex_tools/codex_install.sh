@@ -308,6 +308,7 @@ build_dir /etc/codex/themes codexadm codexadm 755
 build_dir /etc/codex/plugins codexadm codexadm 755
 build_dir /etc/codex/plugins/docman codexadm codexadm 755
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
+build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /var/lib/codex/docman codexadm codexadm 755
@@ -1239,11 +1240,15 @@ $CHKCONFIG vsftpd on
 ##############################################
 # *Last* step: install plugins
 #
+# docman plugin
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 build_dir /etc/codex/plugins/docman/etc codexadm codexadm 755
 $CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codex/plugins/docman/etc/docman.inc
 $CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/docman.inc
 $CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
+
+# serverupdate plugin
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 ##############################################
 # End of installation
