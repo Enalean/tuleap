@@ -909,7 +909,7 @@ todo "If you are behind proxy, then you need to configure the file /home/codexad
 todo "To enable the subversion update, type the following commands:"
 todo " cd /usr/share/codex/"
 todo " svn status -u --username <your_login>"
-todo "Accept permanently the certificate, and type your password.
+todo "Accept permanently the certificate, and type your password."
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
