@@ -31,7 +31,7 @@ RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
 TODO_FILE=/root/todo_codex.txt
-INSTALL_DIR="/usr/share/codex"
+export INSTALL_DIR="/usr/share/codex"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -969,6 +969,8 @@ fi
 todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
 todo "- update /var/named/codex.zone - replace all words starting with %%"
 todo "- cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
+todo "- make sure the file is readable by 'other':"
+todo "  chmod o+r /var/named/chroot/var/named/codex_full.zone"
 todo "- edit /etc/named.conf :"
 todo "   - add DNS forwarders"
 todo "   - make sure the dns cache file exists (or 'touch' it)"
