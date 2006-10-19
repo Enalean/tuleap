@@ -109,7 +109,7 @@ substitute() {
 ##############################################
 echo "Migration script from CodeX 2.8 data to CodeX 3.0"
 echo "This script must be run AFTER a clean CodeX 3.0 installation, and copy of CodeX 2.8 data."
-echo "Read migration_30.README.FIRST for details"
+echo "Read migration_30.README for details"
 echo
 yn="y"
 read -p "Continue? [yn]: " yn
@@ -185,30 +185,6 @@ $SERVICE mailman stop
 $SERVICE smb stop
 
 
-
-
-################################################################################
-
-Various Notes concerning CodeX 2.8 to 3.0 upgrade.
-
-
-Done in 2.8 support branch:
-- redirect commit-email.pl to /dev/null
-
-
-TODO in migration_30
-- Convert BDB to FSFS?
-- /usr/local/bin/log_accum and commit_prep called from CVS hooks... commit-email called from SVN post-commit. -> create links or update?
-- /etc/aliases.codex: /home/mailman/mail/mailman
-- mailman public archive links to private...
-- server update plugin instanciation at install time...
-
-Add question: do you wish to use HTTPS
--> ssl.conf
--> phpMyadmin conf
--> generate certificate (optional)
-
-
 ##############################################
 # Database Structure and initvalues upgrade
 #
@@ -229,7 +205,7 @@ done
 
 echo "Starting DB update for CodeX 3.0. This might take a few minutes."
 
-$CAT <<EOF | $MYSQL $pass_opt sourceforge
+$CAT <<EOF | $MYSQL $pass_opt codex
 
 ###############################################################################
 # Fieldset: create tables
@@ -420,7 +396,7 @@ echo " DB - Artifact details Field and Follow-up comments update"
 ################################################################################
 # artifact_history: updating values
 #
-$CAT <<EOF | $MYSQL $pass_opt sourceforge
+$CAT <<EOF | $MYSQL $pass_opt codex
 
 UPDATE artifact_history 
 SET field_name='comment' 
@@ -546,6 +522,66 @@ echo "End of main DB upgrade"
 # Run 'analyse' on all MySQL DB
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
 mysqlcheck -Aao $pass_opt
+
+###############################################################################
+# 
+echo "Update mailman archive links"
+
+cd /var/lib/mailman/archives/private
+lists=`ls | grep -v "\.mbox"`;
+cd /var/lib/mailman/archives/public
+for list in $lists
+do
+ `ln -s ../private/$list .`;
+done
+
+
+
+##############################################
+# CVS and SVN tools are now in /usr/lib/codex/bin
+#
+
+echo "Updating CVS and Subversion repositories:"
+
+echo "- CVS commitinfo files"
+for cvsfile in `ls /var/lib/codex/cvsroot/*/CVSROOT/commitinfo`
+do
+   projname=`echo $cvsfile | perl -e '$_=<>; s@.*/cvsroot/(.*)/CVSROOT.*@\1@; chomp; print'`
+   # Update CVS config
+   perl -pi -e "s@/usr/local/bin/commit_prep@/usr/lib/codex/bin/commit_prep@" "$cvsfile"
+   # commit changes to file (directly with RCS)
+   cd /var/lib/codex/cvsroot/$projname/CVSROOT
+   rcs -q -l commitinfo
+   ci -q -m"CodeX 3.0 modifications" commitinfo
+   co -q commitinfo
+   $CHOWN codexadm.$projname commitinfo*
+done
+
+echo "- CVS loginfo files"
+for cvsfile in `ls /var/lib/codex/cvsroot/*/CVSROOT/loginfo`
+do
+   projname=`echo $cvsfile | perl -e '$_=<>; s@.*/cvsroot/(.*)/CVSROOT.*@\1@; chomp; print'`
+   # Update CVS config
+   perl -pi -e "s@/usr/local/bin/log_accum@/usr/lib/codex/bin/log_accum@" "$cvsfile"
+   perl -pi -e "s@ /cvsroot@ /var/lib/codex/cvsroot@" "$cvsfile"
+   # commit changes to file (directly with RCS)
+   cd /var/lib/codex/cvsroot/$projname/CVSROOT
+   rcs -q -l loginfo
+   ci -q -m"CodeX 3.0 modifications" loginfo
+   co -q loginfo
+   $CHOWN codexadm.$projname loginfo*
+done
+
+echo "- Subversion post-commit files"
+for svnfile in `ls /var/lib/codex/svnroot/*/hooks/post-commit`
+do
+   projname=`echo $svnfile | perl -e '$_=<>; s@.*/svnroot/(.*)/hooks.*@\1@; chomp; print'`
+   # Update SVN config
+   perl -pi -e "s@/usr/local/bin/commit-email.pl@/usr/lib/codex/bin/commit-email.pl@" "$svnfile"
+   cd /var/lib/codex/svnroot
+   # change ownership on whole repository
+   $CHOWN -R codexadm.$projname $projname
+done
 
 
 
