@@ -516,13 +516,14 @@ EOF
 $CAT <<EOF | $MYSQL $pass_opt codex
 
 UPDATE service
-SET is_used = 0, is_active = 0
+SET is_used = 1, is_active = 0
 WHERE group_id NOT IN (
       SELECT DISTINCT (group_id)
       FROM doc_groups, doc_data
       WHERE doc_groups.doc_group = doc_data.doc_group
   )
-  AND short_name = 'doc';
+  AND short_name = 'doc'
+  AND group_id !=100;
 
 UPDATE service
 SET is_used = 1, is_active = 1
@@ -531,7 +532,8 @@ WHERE group_id NOT IN (
       FROM doc_groups, doc_data
       WHERE doc_groups.doc_group = doc_data.doc_group
   )
-  AND short_name = 'docman';
+  AND short_name = 'docman'
+  AND group_id !=100;
 EOF
 
 ################################################################################
