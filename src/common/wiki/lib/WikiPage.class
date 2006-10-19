@@ -197,9 +197,9 @@ class WikiPage {
   /**
    * @access public
    */
-  function render($lite=false) {
+  function render($lite=false, $full_screen=false) {
     $wpw = new WikiPageWrapper($this->gid);
-    $wpw->render($lite);
+    $wpw->render($lite, $full_screen);
   }
 
 
