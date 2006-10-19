@@ -317,6 +317,7 @@ class WikiServiceViews extends WikiViews {
    * @access public
    */
   function wiki() {
+    global $full_screen;
     $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
 
     $wp->log(user_getid());
@@ -325,7 +326,11 @@ class WikiServiceViews extends WikiViews {
     if(isset($_GET['pv']) && ( $_GET['pv'] == 1)) {
       $lite = true;
     }
-    $wp->render($lite);
+    if(isset($_GET['pv']) && ( $_GET['pv'] == 2)) {
+      $full_screen = true;
+    }
+    $wp->render($lite, $full_screen);
+
   }
 
   /**
