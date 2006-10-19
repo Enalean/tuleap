@@ -283,22 +283,25 @@ if ($set=='my') {
    as well as all the arguments that serves as selection criteria
    If not defined then defaults to ANY (0)
   ================================================== */
-$_title = $group->getPublicName().': \''.$ath->getName().'\' ';
-if (isset($masschange) && $masschange === true) {
-    $_title .=  $Language->getText('tracker_masschange','mass_change_report');
-    $_help = 'ArtifactMassChange.html';
-  } else {
-    $_title .= $Language->getText('tracker_browse', 'search_report');
-    $_help = 'ArtifactBrowsing.html';
-    $masschange = false;
-    
-  }
+  
+if ($pv != 2) {
+    $_title = $group->getPublicName().': \''.$ath->getName().'\' ';
+    if (isset($masschange) && $masschange === true) {
+        $_title .=  $Language->getText('tracker_masschange','mass_change_report');
+        $_help = 'ArtifactMassChange.html';
+    } else {
+        $_title .= $Language->getText('tracker_browse', 'search_report');
+        $_help = 'ArtifactBrowsing.html';
+        $masschange = false;    
+    }
+}
+
 $params=array('title'=>$_title,
               'titlevals'=>array($ath->getName()),
               'pagename'=>'tracker_browse',
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
-              'pv'=>isset($pv)?$pv:false,
+              'pv'=>isset($pv)?$pv:0,
               'help' => $_help);
 
 
@@ -306,7 +309,7 @@ $params=array('title'=>$_title,
 $ath->header($params);
 
 // Display the artifact items according to all the parameters
-$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:false),$masschange);
+$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:0),$masschange);
 
 $ath->footer($params);
 

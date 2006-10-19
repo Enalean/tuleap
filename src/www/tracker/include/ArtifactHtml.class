@@ -70,8 +70,8 @@ class ArtifactHtml extends Artifact {
             echo " ] ".$summary."</H2>";
             echo "</TD>";
             
-            if ( !$pv ) {
-                echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=true' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
+            if ( $pv == 0) {
+                echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
             }
 
             if ($this->ArtifactType->allowsCopy()) {
@@ -188,13 +188,13 @@ class ArtifactHtml extends Artifact {
                     }
                     echo '<TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
             } else {
-                    if (!$pv) {
+                    if ($pv == 0) {
                             echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
                         <TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
                     }
             }
                             
-            if (!user_isloggedin()&&!$pv) {
+            if (!user_isloggedin() && ($pv == 0)) {
                     echo $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
             echo '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
@@ -211,7 +211,7 @@ class ArtifactHtml extends Artifact {
             <TR><TD colspan="2">
             <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
             
-            if ( !$pv ) {
+            if ($pv == 0) {
                 echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
                 echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
                 echo '<input type="text" name="add_cc" size="30">';
@@ -231,7 +231,7 @@ class ArtifactHtml extends Artifact {
             <TR><TD colspan="2">
             <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
             
-            if (!$pv) {
+            if ($pv == 0) {
                 echo $Language->getText('tracker_include_artifact','upload_checkbox');
                 echo ' <input type="checkbox" name="add_file" VALUE="1">';
                 echo $Language->getText('tracker_include_artifact','upload_file_lbl');
@@ -283,7 +283,7 @@ class ArtifactHtml extends Artifact {
             // 
             // Final submit button
             //
-            if ( !$pv ) {
+            if ( $pv == 0) {
                     echo '</TD></TR>                
                     <TR><TD colspan="2" ALIGN="center">
                             <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'">
@@ -495,7 +495,7 @@ class ArtifactHtml extends Artifact {
         }
         echo '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA><p>';
         } else {
-        if (!$pv) {
+        if ($pv = 0) {
           echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
                             <TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
         }

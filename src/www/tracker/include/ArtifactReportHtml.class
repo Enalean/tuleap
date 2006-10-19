@@ -51,7 +51,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 $html_result .=  '</TR></TABLE>';
                 
-		if ((!$masschange)&&(!$pv)) {
+		if ((!$masschange)&&($pv == 0)) {
 		  $html_result .= '</td><td align="right" width="50%">';
 		  $html_result .= '
                           <FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" NAME="artifact_export_form">
@@ -229,14 +229,14 @@ class ArtifactReportHtml extends ArtifactReport {
     			
                     $boxes .= 
                         $field_html->display($this->group_artifact_id,$values,
-                                          false,false,($pv?true:false),false,true,$Language->getText('global','none'), true,$Language->getText('global','any'));
+                                          false,false,($pv != 0?true:false),false,true,$Language->getText('global','none'), true,$Language->getText('global','any'));
             
                 } else if ( $field->isMultiSelectBox() ) {
             
                     $boxes .= 
                         $field_html->display($this->group_artifact_id,
                                           $prefs[$field->getName()],
-                                          false,false,($pv?true:false),false,true,$Language->getText('global','none'), true,$Language->getText('global','any'));
+                                          false,false,($pv != 0?true:false),false,true,$Language->getText('global','none'), true,$Language->getText('global','any'));
             
                 } else if ($field->isDateField() ){
             
@@ -254,7 +254,7 @@ class ArtifactReportHtml extends ArtifactReport {
                            $field->isTextArea() ) {
                     $val=isset($prefs[$field->getName()][0])?$prefs[$field->getName()][0]:"";
                     $boxes .= 
-                        ($pv ? $val : $field_html->fieldText($val,15,80)) ;
+                        ($pv != 0? $val : $field_html->fieldText($val,15,80)) ;
             
                 }
                 $boxes .= "</TD>\n";
@@ -294,7 +294,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          *
          */
-        function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false) {
+        function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false,$pv) {
             global $PHP_SELF,$Language;
 
             $html_result = "";
@@ -311,7 +311,11 @@ class ArtifactReportHtml extends ArtifactReport {
 
             reset($result_fields);
             while (list(,$field) = each($result_fields)) {
-                $links_arr[] = $url.'&order='.$field->getName().'#results';
+                if ($pv != 0) {
+		    $links_arr[] = $url.'&pv='.$pv.'&order='.$field->getName().'#results';
+		} else {
+		    $links_arr[] = $url.'&order='.$field->getName().'#results';
+		}	
                 $title_arr[] = $field->getLabel();
                 $width_arr[$field->getName()] = $field->getColWidth();
             }
@@ -344,8 +348,11 @@ class ArtifactReportHtml extends ArtifactReport {
             
             $offset_last = min($offset+$chunksz-1, $total_rows-1);
         
-            $nav_bar .= '<td width= "20% " align = "center" class="small">'.$Language->getText('tracker_include_report','items').' '.($offset+1).' - '.
+            #display 'Items x - y'  only in normal and printer-version modes
+	    if ($pv != 2) {
+	    $nav_bar .= '<td width= "20% " align = "center" class="small">'.$Language->getText('tracker_include_report','items').' '.($offset+1).' - '.
                 ($offset_last+1)."</td>\n";
+	    }	
         
             $nav_bar .= '<td width="40%" align ="right">';
         
@@ -409,10 +416,12 @@ class ArtifactReportHtml extends ArtifactReport {
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>$value</TD>\n";
-						else
+						else {
+						    ($pv == 0)?$target="":$target=" target=blank";		    
 						    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
-						$value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'">'. 
-						$value .'</A></TD>'."\n";
+						    $value.'&atid='.$this->group_artifact_id.'&group_id='.$group_id.'"'.$target.'>'. 
+						    $value .'</A></TD>'."\n";
+						}    
 	                        
 				    } else if ( $field->isUsername() ) {        
 						if ($nolink)
@@ -461,7 +470,10 @@ class ArtifactReportHtml extends ArtifactReport {
 				$html_result .= '<INPUT TYPE="HIDDEN" NAME="'.$field.'" VALUE="'.$value.'">';
 			}
 		}
-		if ($total_rows > $chunksz) {
+		#stuff related to mass-change (buttons, check_all_items link, clear_all_items link) should be hidden in printer version
+		#as well as table-only view. keep only 'select' column checkboxes
+		if ($pv == 0) {		
+		    if ($total_rows > $chunksz) {
                		$html_result .=
            	    	'<a href="javascript:checkAll(1)">'.$Language->getText('tracker_include_report','check_items').' '.($offset+1).'-'.($offset_last+1).'</a>'.
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_items').' '.($offset+1).'-'.($offset_last+1).'</a><p>';
@@ -470,16 +482,17 @@ class ArtifactReportHtml extends ArtifactReport {
 			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items').'('.($offset+1).'-'.($offset_last+1).')">';
 			$html_result .= '</td><td width="50%" align ="center" class="small">';
 			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_include_report','mass_change_all',$total_rows).'">';
-			$html_result .= '</td></tr></table>';
-		} else {
+			
+		    } else {
 			$html_result .=
            	    	'<a href="javascript:checkAll(1)">'.$Language->getText('tracker_include_report','check_all_items').'</a>'.
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_all_items').' </a><p>';
 		
 			$html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,$total_rows)).'">';
-			$html_result .= '</td></tr></table>';
+			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,$total_rows)).'">';			
+		    }
 		}
+		$html_result .= '</td></tr></table>';		
 		$html_result .= '</FORM>';
             } else {
                	$html_result .= $nav_bar;
@@ -530,7 +543,7 @@ class ArtifactReportHtml extends ArtifactReport {
 
                 
                 //Show the list of available artifact reports
-                if ($pv) {
+                if ($pv == 0) {
                     $html_result .= '<h3>'.$Language->getText('tracker_include_report','selected', array($ath->getCapsItemName())).'</h3>';
                 } else {
                     $res_report = $this->getReports($this->group_artifact_id,user_getid());
@@ -564,7 +577,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $text = $Language->getText('tracker_include_report','adv_search');
                 }
                 
-                if (!$pv) {
+                if ($pv == 0) {
                      $html_result .= '<small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('.$Language->getText('tracker_include_report','or_use').' <a href="'.
                          $url_alternate_search.'">'.$text.'</a>)</small></h3><p>';
                 }
@@ -574,14 +587,16 @@ class ArtifactReportHtml extends ArtifactReport {
                 $html_result .= '</TABLE>';
 
                 // Display query fields
-                $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
+		if ($pv != 2) {
+                    $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
                 
-                if (!$pv) {
-                    $html_result .= '<p><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'"></FONT> '.
-                        '<input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-                        'VALUE="'.$chunksz.'">&nbsp;'.$ath->getItemName().$Language->getText('tracker_include_report','at_once').'</FORM>';
+                    if ($pv == 0) {
+                        $html_result .= '<p><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'"></FONT> '.
+                            '<input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
+                            'VALUE="'.$chunksz.'">&nbsp;'.$ath->getItemName().$Language->getText('tracker_include_report','at_once').'</FORM>';
+                    }
                 }
-                
+		
                 //
                 // Finally display the result table
                 // 
@@ -591,18 +606,19 @@ class ArtifactReportHtml extends ArtifactReport {
                 if ($totalrows > 0) {
                 
                     // Build the sorting header messages
-                    if ( $morder ) {
+                    if ($pv != 2) {    
+		        if ( $morder ) {
                                 $order_statement = $Language->getText('tracker_include_report','sorted_by').' '.($pv ? '':help_button('ArtifactBrowsing.html#ArtifactListSorting',false)).
                                     ' : '.$this->criteriaListToText($morder, $url_nomorder);
-                    } else {
+                        } else {
                                 $order_statement ='';
-                    }
+                        }
                     
-                    $html_result .= '<A name="results"></A>';
-                    $html_result .= '<h3>'.$totalrows.' '.$Language->getText('tracker_include_report','matching').' '.
+                        $html_result .= '<A name="results"></A>';
+			$html_result .= '<h3>'.$totalrows.' '.$Language->getText('tracker_include_report','matching').' '.
                         $order_statement.'</h3>';
                 
-                    if (!$pv) {
+                        if ($pv == 0) {
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
                                 $field = $art_field_fact->getFieldFromName('severity');
                                 if ( $field && $field->isUsed()) {
@@ -611,26 +627,29 @@ class ArtifactReportHtml extends ArtifactReport {
                                 $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=#results"><b>'.$Language->getText('tracker_include_report','reset_sort').'</b></a>. ';
                         }
                     
-                    if ($msort) { 
+                        if ($msort) { 
                                 $url_alternate_sort = str_replace('msort=1','msort=0',$url).
                                     '&order=#results';
                                 $text = $Language->getText('global','deactivate');
-                    } else {    
+			} else {    
                                 $url_alternate_sort = str_replace('msort=0','msort=1',$url).
                             '&order=#results';
                                 $text = $Language->getText('global','activate');
-                    }
+                        }
                 
-                    if (!$pv) {
+                        if ($pv == 0) {
                                 $html_result .= $Language->getText('tracker_include_report','multicolumn_sort',array($url_alternate_sort,$text)).'&nbsp;&nbsp;&nbsp;&nbsp;'.
                                     '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("msg.png").'" border="0">'.
                                     '&nbsp;'.$Language->getText('global','printer_version').'</a>)'."\n";
+                        }
+		    }    
+                
+                    if ($pv != 0) { $chunksz = 100000; }
+                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,$url,($pv == 1 ? true:false),$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange,$pv);
+                    if ($pv != 2) {  
+		        #priority colors are not displayed in table-only view 
+		        $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
                     }
-                
-                    if ($pv) { $chunksz = 100000; }
-                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,($pv ? '' : $url), ($pv ? true:false) ,$chunksz ,$morder,$advsrch,$chunksz,$aids,$masschange);
-                    $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
-                
                 } else {
                 
                     $html_result .= '<h2>'.$Language->getText('tracker_include_report','no_match').'</h2>';
