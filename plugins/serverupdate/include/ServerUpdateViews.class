@@ -63,6 +63,12 @@ class ServerUpdateViews extends Views {
     function preferences() {
         require_once("../www/preferences.php");
     }
+    function norepository() {
+        $output = '';
+        $output .= '<p class="feedback">'.$GLOBALS['Language']->getText('plugin_serverupdate_update','norepository').'</p>';
+        echo $output;
+    }
+    
     
     /**
      * Function testUpdate : simulate the update and execute it if no problem is detected

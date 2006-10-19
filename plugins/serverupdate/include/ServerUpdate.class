@@ -76,23 +76,31 @@ class ServerUpdate extends Controler {
                     }
                     break;
                 default:
-                    if ($request->exist('sort')) {
-                        $GLOBALS['sort'] = $request->get('sort');
-                        if ($request->exist('level_op')) {
-                            $GLOBALS['level_op'] = $request->get('level_op');
+                    if ($this->svnupdate->getRepository() == "") {
+                        $this->view = 'norepository';
+                    } else {
+                        if ($request->exist('sort')) {
+                            $GLOBALS['sort'] = $request->get('sort');
+                            if ($request->exist('level_op')) {
+                                $GLOBALS['level_op'] = $request->get('level_op');
+                            }
+                            if ($request->exist('level')) {
+                                $GLOBALS['level'] = $request->get('level');
+                            }
+                            if ($request->exist('manualupdate')) {
+                                $GLOBALS['manualupdate'] = $request->get('manualupdate');
+                            }
                         }
-                        if ($request->exist('level')) {
-                            $GLOBALS['level'] = $request->get('level');
-                        }
-                        if ($request->exist('manualupdate')) {
-                            $GLOBALS['manualupdate'] = $request->get('manualupdate');
-                        }
+                        $this->view = 'browse';
                     }
-                    $this->view = 'browse';
                     break;
             }
         } else {
-            $this->view = 'browse';
+            if ($this->svnupdate->getRepository() == "") {
+                $this->view = 'norepository';
+            } else {
+                $this->view = 'browse';
+            }
         }
         
         if ($request->exist('action')) {
