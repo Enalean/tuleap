@@ -783,7 +783,7 @@ tracker_common_fieldset	fieldset_status_bugs_lbl_key	Status
 tracker_common_fieldset	fieldset_status_bugs_desc_key	Status of the bug
 tracker_common_fieldset	fieldset_default_patches_lbl_key	Details
 tracker_common_fieldset	fieldset_default_patches_desc_key	Details of the patch
-tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Paste the patch here (text only)
+tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Past the patch here (text only)
 tracker_common_fieldset	fieldset_patchtext_patches_desc_key	Paste the patch here (text only) OR attach it as a file in the 'Attachments' section
 tracker_common_fieldset	fieldset_status_patches_lbl_key	Status
 tracker_common_fieldset	fieldset_status_patches_desc_key	Status of the patch
