@@ -73,6 +73,7 @@ if (!isset($chunksz) || !$chunksz) { $chunksz = 50; }
 if (!isset($offset) || !$offset || $offset < 0) { $offset=0; }
 if (!isset($advsrch)||($advsrch != 1)) { $advsrch = 0; }
 if (!isset($msort)||($msort != 1)) { $msort = 0; }
+if (!isset($pv)) { $pv = 0; }
 
 /* ==================================================
   If the report type is not defined then get it from the user preferences.

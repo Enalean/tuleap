@@ -254,7 +254,7 @@ class ArtifactReportHtml extends ArtifactReport {
                            $field->isTextArea() ) {
                     $val=isset($prefs[$field->getName()][0])?$prefs[$field->getName()][0]:"";
                     $boxes .= 
-                        ($pv != 0? $val : $field_html->fieldText($val,15,80)) ;
+                        ($pv != 0 ? $val : $field_html->fieldText($val,15,80)) ;
             
                 }
                 $boxes .= "</TD>\n";
@@ -544,8 +544,6 @@ class ArtifactReportHtml extends ArtifactReport {
                 
                 //Show the list of available artifact reports
                 if ($pv == 0) {
-                    $html_result .= '<h3>'.$Language->getText('tracker_include_report','selected', array($ath->getCapsItemName())).'</h3>';
-                } else {
                     $res_report = $this->getReports($this->group_artifact_id,user_getid());
                     $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
 
@@ -608,7 +606,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     // Build the sorting header messages
                     if ($pv != 2) {    
 		        if ( $morder ) {
-                                $order_statement = $Language->getText('tracker_include_report','sorted_by').' '.($pv ? '':help_button('ArtifactBrowsing.html#ArtifactListSorting',false)).
+                                $order_statement = $Language->getText('tracker_include_report','sorted_by').' '.($pv != 0 ? '':help_button('ArtifactBrowsing.html#ArtifactListSorting',false)).
                                     ' : '.$this->criteriaListToText($morder, $url_nomorder);
                         } else {
                                 $order_statement ='';
