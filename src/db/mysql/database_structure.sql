@@ -231,7 +231,7 @@ CREATE TABLE bug_field (
   keep_history int(11) NOT NULL default '0',
   special int(11) NOT NULL default '0',
   custom int(11) NOT NULL default '0',
-  value_function TEXT,
+  value_function VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY  (bug_field_id),
   KEY idx_bug_field_name (field_name)
 ) TYPE=MyISAM;
@@ -2672,7 +2672,7 @@ CREATE TABLE artifact_field (
   empty_ok int(11) NOT NULL default '0',
   keep_history int(11) NOT NULL default '0',
   special int(11) NOT NULL default '0',
-  value_function varchar(255) default NULL,
+  value_function TEXT,
   default_value text NOT NULL,
   PRIMARY KEY  (field_id,group_artifact_id),
   KEY idx_fk_field_name (field_name),
@@ -3188,7 +3188,8 @@ CREATE TABLE plugin (
   id int(11) NOT NULL auto_increment,
   name varchar(100) NOT NULL,
   available tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (id)
+  PRIMARY KEY  (id),
+  UNIQUE name (name)
 );
 CREATE TABLE project_plugin (
 project_id INT NOT NULL ,

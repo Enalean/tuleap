@@ -1,0 +1,104 @@
+Migration procedure : CodeX 2.8 to CodeX 3.0
+
+1) make a diff patch to keep your local specific code. 
+
+svn diff [-c] home/httpd | sed 's/SF/src/' > mybackup_directory/diff_patch.txt
+
+2) Make a backup of your data
+
+Please use tar to keep the owner and group owner.
+
+tar cvfz codex.2.8.tgz /etc/ /var/ /home/ /usr/lib/codex/ /usr/share/codex/ /usr/local/ ???????? A RAJOUTER ???????
+
+3) Make a mysql backup (mysql dump)
+
+mysql dump .... ???? A VOIR AVEC NICOLAS T. ??????
+
+4) Install RHEL 4.4 on your server
+
+5) Install CodeX 3.0
+Configure CodeX 3.0 properly (/etc/httpd/conf/httpd.conf, /etc/codex/conf/local.inc, etc.)
+
+6) Restore your data. 
+
+Be carefull to use a copy system that keep the context (owner and group owner)
+You can use tar or cp -a for preservong the context.
+
+  6.1) /etc/codex
+
+Copy documentation, plugins, site-content, themes and CODEX_LICENSE_ACCEPTED in /etc/codex/ (DON'T COPY the conf/ directory)
+
+/etc/codex/documentation/*          ---> /etc/codex/documentation/.
+/etc/codex/plugins/*                ---> /etc/codex/plugins/.
+/etc/codex/site-content/*           ---> /etc/codex/site-content/. 
+/etc/codex/themes/*                 ---> /etc/codex/themes/.
+/etc/codex/CODEX_LICENSE_ACCEPTED   ---> /etc/codex/.
+
+  6.2) /usr/local/bin
+
+Nothing to do.
+
+  6.3) /home/httpd
+
+Nothing to do, but restore your local specific modification saved in the patch file (see 1) for details) ???????? EXPLIQUER MIEUX ??????????
+
+  6.4) /home/data/wiki
+ 
+/home/data/wiki/*   ---> /var/lib/codex/wiki/.
+
+  6.5) /home/users and /home/groups
+
+/home/users/*   ---> /home/users/.
+/home/groups/*   ---> /home/group/.
+
+Be carefull to keep the context (owner and group)
+
+  6.6) /cvsroot/ and /svnroot/
+
+/cvsroot/*  ---> /var/lib/codex/cvsroot/.
+/svnroot/*  ---> /var/lib/codex/svnroot/.
+
+Be carefull to keep the context (owner and group)
+
+  6.7) /home/ftp/ 
+
+/home/ftp/*  ---> /var/lib/codex/ftp/.
+
+  6.8) /home/log/
+
+/home/log/* ---> /var/log/codex/.
+
+  6.9) /etc/skel_codex
+
+/etc/skel_codex/*   ---> /etc/skel_codex/.
+
+  6.10) /var/named/codex.zone   ?????????? not necessary if DNS is well configured ?.????????????????????
+
+  6.11) /home/mailman/
+
+/home/mailman/lists/*               ---> /var/lib/mailman/lists/.
+/home/mailman/archives/private/*    ---> /var/lib/mailman/archives/private/.
+
+  6.13) Check that the mailman queue is empty. If not ?????????????????????
+
+  6.14) /home/httpd/cgi-bin/
+
+/home/httpd/cgi-bin/*    --->  /var/www/cgi-bin/.
+
+  6.15) mysql backup in /var/lib/codex/backup/mysql/.    ????????? Where is the mysql backup file ???????????
+        subversion backup in /var/lib/codex/backup/subversion/.    ????????? Where is the subversion backup file ???????????
+
+  6.16) restore your own scripts (e.g. in /home/tools/ /usr/local/bin/, etc ...) where you want.
+
+  6.17) /var/lib/mysql/   ------> .????????????????? A VOIR AVEC NICOLAS ?????????????????
+
+  6.18) /home/httpd/.subversion -> /home/codexadm
+
+7) Database migration
+mysqldump --opt -u codexadm -p codex > /root/codex.3.0.empty.sql
+mysql -u codexadm -p
+drop database codex;
+create database codex;
+
+
+mysql -u codexadm -p codex < /root/sf.tarisson.sql

@@ -308,6 +308,7 @@ build_dir /etc/codex/themes codexadm codexadm 755
 build_dir /etc/codex/plugins codexadm codexadm 755
 build_dir /etc/codex/plugins/docman codexadm codexadm 755
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
+build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
 
 build_dir /var/run/log_accum root root 1777
 build_dir /var/lib/codex/docman codexadm codexadm 755
@@ -677,7 +678,13 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/b
 # Installing phpMyAdmin
 #
 
-todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
+# Sometimes, PHP does not seem to set the proper access rights on /var/lib/php/session.
+# This is needed by phpMyAdmin
+$CHMOD o+rwx /var/lib/php/session
+
+# Add PmaAbsoluteUri parameter? seems useless now
+#$PERL -i'.orig' -p -e "s/(\?\>)/\\\$cfg['PmaAbsoluteUri'] = 'http:\/\/$sys_default_domain\/phpMyAdmin'\;\n\1/;" /var/www/phpMyAdmin/config.inc.php
+#todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
 
 ##############################################
 # Installing the CodeX database
@@ -1233,11 +1240,15 @@ $CHKCONFIG vsftpd on
 ##############################################
 # *Last* step: install plugins
 #
+# docman plugin
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 build_dir /etc/codex/plugins/docman/etc codexadm codexadm 755
 $CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codex/plugins/docman/etc/docman.inc
 $CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/docman.inc
 $CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
+
+# serverupdate plugin
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 ##############################################
 # End of installation

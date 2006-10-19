@@ -1,66 +1,207 @@
+#!/bin/bash
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2004. All Rights Reserved
+# This file is licensed under the CodeX Component Software License
+# http://codex.xerox.com
+#
+# THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A
+# COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
+# PUBLIC LICENSE.
+#
+#  $Id$
+#
+#      Originally written by Laurent Julliard 2004-2006, CodeX Team, Xerox
+#
+#  This file is part of the CodeX software and must be placed at the same
+#  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
+#  delivered on a CD or by other means
+#
+#  This script migrates a site running CodeX 2.8 to CodeX 3.0
+#
 
 
+progname=$0
+#scriptdir=/mnt/cdrom
+if [ -z "$scriptdir" ]; then 
+    scriptdir=`dirname $progname`
+fi
+cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
+RPMS_DIR=${TOP_DIR}/RPMS_CodeX
+nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
+CodeX_DIR=${TOP_DIR}/CodeX
+TODO_FILE=/root/todo_codex_upgrade.txt
+export INSTALL_DIR="/usr/share/codex"
+
+# path to command line tools
+GROUPADD='/usr/sbin/groupadd'
+GROUPDEL='/usr/sbin/groupdel'
+USERADD='/usr/sbin/useradd'
+USERDEL='/usr/sbin/userdel'
+USERMOD='/usr/sbin/usermod'
+MV='/bin/mv'
+CP='/bin/cp'
+LN='/bin/ln'
+LS='/bin/ls'
+RM='/bin/rm'
+TAR='/bin/tar'
+MKDIR='/bin/mkdir'
+RPM='/bin/rpm'
+CHOWN='/bin/chown'
+CHMOD='/bin/chmod'
+FIND='/usr/bin/find'
+export MYSQL='/usr/bin/mysql'
+TOUCH='/bin/touch'
+CAT='/bin/cat'
+MAKE='/usr/bin/make'
+TAIL='/usr/bin/tail'
+GREP='/bin/grep'
+CHKCONFIG='/sbin/chkconfig'
+SERVICE='/sbin/service'
+PERL='/usr/bin/perl'
+
+CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
+MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+SERVICE PERL"
+
+# Functions
+create_group() {
+    # $1: groupname, $2: groupid
+    $GROUPDEL "$1" 2>/dev/null
+    $GROUPADD -g "$2" "$1"
+}
+
+build_dir() {
+    # $1: dir path, $2: user, $3: group, $4: permission
+    $MKDIR -p "$1" 2>/dev/null; $CHOWN "$2.$3" "$1";$CHMOD "$4" "$1";
+}
+
+make_backup() {
+    # $1: file name, $2: extension for old file (optional)
+    file="$1"
+    ext="$2"
+    if [ -z $ext ]; then
+	ext="nocodex"
+    fi
+    backup_file="$1.$ext"
+    [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
+}
+
+todo() {
+    # $1: message to log in the todo file
+    echo -e "- $1" >> $TODO_FILE
+}
+
+die() {
+  # $1: message to prompt before exiting
+  echo -e "**ERROR** $1"; exit 1
+}
+
+substitute() {
+  # $1: filename, $2: string to match, $3: replacement string
+  # Allow '/' is $3, so we need to double-escape the string
+  replacement=`echo $3 | sed "s|/|\\\\\/|g"`
+  $PERL -pi -e "s/$2/$replacement/g" $1
+}
+
+##############################################
+# CodeX 2.8 to 3.0 migration
+##############################################
+echo "Migration script from CodeX 2.8 data to CodeX 3.0"
+echo "This script must be run AFTER a clean CodeX 3.0 installation, and copy of CodeX 2.8 data."
+echo "Read migration_30.README.FIRST for details"
+echo
+yn="y"
+read -p "Continue? [yn]: " yn
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+##############################################
+# Check the machine is running CodeX 3.0
+#
+OLD_CX_RELEASE='3.0'
+yn="y"
+$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
+if [ $? -ne 0 ]; then
+    $CAT <<EOF
+This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
+script may cause data loss or corruption.
+EOF
+read -p "Continue? [yn]: " yn
+else
+    echo "Found CodeX ${OLD_CX_RELEASE} installed... good!"
+fi
+
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+##############################################
+# Check that all command line tools we need are available
+#
+for cmd in `echo ${CMD_LIST}`
+do
+    [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
+done
+
+##############################################
+# Check we are running on RHEL 4
+#
+RH_RELEASE="4"
+yn="y"
+$RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
+if [ $? -eq 1 ]; then
+    cat <<EOF
+This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
+script may cause data loss or corruption.
+EOF
+read -p "Continue? [yn]: " yn
+else
+    echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
+fi
+
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+$RM -f $TODO_FILE
+todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
+
+##############################################
+# Stop some services before upgrading
+#
+echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
+$SERVICE crond stop
+$SERVICE apache stop
+$SERVICE httpd stop
+$SERVICE mysqld stop
+$SERVICE sendmail stop
+$SERVICE postfix stop
+$SERVICE mailman stop
+$SERVICE smb stop
+
+
+
+
+################################################################################
 
 Various Notes concerning CodeX 2.8 to 3.0 upgrade.
 
 
 Done in 2.8 support branch:
-- copy new backup_job in /home/tools
-- add sys_default_trove_cat in local.inc
 - redirect commit-email.pl to /dev/null
 
 
 TODO in migration_30
-- when moving httpd to httpd_28, don t forget to move the '.subversion' directory back
 - Convert BDB to FSFS?
 - /usr/local/bin/log_accum and commit_prep called from CVS hooks... commit-email called from SVN post-commit. -> create links or update?
-
-RHEL4 Testing:
-
-/usr/sbin/groupadd -g "104" sourceforge
-/usr/sbin/groupadd -g "96" ftpadmin
-/usr/sbin/useradd  -c 'Owner of CodeX directories' -M -d '/home/httpd' -p "$1$h67e4niB$xUTI.9DkGdpV.B65r1NVl/" -u 104 -g 104 -s '/bin/bash' -G ftpadmin sourceforge
-
-don t need perl-CGI
-'mysql' service is now called 'mysqld' -> update install guide.
-remove --force and --nodeps?
-
-
-[root@malaval RPMS]# ls -Za /home/httpd
-drwxrwxr-x  sourcefo sourcefo root:object_r:user_home_dir_t    .
-drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
--rw-------  sourcefo sourcefo user_u:object_r:user_home_t      .bash_history
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        cgi-bin
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        documentation
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        plugins
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        SF
-drwxr-xr-x  sourcefo sourcefo root:object_r:user_home_t        site-content
-
-
-chcon -R -h -t httpd_sys_content_t /home/httpd
-
-[root@malaval RPMS]# ls -Za /home/httpd
-drwxrwxr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t .
-drwxr-xr-x  root     root     system_u:object_r:home_root_t    ..
--rw-------  sourcefo sourcefo user_u:object_r:httpd_sys_content_t .bash_history
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t cgi-bin
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t documentation
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t plugins
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t SF
-drwxr-xr-x  sourcefo sourcefo root:object_r:httpd_sys_content_t site-content
-
-
-[root@malaval RPMS]# ls -Za /home/ftp/codex/
-drwxr-xr-x  root     root     root:object_r:user_home_t        .
-drwxr-xr-x  root     root     root:object_r:user_home_dir_t    ..
-
-chcon -R -h -t httpd_sys_content_t /home/ftp/codex/
-
-
-PHPMyAdmin:
-[root@malaval scripts]# ls -Z /var/lib/php
-drwxrwx---  root     apache   system_u:object_r:httpd_var_run_t session
-[root@malaval scripts]# chmod 777 /var/lib/php/session
+- /etc/aliases.codex: /home/mailman/mail/mailman
+- mailman public archive links to private...
+- server update plugin instanciation at install time...
 
 Add question: do you wish to use HTTPS
 -> ssl.conf
@@ -68,27 +209,12 @@ Add question: do you wish to use HTTPS
 -> generate certificate (optional)
 
 
-
-chcon -R -h -t httpd_sys_content_t /home/groups
-chcon -R -h -t httpd_sys_content_t /home/sfcache
-chcon -R -h -t httpd_sys_content_t /etc/codex
-
-
-RPMs mandatory:
-#mrtg ?
-# munin needs perl-DateManip and sysstat + external RPMs: perl-HTML-Template perl-Net-Server rrdtool perl-rrdtool
-# cp /usr/share/doc/munin-1.2.4/README-apache-cgi /etc/httpd/conf.d/munin.conf + edit to add alias
-# /usr/sbin/munin-node-configure -> useless
-Add option: install munin?
-
-
-
 ##############################################
 # Database Structure and initvalues upgrade
 #
 echo "Updating the CodeX database..."
 
-$SERVICE mysql start
+$SERVICE mysqld start
 sleep 5
 
 pass_opt=""
@@ -103,7 +229,6 @@ done
 
 echo "Starting DB update for CodeX 3.0. This might take a few minutes."
 
-echo " DB - Fieldset update"
 $CAT <<EOF | $MYSQL $pass_opt sourceforge
 
 ###############################################################################
@@ -206,18 +331,58 @@ INSERT INTO permissions_values (permission_type,ugroup_id,is_default) values ('N
 
 ALTER TABLE artifact_field MODIFY value_function TEXT;
 
+###############################################################################
+# name of plugin is unique
+#
+
+ALTER TABLE plugin ADD UNIQUE ( name );
+
+
+###############################################################################
+# typo in trove_cat
+#
+
+UPDATE trove_cat SET shortname = 'communications' WHERE shortname = 'coomunications';
+
+
+###############################################################################
+# Old document manager is now legacy
+#
+
+UPDATE service SET is_active = 0, is_used = 0 WHERE group_id = 100 AND short_name = 'doc';
+REPLACE INTO plugin (name, available) VALUES ('docman', '1');
+
+###############################################################################
+# Active plugin serverupdate
+#
+INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
+
+###############################################################################
+# Add permissions for 'stage' field
+#
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','1#30',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','1#30',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','2#15',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#15',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','3#12',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','3#12',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#11',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','4#11',3);
+
+
 EOF
 
 
 ################################################################################
-echo " Upgrading 2.8 if needed"
+echo " DB - Fieldset update"
 
 $PERL <<'EOF'
 use DBI;
 use Sys::Hostname;
 use Carp;
 
-require "/home/httpd/SF/utils/include.pl";  # Include all the predefined functions
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
 
 &load_local_config();
 
@@ -252,15 +417,163 @@ while (my ($group_artifact_id) = $result_trackers->fetchrow()) {
 EOF
 
 echo " DB - Artifact details Field and Follow-up comments update"
-$CAT <<EOF | $MYSQL $pass_opt sourceforge
-
 ################################################################################
 # artifact_history: updating values
 #
+$CAT <<EOF | $MYSQL $pass_opt sourceforge
+
 UPDATE artifact_history 
 SET field_name='comment' 
 WHERE field_name='details' 
 
 EOF
 
+
+################################################################################
+# PLUGIN Docman
+# Insert CodeX documentation in Project 1 docman
+#
+
+$PERL <<'EOF'
+use DBI;
+use Sys::Hostname;
+use Carp;
+
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
+
+&db_connect;
+
+#Does the plugin already installed ?
+$result_docman = $dbh->prepare("SHOW TABLES LIKE 'plugin_docman_item'");
+$result_docman->execute();
+if ($result_docman->fetchrow()) {
+    
+    #Docman is already installed
+    $permissions = $dbh->prepare("INSERT INTO permissions(permission_type, ugroup_id, object_id) VALUES ('PLUGIN_DOCMAN_READ', 1, ?), ('PLUGIN_DOCMAN_MANAGE', 1, ?)");
+    $insert = $dbh->prepare("INSERT INTO plugin_docman_item (parent_id, group_id, title, description,           create_date,           update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) 
+                                                     VALUES (        ?,        1,     ?,           ?, UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()),        NULL,     101,      0,                 0,    ?,         ?,        ?,         ?,             NULL);");
+    $result_root = $dbh->prepare("SELECT item_id FROM plugin_docman_item WHERE group_id = 1 AND parent_id = 0");
+    $result_root->execute();
+    my($root) = $result_root->fetchrow();
+    if (!$root) {
+        # create a root
+        $insert->execute(0, 'Documentation du projet', '', 0, 1, undef, undef);
+        $id = $dbh->{q{mysql_insertid}};
+        $permissions->execute($id, $id);
+        $root = $id;
+    }
+    $insert->execute($root, 'English Documentation', '', 0, 1, undef, undef);
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $en = $id;
+    
+    $insert->execute($en, 'CodeX User Guide', 'A comprehensive guide describing all the CodeX services and how to use them in an optimal way. Also provides a lot of useful tips and guidelines to manage your CodeX project efficiently.', -1, 1, undef, undef);
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $cug = $id;
+    $insert->execute($cug, 'PDF Version', '', -1, 3, '/documentation/user_guide/pdf/en_US/CodeX_User_Guide.pdf', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cug, 'Multi-page HTML Version', '', 1, 3, '/documentation/user_guide/html/en_US/index.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cug, 'Single-page HTML (2.7 MB) Version', '', 2, 3, '/documentation/user_guide/html/en_US/CodeX_User_Guide.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    
+    $insert->execute($en, 'Command-Line Interface', 'A comprehensive guide describing all the functions of the CodeX Command-Line Interface.', 1, 1, undef, undef);
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $cli = $id;
+    $insert->execute($cli, 'PDF Version', '', -3, 3, '/documentation/cli/pdf/en_US/CodeX_CLI.pdf', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cli, 'Multi-page HTML Version', '', -2, 3, '/documentation/cli/html/en_US/index.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cli, 'Single-page HTML Version', '', 0, 3, '/documentation/cli/html/en_US/CodeX_CLI.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    
+    $insert->execute($root, 'Documentation en français', '', 1, 1, undef, undef);
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $fr = $id;
+    
+    $insert->execute($fr, 'Guide de l\'Utilisateur CodeX', 'Un guide complet décrivant tous les services de CodeX et comment les utiliser de manière optimale. Fournit également de nombreuses astuces et explications pour gérer efficacement votre projet CodeX.', -1, 1, undef, undef);
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $cug = $id;
+    $insert->execute($cug, 'Version PDF', '', -1, 3, '/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cug, 'Version HTML multi-pages', '', 1, 3, '/documentation/user_guide/html/fr_FR/index.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cug, 'Version HTML une page (4,2 Mo)', '', 2, 3, '/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    
+    $insert->execute($fr, 'Interface de Commande en Ligne', 'Un guide complet décrivant toutes les fonctions de l\'Interface de Commande en Ligne de CodeX.', 0, 1, undef, undef);
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $cli = $id;
+    $insert->execute($cli, 'Version PDF', '', 3, 3, '/documentation/cli/pdf/fr_FR/CodeX_CLI.pdf', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cli, 'Version HTML multi-pages', '', 4, 3, '/documentation/cli/html/fr_FR/index.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+    $insert->execute($cli, 'Version HTML une page', '', 5, 3, '/documentation/cli/html/fr_FR/CodeX_CLI.html', '');
+    $id = $dbh->{q{mysql_insertid}};
+    $permissions->execute($id, $id);
+} else {
+    #Docman must be installed
+    `$ENV{MYSQL} -h $sys_dbhost -u $sys_dbuser $sys_dbname --password=$sys_dbpasswd < $ENV{INSTALL_DIR}/plugins/docman/db/install.sql`
+}
+EOF
+
+################################################################################
+# install PLUGIN serverupdate
+#
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+
 echo "End of main DB upgrade"
+
+
+
+###############################################################################
+# Run 'analyse' on all MySQL DB
+echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
+mysqlcheck -Aao $pass_opt
+
+
+
+##############################################
+# Restarting some services
+#
+echo "Starting crond and apache..."
+$SERVICE crond start
+$SERVICE httpd start
+$SERVICE sendmail start
+$SERVICE mailman start
+$SERVICE smb start
+
+
+
+todo "If you have custom themes, in stylesheets, please :"
+todo " - replace horitontal-align by text-align"
+todo " - add the rule"
+todo "        img { border:none; }"
+todo "-----------------------------------------"
+todo "This TODO list is available in $TODO_FILE"
+
+
+# End of it
+echo "=============================================="
+echo "Migration completed succesfully!"
+$CAT $TODO_FILE
+
+exit 1;
+
+
