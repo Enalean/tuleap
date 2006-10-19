@@ -565,6 +565,7 @@ todo "If you have custom themes, in stylesheets, please :"
 todo " - replace horitontal-align by text-align"
 todo " - add the rule"
 todo "        img { border:none; }"
+todo "Move your document from old docman to new one for project #1"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
