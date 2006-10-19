@@ -2,7 +2,7 @@
 // display.php: fetch page or get default content
 rcs_id('$Id$');
 
-require_once('lib/Template.php');
+require_once(PHPWIKI_DIR."/lib/Template.php");
 
 /**
  * Extract keywords from Category* links on page. 
@@ -72,6 +72,7 @@ function actionPage(&$request, $action) {
 }
 
 function displayPage(&$request, $template=false) {
+    global $pv;
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
     $page = $request->getPage();
@@ -100,18 +101,28 @@ function displayPage(&$request, $template=false) {
                                        split_pagename($p . SUBPAGE_SEPARATOR)));
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
+	if (!$pv){ // Here we add Baklinks within pagenames
         $backlink = HTML::a(array('href' => WikiURL($pagename,
                                                     array('action' => _("BackLinks"))),
                                   'class' => 'backlinks'),
                             split_pagename($last_page));
         $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
         $pagetitle->pushContent($backlink);
+	} else {
+	$pageheader = HTML::h1($pagename); // Delete the Backlink from the page title
+					// because we are viewing in printer versions mode
+        }
     } else {
+        if (!$pv){ // Here also, we add Baklinks within pagenames
         $pagetitle = HTML::a(array('href' => WikiURL($pagename,
                                                      array('action' => _("BackLinks"))),
                                    'class' => 'backlinks'),
                              $splitname);
         $pagetitle->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+        } else { 
+        $pageheader = HTML::h1($pagename); // Delete the Backlink from the page title
+					// because we are viewing in printer versions mode
+        }
         if ($request->getArg('frame'))
             $pagetitle->setAttr('target', '_top');
     }

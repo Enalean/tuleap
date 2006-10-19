@@ -1,8 +1,7 @@
 <?php //-*-php-*-
 rcs_id('$Id$');
 
-require_once("lib/ErrorManager.php");
-
+require_once(PHPWIKI_DIR."/lib/ErrorManager.php");
 
 /** An HTML template.
  */
