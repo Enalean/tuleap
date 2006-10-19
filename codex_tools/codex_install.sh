@@ -264,9 +264,7 @@ build_dir /home/users codexadm codexadm 775
 build_dir /home/groups codexadm codexadm 775
 
 # home directories
-#build_dir /home/dummy dummy dummy 700
 build_dir /home/codexadm codexadm codexadm 700
-build_dir /home/codexadm/.subversion codexadm codexadm 700
 
 # data dirs
 build_dir /var/lib/codex codexadm codexadm 700
@@ -332,7 +330,6 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
 $CHCON -R -h -t httpd_sys_content_t /usr/share/codex
 $CHCON -R -h -t httpd_sys_content_t /etc/codex
 $CHCON -R -h -t httpd_sys_content_t /var/lib/codex
-$CHCON -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 $CHCON -R -h -t httpd_sys_content_t /home/groups
 $CHCON -h -t httpd_sys_content_t /svnroot
 $CHCON -h -t httpd_sys_content_t /cvsroot
@@ -669,6 +666,9 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 # Make sure SELinux contexts are valid
 chcon -R -h -t httpd_sys_content_t /usr/share/codex
 
+# Create .subversion directory in codexadm home dir.
+su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm &
+
 
 todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
 todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codex/documentation/cli/xml/ParametersLocal.dtd"
@@ -901,6 +901,10 @@ cd /usr/lib/codex/bin
 $CHOWN codexadm.codexadm commit-email.pl
 $CHMOD 755 commit-email.pl
 #$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x) NG: useless? and issue with SELinux
+
+
+# Set proper SELinux context on codexadm .subversion directory: it should be created now :-)
+$CHCON -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
