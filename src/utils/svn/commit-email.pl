@@ -487,6 +487,7 @@ else
     $dirlist = join(' ', @dirschanged);
   }
 
+$dirlist =~ s/\n//;
 
 ######################################################################
 # Assembly of log message.
