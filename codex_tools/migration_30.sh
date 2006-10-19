@@ -509,6 +509,31 @@ if ($result_docman->fetchrow()) {
 }
 EOF
 
+
+################################################################################
+# Install docman for projects that do not have documents
+# 
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+UPDATE service
+SET is_used = 0, is_active = 0
+WHERE group_id NOT IN (
+      SELECT DISTINCT (group_id)
+      FROM doc_groups, doc_data
+      WHERE doc_groups.doc_group = doc_data.doc_group
+  )
+  AND short_name = 'doc';
+
+UPDATE service
+SET is_used = 1, is_active = 1
+WHERE group_id NOT IN (
+      SELECT DISTINCT (group_id)
+      FROM doc_groups, doc_data
+      WHERE doc_groups.doc_group = doc_data.doc_group
+  )
+  AND short_name = 'docman';
+EOF
+
 ################################################################################
 # install PLUGIN serverupdate
 #
