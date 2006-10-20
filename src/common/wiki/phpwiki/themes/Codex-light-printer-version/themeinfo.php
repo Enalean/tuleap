@@ -7,7 +7,7 @@ rcs_id('$Id: themeinfo.php 2085 2005-09-28 14:44:54Z nterray $');
 
 require_once('lib/Theme.php');
 
-$Theme = new Theme('CodeX');
+$Theme = new Theme('Codex-light-printer-version');
 
 // CSS file defines fonts, colors and background images for this
 // style.  The companion '*-heavy.css' file isn't defined, it's just
