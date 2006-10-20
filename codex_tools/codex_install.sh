@@ -816,9 +816,6 @@ mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
 
 EOF
 
-# Run newaliases
-/usr/bin/newaliases
-
 # Subscribe codex-admin to this ML
 echo \"codex-admin@$sys_default_domain\" | /usr/lib/mailman/bin/add_members -r - mailman
 
@@ -970,19 +967,19 @@ fi
 # DNS Configuration
 #
 todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
-todo "- update /var/named/codex.zone - replace all words starting with %%"
-todo "- cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
-todo "- make sure the file is readable by 'other':"
-todo "  chmod o+r /var/named/chroot/var/named/codex_full.zone"
-todo "- edit /etc/named.conf :"
-todo "   - add DNS forwarders"
-todo "   - make sure the dns cache file exists (or 'touch' it)"
-todo "   - add at the end of the file (before the include):"
+todo "    update /var/named/codex.zone - replace all words starting with %%, and copy it:"
+todo "      > cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
+todo "    make sure the file is readable by 'other':"
+todo "      > chmod o+r /var/named/chroot/var/named/codex_full.zone"
+todo "    edit /etc/named.conf :"
+todo "      add DNS forwarders"
+todo "      make sure the dns cache file exists (or 'touch' it)"
+todo "      add at the end of the file (before the include):"
 todo "zone \"$sys_default_domain\" {"
 todo "          type master;"
 todo "          file \"codex_full.zone\";"
 todo "};"
-todo "- start 'named' service (or reboot)"
+todo "    start 'named' service (or reboot)"
 
 ##############################################
 # Crontab configuration
@@ -1258,13 +1255,16 @@ $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex
 ##############################################
 # End of installation
 #
-todo "If you are behind proxy, then you need to configure the file /home/codexadm/.subversion/servers to identify your proxy"
-todo "To enable the subversion update, type the following commands:"
-todo " cd /usr/share/codex/"
-todo " svn status -u --username <your_login>"
-todo "Accept permanently the certificate, and type your password."
+todo "If you are behind a proxy, then you need to configure the file "
+todo "   /home/codexadm/.subversion/servers to declare your proxy"
+todo "   To enable the subversion update, type the following commands (as codexadm):"
+todo "     cd /usr/share/codex/"
+todo "     svn status -u --username <your_login_on_partners>"
+todo "   Accept the certificate permanently, and type in your password."
 
-todo "Project web site CGIs are currently disabled. If you want to use them, you should install the custom httpd-suexec RPM provided (e.g. 'rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm')."
+todo "Project web site CGIs are currently disabled. If you want to use them, you"
+todo "   should install the custom httpd-suexec RPM provided "
+todo "   (e.g. 'rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm')."
 todo "To customize the network gallery, copy /usr/share/codex/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codex/bin/cvssh, etc.)"
