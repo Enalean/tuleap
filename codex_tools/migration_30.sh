@@ -582,6 +582,9 @@ do
    ci -q -m"CodeX 3.0 modifications" commitinfo
    co -q commitinfo
    $CHOWN codexadm.$projname commitinfo*
+   # Create cvs lock dir if it does not exist
+   $MKDIR -p /var/lock/cvs/$projname
+   $CHMOD 0777 /var/lock/cvs/$projname
 done
 
 echo "- CVS loginfo files"
