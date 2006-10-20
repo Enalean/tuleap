@@ -306,7 +306,10 @@ if( isset($submit) ) {
 		<TD>
 <?php
 	$dirhandle = @opendir($ftp_incoming_dir);
-
+	//set variables for news template 
+	$url = get_server_url()."/file/showfiles.php?group_id=".$group_id;
+	$relname = $Language->getText('file_admin_editreleases','relname');	
+	
 	echo '<SELECT NAME="file_name">\n';
 	echo '	<OPTION VALUE="qrs_newfile">'.$Language->getText('file_admin_qrs','select_file').'</OPTION>';
 	//iterate and show the files in the upload directory
@@ -367,6 +370,22 @@ if( isset($submit) ) {
 			<TEXTAREA NAME="release_changes" ROWS="7" COLS="50"></TEXTAREA>
 		</TD>
 	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<B><?php echo $Language->getText('file_admin_editreleases','subject'); ?>:</B>
+		</TD>
+		<TD>
+			<INPUT TYPE="TEXT" NAME="release_news" VALUE="<?php echo $Language->getText('file_admin_editreleases','file_news_subject',$relname) ?>" SIZE="53" MAXLENGTH="60">
+		</TD>
+	</TR>	
+	<TR>
+		<TD VALIGN="TOP">
+			<B><?php echo $Language->getText('file_admin_editreleases','details'); ?>:</B>
+		</TD>
+		<TD>
+			<TEXTAREA NAME="release_news" ROWS="7" COLS="50"><?php echo $Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)) ?></TEXTAREA>
+		</TD>
+	</TR>	
 	<TR>
 		<TD COLSPAN="2" ALIGN="CENTER">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
