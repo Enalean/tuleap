@@ -539,7 +539,7 @@ EOF
 ################################################################################
 # install PLUGIN serverupdate
 #
-$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL $pass_opt codex 
 
 echo "End of main DB upgrade"
 
