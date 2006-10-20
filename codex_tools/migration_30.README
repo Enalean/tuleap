@@ -27,43 +27,49 @@ re-installation of the operating system.
 
 Now, here are the step-by-step instructions for upgrading:
 
-* If you have custom code running in /home/httpd, make a diff patch to keep your specific code. 
-  Since the 'SF' dir is renamed to 'src', you can convert the string on the fly to simplify the merge process:
+* If you have custom code running in /home/httpd, make a diff patch to keep your
+  specific code. 
+  Since the 'SF' dir is renamed to 'src', you can convert the string on the fly 
+  to simplify the merge process:
   > svn diff -c home/httpd | sed 's/SF/src/' > backup_dir/mycodex.patch
 
 * Make a backup of your data
-  Please use "tar" or a similar command that keeps the owner, group and permissions of each file.
+  Please use "tar" or a similar command that keeps the owner, group and permis-
+  sions of each file.
   Ex:
-  > tar cvfz backup_dir/codex.2.8.tgz /etc/codex /home /home1 /cvsroot /svnroot 
-
+    > tar cvfz backup_dir/codex.2.8.tgz /etc/codex /home /home1 /cvsroot /svnroot /var/named/codex.zone
 
 * Make a mysql backup of the 'sourceforge' database (use mysqldump).
   Ex:
   > mysqldump -q -u sourceforge -p sourceforge >  backup_dir/codex.2.8.sql 
 
 * Make sure all your backup files are copied on another machine!
-  If you have other files on the machine, don't forget to also make a copy (custom
-  administration scripts, non-CodeX data, etc.)
+  If you have other files on the machine, custom scripts, non-CodeX data, etc.,
+  don't forget to also make a copy (look e.g. in /root, /usr/local, etc.)
 
 * Install RHEL 4.4 on your server, erasing all previous data.
-  When partitionning the disk, please choose a large partition for /var/ since it will
-  contain all CodeX data (CVS, subversion, documents, files, etc.)
+  When partitionning the disk, please choose a large partition for /var/ since 
+  it will contain all CodeX data (CVS, subversion, documents, files, etc.)
 
 * Install CodeX 3.0
-  Run codex_install.sh on the CodeX CD, and follow the instructions. 
-  Please make sure that you use the same passwords, domain names, IP address, etc. as on
-  the previous installation. Modifying the machine name is not in the scope of this document.
-  Please Configure CodeX 3.0 properly (/etc/httpd/conf/httpd.conf, /etc/codex/conf/local.inc, etc.),
-  so that the server can be accessed with a web browser.
+  Run "codex_install.sh" on the CodeX CD, and follow the instructions. 
+  Please make sure that you use the same passwords, domain names, IP address, 
+  etc. as on the previous installation. Modifying the machine name is not in the
+  scope of this document.
+  Please Configure CodeX 3.0 properly (/etc/httpd/conf/httpd.conf, 
+  /etc/codex/conf/local.inc, etc.), so that the server can be accessed with a 
+  web browser.
   ***DON'T*** create new users or projects!
 
 * Restore your backed-up data. 
-  Be carefull to use a mechanism that keeps the context (owner, group, permissions of files).
+  Be carefull to use a mechanism that keeps the context (owner, group, permis-
+  sions of files).
   For instance, you can use "tar" or "cp -a" to preserve the context.
   Here is a detailed list of what must be restored:
 
   * in /etc/codex
-    Restore documentation, plugins, site-content, themes and CODEX_LICENSE_ACCEPTED in /etc/codex/ (DON'T COPY the conf/ directory)
+    Restore documentation, plugins, site-content, themes and 
+    CODEX_LICENSE_ACCEPTED in /etc/codex/ (DON'T COPY the conf/ directory)
 
       /etc/codex/documentation/*          ---> /etc/codex/documentation/
       /etc/codex/plugins/*                ---> /etc/codex/plugins/
@@ -73,59 +79,88 @@ Now, here are the step-by-step instructions for upgrading:
 
   * from /home
     * restore /home/users
+        /home/users/*       ---> /home/users/
     * restore /home/groups
+        /home/groups/*      ---> /home/group/
     * Restore /home/data/wiki in /var/lib/codex/wiki
+        /home/data/wiki/*   ---> /var/lib/codex/wiki/
     * restore /home/ftp in /var/lib/codex/ftp
+        /home/ftp/*         ---> /var/lib/codex/ftp/
     * restore /home/log in /var/log/codex
-    * You don't need to restore /home/httpd but it is time to restore your local modifications saved in the patch file (step 1)
-   
-      /home/users/*       ---> /home/users/
-      /home/groups/*      ---> /home/group/
-      /home/data/wiki/*   ---> /var/lib/codex/wiki/
-      /home/ftp/*         ---> /var/lib/codex/ftp/
-      /home/log/* ---> /var/log/codex/.
-      > cd /usr/share/codex; patch -p0 <  mycodex.patch
-      ... then fix the potential conflicts
+        /home/log/* ---> /var/log/codex/.
+    * You don't need to restore /home/httpd but it is time to restore your local
+      modifications saved in the patch file (step 1)
+        > cd /usr/share/codex; patch -p0 <  mycodex.patch
+        ... then fix the potential conflicts
 
-  * /cvsroot/ and /svnroot/ are now in /var/lib/codex (with a
-    link from the '/' dir)
-
+  * /cvsroot/ and /svnroot/ should be restored in /var/lib/codex (there is still
+    a link from the '/' dir)
       /cvsroot/*  ---> /var/lib/codex/cvsroot/.
       /svnroot/*  ---> /var/lib/codex/svnroot/.
 
-
-  * /etc/skel_codex may contain custom environment scripts for user home directories.
+  * /etc/skel_codex may contain custom environment scripts for user home 
+    directories.
     If you have created files in this directory, you can restore them.
       /etc/skel_codex/*   ---> /etc/skel_codex/.
 
-  * /var/named/codex.zone   ?????????? not necessary if DNS is well configured ?.????????????????????
+  * /var/named/codex.zone should be restored at the same location
+      /var/named/codex.zone  ---> /var/named/codex.zone
 
-  * /home/mailman/
+  * /home/mailman/ does not exist any longer. You should copy the appropriate
+    data to their new places:
+      /home/mailman/lists/*               ---> /var/lib/mailman/lists/
+      /home/mailman/archives/private/*    ---> /var/lib/mailman/archives/private/
 
-      /home/mailman/lists/*               ---> /var/lib/mailman/lists/.
-      /home/mailman/archives/private/*    ---> /var/lib/mailman/archives/private/.
+ * mysql backup is now in /var/lib/codex/backup/mysql, and binary log files are
+   now in /var/lib/mysql.
+      E.g.:
+      /cvsroot/.mysql_backup/*   ---> /var/lib/codex/backup/mysql
 
- * Check that the mailman queue is empty. If not ?????????????????????
+ * restore subversion backup in /var/lib/codex/backup/subversion
+      E.g.:
+      /home1/subversion_backup/* ---> /var/lib/codex/backup/subversion/
 
-  * If you had custom scripts in /home/httpd/cgi-bin/ (except viewcvs), you can restore
-    them in /var/www/cgi-bin
-
+ * If you had custom scripts in /home/httpd/cgi-bin/ (except viewcvs), you can
+   restore them in /var/www/cgi-bin
       /home/httpd/cgi-bin/*    --->  /var/www/cgi-bin/.
 
-  6.15) mysql backup in /var/lib/codex/backup/mysql/.    ????????? Where is the mysql backup file ???????????
-        subversion backup in /var/lib/codex/backup/subversion/.    ????????? Where is the subversion backup file ???????????
+ * Restore other scripts or data (e.g. from /usr/local, /home/tools, /root, 
+   etc.) if needed.
 
-  6.16) restore your own scripts (e.g. in /home/tools/ /usr/local/bin/, etc ...) where you want.
+ * Last, to recover your subversion setting, you can also restore the 
+   .subversion directory:
+      /home/httpd/.subversion -> /home/codexadm
 
-  6.17) /var/lib/mysql/   ------> .????????????????? A VOIR AVEC NICOLAS ?????????????????
 
-  6.18) /home/httpd/.subversion -> /home/codexadm
+* Database restore from CodeX 2.8
+  You need to recover the previous database:
+  * backup the new database (not really needed, but who knows...)
+    > mysqldump -q -u codexadm -p codex > /root/codex.3.0.empty.sql
+  * Delete the new database, and create an empty one:
+    > mysql -u codexadm -p
+        > drop database codex;
+        > create database codex;
+        > exit;
+  * Restore the database from CodeX 2.8
+    > mysql -u codexadm -p codex < backup_dir/codex.2.8.sql
 
-7) Database migration
-> mysqldump -q -u codexadm -p codex > /root/codex.3.0.empty.sql
-> mysql -u codexadm -p
-drop database codex;
-create database codex;
-exit;
 
-> mysql -u codexadm -p codex < /root/sf.tarisson.sql
+* Database and file migration to CodeX 3.0:
+  Last step of the migration: run the migration_30.sh script from the CodeX CD.
+
+
+You are all set!
+
+Please verify that the DNS is running properly (check e.g. project web sites or
+subversion access).
+Also verify that emails and mailing lists work as expected.
+In case of problem, please refer to either the DNS or Sendmail configuration 
+instructions from the CodeX Installation Guide.
+
+Enjoy CodeX 3.0
+
+
+-- The Xerox CodeX team
+
+Questions? -> codex-devel@partners.xrce.xerox.com
+Problems?  -> https://partners.xrce.xerox.com/tracker/?group_id=120&atid=199
