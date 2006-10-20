@@ -1,89 +1,116 @@
-Migration procedure : CodeX 2.8 to CodeX 3.0
+CodeX 3.0 Migration README file
+===============================
 
-1) make a diff patch to keep your local specific code. 
+Welcome to CodeX 3.0.
 
-svn diff [-c] home/httpd | sed 's/SF/src/' > mybackup_directory/diff_patch.txt
+This document explains how to upgrade from a CodeX 2.8 server on Red Hat 
+Enterprise Linux 3 (RHEL3), to CodeX 3.0 on RHEL4.
 
-2) Make a backup of your data
+Here is a brief summary of the process:
+- backup the data of the main server, to another server
+- format disks and install RHEL4
+- install CodeX 3.0 
+- copy the backed-up files and DB to their new place
+- run the upgrade script...
+et voilà!
 
-Please use tar to keep the owner and group owner.
+RedHat recommends a full re-installation of RHEL4, and not un upgrade from RHEL3
+to RHEL4:
+"Although upgrades are supported from Red Hat Enterprise Linux versions 2.1 and 3 
+by the Red Hat Enterprise Linux family, you are more likely to have a consistent
+experience by backing up your data and then installing this release of Red Hat
+Enterprise Linux 4 over your previous Red Hat Enterprise Linux installation."
 
-tar cvfz codex.2.8.tgz /etc/ /var/ /home/ /usr/lib/codex/ /usr/share/codex/ /usr/local/ ???????? A RAJOUTER ???????
+For this reason, the upgrade scenario for CodeX 3.0 on RHEL4 also needs a full 
+re-installation of the operating system.
 
-3) Make a mysql backup (mysql dump)
 
-mysql dump .... ???? A VOIR AVEC NICOLAS T. ??????
+Now, here are the step-by-step instructions for upgrading:
 
-4) Install RHEL 4.4 on your server
+* If you have custom code running in /home/httpd, make a diff patch to keep your specific code. 
+  Since the 'SF' dir is renamed to 'src', you can convert the string on the fly to simplify the merge process:
+  > svn diff -c home/httpd | sed 's/SF/src/' > backup_dir/mycodex.patch
 
-5) Install CodeX 3.0
-Configure CodeX 3.0 properly (/etc/httpd/conf/httpd.conf, /etc/codex/conf/local.inc, etc.)
+* Make a backup of your data
+  Please use "tar" or a similar command that keeps the owner, group and permissions of each file.
+  Ex:
+  > tar cvfz backup_dir/codex.2.8.tgz /etc/codex /home /home1 /cvsroot /svnroot 
 
-6) Restore your data. 
 
-Be carefull to use a copy system that keep the context (owner and group owner)
-You can use tar or cp -a for preservong the context.
+* Make a mysql backup of the 'sourceforge' database (use mysqldump).
+  Ex:
+  > mysqldump -q -u sourceforge -p sourceforge >  backup_dir/codex.2.8.sql 
 
-  6.1) /etc/codex
+* Make sure all your backup files are copied on another machine!
+  If you have other files on the machine, don't forget to also make a copy (custom
+  administration scripts, non-CodeX data, etc.)
 
-Copy documentation, plugins, site-content, themes and CODEX_LICENSE_ACCEPTED in /etc/codex/ (DON'T COPY the conf/ directory)
+* Install RHEL 4.4 on your server, erasing all previous data.
+  When partitionning the disk, please choose a large partition for /var/ since it will
+  contain all CodeX data (CVS, subversion, documents, files, etc.)
 
-/etc/codex/documentation/*          ---> /etc/codex/documentation/.
-/etc/codex/plugins/*                ---> /etc/codex/plugins/.
-/etc/codex/site-content/*           ---> /etc/codex/site-content/. 
-/etc/codex/themes/*                 ---> /etc/codex/themes/.
-/etc/codex/CODEX_LICENSE_ACCEPTED   ---> /etc/codex/.
+* Install CodeX 3.0
+  Run codex_install.sh on the CodeX CD, and follow the instructions. 
+  Please make sure that you use the same passwords, domain names, IP address, etc. as on
+  the previous installation. Modifying the machine name is not in the scope of this document.
+  Please Configure CodeX 3.0 properly (/etc/httpd/conf/httpd.conf, /etc/codex/conf/local.inc, etc.),
+  so that the server can be accessed with a web browser.
+  ***DON'T*** create new users or projects!
 
-  6.2) /usr/local/bin
+* Restore your backed-up data. 
+  Be carefull to use a mechanism that keeps the context (owner, group, permissions of files).
+  For instance, you can use "tar" or "cp -a" to preserve the context.
+  Here is a detailed list of what must be restored:
 
-Nothing to do.
+  * in /etc/codex
+    Restore documentation, plugins, site-content, themes and CODEX_LICENSE_ACCEPTED in /etc/codex/ (DON'T COPY the conf/ directory)
 
-  6.3) /home/httpd
+      /etc/codex/documentation/*          ---> /etc/codex/documentation/
+      /etc/codex/plugins/*                ---> /etc/codex/plugins/
+      /etc/codex/site-content/*           ---> /etc/codex/site-content/.
+      /etc/codex/themes/*                 ---> /etc/codex/themes/
+      /etc/codex/CODEX_LICENSE_ACCEPTED   ---> /etc/codex/
 
-Nothing to do, but restore your local specific modification saved in the patch file (see 1) for details) ???????? EXPLIQUER MIEUX ??????????
+  * from /home
+    * restore /home/users
+    * restore /home/groups
+    * Restore /home/data/wiki in /var/lib/codex/wiki
+    * restore /home/ftp in /var/lib/codex/ftp
+    * restore /home/log in /var/log/codex
+    * You don't need to restore /home/httpd but it is time to restore your local modifications saved in the patch file (step 1)
+   
+      /home/users/*       ---> /home/users/
+      /home/groups/*      ---> /home/group/
+      /home/data/wiki/*   ---> /var/lib/codex/wiki/
+      /home/ftp/*         ---> /var/lib/codex/ftp/
+      /home/log/* ---> /var/log/codex/.
+      > cd /usr/share/codex; patch -p0 <  mycodex.patch
+      ... then fix the potential conflicts
 
-  6.4) /home/data/wiki
- 
-/home/data/wiki/*   ---> /var/lib/codex/wiki/.
+  * /cvsroot/ and /svnroot/ are now in /var/lib/codex (with a
+    link from the '/' dir)
 
-  6.5) /home/users and /home/groups
+      /cvsroot/*  ---> /var/lib/codex/cvsroot/.
+      /svnroot/*  ---> /var/lib/codex/svnroot/.
 
-/home/users/*   ---> /home/users/.
-/home/groups/*   ---> /home/group/.
 
-Be carefull to keep the context (owner and group)
+  * /etc/skel_codex may contain custom environment scripts for user home directories.
+    If you have created files in this directory, you can restore them.
+      /etc/skel_codex/*   ---> /etc/skel_codex/.
 
-  6.6) /cvsroot/ and /svnroot/
+  * /var/named/codex.zone   ?????????? not necessary if DNS is well configured ?.????????????????????
 
-/cvsroot/*  ---> /var/lib/codex/cvsroot/.
-/svnroot/*  ---> /var/lib/codex/svnroot/.
+  * /home/mailman/
 
-Be carefull to keep the context (owner and group)
+      /home/mailman/lists/*               ---> /var/lib/mailman/lists/.
+      /home/mailman/archives/private/*    ---> /var/lib/mailman/archives/private/.
 
-  6.7) /home/ftp/ 
+ * Check that the mailman queue is empty. If not ?????????????????????
 
-/home/ftp/*  ---> /var/lib/codex/ftp/.
+  * If you had custom scripts in /home/httpd/cgi-bin/ (except viewcvs), you can restore
+    them in /var/www/cgi-bin
 
-  6.8) /home/log/
-
-/home/log/* ---> /var/log/codex/.
-
-  6.9) /etc/skel_codex
-
-/etc/skel_codex/*   ---> /etc/skel_codex/.
-
-  6.10) /var/named/codex.zone   ?????????? not necessary if DNS is well configured ?.????????????????????
-
-  6.11) /home/mailman/
-
-/home/mailman/lists/*               ---> /var/lib/mailman/lists/.
-/home/mailman/archives/private/*    ---> /var/lib/mailman/archives/private/.
-
-  6.13) Check that the mailman queue is empty. If not ?????????????????????
-
-  6.14) /home/httpd/cgi-bin/
-
-/home/httpd/cgi-bin/*    --->  /var/www/cgi-bin/.
+      /home/httpd/cgi-bin/*    --->  /var/www/cgi-bin/.
 
   6.15) mysql backup in /var/lib/codex/backup/mysql/.    ????????? Where is the mysql backup file ???????????
         subversion backup in /var/lib/codex/backup/subversion/.    ????????? Where is the subversion backup file ???????????
@@ -95,10 +122,10 @@ Be carefull to keep the context (owner and group)
   6.18) /home/httpd/.subversion -> /home/codexadm
 
 7) Database migration
-mysqldump --opt -u codexadm -p codex > /root/codex.3.0.empty.sql
-mysql -u codexadm -p
+> mysqldump -q -u codexadm -p codex > /root/codex.3.0.empty.sql
+> mysql -u codexadm -p
 drop database codex;
 create database codex;
+exit;
 
-
-mysql -u codexadm -p codex < /root/sf.tarisson.sql
+> mysql -u codexadm -p codex < /root/sf.tarisson.sql
