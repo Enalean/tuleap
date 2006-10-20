@@ -259,15 +259,14 @@ $USERADD -c 'Dummy CodeX User' -M -d '/var/lib/codex/dumps' -u 103 -g 103 dummy
 # Build file structure
 
 build_dir $INSTALL_DIR codexadm codexadm 775
-build_dir $INSTALL_DIR/downloads codexadm codexadm 775
+#build_dir $INSTALL_DIR/downloads codexadm codexadm 775
 build_dir /home/users codexadm codexadm 775
 build_dir /home/groups codexadm codexadm 775
 
 # home directories
 build_dir /home/codexadm codexadm codexadm 700
-
 # data dirs
-build_dir /var/lib/codex codexadm codexadm 700
+build_dir /var/lib/codex codexadm codexadm 755
 build_dir /var/lib/codex/dumps dummy dummy 755
 build_dir /var/lib/codex/ftp root ftp 755
 #build_dir /var/lib/codex/ftp/bin ftpadmin ftpadmin 111
@@ -281,17 +280,18 @@ build_dir /var/lib/codex/backup codexadm codexadm 711
 build_dir /var/lib/codex/backup/mysql mysql mysql 770 
 build_dir /var/lib/codex/backup/mysql/old root root 700
 build_dir /var/lib/codex/backup/subversion root root 700
-
+build_dir /var/lib/codex/docman codexadm codexadm 700
+# log dirs
 build_dir /var/log/codex codexadm codexadm 755
 build_dir /var/log/codex/cvslogs codexadm codexadm 775
 build_dir /var/tmp/codex_cache codexadm codexadm 755
-
+# bin dirs
 build_dir /usr/lib/codex codexadm codexadm 755
 build_dir /usr/lib/codex/bin codexadm codexadm 755
-
+# config dirs
 build_dir /etc/skel_codex root root 755
 build_dir /etc/codex codexadm codexadm 755
-build_dir /etc/codex/conf codexadm codexadm 755
+build_dir /etc/codex/conf codexadm codexadm 700
 build_dir /etc/codex/documentation codexadm codexadm 755
 build_dir /etc/codex/documentation/user_guide codexadm codexadm 755
 build_dir /etc/codex/documentation/user_guide/xml codexadm codexadm 755
@@ -304,12 +304,11 @@ build_dir /etc/codex/site-content/fr_FR codexadm codexadm 755
 build_dir /etc/codex/site-content/fr_FR/others codexadm codexadm 755
 build_dir /etc/codex/themes codexadm codexadm 755
 build_dir /etc/codex/plugins codexadm codexadm 755
-build_dir /etc/codex/plugins/docman codexadm codexadm 700
+build_dir /etc/codex/plugins/docman codexadm codexadm 755
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
 build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
-
+# SCM dirs
 build_dir /var/run/log_accum root root 1777
-build_dir /var/lib/codex/docman codexadm codexadm 755
 build_dir /var/lib/codex/cvsroot codexadm codexadm 755
 build_dir /var/lib/codex/svnroot codexadm codexadm 755
 build_dir /var/lock/cvs root root 751
@@ -667,7 +666,7 @@ substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 chcon -R -h -t httpd_sys_content_t /usr/share/codex
 
 # Create .subversion directory in codexadm home dir.
-su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm &
+su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
 
 
 todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
