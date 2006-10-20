@@ -158,8 +158,7 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.8 to 3.0 run the migration script ./migration_30.sh 
-- Follow the instructions of the migration script
+- For an update from 2.8 to 3.0 please read carefully migration_30.README and follow the instructions.
 
 -- The CodeX Team
    <info@codex.xerox.com>
@@ -178,42 +177,49 @@ carefully. And get in touch with us at codex-contact@codex.xerox.com
 if you have questions.
 
 
-Major improvements of CodeX 2.8 over 2.6:
-- Field dependencies in trackers: Field dependencies allow you to link source 
-  field values to target field values. In other words, the values proposed to
-  a final user for a field will depend upon the value selected for another field.
-- New Reference system. With earlier versions of CodeX, it was possible to 
-  automatically create links in commit messages or artifact follow-ups by using
-  certain patterns: 'commit #123' to reference a CVS commit, 'rev #234' for 
-  subversion, or 'art #246' for an artifact. This made a direct link to the 
-  object. With CodeX 2.8, it is now possible to reference any kind of object
-  (documents, files, artifacts, revisions, external objects, etc.), and to
-  customize the list of recognized patterns per project.
-- new LDAP authentication mechanism. It is now provided as a plugin, which is a
-  contribution from ST.
-- Improved scalability and response time.
-- User guide is now available in French
-- Menus (e.g. 'admin') are only displayed if the user has enough permission to 
-  use them.
- 
+What's new in CodeX 3.0?
+
+- New Document Manager
+  The CodeX document manager has been completely rewritten. Now, it:
+  - can host an "unlimited" hierarchy of documents
+  - accepts files, wiki pages, URLs and embedded documents
+  - allows deletion, move
+  - enforces read/write/manage permissions, 
+  - allows document versioning and history access
+  - is more scalable
+  - has a nice javascript-based UI with multiple views
+  While new CodeX projects will immediately benefit from the new document
+  manager, existing projects will need to activate the tool in the project 
+  service administration page. Existing projects that had not used the 
+  legacy document manager now automatically have access to the new one.
+
+- SOAP API foundation in CodeX.
+  CodeX now offers SOAP API for programmatical access to your project data.
+  For the moment, only tracker access is available through this API.
+
+- Command-line client for CodeX
+  CodeX provides a command line script that allows project members to
+  consult or update tracker data. The tool and its documentation is available
+  from the CodeX welcome page.
+
+- An experimental server update mechanism is now provided to CodeX administrators
+  to help manage CodeX updates.
+
+- Tracker improvement: you may now group tracker fields in 'field sets', that
+  simplify tracker management and improve readability for complex trackers.
+  
+- Project templates: you may now create project templates with a specific configuration
+  (trackers, user groups, services, etc.). 
+  A project created with a specific template will inherit its configuration.
+
+- Platform update: CodeX now runs on Red Hat Enterprise Linux 4 and benefits
+  from many updated packages and improved security.
 
 Other changes:
-- Improved plugin architecture
-- File download popup is not mandatory any longer (see local.inc)
-- artifact status simplified: only 'open' and 'close' values allowed. Use the 
-  new 'stage' field to specify more info (new, analyzed, accepted, under 
-  implementation, etc.)
-- Subversion permission file improved: you may now use ugroups in your 
-  permissions.
-- CVS lockdir moved from /cvsroot/projectname/.lockdir to 
-  /var/lock/cvs/projectname
-- updated SVN backup script
-- allow anonymous access to wiki
+- survey manager has been improved
+- project news may now be private, i.e. only visible to project members
+- tracker fields may now be bound to multiple user groups
 - and many bugs fixed!
-
-Package Update:
-- Now install Subversion 1.2.3 (without BDB support) on new CodeX servers (do
-  not upgrade existing servers)
 
 -- The CodeX Team
    <info@codex.xerox.com>
