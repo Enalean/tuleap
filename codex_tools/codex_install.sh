@@ -304,7 +304,7 @@ build_dir /etc/codex/site-content/fr_FR codexadm codexadm 755
 build_dir /etc/codex/site-content/fr_FR/others codexadm codexadm 755
 build_dir /etc/codex/themes codexadm codexadm 755
 build_dir /etc/codex/plugins codexadm codexadm 755
-build_dir /etc/codex/plugins/docman codexadm codexadm 755
+build_dir /etc/codex/plugins/docman codexadm codexadm 700
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
 build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
 
