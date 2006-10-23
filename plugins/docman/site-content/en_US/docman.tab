@@ -248,6 +248,8 @@ plugin_docman	permission_write	Writer
 
 plugin_docman	redirect	<div style="text-align:center"><p>Document Manager updated</p><p>You will be redirected <a href="$1"> to the document manager</a>.</p></div>
 
+plugin_docman	roottitle_lbl_key	Project Documentation
+
 plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Document Manager
 
