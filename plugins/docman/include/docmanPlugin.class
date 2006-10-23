@@ -37,6 +37,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->_addHook('service_public_areas',              'service_public_areas',              false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -155,6 +156,16 @@ class DocmanPlugin extends Plugin {
         require_once('Docman.class');
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
         $controler->logsDaily($params);
+    }
+    
+    function service_public_areas($params) {
+        if ($params['project']->usesService('docman')) {
+            $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['group_id'] .'">' .
+                '<img src="'. $this->_getThemePath() .'/images/ic/text.png" />&nbsp;' .
+                $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
+                $GLOBALS['Language']->getText('plugin_docman', 'title') .
+                '</a>';
+        }
     }
     
     function process() {

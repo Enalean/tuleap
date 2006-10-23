@@ -458,6 +458,19 @@ if ($project->isActive()) {
 	print $Language->getText('include_project_home','anon_ftp_space').'</A>';
 }
 
+// ######################## Plugins
+
+$areas = array();
+$params = array('project' => &$project, 'areas' => &$areas);
+
+$em =& EventManager::instance();
+$em->processEvent('service_public_areas', $params);
+
+foreach($areas as $area) {
+    print '<HR SIZE="1" NoShade>';
+    print $area;
+}
+
 $HTML->box1_bottom();
 
 if ($project->usesNews()) {
