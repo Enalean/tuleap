@@ -248,6 +248,8 @@ plugin_docman	permission_write	Rédacteur
 
 plugin_docman	redirect	<div style="text-align:center"><p>Gestionnaire de documents mis à jour</p><p>Vous allez être redirigé <a href="$1">vers le gestionnaire de documents</a>.</p></div>
 
+plugin_docman	roottitle_lbl_key	Documentation du projet
+
 plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Gestionnaire de documents
 

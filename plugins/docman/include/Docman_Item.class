@@ -66,7 +66,7 @@ class Docman_Item {
 
     var $title;
     function setTitle($title) { 
-        $this->title = $title; 
+        $this->title = strpos($title, '_lbl_key') !== FALSE ? $GLOBALS['Language']->getText('plugin_docman', $title) : $title;
     }
     function getTitle() { 
         return $this->title; 

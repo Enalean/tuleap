@@ -710,7 +710,7 @@ class DocmanActions extends Actions {
             $this->_controler->feedback->log('error', 'Docman already installed.');
             $this->_controler->view = 'DocmanError';
         } else {
-            if ($item_factory->createRoot($request->get('group_id'), $GLOBALS['Language']->getText('plugin_docman', 'title'))) {
+            if ($item_factory->createRoot($request->get('group_id'), 'roottitle_lbl_key')) {
                 //{{{ Set default permissions
                 $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
                 $root =& $item_factory->getRoot($request->get('group_id'));
