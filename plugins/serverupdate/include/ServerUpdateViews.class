@@ -61,7 +61,8 @@ class ServerUpdateViews extends Views {
         echo $output;
     }
     function preferences() {
-        require_once("../www/preferences.php");
+        $output = '';
+        $output .= $this->showPreferences();
     }
     function norepository() {
         $output = '';
@@ -816,6 +817,29 @@ class ServerUpdateViews extends Views {
         echo $output;
     }
     
+    function showPreferences() {
+        $controler = $this->getControler();
+        $svnupdate = $controler->getSVNUpdate();
+        
+        $output = '';
+        $output .= '<h3>'.$GLOBALS['Language']->getText('plugin_serverupdate_preferences','preferences_title').'</h3>';
+        $output .= '<p>';
+        $output .= '<strong>'.$GLOBALS['Language']->getText('plugin_serverupdate_preferences','svn_repository').'</strong> ';
+        if ($svnupdate->getRepository() != "") {
+            $output .= $svnupdate->getRepository();
+        } else {
+            $output .= '<span class="error">'.$GLOBALS['Language']->getText('plugin_serverupdate_preferences','norepository').'</span>';
+        }
+        $output .= '<br /></p>';
+        $output .= '<p>';
+        $output .= '<strong>'.$GLOBALS['Language']->getText('plugin_serverupdate_preferences','working_directory').'</strong> '.$svnupdate->getWorkingCopyDirectory().'<br />';
+        $output .= '</p>';
+        $output .= '<p>';
+        $output .= '<strong>'.$GLOBALS['Language']->getText('plugin_serverupdate_preferences','script_directory').'</strong> '.$svnupdate->getWorkingCopyDirectory().'/'.UPGRADE_SCRIPT_PATH.'<br />';
+        $output .= '</p>';
+        echo $output;
+    }
+
 }
 
 
