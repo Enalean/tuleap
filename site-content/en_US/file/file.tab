@@ -128,7 +128,7 @@ file_admin_editreleases	mail_file_rel_notice	Email File Release Notice
 file_admin_editreleases	send_notice	Send Notice
 file_admin_editreleases	users_monitor	$1 user(s) are monitoring your package. You should send a notice of your file release.
 file_admin_editreleases	create_auto_news	Create Automatic News
-file_admin_editreleases	rel_news	You can automatically create a piece of news to inform people of the new release.
+file_admin_editreleases	rel_news	You can automatically create a piece of news to inform people about the new release.
 file_admin_editreleases	create_news	Create News
 file_admin_editreleases	define_new_release	Define a New Release of a Package
 file_admin_editreleases	contain_multiple_files	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1&hellip;) or names.

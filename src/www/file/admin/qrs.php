@@ -10,6 +10,8 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 require_once('common/include/SimpleSanitizer.class');
 require_once('common/mail/Mail.class');
+$Language->loadLanguageMsg('file/file');
+$Language->loadLanguageMsg('news/news');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000
@@ -250,7 +252,43 @@ if( isset($submit) ) {
 } else {
 ?>
 
-<FORM ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF; ?>">
+<script language="JavaScript">
+<!--
+     function showtextarea() {
+     
+         if (navigator.userAgent.indexOf('MSIE')<0) {          
+             var subject = document.qrs.release_news_subject;
+             var details = document.qrs.release_news_details;
+             var submit = document.qrs.release_submit_news;
+             var npublic = document.qrs.private_news[0];
+             var nprivate = document.qrs.private_news[1];	 
+         } else {     
+             //MS IE is used     
+             var subject = document.getElementById("release_news_subject");
+             var details = document.getElementById("release_news_details");
+             var submit = document.getElementById("release_submit_news");
+             var npublic = document.getElementById("publicnews");
+             var nprivate = document.getElementById("privatenews");
+         }     
+          
+         if (submit.checked) {
+	    //show news submission form
+	    subject.disabled=false;
+	    details.disabled=false;
+	    npublic.disabled=false;
+	    nprivate.disabled=false;
+         } else {
+	    //hide news submission form
+	    subject.disabled=true;
+	    details.disabled=true;	    
+	    npublic.disabled=true;
+	    nprivate.disabled=true;
+         }	
+     }	
+//-->
+</script>		
+
+<FORM NAME="qrs" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF; ?>">
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_upload; ?>">
 	<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
 	<TR>
@@ -372,20 +410,41 @@ if( isset($submit) ) {
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<B><?php echo $Language->getText('file_admin_editreleases','submit_news'); ?>:</B>
+		</TD>
+		<TD>
+			<INPUT TYPE="CHECKBOX" NAME="release_submit_news" onclick="showtextarea()">
+		</TD>	
+	</TR>
+	<TR>
+		<TD VALIGN="TOP" ALIGN="RIGHT">
 			<B><?php echo $Language->getText('file_admin_editreleases','subject'); ?>:</B>
 		</TD>
 		<TD>
-			<INPUT TYPE="TEXT" NAME="release_news" VALUE="<?php echo $Language->getText('file_admin_editreleases','file_news_subject',$relname) ?>" SIZE="53" MAXLENGTH="60">
+			<INPUT DISABLED TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE="<?php echo $Language->getText('file_admin_editreleases','file_news_subject',$relname) ?>" SIZE="40" MAXLENGTH="60">
 		</TD>
 	</TR>	
 	<TR>
-		<TD VALIGN="TOP">
+		<TD VALIGN="TOP" ALIGN="RIGHT">
 			<B><?php echo $Language->getText('file_admin_editreleases','details'); ?>:</B>
 		</TD>
 		<TD>
-			<TEXTAREA NAME="release_news" ROWS="7" COLS="50"><?php echo $Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)) ?></TEXTAREA>
+			<TEXTAREA DISABLED ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50"><?php echo $Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)) ?></TEXTAREA>
 		</TD>
-	</TR>	
+	</TR>
+	<TR>
+		<TD ROWSPAN=2 VALIGN="TOP" ALIGN="RIGHT">
+			<B><?php echo $Language->getText('news_submit','news_privacy') ?> :</B>
+		</TD>
+		<TD>
+			<INPUT DISABLED TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> <?php echo $Language->getText('news_submit','public_news') ?>
+		</TD>
+	</TR> 
+	<TR>
+		<TD>
+			<INPUT DISABLED TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1"> <?php echo $Language->getText('news_submit','private_news') ?>
+		</TD>
+	</TR>
 	<TR>
 		<TD COLSPAN="2" ALIGN="CENTER">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">

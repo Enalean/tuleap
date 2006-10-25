@@ -526,6 +526,10 @@ if (isset($submit)) {
                 $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
             } else {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
+		// set permissions on this piece of news
+		if ($private_news) {
+		  news_insert_permissions($new_id,$group_id);
+		}
             }		
 	} else  if ($func=='update_permissions') {
             list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
@@ -787,6 +791,11 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 			<B>'.$Language->getText('file_admin_editreleases','details').':</B><BR>
 			<TEXTAREA NAME="details" ROWS="10" COLS="60" WRAP="SOFT">'.$Language->getText('file_admin_editreleases','file_news_details',array($release_name,$url)).'</TEXTAREA>
 			<P>
+			<TABLE BORDER=0>
+			<TR><TD ROWSPAN=2 VALIGN="top"><B>'.$Language->getText('news_submit','news_privacy').':</B></TD>
+			<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="0" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
+			<TR><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1">'. $Language->getText('news_submit','private_news').'</TD></TR> 
+			</TABLE><P>
 			<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','submit_news').'">  <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> '.$Language->getText('file_admin_editreleases','im_sure').'
 			</FORM>';						
 	}
