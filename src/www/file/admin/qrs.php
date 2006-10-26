@@ -265,7 +265,6 @@ if( isset($submit) ) {
 	      }
           }
       }
-      //$feedback .= $_POST['release_submit_news'];
       
     } else {
       $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_invalid').": $file_name ";
