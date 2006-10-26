@@ -563,7 +563,8 @@ class ArtifactReportHtml extends ArtifactReport {
                 else
                      $url .= '&advsrch='.$advsrch;
                 
-                $url_nomorder = $url;
+		($pv == 0) ? ($url_nomorder = $url) : ($url_nomorder = $url . "&pv=$pv");
+		
                 $url .= "&morder=$morder";
                 
                 // Build the URL for alternate Search
