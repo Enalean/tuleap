@@ -10,6 +10,7 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 require_once('common/include/SimpleSanitizer.class');
 require_once('common/mail/Mail.class');
+require_once('www/forum/forum_utils.php');
 $Language->loadLanguageMsg('file/file');
 $Language->loadLanguageMsg('news/news');
 
@@ -244,6 +245,28 @@ if( isset($submit) ) {
             $feedback .= '| '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
         }
       }
+      
+      //Now submit news if news option is checked
+      if ($_POST['release_submit_news'] == "on") {   
+          $new_id=forum_create_forum($GLOBALS['sys_news_group'],$release_news_subject,1,0);
+          $req = sprintf('INSERT INTO news_bytes'.
+	        '(group_id,submitted_by,is_approved,date,forum_id,summary,details)'.
+	        'VALUES (%d, %d, %d, %d, %d, "%s", "%s")',
+	  $group_id, user_getid(), 0, time(), $new_id, htmlspecialchars($release_news_subject), htmlspecialchars($release_news_details));
+          $result=db_query($req);
+               
+          if (!$result) {
+              $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+          } else {
+              $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
+	      // set permissions on this piece of news
+	      if ($private_news) {
+	          news_insert_permissions($new_id,$group_id);
+	      }
+          }
+      }
+      //$feedback .= $_POST['release_submit_news'];
+      
     } else {
       $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_invalid').": $file_name ";
     }
