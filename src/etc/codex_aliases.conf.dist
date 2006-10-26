@@ -117,3 +117,6 @@ ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
       RewriteRule viewcvs.cgi/(.*) /cvs/viewvc.php/$1 [R]
     </IfModule>
 </Directory>
+
+# Forbid access to .svn directories
+RedirectMatch 404 /\.svn(/|$)
