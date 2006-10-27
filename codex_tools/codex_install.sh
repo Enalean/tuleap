@@ -153,7 +153,7 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd httpd-suexec mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
-   sendmail telnet bind ntp samba python perl-suidperl \
+   sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql MySQL-python php-mbstring \
