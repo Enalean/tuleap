@@ -31,7 +31,8 @@ def load_local_config(filename):
         assign_pat    = re.compile("^\s*\$(.*);\s*$")
         nodollar_pat  = re.compile("(\s+)\$")
         dottoplus_pat = re.compile("(\s+)\.(\s+)")
-        nocomment_pat = re.compile("\/\/.*")
+        # filter end of line comment, but beware of things like http:// or ldap:// -> make sure there is a blank char before the '//'
+        nocomment_pat = re.compile(" \/\/.*")
         while True:
             line = f.readline()
             if not line: break
