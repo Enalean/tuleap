@@ -75,6 +75,7 @@ function displayPage(&$request, $template=false) {
     global $pv;
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
+    $pagetitle = $request->getArg('pagetitle');
     $page = $request->getPage();
     if ($version) {
         $revision = $page->getRevision($version);
@@ -96,12 +97,16 @@ function displayPage(&$request, $template=false) {
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
         array_shift($pages);
         foreach ($pages as $p)  {
-            $pagetitle->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
+            if (!$pv){  
+	    $pagetitle->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
                                                   'class' => 'backlinks'),
                                        split_pagename($p . SUBPAGE_SEPARATOR)));
+	    } else {
+	    $pagetitle = HTML::h1($pagename);
+	    }
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
-	if (!$pv){ // Here we add Baklinks within pagenames
+	if (!$pv){ // Here we add Baklinks in pagenames
         $backlink = HTML::a(array('href' => WikiURL($pagename,
                                                     array('action' => _("BackLinks"))),
                                   'class' => 'backlinks'),
@@ -109,18 +114,18 @@ function displayPage(&$request, $template=false) {
         $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
         $pagetitle->pushContent($backlink);
 	} else {
-	$pageheader = HTML::h1($pagename); // Delete the Backlink from the page title
+	$pagetitle = HTML::h1($pagename); // Delete the Backlink from the page title
 					// because we are viewing in printer versions mode
         }
     } else {
-        if (!$pv){ // Here also, we add Baklinks within pagenames
+        if (!$pv){ // Here also, we add Baklinks in pagenames
         $pagetitle = HTML::a(array('href' => WikiURL($pagename,
                                                      array('action' => _("BackLinks"))),
                                    'class' => 'backlinks'),
                              $splitname);
         $pagetitle->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
         } else { 
-        $pageheader = HTML::h1($pagename); // Delete the Backlink from the page title
+        $pagetitle = HTML::h1($pagename); // Delete the Backlink from the page title
 					// because we are viewing in printer versions mode
         }
         if ($request->getArg('frame'))
