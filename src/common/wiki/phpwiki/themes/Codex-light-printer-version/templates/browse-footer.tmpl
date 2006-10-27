@@ -1,14 +1,8 @@
 <?php // -*-html-*-
   rcs_id('$Id: browse-footer.tmpl 1422 2005-04-12 13:33:49Z guerin $');
+  /**
+     *	Changes by Sabri LABBENE
+     *	All of the current template elements were removed
+     *	to fit "Wiki pages full screen display" needs.
+     */
 ?>
-<hr class="printer" noshade="noshade" />
-<p class="editdate"><?= $Theme->getLastModifiedMessage($revision) ?></p>
-<?php
-global $HIDE_TOOLBARS;
-if (!$HIDE_TOOLBARS) {
-?>
-<hr class="toolbar" noshade="noshade" />
-<div class="toolbar">
-<?= Template('actionbar') ?>
-</div>
-<?php } ?>
