@@ -236,8 +236,7 @@ class WikiServiceViews extends WikiViews {
    * displayMenu - public
    */
   function displayMenu() {
-    global $Language, $pv;
-    if($pv != 2){
+    global $Language;
     print '
     <table class="ServiceMenu">
       <tr>
@@ -296,7 +295,7 @@ class WikiServiceViews extends WikiViews {
     </tr>
   </table>';
   }
-  }
+  
 
   /**
    * View "Wiki Page access rights permissions"
