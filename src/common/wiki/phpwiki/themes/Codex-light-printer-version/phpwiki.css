@@ -66,12 +66,12 @@ div.wikitext {
   /* Netscape 4 requires this 1px border.
      Without it, the paper borders below cause
      the white background to disappear. */
-  border: 1px black solid;
+  border: 0px;
   /* "paper" borders */
-  border-top:  1px #e8e6df solid;
-  border-left: 1px #e8e6df solid;
-  border-bottom: 1px #d2d2d2 solid;
-  border-right:  1px #b2b2b2 solid;
+  border-top:  0px;
+  border-left: 0px;
+  border-bottom: 0px;
+  border-right:  0px;
   padding-left:  0.8em; 
   padding-right: 0.8em;
   padding-top:    0.5ex;
@@ -82,6 +82,7 @@ div.wikitext {
   clear: both;
 }
 /* .interwiki-map thead td { text-decoration: underline; } */
+
 
 /* Mozilla RecentChanges Sidebar */
 body.sidebar {
