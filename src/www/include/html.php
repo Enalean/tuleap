@@ -466,7 +466,7 @@ function site_footer($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_header($params) {
-  GLOBAL $HTML, $Language;
+  GLOBAL $HTML, $Language, $pv;
 
 	/*
 		Check to see if active
@@ -496,7 +496,7 @@ function site_project_header($params) {
 		session_require(array('group'=>'1'));
 	}
 
-        if (isset($params['pv']) && $params['pv']) {
+        if ($pv == 2) { 
             // Printer version: no right column, no tabs...
             echo $HTML->pv_header($params);
         } else {
@@ -511,9 +511,9 @@ function site_project_header($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_footer($params) {
-	GLOBAL $HTML;
+	GLOBAL $HTML, $pv;
 
-        if (isset($params['pv']) && $params['pv']) {
+        if ($pv == 2) {
             // Printer version
             echo $HTML->pv_footer($params);
         } else {
