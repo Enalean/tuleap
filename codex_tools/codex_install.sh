@@ -1150,7 +1150,7 @@ $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
      destdir="/var/log/codex/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
-     cp /var/log/codex/xferlog.1 $destdir/$destfile
+     cp /var/log/xferlog.1 $destdir/$destfile
     endscript
 }
 EOF
