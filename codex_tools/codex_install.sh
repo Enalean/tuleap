@@ -147,6 +147,8 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 # xorg-x11-deprecated-libs -> docbook/java
+# neon -> subversion
+# libart_lgpl perl-Time-HiRes -> munin
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd httpd-suexec mod_ssl vsftpd \
@@ -157,7 +159,8 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    mysql MySQL-python php-mbstring \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
-   xorg-x11-deprecated-libs
+   xorg-x11-deprecated-libs neon \
+   libart_lgpl perl-Time-HiRes
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then

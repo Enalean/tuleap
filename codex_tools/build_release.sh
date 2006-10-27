@@ -31,7 +31,7 @@ echo "Creating clean build directory..."
 #rm -rf $BUILD_DIR; 
 $MKDIR -p $BUILD_DIR
 cd $BUILD_DIR
-$RM codex_install.sh INSTALL migration_*.sh README  RELEASE_NOTES
+$RM codex_install.sh INSTALL migration_* README  RELEASE_NOTES
 
 # Copy the install script at the top directory
 echo "Copying the CodeX installation script..."
@@ -42,7 +42,7 @@ $CHMOD +x $BUILD_DIR/codex_install.sh
 # Copy the migration script at the top directory
 echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.sh $BUILD_DIR
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.README $BUILD_DIR
 $CHMOD +x $BUILD_DIR/migration_30.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir

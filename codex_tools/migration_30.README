@@ -46,6 +46,10 @@ Now, here are the step-by-step instructions for upgrading:
 * Make sure all your backup files are copied on another machine!
   If you have other files on the machine, custom scripts, non-CodeX data, etc.,
   don't forget to also make a copy (look e.g. in /root, /usr/local, etc.)
+  You may also want to copy specific configuration files (/etc/mail/, 
+  /etc/named.conf, /var/named, /etc/httpd, /etc/my.cnf, /var/spool/cron,  etc.)
+  We recommend doint a backup of the whole '/etc' directory in order to
+  keep a reference of the previous configuration settings.
 
 * Install RHEL 4.4 on your server, erasing all previous data.
   When partitionning the disk, please choose a large partition for /var/ since 
@@ -105,6 +109,9 @@ Now, here are the step-by-step instructions for upgrading:
 
   * /var/named/codex.zone should be restored at the same location
       /var/named/codex.zone  ---> /var/named/codex.zone
+    If you wish to restore other zone files, please note that they are now in a 
+    chroot jail (the codex_full.zone is now there). E.g.:
+      /var/named/root.cache.save ---> /var/named/chroot/var/named/root.cache.save
 
   * /home/mailman/ does not exist any longer. You should copy the appropriate
     data to their new places:
@@ -125,7 +132,9 @@ Now, here are the step-by-step instructions for upgrading:
       /home/httpd/cgi-bin/*    --->  /var/www/cgi-bin/.
 
  * Restore other scripts or data (e.g. from /usr/local, /home/tools, /root, 
-   etc.) if needed.
+   /var/spool/cron, /etc/my.cnf,  etc.) if needed.
+
+ * If you had a specific SSL certificate, you should also restore or regenerate it.
 
  * Last, to recover your subversion setting, you can also restore the 
    .subversion directory:
@@ -143,10 +152,17 @@ Now, here are the step-by-step instructions for upgrading:
         > exit;
   * Restore the database from CodeX 2.8
     > mysql -u codexadm -p codex < backup_dir/codex.2.8.sql
+  * If MySQL complains about "Got a packet bigger than max_allowed_packet bytes",
+    you should increase the value of this parameter in /etc/my.cnf (e.g. 128M).
 
+* user/group restore.
+  You should now run the xerox_crontab.sh script to create all Unix users/groups.
+  Ignore errors about DNS or HTTPD if any.
+    > /usr/share/codex/src/utils/xerox_crontab.sh
 
 * Database and file migration to CodeX 3.0:
   Last step of the migration: run the migration_30.sh script from the CodeX CD.
+  Ignore the message about "./mailman file exists".
 
 
 You are all set!
