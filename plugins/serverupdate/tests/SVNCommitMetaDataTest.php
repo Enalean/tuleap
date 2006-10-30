@@ -1,10 +1,5 @@
 <?php
-if (! defined('CODEX_RUNNER')) {
-    define('CODEX_RUNNER', __FILE__);
-    require_once('../../codex_tools/tests/CodexReporter.class');
-}
-
-require_once('../include/SVNCommitMetaData.class');
+require_once(dirname(__FILE__).'/../include/SVNCommitMetaData.class');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -62,10 +57,4 @@ class SVNCommitMetaDataTest extends UnitTestCase {
     }
     
 }
-
-//We want to be able to run one test AND many tests
-if (CODEX_RUNNER === __FILE__) {
-    $test = &new SVNCommitMetaDataTest();
-    $test->run(new CodexReporter());
- }
 ?>

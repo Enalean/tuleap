@@ -1,16 +1,7 @@
 <?php
-if (! defined('CODEX_RUNNER')) {
-    define('CODEX_RUNNER', __FILE__);
-    require_once('../../codex_tools/tests/CodexReporter.class');
-}
 
-require_once('../include/SVNCommit.class');
-
-
-require_once('tests/simpletest/unit_tester.php');
-require_once('tests/simpletest/mock_objects.php'); //uncomment to use Mocks
-
-require_once('../include/SVNCommitedFile.class');
+require_once(dirname(__FILE__).'/../include/SVNCommit.class');
+require_once(dirname(__FILE__).'/../include/SVNCommitedFile.class');
 Mock::generate('SVNCommitedFile');
 
 
@@ -67,9 +58,4 @@ class SVNCommitTest extends UnitTestCase {
     
 }
 
-//We want to be able to run one test AND many tests
-if (CODEX_RUNNER === __FILE__) {
-    $test = &new SVNCommitTest();
-    $test->run(new CodexReporter());
- }
 ?>

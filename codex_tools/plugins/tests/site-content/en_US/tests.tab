@@ -1,0 +1,5 @@
+plugin_tests	descriptor_description	Execute CodeX unit tests
+plugin_tests	descriptor_name	Unit Tests
+
+plugin_tests	title	Unit Tests
+
