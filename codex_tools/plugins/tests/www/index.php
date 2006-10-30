@@ -1,6 +1,7 @@
 <?php
 
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
+require($GLOBALS['db_config_file']);
 
 require_once('../include/simpletest/unit_tester.php');
 require_once('../include/simpletest/mock_objects.php');
@@ -66,7 +67,9 @@ function display_tests($tests, $categ, $params) {
             echo '<ul>';
         }
         
-        array_walk($tests, 'display_tests', array('is_cat' => ($categ !== "_tests"), 'prefixe' => $prefixe, 'checked' => ($params['checked'] && $categ !== "_tests" ? $params['checked'][$categ] : $params['checked'])));
+        foreach($tests as $c => $t) {
+            display_tests($t, $c, array('is_cat' => ($categ !== "_tests"), 'prefixe' => $prefixe, 'checked' => ($params['checked'] && $categ !== "_tests" ? $params['checked'][$categ] : $params['checked'])));
+        }
         
         if ($categ !== "_tests") {
             echo '</ul>';
@@ -86,8 +89,9 @@ function display_tests_as_javascript($tests, $categ, $params) {
             echo "'$categ': {";
         }
         
-        array_walk($tests, 'display_tests_as_javascript', array('is_cat' => ($categ !== "_tests")));
-        
+        foreach($tests as $c => $t) {
+            display_tests_as_javascript($t, $c, array('is_cat' => ($categ !== "_tests")));
+        }
         if ($categ !== "_tests") {
             echo '},';  
         }
@@ -189,12 +193,16 @@ function display_tests_as_javascript($tests, $categ, $params) {
                         <fieldset>
                             <legend>Tests</legend>
                             <ul id="menu">
-                                <?php array_walk($GLOBALS['tests'], 'display_tests', array('is_cat' => true, 'prefixe' => 'tests_to_run', 'checked' => @$_REQUEST['tests_to_run'])); ?>
+                            <?php foreach($GLOBALS['tests'] as $c => $t) {
+                                display_tests($t, $c, array('is_cat' => true, 'prefixe' => 'tests_to_run', 'checked' => @$_REQUEST['tests_to_run']));
+                            } ?>
                             </ul>
                             <script type="text/javascript">
                             //<!--
                             var tests_to_run = {
-                            <?php array_walk($GLOBALS['tests'], 'display_tests_as_javascript', array('is_cat' => true)); ?>
+                            <?php foreach($GLOBALS['tests'] as $c => $t) {
+                                display_tests_as_javascript($t, $c, array('is_cat' => true));
+                            } ?>
                             };
                             //-->
                             </script>
@@ -209,8 +217,10 @@ function display_tests_as_javascript($tests, $categ, $params) {
                             function add_test_to_group($test, $categ, $params) {
                                 if ($categ != '_do_all') {
                                     if (is_array($test)) {
-                                        $g =& new GroupTest('Tests Results');
-                                        array_walk($test, 'add_test_to_group', array('group' => &$g, 'path' => $params['path']."/$categ/"));
+                                        $g =& new GroupTest($categ .' Results');
+                                        foreach($test as $c => $t) {
+                                            add_test_to_group($t, $c, array('group' => &$g, 'path' => $params['path']."/$categ/"));
+                                        }
                                         $params['group']->addTestCase($g);
                                     } else if ($test) {
                                         $params['group']->addTestFile($params['path'] . $categ);
@@ -220,14 +230,13 @@ function display_tests_as_javascript($tests, $categ, $params) {
                             $g =& new GroupTest("All Tests");
                             foreach($_REQUEST['tests_to_run'] as $plugin => $tests) {
                                 $o =& new GroupTest($plugin .' Tests');
-                                array_walk(
-                                    $tests, 
-                                    'add_test_to_group', 
-                                    array(
+                                foreach($tests as $c => $t) {
+                                    add_test_to_group($t, $c, 
+                                        array(
                                         'group' => &$o, 
-                                        'path' => $GLOBALS['config']['plugins_root'] . $plugin . $GLOBALS['config']['tests_root']
-                                    )
-                                );
+                                        'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'CodeX' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
+                                    ));
+                                }
                                 $g->addTestCase($o);
                             }
                             $g->run(new HtmlReporter());

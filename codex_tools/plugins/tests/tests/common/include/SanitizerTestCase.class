@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * abstract
+ */
+class SanitizerTestCase extends UnitTestCase {
+    function SimpleSanitizerTest($test_name = false) {
+        $this->UnitTestCase($test_name);
+    }
+
+    function testSanitize() {
+        trigger_error("testSanitize() not yet implemented");
+    }
+}
+
+//We just tells SimpleTest to always ignore this testcase
+SimpleTestOptions::ignore('SanitizerTestCase');
+
+?>
