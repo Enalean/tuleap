@@ -6,13 +6,14 @@ class Docman_ValidateFilterFactory {
     }
 
     function &getFromFilter(&$filter) {
+        $f = null;
         if(is_a($filter, 'Docman_FilterDate')) {
-            return new Docman_ValidateFilterDate($filter);
+            $f = new Docman_ValidateFilterDate($filter);
         }
         if(is_a($filter, 'Docman_FilterOrdering')) {
-            return new Docman_ValidateFilterOrdering($filter);
+            $f = new Docman_ValidateFilterOrdering($filter);
         }
-        return null;
+        return $f;
     }
 
 }

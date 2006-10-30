@@ -5,9 +5,7 @@ require_once('www/include/utils.php');
 require_once('common/tracker/ArtifactImport.class');
 //Mock::generatePartial('ArtifactImport','ArtifactImportTestVersion',array());
 
-class BaseLanguage {
-  function getText() {}
-}
+require_once('BaseLanguage.class');
 Mock::generate('BaseLanguage');
 
 //require_once('common/tracker/ArtifactField.class');

@@ -30,4 +30,12 @@ class Docman_ValidatePresenceOf extends Docman_Validator {
     }
 }
 
+class Docman_ValidateValueNotEmpty extends Docman_Validator {
+    function Docman_ValidateValueNotEmpty($value, $msg) {
+        if(!$value || $value === null || $value == '') {
+            $this->addError($msg);
+        }
+    }
+}
+
 ?>

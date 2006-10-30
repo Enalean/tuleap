@@ -22,7 +22,8 @@
  *
  * $Id$
  */
-require_once('Docman.class');
+require_once('DocmanConstants.class');
+//require_once('Docman.class');
 require_once('Docman_Item.class');
 require_once('Docman_ItemDao.class');
 require_once('Docman_Folder.class');
@@ -108,7 +109,7 @@ class Docman_ItemFactory {
     function &getItemFromDb($id) {
         $_id = (int) $id;
         $dao =& $this->_getItemDao();
-        $dar =& $dao->searchById($id);
+        $dar = $dao->searchById($id);
 
         if($dar->isError()){
             return;
@@ -156,7 +157,7 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         $parents = array($item_id);
         do {
-            $dar =& $dao->searchByParentsId($parents);
+            $dar = $dao->searchByParentsId($parents);
             if ($dar && !$dar->isError()) {
                 $parents = array();
                 while ($dar->valid()) {

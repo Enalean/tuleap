@@ -47,13 +47,37 @@ class Docman_MetadataListOfValuesElementFactory {
         return $_plugin_docman_metadata_love_dao_instance;
     }
 
+    function delete(&$love) {
+        $dao =& $this->getDao();
+        return $dao->delete($love->getId());
+    }
+
+    function deleteByMetadataId() {
+        $deleted = false;
+        if($this->metadataId !== null ) {
+            $dao =& $this->getDao();
+            $deleted = $dao->deleteByMetadataId($this->metadataId);
+        }
+        return $deleted;
+    }
+
     function create(&$love) {
         $dao =& $this->getDao();
-        $dao->create($this->metadataId,
-                     $love->getName(),
-                     $love->getDescription(),
-                     $love->getRank(),
-                     'A');
+        return $dao->create($this->metadataId,
+                            $love->getName(),
+                            $love->getDescription(),
+                            $love->getRank(),
+                            'A');
+    }
+
+    function update($love) {
+        $dao =& $this->getDao();
+        return $dao->updateElement($this->metadataId,
+                                   $love->getId(),
+                                   $love->getName(),
+                                   $love->getDescription(),
+                                   $love->getRank(),
+                                   $love->getStatus());
     }
 
     function createNoneValue() {
@@ -76,7 +100,7 @@ class Docman_MetadataListOfValuesElementFactory {
         }
         else {
             $dao =& $this->getDao();
-            $dar =& $dao->serachByFieldId($id, $onlyActive);
+            $dar = $dao->serachByFieldId($id, $onlyActive);
             $res = array();
             while($dar->valid()) {
                 $row = $dar->current();
@@ -102,7 +126,7 @@ class Docman_MetadataListOfValuesElementFactory {
             
         default:
             $dao =& $this->getDao();
-            $dar =& $dao->serachByValueId($id);
+            $dar = $dao->serachByValueId($id);
             if($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $e = $this->instanciateLove($dar->current());
             }
@@ -118,7 +142,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_none_name'));
         $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_none_desc'));
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
-        $e->setStatus('A');
+        $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_NONE] =& $e;
         unset($e);
 
@@ -127,7 +151,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_draft_name'));
         //        $e->setDescription('md_love_status_draft_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_DRAFT);
-        $e->setStatus('A');
+        $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_DRAFT] =& $e;
         unset($e);
 
@@ -136,7 +160,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_approved_name'));
         //        $e->setDescription('md_love_status_approved_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
-        $e->setStatus('A');
+        $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_APPROVED] =& $e;
         unset($e);
 
@@ -145,7 +169,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_rejected_name'));
         //        $e->setDescription('md_love_status_rejected_desc');
         $e->setRank(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
-        $e->setStatus('A');
+        $e->setStatus('P');
         $ea[PLUGIN_DOCMAN_ITEM_STATUS_REJECTED] =& $e;
         unset($e);
         

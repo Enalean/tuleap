@@ -30,6 +30,16 @@ class CodeXHtmlReporter extends HtmlReporter {
         print "<strong>" . $this->getExceptionCount() . "</strong> exceptions.";
         print "</div>\n";
     }
+    function paintPass($message) {
+        parent::paintPass($message);
+        if (isset($_REQUEST['show_pass'])) {
+            print "<span class=\"pass\">Pass</span>: ";
+            $breadcrumb = $this->getTestList();
+            array_shift($breadcrumb);
+            print implode(" -&gt; ", $breadcrumb);
+            print " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
+        }
+    }
 }
 
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
@@ -160,6 +170,9 @@ function display_tests_as_javascript($tests, $categ, $params) {
         .fail { 
             color: red; 
         } 
+        .pass { 
+            color: green; 
+        } 
         pre { 
             background-color: lightgray; 
         }
@@ -237,6 +250,10 @@ function display_tests_as_javascript($tests, $categ, $params) {
                             };
                             //-->
                             </script>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Options</legend>
+                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
                         </fieldset>
                     </form>
                 </td>

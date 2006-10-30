@@ -13,6 +13,10 @@ require_once('Docman_View_Docman.class');
 /* abstract */ class Docman_View_Display extends Docman_View_Docman {
     
     function _title($params) {
+        // No title in printer version
+        if(isset($params['pv']) && $params['pv'] > 0) {
+            return;
+        }
         echo '<h2>'. $this->_getTitle($params) .'</h2>';
     }
     function _breadCrumbs($params) {
@@ -30,12 +34,21 @@ require_once('Docman_View_Docman.class');
                 'title' => $item->getTitle()
             );
         }
+        $urlAction = isset($params['action']) ? $params['action'] : 'show';
+        $this->_initSearchAndSortParams($params);
+        $urlParams = array_merge($this->dfltSortParams, 
+                                 $this->dfltSearchParams);
+        $urlParams['action'] = $urlAction;
         echo '<div style="position:relative;" id="item_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
         $parents = array_reverse($parents);
         foreach($parents as $parent) {
-            echo '&nbsp;<a href="'. $params['default_url'] .'&amp;action=show&amp;id='. $parent['id'] .'">'. $parent['title'] .'</a>&nbsp;/';
+            $urlParams['id'] = $parent['id'];
+            $url = $this->buildActionUrl($params, $urlParams);
+            echo '&nbsp;<a href="'.$url.'">'. $parent['title'] .'</a>&nbsp;/';
         }
-        echo '&nbsp;<a href="'. $params['default_url'] .'&amp;action=show&amp;id='. $id .'"><b>'. $current_item_title .'</b></a>';
+        $urlParams['id'] = $id;
+        $url = $this->buildActionUrl($params, $urlParams);
+        echo '&nbsp;<a href="'.$url.'"><b>'. $current_item_title .'</b></a>';
         
         echo $this->getItemMenu($current_item, $params);
         echo '</div>';

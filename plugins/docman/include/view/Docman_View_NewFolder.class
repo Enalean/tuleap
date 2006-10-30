@@ -27,11 +27,21 @@ class Docman_View_NewFolder extends Docman_View_New {
     function _getGeneralProperties($params) {
         $html = '';
 
-        $new_folder = new Docman_Folder($params['item']);
-        $mdFactory = new Docman_MetadataFactory($params['docman'], $params['group_id']);
-        $new_folder->setMetadata($mdFactory->getOnSubmitFolderMetadataList());
+        $mdFactory = new Docman_MetadataFactory($params['group_id']);
 
-        $get_fields = new Docman_View_GetFieldsVisitor();
+        if(isset($params['force_item'])) {
+            $new_folder =& $params['force_item'];            
+
+            // append MD list
+            $mdFactory->appendAllListOfValuesToItem($new_folder);
+        }
+        else {
+            $new_folder = new Docman_Folder();
+            $mdFactory->appendItemMetadataList($new_folder);
+        }
+
+        $metadataToSkip = $mdFactory->getMetadataLabelToSkipCreation();
+        $get_fields = new Docman_View_GetFieldsVisitor($metadataToSkip);
         $fields     = $new_folder->accept($get_fields, array('form_name'  => $params['form_name'],
                                                              'theme_path' => $params['theme_path']));
         foreach($fields as $field) {

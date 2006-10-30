@@ -45,9 +45,8 @@ class Docman_MetadataFactory {
     var $hardCodedMetadata;
     var $modifiableMetadata;
     var $groupId;
-    var $docman;
     
-    function Docman_MetadataFactory(&$docman, $groupId) {
+    function Docman_MetadataFactory($groupId) {
         // Metadata hard coded as table columns
         $this->hardCodedMetadata = array('title', 'description', 'owner'
                                          , 'create_date', 'update_date'
@@ -62,7 +61,6 @@ class Docman_MetadataFactory {
                                           PLUGIN_DOCMAN_METADATA_TYPE_DATE);
 
         $this->groupId = $groupId;
-        $this->docman =& $docman;
     }
     
     /**
@@ -102,9 +100,14 @@ class Docman_MetadataFactory {
         $md = null;
 
         $dao =& $this->getDao();
-        $dar =& $dao->searchById($id);
+        $dar = $dao->searchById($id);
         if($dar->rowCount() === 1) {            
             $md =& $this->_createFromRow($dar->current());
+        
+            $md->setCanChangeName(true);
+            $md->setCanChangeIsEmptyAllowed(true);
+            $md->setCanChangeDescription(true);
+            $md->setCanChangeDefaultValue(true);
         }
 
         return $md;
@@ -119,7 +122,7 @@ class Docman_MetadataFactory {
         $mda = array();
 
         $dao =& $this->getDao();
-        $dar =& $dao->searchByGroupId($this->groupId, $onlyUsed, $type);
+        $dar = $dao->searchByGroupId($this->groupId, $onlyUsed, $type);
         while($dar->valid()) {
             $row =& $dar->current();                        
             
@@ -136,7 +139,7 @@ class Docman_MetadataFactory {
      *
      * Some HardCoded are customizable at project level.
      */
-    function &appendHardCodedMetadataParams(&$md) {
+    function appendHardCodedMetadataParams(&$md) {
         $sBo =& Docman_SettingsBo::instance($this->groupId);
         $md->setUseIt($sBo->getMetadataUsage($md->getLabel()));
     }
@@ -172,29 +175,21 @@ class Docman_MetadataFactory {
      *
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
-    function &getHardCodedMetadataList($onlyUsed = false) {
-        return $this->_buildHardCodedMetadataList($this->hardCodedMetadata, $onlyUsed);
+    function &getHardCodedMetadataListForDocuments($onlyUsed = false) {
+        $mda =& $this->_buildHardCodedMetadataList($this->hardCodedMetadata, $onlyUsed);
+        return $mda;
     }
 
-    /**
-     * Return HardCoded metadata needed for document submission.
-     *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
-     */
-    function &getOnSubmitHardCodedMetadataList() {
-        $mdOnSubmit = array('title', 'description', //'owner',
-                            'status', 'obsolescence_date');
-        return $this->_buildHardCodedMetadataList($mdOnSubmit, true);
+    function getHardCodedMetadataListForFolders($onlyUsed = false) {
+        $mdOnSubmit = array('title', 'description',// 'owner'
+                            'create_date', 'update_date');
+        $mda =& $this->_buildHardCodedMetadataList($mdOnSubmit, $onlyUsed);
+        return $mda;
     }
 
-    /**
-     * Return HardCoded metadata needed for folder creation.
-     *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
-     */
-    function &getOnSubmitFolderHardCodedMetadataList() {
-        $mdOnSubmit = array('title', 'description');
-        return $this->_buildHardCodedMetadataList($mdOnSubmit, true);
+    function getMetadataLabelToSkipCreation() {
+        $labels = array('owner', 'create_date', 'update_date');
+        return $labels;
     }
    
     /**
@@ -203,34 +198,12 @@ class Docman_MetadataFactory {
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
     function &getMetadataForGroup($onlyUsed = false) {        
-        $mda =& array_merge($this->getHardCodedMetadataList($onlyUsed),
-                            $this->getRealMetadataList($onlyUsed));
+        $mda = array_merge($this->getHardCodedMetadataListForDocuments($onlyUsed),
+                           $this->getRealMetadataList($onlyUsed));
         
-        return new ArrayIterator($mda);
-    }
-
-    /**
-     * Return all metadata fields needed for document submission.
-     *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
-     */
-    function &getOnSubmitMetadataList() {
-        $mda =& array_merge($this->getOnSubmitHardCodedMetadataList(),
-                            $this->getRealMetadataList(true));
-
-        $this->appendAllListOfValues(new ArrayIterator($mda));
-
-        return $mda;
-    }
-
-    /**
-     * Return all metadata fields needed for folder creation
-     *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
-     */
-    function &getOnSubmitFolderMetadataList() {
-        return $this->getOnSubmitFolderHardCodedMetadataList();
-    }
+        $i = new ArrayIterator($mda);
+        return $i;
+    }    
 
     /**
      * Append elements of ListOfValues metadata.
@@ -276,7 +249,16 @@ class Docman_MetadataFactory {
      * Add all the metadata (with their values) to the given item
      */
     function appendItemMetadataList(&$item) {
-        $mda =& $this->getHardCodedMetadataList(true);
+        $mda = array();
+        if(Docman_ItemFactory::getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+            $isFolder = true;
+            $mda = $this->getHardCodedMetadataListForFolders(true);
+        }
+        else {
+            $isFolder = false;
+            $mda =& $this->getHardCodedMetadataListForDocuments(true);
+        }
+
         $i = 0;
         $nbMd = count($mda);
         while($i < $nbMd) {
@@ -284,25 +266,26 @@ class Docman_MetadataFactory {
             $i++;
         }
         
-        $mdvFactory = new Docman_MetadataValueFactory($this->docman, $this->groupId);
-        $mdareal =& $this->getRealMetadataList(true);
-        $j = 0;
-        $nbMd = count($mdareal);
-        while($j < $nbMd) {
-            $mdv =& $mdvFactory->getMetadataValue($item, $mdareal[$j]);
-            if($mdv === null) {
-                // create an empty one
-                $mdv = $mdvFactory->newMetadataValue($item->getId(),
-                                                     $mdareal[$j]->getId(),
-                                                     $mdareal[$j]->getType(),
-                                                     null);
+        if(!$isFolder) {
+            $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
+            $mdareal =& $this->getRealMetadataList(true);
+            $j = 0;
+            $nbMd = count($mdareal);
+            while($j < $nbMd) {
+                $mdv =& $mdvFactory->getMetadataValue($item, $mdareal[$j]);
+                if($mdv === null) {
+                    // create an empty one
+                    $mdv = $mdvFactory->newMetadataValue($item->getId(),
+                                                         $mdareal[$j]->getId(),
+                                                         $mdareal[$j]->getType(),
+                                                         null);
+                }
+                $mdareal[$j]->setValue($mdv->getValue());
+                $mda[$i] =& $mdareal[$j];
+                $i++;            
+                $j++;
             }
-            $mdareal[$j]->setValue($mdv->getValue());
-            $mda[$i] =& $mdareal[$j];
-            $i++;            
-            $j++;
-        }
-        
+        }        
 
         $item->setMetadata($mda);
     }
@@ -338,6 +321,10 @@ class Docman_MetadataFactory {
         }
     }
 
+    function isHardCodedMetadata($label) {
+        return in_array($label, $this->hardCodedMetadata);
+    }
+
     function isRealMetadata($label) {
         if(preg_match('/^field_([0-9]+)$/', $label)) {
             return true;
@@ -347,9 +334,20 @@ class Docman_MetadataFactory {
         }
     }
 
+    function isValidLabel($label) {
+        $valid = false;
+        if(Docman_MetadataFactory::isHardCodedMetadata($label)) {
+            $valid = true;
+        }
+        else {
+            $valid = Docman_MetadataFactory::isRealMetadata($label);
+        }
+        return $valid;
+    }
+
     function updateRealMetadata($md) {
         $dao =& $this->getDao();
-        return $dao->updateById($md->getId(), $md->getUseIt());
+        return $dao->updateById($md->getId(), $md->getName(), $md->getDescription(), $md->getIsEmptyAllowed(), $md->getUseIt(), $md->getDefaultValue());
     }
 
     // Today only usage configuration supported
@@ -375,12 +373,16 @@ class Docman_MetadataFactory {
     function create(&$md) {
         $md->setGroupId($this->groupId);
 
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $md->setDefaultValue(100);
+        }
+
         $dao =& $this->getDao();
         $mdId = $dao->create($this->groupId, 
                              $md->getName(),
                              $md->getType(),
                              $md->getDescription(),
-                             $md->getIsRequired(),                                 
+                             $md->getIsRequired(),
                              $md->getIsEmptyAllowed(),
                              $md->getSpecial(),
                              $md->getDefaultValue(),
@@ -388,7 +390,6 @@ class Docman_MetadataFactory {
 
         if($mdId !== false) {
             if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                $md->setDefaultValue(100);
                 // Insert 'none' value in the list (first value).
                 $loveFactory = new Docman_MetadataListOfValuesElementFactory($mdId);
                 $inserted = $loveFactory->createNoneValue();
@@ -402,9 +403,9 @@ class Docman_MetadataFactory {
                 // value of the metadata.
                 // *WARNING*: Only lists are fully implemented (be carful of
                 // default value for other fields).
-                $mdvFactory = new Docman_MetadataValueFactory($this->docman, $this->groupId);
+                $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
                 
-                $itemBo = new Docman_ItemBo($this->docman, $this->groupId);
+                $itemBo = new Docman_ItemBo($this->groupId);
                 $itemIter =& $itemBo->getDocumentsIterator(); 
 
                 while($itemIter->valid()) {
@@ -422,6 +423,35 @@ class Docman_MetadataFactory {
         }
 
         return $mdId;
+    }
+
+    function delete($md) {
+        $deleted = false;
+
+        // Delete Md
+        $dao =& $this->getDao();
+        $delMd = $dao->delete($md->getId());
+
+        if($delMd) {            
+            // Delete LoveElements if needed
+            $delLove = false;
+            if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+                $delLove = $loveFactory->deleteByMetadataId();
+            }
+            else {
+                $delLove = true;
+            }
+            
+            if($delLove) {
+                $deleted = true;
+                // Delete corresponding values
+                //$mdvFactory = new Docman_MetadataValueFactory($this->groupId);
+                //$deleted = $mdvFactory->deleteByMetadata($md);
+            }
+        }
+
+        return $deleted;
     }
 
     function &getHardCodedMetadataFromLabel($label, $value=null) {
@@ -527,6 +557,18 @@ class Docman_MetadataFactory {
         }
 
         return $md;
+    }
+
+    function getFilterFromLabel($label) {
+        $filter = null;
+
+        $md = $this->getFromLabel($label);
+        if($md !== null) {
+            $fFactory = new Docman_FilterBo();
+            $filter = $fFactory->getFromMetadata($md);
+        }
+         
+        return $filter;
     }
 
 }

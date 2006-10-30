@@ -26,15 +26,21 @@
 require_once('common/dao/include/DataAccessObject.class');
 
 class Docman_MetadataDao extends DataAccessObject {
+    var $deletedStmt;
+    var $notDeletedStmt;
 
     function Docman_MetadataDao(&$da) {
         DataAccessObject::DataAccessObject($da);
+        
+        $this->deletedStmt    = 'special = 100';
+        $this->notDeletedStmt = 'special != 100';
     }
 
     function searchById($id) {
         $sql = sprintf('SELECT *'
                        .' FROM plugin_docman_metadata'
                        .' WHERE field_id = %d'
+                       .' AND '.$this->notDeletedStmt
                        , $id);
         return $this->retrieve($sql);
     }
@@ -53,6 +59,7 @@ class Docman_MetadataDao extends DataAccessObject {
                        .' FROM plugin_docman_metadata'
                        .' WHERE group_id = %d'
                        .$where_clause
+                       .' AND '.$this->notDeletedStmt
                        , $id);
 
         return $this->retrieve($sql);
@@ -60,9 +67,13 @@ class Docman_MetadataDao extends DataAccessObject {
 
     // Very limited implementation of update
     // right now, only 'use_it' field is concerned by update
-    function updateById($id, $useIt) {
+    function updateById($id, $name, $description, $emptyAllowed, $useIt, $defaultValue) {
         $row = array('field_id' => $id,
-                     'use_it' => $useIt);
+                     'name' => $name,
+                     'description' => $description,
+                     'empty_ok' => $emptyAllowed,
+                     'use_it' => $useIt,
+                     'default_value' => $defaultValue);
         return $this->updateFromRow($row);
     }
 
@@ -74,7 +85,7 @@ class Docman_MetadataDao extends DataAccessObject {
         }
         $id = (int) $row['field_id'];        
         if ($id) {
-            $dar =& $this->searchById($id);
+            $dar = $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
                 $current =& $dar->current();
                 $set_array = array();
@@ -137,7 +148,7 @@ class Docman_MetadataDao extends DataAccessObject {
     function _createAndReturnId($sql) {
         $inserted = $this->update($sql);
         if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
             } else {
@@ -146,6 +157,15 @@ class Docman_MetadataDao extends DataAccessObject {
         }
         return $inserted;
     }
+    
+    function delete($id) {
+        $sql = sprintf('UPDATE plugin_docman_metadata'.
+                       ' SET special = 100'.
+                       ' WHERE field_id = %d',
+                       $id);
+        return $this->update($sql);
+    }
+
 }
 
 ?>

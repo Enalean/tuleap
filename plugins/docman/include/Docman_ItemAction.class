@@ -55,9 +55,14 @@ class Docman_ItemAction {
         return $html;
     }
     function fetchAsJavascript($params) {
+        $url = Docman_View_View::buildActionUrl($params, 
+                                                array('action' => $this->action,
+                                                      'id' => $this->item->getId()),
+                                                true,
+                                                true);
         $js = "
         docman.addActionForItem(". $this->item->getId() .", {
-            href   :'". $params['default_url'] .'&action='. $this->action .'&id='. $this->item->getId() ."',
+            href   :'". $url ."',
             classes:'". $this->classes ."',
             title  :'". addslashes($this->title) ."',
             img    :'". $params['docman_icons']->getActionIcon($this->action) ."'

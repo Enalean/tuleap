@@ -24,57 +24,67 @@
  */
 
 class Docman_Filter {
-    var $name;
-    var $title;        
-    var $v;
+    var $name;     
+    var $value;
+    var $md;
+    var $sort;
 
-    function Docman_Filter() {  
-        $this->v = null;
+    function Docman_Filter($md) {  
+        $this->value = null;
+        $this->md = $md;
+        $this->sort = null;
     }
   
     function setValue($v) {
-        $this->v = $v;
+        $this->value = $v;
     }
 
     function getValue() {
-        return $this->v;
+        return $this->value;
     }
 
-    function setName($v) {
-        $this->name = $v;
+    function setSort($s) {
+        $this->sort = $s;
     }
 
-    function getName() {
-        return $this->name;
+    function getSort() {
+        return $this->sort;
     }
 
-    function setTitle($v) {
-        $this->title = $v;
-    } 
-
-    function getTitle() {
-        return $this->title;
+    function getUrlParameters() {
+        $param = array();
+        if($this->value !== null) {
+            $param[$this->md->getLabel()] = $this->value;
+        }
+        return $param;
     }
 
-    function setTable($v) {
-        $this->table = $v;
-    } 
-
-    function getTable() {
-        return $this->table;
+    function getSortParam() {
+        $sortParam = null;
+        if($this->md !== null) {
+            $sortParam = 'sort_'.$this->md->getLabel();
+        }
+        return $sortParam;
     }
 
-    function setField($v) {
-        $this->field = $v;
-    } 
-
-    function getField() {
-        return $this->field;
+    function _initSortFromRequest($request) {
+        $sortparam = $this->getSortParam();
+        if($request->exist($sortparam)) {
+            $this->setSort($request->get($sortparam));
+        }
     }
 
-    function initFromRequest(&$request) {
-        if($request->exist($this->getName())) {
-            $this->setValue($request->get($this->getName()));
+    function _initFilterFromRequest($request) {
+        $param = $this->md->getLabel();
+        if($request->exist($param)) {
+            $this->setValue($request->get($param));
+        }
+    }
+
+    function initFromRequest($request) {
+        if($this->md !== null) {
+            $this->_initSortFromRequest($request);
+            $this-> _initFilterFromRequest($request);
         }
     }
 }
@@ -84,9 +94,14 @@ class Docman_FilterDate extends Docman_Filter {
     var $field_operator_name;
     var $field_value_name;
 
-    function Docman_FilterDate() {
-        parent::Docman_Filter();
+    function Docman_FilterDate($md) {
+        parent::Docman_Filter($md);
         $this->operator = null;
+        if($md !== null) {
+            $label = $md->getLabel();
+            $this->field_operator_name  = $label.'_operator';
+            $this->field_value_name     = $label.'_value';
+        }
     }
 
     function getFieldOperatorName() {
@@ -97,12 +112,6 @@ class Docman_FilterDate extends Docman_Filter {
         return $this->field_value_name;
     }
 
-    function setName($v) {
-        parent::setName($v);
-        $this->field_operator_name  = $v.'_operator';
-        $this->field_value_name     = $v.'_value';
-    }
-
     function setOperator($v) {
         $this->operator = $v;
     } 
@@ -111,7 +120,18 @@ class Docman_FilterDate extends Docman_Filter {
         return $this->operator;
     }
 
-    function initFromRequest(&$request) {
+    function getUrlParameters() {
+        $param = array();
+        if($this->value !== null) {
+            $param[$this->field_value_name] = $this->value;
+            if($this->operator !== null) {
+                $param[$this->field_operator_name] = $this->operator;
+            }
+        }
+        return $param;
+    }
+
+    function _initFilterFromRequest(&$request) {
         if($request->exist($this->getFieldValueName()) && $request->get($this->getFieldValueName()) != '') {
             $this->setValue($request->get($this->getFieldValueName()));
             
@@ -119,13 +139,6 @@ class Docman_FilterDate extends Docman_Filter {
                 $this->setOperator($request->get($this->getFieldOperatorName()));
             }
         }
-    }
-}
-
-class Docman_FilterOrdering extends Docman_Filter {
-
-    function Docman_FilterOrdering() {
-        parent::Docman_Filter();
     }
 }
 

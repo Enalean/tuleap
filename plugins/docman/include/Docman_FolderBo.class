@@ -34,8 +34,8 @@ require_once('Docman_Folder.class');
  */
 class Docman_FolderBo extends Docman_ItemBo {
     
-    function Docman_FolderBo(&$docman, $groupId=0) {
-        $this->Docman_ItemBo($docman, $groupId);
+    function Docman_FolderBo($groupId=0) {
+        $this->Docman_ItemBo($groupId);
     }
 
     /**
@@ -96,7 +96,7 @@ class Docman_FolderBo extends Docman_ItemBo {
 
         $flist = array();
 
-        $dar =& $folderDao->searchAllByType($this->groupId);        
+        $dar = $folderDao->searchAllByType($this->groupId);        
         while($dar->valid()) {
             $row =& $dar->current();
 
@@ -108,7 +108,8 @@ class Docman_FolderBo extends Docman_ItemBo {
             $dar->next();
         }
 
-        return new ArrayIterator($flist);
+        $i = new ArrayIterator($flist);
+        return $i;
     }
 
     /**

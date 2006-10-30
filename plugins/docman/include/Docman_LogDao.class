@@ -23,7 +23,7 @@ class Docman_LogDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM plugin_docman_log";
         return $this->retrieve($sql);
     }
@@ -32,7 +32,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by Timestamp 
     * @return DataAccessResult
     */
-    function & searchByTimestamp($time) {
+    function searchByTimestamp($time) {
         $sql = sprintf("SELECT group_id, item_id, user_id, type, old_value, new_value FROM plugin_docman_log WHERE time = %s",
 				$this->da->quoteSmart($time));
         return $this->retrieve($sql);
@@ -42,7 +42,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by ItemId 
     * @return DataAccessResult
     */
-    function & searchByItemId($itemId, $order = '') {
+    function searchByItemId($itemId, $order = '') {
         $sql = sprintf("SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s ".$order,
 				$this->da->quoteSmart($itemId));
         return $this->retrieve($sql);
@@ -51,7 +51,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by ItemId order by time
     * @return DataAccessResult
     */
-    function & searchByItemIdOrderByTimestamp($itemId) {
+    function searchByItemIdOrderByTimestamp($itemId) {
         return $this->searchByItemId($itemId, ' ORDER BY time DESC ');
     }
 
@@ -59,7 +59,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by UserId 
     * @return DataAccessResult
     */
-    function & searchByUserId($userId) {
+    function searchByUserId($userId) {
         $sql = sprintf("SELECT time, group_id, item_id, type, old_value, new_value FROM plugin_docman_log WHERE user_id = %s",
 				$this->da->quoteSmart($userId));
         return $this->retrieve($sql);
@@ -69,7 +69,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by Type 
     * @return DataAccessResult
     */
-    function & searchByType($type) {
+    function searchByType($type) {
         $sql = sprintf("SELECT time, group_id, item_id, user_id, old_value, new_value FROM plugin_docman_log WHERE type = %s",
 				$this->da->quoteSmart($type));
         return $this->retrieve($sql);
@@ -79,7 +79,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by OldValue 
     * @return DataAccessResult
     */
-    function & searchByOldValue($oldValue) {
+    function searchByOldValue($oldValue) {
         $sql = sprintf("SELECT time, group_id, item_id, user_id, type, new_value FROM plugin_docman_log WHERE old_value = %s",
 				$this->da->quoteSmart($oldValue));
         return $this->retrieve($sql);
@@ -89,7 +89,7 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by NewValue 
     * @return DataAccessResult
     */
-    function & searchByNewValue($newValue) {
+    function searchByNewValue($newValue) {
         $sql = sprintf("SELECT time, group_id, item_id, user_id, type, old_value FROM plugin_docman_log WHERE new_value = %s",
 				$this->da->quoteSmart($newValue));
         return $this->retrieve($sql);

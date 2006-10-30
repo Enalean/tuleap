@@ -106,13 +106,16 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
         return EventManager::instance();
     }
     function &_getVersionFactory() {
-        return new Docman_VersionFactory();
+        $f = new Docman_VersionFactory();
+        return $f;
     }
     function &_getFileStorage() {
-        return new Docman_FileStorage();
+        $fs = new Docman_FileStorage();
+        return $fs;
     }
     function &_getItemDao() {
-        return new Docman_ItemDao(CodexDataAccess::instance());
+        $dao = new Docman_ItemDao(CodexDataAccess::instance());
+        return $dao;
     }
 }
 ?>

@@ -7,8 +7,6 @@
 * Docman_View_GetSpecificFieldsVisitor
 */
 
-require_once(dirname(__FILE__).'/../Docman_ValidateWiki.class');
-require_once(dirname(__FILE__).'/../Docman_ValidateLink.class');
 require_once(dirname(__FILE__).'/../Docman_ValidateUpload.class');
 require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class');
 
@@ -28,7 +26,9 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     }
 
     function &getValidator() {
-        return new Docman_ValidateWiki();
+        $msg = $GLOBALS['Language']->getText('plugin_docman', 'error_field_wiki_required');
+        $validator = new Docman_ValidateValueNotEmpty($this->pagename, $msg);
+        return $validator;
     }
 
 }
@@ -49,7 +49,9 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     }
 
     function &getValidator() {
-        return new Docman_ValidateLink();
+        $msg = $GLOBALS['Language']->getText('plugin_docman', 'error_field_link_required');
+        $validator = new Docman_ValidateValueNotEmpty($this->link_url, $msg);
+        return $validator;
     }
 
 }
@@ -72,7 +74,8 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
     }
 
     function &getValidator() {
-        return new Docman_ValidateUpload();
+        $validator = new Docman_ValidateUpload();
+        return $validator;
     }
 
 }
@@ -92,7 +95,8 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     }
 
     function &getValidator() {
-        return null;
+        $validator = null;
+        return $validator;
     }
 
 }
@@ -103,12 +107,28 @@ class Docman_View_GetSpecificFieldsVisitor {
         return array();
     }
     function visitWiki(&$item, $params = array()) {
-        $pagename = isset($params['force_item']['wiki_page']) ? $params['force_item']['wiki_page'] : $item->getPagename();
+        $pagename = '';
+        if(isset($params['force_item'])) {
+            if(Docman_ItemFactory::getItemTypeForItem($params['force_item']) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+                $pagename = $params['force_item']->getPagename();
+            }
+        }
+        else {
+            $pagename = $item->getPagename();
+        }
         return array(new Docman_MetadataHtmlWiki($pagename));
     }
     
     function visitLink(&$item, $params = array()) {
-        $link_url = isset($params['force_item']['link_url']) ? $params['force_item']['link_url'] : $item->getUrl();
+        $link_url = '';
+        if(isset($params['force_item'])) {
+            if($params['force_item']->getType() == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                $link_url = $params['force_item']->getUrl();
+            }
+        }
+        else {
+            $link_url = $item->getUrl();
+        }
         return array(new Docman_MetadataHtmlLink($link_url));
     }
     

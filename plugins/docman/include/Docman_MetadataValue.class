@@ -101,7 +101,8 @@ class Docman_MetadataValueList extends Docman_MetadataValue {
         $this->valueInt =& $v;
     }
     function &getValue() {
-        return new ArrayIterator($this->valueInt);
+        $i = new ArrayIterator($this->valueInt);
+        return $i;
     }
 
 }

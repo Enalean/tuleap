@@ -32,23 +32,29 @@ class Docman_FilterBo {
     var $filters;
 
     function Docman_FilterBo() {        
-        $this->filters['fltr_udate'] = new Docman_FilterDate();
-        $this->filters['fltr_udate']->setName('fltr_udate');
-        $this->filters['fltr_udate']->setTitle('Update date:');
-        $this->filters['fltr_udate']->setOperator('1');
-        $this->filters['fltr_udate']->setField('update_date');
-        $this->filters['fltr_udate']->setTable('i');
-
-        $this->filters['sort_update_date'] = new Docman_FilterOrdering();
-        $this->filters['sort_update_date']->setName('sort_update_date');
-        $this->filters['sort_update_date']->setTitle('Sort on update date');
-        $this->filters['sort_update_date']->setField('update_date');
-        $this->filters['sort_update_date']->setTable('i');
     }
 
-    function &getFilterByName($name) {
-        return $this->filters[$name];
+    function getFromMetadata($md) {
+        $f = null;
+
+        switch($md->getType()) {
+        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+            $f = new Docman_Filter($md);
+            break;
+        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+            $f = new Docman_Filter($md);
+            break;
+        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+            $f = new Docman_FilterDate($md);
+            break;
+        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+            $f = new Docman_Filter($md);
+            break;
+        }
+
+        return $f;
     }
+
 }
 
 ?>

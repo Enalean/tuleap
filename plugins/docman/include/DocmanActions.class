@@ -61,7 +61,7 @@ class DocmanActions extends Actions {
         $folder->setId($request->get('id'));
         $folder->setGroupId($request->get('group_id'));
 
-        $folderBo = new Docman_FolderBo($this->_controler);
+        $folderBo = new Docman_FolderBo();
         $folderBo->expand($folder);
     }
 
@@ -72,7 +72,7 @@ class DocmanActions extends Actions {
         $folder->setId($request->get('id'));
         $folder->setGroupId($request->get('group_id'));
 
-        $folderBo = new Docman_FolderBo($this->_controler);
+        $folderBo = new Docman_FolderBo();
         $folderBo->collapse($folder);
     }
 
@@ -183,12 +183,13 @@ class DocmanActions extends Actions {
                     )
                 )
             {
+
                 // Special handeling of obsolescence date
-                $obsolescenceDate = $request->get('obsolescence_date');
-                if($obsolescenceDate != "") {
-                    $d = explode('-',$obsolescenceDate);
-                    $item['obsolescence_date'] = mktime(0,0,0,
-                                                        $d[1], $d[2], $d[0]);
+                if(isset($item['obsolescence_date']) 
+                   && preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', 
+                                 $item['obsolescence_date'], $d)) {
+                    $item['obsolescence_date'] = mktime(0, 0, 0,
+                                                        $d[2], $d[3], $d[1]);
                 }
                 else {
                     $item['obsolescence_date'] = 0;
@@ -274,7 +275,7 @@ class DocmanActions extends Actions {
                     // Create metatata
                     if($request->exist('metadata')) {
                         $metadata_array = $request->get('metadata');
-                        $mdvFactory = new Docman_MetadataValueFactory($this->_controler, $request->get('group_id'));
+                        $mdvFactory = new Docman_MetadataValueFactory($request->get('group_id'));
                         $mdvFactory->createFromRow($id, $metadata_array);
                         if($mdvFactory->isError()) {
                             $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
@@ -311,16 +312,13 @@ class DocmanActions extends Actions {
             }
             
             // Special handeling of obsolescence date
-            if($request->exist('obsolescence_date')) {
-                $obsolescenceDate = $request->get('obsolescence_date');
-                if($obsolescenceDate != "") {
-                    $d = explode('-',$obsolescenceDate);
+            if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != '') {
+                    $d = explode('-',$data['obsolescence_date']);
                     $data['obsolescence_date'] = mktime(0,0,0,
                                                         $d[1], $d[2], $d[0]);
-                }
-                else {
-                    $data['obsolescence_date'] = 0;
-                }
+            }
+            else {
+                $data['obsolescence_date'] = 0;
             }
 
             // Check is status change
@@ -363,7 +361,7 @@ class DocmanActions extends Actions {
             // Update real metatata
             if($request->exist('metadata')) {
                 $metadata_array = $request->get('metadata');
-                $mdvFactory = new Docman_MetadataValueFactory($this->_controler, $request->get('group_id'));
+                $mdvFactory = new Docman_MetadataValueFactory($request->get('group_id'));
                 $mdvFactory->updateFromRow($data['id'], $metadata_array);
                 if($mdvFactory->isError()) {
                     $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
@@ -675,7 +673,7 @@ class DocmanActions extends Actions {
         $item =& $item_factory->getItemFromDb($request->get('id'));
         if ($item) {
             if (!$item_factory->isRoot($item)) {
-                $item_bo =& new Docman_ItemBo($this->_controler, $request->get('group_id'));
+                $item_bo =& new Docman_ItemBo($request->get('group_id'));
                 $item =& $item_bo->getItemSubTree($request->get('id'), array('user' => &$user));
                 if ($item) {
                     $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
@@ -734,7 +732,7 @@ class DocmanActions extends Actions {
                 $md->setDefaultValue('');
                 $md->setUseIt(false);
 
-                $mdFactory = new Docman_MetadataFactory($this->_controler, $request->get('group_id'));                
+                $mdFactory = new Docman_MetadataFactory($request->get('group_id'));                
                 $mdcreated = $mdFactory->create($md);
                 if($mdcreated === false) {
                     $this->_controler->feedback->log('error', 'Fail to create "Comment / Keywords" metadata');
@@ -759,20 +757,55 @@ class DocmanActions extends Actions {
     function admin_md_details_update() {
         $request =& HTTPRequest::instance();
         $_label = $request->get('label');
-        $_useIt = (int) $request->get('use_it');
         $_gid = (int) $request->get('group_id');
 
-        $mdFactory = new Docman_MetadataFactory($this->_controler, $_gid);
+        $mdFactory = new Docman_MetadataFactory($_gid);
         $md =& $mdFactory->getFromLabel($_label);
 
         if($md !== null) {
             if($md->getGroupId() == $_gid) {
-                if($_useIt === 1) {
-                    $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
+
+                // Name
+                if($md->canChangeName()) {
+                    $_name = $request->get('name');
+                    $md->setName($_name);
                 }
-                else {
-                    $md->setUseIt(PLUGIN_DOCMAN_METADATA_UNUSED);
+                
+                // Description
+                if($md->canChangeDescription()) {
+                    $_descr = $request->get('descr');
+                    $md->setDescription($_descr);
                 }
+
+                // Is empty allowed
+                if($md->canChangeIsEmptyAllowed()) {
+                    $_isEmptyAllowed = (int) $request->get('empty_allowed');
+
+                    if($_isEmptyAllowed === 1) {
+                        $md->setIsEmptyAllowed(PLUGIN_DOCMAN_DB_TRUE);
+                    }
+                    else {
+                        $md->setIsEmptyAllowed(PLUGIN_DOCMAN_DB_FALSE);
+                    }
+                }
+
+                // Usage
+                if(!$md->isRequired()) {
+                    $_useIt = (int) $request->get('use_it');
+                    if($_useIt === 1) {
+                        $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
+                    }
+                    else {
+                        $md->setUseIt(PLUGIN_DOCMAN_METADATA_UNUSED);
+                    }
+                }
+
+                // Default value
+                if($md->canChangeDefaultValue()) {
+                    $_dflt_value = $request->get('dflt_value');
+                    Docman_MetadataValueFactory::validateInput($md, $_dflt_value);
+                    $md->setDefaultValue($_dflt_value);
+                }                
 
                 $updated = $mdFactory->update($md);
                 if($updated) {
@@ -792,5 +825,180 @@ class DocmanActions extends Actions {
             $this->_controler->feedback->log('error', 'Metadata not updated');
         }
     }
+
+    function admin_create_metadata() {
+        $request =& HTTPRequest::instance();
+
+        $_gid          = (int) $request->get('group_id');
+        $_name         = $request->get('name');
+        $_description  = $request->get('descr');
+        $_emptyallowed = (int) $request->get('empty_allowed');
+        $_dfltvalue    = $request->get('dflt_value');
+        $_useit        = $request->get('use_it');
+        $_type         = (int) $request->get('type');
+
+        $mdFactory = new Docman_MetadataFactory($_gid);
+
+        //$mdrow['group_id'] = $_gid;
+        $mdrow['name'] = $_name;
+        $mdrow['description'] = $_description;
+        $mdrow['data_type'] = $_type;
+        //$mdrow['label'] = 
+        $mdrow['required'] = false;
+        $mdrow['empty_ok'] = $_emptyallowed;
+        $mdrow['special'] = false;
+        $mdrow['default_value'] = $_dfltvalue;
+        $mdrow['use_it'] = $_useit;
+        
+        $md =& $mdFactory->_createFromRow($mdrow);
+
+        $mdId = $mdFactory->create($md);
+        if($mdId !== false) {
+            $this->_controler->feedback->log('info', 'Property successfully created');
+        }
+        else {
+            $this->_controler->feedback->log('error', 'An error occured on propery creation');
+        }
+    }
+
+
+    function admin_delete_metadata() {
+        $md = $this->_controler->_actionParams['md'];
+
+        $name = $md->getName();
+
+        $mdFactory = new Docman_MetadataFactory($md->getGroupId());
+
+        $deleted = $mdFactory->delete($md);
+        if($deleted) {
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman',
+                                                                                   'md_del_success',
+                                                                                   array($name)));
+        }
+        else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman',
+                                                                                    'md_del_failure',
+                                                                                    array($name)));
+        }
+        $this->_controler->view = 'RedirectAfterCrud';
+        $this->_controler->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+    }
+
+    function admin_create_love() {
+        $request =& HTTPRequest::instance();
+        
+        $_name         = $request->get('name');
+        $_description  = $request->get('descr');
+        $_rank         = $request->get('rank');
+        //$_dfltvalue    = (int) $request->get('dflt_value');
+        $_mdLabel      = $request->get('md');
+        $_gid          = (int) $request->get('group_id');
+
+        $mdFactory = new Docman_MetadataFactory($_gid);
+        $md =& $mdFactory->getFromLabel($_mdLabel);
+        
+        if($md !== null 
+           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST 
+           && $md->getLabel() != 'status') {
+
+            $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+            
+            $love = new Docman_MetadataListOfValuesElement();
+            $love->setName($_name);
+            $love->setDescription($_description);
+            $love->setRank($_rank);
+            $loveFactory->create($love);
+        }
+    }
+
+    function admin_delete_love() {
+        $request =& HTTPRequest::instance();
+
+        $_loveId  = (int) $request->get('loveid');
+        $_mdLabel = $request->get('md');
+        $_gid = (int) $request->get('group_id');
+
+        $mdFactory = new Docman_MetadataFactory($_gid);
+        $md =& $mdFactory->getFromLabel($_mdLabel);
+
+        if($md !== null 
+           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST 
+           && $md->getLabel() != 'status') {
+
+            $love = new Docman_MetadataListOfValuesElement($md->getId());
+            $love->setId($_loveId);
+
+            $updated = true;
+            if($_loveId == $md->getDefaultValue()) {
+                // We are about to delete the default value
+                // so reset to none (value == 100)
+                $md->setDefaultValue(100);
+
+                $updated = $mdFactory->update($md);
+                if($updated) {
+                    $this->_controler->feedback->log('info', 'Property default value reset to None.');
+                }
+                else {
+                    $this->_controler->feedback->log('error', 'Cannot reset property default value to none.');
+                }
+            }
+            
+            if($updated) {
+                // Delete value
+                $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+                $deleted = $loveFactory->delete($love);
+
+                if($deleted) {
+                    $this->_controler->feedback->log('info', 'Element successfully deleted.');
+
+                    // Update values to current default                
+                    $mdvFactory = new Docman_MetadataValueFactory($_gid);
+                    $reset = $mdvFactory->updateToMetadataDefaultValue($_loveId, $md);
+
+                    if($reset) {
+                        $this->_controler->feedback->log('info', 'Documents labeled with the deleted element was successfuly updated.');
+                    }
+                    else {
+                        $this->_controler->feedback->log('warning', 'The element was deleted but an error occured on documents update. Some documents may still be labeled with the deleted value.');
+                    }
+                }
+                else {
+                    $this->_controler->feedback->log('error', 'An error occured on element deletion.');
+                }
+            }
+        }
+        else {            
+            // Sth really strange is happening... user try to delete a value
+            // that do not belong to a metadata with a List type !?
+            // If this happen, shutdown the server, format the hard drive and
+            // leave computer science to keep goat on the Larzac.
+        }
+    }
+
+    function admin_update_love() {
+        $md   = $this->_controler->_actionParams['md'];
+        $love = $this->_controler->_actionParams['love'];
+
+        $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+        $updated = $loveFactory->update($love);
+
+        if($updated) {
+            $this->_controler->feedback->log('info', 'Element successfully updated');
+
+            $this->_controler->view = 'RedirectAfterCrud';
+            $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_md_details',
+                                                                          'md'     => $md->getLabel());
+        }
+        else {
+            $this->_controler->feedback->log('error', 'Unable to update element.');
+
+            $this->_controler->view = 'RedirectAfterCrud';
+            $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_display_love',
+                                                                          'md'     => $md->getLabel(),
+                                                                          'loveid' => $love->getId());
+        }
+    }
+
 }
+
 ?>

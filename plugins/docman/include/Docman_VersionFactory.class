@@ -47,7 +47,7 @@ class Docman_VersionFactory {
     
     function getAllVersionForItem(&$item) {
         $dao =& $this->_getVersionDao();
-        $dar =& $dao->searchByItemId($item->getId());
+        $dar = $dao->searchByItemId($item->getId());
         $versions = false;
         if ($dar && !$dar->isError()) {
             $versions = array();
@@ -62,7 +62,7 @@ class Docman_VersionFactory {
     
     function &getSpecificVersion(&$item, $number) {
         $dao =& $this->_getVersionDao();
-        $dar =& $dao->searchByNumber($item->getId(), $number);
+        $dar = $dao->searchByNumber($item->getId(), $number);
         $version = null;
         if ($dar && !$dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());

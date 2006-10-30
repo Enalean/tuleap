@@ -87,6 +87,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         }
     }
     function visitDocument(&$item, $params = array()) {
+        $params['popup_doc'] = true;
         $li_displayed = $this->_displayItem($item, $params);
         if($li_displayed) {
             $this->html .= '</li>'."\n";
@@ -133,7 +134,9 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     if ($class) {
                         $class .= $open;
                     }
-                    $this->html .= '<a href="?group_id='. $item->getGroupId() .'&amp;action='. $action .'&amp;id='. $item->getId() .'" class="'. $class .'">';
+                    $url = Docman_View_View::buildUrl($this->params['default_url'], array('action' => $action,
+                                                                                          'id' => $item->getId()));
+                    $this->html .= '<a href="'.$url.'" class="'. $class .'">';
                 }
                 $this->html .=  $icon;
                 if ($action) {
@@ -141,7 +144,12 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 }
                 $this->html .=  '<span class="docman_item_title">';
                 if ($action) {
-                    $this->html .= '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
+                    $url = Docman_View_View::buildActionUrl($this->params, 
+                                                            array('action' => 'show',
+                                                                  'id' => $item->getId()),
+                                                            false,
+                                                            isset($params['popup_doc']) ? true : false);
+                    $this->html .= '<a href="'.$url.'">';
                 }
                 $this->html .=  $item->getTitle();
                 if ($action) {

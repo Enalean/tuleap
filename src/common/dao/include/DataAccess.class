@@ -46,7 +46,8 @@ class DataAccess {
             var_dump(debug_backtrace());
             echo ' -->';
         }*/
-        return new DataAccessResult($this,mysql_query($sql,$this->db));
+        $dar = new DataAccessResult($this,mysql_query($sql,$this->db));
+        return $dar;
     }
 
     /**

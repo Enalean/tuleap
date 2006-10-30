@@ -235,7 +235,7 @@ class User {
 	}
     
     var $_ugroups;
-    function getUgroups($group_id, $instances) {
+    function &getUgroups($group_id, $instances) {
         $hash = md5(serialize($instances));
         if (!isset($this->_ugroups)) {
             $this->_ugroups = array();

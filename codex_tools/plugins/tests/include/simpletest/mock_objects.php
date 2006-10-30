@@ -1051,7 +1051,7 @@
             }
             $mock_reflection = new SimpleReflection($this->_mock_class);
             if ($mock_reflection->classExistsSansAutoload()) {
-                trigger_error("Partial mock class [$mock_class] already exists");
+                trigger_error("Partial mock class [$this->_mock_class] already exists");
                 return false;
             }
             return eval($this->_extendClassCode($methods));

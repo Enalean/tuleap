@@ -62,18 +62,23 @@ class Docman_ItemDao extends DataAccessObject {
         // Order clause        
         $sql_order = '';
 
+
+        $fromStmts = array();
         //
         // Filters
         if($filters !== null) {
-            $fi =& $filters->getIterator();
+            $fi =& $filters->getFilterIterator();
             $fi->rewind();
             while($fi->valid()) {
                 $f =& $fi->current();
 
                 $sqlFilter =& Docman_SqlFilterFactory::getFromFilter($f);
                 
-                if($sqlFilter !== null) {                   
-                    // Handle 'where' clause                    
+                if($sqlFilter !== null) {   
+                    // Handle 'from' clause
+                    $fromStmts = array_merge($fromStmts, $sqlFilter->getFromClause());                    
+
+                    // Handle 'where' clause
                     $where = $sqlFilter->getWhereClause();
                     if($where != '') {
                         $sql_where .= ' AND '.$where;
@@ -98,18 +103,21 @@ class Docman_ItemDao extends DataAccessObject {
         if($sql_order != '') {
             $sql_order = ' ORDER BY '.$sql_order;
         }
+        
+        $from = array_unique($fromStmts);
              
-        return $this->_searchWithCurrentVersion($sql_where, '', $sql_order);
+        return $this->_searchWithCurrentVersion($sql_where, '', $sql_order, $from);
 
     }
    
-    function _searchWithCurrentVersion($where, $group = '', $order = '') {
+    function _searchWithCurrentVersion($where, $group = '', $order = '', $from = array()) {
         $sql = 'SELECT i.*, '
             .' v.id as version_id, v.number as version_number, v.user_id as version_user_id, v.label as version_label, '
             .' v.changelog as version_changelog, v.date as version_date, v.filename as version_filename, v.filesize as version_filesize, '
             .' v.filetype as version_filetype, v.path as version_path, '
             .' 1 as folder_nb_of_children '
             .' FROM plugin_docman_item AS i LEFT JOIN plugin_docman_version AS v ON (i.item_id = v.item_id) '
+            .(count($from) > 0 ? ', '.implode(', ', $from) : '')
             .' WHERE i.delete_date IS NULL AND '.$where
             .$group
             .$order;
@@ -267,7 +275,7 @@ class Docman_ItemDao extends DataAccessObject {
     function _createAndReturnId($sql, $date) {
         $inserted = $this->update($sql);
         if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
                 if ($inserted) {
@@ -359,7 +367,7 @@ class Docman_ItemDao extends DataAccessObject {
             $id = $row['item_id'];
         }
         if ($id) {
-            $dar =& $this->searchById($id);
+            $dar = $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
                 $current =& $dar->current();
                 $set_array = array();
@@ -384,7 +392,7 @@ class Docman_ItemDao extends DataAccessObject {
     }
     function _updateUpdateDateOfParent($item_id_quoted) {
         $sql = 'SELECT parent_id, update_date FROM plugin_docman_item WHERE item_id = '. $item_id_quoted;
-        $dar =& $this->retrieve($sql);
+        $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->valid()) {
             $item = $dar->current();
             $sql = 'UPDATE plugin_docman_item SET update_date = '. $item['update_date'] .' WHERE item_id = '. $item['parent_id'];
@@ -421,7 +429,7 @@ class Docman_ItemDao extends DataAccessObject {
             $this->da->quoteSmart($group_id),
             $this->da->quoteSmart($item_id)
         );
-        $dar =& $this->retrieve($sql);
+        $dar = $this->retrieve($sql);
         return !$dar->valid();
     }
     function setNewParent($item_id, $new_parent_id, $ordering) {
@@ -432,7 +440,7 @@ class Docman_ItemDao extends DataAccessObject {
                 $sql = sprintf('SELECT '.($ordering=='end'?'MAX(rank)+1':'MIN(rank)-1').' AS rank FROM plugin_docman_item WHERE parent_id = %s', 
                     $this->da->quoteSmart($new_parent_id)
                 );
-                $dar =& $this->retrieve($sql);
+                $dar = $this->retrieve($sql);
                 if ($dar && $dar->valid()) {
                     $row = $dar->current();
                     $rank = $row['rank'];
@@ -469,7 +477,7 @@ class Docman_ItemDao extends DataAccessObject {
             ' AND group_id = %s ',
             $this->da->quoteSmart($group_id)
         );
-        $dar =& $this->retrieve($sql);
+        $dar = $this->retrieve($sql);
         $id = false;
         if ($dar && $dar->valid()) {
             $row = $dar->current();

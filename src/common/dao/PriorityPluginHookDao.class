@@ -74,7 +74,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     }
 
     
-    function searchByHook_PluginId($hook, $pluginId) {
+    function &searchByHook_PluginId($hook, $pluginId) {
         $sql = "SELECT priority FROM priority_plugin_hook WHERE hook = '".$hook."' AND plugin_id = '".$pluginId."'";
         return $this->retrieve($sql);
     }

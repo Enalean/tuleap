@@ -17,7 +17,7 @@ class Docman_View_RawTree extends Docman_View_View {
     
     /* protected */ function _content($params) {
         
-        $itemBo = new Docman_ItemBo($params['docman'], $params['group_id']);
+        $itemBo = new Docman_ItemBo($params['group_id']);
 
         $itemTree =& $itemBo->getItemSubTree($params['item']->getId(), array('user' => $params['user']));
 
@@ -26,7 +26,9 @@ class Docman_View_RawTree extends Docman_View_View {
             'docman_icons'           => $this->_getDocmanIcons($params),
             'default_url'            => $params['default_url'],
             //'display_description'    => isset($params['display_description']) ? $params['display_description'] : true,
-            'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false)
+            'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false),
+            'pv'                     => isset($params['pv']) ? $params['pv'] : false,
+            'report'                 => isset($params['report']) ? $params['report'] : false,
         ));
         $itemTree->accept($displayItemTreeVisitor);
         

@@ -18,18 +18,47 @@ plugin_docman	admin_md_detail_param_desc	Description:
 plugin_docman	admin_md_detail_param_allowempty	Allow empty value:
 plugin_docman	admin_md_detail_param_keephistory	Keep history:
 plugin_docman	admin_md_detail_param_useit	Use this property:
+plugin_docman	admin_md_detail_param_type	Type:
+plugin_docman	admin_md_detail_param_dfltvalue	Default value:
 plugin_docman	admin_md_detail_param_yes	Yes
 plugin_docman	admin_md_detail_param_no	No
+plugin_docman	admin_md_detail_param_type_text	Text
+plugin_docman	admin_md_detail_param_type_string	String
+plugin_docman	admin_md_detail_param_type_date	Date
+plugin_docman	admin_md_detail_param_type_list	List of values
 plugin_docman	admin_md_detail_val_title	Property values
 plugin_docman	admin_md_detail_val_name	Name
 plugin_docman	admin_md_detail_val_desc	Description
 plugin_docman	admin_md_detail_val_rank	Rank
 plugin_docman	admin_md_detail_val_status	Status
+plugin_docman	admin_md_detail_val_delete	Delete
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
+plugin_docman	admin_md_detail_val_perm	Permanent
+plugin_docman	admin_md_detail_val_delete_warn	You are about to delete the value \'$1\' in the current category. All documents already labeled with this value will be bound to the current default value of the category: \'$2\'.Click on \'Ok\' to proceed otherwise click on \'Cancel\'.
+plugin_docman	admin_md_detail_val_delete_alt	Delete value '$1'
+plugin_docman	admin_md_detail_val_create_title	Create a new value
+plugin_docman	admin_md_detail_val_create_name	Name:
+plugin_docman	admin_md_detail_val_create_desc	Description:
+plugin_docman	admin_md_detail_val_create_rank	Rank:
+plugin_docman	admin_md_detail_val_create_rank_beg	At the beginning
+plugin_docman	admin_md_detail_val_create_rank_end	At the end
+plugin_docman	admin_md_detail_val_create_rank_after	After
+plugin_docman	admin_md_detail_val_create_dflt	Is default?
+plugin_docman	admin_md_detail_val_create_submit	Create
+plugin_docman	admin_md_detupdlove_title	Update value '$2' in '$1' property
+plugin_docman	admin_md_detupdlove_update	Update
+plugin_docman	admin_md_detupdlove_backtomenu	Back to property details
 plugin_docman	admin_metadata_title	Manage Properties
+plugin_docman	admin_metadata_list_title	Available properties
 plugin_docman	admin_metadata_descr	Define the properties of your documents.
 plugin_docman	admin_metadata_instructions	<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>
+plugin_docman	admin_metadata_list_name	Name
+plugin_docman	admin_metadata_list_descr	Description
+plugin_docman	admin_metadata_list_status	Status
+plugin_docman	admin_metadata_list_delete	Delete
+plugin_docman	admin_metadata_new_title	Create a new property
+plugin_docman	admin_metadata_new_submit	Create
 plugin_docman	admin_permissions_title	Manage Permissions
 plugin_docman	admin_permissions_descr	Define who can administrate the document manager.
 plugin_docman	admin_permissions_instructions	Please select user groups that can administrate the document manager:
@@ -105,6 +134,7 @@ plugin_docman	details_update_title	Update $1
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
 plugin_docman	error_alreadyinstalled	Document Manager already installed.
+plugin_docman	error_cannot_delete_hc_md	You are not allowed to delete system properties.
 plugin_docman	error_create_initversion	Error while creating initial version.
 plugin_docman	error_create_newversion	Error while creating new version.
 plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not empty.
@@ -112,6 +142,8 @@ plugin_docman	error_field_link_required	The URL is required.
 plugin_docman	error_field_title_required	The Title is required.
 plugin_docman	error_field_wiki_required	The page name is required.
 plugin_docman	error_filenotfound	The file cannot be found.
+plugin_docman	error_invalid_md	Invalid property
+plugin_docman	error_md_or_love	There is an error in parameters. Back to previous screen.
 plugin_docman	error_item_not_deleted	Can't delete item.
 plugin_docman	error_item_not_moved	Can't move item.
 plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the document manager.
@@ -178,10 +210,13 @@ plugin_docman	max_size_msg	(The maximum upload file size is $1 MByte)
 plugin_docman	md_bo_badlabel	Unknown property label '$1'.
 plugin_docman	md_cdate_name	Create Date
 plugin_docman	md_cdate_desc	When the document was added into the document manager.
+plugin_docman	md_del_success	"$1" successfully deleted
+plugin_docman	md_del_failure	An error occured on "$1" deletion
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description of the document.
 plugin_docman	md_install_commentkeyword_name	Comments
 plugin_docman	md_install_commentkeyword_desc	Additional information on the document.
+plugin_docman	md_error_empty_gen	"$1" is required, please fill the field.
 plugin_docman	md_html_validity_3_months	3 Months from today
 plugin_docman	md_html_validity_6_months	6 Months from today
 plugin_docman	md_html_validity_12_months	12 Months from today

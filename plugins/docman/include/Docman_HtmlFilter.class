@@ -28,14 +28,15 @@ class Docman_HtmlFilterFactory {
         
     }
 
-    function getFromFilter(&$filter) {
+    function &getFromFilter(&$filter) {
+        $f = null;
         if(is_a($filter, 'Docman_FilterDate')) {
-            return new Docman_HtmlFilterDate($filter);
+            $f = new Docman_HtmlFilterDate($filter);
         }
-        if(is_a($filter, 'Docman_FilterOrdering')) {
-            return new Docman_HtmlFilter($filter);
+        else {
+            $f = new Docman_HtmlFilter($filter);
         }
-        return null;
+        return $f;
     }
 
 }
@@ -48,15 +49,38 @@ class Docman_HtmlFilter {
  
     }
 
-    function toHtml() {
-        return '';
+    function _valueSelectorHtml($formName) {
+        $html = '';
+        $value = $this->filter->getValue();
+        if($value !== null) {
+            $html .= '<input type="hidden" name="'.$this->filter->md->getLabel().'" value="'.$value.'" />';
+            $html .= "\n";
+        }
+        return $html;
+    }
+
+    function _sortSelectorHtml($formName) {
+        $html = '';
+        $sort = $this->filter->getSort();
+        if($sort !== null) {
+            $html .= '<input type="hidden" name="'.$this->filter->getSortParam().'" value="'.$sort.'" />';
+            $html .= "\n";
+        }
+        return $html;
+    }
+
+    function toHtml($formName) {
+        $html = '';
+        $html .= $this->_valueSelectorHtml($formName);
+        $html .= $this->_sortSelectorHtml($formName);
+        return $html;
     }
 }
 
 class Docman_HtmlFilterDate extends Docman_HtmlFilter {
 
-    function toHtml($formName) {        
-        $html  = $this->filter->getTitle().'&nbsp;';
+    function _valueSelectorHtml($formName) {        
+        $html  = $this->filter->md->getName().'&nbsp;';
         $html .= html_select_operator($this->filter->getFieldOperatorName(), $this->filter->getOperator());
         $html .= html_field_date($this->filter->getFieldValueName(),
                                  $this->filter->getValue(),
@@ -65,6 +89,7 @@ class Docman_HtmlFilterDate extends Docman_HtmlFilter {
                                  '10',
                                  $formName,
                                  false);
+        $html .= "\n&nbsp;\n";
 
         return $html;
     }

@@ -146,7 +146,7 @@ class PluginFactory {
     /**
      * @return Collection of enabled or disabled plugins depends on parameters
      */
-    function _getAvailableOrUnavailablePlugins(&$map, $criteria) {
+    function &_getAvailableOrUnavailablePlugins(&$map, $criteria) {
          $dar =& $this->plugin_dao->searchByAvailable($criteria);
          while($row = $dar->getRow()) {
              $p =& $this->_getInstancePlugin($row['id'], $row['name']);

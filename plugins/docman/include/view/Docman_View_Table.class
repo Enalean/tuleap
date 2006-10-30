@@ -26,17 +26,34 @@ require_once('Docman_View_Browse.class');
 
 class Docman_View_Table extends Docman_View_Browse {
     
-    /* protected */ function _filter($params) {   
+    /* protected */ function _filter($params) {
+
+        // No filter in printer version
+        if(isset($params['pv']) && $params['pv'] > 0) {
+            return;
+        }
+
+        $reportArg = '';
+        if(isset($params['report']) && $params['report'] !== false) {
+            $reportArg = '<input type="hidden" name="report" value="'.$params['report'].'" />';
+        }
+
+        $action = isset($params['action']) ? $params['action'] : 'show';
+
         echo '
 <!-- Filters -->
 <fieldset class="docman_filters">
 <legend>'. $GLOBALS['Language']->getText('plugin_docman', 'filters') .'</legend>
 <form name="plugin_docman_filters" method="GET" action="?">
-<input type="hidden" name="group_id" value="'.$params['group_id'].'">
-<input type="hidden" name="id" value="'.$params['item']->getId().'">
+<input type="hidden" name="group_id" value="'.$params['group_id'].'" />
+<input type="hidden" name="id" value="'.$params['item']->getId().'" />
+<input type="hidden" name="action" value="'.$action.'" />
 ';
+        echo $reportArg;
+
+
         if($params['filter'] !== null) {
-            $fi =& $params['filter']->getIterator();
+            $fi =& $params['filter']->getFilterIterator();
             $fi->rewind();
             while($fi->valid()) {        
                 $f =& $fi->current();
@@ -44,7 +61,6 @@ class Docman_View_Table extends Docman_View_Browse {
                 $htmlFilter =& Docman_HtmlFilterFactory::getFromFilter($f);
                 if($htmlFilter !== null) {
                     print $htmlFilter->toHtml('plugin_docman_filters');
-                    echo "&nbsp;\n";
                 }
                 
                 $fi->next();
@@ -55,9 +71,25 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
 </fieldset>
 ';
     }
+    var $dfltParams = null;
+    function _getDefaultUrlParams($params) {
+        if($this->dfltParams === null) {
+            $action = isset($params['action']) ? $params['action'] : 'show';
+            $this->dfltParams = array('action' => $action,
+                                      'id'     => $params['item']->getId());
+
+            $this->_initSearchAndSortParams($params);
+        }
+        return array_merge($this->dfltParams, $this->dfltSearchParams, $this->dfltSortParams);
+    }
+
+    function _buildSearchUrl($params, $extraParams = array()) {
+        $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
+        return $this->buildActionUrl($params, $parameters);
+    }
 
     /* protected */ function _content($params) {      
-        $itemBo = new Docman_ItemBo($params['docman'], $params['group_id']);
+        $itemBo = new Docman_ItemBo($params['group_id']);
 
         $itemIterator =& $itemBo->getItemList($params['item']->getId(), 
                                               array('user' => $params['user'],
@@ -67,7 +99,9 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
         $itemFactory =& new Docman_ItemFactory();
 
 
-        $currentViewUrl = '?group_id='.$params['group_id'].'&amp;action=show&amp;id='.$params['item']->getId();
+        $action = isset($params['action']) ? $params['action'] : 'show';
+        $currentViewUrlParams = array('action' => $action,
+                                      'id' => $params['item']->getId());
 
         // Limit browsing
         $offset = 25;
@@ -77,40 +111,68 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
         }
         $_high_limit = $_low_limit + $offset;
         $itemCounter = 0;
-                
+
+        $sortableColumns = array();
         /// {{{ Prepare "On column title click" sort
-        $si =& $params['filter']->getSortIterator();
-        $si->rewind();
-        while($si->valid()) {
-            $sort =& $si->current();
-            
-            if($sort->getValue() == 1) {
-                $toggleValue = '0';
-                $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
+        if($params['filter'] !== null) {
+            $fi = $params['filter']->getFilterIterator();
+            $fi->rewind();
+            while($fi->valid()) {        
+                $f =& $fi->current();
+             
+                $sort = $f->getSort();
+                if($sort == 1) {
+                    $toggleValue = '0';
+                    $toogleIcon = '<img src="'.util_get_image_theme("up_arrow.png").'" border="0" >';
+                }
+                else {
+                    $toggleValue = '1';
+                    $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
+                }
+
+                //
+                // URL
+                //
+                $toggleParam = array();
+                $sortParam = $f->getSortParam();
+                if($sortParam !== null) {
+                    $toggleParam[$sortParam] = $toggleValue;
+                }
+                // Cannot use _buildSearchUrl because we don't want to keep previous sort_*.
+                $this->_getDefaultUrlParams($params);
+                $url = $this->buildActionUrl($params, array_merge($this->dfltParams, 
+                                                                  $this->dfltSearchParams, 
+                                                                  $toggleParam));
+                
+                $title = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_toggletitle');
+
+                $link = $f->md->getName();
+                if($sort !== null) {
+                    $link .= '&nbsp;'.$toogleIcon;
+                }
+
+                $href = '<a href="'.$url.'" title="'.$title.'">'.$link.'</a>';
+
+                $sortableColumns[$f->md->getLabel()] = $href;
+                
+                $fi->next();
+            }
+        }
+
+        $columnsOnReport = array('title', 'description', 'location', 'owner', 'update_date');
+
+        $notSortableColumns['location'] = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_location');
+        $columnsTitles = array();
+        foreach($columnsOnReport as $column) {
+            if(isset($sortableColumns[$column])) {
+                $columnsTitles[] = $sortableColumns[$column];
             }
             else {
-                $toggleValue = '1';
-                $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
+                $columnsTitles[] = $notSortableColumns[$column];
             }
-            
-            $url = $currentViewUrl.'&amp;'.$sort->getName().'='.$toggleValue;
-           
-            $sortableColumns[$sort->getField()] = '<a href="'.$url.'" title="'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_toggletitle').'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_'.$sort->getField()).'&nbsp;'.$toogleIcon.'</a>';
- 
-            $si->next();
+        }
 
-        }       
-        /// }}}
-
-        $table = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttable_title'),
-                                                $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttable_desc'),
-                                                $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttable_location'),
-                                                $GLOBALS['Language']->getText('plugin_docman',
-                                                                              'view_documenttable_owner'),
-                                                $sortableColumns['update_date']));
+        $table =  html_build_list_table_top($columnsTitles);
         
         $altRowClass = 0;
         $itemIterator->rewind();
@@ -129,7 +191,12 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
                     $table .=  "<td>";
                     $table .= '<span style="white-space: nowrap;">';
                     $table .= $icon;
-                    $table .=  '<a href="?group_id='. $item->getGroupId() .'&amp;action=show&amp;id='. $item->getId() .'">';
+                    $url = $this->buildActionUrl($params, 
+                                                 array('action' => 'show',
+                                                       'id' => $item->getId()), 
+                                                 false,
+                                                 true);
+                    $table .= '<a href="'.$url.'">';
                     $table .=  htmlentities($item->getTitle(), ENT_QUOTES);
                     $table .=  '</a>';
                     $table .= $this->getItemMenu($item, $params);
@@ -149,8 +216,11 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
                     foreach($pathTitle as $key => $title) {
                         if($key != 0) {
                             $id  = $pathId[$key];
-                            $url = '<a href="?group_id='.$item->getGroupId().'&amp;action=show&amp;id='.$id.'">'.$title.'</a>';
-                            $pathUrl[] = $url;
+                            $dfltParams = $this->_getDefaultUrlParams($params);
+                            $dfltParams['id'] = $id;
+                            $url = $this->buildActionUrl($params, $dfltParams);
+                            $href = '<a href="'.$url.'">'.$title.'</a>';
+                            $pathUrl[] = $href;
                         }
                     }
                     $table .= implode(' / ', $pathUrl);
@@ -176,7 +246,7 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
 
         // Prepare Navigation Bar
         if($_low_limit > 0) {
-            $firstUrl    = $currentViewUrl.'&amp;start=0';
+            $firstUrl    = $this->_buildSearchUrl($params, array('start' => '0'));
             $first       = '<a href="'.$firstUrl.'">&lt;&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_begin').'</a>';
         }
         else {
@@ -188,7 +258,7 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
             if($previousOffset < 0) {
                 $previousOffset = 0;
             }
-            $previousUrl = $currentViewUrl.'&amp;start='.$previousOffset;
+            $previousUrl = $this->_buildSearchUrl($params, array('start' => $previousOffset));
             $previous    = '<a href="'.$previousUrl.'">&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous').' '.$offset.'</a>';
         }
         else {
@@ -196,7 +266,7 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
         }
 
         if($_high_limit < $itemCounter) {
-            $nextUrl     = $currentViewUrl.'&amp;start='.$_high_limit;
+            $nextUrl     = $this->_buildSearchUrl($params, array('start' => $_high_limit));
             $next        = '<a href="'.$nextUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next').' '.$offset.' &gt;</a>';
         }
         else {
@@ -205,7 +275,7 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
 
         if($_high_limit < $itemCounter) {
             $lastOffset  = $itemCounter - $offset;
-            $lastUrl     = $currentViewUrl.'&amp;start='.$lastOffset;
+            $lastUrl     = $this->_buildSearchUrl($params, array('start' => $lastOffset));
             $last        = '<a href="'.$lastUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_end').' &gt;&gt;</a>';
         }
         else {

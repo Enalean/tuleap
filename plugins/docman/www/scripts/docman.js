@@ -408,7 +408,7 @@ function change_obsolescence_date(form) {
     }
   }
 
-  var input = form.obsolescence_date;
+  var input = form.elements['item[obsolescence_date]'];
 
   // Compute new date  
   var newdatestr = "";
@@ -440,7 +440,7 @@ function change_obsolescence_date(form) {
   }
 
   if(init_obsolescence_date == -1) {
-    init_obsolescence_date = form.obsolescence_date.value;
+    init_obsolescence_date = input.value;
   }
 
   // Write new date  

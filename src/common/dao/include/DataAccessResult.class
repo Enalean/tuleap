@@ -32,7 +32,7 @@ class DataAccessResult extends Iterator {
     * Returns an array from query row or false if no more rows
     * @return mixed
     */
-    function getRow() {
+    function &getRow() {
         $row = $this->current();
         $this->next();
         return $row;

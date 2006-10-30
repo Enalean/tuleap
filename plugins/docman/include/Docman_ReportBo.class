@@ -24,122 +24,75 @@
  */
 
 require_once('Docman_FilterBo.class');
-require_once('Docman_UserPreferencesFilter.class');
 
 class Docman_Report {
     var $filters;
 
     function Docman_Report() {
         $this->filters = array();
-        $this->sort    = array();
     }
 
     function addFilter(&$f) {
         $this->filters[] =& $f;
     }
 
-    function addSort(&$s) {
-        $this->sort[] =& $s;
-    }
-
     function &getFilterIterator() {
-        return new ArrayIterator($this->filters);
+        $i = new ArrayIterator($this->filters);
+        return $i;
     }
-
-    function &getSortIterator() {
-        return new ArrayIterator($this->sort);
-    }
-
-    function &getIterator() {
-        return new ArrayIterator(array_merge($this->filters, $this->sort));
-    }
-
 }
 
 class Docman_ReportBo {
+    var $groupId;
 
-    function Docman_ReportBo() {
-
+    function Docman_ReportBo($groupId) {
+        $this->groupId = $groupId;
     }
 
     function &get($id) {
+        $report = null;
         if($id == 'Table') {
             $report = new Docman_Report();
             $filterBo = new Docman_FilterBo();        
 
-            $submitted_fields = array('fltr_udate');
-            foreach($submitted_fields as $fName) {            
-                $filter =& $filterBo->getFilterByName($fName);
-                $report->addFilter($filter);
-            }
+            $mdFactory = new Docman_MetadataFactory($this->groupId);
+            $mdIter = $mdFactory->getMetadataForGroup(true);
+            $mdIter->rewind();
+            while($mdIter->valid()) {
+                $md = $mdIter->current();
 
-            $submitted_sort = array('sort_update_date');
-            foreach($submitted_sort as $fName) {            
-                $filter =& $filterBo->getFilterByName($fName);
-                $report->addSort($filter);
-            }
+                $filter = $mdFactory->getFilterFromLabel($md->getLabel());
+                if($filter !== null) {
+                    $report->addFilter($filter);
+                }
+                unset($filter);
 
-            return $report;
+                $mdIter->next();
+            }
         }
-        return null;
+        return $report;
     }
     
     function setup(&$report, &$request, $groupId, &$feedback) {
         $validateFilterFactory  = new Docman_ValidateFilterFactory();
-        $userPrefsFilterFactory = new Docman_UserPreferencesFilterFactory($groupId);
 
         $fi =& $report->getFilterIterator();
         $fi->rewind();
         while($fi->valid()) {
             $filter =& $fi->current();
 
-            $uPrefs =& $userPrefsFilterFactory->getFromFilter($filter);
-
-            if($request->exist('submit')) {
-                $filter->initFromRequest($request);
+            $filter->initFromRequest($request);
                 
-                // Validate submitted paramters
-                $validateFilter =& $validateFilterFactory->getFromFilter($filter);
+            // Validate submitted paramters
+            $validateFilter =& $validateFilterFactory->getFromFilter($filter);
+            if($validateFilter !== null) {
                 if(!$validateFilter->validate()) {
                     $feedback->log('error', $validateFilter->getMessage());
                 }
-                else {
-                    $uPrefs->update();
-                }
-            }
-            else {
-                // Setup from prefs
-                $uPrefs->initFromPrefs();
             }
             
             $fi->next();
         }
-
-        $si =& $report->getSortIterator();
-        $si->rewind();
-        while($si->valid()) {
-            $filter =& $si->current();
-
-            $uPrefs =& $userPrefsFilterFactory->getFromFilter($filter);
-            
-            if($request->exist($filter->getName())) {
-                $filter->initFromRequest($request);
-                $validateFilter =& $validateFilterFactory->getFromFilter($filter);
-                if(!$validateFilter->validate()) {
-                    $feedback->log('error', $validateFilter->getMessage());
-                }
-                else {
-                    $uPrefs->update();
-                }
-            }
-            else {
-                // Setup from prefs
-                $uPrefs->initFromPrefs();
-            }
-
-            $si->next();
-        }
-
     }
 }
 

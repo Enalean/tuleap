@@ -54,7 +54,7 @@ require_once('Docman_View_ParentsTree.class');
         //{{{ Location
         $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') . help_button('DocumentManager') .'</legend>';
         
-        $potential_parent_id = isset($params['force_item']['parent_id']) ? $params['force_item']['parent_id'] : $params['item']->getId();
+        $potential_parent_id = isset($params['force_item']) ? $params['force_item']->getParentId() : $params['item']->getId();
         $potential_parent_id = $this->_controller->userCanWrite($potential_parent_id) ? $potential_parent_id : false;
         
         $parents_tree =& new Docman_View_ParentsTree($this->_controller);

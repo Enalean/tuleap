@@ -200,7 +200,7 @@ class Docman_Item {
     function _addMetadata(&$md) {
         $this->_metadata[] =& $md;
     }
-    function &setMetadata(&$mda) {
+    function setMetadata(&$mda) {
         $this->_metadata =& $mda;
     }
     function &getMetadata() {
@@ -208,7 +208,8 @@ class Docman_Item {
     }
    
     function &getMetadataIterator() {        
-        return new ArrayIterator($this->_metadata);
+        $i = new ArrayIterator($this->_metadata);
+        return $i;
     }
 
     function getHardCodedMetadataValue($label) {
@@ -247,7 +248,7 @@ class Docman_Item {
             $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_'.$statusLabel.'_name'));
             $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_'.$statusLabel.'_desc'));
             $e->setRank($st);
-            $e->setStatus('A');
+            $e->setStatus('P');
             $mdv = new Docman_MetadataValueList();
             $ea = array($e);
             $mdv->setValue($ea);
@@ -275,7 +276,8 @@ class Docman_Item {
     }
    
     function &getCategoriesIterator() {        
-        return new ArrayIterator($this->_categories);
+        $i = new ArrayIterator($this->_categories);
+        return $i;
     }
 
     var $pathId;

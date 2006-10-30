@@ -24,7 +24,13 @@ require_once('Docman_View_View.class');
         
         $htmlParams = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
 
-        $GLOBALS['HTML']->header($htmlParams);
+        if(isset($params['pv']) && $params['pv'] > 0) {
+            $htmlParams['pv'] = $params['pv'];
+            $GLOBALS['HTML']->pv_header($htmlParams);
+        }
+        else {
+            $GLOBALS['HTML']->header($htmlParams);
+        }
     }
     
     /* protected */ function _getTitle($params) {
@@ -32,7 +38,12 @@ require_once('Docman_View_View.class');
     }
     
     /* protected */ function _footer($params) {
-        $GLOBALS['HTML']->footer(array());
+        if(isset($params['pv']) && $params['pv'] > 0) {
+            $GLOBALS['HTML']->pv_footer(array());
+        }
+        else {
+            $GLOBALS['HTML']->footer(array());
+        }
     }
     
     /* protected */ function _getAdditionalHtmlParams($params) {

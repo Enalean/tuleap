@@ -12,7 +12,9 @@ require_once(dirname(__FILE__).'/../Docman_Icons.class');
 require_once('Docman_View_GetMenuItemsVisitor.class');
 
 /* abstract */ class Docman_View_View {
-    
+    var $dfltSortParams = null;
+    var $dfltSearchParams = null;
+
     var $_controller;
     
     function Docman_View_View(&$controller) {
@@ -55,13 +57,16 @@ require_once('Docman_View_GetMenuItemsVisitor.class');
     
     
     function &_getVersionFactory($params) {
-        return new Docman_VersionFactory();
+        $vf = new Docman_VersionFactory();
+        return $vf;
     }
     function &_getDocmanIcons($params) {
-        return new Docman_Icons($params['theme_path'] .'/images/ic/');
+        $icons = new Docman_Icons($params['theme_path'] .'/images/ic/');
+        return $icons;
     }
     function &_getItemFactory($params) {
-        return new Docman_ItemFactory();
+        $f = new Docman_ItemFactory();
+        return $f;
     }
     /* static */ function buildUrl($prefix, $parameters, $amp = true) {
         $et = $amp ? '&amp;' : '&';
@@ -82,6 +87,88 @@ require_once('Docman_View_GetMenuItemsVisitor.class');
         }
         return $url;
     }
+
+    /* static */ function buildPopupUrl($prefix, $parameters, $injs = false) {
+        $url = Docman_View_View::buildUrl($prefix, $parameters, !$injs);
+        
+        $jsEscape[false] = '\'';
+        $jsEscape[true]  = '\\\'';
+
+        $escapedU = $jsEscape[$injs].$url.$jsEscape[$injs];
+
+        $url = 'javascript:help_window('.$escapedU.')';
+
+
+        return $url;
+    }
+
+    /* static */ function buildActionUrl($params, $parameters, $injs = false, $popup = false) {
+        $output = '';
+
+        $prefix = '';
+        if(isset($params['default_url']) 
+           && $params['default_url'] != false 
+           && $params['default_url'] !== null) {
+            $prefix = $params['default_url'];
+        }
+
+        if(isset($params['pv']) 
+           && $params['pv'] !== false 
+           && $popup) {
+            $output = Docman_View_View::buildPopupUrl($prefix, $parameters, $injs);
+        }
+        else {
+            if(isset($params['pv']) && $params['pv'] !== false) {
+                $parameters['pv'] = $params['pv'];
+            }
+            if(isset($params['report']) && $params['report'] !== false) {
+                $parameters['report'] = $params['report'];
+            }
+            $output = Docman_View_View::buildUrl($prefix, $parameters, !$injs);
+        }
+
+        return $output;
+    }
+
+    function _initSearchAndSortParams($params) {
+        if($this->dfltSortParams === null) {
+            $this->dfltSortParams = null;
+            $this->dfltSearchParams = null;
+
+            if($params['filter'] !== null) {
+                $fi =& $params['filter']->getFilterIterator();
+                if($fi !== null) {
+                    $fi->rewind();
+                    while($fi->valid()) {
+                        $f =& $fi->current();
+                        
+                        if($f !== null) {
+                            $this->dfltSearchParams = array_merge($this->dfltSearchParams,
+                                                                  $f->getUrlParameters());
+
+                            $sort = $f->getSort();
+                            if($sort !== null) {
+                                $this->dfltSortParams[$f->getSortParam()] = $sort;
+                            }
+                        }
+
+                        $fi->next();
+                    }
+                }
+            }
+        }
+    }
+
+    function getSearchParams($params) {
+        $this->_initSearchAndSortParams($params);
+        return $this->dfltSearchParams;
+    }
+    
+    function getSortParams($params) {
+        $this->_initSearchAndSortParams($params);
+        return $this->dfltSortParams;
+    }
+
     function isActionAllowed($action, &$item) {
         $if =& $this->_getItemFactory(array());
         switch ($action) {

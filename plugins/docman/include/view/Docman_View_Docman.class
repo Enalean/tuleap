@@ -13,6 +13,12 @@ require_once('Docman_View_ToolbarNewDocumentVisitor.class');
 
 class Docman_View_Docman extends Docman_View_ProjectHeader {
     /* protected */ function _toolbar($params) {
+
+        // No toolbar in printer version
+        if(isset($params['pv']) && $params['pv'] > 0) {
+            return;
+        }
+
         $tools = array();
         $this->_addDocmanTool($params, $tools);
         

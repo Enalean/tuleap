@@ -8,18 +8,25 @@
 */
 
 require_once('Docman_View_GetSpecificFieldsVisitor.class');
-require_once(dirname(__FILE__).'/../Docman_ValidateTitle.class');
 require_once(dirname(__FILE__).'/../Docman_MetadataHtml.class');
 
 class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
-    
-    function _buildFieldArray(&$mdIter, $formName, $themePath) {        
+    var $mdLabelToSkip;
+
+    function Docman_View_GetFieldsVisitor($mdLabelToSkip = array()) {
+        $this->mdLabelToSkip = $mdLabelToSkip;
+    }
+
+    function _buildFieldArray(&$mdIter, $formName, $themePath) {
         $mdIter->rewind();
         while($mdIter->valid()) {
             $md =& $mdIter->current();                      
             
-            $fields[$md->getLabel()] = Docman_MetadataHtmlFactory::getFromMetadata($md, array('form_name' => $formName,
-                                                                                              'theme_path' => $themePath));
+            if(!in_array($md->getLabel(), $this->mdLabelToSkip)) {
+
+                $fields[$md->getLabel()] = Docman_MetadataHtmlFactory::getFromMetadata($md, array('form_name' => $formName,
+                                                                                                  'theme_path' => $themePath));
+            }
 
             $mdIter->next();
         }

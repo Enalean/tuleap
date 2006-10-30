@@ -43,7 +43,6 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $params['theme_path'] = $this->theme_path;
         $html .= '<table class="docman_item_details_properties">';
         $get_fields =& new Docman_View_GetFieldsVisitor();
-        $params['force_item'] = $this->force;
         $fields = $this->item->accept($get_fields, $params);
         foreach($fields as $field) {
             $html .= '<tr style="vertical-align:top;">';

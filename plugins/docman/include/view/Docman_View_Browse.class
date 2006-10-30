@@ -15,6 +15,12 @@ require_once(dirname(__FILE__).'/../Docman_SettingsBo.class');
 /* abstract */ class Docman_View_Browse extends Docman_View_Display {
     
     /* protected */ function _mode($params) {
+
+        // No mode selector in printer version
+        if(isset($params['pv']) && $params['pv'] > 0) {
+            return;
+        }
+
         $html = '<div style="text-align:right;float:right;">';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<select name="selected_view" onchange="this.form.submit()" style="font-family:monospace;">';

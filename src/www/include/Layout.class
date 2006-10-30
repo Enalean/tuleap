@@ -227,11 +227,13 @@ class Layout extends Error {
                 echo '
 <body class="bg_help">
 ';
+                if(isset($params['pv']) && $params['pv'] < 2) {
                 if (isset($params['title']) && $params['title']) {
                     echo '
 <H2>'.$params['title'].' - '.format_date($sys_datefmt,time()).'</H2>
 <HR>
 ';
+                }
                 }
         }
 

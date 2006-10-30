@@ -28,7 +28,8 @@ class DataAccessObject {
         $result =& $this->da->fetch($sql);
         if ($error = $result->isError()) {
             trigger_error($error .' ==> '. $sql);
-            return false;
+            $result = false;
+            return $result;
         } else {
             return $result;
         }

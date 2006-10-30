@@ -1,0 +1,6 @@
+* Delete Docman_ItemNode.class
+* Make docman new item and update more coherent: since we already created and
+  validated an Docman_Item object, DocmanActions should only rely on this
+  object. (It imply to develop a validator for Docman_File).
+* getItemMenu() in views make a lot of queries searchById (at least one per item!)
+

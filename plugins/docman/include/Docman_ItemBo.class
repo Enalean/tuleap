@@ -25,16 +25,14 @@
 require_once('common/dao/CodexDataAccess.class');
 require_once('Docman_ItemDao.class');
 require_once('Docman_ItemFactory.class');
-require_once('common/permission/PermissionsManager.class');
+require_once('Docman_PermissionsManager.class');
 
 class Docman_ItemBo {
     var $groupId;
     var $dao;
-    var $docman;
     
-    function Docman_ItemBo(&$docman, $groupId=0) {
+    function Docman_ItemBo($groupId=0) {
         $this->groupId = (int) $groupId;
-        $this->docman =& $docman;
         $this->dao = new Docman_ItemDao(CodexDataAccess::instance());
         $this->permCache = array();
     }       
@@ -51,8 +49,8 @@ class Docman_ItemBo {
     function &_getCollapsedUserPrefs($parentId, $userId) {           
         $collapsedItems = array();     
         // Retreive the list of collapsed folders in prefs        
-        $dar =& $this->dao->searchCollapseUserPrefs($this->groupId, 
-                                                    $userId);
+        $dar = $this->dao->searchCollapseUserPrefs($this->groupId, 
+                                                   $userId);
         while($dar->valid()) {
             $row =& $dar->current();
             $tmp = explode('_', $row['preference_name']);
@@ -66,21 +64,8 @@ class Docman_ItemBo {
     }
 
     function userHasPermission(&$user, &$item) {
-        if(!isset($this->permCache[$user->getId()][$item->getId()])) {
-            
-            $pm =& PermissionsManager::instance();
-            if ($user->isSuperUser() 
-                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_READ', $user->getUgroups($item->getGroupId(), array())) 
-                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_WRITE', $user->getUgroups($item->getGroupId(), array())) 
-                || $pm->userHasPermission($item->getId(), 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups($item->getGroupId(), array())) 
-                || $this->docman->userCanAdmin()) {
-                $this->permCache[$user->getId()][$item->getId()] = true;
-            }
-            else {
-                $this->permCache[$user->getId()][$item->getId()] = false;
-            }
-        }
-        return $this->permCache[$user->getId()][$item->getId()];
+        $dPm =& Docman_PermissionsManager::instance($this->groupId);
+        return $dPm->userCanRead($user, $item->getId());
     }
 
     /**
@@ -108,7 +93,7 @@ class Docman_ItemBo {
             $filter =& $params['filter'];
         }  
 
-        $dar =& $this->dao->searchByGroupId($this->groupId, $filter);
+        $dar = $this->dao->searchByGroupId($this->groupId, $filter);
         
         // Preload perms
         $objectsIds = array();
@@ -130,7 +115,7 @@ class Docman_ItemBo {
         $dar->rewind();
         while(count($parentIdList) > 0 || $first) {
             if(!$first) {
-                $dar =& $this->dao->searchByIdList($parentIdList);
+                $dar = $this->dao->searchByIdList($parentIdList);
             }
             else {
                 $first = false;
@@ -240,7 +225,7 @@ class Docman_ItemBo {
         $itemList = array();
         $itemLocationInList = array();
 
-        $dar =& $this->dao->searchByGroupId($this->groupId, $filter);
+        $dar = $this->dao->searchByGroupId($this->groupId, $filter);
         $i = 0;
         while($dar->valid()) {
             $row =& $dar->current();
@@ -362,7 +347,8 @@ class Docman_ItemBo {
             unset($itemList[$itemOffset]);
         }        
 
-        return new ArrayIterator($itemList);
+        $i = new ArrayIterator($itemList);
+        return $i;
     }
 
     // STOP: note for childrens, this is a big messy hack !
@@ -372,7 +358,7 @@ class Docman_ItemBo {
     // this case on display to add a clickable 'plus'.
     function &getParentList() {
         // Fetch list of items that contains that are parent of other items.
-        $dar =& $this->dao->searchAllParent($this->groupId);
+        $dar = $this->dao->searchAllParent($this->groupId);
         $fakeParentList = array();
         while($dar->valid()) {
             $row =& $dar->current();
@@ -412,7 +398,7 @@ class Docman_ItemBo {
         $itemFactory =& new Docman_ItemFactory();
 
         $filters = null;
-        $dar =& $this->dao->searchByGroupId($this->groupId, $filters);
+        $dar = $this->dao->searchByGroupId($this->groupId, $filters);
         $itemList = array();
         while($dar->valid()) {
             $row = $dar->current();
@@ -428,7 +414,8 @@ class Docman_ItemBo {
             $dar->next();
         }
 
-        return new ArrayIterator($itemList);
+        $i = new ArrayIterator($itemList);
+        return $i;
     }
 
     /**

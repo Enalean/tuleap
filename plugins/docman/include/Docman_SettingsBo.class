@@ -45,7 +45,7 @@ class Docman_SettingsBo {
     function _cacheGroupSettings() {
         if($this->row === null) {
             $dao =& new Docman_SettingsDao(CodexDataAccess::instance());
-            $dar =& $dao->searchByGroupId($this->groupId);
+            $dar = $dao->searchByGroupId($this->groupId);
             if($dar && !$dar->isError() && $dar->valid()) {
                 $this->row = $dar->current();
             }

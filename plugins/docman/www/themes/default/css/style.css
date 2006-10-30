@@ -357,3 +357,64 @@ fieldset.docman_filters legend {
   height: 7em;
 }
 
+/* 
+ * Metadata admin create 
+ */
+.docman_admin_metadata p { 
+  clear: both;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+.docman_admin_metadata label {
+ float: left;
+ width: 20%;
+ text-align: left;
+}
+
+.docman_admin_metadata textarea {
+  width: 50%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+.docman_admin_metadata input.text_field {
+  width: 50%;
+}
+
+/* 
+ * Metadata listofvalues admin
+ */
+.docman_admin_list_values tr.default_value { 
+  font-weight: bold;
+}
+
+/* 
+ * Metadata listofvalues create
+ */
+
+form.md_create_love p { 
+  clear: both;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+form.md_create_love label {
+ float: left;
+ width: 20%;
+ text-align: left;
+}
+
+form.md_create_love textarea {
+  width: 50%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+form.md_create_love .text_field {
+  width: 50%;
+}

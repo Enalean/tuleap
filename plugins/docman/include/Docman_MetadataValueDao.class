@@ -98,7 +98,7 @@ class Docman_MetadataValueDao extends DataAccessObject {
     function _createAndReturnId($sql) {
         $inserted = $this->update($sql);
         if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
             } else {
@@ -164,6 +164,17 @@ class Docman_MetadataValueDao extends DataAccessObject {
                        $itemId,
                        $fieldId);
         return $this->retrieve($sql);
+    }
+
+    function updateToListOfValueElementDefault($fieldId, $previousValue, $newValue) {
+        $sql = sprintf('UPDATE plugin_docman_metadata_value'.
+                       ' SET valueInt = %d'.
+                       ' WHERE field_id = %d'.
+                       '  AND valueInt = %d',
+                       $newValue,
+                       $fieldId,
+                       $previousValue);
+        return $this->update($sql);
     }
 }
 

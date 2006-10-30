@@ -281,7 +281,8 @@ class Docman_ListMetadata extends Docman_Metadata {
         $this->listOfValue =& $l;
     }
     function &getListOfValueIterator() {
-        return new ArrayIterator($this->listOfValue); 
+        $i = new ArrayIterator($this->listOfValue);
+        return $i;
     }
 }
 

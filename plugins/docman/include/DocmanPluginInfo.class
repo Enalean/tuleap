@@ -86,7 +86,7 @@ class DocmanPluginInfo extends PluginInfo {
     }
     
     function getPropertyValueForName($name) {
-        $desc =& $this->getPropertyDescriptorForName($name);
+        $desc = $this->getPropertyDescriptorForName($name);
         return $desc ? $desc->getValue() : $desc;
     }
     
