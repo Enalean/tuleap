@@ -157,6 +157,12 @@ function display_tests_as_javascript($tests, $categ, $params) {
         tr {
             vertical-align:top;
         }
+        .fail { 
+            color: red; 
+        } 
+        pre { 
+            background-color: lightgray; 
+        }
         </style>
         <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
         <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
