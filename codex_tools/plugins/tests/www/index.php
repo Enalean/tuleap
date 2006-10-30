@@ -22,9 +22,9 @@ function search_tests_rec($dir, &$tab, $entry) {
             while (($file = readdir($dh)) !== false) {
                 if (!in_array($file, $GLOBALS['config']['excludes'])) {
                     if (is_dir("$dir/$file")) {
-                        search_tests_rec("$dir/$file", $tab[$entry], $file);
+                        search_tests_rec("$dir/$file", $tab[($entry == 'tests'?'CodeX':$entry)], $file);
                     } else if(substr($file, -strlen($GLOBALS['config']['suffix'])) === $GLOBALS['config']['suffix']) {
-                        $tab[$entry]['_tests'][] = $file;
+                        $tab[($entry == 'tests'?'CodeX':$entry)]['_tests'][] = $file;
                     }
                 }
             }
@@ -38,6 +38,22 @@ function search_tests($entry) {
 $roots = glob($GLOBALS['config']['plugins_root'] .'*'. $GLOBALS['config']['tests_root']);
 array_map('clean_plugins_root', $roots);
 array_map('search_tests', $roots);
+
+//{{{ Tri
+function sort_by_key_and_by_value_depending_of_type($a, $b) {
+    return strnatcasecmp((is_array($a) ? key($a) : $a), (is_array($b) ? key($b) : $b));
+}
+function sort_tests(&$entry, $key) {
+    if ($key == '_tests') {
+        usort($entry, 'strnatcasecmp');
+    } else {
+        uksort($entry, 'strnatcasecmp');
+        array_walk($entry, 'sort_tests');
+    }
+}
+uksort($GLOBALS['tests'], 'strnatcasecmp');
+array_walk($GLOBALS['tests'], 'sort_tests');
+//}}}
 
 function display_tests($tests, $categ, $params) {
     $prefixe  = ($params['is_cat'] && $categ !== "_tests") ? $params['prefixe'] .'['. $categ .']' : $params['prefixe'];
@@ -203,7 +219,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                             }
                             $g =& new GroupTest("All Tests");
                             foreach($_REQUEST['tests_to_run'] as $plugin => $tests) {
-                                $o =& new GroupTest(($plugin == 'tests' ? 'CodeX' : $plugin) .' Tests');
+                                $o =& new GroupTest($plugin .' Tests');
                                 array_walk(
                                     $tests, 
                                     'add_test_to_group', 
