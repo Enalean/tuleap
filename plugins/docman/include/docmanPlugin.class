@@ -38,6 +38,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('service_public_areas',              'service_public_areas',              false);
+        $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -160,14 +161,21 @@ class DocmanPlugin extends Plugin {
     
     function service_public_areas($params) {
         if ($params['project']->usesService('docman')) {
-            $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['group_id'] .'">' .
+            $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['project']->getId() .'">' .
                 '<img src="'. $this->_getThemePath() .'/images/ic/text.png" />&nbsp;' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
                 '</a>';
         }
     }
-    
+    function service_admin_pages($params) {
+        if ($params['project']->usesService('docman')) {
+            $params['admin_pages'][] = '<a href="/plugins/docman/?action=admin&amp;group_id='. $params['project']->getId() .'">' .
+                $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '. 
+                $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .
+                '</a>';
+        }
+    }
     function process() {
         require_once('Docman.class');
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());

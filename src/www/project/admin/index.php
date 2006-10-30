@@ -348,6 +348,19 @@ if ( $project->usesTracker()) {
     }
 
 }
+// {{{ Plugins
+$admin_pages = array();
+$params = array('project' => &$project, 'admin_pages' => &$admin_pages);
+
+$em =& EventManager::instance();
+$em->processEvent('service_admin_pages', $params);
+
+foreach($admin_pages as $admin_page) {
+    print '<br />';
+    print $admin_page;
+}
+
+// }}}
 
 $HTML->box1_bottom(); 
 
