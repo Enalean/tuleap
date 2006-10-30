@@ -32,7 +32,7 @@ $gitphp_conf['stylesheet'] = "gitphp.css";
  * Absolute filesystem path prepended to project paths
  * (don't forget trailing slash!)
  */
-$gitphp_conf['projectroot'] = "/storage/anime3/non-anime/git/";
+$gitphp_conf['projectroot'] = "/git/";
 
 /*
  * gitbin
@@ -137,20 +137,25 @@ $git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
 $git_projects['Core']['Scripts'] = "core/scripts.git";
 $git_projects['Core']['Soulforge'] = "core/soulforge.git";
 $git_projects['Core']['XNSS'] = "core/xnss.git";
-$git_projects['PHP']['Codex'] = "core/codex.git";
-$git_projects['PHP']['gitphp'] = "core/gitphp.git";
-$git_projects['PHP']['MDB'] = "core/mdb.git";
+$git_projects['Core']['XNSS_old'] = "core/xnss_old.git";
+$git_projects['PHP']['Codex'] = "php/codex.git";
+$git_projects['PHP']['gitphp'] = "php/gitphp.git";
+$git_projects['PHP']['MDB'] = "php/mdb.git";
 $git_projects['Nuclear']['Fusion'] = "nuclear/fusion.git";
-$git_projects['Websites']['lots'] = "core/lots.git";
-$git_projects['Websites']['bth'] = "core/bth.git";
+$git_projects['Websites']['lots'] = "websites/lots.git";
+$git_projects['Websites']['bth'] = "websites/bth.git";
 $git_projects['School']['CS135'] = "school/cs135.git";
 $git_projects['School']['CS150'] = "school/cs150.git";
 $git_projects['School']['CS151'] = "school/cs151.git";
 $git_projects['School']['CS156'] = "school/cs156.git";
 $git_projects['School']['CS160'] = "school/cs160.git";
 $git_projects['School']['CS161'] = "school/cs161.git";
+$git_projects['School']['CS169'] = "school/cs169.git";
 $git_projects['School']['CS178'] = "school/cs178.git";
 $git_projects['School']['CS180'] = "school/cs180.git";
 $git_projects['School']['CS189'] = "school/cs189.git";
+$git_projects['School']['CS183'] = "school/cs183.git";
+$git_projects['School']['CS193'] = "school/cs193.git";
+$git_projects['School']['CS195'] = "school/cs195.git";
 
 ?>
