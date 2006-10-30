@@ -21,8 +21,8 @@ function search_tests_rec($dir, &$tab, $entry) {
         if ($dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
                 if (!in_array($file, $GLOBALS['config']['excludes'])) {
-                    if (is_dir($dir . $file)) {
-                        search_tests_rec($dir . $file, $tab[$entry], $file);
+                    if (is_dir("$dir/$file")) {
+                        search_tests_rec("$dir/$file", $tab[$entry], $file);
                     } else if(substr($file, -strlen($GLOBALS['config']['suffix'])) === $GLOBALS['config']['suffix']) {
                         $tab[$entry]['_tests'][] = $file;
                     }
