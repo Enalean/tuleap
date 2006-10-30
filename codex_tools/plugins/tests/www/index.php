@@ -1,4 +1,9 @@
 <?php
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
@@ -6,6 +11,26 @@ require($GLOBALS['db_config_file']);
 require_once('../include/simpletest/unit_tester.php');
 require_once('../include/simpletest/mock_objects.php');
 require_once('../include/simpletest/reporter.php');
+
+
+class CodeXHtmlReporter extends HtmlReporter {
+    function paintHeader($test_name) {
+        print "<h1>$test_name</h1>\n";
+        flush();
+    }
+    function paintFooter($test_name) {
+        $colour = ($this->getFailCount() + $this->getExceptionCount() > 0 ? "red" : "green");
+        print "<div style=\"";
+        print "padding: 8px; margin-top: 1em; background-color: $colour; color: white;";
+        print "\">";
+        print $this->getTestCaseProgress() . "/" . $this->getTestCaseCount();
+        print " test cases complete:\n";
+        print "<strong>" . $this->getPassCount() . "</strong> passes, ";
+        print "<strong>" . $this->getFailCount() . "</strong> fails and ";
+        print "<strong>" . $this->getExceptionCount() . "</strong> exceptions.";
+        print "</div>\n";
+    }
+}
 
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
 $GLOBALS['config']['tests_root']   = '/tests/';
@@ -127,7 +152,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
         }
         #submit_panel input {
             font-size:2em;
-            width:100%;
+            width:200px;;
         }
         tr {
             vertical-align:top;
@@ -209,7 +234,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                         </fieldset>
                     </form>
                 </td>
-                <td>
+                <td width="90%">
                     <fieldset>
                         <legend>Results</legend>
                         <?php
@@ -239,7 +264,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                                 }
                                 $g->addTestCase($o);
                             }
-                            $g->run(new HtmlReporter());
+                            $g->run(new CodeXHtmlReporter());
                         }
                         ?>
                     </fieldset>
