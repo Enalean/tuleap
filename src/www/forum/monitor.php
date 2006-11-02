@@ -32,12 +32,15 @@ if (user_isloggedin()) {
 	            exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
 	        }
 	    }
-
-		/*
-			First check to see if they are already monitoring
-			this thread. If they are, say so and quit.
-			If they are NOT, then insert a row into the db
-		*/
+        
+        $forum_monitor_error = false;
+		if (forum_is_monitored($forum_id, user_getid())) {
+		    // If already monitored then stop monitoring
+            forum_delete_monitor($forum_id, user_getid());
+        } else {
+		    // Not yet monitored so add it
+		    $forum_monitor_error = !forum_add_monitor($forum_id, user_getid());
+        }
 
 		/*
 			Set up navigation vars
@@ -53,31 +56,16 @@ if (user_isloggedin()) {
 			<H2>'.$Language->getText('forum_monitor','monitor').'</H2>';
 
 		if (forum_is_monitored($forum_id, user_getid())) {
-		  if ($pv) {
-		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
-		    echo '<P>'.$Language->getText('forum_monitor','get_followups');
-		    echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off');
-		  } else {
-		    // If already monitored then stop monitoring
-		    forum_delete_monitor ($forum_id, user_getid());
-		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','monitor_off')."</H3></span>";
-		    echo '<P>'.$Language->getText('forum_monitor','no_mails_anymore');
-		  }
+            echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
+            echo '<P>'.$Language->getText('forum_monitor','get_followups').'</p>';
+            echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off').'</p>';
 		} else {
-		  if ($pv) {
 		    echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','monitor_off')."</H3></span>";
-		    echo '<P>'.$Language->getText('forum_monitor','no_mails_anymore');
-		  } else {
-		    // Not yet monitored so add it
-		    if (forum_add_monitor ($forum_id, user_getid()) ) {
-			echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
-			echo '<P>'.$Language->getText('forum_monitor','get_followups');
-			echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off');	
-		    } else {
-			echo "<span class=\"highlight\">".$Language->getText('forum_forum_utils','insert_err')."</span>";
-		    }
-		  }
+		    echo '<P>'.$Language->getText('forum_monitor','no_mails_anymore').'</p>';
 		}
+        if ($forum_monitor_error) {
+            echo "<span class=\"highlight\">".$Language->getText('forum_forum_utils','insert_err')."</span>";
+        }
 		forum_footer(array());
 
 	} else {
