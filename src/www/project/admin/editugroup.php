@@ -50,7 +50,7 @@ if (!$func) $func='create';
 
 
 if ($func=='do_create') {
-    $ugroup_id=ugroup_create($_POST['group_id'], $_POST['ugroup_name'], addslashes($_POST['ugroup_description']), $_POST['group_templates']);
+    $ugroup_id=ugroup_create($_POST['group_id'], $_POST['ugroup_name'], $_POST['ugroup_description'], $_POST['group_templates']);
 }
 
 
@@ -65,7 +65,7 @@ if ($func=='create') {
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
 	<input type="hidden" name="func" value="do_create">
 	<input type="hidden" name="group_id" value="'.$group_id.'">';
-    display_name_and_desc_form($ugroup_name,$ugroup_description);
+    display_name_and_desc_form(isset($ugroup_name)?$ugroup_name:'',isset($ugroup_description)?$ugroup_description:'');
     echo '<tr> 
 	  <td width="21%"><b>'.$Language->getText('project_admin_editugroup','create_from').'</b>:</td>
 	  <td width="79%">';
@@ -106,6 +106,9 @@ if (($func=='edit')||($func=='do_create')) {
     }
     if (!isset($ugroup_name) || !$ugroup_name) { $ugroup_name=db_result($res,0,'name'); }
     if (!isset($ugroup_description) || !$ugroup_description) { $ugroup_description=db_result($res,0,'description'); }
+    else {
+        $ugroup_description = stripslashes($ugroup_description);
+    }
 
     project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html#UGroupCreation'));
