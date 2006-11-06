@@ -33,7 +33,7 @@ plugin_serverupdate_menu	preferences	Préférences
 plugin_serverupdate_update	WorkingCopyRevision	Révision de la copie de travail : <strong>$1</strong>
 plugin_serverupdate_update	NumberOfUpdates	Nombre de mises à jour disponibles : <strong>$1</strong>
 plugin_serverupdate_update	RepositoryIs	Dépôt Subversion : <strong>$1</strong>
-plugin_serverupdate_update	norepository	Dépôt Subversion non détecté.<br />Si vous êtes derrière un proxy, assurez-vous d'avoir bien configuré le fichier <em>/home/codexadm/.subversion/servers</em> est bien configuré.<br />Avant d'utiliser ce plugin, veuillez exécuter la commande <strong><em>svn status -u --username [votre_login]</em></strong>, accepter de manière permanente le certificat, puis de taper votre mot de passe. Cette opération n'est à faire qu'une seule fois, ou à chaque fois que vous changerez de mot de passe.
+plugin_serverupdate_update	norepository	Dépôt Subversion non détecté.<br />Si vous êtes derrière un proxy, assurez-vous d'avoir bien configuré le fichier <em>/home/codexadm/.subversion/servers</em>.<br />Avant d'utiliser ce plugin, veuillez exécuter la commande <strong><em>svn status -u --username [votre_login]</em></strong>, acceptez de manière permanente le certificat, puis tapez votre mot de passe. Cette opération n'est à faire qu'une seule fois, ou à chaque fois que vous changerez de mot de passe.
 plugin_serverupdate_update	Updates	Mises à jour
 plugin_serverupdate_update	Revision	Révision
 plugin_serverupdate_update	Date	Date
