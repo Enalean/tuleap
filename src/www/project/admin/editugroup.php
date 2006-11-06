@@ -326,7 +326,19 @@ function switchMessage(_I)
                     .' <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
                     .$objname.'</a></TD>';
             } else {
-                echo '<TD>'.$row['object_id'].'</TD>';
+                $results = false;
+                $em =& EventManager::instance();
+                $em->processEvent('permissions_for_ugroup', array(
+                    'permission_type' => $row['permission_type'],
+                    'object_id'       => $row['object_id'],
+                    'group_id'        => $group_id,
+                    'results'         => &$results
+                ));
+                if ($results) {
+                    echo '<TD>'.$results.'</TD>';
+                } else {
+                    echo '<TD>'.$row['object_id'].'</TD>';
+                }
             }
 
             echo '</TR>

@@ -24,7 +24,7 @@ if ($func=='delete') {
 }
 
 if ($func=='do_update') {
-    ugroup_update($_POST['group_id'], $_POST['ugroup_id'], $_POST['ugroup_name'], addslashes($_POST['ugroup_description']), $_POST['PickList']);
+    ugroup_update($_POST['group_id'], $_POST['ugroup_id'], $_POST['ugroup_name'], $_POST['ugroup_description'], $_POST['PickList']);
 }
 
 
