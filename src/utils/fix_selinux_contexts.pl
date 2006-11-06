@@ -11,7 +11,7 @@
 #
 
 require("include.pl");  # Include all the predefined functions and variables
-export CHCON='/usr/bin/chcon'
+$CHCON='/usr/bin/chcon';
 
 # /usr/share/codex -> CodeX main Web tree, documentation, plugins, etc.
 `$CHCON -R -h -t httpd_sys_content_t $codex_dir`;
