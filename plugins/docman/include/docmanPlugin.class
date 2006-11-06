@@ -39,6 +39,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('service_public_areas',              'service_public_areas',              false);
         $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
+        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -95,6 +96,25 @@ class DocmanPlugin extends Plugin {
                     $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                     $name = $item->getTitle();
                     $params['object_fullname'] = $name .' '. $title; //TODO i18n
+                }
+            }
+        }
+    }
+    function permissions_for_ugroup($params) {
+        if (!$params['results']) {
+            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
+                require_once('Docman_ItemFactory.class');
+                $if =& new Docman_ItemFactory();
+                $item =& $if->getItemFromDb($params['object_id']);
+                if ($item) {
+                    $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
+                    $params['results']  = $GLOBALS['Language']->getText('plugin_docman', 'resource_name_'.$type, array(
+                            '/plugins/docman/?group_id='. $params['group_id'] .
+                              '&amp;action=details&amp;section=permissions' .
+                              '&amp;id='. $item->getId()
+                            , $item->getTitle()
+                        )
+                    );
                 }
             }
         }
