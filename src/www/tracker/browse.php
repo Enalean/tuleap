@@ -284,7 +284,8 @@ if ($set=='my') {
    as well as all the arguments that serves as selection criteria
    If not defined then defaults to ANY (0)
   ================================================== */
-  
+$_title = '';
+$_help = '';
 if ($pv != 2) {
     $_title = $group->getPublicName().': \''.$ath->getName().'\' ';
     if (isset($masschange) && $masschange === true) {
