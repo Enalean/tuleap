@@ -53,7 +53,7 @@
 # http://svn.collab.net/repos/svn/trunk/tools/hook-scripts/ and
 # http://svn.collab.net/repos/svn/trunk/contrib/hook-scripts/
 
-BRANCH_TO_CHECK="support/CX_3_0_TEST/"
+BRANCH_TO_CHECK="support/CX_3_0_SUP/"
 
 REPOS="$1"
 TXN="$2"
