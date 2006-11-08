@@ -97,16 +97,16 @@ function displayPage(&$request, $template=false) {
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
         array_shift($pages);
         foreach ($pages as $p)  {
-            if (!$pv){  
+            if ($pv != 2){// Add the Backlink in pagetitle
 	    $pagetitle->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
                                                   'class' => 'backlinks'),
                                        split_pagename($p . SUBPAGE_SEPARATOR)));
-	    } else {
+	    } else {// Full screen mode => no backlink in pagetitle
 	    $pagetitle = HTML::h1($pagename);
 	    }
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
-	if (!$pv){ // Here we add Baklinks in pagenames
+	if ($pv != 2){ // Here we add Baklinks in pagetitles
         $backlink = HTML::a(array('href' => WikiURL($pagename,
                                                     array('action' => _("BackLinks"))),
                                   'class' => 'backlinks'),
@@ -114,19 +114,19 @@ function displayPage(&$request, $template=false) {
         $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
         $pagetitle->pushContent($backlink);
 	} else {
-	$pagetitle = HTML::h1($pagename); // Delete the Backlink from the page title
-					// because we are viewing in printer versions mode
+	$pagetitle = HTML::h1($pagename); // Delete the Backlink from the pagetitle
+					// because we are viewing in full-screen mode
         }
     } else {
-        if (!$pv){ // Here also, we add Baklinks in pagenames
+        if ($pv != 2){ // Here also, we add Baklinks in pagenames
         $pagetitle = HTML::a(array('href' => WikiURL($pagename,
                                                      array('action' => _("BackLinks"))),
                                    'class' => 'backlinks'),
                              $splitname);
         $pagetitle->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
         } else { 
-        $pagetitle = HTML::h1($pagename); // Delete the Backlink from the page title
-					// because we are viewing in printer versions mode
+        $pagetitle = HTML::h1($pagename); // Delete the Backlink from the pagetitle
+					// because we are viewing in full-screen mode
         }
         if ($request->getArg('frame'))
             $pagetitle->setAttr('target', '_top');
