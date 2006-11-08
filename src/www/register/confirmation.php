@@ -121,7 +121,7 @@ if (isset($show_confirm) && $show_confirm) {
 	  exit_no_group();
         }
 
-	$system_template = ($template_group->getStatus() == 's');
+	$system_template = ($template_group->getStatus() == 's' || $template_group->getStatus() == 'S');
 
 	
 	if (!$system_template) {
