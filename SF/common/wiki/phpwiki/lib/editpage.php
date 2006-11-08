@@ -34,6 +34,15 @@ class PageEditor
                             'mtime' => time());
         
         $this->tokens = array();
+	
+	if (ENABLE_WYSIWYG) {
+            $backend = WYSIWYG_BACKEND;
+            // TODO: error message
+            require_once("lib/WysiwygEdit/$backend.php");
+            $class = "WysiwygEdit_$backend";
+            $this->WysiwygEdit = new $class();
+        }
+	
         if (ENABLE_CAPTCHA) {
             require_once('lib/Captcha.php');
             $this->Captcha = new Captcha($this->meta);
@@ -179,9 +188,11 @@ class PageEditor
         }
 
         $title = new FormattedText ($title_fs, $pagelink);
-        if (USE_HTMLAREA and $template == 'editpage') {
-            $WikiTheme->addMoreHeaders(Edit_HtmlArea_Head());
-            //$tokens['PAGE_SOURCE'] = Edit_HtmlArea_ConvertBefore($this->_content);
+      
+	
+        if (ENABLE_WYSIWYG and $template == 'editpage') {
+	        $WikiTheme->addMoreHeaders($this->WysiwygEdit->Head());
+            //$tokens['PAGE_SOURCE'] = $this->WysiwygEdit->ConvertBefore($this->_content);
         }
         $template = Template($template, $this->tokens);
         GeneratePage($template, $title, $rev);
@@ -499,7 +510,7 @@ class PageEditor
 
         $textarea = HTML::textarea(array('class'=> 'wikiedit',
                                          'name' => 'edit[content]',
-                                         'id'   => 'edit[content]',
+					 'id'   => 'edit[content]',
                                          'rows' => $request->getPref('editHeight'),
                                          'cols' => $request->getPref('editWidth'),
                                          'readonly' => (bool) $readonly),
