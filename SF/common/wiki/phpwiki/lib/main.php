@@ -670,7 +670,7 @@ class WikiRequest extends Request {
     // [574ms] mainly template:printexpansion: 393ms and template::expandsubtemplate [100+70+60ms]
     function handleAction () {
         $action = $this->getArg('action');
-        if ($this->isPost() and !$this->_user->isAdmin() and $action != 'browse') {
+        if ($this->isPost() and !$this->_user->isAdmin() and $action != 'browse' and $action!='wikitohtml') {
             $page = $this->getPage();
             if ( $page->get('moderation') ) {
                 require_once("lib/WikiPlugin.php");
@@ -1141,6 +1141,12 @@ class WikiRequest extends Request {
         $captcha->image ( $captcha->captchaword() ); 
     }
     
+    function action_wikitohtml () {
+       include_once("lib/WikiToHtml.php");
+       $wikitohtml = new WikiToHtml( $this->getArg("content") , $this);
+              $wikitohtml->send();
+    }
+    
 }
 
 //FIXME: deprecated with ENABLE_PAGEPERM (?)
@@ -1221,7 +1227,13 @@ function main () {
     // Initialize with system defaults in case user not logged in.
     // Should this go into constructor?
     $request->initializeTheme();
-
+    
+    // convert wiki to html
+    if ($action == 'wikitohtml') {
+      $request->handleAction();
+      return;
+    }  
+    
     $request->updateAuthAndPrefs();
     $request->initializeLang();
     
