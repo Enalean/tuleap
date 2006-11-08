@@ -118,5 +118,10 @@ ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
     </IfModule>
 </Directory>
 
+# Redirect viewcvs calls to viewvc
+RedirectMatch permanent /svn/viewcvs.php(.*) /svn/viewvc.php$1
+RedirectMatch permanent /cvs/viewcvs.php(.*) /cvs/viewvc.php$1
+
 # Forbid access to .svn directories
 RedirectMatch 404 /\.svn(/|$)
+
