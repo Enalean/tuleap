@@ -19,6 +19,7 @@ survey_common_survey	radio_buttons_yes_no	Radio Buttons Yes/No
 survey_common_survey	comment_only	Comment Only
 survey_common_survey	text_field	Text Field
 survey_common_survey	radio_buttons	Custom Radio Buttons
+survey_common_survey	select_box	Select Box
 survey_common_survey	none	None
 survey_common_survey	dev_survey_title_key	Developer Survey
 #

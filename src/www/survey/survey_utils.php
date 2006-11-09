@@ -192,7 +192,20 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' <BR>';
 		    $j++;
 		}    
-	    }	
+	    } else if ($question_type == $survey->SELECT_BOX) {
+		/*
+		  This is a select-box question.
+		*/
+
+		$qry="SELECT * FROM survey_radio_choices WHERE question_id='$quest_array[$i]' ORDER BY choice_rank";
+		$res=db_query($qry);
+		$return .= '<SELECT name="_'.$quest_array[$i].'">';
+		while ($row=db_fetch_array($res)) {
+		    $value=$row['radio_choice'];
+		    $return .= '<OPTION VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' </OPTION>';		    
+		}
+		$return .= '</SELECT>';
+	    }
 	
 	    if ($q_num > 1) {
 	      $return .= '<br></TD></TR>';
@@ -314,7 +327,7 @@ function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true
 	$question_id = db_result($result,$j,'question_id');
 	$question_type_id = db_result($result,$j,'question_type_id');
 	
-	if ($question_type_id == 6) {
+	if ($question_type_id == 6 || $question_type_id == 7) {
 	    $warning='warning_loose_data';
 	} else {
 	    $warning='warning_loose_answers';

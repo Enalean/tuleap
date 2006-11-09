@@ -320,6 +320,7 @@ INSERT INTO survey_question_types (id, type, rank) VALUES (3,'radio_buttons_yes_
 INSERT INTO survey_question_types (id, type, rank) VALUES (4,'comment_only', '10');
 INSERT INTO survey_question_types (id, type, rank) VALUES (5,'text_field', '31');
 INSERT INTO survey_question_types (id, type, rank) VALUES (6,'radio_buttons', '20');
+INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23');
 INSERT INTO survey_question_types (id, type, rank) VALUES (100,'none', '40');
 
 #

@@ -27,7 +27,7 @@ if (isset($post_changes) && $post_changes) {
    $question_id = survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
 
    // if radio-type question is created, redirect to Edit A Question page
-   if ($question_type=="6" && isset($question_id)) {
+   if (isset($question_id) && ($question_type=="6" || $question_type=="7")) {
        session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id");       
    }
 }
