@@ -88,7 +88,7 @@ for ($i=0; $i<$quest_count; $i++) {
 
 	}
 	
-	if (($question_type == $survey->RADIO_BUTTON_1_5) || ($question_type == $survey->RADIO_BUTTON)) {
+	if (($question_type == $survey->RADIO_BUTTON_1_5) || ($question_type == $survey->RADIO_BUTTON) || ($question_type == $survey->SELECT_BOX)) {
 
 		/*
 			This is a radio-button question.	
@@ -141,10 +141,12 @@ for ($i=0; $i<$quest_count; $i++) {
 
 		// Show the 1-5 markers only if this is the first in a series
 
-                if ($question_type == "1") {
+                if ($question_type == $survey->RADIO_BUTTON_1_5) {
 		    $type = " <B>1 &lt;--- - - - ---&gt; 5</B>\n";
-		} else {    
+		} else if ($question_type == $survey->RADIO_BUTTON) {    
 		    $type = " <B>Radio Button</B>\n";
+		} else {
+		    $type = " <B>Select Box</B>\n";
 		}
 		if (isset($last_question_type) && $question_type != $last_question_type) {			
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.

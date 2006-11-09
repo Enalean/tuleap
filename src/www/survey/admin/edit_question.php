@@ -39,7 +39,9 @@ switch ($func) {
 	 $old_quest_type = db_result($res,0,'question_type');
 	 	 
 	 // Delete radio buttons if the question type changes from radio-button	to anything else different
-	 if (($old_quest_type=="6") && ($question_type != "6") && ($question_type != 100)) {
+	 $cond1 = ($old_quest_type=="6") && ($question_type != "6") && ($question_type != 100);
+	 $cond2 = ($old_quest_type=="7") && ($question_type != "7") && ($question_type != 100);
+	 if ($cond1 || $cond2) {
 	   // check first if really something to delete
 	   $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
 	   $result = db_query($sql);
