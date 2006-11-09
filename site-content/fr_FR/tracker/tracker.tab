@@ -246,6 +246,7 @@ tracker_include_field	end	Fin&nbsp;:
 tracker_include_field	any_time	N'importe quand
 tracker_include_field	pick_date	Cliquer ici pour choisir une date
 tracker_include_field	unknown_display_type	$1&nbsp;: Type d'affichage du champ inconnu
+tracker_include_field	unknown_value	*** valeur inconnue ***
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactFileHtml.class

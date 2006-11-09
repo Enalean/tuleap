@@ -163,6 +163,8 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='') {
         global $Language;
         $return = '';
+        $isAValueSelected = false;
+        
 	/*
 
 		The infamous '100 row' has to do with the
@@ -211,6 +213,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 	*/
 	if ($show_unchanged) {
 	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$text_unchanged.'</OPTION>';
+      $isAValueSelected = true;
 	}
 
 	//we don't always want the default any  row shown
@@ -218,11 +221,15 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 		if ( is_array($checked_val) ) {
 			if ( in_array(0,$checked_val) ) {
 				$selected = "SELECTED";
+                $isAValueSelected = true;
 			} else {
 				$selected = "";
 			}
 		} else {
 	    	$selected = ( $checked_val == 0 ? 'SELECTED':'');
+            if ($checked_val == 0) { 
+                $isAValueSelected = true;
+            }
 	    }
 	    $return .= "\n<OPTION VALUE=\"0\" $selected>$text_any </OPTION>";
 	}
@@ -232,11 +239,15 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 		if ( is_array($checked_val) ) {
 			if ( in_array(100,$checked_val) ) {
 				$selected = "SELECTED";
+                $isAValueSelected = true;
 			} else {
 				$selected = "";
 			}
 		} else {
 		    $selected = ( $checked_val == 100 ? 'SELECTED':'');
+            if ($checked_val == 100) {
+                $isAValueSelected = true;
+            }
 		}
 	    $return .= "\n<OPTION VALUE=\"100\" $selected>$text_100 </OPTION>";
 	}
@@ -257,17 +268,21 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 			if ( is_array($checked_val) ) {
 				if ( in_array($vals[$i],$checked_val) ) {
 					$return .= ' SELECTED';
+                    $isAValueSelected = true;
 				}
 			} else {
 				if ($vals[$i] == $checked_val) {
 					$return .= ' SELECTED';
+                    $isAValueSelected = true;
 				}
 			}
 			$return .= '>'.$texts[$i].'</OPTION>';
 		}
-		
 	}
-	$return .= '
+    if ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected) {
+        $return .= '<OPTION VALUE="'.$checked_val.'" SELECTED>'.$Language->getText('include_html','unknown_value').'</OPTION>';
+    }
+    $return .= '
 		</SELECT>';
 	return $return;
 }

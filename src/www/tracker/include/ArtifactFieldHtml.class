@@ -116,9 +116,19 @@ class ArtifactFieldHtml extends ArtifactField {
         return (is_array($default_value) && in_array($value, $default_value)) || $value == $default_value;
     }
     function _getValuesAsJavascript($values, $default_value) {
+        global $Language;
             $output  = "options['".$this->getID()."'] = {};\n";
+            $isDefaultValuePresent = false;
             foreach ($values as $row) {
                 $output .= "options['". $this->getID() ."']['". $row['0'] ."'] = {option:new Option('". addslashes($row['1']) ."', '". $row['0'] ."'), selected:". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') ."};\n";
+                if ($row['0'] == $default_value) {
+                    $isDefaultValuePresent = true;
+                }
+            }
+            if (!$isDefaultValuePresent && !is_array($default_value)) {
+                // for single select box, if the default value is not present, 
+                // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
+                $output .= "options['". $this->getID() ."']['". $default_value ."'] = {option:new Option('". addslashes($Language->getText('tracker_include_field','unknown_value')) ."', '". $default_value ."'), selected:true};\n";
             }
             return $output;
     }        

@@ -241,6 +241,7 @@ tracker_include_field	end	End:
 tracker_include_field	any_time	Any time
 tracker_include_field	pick_date	Click Here to Pick up a date
 tracker_include_field	unknown_display_type	$1: UNKNOW ARTIFACT FIELD DISPLAY TYPE
+tracker_include_field	unknown_value	*** unknown value ***
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactFileHtml.class
