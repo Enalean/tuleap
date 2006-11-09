@@ -166,6 +166,7 @@ include_html	medium	Moyen
 include_html	highest	Maximum
 include_html	g_not_exist	Ce groupe n'existe pas.
 include_html	invalid_g	Groupe invalide
+include_html	unknown_value	*** valeur inconnue ***
 #
 #-----------------------------------------------
 # Script: SF/www/include/layout.php
