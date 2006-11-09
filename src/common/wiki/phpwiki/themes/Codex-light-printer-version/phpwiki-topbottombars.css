@@ -35,33 +35,6 @@ hr.toolbar {
   display: none;
 }
 
-
-/**
- * Navbar
- */
-div#header {
-  top: 0px;
-  padding-top: 1.5ex;
-  border-bottom: 1px solid #b2b2b2;
-}
-div#navbuttons {
-  padding-bottom: 1ex;
-}
-
-
-/**
- * Actionbar
- */
-div#footer {
-  border-top: 1px solid #b2b2b2;
-  /* kludge for Mozilla */
-    bottom: -1ex;
-    padding-bottom: 0ex;
-}
-div#actionbuttons {
-  /* For IE5.1Mac, workaround the Mozilla kludge */
-  padding-bottom: 1ex;
-}
 p.editdate { margin-bottom: 0.5ex; }
 
 
