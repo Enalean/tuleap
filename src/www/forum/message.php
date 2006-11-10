@@ -39,7 +39,10 @@ if ($msg_id) {
 	    }
 	}   
 
-	forum_header(array('title'=>db_result($result,0,'subject')));
+        $params=array('title'=>db_result($result,0,'subject'),
+                      'pv'   =>isset($pv)?$pv:false);
+	forum_header($params);
+	//forum_header(array('title'=>db_result($result,0,'subject')));
 
 	echo "<P>";
 
@@ -67,29 +70,31 @@ if ($msg_id) {
 	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
 	echo "</TD></TR></TABLE>";
 
+	if (!isset($pv)) {
 	/*
 		Show entire thread
 	*/
-	echo '<BR>&nbsp;<P><H3>'.$Language->getText('forum_message','thread_view').'</H3>';
+	    echo '<BR>&nbsp;<P><H3>'.$Language->getText('forum_message','thread_view').'</H3>';
 
-	//highlight the current message in the thread list
-	$current_message=$msg_id;
-	echo show_thread(db_result($result,0, 'thread_id'));
+	    //highlight the current message in the thread list
+	    $current_message=$msg_id;
+	    echo show_thread(db_result($result,0, 'thread_id'));
 
 	/*
 		Show post followup form
 	*/
 
-	echo '<P>&nbsp;<P>';
-	echo '<CENTER><h3>'.$Language->getText('forum_message','post_followup').'</h3></CENTER>';
+	    echo '<P>&nbsp;<P>';
+	    echo '<CENTER><h3>'.$Language->getText('forum_message','post_followup').'</h3></CENTER>';
 
-	show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
+	    show_post_form(db_result($result, 0, 'group_forum_id'),db_result($result, 0, 'thread_id'), $msg_id, db_result($result,0, 'subject'));
+	}
 
 } else {
     exit_error($Language->getText('global','error'),$Language->getText('forum_message','choose_msg_first'));            
 
 }
 
-forum_footer(array()); 
+forum_footer($params); 
 
 ?>
