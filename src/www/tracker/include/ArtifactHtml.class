@@ -13,7 +13,7 @@
 //
 require_once('common/tracker/Artifact.class');
 require_once('common/mail/Mail.class');
-
+require_once('common/include/ReferenceManager.class');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -1505,6 +1505,20 @@ class ArtifactHtml extends Artifact {
 	    // Then output the history of attached files from newest to oldest
 	    $body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
 	    
+        // Extract references from the message
+        $referenceManager =& ReferenceManager::instance();
+        $ref_array = $referenceManager->extractReferencesGrouped($body, $group_id);
+        if (count($ref_array) > 0) {
+            $body .= $sys_lf.$sys_lf.$Language->getText('tracker_include_artifact','references').$sys_lf;
+        }
+        foreach ($ref_array as $description => $match_array) {
+            $body .= $sys_lf.$description.":".$sys_lf;
+            foreach ($match_array as $match => $ref_instance) {
+                $reference =& $ref_instance->getReference();
+                $body .= ' '.$ref_instance->getMatch().': '.$ref_instance->getFullGotoLink().$sys_lf;
+            }
+        }
+        
 	    // Finally output the message trailer
 	    $body .= "$sys_lf$sys_lf".$Language->getText('tracker_include_artifact','follow_link');
 	    $body .= "$sys_lf".$artifact_href;

@@ -317,6 +317,7 @@ tracker_include_artifact	copy_art	Copy This Artifact
 tracker_include_artifact	is_copy	this $1 is a copy of $2
 tracker_include_artifact	copy_of	Copy of $1
 tracker_include_artifact	copy	Copy
+tracker_include_artifact	references	References:
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class

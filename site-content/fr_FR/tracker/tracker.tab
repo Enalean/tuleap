@@ -322,6 +322,7 @@ tracker_include_artifact	copy_art	Dupliquer Cet Artifact
 tracker_include_artifact	is_copy	ce $1 est une copie de $2
 tracker_include_artifact	copy_of	Copie de $1
 tracker_include_artifact	copy	Copie
+tracker_include_artifact	references	Références :
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class

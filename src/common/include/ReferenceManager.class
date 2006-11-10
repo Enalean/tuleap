@@ -294,8 +294,10 @@ class ReferenceManager {
     }
 
     /**
-     * insert html links in text
-     * @param $html 
+     * extract references from text $html
+     * @param $html the text to be extracted
+     * @param $group_id the group_id of the project
+     * @return array of {ReferenceInstance} : an array of project references extracted in the text $html
      */
     function extractReferences($html,$group_id) {
 
@@ -320,6 +322,23 @@ class ReferenceManager {
         return $referencesInstances;
     }
 
+    /**
+     * extract references from text $html (same as extractReferences) but returns them grouped by Description, and removes the duplicates references
+     * @param $html the text to be extracted
+     * @param $group_id the group_id of the project
+     * @return array referenceinstance with the following structure: array[$description][$match] = {ReferenceInstance}
+     */
+    function extractReferencesGrouped($html,$group_id) {
+        $referencesInstances = $this->extractReferences($html,$group_id);
+        $groupedReferencesInstances = array();
+        foreach ($referencesInstances as $idx => $referenceInstance) {
+            $reference =& $referenceInstance->getReference();
+            // description to group the references
+            // match to remove duplicates entries
+            $groupedReferencesInstances[$reference->getDescription()][$referenceInstance->getMatch()] = $referenceInstance;
+        }
+        return $groupedReferencesInstances;
+    }
 
     // callback function
     function _insertRefCallback($match) {
