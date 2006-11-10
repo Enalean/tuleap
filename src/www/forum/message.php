@@ -42,7 +42,6 @@ if ($msg_id) {
         $params=array('title'=>db_result($result,0,'subject'),
                       'pv'   =>isset($pv)?$pv:false);
 	forum_header($params);
-	//forum_header(array('title'=>db_result($result,0,'subject')));
 
 	echo "<P>";
 
