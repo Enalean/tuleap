@@ -192,8 +192,8 @@ while ($ln = pop(@groupdump_array)) {
 	}
 
 	# make all user names lower case.
-	$userlist =~ tr/A-Z/a-z/;
-	$ugrouplist =~ tr/A-Z/a-z/;
+	#$userlist =~ tr/A-Z/a-z/;
+	#$ugrouplist =~ tr/A-Z/a-z/;
 
 	$group_exists = getgrnam($gname);
 
@@ -392,11 +392,11 @@ while ($ln = pop(@groupdump_array)) {
             # src/www/svn/svn_utils.php
             print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
             print SVNACCESS "[groups]\n";
-            print SVNACCESS "members = ",$userlist,"\n";
+            print SVNACCESS "members = ",join(", ", split(",", $userlist)),"\n";
 
 	    @ugroup_array = split(" ",$ugrouplist);
 	    while ($ln = pop(@ugroup_array)) {
-		print SVNACCESS $ln,"\n";
+		print SVNACCESS join(", ", split(",", $ln)),"\n";
 	    }
 	    print SVNACCESS "\n";
 
