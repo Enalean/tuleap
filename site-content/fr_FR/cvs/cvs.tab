@@ -105,11 +105,11 @@ cvs_commit_utils	added_line	Lignes ajoutées
 cvs_commit_utils	removed_line	Lignes supprimées
 #
 #-----------------------------------------------
-# Script: SF/www/cvs/viewcvs.php
+# Script: SF/www/cvs/viewvc.php
 #
-cvs_viewcvs	title	Affichage de l'arbre CVS	
-cvs_viewcvs	error_noaccess	Accès refusé
-cvs_viewcvs	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
+cvs_viewvc	title	Affichage de l'arbre CVS	
+cvs_viewvc	error_noaccess	Accès refusé
+cvs_viewvc	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
 
 
 

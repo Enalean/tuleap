@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Step 5: Software Policy</H2>
+<H2>Step 6: Software Policy</H2>
 
 
 
@@ -61,6 +61,6 @@ with a description of your license.
 <P>
 <H2><FONT COLOR="RED">Do Not Back Arrow After This Point</FONT></H2> 
 <P>
-<INPUT type=submit name="Submit" value="Step 6: Category">
+<INPUT type=submit name="Submit" value="Step 7: Category">
 </FORM>
 </FONT>

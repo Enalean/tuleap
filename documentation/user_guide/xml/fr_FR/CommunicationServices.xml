@@ -155,17 +155,19 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       annonce&#34; dans la barre de menu du service au sommet de la
       page. Ensuite tapez le titre et le contenu de l'annonce. Les
       URLs présents dans le message seront automatiquement transformés
-      en hyperlien dans la version publiée.</para>
+      en hyperlien dans la version publiée. Vous pouvez aussi choisir
+      de rendre votre annonce publique c'est à dire visible sur votre page
+      de sommaire du projet par tous les utilisateurs CodeX ou privée 
+      c'est à dire visible seulement par vos membres de projet.</para>
 
-      <para>Toutes les annonces postées apparaissent sur la page de
-      sommaire du projet et sont donc visibles pour l'ensemble des
-      utilisateurs qui rendent visite à votre projet. N'importe quel
-      utilisateur CodeX peut attacher un commentaire à l'annonce,
+      <para>N'importe quel
+      utilisateur CodeX peut attacher un commentaire aux annonces visibles
+      pour lui sur votre page de sommaire de projet,
       ce qui signifie que chaque annonce est un forum de discussion en
       puissance<footnote><para>En arrière plan, chaque annonce est en
       fait gérée exactement comme un forum Web
       CodeX.</para></footnote>. De plus, l'équipe d'administration du
-      site CodeX a une vue sur l'ensemble des annonces publiées par
+      site CodeX a une vue sur l'ensemble des annonces publiques publiées par
       les différents projets et peut décider de faire apparaître
       certaines d'entre elles sur la page d'accueil principale du site
       CodeX si elles présentent un intérêt pour l'ensemble des

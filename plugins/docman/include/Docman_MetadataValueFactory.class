@@ -1,0 +1,295 @@
+<?php
+/**
+ * Copyright � STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+require_once('Docman_MetadataValue.class');
+require_once('Docman_MetadataValueDao.class');
+
+/**
+ * High level object for Metadata Values management.
+ */
+class Docman_MetadataValueFactory extends Error {
+    var $groupId;
+    var $docman;
+    
+    /**
+     * Constructor
+     */
+    function Docman_MetadataValueFactory(&$docman, $groupId) {
+        $this->docman =& $docman;
+        $this->groupId = $groupId;
+    }
+
+    /**
+     * Return Docman_MetadataValueDao reference.
+     */
+    function &getDao() {
+        static $_plugin_docman_metadata_value_dao_instance;
+        if(!$_plugin_docman_metadata_value_dao_instance) {
+            $_plugin_docman_metadata_value_dao_instance =& new Docman_MetadataValueDao(CodexDataAccess::instance());
+        }
+        return $_plugin_docman_metadata_value_dao_instance;
+    }
+
+    /**
+     * Factory. Create a MetadataValue object based on the metadata type.
+     */
+    function &createFromType($type) {
+        $mdv = null;
+        switch($type) {
+        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+            $mdv = new Docman_MetadataValueList();
+            break;
+
+        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+            $mdv = new Docman_MetadataValueScalar();
+            break;
+        }
+        return $mdv;
+    }
+
+    /**
+     * Create and set-up a MetadataValue object.
+     */
+    function &newMetadataValue($itemId, $fieldId, $type, $value) {
+        $mdv =& $this->createFromType($type);
+        
+        $mdv->setFieldId($fieldId);
+        $mdv->setItemId($itemId);
+        $mdv->setType($type);
+        if($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $ea = array();
+            $ea[0] =& new Docman_MetadataListOfValuesElement();
+            $ea[0]->setId($value);
+            $mdv->setValue($ea);
+        }
+        else {
+            $mdv->setValue($value);
+        }
+          
+        return $mdv;
+    }
+
+    /**
+     * Create and set-up a MetadataValue object from database.
+     */
+    function &getMetadataValue(&$item, &$md) {
+        $mdv = null;
+        $dao =& $this->getDao();
+        $dar =& $dao->searchById($md->getId(), $item->getId());
+        if($dar && !$dar->isError()) { 
+            if($dar->rowCount() == 1) {
+                $row =& $dar->current();
+                $mdv =& $this->createFromType($md->getType());
+                $mdv->initFromRow($row);
+                if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                    $loveBo = new Docman_MetadataListOfValuesElementFactory();
+                    $ea = array();
+                    $ea[] =& $loveBo->getByElementId($row['valueInt']);                    
+                    $mdv->setValue($ea);
+                }
+            }
+            else {
+                // Should only exist for lists.
+                //@todo: write the code for multiple selection box
+            }
+        }
+        return $mdv;
+    }
+
+    /**
+     * Insert new metadata value(s) in database.
+     */
+    function create(&$mdv) {
+        $dao =& $this->getDao();
+        switch($mdv->getType()) {
+        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+            $eIter =& $mdv->getValue();
+            $eIter->rewind();
+            $ret = true;
+            while($eIter->valid()) {
+                $e =& $eIter->current();
+
+                $pret = $dao->create($mdv->getItemId(),
+                                     $mdv->getFieldId(),
+                                     $mdv->getType(),
+                                     $e->getId());
+                if($pret === false) {
+                    //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
+                    $ret = false;
+                }
+
+                $eIter->next();
+            }
+            break;
+            
+        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+            $ret = $dao->create($mdv->getItemId(),
+                                $mdv->getFieldId(),
+                                $mdv->getType(),
+                                $mdv->getValue());
+            break;
+
+        default:
+            $this->setError($GLOBALS['Language']->getText('plugin_docman',
+                                                          'mdv_bo_errbadtype'));
+            $ret = false;
+        }
+        return $ret;
+    }
+
+    /**
+     * Create new MetadataValue record.
+     */
+    function createFromRow($id, $row) {
+        $mdFactory = new Docman_MetadataFactory($this->docman, $this->groupId);
+
+        foreach($row as $md_name => $md_v) {
+            $md =& $mdFactory->getFromLabel($md_name);
+            
+            if($md !== null) {
+                $mdv =& $this->newMetadataValue($id
+                                                ,$md->getId()
+                                                ,$md->getType()
+                                                ,$md_v);
+                
+                $created = $this->create($mdv);
+                if(!$created) {
+                    $this->setError($GLOBALS['Language']->getText('plugin_docman',
+                                                                  'mdv_bo_createerror',
+                                                                  array($md->getName())));
+                }
+            }
+            else {
+                $this->setError($GLOBALS['Language']->getText('plugin_docman',
+                                                              'mdv_bo_createunknown',
+                                                              array($md_name)));
+            }
+        }
+    }
+
+    /**
+     * Update MetadataValue in database.
+     */
+    function update($mdv) {
+        $dao =& $this->getDao(); 
+        switch($mdv->getType()) {
+        case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+            $eIter =& $mdv->getValue();
+            $eIter->rewind();
+            $ret = true;
+            while($eIter->valid()) {
+                $e =& $eIter->current();
+
+                $pret = $dao->updateValue($mdv->getItemId(),
+                                          $mdv->getFieldId(),
+                                          $mdv->getType(),
+                                          $e->getId());
+                if($pret === false) {
+                    //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
+                    $ret = false;
+                }
+
+                $eIter->next();
+            }
+            break;
+            
+        case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+        case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+        case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+            $ret = $dao->updateValue($mdv->getItemId(),
+                                     $mdv->getFieldId(),
+                                     $mdv->getType(),
+                                     $mdv->getValue());
+            break;
+
+        default:
+            $this->setError($GLOBALS['Language']->getText('plugin_docman',
+                                                          'mdv_bo_errbadtype'));
+            $ret = false;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Update an existing MetadataValue record.
+     */
+    function updateFromRow($id, $row) {
+        $mdFactory = new Docman_MetadataFactory($this->docman, $this->groupId);
+
+        foreach($row as $md_name => $md_v) {
+            $md =& $mdFactory->getFromLabel($md_name);
+
+            if($md !== null) {
+                $mdv =& $this->newMetadataValue($id
+                                                ,$md->getId()
+                                                ,$md->getType()
+                                                ,$md_v);
+
+                if($this->exist($mdv->getItemId(), $mdv->getFieldId())) {
+                    // warning: with multi-value lists, this do not work
+                    // we will have to delete all previous values associated
+                    // to (item, field) and then create the new one.
+                    $success = $this->update($mdv);
+                }
+                else {
+                    $success = $this->create($mdv);
+                }
+                if($success === false) {
+                    $this->setError($GLOBALS['Language']->getText('plugin_docman',
+                                                                  'mdv_bo_updateerror',
+                                                                  array($mdv->getName())));
+                }
+            }
+            else {
+                $this->setError($GLOBALS['Language']->getText('plugin_docman',
+                                                              'mdv_bo_updateunknown',
+                                                              array($md_name)));
+            }
+        }
+    }
+
+    /**
+     * Return true if a value already exist for a given (itme, field).
+     */
+    function exist($itemId, $fieldId) {
+        $exist = false;
+        $dao =& $this->getDao();
+        $dar =& $dao->exist($itemId, $fieldId);        
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            if($row['nb'] > 0) {
+                $exist = true;
+            }
+        }
+        return $exist;
+    }
+}
+
+?>

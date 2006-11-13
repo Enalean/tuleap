@@ -117,7 +117,7 @@ if ($debug) {
     print "utils = $utils\n";
 }
 
-$ENV{'SF_LOCAL_INC_PREFIX'} = $config;
+$ENV{'CODEX_LOCAL_INC'} = $config."/etc/codex/conf/local.inc";
 require "$utils/include.pl";
 &db_connect || die "Could not connect to CodeX database";
 

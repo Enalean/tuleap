@@ -83,8 +83,22 @@
           peut-être y remédier.</para>
         </listitem>
 
+	<listitem> 
+	  <para><emphasis role="bold">&Eacute;tape 3 - Projet de patron</emphasis></para>
+
+	  <para>Vous avez déjà soumis un projet CodeX et voudriez réutiliser la 
+	  même configuration des services ? Vous pouvez convertir votre ancien projet
+	  en patron de projet (voir <xref linkend="ProjectType" />) et vous le 
+	  retrouverez sur cette page dans la liste des patrons de projet disponible. 
+	  Choisissez votre ancien
+	  projet comme patron et votre nouveau projet aura les mêmes services configurés
+	  de la même manière que votre ancien projet. Si vous ne voulez pas réutiliser
+	  un patron spécifique gardez simplement le Patron CodeX par défault coché
+	  et continuez l'enregistrement.</para>
+	</listitem>
+
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 3 - Enregistrement du projet</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 4 - Informations projet</emphasis></para>
 
           <para>C'est là que tout commence véritablement ! En
           commençant par une description de votre projet. Il est
@@ -100,7 +114,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 4 - Nom du projet</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 5 - Nom du projet</emphasis></para>
 
           <para>Indiquez le nom court et le nom complet du
           projet. Lisez attentivement les instructions fournies. Le
@@ -112,7 +126,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 5 - Politique d'échange</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 6 - Politique d'échange</emphasis></para>
 
           <para>NOTE : cette étape ne s'applique que si vous créez un
           projet public. Si c'est le cas, le choix par défaut est
@@ -126,19 +140,21 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 6 - Catégories</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 7 - Catégories</emphasis></para>
 
           <para>Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. 
           Cela permettra aux utilisateurs de trouver rapidement votre projet. 
           Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".
-          Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.
+          Si vous avez utilisé un patron de projet qui a déjà été classifié vous allez retrouver
+	  ses catégories ici. 
+	  Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.
           Vous pouvez catégoriser votre projet suivant sept critères qui sont 
           ceux utilisés dans l'arbre des projets 
           (voir <xref linkend="SoftwareMap" />).</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 7 - Confirmation finale</emphasis></para>
+          <para><emphasis role="bold">&Eacute;tape 8 - Confirmation finale</emphasis></para>
 
           <para>Lors de cette dernière étape un récapitulatif des
           différentes informations saisies vous est présenté pour

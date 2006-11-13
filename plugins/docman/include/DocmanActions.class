@@ -1,0 +1,796 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+require_once('service.php');
+
+require_once('common/mvc/Actions.class');
+require_once('common/include/HTTPRequest.class');
+
+require_once('DocmanActionsDeleteVisitor.class');
+require_once('Docman_Folder.class');
+require_once('Docman_FolderBo.class');
+require_once('Docman_ItemFactory.class');
+require_once('Docman_VersionFactory.class');
+require_once('Docman_FileStorage.class');
+require_once('Docman_MetadataValueFactory.class');
+
+require_once('view/Docman_View_Browse.class');
+
+require_once('common/permission/PermissionsManager.class');
+
+require_once('www/project/admin/permissions.php');
+
+class DocmanActions extends Actions {
+    
+    var $event_manager;
+    
+    function DocmanActions(&$controler, $view=null) {
+        parent::Actions($controler);
+        $this->event_manager =& $this->_getEventManager();
+	}
+	
+    function &_getEventManager() {
+        return EventManager::instance();
+    }
+    
+    function expandFolder() {
+        $request =& HTTPRequest::instance();
+
+        $folder = new Docman_Folder();
+        $folder->setId($request->get('id'));
+        $folder->setGroupId($request->get('group_id'));
+
+        $folderBo = new Docman_FolderBo($this->_controler);
+        $folderBo->expand($folder);
+    }
+
+    function collapseFolder() {
+        $request =& HTTPRequest::instance();
+
+        $folder = new Docman_Folder();
+        $folder->setId($request->get('id'));
+        $folder->setGroupId($request->get('group_id'));
+
+        $folderBo = new Docman_FolderBo($this->_controler);
+        $folderBo->collapse($folder);
+    }
+
+    //@todo need to check owner rights on parent    
+    function _checkOwnerChange($owner, &$user) {
+        $ret_id = null;
+
+        $_owner = util_user_finder($owner);
+        if($_owner == "") {
+            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner'));
+            $ret_id = $user->getId();
+        }
+        else {
+            $dbresults = user_get_result_set_from_unix($_owner);
+            $_owner_id     = db_result($dbresults, 0, 'user_id');
+            $_owner_status = db_result($dbresults, 0, 'status');
+            
+            if($_owner_id === false || $_owner_id < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
+                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner'));
+                $ret_id = $user->getId();
+            }
+            else {
+                $ret_id = $_owner_id;
+            }
+        }
+        return $ret_id;
+    }
+
+    function _raiseOwnerChangeEvent(&$user, $id, $group_id, $old, $new) {
+        $logEventParam = array('group_id' => $group_id,
+                               'item'     => $id,
+                               'user'     => $user->getId(),
+                               'old_value' => $old,
+                               'new_value' => $new,
+                               'field'     => 'owner');
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,
+                                           $logEventParam);
+    }
+
+    function _updateOwnerOnItemCreation($id, $group_id, $owner, &$user) {
+        if($owner != "") {
+            $_owner_id = $this->_checkOwnerChange($owner, $user);
+                                
+            if($_owner_id != $user->getId()) {
+                $_update_row['id']      = $id;
+                $_update_row['user_id'] = $_owner_id;
+
+                $item_factory =& $this->_getItemFactory();
+                $item_factory->update($_update_row);
+
+                $_oldowner = user_getname($user->getId());
+                $_newowner = user_getname($_owner_id);
+                $this->_raiseOwnerChangeEvent($user, $id, $group_id,
+                                              $_oldowner, $_newowner);
+                
+                return $_owner_id;
+            }
+            else {
+                return $user->getId();
+            }
+        }
+        else {
+            return $user->getId();
+        }
+    }
+
+    function createFolder() {
+        $request =& HTTPRequest::instance();
+        $item_factory =& $this->_getItemFactory();
+        if ($request->exist('item')) {
+            $item = $request->get('item');
+            $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
+            $user =& $this->_controler->getUser();
+            $item['user_id']  = $user->getId();
+            $item['group_id'] = $request->get('group_id');
+            $id = $item_factory->create($this->sanitizeItemData($item), $request->get('ordering'));
+            
+            if ($id) {
+                if (isset($item['parent_id'])) {
+                    $pm =& PermissionsManager::instance();
+                    $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+                }
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
+                    'group_id' => $request->get('group_id'),
+                    'item'     => $id,
+                    'user'     => $user->getId())
+                );
+                
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_folder_created'));
+
+            }
+        }
+    }
+    
+    function createDocument() {
+        $request =& HTTPRequest::instance();
+        $item_factory =& $this->_getItemFactory();
+        if ($request->exist('item')) {
+            $item = $request->get('item');
+            $fs =& $this->_getFileStorage();
+            if (
+                    $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE 
+                    || 
+                    (
+                        $this->_controler->getProperty('embedded_are_allowed') 
+                        && 
+                        $request->exist('content')
+                    )
+                )
+            {
+                // Special handeling of obsolescence date
+                $obsolescenceDate = $request->get('obsolescence_date');
+                if($obsolescenceDate != "") {
+                    $d = explode('-',$obsolescenceDate);
+                    $item['obsolescence_date'] = mktime(0,0,0,
+                                                        $d[1], $d[2], $d[0]);
+                }
+                else {
+                    $item['obsolescence_date'] = 0;
+                }
+
+                $user =& $this->_controler->getUser();
+                $item['user_id']  = $user->getId();
+                $item['group_id'] = $request->get('group_id');
+                $id = $item_factory->create($item, $request->get('ordering'));
+                if ($id) {
+                    if (isset($item['parent_id'])) {
+                        $pm =& PermissionsManager::instance();
+                        $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+                    }
+                    $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
+                        'group_id' => $request->get('group_id'),
+                        'item'     => $id,
+                        'user'     => $user->getId())
+                    );
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
+                    
+                    switch ($item['item_type']) {
+                        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                            $fs =& $this->_getFileStorage();
+                            if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $id, 0)) {
+                                $version_factory =& $this->_getVersionFactory();
+                                $version_id = $version_factory->create(array(
+                                    'item_id'   => $id,
+                                    'number'    => 0,
+                                    'user_id'   => $user->getId(),
+                                    'label'     => '',
+                                    'changelog' => 'Initial version',
+                                    'filename'  => $_FILES['file']['name'],
+                                    'filesize'  => $_FILES['file']['size'],
+                                    'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
+                                    'path'      => $path)
+                                );
+                                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                                    'group_id' => $request->get('group_id'),
+                                    'item'     => $id, 
+                                    'version'  => $version_id,
+                                    'user'     => $user->getId())
+                                );
+                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion'));
+                            } else {
+                                //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                                //Annulation du nouvel item ?
+                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_initversion'));
+                            }
+                            break;
+                        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                            $fs =& $this->_getFileStorage();
+                            if ($path = $fs->store($request->get('content'), $request->get('group_id'), $id, 0)) {
+                                $version_factory =& $this->_getVersionFactory();
+                                $version_id = $version_factory->create(array(
+                                    'item_id'   => $id,
+                                    'number'    => 0,
+                                    'user_id'   => $user->getId(),
+                                    'label'     => '',
+                                    'changelog' => 'Initial version',
+                                    'filename'  => basename($path),
+                                    'filesize'  => filesize($path),
+                                    'filetype'  => 'text/html',     //TODO take mimetype once the file has been written ?
+                                    'path'      => $path)
+                                );
+                                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                                    'group_id' => $request->get('group_id'),
+                                    'item'     => $id, 
+                                    'version'  => $version_id,
+                                    'user'     => $user->getId())
+                                );
+                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion'));
+                            } else {
+                                //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                                //Annulation du nouvel item ?
+                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_initversion'));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    // Create metatata
+                    if($request->exist('metadata')) {
+                        $metadata_array = $request->get('metadata');
+                        $mdvFactory = new Docman_MetadataValueFactory($this->_controler, $request->get('group_id'));
+                        $mdvFactory->createFromRow($id, $metadata_array);
+                        if($mdvFactory->isError()) {
+                            $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
+                        }
+                    }
+
+                    // Change owner if needed
+                    //$this->_updateOwnerOnItemCreation($id, $item['group_id'], $item['owner'], $user);
+                }
+            }
+        }
+    }
+    function update() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('item')) {
+            $user =& $this->_controler->getUser();
+            
+            $data = $request->get('item');
+
+            $item_factory =& $this->_getItemFactory();
+            
+            // Update Owner
+            $ownerChanged = false;
+            if(array_key_exists('owner', $data)) {
+                $item =& $item_factory->getItemFromDb($data['id']);
+                $_owner_id = $this->_checkOwnerChange($data['owner'], $user);
+                if($_owner_id != $item->getOwnerId()) {
+                    $ownerChanged = true;
+                    $_oldowner = user_getname($item->getOwnerId());
+                    $_newowner = user_getname($_owner_id);
+                    $data['user_id'] = $_owner_id;
+                }
+                unset($data['owner']);
+            }
+            
+            // Special handeling of obsolescence date
+            if($request->exist('obsolescence_date')) {
+                $obsolescenceDate = $request->get('obsolescence_date');
+                if($obsolescenceDate != "") {
+                    $d = explode('-',$obsolescenceDate);
+                    $data['obsolescence_date'] = mktime(0,0,0,
+                                                        $d[1], $d[2], $d[0]);
+                }
+                else {
+                    $data['obsolescence_date'] = 0;
+                }
+            }
+
+            // Check is status change
+            $statusChanged = false;
+            if(array_key_exists('status', $data)) {
+                $old_st = $item->getStatus();
+                if($old_st != $data['status']) {
+                    $statusChanged = true;
+                }
+            }
+
+            $item_factory->update($this->sanitizeItemData($data));
+            if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
+                    'group_id' => $request->get('group_id'),
+                    'item'     => $data['id'],
+                    'user'     => $user->getId())
+                );
+            }
+
+            if($ownerChanged) {
+                $this->_raiseOwnerChangeEvent($user,
+                                              $data['id'],
+                                              $request->get('group_id'), 
+                                              $_oldowner, 
+                                              $_newowner);
+            }
+
+            if($statusChanged) {
+                $logEventParam = array('group_id' => $request->get('group_id'),
+                                       'item'     => $data['id'],
+                                       'user'     => $user->getId(),
+                                       'old_value' => $old_st,
+                                       'new_value' => $data['status'],
+                                       'field'     => 'status');
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,
+                                                   $logEventParam);
+            }
+
+            // Update real metatata
+            if($request->exist('metadata')) {
+                $metadata_array = $request->get('metadata');
+                $mdvFactory = new Docman_MetadataValueFactory($this->_controler, $request->get('group_id'));
+                $mdvFactory->updateFromRow($data['id'], $metadata_array);
+                if($mdvFactory->isError()) {
+                    $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
+                }
+            }
+
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_updated'));
+        }
+    }
+    function new_version() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('id')) {
+            $user =& $this->_controler->getUser();
+            $item_factory =& $this->_getItemFactory();
+            $item =& $item_factory->getItemFromDb($request->get('id'));
+            $item_type = $item_factory->getItemTypeForItem($item);
+            if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $label = '';
+                $changelog = '';
+                $data_version = $request->get('version');
+                if ($data_version) {
+                    if (isset($data_version['label'])) {
+                        $label = $data_version['label'];
+                    }
+                    if (isset($data_version['changelog'])) {
+                        $changelog = $data_version['changelog'];
+                    }
+                }
+                $version =& $item->getCurrentVersion();
+                $number = ($version ? $version->getNumber() : 0) + 1;
+                $fs =& $this->_getFileStorage();
+                if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
+                    if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $request->get('id'), $number)) {
+                        
+                        $version_factory =& $this->_getVersionFactory();
+                        $version_id = $version_factory->create(array(
+                            'item_id'   => $request->get('id'),
+                            'number'    => $number,
+                            'user_id'   => $user->getId(),
+                            'label'     => $label,
+                            'changelog' => $changelog,
+                            'filename'  => $_FILES['file']['name'],
+                            'filesize'  => $_FILES['file']['size'],
+                            'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
+                            'path'      => $path)
+                        );
+                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                            'group_id' => $request->get('group_id'),
+                            'item'     => $request->get('id'),
+                            'version'  => $version_id,
+                            'user'     => $user->getId())
+                        );
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+                    } else {
+                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
+                    }
+                } else if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
+                    if ($path = $fs->store($request->get('content'), $request->get('group_id'), $request->get('id'), $number)) {
+                        $version_factory =& $this->_getVersionFactory();
+                        $version_id = $version_factory->create(array(
+                            'item_id'   => $request->get('id'),
+                            'number'    => $number,
+                            'user_id'   => $user->getId(),
+                            'label'     => $label,
+                            'changelog' => $changelog,
+                            'filename'  => basename($path),
+                            'filesize'  => filesize($path),
+                            'filetype'  => 'text/html', //TODO take mimetype once the file has been written ?
+                            'path'      => $path)
+                        );
+                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
+                            'group_id' => $request->get('group_id'),
+                            'item'     => $request->get('id'), 
+                            'version'  => $version_id,
+                            'user'     => $user->getId())
+                        );
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+                    } else {
+                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
+                    }
+                }
+            }
+        }
+    }
+    var $filestorage;
+    function &_getFileStorage() {
+        if (!$this->filestorage) {
+            $this->filestorage =& new Docman_FileStorage($this->_controler->getProperty('docman_root'));
+        }
+        return $this->filestorage;
+    }
+    var $item_factory;
+    function &_getItemFactory() {
+        if (!$this->item_factory) {
+            $this->item_factory =& new Docman_ItemFactory();
+        }
+        return $this->item_factory;
+    }
+    var $version_factory;
+    function &_getVersionFactory() {
+        if (!$this->version_factory) {
+            $this->version_factory =& new Docman_VersionFactory();
+        }
+        return $this->version_factory;
+    }
+    function sanitizeItemData($data) {
+        $sanitized_data = $data;
+        
+        $must_be_stripped = array('title', 'wiki_page', 'link_url', 'description');
+        foreach($must_be_stripped as $property) {
+            if (isset($sanitized_data[$property])) {
+                $sanitized_data[$property] = strip_tags($sanitized_data[$property]);
+            }
+        }
+        return $sanitized_data;
+    }
+    function move() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('id') && $request->exist('item_to_move')) {
+            $user =& $this->_controler->getUser();
+            
+            $item_factory =& $this->_getItemFactory();
+            $item =& $item_factory->getItemFromDb($request->get('item_to_move'));
+            $old_parent =& $item_factory->getItemFromDb($item->getParentId());
+            if ($item_factory->setNewParent($item->getId(), $request->get('id'), $request->get('ordering'))) {
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_MOVE, array(
+                    'group_id' => $request->get('group_id'),
+                    'item'    => $request->get('item_to_move'), 
+                    'parent'  => $request->get('id'),
+                    'user'    => $user->getId())
+                );
+                $new_parent =& $item_factory->getItemFromDb($request->get('id'));
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
+                    $item->getGroupId(),
+                    $old_parent->getId(), 
+                    $old_parent->getTitle(),
+                    $new_parent->getId(), 
+                    $new_parent->getTitle()
+                )));
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
+            }
+        }
+    }
+    function _get_definition_index_for_permission($p) {
+        switch ($p) {
+            case 'PLUGIN_DOCMAN_READ':
+                return 1;
+                break;
+            case 'PLUGIN_DOCMAN_WRITE':
+                return 2;
+                break;
+            case 'PLUGIN_DOCMAN_MANAGE':
+                return 3;
+                break;
+            default:
+                return 100;
+                break;
+        }
+    }
+    function permissions() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('id') && $request->exist('permissions')) {
+            $user =& $this->_controler->getUser();
+            
+            $item_factory =& $this->_getItemFactory();
+            $item =& $item_factory->getItemFromDb($request->get('id'));
+            if ($item) {
+                $permission_definition = array(
+                    100 => array(
+                        'order' => 0, 
+                        'type'  => null,
+                        'label' => null,
+                        'previous' => null
+                    ),
+                    1 => array(
+                        'order' => 1, 
+                        'type'  => 'PLUGIN_DOCMAN_READ',
+                        'label' => permission_get_name('PLUGIN_DOCMAN_READ'),
+                        'previous' => 0
+                    ),
+                    2 => array(
+                        'order' => 2, 
+                        'type'  => 'PLUGIN_DOCMAN_WRITE',
+                        'label' => permission_get_name('PLUGIN_DOCMAN_WRITE'),
+                        'previous' => 1
+                    ),
+                    3 => array(
+                        'order' => 3, 
+                        'type'  => 'PLUGIN_DOCMAN_MANAGE',
+                        'label' => permission_get_name('PLUGIN_DOCMAN_MANAGE'),
+                        'previous' => 2
+                    )
+                );
+                $permissions = $request->get('permissions');
+                $old_permissions = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_MANAGE'), false);
+                $done_permissions = array();
+                $history = array(
+                    'PLUGIN_DOCMAN_READ'  => false,
+                    'PLUGIN_DOCMAN_WRITE' => false,
+                    'PLUGIN_DOCMAN_MANAGE' => false
+                );
+                foreach($permissions as $ugroup_id => $wanted_permission) {
+                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, &$history);
+                }
+                
+                $updated = false;
+                foreach($history as $perm => $put_in_history) {
+                    if ($put_in_history) {
+                        permission_add_history($item->getGroupId(), $perm, $item->getId());
+                        $updated = true;
+                    }
+                }
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+                if ($this->_controler->request->get('recursive')) {
+                    $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
+                }
+            }
+        }
+    }
+    function recursivePermissions($data, $params) {
+        if ($this->_controler->userCanManage($data["item_id"])) {
+            $pm =& PermissionsManager::instance();
+            $pm->clonePermissions($params['id'], $data["item_id"], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+        } else {
+            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
+        }
+    }
+    function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history) {
+        if (!isset($done_permissions[$ugroup_id])) {
+            if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
+                $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history);
+                if ($parent = $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permissions[$ugroup_id])) {
+                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_perms', array($old_permissions[$ugroup_id]['ugroup']['name'],$old_permissions[$parent]['ugroup']['name'],$permission_definition[$done_permissions[$parent]]['label'])));
+                    if (count($old_permissions[$ugroup_id]['permissions'])) {
+                        foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
+                            permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
+                            $history[$permission] = true;
+                        }
+                    }
+                    $done_permissions[$ugroup_id] = 100;
+                }
+            }
+            if (!isset($done_permissions[$ugroup_id])) {
+                //We clear if needed
+                $perms_cleared = false;
+                if (count($old_permissions[$ugroup_id]['permissions'])) {
+                    foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
+                        if ($permission != $permission_definition[$wanted_permissions[$ugroup_id]]['type']) {
+                            permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
+                            $history[$permission] = true;
+                            $perms_cleared = true;
+                            $done_permissions[$ugroup_id] = 100;
+                        } else {
+                            $done_permissions[$ugroup_id] = $this->_get_definition_index_for_permission($permission);
+                        }
+                    }
+                }
+                if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
+                    $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
+                    permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id);
+                    $history[$permission] = true;
+                    $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
+                } else {
+                    $done_permissions[$ugroup_id] = 100;
+                }
+            }
+        }
+    }
+    function _getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission) {
+        if ($wanted_permission == 100) {
+            return false;
+        } else {
+            if ($permission_definition[$done_permissions[$parent]]['order'] >= $permission_definition[$wanted_permission]['order']) {
+                return $parent;
+            } else {
+                if (($parent = ugroup_get_parent($parent)) !== false) {
+                    return $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission);
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+    
+    function change_view() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
+            $item_factory =& $this->_getItemFactory();
+            $folder = $item_factory->getItemFromDb($request->get('id'));
+            if ($folder) {
+                user_set_preference(
+                    PLUGIN_DOCMAN_VIEW_PREF .'_'. $folder->getGroupId(),
+                    $request->get('selected_view')
+                );
+                $this->_controler->forceView($request->get('selected_view'));
+            }
+        }
+    }
+    
+    function delete() {
+        $user =& $this->_controler->getUser();
+        $request =& HTTPRequest::instance();
+        
+        $item_factory =& $this->_getItemFactory();
+        $item =& $item_factory->getItemFromDb($request->get('id'));
+        if ($item) {
+            if (!$item_factory->isRoot($item)) {
+                $item_bo =& new Docman_ItemBo($this->_controler, $request->get('group_id'));
+                $item =& $item_bo->getItemSubTree($request->get('id'), array('user' => &$user));
+                if ($item) {
+                    $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                    if ($item->accept($deletor, array('user' => &$user))) {
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
+                    }
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted'));
+            }
+        }
+    }
+
+    function admin_change_view() {
+        $request =& HTTPRequest::instance();
+        if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
+            require_once('Docman_SettingsBo.class');
+            $sBo =& Docman_SettingsBo::instance($request->get('group_id'));
+            if ($sBo->updateView($request->get('selected_view'))) {
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_settings_updated'));
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_settings_updated'));
+            }
+        }
+    }
+    
+    function install() {
+        $request =& HTTPRequest::instance();
+        $item_factory =& $this->_getItemFactory();
+        $root =& $item_factory->getRoot($request->get('group_id'));
+        if ($root) {
+            $this->_controler->feedback->log('error', 'Docman already installed.');
+            $this->_controler->view = 'DocmanError';
+        } else {
+            if ($item_factory->createRoot($request->get('group_id'), 'roottitle_lbl_key')) {
+                //{{{ Set default permissions
+                $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+                $root =& $item_factory->getRoot($request->get('group_id'));
+                foreach($perms as $perm) {
+                    $req = permission_db_get_defaults($perm);
+                    while ($row = db_fetch_array($req)) {
+                        permission_add_ugroup($request->get('group_id'), $perm, $root->getId(), $row['ugroup_id']);
+                    }
+                }
+                //}}}
+                $this->_controler->feedback->log('info', 'Docman successfully installed.');
+
+                //{{{ Default metadata
+                $md = new Docman_Metadata();
+                $md->setName($GLOBALS['Language']->getText('plugin_docman', 'md_install_commentkeyword_name'));
+                $md->setDescription($GLOBALS['Language']->getText('plugin_docman', 'md_install_commentkeyword_desc'));
+                $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+                $md->setIsRequired(false);
+                $md->setIsEmptyAllowed(true);
+                $md->setSpecial(false);
+                $md->setDefaultValue('');
+                $md->setUseIt(false);
+
+                $mdFactory = new Docman_MetadataFactory($this->_controler, $request->get('group_id'));                
+                $mdcreated = $mdFactory->create($md);
+                if($mdcreated === false) {
+                    $this->_controler->feedback->log('error', 'Fail to create "Comment / Keywords" metadata');
+                }
+                //}}}
+            } else {
+                $this->_controler->feedback->log('error', 'Unable to install docman.');
+                $this->_controler->view = 'ProjectError';
+            }
+        }
+    }
+    
+    function admin_set_permissions() {
+        list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
+        if (!$return_code) {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_updated', $feedback));
+        } else {
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+        }
+    }
+
+    function admin_md_details_update() {
+        $request =& HTTPRequest::instance();
+        $_label = $request->get('label');
+        $_useIt = (int) $request->get('use_it');
+        $_gid = (int) $request->get('group_id');
+
+        $mdFactory = new Docman_MetadataFactory($this->_controler, $_gid);
+        $md =& $mdFactory->getFromLabel($_label);
+
+        if($md !== null) {
+            if($md->getGroupId() == $_gid) {
+                if($_useIt === 1) {
+                    $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
+                }
+                else {
+                    $md->setUseIt(PLUGIN_DOCMAN_METADATA_UNUSED);
+                }
+
+                $updated = $mdFactory->update($md);
+                if($updated) {
+                    $this->_controler->feedback->log('info', 'Metadata successfully updated');
+                }
+                else {
+                    $this->_controler->feedback->log('warning', 'Metadata not updated');
+                }
+            }
+            else {
+                $this->_controler->feedback->log('error', 'Given project id and metadata project id mismatch.');
+                $this->_controler->feedback->log('error', 'Metadata not updated');
+            }
+        }
+        else {
+            $this->_controler->feedback->log('error', 'Bad metadata label');
+            $this->_controler->feedback->log('error', 'Metadata not updated');
+        }
+    }
+}
+?>

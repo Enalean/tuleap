@@ -278,10 +278,17 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Boutons radio
-            Oui/Non</emphasis> : il s'agit d'une variante du type
+            <para><emphasis role="bold">Boutons radio Oui/Non</emphasis> : 
+	    il s'agit d'une variante du type
             précédent où seules les réponses Oui ou Non sont
             possibles.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Boutons radio spécifiques</emphasis> : 
+	    ce type de question permet à l'administrateur projet 
+	    de définir un ensemble de réponses parmi lesquelles 
+	    l'utilisateur pourra en choisir une.</para>
           </listitem>
 
           <listitem>

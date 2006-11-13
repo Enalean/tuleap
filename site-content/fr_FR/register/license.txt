@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Etape 5&nbsp;: Politique d'échange des logiciels</H2>
+<H2>Etape 6&nbsp;: Politique d'échange des logiciels</H2>
 
 
 
@@ -67,6 +67,6 @@ Si vous avez choisi l'option "Autre", merci d'en préciser la raison et de fourni
 <P>
 <H2><FONT COLOR="RED">Pas de retour arrière au delà de ce point</FONT></H2> 
 <P>
-<INPUT type=submit name="Submit" value="Etape 6 : Catégories">
+<INPUT type=submit name="Submit" value="Etape 7 : Catégories">
 </FORM>
 </FONT>

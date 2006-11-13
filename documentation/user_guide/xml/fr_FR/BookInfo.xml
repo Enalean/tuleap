@@ -76,6 +76,53 @@
 
         <revremark>Ajout d'une section concernant la gestion des références.</revremark>
       </revision>
+      <revision>
+        <revnumber>2.9.6</revnumber>
+
+        <date>24-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Survey Manager suite à l'amélioration de ST 
+	des boutons radio spécifiques pour les sondages
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.7</revnumber>
+
+        <date>25-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour des chapitres Vue d'ensemble du site
+	CodeX, Créer un nouveau projet et Administration d'un projet
+	pour les patron de projets.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.8</revnumber>
+
+        <date>30-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Service d'annonces
+	pour inclure les amélioration de ST sur les annonces
+	privées (SR #265).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.9</revnumber>
+
+        <date>21-Sep-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Dans paragraphe type de projet : correction 
+	du lien sur références et ajout de détails sur la création de
+	projets à partir d'un projet de patron. 
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

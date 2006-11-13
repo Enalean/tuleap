@@ -1,0 +1,146 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ */
+
+require_once('Docman_FilterBo.class');
+require_once('Docman_UserPreferencesFilter.class');
+
+class Docman_Report {
+    var $filters;
+
+    function Docman_Report() {
+        $this->filters = array();
+        $this->sort    = array();
+    }
+
+    function addFilter(&$f) {
+        $this->filters[] =& $f;
+    }
+
+    function addSort(&$s) {
+        $this->sort[] =& $s;
+    }
+
+    function &getFilterIterator() {
+        return new ArrayIterator($this->filters);
+    }
+
+    function &getSortIterator() {
+        return new ArrayIterator($this->sort);
+    }
+
+    function &getIterator() {
+        return new ArrayIterator(array_merge($this->filters, $this->sort));
+    }
+
+}
+
+class Docman_ReportBo {
+
+    function Docman_ReportBo() {
+
+    }
+
+    function &get($id) {
+        if($id == 'Table') {
+            $report = new Docman_Report();
+            $filterBo = new Docman_FilterBo();        
+
+            $submitted_fields = array('fltr_udate');
+            foreach($submitted_fields as $fName) {            
+                $filter =& $filterBo->getFilterByName($fName);
+                $report->addFilter($filter);
+            }
+
+            $submitted_sort = array('sort_update_date');
+            foreach($submitted_sort as $fName) {            
+                $filter =& $filterBo->getFilterByName($fName);
+                $report->addSort($filter);
+            }
+
+            return $report;
+        }
+        return null;
+    }
+    
+    function setup(&$report, &$request, $groupId, &$feedback) {
+        $validateFilterFactory  = new Docman_ValidateFilterFactory();
+        $userPrefsFilterFactory = new Docman_UserPreferencesFilterFactory($groupId);
+
+        $fi =& $report->getFilterIterator();
+        $fi->rewind();
+        while($fi->valid()) {
+            $filter =& $fi->current();
+
+            $uPrefs =& $userPrefsFilterFactory->getFromFilter($filter);
+
+            if($request->exist('submit')) {
+                $filter->initFromRequest($request);
+                
+                // Validate submitted paramters
+                $validateFilter =& $validateFilterFactory->getFromFilter($filter);
+                if(!$validateFilter->validate()) {
+                    $feedback->log('error', $validateFilter->getMessage());
+                }
+                else {
+                    $uPrefs->update();
+                }
+            }
+            else {
+                // Setup from prefs
+                $uPrefs->initFromPrefs();
+            }
+            
+            $fi->next();
+        }
+
+        $si =& $report->getSortIterator();
+        $si->rewind();
+        while($si->valid()) {
+            $filter =& $si->current();
+
+            $uPrefs =& $userPrefsFilterFactory->getFromFilter($filter);
+            
+            if($request->exist($filter->getName())) {
+                $filter->initFromRequest($request);
+                $validateFilter =& $validateFilterFactory->getFromFilter($filter);
+                if(!$validateFilter->validate()) {
+                    $feedback->log('error', $validateFilter->getMessage());
+                }
+                else {
+                    $uPrefs->update();
+                }
+            }
+            else {
+                // Setup from prefs
+                $uPrefs->initFromPrefs();
+            }
+
+            $si->next();
+        }
+
+    }
+}
+
+?>

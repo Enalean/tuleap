@@ -196,10 +196,14 @@ project_admin_index	quick_file_add	[Ajout rapide d'une version]
 project_admin_index	if_1_file_in_rel	Si vous avez juste un fichier à publier.
 project_admin_index	packages_available	Paquet(s) actuellement disponible(s)&nbsp;:
 project_admin_index	or	ou
+project_admin_index	changed_group_type	Type de projet modifié
+project_admin_index	group_type	Type de projet
+project_admin_index	built_from_template	Patron utilisé pour ce projet: $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
 #
+project_admin_permissions	news_access	Lecture d'annonce
 project_admin_permissions	pack_download	Téléchargement de paquet
 project_admin_permissions	rel_download	Téléchargement de version
 project_admin_permissions	doc_access	Accès à un document
@@ -339,7 +343,7 @@ project_admin_utils	feedback_history	Historique du retour d'information
 project_admin_utils	changed_personal_email_notif	Modification de la configuration de la notification e-mail personnelle
 project_admin_utils	changed_bts_form_message	Modification du message du formulaire du BTS
 project_admin_utils	changed_bts_allow_anon	Modification du BTS, soumission permise aux anonymes
-project_admin_utils	doc_deleted	Document détruit ($1)	
+project_admin_utils	doc_deleted	Document détruit ($1)
 project_admin_utils	removed_project	Projet enlevé
 project_admin_utils	added_user	Utilisateur ajouté ($1)
 project_admin_utils	removed_user	Utilisateur enlevé
@@ -364,6 +368,7 @@ project_admin_utils	perm_reset_for_tracker	Réinitialisation des permissions pour
 project_admin_utils	perm_reset_for_package	Réinitialisation des permissions pour le paquet $1
 project_admin_utils	perm_reset_for_release	Réinitialisation des permissions pour la version $1
 project_admin_utils	perm_reset_for_document	Réinitialisation des permissions pour le document $1
+project_admin_utils	perm_reset_for_folder	Réinitialisation des permissions pour le dossier $1
 project_admin_utils	perm_reset_for_docgroup	Réinitialisation des permissions pour le groupe de documents $1
 project_admin_utils	perm_reset_for_wiki	Réinitialisation des permissions pour le wiki $1
 project_admin_utils	perm_reset_for_wikipage	Réinitialisation des permissions pour la page wiki $1
@@ -373,6 +378,7 @@ project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de
 project_admin_utils	perm_granted_for_package	Permission accordée pour le paquet $1
 project_admin_utils	perm_granted_for_release	Permission accordée pour la version $1
 project_admin_utils	perm_granted_for_document	Permission accordée pour le document $1
+project_admin_utils	perm_granted_for_folder	Permission accordée pour le dossier $1
 project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le groupe de documents  $1
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
@@ -380,6 +386,7 @@ project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1
 project_admin_utils	menu_config	Configuration&nbsp;: 
 project_admin_utils	menu_permissions	Permissions&nbsp;: 
 project_admin_utils	menu_data	Données&nbsp;: 
+project_admin_utils	group_type	Type de projet modifié
 #... end of values
 #
 #-----------------------------------------------
@@ -623,6 +630,7 @@ project_export_support_request_export	follow_up_desc	Tout le fil de commentaires
 #
 project_export_survey_responses_export	survey_id	ID sondage
 project_export_survey_responses_export	question_id	ID question
+project_export_survey_responses_export	user_id	ID utilisateur
 project_export_survey_responses_export	response	Réponse
 project_export_survey_responses_export	date_stamp	Horodatage
 project_export_survey_responses_export	survey_id_desc	Identifiant unique du sondage
@@ -630,6 +638,7 @@ project_export_survey_responses_export	question_id_desc	Identifiant unique de la
 project_export_survey_responses_export	response_desc	Réponse à la question
 project_export_survey_responses_export	date_desc	Heure à laquelle la réponse a été enregistrée
 project_export_survey_responses_export	date_stamp_desc	Un identifiant unique pour l'ensemble des réponses fournies à ce sondage par un utilisateur donné
+project_export_survey_responses_export	user_id_desc	Identifiant encrypté de l'utilisateur
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php

@@ -16,7 +16,7 @@ Mock::generate('DataAccessResult');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: DaoTest.php,v 1.2 2005/08/01 14:29:51 nterray Exp $
+ * $Id$
  *
  * Tests the class Dao
  */
@@ -40,7 +40,8 @@ class DaoTest extends UnitTestCase {
     }
     
     function testRealDao() {
-        require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+        include(getenv('CODEX_LOCAL_INC'));
+        require($GLOBALS['db_config_file']);
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertFalse($da->isError());
         $dao =& new DataAccessObject($da);

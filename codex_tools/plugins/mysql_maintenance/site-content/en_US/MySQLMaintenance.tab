@@ -1,0 +1,4 @@
+plugin_MySQLMaintenance	descriptor_description	Performs an ANALYZE statement on CodeX tables.
+plugin_MySQLMaintenance	title	MySQL Maintenance
+plugin_MySQLMaintenance	submit	Perform ANALYZE TABLE statement on all tables now !
+plugin_MySQLMaintenance	result	ANALYZE TABLE statement results:

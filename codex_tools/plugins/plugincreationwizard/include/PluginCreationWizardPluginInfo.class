@@ -1,0 +1,14 @@
+<?php
+
+require_once('common/plugin/PluginInfo.class');
+require_once('PluginCreationWizardPluginDescriptor.class');
+
+class PluginCreationWizardPluginInfo extends PluginInfo {
+    
+    function PluginCreationWizardPluginInfo(&$plugin) {
+        $this->PluginInfo($plugin);
+        $this->setPluginDescriptor(new PluginCreationWizardPluginDescriptor());
+    }
+    
+}
+?>

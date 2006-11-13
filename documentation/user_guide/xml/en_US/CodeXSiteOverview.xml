@@ -185,7 +185,8 @@
         listed right after the project name and description. Notice that next
         to each criteria value is a [Filter] hyperlink. Clicking on any of
         these filters will result in restricting the project list to those
-        that match the filter.</para>
+        that match the filter. CodeX project templates or test projects 
+	(see <xref linkend="ProjectType" />) are not listed in the Software Map.</para>
 
         <para>A Software Map browsing sample is shown on <xref
         linkend="FigureSoftwareMapSampleBrowsing" />. In this example, the
@@ -524,7 +525,8 @@
         <listitem>
           <para><emphasis role="bold">CodeX Statistics</emphasis>: give the
           total number of hosted projects (excluding those that have a private
-          status), the total number of registered users, the total number of
+          status, as well as template and test projects), the total number 
+	  of registered users, the total number of
           software packages downloaded and the total number of Web pages
           browsed by CodeX users since the site opening.</para>
         </listitem>

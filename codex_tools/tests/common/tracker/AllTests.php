@@ -5,7 +5,8 @@ if (! defined('CODEX_RUNNER')) {
     require_once('tests/CodexReporter.class');
 }
 
-require(getenv('SF_LOCAL_INC_PREFIX').'/etc/codex/conf/local.inc');
+require(getenv('CODEX_LOCAL_INC'));
+require($GLOBALS['db_config_file']);
 require_once('tests/simpletest/unit_tester.php');
 
 //We define a group of test
@@ -17,6 +18,8 @@ class TrackerGroupTest extends GroupTest {
         $this->addTestFile(dirname(__FILE__).'/ArtifactRuleValueViewTest.php');
         $this->addTestFile(dirname(__FILE__).'/ArtifactRuleFactoryTest.php');
         $this->addTestFile(dirname(__FILE__).'/ArtifactRulesManagerTest.php');
+	$this->addTestFile(dirname(__FILE__).'/ArtifactImportTest.php');
+
     }
 }
 

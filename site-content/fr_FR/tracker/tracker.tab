@@ -208,6 +208,11 @@ tracker_admin_index	modify_usage_for	 - Modifier l'utilisation d'un champ pour '
 tracker_admin_index	deletion_failed	Outil de suivi '$1' - La destruction a échoué - 
 tracker_admin_index	delete_success	Outil de suivi '$1' - Destruction réussie
 tracker_admin_index	tracker_deleted	<H2>Outil de suivi '$1' - Détruit</H2> <p>Dans le cas où vous auriez détruit cet outil de suivi par inadvertance et que vous souhaitiez le restaurer, veuillez contacter l'<a href="mailto:$2">administrateur du site</A> dans les 10 jours qui viennent.</p>
+tracker_admin_index	fieldset_created	Groupe de champs créé avec les permissions par défaut
+tracker_admin_index	fieldset_updated	Groupe de champs mis à jour
+tracker_admin_index	fieldset_deleted	Groupe de champs détruit
+tracker_admin_index	modify_fieldset	 - Modifier le groupe de champs
+tracker_admin_index	modify_fieldset_for	 - Modifier le groupe de champs '$1'
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -241,6 +246,7 @@ tracker_include_field	end	Fin&nbsp;:
 tracker_include_field	any_time	N'importe quand
 tracker_include_field	pick_date	Cliquer ici pour choisir une date
 tracker_include_field	unknown_display_type	$1&nbsp;: Type d'affichage du champ inconnu
+tracker_include_field	unknown_value	*** valeur inconnue ***
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactFileHtml.class
@@ -404,8 +410,6 @@ tracker_include_type	user	Utilisateur
 tracker_include_type	perm	Permissions
 tracker_include_type	del_user	Détruire cet utilisateur ?
 tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
-tracker_include_type	public_tracker	Outil de suivi public&nbsp;:
-tracker_include_type	allow_anon	Autoriser les soumissions anonymes&nbsp;:
 tracker_include_type	allow_copy	Autoriser la copie d'artefacts&nbsp;:
 tracker_include_type	submit_instr	<b>Instructions de soumissions</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
 tracker_include_type	browse_instr	<b>Instructions de navigation</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
@@ -521,6 +525,22 @@ tracker_include_type	field_dependencies	Dépendances&nbsp;entre&nbsp;champs
 tracker_include_type	mng_field_dependencies	Gérer les dépendances entre champs
 tracker_include_type	mng_field_dependencies_title	 - Gérer les dépendances entre champs
 tracker_include_type	define_field_dependencies	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ.
+tracker_include_type	manage_fieldsets	Gérer les groupes de champs
+tracker_include_type	define_manage_fieldsets	Définir les groupes de champs de l'outil de suivi.
+tracker_include_type	fieldsets	Groupes de champs
+tracker_include_type	fieldset	Groupe du champs
+tracker_include_type	create_fieldset	Créer un nouveau groupe de champs
+tracker_include_type	list_all_fieldsets	Liste de tous les groupes de champs
+tracker_include_type	fieldset_ident	Identification et description du groupe de champs
+tracker_include_type	fieldset_name	Nom du groupe de champs
+tracker_include_type	fieldset_desc	Description
+tracker_include_type	fieldset_display	Information d'affichage
+tracker_include_type	fields_inside	Champs
+tracker_include_type	update_fieldset	Modifier le groupe de champs '$1'
+tracker_include_type	warning_delete_fieldset	** ATTENTION!! ** Effacer ce groupe de champs (aucune récupération possible) ?
+tracker_include_type	rank_in_fieldset	Rang dans le groupe de champs
+tracker_include_type	current_date	Date courante.
+tracker_include_type	date_value	Date particulière :
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -558,6 +578,9 @@ tracker_common_artifact	invalid_art	 Artefact invalide no. $1
 tracker_common_artifact	depend_add_fail	L'ajout de dépendances sur l'artefact no. $1 a échoué
 tracker_common_artifact	depend_add	Dépendances ajoutées
 tracker_common_artifact	depend_removed	Dépendances enlevées
+tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
+tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.
+tracker_common_artifact	bad_field_value	La valeur $2 n'est pas autorisée pour le champ $1.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class
@@ -589,6 +612,7 @@ tracker_common_field_factory	use_ins_err	Erreur lors de l'insertion de artifact_
 tracker_common_field_factory	vl_ins_err	Erreur lors de l'insertion de artifact_field_value_list ($1-$2) : $3
 tracker_common_field_factory	label_requ	Le label du champ, son type de donnée et son type d'affichage sont obligatoires.
 tracker_common_field_factory	ins_err	Erreur lors de l'insertion de artifact_field ($1-$2) : $3
+tracker_common_field_factory	ugroup_not_exist	Le champ $1 n'a pu être associé au groupe inconnu $2
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFile.class
@@ -646,6 +670,7 @@ tracker_common_type	notif_fail	Erreur lors de l'insertion du rôle de la notifica
 tracker_common_type	del_err	Erreur lors de la destruction des dépendances $1 : $2
 tracker_common_type	none_found	Aucun trouvé 
 tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
+tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactTypes.class
@@ -687,7 +712,7 @@ tracker_common_types	event_NEW_FILE_short_desc	Nouvel attachement
 tracker_common_types	event_CC_CHANGE_short_desc	Changement des CC
 tracker_common_types	event_CLOSED_short_desc	L'artefact est fermé
 tracker_common_types	event_PSS_CHANGE_short_desc	Changement PSS
-tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Tout autre changement	
+tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Tout autre changement
 tracker_common_types	event_I_MADE_IT_short_desc	Je l'ai fais
 tracker_common_types	event_NEW_ARTIFACT_short_desc	Nouvel artefact
 tracker_common_types	event_ROLE_CHANGE_desc	On me donne ou on m'enlève ce rôle
@@ -743,3 +768,43 @@ tracker_field_dependencies	source	Source&nbsp;:
 tracker_field_dependencies	target	Cible&nbsp;:
 tracker_field_dependencies	saved	Sauvegardé avec succès
 tracker_field_dependencies	inline_help	Selectionnez un champ source et un champ cible pour editer les dépendances entre ces champs.
+#
+#--------------------------------------
+# Tracker fieldsets
+# Script: SF/www/tracker/admin/fieldset.php
+#
+tracker_admin_fieldset	tracker_admin	Administration outil de suivi
+tracker_admin_fieldset	fieldset_admin	Administration des groupes de champs
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSet.class
+#
+tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
+tracker_common_fieldset	name_requ	Le nom du groupoe de champ est obligatoire.
+tracker_common_fieldset	fieldset_default_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_desc_key	Détails de l'artefact
+tracker_common_fieldset	fieldset_default_bugs_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_bugs_desc_key	Détails du bug
+tracker_common_fieldset	fieldset_status_bugs_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_bugs_desc_key	Etat d'avancement du bug
+tracker_common_fieldset	fieldset_default_patches_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_patches_desc_key	Détails du patch
+tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Coller le code du correctif ici (texte uniquement)
+tracker_common_fieldset	fieldset_patchtext_patches_desc_key	Coller le code du correctif ici (texte uniquement) OU joignez un fichier dans la section 'Fichiers attachés'
+tracker_common_fieldset	fieldset_status_patches_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_patches_desc_key	Etat d'avancement du patch
+tracker_common_fieldset	fieldset_default_SR_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_SR_desc_key	Détails de la demande de support
+tracker_common_fieldset	fieldset_status_SR_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_SR_desc_key	Etat d'avancement de la demande de support
+tracker_common_fieldset	fieldset_default_tasks_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_tasks_desc_key	Détails de la tâche
+tracker_common_fieldset	fieldset_status_tasks_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_tasks_desc_key	Etat d'avancement de la tâche
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class
+#
+tracker_common_fieldset_factory	delete_only_empty_fieldset	Impossible de supprimer un groupe de champs non vide.
+tracker_common_fieldset_factory	label_requ	Le nom du groupe de champs est obligatoire.
+tracker_common_fieldset_factory	ins_err	Erreur lors de l'insertion de artifact_field_set ($1-$2) : $3

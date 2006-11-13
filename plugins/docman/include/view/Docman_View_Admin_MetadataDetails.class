@@ -1,0 +1,189 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+require_once('Docman_View_Extra.class');
+
+class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
+    
+    function _title($params) {
+        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_details_title', array($params['md']->getName())) .'</h2>';
+    }
+
+    function _content($params) {
+        $md =& $params['md'];
+
+        $sthCanChange = false;
+        $mdContent = '';
+
+        $_str_yes = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_yes');
+        $_str_no = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
+
+
+        $mdContent .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_title').'</h3>';
+
+        $mdContent .= '<table>';
+
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_name').'</td>';
+        $mdContent .= '<td>';
+        if($md->canChangeName()) {
+            $sthCanChange = true;
+            $mdContent .= '<input type="text" name="name" value="'.$md->getName().'" />';
+        }
+        else {
+            $mdContent .= $md->getName();
+        }
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
+
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_desc').'</td>';
+        $mdContent .= '<td>';
+        if($md->canChangeDescription()) {
+            $sthCanChange = true;
+            $mdContent .= '<textarea name="name">'.$md->getDescription().'</textarea>';
+        }
+        else {
+            $mdContent .= $md->getDescription();
+        }
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
+      
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowempty').'</td>';
+        $mdContent .= '<td>';
+        if($md->canChangeIsEmptyAllowed()) {
+            $sthCanChange = true;
+            $selected = '';
+            if($md->isEmptyAllowed()) {
+                $selected = 'selected="selected"';
+            }          
+            $mdContent .= '<input type="checkbox" name="empty_allowed" '.$selected.' />';
+        }
+        else {
+            if($md->isEmptyAllowed()) {
+                $mdContent .= $_str_yes;
+            }
+            else {
+                $mdContent .= $_str_no;
+            }
+        }
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
+
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_keephistory').'</td>';
+        $mdContent .= '<td>';
+        if($md->getKeepHistory()) {
+            $mdContent .= $_str_yes;
+        }
+        else {
+            $mdContent .= $_str_no;
+        }
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
+
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_useit').'</td>';
+        $mdContent .= '<td>';
+        if(!$md->isRequired()) {
+            $sthCanChange = true;
+            $selected = '';
+            if($md->isUsed()) {
+                $selected = 'checked="checked"';
+            }          
+            $mdContent .= '<input type="checkbox" name="use_it" value="1" '.$selected.' />';
+        }
+        else {
+            if($md->isUsed()) {
+                $mdContent .= $_str_yes;
+            }
+            else {
+                $mdContent .= $_str_no;
+            }
+        }
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
+        $mdContent .= '</table>';
+
+        if($sthCanChange) {
+            $act_url = $this->buildUrl($params['default_url'], array());
+            echo '<form name="md_details_update" method="POST" action="'.$act_url.'">';
+            echo '<input type="hidden" name="label" value="'.$md->getLabel().'" />';
+            echo '<input type="hidden" name="action" value="admin_md_details_update" />';
+            echo $mdContent;
+            echo '<input type="submit" name="submit" value="Update" />';
+            echo '</form>';
+        }
+        else {
+            echo $mdContent;
+        }
+
+        //
+        // Display list of values
+        //
+
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_title').'</h3>';
+
+            echo html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_name'),
+                                                 $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_desc'),
+                                                 $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_rank'),
+                                                 $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_status')));
+            
+            $vIter =& $md->getListOfValueIterator();
+            $vIter->rewind();
+            while($vIter->valid()) {
+                $e =& $vIter->current();                                
+                echo '<tr>';
+                
+                // Name
+                echo '<td>'.Docman_MetadataHtmlList::_getElementName($e).'</td>';
+
+                // Description
+                echo '<td>'.Docman_MetadataHtmlList::_getElementDescription($e).'</td>';
+
+                // Rank
+                echo '<td>'.$e->getRank().'</td>';
+
+                // Status
+                $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_inactive');
+                if($e->getStatus() == 'A') {
+                    $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_active');
+                }                
+                echo '<td>'.$status.'</td>';
+
+                echo '</tr>';
+                $vIter->next();
+            }
+            
+            echo '</table>';
+        }
+
+        $backUrl  = $this->buildUrl($params['default_url'],
+                                    array('action' => 'admin_metadata'));
+        echo '<p><a href="'.$backUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_backtomenu').'</a></p>';
+    }
+}

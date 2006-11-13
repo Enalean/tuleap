@@ -1,0 +1,43 @@
+#
+# PHP is an HTML-embedded scripting language which attempts to make it
+# easy for developers to write dynamically generated webpages.
+#
+
+<IfModule !sapi_apache2.c>
+  LoadModule php4_module modules/libphp4.so
+</IfModule>
+
+#
+# Cause the PHP interpreter handle files with a .php extension.
+# CodeX: also handles php3 legacy scripts
+#
+<Files *.php?>
+    SetOutputFilter PHP
+    SetInputFilter PHP
+    LimitRequestBody 0
+</Files>
+
+#
+# Add index.php to the list of files that will be served as directory
+# indexes.
+#
+#DirectoryIndex index.php
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php .class
+
+# PHP variables
+php_flag register_globals on
+php_flag magic_quotes_gpc on
+php_value include_path "/usr/share/codex/src/www/include:/usr/share/codex/src:."
+php_value memory_limit 30M
+php_value post_max_size 20M
+php_value upload_max_filesize 20M
+php_admin_value upload_tmp_dir /var/tmp
+
+# For phpwiki
+php_value allow_call_time_pass_reference on
+
+# Debugging 2047=all, 2039=all-notice
+#php_flag display_errors on
+php_value error_reporting "2039"
+

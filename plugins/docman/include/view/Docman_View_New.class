@@ -1,0 +1,96 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_New
+*/
+
+require_once('Docman_View_Display.class');
+require_once('Docman_View_ParentsTree.class');
+
+/* abstract */ class Docman_View_New extends Docman_View_Display /* implements Visitor */ {
+    
+    /* protected abstract */ function _getEnctype() {
+    }
+    
+    /* protected abstract */ function _getAction() {
+    }
+    
+    /* protected abstract */ function _getActionText() {
+    }
+    
+    /* protected abstract */ function _getForm() {
+    }
+
+    /* protected */ function _getSpecificProperties($params) {
+        return '';
+    }
+
+    /* protected */ function _getCategories($params) {
+        return '';
+    }
+
+    function _content($params) {
+        $params['form_name'] = 'new_item';
+
+        $html  = '<br />';
+        $html .= '<form name="'.$params['form_name'].'" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .'>';                
+
+        $html .= '<div class="docman_new_item">'."\n";
+
+        $html .= '<div class="properties">'."\n";
+        //{{{ General Properties
+        $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') . help_button('DocumentManager') .'</legend>';
+        $html .= $this->_getGeneralProperties($params);
+        $html .= '<p><span class="highlight"><em>'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</em></span></p>';
+        //}}}
+        $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';        
+        $html .= '</fieldset>';
+
+        
+        //{{{ Location
+        $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') . help_button('DocumentManager') .'</legend>';
+        
+        $potential_parent_id = isset($params['force_item']['parent_id']) ? $params['force_item']['parent_id'] : $params['item']->getId();
+        $potential_parent_id = $this->_controller->userCanWrite($potential_parent_id) ? $potential_parent_id : false;
+        
+        $parents_tree =& new Docman_View_ParentsTree($this->_controller);
+        $html .= $parents_tree->fetch(array(
+            'docman_icons' => $this->_getDocmanIcons($params),
+            'current'      => $potential_parent_id,
+            'hierarchy'    => $params['hierarchy']
+        ));
+        $html .= '<div style="border-top:1px solid #e7e7e7">Position : ';
+        $html .= '<input type="radio" name="ordering" id="docma_item_ordering_begin" value="beginning" checked="checked" /><label for="docma_item_ordering_begin">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</label>';
+        $html .= '<input type="radio" name="ordering" id="docma_item_ordering_end" value="end" /><label for="docma_item_ordering_end">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</label><br />';
+        $html .= '</div>';
+        $html .= '</fieldset>';
+        //}}}        
+        $html .= '</div>'."\n"; // "location"
+
+        $html .= '<div class="categorization">'."\n";
+        //{{{ Specific Properties
+        $specific = $this->_getSpecificProperties($params);
+        if (trim($specific)) {
+            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') . help_button('DocumentManager') .'</legend>';
+            $html .= $specific;
+            $html .= '</fieldset>';
+        }
+        //}}}
+        $html .= '</div>'."\n"; // "categorization"  
+
+        $html .= '<div class="docman_new_submit">'."\n";
+        $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
+        $html .= '</div>'."\n";
+
+        $html .= '</div>'."\n"; // "docman_new_item"
+
+        $html .= '</form>';
+        echo $html;
+    }
+}
+
+?>

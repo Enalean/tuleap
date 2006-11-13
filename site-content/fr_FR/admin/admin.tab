@@ -126,7 +126,7 @@ admin_groupedit	error_group	Groupe invalide passé en paramètre.
 admin_groupedit	proj_edit	Editer les détails d'un projet
 admin_groupedit	proj_admin	Admin Projet
 admin_groupedit	proj_member	Voir/Editer les membres d'un projet
-admin_groupedit	group_type	Type de groupe
+admin_groupedit	group_type	Type de projet
 admin_groupedit	incomplete	Incomplet
 admin_groupedit	active	Actif
 admin_groupedit	pending	En attente
@@ -144,6 +144,7 @@ admin_groupedit	grp_name	Nom du groupe
 admin_groupedit	unix_grp	Nom unix du groupe
 admin_groupedit	description	Description
 admin_groupedit	license_other	Autre licence
+admin_groupedit	built_from_template	Créé à partir du patron
 #
 #-----------------------------------------------
 # Script: SF/www/admin/grouplist.php

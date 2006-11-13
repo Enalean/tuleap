@@ -1,0 +1,109 @@
+<?php
+/**
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * 
+ * Originally written by Manuel VACELET, 2006.
+ * 
+ * This file is a part of CodeX.
+ * 
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ * $Id$
+ */
+
+class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
+
+    function Docman_MetadataListOfValuesElementDao(&$da) {
+        DataAccessObject::DataAccessObject($da);
+    }
+
+    function serachByValueId($id) {
+        $sql = sprintf('SELECT *'.
+                       ' FROM plugin_docman_metadata_love AS love'.
+                       ' WHERE love.value_id = %d',
+                       $id);
+        return $this->retrieve($sql);
+    }
+
+    function serachByFieldId($id, $onlyActive) {
+        
+        $where_clause = '';
+        if($onlyActive === true) {
+            $where_clause .= ' AND love.status IN ("A", "P")';
+        }
+
+        $sql = sprintf('SELECT *'.
+                       ' FROM plugin_docman_metadata_love AS love,'.
+                       '  plugin_docman_metadata_love_md AS lovemd'.
+                       ' WHERE lovemd.field_id = %d'.
+                       ' AND love.value_id = lovemd.value_id'.
+                       $where_clause.
+                       ' ORDER BY love.rank',
+                       $id);
+
+        return $this->retrieve($sql);
+    }
+
+    function createElement($name, $description, $rank, $status) {
+        $sql = sprintf('INSERT INTO plugin_docman_metadata_love('.
+                       'name, description, rank, status'.
+                       ') VALUES ('.
+                       '%s, %s, %d, %s'.
+                       ')',
+                       $this->da->quoteSmart($name),
+                       $this->da->quoteSmart($description),
+                       $rank,
+                       $this->da->quoteSmart($status));
+        return $this->_createAndReturnId($sql);
+    }
+
+    function createMetadataElementBond($metadataId, $elementId) {
+        $sql = sprintf('INSERT INTO plugin_docman_metadata_love_md('.
+                       'field_id, value_id'.
+                       ') VALUES ('.
+                       '%d, %d'.
+                       ')',
+                       $metadataId,
+                       $elementId);
+        return $this->update($sql);
+    }
+
+    function create($metadataId, $name, $description, $rank, $status) {
+        $elementId = $this->createElement($name, $description, $rank, $status);
+        if($elementId !== false) {
+            $inserted = $this->createMetadataElementBond($metadataId, $elementId);
+            return $inserted;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function _createAndReturnId($sql) {
+        $inserted = $this->update($sql);
+        if ($inserted) {
+            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
+            }
+        }
+        return $inserted;
+    }
+
+}
+
+?>

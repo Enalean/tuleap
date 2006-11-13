@@ -1,0 +1,132 @@
+<?php
+/*
+ * Copyright © STMicroelectronics, 2006
+ * Originally written by Manuel VACELET, STMicroelectronics, 2006
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
+ *
+ */
+
+class Docman_Filter {
+    var $name;
+    var $title;        
+    var $v;
+
+    function Docman_Filter() {  
+        $this->v = null;
+    }
+  
+    function setValue($v) {
+        $this->v = $v;
+    }
+
+    function getValue() {
+        return $this->v;
+    }
+
+    function setName($v) {
+        $this->name = $v;
+    }
+
+    function getName() {
+        return $this->name;
+    }
+
+    function setTitle($v) {
+        $this->title = $v;
+    } 
+
+    function getTitle() {
+        return $this->title;
+    }
+
+    function setTable($v) {
+        $this->table = $v;
+    } 
+
+    function getTable() {
+        return $this->table;
+    }
+
+    function setField($v) {
+        $this->field = $v;
+    } 
+
+    function getField() {
+        return $this->field;
+    }
+
+    function initFromRequest(&$request) {
+        if($request->exist($this->getName())) {
+            $this->setValue($request->get($this->getName()));
+        }
+    }
+}
+
+class Docman_FilterDate extends Docman_Filter {
+    var $operator;
+    var $field_operator_name;
+    var $field_value_name;
+
+    function Docman_FilterDate() {
+        parent::Docman_Filter();
+        $this->operator = null;
+    }
+
+    function getFieldOperatorName() {
+        return $this->field_operator_name;
+    }
+
+    function getFieldValueName() {
+        return $this->field_value_name;
+    }
+
+    function setName($v) {
+        parent::setName($v);
+        $this->field_operator_name  = $v.'_operator';
+        $this->field_value_name     = $v.'_value';
+    }
+
+    function setOperator($v) {
+        $this->operator = $v;
+    } 
+
+    function getOperator() {
+        return $this->operator;
+    }
+
+    function initFromRequest(&$request) {
+        if($request->exist($this->getFieldValueName()) && $request->get($this->getFieldValueName()) != '') {
+            $this->setValue($request->get($this->getFieldValueName()));
+            
+            if($request->exist($this->getFieldOperatorName())) {
+                $this->setOperator($request->get($this->getFieldOperatorName()));
+            }
+        }
+    }
+}
+
+class Docman_FilterOrdering extends Docman_Filter {
+
+    function Docman_FilterOrdering() {
+        parent::Docman_Filter();
+    }
+}
+
+?>

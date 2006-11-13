@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: DocumentManager.xml 2681 2006-03-02 12:37:39Z guerin $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<chapter id="DocumentManagerPlugin">
+  <title>Gestionnaire de Documents</title>
+
+  <para>La documentation est probablement le délivrable le plus
+  important d'un projet après le logiciel lui-même. CodeX propose un
+  service spécifique pour la gestion de la documentation.</para>
+
+  <para>Bien que le gestionnaire de documents de CodeX ne soit pas
+  comparable à un système de gestion documentaire dédié, il est
+  cependant extrêmement pratique pour gérer les documents critiques
+  pour votre communauté d'utilisateurs. Quelques exemples : manuel
+  d'installation, d'administration ou d'utilisation, documentation des
+  API, Foire aux Questions, etc...</para>
+
+  <para>Les fonctionnalités du gestionnaire de documents sont les suivantes :</para>
+
+  <itemizedlist mark="bullet" spacing="compact">
+    <listitem>
+      <para>Le gestionnaire peut gérer n'importe quel type de document.</para>
+    </listitem>
+
+    <listitem>
+      <para>Les documents sont stockés dans des dossiers. Vous pouvez avoir des sous-dossiers dans un dossier.</para>
+    </listitem>
+
+    <listitem>
+      <para>Les documents peuvent être édités en ligne (si ils sont embarqués au format text ou html).</para>
+    </listitem>
+
+    <listitem>
+      <para>Les règles de droits d'accès peuvent être définies pour chaque dossier ou document.</para>
+    </listitem>
+
+    <listitem>
+        <para>Les documents possèdent des propriétés.</para>
+    </listitem>
+  </itemizedlist>
+
+  <section>
+    <title>Structure</title>
+    <para>Vous pouvez structurer comme vous voulez votre gestionnaire de document en créant des dossiers et sous-dossiers pour classer vos documents.</para>
+    <figure id="docman2_folders">
+        <title>Dossiers et sous-dossiers</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_folders.png" />
+          </imageobject>
+        </mediaobject>
+    </figure>
+  </section>
+  
+  <section>
+    <title>Actions</title>
+    <para>Le gestionnaire de document permet certaines actions sur les dossiers ou documents. Ces action sont disponible ou pas suivant les permissions. Pour afficher le paneau des actions, il vous suffit de cliquer sur l'icône en forme de crayon à côté du titre de l'élément.</para>
+    <figure id="docman2_actions">
+        <title>Actions</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_actions.png" />
+          </imageobject>
+        </mediaobject>
+    </figure>
+    <para>Nous allons maintenant décrire toutes les actions qui peuvent être effectuées :</para>
+    <section><title>Nouveau Document</title>
+      <para>Cette action est seulement disponible pour les dossiers et permet à l'utilisateur de créer un nouveau document. Quand vous selectionnez cette action, une fenêtre "Nouveau document" est affichée, où vous pouvez entrer les informations concernant le nouveau document.</para>
+      <figure id="docman2_newdocument">
+          <title>Create a new document</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_newdocument.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>Le nouveau document hérite des permissions du dossier parent.</para>
+      <section>
+        <title>Propriétés</title>
+        <para>Le titre du document est obligatoire. L'utilisateur peut fournir une description. En fonction du projet, il peut y avoir des propriétés supplémentaires requise pour définir le document.</para>
+      </section>
+      <section>
+        <title>Type de document</title>
+        <para>4 types de documents sont disponibles :</para>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis>Lien:</emphasis> autorise l'utilisateur de pointer un document avec une URL. Le document ne sera pas stocker localement dans le manager.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis>Wiki:</emphasis> le document peut être créer avec le service wiki.Entrez juste le nom correspondant la nouvelle page wiki. Vous pouvez également utiliser une page wiki existante.
+            </para>
+          </listitem>
+          <listitem>
+            <para><emphasis>Fichier:</emphasis> n'importe quel type de documents peut être chargé. Depuis une présentation PowerPoint à une simple image ou un document office. Les fichiers sont versionnés ainsi vous pouvez ajouter de nouvelles versions sur les documents existants.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis>Fichier embarqués:</emphasis> les documents de type texte ou html peuvent être édités en ligne et sont versionnés.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      
+      <section>
+        <title>Chemin</title>
+        <para>Par défaut, le sytème crée un document dans le dossier qui a été sélectionné. L'utilisateur peut aussi choisir un autre dossier. Il peut également sélectionner la position du nouveau document dans le dossier : au début ou à la fin.</para>
+      </section>
+    </section>
+    
+    <section><title>Nouveau Dossier</title>
+      <para>Cette action est seulement disponible pour les dossiers et permet à l'utilisateur de créer un sous-dossier.</para>
+      <figure id="docman2_newfolder">
+          <title>Créer un nouveau dossier</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_newfolder.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>Le nouveau dossier hérite des permissions du dossier parent.</para>
+      <section>
+        <title>Propriétés</title>
+        <para>Comme pour les documents, le titre des dossier est obligatoire. L'utilisateur peut fournir une description. Le champ propriétaire désigne le propriétaire officiel du dossier. Selon les projets, il peut y avoir des propriétés supplémentaires requises pour définir les dossiers.</para>
+      </section>
+      <section>
+        <title>Chemin</title>
+        <para>Comme pour les documents, par défaut, le système crée un dossier dans le dossier qui a été sélectionné. L'utilisateur peut aussi choisir un autre dossier. Il peut également sélectionner la position du nouveau dossier : au début ou à la fin.</para>
+      </section>
+    </section>
+    
+    <section><title>Propriétés</title>
+      <para>Cette action permet à l'utilisateur de voir les propriétés d'un document ou d'un dossier, si il en a les droits. Si il a les permissions requises, il sera capable de modifier ces propriétés.</para>
+      <figure id="docman2_properties">
+          <title>Afficher et editer les propriétés</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_properties.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    <para>Depuis le paneau des propriétés, il est possible de voir/éditer les permissions, voir l'historique et d'accèder aux actions (mise à jour/déplacement/suppression).</para>
+    
+    <section><title>Historique</title>
+      <para>Cette action permet à l'utilisateur de voir les journeaux et les anciennes versions (si disponibles).</para>
+      <figure id="docman2_history">
+          <title>Historique</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_history.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Mise à jour</title>
+      <para>Cette action permet à l'utilisateur de mettre à jour le nom d'une page wiki ou l'url d'un lien.</para>
+      <figure id="docman2_update">
+          <title>Mise à jour d'un lien</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_update.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Nouvelle version</title>
+      <para>Cette action permet à l'utilisateur de mettre à jour un document de type fichier ou fichier embarqué.</para>
+      <figure id="docman2_newversion">
+          <title>Créer une nouvelle version d'un fichier embarqué</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_newversion.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Permissions</title>
+      <para>Cette action permet à l'utilisateur de gérer les permissions d'un document ou d'un dossier. les permissions d'un dossier peuvent être appliquées recursivement à sa sous-hiérarchie.</para>
+      <figure id="docman2_permissions">
+          <title>Define permissions</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_permissions.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>Il y a 3 types de permission.</para>
+      
+      <section>
+        <title>Lecteurs</title>
+        <para>Ceux qui peuvent lire un document ou accèder au contenu d'un dossier.</para>
+        <para>"lecture" signifie accès au document/dossier, voir ses propriétés, voir son historique.</para>
+        <para>Merci de noter que si un utilisateur ne peut pas lire un dossier alors il ne pourra pas accèder à tout les éléments en dessous de lui, quelques soient leurs permissions.</para>
+      </section>
+      
+      <section>
+        <title>Rédacteurs</title>
+        <para>Les Rédacteurs sont des lecteurs qui peuvent modifier un document ou créer un sous-élément dans un dossier.</para>
+        <para>"Modifier" signifie mettre à jour/ajouter une nouvelle version, modifier un lien ou le nom d'un page wiki, modifier les propriétés, déplacer un élément ou le supprimer.</para>
+      </section>
+      
+      <section>
+        <title>Gestionnaires</title>
+        <para>Les gestionnaires sont des rédacteurs qui peuvent aussi définir les permissions d'un document ou d'un dossier. Ils peuvent aussi consulter les historique d'accès à un document.</para>
+      </section>
+    </section>
+    
+    <section><title>Déplacer</title>
+      <para>Les documents ou les dossiers peuvent être déplacé au sein des documents du projets.</para>
+      <para>L'utilisateur ne peut déplacé un élément que si les dossiers source et destination sont modifiables.</para>
+      <figure id="docman2_move">
+          <title>Move a document</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_move.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>Si l'utilisateur veut ordonné le contenu d'un dossier, il peut déplacer les éléments les uns par rapport aux autres (au début du dossier, à la fin du dossier ou après un autre élément).</para>
+      <figure id="docman2_move2">
+          <title>Move a document at a specific position</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_move2.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Delete</title>
+      <para>Les documents ou dossiers peuvent être supprimés. Si un utilisateur veut supprimer un dossier, il sera averti que tous les sous-éléments seront supprimés (si il a les permissions ad-hoc).</para>
+      <para>Pour pouvoir supprimer un item, l'utilisateur doit avoir le droit "rédacteur" sur le répertoir parent.</para>
+    </section>
+  </section>
+  
+  <section><title>Administration</title>
+    <section>
+      <title>Permissions</title>
+      <para>This section defines who can administrate the document manager.</para>
+      <para>Document manager administrators have all access to all items of the manager.</para>
+    </section>
+    <section>
+      <title>Afficher les performances</title>
+      <para>Cette section permet de définir la vue par défaut du gestionnaire de documents. Ce paramètres peut être surchargé par les préférences de l'utilisateur.</para>
+    </section>
+    <section>
+      <title>Propriétés</title>
+      <para>Cette section gère les propriétés des documents. Chaque propriété peut être valuée lors de la soumission ou de l'édition d'un document.</para>
+      <para>Il n'y a pas de permissions spécifiques aux propriétés. Si un utilisateur peut lire(modifier) un document, il peut également lire(modifier) chacune de ses propriétés.</para>
+    </section>
+  </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

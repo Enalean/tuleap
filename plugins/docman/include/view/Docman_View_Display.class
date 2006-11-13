@@ -1,0 +1,45 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_Display
+*/
+
+require_once('Docman_View_Docman.class');
+
+/* abstract */ class Docman_View_Display extends Docman_View_Docman {
+    
+    function _title($params) {
+        echo '<h2>'. $this->_getTitle($params) .'</h2>';
+    }
+    function _breadCrumbs($params) {
+        $item =& $params['item'];
+        $current_item       =& $item;
+        $current_item_title = $item->getTitle();
+        $user_actions       = $item->accept(new Docman_View_GetMenuItemsVisitor());
+        $id                 = $item->getId();
+        $parents = array();
+        $item_factory =& $this->_getItemFactory($params);
+        while ($item->getParentId() != 0) {
+            $item =& $item_factory->getItemFromDb($item->getParentId());
+            $parents[] = array(
+                'id'    => $item->getId(),
+                'title' => $item->getTitle()
+            );
+        }
+        echo '<div style="position:relative;" id="item_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
+        $parents = array_reverse($parents);
+        foreach($parents as $parent) {
+            echo '&nbsp;<a href="'. $params['default_url'] .'&amp;action=show&amp;id='. $parent['id'] .'">'. $parent['title'] .'</a>&nbsp;/';
+        }
+        echo '&nbsp;<a href="'. $params['default_url'] .'&amp;action=show&amp;id='. $id .'"><b>'. $current_item_title .'</b></a>';
+        
+        echo $this->getItemMenu($current_item, $params);
+        echo '</div>';
+    }
+}
+
+?>
