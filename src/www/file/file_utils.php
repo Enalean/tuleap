@@ -21,7 +21,7 @@ function file_utils_header($params) {
     
     site_project_header($params);
 
-    if (!$params['pv']) {
+    if (!array_key_exists('pv', $params) || !$params['pv']) {
         if (user_ismember($group_id,"R2")) {
             echo '<strong>'
                 .'<a href="/file/admin/index.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';

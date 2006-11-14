@@ -174,7 +174,7 @@ function download(group_id,file_id,filename) {
 			}
 
 			print "\t" . '<TR class="'. $bgcolor .'"><TD>&nbsp;</TD><TD><B>'
-				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'" title="'.$release_id." - ".$package_release['name'].'">'
+				. '<A HREF="shownotes.php?release_id='.$package_release['release_id'].'" title="'.$package_release['release_id']." - ".$package_release['name'].'">'
 				. $package_release['name'] .'</A></B>';
                         if ($authorized_user) {
                             if ($permission_exists) {
