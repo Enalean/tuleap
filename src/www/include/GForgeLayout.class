@@ -616,9 +616,17 @@ BODY {
 				<?php
 			} else {
 				?>
-				<b><a style="color: #FFFFFF" href="/account/login.php"><?php echo $Language->getText('common','login'); ?></a></b><br />
+				<b><a style="color: #FFFFFF" href="/account/login.php"><?php echo $Language->getText('common','login'); ?></a></b><?php
+              $em =& EventManager::instance();
+              $display_new_user = true;
+              $params = array('allow' => &$display_new_user);
+              $em->processEvent('display_newaccount', $params);
+              if ($display_new_user) {
+                ?>
+                <br />
 				<b><a style="color: #FFFFFF" href="/account/register.php"><?php echo $Language->getText('common','newaccount'); ?></a></b>
 				<?php
+              }
 			}
 
 		?></td>

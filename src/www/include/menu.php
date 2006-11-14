@@ -188,7 +188,14 @@ function menu_notloggedin() {
     $HTML->menuhtml_top($Language->getText('global','status').':');
     echo '<h4><span class="highlight">'.$Language->getText('include_menu','not_logged_in').'</span></h4>';
     $HTML->menu_entry('/account/login.php',$Language->getText('include_menu','login'));
-    $HTML->menu_entry('/account/register.php',$Language->getText('include_menu','new_user'));
+
+    $em =& EventManager::instance();
+    $display_new_user = true;
+    $params = array('allow' => &$display_new_user);
+    $em->processEvent('display_newaccount', $params);
+    if ($display_new_user) {
+        $HTML->menu_entry('/account/register.php',$Language->getText('include_menu','new_user'));
+    }
     $HTML->menuhtml_bottom();
 }
 

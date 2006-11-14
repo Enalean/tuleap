@@ -56,7 +56,14 @@ class TabbedLayout extends Layout {
         } else {
             $output .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';
             $output .= '<li><a href="/account/login.php">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
-            $output .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
+
+            $em =& EventManager::instance();
+            $display_new_user = true;
+            $params = array('allow' => &$display_new_user);
+            $em->processEvent('display_newaccount', $params);
+            if ($display_new_user) {
+                $output .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
+            }
         
         }
         $output .= '</ul>

@@ -185,7 +185,7 @@ class LDAP extends Error {
 
     // Search the LDAP directory with the given DN and filter.
     // @return array of result entries
-    function &search($dn,$filter) {
+    function &search($dn,$filter,$args=null) {
         global $Language;
         if (!$this->connect()) {
             $this->setError($Language->getText('ldap_class','err_cant_connect'));
@@ -196,7 +196,12 @@ class LDAP extends Error {
             return false;
         }
         // Now run the ldap search
+	if(is_array($args)) {
+	  $sr=ldap_search($this->ds,$dn,$filter,$args);
+	}
+	else {
         $sr=ldap_search($this->ds,$dn,$filter);
+	}
         if (!$sr) {
             $this->setError($Language->getText('ldap_class','err_search'));
             return false;
@@ -218,8 +223,8 @@ class LDAP extends Error {
      * @param $filter string LDAP filter
      * @return LDAPResultIterator
      */
-    function &asearch($filter) {
-        return new LDAPResultIterator($this->search($GLOBALS['sys_ldap_dn'], $filter));    
+    function &asearch($filter, $args=null) {
+        return new LDAPResultIterator($this->search($GLOBALS['sys_ldap_dn'], $filter, $args));    
     }
 
 
