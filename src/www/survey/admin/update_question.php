@@ -109,7 +109,7 @@ $question_type=db_result($res1,0,'question_type');
 <?php
 
 // for radio-button questions, display buttons list and form
-if ($question_type=="6") {   
+if ($question_type=="6" || $question_type=="7") {   
     
     $sql="SELECT * ".
     "FROM survey_radio_choices ".
@@ -117,8 +117,8 @@ if ($question_type=="6") {
     "ORDER BY choice_rank";
     $result=db_query($sql);
     
-    survey_utils_show_radio_list($result);
-    survey_utils_show_radio_form($question_id,"");
+    survey_utils_show_radio_list($result,$question_type);
+    survey_utils_show_radio_form($question_id,"",$question_type);
 }
 
 survey_footer(array());

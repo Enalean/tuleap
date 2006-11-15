@@ -24,6 +24,7 @@ survey_common_survey	radio_buttons_yes_no	Boutons Radio Oui/Non
 survey_common_survey	comment_only	Commentaire seulement
 survey_common_survey	text_field	Champ texte
 survey_common_survey	radio_buttons	Boutons Radio Spécifiques
+survey_common_survey	select_box	Boîte de sélection
 survey_common_survey	none	Aucun
 survey_common_survey	dev_survey_title_key	Sondage développeur
 #
@@ -122,6 +123,8 @@ survey_admin_update_question	subm_changes	Valider
 survey_admin_update_question	edit_r	Editer les boutons radio
 survey_admin_update_question	existing_r	Boutons radio existants
 survey_admin_update_question	edit_r_msg	Cliquer sur l'identifiant (ID) du bouton radio pour le modifier
+survey_admin_update_question	existing_sb	Entrées existantes
+survey_admin_update_question	edit_sb_msg	Cliquer sur l'identifiant (ID) de l'entrée pour la modifier
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_radio.php
@@ -180,12 +183,12 @@ survey_s_data	q_create_succ	Question no. $1 créé avec succès
 survey_s_data	q_create_fail	La création de la question a échoué $1
 survey_s_data	q_del_fail	Erreur lors de la destruction de la question no. $1 : $2
 survey_s_data	q_del_succ	Question no. $1 détruite avec succès
-survey_s_data	r_create_succ	Bouton Radio #$1 créé avec succès
-survey_s_data	r_create_fail	La création du bouton radio a échoué $1
-survey_s_data	r_del_fail	Erreur lors de la suppression du bouton radio #$1: $2
-survey_s_data	r_del_succ	Bouton radio #$1 supprimé avec succès
-survey_s_data	r_create_duplicate	La création a échoué. Bouton radio dupliqué
-survey_s_data	r_update_duplicate	La mise à jour a échoué. Bouton radio dupliqué
+survey_s_data	r_create_succ	Item #$1 créé avec succès
+survey_s_data	r_create_fail	La création de l'item a échoué $1
+survey_s_data	r_del_fail	Erreur lors de la suppression de l'item #$1: $2
+survey_s_data	r_del_succ	Item #$1 supprimé avec succès
+survey_s_data	r_create_duplicate	La création a échoué. Item dupliqué
+survey_s_data	r_update_duplicate	La mise à jour a échoué. Item dupliqué
 survey_s_data	r_rank_int	Echec de l'opération. Le type du champ Rang doit être entier.
 #
 #-----------------------------------------------
@@ -224,9 +227,11 @@ survey_s_utils	create	Ajouter
 survey_s_utils	update	Modifier
 survey_s_utils	text_r	Texte
 survey_s_utils	add_button	Créer un nouveau bouton
+survey_s_utils	add_sb_item	Créer une nouvelle entrée
 survey_s_utils	button_id	ID Bouton
+survey_s_utils	item_id	ID Entrée
 survey_s_utils	rank	Rang
-survey_s_utils	warning_loose_data	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUS les boutons radio et TOUTES les réponses associées, Continuer?
+survey_s_utils	warning_loose_data	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUS les choix de réponse définis et TOUTES les réponses associées, Continuer?
 survey_s_utils	warning_loose_answers	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUTES les réponses associées, Continuer?
-survey_s_utils	warn_loose_button	** AVERTISSEMENT!! ** Si vous mettez à jour ce type de question, vous perdrez TOUS les boutons radio associés, Continuer?
+survey_s_utils	warn_loose_button	** AVERTISSEMENT!! ** Si vous mettez à jour ce type de question, vous perdrez TOUS les choix de réponse associés, Continuer?
 survey_s_utils	required_fields	Champs imposés	

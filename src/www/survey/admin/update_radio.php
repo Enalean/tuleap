@@ -39,6 +39,7 @@ $res1=db_query($sql1);
 if (db_numrows($res1) == 0) {
     $feedback .= " Error finding question #".$question_id;
 } else {
+    $q_type=db_result($res1,0,'question_type');
     $sql2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'"; 
     $res2=db_query($sql2);
     if (db_numrows($res2) == 0) {
@@ -49,14 +50,23 @@ if (db_numrows($res1) == 0) {
 ?>
 
 <P>
-<H2><?php echo $Language->getText('survey_admin_update_radio','update_r'); ?></H2>
-
+<H2>
+<?php
+if ($q_type == 6) {
+    //radio buttons
+    echo $Language->getText('survey_admin_update_radio','update_r'); 
+} else {
+    //select-box
+    echo $Language->getText('survey_admin_update_radio','update_sb'); 
+}
+?>
+</H2>
 <P>
 
 <?php
 
 if ((db_numrows($res1) != 0) && (db_numrows($res2) != 0)) {
-    survey_utils_show_radio_form($question_id, $choice_id);
+    survey_utils_show_radio_form($question_id, $choice_id, $q_type);
 }    
 survey_footer(array());
 

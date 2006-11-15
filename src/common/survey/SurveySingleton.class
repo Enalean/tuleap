@@ -21,6 +21,7 @@ class SurveySingleton {
   var $COMMENT_ONLY = 4;
   var $TEXT_FIELD = 5;
   var $RADIO_BUTTON = 6;
+  var $SELECT_BOX = 7;
   var $NONE = 100;
   
   function SurveySingleton() {
