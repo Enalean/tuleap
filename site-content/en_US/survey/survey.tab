@@ -120,11 +120,14 @@ survey_admin_update_question	subm_changes	Submit Changes
 survey_admin_update_question	edit_r	Edit Radio Buttons
 survey_admin_update_question	existing_r	Existing Radio Button Choices
 survey_admin_update_question	edit_r_msg	Click on the 'Button ID' to edit a radio button
+survey_admin_update_question	existing_sb	Existing Select Box Choices
+survey_admin_update_question	edit_sb_msg	Click on the 'Item ID' to edit a select-box choice
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_radio.php
 #
-survey_admin_update_radio	update_r	Update A Radio Button
+survey_admin_update_radio	update_r	Update A Radio Button Choice
+survey_admin_update_radio	update_sb	Update A Select Box Choice
 survey_admin_update_radio	fill_r_text	Please, fill the Text field.
 survey_admin_update_radio	fill_r_rank	Please, fill the Rank field.
 #
@@ -178,12 +181,12 @@ survey_s_data	q_create_succ	Question #$1 successfully created
 survey_s_data	q_create_fail	Question Creation Failed $1
 survey_s_data	q_del_fail	Error deleting question #$1: $2
 survey_s_data	q_del_succ	Question #$1 successfully deleted
-survey_s_data	r_create_succ	Radio button #$1 successfully created
-survey_s_data	r_create_fail	Radio button creation failed $1
-survey_s_data	r_del_fail	Error deleting radio button #$1: $2
-survey_s_data	r_del_succ	Radio button #$1 successfully deleted
-survey_s_data	r_create_duplicate	Creation failed - Duplicate radio button
-survey_s_data	r_update_duplicate	Update failed - Duplicate radio button
+survey_s_data	r_create_succ	Choice #$1 successfully created
+survey_s_data	r_create_fail	Choice creation failed $1
+survey_s_data	r_del_fail	Error deleting choice #$1: $2
+survey_s_data	r_del_succ	Choice #$1 successfully deleted
+survey_s_data	r_create_duplicate	Creation failed - Duplicate choice.
+survey_s_data	r_update_duplicate	Update failed - Duplicate choice.
 survey_s_data	r_rank_int	Submit failed. Rank type should be integer.
 #
 #-----------------------------------------------
@@ -222,9 +225,11 @@ survey_s_utils	create	Create
 survey_s_utils	update	Update
 survey_s_utils	text_r	Text
 survey_s_utils	add_button	Create a New Radio Button Choice
+survey_s_utils	add_sb_item	Create a New Select Box Choice
 survey_s_utils	button_id	Button ID
+survey_s_utils	item_id	Item ID
 survey_s_utils	rank	Rank
-survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will loose ALL the associated radio buttons and responses in all surveys using this question.Continue?
-survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will loose responses in all surveys using this question.Continue?
-survey_s_utils	warn_loose_button	** WARNING!! ** If you update this question type, you loose all radio buttons associated to this question. Continue?
+survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will lose ALL the associated choices and responses in all surveys using this question.Continue?
+survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will lose responses in all surveys using this question.Continue?
+survey_s_utils	warn_loose_button	** WARNING!! ** If you update this question type, you lose all choices associated to this question. Continue?
 survey_s_utils	required_fields	fields required

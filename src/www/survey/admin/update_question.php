@@ -117,8 +117,8 @@ if ($question_type=="6" || $question_type=="7") {
     "ORDER BY choice_rank";
     $result=db_query($sql);
     
-    survey_utils_show_radio_list($result);
-    survey_utils_show_radio_form($question_id,"");
+    survey_utils_show_radio_list($result,$question_type);
+    survey_utils_show_radio_form($question_id,"",$question_type);
 }
 
 survey_footer(array());

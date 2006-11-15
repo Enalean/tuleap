@@ -356,21 +356,33 @@ function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true
     echo "</table>";
 }
 
-function  survey_utils_show_radio_list($result) {
+function  survey_utils_show_radio_list($result,$question_type) {
     global $group_id,$question_id,$Language;
 
+    if ($question_type == 6) {
+        //radio buttons
+        $id_lbl="button_id";
+	$existing_lbl="existing_r";
+	$edit_lbl="edit_r_msg";
+    } else {
+        //select-box
+	$id_lbl="item_id";
+	$existing_lbl="existing_sb";
+	$edit_lbl="edit_sb_msg";
+    }
+    
     $rows  =  db_numrows($result);
     
     $title_arr=array();
-    $title_arr[]=$Language->getText('survey_s_utils','button_id');
+    $title_arr[]=$Language->getText('survey_s_utils',$id_lbl);
     $title_arr[]=$Language->getText('survey_s_utils','text_r');
     $title_arr[]=$Language->getText('survey_s_utils','rank');
     $title_arr[]=$Language->getText('survey_s_utils','del');
 
-    echo "<P><HR><P><H3>".$Language->getText('survey_admin_update_question','existing_r')."</H3>";
+    echo "<P><HR><P><H3>".$Language->getText('survey_admin_update_question',$existing_lbl)."</H3>";
     echo "<h3>".$Language->getText('survey_s_utils','found',$rows)."</h3>";
     if ($rows) {
-      echo $Language->getText('survey_admin_update_question','edit_r_msg'); 
+      echo $Language->getText('survey_admin_update_question',$edit_lbl); 
       echo html_build_list_table_top ($title_arr);
     }
 
@@ -393,7 +405,7 @@ function  survey_utils_show_radio_list($result) {
     }
 }
 
-function survey_utils_show_radio_form($question_id, $choice_id) {
+function survey_utils_show_radio_form($question_id, $choice_id, $question_type) {
     global $group_id,$question_id,$Language;
     
     if ($choice_id != "") {
@@ -416,7 +428,11 @@ function survey_utils_show_radio_form($question_id, $choice_id) {
         $submit_value=$Language->getText('survey_s_utils','create');
 	$action = "/survey/admin/edit_question.php?func=create_radio&group_id=$group_id&question_id=$question_id";	
         echo "<hr>";
-        echo '<h3>'.$Language->getText('survey_s_utils','add_button').'</h3>';
+        if ($question_type == 6) { 
+	    echo '<h3>'.$Language->getText('survey_s_utils','add_button').'</h3>';
+	} else {
+	    echo '<h3>'.$Language->getText('survey_s_utils','add_sb_item').'</h3>';
+	}
     }
     
     
