@@ -260,7 +260,15 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           <listitem>
             <para><emphasis role="bold">Custom Radio Buttons</emphasis>: this response 
 	    type allows the project administrator to define a set of answers 
-	    from which the user may choose one.</para>
+	    from which the user may choose one. The possible answers are displayed as 
+        radio buttons.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Select Box</emphasis>: this response 
+	    type allows the project administrator to define a set of answers 
+	    from which the user may choose one. The possible answers are displayed in 
+        a select box.</para>
           </listitem>
 
           <listitem>

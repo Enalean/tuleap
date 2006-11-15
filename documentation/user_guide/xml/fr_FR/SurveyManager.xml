@@ -288,7 +288,16 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             <para><emphasis role="bold">Boutons radio spécifiques</emphasis> : 
 	    ce type de question permet à l'administrateur projet 
 	    de définir un ensemble de réponses parmi lesquelles 
-	    l'utilisateur pourra en choisir une.</para>
+	    l'utilisateur pourra en choisir une. Les différents choix sont affichés 
+        sous forme de boutons radio.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Boîte de sélection</emphasis> : 
+	    ce type de question permet à l'administrateur projet 
+	    de définir un ensemble de réponses parmi lesquelles 
+	    l'utilisateur pourra en choisir une. Les différents choix sont proposés 
+        dans une boîte de sélection.</para>
           </listitem>
 
           <listitem>
