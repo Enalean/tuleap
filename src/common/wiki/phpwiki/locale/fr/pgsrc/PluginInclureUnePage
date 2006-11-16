@@ -1,0 +1,27 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginInclureUnePage,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginInclureUnePage;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Ce plugin inclura d'autres pages dans ce wiki. Dans le langage de l'hypertexte, 
+ça s'appelle la <i>transclusion</i>. Les pages iront dans des tables distinctes.
+Vous pouvez aussi charger des pages externes sur un mode plus limité avec 
+PluginInclureUnCadre. Par exemple, les lignes suivantes :
+
+<verbatim>
+<?plugin IncludePage page="PageAccueil" ?>
+
+<?plugin IncludePage page="WabiSabi" ?>
+</verbatim>
+
+donne :
+
+<?plugin IncludePage page="PageAccueil" ?>
+
+<?plugin IncludePage page="WabiSabi" ?>

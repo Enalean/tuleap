@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: AddComment.php,v 1.8 2004/06/13 09:45:23 rurban Exp $');
 /*
  Copyright (C) 2004 $ThePhpWikiProgrammingTeam
  
@@ -45,7 +45,7 @@ extends WikiPlugin_WikiBlog
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.8 $");
     }
 
     // Arguments:
@@ -83,6 +83,10 @@ extends WikiPlugin_WikiBlog
             
         if ($request->isPost() and !empty($comment['addcomment'])) {
             $this->add($request, $comment, 'comment'); // noreturn
+        }
+        if ($args['jshide'] and isBrowserIE() and browserDetect("Mac")) {
+            //trigger_error(_("jshide set to 0 on Mac IE"), E_USER_NOTICE);
+            $args['jshide'] = 0;
         }
 
         // Now we display previous comments and/or provide entry box
@@ -135,7 +139,10 @@ function togglecomments(a) {
    
 };
 
-// $Log$
+// $Log: AddComment.php,v $
+// Revision 1.8  2004/06/13 09:45:23  rurban
+// display bug workaround for MacIE browsers, jshide: 0
+//
 // Revision 1.7  2004/03/29 21:33:32  rurban
 // possible fix for problem reported by Whit Blauvelt
 //   Message-ID: <20040327211707.GA22374@free.transpect.com>

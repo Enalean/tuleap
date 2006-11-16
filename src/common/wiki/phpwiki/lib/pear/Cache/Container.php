@@ -1,8 +1,8 @@
 <?php
 // +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
+// | PEAR :: Cache                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997, 1998, 1999, 2000, 2001 The PHP Group             |
+// | Copyright (c) 1997-2003 The PHP Group                                |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the PHP license,       |
 // | that is bundled with this package in the file LICENSE, and is        |
@@ -14,10 +14,10 @@
 // +----------------------------------------------------------------------+
 // | Authors: Ulf Wendel <ulf.wendel@phpdoc.de>                           |
 // |          Sebastian Bergmann <sb@sebastian-bergmann.de>               |
-// |          Christian Stocker <chregu@nomad.ch>                         |
+// |          Christian Stocker <chregu@phant.ch>                         |
 // +----------------------------------------------------------------------+
 //
-// $Id$
+// $Id: Container.php,v 1.3 2004/06/21 08:39:38 rurban Exp $
 
 require_once 'Cache/Error.php';
 
@@ -39,7 +39,7 @@ require_once 'Cache/Error.php';
 * not recommended!
 * 
 * @author   Ulf Wendel <ulf.wendel@phpdoc.de>
-* @version  $Id$
+* @version  $Id: Container.php,v 1.3 2004/06/21 08:39:38 rurban Exp $
 * @package  Cache
 * @access   public
 * @abstract

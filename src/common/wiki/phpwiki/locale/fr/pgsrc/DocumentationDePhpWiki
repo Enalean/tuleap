@@ -1,0 +1,13 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: DocumentationDePhpWiki,v 1.8 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=DocumentationDePhpWiki;
+  pgsrc_version="2 $Revision: 1.8 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!! Pages dans cette catégorie :
+<?plugin BackLinks exclude||='' include_self||=1 noheader||=0 page||=[pagename] info=pagename,mtime ?>

@@ -1,12 +1,5 @@
 <?php // -*-php-*-
-  rcs_id('$Id$');
-  if (!$page->get('locked') || $user->isAdmin())
-      $EditB = Button("edit",
-                      $revision->isCurrent() ? _("Edit") : _("Edit Old Revision"));
-  else
-      $EditB = Button("viewsource", _("View Source"));
-
-  $Sep = $Theme->getButtonSeparator();
+rcs_id('$Id: actionbar.tmpl,v 1.36 2005/04/23 11:43:44 rurban Exp $');
 ?>
 <?php /* I would like not to have to use these tables, and managed to
        * get this stuff to work more or less correctly using
@@ -18,38 +11,51 @@
 <tr valign="baseline">
   <td>
   <div id="actionbuttons">
-    <?= $EditB ?>
-    <?php if ($user->isAdmin()) { ?>
-      <?=$Sep?><?= Button($page->get('locked') ? 'unlock' : 'lock') ?>
-      <?=$Sep?><?= Button('remove') ?>
+    <?php if ((!$page->get('locked') || $user->isAdmin()) and $revision) { ?>
+      <?= Button("edit", $revision->isCurrent() ? _("Edit") : _("Edit Old Revision")) ?>
+    <?php } else { ?>
+      <?= Button("viewsource", _("View Source")) ?>
     <?php } ?>
-    <?=$Sep?><?= Button("PageHistory", _("PageHistory")) ?>
-    <?=$Sep?><?= Button("diff") ?> 
-    <?=$Sep?><?= Button("PageInfo", _("PageInfo")) ?>
-<?php if (((defined('DEBUG') and DEBUG and $request->getArg('action') == 'browse')) || $user->isAdmin()) { ?> 
+    <?php if ($user->isAdmin() or mayAccessPage('change', $page->getName())) { ?>
+      <?=$SEP?><?= Button($page->get('locked') ? 'unlock' : 'lock') ?>
+    <?php if (ENABLE_PAGEPERM and mayAccessPage('change', $page->getName())) { ?>
+      <?=$SEP?><?= Button('chown') ?>
+      <?=$SEP?><?= Button('setacl') ?>
+    <?php }} ?>
+    <?php if ($user->isAdmin() or mayAccessPage('remove', $page->getName())) { ?>
+      <?=$SEP?><?= Button('revert',_("Revert"), $revision->isCurrent() ? $page->GetRevisionBefore() : $revision) ?>
+      <?=$SEP?><?= Button('remove') ?>
+    <?php } ?>
+    <?=$SEP?><?= Button("PageHistory", _("PageHistory")) ?>
+    <?=$SEP?><?= Button("diff") ?> 
+    <?=$SEP?><?= Button("PageInfo", _("PageInfo")) ?>
+<?php if ((DEBUG and $request->getArg('action') == 'browse') || $user->isAdmin()) { ?> 
     <!-- Buttons really only for debugging -->
-    <?=$Sep?><?= Button("DebugInfo", _("DebugInfo")) ?>
-    <?=$Sep?><?= Button("PageDump", _("PageDump")) ?>
-    <?php if (1 or CACHE_CONTROL != 'NONE') {
-       $PurgeCache = Button(array('nocache' => 'purge'),
+    <?=$SEP?><?= Button("DebugInfo", _("DebugInfo")) ?>
+    <?=$SEP?><?= Button("PageDump", _("PageDump")) ?>
+<?php
+    if (DEBUG & _DEBUG_SQL and USECACHE) {
+      $PurgeCache = Button(array('nocache' => 'purge'),
                      _("PurgeHtmlCache"), $page->getName());
-       $PurgeCache->addTooltip(_("Purge HTML cache for this page. Regenerate from WikiMarkup when next accessed."));
-       ?>
-      <?=$Sep?><?= $PurgeCache ?>
-    <?php } ?>
+      $PurgeCache->addTooltip(_("Purge HTML cache for this page. Regenerate from WikiMarkup when next accessed."));
+?>
+      <?=$SEP?><?= $PurgeCache ?>
+<?php } ?>
     <!-- End debugging buttons -->
+<?php } ?>
+<?php if (defined('USE_EXTERNAL_HTML2PDF') and USE_EXTERNAL_HTML2PDF) { ?> 
+    <?=$SEP?><?= Button("pdf") ?>
 <?php } ?>
   </div>
   </td>
+<?php if (empty($NOSIGNIN)) { ?>
 <?php
 /* valign="top" is not ideal here but required to get reasonable alignment
    with the other action buttons in some browsers, like OmniWeb and Safari
-   (therefore probably Konquorer too) */
-if (empty($NOSIGNIN)) {
-?>
+   (therefore probably Konquorer too) */ ?>
   <td align="right" valign="top">
     <div id="signin"><?= Template('signin') ?></div>
   </td>
+<?php } ?>
 </tr>
 </table>
-<?php } ?>

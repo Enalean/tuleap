@@ -1,5 +1,5 @@
 <?php  // -*-html-*-
-/* $Id$
+/* $Id: frame-footer.tmpl,v 1.2 2004/06/14 11:26:51 rurban Exp $
  *
  * This template is responsible mainly for the outer level <html> stuff.
  */
@@ -11,7 +11,7 @@ printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
 <?= Template('head') ?>
 <body>
 <hr class="printer" noshade="noshade" />
-<p class="editdate"><?= $Theme->getLastModifiedMessage($revision) ?></p>
+<p class="editdate"><?= $WikiTheme->getLastModifiedMessage($revision) ?></p>
 <?= Template('bottom') ?>
 </body>
 </html>

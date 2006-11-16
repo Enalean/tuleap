@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: PluginManager.php,v 1.19 2005/10/12 06:15:25 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -37,7 +37,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.19 $");
     }
 
     function getDefaultArguments() {
@@ -110,116 +110,52 @@ extends WikiPlugin
         $row_no = 0;
 
         $w = new WikiPluginLoader;
-        foreach($plugins as $pluginName) {
+        foreach ($plugins as $pluginName) {
             // instantiate a plugin
             $pluginName = str_replace(".php", "", $pluginName);
             $temppluginclass = "<? plugin $pluginName ?>"; // hackish
             $p = $w->getPlugin($pluginName, false); // second arg?
             // trap php files which aren't WikiPlugin~s
-            if (!substr(get_parent_class($p), 0, 10) == 'wikiplugin') {
+            if (!strtolower(substr(get_parent_class($p), 0, 10)) == 'wikiplugin') {
                 // Security: Hide names of extraneous files within
                 // plugin dir from non-admins.
-                if ($request->_user->isadmin())
+                if ($request->_user->isAdmin())
                     trigger_error(sprintf(_("%s does not appear to be a WikiPlugin."),
                                           $pluginName . ".php"));
                 continue; // skip this non WikiPlugin file
             }
             $desc = $p->getDescription();
             $ver = $p->getVersion();
-            $args = $p->getDefaultArguments();
+            $arguments = $p->getArgumentsDescription();
             unset($p); //done querying plugin object, release from memory
 
-            $arguments = HTML();
-            foreach ($args as $arg => $default) {
-                // Word around UserPreferences plugin to avoid error
-                if ((is_array($default))) {
-                    $default = '(array)';
-                    // This is a bit flawed with UserPreferences object
-                    //$default = sprintf("array('%s')",
-                    //                   implode("', '", array_keys($default)));
-                }
-                else
-                    if (stristr($default, ' '))
-                        $default = "'$default'";
-                $arguments->pushcontent("$arg=$default", HTML::br());
-            }
+            // This section was largely improved by Pierrick Meignen:
             // make a link if an actionpage exists
             $pluginNamelink = $pluginName;
-            $pluginDocPageNamelink = false;
-            // Also look for pages in the current locale
-            // Maybe FIXME? warn about case language != en and _(p) == "p"?
-            if (_($pluginName) != $pluginName) {
-                $localizedPluginName = _($pluginName);
-            }
-            else
-                $localizedPluginName = '';
-            $pluginNamelink = WikiLink($pluginName, 'if_known');
-            // make another link for the localized plugin description
-            // page if it exists
             $pluginDocPageName = $pluginName . "Plugin";
-            // Also look for pages in the current locale
-            if (_($pluginDocPageName) != $pluginDocPageName) {
-                $localizedPluginDocPageName = _($pluginDocPageName);
-            }
-            else
-                $localizedPluginDocPageName = '';
 
-            if (isWikiWord($pluginDocPageName) && $dbi->isWikiPage($pluginDocPageName))
-                {
-                $pluginDocPageNamelink = HTML(WikiLink($pluginDocPageName));
+            $pluginDocPageNamelink = false;
+            $localizedPluginName = '';
+            $localizedPluginDocPageName = '';
+
+            if($GLOBALS['LANG'] != "en"){
+                if (_($pluginName) != $pluginName)
+                    $localizedPluginName = _($pluginName);
+                if($localizedPluginName && $dbi->isWikiPage($localizedPluginName))
+                    $pluginDocPageNamelink = WikiLink($localizedPluginName,'if_known');
+                
+                if (_($pluginDocPageName) != $pluginDocPageName)
+                    $localizedPluginDocPageName = _($pluginDocPageName);
+                if($localizedPluginDocPageName && 
+                   $dbi->isWikiPage($localizedPluginDocPageName))
+                    $pluginDocPageNamelink = 
+			WikiLink($localizedPluginDocPageName, 'if_known');
             }
             else {
-                // don't link to actionpages and plugins starting with
-                // an _ from page list
-                if (!preg_match("/^_/", $pluginName)
-                    //&& !(@$request->isActionPage($pluginName)) //FIXME?
-                    ) {
-                    $pluginDocPageNamelink = WikiLink($pluginDocPageName,
-                                                      'unknown');
-                }
-                else
-                    $pluginDocPageNamelink = false;
-            }
-            // insert any found locale-specific pages at the bottom of
-            // the td
-            if ($localizedPluginName || $localizedPluginDocPageName) {
-                $par = HTML::p();
-                if ($localizedPluginName) {
-                    // Don't offer to create a link to a non-wikiword
-                    // localized plugin page but show those that
-                    // already exist (Calendar, Comment, etc.)  (Non
-                    // non-wikiword plugins are okay, they just can't
-                    // become actionPages.)
-                    if (isWikiWord($localizedPluginName)
-                        || $dbi->isWikiPage($localizedPluginName))
-                        {
-                        $par->pushContent(WikiLink($localizedPluginName,
-                                                   'auto'));
-                    }
-                    else {
-                        // probably incorrectly translated, so no page
-                        // link
-                        $par->pushContent($localizedPluginName, ' '
-                                          . _("(Not a WikiWord)"));
-                    }
-                }
-                if ($localizedPluginName && $localizedPluginDocPageName)
-                    $par->pushContent(HTML::br());
-                if ($localizedPluginDocPageName) {
-                    if (isWikiWord($localizedPluginDocPageName)
-                        || $dbi->isWikiPage($localizedPluginDocPageName))
-                        {
-                        $par->pushContent(WikiLink($localizedPluginDocPageName,
-                                                   'auto'));
-                    }
-                    else {
-                        // probably incorrectly translated, so no page
-                        // link
-                        $par->pushContent($localizedPluginDocPageName, ' '
-                                          . _("(Not a WikiWord)"));
-                    }
-                }
-                $pluginDocPageNamelink->pushContent($par);
+                $pluginNamelink = WikiLink($pluginName, 'if_known');
+                
+                if ($dbi->isWikiPage($pluginDocPageName))
+                    $pluginDocPageNamelink = WikiLink($pluginDocPageName,'if_known');
             }
 
             // highlight alternate rows
@@ -233,7 +169,6 @@ extends WikiPlugin
                 $tr->pushContent(HTML::td($pluginNamelink, HTML::br(),
                                           $pluginDocPageNamelink));
                 $pluginDocPageNamelink = false;
-                //$row_no++;
             }
             else {
                 // plugin just has an actionpage
@@ -252,7 +187,24 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: PluginManager.php,v $
+// Revision 1.19  2005/10/12 06:15:25  rurban
+// just aesthetics
+//
+// Revision 1.18  2005/09/26 06:38:00  rurban
+// use the new method
+//
+// Revision 1.17  2005/01/25 06:58:22  rurban
+// reformatting
+//
+// Revision 1.16  2004/06/04 20:32:54  rurban
+// Several locale related improvements suggested by Pierrick Meignen
+// LDAP fix by John Cole
+// reanable admin check without ENABLE_PAGEPERM in the admin plugins
+//
+// Revision 1.15  2004/05/25 13:17:12  rurban
+// fixed Fatal error: Call to a member function on a non-object in PluginManager.php on line 222
+//
 // Revision 1.14  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

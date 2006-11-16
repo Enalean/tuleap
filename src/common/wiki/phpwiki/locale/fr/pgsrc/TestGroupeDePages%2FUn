@@ -1,0 +1,31 @@
+Date: Sat, 5 Jun 2004 16:49:58 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: TestGroupeDePages%2FUn,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=TestGroupeDePages%2FUn;
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Ok, c'est la première page du groupe
+
+Il y a un bug. Quand la boucle est activée (et c'est la cas seulement pour
+cette première page -- un autre défaut possible) et si le titre du sommaire
+n'est pas le premier item dans la page de la table des matières et s'il y a
+autre chose dans la table des matières après la liste actuelle alors les 
+choses tournent mal. Notez que le lien __Précédent :__ ci-dessous pointe vers 
+la dernière page. Cliquez sur le suivant.
+
+%%% %%% %%% %%% %%% %%% %%%
+
+<?plugin PageGroup
+         label="Autres pages du groupe"
+         loop=1
+         parent=TestGroupeDePages
+         section="Table des matières"
+?>
+
+----
+TestGroupeDePages
+

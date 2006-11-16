@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: OldStyleTable.php,v 1.11 2005/09/14 05:56:21 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -55,7 +55,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.11 $");
     }
 
     function getDefaultArguments() {
@@ -73,7 +73,7 @@ extends WikiPlugin
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-        global $Theme;
+        global $WikiTheme;
         include_once('lib/InlineParser.php');
 
         $args = $this->getArgs($argstr, $request);
@@ -97,6 +97,8 @@ extends WikiPlugin
         $table = HTML::table($table_args);
         if (!empty($caption))
             $table->pushContent(HTML::caption(array('valign'=>'top'),$caption));
+        if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0])) 
+            $lines[0] = '';
         foreach ($lines as $line) {
             if (!$line)
                 continue;
@@ -105,9 +107,12 @@ extends WikiPlugin
             	if (in_array(trim($tmp[0]),$default_args))
                     continue;
             }
-            if ($line[0] != '|')
-                return $this->error(fmt("Line does not begin with a '|'."));
-            $table->pushContent($this->_parse_row($line, $basepage));
+            if ($line[0] != '|') {
+            	// bogus error if argument
+                trigger_error(sprintf(_("Line %s does not begin with a '|'."), $line), E_USER_WARNING);
+            } else {
+                $table->pushContent($this->_parse_row($line, $basepage));
+            }
         }
 
         return $table;
@@ -147,7 +152,18 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: OldStyleTable.php,v $
+// Revision 1.11  2005/09/14 05:56:21  rurban
+// fixed OldStyleTables plugin with args
+//
+// Revision 1.10  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.9  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

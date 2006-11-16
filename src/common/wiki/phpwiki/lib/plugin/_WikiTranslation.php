@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: _WikiTranslation.php,v 1.17 2005/09/10 11:31:16 rurban Exp $');
 /*
- Copyright 2004 $ThePhpWikiProgrammingTeam
+ Copyright 2004,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -46,6 +46,9 @@ rcs_id('$Id$');
 $pgsrc_container = 
     _("AddCommentPlugin")  .','.
     _("AddingPages")  .','.
+    _("AllPagesCreatedByMe")  .','.
+    _("AllPagesLastEditedByMe")  .','.
+    _("AllPagesOwnedByMe")  .','.
     _("AuthorHistoryPlugin") .','.
     _("BackLinks") .','.
     _("CalendarListPlugin") .','.
@@ -55,9 +58,11 @@ $pgsrc_container =
     _("CommentPlugin")  .','.
     _("CreateTocPlugin")  .','.
     _("DebugInfo") .','.
+    _("EditMetaData") .','.
     _("EditMetaDataPlugin") .','.
     _("ExternalSearchPlugin") .','.
     _("FindPage") .','.
+    _("FoafViewerPlugin") .','.
     _("FrameIncludePlugin") .','.
     _("FullRecentChanges") .','.
     _("HelloWorldPlugin") .','.
@@ -82,22 +87,36 @@ $pgsrc_container =
     _("PhpWeatherPlugin") .','.
     _("PhpWiki") .','.
     _("PhpWikiAdministration/Chmod") .','.
+    _("PhpWikiAdministration/Chown") .','.
     _("PhpWikiAdministration/Remove") .','.
     _("PhpWikiAdministration/Rename") .','.
     _("PhpWikiAdministration/Replace") .','.
+    _("PhpWikiAdministration/SetAcl") .','.
     _("PhpWikiDocumentation") .','.
     _("PhpWikiPoll") .','.
+    _("PloticusPlugin") .','.
+    _("PgsrcTranslation") .','.
+    _("PgsrcTranslation/de") .','.
+    _("PgsrcTranslation/fr") .','.
+    _("PgsrcTranslation/it") .','.
+    _("PgsrcTranslation/es") .','.
+    _("PgsrcTranslation/nl") .','.
+    _("PgsrcTranslation/sv") .','.
+    _("PgsrcTranslation/ja") .','.
+    _("PgsrcTranslation/zh") .','.
     _("RawHtmlPlugin") .','.
     _("RecentVisitors") .','.
     _("RedirectToPlugin") .','.
     _("ReleaseNotes") .','.
     _("RichTablePlugin") .','.
+//    _("SpellCheck") .','.
     _("SteveWainstead") .','.
     _("SystemInfoPlugin") .','.
     _("TranscludePlugin") .','.
     _("TranslateText") .','.
     _("UnfoldSubpagesPlugin") .','.
     _("UpLoad") .','.
+    _("UpLoadPlugin") .','.
     _("WabiSabi") .','.
     _("WikiBlogPlugin") .','.
     _("WikiPlugin") .','.
@@ -119,40 +138,46 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.17 $");
     }
 
     function getDefaultArguments() {
-        return 
-            array( 'languages'  => '',  // comma delimited string of de,en,sv,...
-                   'string'     => '',  
-                   'page'       => '',  // use a translation service
-                   'what'       => 'pages', // or 'buttons', 'plugins' or 'wikiwords'
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array( 'languages'  => '',  // comma delimited string of de,en,sv,...
+                    'string'     => '',  
+                    'page'       => '',  // use a translation service
+                    'what'       => 'pages', // or 'buttons', 'plugins' or 'wikiwords'
 
-                   'match'         => '*',
-                   'from_lang'     => false,
-                   'include_empty' => false,
-                   'exclude'       => '',
-                   'sortby'        => '',
-                   'limit'         => 0,
-                   'nolinks'       => false,  // don't display any links (for development only)
-                   'noT'           => false,  // don't display the T link (for development only)
-                   'debug'         => false
-                 );
+                    'match'         => '*',
+                    'from_lang'     => false,
+                    'include_empty' => false,
+                    //'exclude'       => '',
+                    //'sortby'        => '',
+                    //'limit'         => 0,
+                    'nolinks'       => false,  // don't display any links 
+                    			       // (for development only)
+                    'noT'           => false,  // don't display the T link 
+                   			      // (for development only)
+                    'debug'         => false
+                    ));
     }
 
     function init_locale($lang) {
         if ($lang != $this->lang)
             update_locale($lang);
         if ($lang == 'en') {
-            //hack alert! we need hash for stepping through it, even if it's in the wrong language
+            // Hack alert! we need hash for stepping through it, even if it's 
+            // in the wrong language
             include (FindFile("locale/de/LC_MESSAGES/phpwiki.php", 0,'reinit'));
             foreach ($locale as $en => $de) {
             	$locale[$en] = $en;
             }
         // gettext module loaded: must load the LC_MESSAGES php hash
         } elseif (function_exists ('bindtextdomain')) {
-            include (FindLocalizedFile("LC_MESSAGES/phpwiki.php", 0,'reinit'));
+            include (FindFile("locale/$lang/LC_MESSAGES/phpwiki.php", 0,'reinit'));
+            //include (FindLocalizedFile("LC_MESSAGES/phpwiki.php", 0,'reinit'));
         // we already have a $locale, but maybe it's in the wrong language
         } elseif ($lang != $this->lang or empty($GLOBALS['locale'])) {
             include (FindFile("locale/$lang/LC_MESSAGES/phpwiki.php", 0,'reinit'));
@@ -163,7 +188,7 @@ extends WikiPlugin
     }
 
     // reverse translation: 
-    function translate_to_en($text,$lang=false) {
+    function translate_to_en($text, $lang=false) {
         if (!$lang) $lang = $this->lang; // current locale
         if ($lang == 'en') return $text;
 
@@ -184,22 +209,44 @@ extends WikiPlugin
             return $text;
         }
     }
-
-    function translate($text,$to_lang,$from_lang=false) {
+    
+    /** 
+     * setlocale() switching with the gettext extension is by far too slow.
+     * So use the hash regardless if gettext is loaded or not.
+     */
+    function fast_translate($text, $to_lang, $from_lang=false) {
         if (!$from_lang) $from_lang = $this->lang; // current locale
         if ($from_lang == $to_lang) return $text;
-        // speed up hash lookup. not needed for gettext module
+        // setup hash from en => to_lang
+        if (!isset($this->_locales[$to_lang]))
+            $this->init_locale($to_lang);
+        if ($from_lang != 'en') {
+            // get reverse gettext: translate to english
+            $text = $this->translate_to_en($text, $from_lang);
+        }
+        return !empty($this->_locales[$to_lang][$text]) 
+                 ? $this->_locales[$to_lang][$text] 
+                 : $text;
+    }
+
+    //FIXME! There's something wrong.
+    function translate($text, $to_lang, $from_lang=false) {
+        if (!$from_lang) $from_lang = $this->lang; // current locale
+        if ($from_lang == $to_lang) return $text;
+        // Speed up hash lookup. Not needed for gettext module
         if (!isset($this->_locales[$from_lang]) and !function_exists('bindtextdomain')) {
             $this->init_locale($from_lang);
         }
         if ($from_lang != 'en') {
             // get reverse gettext: translate to english
-            $en = $this->translate_to_en($text,$from_lang);
+            $en = $this->translate_to_en($text, $from_lang);
             // and then to target
             update_locale($to_lang);
             $result = gettext($en);
             update_locale($from_lang);
         } else {
+            // locale switching is very slow with the gettext extension.
+            // better use fast_translate
             if ($from_lang != $to_lang) {
                 update_locale($to_lang);
             }
@@ -211,7 +258,7 @@ extends WikiPlugin
         return $result;
     }
                 
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage) {
         $this->args = $this->getArgs($argstr, $request);
         extract($this->args);
         $this->request = &$request;
@@ -226,43 +273,51 @@ extends WikiPlugin
                 array_shift($available_languages);
             }
             // put from_lang to the very end.
-            if (in_array($from_lang,$available_languages))
+            if (in_array($from_lang, $available_languages))
                 $languages = $available_languages;
             else
-            	$languages = array_merge($available_languages,array($from_lang));
+            	$languages = array_merge($available_languages, array($from_lang));
         } elseif (strstr($languages,',')) {
-            $languages = explode(',',$languages);
+            $languages = explode(',', $languages);
         } else {
             $languages = array($languages);
         }
-        if (in_array('zh',$languages) or in_array('ja',$languages)) {
-            // if the current charset != utf-8 the text will not be displayed correctly
-            // but here we cannot change the header anymore. so we can decide to ignore them, 
+        if (in_array('zh', $languages) or in_array('ja', $languages)) {
+        	
+            // If the current charset != utf-8 the text will not be displayed correctly.
+            // But here we cannot change the header anymore. So we can decide to ignore them, 
             // or display them with all the errors.
-            $GLOBALS['charset'] = 'utf-8';
+            //FIXME: do iconv the ob
+            if ($GLOBALS['charset'] != 'utf-8' and !defined('NEED_ICONV_TO')) {
+            	define('NEED_ICONV_TO', 'utf-8');
+            	//either the extension or external 
+                //$GLOBALS['charset'] = 'utf-8';
+            }
         }
         $to_lang = $languages[0];
         if (!empty($string) and count($languages)==1) {
-            return $this->translate($string,$to_lang,$from_lang);
+            return $this->translate($string, $to_lang, $from_lang);
         }
         if (!empty($page)) {
             $pagename = $page;
             if ($dbi->isWikiPage($pagename)) {
             	$url = '';
             	// google can only translate from english and french
-            	if (in_array($from_lang,array('en','fr'))) {
+            	if (in_array($from_lang, array('en', 'fr'))) {
                     $url = "http://translate.google.com/translate";
                     $url .= "?langpair=" . urlencode($from_lang."|".$to_lang);
-                    $url .= "&u=" . urlencode(WikiURL($pagename,false,true));
+                    $url .= "&u=" . urlencode(WikiURL($pagename, false, true));
             	}
             	// redirect or transclude?
-	        if ($url)
+	        if ($url) {
 	            return $request->redirect($url);
+	        }
             	return HTML(fmt("TODO: Google can only translate from english and french. Find a translation service for %s to language %s",
-            	                WikiURL($pagename,false,true),
+            	                WikiURL($pagename, false, true),
             	                $to_lang));
-            } else
+            } else {
                 return $this->error(fmt("%s is empty",$pagename));
+            }
         }
         
         $pagelist = new PageList('', $exclude, $this->args);
@@ -270,9 +325,8 @@ extends WikiPlugin
         foreach ($languages as $lang) {
             if ($lang == $from_lang) continue;
             $field = "custom:$lang";
-            $column = new _PageList_Column_custom($field,$from_lang,$this);
-            $pagelist->_types["custom"] = $column;
-            $pagelist->_addColumn($field);
+            $pagelist->addColumnObject (
+              new _PageList_Column_customlang($field, $from_lang, $this));
         }
         if (!empty($string)) {
             $pagelist->addPage( $string );
@@ -280,20 +334,22 @@ extends WikiPlugin
         }
         switch ($what) {
         case 'allpages':
-            $pagelist->addPages( $dbi->getAllPages($include_empty, $sortby, $limit) );
+            $pagelist->addPages( $dbi->getAllPages($include_empty, $sortby, 
+                                                   $limit, $exclude) );
             break;
         case 'pages':
             // not all pages, only the pgsrc pages
             if (!is_array($exclude))
-                $exclude = $pagelist->explodePageList($exclude,false,$sortby,$limit);
+                $exclude = $pagelist->explodePageList($exclude, false, $sortby, 
+                                                      $limit, $exclude);
             $path = FindLocalizedFile(WIKI_PGSRC);
             $pgsrc = new fileSet($path);
-            foreach ($pgsrc->getFiles($exclude,$sortby,$limit) as $pagename) {
+            foreach ($pgsrc->getFiles($exclude, $sortby, $limit) as $pagename) {
                 $pagename = urldecode($pagename);
                 if (substr($pagename,-1,1) == '~') continue;
 	        if (in_array($pagename, $exclude))
         	    continue;             // exclude page.
-                if ($match != '*' and !glob_match($match,$pagename))
+                if ($match != '*' and !glob_match($match, $pagename))
                     continue;
                 $page_handle = $dbi->getPage($pagename);
                 $pagelist->addPage( $page_handle );
@@ -307,7 +363,7 @@ extends WikiPlugin
             if (is_array($locale)) {
                 $count = 0;
                 foreach ($locale as $from => $to) {
-                    if ($match != '*' and !glob_match($match,$from))
+                    if ($match != '*' and !glob_match($match, $from))
                         continue;
                     if (isWikiWord($from)) {
                         $count++;
@@ -318,13 +374,15 @@ extends WikiPlugin
             }
             break;
         // all Button texts, which need a localized .png
-        // where to get them from? templates/*.tmpl: Button() and WikiLink(?,'button')
+        // where to get them from? templates/*.tmpl: Button() 
+        // and WikiLink(?,'button')
         // navbar links, actionpages, and admin requests
         case 'buttons':
             $buttons = $GLOBALS['AllActionPages'];
-            $fileset = new FileSet(FindFile("themes/MacOSX/buttons/en"), "*.png");
+            $fileset = new FileSet(FindFile("themes/MacOSX/buttons/en"), 
+                                   "*.png");
             foreach ($fileset->getFiles() as $file) {
-                $b = urldecode(substr($file,0,-4));
+                $b = urldecode(substr($file, 0, -4));
                 if (!in_array($b,$buttons))
                     $buttons[] = $b;
             }
@@ -339,8 +397,8 @@ extends WikiPlugin
     }
 };
 
-class _PageList_Column_custom extends _PageList_Column {
-    function _PageList_Column_custom($field, $from_lang, $plugin) {
+class _PageList_Column_customlang extends _PageList_Column {
+    function _PageList_Column_customlang($field, $from_lang, $plugin) {
         $this->_field = $field;
         $this->_from_lang = $from_lang;
         $this->_plugin =& $plugin;
@@ -350,32 +408,38 @@ class _PageList_Column_custom extends _PageList_Column {
         $this->_iscustom = substr($field, 0, 7) == 'custom:';
         if ($this->_iscustom)
             $this->_field = substr($field, 7);
-        $heading = $field;
+        //$heading = $field;
         $this->dbi = &$GLOBALS['request']->getDbh();
-        $this->_PageList_Column_base($field);
+        $this->_PageList_Column_base($this->_field);
     }
     
     function _getValue($page, &$revision_handle) {
     	if (is_object($page)) $text = $page->getName();
         else $text = $page;
-    	$trans = $this->_plugin->translate($text, $this->_field, $this->_from_lang);
+    	$trans = $this->_plugin->fast_translate($text, $this->_field, 
+                                                $this->_from_lang);
         // how to markup untranslated words and not existing pages?
         // untranslated: (TODO) link to translation editor
         if ($trans == $text or // untranslated
             (($this->_from_lang != 'en') and 
              ($this->_field != 'en') and
-             ($trans == $this->_plugin->translate($text, 'en', $this->_from_lang))
+             ($trans == $this->_plugin->fast_translate($text, 'en', 
+                                                       $this->_from_lang))
              ))
         {    
-            global $Theme;
-            $link = $Theme->linkUnknownWikiWord($trans);
-            if (!($this->_noT or $this->_nolinks) and $this->dbi->isWikiPage($trans)) {
-                $url = WikiURL($trans, array('action' => 'TranslateText','lang' => $this->_field));
-                $button = $Theme->makeButton('T', $url);
-                $button->addTooltip(sprintf(_("Define the translation for %s in %s"), $trans, $this->_field));
+            global $WikiTheme;
+            $link = $WikiTheme->linkUnknownWikiWord($trans);
+            if (!($this->_noT or $this->_nolinks) 
+                and $this->dbi->isWikiPage($trans)) 
+            {
+                $url = WikiURL($trans, array('action' => 'TranslateText',
+                                             'lang' => $this->_field));
+                $button = $WikiTheme->makeButton('T', $url);
+                $button->addTooltip(sprintf(_("Define the translation for %s in %s"), 
+                                            $trans, $this->_field));
                 $link = HTML::span($button);
                 $link->setAttr('class', 'wikiunknown');
-                $text = HTML::span($Theme->maybeSplitWikiWord($trans));
+                $text = HTML::span($WikiTheme->maybeSplitWikiWord($trans));
                 $text->setAttr('style', 'text-decoration:line-through');
                 $link->pushContent($text);
                 return $link;
@@ -385,7 +449,7 @@ class _PageList_Column_custom extends _PageList_Column {
                 return '';
         } elseif (is_object($page)) {
             if (!$this->_nolinks)
-                return WikiLink($trans,'auto');
+                return WikiLink($trans, 'auto');
             else
                 return $trans;
         } else {
@@ -394,7 +458,35 @@ class _PageList_Column_custom extends _PageList_Column {
     }
 }
 
-// $Log$
+// $Log: _WikiTranslation.php,v $
+// Revision 1.17  2005/09/10 11:31:16  rurban
+// protect against 2x define
+//
+// Revision 1.16  2005/02/12 17:24:24  rurban
+// locale update: missing . : fixed. unified strings
+// proper linebreaks
+//
+// Revision 1.15  2005/01/25 08:06:47  rurban
+// add fast_translate: setlocale() switching with the gettext extension is by far too slow; add default pagelist args
+//
+// Revision 1.14  2004/07/08 20:30:07  rurban
+// plugin->run consistency: request as reference, added basepage.
+// encountered strange bug in AllPages (and the test) which destroys ->_dbi
+//
+// Revision 1.13  2004/06/18 14:38:22  rurban
+// adopt new PageList style
+//
+// Revision 1.12  2004/06/17 10:39:18  rurban
+// fix reverse translation of possible actionpage
+//
+// Revision 1.11  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.10  2004/05/03 21:57:47  rurban
 // locale updates: we previously lost some words because of wrong strings in
 //   PhotoAlbum, german rewording.

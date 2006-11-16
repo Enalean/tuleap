@@ -23,12 +23,12 @@
 // - Piotr Roszatycki <Piotr_Roszatycki@netia.net.pl>
 //   DB_ldap::base() method, support for LDAP sequences, various fixes
 //
-// $Id$
+// $Id: ldap.php,v 1.2 2004/04/26 20:44:37 rurban Exp $
 //
 // Based on DB 1.3 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths. 
 //
-rcs_id('$Id$');
+rcs_id('$Id: ldap.php,v 1.2 2004/04/26 20:44:37 rurban Exp $');
 rcs_id('From Pear CVS: Id: ldap.php,v 1.9 2002/02/11 12:59:37 mj Exp');
 
 require_once 'DB/common.php';

@@ -1,5 +1,5 @@
 <?php // -*-php-*- ?>
-<!-- $Id$ -->
+<!-- $Id: online.tmpl,v 1.7 2005/04/02 15:13:45 rurban Exp $ -->
 <?php
 // Formatting and idea borrowed from postnuke.
 
@@ -7,7 +7,7 @@
 // 2. "detail" with a table of online users, date and current actions
 $header = _("Who Is Online");
 if ($MAX_ONLINE_TIME and $MAX_ONLINE_NUM)
-  $MAX_ONLINE_TIME = $Theme->formatDateTime($MAX_ONLINE_TIME);
+  $MAX_ONLINE_TIME = $WikiTheme->formatDateTime($MAX_ONLINE_TIME);
 ?>
 
 <?php if ($mode == 'summary') {
@@ -21,13 +21,13 @@ if ($MAX_ONLINE_TIME and $MAX_ONLINE_NUM)
   <tr><td class="row1" rowspan="3"><?= $ONLINE_ICON ?></td>
       <td class="row1" class="gensmall"><?= fmt("Our users created a total of %d pages.",$NUM_PAGES) ?><br />
 	  <?= fmt("We have a total of %d registered users.",$NUM_USERS) ?><br />
-          <?= $NEWEST_USER ? fmt("The newest registered user is %s",$NEWEST_USER) : ''?>
+          <?= $NEWEST_USER ? fmt("The newest registered user is %s.",$NEWEST_USER) : ''?>
           </td></tr>
   <?php if ($SESSDATA_BOOL) { ?>
   <tr><td class="row1" class="gensmall">
-          <?= fmt("In total there are %d user sessions online :: Unique %d Registered and %d Guests",
+          <?= fmt("In total there are %d user sessions online. :: Unique %d Registered and %d Guests",
 	          $NUM_ONLINE,$NUM_REGISTERED,$NUM_GUESTS) ?><br />
-          <?= $MAX_ONLINE_NUM ? fmt("Most users ever online was %d at %s",$MAX_ONLINE_NUM,$MAX_ONLINE_TIME) : '' ?><br />
+          <?= $MAX_ONLINE_NUM ? fmt("Most users ever online was %d at %s.",$MAX_ONLINE_NUM,$MAX_ONLINE_TIME) : '' ?><br />
           <?= fmt("Registered Users Online: ") ?>
 <?php 
     $s='';
@@ -36,7 +36,7 @@ if ($MAX_ONLINE_TIME and $MAX_ONLINE_NUM)
       $s .= $link->asXML() . ", ";
     }
     if (!count($REGISTERED)) echo(htmlentities(_("<none>")));
-    else echo(htmlentities(substr($s,0,-2)));
+    else echo(substr($s,0,-2));
 ?>
 <?php if (!empty($ADMINS) and $dispose_admin) { ?> 
     <br />
@@ -44,7 +44,7 @@ if ($MAX_ONLINE_TIME and $MAX_ONLINE_NUM)
 <?php } ?>
   </td></tr>
   <tr><td class="row1" class="gensmall">
-    <?= fmt("This data is based on users active over the past %s",$SESSION_TIME) ?><br />
+    <?= fmt("This data is based on users active over the past %s.",$SESSION_TIME) ?><br />
     </td></tr>
   <?php } else { ?>
   <tr><td class="row1" class="gensmall"><br />
@@ -64,21 +64,21 @@ if ($MAX_ONLINE_TIME and $MAX_ONLINE_NUM)
   <?php if (!empty($ADMINS) and $dispose_admin) { ?> 
   <?php   foreach ($ADMINS as $user) { ?>
   <tr><td class="row1" class="gensmall"><?= $user['name'] ?></td>
-      <td class="row1" class="gensmall"><?= $Theme->formatDateTime($user['date']) ?></td>
+      <td class="row1" class="gensmall"><?= $WikiTheme->formatDateTime($user['date']) ?></td>
       <td class="row1" class="gensmall"><?= $user['action'].' '.$user['page'] ?></td>
       </tr>
   <?php   } ?>
   <?php } ?>
   <?php foreach ($REGISTERED as $user) { ?>
   <tr><td class="row1" class="gensmall"><?= $user['name'] ?></td>
-      <td class="row1" class="gensmall"><?= $Theme->formatDateTime($user['date']) ?></td>
+      <td class="row1" class="gensmall"><?= $WikiTheme->formatDateTime($user['date']) ?></td>
       <td class="row1" class="gensmall"><?= $user['action'].' '.$user['page'] ?></td>
       </tr>
   <?php } ?>
    <tr><td class="cat" colspan="3"><?= _("Guests") ?></td></tr>
   <?php foreach ($GUESTS as $user) { ?>
   <tr><td class="row1" class="gensmall"><?= $user['name'] ?></td>
-      <td class="row1" class="gensmall"><?= $Theme->formatDateTime($user['date']) ?></td>
+      <td class="row1" class="gensmall"><?= $WikiTheme->formatDateTime($user['date']) ?></td>
       <td class="row1" class="gensmall"><?= $user['action'].' '.$user['page'] ?></td>
       </tr>
   <?php } ?>

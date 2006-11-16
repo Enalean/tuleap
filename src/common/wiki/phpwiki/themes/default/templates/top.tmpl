@@ -1,18 +1,18 @@
 <?php // -*-html-*-
-rcs_id('$Id$');
+rcs_id('$Id: top.tmpl,v 1.27 2005/02/27 18:19:21 rurban Exp $');
 
 global $HIDE_TOOLBARS;
 if (!$HIDE_TOOLBARS) {
 ?>
 <!-- The logo -->
-<div align="right" id="logo"><a class="wikilink" 
-                  href="<?=WikiURL(HOME_PAGE)?>" target="_top"
-                  ><img src="<?=$Theme->getImageURL('logo')?>" id="logo-img"
-                        border="0" alt="<?=fmt("%s: %s", WIKI_NAME, HOME_PAGE) ?>"
-                        align="right" /></a></div>
-
+<div id="logo"><a class="wikilink" 
+    href="<?=WikiURL(HOME_PAGE)?>" target="_top"
+    ><img src="<?=$WikiTheme->getImageURL('logo')?>" id="logo-img"
+      border="0" alt="<?=fmt(_("%s: %s"), WIKI_NAME, HOME_PAGE) ?>" align="right" /></a></div>
 <!-- The top navigation/search bar -->
-<div class="toolbar"><?= Template('navbar') ?></div>
+<div class="toolbar">
+  <?= Template('navbar') ?>
+  </div>
 <?php } ?>
 
 <!-- Page title -->

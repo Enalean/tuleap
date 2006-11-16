@@ -1,0 +1,20 @@
+Date: Sat, 5 Jun 2004 16:49:58 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: StyleCorrect,v 1.2 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=StyleCorrect;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+"Les jeunes auteurs supposent souvent que le style est une garniture pour la chair de la prose, une sauce grâce à laquelle un plat fade devient agréable au goût. Le style n'a pas de telles entités séparées ; il n'est pas détachable, il n'est pas filtrable. Le débutant devrait approcher le style avec crainte, en comprenant que c'est lui-même qu'il approche, et personne d'autre ; et il devrait commencer par se détourner résolument de tous les appareils considérés populairement comme indiquant le style -- tout maniérisme, artifice, ornement. L'approche du style se fait par la sobriété, la simplicité, l'ordre et la sincérité".
+
+--Strunk et White, "Les Éléments du Style"
+
+''Et ainsi un manuel américain, lecture typiquement requise auprès d'étudiants de 10e niveau en anglais, exalte sans le savoir certaines vertus du WabiSabi''
+
+--scummings
+----
+DocumentationDePhpWiki

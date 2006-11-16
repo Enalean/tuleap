@@ -1,6 +1,6 @@
-<!-- $Id$ -->
+<!-- $Id: comment.tmpl,v 1.5 2004/06/14 11:26:52 rurban Exp $ -->
 <?php
-$CDATE = $Theme->formatDateTime($COMMENT_CTIME);
+$CDATE = $WikiTheme->formatDateTime($COMMENT_CTIME);
 $buttons = $modified = '';
 
 if ($user->isAdmin() or $user->getId() == $COMMENT_CREATOR) {
@@ -13,7 +13,7 @@ if ($user->isAdmin() or $user->getId() == $COMMENT_CREATOR) {
 // This is a hack, but since we only have a fake PageRevision,
 // we can't get the version.
 if ($rev->get('mtime') != $COMMENT_CTIME) {
-    $mtime = $Theme->formatDateTime($rev->get('mtime'));
+    $mtime = $WikiTheme->formatDateTime($rev->get('mtime'));
     $modified = HTML::small(array('class' => 'floatright'),
 			    fmt("Comment modified on %s by %s",
 				$mtime, $rev->get('author')));

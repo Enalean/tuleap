@@ -1,0 +1,50 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginCr%E9erUneTdm,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginCr%E9erUneTdm;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin CreateToc jshide||=1 ?>
+
+!!Descrition
+
+PluginCréerUneTdm vous permet (depuis v1.3.8) de créer automatiquement 
+une *Table des matières* dynamique de tous les en-têtes (titres et sous-titres). 
+
+!!Usage
+
+<verbatim>
+     <?plugin CreateToc ?>
+     <?plugin CreateToc jshide||=1 with_toclink||=1 ?>
+</verbatim>
+
+!!Arguments
+
+__jshide__: |
+  Booléen si la table doit être initialement cachée puis montrée par un clique. Par défaut : 0
+__with_toclink__:  |
+  Booléen si les en-têtes doivent être liés à la table. Par défaut : 0
+__headers__:  |
+  Quels en-têtes inclure. Par défaut : !!!,!!,!    1,2,3 également permis
+__noheader__:  |
+  Booléen si le titre h2 "Table des matières" doit être omis. Par défaut : 0
+__liststyle__:  |
+  dl ou ol ou ul. Par défaut : dl
+__indentstr__:  |
+  Par défaut : &nbsp;&nbsp;
+__pagename__:  |
+  Table pour quelle page ? Par défaut : page courante.
+
+!!Problèmes connus
+
+Si un en-tête contient un lien ou un ~WikiWord ou des caractères d'échappement, ~CreateToc 
+affichera un message d'avertissement et refusera de lier cet en-tête.
+
+!!Exemples
+
+Voir par exemple PhpWikiDemo:en/TextFormattingRules

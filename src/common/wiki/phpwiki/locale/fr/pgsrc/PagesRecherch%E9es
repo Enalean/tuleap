@@ -1,0 +1,24 @@
+Date: Sat, 5 Jun 2004 16:49:55 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PagesRecherch%E9es,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PagesRecherch%E9es;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Voici la liste des pages qui ont été citées sur ce wiki mais qui n'ont 
+pas encore été écrites. Bien qu'elles soient apparemment recherchées,
+elles peuvent correspondre à des noms mal orthographiés ou à des pages
+si triviales qu'elles ne méritent pas d'être créées.
+
+Le mieux n'est pas forcément de créer ces pages. Il est souvent préférable
+de changer les références pour ne plus avoir de ~WikiNoms. Lorsque c'est 
+possible, vous pouvez juste changer la casse ou insérer le caractère 
+d'échappement ~~.
+
+----
+
+<?plugin WantedPages?>

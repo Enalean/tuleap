@@ -1,13 +1,41 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: pdf.php,v 1.7 2004/09/22 13:46:26 rurban Exp $');
+/*
+ Copyright (C) 2003 Olivier PLATHEY
+ Copyright (C) 200? Don Sebà
+ Copyright (C) 2004 Reini Urban
 
-// PDF functions taken from FPDF http://www.fpdf.org
-// Edited for PHPWebthings by Don Sebà 
-//   Feel free to edit , enhance the module, and please share it at http://www.phpdbform.com
-//   Keep PHPWT COOL submit your modules/themes/mods, it will help to improve ! :)
-// Changes for PhpWiki by Reini Urban
+ This file is part of PhpWiki.
+
+ PhpWiki is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ PhpWiki is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with PhpWiki; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */ 
+/*
+ * Credits:
+ * PDF functions taken from FPDF http://www.fpdf.org
+ * Edited for PHPWebthings by Don Sebà 
+ *   Feel free to edit , enhance the module, and please share it at http://www.phpdbform.com
+ *   Keep PHPWT COOL submit your modules/themes/mods, it will help to improve ! :)
+ * Changes for PhpWiki by Reini Urban
+ */
 
 require_once('lib/fpdf.php');
+
+// http://phpwiki.sourceforge.net/phpwiki/PhpWikiToDocBookAndPDF
+// htmldoc or ghostscript + html2ps or docbook (dbdoclet, xsltproc, fop)
+// http://www.easysw.com/htmldoc
+//define("USE_EXTERNAL_HTML2PDF", "htmldoc --quiet --format pdf14 --jpeg --webpage --no-toc --no-title %s");
 
 class PDF extends FPDF {
     var $B = 0;
@@ -54,7 +82,7 @@ class PDF extends FPDF {
         $this->SetFont('Arial','',9);
 	//URL - space from side - space from top - width
 	if (!DEBUG) {
-          $imgurl = $GLOBALS['Theme']->_findFile("images/logo.png"); // header and wikilogo
+          $imgurl = $GLOBALS['WikiTheme']->_findFile("images/logo.png"); // header and wikilogo
           if ($imgurl)
             $this->Image($imgurl,3,3);
         }
@@ -105,6 +133,84 @@ class PDF extends FPDF {
         $this->SetTextColor(0);
     }
 }
+
+function ConvertAndDisplayPdf (&$request) {
+    if (empty($request->_is_buffering_output))
+        $request->buffer_output(false/*'nocompress'*/);
+    $pagename = $request->getArg('pagename');
+    $dest = $request->getArg('dest');
+    //TODO: inline cached content: /getimg.php? => image.png
+    // Disable CACHE
+
+    include_once("lib/display.php");
+    displayPage($request);
+    $html = ob_get_contents();
+    
+    // check hook for external converters
+    if (defined('USE_EXTERNAL_HTML2PDF')
+        and USE_EXTERNAL_HTML2PDF)
+    {   // See http://phpwiki.sourceforge.net/phpwiki/PhpWikiToDocBookAndPDF
+        // htmldoc or ghostscript + html2ps or docbook (dbdoclet, xsltproc, fop)
+        $request->discardOutput();
+        $request->buffer_output(false/*'nocompress'*/);
+        require_once("lib/WikiPluginCached.php");
+        $cache = new WikiPluginCached;
+        $cache->newCache();
+        $tmpfile = $cache->tempnam();
+        $fp = fopen($tmpfile, "wb");
+        fwrite($fp, $html);
+        fclose($fp);
+        Header('Content-Type: application/pdf');
+        passthru(sprintf(USE_EXTERNAL_HTML2PDF, $tmpfile));
+        unlink($tmpfile);
+    } else {
+        // use fpdf:
+        if ($GLOBALS['LANG'] == 'ja') {
+            include_once("lib/fpdf/japanese.php");
+            $pdf = new PDF_Japanese;
+        } elseif ($GLOBALS['LANG'] == 'zh') {
+            include_once("lib/fpdf/chinese.php");
+            $pdf = new PDF_Chinese;
+        } else {
+            $pdf = new PDF;
+        }
+        $pdf->Open();
+        $pdf->AddPage();
+        $pdf->ConvertFromHTML($html);
+        $request->discardOutput();
+        $request->buffer_output(false/*'nocompress'*/);
+        $pdf->Output($pagename.".pdf", $dest ? $dest : 'I');
+    }
+    if (!empty($errormsg)) {
+        $request->discardOutput();
+    }
+}
+
+// $Log: pdf.php,v $
+// Revision 1.7  2004/09/22 13:46:26  rurban
+// centralize upload paths.
+// major WikiPluginCached feature enhancement:
+//   support _STATIC pages in uploads/ instead of dynamic getimg.php? subrequests.
+//   mainly for debugging, cache problems and action=pdf
+//
+// Revision 1.6  2004/09/20 13:40:19  rurban
+// define all config.ini settings, only the supported will be taken from -default.
+// support USE_EXTERNAL_HTML2PDF renderer (htmldoc tested)
+//
+// Revision 1.5  2004/09/17 14:19:02  rurban
+// default pdf dest: browser
+//
+// Revision 1.4  2004/06/14 11:31:37  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.3  2004/05/15 19:49:09  rurban
+// moved action_pdf to lib/pdf.php
+//
 
 // Local Variables:
 // mode: php

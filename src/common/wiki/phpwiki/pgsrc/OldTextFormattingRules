@@ -1,24 +1,23 @@
-Date: Thu, 28 Mar 2002 14:57:00 -0500
-Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
-X-Rcs-Id: $Id$
+Date: Sat, 8 Jan 2005 22:55:20 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre-20041223)
+X-Rcs-Id: $Id: OldTextFormattingRules,v 1.7 2005/01/08 23:14:06 rurban Exp $
 Content-Type: application/x-phpwiki;
   pagename=OldTextFormattingRules;
-  pgsrc_version="2 $Revision$";
+  pgsrc_version="2 $Revision: 1.7 $";
   flags=PAGE_LOCKED;
-  charset=iso-8859-1
+  charset=iso-8859-1;
+  markup=2
 Content-Transfer-Encoding: binary
 
-<?plugin CreateToc jshide||=1 with_toclink||=1 ?>
-----
 ! Synopsis
 OldTextFormattingRules%%%
-__Emphasis:__ '____' for ''italics'', _''''_ for __bold__, '____'_''''_ for ''__both__''.%%%
-__Lists:__ * for bullet lists, # for numbered lists, ''__;__ term __:__ definition'' for definition lists.%%%
-__References:__ !JoinCapitalizedWords or use square brackets for a [[page link] or URL [[!http://cool.wiki.int/].%%%
-__Footnotes:__ Use [[1],[[2],[[3],...%%%
-__Preventing linking:__ Prefix with "!": !!DoNotHyperlink, name links like [[[[text | URL] (double up on the "[").%%%
-__Misc:__ "!", "!!", "!!!" make headings, "%%''''%" makes a linebreak, "-''''-''''-''''-" makes a horizontal rule.
-__Tables:__ »|« as first char, »|« for more columns, »|>« align right, »|<« align left, »|^« centered (default), »||« span columns, »|v« span rows
+<strong>Emphasis:</strong> '<strong></strong>' for <em>italics</em>, _<em></em>~_ for <strong>bold</strong>, '<strong></strong>'_<em></em>~_ for <em><strong>both</strong></em>.%%%
+<strong>Lists:</strong> * for bullet lists, # for numbered lists, <em><strong>;</strong> term <strong>:</strong> definition</em> for definition lists.%%%
+<strong>References:</strong> ~JoinCapitalizedWords or use square brackets for a ~[page link] or URL ~[~http://cool.wiki.int/].%%%
+<strong>Footnotes:</strong> Use ~[1],~[2],~[3],...%%%
+<strong>Preventing linking:</strong> Prefix with "~!": ~!~DoNotHyperlink, name links like ~[~[text | URL] (double up on the "[").%%%
+<strong>Misc:</strong> "~!", "~!~!", "~!~!~!" make headings, "%%<em></em>%" makes a linebreak, "-<em></em>-<em></em>-<em></em>-" makes a horizontal rule.%%%
+<strong>Tables:</strong> »|« as first char, »|« for more columns, »|>« align right, »|<« align left, »|^« centered (default), »||« span columns, »|v« span rows
 
 ----
 ! Paragraphs
@@ -27,13 +26,13 @@ __Tables:__ »|« as first char, »|« for more columns, »|>« align right, »|<« alig
 * Words wrap and fill as needed
 * Use blank lines as separators
 * Four or more minus signs make a horizontal rule
-* %%''''% makes a linebreak (in headings and lists too)
+* %%<em></em>% makes a linebreak (in headings and lists too)
 
 
 ! Lists
 
 * asterisk for first level
-** asterisk-asterisk for second level, etc.
+     * asterisk-asterisk for second level, etc.
 * Use * for bullet lists, # for numbered lists (mix at will)
 * semicolon-term-colon-definition for definition lists:
 ;term here:definition here, as in the <DL><DT><DD> list
@@ -42,29 +41,31 @@ __Tables:__ »|« as first char, »|« for more columns, »|>« align right, »|<« alig
 
 ! Headings
 
-* '!' at the start of a line makes a small heading
-* '!!' at the start of a line makes a medium heading
-* '!!!' at the start of a line makes a large heading
+* '~!' at the start of a line makes a small heading
+* '~!~!' at the start of a line makes a medium heading
+* '~!~!~!' at the start of a line makes a large heading
 
 ! Fonts
 
 * Indent with one or more spaces to use a monospace font:
 
+<pre>
  This is in monospace
+</pre>
 This is not
 
 !Indented Paragraphs
 
 * semicolon-colon -- works like <BLOCKQUOTE>
 
-;: this is an indented block of text
+;:this is an indented block of text
 
 ! Emphasis
 
-* Use doubled single-quotes ('____') for emphasis (usually ''italics'')
-* Use doubled underscores (_''''_) for strong emphasis (usually __bold__)
-* Mix them at will: __''bold italics''__
-* ''Emphasis'' can be used ''multiple'' times within a line, but ''cannot'' cross line boundaries:
+* Use doubled single-quotes ('<strong></strong>') for emphasis (usually <em>italics</em>)
+* Use doubled underscores (_<em></em>_) for strong emphasis (usually <strong>bold</strong>)
+* Mix them at will: <strong><em>bold italics</em></strong>
+* <em>Emphasis</em> can be used <em>multiple</em> times within a line, but <em>cannot</em> cross line boundaries:
 
 ''this
 will not work''
@@ -73,26 +74,30 @@ will not work''
 * Hyperlinks to other pages within the Wiki are made by placing the page name in square brackets: [this is a page link] or UsingWikiWords (preferred)
 * Hyperlinks to external pages are done like this: [http://www.wcsb.org/]
 * You can name the links by providing a name, a bar (|) and then the hyperlink or pagename: [PhpWiki home page | http://phpwiki.sourceforge.net/]  - [the front page | HomePage]
-* You can suppress linking to old-style references and URIs by preceding the word with a '!', e.g. !NotLinkedAsWikiName, !http://not.linked.to/
-* You can create footnotes by using [[1], [[2], [[3], ... like this here [1]. See footnote for counterpart.  (If the [[ is in the first column, it is a footnote ''definition'' rather than a footnote ''reference'' [1].)
+* You can suppress linking to old-style references and URIs by preceding the word with a '~!', e.g. ~NotLinkedAsWikiName, ~http://not.linked.to/
+* You can create footnotes by using ~[1], ~[2], ~[3], ... like this here #[|ftnt_ref_1]<sup>~[[1|#ftnt_1]~]</sup>. See footnote for counterpart.  (If the ~[ is in the first column, it is a footnote <em>definition</em> rather than a footnote <em>reference</em> #[|ftnt_ref_1]<sup>~[[1|#ftnt_1]~]</sup>.)
 * Also, the old way of linking URL's is still supported: precede URLs with "http:", "ftp:" or "mailto:" to create links automatically as in: http://c2.com/
-* URLs ending with .png, .gif, or .jpg are inlined if in square brackets, by themselves.
+* URLs ending with .png, .gif, or .jpg are inlined if in square brackets, by themselves: [http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
 
 ! Tables
 
-* Simple tables are available.  A table row is introduced by a __|__ in the first column.  It is best described by example:
-      ||  _''''_Name_''''_               |v _''''_Cost_''''_   |v _''''_Notes_''''_
-      | _''''_First_''''_   | _''''_Last_''''_
+* Simple tables are available.  A table row is introduced by a <strong>|</strong> in the first column.  It is best described by example:
+<pre>
+      ||  _<em></em>_Name_<em></em>~_               |v _<em></em>_Cost_<em></em>~_   |v _<em></em>_Notes_<em></em>~_
+      | _<em></em>_First_<em></em>~_   | _<em></em>_Last_<em></em>~_
       |> Jeff       |< Dairiki   |^  Cheap     |< Not worth it
       |> Marco      |< Polo      | Cheaper     |< Not available
-;: will generate
-||  __Name__               |v __Cost__   |v __Notes__
-| __First__   | __Last__
+</pre>
+;:will generate
+<?plugin OldStyleTable
+||  <strong>Name</strong>               |v <strong>Cost</strong>   |v <strong>Notes</strong>
+| <strong>First</strong>   | <strong>Last</strong>
 |> Jeff       |< Dairiki   |^  Cheap     |< Not worth it
 |> Marco      |< Polo      | Cheaper     |< Not available
+?>
 
-;: Note that multiple __|__'s lead to spanned columns, and __v__'s can be used to span rows.  A __>__ generates a right justified column, __<__ a left justified column and __^__ a centered column (which is the default.)
-;: With the new TextFormatingsRules tables are only supported with the OldStyleTablePlugin.
+;:Note that multiple <strong>|</strong>'s lead to spanned columns, and <strong>v</strong>'s can be used to span rows.  A <strong>></strong> generates a right justified column, <strong><</strong> a left justified column and <strong>^</strong> a centered column (which is the default.)
+;:With the new TextFormatingsRules tables are only supported with the OldStyleTablePlugin.
 
 
 ! HTML Mark-Up Language
@@ -104,12 +109,12 @@ will not work''
 
 ! More detail than you want to know
 
-See [MagicPhpWikiURLs] for gory details on how to write various kind of wiki maintainance links. (''deprecated'')
+See [MagicPhpWikiURLs] for gory details on how to write various kind of wiki maintainance links. (<em>deprecated</em>)
 
 -----
 
 ! Footnotes:
 
-[1] By using [[1] a second time (in the first column) the footnote itself is ''defined''.  You may refer to a footnote as many times as you want, but you may only define it once on the page.  Note the the [[1] in the footnote links back to the first reference, if there are multiple references there will be +'s after the [[1] which will link to the other references.  (References which come ''after'' the footnote ''definition'' will not be linked to.)
+#[|ftnt_1]~[[1|#ftnt_ref_1]~]  By using ~[1] a second time (in the first column) the footnote itself is <em>defined</em>.  You may refer to a footnote as many times as you want, but you may only define it once on the page.  Note the the ~[1] in the footnote links back to the first reference, if there are multiple references there will be +'s after the ~[1] which will link to the other references.  (References which come <em>after</em> the footnote <em>definition</em> will not be linked to.)
 ----
 PhpWikiDocumentation

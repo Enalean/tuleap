@@ -2,12 +2,19 @@
 
 div.calendar { position: relative; }
 
-.calendar, .calendar table {
+.calendar {
+  font-size: 9px;
+  color: #000;
+  cursor: default;
+  font-family: tahoma,verdana,sans-serif;
+}
+
+.calendar table {
   border: 1px solid #556;
   font-size: 9px;
   color: #000;
   cursor: default;
-  background: #eef;
+  /*background: #eef;*/
   font-family: tahoma,verdana,sans-serif;
 }
 
@@ -19,7 +26,7 @@ div.calendar { position: relative; }
 }
 
 .calendar .nav {
-  background: #778 url(menuarrow.gif) no-repeat 100% 100%;
+  background: #778 url(menuarrow.png) no-repeat 100% 100%;
 }
 
 .calendar thead .title { /* This holds the current "month, year" */
@@ -101,6 +108,11 @@ div.calendar { position: relative; }
 
 .calendar tbody td.active { /* Active (pressed) cells <TD> */
   background: #cde;
+  padding: 2px 2px 0px 2px;
+}
+.calendar tbody .existing { /* Existing dates */
+  background: #cde;
+  color: #a66;
   padding: 2px 2px 0px 2px;
 }
 

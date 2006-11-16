@@ -1,4 +1,4 @@
-<?php rcs_id('$Id$');
+<?php rcs_id('$Id: dba.php,v 1.7 2005/09/14 06:05:22 rurban Exp $');
 
 require_once('lib/WikiDB.php');
 require_once('lib/WikiDB/backend/dba.php');
@@ -12,16 +12,9 @@ class WikiDB_dba extends WikiDB
         $this->WikiDB($backend, $dbparams);
 
         if (empty($dbparams['directory'])
-            || preg_match('@^/tmp\b@', $dbparams['directory'])) {
-            $this->_warnings
-                = sprintf(_("DBA files are in the %s directory. Please read the INSTALL file and move the DB file to a permanent location or risk losing all the pages!"),'/tmp');
-        }
-        else
-            $this->_warnings = false;
-    }
-    
-    function genericWarnings () {
-        return $this->_warnings;
+            || preg_match('@^/tmp\b@', $dbparams['directory'])) 
+            trigger_error(sprintf(_("The %s files are in the %s directory. Please read the INSTALL file and move the database to a permanent location or risk losing all the pages!"), 
+                                  "DBA", "/tmp"), E_USER_WARNING);
     }
 };
 

@@ -22,5 +22,10 @@ will be used.
 
 See doc/THEMES for more info on PhpWiki themes.
 
-$Id$
-$Source$
+TODO:
+Make it easier to add design templates such as these:
+  http://www.oswd.org/viewdesign.phtml?id=1739&referer=%2Fmost_popular.phtml
+Use the plugin->box method for the right and left boxes.
+
+$Id: README,v 1.5 2004/11/03 16:45:05 rurban Exp $
+$Source: /cvsroot/phpwiki/phpwiki/themes/README,v $

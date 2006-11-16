@@ -1,0 +1,16 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: EditText,v 1.6 2002/11/25 19:44:01 dairiki Exp $
+Content-Type: application/x-phpwiki;
+  pagename=EditText;
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+All pages (except search results) have an EditText link at the bottom.
+You can edit the page you are reading by clicking that link.
+
+----
+
+PhpWikiDocumentation

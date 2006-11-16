@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: AllUsers.php,v 1.18 2004/11/23 15:17:19 rurban Exp $');
 /*
  Copyright 2002,2004 $ThePhpWikiProgrammingTeam
 
@@ -25,9 +25,10 @@ require_once('lib/PageList.php');
 /**
  * Based on AllPages and WikiGroup.
  *
- * We query homepage users (prefs stored in a page), 
- * users with db prefs and externally authenticated users with a db users table,
- * if auth_user_exists is defined.
+ * We list all users, 
+ * either homepage users (prefs stored in a page), 
+ * users with db prefs and 
+ * externally authenticated users with a db users table, if auth_user_exists is defined.
  */
 class WikiPlugin_AllUsers
 extends WikiPlugin
@@ -37,24 +38,22 @@ extends WikiPlugin
     }
 
     function getDescription() {
-        return _("With external authentication all users which stored their Preferences. Without external authentication all once signed-in users (from version 1.3.4 on).");
+        return _("List all once authenticated users.");
     }
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.18 $");
     }
 
     function getDefaultArguments() {
-        return array('noheader'      => false,
-                     'include_empty' => true,
-                     'exclude'       => '',
-                     'info'          => '',   // which columns? default: list of pagenames only
-                     'sortby'        => '',   // +mtime,-pagename
-                     'limit'         => 50,
-                     'paging'        => 'auto',
-                     'debug'         => false
-                     );
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array('noheader'      => false,
+                   'include_empty' => true,
+                   'debug'         => false
+                   ));
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
@@ -68,17 +67,15 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage) {
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        if ($sorted = $request->getArg('sortby'))
-            $sortby = $sorted;
-        elseif ($sortby)
-            $request->setArg('sortby',$sortby);
-
-        //if (defined('DEBUG') and DEBUG) $debug = true;
         if ($debug)
             $timer = new DebugTimer;
 
-        $group = WikiGroup::getGroup($request);
-        $allusers = $group->_allUsers();
+        $group = $request->getGroup();
+        if (method_exists($group,'_allUsers')) {
+            $allusers = $group->_allUsers();
+        } else {
+        	$allusers = array();
+        }
         $args['count'] = count($allusers);
         // deleted pages show up as version 0.
         $pagelist = new PageList($info, $exclude, $args);
@@ -86,9 +83,10 @@ extends WikiPlugin
             $pagelist->setCaption(_("Authenticated users on this wiki (%d total):"));
         if ($include_empty and empty($info))
             $pagelist->_addColumn('version');
-        list($offset,$pagesize) = $pagelist->limit($args['limit']);
-        if (!$pagesize) $pagelist->addPageList($pages);
-        else {
+        list($offset, $pagesize) = $pagelist->limit($args['limit']);
+        if (!$pagesize) {
+            $pagelist->addPageList($allusers);
+        } else {
             for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
             	if ($i >= $args['count']) break;
                 $pagelist->addPage($allusers[$i]);
@@ -111,7 +109,40 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: AllUsers.php,v $
+// Revision 1.18  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.17  2004/11/19 13:25:31  rurban
+// clarify docs
+//
+// Revision 1.16  2004/09/25 16:37:18  rurban
+// add support for all PageList options
+//
+// Revision 1.15  2004/07/08 13:50:33  rurban
+// various unit test fixes: print error backtrace on _DEBUG_TRACE; allusers fix; new PHPWIKI_NOMAIN constant for omitting the mainloop
+//
+// Revision 1.14  2004/06/25 14:29:22  rurban
+// WikiGroup refactoring:
+//   global group attached to user, code for not_current user.
+//   improved helpers for special groups (avoid double invocations)
+// new experimental config option ENABLE_XHTML_XML (fails with IE, and document.write())
+// fixed a XHTML validation error on userprefs.tmpl
+//
+// Revision 1.13  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
 // Revision 1.12  2004/04/20 00:56:00  rurban
 // more paging support and paging fix for shorter lists
 //

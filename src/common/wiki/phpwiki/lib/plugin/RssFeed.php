@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: RssFeed.php,v 1.10 2005/04/10 10:24:58 rurban Exp $');
 /*
  Copyright 2003 Arnaud Fontaine
 
@@ -39,26 +39,25 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.10 $");
     }
 
     // Establish default values for each of this plugin's arguments.
     function getDefaultArguments() {
         return array('feed' 		=> "",
                      'description' 	=> "",
-                     'url' 		=> "", //"http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss",
+                     'url' 		=> "", //"http://phpwiki.org/RecentChanges?format=rss",
                      'maxitem' 		=> 0,
                      'debug' 		=> false,
                      );
    }
 
-    function run($dbi, $argstr, $request, $basepage) {
+    function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
 
-        $xml_parser = xml_parser_create();
         $rss_parser = new RSSParser();
         if (!empty($url))
-            $rss_parser->parse_results( $xml_parser, &$rss_parser, $url,$debug);
+            $rss_parser->parse_url( $url, $debug );
 
         if (!empty($rss_parser->channel['title'])) $feed = $rss_parser->channel['title'];
         if (!empty($rss_parser->channel['link']))  $url  = $rss_parser->channel['link'];
@@ -83,21 +82,28 @@ extends WikiPlugin
         if (!empty($rss_parser->channel['date']))
             $th->pushContent(HTML::raw("<!--".$rss_parser->channel['date']."-->"));
         $html = HTML::div(array('class'=> 'rss'), $th);
-
-        // limitation du nombre d'items affichs
-        if ($maxitem > 0) $rss_parser->items = array_slice($rss_parser->items, 0, $maxitem);
-
-        foreach ($rss_parser->items as $item) {
-            $cell_title = HTML::div(array('class'=> 'itemname'),
-                                    HTML::a(array('href'=>$item['link']),
-                                            HTML::raw($item['title'])));
-            $cell_content = HTML::div(array('class'=> 'itemdesc'),
-                                      HTML::raw($item['description']));
-            $cell = HTML::div(array('class'=> 'rssitem'));
-            $cell->pushContent($cell_title);
-            $cell->pushContent($cell_content);
-            $html->pushContent($cell);
+        if ($rss_parser->items) { 
+            // only maxitem's
+            if ( $maxitem > 0 )
+                $rss_parser->items = array_slice($rss_parser->items, 0, $maxitem);
+            foreach ($rss_parser->items as $item) {
+                $cell = HTML::div(array('class'=> 'rssitem'));
+                if ($item['link'] and empty($item['title']))
+                    $item['title'] = $item['link'];
+                $cell_title = HTML::div(array('class'=> 'itemname'),
+                                        HTML::a(array('href'=>$item['link']),
+                                                HTML::raw($item['title'])));
+                $cell->pushContent($cell_title);
+                if (!empty($item['description']))
+                    $cell->pushContent(HTML::div(array('class'=> 'itemdesc'),
+                                                 HTML::raw($item['description'])));
+                $html->pushContent($cell);
+            }
+        } else {
+            $html = HTML::div(array('class'=> 'rss'), HTML::em(_("no RSS items")));
         }
+        if (!check_php_version(5))
+            $rss_parser->__destruct();
         return $html;
     }
 
@@ -114,7 +120,28 @@ extends WikiPlugin
 
 };
 
-// $Log$
+// $Log: RssFeed.php,v $
+// Revision 1.10  2005/04/10 10:24:58  rurban
+// fix for RSS feeds without detailled <item> tags:
+//   just list the <items> urls then (Bug #1180027)
+//
+// Revision 1.9  2004/11/03 16:34:10  rurban
+// proper msg if rss connection is broken or no items found
+//
+// Revision 1.8  2004/07/08 20:30:07  rurban
+// plugin->run consistency: request as reference, added basepage.
+// encountered strange bug in AllPages (and the test) which destroys ->_dbi
+//
+// Revision 1.7  2004/06/08 21:03:20  rurban
+// updated RssParser for XmlParser quirks (store parser object params in globals)
+//
+// Revision 1.6  2004/05/24 17:36:06  rurban
+// new interface
+//
+// Revision 1.5  2004/05/18 16:18:37  rurban
+// AutoSplit at subpage seperators
+// RssFeed stability fix for empty feeds or broken connections
+//
 // Revision 1.4  2004/04/18 01:11:52  rurban
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.

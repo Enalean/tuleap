@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: OrphanedPages.php,v 1.10 2004/07/09 13:05:34 rurban Exp $');
 /**
  This file is part of PhpWiki.
 
@@ -42,7 +42,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.10 $");
     }
 
     function getDefaultArguments() {
@@ -51,7 +51,7 @@ extends WikiPlugin
                      'exclude'       => '',
                      'info'          => '',
                      'sortby'        => false,
-                     'limit'         => 50,
+                     'limit'         => 0,
                      'paging'        => 'auto',
                      );
     }
@@ -66,18 +66,19 @@ extends WikiPlugin
         // There's probably a more efficient way to do this (eg a
         // tailored SQL query via the backend, but this does the job
 
-        $allpages_iter = $dbi->getAllPages($include_empty,$sortby,0);
+        $allpages_iter = $dbi->getAllPages($include_empty);
 	$pages = array();
         while ($page = $allpages_iter->next()) {
-            $links_iter = $page->getLinks();
-            // test for absence of backlinks. If a page is linked to
+            $links_iter = $page->getBackLinks();
+            // Test for absence of backlinks. If a page is linked to
             // only by itself, it is still an orphan
             $parent = $links_iter->next();
-            if (!$parent ||               // page has no parents
-                (($parent->getName() == $page->getName())
-                 && !$links_iter->next()) // page has only itself as a parent
-                )
+            if (!$parent               // page has no parents
+                or (($parent->getName() == $page->getName())
+                    and !$links_iter->next())) // or page has only itself as a parent
+            {
                 $pages[] = $page;
+            }
         }
         $args['count'] = count($pages);
         $pagelist = new PageList($info, $exclude, $args);
@@ -98,7 +99,13 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: OrphanedPages.php,v $
+// Revision 1.10  2004/07/09 13:05:34  rurban
+// just aesthetics
+//
+// Revision 1.9  2004/07/09 12:49:46  rurban
+// no limit, no sorting
+//
 // Revision 1.8  2004/04/20 00:56:00  rurban
 // more paging support and paging fix for shorter lists
 //

@@ -21,34 +21,34 @@
 // for outputting RecentChanges in RSS 0.91 format
 // ----------------------------------------------------------------------
 
-rcs_id('$Id$');
+rcs_id('$Id: RSSWriter091.php,v 1.10 2005/08/06 13:06:22 rurban Exp $');
 
-include_once "lib/RssWriter.php";
+include_once("lib/RssWriter.php");
 class RSSWriter091 extends RSSWriter
 {
-	function RSSWriter091()
-	{
-		$this->XmlElement('rss', array('version' => "0.91"));
-	    $this->_items = array();
-	}
+    function RSSWriter091()
+    {
+        $this->XmlElement('rss', array('version' => "0.91"));
+        $this->_items = array();
+    }
   /**
    * Finish construction of RSS.
    */	
-	function finish() 
-	{
+    function finish() 
+    {
         if (isset($this->_finished))
             return;
-
+        
         $channel = &$this->_channel;
         $items = &$this->_items;
     	
-		if ($items)
-		{
+        if ($items)
+            {
 		foreach ($items as $i)
-            $channel->pushContent($i);
-		}
+                    $channel->pushContent($i);
+            }
         $this->pushContent($channel);
-		$this->__spew();
+        $this->__spew();
         $this->_finished = true;
     }
 
@@ -74,18 +74,15 @@ class RSSWriter091 extends RSSWriter
 	
 }
 
-
-
 class _RecentChanges_RssFormatter091
 extends _RecentChanges_RSSFormatter
 // This class should probably go at then of RecentChanges.php
 {
-	function format ($changes) 
-	{
-    //    include_once('lib/RssWriter.php');
+    function format ($changes) 
+    {
+        //    include_once('lib/RssWriter.php');
         $rss = new RssWriter091;
 
-        
         $rss->channel($this->channel_properties());
 
         if (($props = $this->image_properties()))
@@ -107,7 +104,7 @@ extends _RecentChanges_RSSFormatter
 
 
     function channel_properties () 
-	{
+    {
         global $request;
 
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
@@ -119,26 +116,25 @@ extends _RecentChanges_RSSFormatter
 
         /* FIXME: language should come from $LANG (or other config variable). */
         
-            /* FIXME: other things one might like in <channel>:                   
-             * managingEditor
-             * webmaster
-             * lastBuildDate
-             * copyright
-             */
-  	   }
+        /* FIXME: other things one might like in <channel>:                   
+         * managingEditor
+         * webmaster
+         * lastBuildDate
+         * copyright
+         */
+    }
     
         
     function item_properties ($rev)
-	{
+    {
         $page = $rev->getPage();
         $pagename = $page->getName();
         
-        return array( 'title'		=> split_pagename($pagename),
+        return array( 'title'		=> SplitPagename($pagename),
                       'description'	=> $this->summary($rev),
                       'link'		=> $this->pageURL($rev)                  
                       );
     }
-
 }
 
 // (c-file-style: "gnu")

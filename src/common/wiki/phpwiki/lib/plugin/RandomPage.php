@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: RandomPage.php,v 1.13 2005/01/25 08:09:26 rurban Exp $');
 /**
- Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
+ Copyright 1999,2000,2001,2002,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -22,6 +22,10 @@ rcs_id('$Id$');
 
 require_once('lib/PageList.php');
 
+/**
+ * With 1.3.11 the "pages" argument was renamed to "numpages".
+ * action=upgrade should deal with pages containing RandomPage modified earlier than 2005-01-24
+ */
 class WikiPlugin_RandomPage
 extends WikiPlugin
 {
@@ -35,64 +39,85 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.13 $");
     }
 
     function getDefaultArguments() {
-        return array('pages'        => 1,
-                     'redirect'     => false,
-                     'hidename'     => false, // only for pages=1
-                     'exclude'      => $this->default_exclude(),
-                     'info'         => '');
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array('numpages'     => 20,     // was pages
+                   'pages'        => false, // deprecated
+                   'redirect'     => false,
+                   'hidename'     => false, // only for numpages=1
+                   'exclude'      => $this->default_exclude(),
+                   'info'         => ''));
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-        extract($this->getArgs($argstr, $request));
+        $args = $this->getArgs($argstr, $request);
+        extract($args);
 
-        $allpages = $dbi->getAllPages();
-
-        $exclude = $exclude ? explode(",", $exclude) : array();
-        foreach ($exclude as $e) {
-            $_exclude []= trim($e);
+        // fix deprecated arg
+        if (is_integer($pages)) {
+            $numpages = $pages;
+            $pages = false;
+        // fix new pages handling in arg preprozessor.    
+        } elseif (is_array($pages)) {
+            $numpages = (int)$pages[0];
+            if ($numpages > 0 and !$dbi->isWikiPage($numpages)) $pages = false;
+            else $numpages = 1;
         }
 
-        while ($page = $allpages->next()) {
-            if (!in_array($page->getName(), $_exclude))
-                $pagearray[] = $page;
-        }
-
+        $allpages = $dbi->getAllPages(false, $sortby, $limit, $exclude);
+        $pagearray = $allpages->asArray();
         better_srand(); // Start with a good seed.
 
-        if ($pages == 1 && $pagearray) {
+        if (($numpages == 1) && $pagearray) {
             $page = $pagearray[array_rand($pagearray)];
+            $pagename = $page->getName();
             if ($redirect)
-                $request->redirect(WikiURL($page, false, 'absurl')); // noreturn
+                $request->redirect(WikiURL($pagename, false, 'absurl')); // noreturn
             if ($hidename)
-                return WikiLink($page, false, _("RandomPage"));
+                return WikiLink($pagename, false, _("RandomPage"));
             else
-                return WikiLink($page);
+                return WikiLink($pagename);
         }
 
-        $pages = min( max(1, (int)$pages), 20, count($pagearray));
-        $pagelist = new PageList($info);
-        $shuffle = array_rand($pagearray, $pages);
-        foreach ($shuffle as $i)
-            $pagelist->addPage($pagearray[$i]);
+        $numpages = min( max(1, (int) $numpages), 20, count($pagearray));
+        $pagelist = new PageList($info, $exclude, $args);
+        $shuffle = array_rand($pagearray, $numpages);
+        if (is_array($shuffle)) {
+            foreach ($shuffle as $i)
+                if (isset($pagearray[$i])) $pagelist->addPage($pagearray[$i]);
+        } else { // if $numpages = 1
+             if (isset($pagearray[$shuffle]))
+	         $pagelist->addPage($pagearray[$shuffle]);
+        }
         return $pagelist;
     }
 
     function default_exclude() {
         // Some useful default pages to exclude.
-        $default_exclude = 'RandomPage, HomePage, AllPages, RecentChanges, RecentEdits, FullRecentChanges';
+        $default_exclude = 'RandomPage,HomePage,AllPages,RecentChanges,RecentEdits,FullRecentChanges';
         foreach (explode(",", $default_exclude) as $e) {
-            $_exclude[] = gettext(trim($e));
+            $exclude[] = gettext($e);
         }
-        return implode(", ", $_exclude);
+        return implode(",", $exclude);
     }
 };
 
 
-// $Log$
+// $Log: RandomPage.php,v $
+// Revision 1.13  2005/01/25 08:09:26  rurban
+// deprecate pages, replaced by numpages; use complicated transition code; improved pagelist args support
+//
+// Revision 1.12  2004/11/25 08:30:15  rurban
+// dont mess around with spaces
+//
+// Revision 1.11  2004/10/04 23:42:42  rurban
+// fix for pages=1
+//
 // Revision 1.10  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

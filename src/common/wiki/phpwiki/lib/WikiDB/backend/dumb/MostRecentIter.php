@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: MostRecentIter.php,v 1.6 2005/04/09 09:16:54 rurban Exp $');
 
 require_once('lib/WikiDB/backend.php');
 
@@ -44,12 +44,14 @@ extends WikiDB_backend_iterator
             }
             $revs->free();
         }
-        if ($reverse){
+        if ($reverse) {
             usort($this->_revisions, 'WikiDB_backend_dumb_MostRecentIter_sortf_rev');
+        } else {
+            usort($this->_revisions, 'WikiDB_backend_dumb_MostRecentIter_sortf');
         }
-        else usort($this->_revisions, 'WikiDB_backend_dumb_MostRecentIter_sortf');
-        if (!empty($limit) && $limit < count($this->_revisions))
+        if (!empty($limit) && $limit < count($this->_revisions)) {
             array_splice($this->_revisions, $limit);
+        }
     }
     
     function next() {

@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: difflib.php,v 1.12 2005/02/04 13:44:45 rurban Exp $');
 
 // difflib.php
 //
@@ -583,7 +583,7 @@ class Diff
      *
      * @return array The sequence of strings.
      */
-    function final() {
+    function _final() {
         $lines = array();
 
         foreach ($this->edits as $edit) {
@@ -601,13 +601,13 @@ class Diff
     function _check ($from_lines, $to_lines) {
         if (serialize($from_lines) != serialize($this->orig()))
             trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
-        if (serialize($to_lines) != serialize($this->final()))
+        if (serialize($to_lines) != serialize($this->_final()))
             trigger_error("Reconstructed final doesn't match", E_USER_ERROR);
 
         $rev = $this->reverse();
         if (serialize($to_lines) != serialize($rev->orig()))
             trigger_error("Reversed original doesn't match", E_USER_ERROR);
-        if (serialize($from_lines) != serialize($rev->final()))
+        if (serialize($from_lines) != serialize($rev->_final()))
             trigger_error("Reversed final doesn't match", E_USER_ERROR);
 
 
@@ -909,7 +909,13 @@ class BlockDiffFormatter extends DiffFormatter
 }
 
 /**
- $Log$
+ $Log: difflib.php,v $
+ Revision 1.12  2005/02/04 13:44:45  rurban
+ prevent from php5 nameclash
+
+ Revision 1.11  2004/11/21 11:59:19  rurban
+ remove final \n to be ob_cache independent
+
  Revision 1.10  2004/04/08 01:22:53  rurban
  fixed PageChange Notification
 

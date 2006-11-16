@@ -1,6 +1,7 @@
 <?php 
-rcs_id('$Id$');
-/* Copyright (C) 2002, Geoffrey T. Dairiki <dairiki@dairiki.org>
+rcs_id('$Id: CachedMarkup.php,v 1.35 2005/04/23 11:18:58 rurban Exp $');
+/* Copyright (C) 2002 Geoffrey T. Dairiki <dairiki@dairiki.org>
+ * Copyright (C) 2004, 2005 $ThePhpWikiProgrammingTeam
  *
  * This file is part of PhpWiki.
  * 
@@ -44,19 +45,33 @@ class CacheableMarkup extends XmlContent {
         if (!$packed)
             return false;
 
-        if (function_exists('gzcompress')) {
-            // ZLIB format has a five bit checksum in it's header.
-            // Lets check for sanity.
-            if ((ord($packed[0]) * 256 + ord($packed[1])) % 31 == 0) {
+        // ZLIB format has a five bit checksum in it's header.
+        // Lets check for sanity.
+        if (((ord($packed[0]) * 256 + ord($packed[1])) % 31 == 0)
+             and (substr($packed,0,2) == "\037\213") 
+                  or (substr($packed,0,2) == "x\332"))   // 120, 218
+        {
+            if (function_exists('gzuncompress')) {
                 // Looks like ZLIB.
-                return unserialize(gzuncompress($packed));
+                $data = gzuncompress($packed);
+                return unserialize($data);
+            } else {
+                // user our php lib. TESTME
+                include_once("ziplib.php");
+                $zip = new ZipReader($packed);
+                list(,$data,$§attrib) = $zip->readFile();
+                return unserialize($data);
             }
         }
         if (substr($packed,0,2) == "O:") {
             // Looks like a serialized object
             return unserialize($packed);
         }
-        trigger_error("Can't unpack bad cached markup. Probably php_zlib extension not loaded.", E_USER_WARNING);
+        if (preg_match("/^\w+$/", $packed))
+            return $packed;
+        // happened with _BackendInfo problem also.
+        trigger_error("Can't unpack bad cached markup. Probably php_zlib extension not loaded.", 
+                      E_USER_WARNING);
         return false;
     }
     
@@ -108,7 +123,7 @@ class CacheableMarkup extends XmlContent {
 		$this->_append($subitem);
 	}
 	elseif (!is_object($item)) {
-	    $this->_buf .= util_make_links($this->_quote((string) $item), $GLOBALS['group_id']);
+	    $this->_buf .= $this->_quote((string) $item);
 	}
 	elseif (isa($item, 'Cached_DynamicContent')) {
 	    if ($this->_buf) {
@@ -137,10 +152,10 @@ class CacheableMarkup extends XmlContent {
 	    foreach ($item->getContent() as $item)
 		$this->_append($item);
 	}
-	elseif (method_exists($item, 'asxml')) {
+	elseif (method_exists($item, 'asXML')) {
 	    $this->_buf .= $item->asXML();
 	}
-	elseif (method_exists($item, 'asstring')) {
+	elseif (method_exists($item, 'asString')) {
 	    $this->_buf .= $this->_quote($item->asString());
 	}
 	else {
@@ -187,8 +202,12 @@ class CacheableMarkup extends XmlContent {
             if (is_string($item)) {
                 $xml .= $item;
             }
-            elseif (is_subclass_of($item, 'cached_dynamiccontent')) {
-                $val = $item->expand($basepage, &$this);
+            elseif (is_subclass_of($item, 
+                                   check_php_version(5) 
+                                     ? 'Cached_DynamicContent' 
+                                     : 'cached_dynamiccontent'))
+            {
+                $val = $item->expand($basepage, $this);
                 $xml .= $val->asXML();
             }
             else {
@@ -206,10 +225,13 @@ class CacheableMarkup extends XmlContent {
             if (is_string($item)) {
                 print $item;
             }
-            elseif (is_subclass_of($item, 'cached_dynamiccontent')) {
-            	// give the content the chance to know about itself or even 
-            	// to change itself itself
-                $val = $item->expand($basepage, &$this);
+            elseif (is_subclass_of($item, 
+                                   check_php_version(5) 
+                                     ? 'Cached_DynamicContent' 
+                                     : 'cached_dynamiccontent')) 
+            {  	// give the content the chance to know about itself or even 
+            	// to change itself
+                $val = $item->expand($basepage, $this);
                 $val->printXML();
             }
             else {
@@ -231,7 +253,7 @@ class Cached_DynamicContent {
 	$cache[] = $this;
     }
 
-    function expand($basepage, $obj) {
+    function expand($basepage, &$obj) {
         trigger_error("Pure virtual", E_USER_ERROR);
     }
 
@@ -245,6 +267,7 @@ class XmlRpc_LinkInfo {
 	$this->page = $page;
 	$this->type = $type;
 	$this->href = $href;
+	//$this->pageref = str_replace("/RPC2.php", "/index.php", $href);
     }
 }
 
@@ -301,7 +324,8 @@ class Cached_WikiLink extends Cached_Link {
     }
 
     function _getURL($basepage) {
-	return WikiURL($this->getPagename($basepage), false, 'abs_url');
+	return WikiURL($this->getPagename($basepage));
+	//return WikiURL($this->getPagename($basepage), false, 'abs_url');
     }
 
     function expand($basepage, &$markup) {
@@ -386,8 +410,19 @@ class Cached_ExternalLink extends Cached_Link {
     }
 
     function expand($basepage, &$markup) {
+        global $request;
+
 	$label = isset($this->_label) ? $this->_label : false;
-	return LinkURL($this->_url, $label);
+	$link = LinkURL($this->_url, $label);
+
+        if (GOOGLE_LINKS_NOFOLLOW) {
+            // Ignores nofollow when the user who saved the page was authenticated. 
+            $page = $request->getPage($basepage);
+            $current = $page->getCurrentRevision();
+            if (!$current->get('author_id'))
+                $link->setAttr('rel', 'nofollow');
+        }
+        return $link;
     }
 
     function asString() {
@@ -411,13 +446,12 @@ class Cached_InterwikiLink extends Cached_ExternalLink {
     }
     
     function _getURL($basepage) {
-	$link = $this->expand($basepage, &$this);
+	$link = $this->expand($basepage, $this);
 	return $link->getAttr('href');
     }
 
     function expand($basepage, &$markup) {
-        //include_once('lib/interwiki.php');
-	$intermap = getInterwikiMap($GLOBALS['request']);
+	$intermap = getInterwikiMap();
 	$label = isset($this->_label) ? $this->_label : false;
 	return $intermap->link($this->_link, $label);
     }
@@ -446,6 +480,7 @@ class Cached_UserLink extends Cached_WikiLink {
 }
 
 class Cached_PluginInvocation extends Cached_DynamicContent {
+
     function Cached_PluginInvocation ($pi) {
 	$this->_pi = $pi;
     }
@@ -461,18 +496,26 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
     }
 
     function expand($basepage, &$markup) {
-        $loader = &$this->_getLoader();
+        $loader = $this->_getLoader();
 
-        $xml = $loader->expandPI($this->_pi, $GLOBALS['request'], &$markup, $basepage);
+        $xml = $loader->expandPI($this->_pi, $GLOBALS['request'], $markup, $basepage);
         $div = HTML::div(array('class' => 'plugin'));
+        if (is_array($plugin_cmdline = $loader->parsePI($this->_pi)) and $plugin_cmdline[1])
+            $id = GenerateId($plugin_cmdline[1]->getName() . 'Plugin');
         
 	if (isset($this->_tightenable)) {
-	    if ($this->_tightenable == 3)
-	        return HTML::span(array('class' => 'plugin'), $xml);
+	    if ($this->_tightenable == 3) {
+                $span = HTML::span(array('class' => 'plugin'), $xml);
+                if (!empty($id))
+                    $span->setAttr('id', $id);
+	        return $span;
+            }
 	    $div->setInClass('tightenable');
 	    $div->setInClass('top', ($this->_tightenable & 1) != 0);
 	    $div->setInClass('bottom', ($this->_tightenable & 2) != 0);
 	}
+        if (!empty($id))
+            $div->setAttr('id', $id);
 	$div->pushContent($xml);
 	return $div;
     }
@@ -483,12 +526,12 @@ class Cached_PluginInvocation extends Cached_DynamicContent {
 
 
     function getWikiPageLinks($basepage) {
-        $loader = &$this->_getLoader();
+        $loader = $this->_getLoader();
 
         return $loader->getWikiPageLinks($this->_pi, $basepage);
     }
 
-    function _getLoader() {
+    function & _getLoader() {
         static $loader = false;
 
 	if (!$loader) {

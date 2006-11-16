@@ -1,0 +1,19 @@
+Date: Sat, 5 Jun 2004 16:49:55 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PageAccueil,v 1.2 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageAccueil;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+* Qu'est-ce qu'un WikiWikiWeb ? Description courte de cette application.
+* Apprenez CommentUtiliserUnWiki et comment AjouterDesPages.
+* Le [BacÀSable] est là pour jouer et expérimenter.
+* Signez la page des DerniersVisiteurs.
+* Visitez DernièresModifs pour voir les additions et les modifications les plus récentes.
+* Découvrez quelles pages sont LesPlusVisitées.
+* Lisez les NotesDeVersion.
+* Ce Wiki est géré par l'intermédiaire de la page d'AdministrationDePhpWiki.

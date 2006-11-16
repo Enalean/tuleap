@@ -1940,7 +1940,7 @@
 			$retarr = array();
 			while (!$rs->EOF) { //print_r($rs->fields);
 				$fld =& new ADOFieldObject();
-				$fld->name = $rs->fields[0];
+				$fld->name = $upper ? strtoupper($rs->fields[0]) : $rs->fields[0];
 				$fld->type = $rs->fields[1];
 				if (isset($rs->fields[3]) && $rs->fields[3]) {
 					if ($rs->fields[3]>0) $fld->max_length = $rs->fields[3];
@@ -1950,7 +1950,7 @@
 					$fld->max_length = $rs->fields[2];
 					
 				if ($ADODB_FETCH_MODE == ADODB_FETCH_NUM) $retarr[] = $fld;	
-				else $retarr[strtoupper($fld->name)] = $fld;
+				else $retarr[$fld->name] = $fld;
 				$rs->MoveNext();
 			}
 			$rs->Close();
@@ -2130,9 +2130,9 @@
 	/**
 	* Quotes a string, without prefixing nor appending quotes. 
 	*/
-	function addq($s,$magicq=false)
+	function addq($s, $magicq=false)
 	{
-		if (!$magic_quotes) {
+		if (!$magicq) {
 		
 			if ($this->replaceQuote[0] == '\\'){
 				// only since php 4.0.5

@@ -801,11 +801,10 @@ class FPDF
                         $i++;
                     $this->Cell($w,$h,substr($s,$j,$i-$j),0,2,'',0,$link);
                 }
-                else
-                    {
-                        $this->Cell($w,$h,substr($s,$j,$sep-$j),0,2,'',0,$link);
-                        $i=$sep+1;
-                    }
+                else {
+                    $this->Cell($w,$h,substr($s,$j,$sep-$j),0,2,'',0,$link);
+                    $i=$sep+1;
+                }
                 $sep=-1;
                 $j=$i;
                 $l=0;

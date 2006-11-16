@@ -1,0 +1,47 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: InterWiki,v 1.6 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=InterWiki;
+  pgsrc_version="2 $Revision: 1.6 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Ce wiki accepte les liens InterWiki dans un style copié sur celui du wiki 
+[UseMod:]. Les liens vers des pages d'autres wikis peuvent être réalisés 
+sans avoir à connaître ou taper les URL complets, par exemple : 
+MeatBall:InterWiki produira un lien vers la page nommée "~InterWiki" sur 
+MeatballWiki.
+
+La carte InterWiki est extraite du bloc <verbatim> dans la CarteInterWiki, 
+mais cette page doit être verrouillée pour que cela fonctionne. 
+Ceci interdit aux hackers potentiels de pouvoir changer abominablement 
+tous les liens ~InterWiki pour qu'ils pointent vers un URL diabolique. 
+Si aucune carte n'est trouvée dans la CarteInterWiki (ou si la page n'est 
+pas verrouillée), PhpWiki utilisera à la place le fichier lib/interwiki.map
+de votre distribution phpwiki. Le fichier de la carte ~Interwiki est 
+utilisée sur PhpWiki : vous pouvez la voir sur [http://phpwiki.sf.net/interwiki.map].
+
+Le fichier de la carte est mis à jour à la main. Il est basé sur et 
+périodiquement synchronisé avec [l'InterMap de UseMod|http://usemod.com/intermap.txt] 
+mais il n'est pas tout à fait identique. Une différence notable par rapport 
+à [UseMod:] est que PhpWiki supporte les '%s' au sein des URL dans la 
+carte -- voir l'entrée RFC pour un exemple de son fonctionnement.
+
+Toutes les entrées de la carte InterWiki ne sont pas forcément des wikis. 
+Par exemple, celles-ci sont juste des sites web 
+normaux : Dictionary:fungible, [JargonFile:Alderson loop], [IMDB:Roman Holiday], 
+RFC:2822, et ISBN:020171499X.
+
+Le mot-clé "Category" est une entrée spéciale qui permet de créer des liens 
+entre une page et une page de catégorie sans créer de référence inverse. 
+Ainsi [Category:Category] crée un lien vers la page CategoryCategory, et 
+pourtant cette page n'apparaîtra pas dans la liste des rétroliens de 
+CategoryCategory.
+
+Le terme "InterWiki" se réfère aussi à un concept plus large. Voir 
+PhpWiki:InterWikiSearch pour plus de liens.
+----
+DocumentationDePhpWiki

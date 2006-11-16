@@ -1,10 +1,10 @@
 <?php  // -*-html-*-
-rcs_id('$Id$');
+rcs_id('$Id: htmldump.tmpl,v 1.6 2005/02/04 13:25:08 rurban Exp $');
 /*
  * This template is used only for html file dumps, and is responsible
  * mainly for the outer level <html> stuff and the and <head>.
  */
-printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
+echo "<","?xml version=\"1.0\" encoding=\"", $charset, "\"?", ">\n";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -23,7 +23,7 @@ printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
 <link rel="copyright" title="<?=COPYRIGHTPAGE_TITLE?>" href="<?=COPYRIGHTPAGE_URL?>" />
 <link rel="author" title="<?=AUTHORPAGE_TITLE?>" href="<?=AUTHORPAGE_URL?>" />
 
-<?= $Theme->getCSS() ?>
+<?= $WikiTheme->getCSS() ?>
 <?php
   // avoid redundant bookmark title for custom home page
   if ($page->getName() == WIKI_NAME && HOME_PAGE == WIKI_NAME)
@@ -36,7 +36,9 @@ printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
 <?= Template('body') ?>
 <?php
 if (defined('DEBUG') and DEBUG) {
-    printf("<!-- phpwiki source: \n%s-->\n", $RCS_IDS); 
+    echo "<!-- phpwiki source: \n";
+    echo $RCS_IDS;
+    echo "-->\n";
 }
 ?>
 </html>

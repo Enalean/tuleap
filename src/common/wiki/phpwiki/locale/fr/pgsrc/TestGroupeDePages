@@ -1,0 +1,35 @@
+Date: Sat, 5 Jun 2004 16:49:58 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: TestGroupeDePages,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=TestGroupeDePages;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+TestGroupeDePages est un test pour le plugin ~PageGroup
+
+Cliquez sur la première page pour lancer la visite de ce plugin
+expérimental.
+
+!Table des matières
+# [TestGroupeDePages/Un]
+# [TestGroupeDePages/Deux]
+# [TestGroupeDePages/Trois]
+# [TestGroupeDePages/Quatre]
+
+!À faire
+
+* Accepter les liens ~[ nom | page ~]
+* Accepter  Précédent, Suivant... et les boutons images.
+
+%%% %%% %%% %%%
+
+----
+
+Pour référence, voici toutes les pages qui sont liées à TestGroupeDePages
+(notez qu'une seule est absente) :
+
+<?plugin BackLinks page=TestGroupeDePages?>

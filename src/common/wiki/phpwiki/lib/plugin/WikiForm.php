@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiForm.php,v 1.16 2004/07/01 13:14:01 rurban Exp $');
 /**
- Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
+ Copyright 1999, 2000, 2001, 2002, 2004 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -22,8 +22,10 @@ rcs_id('$Id$');
 
 /**
  * This is a replacement for MagicPhpWikiURL forms.
+ * Just a few old actions are supported, which where previously 
+ * encoded with the phpwiki: syntax.
  *
- *
+ * See WikiFormMore for the more generic version.
  */
 class WikiPlugin_WikiForm
 extends WikiPlugin
@@ -34,7 +36,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.16 $");
     }
 
     function getDefaultArguments() {
@@ -42,6 +44,7 @@ extends WikiPlugin
                                            // 'dumpserial'
                      'default' => false,
                      'buttontext' => false,
+                     'overwrite' => false,
                      'size' => 50);
     }
 
@@ -62,7 +65,7 @@ extends WikiPlugin
         case 'loadfile':
             $input['name'] = 'source';
             if (!$default)
-                $input['value'] = '/tmp/wikidump';
+                $input['value'] = DEFAULT_DUMP_DIR;
             if (!$buttontext)
                 $buttontext = _("Load File");
             $class = false;
@@ -76,7 +79,7 @@ extends WikiPlugin
         case 'dumpserial':
             $input['name'] = 'directory';
             if (!$default)
-                $input['value'] = '/tmp/wikidump';
+                $input['value'] = DEFAULT_DUMP_DIR;
             if (!$buttontext)
                 $buttontext = _("Dump Pages");
             $class = 'wikiadmin';
@@ -84,7 +87,7 @@ extends WikiPlugin
         case 'dumphtml':
             $input['name'] = 'directory';
             if (!$default)
-                $input['value'] = '/tmp/wikidumphtml';
+                $input['value'] = HTML_DUMP_DIR;
             if (!$buttontext)
                 $buttontext = _("Dump Pages as XHTML");
             $class = 'wikiadmin';
@@ -119,7 +122,26 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: WikiForm.php,v $
+// Revision 1.16  2004/07/01 13:14:01  rurban
+// desc only
+//
+// Revision 1.15  2004/06/22 07:12:49  rurban
+// removed USE_TAGLINES constant
+//
+// Revision 1.14  2004/06/21 17:06:38  rurban
+// renamed constant
+//
+// Revision 1.13  2004/06/21 16:22:32  rurban
+// add DEFAULT_DUMP_DIR and HTML_DUMP_DIR constants, for easier cmdline dumps,
+// fixed dumping buttons locally (images/buttons/),
+// support pages arg for dumphtml,
+// optional directory arg for dumpserial + dumphtml,
+// fix a AllPages warning,
+// show dump warnings/errors on DEBUG,
+// don't warn just ignore on wikilens pagelist columns, if not loaded.
+// RateIt pagelist column is called "rating", not "ratingwidget" (Dan?)
+//
 // Revision 1.12  2004/04/18 01:11:52  rurban
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.

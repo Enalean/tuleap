@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiAdminRemove.php,v 1.30 2004/11/23 15:17:19 rurban Exp $');
 /*
  Copyright 2002,2004 $ThePhpWikiProgrammingTeam
 
@@ -31,9 +31,10 @@ rcs_id('$Id$');
  */
 // maybe display more attributes with this class...
 require_once('lib/PageList.php');
+require_once('lib/plugin/WikiAdminSelect.php');
 
 class WikiPlugin_WikiAdminRemove
-extends WikiPlugin
+extends WikiPlugin_WikiAdminSelect
 {
     function getName() {
         return _("WikiAdminRemove");
@@ -45,11 +46,15 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.30 $");
     }
 
     function getDefaultArguments() {
-        return array(
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array(
+                   's' 	=> false,
                      /*
                       * Show only pages which have been 'deleted' this
                       * long (in days).  (negative or non-numeric
@@ -66,17 +71,9 @@ extends WikiPlugin
                       * FIXME: could use a better name.
                       */
                      'max_age' => 31,
-
-                     /* Pages or regex to exclude */
-                     'exclude'  => '',
-
                      /* Columns to include in listing */
                      'info'     => 'most',
-
-                     /* How to sort */
-                     'sortby'   => 'pagename',
-                     'limit'    => 0
-                     );
+                   ));
     }
 
     function collectPages(&$list, &$dbi, $sortby, $limit=0) {
@@ -84,7 +81,7 @@ extends WikiPlugin
 
         $now = time();
         
-        $allPages = $dbi->getAllPages('include_deleted',$sortby,$limit);
+        $allPages = $dbi->getAllPages('include_empty',$sortby,$limit);
         while ($pagehandle = $allPages->next()) {
             $pagename = $pagehandle->getName();
             $current = $pagehandle->getCurrentRevision();
@@ -111,43 +108,48 @@ extends WikiPlugin
 
     function removePages(&$request, $pages) {
         $ul = HTML::ul();
-        $dbi = $request->getDbh();
+        $dbi = $request->getDbh(); $count = 0;
         foreach ($pages as $name) {
             $name = str_replace(array('%5B','%5D'),array('[',']'),$name);
-            $dbi->deletePage($name);
-            $ul->pushContent(HTML::li(fmt("Removed page '%s' successfully.", $name)));
+            if (mayAccessPage('remove',$name)) {
+                $dbi->deletePage($name);
+                $ul->pushContent(HTML::li(fmt("Removed page '%s' successfully.", $name)));
+                $count++;
+            } else {
+            	$ul->pushContent(HTML::li(fmt("Didn't removed page '%s'. Access denied.", $name)));
+            }
         }
-        $dbi->touch();
+        if ($count) $dbi->touch();
         return HTML($ul,
-                    HTML::p(_('All selected pages have been permanently removed.')));
+                    HTML::p(fmt("%d pages have been permanently removed.",$count)));
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
         if ($request->getArg('action') != 'browse')
-            return $this->disabled("(action != 'browse')");
+            if ($request->getArg('action') != _("PhpWikiAdministration/Remove"))
+                return $this->disabled("(action != 'browse')");
         
         $args = $this->getArgs($argstr, $request);
         if (!is_numeric($args['min_age']))
             $args['min_age'] = -1;
         $this->_args =& $args;
-        
-        if (!empty($args['exclude']))
+        /*if (!empty($args['exclude']))
             $exclude = explodePageList($args['exclude']);
         else
-            $exclude = false;
-
+        $exclude = false;*/
+        $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
+        if (!$p) $p = $this->_list;
         $post_args = $request->getArg('admin_remove');
 
         $next_action = 'select';
         $pages = array();
-        
         if ($p && $request->isPost() &&
             !empty($post_args['remove']) && empty($post_args['cancel'])) {
 
-            // FIXME: check individual PagePermissions
-            if (!$request->_user->isAdmin()) {
+            // check individual PagePermissions
+            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -163,7 +165,7 @@ extends WikiPlugin
                     $pages[$name] = $c;
                 }
             }
-        } elseif (is_array($p) && !$request->isPost()) { // from WikiAdminSelect
+        } elseif ($p && is_array($p) && !$request->isPost()) { // from WikiAdminSelect
             $next_action = 'verify';
             foreach ($p as $name => $c) {
                 $name = str_replace(array('%5B','%5D'),array('[',']'),$name);
@@ -173,9 +175,9 @@ extends WikiPlugin
         }
         if ($next_action == 'select') {
             // List all pages to select from.
-            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit']);
+            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], $args['exclude']);
         }
-        $pagelist = new PageList_Selectable($args['info'], $exclude, 
+        $pagelist = new PageList_Selectable($args['info'], $args['exclude'], 
                                             array('types' => 
                                                   array('remove'
                                                         => new _PageList_Column_remove('remove', _("Remove")))));
@@ -211,17 +213,14 @@ extends WikiPlugin
         $buttons = HTML::p(Button('submit:admin_remove[remove]', $button_label, 'wikiadmin'),
                            Button('submit:admin_remove[cancel]', _("Cancel"), 'button'));
 
+        // TODO: quick select by regex javascript?
         return HTML::form(array('action' => $request->getPostURL(),
                                 'method' => 'post'),
-
                           $header,
-                          
                           $pagelist->getContent(),
-
                           HiddenInputs($request->getArgs(),
                                         false,
                                         array('admin_remove')),
-
                           HiddenInputs(array('admin_remove[action]' => $next_action,
                                              'require_authority_for_post' => WIKIAUTH_ADMIN)),
                           $buttons);
@@ -236,7 +235,67 @@ class _PageList_Column_remove extends _PageList_Column {
 };
 
 
-// $Log$
+// $Log: WikiAdminRemove.php,v $
+// Revision 1.30  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.29  2004/11/09 17:11:17  rurban
+// * revert to the wikidb ref passing. there's no memory abuse there.
+// * use new wikidb->_cache->_id_cache[] instead of wikidb->_iwpcache, to effectively
+//   store page ids with getPageLinks (GleanDescription) of all existing pages, which
+//   are also needed at the rendering for linkExistingWikiWord().
+//   pass options to pageiterator.
+//   use this cache also for _get_pageid()
+//   This saves about 8 SELECT count per page (num all pagelinks).
+// * fix passing of all page fields to the pageiterator.
+// * fix overlarge session data which got broken with the latest ACCESS_LOG_SQL changes
+//
+// Revision 1.28  2004/11/01 10:43:59  rurban
+// seperate PassUser methods into seperate dir (memory usage)
+// fix WikiUser (old) overlarge data session
+// remove wikidb arg from various page class methods, use global ->_dbi instead
+// ...
+//
+// Revision 1.27  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
+// Revision 1.26  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.25  2004/06/13 15:33:20  rurban
+// new support for arguments owner, author, creator in most relevant
+// PageList plugins. in WikiAdmin* via preSelectS()
+//
+// Revision 1.24  2004/06/08 10:05:11  rurban
+// simplified admin action shortcuts
+//
+// Revision 1.23  2004/06/03 22:24:48  rurban
+// reenable admin check on !ENABLE_PAGEPERM, honor s=Wildcard arg, fix warning after Remove
+//
+// Revision 1.22  2004/05/16 22:07:35  rurban
+// check more config-default and predefined constants
+// various PagePerm fixes:
+//   fix default PagePerms, esp. edit and view for Bogo and Password users
+//   implemented Creator and Owner
+//   BOGOUSERS renamed to BOGOUSER
+// fixed syntax errors in signin.tmpl
+//
 // Revision 1.21  2004/05/04 16:34:22  rurban
 // prvent hidden p overwrite checked p
 //

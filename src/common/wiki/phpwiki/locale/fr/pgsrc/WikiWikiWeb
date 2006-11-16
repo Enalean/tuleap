@@ -1,0 +1,26 @@
+Date: Sat, 5 Jun 2004 16:49:58 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: WikiWikiWeb,v 1.3 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=WikiWikiWeb;
+  pgsrc_version="2 $Revision: 1.3 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Un WikiWikiWeb est un site sur lequel tout le monde peut collaborer au contenu. Le Wiki le plus connu et le plus largement utilisé est le Portland Pattern Repository à http://c2.com/cgi-bin/wiki?WikiWikiWeb.
+
+Vous et moi pourrons trouver là-bas ces déclarations particulièrement pertinentes :
+
+ ''Le tout est de rendre l'édition simple et la recherche ChercherUnePage rapide.''
+
+ ''En plus d'être rapide, ce site aspire aussi aux idéaux du Zen généralement réunis sous le nom de WabiSabi. Le Zen trouve la beauté dans l'imparfait et l'éphémère. Lorsque vous y parvenez, vous n'avez besoin de rien d'autre.''
+
+ ''L'Univers tend vers le chaos. L'Univers tend vers Wiki.''
+
+Vosu pouvez dire bonjour sur DerniersVisiteurs, ou en lire plus sur CommentUtiliserUnWiki et comment AjouterDesPages. Pour le moment ce Wiki n'a pas de thème de discussion, alors allez-y, jouez avec et amusez-vous !!
+
+--SteveWainstead.
+----
+DocumentationDePhpWiki

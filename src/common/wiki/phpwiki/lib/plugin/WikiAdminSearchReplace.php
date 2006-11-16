@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiAdminSearchReplace.php,v 1.19 2004/11/26 18:39:02 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
 
@@ -25,9 +25,7 @@ rcs_id('$Id$');
  * Author:  Reini Urban <rurban@x-ray.at>
  *
  * KNOWN ISSUES:
- * Currently we must be Admin.
- * Future versions will support PagePermissions.
- * requires PHP 4.2 so far.
+ *   Requires PHP 4.2 so far.
  */
 require_once('lib/PageList.php');
 require_once('lib/plugin/WikiAdminSelect.php');
@@ -45,35 +43,38 @@ extends WikiPlugin_WikiAdminSelect
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.19 $");
     }
 
     function getDefaultArguments() {
-        return array(
-                     /* Pages to exclude */
-                     'exclude'  => '.',
-                     /* Columns to include in listing */
-                     'info'     => 'some',
-                     /* How to sort */
-                     'sortby'   => 'pagename',
-                     'limit'    => 0,
-                     );
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array(
+                   's' 	=> false,
+                   /* Columns to include in listing */
+                   'info'     => 'some',
+                   ));
     }
 
-    function replaceHelper(&$dbi, $pagename, $from, $to, $caseexact = true) {
+    function replaceHelper(&$dbi, $pagename, $from, $to, $case_exact=true, $regex=false) {
         $page = $dbi->getPage($pagename);
         if ($page->exists()) {// don't replace default contents
             $current = $page->getCurrentRevision();
             $version = $current->getVersion();
             $text = $current->getPackedContent();
-            if ($caseexact) {
-                $newtext = str_replace($from, $to, $text);
+            if ($regex) {
+                $newtext = preg_replace("/".$from."/".($case_exact?'':'i'), $to, $text);
             } else {
-                //not all PHP have this enabled. use a workaround
-                if (function_exists('str_ireplace'))
-                    $newtext = str_ireplace($from, $to, $text);
-                else { // see eof
-                    $newtext = stri_replace($from, $to, $text);
+                if ($case_exact) {
+                    $newtext = str_replace($from, $to, $text);
+                } else {
+                    //not all PHP have this enabled. use a workaround
+                    if (function_exists('str_ireplace'))
+                        $newtext = str_ireplace($from, $to, $text);
+                    else { // see eof
+                        $newtext = stri_replace($from, $to, $text);
+                    }
                 }
             }
             if ($text != $newtext) {
@@ -90,13 +91,17 @@ extends WikiPlugin_WikiAdminSelect
         $ul = HTML::ul();
         $count = 0;
         $post_args = $request->getArg('admin_replace');
-        $caseexact = !empty($post_args['caseexact']);
+        $case_exact = !empty($post_args['case_exact']);
+        $regex = !empty($post_args['regex']);
         foreach ($pages as $pagename) {
-            if (($result = $this->replaceHelper(&$dbi,$pagename,$from,$to,$caseexact))) {
+            if (!mayAccessPage('edit',$pagename)) {
+		$ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.",$pagename)));
+            } elseif (($result = $this->replaceHelper($dbi, $pagename, $from, $to, $case_exact, $regex))) {
                 $ul->pushContent(HTML::li(fmt("Replaced '%s' with '%s' in page '%s'.", $from, $to, WikiLink($pagename))));
                 $count++;
             } else {
-                $ul->pushContent(HTML::li(fmt("Search string '%s' not found in page '%s'.", $from, $to, WikiLink($pagename))));
+                $ul->pushContent(HTML::li(fmt("Search string '%s' not found in content of page '%s'.", 
+                                              $from, WikiLink($pagename))));
             }
         }
         if ($count) {
@@ -110,18 +115,18 @@ extends WikiPlugin_WikiAdminSelect
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
+    	// no action=replace support yet
         if ($request->getArg('action') != 'browse')
             return $this->disabled("(action != 'browse')");
         
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
-        if (!empty($args['exclude']))
-            $exclude = explodePageList($args['exclude']);
-        else
-            $exclude = false;
-
+            
+        //TODO: support p from <!plugin-list !>
+        $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
+        if (!$p) $p = $this->_list;
         $post_args = $request->getArg('admin_replace');
         $next_action = 'select';
         $pages = array();
@@ -129,9 +134,8 @@ extends WikiPlugin_WikiAdminSelect
             $pages = $p;
         if ($p && $request->isPost() &&
             empty($post_args['cancel'])) {
-
-            // FIXME: check individual PagePermissions
-            if (!$request->_user->isAdmin()) {
+            // without individual PagePermissions:
+            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -150,16 +154,21 @@ extends WikiPlugin_WikiAdminSelect
         }
         if ($next_action == 'select' and empty($pages)) {
             // List all pages to select from.
-            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit']);
+            //TODO: check for permissions and list only the allowed
+            $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], $args['exclude']);
         }
 
         if ($next_action == 'verify') {
             $args['info'] = "checkbox,pagename,hi_content";
         }
-        $pagelist = new PageList_Selectable($args['info'], $exclude,
-                                            array('types' => array(
-                                                  'hi_content' // with highlighted search for SearchReplace
-                                                   => new _PageList_Column_content('rev:hi_content', _("Content")))));
+        $pagelist = new PageList_Selectable($args['info'], $args['exclude'],
+                                            array_merge
+                                            (
+                                             $args,
+                                             array('types' => array
+                                                   (
+                                                    'hi_content' // with highlighted search for SearchReplace
+                                                    => new _PageList_Column_content('rev:hi_content', _("Content"))))));
 
         $pagelist->addPageList($pages);
 
@@ -172,11 +181,11 @@ extends WikiPlugin_WikiAdminSelect
             $header->pushContent(
               HTML::p(HTML::strong(
                                    _("Are you sure you want to permanently search & replace text in the selected files?"))));
-            $this->replaceForm(&$header, $post_args);
+            $this->replaceForm($header, $post_args);
         }
         else {
             $button_label = _("Search & Replace");
-            $this->replaceForm(&$header, $post_args);
+            $this->replaceForm($header, $post_args);
             $header->pushContent(HTML::p(_("Select the pages to search:")));
         }
 
@@ -191,25 +200,37 @@ extends WikiPlugin_WikiAdminSelect
                           HiddenInputs($request->getArgs(),
                                         false,
                                         array('admin_replace')),
-                          HiddenInputs(array('admin_replace[action]' => $next_action,
-                                             'require_authority_for_post' => WIKIAUTH_ADMIN)),
+                          HiddenInputs(array('admin_replace[action]' => $next_action)),
+                          ENABLE_PAGEPERM
+                          ? ''
+                          : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
                           $buttons);
     }
 
     function replaceForm(&$header, $post_args) {
+        $header->pushContent(HTML::div(array('class'=>'hint'),
+                                       _("Replace all occurences of the given string in the content of all pages.")),
+                             HTML::br());
         $header->pushContent(_("Replace: "));
         $header->pushContent(HTML::input(array('name' => 'admin_replace[from]',
                                                'value' => $post_args['from'])));
         $header->pushContent(' '._("by").': ');
         $header->pushContent(HTML::input(array('name' => 'admin_replace[to]',
                                                'value' => $post_args['to'])));
-        $header->pushContent(' '._("(no regex) Case-exact: "));
         $checkbox = HTML::input(array('type' => 'checkbox',
-                                      'name' => 'admin_replace[caseexact]',
+                                      'name' => 'admin_replace[case_exact]',
                                       'value' => 1));
-        if (!empty($post_args['caseexact']))
+        if (!empty($post_args['case_exact']))
             $checkbox->setAttr('checked','checked');
-        $header->pushContent($checkbox);
+        $header->pushContent(HTML::br(),$checkbox," ",_("case-exact"));
+        $checkbox_re = HTML::input(array('type' => 'checkbox',
+                                         'name' => 'admin_replace[regex]',
+                                         //'disabled' => 'disabled',
+                                         'value' => 1));
+        if (!empty($post_args['regex']))
+            $checkbox_re->setAttr('checked','checked');
+        $header->pushContent(HTML::br(),HTML::span(//array('style'=>'color: #aaa'),
+                                                   $checkbox_re," ",_("regex")));
         $header->pushContent(HTML::br());
         return $header;
     }
@@ -242,7 +263,56 @@ function stri_replace($find,$replace,$string) {
     return $string;
 }
 
-// $Log$
+// $Log: WikiAdminSearchReplace.php,v $
+// Revision 1.19  2004/11/26 18:39:02  rurban
+// new regex search parser and SQL backends (90% complete, glob and pcre backends missing)
+//
+// Revision 1.18  2004/11/23 15:17:20  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.17  2004/09/17 14:24:06  rurban
+// support exclude=<!plugin-list !>, p not yet
+//
+// Revision 1.16  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
+// Revision 1.15  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.14  2004/06/13 15:33:20  rurban
+// new support for arguments owner, author, creator in most relevant
+// PageList plugins. in WikiAdmin* via preSelectS()
+//
+// Revision 1.13  2004/06/13 14:30:26  rurban
+// security fix: check permissions in SearchReplace
+//
+// Revision 1.12  2004/06/08 10:05:12  rurban
+// simplified admin action shortcuts
+//
+// Revision 1.11  2004/06/04 20:32:54  rurban
+// Several locale related improvements suggested by Pierrick Meignen
+// LDAP fix by John Cole
+// reanable admin check without ENABLE_PAGEPERM in the admin plugins
+//
+// Revision 1.10  2004/06/03 22:24:48  rurban
+// reenable admin check on !ENABLE_PAGEPERM, honor s=Wildcard arg, fix warning after Remove
+//
 // Revision 1.9  2004/04/07 23:13:19  rurban
 // fixed pear/File_Passwd for Windows
 // fixed FilePassUser sessions (filehandle revive) and password update

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: WikiForum.php,v 1.3 2004/06/14 11:31:39 rurban Exp $');
 /*
  Copyright 2004 $ThePhpWikiProgrammingTeam
  
@@ -58,7 +58,7 @@ extends WikiPlugin_WikiBlog
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.3 $");
     }
 
     function getDefaultArguments() {
@@ -112,7 +112,7 @@ extends WikiPlugin_WikiBlog
     // Table of titles(subpages) without content
     // TODO: use $args['info']
     function showTopics($request, $args) {
-        global $Theme;
+        global $WikiTheme;
 
         $dbi = $request->getDbh();
         $topics = $this->findBlogs($dbi, $args['pagename'], 'wikiforum');
@@ -127,7 +127,7 @@ extends WikiPlugin_WikiBlog
             // format as list, not as wikiforum content
             $page = new WikiPageName($rev,$args['pagename']);
             $row = HTML::tr(HTML::td(WikiLink($page,'if_known',$rev->get('summary'))),
-                            HTML::td($Theme->formatDateTime($meta['ctime'])),
+                            HTML::td($WikiTheme->formatDateTime($meta['ctime'])),
                             HTML::td(WikiLink($meta['creator'],'if_known')));
             $html->pushContent($row);
         }
@@ -135,7 +135,15 @@ extends WikiPlugin_WikiBlog
     }
 };
 
-// $Log$
+// $Log: WikiForum.php,v $
+// Revision 1.3  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.2  2004/04/19 18:27:46  rurban
 // Prevent from some PHP5 warnings (ref args, no :: object init)
 //   php5 runs now through, just one wrong XmlElement object init missing

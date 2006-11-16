@@ -1,56 +1,25 @@
-
 InstallWikiPluginCached       
-
 
 !!!Requirements
 
 I don't know, tested it with the followings: 
 * WikiPluginCached needs
-** PhpWiki 1.3.3
-** Pear Cache 1.0
+** PhpWiki >= 1.3.3
+** Pear Cache >= 1.0
 ** GD >= 1.6
 * TexToPng needs
 ** TeX 3.14159
 ** GNU Ghostscript 6.51 
 ** LaTex2HTML Version 99.2beta8 (1.43)
-** Perl 5.6.1 built for i586-linux
+** Perl >= 5.6.1 built for i586-linux
 * VisualWiki needs
 ** graphviz 1.8.x (http://www.graphviz.org/)
 
 !!!Installation
-* EITHER copy the ....tar.gz into your phpwiki directory and use
-      tar -xvzf wikiplugincached-0.8.tar.gz
-  OR copy the following files manually:
-**      imagecache.php            into  lib/imagecache.php
-**      WikiPluginCached.php      into  lib/WikiPluginImageCache.php
-**      plugincache-config.php    into  lib/plugincache-config.php
-**      TexToPng.php              into  lib/plugin/TexToPng.php
-**      CacheTest.php             into  lib/plugin/CacheText.php
-**      VisualWiki.php            into  lib/plugin/VisualWiki.php
-**      RecentChangesCached.php   into  lib/plugin/RecentChangesCached.php
-**      Cache.php                 into  lib/pear/Cache.php
-**      Error.php                 into  lib/pear/Cache/Error.php
-**      Container.php             into  lib/pear/Cache/Container.php
-**      file.php                  into  lib/pear/Cache/Container/file.php
-**      imgfile.php               into  lib/pear/Cache/Container/imgfile.php
-      
- 
-* copy your own index.php config file into getimg.php
-  and substitute the wiki start up (to be found at the end of the file)
-    include "lib/main.php";
-  by
-      include "lib/imagecache.php";
- 
-* modify configuration file plugincache-config.php according to your wishes, %%%especially:
-**  set 'cache_dir' to a directory accessible by your apache user.
-**  set database to 'file' 
-;:There is a hack which allows to let apache determine whether the image needs to be recreated. You have to include
-a symbolic link from your wiki dir to your cache dir and make the getimg.php file the 404 ErrorDocument. So whenever Apache
-tries to load an image not present in this dir, Apache will call the 404 (=file not found) ErrorDocument which creates the image
-on the fly. You have to use 'imgfile' as database entry in plugincache-config.php, though. Furthermore you have to 
-replace the old value of 'cache_url' which should be '../getimg.php?' by '../path/to/cache'. Remember: This really is a hack because it needs my modified cache-filesystem-interface which is not part of the official pear distribution. 
- 
+phpwiki comes with its own copy of PEAR::Cache. 
+You have to configure the PLUGINCACHED Pear/Cache Settings in config/config.ini
 
+*  set PLUGIN_CACHED_CACHE_DIR to a directory accessible by your apache user.
  
 !!!Example Calls from Wiki
 !! TexToPng
@@ -79,16 +48,14 @@ Standard call:
 Help:
  < ?plugin VisualWiki help="1" ?>
 
-
-
-!!!Bugs
+!!!Known Bugs
 
 WikiPluginCached 0.8
 * VisualWiki and TexToPng use png image type for communication with
   the image creating scripts (dot and pstoimg), so they rely on
   CreateImageFronPNG(...)
 * RecentChangesCached produces a strange RSS-link for the RSS-image
-  when it has to store a new html sniplet in the cache immediately 
+  when it has to store a new html snippet in the cache immediately 
   after an edit/save cycle.
 
 

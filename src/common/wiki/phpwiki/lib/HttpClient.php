@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: HttpClient.php,v 1.6 2004/11/01 10:43:55 rurban Exp $');
 
 /** 
    Version 0.9, 6th April 2003 - Simon Willison ( http://simon.incutio.com/ )
@@ -23,7 +23,7 @@ class HttpClient {
     var $accept_language = 'en-us';
     var $user_agent = 'Incutio HttpClient v0.9';
     // Options
-    var $timeout = 20;
+    var $timeout = 10;
     var $use_gzip = true;
     var $persist_cookies = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
                                   // Note: This currently ignores the cookie path (and time) completely. Time is not important, 
@@ -67,16 +67,16 @@ class HttpClient {
         $querystring = '';
         if (is_array($data)) {
             // Change data in to postable data
-    		foreach ($data as $key => $val) {
-    			if (is_array($val)) {
-    				foreach ($val as $val2) {
-    					$querystring .= urlencode($key).'='.urlencode($val2).'&';
-    				}
-    			} else {
-    				$querystring .= urlencode($key).'='.urlencode($val).'&';
-    			}
-    		}
-    		$querystring = substr($querystring, 0, -1); // Eliminate unnecessary &
+            foreach ($data as $key => $val) {
+                if (is_array($val)) {
+                    foreach ($val as $val2) {
+                        $querystring .= urlencode($key).'='.urlencode($val2).'&';
+                    }
+                } else {
+                    $querystring .= urlencode($key).'='.urlencode($val).'&';
+                }
+            }
+            $querystring = substr($querystring, 0, -1); // Eliminate unnecessary &
     	} else {
     	    $querystring = $data;
     	}
@@ -84,6 +84,8 @@ class HttpClient {
     }
     function doRequest() {
         // Performs the actual HTTP request, returning true or false depending on outcome
+        // Ensure that the PHP timeout is longer than the socket timeout
+        longer_timeout($this->timeout);
         if (!$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout)) {
             // Set error message
             switch($errno) {
@@ -333,17 +335,23 @@ class HttpClient {
             print '<div style="border: 1px solid red; padding: 0.5em; margin: 0.5em;"><strong>HttpClient Debug:</strong> '.$msg;
             if ($object) {
                 ob_start();
-        	    print_r($object);
-        	    $content = htmlentities(ob_get_contents());
-        	    ob_end_clean();
-        	    print '<pre>'.$content.'</pre>';
-        	}
-        	print '</div>';
+                print_r($object);
+                $content = htmlentities(ob_get_contents());
+                ob_end_clean();
+                print '<pre>'.$content.'</pre>';
+            }
+            print '</div>';
         }
     }   
 }
 
-// $Log$
+// $Log: HttpClient.php,v $
+// Revision 1.6  2004/11/01 10:43:55  rurban
+// seperate PassUser methods into seperate dir (memory usage)
+// fix WikiUser (old) overlarge data session
+// remove wikidb arg from various page class methods, use global ->_dbi instead
+// ...
+//
 // Revision 1.5  2004/04/29 19:34:24  rurban
 // omit "socket_set_timeout() is not supported in this PHP build" warning
 //

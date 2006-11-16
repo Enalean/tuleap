@@ -1,10 +1,9 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: removepage.php,v 1.26 2004/12/20 12:12:31 rurban Exp $');
 require_once('lib/Template.php');
-require_once(PHPWIKI_DIR.'/../lib/WikiPage.class'); // CodeX specific
 
 function RemovePage (&$request) {
-    global $Theme;
+    global $WikiTheme;
 
     $page = $request->getPage();
     $pagelink = WikiLink($page);
@@ -14,16 +13,17 @@ function RemovePage (&$request) {
     }
 
     $current = $page->getCurrentRevision();
-    $version = $current->getVersion();
 
-    if (!$request->isPost() || !$request->getArg('verify')) {
+    if (!$current or !($version = $current->getVersion())) {
+        $html = HTML(HTML::h2(_("Already deleted")),
+                     HTML::p(_("Sorry, this page is not in the database.")));
+    }
+    elseif (!$request->isPost() || !$request->getArg('verify')) {
 
-        // FIXME: button should be class wikiadmin
-        // Use the macosx button
         $removeB = Button('submit:verify', _("Remove Page"), 'wikiadmin');
         $cancelB = Button('submit:cancel', _("Cancel"), 'button'); // use generic wiki button look
 
-        $html = HTML(HTML::h2(fmt("You are about to remove '%s' permanently!", $pagelink)),
+        $html = HTML(HTML::h2(fmt("You are about to remove '%s'!", $pagelink)),
                      HTML::form(array('method' => 'post',
                                       'action' => $request->getPostURL()),
                                 HiddenInputs(array('currentversion' => $version,
@@ -32,26 +32,35 @@ function RemovePage (&$request) {
                                 
                                 HTML::div(array('class' => 'toolbar'),
                                           $removeB,
-                                          $Theme->getButtonSeparator(),
-                                          $cancelB)));
+                                          $WikiTheme->getButtonSeparator(),
+                                          $cancelB)),
+                     HTML::hr()
+                     );
+        $sample = HTML::div(array('class' => 'transclusion'));
+        // simple and fast preview expanding only newlines
+        foreach (explode("\n", firstNWordsOfContent(100, $current->getPackedContent())) as $s) {
+            $sample->pushContent($s, HTML::br());
+        }
+        $html->pushContent(HTML::div(array('class' => 'wikitext'), 
+                                     $sample));
     }
     elseif ($request->getArg('currentversion') != $version) {
         $html = HTML(HTML::h2(_("Someone has edited the page!")),
                      HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink)));
     }
     else {
-        // CodeX specific: remove permissions for this page
-        $wiki_page = new WikiPage($_REQUEST['group_id'],$_REQUEST['pagename']);
-        $wiki_page->resetPermissions() ;
         // Real delete.
         $pagename = $page->getName();
         $dbi = $request->getDbh();
         $dbi->deletePage($pagename);
         $dbi->touch();
-        $html = HTML(HTML::h2(fmt("Removed page '%s' successfully.", $pagename)));
+        $link = HTML::a(array('href' => 'javascript:history.go(-2)'), 
+                        _("Back to the previous page."));
+        $html = HTML(HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),
+        	     HTML::div($link), HTML::hr());
     }
 
-    GeneratePage($html, _("Remove page"));
+    GeneratePage($html, _("Remove Page"));
 }
 
 

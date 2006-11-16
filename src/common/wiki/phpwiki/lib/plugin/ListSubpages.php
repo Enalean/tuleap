@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: ListSubpages.php,v 1.6 2004/11/23 15:17:19 rurban Exp $');
 /*
  Copyright 2002 $ThePhpWikiProgrammingTeam
 
@@ -40,25 +40,31 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.6 $");
     }
 
     function getDefaultArguments() {
-        return array('noheader' => false, // no header
-                     'pages'    => '',    // maximum number of pages
-                                          //  to include
-                     'exclude'  => '',
-                   /*'relative' => false, */
+        return array_merge
+            (
+             PageList::supportedArgs(),
+               array('noheader' => false, // no header
+                     'basepage' => false, // subpages of which page, default: current
+                     'maxpages' => '',    // maximum number of pages to include, change that to limit
+                     //'exclude'  => '',
+                     /*'relative' => false, */
                      'info'     => ''
-                     );
+                     ));
     }
     // info arg allows multiple columns
-    // info=mtime,hits,summary,version,author,locked,minor
+    // info=mtime,hits,summary,version,author,locked,minor,count
     // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
 
     function run($dbi, $argstr, &$request, $basepage) {
-        $pagename = $request->getArg('pagename');
-
+        $args = $this->getArgs($argstr, $request);
+        if ($args['basepage'])
+            $pagename = $args['basepage'];
+        else
+            $pagename = $request->getArg('pagename');
 
         // FIXME: explodePageList from stdlib doesn't seem to work as
         // expected when there are no subpages. (see also
@@ -67,19 +73,22 @@ extends WikiPlugin
         if (! $subpages) {
             return $this->error(_("The current page has no subpages defined."));
         }
-
-
-        extract($this->getArgs($argstr, $request));
+        extract($args);
 
         $content = HTML();
         $subpages = array_reverse($subpages);
-        if($pages) {
-            $subpages = array_slice ($subpages, 0, $pages);        
+        if ($maxpages) {
+            $subpages = array_slice ($subpages, 0, $maxpages);
         }
 
         $descrip = fmt("SubPages of %s:",
                        WikiLink($pagename, 'auto'));
-        $pagelist = new PageList($info, $exclude);
+        if ($info) {
+            $info = explode(",", $info);
+            if (in_array('count',$info))
+                $args['types']['count'] = new _PageList_Column_ListSubpages_count('count', _("#"), 'center');
+        }
+        $pagelist = new PageList($info, $exclude, $args);
         if (!$noheader)
             $pagelist->setCaption($descrip);
 
@@ -104,7 +113,30 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// how many backlinks for this subpage
+class _PageList_Column_ListSubpages_count extends _PageList_Column {
+    function _getValue($page, &$revision_handle) {
+        $iter = $page->getBackLinks();
+        $count = $iter->count();
+        return $count;
+    }
+}
+
+// $Log: ListSubpages.php,v $
+// Revision 1.6  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.5  2004/09/13 14:59:56  rurban
+// info=count: number of backlinks for this subpage
+//
+// Revision 1.4  2004/08/18 11:15:11  rurban
+// added basepage argument. Default current
+//
 // Revision 1.3  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

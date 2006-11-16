@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: GooglePlugin.php,v 1.5 2004/06/13 14:30:26 rurban Exp $');
 /**
  Copyright 2004 $ThePhpWikiProgrammingTeam
 
@@ -49,7 +49,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.5 $");
     }
 
     function getDefaultArguments() {
@@ -69,9 +69,11 @@ extends WikiPlugin
         //    return '';
         $html = HTML();
         extract($args);
-        if ($request->isPost()) {
+        // prevent from dump
+        if ($q and $request->isPost()) {
             require_once("lib/Google.php");
             $google = new Google();
+            if (!$google) return '';
             switch ($mode) {
                 case 'search': $result = $google->doGoogleSearch($q); break;
                 case 'cache':  $result = $google->doGetCachedPage($q); break;
@@ -82,11 +84,18 @@ extends WikiPlugin
             if (isa($result,'HTML'))
                 $html->pushContent($result);
             if (isa($result,'GoogleSearchResults')) {
-                //todo: result template
-                foreach ($this->resultElements as $result) {
-                    $html->pushContent(WikiLink($result->URL));
-                    $html->pushContent(HTML::br());
+                //TODO: result template
+                if (!empty($result->resultElements)) {
+                    $list = HTML::ol();
+                    foreach ($result->resultElements as $res) {
+                    	$li = HTML::li(LinkURL($res['URL'],$res['directoryTitle']),HTML::br(),
+                    	               $res['directoryTitle'] ? HTML(HTML::raw('&nbsp;&nbsp;'),HTML::em($res['summary']),' -- ',LinkURL($res['URL'])) : '');
+                        $list->pushContent($li);
+                    }
+                    $html->pushContent($list);
                 }
+                else 
+                    return _("Nothing found");
             }
             if (is_string($result)) {
                 // cache content also?
@@ -107,13 +116,26 @@ extends WikiPlugin
                                              'size'  => $formsize)));
         $form->pushContent(HTML::input(array('type' => 'submit',
                                              'class' => 'button',
-                                             'value' => $mode
+                                             'value' => gettext($mode)
                                              )));
         return HTML($html,$form);
     }
 };
 
-// $Log$
+// $Log: GooglePlugin.php,v $
+// Revision 1.5  2004/06/13 14:30:26  rurban
+// security fix: check permissions in SearchReplace
+//
+// Revision 1.4  2004/06/13 14:15:28  rurban
+// GooglePlugin now actually works (templated result missing)
+//
+// Revision 1.3  2004/06/13 13:54:25  rurban
+// Catch fatals on the four dump calls (as file and zip, as html and mimified)
+// FoafViewer: Check against external requirements, instead of fatal.
+// Change output for xhtmldumps: using file:// urls to the local fs.
+// Catch SOAP fatal by checking for GOOGLE_LICENSE_KEY
+// Import GOOGLE_LICENSE_KEY and FORTUNE_DIR from config.ini.
+//
 // Revision 1.2  2004/04/18 01:11:52  rurban
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.

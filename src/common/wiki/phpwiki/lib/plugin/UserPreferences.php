@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: UserPreferences.php,v 1.35 2004/10/13 14:13:55 rurban Exp $');
 /**
- Copyright (C) 2001, 2002, 2003, 2004 $ThePhpWikiProgrammingTeam
+ Copyright (C) 2001,2002,2003,2004,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -26,8 +26,7 @@ rcs_id('$Id$');
  * Prefs are stored in metadata in the current session, 
  *  within the user's home page or in a database.
  *
- * TODO:
- * Certain themes should be able to extend the predefined list 
+ * Theme extension: Themes are able to extend the predefined list 
  * of preferences.
  */
 class WikiPlugin_UserPreferences
@@ -41,7 +40,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.35 $");
     }
 
     function getDefaultArguments() {
@@ -66,7 +65,14 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage) {
         $args = $this->getArgs($argstr, $request);
         $user =& $request->_user;
-        if (! $request->isActionPage($request->getArg('pagename'))) {
+        if (isa($request,'MockRequest'))
+            return '';
+        if ((!$request->isActionPage($request->getArg('pagename')) 
+             and (!isset($user->_prefs->_method) 
+                  or !in_array($user->_prefs->_method,array('ADODB','SQL'))))
+            or (in_array($request->getArg('action'),array('zip','ziphtml','dumphtml')))
+            or (isa($user,'_ForbiddenUser'))) 
+        {
             $no_args = $this->getDefaultArguments();
 // ?
 //            foreach ($no_args as $key => $value) {
@@ -81,6 +87,7 @@ extends WikiPlugin
              $user->isAuthenticated() and !empty($userid))
         {
             $pref = &$request->_prefs;
+	    $args['isForm'] = true;
             //trigger_error("DEBUG: reading prefs from getPreferences".print_r($pref));
  
             if ($request->isPost()) {
@@ -132,7 +139,7 @@ extends WikiPlugin
                                 if ($passchanged) {
                                     $errmsg = _("Password updated.");
                                 } else {
-                                    $errmsg = _("Password cannot be changed.");
+                                    $errmsg = _("Password was not changed.");
                                 }
                             } else {
                                 $errmsg = _("Password cannot be changed.");
@@ -153,8 +160,7 @@ extends WikiPlugin
             $args['available_languages'] = listAvailableLanguages();
 
             return Template('userprefs', $args);
-        }
-        else {
+        } else {
             // wrong or unauthenticated user
             return $request->_notAuthorized(WIKIAUTH_BOGO);
             //return $user->PrintLoginForm ($request, $args, false, false);
@@ -162,7 +168,30 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: UserPreferences.php,v $
+// Revision 1.35  2004/10/13 14:13:55  rurban
+// fix cannot edit prefs
+//
+// Revision 1.34  2004/10/05 00:10:49  rurban
+// adjust for unittests. They finally pass all tests
+//
+// Revision 1.33  2004/10/04 23:39:34  rurban
+// just aesthetics
+//
+// Revision 1.32  2004/06/28 12:51:41  rurban
+// improved dumphtml and virgin setup
+//
+// Revision 1.31  2004/06/27 10:26:03  rurban
+// oci8 patch by Philippe Vanhaesendonck + some ADODB notes+fixes
+//
+// Revision 1.30  2004/06/15 09:15:52  rurban
+// IMPORTANT: fixed passwd handling for passwords stored in prefs:
+//   fix encrypted usage, actually store and retrieve them from db
+//   fix bogologin with passwd set.
+// fix php crashes with call-time pass-by-reference (references wrongly used
+//   in declaration AND call). This affected mainly Apache2 and IIS.
+//   (Thanks to John Cole to detect this!)
+//
 // Revision 1.29  2004/05/06 13:26:01  rurban
 // omit "Okay", this is default
 //

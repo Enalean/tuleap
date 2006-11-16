@@ -156,16 +156,17 @@ class Google {
     function Google($maxResults=10,$license_key=false,$proxy=false) {
         if ($license_key)
             $this->license_key = $license_key;
-        elseif (!defined('GOOGLE_LICENSE_KEY'))
-            return HTML::div(array('class' => 'errors'),
-                             fmt("You must first obtain a license key at %s to be able to use the Google API.",
-                                 WikiLink("http://www.google.com/apis/")),
-                             fmt("It's free however."));
+        elseif (!defined('GOOGLE_LICENSE_KEY')) {
+            trigger_error("\nYou must first obtain a license key at http://www.google.com/apis/"
+                         ."\nto be able to use the Google API.".
+                          "\nIt's free however.", E_USER_WARNING);
+            return false;
+        }
         else
             $this->license_key = GOOGLE_LICENSE_KEY;
         require_once("lib/nusoap/nusoap.php");
 
-        $this->soapclient = new soapclient(SERVER_URL . DATA_PATH."/"."GoogleSearch.wsdl", "wsdl");
+        $this->soapclient = new soapclient(SERVER_URL . NormalizeWebFileName("GoogleSearch.wsdl"), "wsdl");
         $this->proxy = $this->soapclient->getProxy();
         if ($maxResults > 10) $maxResults = 10;
         if ($maxResults < 1) $maxResults = 1;
@@ -219,8 +220,10 @@ class Google {
     function doGoogleSearch($query, $startIndex=1, $maxResults=10, $filter = "false",
                             $restrict='', $safeSearch='false', $lr='',
                             $inputencoding='UTF-8', $outputencoding='UTF-8') {
+        if (!$this->license_key)
+            return false;
         // doGoogleSearch() gets created automatically!! (some eval'ed code from the soap request)
-        $result = $this->doGoogleSearch(GOOGLE_LICENSE_KEY, // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        $result = $this->proxy->doGoogleSearch($this->license_key, // "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                                         $query,
                                         $startIndex,
                                         $maxResults,
@@ -249,8 +252,10 @@ class Google {
      *  @return string full text of the cached page
      */
     function doGetCachedPage($url) {
+        if (!$this->license_key)
+            return false;
         // This method gets created automatically!! (some eval'ed code from the soap request)
-        $result = $this->proxy->doGetCachedPage(GOOGLE_LICENSE_KEY,
+        $result = $this->proxy->doGetCachedPage($this->license_key,
                                                 $url);
         if (!empty($result)) return base64_decode($result);
     }
@@ -262,8 +267,10 @@ class Google {
      * @return string          text of any suggested replacement, or None
      */
     function doSpellingSuggestion($phrase) {
+        if (!$this->license_key)
+            return false;
         // This method gets created automatically!! (some eval'ed code from the soap request)
-        return $this->proxy->doSpellingSuggestion(GOOGLE_LICENSE_KEY,
+        return $this->proxy->doSpellingSuggestion($this->license_key,
                                                   $phrase);
     }
 }

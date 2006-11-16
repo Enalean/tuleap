@@ -1,9 +1,9 @@
 <?php // -*-html-*- ?>
-<!-- $Id$ -->
+<!-- $Id: savepage.tmpl,v 1.10 2004/12/10 03:05:58 rurban Exp $ -->
 <?php
-    $signatureURL = $Theme->getImageURL('signature');
+    $signatureURL = $WikiTheme->getImageURL('signature');
 ?>
-<p><?=fmt("Thank you for editing %s.", WikiLink($page))?><br />
+<p><?=fmt("Thank you for editing %s.", WikiLink($page))?> 
 <?=_("Your careful attention to detail is much appreciated.")?></p>
 
 <?php if (!empty($WARNINGS)) { ?>

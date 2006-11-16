@@ -1,16 +1,16 @@
-Date: Wed, 26 Nov 2003 18:34:06 +0100
-Mime-Version: 1.0 (Produced by PhpWiki 1.3.7pre)
-X-Rcs-Id: $Id$
+Date: Mon, 17 Jan 2005 08:44:07 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: PhpWikiAdministration,v 1.39 2005/01/25 06:58:23 rurban Exp $
 Content-Type: application/x-phpwiki;
   pagename=PhpWikiAdministration;
-  pgsrc_version="2 $Revision$";
+  pgsrc_version="2 $Revision: 1.39 $";
   flags=PAGE_LOCKED;
   markup=2;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-_*Note:*_ _Most of the actions on this page require administrative
-privileges. They won't work unless you have set an admin username and
+_*Note:*_  _Most of the actions on this page require administrative
+privileges. They will not work unless you have set an admin username and
 password in the PhpWiki config file._
 
 <?plugin CreateToc jshide||=1 with_toclink||=1 ?>
@@ -28,21 +28,26 @@ or call the available ~WikiAdmin actions directly:
   [/Rename] |
     [/Replace] |
       [/SetAcl] |
-        [/Chmod]
+        [/Chmod] |
+          [/Chown]
 
 ----
 !!! User Management
 
-PhpWiki:EmailVerification is currently non-strict, leaving some possible holes, which can be administrated below.
+PhpWiki:EmailVerification is currently non-strict, leaving some possible holes, which can be 
+administrated below.
 
-  This button will show a list of all users with registered emails and buttons to set the verification status manually.
+  This button will show a list of all users with registered emails and buttons to set the 
+  verification status manually.
 
   <?plugin WikiAdminUtils
            action=email-verification
            label="Email Verification"
    ?>
 
-To prevent from robots eating all possible ressources in a short time, blocking from certain IP's or not-well-behaving user agents can be defined below. See PhpWiki:HowToBlockRobots and MeatBall:SurgeProtector. _Note: Not yet enabled._
+To prevent from robots eating all possible ressources in a short time, blocking from certain IPs 
+or not-well-behaving user agents can be defined below. See PhpWiki:HowToBlockRobots and 
+MeatBall:SurgeProtector. _Note: Not yet enabled._
 
   <?plugin WikiAdminUtils
            action=access-restrictions
@@ -67,14 +72,14 @@ These links lead to zip files, generated on the fly, which contain all
 the pages in your Wiki. The zip file will be downloaded to your local
 computer.
 
-  This __[ZIP Snapshot | phpwiki:?action=zip]__ contains only the
-  latest versions of each page, while this __[ZIP Dump |
-  phpwiki:?action=zip&include=all]__ contains all archived versions.
+  This *[ZIP Snapshot | phpwiki:?action=zip]* contains only the
+  latest versions of each page, while this *[ZIP Dump |
+  phpwiki:?action=zip&include=all]* contains all archived versions.
 
   (If the PhpWiki is configured to allow it, anyone can download a zip
   file.)
 
-If your php has ''zlib'' support, the files in the archive will be
+If your php has _zlib_ support, the files in the archive will be
 compressed, otherwise they will just be stored.
 
 !! Dump to directory
@@ -111,6 +116,7 @@ directories. The file or directory must be local to the http
 server. You can also use this form to load from an http: or ftp: URL.
 
   <?plugin WikiForm action=loadfile?>
+  <?plugin WikiForm action=loadfile buttontext="Load & Overwrite" overwrite=1?>
 
 !! Upgrade
 
@@ -126,25 +132,25 @@ new phpwiki engine update:
 !!! Format of the files
 
 Currently the pages are stored, one per file, as MIME (RFC:2045)
-e-mail (RFC:822) messages. The content-type ''application/x-phpwiki''
+e-mail (RFC:822) messages. The content-type _application/x-phpwiki_
 is used, and page meta-data is encoded in the content-type
 parameters. (If the file contains several versions of a page, it will
-have type ''multipart/mixed'', and contain several sub-parts, each
-with type ''application/x-phpwiki''.)  The message body contains the
+have type _multipart/mixed_, and contain several sub-parts, each
+with type _application/x-phpwiki_.)  The message body contains the
 page text.
 
 !! Old Formats
 
-__Serialized Files__
+*Serialized Files*
 
   The dump to directory command used to dump the pages as PHP
-  ''serialized()'' strings. For humans, this made the files very hard
+  _serialized()_ strings. For humans, this made the files very hard
   to read, and nearly impossible to edit.
 
-__Plain Files__
+*Plain Files*
 
   Before that the page text was just dumped to a file--this means that
-  all page meta-data was lost. Note that when loading ''plain files'',
+  all page meta-data was lost. Note that when loading _plain files_,
   the page name is deduced from the file name.
 
 The upload and load functions will automatically recognize each of
@@ -162,17 +168,17 @@ links for page editing functions and navigation are removed from the
 pages.
 
   The XHTML file collection can also be downloaded as an
-  __[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]__.
+  *[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]*.
 
 ----
 
 !!! Phpwiki Internals
 
-These are here mostly for debugging purposes (at least, that's the
+These are here mostly for debugging purposes (at least, that is the
 hope.)
 
-In normal use, you shouldn't need to use these, though, then again,
-they shouldn't really do any harm.
+In normal use, you should not need to use these, though, then again,
+they should not really do any harm.
 
 !! Purge Markup Cache
 
@@ -195,12 +201,33 @@ Page names beginning with the subpage-separator, usually a slash
 (=/=), are not allowed. Sometimes though an errant plugin or something
 might create one....
 
-  This button will delete any pages with illegal page names.
+  This button will delete any pages with illegal page names, without possibility to restore.
 
   <?plugin WikiAdminUtils
            action=purge-bad-pagenames
-           label="Exorcise WikiDB"
+           label="Purge bad pagenames"
+   ?>
+
+!! Clean WikiDB of empty and unreferenced pages
+
+  *Warning!* This button will delete every empty and unreferenced page, without any possibility to restore them again.
+  This will disable the possibility to revert or get back any deleted page.
+
+  <?plugin WikiAdminUtils
+           action=purge-empty-pages
+           label="Purge all empty unreferenced pages"
+   ?>
+
+!! Convert cached_html to new SQL column
+
+  This is only needed on SQL or ADODB if you didn't do action=upgrade, but created the 
+  new page.cached_html field seperately, and now you want to move this data from 
+  page.pagedata over to page.cached_html.
+
+  <?plugin WikiAdminUtils
+           action=convert-cached-html
+           label="Convert cached_html"
    ?>
 
 ----
-Codex:PhpWikiDocumentation
+PhpWikiDocumentation

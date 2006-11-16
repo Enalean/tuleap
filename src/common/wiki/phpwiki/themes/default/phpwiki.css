@@ -1,5 +1,5 @@
 /**
- * $Id$
+ * $Id: phpwiki.css,v 1.49 2005/04/11 19:41:23 rurban Exp $
  *
  * This incarnation of this stylesheet is a complete rewrite from the
  * ground up.
@@ -184,16 +184,19 @@ caption { font-family: Arial, Helvetica, sans-serif; }
 .pagelist tr.evenrow { background: #eee; }
 .pagelist tr.oddrow  { background: white; }
 th.gridbutton {
-  background-color: threedlightshadow;
+  background-color: ThreedLightShadow;
   color: black;
+  font-family: Tahoma, sans-serif, Arial, Helvetica;
+  font-size: small;
   font-weight: normal;
   /*font-style: menu;*/
+  white-space: nowrap;
   margin: 5px 0px;
-  max-height: 18px;
-  padding-top: 5px;
+  max-height: 24px;
+  padding: 5px 0px 5px 0px;
   border-width: 1px;
   border-style: solid;
-  border-color: threedhighlight threeddarkshadow threeddarkshadow threedhighlight;
+  border-color: ThreedHighlight ThreedDarkShadow ThreedDarkShadow ThreedHighlight;
 }
 input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   text-decoration: none;
@@ -201,7 +204,7 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   font-weight: normal;
   /*font-style: menu;*/
   font-family: Tahoma, sans-serif, Arial, Helvetica;
-  background-color: threedlightshadow;
+  background-color: ThreedLightShadow;
   color: black;
 }
 
@@ -215,6 +218,15 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   padding: 0;
   margin:  0;
 }
+.edit-toolbar {
+  padding: 0;
+  margin:  0;
+}
+.edit-toolbar img, .edit-toolbar input {
+  background-color: #fff;
+  border: 1px solid ButtonFace;
+}
+
 #navbuttons {
   padding-right: 4em; /* wrap around logo */
   padding-bottom: 1ex; /* space for h1 */
@@ -225,7 +237,13 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   padding: 0;
   padding-top: 0.25ex;
 }
+/*
+div#logo {
+  float: right;
+}
+*/
 #logo img {
+  float: right;
   /* Netscape 4 requires this 1px border.
      Without it, the paper borders below cause
      the white background to disappear. */
@@ -259,6 +277,8 @@ textarea.wikiedit {
   text-align: left;
   font-size: smaller;
 }
+#toolbar { padding:0px; }
+
 /**
  * Search Results
  */
@@ -266,6 +286,41 @@ textarea.wikiedit {
 .search-term {
   background: yellow;
   font-weight: normal;
+}
+#LSResult {
+  position: absolute;
+  text-align: left;
+  display: none;
+  z-index: 100;
+  background-color: white;
+  border: 1px solid #d0d0d0; 
+  font-size: 9px;
+  overflow: hidden;
+}
+#LSHighlight {
+  background-color: #f08000;
+}
+#LSResult .evenrow {
+  background-color: #f0f0f0;
+} 
+#LSREsult .oddrow {
+} 
+.LSEnd {
+  text-align: right;
+}
+.LSRow:hover {
+  background-color: white;
+}
+.LSRow {
+  padding: 1px;
+} 
+ul.LSRes {
+  margin: 0px;
+  padding: 0px;
+}
+li.LSRow {
+  margin: 0px;
+  list-style-image: none;
 }
 
 /* IncludePage plugin */
@@ -503,11 +558,23 @@ div.errors {
   border: medium solid red;
   clear: both;
 }
-.errors h4 {
+h4.errors {
   color: red;
   margin:  0;
   padding: 0;
   text-decoration: underline;
+}
+div.warning {
+  color: black;
+  background: #eee;
+  margin-top:    1em;
+  margin-bottom: 1em;
+  padding-left:  0.8em; 
+  padding-right: 0.8em; 
+  padding-top:    0.8ex;
+  padding-bottom: 0;
+  border: thin solid blue;
+  clear: both;
 }
 .error { font-family: monospace; font-size: 120%; }
 .error ul { font-family: monospace; }
@@ -663,7 +730,7 @@ blockquote.mail-style-quote {
 .floatright { float: right; }
 
 div.wikiblog {
-  border: thin black solid;
+  /* border: thin black solid; */
   margin: 1ex 2em;
   padding: 0 0;
 }
@@ -672,10 +739,10 @@ div.wikiblog > div {
   padding: 0.5ex 0.5em;
 }
 div.wikiblog-header {
-  background-color: #ccf;
+  /* background-color: #ccf; */
 }
 div.wikiblog > div.wikiblog-footer {
-  background-color: #eee;
+  /* background-color: #eee; */
   padding: 0.2ex 0.5em;
 }
 h3.wikiblog-summary {
@@ -685,7 +752,7 @@ h3.wikiblog-summary {
 }
 
 div.wikiblog.wikiblog-form {
-  background-color: #eee;
+  /* background-color: #eee; */
 }
 
 table.wikiblog-form {
@@ -694,7 +761,7 @@ table.wikiblog-form {
   margin: 0.25em 0;
 }
 .wikiblog-form caption {
-  background-color: #ccf;
+  /* background-color: #ccf; */
   caption-side: top;
   font-weight: bold;
   text-align: left;
@@ -783,10 +850,10 @@ td.spacerow{background:#cad9ea;color:#000000}
 
 /* Sidebar */
 .box { background:#ffffff; border: 1px solid #888888 }
-.box-title { font-weight: bold; font-size: 11pt; background-color: #cdcdcd; color: black; /*font-style: menu;*/ }
+.box-title { font-weight: normal; /*font-size: 11pt; */ background-color: #ccc; color: black; /*font-style: menu;*/ text-align: center; }
 .box-data { width: 160px; font-size: 9pt; font-weight: normal; }
 .box-data .wiki { font-weight: normal; }
-table.sidebar { border-spacing: 0px; margin: 0ex;}
+td.sidebar { border-spacing: 0px; margin: 0ex;}
 
 /* RssFeed */
 div.rss { margin: 1em; padding: 1em; font-size: 0.9em; background-color: #eeeeee; border: thin dashed #aaa; }
@@ -808,6 +875,13 @@ table.sqlresult td {
   border: 1px solid gray;
 }
 
+/**
+ * TeX2png plugin
+ */
+img.tex { 
+  border: 0ex;
+  vertical-align: middle; 
+}
 
 /* For emacs users
  *

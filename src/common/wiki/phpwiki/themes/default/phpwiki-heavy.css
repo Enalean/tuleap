@@ -1,5 +1,5 @@
 /**
- * $Id$
+ * $Id: phpwiki-heavy.css,v 1.5 2004/06/29 18:09:20 rurban Exp $
  *
  * This is stuff which should be in phpwiki.css, but which breaks Netscape 4.
  *
@@ -88,6 +88,7 @@ input.wikiaction, input.wikiadmin, input.wikiunsafe, input.button {
   padding: 0.05ex 0.25em 0.1ex 0.25em;
   height: auto;
   width: auto;
+/* These gecko-specific give CSS parse error: */
   -moz-appearance: none;
   -moz-box-sizing: content-box;
   -moz-border-radius: 1ex;

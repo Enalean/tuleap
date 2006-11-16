@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: UnfoldSubpages.php,v 1.21 2005/09/11 13:20:07 rurban Exp $');
 /*
- Copyright 2002 $ThePhpWikiProgrammingTeam
+ Copyright 2002,2004,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -23,12 +23,12 @@ rcs_id('$Id$');
 /**
  * UnfoldSubpages:  Lists the content of all SubPages of the current page.
  *   This is e.g. useful for the CalendarPlugin, to see all entries at once.
- *   Warning: Don't use it with subpages where the RedirectTo plugin is used
- *            or with non-existant sections!
+ *   Warning: Better don't use it with non-existant sections!
  *	      The section extractor is currently quite unstable.
  * Usage:   <?plugin UnfoldSubpages sortby=-mtime words=50 maxpages=5 ?>
  * Author:  Reini Urban <rurban@x-ray.at>
  */
+include_once("lib/PageList.php");
 class WikiPlugin_UnfoldSubpages
 extends WikiPlugin
 {
@@ -42,150 +42,164 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.21 $");
     }
 
     function getDefaultArguments() {
-        return array(
-            'pagename' => '[pagename]', // default: current page
-            //'header'  => '',  // expandable string
-            'quiet'   => false, // print no header
-            //'sort'    => 'asc', // deprecated: use sortby=+pagename or 
-            			//   sortby=-mtime instead,
-            'sortby'   => 'pagename', // [+|-]pagename, [+|-]mtime, [+|-]hits
-            'limit'    => 0,    
-            'pages'    => false,    // deprecated. use maxpages instead
-            'maxpages' => false,   // maximum number of pages to include
-            'sections' => false,// maximum number of sections per page to
-            			//  include
-            'smalltitle' => false, // if set, hide transclusion-title,
-                                //  just have a small link at the start of 
-            			//  the page.
-            'words'   => false, // maximum number of words
-                                //  per page to include
-            'lines'   => false, // maximum number of lines
-                                //  per page to include
-            'bytes'   => false, // maximum number of bytes
-                                //  per page to include
-            'section' => false, // this named section per page only
-            'sectionhead' => false // when including a named
-                                //  section show the heading
-            );
-    }
-
-    // from IncludePage
-    function firstNWordsOfContent($n, $content) {
-        $wordcount = 0;
-        $new = array( );
-        foreach ($content as $line) {
-            $words = explode(' ', $line);
-            if ($wordcount + count($words) > $n) {
-                $new[] = implode(' ', array_slice($words, 0, $n - $wordcount))
-                         . sprintf(_("... first %d words"), $n);
-                return $new;
-            }
-            else {
-                $wordcount += count($words);
-                $new[] = $line;
-            }
-        }
-        return $new;
-    }
-
-    //TODO: move this to stdlib.php
-    function extractSection ($section, $content, $page, $quiet, $sectionhead) {
-        $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
-
-        if (preg_match("/ ^(!{1,})\\s*$qsection" // section header
-                       . "  \\s*$\\n?"           // possible blank lines
-                       . "  ( (?: ^.*\\n? )*? )" // some lines
-                       . "  (?= ^\\1 | \\Z)/xm", // sec header (same
-                                                 //  or higher level)
-                                                 //  (or EOF)
-                       implode("\n", $content),
-                       $match)) {
-            // Strip trailing blanks lines and ---- <hr>s
-            $text = preg_replace("/\\s*^-{4,}\\s*$/m", "", $match[2]);
-            if ($sectionhead)
-                $text = $match[1] . $section ."\n". $text;
-            return explode("\n", $text);
-        }
-        if ($quiet)
-            $mesg = $page ." ". $section;
-        else
-            $mesg = $section;
-        return array(sprintf(_("<%s: no such section>"), $mesg));
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array(
+                   'pagename' => '[pagename]', // default: current page
+                   //'header'  => '',  // expandable string
+                   'quiet'   => false, // print no header
+                   'sortby'   => '',    // [+|-]pagename, [+|-]mtime, [+|-]hits
+                   'maxpages' => false, // maximum number of pages to include (== limit)
+                   'sections' => false, // maximum number of sections per page to include
+                   'smalltitle' => false, // if set, hide transclusion-title,
+                   			//  just have a small link at the start of 
+            				//  the page.
+                   'words'   => false, 	// maximum number of words
+                                	//  per page to include
+                   'lines'   => false, 	// maximum number of lines
+                                	//  per page to include
+                   'bytes'   => false, 	// maximum number of bytes
+                                	//  per page to include
+                   'section' => false, 	// this named section per page only
+                   'sectionhead' => false // when including a named
+                   			//  section show the heading
+                   ));
     }
 
     function run($dbi, $argstr, &$request, $basepage) {
-        include_once('lib/BlockParser.php');
-
+        static $included_pages = false;
+        if (!$included_pages) $included_pages = array($basepage);
+        
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        $subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*',false,$sortby,$limit);
-        if (! $subpages ) {
-            return $this->error(_("The current page has no subpages defined."));
-        }           
+        $query = new TextSearchQuery($pagename . SUBPAGE_SEPARATOR . '*', true, 'glob');
+        $subpages = $dbi->titleSearch($query, $sortby, $limit, $exclude);
+        //if ($sortby)
+        //    $subpages = $subpages->applyFilters(array('sortby' => $sortby, 'limit' => $limit, 'exclude' => $exclude));
+        //$subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*', false, 
+        //                            $sortby, $limit, $exclude);
+	if (is_string($exclude) and !is_array($exclude))
+            $exclude = PageList::explodePageList($exclude, false, false, $limit);
         $content = HTML();
-        if ($maxpages) {
-          $subpages = array_slice ($subpages, 0, $maxpages);
-        }
-        foreach ($subpages as $page) {
+
+        include_once('lib/BlockParser.php');
+	$i = 0;
+        while ($page = $subpages->next()) {
+            $cpagename = $page->getName();
+     	    if ($maxpages and ($i++ > $maxpages)) {
+                return $content;
+            }
+            if (in_array($cpagename, $exclude))
+            	continue;
             // A page cannot include itself. Avoid doublettes.
-            static $included_pages = array();
-            if (in_array($page, $included_pages)) {
+            if (in_array($cpagename, $included_pages)) {
                 $content->pushContent(HTML::p(sprintf(_("recursive inclusion of page %s ignored"),
-                                                      $page)));
+                                                      $cpagename)));
                 continue;
             }
             // trap any remaining nonexistant subpages
-            if ($dbi->isWikiPage($page)) {
-                $p = $dbi->getPage($page);
-                $r = $p->getCurrentRevision();
-                $c = $r->getContent();
-
+            if ($page->exists()) {
+                $r = $page->getCurrentRevision();
+                $c = $r->getContent();   // array of lines
+                // trap recursive redirects
+                if (preg_match('/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/', 
+                               implode("\n", $c), $m)) 
+                {
+                    if (in_array($m[1], $included_pages)) {
+                    	if (!$quiet)
+                            $content->pushContent(
+                                HTML::p(sprintf(_("recursive inclusion of page %s ignored"),
+                                                $cpagename.' => '.$m[1])));
+                        continue;
+                    }
+                }
                 if ($section)
-                    $c = $this->extractSection($section, $c, $page, $quiet,
-                                               $sectionhead);
+                    $c = extractSection($section, $c, $cpagename, $quiet,
+                                        $sectionhead);
                 if ($lines)
                     $c = array_slice($c, 0, $lines)
                         . sprintf(_(" ... first %d lines"), $bytes);
                 if ($words)
-                    $c = $this->firstNWordsOfContent($words, $c);
+                    $c = firstNWordsOfContent($words, $c);
                 if ($bytes) {
                     if (strlen($c) > $bytes)
                         $c = substr($c, 0, $bytes)
                             . sprintf(_(" ... first %d bytes"), $bytes);
                 }
+                $ct = implode("\n", $c); // one string
 
-                array_push($included_pages, $page);
+                array_push($included_pages, $cpagename);
                 if ($smalltitle) {
-                    $pname = array_pop(explode("/", $page)); // get last subpage name
+                    $pname = array_pop(explode(SUBPAGE_SEPARATOR, $cpagename)); // get last subpage name
                     // Use _("%s: %s") instead of .": ". for French punctuation
-                    $ct = TransformText(sprintf(_("%s: %s"), "[$pname|$page]",
-                                                implode("\n", $c)),
-                                        $r->get('markup'), $page);
+                    $ct = TransformText(sprintf(_("%s: %s"), "[$pname|$cpagename]",
+                                                $ct),
+                                        $r->get('markup'), $cpagename);
                 }
                 else {
-                    $ct = TransformText(implode("\n", $c), $r->get('markup'), $page);
+                    $ct = TransformText($ct, $r->get('markup'), $cpagename);
                 }
                 array_pop($included_pages);
                 if (! $smalltitle) {
                     $content->pushContent(HTML::p(array('class' => $quiet ?
                                                         '' : 'transclusion-title'),
                                                   fmt("Included from %s:",
-                                                      WikiLink($page))));
+                                                      WikiLink($cpagename))));
                 }
                 $content->pushContent(HTML(HTML::div(array('class' => $quiet ?
                                                            '' : 'transclusion'),
                                                      false, $ct)));
             }
         }
+        if (! $cpagename ) {
+            return $this->error(sprintf(_("%s has no subpages defined."), $pagename));
+        }
         return $content;
     }
 };
 
-// $Log$
+// $Log: UnfoldSubpages.php,v $
+// Revision 1.21  2005/09/11 13:20:07  rurban
+// use TitleSearch and iterators instead of get_all_pages
+//
+// Revision 1.20  2005/04/11 19:45:17  rurban
+// proper linebreaks
+//
+// Revision 1.19  2005/01/21 14:12:48  rurban
+// clarify $ct
+//
+// Revision 1.18  2004/12/06 19:50:05  rurban
+// enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+// renamed delete_page to purge_page.
+// enable action=edit&version=-1 to force creation of a new version.
+// added BABYCART_PATH config
+// fixed magiqc in adodb.inc.php
+// and some more docs
+//
+// Revision 1.17  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.16  2004/09/25 16:35:09  rurban
+// use stdlib firstNWordsOfContent, extractSection
+//
+// Revision 1.15  2004/07/03 14:48:18  rurban
+// Tested new mysql 4.1.3-beta: binary search bug as fixed.
+// => fixed action=upgrade,
+// => version check in PearDB also (as in ADODB)
+//
+// Revision 1.14  2004/07/03 08:19:40  rurban
+// trap recursive redirects
+//
 // Revision 1.13  2004/03/12 15:48:08  rurban
 // fixed explodePageList: wrong sortby argument order in UnfoldSubpages
 // simplified lib/stdlib.php:explodePageList

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: MostPopular.php,v 1.32 2004/12/26 17:14:03 rurban Exp $');
 /*
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -38,18 +38,21 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.32 $");
     }
 
     function getDefaultArguments() {
-        return array('pagename' => '[pagename]', // hackish
-                     'exclude'  => '',
-                     'limit'    => 20, // limit <0 returns least popular pages
-                     'noheader' => 0,
-                     'sortby'   => 'hits',
-                     'info'     => false,
-                     'paging'   => 'auto'
-                    );
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array('pagename' => '[pagename]', // hackish
+                   //'exclude'  => '',
+                   'limit'    => 20, // limit <0 returns least popular pages
+                   'noheader' => 0,
+                   'sortby'   => '-hits',
+                   'info'     => false,
+                   //'paging'   => 'auto'
+                   ));
     }
     
     // info arg allows multiple columns
@@ -70,20 +73,21 @@ extends WikiPlugin
         
         if (! $request->getArg('count')) {
             //$args['count'] = $dbi->numPages(false,$exclude);
-            $allpages = $dbi->mostPopular(0);
+            $allpages = $dbi->mostPopular(0, $sortby);
             $args['count'] = $allpages->count();
         } else {
             $args['count'] = $request->getArg('count');
         }
-        $dbi->touch();
-        $pages = $dbi->mostPopular($limit,$sortby);
+        //$dbi->touch();
+        $pages = $dbi->mostPopular($limit, $sortby);
         $pagelist = new PageList($columns, $exclude, $args);
         while ($page = $pages->next()) {
             $hits = $page->get('hits');
             // don't show pages with no hits if most popular pages
             // wanted
-            if ($hits == 0 && $limit > 0)
+            if ($hits == 0 && $limit > 0) {
                 break;
+            }
             $pagelist->addPage($page);
         }
         $pages->free();
@@ -103,7 +107,25 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: MostPopular.php,v $
+// Revision 1.32  2004/12/26 17:14:03  rurban
+// fix ADODB MostPopular, avoid limit -1, pass hits on empty data
+//
+// Revision 1.31  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.30  2004/10/14 19:19:34  rurban
+// loadsave: check if the dumped file will be accessible from outside.
+// and some other minor fixes. (cvsclient native not yet ready)
+//
+// Revision 1.29  2004/09/25 16:33:52  rurban
+// add support for all PageList options
+//
 // Revision 1.28  2004/04/20 18:10:55  rurban
 // config refactoring:
 //   FileFinder is needed for WikiFarm scripts calling index.php

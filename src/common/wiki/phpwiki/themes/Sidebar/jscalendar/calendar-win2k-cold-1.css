@@ -7,7 +7,7 @@
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   border-left: 2px solid #fff;
-  font-size: 9px;
+  font-size: 11px;
   color: #000;
   cursor: default;
   background: #c8d0d4;
@@ -19,7 +19,7 @@
   border-right: 1px solid #fff;
   border-bottom: 1px solid #fff;
   border-left: 1px solid #000;
-  font-size: 9px;
+  font-size: 11px;
   color: #000;
   cursor: default;
   background: #c8d0d4;
@@ -200,6 +200,7 @@
   background: #d8e0e4;
   font-size: 90%;
   padding: 1px;
+  z-index: 100;
 }
 
 .calendar .combo .label,

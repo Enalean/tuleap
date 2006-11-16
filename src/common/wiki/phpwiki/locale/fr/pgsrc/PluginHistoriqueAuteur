@@ -1,0 +1,23 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginHistoriqueAuteur,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginHistoriqueAuteur;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Ce plugin vous permet d'afficher l'historique des éditions d'un auteur particulier. 
+Vous pouvez aussi bien spécifier le nom de la page (page courante par défaut).
+
+<verbatim>
+<?plugin AuthorHistory user="test" ?>
+
+<?plugin AuthorHistory page=HomePage ?>
+</verbatim>
+
+Le second exemple aura la page courante par défaut. Nous ne pouvons vous fournir 
+d'autres exemples puisque nous ne connaissons par les noms d'utilisateurs potentiels
+de votre wiki.

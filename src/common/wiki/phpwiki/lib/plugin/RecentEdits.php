@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: RecentEdits.php,v 1.1 2004/04/21 04:29:10 rurban Exp $');
 
 require_once("lib/plugin/RecentChanges.php");
 
@@ -12,7 +12,7 @@ extends WikiPlugin_RecentChanges
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.1 $");
     }
 
     function getDefaultArguments() {
@@ -38,7 +38,7 @@ extends WikiPlugin_RecentChanges
     }
 }
 
-// $Log$
+// $Log: RecentEdits.php,v $
 // Revision 1.1  2004/04/21 04:29:10  rurban
 // Two convenient RecentChanges extensions
 //   RelatedChanges (only links from current page)

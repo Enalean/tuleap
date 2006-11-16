@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: TexToPng.php,v 1.5 2004/06/19 10:06:38 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -105,7 +105,7 @@ class WikiPlugin_TexToPng extends WikiPluginCached
     
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.5 $");
     }
 
     function getDefaultArguments() {
@@ -252,8 +252,8 @@ class WikiPlugin_TexToPng extends WikiPluginCached
     /* ---------------------------------------------------------------- */            
 
     function TexToImg($texstr, $scale, $aalias, $transp) {
-        $cacheparams = $GLOBALS['CacheParams'];        
-        $tempfiles = tempnam($cacheparams['cache_dir'],'TexToPng');
+        //$cacheparams = $GLOBALS['CacheParams'];        
+        $tempfiles = $this->tempnam('TexToPng');
         $img = 0; // $size = 0;
 
         // procuce options for pstoimg
@@ -302,7 +302,11 @@ class WikiPlugin_TexToPng extends WikiPluginCached
     } // TexToImg
 } // WikiPlugin_TexToPng
 
-// $Log$
+// $Log: TexToPng.php,v $
+// Revision 1.5  2004/06/19 10:06:38  rurban
+// Moved lib/plugincache-config.php to config/*.ini
+// use PLUGIN_CACHED_* constants instead of global $CacheParams
+//
 // Revision 1.4  2003/01/18 22:08:01  carstenklapp
 // Code cleanup:
 // Reformatting & tabs to spaces;

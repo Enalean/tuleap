@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: file.php,v 1.22 2004/12/06 19:50:04 rurban Exp $');
 
 /**
  Copyright 1999, 2000, 2001, 2002, 2003 $ThePhpWikiProgrammingTeam
@@ -20,8 +20,6 @@ rcs_id('$Id$');
  along with PhpWiki; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-
 
 /**
  * Backend for handling file storage. 
@@ -46,22 +44,21 @@ rcs_id('$Id$');
 require_once('lib/WikiDB/backend.php');
 require_once('lib/ErrorManager.php');
 
-
-
 class WikiDB_backend_file
 extends WikiDB_backend
 {
     var $data_dir;
     var $_dir_names;
 
-    var $_page_data;  // temporarily stores the pagedata (via _loadPageData)
+    var $_page_data;          // temporarily stores the pagedata (via _loadPageData)
     var $_page_version_data;  // temporarily stores the versiondata (via _loadVersionData)
-    var $_latest_versions;  // temporarily stores the latest version-numbers (for every pagename)  (via _loadLatestVersions)
-    
+    var $_latest_versions;    // temporarily stores the latest version-numbers (for every pagename)
 
     function WikiDB_backend_file( $dbparam )
     {
         $this->data_dir = $dbparam['directory'];
+        if (file_exists($this->data_dir) and is_file($this->data_dir))
+        	unlink($this->data_dir);
         if (is_dir($this->data_dir) == false) {
             mkdir($this->data_dir, 0755);
         }
@@ -73,6 +70,8 @@ extends WikiDB_backend
                     'links'        => $this->data_dir.'/'.'links' );
 
         foreach ($this->_dir_names as $key => $val) {
+        	if (file_exists($val) and is_file($val))
+        	    unlink($val);
             if (is_dir($val) == false)
                 mkdir($val, 0755);
         }
@@ -95,6 +94,8 @@ extends WikiDB_backend
 
     function _loadPage($type, $pagename, $version, $set_pagename = true) {
       $filename = $this->_pagename2filename($type, $pagename, $version);
+      if (!file_exists($filename)) return NULL;
+      if (!filesize($filename)) return array();
       if ($fd = @fopen($filename, "rb")) {
          $locked = flock($fd, 1); # Read lock
          if (!$locked) { 
@@ -124,7 +125,6 @@ extends WikiDB_backend
            if (!$locked) { 
               ExitWiki("Timeout while obtaining lock. Please try again"); 
            }
-	 
 
            rewind($fd);
            ftruncate($fd, 0);
@@ -138,14 +138,13 @@ extends WikiDB_backend
 
     function _removePage($type, $pagename, $version) {
         $filename = $this->_pagename2filename($type, $pagename, $version);
+        if (!file_exists($filename)) return NULL;
         $f = @unlink($filename);
         if ($f == false)
-	          trigger_error("delete file failed: ".$filename." ver: ".$version, E_USER_WARNING);
+            trigger_error("delete file failed: ".$filename." ver: ".$version, E_USER_WARNING);
     }
 
-
     // *********************************************************************
-
 
     // *********************************************************************
     // Load/Save Version-Data
@@ -339,9 +338,15 @@ extends WikiDB_backend
      * @param $version int Find version before this one.
      * @return int The version number of the version in the database which
      *  immediately preceeds $version.
+     *
+     * FIXED: Check if this version really exists!
      */
     function get_previous_version($pagename, $version) {
-        return ($version > 0 ? $version - 1 : 0);
+        $prev = ($version > 0 ? $version - 1 : 0);
+    	while ($prev and !file_exists($this->_pagename2filename('ver_data', $pagename, $prev))) {
+            $prev--;
+    	}
+    	return $prev;
     }
     
     /**
@@ -395,15 +400,22 @@ extends WikiDB_backend
     }
 
     /**
+     * See ADODB for a better delete_page(), which can be undone and is seen in RecentChanges.
+     */
+    function delete_page($pagename) {
+        $this->purge_page($pagename);
+    }
+
+    /**
      * Delete page from the database.
      *
      * Delete page (and all it's revisions) from the database.
      *
      * @param $pagename string Page name.
      */
-    function delete_page($pagename) {
+    function purge_page($pagename) {
         $ver = $this->get_latest_version($pagename);
-        while($ver > 0) {
+        while ($ver > 0) {
             $this->_removePage('ver_data', $pagename, $ver);
             $ver = $this->get_previous_version($pagename, $ver);
         }
@@ -429,7 +441,9 @@ extends WikiDB_backend
         if ($this->get_latest_version($pagename) == $version) {
             // try to delete the latest version!
             // so check if an older version exist:
-            if ($this->get_versiondata($pagename, $this->get_previous_version($pagename, $version), false) == false) {
+            if ($this->get_versiondata($pagename, 
+                                       $this->get_previous_version($pagename, $version), 
+                                       false) == false) {
               // there is no older version....
               // so the completely page will be removed:
               $this->delete_page($pagename);
@@ -502,7 +516,8 @@ extends WikiDB_backend
      * FIXME: array or iterator?
      * @return object A WikiDB_backend_iterator.
      */
-    function get_links($pagename, $reversed) {
+    function get_links($pagename, $reversed=true, $include_empty=false,
+                       $sortby=false, $limit=false, $exclude=false) {
         if ($reversed == false)
             return new WikiDB_backend_file_iter($this, $this->_loadPageLinks($pagename));
 
@@ -527,10 +542,12 @@ extends WikiDB_backend
      * @param $pagename string The page name.
      * @return object A WikiDB_backend_iterator.
      */
+    /*
     function get_all_revisions($pagename) {
         include_once('lib/WikiDB/backend/dumb/AllRevisionsIter.php');
         return new WikiDB_backend_dumb_AllRevisionsIter($this, $pagename);
     }
+    */
     
     /**
      * Get all pages in the database.
@@ -551,83 +568,28 @@ extends WikiDB_backend
      *
      * @return object A WikiDB_backend_iterator.
      */
-    function get_all_pages($include_deleted=false, $orderby='pagename') {
+    function get_all_pages($include_empty=false, $sortby=false, $limit=false, $exclude=false) {
+    	require_once("lib/PageList.php");
         $this->_loadLatestVersions();
         $a = array_keys($this->_latest_versions);
-
+        if (empty($a))
+            return new WikiDB_backend_file_iter($this, $a);
+        $sortby = $this->sortby($sortby, 'db', $this->sortable_columns());
+        switch ($sortby) {
+        case '': break;
+        case 'pagename ASC':  sort($a); break;
+        case 'pagename DESC': rsort($a); break;
+        }
         return new WikiDB_backend_file_iter($this, $a);
     }
-        
-    /**
-     * Title or full text search.
-     *
-     * Pages should be returned in alphabetical order if that is
-     * feasable.
-     *
-     * @access protected
-     *
-     * @param $search object A TextSearchQuery object describing what pages
-     * are to be searched for.
-     *
-     * @param $fullsearch boolean If true, a full text search is performed,
-     *  otherwise a title search is performed.
-     *
-     * @return object A WikiDB_backend_iterator.
-     *
-     * @see WikiDB::titleSearch
-     */
-    function text_search($search = '', $fullsearch = false) {
-        // This is method implements a simple linear search
-        // through all the pages in the database.
-        //
-        // It is expected that most backends will overload
-        // method with something more efficient.
-        include_once('lib/WikiDB/backend/dumb/TextSearchIter.php');
-        $pages = $this->get_all_pages(false);
-        return new WikiDB_backend_dumb_TextSearchIter($this, $pages, $search, $fullsearch);
+
+    function sortable_columns() {
+        return array('pagename');
     }
 
-    /**
-     * Find pages with highest hit counts.
-     *
-     * Find the pages with the highest hit counts.  The pages should
-     * be returned in reverse order by hit count.
-     *
-     * @access protected
-     * @param $limit integer  No more than this many pages
-     * @return object A WikiDB_backend_iterator.
-     */
-    function most_popular($limit,$sortby = '') {
-        // This is method fetches all pages, then
-        // sorts them by hit count.
-        // (Not very efficient.)
-        //
-        // It is expected that most backends will overload
-        // method with something more efficient.
-        include_once('lib/WikiDB/backend/dumb/MostPopularIter.php');
-        $pages = $this->get_all_pages(false,'hits DESC');
-        
-        return new WikiDB_backend_dumb_MostPopularIter($this, $pages, $limit);
-    }
-
-    /**
-     * Find recent changes.
-     *
-     * @access protected
-     * @param $params hash See WikiDB::mostRecent for a description
-     *  of parameters which can be included in this hash.
-     * @return object A WikiDB_backend_iterator.
-     * @see WikiDB::mostRecent
-     */
-    function most_recent($params) {
-        // This method is very inefficient and searches through
-        // all pages for the most recent changes.
-        //
-        // It is expected that most backends will overload
-        // method with something more efficient.
-        include_once('lib/WikiDB/backend/dumb/MostRecentIter.php');
-        $pages = $this->get_all_pages(true,'mtime DESC');
-        return new WikiDB_backend_dumb_MostRecentIter($this, $pages, $params);
+    function numPages($filter=false, $exclude='') {
+        $this->_loadLatestVersions();
+        return count($this->_latest_versions);
     }
 
     /**
@@ -678,7 +640,7 @@ extends WikiDB_backend
      * Optimize the database.
      */
     function optimize() {
-        //trigger_error("optimize: Not Implemented", E_USER_WARNING);
+        return 0;//trigger_error("optimize: Not Implemented", E_USER_WARNING);
     }
 
     /**
@@ -738,39 +700,99 @@ class WikiDB_backend_file_iter extends WikiDB_backend_iterator
     }
     
     function next() {
-        $backend = &$this->_backend;
-
         if (!$this->_result)
             return false;
-
         if (count($this->_result) <= 0)
             return false;
 
         $e = each($this->_result);
-        if ($e == false)
+        if ($e == false) {
             return false;
-
+        }
+        
         $pn = $e[1];
-
-        $pagedata = $backend->get_pagedata($pn);
+        $pagedata = $this->_backend->get_pagedata($pn);
+        // don't pass _cached_html via iterators
+        if (isset($pagedata['_cached_html']))
+            unset($pagedata['_cached_html']);
+        unset($pagedata['pagename']);
         $rec = array('pagename' => $pn,
                      'pagedata' => $pagedata);
-
         //$rec['version'] = $backend->get_latest_version($pn);
         //$rec['versiondata'] = $backend->get_versiondata($pn, $rec['version'], true);
-
         return $rec;
     }
-
+    function asArray() {
+        reset($this->_result);
+        return $this->_result;
+    }
     function count() {
     	return count($this->_result);
     }
-    
     function free () {
+        $this->_result = array();
     }
 }
 
-// $Log$
+// $Log: file.php,v $
+// Revision 1.22  2004/12/06 19:50:04  rurban
+// enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+// renamed delete_page to purge_page.
+// enable action=edit&version=-1 to force creation of a new version.
+// added BABYCART_PATH config
+// fixed magiqc in adodb.inc.php
+// and some more docs
+//
+// Revision 1.21  2004/11/25 17:20:52  rurban
+// and again a couple of more native db args: backlinks
+//
+// Revision 1.20  2004/11/23 13:35:49  rurban
+// add case_exact search
+//
+// Revision 1.19  2004/11/21 11:59:26  rurban
+// remove final \n to be ob_cache independent
+//
+// Revision 1.18  2004/11/09 17:11:17  rurban
+// * revert to the wikidb ref passing. there's no memory abuse there.
+// * use new wikidb->_cache->_id_cache[] instead of wikidb->_iwpcache, to effectively
+//   store page ids with getPageLinks (GleanDescription) of all existing pages, which
+//   are also needed at the rendering for linkExistingWikiWord().
+//   pass options to pageiterator.
+//   use this cache also for _get_pageid()
+//   This saves about 8 SELECT count per page (num all pagelinks).
+// * fix passing of all page fields to the pageiterator.
+// * fix overlarge session data which got broken with the latest ACCESS_LOG_SQL changes
+//
+// Revision 1.17  2004/07/09 13:05:34  rurban
+// just aesthetics
+//
+// Revision 1.16  2004/07/09 12:47:45  rurban
+// dont cache _ cached_html and pagename in flatfile page iterators
+//
+// Revision 1.15  2004/07/09 10:06:50  rurban
+// Use backend specific sortby and sortable_columns method, to be able to
+// select between native (Db backend) and custom (PageList) sorting.
+// Fixed PageList::AddPageList (missed the first)
+// Added the author/creator.. name to AllPagesBy...
+//   display no pages if none matched.
+// Improved dba and file sortby().
+// Use &$request reference
+//
+// Revision 1.14  2004/07/08 17:31:43  rurban
+// improve numPages for file (fixing AllPagesTest)
+//
+// Revision 1.13  2004/07/08 15:23:59  rurban
+// less verbose for tests
+//
+// Revision 1.12  2004/07/08 13:50:32  rurban
+// various unit test fixes: print error backtrace on _DEBUG_TRACE; allusers fix; new PHPWIKI_NOMAIN constant for omitting the mainloop
+//
+// Revision 1.11  2004/07/08 11:12:49  rurban
+// quiet the testruns
+//
+// Revision 1.10  2004/06/03 22:08:17  rurban
+// fix bug #963268 (check existing previous version)
+//
 // Revision 1.9  2004/04/27 16:03:05  rurban
 // missing pageiter::count methods
 //
@@ -823,5 +845,4 @@ class WikiDB_backend_file_iter extends WikiDB_backend_iterator
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-
 ?>

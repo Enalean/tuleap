@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: PageHistory.php,v 1.30 2004/06/14 11:31:39 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -122,10 +122,6 @@ extends _RecentChanges_HtmlFormatter
         $html[] = HTML::input(array('type'  => 'hidden',
                                     'name'  => 'action',
                                     'value' => 'diff'));
-        
-        $html[] = HTML::input(array('type'  => 'hidden',
-                                    'name'  => 'group_id',
-                                    'value' => GROUP_ID));
         if (USE_PATH_INFO) {
             $action = WikiURL($pagename);
         }
@@ -219,7 +215,7 @@ extends _RecentChanges_RssFormatter
 
         $title = sprintf(_("%s: %s"),
                          WIKI_NAME,
-                         split_pagename($this->_args['page']));
+                         SplitPagename($this->_args['page']));
 
         return array('title'          => $title,
                      'dc:description' => _("History of changes."),
@@ -257,7 +253,7 @@ extends WikiPlugin_RecentChanges
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.30 $");
     }
 
     function getDefaultArguments() {
@@ -289,10 +285,10 @@ extends WikiPlugin_RecentChanges
     }
 
     function format ($changes, $args) {
-        global $Theme;
+        global $WikiTheme;
         $format = $args['format'];
 
-        $fmt_class = $Theme->getFormatter('PageHistory', $format);
+        $fmt_class = $WikiTheme->getFormatter('PageHistory', $format);
         if (!$fmt_class) {
             if ($format == 'rss')
                 $fmt_class = '_PageHistory_RssFormatter';
@@ -322,7 +318,18 @@ extends WikiPlugin_RecentChanges
     }
 };
 
-// $Log$
+// $Log: PageHistory.php,v $
+// Revision 1.30  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.29  2004/05/18 16:23:40  rurban
+// rename split_pagename to SplitPagename
+//
 // Revision 1.28  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

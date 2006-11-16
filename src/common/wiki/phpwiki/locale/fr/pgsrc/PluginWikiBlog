@@ -1,0 +1,23 @@
+Date: Sat, 5 Jun 2004 16:49:57 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginWikiBlog,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginWikiBlog;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Un blog (ou weblog ou carnet Web ou blogue ou weblogue) est un type de publication 
+Web dynamique par articles qui s'affichent sur une page Web. Ces articles sont 
+archivés au fur et à mesure. Chaque article peut-être modifié à souhait voire supprimé 
+par son auteur après sa publication. Un système de commentaires est effectif 
+sur chaque blog et permet d'apporter des compléments d'information ou des réactions 
+après chaque article (ou billet).
+
+PluginWikiBlog est un plugin simple qui permet les entrées dans le style blog sur 
+une page. Essayez quelques entrées puis jeter un coup d'oeil sur les DernièresModifs
+pour vous faire une idée de la façon dont ça fonctionne.
+
+<?plugin WikiBlog ?>

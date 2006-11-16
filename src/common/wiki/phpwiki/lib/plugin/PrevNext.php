@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: PrevNext.php,v 1.4 2004/06/14 11:31:39 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -38,7 +38,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.4 $");
     }
 
     function getDefaultArguments() {
@@ -78,8 +78,8 @@ extends WikiPlugin
             unset ($new_directions); // free memory
         }
 
-        global $Theme;
-        $sep = $Theme->getButtonSeparator();
+        global $WikiTheme;
+        $sep = $WikiTheme->getButtonSeparator();
         $links = HTML();
         if ($style == 'text') {
             if (!$sep)
@@ -94,14 +94,14 @@ extends WikiPlugin
                 $url = $args[$dir];
                 if ($style == 'button') {
                     // localized version: _("Previous").gif
-                    if ($imgurl = $Theme->getButtonURL($label)) {
+                    if ($imgurl = $WikiTheme->getButtonURL($label)) {
                         if ($last_is_text)
                             $links->pushContent($sep);
                         $links->pushcontent(new ImageButton($label, $url,
                                                             false, $imgurl));
                         $last_is_text = false;
                         // generic version: prev.gif
-                    } elseif ($imgurl = $Theme->getButtonURL($dir)) {
+                    } elseif ($imgurl = $WikiTheme->getButtonURL($dir)) {
                         if ($last_is_text)
                             $links->pushContent($sep);
                         $links->pushContent(new ImageButton($label, $url,
@@ -128,7 +128,15 @@ extends WikiPlugin
     }
 }
 
-// $Log$
+// $Log: PrevNext.php,v $
+// Revision 1.4  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.3  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

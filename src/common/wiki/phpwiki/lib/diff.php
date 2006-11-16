@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: diff.php,v 1.52 2005/04/01 14:45:14 rurban Exp $');
 // diff.php
 //
 // PhpWiki diff output code.
@@ -48,7 +48,7 @@ class _HWLDF_WordAccumulator {
             if (!$word)
                 continue;
             if ($word[0] == "\n") {
-                $this->_group .= PrintXML(HTML::raw('&nbsp;'));
+                $this->_group .= " ";
                 $this->_flushLine($tag);
                 $word = substr($word, 1);
             }
@@ -96,7 +96,7 @@ class WordLevelDiff extends MappedDiff
         return $orig->getLines();
     }
 
-    function final () {
+    function _final () {
         $final = new _HWLDF_WordAccumulator;
 
         foreach ($this->edits as $edit) {
@@ -173,7 +173,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
     function _changed($orig, $final) {
         $diff = new WordLevelDiff($orig, $final);
         $this->_lines($diff->orig(), 'original', '-');
-        $this->_lines($diff->final(), 'final', '+');
+        $this->_lines($diff->_final(), 'final', '+');
     }
 }
 
@@ -237,9 +237,9 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 
 /////////////////////////////////////////////////////////////////
 
-function PageInfoRow ($label, $rev, &$request)
+function PageInfoRow ($label, $rev, &$request, $is_current = false)
 {
-    global $Theme, $WikiNameRegexp;
+    global $WikiTheme;
 
     $row = HTML::tr(HTML::td(array('align' => 'right'), $label));
     if ($rev) {
@@ -248,14 +248,22 @@ function PageInfoRow ($label, $rev, &$request)
 
         $iswikipage = (isWikiWord($author) && $dbi->isWikiPage($author));
         $authorlink = $iswikipage ? WikiLink($author) : $author;
-
-        $linked_version = WikiLink($rev, 'existing', $rev->getVersion());
+        $version = $rev->getVersion();
+        $linked_version = WikiLink($rev, 'existing', $version);
+        if ($is_current)
+            $revertbutton = HTML();
+        else
+            $revertbutton = $WikiTheme->makeActionButton(array('action' => 'revert',
+                                                               'version' => $version),
+                                                         false, $rev);
         $row->pushContent(HTML::td(fmt("version %s", $linked_version)),
-                          HTML::td($Theme->getLastModifiedMessage($rev,
-                                                                  false)),
-                          HTML::td(fmt("by %s", $authorlink)));
+                          HTML::td($WikiTheme->getLastModifiedMessage($rev,
+                                                                      false)),
+                          HTML::td(fmt("by %s", $authorlink)),
+                          HTML::td($revertbutton)
+                          );
     } else {
-        $row->pushContent(HTML::td(array('colspan' => '3'), _("None")));
+        $row->pushContent(HTML::td(array('colspan' => '4'), _("None")));
     }
     return $row;
 }
@@ -277,8 +285,9 @@ function showDiff (&$request) {
     $page = $request->getPage();
     $current = $page->getCurrentRevision();
     if ($current->getVersion() < 1) {
-        $html = HTML(HTML::p(fmt("I'm sorry, there is no such page as %s.",
-                                 WikiLink($pagename, 'unknown'))));
+        $html = HTML::div(array('id'=>'content'),
+                          HTML::p(fmt("I'm sorry, there is no such page as %s.",
+                                      WikiLink($pagename, 'unknown'))));
         include_once('lib/Template.php');
         GeneratePage($html, sprintf(_("Diff: %s"), $pagename), false);
         return; //early return
@@ -334,8 +343,9 @@ function showDiff (&$request) {
     $old_link = $old ? WikiLink($old, '', $old_version) : $old_version;
     $page_link = WikiLink($page);
 
-    $html = HTML(HTML::p(fmt("Differences between %s and %s of %s.",
-                             $new_link, $old_link, $page_link)));
+    $html = HTML::div(array('id'=>'content'),
+                     HTML::p(fmt("Differences between %s and %s of %s.",
+                                 $new_link, $old_link, $page_link)));
 
     $otherdiffs = HTML::p(_("Other diffs:"));
     $label = array('major' => _("Previous Major Revision"),
@@ -358,9 +368,9 @@ function showDiff (&$request) {
         $old = false;
 
     $html->pushContent(HTML::Table(PageInfoRow(_("Newer page:"), $new,
-                                               $request),
+                                               $request, empty($version)),
                                    PageInfoRow(_("Older page:"), $old,
-                                               $request)));
+                                               $request, false)));
 
     if ($new && $old) {
         $diff = new Diff($old->getContent(), $new->getContent());
@@ -384,12 +394,36 @@ function showDiff (&$request) {
     GeneratePage($html, sprintf(_("Diff: %s"), $pagename), $new);
 }
 
-// $Log$
+// $Log: diff.php,v $
+// Revision 1.52  2005/04/01 14:45:14  rurban
+// fix dirty side-effect: dont printf too early bypassing ob_buffering.
+// fixes MSIE.
+//
+// Revision 1.51  2005/02/04 15:26:57  rurban
+// need div=content for blog
+//
+// Revision 1.50  2005/02/04 13:44:45  rurban
+// prevent from php5 nameclash
+//
+// Revision 1.49  2004/11/21 11:59:19  rurban
+// remove final \n to be ob_cache independent
+//
+// Revision 1.48  2004/06/14 11:31:36  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.47  2004/06/08 13:51:57  rurban
+// some comments only
+//
 // Revision 1.46  2004/05/01 15:59:29  rurban
-// more php-4.0.6 compatibility: superglobals
+// nothing changed
 //
 // Revision 1.45  2004/01/25 03:57:15  rurban
-// WikiUserNew support (temp. ENABLE_USER_NEW constant)
+// use isWikiWord()
 //
 // Revision 1.44  2003/02/17 02:17:31  dairiki
 // Fix so that action=diff will work when the most recent version

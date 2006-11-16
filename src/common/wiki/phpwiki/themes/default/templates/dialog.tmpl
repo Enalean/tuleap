@@ -1,5 +1,5 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: dialog.tmpl,v 1.5 2004/06/14 11:26:52 rurban Exp $');
 /* 
  * A "popup" dialog.  (Though it doesn't pop up yet.)
  */
@@ -14,7 +14,7 @@ printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", CHARSET);
 <meta name="generator" content="phpWiki" />
 <meta name="PHPWIKI_VERSION" content="<?=PHPWIKI_VERSION?>" />
 <base href="<?=PHPWIKI_BASE_URL?>" />
-<?= $Theme->getCSS() ?>
+<?= $WikiTheme->getCSS() ?>
 <title><?=WIKI_NAME . ' - ' . _("Dialog")?></title>
 </head>
 <body>

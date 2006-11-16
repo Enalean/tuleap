@@ -1,5 +1,5 @@
 <?php // -*- php -*-
-  rcs_id('$Id$');
+  rcs_id('$Id: wikiforum.tmpl,v 1.2 2004/06/14 11:26:53 rurban Exp $');
 /* 
 navigation headline: "MainForum / SubPage / ThisTopic" comes for free
 
@@ -9,7 +9,7 @@ this  template:  detailed list of threads per topic
 
 action: "newtopic" or "postreply"
 */
-$CDATE = $Theme->formatDateTime($FORUM_CTIME);
+$CDATE = $WikiTheme->formatDateTime($FORUM_CTIME);
 ?>
 <div class="wikiforum wikiforum-form">
 <form action="<?=$request->getPostURL()?>" method="post" class="wikiaction"

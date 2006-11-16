@@ -1,13 +1,17 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: editpage.php,v 1.96 2005/05/06 17:54:22 rurban Exp $');
 
 require_once('lib/Template.php');
 
+// USE_HTMLAREA - Support for some WYSIWYG HTML Editor
 // Not yet enabled, since we cannot convert HTML to Wiki Markup yet.
+// (See HtmlParser.php for the ongoing efforts)
 // We might use a HTML PageType, which is contra wiki, but some people might prefer HTML markup.
-// Todo: change from constant to user preference variable. (or checkbox setting)
-if (!defined('USE_HTMLAREA')) define('USE_HTMLAREA',false);
+// TODO: Change from constant to user preference variable (checkbox setting),
+//       when HtmlParser is finished.
+if (!defined('USE_HTMLAREA')) define('USE_HTMLAREA', false);
 if (USE_HTMLAREA) require_once('lib/htmlarea.php');
+if (ENABLE_CAPTCHA)  require_once('lib/Captcha.php'); 
 
 class PageEditor
 {
@@ -17,7 +21,7 @@ class PageEditor
         $this->user = $request->getUser();
         $this->page = $request->getPage();
 
-        $this->current = $this->page->getCurrentRevision();
+        $this->current = $this->page->getCurrentRevision(false);
 
         // HACKish short circuit to browse on action=create
         if ($request->getArg('action') == 'create') {
@@ -25,12 +29,15 @@ class PageEditor
                 $request->redirect(WikiURL($this->page->getName())); // noreturn
         }
         
-        
         $this->meta = array('author' => $this->user->getId(),
                             'author_id' => $this->user->getAuthenticatedId(),
                             'mtime' => time());
         
         $this->tokens = array();
+        if (ENABLE_CAPTCHA) {
+            require_once('lib/Captcha.php');
+            $this->Captcha = new Captcha($this->meta);
+        }
         
         $version = $request->getArg('version');
         if ($version !== false) {
@@ -38,8 +45,8 @@ class PageEditor
             $this->version = $version;
         }
         else {
-            $this->selected = $this->current;
             $this->version = $this->current->getVersion();
+            $this->selected = $this->page->getRevision($this->version);
         }
 
         if ($this->_restoreState()) {
@@ -50,13 +57,15 @@ class PageEditor
             $this->_initialEdit = true;
 
             // The edit request has specified some initial content from a template 
-            if (  ($template = $request->getArg('template')) and 
-                  $request->_dbi->isWikiPage($template)) {
+            if (  ($template = $request->getArg('template'))
+                   and $request->_dbi->isWikiPage($template)) 
+            {
                 $page = $request->_dbi->getPage($template);
                 $current = $page->getCurrentRevision();
                 $this->_content = $current->getPackedContent();
             } elseif ($initial_content = $request->getArg('initial_content')) {
                 $this->_content = $initial_content;
+                $this->_redirect_to = $request->getArg('save_and_redirect_to');
             }
         }
         if (!headers_sent())
@@ -64,21 +73,53 @@ class PageEditor
     }
 
     function editPage () {
+        global $WikiTheme;
         $saveFailed = false;
         $tokens = &$this->tokens;
+        $tokens['PAGE_LOCKED_MESSAGE'] = '';
+        $tokens['CONCURRENT_UPDATE_MESSAGE'] = '';
+        $r =& $this->request;
+
+        if (isset($r->args['pref']['editWidth'])
+            and ($r->getPref('editWidth') != $r->args['pref']['editWidth'])) {
+            $r->_prefs->set('editWidth', $r->args['pref']['editWidth']);
+        }
+        if (isset($r->args['pref']['editHeight'])
+            and ($r->getPref('editHeight') != $r->args['pref']['editHeight'])) {
+            $r->_prefs->set('editHeight', $r->args['pref']['editHeight']);
+        }
 
         if (! $this->canEdit()) {
             if ($this->isInitialEdit())
                 return $this->viewSource();
             $tokens['PAGE_LOCKED_MESSAGE'] = $this->getLockedMessage();
         }
-        elseif ($this->editaction == 'save') {
-            if ($this->savePage())
+        elseif ($r->getArg('save_and_redirect_to') != "") {
+            if (ENABLE_CAPTCHA && $this->Captcha->Failed()) {
+		$this->tokens['PAGE_LOCKED_MESSAGE'] = 
+                    HTML::p(HTML::h1($this->Captcha->failed_msg));
+	    }
+            elseif ( $this->savePage()) {
+                // noreturn
+                $r->redirect(WikiURL($r->getArg('save_and_redirect_to')));
                 return true;    // Page saved.
+            }
             $saveFailed = true;
         }
+        elseif ($this->editaction == 'save') {
+            if (ENABLE_CAPTCHA && $this->Captcha->Failed()) {
+		$this->tokens['PAGE_LOCKED_MESSAGE'] = 
+                    HTML::p(HTML::h1($this->Captcha->failed_msg));
+	    }
+            elseif ($this->savePage()) {
+                return true;    // Page saved.
+            }
+            else {
+                $saveFailed = true;
+            }
+        }
 
-        if ($saveFailed || $this->isConcurrentUpdate())
+        if ($saveFailed and $this->isConcurrentUpdate())
         {
             // Get the text of the original page, and the two conflicting edits
             // The diff3 class takes arrays as input.  So retrieve content as
@@ -97,90 +138,34 @@ class PageEditor
             $this->_currentVersion = $this->current->getVersion();
             $this->version = $this->_currentVersion;
             $unresolved = $diff->ConflictingBlocks;
-            $tokens['CONCURRENT_UPDATE_MESSAGE'] = $this->getConflictMessage($unresolved);
+            $tokens['CONCURRENT_UPDATE_MESSAGE'] 
+                = $this->getConflictMessage($unresolved);
+        } elseif ($saveFailed && !$this->_isSpam) {
+            $tokens['CONCURRENT_UPDATE_MESSAGE'] = 
+                HTML(HTML::h2(_("Some internal editing error")),
+            	     HTML::p(_("Your are probably trying to edit/create an invalid version of this page.")),
+            	     HTML::p(HTML::em(_("&version=-1 might help."))));
         }
 
+        if ($this->editaction == 'edit_convert')
+            $tokens['PREVIEW_CONTENT'] = $this->getConvertedPreview();
         if ($this->editaction == 'preview')
             $tokens['PREVIEW_CONTENT'] = $this->getPreview(); // FIXME: convert to _MESSAGE?
 
         // FIXME: NOT_CURRENT_MESSAGE?
-
         $tokens = array_merge($tokens, $this->getFormElements());
 
-        if (defined('JS_SEARCHREPLACE') and JS_SEARCHREPLACE) {
-            $tokens['JS_SEARCHREPLACE'] = 1;
-            $GLOBALS['Theme']->addMoreHeaders(Javascript("
-var wart=0, d, f, x='', replacewin, pretxt=new Array(), pretxt_anzahl=0;
-var fag='<font face=\"arial,helvetica,sans-serif\" size=\"-1\">', fr='<font color=\"#cc0000\">', spn='<span class=\"grey\">';
-
-function define_f() {
-   f=document.getElementById('editpage');
-   f.editarea=document.getElementById('edit[content]');
-   if(f.rck.style) f.rck.style.color='#ececec';
-}
-
-function replace() {
-   replacewin=window.open('','','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,height=90,width=450');
-   replacewin.window.document.write('<html><head><title>"._("Search & Replace")."</title><style type=\"text/css\"><'+'!'+'-- input.btt {font-family:Tahoma,Verdana,Geneva,sans-serif;font-size:10pt} --'+'></style></head><body bgcolor=\"#dddddd\" onload=\"if(document.forms[0].ein.focus) document.forms[0].ein.focus()\"><form><center><table><tr><td align=\"right\">'+fag+'"._("Search").":</font></td><td align=\"left\"><input type=\"text\" name=\"ein\" size=\"50\" maxlength=\"500\"></td></tr><tr><td align=\"right\">'+fag+' "._("Replace with").":</font></td><td align=\"left\"><input type=\"text\" name=\"aus\" size=\"50\" maxlength=\"500\"></td></tr><tr><td colspan=\"2\" align=\"center\"><input class=\"btt\" type=\"button\" value=\" "._("OK")." \" onclick=\"self.opener.do_replace()\">&nbsp;&nbsp;&nbsp;<input class=\"btt\" type=\"button\" value=\""._("Close")."\" onclick=\"self.close()\"></td></tr></table></center></form></body></html>');
-   replacewin.window.document.close();
-}
-
-function do_replace() {
-   var txt=pretxt[pretxt_anzahl]=f.editarea.value, ein=new RegExp(replacewin.document.forms[0].ein.value,'g'), aus=replacewin.document.forms[0].aus.value;
-   if(ein==''||ein==null) {
-      replacewin.window.document.forms[0].ein.focus();
-      return;
-   }
-   var z_repl=txt.match(ein)? txt.match(ein).length : 0;
-   txt=txt.replace(ein,aus);
-   ein=ein.toString().substring(1,ein.toString().length-2);
-   result(z_repl, 'Substring \"'+ein+'\" found '+z_repl+' times. Replace with \"'+aus+'\"?', txt, 'String \"'+ein+'\" not found.');
-   replacewin.window.focus();
-   replacewin.window.document.forms[0].ein.focus();
-}
-function result(zahl,frage,txt,alert_txt) {
-   if(wart!=0&&wart.window) {
-      wart.window.close();
-      wart=0;
-   }
-   if(zahl>0) {
-      if(window.confirm(frage)==true) {
-         f.editarea.value=txt;
-         pretxt_anzahl++;
-         if(f.rck.style) f.rck.style.color='#000000';
-         f.rck.value='"._("Undo")."';
-      }
-   } else alert(alert_txt);
-}
-function rueck() {
-   if(pretxt_anzahl==0) return;
-   else if(pretxt_anzahl>0) {
-      f.editarea.value=pretxt[pretxt_anzahl-1];
-      pretxt[pretxt_anzahl]=null;
-      pretxt_anzahl--;
-      if(pretxt_anzahl==0) {
-         alert('Operation undone.');
-         if(f.rck.style) f.rck.style.color='#ececec';
-         f.rck.value='("._("Undo").")';
-         if(f.rck.blur) f.rck.blur();
-      }
-   }
-}
-function speich() {
-   pretxt[pretxt_anzahl]=f.editarea.value;
-   pretxt_anzahl++;
-   if(f.rck.style) f.rck.style.color='#000000';
-   f.rck.value='"._("Undo")."';
-}
-"));
-            $GLOBALS['Theme']->addMoreAttr('body'," onload='define_f()'");
+        if (ENABLE_EDIT_TOOLBAR) {
+            include_once("lib/EditToolbar.php");
+            $toolbar = new EditToolbar();
+            $tokens = array_merge($tokens, $toolbar->getTokens());
         }
 
         return $this->output('editpage', _("Edit: %s"));
     }
 
     function output ($template, $title_fs) {
-        global $Theme;
+        global $WikiTheme;
         $selected = &$this->selected;
         $current = &$this->current;
 
@@ -193,10 +178,9 @@ function speich() {
             $pagelink = WikiLink($this->page);
         }
 
-
         $title = new FormattedText ($title_fs, $pagelink);
-        if ($template == 'editpage' and USE_HTMLAREA) {
-            $Theme->addMoreHeaders(Edit_HtmlArea_Head());
+        if (USE_HTMLAREA and $template == 'editpage') {
+            $WikiTheme->addMoreHeaders(Edit_HtmlArea_Head());
             //$tokens['PAGE_SOURCE'] = Edit_HtmlArea_ConvertBefore($this->_content);
         }
         $template = Template($template, $this->tokens);
@@ -210,6 +194,7 @@ function speich() {
         assert($this->selected);
 
         $this->tokens['PAGE_SOURCE'] = $this->_content;
+        $this->tokens['HIDDEN_INPUTS'] = HiddenInputs($this->request->getArgs());
         return $this->output('viewsource', _("View Source: %s"));
     }
 
@@ -249,6 +234,21 @@ function speich() {
             return true;
         }
 
+        if (!$this->user->isAdmin() and $this->isSpam()) {
+            $this->_isSpam = true;
+            return false;
+            /*
+            // Save failed. No changes made.
+            $this->_redirectToBrowsePage();
+            // user will probably not see the rest of this...
+            include_once('lib/display.php');
+            // force browse of current version:
+            $request->setArg('version', false);
+            displayPage($request, 'nochanges');
+            return true;
+            */
+        }
+
         $page = &$this->page;
 
         // Include any meta-data from original page version which
@@ -261,8 +261,13 @@ function speich() {
         
         // Save new revision
         $this->_content = $this->getContent();
-        $newrevision = $page->save($this->_content, $this->_currentVersion + 1, $meta);
-        if (!isa($newrevision, 'wikidb_pagerevision')) {
+        $newrevision = $page->save($this->_content, 
+        			   $this->version == -1 
+                                     ? -1 
+                                     : $this->_currentVersion + 1, 
+                                   // force new?
+        			   $meta);
+        if (!isa($newrevision, 'WikiDB_PageRevision')) {
             // Save failed.  (Concurrent updates).
             return false;
         }
@@ -275,15 +280,19 @@ function speich() {
         $cleaner = new ArchiveCleaner($GLOBALS['ExpireParams']);
         $cleaner->cleanPageRevisions($page);
 
-        /* generate notification emails done in WikiDB::save to catch all direct calls 
-          (admin plugins) */
+        /* generate notification emails done in WikiDB::save to catch 
+         all direct calls (admin plugins) */
+
+        // look at the errorstack
+        $errors   = $GLOBALS['ErrorManager']->_postponed_errors;
+        $warnings = $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML(); 
+        $GLOBALS['ErrorManager']->_postponed_errors = $errors;
 
         $dbi = $request->getDbh();
-        $warnings = $dbi->GenericWarnings();
         $dbi->touch();
         
-        global $Theme;
-        if (empty($warnings) && ! $Theme->getImageURL('signature')) {
+        global $WikiTheme;
+        if (empty($warnings->_content) && ! $WikiTheme->getImageURL('signature')) {
             // Do redirect to browse page if no signature has
             // been defined.  In this case, the user will most
             // likely not see the rest of the HTML we generate
@@ -297,7 +306,7 @@ function speich() {
 
         $template = Template('savepage', $this->tokens);
         $template->replace('CONTENT', $newrevision->getTransformedContent());
-        if (!empty($warnings))
+        if (!empty($warnings->_content))
             $template->replace('WARNINGS', $warnings);
 
         $pagelink = WikiLink($page);
@@ -328,9 +337,102 @@ function speich() {
         return $this->_content == $current->getPackedContent();
     }
 
+    /** 
+     * Handle AntiSpam here. How? http://wikiblacklist.blogspot.com/
+     * Need to check dynamically some blacklist wikipage settings 
+     * (plugin WikiAccessRestrictions) and some static blacklist.
+     * DONE: 
+     *   Always: More then 20 new external links
+     *   ENABLE_SPAMASSASSIN:  content patterns by babycart (only php >= 4.3 for now)
+     *   ENABLE_SPAMBLOCKLIST: content domain blacklist
+     */
+    function isSpam () {
+        $current = &$this->current;
+        $request = &$this->request;
+
+        $oldtext = $current->getPackedContent();
+        $newtext =& $this->_content;
+
+        // FIXME: in longer texts the NUM_SPAM_LINKS number should be increased.
+        //        better use a certain text : link ratio.
+
+        // 1. Not more then 20 new external links
+        if ($this->numLinks($newtext) - $this->numLinks($oldtext) >= NUM_SPAM_LINKS)
+        {
+            // Allow strictly authenticated users?
+            // TODO: mail the admin?
+            $this->tokens['PAGE_LOCKED_MESSAGE'] = 
+                HTML($this->getSpamMessage(),
+                     HTML::p(HTML::strong(_("Too many external links."))));
+            return true;
+        }
+        // 2. external babycart (SpamAssassin) check
+        // This will probably prevent from discussing sex or viagra related topics. So beware.
+        if (ENABLE_SPAMASSASSIN) {
+            include_once("lib/spam_babycart.php");
+            if ($babycart = check_babycart($newtext, $request->get("REMOTE_ADDR"), 
+                                           $this->user->getId())) {
+                // TODO: mail the admin
+                if (is_array($babycart))
+                    $this->tokens['PAGE_LOCKED_MESSAGE'] = 
+                        HTML($this->getSpamMessage(),
+                             HTML::p(HTML::em(_("SpamAssassin reports: "), 
+                                                join("\n", $babycart))));
+                return true;
+            }
+        }
+        // 3. extract (new) links and check surbl for blocked domains
+        if (ENABLE_SPAMBLOCKLIST and $this->numLinks($newtext)) {
+            include_once("lib/SpamBlocklist.php");
+            include_once("lib/InlineParser.php");
+            $parsed = TransformLinks($newtext);
+            foreach ($parsed->_content as $link) {
+            	if (isa($link, 'Cached_ExternalLink')) {
+                  $uri = $link->_getURL($this->page->getName());
+                  if ($res = IsBlackListed($uri)) {
+                    // TODO: mail the admin
+                    $this->tokens['PAGE_LOCKED_MESSAGE'] = 
+                        HTML($this->getSpamMessage(),
+                             HTML::p(HTML::strong(_("External links contain blocked domains:")),
+                             HTML::ul(HTML::li(sprintf(_("%s is listed at %s"), 
+                                                       $res[2], $res[0])))));
+                    return true;
+                  }
+            	}
+            }
+        }
+
+        return false;
+    }
+
+    /** Number of external links in the wikitext
+     */
+    function numLinks(&$text) {
+        return substr_count($text, "http://") + substr_count($text, "https://");
+    }
+
+    /** Header of the Anti Spam message 
+     */
+    function getSpamMessage () {
+        return
+            HTML(HTML::h2(_("Spam Prevention")),
+                 HTML::p(_("This page edit seems to contain spam and was therefore not saved."),
+                         HTML::br(),
+                         _("Sorry for the inconvenience.")),
+                 HTML::p(""));
+    }
+
     function getPreview () {
         include_once('lib/PageType.php');
         $this->_content = $this->getContent();
+	return new TransformedText($this->page, $this->_content, $this->meta);
+    }
+
+    function getConvertedPreview () {
+        include_once('lib/PageType.php');
+        $this->_content = $this->getContent();
+        $this->meta['markup'] = 2.0;
+        $this->_content = ConvertOldMarkup($this->_content);
 	return new TransformedText($this->page, $this->_content, $this->meta);
     }
 
@@ -338,7 +440,7 @@ function speich() {
     function getContent () {
         if (USE_HTMLAREA) {
             $xml_output = Edit_HtmlArea_ConvertAfter($this->_content);
-            $this->_content = join("",$xml_output->_content);
+            $this->_content = join("", $xml_output->_content);
             return $this->_content;
         } else {
             return $this->_content;
@@ -388,22 +490,25 @@ function speich() {
     function getTextArea () {
         $request = &$this->request;
 
-        // wrap=virtual is not HTML4, but without it NS4 doesn't wrap
-        // long lines
         $readonly = ! $this->canEdit(); // || $this->isConcurrentUpdate();
         if (USE_HTMLAREA) {
             $html = $this->getPreview();
             $this->_wikicontent = $this->_content;
             $this->_content = $html->asXML();
         }
-        $textarea = HTML::textarea(array('class' => 'wikiedit',
+
+        $textarea = HTML::textarea(array('class'=> 'wikiedit',
                                          'name' => 'edit[content]',
                                          'id'   => 'edit[content]',
                                          'rows' => $request->getPref('editHeight'),
                                          'cols' => $request->getPref('editWidth'),
-                                         'readonly' => (bool) $readonly,
-                                         'wrap' => 'virtual'),
+                                         'readonly' => (bool) $readonly),
                                    $this->_content);
+        /** <textarea wrap="virtual"> is not valid XHTML but Netscape 4 requires it
+         * to wrap long lines.
+         */
+        if (isBrowserNS4())
+            $textarea->setAttr('wrap', 'virtual');
         if (USE_HTMLAREA)
             return Edit_HtmlArea_Textarea($textarea,$this->_wikicontent,'edit[content]');
         else
@@ -411,9 +516,9 @@ function speich() {
     }
 
     function getFormElements () {
+        global $WikiTheme;
         $request = &$this->request;
         $page = &$this->page;
-
 
         $h = array('action'   => 'edit',
                    'pagename' => $page->getName(),
@@ -422,13 +527,14 @@ function speich() {
                    'edit[current_version]' => $this->_currentVersion);
 
         $el['HIDDEN_INPUTS'] = HiddenInputs($h);
-
-
         $el['EDIT_TEXTAREA'] = $this->getTextArea();
-
+        if ( ENABLE_CAPTCHA ) {
+            $el = array_merge($el, $this->Captcha->getFormElements());
+        }
         $el['SUMMARY_INPUT']
             = HTML::input(array('type'  => 'text',
                                 'class' => 'wikitext',
+                                'id' => 'edit[summary]',
                                 'name'  => 'edit[summary]',
                                 'size'  => 50,
                                 'maxlength' => 256,
@@ -436,6 +542,7 @@ function speich() {
         $el['MINOR_EDIT_CB']
             = HTML::input(array('type' => 'checkbox',
                                 'name'  => 'edit[minor_edit]',
+                                'id' => 'edit[minor_edit]',
                                 'checked' => (bool) $this->meta['is_minor_edit']));
         $el['OLD_MARKUP_CB']
             = HTML::input(array('type' => 'checkbox',
@@ -444,10 +551,12 @@ function speich() {
                                 'checked' => $this->meta['markup'] < 2.0,
                                 'id' => 'useOldMarkup',
                                 'onclick' => 'showOldMarkupRules(this.checked)'));
-
+        $el['OLD_MARKUP_CONVERT'] = ($this->meta['markup'] < 2.0) 
+            ? Button('submit:edit[edit_convert]', _("Convert"), 'wikiaction') : '';
         $el['LOCKED_CB']
             = HTML::input(array('type' => 'checkbox',
                                 'name' => 'edit[locked]',
+                                'id'   => 'edit[locked]',
                                 'disabled' => (bool) !$this->user->isadmin(),
                                 'checked'  => (bool) $this->locked));
 
@@ -459,13 +568,31 @@ function speich() {
 
         $el['IS_CURRENT'] = $this->version == $this->current->getVersion();
 
+        $el['WIDTH_PREF'] = HTML::input(array('type' => 'text',
+                                    'size' => 3,
+                                    'maxlength' => 4,
+                                    'class' => "numeric",
+                                    'name' => 'pref[editWidth]',
+                                    'id'   => 'pref[editWidth]',
+                                    'value' => $request->getPref('editWidth'),
+                                    'onchange' => 'this.form.submit();'));
+        $el['HEIGHT_PREF'] = HTML::input(array('type' => 'text',
+                                     'size' => 3,
+                                     'maxlength' => 4,
+                                     'class' => "numeric",
+                                     'name' => 'pref[editHeight]',
+                                     'id'   => 'pref[editHeight]',
+                                     'value' => $request->getPref('editHeight'),
+                                     'onchange' => 'this.form.submit();'));
+        $el['SEP'] = $WikiTheme->getButtonSeparator();
+        $el['AUTHOR_MESSAGE'] = fmt("Author will be logged as %s.", HTML::em($this->user->getId()));
+        
         return $el;
     }
 
     function _redirectToBrowsePage() {
         $this->request->redirect(WikiURL($this->page, false, 'absolute_url'));
     }
-    
 
     function _restoreState () {
         $request = &$this->request;
@@ -495,6 +622,10 @@ function speich() {
         $meta['summary'] = trim(substr($posted['summary'], 0, 256));
         $meta['is_minor_edit'] = !empty($posted['minor_edit']);
         $meta['pagetype'] = !empty($posted['pagetype']) ? $posted['pagetype'] : false;
+        if ( ENABLE_CAPTCHA )
+	    $meta['captcha_input'] = !empty($posted['captcha_input']) ?
+		$posted['captcha_input'] : '';
+
         $this->meta = array_merge($this->meta, $meta);
         $this->locked = !empty($posted['locked']);
 
@@ -502,6 +633,8 @@ function speich() {
             $this->editaction = 'preview';
         elseif (!empty($posted['save']))
             $this->editaction = 'save';
+        elseif (!empty($posted['edit_convert']))
+            $this->editaction = 'edit_convert';
         else
             $this->editaction = 'edit';
 
@@ -520,7 +653,6 @@ function speich() {
         $this->_currentVersion = $current->getVersion();
         $this->_content = $selected->getPackedContent();
 
-        $this->meta['summary'] = '';
         $this->locked = $this->page->get('locked');
 
         // If author same as previous author, default minor_edit to on.
@@ -537,6 +669,10 @@ function speich() {
 
         $this->meta['markup'] = $is_new_markup ? 2.0: false;
         $this->meta['pagetype'] = $selected->get('pagetype');
+        if ($this->meta['pagetype'] == 'wikiblog')
+            $this->meta['summary'] = $selected->get('summary'); // keep blog title
+        else
+            $this->meta['summary'] = '';
         $this->editaction = 'edit';
     }
 }
@@ -584,11 +720,12 @@ extends PageEditor
             $tokens['CONCURRENT_UPDATE_MESSAGE'] = $this->getConflictMessage();
         }
 
+        if ($this->editaction == 'edit_convert')
+            $tokens['PREVIEW_CONTENT'] = $this->getConvertedPreview();
         if ($this->editaction == 'preview')
             $tokens['PREVIEW_CONTENT'] = $this->getPreview(); // FIXME: convert to _MESSAGE?
 
         // FIXME: NOT_CURRENT_MESSAGE?
-
         $tokens = array_merge($tokens, $this->getFormElements());
 
         return $this->output('editpage', _("Merge and Edit: %s"));
@@ -608,13 +745,14 @@ extends PageEditor
             $pagelink = WikiLink($this->page);
         }
 
-        $title = new FormattedText ($title_fs, $pagelink);
+        //$title = new FormattedText ($title_fs, $pagelink);
         $template = Template($template, $this->tokens);
 
         //GeneratePage($template, $title, $rev);
         PrintXML($template);
         return true;
     }
+
     function getConflictMessage () {
         $message = HTML(HTML::p(fmt("Some of the changes could not automatically be combined.  Please look for sections beginning with '%s', and ending with '%s'.  You will need to edit those sections by hand before you click Save.",
                                     "<<<<<<<",
@@ -625,7 +763,148 @@ extends PageEditor
 }
 
 /**
- $Log$
+ $Log: editpage.php,v $
+ Revision 1.106  2005/11/21 22:03:08  rurban
+ fix syntax error inside ENABLE_SPAMBLOCKLIST
+
+ Revision 1.105  2005/11/21 20:53:59  rurban
+ beautify request pref lines, no antispam if admin (netznetz request), user is a member anyway
+
+ Revision 1.101  2005/10/30 16:12:28  rurban
+ simplify viewsource tokens
+
+ Revision 1.100  2005/10/30 14:20:42  rurban
+ move Captcha specific vars and methods into a Captcha object
+ randomize Captcha chars positions and angles (smoothly)
+
+ Revision 1.99  2005/10/29 08:21:58  rurban
+ ENABLE_SPAMBLOCKLIST:
+   Check for links to blocked external tld domains in new edits, against
+   multi.surbl.org and bl.spamcop.net.
+
+ Revision 1.96  2005/05/06 17:54:22  rurban
+ silence Preview warnings for PAGE_LOCKED_MESSAGE, CONCURRENT_UPDATE_MESSAGE (thanks to schorni)
+
+ Revision 1.95  2005/04/25 20:17:14  rurban
+ captcha feature by Benjamin Drieu. Patch #1110699
+
+ Revision 1.94  2005/02/28 20:23:31  rurban
+ fix error_stack
+
+ Revision 1.93  2005/02/27 19:31:52  rurban
+ hack: display errorstack without sideeffects (save and restore)
+
+ Revision 1.92  2005/01/29 20:37:21  rurban
+ no edit toolbar at all if ENABLE_EDITTOOLBAR = false
+
+ Revision 1.91  2005/01/25 07:05:49  rurban
+ extract toolbar code, support new tags to get rid of php inside templates
+
+ Revision 1.90  2005/01/22 12:46:15  rurban
+ fix oldmakrup button label
+ update pref[edit*] settings
+
+ Revision 1.89  2005/01/21 14:07:49  rurban
+ reformatting
+
+ Revision 1.88  2004/12/17 16:39:03  rurban
+ minor reformatting
+
+ Revision 1.87  2004/12/16 18:28:05  rurban
+ keep wikiblog summary = page title
+
+ Revision 1.86  2004/12/11 14:50:15  rurban
+ new edit_convert button, to get rid of old markup eventually
+
+ Revision 1.85  2004/12/06 19:49:56  rurban
+ enable action=remove which is undoable and seeable in RecentChanges: ADODB ony for now.
+ renamed delete_page to purge_page.
+ enable action=edit&version=-1 to force creation of a new version.
+ added BABYCART_PATH config
+ fixed magiqc in adodb.inc.php
+ and some more docs
+
+ Revision 1.84  2004/12/04 12:58:26  rurban
+ enable babycart Blog::SpamAssassin module on ENABLE_SPAMASSASSIN=true
+ (currently only for php >= 4.3.0)
+
+ Revision 1.83  2004/12/04 11:55:39  rurban
+ First simple AntiSpam prevention:
+   No more than 20 new http:// links allowed
+
+ Revision 1.82  2004/11/30 22:21:56  rurban
+ changed gif to optimized (pngout) png
+
+ Revision 1.81  2004/11/29 17:57:27  rurban
+ translated pulldown buttons
+
+ Revision 1.80  2004/11/25 17:20:51  rurban
+ and again a couple of more native db args: backlinks
+
+ Revision 1.79  2004/11/21 11:59:20  rurban
+ remove final \n to be ob_cache independent
+
+ Revision 1.78  2004/11/16 17:57:45  rurban
+ fix search&replace button
+ use new addTagButton machinery
+ new showPulldown for categories, TODO: in a seperate request
+
+ Revision 1.77  2004/11/15 15:52:35  rurban
+ improve js stability
+
+ Revision 1.76  2004/11/15 15:37:34  rurban
+ fix JS_SEARCHREPLACE
+   don't use document.write for replace, otherwise self.opener is not defined.
+
+ Revision 1.75  2004/09/16 08:00:52  rurban
+ just some comments
+
+ Revision 1.74  2004/07/03 07:36:28  rurban
+ do not get unneccessary content
+
+ Revision 1.73  2004/06/16 21:23:44  rurban
+ fixed non-object fatal #215
+
+ Revision 1.72  2004/06/14 11:31:37  rurban
+ renamed global $Theme to $WikiTheme (gforge nameclash)
+ inherit PageList default options from PageList
+   default sortby=pagename
+ use options in PageList_Selectable (limit, sortby, ...)
+ added action revert, with button at action=diff
+ added option regex to WikiAdminSearchReplace
+
+ Revision 1.71  2004/06/03 18:06:29  rurban
+ fix file locking issues (only needed on write)
+ fixed immediate LANG and THEME in-session updates if not stored in prefs
+ advanced editpage toolbars (search & replace broken)
+
+ Revision 1.70  2004/06/02 20:47:47  rurban
+ dont use the wikiaction class
+
+ Revision 1.69  2004/06/02 10:17:56  rurban
+ integrated search/replace into toolbar
+ added save+preview buttons
+
+ Revision 1.68  2004/06/01 15:28:00  rurban
+ AdminUser only ADMIN_USER not member of Administrators
+ some RateIt improvements by dfrankow
+ edit_toolbar buttons
+
+ Revision _1.6  2004/05/26 15:48:00  syilek
+ fixed problem with creating page with slashes from one true page
+
+ Revision _1.5  2004/05/25 16:51:53  syilek
+ added ability to create a page from the category page and not have to edit it
+
+ Revision 1.67  2004/05/27 17:49:06  rurban
+ renamed DB_Session to DbSession (in CVS also)
+ added WikiDB->getParam and WikiDB->getAuthParam method to get rid of globals
+ remove leading slash in error message
+ added force_unlock parameter to File_Passwd (no return on stale locks)
+ fixed adodb session AffectedRows
+ added FileFinder helpers to unify local filenames and DATA_PATH names
+ editpage.php: new edit toolbar javascript on ENABLE_EDIT_TOOLBAR
+
  Revision 1.66  2004/04/29 23:25:12  rurban
  re-ordered locale init (as in 1.3.9)
  fixed loadfile with subpages, and merge/restore anyway

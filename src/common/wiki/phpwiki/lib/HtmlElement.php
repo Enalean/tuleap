@@ -1,4 +1,4 @@
-<?php rcs_id('$Id$');
+<?php rcs_id('$Id: HtmlElement.php,v 1.47 2005/08/06 12:53:36 rurban Exp $');
 /**
  * Code for writing the HTML subset of XML.
  * @author: Jeff Dairiki
@@ -97,7 +97,7 @@ function HTML (/* $content, ... */) {
 
 class HTML extends HtmlElement {
     function raw ($html_text) {
-        return new RawXML($html_text);
+        return new RawXml($html_text);
     }
     
     function getTagProperties($tag) {
@@ -110,10 +110,12 @@ class HTML extends HtmlElement {
         if (is_string($tags))
             $tags = preg_split('/\s+/', $tags);
         foreach ($tags as $tag) {
-            if (isset($props[$tag]))
-                $props[$tag] |= $prop_flag;
-            else
-                $props[$tag] = $prop_flag;
+            $tag = trim($tag);
+            if ($tag)
+                if (isset($props[$tag]))
+                    $props[$tag] |= $prop_flag;
+                else
+                    $props[$tag] = $prop_flag;
         }
     }
 
@@ -348,6 +350,10 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('input');
         return $el->_init2(func_get_args());
     }
+    function button (/*...*/) {
+        $el = new HtmlElement('button');
+        return $el->_init2(func_get_args());
+    }
     function option (/*...*/) {
         $el = new HtmlElement('option');
         return $el->_init2(func_get_args());
@@ -358,6 +364,10 @@ class HTML extends HtmlElement {
     }
     function textarea (/*...*/) {
         $el = new HtmlElement('textarea');
+        return $el->_init2(func_get_args());
+    }
+    function label (/*...*/) {
+        $el = new HtmlElement('label');
         return $el->_init2(func_get_args());
     }
 
@@ -386,6 +396,14 @@ class HTML extends HtmlElement {
         $el = new HtmlElement('nobody');
         return $el->_init2(func_get_args());
     }
+    function object (/*...*/) {
+        $el = new HtmlElement('object');
+        return $el->_init2(func_get_args());
+    }
+    function embed (/*...*/) {
+        $el = new HtmlElement('embed');
+        return $el->_init2(func_get_args());
+    }
 }
 
 define('HTMLTAG_EMPTY', 1);
@@ -400,8 +418,8 @@ HTML::_setTagProperty(HTMLTAG_ACCEPTS_INLINE,
                       'b big i small tt ' // %fontstyle
                       . 's strike u ' // (deprecated)
                       . 'abbr acronym cite code dfn em kbd samp strong var ' //%phrase
-                      . 'a img object br script map q sub sup span bdo '//%special
-                      . 'button input label option select textarea ' //%formctl
+                      . 'a img object embed br script map q sub sup span bdo '//%special
+                      . 'button input label option select textarea label ' //%formctl
 
                       // %block elements which contain inline content
                       . 'address h1 h2 h3 h4 h5 h6 p pre '
@@ -411,7 +429,7 @@ HTML::_setTagProperty(HTMLTAG_ACCEPTS_INLINE,
                       // other with inline content
                       . 'caption dt label legend '
                       // other with either inline or block
-                      . 'dd del ins li td th colgroup ');
+                      . 'dd del ins li td th colgroup');
 
 HTML::_setTagProperty(HTMLTAG_INLINE,
                       // %inline elements:
@@ -449,7 +467,7 @@ function HiddenInputs ($query_args, $pfx = false, $exclude = array()) {
     $inputs = HTML();
 
     foreach ($query_args as $key => $val) {
-        if (in_array($key,$exclude)) continue;
+        if (in_array($key, $exclude)) continue;
         $name = $pfx ? $pfx . "[$key]" : $key;
         if (is_array($val))
             $inputs->pushContent(HiddenInputs($val, $name));
@@ -470,15 +488,18 @@ function HiddenInputs ($query_args, $pfx = false, $exclude = array()) {
  * @return HtmlElement A <script> element.
  */
 function JavaScript ($js, $script_args = false) {
-    $default_script_args = array('version' => 'JavaScript',
+    $default_script_args = array(//'version' => 'JavaScript', // not xhtml conformant
                                  'type' => 'text/javascript');
-    $script_args = $script_args ? array_merge($default_script_args,$script_args)
+    $script_args = $script_args ? array_merge($default_script_args, $script_args)
                                 : $default_script_args;
     if (empty($js))
-        return HTML::script($script_args);
+        return HTML(HTML::script($script_args),"\n");
     else
-        return HTML::script($script_args,
-                            new RawXml("<!-- //\n${js}\n// -->"));
+        // see http://devedge.netscape.com/viewsource/2003/xhtml-style-script/
+        return HTML(HTML::script($script_args,
+                            new RawXml((ENABLE_XHTML_XML ? "\n//<![CDATA[" : "\n<!--//")
+                                       . "\n".trim($js)."\n"
+                                       . (ENABLE_XHTML_XML ? "//]]>\n" : "// -->"))),"\n");
 }
 
 /** Conditionally display content based of whether javascript is supported.
@@ -513,7 +534,40 @@ function IfJavaScript($if_content = false, $else_content = false) {
 }
     
 /**
- $Log$
+ $Log: HtmlElement.php,v $
+ Revision 1.47  2005/08/06 12:53:36  rurban
+ beautify SCRIPT lines
+
+ Revision 1.46  2005/01/25 06:50:33  rurban
+ added label
+
+ Revision 1.45  2005/01/10 18:05:56  rurban
+ php5 case-sensitivity
+
+ Revision 1.44  2005/01/08 20:58:19  rurban
+ ending space after colgroup breaks _setTagProperty
+
+ Revision 1.43  2004/11/21 11:59:14  rurban
+ remove final \n to be ob_cache independent
+
+ Revision 1.42  2004/09/26 17:09:23  rurban
+ add SVG support for Ploticus (and hopefully all WikiPluginCached types)
+ SWF not yet.
+
+ Revision 1.41  2004/08/05 17:31:50  rurban
+ more xhtml conformance fixes
+
+ Revision 1.40  2004/06/25 14:29:17  rurban
+ WikiGroup refactoring:
+   global group attached to user, code for not_current user.
+   improved helpers for special groups (avoid double invocations)
+ new experimental config option ENABLE_XHTML_XML (fails with IE, and document.write())
+ fixed a XHTML validation error on userprefs.tmpl
+
+ Revision 1.39  2004/05/17 13:36:49  rurban
+ Apply RFE #952323 "ExternalSearchPlugin improvement", but
+   with <button><img></button>
+
  Revision 1.38  2004/05/12 10:49:54  rurban
  require_once fix for those libs which are loaded before FileFinder and
    its automatic include_path fix, and where require_once doesn't grok

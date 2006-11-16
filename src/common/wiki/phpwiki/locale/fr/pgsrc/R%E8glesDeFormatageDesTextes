@@ -1,0 +1,210 @@
+Date: Sat, 5 Jun 2004 16:49:57 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: R%E8glesDeFormatageDesTextes,v 1.7 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=R%E8glesDeFormatageDesTextes;
+  pgsrc_version="2 $Revision: 1.7 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+----
+! Vue d'ensemble
+RèglesDeFormatageDesTextes%%%
+*Emphase :* <tt>~_</tt> pour _italique_, <tt>~*</tt> pour *bold*,
+<tt>~_~*</tt> pour _*les deux*_, <tt>~=</tt> pour =chasse fixe=.%%%
+*Listes :* <tt>~*</tt> pour listes pointées, <tt>#</tt> pour listes numérotées,
+_Terme<b>:</b>~<nouvelle ligne> définition_ pour les listes de définitions.%%%
+*Texte pré-formaté :* enfermer le texte dans <tt>~<pre>~</pre></tt> ou
+<tt>~<verbatim>~</verbatim></tt>.%%%
+*Texte décalé :* décaler le paragraphe avec des espaces.%%%
+*Liens :* ~JoindreMotsAvecMajuscules ou utiliser des crochets pour une 
+<tt>~[page]</tt> ou une URL <tt>~[~http://cool.wiki.int/]</tt>.%%%
+*Désactiver les liens :* Préfixer avec "<tt>~~</tt>":
+<tt>~~~NePasLier</tt>, nommer les liens comme <tt>~[texte | URL]</tt>.%%%
+*Divers :* "<tt>!</tt>", "<tt>!!</tt>", "<tt>!!!</tt>" pour les titres et sous-titres,
+"<tt>~%%%</tt>" ou "<tt>~<br></tt>" pour aller à la ligne,
+"<tt>~----</tt>" fait un trait horizontal.%%%
+*Balises HTML utilisables :* <b>b</b> <big>big</big> <i>i</i>
+<small>small</small> <tt>tt</tt> <em>em</em> <strong>strong</strong>
+<abbr>abbr</abbr> <acronym>acronym</acronym> <cite>cite</cite>
+<code>code</code> <dfn>dfn</dfn> <kbd>kbd</kbd> <samp>samp</samp>
+<var>var</var> <sup>sup</sup> <sub>sub</sub>
+
+----
+
+!!! Paragraphes
+
+* N'indentez pas les paragraphes
+* Les mots reviennent à la ligne et remplissent les blancs au besoin
+* Utilisez des lignes vides comme séparateurs
+* Quatre tirets ou plus créent une règle horizontale
+* %%''''% provoque un retour à la ligne (y compris dans les titres et les listes)
+
+
+!!! Listes
+
+* Un astérisque pour le premier niveau
+  * astérisque décalé pour le deuxième niveau, etc.
+* Utilisez <tt>~*</tt>, <tt>-</tt>, <tt>+</tt> ou <tt>o</tt> pour les listes à puces, <tt>#</tt> pour les listes numérotées (mélangez à volonté)
+* listes de définitions :
+  <pre>
+  Terme :
+    définition
+  </pre>
+  donne 
+  Terme :
+    définition
+  comme pour la liste =<DL><DT><DD>=
+* un item peut contenir plusieurs paragraphes et autre contenu multi-lignes, il faut juste décalé les items
+
+
+!!! Titres
+
+* '=!=' en début de ligne produit un petit titre
+* '=!!=' en début de ligne produit un titre moyen
+* '=!!!=' en début de ligne produit un gros titre
+
+
+!!! Texte pré-formaté
+
+* placer des lignes pré-formatées à l'intérieur de =~<pre>=:
+  <verbatim>
+  <pre>
+  Texte pré-formaté. Les LiensWiki marchent encore
+  </pre>
+  </verbatim>
+  donne
+  <pre>
+  Texte pré-formaté. Les LiensWiki marchent encore
+  </pre>
+* pour désactiver le lien, utiliser la marque =~<verbatim>= :
+  <pre>
+  <verbatim>
+  Texte pré-formaté. Plus de ~LienWiki
+  </verbatim>
+  </pre>
+  donne
+  <verbatim>
+  Texte pré-formaté. Plus de LienWiki
+  </verbatim>
+
+
+!!! Paragraphes indentés
+
+* deux (ou plus) espaces pour signaler un paragraphe décalé. Les décalages peuvent s'imbriquer 
+
+    Texte décalé
+
+      Texte encore plus décalé
+
+* le style email commenté est disponible :
+  <pre>
+  > texte commenté
+  </pre>
+  donne
+
+  > texte commenté.
+
+
+!!! Emphase
+
+* Utilisez un underscore (<tt>~_</tt>) pour l'emphase (habituellement en _italique_)
+* Utilisez un astérisque (<tt>~*</tt>) pour l'emphase forte (habituellement en *gras*)
+* Mélangez-les à volonté : *_gras italique_*
+* L'_emphase_ peut être utilisée _plusieurs_ fois dans une ligne, mais ne peut _pas_ passer 
+  à la ligne :
+
+  _ceci
+
+  ne marche pas_
+
+!!! Liens
+
+* Les hyperliens vers d'autres pages au sein du Wiki sont créés en plaçant le nom de la 
+  page entre crochets : [ceci est un hyperlien] ou en UtilisantDesMotsWiki (de préférence)
+* Les hyperliens vers des pages externes sont créés de cette façon : [http://www.wcsb.org/]
+* Vous pouvez nommer les liens en leur donnant un nom, une barre verticale (|) puis 
+  l'hyperlien ou le nom de la page : 
+  [page d'accueil de PhpWiki | http://phpwiki.sourceforge.net/] --- 
+  [la page d'accueil | PageAccueil]
+* Vous pouvez supprimer les liens vers les références à l'ancienne ou vers les URI en 
+  précédant le mot d'un '<tt>~~</tt>', e.g. ~NonLiéEnModeWiki, ~http://pas.de.lien.ici/
+* L'ancienne manière de lier les URL est aussi toujours supportée : précédez les URL de 
+  "<tt>http:</tt>", "<tt>ftp:</tt>" ou "<tt>mailto:</tt>" pour créer automatiquement 
+  des liens comme dans : http://c2.com/
+* Les URL se terminant par .png, .gif, ou .jpg sont inclus s'ils sont isolés entre 
+  crochets : [http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+* les #[hyperliens] dans la page sont réalisés en plaçant le nom d'une ancre
+  et en se référant à l'andre par un lien :
+  * ancres nommés :
+    * <tt>~#~[foo]</tt> : une ancre pour le texte "foo" avec l'identifiant "foo"
+    * <tt>~#~[|foo]</tt> : une ancre vide avec l'identifiant "foo"
+    * <tt>~#~[howdy|foo]</tt> : une ancre pour le texte "howdy" avec l'identifiant "foo"
+  * les références aux ancres nommées sont fait de cette manière :%%%
+    <tt>~[~#[#hyperliens]]</tt>, <tt>~[~AutrePage#foo]</tt>,
+    <tt>~[nommé|~AutrePage#foo]</tt>.
+
+
+!!! Tableaux
+
+* les tableaux sont des listes de définitions utilisant le tuyau (<tt>|</tt>) à la place
+  de des deux points (<tt>:</tt>)
+
+  <pre>
+  Terme 1 |
+     Définition 1 commence ici.
+     Terme 1.1 |
+        Définition 1.1
+     Terme 1.2 |
+        Définition 1.2
+     C'est une partie de la définition 1.
+  Terme 2 |
+     C'est le définition 2.
+  </pre>
+
+  Terme 1 |
+     Définition 1 commence ici.
+     Terme 1.1 |
+        Définition 1.1
+     Terme 1.2 |
+        Définition 1.2
+     C'est une partie de la définition 1.
+  Terme 2 |
+     C'est le définition 2.
+
+* les anciens styles de tableau sont possible avec le plugin OldStyleTablePlugin:
+
+
+!!! Langage HTML
+
+* certaines balises sont autorisées :
+  <b>b</b>, <big>big</big>, <i>i</i>, <small>small</small>,
+  <tt>tt</tt>, <em>em</em>, <strong>strong</strong>,
+  <abbr>abbr</abbr>, <acronym>acronym</acronym>, <cite>cite</cite>,
+  <code>code</code>, <dfn>dfn</dfn>, <kbd>kbd</kbd>,
+  <samp>samp</samp>, <var>var</var>, <sup>sup</sup> and <sub>sub</sub>
+* < et > sont eux-mêmes
+* les caractères & ne fonctionneront pas
+
+!!! Créer toute sorte de liens spéciaux
+
+* Voir [URLMagiquesPhpWiki] pour obtenir des détails gores sur la façon d'écrire 
+  divers types de liens de maintenance du wiki.
+
+!!! Insérer des plugins
+
+* quelques plugins embarqués dans les pages ajoutent des possibilités au Wiki. Par exemple,
+  <verbatim>
+  <?plugin BackLinks page=PageAccueil info=hits ?>
+  </verbatim>
+  donne
+  <?plugin BackLinks page=PageAccueil info=hits ?>
+
+* pour plus d'informations sur les plugins, voir PluginWiki, et GestionPlugin pour 
+  la liste des plugins.
+
+----
+
+DocumentationDePhpWiki

@@ -1,29 +1,33 @@
 <?php
-rcs_id('$Id$');
+rcs_id('$Id: themeinfo.php,v 1.24 2005/08/06 13:26:25 rurban Exp $');
 
 /*
- * This file defines the Sidebar appearance ("theme") of PhpWiki.
+ * This file defines the Sidebar appearance ("theme") of PhpWiki,
+ * which can be used as parent class for all sidebar themes. See blog.
+ * This use the dynamic jscalendar, which doesn't need extra requests 
+ * per month/year change.
  */
 
 require_once('lib/Theme.php');
+require_once('lib/WikiPlugin.php');
 
 class Theme_Sidebar extends Theme {
+
+    function Theme_Sidebar ($theme_name='Sidebar') {
+        parent::Theme($theme_name);
+
+        $this->calendarInit(true);
+    }
 
     function findTemplate ($name) {
         // hack for navbar.tmpl to hide the buttonseparator
         if ($name == "navbar") {
-            //$old = $Theme->getButtonSeparator();
-            $this->setButtonSeparator(HTML::Raw('<br /> &middot; '));
-            //$this->setButtonSeparator("\n");
-            //$Theme->setButtonSeparator($old);
+            $this->setButtonSeparator(HTML::Raw("<br />\n&nbsp;&middot;&nbsp;"));
         }
         if ($name == "actionbar" || $name == "signin") {
-            //$old = $Theme->getButtonSeparator();
-            //$this->setButtonSeparator(HTML::br());
             $this->setButtonSeparator(" ");
-            //$Theme->setButtonSeparator($old);
         }
-        return $this->_path . $this->_findFile("templates/$name.tmpl");
+        return parent::findTemplate($name);
     }
 
     function calendarLink($date = false) {
@@ -33,47 +37,95 @@ class Theme_Sidebar extends Theme {
 
     function calendarBase() {
         static $UserCalPageTitle = false;
+        global $request;
+
         if (!$UserCalPageTitle) 
-            $UserCalPageTitle = $GLOBALS['request']->_user->getId() . 
+            $UserCalPageTitle = $request->_user->getId() . 
                                 SUBPAGE_SEPARATOR . _("Calendar");
+        if (!$UserCalPageTitle)
+            $UserCalPageTitle = (BLOG_EMPTY_DEFAULT_PREFIX ? '' 
+                                 : ($request->_user->getId() . SUBPAGE_SEPARATOR)) . "Blog";
         return $UserCalPageTitle;
     }
-}
-$Theme = new Theme_Sidebar('Sidebar');
 
-$dbi = $GLOBALS['request']->getDbh();
-// display flat calender dhtml under the clock
-if ($dbi->isWikiPage($Theme->calendarBase())) {
-    $jslang = @$GLOBALS['LANG'];
-    $Theme->addMoreHeaders($Theme->_CSSlink(0,
-        $Theme->_findFile('jscalendar/calendar-phpwiki.css'),'all'));
-    $Theme->addMoreHeaders("\n");
-    $Theme->addMoreHeaders(JavaScript('',
-        array('src' => $Theme->_findData('jscalendar/calendar_stripped.js'))));
-    $Theme->addMoreHeaders("\n");
-    if (!($langfile = $Theme->_findData("jscalendar/lang/calendar-$jslang.js")))
-        $langfile = $Theme->_findData("jscalendar/lang/calendar-en.js");
-    $Theme->addMoreHeaders(JavaScript('',array('src' => $langfile)));
-    $Theme->addMoreHeaders("\n");
-    $Theme->addMoreHeaders(JavaScript('',
-        array('src' => $Theme->_findData('jscalendar/calendar-setup_stripped.js'))));
-    $Theme->addMoreHeaders("\n");
+    function calendarInit($force = false) {
+        $dbi = $GLOBALS['request']->getDbh();
+        // display flat calender dhtml in the sidebar
+        if ($force or $dbi->isWikiPage($this->calendarBase())) {
+            $jslang = @$GLOBALS['LANG'];
+            $this->addMoreHeaders
+                (
+                 $this->_CSSlink(0, 
+                                 $this->_findFile('jscalendar/calendar-phpwiki.css'), 'all'));
+            $this->addMoreHeaders
+                (JavaScript('',
+                            array('src' => $this->_findData('jscalendar/calendar'.(DEBUG?'':'_stripped').'.js'))));
+            if (!($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js")))
+                $langfile = $this->_findData("jscalendar/lang/calendar-en.js");
+            $this->addMoreHeaders(JavaScript('',array('src' => $langfile)));
+            $this->addMoreHeaders
+                (JavaScript('',
+                            array('src' => 
+                                  $this->_findData('jscalendar/calendar-setup'.(DEBUG?'':'_stripped').'.js'))));
+
+            // Get existing date entries for the current user
+            require_once("lib/TextSearchQuery.php");
+            $iter = $dbi->titleSearch(new TextSearchQuery("^".$this->calendarBase().SUBPAGE_SEPARATOR, true, "auto"));
+            $existing = array();
+            while ($page = $iter->next()) {
+                if ($page->exists())
+                    $existing[] = basename($page->_pagename);
+            }
+            if (!empty($existing)) {
+                $js_exist = '{"'.join('":1,"',$existing).'":1}';
+                //var SPECIAL_DAYS = {"2004-05-11":1,"2004-05-12":1,"2004-06-01":1}
+                $this->addMoreHeaders(JavaScript('
+// This table holds the existing calender entries for the current user
+// calculated from the database
+var SPECIAL_DAYS = '.$js_exist.';
+// This function returns true if the date exists in SPECIAL_DAYS
+function dateExists(date, y, m, d) {
+    var year = date.getFullYear();
+    m = m + 1;
+    m = m < 10 ? "0" + m : m;  // integer, 0..11
+    d = d < 10 ? "0" + d : d;  // integer, 1..31
+    var date = year+"-"+m+"-"+d;
+    var exists = SPECIAL_DAYS[date];
+    if (!exists) return false;
+    else return true;
 }
+// This is the actual date status handler. 
+// Note that it receives the date object as well as separate 
+// values of year, month and date.
+function dateStatusFunc(date, y, m, d) {
+    if (dateExists(date, y, m, d)) return "existing";
+    else return false;
+}'));
+            }
+            else {
+                $this->addMoreHeaders(JavaScript('
+function dateStatusFunc(date, y, m, d) { return false;}'));
+            }
+        }
+    }
+}
+
+$WikiTheme = new Theme_Sidebar('Sidebar');
 
 // CSS file defines fonts, colors and background images for this
 // style.  The companion '*-heavy.css' file isn't defined, it's just
 // expected to be in the same directory that the base style is in.
 
-//$Theme->setDefaultCSS(_("Sidebar"), 'sidebar.css');
-//$Theme->addAlternateCSS('PhpWiki', 'phpwiki.css');
-$Theme->setDefaultCSS('PhpWiki', 'phpwiki.css');
-$Theme->addAlternateCSS(_("Printer"), 'phpwiki-printer.css', 'print, screen');
-$Theme->addAlternateCSS(_("Modern"), 'phpwiki-modern.css');
+$WikiTheme->setDefaultCSS(_("Sidebar"), 'sidebar.css');
+//$WikiTheme->addAlternateCSS('PhpWiki', 'phpwiki.css');
+//$WikiTheme->setDefaultCSS('PhpWiki', 'phpwiki.css');
+$WikiTheme->addAlternateCSS(_("Printer"), 'phpwiki-printer.css', 'print, screen');
+$WikiTheme->addAlternateCSS(_("Modern"), 'phpwiki-modern.css');
 
 /**
  * The logo image appears on every page and links to the HomePage.
  */
-//$Theme->addImageAlias('logo', 'logo.png');
+//$WikiTheme->addImageAlias('logo', 'logo.png');
 
 /**
  * The Signature image is shown after saving an edited page. If this
@@ -83,25 +135,25 @@ $Theme->addAlternateCSS(_("Modern"), 'phpwiki-modern.css');
  */
 
 // Comment this next line out to enable signature.
-$Theme->addImageAlias('signature', false);
+$WikiTheme->addImageAlias('signature', false);
 
 /*
  * Link icons.
  */
-$Theme->setLinkIcon('http');
-$Theme->setLinkIcon('https');
-$Theme->setLinkIcon('ftp');
-$Theme->setLinkIcon('mailto');
-$Theme->setLinkIcon('interwiki');
-$Theme->setLinkIcon('*', 'url');
+$WikiTheme->setLinkIcon('http');
+$WikiTheme->setLinkIcon('https');
+$WikiTheme->setLinkIcon('ftp');
+$WikiTheme->setLinkIcon('mailto');
+$WikiTheme->setLinkIcon('interwiki');
+$WikiTheme->setLinkIcon('*', 'url');
 
-//$Theme->setButtonSeparator(' | ');
+//$WikiTheme->setButtonSeparator(' | ');
 
 /**
  * WikiWords can automatically be split by inserting spaces between
  * the words. The default is to leave WordsSmashedTogetherLikeSo.
  */
-$Theme->setAutosplitWikiWords(true);
+$WikiTheme->setAutosplitWikiWords(true);
 
 /**
  * If true (default) show create '?' buttons on not existing pages, even if the 
@@ -109,7 +161,7 @@ $Theme->setAutosplitWikiWords(true);
  * If false, anon users get no links and it looks cleaner, but then they 
  * cannot easily fix missing pages.
  */
-$Theme->setAnonEditUnknownLinks(false);
+$WikiTheme->setAnonEditUnknownLinks(false);
 
 /*
  * You may adjust the formats used for formatting dates and times
@@ -119,7 +171,7 @@ $Theme->setAnonEditUnknownLinks(false);
  * Do not include the server's zone (%Z), times are converted to the
  * user's time zone.
  */
-//$Theme->setDateFormat("%B %d, %Y");
+//$WikiTheme->setDateFormat("%B %d, %Y");
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

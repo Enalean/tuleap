@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: EditMetaData.php,v 1.11 2004/06/01 16:48:11 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -51,7 +51,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.11 $");
     }
 
     // Arguments:
@@ -80,12 +80,9 @@ extends WikiPlugin
         // Look at arguments to see if submit was entered. If so,
         // process this request before displaying.
         //
-
-        if ($request->getArg('metaedit')) {
-
+        if ($request->isPost() and $request->_user->isAdmin() and $request->getArg('metaedit')) {
             $metafield = trim($request->getArg('metafield'));
             $metavalue = trim($request->getArg('metavalue'));
-
             if (!in_array($metafield, $readonly_pagemeta)) {
                 if (preg_match('/^(.*?)\[(.*?)\]$/', $metafield, $matches)) {
                     list(,$array_field, $array_key) = $matches;
@@ -96,11 +93,10 @@ extends WikiPlugin
                     $p->set($metafield, $metavalue);
                 }
             }
-
-            $url = $request->getURLtoSelf('', array('metaedit', 'metafield',
-                                                    'metavalue'));
+            $dbi->touch();
+            $url = $request->getURLtoSelf(false, 
+                                          array('metaedit','metafield','metavalue'));
             $request->redirect($url);
-
             // The rest of the output will not be seen due to the
             // redirect.
 
@@ -113,7 +109,6 @@ extends WikiPlugin
         $html->pushContent(fmt("Existing page-level metadata for %s:",
                                $page));
         $dl = HTML::dl();
-
         foreach ($pagemeta as $key => $val) {
             if (is_string($val) and (substr($val,0,2) == 'a:')) {
                 $dl->pushContent(HTML::dt("\n$key => $val\n",
@@ -148,7 +143,7 @@ extends WikiPlugin
         if ($request->_user->isAdmin()) {
             $action = $request->getPostURL();
             $hiddenfield = HiddenInputs($request->getArgs());
-            $instructions = _("Add or change a page-level metadata 'key=>value' pair. Note that you can remove a key by leaving value-box empty.");
+            $instructions = _("Add or change a page-level metadata 'key=>value' pair. Note that you can remove a key by leaving the value-box empty.");
             $keyfield = HTML::input(array('name' => 'metafield'), '');
             $valfield = HTML::input(array('name' => 'metavalue'), '');
             $button = Button('submit:metaedit', _("Submit"), false);
@@ -169,7 +164,11 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: EditMetaData.php,v $
+// Revision 1.11  2004/06/01 16:48:11  rurban
+// dbi->touch
+// security fix to allow post admin only.
+//
 // Revision 1.10  2004/04/18 01:11:52  rurban
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.

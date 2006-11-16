@@ -1,0 +1,29 @@
+Date: Thu, 31 Jan 2002 03:02:06 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: PageGroupTestFour,v 1.6 2004/12/05 11:15:41 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageGroupTestFour;
+  flags="";
+  author=CarstenKlapp;
+  author_id=CarstenKlapp;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+So, this is the last page in this page group.
+
+Note that looping of off on this page, so __Next:__ shouldn't show up
+here but it does because of the bug described in PageGroupTestOne.
+
+%%% %%% %%% %%% %%% %%% %%%
+----
+
+<?plugin PageGroup
+        parent=PageGroupTest
+        section="Table of Contents"
+        loop=false
+?>
+
+----
+
+PageGroupTest

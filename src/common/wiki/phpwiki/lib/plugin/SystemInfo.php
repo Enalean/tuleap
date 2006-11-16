@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: SystemInfo.php,v 1.23 2005/10/03 16:48:09 rurban Exp $');
 /**
  Copyright (C) 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -36,14 +36,13 @@ rcs_id('$Id$');
  *
  * In spirit to http://www.ecyrd.com/JSPWiki/SystemInfo.jsp
  *
- * Todo: Some calculations are heavy (~5-8 secs), so we should cache
+ * Done: Some calculations are heavy (~5-8 secs), so we should cache
  *       the result. In the page or with WikiPluginCached?
  */
-//require_once "lib/WikiPluginCached.php";
 
+require_once "lib/WikiPluginCached.php";
 class WikiPlugin_SystemInfo
-//extends WikiPluginCached
-extends WikiPlugin
+extends WikiPluginCached
 {
     function getPluginType() {
         return PLUGIN_CACHED_HTML;
@@ -58,9 +57,17 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.23 $");
     }
-
+    /* From lib/WikiPlugin.php:
+     * If the plugin can deduce a modification time, or equivalent
+     * sort of tag for it's content, then the plugin should
+     * call $request->appendValidators() with appropriate arguments,
+     * and should override this method to return true.
+     */
+    function managesValidators() {
+        return true;
+    }
     function getExpire($dbi, $argarray, $request) {
         return '+1800'; // 30 minutes
     }
@@ -79,38 +86,42 @@ extends WikiPlugin
     */
 
     function database() {
-        global $DBParams, $request;
-        $s  = _("db type:") . " {$DBParams['dbtype']}, ";
-        switch ($DBParams['dbtype']) {
+        global $request;
+        $s  = "DATABASE_TYPE: " . DATABASE_TYPE . ", ";
+        switch (DATABASE_TYPE) {
         case 'SQL':     // pear
         case 'ADODB':
-            $dsn = $DBParams['dsn'];
-            $s .= _("db backend:") . " ";
-            $s .= ($DBParams['dbtype'] == 'SQL') ? 'PearDB' : 'ADODB';
+        case 'PDO':
+            $dsn = DATABASE_DSN;
+            $s .= "DATABASE BACKEND:" . " ";
+            $s .= (DATABASE_TYPE == 'SQL') ? 'PearDB' : 'ADODB';
             if (preg_match('/^(\w+):/', $dsn, $m)) {
                 $backend = $m[1];
                 $s .= " $backend, ";
             }
+            $s .= "DATABASE_PREFIX: \"".DATABASE_PREFIX."\", ";
             break;
         case 'dba':
-            $s .= _("dba handler:") . " {$DBParams['dba_handler']}, ";
+            $s .= "DATABASE_DBA_HANDLER: ".DATABASE_DBA_HANDLER.", ";
+            $s .= "DATABASE_DIRECTORY: \"".DATABASE_DIRECTORY."\", ";
             break;
         case 'cvs':
+            $s .= "DATABASE_DIRECTORY: \"".DATABASE_DIRECTORY."\", ";
             // $s .= "cvs stuff: , ";
             break;
         case 'flatfile':
-            // $s .= "flatfile stuff: , ";
+            $s .= "DATABASE_DIRECTORY: ".DATABASE_DIRECTORY.", ";
             break;
         }
         // hack: suppress error when using sql, so no timeout
-        @$s .= _("timeout:") . " {$DBParams['timeout']}";
+        @$s .= "DATABASE_TIMEOUT: " . DATABASE_TIMEOUT . ", ";
         return $s;
     }
     function cachestats() {
-        global $DBParams, $request;
+        global $request;
         if (! defined('USECACHE') or !USECACHE)
             return _("no cache used");
-        $dbi = $request->getDbh();
+        $dbi =& $this->_dbi;
         $cache = $dbi->_cache;
         $s  = _("cached pagedata:") . " " . count($cache->_pagedata_cache);
         $s .= ", " . _("cached versiondata:");
@@ -138,19 +149,9 @@ extends WikiPlugin
     }
     function pagestats() {
         global $request;
-        $e = 0;
-        $a = 0;
         $dbi = $request->getDbh();
-        $include_empty = true;
-        $iter = $dbi->getAllPages($include_empty);
-        while ($page = $iter->next())
-            $e++;
-        $s  = sprintf(_("%d pages"), $e);
-        $include_empty = false;
-        $iter = $dbi->getAllPages($include_empty);
-        while ($page = $iter->next())
-            $a++;
-        $s  .= ", " . sprintf(_("%d not-empty pages"), $a);
+        $s  = sprintf(_("%d pages"), $dbi->numPages(true));
+        $s  .= ", " . sprintf(_("%d not-empty pages"), $dbi->numPages(false));
         // more bla....
         // $s  .= ", " . sprintf(_("earliest page from %s"), $earliestdate);
         // $s  .= ", " . sprintf(_("latest page from %s"), $latestdate);
@@ -171,7 +172,7 @@ extends WikiPlugin
     //   easy. related to the view/edit rate in accessstats.
     function userstats() {
         global $request;
-        $dbi = $request->getDbh();
+        $dbi =& $this->_dbi;
         $h = 0;
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
@@ -185,52 +186,34 @@ extends WikiPlugin
         // $s  .= ", " . sprintf(_("%d externally authenticated users"), $extauth); // query AuthDB?
         return $s;
     }
+
     //only from logging info possible. = hitstats per time.
     // total hits per day/month/year
     // view/edit rate
-    // TODO: see WhoIsOnline hit stats
+    // TODO: see WhoIsOnline hit stats, and sql accesslogs
     function accessstats() {
         $s  = _("not yet");
         return $s;
     }
-    // only absolute numbers, not for any time interval. see accessstats
-    //  some useful number derived from the curve of the hit stats.
-    //  total, max, mean, median, stddev;
-    //  %d pages less than 3 hits (<10%)    <10% percent of the leastpopular
-    //  %d pages more than 100 hits (>90%)  >90% percent of the mostpopular
-    function hitstats() {
-        global $request;
-        $dbi = $request->getDbh();
-        $total = 0;
-        $max = 0;
-        $hits = array();
-        $page_iter = $dbi->getAllPages(true);
-        while ($page = $page_iter->next()) {
-            if (($current = $page->getCurrentRevision())
-                && (! $current->hasDefaultContents())) {
-                $h = $page->get('hits');
-                $hits[] = $h;
-                $total += $h;
-                $max = max($h, $max);
-            }
-        }
+
+    // numeric array
+    function _stats($hits, $treshold = 10.0) {
         sort($hits);
         reset($hits);
         $n = count($hits);
+        $max = 0; $min = 9999999999999; $sum = 0;
+        foreach ($hits as $h) {
+            $sum += $h;
+            $max = max($h, $max);
+            $min = min($h, $min);
+        }
         $median_i = (int) $n / 2;
         if (! ($n / 2))
             $median = $hits[$median_i];
         else
             $median = $hits[$median_i];
-        $stddev = stddev($hits, $total);
-
-        $s  = sprintf(_("total hits: %d"), $total);
-        $s .= ", " . sprintf(_("max: %d"), $max);
-        $s .= ", " . sprintf(_("mean: %2.3f"), $total / $n);
-        $s .= ", " . sprintf(_("median: %d"), $median);
-        $s .= ", " . sprintf(_("stddev: %2.3f"), $stddev);
-        $percentage = 10;
-        $mintreshold = $max * $percentage / 100.0;   // lower than 10% of the hits
+        $treshold = 10;
+        $mintreshold = $max * $treshold / 100.0;   // lower than 10% of the hits
         reset($hits);
         $nmin = $hits[0] < $mintreshold ? 1 : 0;
         while (next($hits) < $mintreshold)
@@ -240,50 +223,184 @@ extends WikiPlugin
         $nmax = 1;
         while (prev($hits) > $maxtreshold)
             $nmax++;
-        $s .= "; " . sprintf(_("%d pages with less than %d hits (<%d%%)."),
-                             $nmin, $mintreshold, $percentage);
-        $s .= " " . sprintf(_("%d page(s) with more than %d hits (>%d%%)."),
-                            $nmax, $maxtreshold, 100 - $percentage);
-        return $s;
+        return array('n'     => $n,
+                     'sum'   => $sum,
+                     'min'   => $min,
+                     'max'   => $max,
+                     'mean'  => $sum / $n,
+                     'median'=> $median,
+                     'stddev'=> stddev($hits, $sum),
+                     'treshold'    => $treshold,
+                     'nmin'        => $nmin,
+                     'mintreshold' => $mintreshold,
+                     'nmax'        => $nmax, 
+                     'maxtreshold' => $maxtreshold);
     }
-    function revisionstats() {
+
+    // only absolute numbers, not for any time interval. see accessstats
+    //  some useful number derived from the curve of the hit stats.
+    //  total, max, mean, median, stddev;
+    //  %d pages less than 3 hits (<10%)    <10% percent of the leastpopular
+    //  %d pages more than 100 hits (>90%)  >90% percent of the mostpopular
+    function hitstats() {
         global $request;
-        $dbi = $request->getDbh();
-        $total = 0;
-        $max = 0;
+        $dbi =& $this->_dbi;
         $hits = array();
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
-            if ($current = $page->getCurrentRevision()
+            if (($current = $page->getCurrentRevision())
                 && (! $current->hasDefaultContents())) {
-                //$ma = $page->get('major');
-                //$mi = $page->get('minor');
-                ;
+                $hits[] = $page->get('hits');
             }
         }
-        return 'not yet';
+        $treshold = 10.0;
+        $stats = $this->_stats($hits, $treshold);
+
+        $s  = sprintf(_("total hits: %d"), $stats['sum']);
+        $s .= ", " . sprintf(_("max: %d"), $stats['max']);
+        $s .= ", " . sprintf(_("mean: %2.3f"), $stats['mean']);
+        $s .= ", " . sprintf(_("median: %d"), $stats['median']);
+        $s .= ", " . sprintf(_("stddev: %2.3f"), $stats['stddev']);
+        $s .= "; " . sprintf(_("%d pages with less than %d hits (<%d%%)."),
+                             $stats['nmin'], $stats['mintreshold'], $treshold);
+        $s .= " " . sprintf(_("%d page(s) with more than %d hits (>%d%%)."),
+                            $stats['nmax'], $stats['maxtreshold'], 100 - $treshold);
+        return $s;
+    }
+    /* not yet ready
+     */
+    function revisionstats() {
+        global $request, $LANG;
+
+        include_once("lib/WikiPluginCached.php");
+        $cache = WikiPluginCached::newCache();
+        $id = $cache->generateId('SystemInfo::revisionstats_' . $LANG);
+        $cachedir = 'plugincache';
+        $content = $cache->get($id, $cachedir);
+
+        if (!empty($content))
+            return $content;
+
+        $dbi =& $this->_dbi;
+        $stats = array();
+        $page_iter = $dbi->getAllPages(true);
+        $stats['empty'] = $stats['latest']['major'] = $stats['latest']['minor'] = 0;
+        while ($page = $page_iter->next()) {
+            if (!$page->exists()) {
+                $stats['empty']++;
+                continue;
+            }
+            $current = $page->getCurrentRevision();
+            // is the latest revision a major or minor one?
+            //   latest revision: numpages 200 (100%) / major (60%) / minor (40%)
+            if ($current->get('is_minor_edit'))
+                $stats['latest']['major']++;
+            else
+                $stats['latest']['minor']++;
+/*
+            // FIXME: This needs much too long to be acceptable.
+            // overall:
+            //   number of revisions: all (100%) / major (60%) / minor (40%)
+            // revs per page:
+            //   per page: mean 20 / major (60%) / minor (40%)
+            $rev_iter = $page->getAllRevisions();
+            while ($rev = $rev_iter->next()) {
+                if ($rev->get('is_minor_edit'))
+                    $stats['page']['major']++;
+                else
+                    $stats['page']['minor']++;
+            }
+            $rev_iter->free();
+            $stats['page']['all'] = $stats['page']['major'] + $stats['page']['minor'];
+            $stats['perpage'][]       = $stats['page']['all'];
+            $stats['perpage_major'][] = $stats['page']['major'];
+            $stats['sum']['all'] += $stats['page']['all'];
+            $stats['sum']['major'] += $stats['page']['major'];
+            $stats['sum']['minor'] += $stats['page']['minor'];
+            $stats['page'] = array();
+*/            
+        }
+        $page_iter->free();
+        $stats['numpages'] = $stats['latest']['major'] + $stats['latest']['minor'];
+        $stats['latest']['major_perc'] = $stats['latest']['major'] * 100.0 / $stats['numpages'];
+        $stats['latest']['minor_perc'] = $stats['latest']['minor'] * 100.0 / $stats['numpages'];
+        $empty = sprintf("empty pages: %d (%02.1f%%) / %d (100%%)\n", 
+                         $stats['empty'], $stats['empty'] * 100.0 / $stats['numpages'],
+                         $stats['numpages']);
+        $latest = sprintf("latest revision: major %d (%02.1f%%) / minor %d (%02.1f%%) / all %d (100%%)\n", 
+                          $stats['latest']['major'], $stats['latest']['major_perc'], 
+                          $stats['latest']['minor'], $stats['latest']['minor_perc'], $stats['numpages']);
+/*                          
+        $stats['sum']['major_perc'] = $stats['sum']['major'] * 100.0 / $stats['sum']['all'];
+        $stats['sum']['minor_perc'] = $stats['sum']['minor'] * 100.0 / $stats['sum']['all'];
+        $sum = sprintf("number of revisions: major %d (%02.1f%%) / minor %d (%02.1f%%) / all %d (100%%)\n", 
+                       $stats['sum']['major'], $stats['sum']['major_perc'],
+                       $stats['sum']['minor'], $stats['sum']['minor_perc'], $stats['sum']['all']);
+
+        $stats['perpage']       = $this->_stats($stats['perpage']);
+        $stats['perpage_major'] = $this->_stats($stats['perpage_major']);
+        $stats['perpage']['major_perc'] = $stats['perpage_major']['sum'] * 100.0 / $stats['perpage']['sum'];
+        $stats['perpage']['minor_perc'] = 100 - $stats['perpage']['major_perc'];
+        $stats['perpage_minor']['sum']  = $stats['perpage']['sum'] - $stats['perpage_major']['sum'];
+        $stats['perpage_minor']['mean'] = $stats['perpage_minor']['sum'] / ($stats['perpage']['n'] - $stats['perpage_major']['n']);
+        $perpage = sprintf("revisions per page: all %d, mean %02.1f / major %d (%02.1f%%) / minor %d (%02.1f%%)\n", 
+                           $stats['perpage']['sum'], $stats['perpage']['mean'],
+                           $stats['perpage_major']['mean'], $stats['perpage']['major_perc'],
+                           $stats['perpage_minor']['mean'], $stats['perpage']['minor_perc']);
+        $perpage .= sprintf("  %d page(s) with less than %d revisions (<%d%%)\n",
+                            $stats['perpage']['nmin'], $stats['perpage']['maintreshold'], $treshold);
+        $perpage .= sprintf("  %d page(s) with more than %d revisions (>%d%%)\n",
+                            $stats['perpage']['nmax'], $stats['perpage']['maxtreshold'], 100 - $treshold);
+        $content = $empty . $latest . $sum . $perpage;
+*/
+        $content = $empty . $latest;
+
+        // regenerate cache every 30 minutes
+        $cache->save($id, $content, '+1800', $cachedir); 
+        return $content;
     }
     // Size of databases/files/cvs are possible plus the known size of the app.
-    // Todo: cache this costly operation!
+    // Cache this costly operation. 
+    // Even if the whole plugin call is stored internally, we cache this 
+    // seperately with a seperate key.
     function discspace() {
-        global $DBParams;
-        $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : '.';
-        $appsize = `du -s $dir | cut -f1`;
+        global $DBParams, $request;
 
-        if (in_array($DBParams['dbtype'], array('SQL', 'ADODB'))) {
-            $pagesize = 0;
-        } elseif ($DBParams['dbtype'] == 'dba') {
-            $pagesize = 0;
-            $dbdir = $DBParams['directory'];
-            if ($DBParams['dba_handler'] == 'db3')
-                $pagesize = filesize($DBParams['directory']
-                                     . "/wiki_pagedb.db3") / 1024;
-            // if issubdirof($dbdir, $dir) $appsize -= $pagesize;
-        } else { // flatfile, cvs
-            $dbdir = $DBParams['directory'];
-            $pagesize = `du -s $dbdir`;
-            // if issubdirof($dbdir, $dir) $appsize -= $pagesize;
+        include_once("lib/WikiPluginCached.php");
+        $cache = WikiPluginCached::newCache();
+        $id = $cache->generateId('SystemInfo::discspace');
+        $cachedir = 'plugincache';
+        $content = $cache->get($id, $cachedir);
+
+        if (empty($content)) {
+            $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : '.';
+            //TODO: windows only (no cygwin)
+            $appsize = `du -s $dir | cut -f1`;
+
+            if (in_array($DBParams['dbtype'], array('SQL', 'ADODB'))) {
+                //TODO: where is the data is actually stored? see phpMyAdmin
+                $pagesize = 0;
+            } elseif ($DBParams['dbtype'] == 'dba') {
+                $pagesize = 0;
+                $dbdir = $DBParams['directory'];
+                if ($DBParams['dba_handler'] == 'db3')
+                    $pagesize = filesize($DBParams['directory']
+                                         . "/wiki_pagedb.db3") / 1024;
+                // if issubdirof($dbdir, $dir) $appsize -= $pagesize;
+            } else { // flatfile, cvs
+                $dbdir = $DBParams['directory'];
+                $pagesize = `du -s $dbdir`;
+                // if issubdirof($dbdir, $dir) $appsize -= $pagesize;
+            }
+            $content = array('appsize' => $appsize,
+                             'pagesize' => $pagesize);
+            // regenerate cache every 30 minutes
+            $cache->save($id, $content, '+1800', $cachedir); 
+        } else {
+            $appsize = $content['appsize'];
+            $pagesize = $content['pagesize'];
         }
+
         $s  = sprintf(_("Application size: %d Kb"), $appsize);
         if ($pagesize)
             $s  .= ", " . sprintf(_("Pagedata size: %d Kb", $pagesize));
@@ -323,13 +440,13 @@ extends WikiPlugin
     }
 
     function supported_themes () {
-        global $Theme;
+        global $WikiTheme;
         $available_themes = listAvailableThemes();
         natcasesort($available_themes);
         return sprintf(_("Total of %d themes: "), count($available_themes))
             . implode(', ',$available_themes) . ". "
-            . sprintf(_("Current theme: '%s'"), $Theme->_name)
-            . ((THEME != $Theme->_name)
+            . sprintf(_("Current theme: '%s'"), $WikiTheme->_name)
+            . ((THEME != $WikiTheme->_name)
                ? ". " . sprintf(_("Default theme: '%s'"), THEME)
                : '');
     }
@@ -339,7 +456,8 @@ extends WikiPlugin
             return $availableargs[$arg]();
         elseif (method_exists($this, $arg)) // any defined SystemInfo->method()
             return call_user_func_array(array(&$this, $arg), '');
-        elseif (defined($arg) && $arg != 'ADMIN_PASSWD') // any defined constant
+        elseif (defined($arg) && // any defined constant
+                !in_array($arg,array('ADMIN_PASSWD','DATABASE_DSN','DBAUTH_AUTH_DSN')))
             return constant($arg);
         else
             return $this->error(sprintf(_("unknown argument '%s' to SystemInfo"), $arg));
@@ -348,6 +466,7 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage) {
         // don't parse argstr for name=value pairs. instead we use just 'name'
         //$args = $this->getArgs($argstr, $request);
+        $this->_dbi =& $dbi;
         $args['seperator'] = ' ';
         $availableargs = // name => callback + 0 args
             array ('appname' => create_function('',"return 'PhpWiki';"),
@@ -375,7 +494,7 @@ extends WikiPlugin
                              'userstats'        => _("User statistics"),
                              //'accessstats'      => _("Access statistics"),
                              'hitstats'         => _("Hit statistics"),
-                             //'discspace'        => _("Harddisc usage"),
+                             'discspace'        => _("Harddisc usage"),
                              'expireparams'     => _("Expiry parameters"),
                              'wikinameregexp'   => _("Wikiname regexp"),
                              'allowedprotocols' => _("Allowed protocols"),
@@ -414,24 +533,6 @@ extends WikiPlugin
     }
 }
 
-/* // autolisp stdlib
-;;; Median of the sorted list of numbers. 50% is above and 50% below
-;;; "center of a distribution"
-;;; Ex: (std-median (std-make-list 100 std-%random)) => 0.5 +- epsilon
-;;;     (std-median (std-make-list 100 (lambda () (std-random 10))))
-;;;       => 4.0-5.0 [0..9]
-;;;     (std-median (std-make-list 99  (lambda () (std-random 10))))
-;;;       => 4-5
-;;;     (std-median '(0 0 2 4 12))      => 2
-;;;     (std-median '(0 0 4 12))        => 2.0
-(defun STD-MEDIAN (numlst / l)
-  (setq numlst (std-sort numlst '<))            ; don't remove duplicates
-  (if (= 0 (rem (setq l (length numlst)) 2))    ; if even length
-    (* 0.5 (+ (nth (/ l 2) numlst)              ; force float!
-              (nth (1- (/ l 2)) numlst)))       ; fixed by Serge Pashkov
-    (nth (/ l 2) numlst)))
-
-*/
 function median($hits) {
     sort($hits);
     reset($hits);
@@ -460,13 +561,6 @@ function gensym($prefix = "_gensym") {
     return $prefix . $i;
 }
 
-/* // autolisp stdlib
-(defun STD-STANDARD-DEVIATION (numlst / n _dev_m r)
-  (setq n      (length numlst)
-        _dev_m (std-mean numlst)
-        r      (mapcar (function (lambda (x) (std-sqr (- x _dev_m)))) numlst))
-  (sqrt (* (std-mean r) (/ n (float (- n 1))))))
-*/
 function stddev(&$hits, $total = false) {
     $n = count($hits);
     if (!$total) $total = array_reduce($hits, 'rsum');
@@ -477,7 +571,35 @@ function stddev(&$hits, $total = false) {
     return (float)sqrt(mean($r, $total) * ($n / (float)($n -1)));
 }
 
-// $Log$
+// $Log: SystemInfo.php,v $
+// Revision 1.23  2005/10/03 16:48:09  rurban
+// add revstats and arg caching
+//
+// Revision 1.22  2004/12/26 17:10:44  rurban
+// just docs or whitespace
+//
+// Revision 1.21  2004/11/26 18:39:02  rurban
+// new regex search parser and SQL backends (90% complete, glob and pcre backends missing)
+//
+// Revision 1.20  2004/11/20 11:28:49  rurban
+// fix a yet unused PageList customPageListColumns bug (merge class not decl to _types)
+// change WantedPages to use PageList
+// change WantedPages to print the list of referenced pages, not just the count.
+//   the old version was renamed to WantedPagesOld
+//   fix and add handling of most standard PageList arguments (limit, exclude, ...)
+// TODO: pagename sorting, dumb/WantedPagesIter and SQL optimization
+//
+// Revision 1.19  2004/06/19 11:49:42  rurban
+// dont print db passwords
+//
+// Revision 1.18  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
 // Revision 1.17  2004/05/08 14:06:13  rurban
 // new support for inlined image attributes: [image.jpg size=50x30 align=right]
 // minor stability and portability fixes

@@ -1,0 +1,114 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginColorationPhp,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginColorationPhp;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Description
+
+PluginColorationPhp affiche le code PHP en coloration syntaxique
+en utilisant la fonction php-function: highlight-string
+
+!!Usage
+
+Vous devez spécifier les options de ce plugin sur la même ligne que 
+=<?plugin= puis écrire le code sur les lignes suivantes jusqu'au 
+=?>= final :
+
+<verbatim>
+<?plugin PhpHighlight [wrap?] [color options]
+code devant être coloré
+?>
+</verbatim>
+
+Dépendant de l'option =wrap=, le code prendra soin d'ajouter =<?php=
+et =?>= au code avant de la passer à la fonction highlight-string. Si 
+les délimiteurs php sont déjà présents alors le plugin les enlèvera
+encore de la chaîne colorée avant de les afficher.
+
+!!Options
+
+Enveloppement automatique :
+
+  Si vous ne voulez pas que le plugin enveloppe automatiquement le code
+  source dans =<?php= et =?>= alors positionnez =wrap= sur =0=. La valeur
+  par défaut est =1=, ce qui signifie que le plugin prendra soin d'ajouter
+  ou d'enlver =<?php= et =?>= automatiquement.
+
+  Si vous mettez =wrap= à =0= alors vous aurez la possibilité de mélanger
+  du PHPO avec de l'HTML. Le plugin transformera '=< ?php=' en =<?php=' et
+  '=? >=' en '=?>=' pour vous permettre de démarrer et d'arrêter le mode 
+  PHP dans votre code.
+
+Options des couleurs :
+
+  Le plugin accepte des arguments optionnels pour les couleurs qui correspondent
+  à la coloration définie dans *php.ini*. Les couleurs doivent être spécifiées
+  par des valeurs hexadécimales ou des
+  [noms de couleur HTML 4|http://www.w3.org/TR/REC-html40/types.html#h-6.5]
+  en minuscules comme ='#0f0344'= ou =blue=. Vous pouvez utiliser les options 
+  suivantes :
+
+  =string=, =comment=, =keyword=, =bg=, =default=, and =html=
+
+!!Exemples
+
+!Code PHP avec les couleurs par défaut de =php.ini= :
+
+<?plugin PhpHighlight
+function hello() {
+    echo "Hello World<p>";
+}
+?>
+
+!HTML avec PHP inclus
+
+Ici nous devons utiliser =wrap=0= pour prévenir l'enveloppement automatique
+et fermer '=?>=' comme '=? >=' :
+
+<?plugin PhpHighlight wrap=0 html='#000000' bg='#dddddd'
+<html>
+  <head>
+    <title>PHP Test</title>
+  </head>
+  <body>
+    < ?php echo "<p>Hello World</p>\n"; ? >
+  </body>
+</html>
+?>
+
+!Source en C
+
+Bien que =highlight_string()= ait été conçu avec du code PHP à l'esprit,
+il est utilisable pour des colorations syntaxique de code C car les deux 
+syntaxe sont similaires.
+
+
+<?plugin PhpHighlight default=black string=blue comment=gray keyword=purple
+#include <stdio.h>
+/* Get load */
+int
+getload(void)
+{
+    if ((fp = fopen("/proc/loadavg", "r")) == NULL) {
+        syslog(LOG_ERR, _("%s %s: unable to open %s: %s"), _("FATAL ERROR:"),
+              "getload()", "/proc/loadavg", strerror(errno));
+        exit(EX_OSFILE);
+    }
+    fclose(fp);
+}
+?>
+
+!!Auteurs
+
+Martin Geisler mailto:gimpster@gimpster.com et Carsten Klapp
+mailto:carstenklapp@users.sourceforge.net.
+
+----
+
+PluginWiki

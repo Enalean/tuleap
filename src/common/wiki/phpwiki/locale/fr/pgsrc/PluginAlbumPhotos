@@ -1,0 +1,94 @@
+Date: Sat, 5 Jun 2004 16:49:55 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginAlbumPhotos,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginAlbumPhotos;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Description
+
+Faire un album en affichant un ensemble de photos dont la liste est
+un fichier de texte avec des descriptions optionnelles.
+
+!!Usage
+
+<verbatim>
+<?plugin PhotoAlbum
+         src=http://server/textfile
+         mode=[column|row]
+         align=[center|left|right]
+         desc=true
+         sort=false
+         height=100%
+         width=100%
+         weblocation=>false
+?>
+</verbatim>
+
+!!Arguments
+
+''='src'= est le seul paramètre obligatoire.''
+
+__src__:
+  Url ou chemin local pour un fichier CSV où chaque ligne est un nom de 
+  fichier de photo et une description de la photo. Les photos sont dans le 
+  même répertoire que le fichier. Les descriptions sont facultatives. Si
+  le chemin local est un répertoire relatif à PHPWIKI_DIR et que le script 
+  principal est dans PHPWIKI_DIR, alors la localisation des fichiers ne 
+  doit pas être donnée et toutes les images du répertoire sont affichées.
+
+__weblocation__:
+  Chemin optionnel si les sources pointent vers un répertoire local et 
+  que les liens vers les photos ne fonctionnent pas.
+
+__mode__:
+  Spécifie comment les images sont rangées : ='column'= signifie 
+  verticalement, ='row'= signifie horizontalement . Par défaut : ='row'=.
+
+__align__:
+  Seulement applicable au mode colonne. Par défaut : ='center'=.
+
+__desc__:
+  Affiche les descriptions données dans le fichier. Vrai par défaut.
+
+__sort__:
+  Tri les images par nom de fichier. Par défaut, c'est l'ordre dans le 
+  fichier texte qui est suivi.
+
+__height__, __width__:
+  Height and width are calculated compared to original metrics
+  retrieved by [php-function:getimagesize] and can be absolute or a
+  percentage (e.g. "50%").
+
+!!Exemples
+
+!Fichier texte
+Contenu possible d'une fichier texte valide :
+
+<verbatim>
+photo-01.jpg; Ma femme et moi !
+photo-02.jpg
+jn.gif; Joyeux Noël !
+</verbatim>
+
+!Exemple d'album
+Dossier local :
+<?plugin PhotoAlbum
+         src="themes/Hawaiian/images/pictures/"
+?>
+ou par une adresse extérieure :
+<verbatim>
+<?plugin PhotoAlbum
+         src="http://phpwiki.sourceforge.net/demo/themes/Hawaiian/images/pictures/PhotoAlbum.csv"
+</verbatim>
+?>
+
+!!Auteur
+
+[Ted Vinke|mailto:teddy@jouwfeestje.com] <teddy@jouwfeestje.com>
+----
+DocumentationDePhpWiki PluginWiki

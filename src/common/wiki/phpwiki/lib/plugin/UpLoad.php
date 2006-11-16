@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: UpLoad.php,v 1.19 2005/04/11 19:40:15 rurban Exp $');
 /*
  Copyright 2003, 2004 $ThePhpWikiProgrammingTeam
 
@@ -31,19 +31,12 @@ rcs_id('$Id$');
  * Note:    See also Jochen Kalmbach's plugin/UserFileManagement.php
  */
 
-    /* Change these config variables to your needs. Paths must end with "/".
-     */
-
 class WikiPlugin_UpLoad
 extends WikiPlugin
 {
-    //var $file_dir = PHPWIKI_DIR . "/img/";
-    //var $url_prefix = DATA_PATH . "/img/";
-    //what if the above are not set in index.php? seems to fail...
-
     var $disallowed_extensions;
-    // todo: use PagePerms instead
-    var $only_authenticated = true; // allow only authenticated users upload.
+    // TODO: use PagePerms instead
+    var $only_authenticated = true; // allow only authenticated users may upload.
 
     function getName () {
         return "UpLoad";
@@ -54,7 +47,7 @@ extends WikiPlugin
     }
 
     function getDefaultArguments() {
-        return array('logfile'  => 'file_list.txt',
+        return array('logfile'  => 'phpwiki-upload.log',
         	     // add a link of the fresh file automatically to the 
         	     // end of the page (or current page)
         	     'autolink' => true, 
@@ -105,9 +98,8 @@ ws[cfh]");
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
-        $file_dir = defined('PHPWIKI_DIR') ? 
-            PHPWIKI_DIR . "/uploads/" : "uploads/";
-        $url_prefix = SERVER_NAME . DATA_PATH; 
+        $file_dir = getUploadFilePath();
+        //$url_prefix = SERVER_NAME . DATA_PATH; 
 
         $form = HTML::form(array('action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
@@ -116,13 +108,6 @@ ws[cfh]");
         $contents->pushContent(HTML::input(array('type' => 'hidden',
                                                  'name' => 'MAX_FILE_SIZE',
                                                  'value' => MAX_UPLOAD_SIZE)));
-        /// MV add pv
-        /// @todo: have a generic method to transmit pv
-        if(!empty($_GET['pv'])) {
-            $contents->pushContent(HTML::input(array('type' => 'hidden',
-                                                     'name' => 'pv',
-                                                     'value' => $_GET['pv'])));
-        }
         $contents->pushContent(HTML::input(array('name' => 'userfile',
                                                  'type' => 'file',
                                                  'size' => '50')));
@@ -132,45 +117,61 @@ ws[cfh]");
         $form->pushContent($contents);
 
         $message = HTML();
+        if ($request->isPost() and $this->only_authenticated) {
+            // Make sure that the user is logged in.
+            $user = $request->getUser();
+            if (!$user->isAuthenticated()) {
+                $message->pushContent(HTML::h2(_("ACCESS DENIED: You must log in to upload files.")),
+                                          HTML::br(),HTML::br());
+                $result = HTML();
+                $result->pushContent($form);
+                $result->pushContent($message);
+                return $result;
+            }
+        }
+        
         $userfile = $request->getUploadedFile('userfile');
         if ($userfile) {
             $userfile_name = $userfile->getName();
-            $userfile_name = basename($userfile_name);
+            $userfile_name = trim(basename($userfile_name));
             $userfile_tmpname = $userfile->getTmpName();
-
-            if ($this->only_authenticated) {
-                // Make sure that the user is logged in.
-                //
-                $user = $request->getUser();
-                if (!$user->isAuthenticated()) {
-                    $message->pushContent(_("ACCESS DENIED: You must log in to upload files."),
-                                          HTML::br(),HTML::br());
-                    $result = HTML();
-                    $result->pushContent($form);
-                    $result->pushContent($message);
-                    return $result;
-                }
+	    $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
+            if (preg_match("/(\." . join("|\.", $this->disallowed_extensions) . ")\$/",
+                           $userfile_name))
+            {
+            	$message->pushContent($err_header);
+                $message->pushContent(fmt("Files with extension %s are not allowed.",
+                                          join(", ", $this->disallowed_extensions)),HTML::br(),HTML::br());
+            } 
+            elseif (preg_match("/[^._a-zA-Z0-9-]/", $userfile_name))
+            {
+            	$message->pushContent($err_header);
+                $message->pushContent(_("File names may only contain alphanumeric characters and dot, underscore or dash."),
+                                      HTML::br(),HTML::br());
             }
-
-            $userfile_size = $userfile->getSize();
-            $userfile_type = $userfile->getType();
-
-            require_once($_SERVER['DOCUMENT_ROOT'].'/../common/wiki/lib/WikiAttachment.class');
-            $wa = new WikiAttachment(GROUP_ID);
-            $rev = $wa->createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname);
-            if($rev >= 0) {
-                $prev = $rev+1;
+            elseif (file_exists($file_dir . $userfile_name)) {
+            	$message->pushContent($err_header);
+                $message->pushContent(fmt("There is already a file with name %s uploaded.",
+                                          $userfile_name),HTML::br(),HTML::br());
+            }
+            elseif ($userfile->getSize() > (MAX_UPLOAD_SIZE)) {
+            	$message->pushContent($err_header);
+                $message->pushContent(_("Sorry but this file is too big."),HTML::br(),HTML::br());
+            }
+            elseif (move_uploaded_file($userfile_tmpname, $file_dir . $userfile_name) or
+                    (IsWindows() and rename($userfile_tmpname, $file_dir . $userfile_name))
+                    )
+            {
             	$interwiki = new PageType_interwikimap();
-            	$link = $interwiki->link("Upload:$prev/$userfile_name");
-                $message->pushContent(_("File successfully uploaded."));
+            	$link = $interwiki->link("Upload:$userfile_name");
+                $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
 
-                // MV: Do not log uploads.
                 // the upload was a success and we need to mark this event in the "upload log"
-                //$upload_log = $file_dir . basename($logfile);
-                //if ($logfile) { 
-                //    $this->log($userfile, $upload_log, &$message);
-                //}
+                if ($logfile) { 
+                    $upload_log = $file_dir . basename($logfile);
+                    $this->log($userfile, $upload_log, $message);
+                }
                 if ($autolink) {
                     require_once("lib/loadsave.php");
                     $pagehandle = $dbi->getPage($page);
@@ -178,16 +179,16 @@ ws[cfh]");
                         $current = $pagehandle->getCurrentRevision();
                         $version = $current->getVersion();
                         $text = $current->getPackedContent();
-                        $newtext = $text . "\n* [Upload:$prev/$userfile_name]";
+                        $newtext = $text . "\n* [Upload:$userfile_name]";
                         $meta = $current->_data;
-                        $meta['summary'] = sprintf(_("uploaded %s revision %d"),$userfile_name,$prev);
-                        $meta['author'] = user_getname();
+                        $meta['summary'] = sprintf(_("uploaded %s"),$userfile_name);
                         $pagehandle->save($newtext, $version + 1, $meta);
                     }
                 }
             }
             else {
-                //$message->pushContent(HTML::br(),_("Uploading failed: "),$userfile_name, HTML::br());
+            	$message->pushContent($err_header);
+                $message->pushContent(HTML::br(),_("Uploading failed."),HTML::br());
             }
         }
         else {
@@ -202,15 +203,13 @@ ws[cfh]");
     }
 
     function log ($userfile, $upload_log, &$message) {
-    	global $Theme;
+    	global $WikiTheme;
     	$user = $GLOBALS['request']->_user;
         if (!is_writable($upload_log)) {
-            $message->pushContent(_("Error: the upload log is not writable"));
-            $message->pushContent(HTML::br());
+            trigger_error(_("The upload logfile is not writable."), E_USER_WARNING);
         }
         elseif (!$log_handle = fopen ($upload_log, "a")) {
-            $message->pushContent(_("Error: can't open the upload logfile"));
-            $message->pushContent(HTML::br());
+            trigger_error(_("Can't open the upload logfile."), E_USER_WARNING);
         }
         else {        // file size in KB; precision of 0.1
             $file_size = round(($userfile->getSize())/1024, 1);
@@ -222,7 +221,7 @@ ws[cfh]");
                    "\n"
                    . "<tr><td><a href=\"$userfile_name\">$userfile_name</a></td>"
                    . "<td align=\"right\">$file_size kB</td>"
-                   . "<td>&nbsp;&nbsp;" . $Theme->formatDate(time()) . "</td>"
+                   . "<td>&nbsp;&nbsp;" . $WikiTheme->formatDate(time()) . "</td>"
                    . "<td>&nbsp;&nbsp;<em>" . $user->getId() . "</em></td></tr>");
             fclose($log_handle);
         }
@@ -231,16 +230,53 @@ ws[cfh]");
 
 }
 
-// (c-file-style: "gnu")
-// Local Variables:
-// mode: php
-// tab-width: 8
-// c-basic-offset: 4
-// c-hanging-comment-ender-p: nil
-// indent-tabs-mode: nil
-// End:
-
-// $Log$
+// $Log: UpLoad.php,v $
+// Revision 1.19  2005/04/11 19:40:15  rurban
+// Simplify upload. See https://sourceforge.net/forum/message.php?msg_id=3093651
+// Improve UpLoad warnings.
+// Move auth check before upload.
+//
+// Revision 1.18  2005/02/12 17:24:24  rurban
+// locale update: missing . : fixed. unified strings
+// proper linebreaks
+//
+// Revision 1.17  2004/11/09 08:15:50  rurban
+// trim filename
+//
+// Revision 1.16  2004/10/21 19:03:37  rurban
+// Be more stricter with uploads: Filenames may only contain alphanumeric
+// characters. Patch #1037825
+//
+// Revision 1.15  2004/09/22 13:46:26  rurban
+// centralize upload paths.
+// major WikiPluginCached feature enhancement:
+//   support _STATIC pages in uploads/ instead of dynamic getimg.php? subrequests.
+//   mainly for debugging, cache problems and action=pdf
+//
+// Revision 1.14  2004/06/16 10:38:59  rurban
+// Disallow refernces in calls if the declaration is a reference
+// ("allow_call_time_pass_reference clean").
+//   PhpWiki is now allow_call_time_pass_reference = Off clean,
+//   but several external libraries may not.
+//   In detail these libs look to be affected (not tested):
+//   * Pear_DB odbc
+//   * adodb oracle
+//
+// Revision 1.13  2004/06/14 11:31:39  rurban
+// renamed global $Theme to $WikiTheme (gforge nameclash)
+// inherit PageList default options from PageList
+//   default sortby=pagename
+// use options in PageList_Selectable (limit, sortby, ...)
+// added action revert, with button at action=diff
+// added option regex to WikiAdminSearchReplace
+//
+// Revision 1.12  2004/06/13 11:34:22  rurban
+// fixed bug #969532 (space in uploaded filenames)
+// improved upload error messages
+//
+// Revision 1.11  2004/06/11 09:07:30  rurban
+// support theme-specific LinkIconAttr: front or after or none
+//
 // Revision 1.10  2004/04/12 10:19:18  rurban
 // fixed copyright year
 //
@@ -293,5 +329,13 @@ ws[cfh]");
 // ago. (This is the best UpLoad function I have seen for PhpWiki so
 // far. Cleaned up text formatting and typos from the version on the
 // mailing list. Still needs a few adjustments.)
-//
+
+// (c-file-style: "gnu")
+// Local Variables:
+// mode: php
+// tab-width: 8
+// c-basic-offset: 4
+// c-hanging-comment-ender-p: nil
+// indent-tabs-mode: nil
+// End:
 ?>

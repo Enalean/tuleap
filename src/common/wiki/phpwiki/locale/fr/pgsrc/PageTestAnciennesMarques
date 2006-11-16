@@ -1,0 +1,144 @@
+Date: Sat, 5 Jun 2004 16:49:55 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PageTestAnciennesMarques,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageTestAnciennesMarques;
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+ Nouvelles listes : astérisques, dièses et ";text:def" 
+* gros point
+* l1
+** l2
+** l2
+*** l3
+# un
+#deux
+#trois
+;Terme1:définition1.1
+;:définition1.2
+;Terme2:définition2
+;; Terme3:définition3
+;;;Terme4: définition4
+;;; : définition4.2
+;;; Terme5 : définition5
+
+Mixte :
+*ul1
+*#ul1-ol1
+*#ul1-ol2
+*#*ul1-ol2-ul1
+*#*ul1-ol2-ul2
+*#**ul1-ol2-ul2-ul1
+*#**ul1-ol2-ul2-ul2
+
+*l1
+ texte pré-formaté
+**    l2
+----
+ anciennnes listes
+	* level 1
+	* l1
+		*l2
+		*l2
+			*l3
+			*l3
+				*l4
+			*l3
+					*l5
+			*l3
+	#un
+	#deux
+		#un
+		#deux
+	*l1
+		#trois
+		#four
+	*l1
+		*l2
+		# un
+		# deux
+
+ texte pré-formaté
+ texte supplémentaire
+
+	*l1
+				*l2
+	# numéro
+	# numéro
+C'est un paragraphe simple
+	* gros point
+C'est toujours un paragraphe simple
+	# numéro
+----
+__Tests de liens__
+# normal : PageAccueil
+# avec crochets : [PageAccueil] -- nommé : [la page d'accueil|PageAccueil]
+# lien avec crochets : [http://phpwiki.sourceforge.net/]
+# lien sans crochets : http://phpwiki.sourceforge.net/
+# lien avec un mot Wiki : http://phpwiki.sourceforge.net/phpwiki/index.php?HomePage
+# deux lien sconsécutifs: http://phpwiki.sourceforge.net/ http://phpwiki.sourceforge.net/phpwiki/
+# [PhpWiki à Sourceforge | http://phpwiki.sourceforge.net/]
+# [URL avec un mot Wiki | http://phpwiki.sourceforge.net/phpwiki/index.php?RecentChanges]
+# Javascript: [boo! | javascript:alert('oops') ]  (c'est désormais un lien nommé interne)
+# un [[Lien] produit un [Lien]
+# un [Lien] ressemble à ceci : [[Lien]
+# [%%%] est un lien vers un changement de ligne
+# aussi cette page [[n'est pas liée à], et celle-ci est !PasLiéeÀ et celle-là !http://not.linked.to/ non plus.
+#* WikiName - WikiNameSameStem -- !!WikiName - !!WikiNameSameStem
+#* !!WikiName - !!WikiNameSameStem -- WikiName - WikiNameSameStem
+#* WikiNameSameStem - WikiName -- !!WikiNameSameStem - !!WikiName
+#* !!WikiNameSameStem - !!WikiName -- WikiNameSameStem - WikiName
+
+----
+Tests de marques :
+
+__underscores pour le gras__
+
+'''apostrophes pour le gras'''
+
+''apostrophes pour l'italique''
+
+__''underscores pour l'italique gras''__
+
+'''''cinq apostrophes pour l'italique gras'''''
+
+''''''six apostrophes''''''
+
+'''''italique gras''' et italique'' (à éviter)
+
+'''gras et ''italique gras''''' (à éviter)
+
+!!! h1
+
+!! h2
+
+! h3
+
+c'est un texte simple avec <br>%%%
+une nouvelle ligne
+
+Aller voir <a href="http://phpwiki.sourceforge.net/">les marques</a>
+
+Vous ne pouvez pas utiliser &, < ou >
+
+----
+Usage en texte pré-formaté :
+
+ __underscores pour le gras__
+ '''apostrophes pour le gras'''
+ ''apostrophes pour l'italique''
+ __''underscores pour l'italique gras''__
+ '''''cinq apostrophes pour l'italique gras'''''
+ ''''''six apostrophes''''''
+ '''''italique gras''' et italique'' (à éviter)
+ '''gras et ''italique gras''''' (à éviter)
+ !!! h1
+ !! h2
+ ! h3
+ c'est un texte simple avec <br>%%%
+ une nouvelle ligne
+ Aller voir <a href="http://phpwiki.sourceforge.net/">les marques</a>
+ vous ne pouvez pas utiliser &, < ou > 

@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: japanese.php,v 1.1 2004/05/04 22:34:25 rurban Exp $');
 
 // PDF functions taken from FPDF http://www.fpdf.org
 

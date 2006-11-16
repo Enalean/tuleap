@@ -1,7 +1,7 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: TitleSearch.php,v 1.28 2005/09/10 21:33:08 rurban Exp $');
 /**
- Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
+ Copyright 1999,2000,2001,2002,2004,2005 $ThePhpWikiProgrammingTeam
 
  This file is part of PhpWiki.
 
@@ -22,7 +22,19 @@ rcs_id('$Id$');
 
 require_once('lib/TextSearchQuery.php');
 require_once('lib/PageList.php');
+
 /**
+ * Display results of pagename search. 
+ * Provides no own input box, just <?plugin-form TitleSearch ?> is enough.
+ * Fancier Inputforms can be made using WikiForm Rich, to support regex and case_exact args.
+ *
+ * If only one pages is found and auto_redirect is true, this page is displayed immediatly, 
+ * otherwise the found pagelist is displayed.
+ * The workhorse TextSearchQuery converts the query string from google-style words 
+ * to the required DB backend expression.
+ *   (word and word) OR word, -word, "two words"
+ * regex=auto tries to detect simple glob-style wildcards and expressions, 
+ * like xx*, *xx, ^xx, xx$, ^word$.
  */
 class WikiPlugin_TitleSearch
 extends WikiPlugin
@@ -37,45 +49,61 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.28 $");
     }
 
     function getDefaultArguments() {
-        return array('s'             => false,
-                     'auto_redirect' => false,
-                     'noheader'      => false,
-                     'exclude'       => '',
-                     'info'          => false
-                     );
+        return array_merge
+            (
+             PageList::supportedArgs(), // paging and more.
+             array('s'             => false,
+                   'auto_redirect' => false,
+                   'noheader'      => false,
+                   'exclude'       => false,
+                   'info'          => false,
+                   'case_exact'    => false,
+                   'regex'     	   => 'auto',
+                   'format'    	   => false,
+                   ));
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
-    // exclude arg allows multiple pagenames exclude=HomePage,RecentChanges
+    // exclude arg allows multiple pagenames exclude=Php*,RecentChanges
 
     function run($dbi, $argstr, &$request, $basepage) {
         $args = $this->getArgs($argstr, $request);
         if (empty($args['s']))
             return '';
 
-        extract($args);
+        $query = new TextSearchQuery($args['s'], $args['case_exact'], $args['regex']);
+        $pages = $dbi->titleSearch($query,$args['sortby'],$args['limit'],$args['exclude']);
 
-        $query = new TextSearchQuery($s);
-        $pages = $dbi->titleSearch($query);
-
-        $pagelist = new PageList($info, $exclude);
-
+        $pagelist = new PageList($args['info'], $args['exclude'], $args);
         while ($page = $pages->next()) {
             $pagelist->addPage($page);
             $last_name = $page->getName();
         }
+        if ($args['format'] == 'livesearch') {
+            $request->discardOutput();
+            $request->buffer_output(false);
+            echo '<div class="LSRes">';
+            echo $pagelist->asXml();
+            echo '</div>';
+            if (empty($WikiTheme->DUMP_MODE)) {
+                unset($GLOBALS['ErrorManager']->_postponed_errors);
+                $request->finish();
+            }
+        }
         // Provide an unknown WikiWord link to allow for page creation
         // when a search returns no results
-        if (!$noheader)
-            $pagelist->setCaption(fmt("Title search results for '%s'",
-                                      $pagelist->getTotal() == 0
-                                      ? WikiLink($s, 'auto') : $s));
+        if (!$args['noheader']) {
+            $s = $args['s'];
+            if (!$pagelist->getTotal() and !$query->_regex)
+                $s = WikiLink($args['s'], 'auto');
+            $pagelist->setCaption(fmt("Title search results for '%s'", $s));
+        }
 
-        if ($auto_redirect && ($pagelist->getTotal() == 1)) {
+        if ($args['auto_redirect'] && ($pagelist->getTotal() == 1)) {
             return HTML($request->redirect(WikiURL($last_name, false, 'absurl'), false),
                         $pagelist);
         }
@@ -84,7 +112,42 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: TitleSearch.php,v $
+// Revision 1.28  2005/09/10 21:33:08  rurban
+// support enhanced API
+//
+// Revision 1.27  2005/02/03 05:09:57  rurban
+// livesearch.js support
+//
+// Revision 1.26  2004/11/27 14:39:05  rurban
+// simpified regex search architecture:
+//   no db specific node methods anymore,
+//   new sql() method for each node
+//   parallel to regexp() (which returns pcre)
+//   regex types bitmasked (op's not yet)
+// new regex=sql
+// clarified WikiDB::quote() backend methods:
+//   ->quote() adds surrounsing quotes
+//   ->qstr() (new method) assumes strings and adds no quotes! (in contrast to ADODB)
+//   pear and adodb have now unified quote methods for all generic queries.
+//
+// Revision 1.25  2004/11/26 18:39:02  rurban
+// new regex search parser and SQL backends (90% complete, glob and pcre backends missing)
+//
+// Revision 1.24  2004/11/25 08:30:58  rurban
+// dont extract args
+//
+// Revision 1.23  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.22  2004/11/23 13:35:49  rurban
+// add case_exact search
+//
 // Revision 1.21  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

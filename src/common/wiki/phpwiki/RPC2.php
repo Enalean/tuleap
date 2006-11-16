@@ -1,11 +1,11 @@
 <?php 
-// $Id$
+// $Id: RPC2.php,v 1.5 2005/01/21 11:23:58 rurban Exp $
 /*
  * The guts of this code have been moved to lib/XmlRpcServer.php.
  *
  * This file is really a vestige, as now, you can direct XML-RPC
  * request to the main wiki URL (e.g. index.php) --- it will
- * notice that you've  * POSTed content-type of text/xml and
+ * notice that you've POSTed content-type of text/xml and
  * fire up the XML-RPC server automatically.
  */
 
@@ -15,7 +15,7 @@
 if ($HTTP_SERVER_VARS['REQUEST_METHOD'] != "POST")  
 {
     die('This is the address of the XML-RPC interface.' .
-        '  You must use XML-RPC calls to access information here');
+        '  You must use XML-RPC calls to access information here.');
 }
 
 // Constant defined to indicate to phpwiki that it is being accessed via XML-RPC

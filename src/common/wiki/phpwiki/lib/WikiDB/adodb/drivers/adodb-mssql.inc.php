@@ -36,7 +36,7 @@ Set tabs to 4 for best viewing.
 // has datetime converstion to YYYY-MM-DD format, and also mssql_fetch_assoc
 if (ADODB_PHPVER >= 0x4300) {
 // docs say 4.2.0, but testing shows only since 4.3.0 does it work!
-	ini_set('mssql.datetimeconvert',0); 
+	@ini_set('mssql.datetimeconvert',0); 
 } else {
 global $ADODB_mssql_mths;		// array, months must be upper-case
 

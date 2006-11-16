@@ -1,0 +1,56 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: Ic%F4nesDeLien,v 1.4 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=Ic%F4nesDeLien;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags="";
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! Description
+
+Les IcônesDeLien forment une nouvelle caractéristique optionnelle de PhpWiki. 
+Lorsqu'elles sont activées, des icônes seront affichées devant les URL pour 
+indiquer de quel type de lien il s'agit.
+
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/http.png] lien http
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/url.png] lien internet générique
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/interwiki.png] lien InterWiki
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/https.png] lien https
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/mailto.png] lien mailto
+* [http://phpwiki.sourceforge.net/demo/themes/default/images/ftp.png] lien ftp
+
+!!! Avertissements
+
+Certaines icônes par défaut utilisent le canal alpha du format d'image [PNG|http://www.libpng.org/pub/png/png-sitemap.html] pour un rendu lissé sur n'importe quel fond de page coloré ou texturé. Il se peut que certains anciens navigateurs ne sachent pas afficher ces images correctement.
+
+!!! Exemples
+
+Les exemples suivants ne s'afficheront avec les icônes de lien ci-dessus que si l'administrateur a validé cette option.
+
+!! Liens InterWiki
+
+*Lien InterWiki PhpWiki:InterWiki %%%
+*Un InterWiki nommé [lire WhyWikiWorks à c2|Wiki:WhyWikiWorks].
+
+!! URL
+
+* Adresse électronique [PhpWiki-talk mailing list|mailto:phpwiki-talk@lists.sourceforge.net]%%%
+* Lien http normal [Page d'accueil de PhpWiki|http://phpwiki.sourceforge.net/phpwiki/]%%%
+* Lien http sécurisé [PhpWiki's Home Page|https://phpwiki.sourceforge.net/phpwiki/] %%%
+* Serveur ftp ftp://ftp.sourceforge.net/ %%%
+
+''Une icône générique est affichée pour les autres liens d'un type moins communs.''%%%
+* [news://nntp.news.com] %%%
+* gopher://gopher.caltech.cmu.edu %%%
+
+IcônesDeLien s'affichera seulement lorsque le protocole d'URL fait partie de ceux qui 
+sont autorisé dans PhpWiki. Les exemples suivants ne montrent rien et PhpWiki ignorera 
+l'activation du double-clique à moins que l'administrateur l'ajoute :
+
+* bogus://oedipus.nostradamus.com %%%
+* bolo://lgm.cheshire.org
+
+----
+DocumentationDePhpWiki

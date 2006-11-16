@@ -1,16 +1,50 @@
-UPGRADING from 1.3.9
+To migrate to a new phpwiki installation you might want to backup your old pages 
+(best via a zip dump), configure your new installation, and restore the old 
+pages in PhpWikiAdministration. 
+UPGRADING from 1.3.7 on requires just ?action=upgrade.
 
+Can't unpack bad cached markup. Probably php_zlib extension not loaded.
+=======================================================================
+Sign in as ADMIN_USER, go to PhpWikiAdministration#Purge_Markup_Cache
+and click on the [Purge Cache] button.
+
+?action=upgrade
+===============
+To upgrade default pages, the database and some config settings 
+add "?action=upgrade" to your HomePage url and press "Enter", which will
+do most of the upgrades automatically.
+
+You might need to enter the DBADMIN_USER and DBADMIN_PASSWD in 
+config/config.ini for SQL databases and default permissions.
+
+The importer looks at the Date header of the page. In your current wikidb 
+against the creation date of the pgsrc, you want to import.
+If you changed your pages after I changed the pgsrc pages, 
+they will not be upgraded.
+
+Or just upgrade your configuration as described below.
+
+UPGRADING since 1.3.11
+======================
+?action=upgrade should be enough.
+
+UPGRADING since 1.3.10
+======================
+?action=upgrade should be enough.
+
+UPGRADING from 1.3.9
+======================
 At first you have to manually create a config/config.ini based on 
-config-dist.ini and your previous index.php. We don't have a script yet,
+config-dist.ini and your previous index.php. We don't have a script,
 to do that automatically.
 
 mysql:
   ALTER TABLE page CHANGE id id INT NOT NULL AUTO_INCREMENT;
 NOTE: ?action=upgrade does this also, if your mysql user has the 
-      ALTER permissions.
+ALTER permissions or DBADMIN_USER and DBADMIN_PASSWD are set.
 
 UPGRADING from 1.3.7
-
+======================
 mysql + postgres:
   ALTER TABLE session ADD sess_ip CHAR(15) NOT NULL;
   CREATE INDEX sess_date ON session (sess_date); 
@@ -39,8 +73,8 @@ this will come with the next release. Also upgrading the
 database automatically.
 
 UPGRADING from 1.2.x
-
-FIXME: WARNING WARNING: the schemas used by the new databases
+======================
+FIXME: WARNING WARNING: The schemas used by the new databases
 are completely incompatible with schemas in any previous version
 (i.e. before release 1.3.1 of PhpWiki).  If you install this new
 PhpWiki, you must start with a new empty database (currently
@@ -108,8 +142,8 @@ some of the pages which need fixing are locked.)
 (at the bottom of the page).  This should get you a list of all
 archived versions of the page.
 
-4c. Browse to the archive 1.3 version of the page (probably version number
-1) by clicking on the version number of the desired version.
+4c. Browse to the archive 1.3 version of the page (probably version 
+number 1) by clicking on the version number of the desired version.
 
 4d. Click the "Edit old revision" button (bottom of page).  This should
 get you to the edit form.
@@ -120,7 +154,7 @@ as the current contents.
 We really need to figure out a way to simplify this process, but, for now,
 that's what you gotta do.
 
-An older note of mine on the same subject can be found at:
- http://sourceforge.net/forum/message.php?msg_id=107858
+An older note on the same subject can be found at:
+  http://sourceforge.net/forum/message.php?msg_id=107858
 
-$Id$
+$Id: UPGRADING,v 1.9 2004/12/17 09:23:41 rurban Exp $

@@ -1,9 +1,9 @@
-Date: Thu, 28 Mar 2002 14:57:00 -0500
+Date: Tue, 8 Jun 2004 22:20:05 +0200
 Mime-Version: 1.0 (Produced by PhpWiki 1.3.8)
-X-Rcs-Id: $Id$
+X-Rcs-Id: $Id: TextFormattingRules,v 1.32 2004/06/19 12:13:57 rurban Exp $
 Content-Type: application/x-phpwiki;
   pagename=TextFormattingRules;
-  pgsrc_version="2 $Revision$";
+  pgsrc_version="2 $Revision: 1.32 $";
   flags=PAGE_LOCKED;
   markup=2;
   charset=iso-8859-1
@@ -34,6 +34,29 @@ _Term<b>:</b>~<new-line> definition_ for definition lists.%%%
 <var>var</var> <sup>sup</sup> <sub>sub</sub>
 
 ----
+
+!!! Character Formatting
+
+* All special non-whitespace HTML characters are displayed as-is. Exceptions below.
+* See [Emphasis|TextFormattingRules#Emphasis].
+* There's no syntax for font tags or color attributes.
+* The tilde '~~' is the _Escape Character_:
+** A single tilde '~~' followed by nothing gets rendered as a single tilde. => ~
+** Two tilde '~~~~' get rendered as a single tilde. => ~~
+** A single tilde before a link ('~~http~:~/~/foo.bar') prevents linking.
+   => ~http://foo.bar
+** Two tildes before a link ('~~~~http~:~/~/foo.bar') produce a tilde
+   followed by the hyperlinked URL.
+   => ~~http://foo.bar
+** A tilde inside an URL gets removed, unless it's formatted inside
+   ~[ ~] brackets.
+   Two tildes inside an URL (without brackets) become a single tilde.
+   => [http://foo.bar/~user] or http://foo.bar/~~user
+* Special non-ascii or non-latin characters are printed as-is only if supported
+  by the native wiki CHARSET. Add such characters on a non-supported CHARSET with the RawHtmlPlugin if it is enabled by the Admin and e.g. the &#num; syntax. %%%
+  E.g. These japanese euc-jp chars '&#12363;&#12425; &#26032;&#35215;&#12506;&#12540;&#12472;' on this =<?plugin SystemInfo CHARSET?>= wiki.
+  And with the plugin: <?plugin RawHtml &#12363;&#12425; &#26032;&#35215;&#12506;&#12540;&#12472; ?> %%%
+  And this is how it should like: [http://phpwiki.sourceforge.net/demo/images/chars-releasenotes-japanese.png]
 
 !!! Paragraphs
 
@@ -141,7 +164,8 @@ _Term<b>:</b>~<new-line> definition_ for definition lists.%%%
   with "<tt>http:</tt>", "<tt>ftp:</tt>" or "<tt>mailto:</tt>" to
   create links automatically as in: http://c2.com/
 * URLs ending with =.png=, =.gif=, or =.jpg= are inlined if in square
-  brackets, by themselves.
+  brackets, by themselves:
+  [http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
 * In-page #[hyperlinks] are made by placing a named anchor and
   referring to the anchor in a hyperlink:
   * Named anchors:

@@ -3,7 +3,7 @@
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2003 The PHP Group                                |
+// | Copyright (c) 1997-2004 The PHP Group                                |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.02 of the PHP license,      |
 // | that is bundled with this package in the file LICENSE, and is        |
@@ -14,27 +14,35 @@
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
 // | Author: Stig Bakken <ssb@php.net>                                    |
+// | Maintainer: Daniel Convissor <danielc@php.net>                       |
 // +----------------------------------------------------------------------+
 //
-// Based on DB 1.3 from the pear.php.net repository. 
-// The only modifications made have been modification of the include paths. 
-//
-rcs_id('$Id$');
-rcs_id('From Pear CVS: Id: mysql.php,v 1.15 2003/05/07 16:58:28 mj Exp');
-//
-// Database independent query interface definition for PHP's MySQL
-// extension.
-//
+// $Id: mysql.php,v 1.6 2004/06/21 08:39:38 rurban Exp $
 
-//
+
 // XXX legend:
 //
 // XXX ERRORMSG: The error message from the mysql function should
 //               be registered here.
 //
+// TODO/wishlist:
+// longReadlen
+// binmode
 
-require_once "DB/common.php";
 
+require_once 'DB/common.php';
+
+/**
+ * Database independent query interface definition for PHP's MySQL
+ * extension.
+ *
+ * This is for MySQL versions 4.0 and below.
+ *
+ * @package  DB
+ * @version  $Id: mysql.php,v 1.6 2004/06/21 08:39:38 rurban Exp $
+ * @category Database
+ * @author   Stig Bakken <ssb@php.net>
+ */
 class DB_mysql extends DB_common
 {
     // {{{ properties
@@ -57,7 +65,6 @@ class DB_mysql extends DB_common
      *
      * @access public
      */
-
     function DB_mysql()
     {
         $this->DB_common();
@@ -75,6 +82,7 @@ class DB_mysql extends DB_common
             1006 => DB_ERROR_CANNOT_CREATE,
             1007 => DB_ERROR_ALREADY_EXISTS,
             1008 => DB_ERROR_CANNOT_DROP,
+            1022 => DB_ERROR_ALREADY_EXISTS,
             1046 => DB_ERROR_NODBSELECTED,
             1050 => DB_ERROR_ALREADY_EXISTS,
             1051 => DB_ERROR_NOSUCHTABLE,
@@ -85,11 +93,11 @@ class DB_mysql extends DB_common
             1136 => DB_ERROR_VALUE_COUNT_ON_ROW,
             1146 => DB_ERROR_NOSUCHTABLE,
             1048 => DB_ERROR_CONSTRAINT,
+            1216 => DB_ERROR_CONSTRAINT
         );
     }
 
     // }}}
-
     // {{{ connect()
 
     /**
@@ -101,36 +109,34 @@ class DB_mysql extends DB_common
      * @access public
      * @return int DB_OK on success, a DB error on failure
      */
-
     function connect($dsninfo, $persistent = false)
     {
-        if (!DB::assertExtension('mysql'))
+        if (!DB::assertExtension('mysql')) {
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
-
+        }
         $this->dsn = $dsninfo;
-        if (isset($dsninfo['protocol']) && $dsninfo['protocol'] == 'unix') {
+        if ($dsninfo['protocol'] && $dsninfo['protocol'] == 'unix') {
             $dbhost = ':' . $dsninfo['socket'];
         } else {
             $dbhost = $dsninfo['hostspec'] ? $dsninfo['hostspec'] : 'localhost';
-            if (!empty($dsninfo['port'])) {
+            if ($dsninfo['port']) {
                 $dbhost .= ':' . $dsninfo['port'];
             }
         }
-        $user = $dsninfo['username'];
-        $pw = $dsninfo['password'];
 
         $connect_function = $persistent ? 'mysql_pconnect' : 'mysql_connect';
 
-        if ($dbhost && $user && $pw) {
-            $conn = @$connect_function($dbhost, $user, $pw);
-        } elseif ($dbhost && $user) {
-            $conn = @$connect_function($dbhost, $user);
+        if ($dbhost && $dsninfo['username'] && isset($dsninfo['password'])) {
+            $conn = @$connect_function($dbhost, $dsninfo['username'],
+                                       $dsninfo['password']);
+        } elseif ($dbhost && $dsninfo['username']) {
+            $conn = @$connect_function($dbhost, $dsninfo['username']);
         } elseif ($dbhost) {
             $conn = @$connect_function($dbhost);
         } else {
             $conn = false;
         }
-        if (empty($conn)) {
+        if (!$conn) {
             if (($err = @mysql_error()) != '') {
                 return $this->raiseError(DB_ERROR_CONNECT_FAILED, null, null,
                                          null, $err);
@@ -147,17 +153,13 @@ class DB_mysql extends DB_common
                switch(mysql_errno($conn)) {
                         case 1049:
                             return $this->raiseError(DB_ERROR_NOSUCHDB, null, null,
-                                                     null, mysql_error($conn));
-                            break;
+                                                     null, @mysql_error($conn));
                         case 1044:
                              return $this->raiseError(DB_ERROR_ACCESS_VIOLATION, null, null,
-                                                      null, mysql_error($conn));
-                            break;
+                                                      null, @mysql_error($conn));
                         default:
                             return $this->raiseError(DB_ERROR, null, null,
-                                                     null, mysql_error($conn));
-                            break;
-
+                                                     null, @mysql_error($conn));
                     }
             }
             // fix to allow calls to different databases in the same script
@@ -176,11 +178,11 @@ class DB_mysql extends DB_common
      *
      * @access public
      *
-     * @return bool TRUE on success, FALSE if not connected.
+     * @return bool true on success, false if not connected.
      */
     function disconnect()
     {
-        $ret = mysql_close($this->connection);
+        $ret = @mysql_close($this->connection);
         $this->connection = null;
         return $ret;
     }
@@ -229,7 +231,7 @@ class DB_mysql extends DB_common
             if (is_object($numrows)) {
                 return $numrows;
             }
-            $this->num_rows[$result] = $numrows;
+            $this->num_rows[(int)$result] = $numrows;
             return $result;
         }
         return DB_OK;
@@ -255,41 +257,25 @@ class DB_mysql extends DB_common
     }
 
     // }}}
-    // {{{ fetchRow()
-
-    /**
-     * Fetch and return a row of data (it uses fetchInto for that)
-     * @param $result MySQL result identifier
-     * @param   $fetchmode  format of fetched row array
-     * @param   $rownum     the absolute row number to fetch
-     *
-     * @return  array   a row of data, or false on error
-     */
-    function fetchRow($result, $fetchmode = DB_FETCHMODE_DEFAULT, $rownum=null)
-    {
-        if ($fetchmode == DB_FETCHMODE_DEFAULT) {
-            $fetchmode = $this->fetchmode;
-        }
-        $res = $this->fetchInto ($result, $arr, $fetchmode, $rownum);
-        if ($res !== DB_OK) {
-            return $res;
-        }
-        return $arr;
-    }
-
-    // }}}
     // {{{ fetchInto()
 
     /**
      * Fetch a row and insert the data into an existing array.
      *
-     * @param $result MySQL result identifier
-     * @param $arr (reference) array where data from the row is stored
-     * @param $fetchmode how the array data should be indexed
-     * @param   $rownum the row number to fetch
-     * @access public
+     * Formating of the array and the data therein are configurable.
+     * See DB_result::fetchInto() for more information.
      *
-     * @return int DB_OK on success, a DB error on failure
+     * @param resource $result    query result identifier
+     * @param array    $arr       (reference) array where data from the row
+     *                            should be placed
+     * @param int      $fetchmode how the resulting array should be indexed
+     * @param int      $rownum    the row number to fetch
+     *
+     * @return mixed DB_OK on success, null when end of result set is
+     *               reached or on failure
+     *
+     * @see DB_result::fetchInto()
+     * @access private
      */
     function fetchInto($result, &$arr, $fetchmode, $rownum=null)
     {
@@ -300,15 +286,34 @@ class DB_mysql extends DB_common
         }
         if ($fetchmode & DB_FETCHMODE_ASSOC) {
             $arr = @mysql_fetch_array($result, MYSQL_ASSOC);
+            if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE && $arr) {
+                $arr = array_change_key_case($arr, CASE_LOWER);
+            }
         } else {
             $arr = @mysql_fetch_row($result);
         }
         if (!$arr) {
+            // See: http://bugs.php.net/bug.php?id=22328
+            // for why we can't check errors on fetching
+            return null;
+            /*
             $errno = @mysql_errno($this->connection);
             if (!$errno) {
-                return NULL;
+                return null;
             }
             return $this->mysqlRaiseError($errno);
+            */
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_RTRIM) {
+            /*
+             * Even though this DBMS already trims output, we do this because
+             * a field might have intentional whitespace at the end that
+             * gets removed by DB_PORTABILITY_RTRIM under another driver.
+             */
+            $this->_rtrimArrayValues($arr);
+        }
+        if ($this->options['portability'] & DB_PORTABILITY_NULL_TO_EMPTY) {
+            $this->_convertNullArrayValuesToEmpty($arr);
         }
         return DB_OK;
     }
@@ -319,30 +324,16 @@ class DB_mysql extends DB_common
     /**
      * Free the internal resources associated with $result.
      *
-     * @param $result MySQL result identifier or DB statement identifier
+     * @param $result MySQL result identifier
      *
      * @access public
      *
-     * @return bool TRUE on success, FALSE if $result is invalid
+     * @return bool true on success, false if $result is invalid
      */
     function freeResult($result)
     {
-        if (is_resource($result)) {
-            return mysql_free_result($result);
-        }
-
-        $result = (int)$result; // $result is a prepared query handle
-        if (!isset($this->prepare_tokens[$result])) {
-            return false;
-        }
-
-
-		// I fixed the unset thing.
-
-        $this->prepare_types = array();
-        $this->prepare_tokens = array();
-
-        return true;
+        unset($this->num_rows[(int)$result]);
+        return @mysql_free_result($result);
     }
 
     // }}}
@@ -460,15 +451,13 @@ class DB_mysql extends DB_common
      *
      * @return number of rows affected by the last query
      */
-
     function affectedRows()
     {
         if (DB::isManip($this->last_query)) {
-            $result = @mysql_affected_rows($this->connection);
+            return @mysql_affected_rows($this->connection);
         } else {
-            $result = 0;
+            return 0;
         }
-        return $result;
      }
 
     // }}}
@@ -482,27 +471,26 @@ class DB_mysql extends DB_common
      *
      * @return int native MySQL error code
      */
-
     function errorNative()
     {
-        return mysql_errno($this->connection);
+        return @mysql_errno($this->connection);
     }
 
     // }}}
     // {{{ nextId()
 
     /**
-     * Get the next value in a sequence.  We emulate sequences
-     * for MySQL.  Will create the sequence if it does not exist.
+     * Returns the next free id in a sequence
      *
+     * @param string  $seq_name  name of the sequence
+     * @param boolean $ondemand  when true, the seqence is automatically
+     *                           created if it does not exist
+     *
+     * @return int  the next id number in the sequence.  DB_Error if problem.
+     *
+     * @internal
+     * @see DB_common::nextID()
      * @access public
-     *
-     * @param string $seq_name the name of the sequence
-     *
-     * @param bool $ondemand whether to create the sequence table on demand
-     * (default is true)
-     *
-     * @return mixed a sequence integer, or a DB error
      */
     function nextId($seq_name, $ondemand = true)
     {
@@ -515,7 +503,7 @@ class DB_mysql extends DB_common
             $this->popErrorHandling();
             if ($result == DB_OK) {
                 /** COMMON CASE **/
-                $id = mysql_insert_id($this->connection);
+                $id = @mysql_insert_id($this->connection);
                 if ($id != 0) {
                     return $id;
                 }
@@ -550,13 +538,10 @@ class DB_mysql extends DB_common
                 $result->getCode() == DB_ERROR_NOSUCHTABLE)
             {
                 $result = $this->createSequence($seq_name);
-                // Since createSequence initializes the ID to be 1,
-                // we do not need to retrieve the ID again (or we will get 2)
                 if (DB::isError($result)) {
                     return $this->raiseError($result);
                 } else {
-                    // First ID of a newly created sequence is 1
-                    return 1;
+                    $repeat = 1;
                 }
 
             /** BACKWARDS COMPAT **/
@@ -578,6 +563,18 @@ class DB_mysql extends DB_common
     // }}}
     // {{{ createSequence()
 
+    /**
+     * Creates a new sequence
+     *
+     * @param string $seq_name  name of the new sequence
+     *
+     * @return int  DB_OK on success.  A DB_Error object is returned if
+     *              problems arise.
+     *
+     * @internal
+     * @see DB_common::createSequence()
+     * @access public
+     */
     function createSequence($seq_name)
     {
         $seqname = $this->getSequenceName($seq_name);
@@ -588,28 +585,43 @@ class DB_mysql extends DB_common
             return $res;
         }
         // insert yields value 1, nextId call will generate ID 2
-        return $this->query("INSERT INTO ${seqname} VALUES(0)");
+        $res = $this->query("INSERT INTO ${seqname} VALUES(0)");
+        if (DB::isError($res)) {
+            return $res;
+        }
+        // so reset to zero
+        return $this->query("UPDATE ${seqname} SET id = 0;");
     }
 
     // }}}
     // {{{ dropSequence()
 
+    /**
+     * Deletes a sequence
+     *
+     * @param string $seq_name  name of the sequence to be deleted
+     *
+     * @return int  DB_OK on success.  DB_Error if problems.
+     *
+     * @internal
+     * @see DB_common::dropSequence()
+     * @access public
+     */
     function dropSequence($seq_name)
     {
-        $seqname = $this->getSequenceName($seq_name);
-        return $this->query("DROP TABLE ${seqname}");
+        return $this->query('DROP TABLE ' . $this->getSequenceName($seq_name));
     }
 
     // }}}
     // {{{ _BCsequence()
 
     /**
-    * Backwards compatibility with old sequence emulation implementation
-    * (clean up the dupes)
-    *
-    * @param string $seqname The sequence name to clean up
-    * @return mixed DB_Error or true
-    */
+     * Backwards compatibility with old sequence emulation implementation
+     * (clean up the dupes)
+     *
+     * @param string $seqname The sequence name to clean up
+     * @return mixed DB_Error or true
+     */
     function _BCsequence($seqname)
     {
         // Obtain a user-level lock... this will release any previous
@@ -648,38 +660,66 @@ class DB_mysql extends DB_common
     }
 
     // }}}
+    // {{{ quoteIdentifier()
+
+    /**
+     * Quote a string so it can be safely used as a table or column name
+     *
+     * Quoting style depends on which database driver is being used.
+     *
+     * MySQL can't handle the backtick character (<kbd>`</kbd>) in
+     * table or column names.
+     *
+     * @param string $str  identifier name to be quoted
+     *
+     * @return string  quoted identifier string
+     *
+     * @since 1.6.0
+     * @access public
+     * @internal
+     */
+    function quoteIdentifier($str)
+    {
+        return '`' . $str . '`';
+    }
+
+    // }}}
     // {{{ quote()
 
     /**
-    * Quote the given string so it can be safely used within string delimiters
-    * in a query.
-    * @param $string mixed Data to be quoted
-    * @return mixed "NULL" string, quoted string or original data
-    */
-    function quote($str = null)
-    {
-        switch (strtolower(gettype($str))) {
-            case 'null':
-                return 'NULL';
-            case 'integer':
-            case 'double':
-                return $str;
-            case 'string':
-            default:
-                if (function_exists('mysql_real_escape_string')) {
-                    return "'".mysql_real_escape_string($str, $this->connection)."'";
-                } else {
-                    return "'".mysql_escape_string($str)."'";
-                }
+     * @deprecated  Deprecated in release 1.6.0
+     * @internal
+     */
+    function quote($str) {
+        return $this->quoteSmart($str);
+    }
+
+    // }}}
+    // {{{ escapeSimple()
+
+    /**
+     * Escape a string according to the current DBMS's standards
+     *
+     * @param string $str  the string to be escaped
+     *
+     * @return string  the escaped string
+     *
+     * @internal
+     */
+    function escapeSimple($str) {
+        if (function_exists('mysql_real_escape_string')) {
+            return @mysql_real_escape_string($str, $this->connection);
+        } else {
+            return @mysql_escape_string($str);
         }
     }
 
     // }}}
     // {{{ modifyQuery()
 
-    function modifyQuery($query, $subject = null)
+    function modifyQuery($query)
     {
-        if ($this->options['optimize'] == 'portability') {
+        if ($this->options['portability'] & DB_PORTABILITY_DELETE_COUNT) {
             // "DELETE FROM table" gives 0 affected rows in MySQL.
             // This little hack lets you know how many rows were deleted.
             if (preg_match('/^\s*DELETE\s+FROM\s+(\S+)\s*$/i', $query)) {
@@ -705,96 +745,108 @@ class DB_mysql extends DB_common
     // }}}
     // {{{ mysqlRaiseError()
 
+    /**
+     * Gather information about an error, then use that info to create a
+     * DB error object and finally return that object.
+     *
+     * @param  integer  $errno  PEAR error number (usually a DB constant) if
+     *                          manually raising an error
+     * @return object  DB error object
+     * @see DB_common::errorCode()
+     * @see DB_common::raiseError()
+     */
     function mysqlRaiseError($errno = null)
     {
         if ($errno === null) {
+            if ($this->options['portability'] & DB_PORTABILITY_ERRORS) {
+                $this->errorcode_map[1022] = DB_ERROR_CONSTRAINT;
+                $this->errorcode_map[1048] = DB_ERROR_CONSTRAINT_NOT_NULL;
+                $this->errorcode_map[1062] = DB_ERROR_CONSTRAINT;
+            } else {
+                // Doing this in case mode changes during runtime.
+                $this->errorcode_map[1022] = DB_ERROR_ALREADY_EXISTS;
+                $this->errorcode_map[1048] = DB_ERROR_CONSTRAINT;
+                $this->errorcode_map[1062] = DB_ERROR_ALREADY_EXISTS;
+            }
             $errno = $this->errorCode(mysql_errno($this->connection));
         }
         return $this->raiseError($errno, null, null, null,
-                                 @mysql_errno($this->connection) . " ** " .
+                                 @mysql_errno($this->connection) . ' ** ' .
                                  @mysql_error($this->connection));
     }
 
     // }}}
     // {{{ tableInfo()
 
+    /**
+     * Returns information about a table or a result set.
+     *
+     * @param object|string  $result  DB_result object from a query or a
+     *                                string containing the name of a table
+     * @param int            $mode    a valid tableInfo mode
+     * @return array  an associative array with the information requested
+     *                or an error object if something is wrong
+     * @access public
+     * @internal
+     * @see DB_common::tableInfo()
+     */
     function tableInfo($result, $mode = null) {
-        $count = 0;
-        $id    = 0;
-        $res   = array();
-
-        /*
-         * depending on $mode, metadata returns the following values:
-         *
-         * - mode is null (default):
-         * $result[]:
-         *   [0]["table"]  table name
-         *   [0]["name"]   field name
-         *   [0]["type"]   field type
-         *   [0]["len"]    field length
-         *   [0]["flags"]  field flags
-         *
-         * - mode is DB_TABLEINFO_ORDER
-         * $result[]:
-         *   ["num_fields"] number of metadata records
-         *   [0]["table"]  table name
-         *   [0]["name"]   field name
-         *   [0]["type"]   field type
-         *   [0]["len"]    field length
-         *   [0]["flags"]  field flags
-         *   ["order"][field name]  index of field named "field name"
-         *   The last one is used, if you have a field name, but no index.
-         *   Test:  if (isset($result['meta']['myfield'])) { ...
-         *
-         * - mode is DB_TABLEINFO_ORDERTABLE
-         *    the same as above. but additionally
-         *   ["ordertable"][table name][field name] index of field
-         *      named "field name"
-         *
-         *      this is, because if you have fields from different
-         *      tables with the same field name * they override each
-         *      other with DB_TABLEINFO_ORDER
-         *
-         *      you can combine DB_TABLEINFO_ORDER and
-         *      DB_TABLEINFO_ORDERTABLE with DB_TABLEINFO_ORDER |
-         *      DB_TABLEINFO_ORDERTABLE * or with DB_TABLEINFO_FULL
-         */
-
-        // if $result is a string, then we want information about a
-        // table without a resultset
-        if (is_string($result)) {
+        if (isset($result->result)) {
+            /*
+             * Probably received a result object.
+             * Extract the result resource identifier.
+             */
+            $id = $result->result;
+            $got_string = false;
+        } elseif (is_string($result)) {
+            /*
+             * Probably received a table name.
+             * Create a result resource identifier.
+             */
             $id = @mysql_list_fields($this->dsn['database'],
                                      $result, $this->connection);
-            if (empty($id)) {
-                return $this->mysqlRaiseError();
-            }
-        } else { // else we want information about a resultset
+            $got_string = true;
+        } else {
+            /*
+             * Probably received a result resource identifier.
+             * Copy it.
+             * Deprecated.  Here for compatibility only.
+             */
             $id = $result;
-            if (empty($id)) {
-                return $this->mysqlRaiseError();
-            }
+            $got_string = false;
+        }
+
+        if (!is_resource($id)) {
+            return $this->mysqlRaiseError(DB_ERROR_NEED_MORE_DATA);
+        }
+
+        if ($this->options['portability'] & DB_PORTABILITY_LOWERCASE) {
+            $case_func = 'strtolower';
+        } else {
+            $case_func = 'strval';
         }
 
         $count = @mysql_num_fields($id);
 
         // made this IF due to performance (one if is faster than $count if's)
-        if (empty($mode)) {
+        if (!$mode) {
             for ($i=0; $i<$count; $i++) {
-                $res[$i]['table'] = @mysql_field_table ($id, $i);
-                $res[$i]['name']  = @mysql_field_name  ($id, $i);
-                $res[$i]['type']  = @mysql_field_type  ($id, $i);
-                $res[$i]['len']   = @mysql_field_len   ($id, $i);
-                $res[$i]['flags'] = @mysql_field_flags ($id, $i);
+                $res[$i]['table'] = $case_func(@mysql_field_table($id, $i));
+                $res[$i]['name']  = $case_func(@mysql_field_name($id, $i));
+                $res[$i]['type']  = @mysql_field_type($id, $i);
+                $res[$i]['len']   = @mysql_field_len($id, $i);
+                $res[$i]['flags'] = @mysql_field_flags($id, $i);
             }
         } else { // full
             $res['num_fields']= $count;
 
             for ($i=0; $i<$count; $i++) {
-                $res[$i]['table'] = @mysql_field_table ($id, $i);
-                $res[$i]['name']  = @mysql_field_name  ($id, $i);
-                $res[$i]['type']  = @mysql_field_type  ($id, $i);
-                $res[$i]['len']   = @mysql_field_len   ($id, $i);
-                $res[$i]['flags'] = @mysql_field_flags ($id, $i);
+                $res[$i]['table'] = $case_func(@mysql_field_table($id, $i));
+                $res[$i]['name']  = $case_func(@mysql_field_name($id, $i));
+                $res[$i]['type']  = @mysql_field_type($id, $i);
+                $res[$i]['len']   = @mysql_field_len($id, $i);
+                $res[$i]['flags'] = @mysql_field_flags($id, $i);
+
                 if ($mode & DB_TABLEINFO_ORDER) {
                     $res['order'][$res[$i]['name']] = $i;
                 }
@@ -805,7 +857,7 @@ class DB_mysql extends DB_common
         }
 
         // free the result only if we were called on a table
-        if (is_string($result)) {
+        if ($got_string) {
             @mysql_free_result($id);
         }
         return $res;
@@ -815,21 +867,20 @@ class DB_mysql extends DB_common
     // {{{ getSpecialQuery()
 
     /**
-    * Returns the query needed to get some backend info
-    * @param string $type What kind of info you want to retrieve
-    * @return string The SQL query string
-    */
+     * Returns the query needed to get some backend info
+     * @param string $type What kind of info you want to retrieve
+     * @return string The SQL query string
+     */
     function getSpecialQuery($type)
     {
         switch ($type) {
             case 'tables':
-                $sql = "SHOW TABLES";
-                break;
+                return 'SHOW TABLES';
             case 'views':
                 return DB_ERROR_NOT_CAPABLE;
             case 'users':
-                $sql = "select distinct User from user";
-                if($this->dsn['database'] != 'mysql') {
+                $sql = 'select distinct User from user';
+                if ($this->dsn['database'] != 'mysql') {
                     $dsn = $this->dsn;
                     $dsn['database'] = 'mysql';
                     if (DB::isError($db = DB::connect($dsn))) {
@@ -843,21 +894,22 @@ class DB_mysql extends DB_common
                     }
                 }
                 return $sql;
-                break;
             case 'databases':
-                $sql = "SHOW DATABASES";
-                break;
+                return 'SHOW DATABASES';
             default:
                 return null;
         }
-        return $sql;
     }
 
     // }}}
 
-    // TODO/wishlist:
-    // longReadlen
-    // binmode
 }
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ */
 
 ?>

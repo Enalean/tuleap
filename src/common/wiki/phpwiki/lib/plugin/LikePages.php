@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id$');
+rcs_id('$Id: LikePages.php,v 1.22 2004/11/23 15:17:19 rurban Exp $');
 /**
  Copyright 1999, 2000, 2001, 2002 $ThePhpWikiProgrammingTeam
 
@@ -39,17 +39,18 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision$");
+                            "\$Revision: 1.22 $");
     }
 
     function getDefaultArguments() {
-        return array('page'     => '[pagename]',
-                     'prefix'   => false,
-                     'suffix'   => false,
-                     'exclude'  => '',
-                     'noheader' => false,
-                     'info'     => ''
-                     );
+        return array_merge
+            (
+             PageList::supportedArgs(),
+             array('page'     => '[pagename]',
+                   'prefix'   => false,
+                   'suffix'   => false,
+                   'noheader' => false,
+                   ));
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor
@@ -70,7 +71,7 @@ extends WikiPlugin
         }
         elseif ($page) {
             $words = preg_split('/[\s:-;.,]+/',
-                                split_pagename($page));
+                                SplitPagename($page));
             $words = preg_grep('/\S/', $words);
 
             $prefix = reset($words);
@@ -98,12 +99,10 @@ extends WikiPlugin
 
         $match_re = '/' . join('|', $match) . '/';
 
-        $pagelist = new PageList($info, $exclude);
+        $pagelist = new PageList($info, $exclude, $args);
         if (!$noheader)
             $pagelist->setCaption($descrip);
-
         $pages = $dbi->titleSearch($query);
-
         while ($page = $pages->next()) {
             $name = $page->getName();
             if (!preg_match($match_re, $name))
@@ -119,7 +118,21 @@ extends WikiPlugin
     }
 };
 
-// $Log$
+// $Log: LikePages.php,v $
+// Revision 1.22  2004/11/23 15:17:19  rurban
+// better support for case_exact search (not caseexact for consistency),
+// plugin args simplification:
+//   handle and explode exclude and pages argument in WikiPlugin::getArgs
+//     and exclude in advance (at the sql level if possible)
+//   handle sortby and limit from request override in WikiPlugin::getArgs
+// ListSubpages: renamed pages to maxpages
+//
+// Revision 1.21  2004/09/25 16:33:52  rurban
+// add support for all PageList options
+//
+// Revision 1.20  2004/05/18 16:23:40  rurban
+// rename split_pagename to SplitPagename
+//
 // Revision 1.19  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
 //

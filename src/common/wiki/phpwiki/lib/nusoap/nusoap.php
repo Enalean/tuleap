@@ -175,8 +175,9 @@ class nusoap_base {
      * @return	string
      * @access	public
      */
-    function serialize_val($val,$name=false,$type=false,$name_ns=false,$type_ns=false,$attributes=false,$use='encoded'){
-    	if(is_object($val) && get_class($val) == 'soapval'){
+    function serialize_val($val,$name=false,$type=false,$name_ns=false,
+                           $type_ns=false,$attributes=false,$use='encoded') {
+    	if(is_object($val) && strtolower(get_class($val)) == 'soapval'){
             return $val->serialize($use);
         }
         $this->debug( "in serialize_val: $val, $name, $type, $name_ns, $type_ns, $attributes, $use");
@@ -259,7 +260,7 @@ class nusoap_base {
             }
             break;
         case is_object($val):
-            $name = get_class($val);
+            $name = strtolower(get_class($val));
             foreach(get_object_vars($val) as $k => $v){
                 $pXml = isset($pXml) ? $pXml.$this->serialize_val($v,$k,false,false,false,false,$use) : $this->serialize_val($v,$k,false,false,false,false,$use);
             }
@@ -280,7 +281,7 @@ class nusoap_base {
                 $i = 0;
                 if(is_array($val) && count($val)> 0){
                     foreach($val as $v){
-                        if(is_object($v) && get_class($v) == 'soapval'){
+                        if(is_object($v) && strtolower(get_class($v)) == 'soapval'){
                             $tt = $v->type;
                         } else {
                             $tt = gettype($v);
@@ -1986,12 +1987,12 @@ class soap_server extends nusoap_base {
                 // if we got nothing back. this might be ok (echoVoid)
                 if(isset($method_response) && $method_response != '' || is_bool($method_response)) {
                     // if fault
-                    if(get_class($method_response) == 'soap_fault'){
+                    if(strtolower(get_class($method_response)) == 'soap_fault'){
                         $this->debug('got a fault object from method');
                         $this->fault = $method_response;
                         return $method_response->serialize();
                         // if return val is soapval object
-                    } elseif(get_class($method_response) == 'soapval'){
+                    } elseif(strtolower(get_class($method_response)) == 'soapval'){
                         $this->debug('got a soapval object from method');
                         $return_val = $method_response->serialize();
                         // returned other
