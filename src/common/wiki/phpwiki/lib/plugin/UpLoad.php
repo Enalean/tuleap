@@ -21,6 +21,10 @@ rcs_id('$Id: UpLoad.php,v 1.19 2005/04/11 19:40:15 rurban Exp $');
 
  */
 
+/// MV add
+/// Wiki attachments
+require_once('common/wiki/lib/WikiAttachment.class');
+
 /**
  * UpLoad:  Allow Administrator to upload files to a special directory,
  *          which should preferably be added to the InterWikiMap
@@ -36,7 +40,7 @@ extends WikiPlugin
 {
     var $disallowed_extensions;
     // TODO: use PagePerms instead
-    var $only_authenticated = true; // allow only authenticated users may upload.
+    var $only_authenticated = false; // allow only authenticated users may upload.
 
     function getName () {
         return "UpLoad";
@@ -47,10 +51,10 @@ extends WikiPlugin
     }
 
     function getDefaultArguments() {
-        return array('logfile'  => 'phpwiki-upload.log',
+        return array('logfile'  => false,
         	     // add a link of the fresh file automatically to the 
         	     // end of the page (or current page)
-        	     'autolink' => true, 
+        	     'autolink' => false, 
         	     'page'     => '[pagename]',
         	     );
     }
@@ -108,6 +112,13 @@ ws[cfh]");
         $contents->pushContent(HTML::input(array('type' => 'hidden',
                                                  'name' => 'MAX_FILE_SIZE',
                                                  'value' => MAX_UPLOAD_SIZE)));
+        /// MV add pv
+        /// @todo: have a generic method to transmit pv
+        if(!empty($_REQUEST['pv'])) {
+            $contents->pushContent(HTML::input(array('type' => 'hidden',
+                                                     'name' => 'pv',
+                                                     'value' => $_REQUEST['pv'])));
+        }
         $contents->pushContent(HTML::input(array('name' => 'userfile',
                                                  'type' => 'file',
                                                  'size' => '50')));
@@ -136,37 +147,19 @@ ws[cfh]");
             $userfile_name = trim(basename($userfile_name));
             $userfile_tmpname = $userfile->getTmpName();
 	    $err_header = HTML::h2(fmt("ERROR uploading '%s': ", $userfile_name));
-            if (preg_match("/(\." . join("|\.", $this->disallowed_extensions) . ")\$/",
-                           $userfile_name))
-            {
-            	$message->pushContent($err_header);
-                $message->pushContent(fmt("Files with extension %s are not allowed.",
-                                          join(", ", $this->disallowed_extensions)),HTML::br(),HTML::br());
-            } 
-            elseif (preg_match("/[^._a-zA-Z0-9-]/", $userfile_name))
-            {
-            	$message->pushContent($err_header);
-                $message->pushContent(_("File names may only contain alphanumeric characters and dot, underscore or dash."),
-                                      HTML::br(),HTML::br());
-            }
-            elseif (file_exists($file_dir . $userfile_name)) {
-            	$message->pushContent($err_header);
-                $message->pushContent(fmt("There is already a file with name %s uploaded.",
-                                          $userfile_name),HTML::br(),HTML::br());
-            }
-            elseif ($userfile->getSize() > (MAX_UPLOAD_SIZE)) {
-            	$message->pushContent($err_header);
-                $message->pushContent(_("Sorry but this file is too big."),HTML::br(),HTML::br());
-            }
-            elseif (move_uploaded_file($userfile_tmpname, $file_dir . $userfile_name) or
-                    (IsWindows() and rename($userfile_tmpname, $file_dir . $userfile_name))
-                    )
-            {
+
+            /// MV add
+            /// Wiki attachments
+            $wa  = new WikiAttachment(GROUP_ID);
+            $rev = $wa->createRevision($userfile_name, $userfile->getSize(), 
+                                       $userfile->getType(), $userfile->getTmpName());
+            if($rev >= 0) {
+                $prev = $rev+1;
             	$interwiki = new PageType_interwikimap();
-            	$link = $interwiki->link("Upload:$userfile_name");
+            	$link = $interwiki->link("Upload:$prev/$userfile_name");
                 $message->pushContent(HTML::h2(_("File successfully uploaded.")));
                 $message->pushContent(HTML::ul(HTML::li($link)));
-
+                
                 // the upload was a success and we need to mark this event in the "upload log"
                 if ($logfile) { 
                     $upload_log = $file_dir . basename($logfile);
@@ -195,10 +188,64 @@ ws[cfh]");
             $message->pushContent(HTML::br(),HTML::br());
         }
 
+        /// {{{ Codex Specific        
+
+        // URL arguments
+        if(array_key_exists('offset', $_REQUEST))
+            $offset = $_REQUEST['offset'];
+        else
+            $offset = 0;
+
+        if(array_key_exists('limit', $_REQUEST))
+            $limit = $_REQUEST['limit'];
+        else
+            $limit = 10;
+                
+        $attchTab = HTML::table(array('border' => '1',
+                                      'width'  => '100%'));
+        $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
+                                        HTML::th(_("Number of revision"))));
+        $wai =& WikiAttachment::getListWithCounter(GROUP_ID,
+                                                   user_getid(),
+                                                   array('offset' => $offset,
+                                                         'nb'     => $limit));
+        $wai->rewind();
+        while($wai->valid()) {
+            $wa =& $wai->current();
+            
+            $filename = basename($wa->getFilename());
+            $url = getUploadDataPath().urlencode($filename);
+
+            $line = HTML::tr();            
+            $line->pushContent(HTML::td(HTML::a(array('href' => $url),
+                                                "Attach:".$filename)));
+            $line->pushContent(HTML::td($wa->count()));
+            $attchTab->pushContent($line);                
+            
+            $wai->next();
+        }
+        $attchList = HTML();
+        $attchList->pushContent(HTML::hr(),
+                                HTML::h2(_("Attached files")));
+        $attchList->pushContent($attchTab);
+        
+        $url = WikiURL("UpLoad");
+        if(!empty($_REQUEST['pv'])) {
+            $url .= '&pv='.$_REQUEST['pv'];
+        }
+        $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset-$limit)),
+                                        "<- Previous"));
+        $attchList->pushContent(" - ");
+        $attchList->pushContent(HTML::a(array('href' => $url.'&offset='.($offset+$limit)),
+                                        "Next ->"));
+        /// }}}
+
+
         //$result = HTML::div( array( 'class' => 'wikiaction' ) );
         $result = HTML();
         $result->pushContent($form);
         $result->pushContent($message);
+        $result->pushContent($attchList);
         return $result;
     }
 

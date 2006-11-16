@@ -91,10 +91,11 @@ extends WikiPlugin_WikiAdminSelect
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
-        if ($request->getArg('action') != 'browse')
+        return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
+	if ($request->getArg('action') != 'browse')
             if (!$request->getArg('action') == _("PhpWikiAdministration/Chown"))
                 return $this->disabled("(action != 'browse')");
-        
+	        
         $args = $this->getArgs($argstr, $request);
         $this->_args = $args;
         if (empty($args['user']))

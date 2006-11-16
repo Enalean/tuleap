@@ -95,6 +95,7 @@ extends WikiPlugin_WikiAdminSelect
     }
     
     function run($dbi, $argstr, &$request, $basepage) {
+	return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if (!DEBUG)
             return $this->disabled("WikiAdminChmod not yet enabled. Set DEBUG to try it.");
         

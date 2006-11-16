@@ -25,6 +25,9 @@ wiki_views_wikiserviceviews	menuadmin	Admin
 wiki_views_wikiserviceviews	menupages	Pages	
 wiki_views_wikiserviceviews	menudocuments	Documents
 wiki_views_wikiserviceviews	menuattch	Attach a file
+wiki_views_wikiserviceviews	attatch_page	UpLoad
+wiki_views_wikiserviceviews	menuprefs	Preferences
+wiki_views_wikiserviceviews	preferences_page	UserPreferences
 wiki_views_wikiserviceviews	lock_title_spec	There are specific permissions on this Wiki Page
 wiki_views_wikiserviceviews	lock_title_set	There are permissions set on this Wiki
 wiki_views_wikiserviceviews	lock_alt	Lock
@@ -46,10 +49,18 @@ wiki_views_wikiviews	not_empty_page	<p>You can set specific permissions on <stro
 #
 wiki_lib_attachment	err_extension	Files with extension $1 are not allowed.
 wiki_lib_attachment	err_alpha	ERROR uploading $1: File names may only contain alphanumeric characters and dot, underscore or dash.
-wiki_lib_attachment	err_insert	Can not insert new attachment revision: $1
+wiki_lib_attachment	err_insert	Can not insert new attachment revision.
 wiki_lib_attachment	err_create_upload_dir	Unable to create project upload area
 wiki_lib_attachment	err_create_file_dir	Unable to create file revision area
 wiki_lib_attachment	err_multi_id	There are multiple identifier for an attachment.Please contact an administrator
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiAttachmentRevision.class
+#
+wiki_lib_attachment_rev	err_multi_id	There are multiple identifier for an attachment. Please <a href="mailto:$1?Subject=Wiki Attachment Error (attch:$2,rev:$3)" title="Send a mail to $4 administrators">contact</a> a $4 administrator.
+wiki_lib_attachment_rev	err_upl_mv	Upload of '$1' faild.
+wiki_lib_attachment_rev	err_create	An error occured on attachment revision creation. Database entry not created.
+wiki_lib_attachment_rev	err_too_big	Sorry but this file is too big.
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiEntry.class
@@ -70,6 +81,9 @@ wiki_lib_wikipage	notunique_err	Wiki page is not unique. Please contact an admin
 wiki_lib_wikipagewrap	new_page_text	$1 store pages created with main interface:
 wiki_lib_wikipagewrap	page_added	Added $1
 wiki_lib_wikipagewrap	right_error	This operation require admin rights
+wiki_lib_wikipagewrap	dfltentryname	Wiki Home
+wiki_lib_wikipagewrap	dfltentrydesc	Initial Wiki Document
+wiki_lib_wikipagewrap	dfltentrypage	HomePage
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/actions/WikiServiceAdminActions.class
@@ -98,13 +112,6 @@ wiki_views_wkserviews	description	Description:
 wiki_views_wkserviews	description_em	<em>Description of the Wiki document</em>
 wiki_views_wkserviews	rank_screen	Rank on screen:
 wiki_views_wkserviews	rank_screen_em	<em>Documents are displayed with this reference</em>
-wiki_views_wkserviews	menuview	View
-wiki_views_wkserviews	menuadmin	Admin
-wiki_views_wkserviews	menudocs	Wiki Documents
-wiki_views_wkserviews	menupage	Wiki Pages
-wiki_views_wkserviews	menuattch	Wiki Attachments
-wiki_views_wkserviews	menuperm	Wiki Permissions
-wiki_views_wkserviews	main	<h2>Wiki '$1' - Administration</h2><h3><a href="$2&view=wikiDocuments">Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p><h3><a href="$3&view=wikiPages">Manage Wiki Pages</a></h3><p>Browse and set specific permissions on Wiki Pages.</p><h3><a href="$4&view=wikiAttachments">Manage Wiki Attachments</a></h3><p>Browse and set permissions on ressources attached on the Wiki.</p><h3><a href="$5&view=wikiPerms">Set Wiki Permissions</a></h3><p>Set permissions on whole $6 Wiki.</p>
 wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Manage Wiki Documents</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Create a new Wiki Document</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Wiki Documents</h3>
@@ -144,6 +151,6 @@ wiki_views_wkserviews	doc_rank	Rank On Screen
 wiki_views_wkserviews	doc_delete	Delete ?
 #
 #-----------------------------------------------
-# Script: SF/www/wiki/upload
+# Script: SF/www/wiki/uploads
 #
 wiki_attachment_upload	err_not_exist	This attachment doesn't exist. Please Check the url.

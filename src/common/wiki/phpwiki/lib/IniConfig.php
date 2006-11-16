@@ -480,7 +480,8 @@ function IniConfig($file) {
         // will throw an error if not exists.
         define('PLUGIN_CACHED_CACHE_DIR', FindFile($rs['PLUGIN_CACHED_CACHE_DIR'],false,1)); 
     } else {
-        define('PLUGIN_CACHED_CACHE_DIR', $rs['PLUGIN_CACHED_CACHE_DIR']);
+        if(!defined('PLUGIN_CACHED_CACHE_DIR'))
+            define('PLUGIN_CACHED_CACHE_DIR', $rs['PLUGIN_CACHED_CACHE_DIR']);
         // will throw an error if not exists.
         FindFile(PLUGIN_CACHED_CACHE_DIR);
     }
@@ -533,9 +534,9 @@ function fixup_static_configs($file) {
                               'AllPages:BackLinks:CreatePage:DebugInfo:EditMetaData:FindPage:'
                               .'FullRecentChanges:FullTextSearch:FuzzyPages:InterWikiSearch:'
                               .'LikePages:MostPopular:'
-                              .'OrphanedPages:PageDump:PageHistory:PageInfo:RandomPage:RateIt:'
+                              .'OrphanedPages:PageDump:PageHistory:PageInfo:RandomPage:'
                               .'RecentChanges:RecentEdits:RecentComments:RelatedChanges:TitleSearch:'
-                              .'TranslateText:UpLoad:UserPreferences:WantedPages:WhoIsOnline:'
+                              .'UpLoad:UserPreferences:WantedPages:'
                               .'PhpWikiAdministration/Remove:PhpWikiAdministration/Chmod:'
                               .'PhpWikiAdministration/Rename:PhpWikiAdministration/Replace:'
                               .'PhpWikiAdministration/SetAcl:PhpWikiAdministration/Chown'

@@ -15,7 +15,8 @@ require_once('common/tracker/ArtifactFieldFactory.class');
 
 $Language->loadLanguageMsg('search/search');
 
-if ($type_of_search !== "tracker") {
+if ($type_of_search !== "tracker" &&
+    $type_of_search !== "wiki") {
     $HTML->header(array('title'=>$Language->getText('search_index','search')));
     echo "<P><CENTER>";
     $HTML->searchBox();
@@ -39,7 +40,7 @@ if (!$words) {
 $words = trim($words);
 $no_rows = 0;
 
-if ($exact) {
+if (isset($_REQUEST['exact']) && $_REQUEST['exact']) {
 	$crit='AND';
 } else {
 	$crit='OR';
@@ -512,6 +513,8 @@ if ($type_of_search == "soft") {
                 }
 		echo "</TABLE>\n";
 	}
+} else if ($type_of_search == 'wiki') {
+    util_return_to('/wiki/index.php?group_id='.$_REQUEST['group_id'].'&pagename=FullTextSearch&s='.urlencode($_REQUEST['words']));
 } else {
     $GLOBALS['search_type'] = false;
     $em =& EventManager::instance();

@@ -1,0 +1,46 @@
+Date: Fri, 17 Dec 2004 09:53:18 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: PluginManager,v 1.8 2004/12/17 09:23:42 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginManager;
+  pgsrc_version="2 $Revision: 1.8 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+PhpWiki lets you extend it with new functionality via a plugin
+mechanism. In short, you extend a PHP class we provide and customize
+it to print out the content you want. For more information see
+WikiPlugin, HelloWorldPlugin, and view the source of the files in
+<tt>lib/plugin</tt>.
+
+If there is no example page for the plugin, or you need more
+information, the best place to go is the source of the plugin. Under
+your wiki's root directory, the folder <tt>lib/plugin</tt> contains all the PHP
+files for the plugins.
+
+! External Requirements
+Some plugins require correctly configured PLUGIN_CACHED and external libraries 
+not provided with PhpWiki or PHP, such as 
+* [PHP with GD support | php-function:ref.image] for the text2png plugin, 
+* [LaTeX2HTML | ftp://ftp.dante.de/tex-archive/support/latex2html ] for the TexToPngPlugin and TeX2pngPlugin,
+* [graphviz | http://graphviz.org/] for the GraphVizPlugin and VisualWikiPlugin, 
+* [ploticus | http://ploticus.sourceforge.net/] for the PloticusPlugin, 
+* [phpweather | http://phpweather.sf.net] for the PhpWeatherPlugin,
+* [highlight | http://www.andre-simon.de/] for the SyntaxHighlighterPlugin,
+* a browser with [<iframe> support|http://www.cs.tut.fi/~jkorpela/html/iframe.html] for the TranscludePlugin,
+* USE_DB_SESSION = true (default for the peardb, adodb or dba backends) for the WhoIsOnline plugin,
+* --with-xml support (with expat or libxml2) for the ~RssFeed plugin (ProjectSummary, RecentReleases) and 
+  HtmlParser support (ImportHtml, HtmlAreaEditing),
+* PHP Mail functionality (php.ini: SMTP + sendmail_from on Windows or sendmail_path) for email 
+  PageChangeNotifications and ModeratedPage's,
+* a [Google license key | http://www.google.com/apis/] for the GooglePlugin, 
+* optionally an external recommender engine (none yet, php only so far) and the wikilens theme for the RateIt plugin,
+* optionally apache/mod_log_{my}sql for fast, external log analysis if ACCESS_LOG_SQL=1 (Referer, Abuse Prevention).
+  See <tt>lib/Request.php</tt> and http://www.outoforder.cc/projects/apache/mod_log_sql/
+
+-----
+<?plugin PluginManager?>
+----
+PhpWikiDocumentation WikiPlugin

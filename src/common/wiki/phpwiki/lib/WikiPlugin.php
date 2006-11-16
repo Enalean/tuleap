@@ -305,6 +305,9 @@ class WikiPlugin
                                  'method' => $args['method'],
                                  'class'  => $args['class'],
                                  'accept-charset' => $GLOBALS['charset']));
+        $form->pushContent(HTML::input(array('type' => 'hidden', 
+                                             'name' => 'group_id', 
+                                             'value' => GROUP_ID)));
         if (! USE_PATH_INFO ) {
             $pagename = $request->get('pagename');
             $form->pushContent(HTML::input(array('type' => 'hidden', 
@@ -504,7 +507,15 @@ class WikiPluginLoader {
     function getPlugin($plugin_name, $pi=false) {
         global $ErrorManager;
 
-        // Note that there seems to be no way to trap parse errors
+	//Changes by Sabri LABBENE
+	//Some plugins were removed since we don't use them any more
+	//the following array contains the removed plugins names. References 
+	//to these plugins will never be processed.
+        $removed_plugins = array("RawHtml", "RateIt", "PhpWeather", "AnalyseAccessLogSql", "FoafViewer", "ModeratePage", "Ploticus", "AllUsers");
+	if (in_array($plugin_name, $removed_plugins)){ 
+							return $this->_error(sprintf(_("The '%s' plugin is blocked by administrator. Sorry for the inconvenience"), _($plugin_name)));
+						 }
+	// Note that there seems to be no way to trap parse errors
         // from this include.  (At least not via set_error_handler().)
         $plugin_source = "lib/plugin/$plugin_name.php";
 

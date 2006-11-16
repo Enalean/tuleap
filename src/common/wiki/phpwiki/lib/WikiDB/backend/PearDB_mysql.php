@@ -127,7 +127,7 @@ extends WikiDB_backend_PearDB
             . " FROM $link_tbl,$page_tbl as linked "
             . " LEFT JOIN $page_tbl ON ($link_tbl.linkto=$page_tbl.id)"
             . " LEFT JOIN $nonempty_tbl ON ($link_tbl.linkto=$nonempty_tbl.id)" 
-            . " WHERE ISNULL($nonempty_tbl.id) AND linked.id=$link_tbl.linkfrom"
+            . " WHERE ISNULL($nonempty_tbl.id) AND linked.id=$link_tbl.linkfrom AND linked.group_id=".GROUP_ID
             . $exclude_from
             . $exclude
             . $orderby;
@@ -197,9 +197,10 @@ extends WikiDB_backend_PearDB
         // have a record in the page table.  Since it's just the
         // hit count, who cares?
         // LIMIT since 3.23
-        $dbh->query(sprintf("UPDATE LOW_PRIORITY %s SET hits=hits+1 WHERE pagename='%s' %s",
+        $dbh->query(sprintf("UPDATE LOW_PRIORITY %s SET hits=hits+1 WHERE pagename='%s' AND group_id=%d %s",
                             $this->_table_names['page_tbl'],
                             $dbh->escapeSimple($pagename),
+                            GROUP_ID,
                             ($this->_serverinfo['version'] >= 323.0) ? "LIMIT 1": ""));
         return;
     }

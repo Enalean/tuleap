@@ -3139,6 +3139,7 @@ CREATE TABLE wiki_page (
         pagename        VARCHAR(100) BINARY NOT NULL,
 	hits            INT NOT NULL DEFAULT 0,
         pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
+	cached_html 	MEDIUMBLOB,
 	group_id        INT NOT NULL DEFAULT 0,
         PRIMARY KEY (id)
 );

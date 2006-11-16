@@ -143,10 +143,10 @@ if (!defined('TIMEOFFSET_DEFAULT_HOURS')) define('TIMEOFFSET_DEFAULT_HOURS', 0);
  */
 
 // The last object in the row is the bad guy...
-if (!is_array($USER_AUTH_ORDER))
-    $USER_AUTH_ORDER = array("Forbidden");
+if (!is_array($GLOBALS['USER_AUTH_ORDER']))
+    $GLOBALS['USER_AUTH_ORDER'] = array("Forbidden");
 else
-    $USER_AUTH_ORDER[] = "Forbidden";
+    $GLOBALS['USER_AUTH_ORDER'][] = "Forbidden";
 
 // Local convenience functions.
 function _isAnonUserAllowed() {
@@ -854,7 +854,7 @@ extends _AnonUser
             }
         } else {
             if (!$this->_prefs) {
-            	$this->_prefs = new UserPreferences();
+            	$this->_prefs = new CodexUserPreferences();
             	$need_pref = true;
             }
             $this->_prefs->_method = 'HomePage';
@@ -1126,6 +1126,12 @@ extends _AnonUser
             }
         }
         if ($num = _AnonUser::setPreferences($prefs, $id_only)) {
+            // Codex specific: We have to load the home page here because since
+            // the user page is not systematicaly created, the home page handle
+            // is not passed as user argument on _PassUser call. BTW, this
+            // method is called without test because it's only used because it
+            // load the '$this->_HomePagehandle' param.
+            $this->hasHomePage();
             // Encode only the _prefs array of the UserPreference object
             if (!empty($this->_HomePagehandle) and !$id_only) {
                 $this->_HomePagehandle->set('pref', $this->_prefs->store());
@@ -1663,7 +1669,7 @@ function ValidateMail($email, $noconnect=false) {
 
     // if this check is too strict (like invalid mail addresses in a local network only)
     // uncomment the following line:
-    // return array(true,"not validated");
+    return array(true,"not validated");
     // see http://sourceforge.net/tracker/index.php?func=detail&aid=1053681&group_id=6121&atid=106121
 
     $result = array();
@@ -1788,7 +1794,7 @@ class UserPreferences
                     'noLinkIcons'   => new _UserPreference_bool(),    // 1.3.8 
                     'editHeight'    => new _UserPreference_int(EDITHEIGHT_DEFAULT_ROWS,
                                                                EDITHEIGHT_MIN_ROWS,
-                                                               EDITHEIGHT_DEFAULT_ROWS),
+                                                               EDITHEIGHT_MAX_ROWS),
                     'timeOffset'    => new _UserPreference_numeric(TIMEOFFSET_DEFAULT_HOURS,
                                                                    TIMEOFFSET_MIN_HOURS,
                                                                    TIMEOFFSET_MAX_HOURS),

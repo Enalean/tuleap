@@ -42,6 +42,9 @@ class ArrayIterator extends SeekableIterator {
     function next() {
         $this->_current = $this->_current + 1;
     }
+    function count() {
+        return $this->_nb;
+    }
 }
 
 ?>

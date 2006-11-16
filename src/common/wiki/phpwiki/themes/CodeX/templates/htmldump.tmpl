@@ -1,0 +1,44 @@
+<?php  // -*-html-*-
+rcs_id('$Id: htmldump.tmpl,v 1.6 2005/02/04 13:25:08 rurban Exp $');
+/*
+ * This template is used only for html file dumps, and is responsible
+ * mainly for the outer level <html> stuff and the and <head>.
+ */
+echo "<","?xml version=\"1.0\" encoding=\"", $charset, "\"?", ">\n";
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=<?=CHARSET?>" />
+<?php /**
+       * Additional navigation links are provided here in the html header for browsers
+       * which support them: Mozilla, iCab, Amaya (and certain versions of Opera??).
+       *
+       * See http://www.w3.org/TR/html401/struct/links.html#edef-LINK
+       *     http://www.euronet.nl/~tekelenb/WWW/LINK/index.html
+       */ ?>
+<link rel="home" title="<?=HOME_PAGE?>" href="<?=WikiURL(HOME_PAGE)?>" />
+<link rel="help" title="<?=_("HowToUseWiki")?>" href="<?=WikiURL(_("HowToUseWiki"))?>" />
+<link rel="copyright" title="<?=COPYRIGHTPAGE_TITLE?>" href="<?=COPYRIGHTPAGE_URL?>" />
+<link rel="author" title="<?=AUTHORPAGE_TITLE?>" href="<?=AUTHORPAGE_URL?>" />
+
+<?= $WikiTheme->getCSS() ?>
+<?php
+  // avoid redundant bookmark title for custom home page
+  if ($page->getName() == WIKI_NAME && HOME_PAGE == WIKI_NAME)
+      $pagetitle = "";
+  else
+      $pagetitle = " - ". AsString($TITLE);
+?>
+<title><?=WIKI_NAME.$pagetitle?></title>
+</head>
+<?= Template('body') ?>
+<?php
+if (defined('DEBUG') and DEBUG) {
+    echo "<!-- phpwiki source: \n";
+    echo $RCS_IDS;
+    echo "-->\n";
+}
+?>
+</html>

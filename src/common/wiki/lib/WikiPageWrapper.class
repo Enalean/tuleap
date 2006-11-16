@@ -21,11 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-define('PHPWIKI_DIR', dirname(__FILE__).'/../phpwiki');
+define('PHPWIKI_DIR',$codex_dir.'/src/common/wiki/phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
-
-$Language->loadLanguageMsg('wiki/wiki');
+require_once('common/wiki/lib/WikiEntry.class');
 
 /**
  * Wrapper to access to PhpWiki WikiPage objects
@@ -55,15 +54,18 @@ class WikiPageWrapper {
     define('WIKI_NAME', $this->wikiname);
     define('DATABASE_DSN', $sys_server.'://'.
 	   $sys_dbuser.':'.$sys_dbpasswd.'@'.$sys_dbhost.'/'.$sys_dbname);
+    define('DATABASE_PERSISTENT', false);
     define('GROUP_ID', $this->gid);    
+    define('PLUGIN_CACHED_CACHE_DIR', getenv('SF_LOCAL_INC_PREFIX').'/home/sfcache');
   }
 
   function &getRequest() {
+      define('PHPWIKI_NOMAIN', true);
     IniConfig(PHPWIKI_DIR."/config/config.ini");
     ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
 
     require_once(PHPWIKI_DIR.'/lib/WikiDB.php');
-    require_once(PHPWIKI_DIR.'/lib/WikiRequest.php');
+    require_once(PHPWIKI_DIR.'/lib/main.php');
     
     return new WikiRequest();
   }
@@ -78,18 +80,18 @@ class WikiPageWrapper {
     $dbi = $request->getDbh();
     $pagehandle = $dbi->getPage($page);
 
-    $links = $pagehandle->getLinks(false);
+    $links = $pagehandle->getPageLinks(true);
     $allPages=array();
     while ($link_handle = $links->next()) {
-      if(!$link_handle->exists()) {
-	$allPages[]=$link_handle->getName();
-      }
+        if (!$dbi->isWikiPage($linkname = $link_handle->getName())) {
+            $allPages[]=$link_handle->getName();
+        }
     }
     return $allPages;
   }
 
   function addNewProjectPage($pagename) {
-    global $Language;
+    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     $projectPageName='ProjectWantedPages';
 
     // Dirty hack to 'give' a WikiRequest object to phpwiki
@@ -108,12 +110,16 @@ class WikiPageWrapper {
     else {
       // Create a new page (first use or page previously erased)
       $version = 0;
-      $text = $Language->getText('wiki_lib_wikipagewrap', 'new_page_text', array($projectPageName));
+      $text = $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                            'new_page_text',
+                                            array($projectPageName));
     }
 
     $text .= "\n* [$pagename]";
-    $meta['summary'] =  $Language->getText('wiki_lib_wikipagewrap', 'page_added', array($pagename));
-    $meta['author'] = user_getname();
+    $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                                      'page_added',
+                                                      array($pagename));
+      $meta['author'] = user_getname();
     $pagehandle->save($text, $version + 1, $meta);
   }
 
@@ -135,7 +141,11 @@ class WikiPageWrapper {
         else {
             // Create a new page (first use or page previously erased)
             $version = 0;
-            $text = '__Upload a file which will be accessible by prefixing the filename with "Upload:".__
+            $text = '__Upload a file which will be accessible by typing:__
+<verbatim>
+Upload:num_rev/filename
+</verbatim>
+
 ----
 <?plugin UpLoad ?>
 ----
@@ -155,27 +165,58 @@ class WikiPageWrapper {
 
     IniConfig(PHPWIKI_DIR."/config/config.ini");
     ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
-    include(PHPWIKI_DIR."/lib/main.php");
+    include(PHPWIKI_DIR."/codex.php");
   }
 
   /**
    * special install function
+   *
    */
   function install() {
-    global $Language;
-    if($this->gid == 1) {
-      if(!user_is_super_user()) {
-          exit_error($Language->getText('global','error'),$Language->getText('wiki_lib_wikipagewrap', 'right_error'));
+      $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+      if($this->gid == 1) {
+          if(!user_is_super_user()) {              
+              exit_error($GLOBALS['Language']->getText('global','error'),
+                         $GLOBALS['Language']->getText('wiki_lib_wikipagewrap', 
+                                                       'right_error'));
+          }
       }
-      define('WIKI_PGSRC', 'codexpgsrc');
-      define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
-    }
-    else {
-      define('WIKI_PGSRC', 'projectpgsrc');
-      define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
-    }
+      $we = new WikiEntry();
+      $we->setGid($this->gid);
+      $we->setLanguage_id($_REQUEST['language_id']);
 
-    $this->render();
+      $name_fr = "Page d'accueil";
+      $page_fr = "PageAccueil";
+      $desc_fr = "Document initial du Wiki";
+      $name_en = "Home Page";
+      $page_en = "HomePage";
+      $desc_en = "Initial wiki document";
+      switch ($we->getLanguage_id()){
+              // English
+	      case 1:   define('WIKI_PGSRC', 'codexpgsrc');
+			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+			$we->setName($name_en);
+		        $we->setPage($page_en);
+			$we->setDesc($desc_en);
+			break;
+	      // French   
+	      case 2:   define('WIKI_PGSRC', 'pgsrc');
+			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/locale/fr/pgsrc');
+			$we->setName($name_fr);
+		        $we->setPage($page_fr);
+			$we->setDesc($desc_fr);
+			break;
+	      
+	      default : define('WIKI_PGSRC', 'codexpgsrc');
+			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+			$we->setName($name_en);
+		        $we->setPage($page_en);
+			$we->setDesc($desc_en);
+
+			
+      }
+      $we->add();
+      $this->render();
   }
 }
 ?>

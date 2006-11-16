@@ -23,8 +23,6 @@
 require_once('WikiPageWrapper.class');
 require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('wiki/wiki');
-
 /**
  * CodeX manipulation of WikiPages
  *
@@ -71,13 +69,14 @@ class WikiPage {
    * @access private
    */
   function _findPageId() {
-    global $Language;
     $res = db_query(' SELECT id FROM wiki_page'.
 		    ' WHERE group_id="'.$this->gid.'"'.
 		    ' AND pagename="'.addslashes($this->pagename).'"');
     if(db_numrows($res) > 1) {
-        exit_error($Language->getText('global','error'), 
-                   $Language->getText('wiki_lib_wikipage', 'notunique_err'));
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        exit_error($GLOBALS['Language']->getText('global','error'), 
+                   $GLOBALS['Language']->getText('wiki_lib_wikipage', 
+                                                 'notunique_err'));
     }
     $row = db_fetch_array($res);
     $this->id =  $row['id'];
@@ -88,12 +87,13 @@ class WikiPage {
    * @access private
    */
   function _initFromDb() {
-      global $Language;
     $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
 		    ' WHERE id="'.$this->id.'"');
     if(db_numrows($res) > 1) {
-      exit_error($Language->getText('global','error'), 
-                 $Language->getText('wiki_lib_wikipage', 'notunique_err'));
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        exit_error($GLOBALS['Language']->getText('global','error'), 
+                   $GLOBALS['Language']->getText('wiki_lib_wikipage', 
+                                                 'notunique_err'));
     }
     $row = db_fetch_array($res);
 
@@ -304,42 +304,37 @@ class WikiPage {
    * @access public
    * @return string[] List of pagename 
    */
-  function getDefaultPages() {
-    return array
-      ("AddCommentPlugin","AddingPages","AllPages","AllUsers","_AuthInfo"
-       ,"AuthorHistoryPlugin","BackLinks","CalendarListPlugin","CalendarPlugin"
-       ,"CategoryCategory","CategoryGroup","CategoryHomePages","CommentPlugin"
-       ,"CreatePagePlugin","CreateTocPlugin","DebugInfo","EditMetaDataPlugin"
-       ,"EditText","ExternalSearchPlugin","FindPage","FrameIncludePlugin"
-       ,"FullRecentChanges","FullTextSearch","FuzzyPages","GoodStyle","GoogleLink"
-       ,"HelloWorldPlugin","HomePageAlias","HowToUseWiki","IncludePagePlugin"
-       ,"InterWiki","InterWikiMap","InterWikiSearch","LikePages","LinkIcons"
-       ,"MagicPhpWikiURLs","MoreAboutMechanics","MostPopular","NewMarkupTestPage"
-       ,"OldMarkupTestPage","OldStyleTablePlugin","OldTextFormattingRules"
-       ,"OrphanedPages","PageDump","PageGroupTest","PageGroupTest/Four"
-       ,"PageGroupTest/One","PageGroupTest/Three","PageGroupTest/Two","PageHistory"
-       ,"PageInfo","PgsrcRefactoring","PgsrcTranslation","PhotoAlbumPlugin"
-       ,"PhpHighlightPlugin","PhpWeatherPlugin","PhpWiki","PhpWikiDocumentation"
-       ,"PhpWikiPoll","PhpWikiRecentChanges","PluginManager","ProjectSummary"
-       ,"RandomPage","RateIt","RawHtmlPlugin","RecentChanges","RecentEdits"
-       ,"RecentReleases","RecentVisitors","RedirectToPlugin","RelatedChanges"
-       ,"ReleaseNotes","RichTablePlugin","RssFeedPlugin","SteveWainstead"
-       ,"SystemInfoPlugin","TextFormattingRules","TitleSearch","TranscludePlugin"
-       ,"TranslateText","UnfoldSubpagesPlugin","UpLoad","UserPreferences","WabiSabi"
-       ,"WantedPages","WhoIsOnline","WikiBlogPlugin","WikiPlugin","WikiWikiWeb"
-       ,"PhpWikiAdministration/Chmod",
-       "Accueil" ,"AdministrationDePhpWiki" 
-       ,"AdministrationDePhpWiki/Supprimer" ,"AjouterDesPages" ,"BacASable" 
-       ,"ÉditerLeContenu" ,"ÉditionsRécentes" ,"CarteInterWiki" 
-       ,"ChercherUnePage" ,"CommentUtiliserUnWiki" ,"DétailsTechniques" 
-       ,"DernièresModifs" ,"DernièresModifsComplètes" ,"DerniersVisiteurs" 
-       ,"DocumentationDePhpWiki" ,"Historique" ,"IcônesDeLien" 
-       ,"Info" ,"LesPlusVisitées" ,"ModifsLiées" ,"NotesDeVersion" 
-       ,"PageAléatoire" ,"PageDeTests" ,"PagesFloues" ,"PagesOrphelines" 
-       ,"PagesSemblables" ,"PluginCalendrier" ,"PluginWiki" 
-       ,"PréférencesUtilisateurs" ,"RèglesDeFormatageDesTextes" ,"RétroLiens" 
-       ,"RechercheEnTexteIntégral" ,"RechercheParTitre" ,"RolandTrique" 
-       ,"StyleCorrect" ,"ToutesLesPages" ,"URLMagiquesPhpWiki" );
+    function getDefaultPages() {
+        return array
+            ( // Plugin documentation pages
+             "AddCommentPlugin","AppendTextPlugin","AuthorHistoryPlugin"
+             ,"CalendarListPlugin","CommentPlugin","CreatePagePlugin"
+             ,"CreateTocPlugin","EditMetaDataPlugin","FrameIncludePlugin"
+             ,"HelloWorldPlugin","IncludePagePlugin","ListPagesPlugin"
+             ,"PhotoAlbumPlugin","PhpHighlightPlugin","RedirectToPlugin"
+             ,"RichTablePlugin","RssFeedPlugin","SearchHighlightPlugin"
+             ,"SyntaxHighlighterPlugin","TemplateExample","TemplatePlugin"
+             ,"TranscludePlugin","UnfoldSubpagesPlugin","WikiBlogPlugin"
+             ,"CalendarPlugin","PhpWikiPoll"
+             
+             // Wiki doc page
+             ,"WikiPlugin","OldStyleTablePlugin","OldTextFormattingRules"
+             ,"PhpWikiDocumentation","TextFormattingRules"
+
+             // Action Pages
+             ,"DebugInfo","AppendText","CreatePage","EditMetaData","LikePages"
+             ,"PluginManager","SearchHighlight","UpLoad","AllPages","BackLinks"
+             ,"FindPage","FullRecentChanges","FullTextSearch","FuzzyPages"
+             ,"InterWikiMap","InterWikiSearch","MostPopular","OrphanedPages"
+             ,"PageDump","PageHistory","PageInfo","RandomPage","RecentChanges"
+             ,"RecentComments","RecentEdits","RecentReleases","RelatedChanges"
+             ,"TitleSearch","UserPreferences","WantedPages"
+
+             // Collection Pages
+             ,"CategoryCategory","CategoryGroup"
+
+             // French pages
+             );
   }
 
   /**
@@ -352,10 +347,11 @@ class WikiPage {
    */
   function getAdminPages() {
     return array
-      ("HomePage" ,"PhpWikiAdministration"
+      ("HomePage" ,"PhpWikiAdministration","WikiAdminSelect"
        ,"PhpWikiAdministration/Remove"
        ,"PhpWikiAdministration/Rename", "PhpWikiAdministration/Replace"
-       ,"SandBox", "ProjectWantedPages",
+       ,"PhpWikiAdministration/Chmod","PhpWikiAdministration/Chown"
+       ,"PhpWikiAdministration/SetAcl" ,"SandBox", "ProjectWantedPages",
        "Accueil" ,"AdministrationDePhpWiki",
        "AdministrationDePhpWiki/Supprimer", "BacASable", );
   }

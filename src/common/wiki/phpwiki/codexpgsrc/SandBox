@@ -1,0 +1,15 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: SandBox,v 1.5 2002/12/29 00:32:34 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=SandBox;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+You can try out Wiki in here.
+
+Have fun :-)
+

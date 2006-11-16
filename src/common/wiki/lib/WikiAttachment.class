@@ -21,16 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-define('ATTACHMENT_DATA_DIR', $GLOBALS['sys_wiki_attachment_data_dir']);
 require_once('WikiAttachmentRevision.class');
-require_once($_SERVER['DOCUMENT_ROOT'].'/project/admin/permissions.php');
-
-$GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+require_once('WikiAttachmentDao.class');
+require_once('www/project/admin/permissions.php');
+require_once('common/dao/CodexDataAccess.class');
 
 /**
  * Management of external ressources linked on a wiki
  *
- * This class allows to manage external ressources in wiki (non-text ressources)
+ * This class allows to manage external ressources in wiki (non-text
+ * ressources)
  * It's based on UpLoad plugin in PhpWiki and a CodeX layer in order to manage
  * versionning of files and permissions.
  * Every ressources (attachments) are stored in a directory. There is one
@@ -39,7 +39,6 @@ $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
  *
  *
  * @see       WikiAttachmentRevision
- * @see       WikiAttachmentRevisionIterator
  * @package   WikiService
  * @copyright STMicroelectronics, 2005
  * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
@@ -76,6 +75,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     var $id;
 
+    var $revisionCounter;
 
     /**
      * @access public
@@ -85,6 +85,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->setGid($gid);
         $this->filetype = null;
         $this->filesize = null;
+        $this->revisionCounter = null;
 
         /*
          * Check user
@@ -93,13 +94,122 @@ class WikiAttachment /* implements UGroupPermission */ {
             exit_not_logged_in();
     }
 
+    function &getDao() {
+        static $_codex_wikiattachmentdao_instance;
+        
+        if(!$_codex_wikiattachmentdao_instance) {
+            $_codex_wikiattachmentdao_instance =& new WikiAttachmentDao(CodexDataAccess::instance());
+        }
+
+        return $_codex_wikiattachmentdao_instance;
+    }
+
+    /**
+     * @access public
+     * @param  Iterator
+     */
+    function &getAttachmentIterator($gid=null) {
+        if($gid !== null) {
+            $gid = (int) $gid;
+        }
+        else {
+            $gid = $this->gid;
+        }
+
+        $dao =& WikiAttachment::getDao();
+        $dar =& $dao->getList($gid);
+        
+        while($row = $dar->getRow()) {
+            $wa =& new WikiAttachment($gid);
+            $wa->setFromRow($row);
+            $waArray[] =& $wa;
+            unset($wa);
+        }
+
+        return new ArrayIterator($waArray);
+    }
+
+    function getListWithCounter($gid=null, $uid=null, $limit=null) {
+        if($gid !== null) {
+            $gid = (int) $gid;
+        }
+        else {
+            $gid = $this->gid;
+        }
+
+        $uid = (int) $uid;
+                        
+        $offset = 0;
+        $max    = null;
+        if(is_array($limit)) {
+            // Due to permissions, we cannot use SQL limit
+            // This will be possible when whe will have the
+            // possibility to join the permission table and
+            // the attachement table
+
+            /*$qry .= sprintf(' LIMIT %d,%d',
+                            $limit['offset'],
+                            $limit['nb']);*/
+            
+            if(array_key_exists('offset', $limit)) {
+                $offset = (int) $limit['offset'];
+            }
+            if(array_key_exists('nb', $limit)) {
+                $max = (int) $limit['nb'];
+            }
+        }
+        
+        $dao =& WikiAttachment::getDao();
+        $dar =& $dao->getListWithCounterOrderedByRevDate($gid);
+
+        $i = 0;
+        $j = 0; // count viewable attch for offset
+        $waArray = array();
+        $stop = false;
+        while(($row = $dar->getRow()) && !$stop) {
+            if($max !== null) {
+                if($i >= $max) {
+                    $stop = true;
+                    break;
+                }
+            }
+
+            $wa =& new WikiAttachment($gid);
+            $wa->setFromRow($row);
+
+            // Check for user rights
+            $isAllowedToSee = false;
+            if($wa->permissionExist()) {
+                if($wa->isAutorized($uid)) {
+                    $isAllowedToSee = true;
+                }
+            }
+            else {
+                $isAllowedToSee = true;
+            }
+
+            if($isAllowedToSee) {
+                if($j >= $offset) {
+                    $wa->setRevisionCounter($row['nb']);
+                    $waArray[] =& $wa;
+                    $i++;
+                }
+                $j++;
+            }
+
+            unset($wa);
+        }
+
+        return new ArrayIterator($waArray);
+    }
+
     /**
      * @access public
      * @param  int $id Project identifier
      */
     function setGid($id=0) {
         $this->gid      = (int) $id;
-        $this->basedir = ATTACHMENT_DATA_DIR.'/'.$this->gid;
+        $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
     }
   
     /**
@@ -107,7 +217,6 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @param  string $name File name
      */
     function setFilename($name="") {
-        global $Language;
         $disallowed_extensions = explode("\n",
                                          "ad[ep]
 asd
@@ -148,11 +257,15 @@ ws[cfh]");
 
         if (preg_match("/(\." . join("|\.", $disallowed_extensions) . ")\$/",
                        $name)) {
-            trigger_error($Language->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
             return false;
         }
         elseif (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
-            trigger_error($Language->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
         }
 
         $this->filename = $name;
@@ -234,7 +347,7 @@ ws[cfh]");
       
             // @TODO: prevent usage of '?' and '&' as behind. But with a
             // generical functions, in utils.php for instance.
-            if(is_numeric($uriExp[5])) {
+            if(isset($uriExp[5]) && is_numeric($uriExp[5])) {
                 $rev = (int) $uriExp[5];
             }
             else {
@@ -256,30 +369,28 @@ ws[cfh]");
     }
 
     function dbadd() {
-        global $Language;
-        $sql = ('   INSERT INTO wiki_attachment SET'
-                .'  group_id="'.$this->gid.'"'
-                .', name="'.mysql_real_escape_string($this->filename).'"'	  
-                );
+        $dao =& WikiAttachment::getDao();
+        $created = $dao->create($this->gid, $this->filename);
 
-        $res = db_query($sql);
-
-        if($res === false) {            
-	  trigger_error($Language->getText('wiki_lib_attachment', 'err_insert',array(db_error())), E_USER_ERROR);	  
-	  return false;
-	}
-	else {
-	  return true;
-	}
+        if(!$created) {            
+            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 
+                                                        'err_insert'),
+                          E_USER_ERROR);
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     function create() {
-        global $Language;
         // Create wiki attachment directory for current project
         if(!is_dir($this->basedir)){
             $res = mkdir($this->basedir, 0700);
             if(!$res) {
-                trigger_error($Language->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
+                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+                trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
                 return false;
             }
         }
@@ -288,7 +399,8 @@ ws[cfh]");
         if(!is_dir($this->basedir.'/'.$this->filename)){
             $res = mkdir($this->basedir.'/'.$this->filename, 0700);
             if(!$res) {
-                trigger_error($Language->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
+                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+                trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
             }
         }
@@ -298,18 +410,17 @@ ws[cfh]");
     }
 
     function getId() {
-        global $Language;
         if(!is_numeric($this->id)) {
-            $sql = 'SELECT id FROM wiki_attachment'
-                .' WHERE name="'.$this->getFilename().'"'
-                .' AND group_id="'.$this->gid.'"';
-            $res = db_query($sql);
-            if(db_numrows($res) > 1) {
-                trigger_error($Language->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
+            $dao =& WikiAttachment::getDao();
+            $dar =& $dao->getIdFromFilename($this->gid, $this->getFilename());
+
+            if($dar->rowCount() > 1) {
+                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+                trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             }
             else {
-                $row = db_fetch_array($res);
+                $row =& $dar->getRow();
                 $this->id = $row['id'];
             }
         }
@@ -354,11 +465,10 @@ ws[cfh]");
     }
   
     function initWithId($id=0) {
-        $this->id = $id;
-        $sql = 'SELECT * FROM wiki_attachment'
-            .' WHERE id="'.$this->id.'"';
-        $res = db_query($sql);
-        $this->setFromRow(db_fetch_array($res));
+        $this->id = (int) $id;
+        $dao =& WikiAttachment::getDao();
+        $dar =& $dao->read($this->id);
+        $this->setFromRow($dar->getRow());
     }
 
     function setFromRow($row) {
@@ -367,6 +477,10 @@ ws[cfh]");
         $this->filename = $row['name'];
     }
 
+    function setRevisionCounter($nb) {
+        $this->revisionCounter = (int) $nb;
+    }
+    
     /**
      * @access
      * @param
@@ -394,10 +508,12 @@ ws[cfh]");
     }
 
     function count() {
-        $this->getId();
-        $waIter = new WikiAttachmentRevisionIterator($this->id);
-        $waIter->getList();
-        return $waIter->count();
+        if($this->revisionCounter === null) {
+            $this->getId();
+            $waIter =& WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
+            $this->revisionCounter = $waIter->count();
+        }
+        return $this->revisionCounter;
     }
 
     /**
@@ -446,37 +562,6 @@ ws[cfh]");
                                     $this->id);
     }
 
-}
-
-
-
-/**
- *
- * @see       WikiAttachment
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
-class WikiAttachmentIterator extends RecordIterator {
-    var $gid;
- 
-
-    /**
-     * @access public
-     * @param int $id Project Id
-     */
-    function WikiAttachmentIterator($id=0) {
-        $this->gid     = (int) $id;
-        parent::RecordIterator('WikiAttachment');
-    }
-
-    function getList() {
-        $this->sqlStatement = 
-            '  SELECT * FROM wiki_attachment'
-            .' WHERE group_id="'.$this->gid.'"';
-        $this->dbinit();
-    }
 }
 
 ?>

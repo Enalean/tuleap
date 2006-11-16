@@ -1,6 +1,6 @@
 <?php
 /* 
- * Copyright 2005, STMicroelectronics
+ * Copyright 2005, 2006, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
  *
@@ -21,7 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('RecordIterator.class');
+require_once('common/collection/ArrayIterator.class');
+require_once('common/dao/CodexDataAccess.class');
+
+require_once('common/wiki/lib/WikiAttachmentRevisionDao.class');
 
 /**
  *
@@ -38,7 +41,6 @@ require_once('RecordIterator.class');
  *
  *
  * @see       WikiAttachment
- * @see       WikiAttachmentRevisionIterator
  * @package   WikiService
  * @copyright STMicroelectronics, 2005
  * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
@@ -65,24 +67,37 @@ class WikiAttachmentRevision {
      */
     function WikiAttachmentRevision($gid=null) {
         if(is_numeric($gid)) {
-            $this->gid = $gid;
-            $this->basedir = ATTACHMENT_DATA_DIR.'/'.$this->gid;
+            $this->gid = (int) $gid;
+            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
         }
     }
 
-    function dbFetch() {
-        $sql = 'SELECT * FROM wiki_attachment_revision'
-            .'    WHERE attachment_id="'.$this->attachmentId.'"'
-            .'    AND revision="'.$this->revision.'"';
-        $res = db_query($sql);
+    function &getDao() {        
+        static $_codex_wikiattachmentrevisiondao_instance;
+        
+        if(!$_codex_wikiattachmentrevisiondao_instance) {
+            $_codex_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodexDataAccess::instance());
+        }
 
-        if(db_numrows($res) > 1) {
-            trigger_error("There are multiple identifier for an attachment."
-                          ."Please contact an administrator", E_USER_ERROR);
+        return $_codex_wikiattachmentrevisiondao_instance;
+    }
+
+    function dbFetch() {
+        $dao =& $this->getDao();
+        $dar =& $dao->getRevision($this->attachmentId, $this->revision);
+
+        if($dar->rowCount() > 1) {
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev', 
+                                                        'err_multi_id',
+                                                        array($GLOBALS['sys_email_admin'],
+                                                              $this->attachmentId,
+                                                              $this->revision,
+                                                              $GLOBALS['sys_fullname']))
+                          ,E_USER_ERROR);
             return false;
         }
         else {
-            $this->setFromRow(mysql_fetch_array($res));    
+            $this->setFromRow($dar->getRow());    
         }
     }
   
@@ -92,12 +107,14 @@ class WikiAttachmentRevision {
     
         /** @todo: add lock */
 
-        $waIter = new WikiAttachmentRevisionIterator($this->attachmentId);
-        $waIter->getList();
+        $waIter =& $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
-        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {		
-            trigger_error( "Uploading faild: ".$this->filename, E_USER_ERROR);
+        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {	
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
+                                                        'err_upl_mv',
+                                                        array($this->filename)),
+                          E_USER_ERROR);
             return false;
         }
 
@@ -111,23 +128,23 @@ class WikiAttachmentRevision {
     }
   
     function dbadd() {
-        $sql = 'INSERT INTO wiki_attachment_revision SET'
-            .'  attachment_id="'.$this->attachmentId.'"'
-            .', user_id="'.$this->owner_id.'"'
-            .', date="'.$this->date.'"'
-            .', revision="'.$this->revision.'"'
-            .', mimetype="'.mysql_real_escape_string($this->mimeType).'"'
-            .', size="'.$this->size.'"';
-
-        $res = db_query($sql);
-
+        $dao =& $this->getDao();
+        $res = $dao->create($this->attachmentId, 
+                            $this->owner_id, 
+                            $this->date, 
+                            $this->revision, 
+                            $this->mimeType, 
+                            $this->size);
+        
         if($res === false) {
-	  trigger_error('Can not insert new attachment revision: "'.db_error(), E_USER_ERROR);
-	  return false;
-	}
-	else {
-	  return true;
-	}
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
+                                                        'err_create'),
+                          E_USER_ERROR);
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
 
@@ -162,18 +179,12 @@ class WikiAttachmentRevision {
 
 
     function log($userId) {
-        $_userId = (int) $userId;
-
-        $qry = 'INSERT INTO wiki_attachment_log'
-            .' (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)'
-            .' VALUES('.$_userId
-            .', '.$this->gid
-            .', '.$this->attachmentId
-            .', '.$this->id
-            .', '.time().')';
-            
-        db_query($qry);
-        
+        $dao =& $this->getDao();
+        $dao->log($this->attachmentId, 
+                  $this->id, 
+                  $this->gid, 
+                  $userId, 
+                  time());        
     }
 
 
@@ -203,7 +214,9 @@ class WikiAttachmentRevision {
         global $sys_max_size_upload;
 
         if ($s> $sys_max_size_upload) {
-            trigger_error("Sorry but this file is too big", E_USER_ERROR);
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
+                                                        'err_too_big'),
+                          E_USER_ERROR);
             return false;
         }
 
@@ -248,17 +261,15 @@ class WikiAttachmentRevision {
     }
 
     /**
-     *
+     * 
      */
     function getFilename() {
         if(empty($this->filename)) {
-            if(is_numeric($this->attachmentId)) {
-                $sql = 'SELECT name FROM wiki_attachment'
-                    .'    WHERE id="'.$this->attachmentId.'"';
-                $res = db_query($sql);
-                $row = db_fetch_array($res);
-                $this->filename = $row['name'];
-            }
+            $wa = new WikiAttachment();
+            // @todo: catch error when wiki no attachementId is set.
+            $wa->initWithId($this->attachmentId);
+            // @todo: catch error when given attchId do not exist
+            $this->filename = $wa->getFilename();            
         }
         return $this->filename;
     }
@@ -298,47 +309,33 @@ class WikiAttachmentRevision {
     function getDate() {
         return $this->date;
     }
-}
 
+    /**
+     * @access public static
+     * @param  Iterator
+     */
+    function &getRevisionIterator($gid=null, $id=null) {
+        if($id !== null) {
+            $id  = (int) $id;
+            $gid = (int) $gid;            
+        }
+        else {
+            $gid = $this->gid;
+            $id  = $this->attachmentId;
+        }
 
-/**
- * Iteratator for file revisions
- *
- * This class helps for WikiAttachment and WikiAttachement_Revision handeling
- * It offers classical function to walk into WikiAttachement_Revision and to
- * compute interesting values.
- *
- * @see       WikiAttachment
- * @see       WikiAttachmentRevision
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
-class WikiAttachmentRevisionIterator extends RecordIterator {
-    /**
-     * attachment id
-     * @var int
-     */
-    var $id;
-  
-    /**
-     * @access public
-     * @param  $file string File to iterate
-     */
-    function WikiAttachmentRevisionIterator($id) {
-        $this->id = (int) $id;   
-        parent::RecordIterator('WikiAttachmentRevision');
+        $dao =& WikiAttachmentRevision::getDao();
+        $dar =& $dao->getAllRevisions($id);        
+        while($row =& $dar->getRow()) {
+            $war =& new WikiAttachmentRevision($gid);
+            $war->setFromRow($row);
+            $warArray[] =& $war;
+            unset($war);
+        }
+
+        return new ArrayIterator($warArray);
     }
 
-
-    function getList() {
-        $this->sqlStatement = 
-            '  SELECT * FROM wiki_attachment_revision'
-            .' WHERE attachment_id="'.$this->id.'"'
-            .' ORDER BY date DESC';
-        $this->dbinit();
-    }
 }
 
 ?>

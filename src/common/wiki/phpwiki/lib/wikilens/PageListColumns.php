@@ -33,7 +33,6 @@ rcs_id('$Id: PageListColumns.php,v 1.10 2005/09/30 18:41:39 uckelman Exp $');
 
 require_once('lib/PageList.php');
 require_once("lib/wikilens/RatingsUser.php");
-require_once('lib/plugin/RateIt.php');
 
 /**
  * Column representing the number of backlinks to the page.
