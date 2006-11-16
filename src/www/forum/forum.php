@@ -210,6 +210,7 @@ if ($forum_id) {
 	}
 
 //now set up the query
+    $threading_sql = '';
 	if ($style == 'nested' || $style== 'threaded' ) {
 		//the flat and 'no comments' view just selects the most recent messages out of the forum
 		//the other views just want the top message in a thread so they can recurse.
