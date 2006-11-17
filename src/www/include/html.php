@@ -511,7 +511,7 @@ function site_project_header($params) {
 		session_require(array('group'=>'1'));
 	}
 
-        if (isset($params['pv']) && $params['pv']) {
+        if (isset($params['pv']) && $params['pv'] != 0) {
             // Printer version: no right column, no tabs...
             echo $HTML->pv_header($params);
         } else {
@@ -528,7 +528,7 @@ function site_project_header($params) {
 function site_project_footer($params) {
 	GLOBAL $HTML;
 
-        if (isset($params['pv']) && $params['pv']) {
+        if (isset($params['pv']) && $params['pv'] != 0) {
             // Printer version
             echo $HTML->pv_footer($params);
         } else {

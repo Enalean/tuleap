@@ -73,6 +73,7 @@ if (!isset($chunksz) || !$chunksz) { $chunksz = 50; }
 if (!isset($offset) || !$offset || $offset < 0) { $offset=0; }
 if (!isset($advsrch)||($advsrch != 1)) { $advsrch = 0; }
 if (!isset($msort)||($msort != 1)) { $msort = 0; }
+if (!isset($pv)) { $pv = 0; }
 
 /* ==================================================
   If the report type is not defined then get it from the user preferences.
@@ -284,21 +285,25 @@ if ($set=='my') {
    If not defined then defaults to ANY (0)
   ================================================== */
 $_title = $group->getPublicName().': \''.$ath->getName().'\' ';
-if (isset($masschange) && $masschange === true) {
-    $_title .=  $Language->getText('tracker_masschange','mass_change_report');
-    $_help = 'ArtifactMassChange.html';
-  } else {
-    $_title .= $Language->getText('tracker_browse', 'search_report');
-    $_help = 'ArtifactBrowsing.html';
-    $masschange = false;
-    
-  }
+if ($pv != 2) {
+    if (isset($masschange) && $masschange === true) {
+        $_title .=  $Language->getText('tracker_masschange','mass_change_report');
+        $_help = 'ArtifactMassChange.html';
+    } else {
+        $_title .= $Language->getText('tracker_browse', 'search_report');
+        $_help = 'ArtifactBrowsing.html';
+        $masschange = false;    
+    }
+} else {
+    $_help = ''; // printer version without help
+}
+
 $params=array('title'=>$_title,
               'titlevals'=>array($ath->getName()),
               'pagename'=>'tracker_browse',
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
-              'pv'=>isset($pv)?$pv:false,
+              'pv'=>isset($pv)?$pv:0,
               'help' => $_help);
 
 
@@ -306,7 +311,7 @@ $params=array('title'=>$_title,
 $ath->header($params);
 
 // Display the artifact items according to all the parameters
-$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:false),$masschange);
+$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:0),$masschange);
 
 $ath->footer($params);
 
