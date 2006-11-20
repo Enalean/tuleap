@@ -276,7 +276,7 @@ if( isset($submit) ) {
 
 <script language="JavaScript">
 <!--
-     function showtextarea() {
+     function show_textarea() {
      
          if (navigator.userAgent.indexOf('MSIE')<0) {          
              var subject = document.qrs.release_news_subject;
@@ -306,7 +306,43 @@ if( isset($submit) ) {
 	    npublic.disabled=true;
 	    nprivate.disabled=true;
          }	
-     }	
+     }
+     
+   function replace(expr,a,b) {
+      var i=0
+      while (i!=-1) {
+         i=expr.indexOf(a,i);
+         if (i>=0) {
+            expr=expr.substring(0,i)+b+expr.substring(i+a.length);	    
+            i+=b.length;
+         }
+      }
+      return expr
+   }
+ 
+    
+    function update_news() {
+        
+      if (navigator.userAgent.indexOf('MSIE')<0) {  
+          var rel_name = document.qrs.release_name;
+          var subject = document.qrs.release_news_subject;      
+          var details = document.qrs.release_news_details;
+      } else {   	  
+          var rel_name =  document.getElementById("release_name");
+          var subject = document.getElementById("release_news_subject");
+          var details = document.getElementById("release_news_details");
+      } 
+      
+      var a ="<release-name>";
+      var b = rel_name.value;
+      var expr1 = subject.value;
+      var expr2 = details.value;
+      
+      new_subject = replace(expr1,a,b);
+      new_details = replace(expr2,a,b);
+      subject.value = new_subject;
+      details.value = new_details;
+    }    
 //-->
 </script>		
 
@@ -340,7 +376,7 @@ if( isset($submit) ) {
 			  <B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>:</B>
 		</TD>
 		<TD>
-			<INPUT TYPE="TEXT" name="release_name">
+			<INPUT TYPE="TEXT" name="release_name" onBlur="update_news()">
 		</TD>
 	</TR>
 	<TR>
@@ -435,7 +471,7 @@ if( isset($submit) ) {
 			<B><?php echo $Language->getText('file_admin_editreleases','submit_news'); ?>:</B>
 		</TD>
 		<TD>
-			<INPUT TYPE="CHECKBOX" NAME="release_submit_news" onclick="showtextarea()">
+			<INPUT TYPE="CHECKBOX" NAME="release_submit_news" onclick="show_textarea()">
 		</TD>	
 	</TR>
 	<TR>
