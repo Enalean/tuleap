@@ -443,7 +443,7 @@ if( isset($submit) ) {
 			<B><?php echo $Language->getText('file_admin_editreleases','subject'); ?>:</B>
 		</TD>
 		<TD>
-			<INPUT DISABLED TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE="<?php echo $Language->getText('file_admin_editreleases','file_news_subject',$relname) ?>" SIZE="40" MAXLENGTH="60">
+			<INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE="<?php echo $Language->getText('file_admin_editreleases','file_news_subject',$relname) ?>" SIZE="40" MAXLENGTH="60">
 		</TD>
 	</TR>	
 	<TR>
@@ -451,7 +451,7 @@ if( isset($submit) ) {
 			<B><?php echo $Language->getText('file_admin_editreleases','details'); ?>:</B>
 		</TD>
 		<TD>
-			<TEXTAREA DISABLED ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50"><?php echo $Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)) ?></TEXTAREA>
+			<TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50"><?php echo $Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)) ?></TEXTAREA>
 		</TD>
 	</TR>
 	<TR>
@@ -459,12 +459,12 @@ if( isset($submit) ) {
 			<B><?php echo $Language->getText('news_submit','news_privacy') ?> :</B>
 		</TD>
 		<TD>
-			<INPUT DISABLED TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> <?php echo $Language->getText('news_submit','public_news') ?>
+			<INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> <?php echo $Language->getText('news_submit','public_news') ?>
 		</TD>
 	</TR> 
 	<TR>
 		<TD>
-			<INPUT DISABLED TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1"> <?php echo $Language->getText('news_submit','private_news') ?>
+			<INPUT TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1"> <?php echo $Language->getText('news_submit','private_news') ?>
 		</TD>
 	</TR>
 	<TR>
