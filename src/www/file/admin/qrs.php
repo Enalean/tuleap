@@ -247,7 +247,7 @@ if( isset($submit) ) {
       }
       
       //Now submit news if news option is checked
-      if ($_POST['release_submit_news'] == "on") {   
+      if ($_POST['release_submit_news'] == "on" && user_ismember($group_id,'A')) {   
           $new_id=forum_create_forum($GLOBALS['sys_news_group'],$release_news_subject,1,0);
           $req = sprintf('INSERT INTO news_bytes'.
 	        '(group_id,submitted_by,is_approved,date,forum_id,summary,details)'.
@@ -466,9 +466,12 @@ if( isset($submit) ) {
 			<TEXTAREA NAME="release_changes" ROWS="7" COLS="50"></TEXTAREA>
 		</TD>
 	</TR>
+<?php 
+if (user_ismember($group_id,'A')) {
+    echo '
 	<TR>
 		<TD VALIGN="TOP">
-			<B><?php echo $Language->getText('file_admin_editreleases','submit_news'); ?>:</B>
+			<B> '.$Language->getText('file_admin_editreleases','submit_news').' :</B>
 		</TD>
 		<TD>
 			<INPUT TYPE="CHECKBOX" NAME="release_submit_news" onclick="show_textarea()">
@@ -476,33 +479,36 @@ if( isset($submit) ) {
 	</TR>
 	<TR>
 		<TD VALIGN="TOP" ALIGN="RIGHT">
-			<B><?php echo $Language->getText('file_admin_editreleases','subject'); ?>:</B>
+			<B> '.$Language->getText('file_admin_editreleases','subject').' :</B>
 		</TD>
 		<TD>
-			<INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE="<?php echo $Language->getText('file_admin_editreleases','file_news_subject',$relname) ?>" SIZE="40" MAXLENGTH="60">
+			<INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE=" '.$Language->getText('file_admin_editreleases','file_news_subject',$relname) .'" SIZE="40" MAXLENGTH="60">
 		</TD>
 	</TR>	
 	<TR>
 		<TD VALIGN="TOP" ALIGN="RIGHT">
-			<B><?php echo $Language->getText('file_admin_editreleases','details'); ?>:</B>
+			<B> '.$Language->getText('file_admin_editreleases','details').' :</B>
 		</TD>
 		<TD>
-			<TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50"><?php echo $Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)) ?></TEXTAREA>
+			<TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50"> '.$Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)).' </TEXTAREA>
 		</TD>
 	</TR>
 	<TR>
 		<TD ROWSPAN=2 VALIGN="TOP" ALIGN="RIGHT">
-			<B><?php echo $Language->getText('news_submit','news_privacy') ?> :</B>
+			<B> '.$Language->getText('news_submit','news_privacy').' :</B>
 		</TD>
 		<TD>
-			<INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> <?php echo $Language->getText('news_submit','public_news') ?>
+			<INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> '.$Language->getText('news_submit','public_news').'
 		</TD>
 	</TR> 
 	<TR>
 		<TD>
-			<INPUT TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1"> <?php echo $Language->getText('news_submit','private_news') ?>
+			<INPUT TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1">'.$Language->getText('news_submit','private_news').'
 		</TD>
-	</TR>
+	</TR>';
+}
+?>
+	
 	<TR>
 		<TD COLSPAN="2" ALIGN="CENTER">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
