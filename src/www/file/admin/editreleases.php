@@ -513,7 +513,7 @@ if (isset($submit)) {
                 $feedback .= ' '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
             }
 		} 
-	} else if ($func=='submit_file_news' && $release_id && $im_sure) {
+	} else if ($func=='submit_file_news' && $release_id && $im_sure && user_ismember($group_id,'A')) {
 	    //submit  the news  
 	    $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
             $sql = sprintf('INSERT INTO news_bytes'.
@@ -771,7 +771,8 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 			Create automatic news
 		 */
 			
-		echo '
+		if (user_ismember($group_id,'A')) {
+		    echo '
 			</TD></TR><TR><TD>
 			<HR><NOSHADE>
 			<H2>'.$Language->getText('file_admin_editreleases','step_x',4).'</H2>
@@ -798,6 +799,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 			</TABLE><P>
 			<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','submit_news').'">  <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> '.$Language->getText('file_admin_editreleases','im_sure').'
 			</FORM>';						
+		}	
 	}
 	
 /*
@@ -806,11 +808,12 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 
 */
 	$count=db_result(db_query("SELECT count(*) from filemodule_monitor WHERE filemodule_id='$package_id'"),0,0);
+	(user_ismember($group_id,'A')) ? $num=5 : $num=4;
 	if ($count>0) {
 	echo '</TD></TR>
 		<TR><TD>
 		<HR NOSHADE>
-		<H2>'.$Language->getText('file_admin_editreleases','step_x',5).'</H2>
+		<H2>'.$Language->getText('file_admin_editreleases','step_x',$num).'</H2>
 		<P>
 		<H3>'.$Language->getText('file_admin_editreleases','mail_file_rel_notice').':</H3>
 		<P>
