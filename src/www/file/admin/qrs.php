@@ -10,6 +10,9 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 require_once('common/include/SimpleSanitizer.class');
 require_once('common/mail/Mail.class');
+require_once('www/forum/forum_utils.php');
+$Language->loadLanguageMsg('file/file');
+$Language->loadLanguageMsg('news/news');
 
 /*
 	Quick file release system , Darrell Brogdon, SourceForge, Aug, 2000
@@ -242,6 +245,27 @@ if( isset($submit) ) {
             $feedback .= '| '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
         }
       }
+      
+      //Now submit news if news option is checked
+      if ($_POST['release_submit_news'] == "on" && user_ismember($group_id,'A')) {   
+          $new_id=forum_create_forum($GLOBALS['sys_news_group'],$release_news_subject,1,0);
+          $req = sprintf('INSERT INTO news_bytes'.
+	        '(group_id,submitted_by,is_approved,date,forum_id,summary,details)'.
+	        'VALUES (%d, %d, %d, %d, %d, "%s", "%s")',
+	  $group_id, user_getid(), 0, time(), $new_id, htmlspecialchars($release_news_subject), htmlspecialchars($release_news_details));
+          $result=db_query($req);
+               
+          if (!$result) {
+              $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+          } else {
+              $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
+	      // set permissions on this piece of news
+	      if ($private_news) {
+	          news_insert_permissions($new_id,$group_id);
+	      }
+          }
+      }
+      
     } else {
       $feedback .= ' | '.$Language->getText('file_admin_editreleases','filename_invalid').": $file_name ";
     }
@@ -250,7 +274,78 @@ if( isset($submit) ) {
 } else {
 ?>
 
-<FORM ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF; ?>">
+<script language="javascript">
+<!--
+    function show_textarea() {
+
+        if (navigator.userAgent.indexOf('MSIE')<0) {
+            var subject = document.qrs.release_news_subject;
+            var details = document.qrs.release_news_details;
+            var submit = document.qrs.release_submit_news;
+            var npublic = document.qrs.private_news[0];
+            var nprivate = document.qrs.private_news[1];
+        } else {
+            //MS IE is used
+            var subject = document.getElementById("release_news_subject");
+            var details = document.getElementById("release_news_details");
+            var submit = document.getElementById("release_submit_news");
+            var npublic = document.getElementById("publicnews");
+            var nprivate = document.getElementById("privatenews");
+        }
+
+        if (submit.checked) {
+            //show news submission form
+            subject.disabled=false;
+            details.disabled=false;
+            npublic.disabled=false;
+            nprivate.disabled=false;
+        } else {
+            //hide news submission form
+            subject.disabled=true;
+            details.disabled=true;	    
+            npublic.disabled=true;
+            nprivate.disabled=true;
+        }
+    }
+
+    function replace(expr,a,b) {
+        var i=0
+        while (i!=-1) {
+            i=expr.indexOf(a,i);
+            if (i>=0) {
+                expr=expr.substring(0,i)+b+expr.substring(i+a.length);	    
+                i+=b.length;
+            }
+        }
+        return expr
+    }
+
+    function update_news() {
+
+        if (navigator.userAgent.indexOf('MSIE')<0) {  
+            var rel_name = document.qrs.release_name;
+            var subject = document.qrs.release_news_subject;      
+            var details = document.qrs.release_news_details;
+        } else {
+            var rel_name =  document.getElementById("release_name");
+            var subject = document.getElementById("release_news_subject");
+            var details = document.getElementById("release_news_details");
+        }
+
+        var a ="<?php echo $Language->getText('file_admin_editreleases','relname'); ?>";
+        var b = rel_name.value;
+        var expr1 = subject.value;
+        var expr2 = details.value;
+
+        new_subject = replace(expr1,a,b);
+        new_details = replace(expr2,a,b);
+        subject.value = new_subject;
+        details.value = new_details;
+    }
+//-->
+</script>
+
+<FORM NAME="qrs" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF; ?>">
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_upload; ?>">
 	<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
 	<TR>
@@ -280,7 +375,7 @@ if( isset($submit) ) {
 			  <B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>:</B>
 		</TD>
 		<TD>
-			<INPUT TYPE="TEXT" name="release_name">
+			<INPUT TYPE="TEXT" name="release_name" onBlur="update_news()">
 		</TD>
 	</TR>
 	<TR>
@@ -306,7 +401,10 @@ if( isset($submit) ) {
 		<TD>
 <?php
 	$dirhandle = @opendir($ftp_incoming_dir);
-
+	//set variables for news template 
+	$url = get_server_url()."/file/showfiles.php?group_id=".$group_id;
+	$relname = $Language->getText('file_admin_editreleases','relname');	
+	
 	echo '<SELECT NAME="file_name">\n';
 	echo '	<OPTION VALUE="qrs_newfile">'.$Language->getText('file_admin_qrs','select_file').'</OPTION>';
 	//iterate and show the files in the upload directory
@@ -367,6 +465,49 @@ if( isset($submit) ) {
 			<TEXTAREA NAME="release_changes" ROWS="7" COLS="50"></TEXTAREA>
 		</TD>
 	</TR>
+<?php 
+if (user_ismember($group_id,'A')) {
+    echo '
+	<TR>
+		<TD VALIGN="TOP">
+			<B> '.$Language->getText('file_admin_editreleases','submit_news').' :</B>
+		</TD>
+		<TD>
+			<INPUT TYPE="CHECKBOX" NAME="release_submit_news" onclick="show_textarea()">
+		</TD>	
+	</TR>
+	<TR>
+		<TD VALIGN="TOP" ALIGN="RIGHT">
+			<B> '.$Language->getText('file_admin_editreleases','subject').' :</B>
+		</TD>
+		<TD>
+			<INPUT TYPE="TEXT" ID="release_news_subject" NAME="release_news_subject" VALUE=" '.$Language->getText('file_admin_editreleases','file_news_subject',$relname) .'" SIZE="40" MAXLENGTH="60">
+		</TD>
+	</TR>	
+	<TR>
+		<TD VALIGN="TOP" ALIGN="RIGHT">
+			<B> '.$Language->getText('file_admin_editreleases','details').' :</B>
+		</TD>
+		<TD>
+			<TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">'.$Language->getText('file_admin_editreleases','file_news_details',array($relname,$url)).' </TEXTAREA>
+		</TD>
+	</TR>
+	<TR>
+		<TD ROWSPAN=2 VALIGN="TOP" ALIGN="RIGHT">
+			<B> '.$Language->getText('news_submit','news_privacy').' :</B>
+		</TD>
+		<TD>
+			<INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> '.$Language->getText('news_submit','public_news').'
+		</TD>
+	</TR> 
+	<TR>
+		<TD>
+			<INPUT TYPE="RADIO" ID="privatenews" NAME="private_news" VALUE="1">'.$Language->getText('news_submit','private_news').'
+		</TD>
+	</TR>';
+}
+?>
+	
 	<TR>
 		<TD COLSPAN="2" ALIGN="CENTER">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
@@ -375,6 +516,11 @@ if( isset($submit) ) {
 	</TR>
 	</TABLE>
 </FORM>
+
+<script language="javascript">
+    // show or hide the "submit news" form if needed on page loading
+    show_textarea();
+</script>
 
 <?php
 }

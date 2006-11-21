@@ -10,6 +10,7 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');    
 require_once('www/file/file_utils.php');
 require_once('common/mail/Mail.class');
+require_once('www/forum/forum_utils.php');
 $Language->loadLanguageMsg('file/file');
 
 
@@ -512,6 +513,24 @@ if (isset($submit)) {
                 $feedback .= ' '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
             }
 		} 
+	} else if ($func=='submit_file_news' && $release_id && $im_sure && user_ismember($group_id,'A')) {
+	    //submit  the news  
+	    $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
+            $sql = sprintf('INSERT INTO news_bytes'.
+	        '(group_id,submitted_by,is_approved,date,forum_id,summary,details)'.
+		'VALUES (%d, %d, %d, %d, %d, "%s", "%s")',
+		$group_id, user_getid(), 0, time(), $new_id, htmlspecialchars($summary), htmlspecialchars($details));
+            $result=db_query($sql);
+               
+	    if (!$result) {
+                $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+            } else {
+                $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
+		// set permissions on this piece of news
+		if ($private_news) {
+		  news_insert_permissions($new_id,$group_id);
+		}
+            }		
 	} else  if ($func=='update_permissions') {
             list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
             if (!$return_code) exit_error($Language->getText('global','error'),$Language->getText('file_admin_editpackages','perm_update_err').': <p>'.$feedback);
@@ -574,6 +593,8 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 
 	//get the package_id for use below
 	$package_id=db_result($result,0,'package_id');
+	$release_name=db_result($result,0,'release_name');
+	$url=get_server_url()."/file/showfiles.php?group_id=".$group_id;	
 
 	echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="';
@@ -745,18 +766,54 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 			</TR></FORM>';
 		}
 		echo '</TABLE>';
+		
+		/*
+			Create automatic news
+		 */
+			
+		if (user_ismember($group_id,'A')) {
+		    echo '
+			</TD></TR><TR><TD>
+			<HR><NOSHADE>
+			<H2>'.$Language->getText('file_admin_editreleases','step_x',4).'</H2>
+			<P>
+			<H3>'.$Language->getText('file_admin_editreleases','create_auto_news').':</H3>
+			<P>
+			'.$Language->getText('file_admin_editreleases','rel_news').'
+			<P>
+			<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
+			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+			<INPUT TYPE="HIDDEN" NAME="release_id" VALUE="'.$release_id.'">
+			<INPUT TYPE="HIDDEN" NAME="func" VALUE="submit_file_news">						
+			<P>
+			<B>'.$Language->getText('file_admin_editreleases','subject').':</B><BR>
+			<INPUT TYPE="TEXT" NAME="summary" VALUE="'.$Language->getText('file_admin_editreleases','file_news_subject',$release_name).'" SIZE="53" MAXLENGTH="60">
+			<P>
+			<B>'.$Language->getText('file_admin_editreleases','details').':</B><BR>
+			<TEXTAREA NAME="details" ROWS="10" COLS="60" WRAP="SOFT">'.$Language->getText('file_admin_editreleases','file_news_details',array($release_name,$url)).'</TEXTAREA>
+			<P>
+			<TABLE BORDER=0>
+			<TR><TD ROWSPAN=2 VALIGN="top"><B>'.$Language->getText('news_submit','news_privacy').':</B></TD>
+			<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="0" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
+			<TR><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1">'. $Language->getText('news_submit','private_news').'</TD></TR> 
+			</TABLE><P>
+			<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','submit_news').'">  <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> '.$Language->getText('file_admin_editreleases','im_sure').'
+			</FORM>';						
+		}	
 	}
+	
 /*
 
 	Send out file release notice
 
 */
 	$count=db_result(db_query("SELECT count(*) from filemodule_monitor WHERE filemodule_id='$package_id'"),0,0);
+	(user_ismember($group_id,'A')) ? $num=5 : $num=4;
 	if ($count>0) {
 	echo '</TD></TR>
 		<TR><TD>
 		<HR NOSHADE>
-		<H2>'.$Language->getText('file_admin_editreleases','step_x',4).'</H2>
+		<H2>'.$Language->getText('file_admin_editreleases','step_x',$num).'</H2>
 		<P>
 		<H3>'.$Language->getText('file_admin_editreleases','mail_file_rel_notice').':</H3>
 		<P>
@@ -768,7 +825,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="send_notice">
 		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. $package_id .'">
 		<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editreleases','send_notice').'"> <INPUT TYPE="checkbox" NAME="im_sure" VALUE="1"> '.$Language->getText('file_admin_editreleases','im_sure').'
-		</FORM>';
+		</FORM>';		
 	}
 	echo '</TD></TR></TABLE>';
 } else {
