@@ -35,6 +35,14 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   if ($service['short_name']=="homepage") {
     $hp=true;
   }
+  // There is a special case for the 'Legacy docman' service: project admins can modify the label and description (but not the link)
+  $is_legacy_docman=false;
+  if ($service['short_name']=="doc") {
+      $is_legacy_docman=true;
+      if (user_ismember($group_id,'A')) {
+          $ro = false;
+      }
+  }
   if ($su) { $ro=false; }
   echo '
 <h3>'.$Language->getText('project_admin_editservice','s_conf').'</h3>';
@@ -73,7 +81,7 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').':&nbsp;</a><font color="red">*</font></td>
 <td>';
-  if ((!$ro)||($hp)) {
+  if (((!$ro)||($hp)) && (!$is_legacy_docman || $su)) {
     echo '<input type="text" name="link" size="70" maxlength="255" value="'.$service['link'].'">';
   } else {
     echo $service['link'];
@@ -213,7 +221,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editservic
 
 
 
-if ($func=="create") {
+if (isset($func) && $func=="create") {
     $is_superuser=false;
     if (user_is_super_user()) {
             $is_superuser=true;
