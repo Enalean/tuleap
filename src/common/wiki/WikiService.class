@@ -62,9 +62,9 @@ class WikiService extends Controler {
     // Check access right
     $this->checkPermissions();
 
-    // If Wiki for project doesn't exist, propose creation ... if user is admin
+    // If Wiki for project doesn't exist, propose creation ... if user is project admin or wiki admin
     if(!$this->wiki->exist()) {
-      if(!user_ismember($this->gid, 'W2')) {
+      if((!user_ismember($this->gid, 'W2'))&&(!user_ismember($this->gid, 'A'))) {
 	exit_wiki_empty();
       }
     }
