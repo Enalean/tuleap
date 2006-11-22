@@ -386,7 +386,22 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Step 4 - Send e-mail notification
+            <para><emphasis role="bold">Step 4 - Create automatic news
+            (optional)</emphasis></para>
+
+            <para>This step is optional in the sense that you can skip it 
+            if you want. This step gives the opportunity to project admin to 
+            submit a news about the release they've just created (if you're 
+            not project admin, you won't see this step). A default 
+            subject and message are pre-filled. You are of course free to modify 
+            it. The news will be displayed on your project summary page.
+            It is a good way to advertise the users that a new release have been done.
+            The news will also appear in the news administration page, like others.
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Step 5 - Send e-mail notification
             (optional)</emphasis></para>
 
             <para>This step is optional in the sense that it may not show up
@@ -564,6 +579,9 @@
       <para>Don&#39;t forget to specify the hardware architecture and the file
       type. Then push on the &#34;Release File&#34; button at the bottom of
       the screen.</para>
+      <para>Like for usual release, project admin can submit automatic news 
+      relating the release just created. Just check the box and fill the form 
+      to submit a news.</para>
       <para>If some CodeX users were monitoring the package, they will 
       automatically receive an email notification, unless you set the release
       status to 'Hidden'.</para>
