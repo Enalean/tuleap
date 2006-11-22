@@ -36,24 +36,24 @@ if( isset($submit) ) {
         }
     }
 
-    if (!isset($release_name)) {
-    $feedback .= ' '.$Language->getText('file_admin_qrs','define_rel_name').' ';
-    echo db_error();
-    file_utils_footer(array());
-    exit;
-  } 
-  
+    if (!isset($release_name) || trim($release_name) == '') {
+        $feedback .= ' '.$Language->getText('file_admin_qrs','define_rel_name').' ';
+        echo db_error();
+        file_utils_footer(array());
+        exit;
+    }
+
     if (!isset($file_name)) {
-    $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
-    file_utils_footer(array());
-    exit;
-  }
-	
-  
+        $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
+        file_utils_footer(array());
+        exit;
+    }
+
+
   // Check to see if the user uploaded a file instead of selecting an existing one.
   // If so then move it to the 'incoming' dir where we proceed as usual.
   if( $file_name == "qrs_newfile" ) {
-      if (!isset($_FILES['userfile']['name'])) {
+      if (!isset($_FILES['userfile']['name']) || trim($_FILES['userfile']['name']) == '') {
       $feedback .= ' '.$Language->getText('file_admin_editreleases','no_files_selected').' ';
       file_utils_footer(array());
       exit;
@@ -372,7 +372,7 @@ if( isset($submit) ) {
 	</TR>
 	<TR>
 		<TD>
-			  <B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>:</B>
+			  <B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>: <span class="highlight"><strong>*</strong></span></B>
 		</TD>
 		<TD>
 			<INPUT TYPE="TEXT" name="release_name" onBlur="update_news()">

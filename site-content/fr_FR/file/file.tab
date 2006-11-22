@@ -70,6 +70,7 @@ file_admin_editreleases	p_not_exists	Ce paquet n'existe pas ou ne vous appartien
 file_admin_editreleases	add_rel_fail	La création de la version a échoué
 file_admin_editreleases	rel_added	Version créée avec succès
 file_admin_editreleases	rel_name_exists	Ce nom de version existe déjà
+file_admin_editreleases	rel_name_empty	Nom de version invalide : nom de version vide
 file_admin_editreleases	updating_rel	Mise à jour de la version
 file_admin_editreleases	data_uploaded	Fichier téléchargé
 file_admin_editreleases	length_err	ERREUR - Le fichier téléchargé doit être de taille non nulle et plus petit que $1 caractères.

@@ -154,9 +154,11 @@ if (isset($submit)) {
 
 		*/
 
-		if (!$release_name || !$package_id) {
+		if (!$package_id) {
 			$feedback .= ' '.$Language->getText('file_admin_editreleases','create_p_before_rel').' ';
-		} else {
+		} elseif (!$release_name || trim($release_name) == '') {
+            $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_name_empty').' ';
+        } else {
 			//create a new release of this package
 
 			//see if this package belongs to this project
@@ -610,7 +612,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 		<B>'.$Language->getText('file_admin_editreleases','release_date').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="release_date" VALUE="'. format_date('Y-m-d',db_result($result,0,'release_date')) .'" SIZE="10" MAXLENGTH="10">
 		<P>
-		<B>'.$Language->getText('file_admin_editreleases','release_name').':</B><BR>
+		<B>'.$Language->getText('file_admin_editreleases','release_name').':</B> <span class="highlight"><strong>*</strong></span><BR>
 		<INPUT TYPE="TEXT" NAME="release_name" VALUE="'. db_result($result,0,'release_name') .'" SIZE="20" MAXLENGTH="25">
 		<P>
 		<B>'.$Language->getText('global','status').':</B><BR>

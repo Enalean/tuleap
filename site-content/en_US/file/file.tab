@@ -65,6 +65,7 @@ file_admin_editreleases	p_not_exists	Package Doesn't Exist Or Isn't Yours
 file_admin_editreleases	add_rel_fail	Adding Release Failed
 file_admin_editreleases	rel_added	Added Release
 file_admin_editreleases	rel_name_exists	Release Name Already Exists
+file_admin_editreleases	rel_name_empty	Invalid Release Name : empty names are not allowed
 file_admin_editreleases	updating_rel	Updating Release
 file_admin_editreleases	data_uploaded	Data Uploaded
 file_admin_editreleases	length_err	ERROR - uploaded data must be non null and < $1 in length
