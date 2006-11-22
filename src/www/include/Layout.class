@@ -508,8 +508,7 @@ echo html_blankimage(5,100);
      */
     function searchBox() {
         global $words,$forum_id,$group_id,$is_bug_page,$is_support_page,$Language,
-            $is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid;
-        
+            $is_pm_page,$is_snippet_page,$exact,$type_of_search,$atid, $is_wiki_page;
         // if there is no search currently, set the default
         if ( ! isset($type_of_search) ) {
             $exact = 1;
@@ -529,12 +528,13 @@ echo html_blankimage(5,100);
             $output .= "\t<OPTION value=\"forums\"".( $type_of_search == "forums" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_forum')."</OPTION>\n";
         } else if ($group_id && $atid) {
             $output .= "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
+        } else if ($group_id && $is_wiki_page) {
+            $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
         }
         
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
         $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
-        $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','wiki')."</OPTION>\n";
 
         $em =& EventManager::instance();
         $GLOBALS['search_type_entry_output'] = '';
@@ -565,6 +565,9 @@ echo html_blankimage(5,100);
         }
         if ( isset($is_snippet_page) ) {
             $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_snippet_page\" NAME=\"is_snippet_page\">\n";
+        }
+	if ( isset($is_wiki_page) ) {
+            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$is_wiki_page\" NAME=\"is_wiki_page\">\n";
         }
         if ( isset($group_id) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
