@@ -421,6 +421,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 			"WHERE is_followup_to='$is_followup_to' ".
 			"AND subject='".  htmlspecialchars($subject) ."' ".
 			"AND group_forum_id='$group_forum_id' ".
+            "AND body='$body' ".
 			"AND posted_by='". user_getid() ."'");
 
 		if (db_numrows($res3) > 0) {
