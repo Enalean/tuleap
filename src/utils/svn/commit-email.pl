@@ -498,6 +498,12 @@ push(@body, sprintf("SVN Repository: %s\n",$repos));
 push(@body, sprintf("Changes by:     %s  on %s\n","$fullname <$mailname>", $date));
 push(@body, sprintf("New Revision:   %s   %s/goto?key=rev&val=%s&group_id=%s\n", $rev, $codex_srv, $rev, $group_id));
 push(@body, "\n");
+
+# Changes by SL : we first add the log message to the mail body before adding
+# the list of the affected files.
+push(@body, "\nLog message:\n");
+push(@body, @log);
+
 if (@adds)
   {
     @adds = sort @adds;
@@ -516,8 +522,7 @@ if (@mods)
     push(@body, "\nModified files:\n");
     push(@body, map { "   $_\n" } @mods);
   }
-push(@body, "\nLog message:\n");
-push(@body, @log);
+
 #push(@body, "\n");
 push(@body, map { /[\r\n]+$/ ? $_ : "$_\n" } @difflines);
 push(@body, map { "$_\n" } &format_xref(@log));
