@@ -529,7 +529,7 @@ function fixup_static_configs($file) {
         $FieldSeparator = "\xFF";
     else
         $FieldSeparator = "\x81";
-
+    // CodeX: removed PhpWikiAdministration/SetAcl, PhpWikiAdministration/Chown and PhpWikiAdministration/Chmod
     $AllActionPages = explode(':',
                               'AllPages:BackLinks:CreatePage:DebugInfo:EditMetaData:FindPage:'
                               .'FullRecentChanges:FullTextSearch:FuzzyPages:InterWikiSearch:'
@@ -537,9 +537,8 @@ function fixup_static_configs($file) {
                               .'OrphanedPages:PageDump:PageHistory:PageInfo:RandomPage:'
                               .'RecentChanges:RecentEdits:RecentComments:RelatedChanges:TitleSearch:'
                               .'UpLoad:UserPreferences:WantedPages:'
-                              .'PhpWikiAdministration/Remove:PhpWikiAdministration/Chmod:'
-                              .'PhpWikiAdministration/Rename:PhpWikiAdministration/Replace:'
-                              .'PhpWikiAdministration/SetAcl:PhpWikiAdministration/Chown'
+                              .'PhpWikiAdministration/Remove:'
+                              .'PhpWikiAdministration/Rename:PhpWikiAdministration/Replace'
                               );
 
     // If user has not defined PHPWIKI_DIR, and we need it
