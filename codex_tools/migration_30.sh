@@ -581,7 +581,11 @@ do
    rcs -q -l commitinfo
    ci -q -m"CodeX 3.0 modifications" commitinfo
    co -q commitinfo
-   $CHOWN codexadm.$projname commitinfo*
+   # Change ownership if group exists
+   grep -q "^$projname:" /etc/group
+   if [ $? -eq 0 ]; then
+     $CHOWN codexadm.$projname commitinfo*
+   fi
    # Create cvs lock dir if it does not exist
    $MKDIR -p /var/lock/cvs/$projname
    $CHMOD 0777 /var/lock/cvs/$projname
@@ -599,7 +603,11 @@ do
    rcs -q -l loginfo
    ci -q -m"CodeX 3.0 modifications" loginfo
    co -q loginfo
-   $CHOWN codexadm.$projname loginfo*
+   # Change ownership if group exists
+   grep -q "^$projname:" /etc/group
+   if [ $? -eq 0 ]; then
+     $CHOWN codexadm.$projname loginfo*
+   fi
 done
 
 echo "- Subversion post-commit files"
@@ -610,7 +618,10 @@ do
    perl -pi -e "s@/usr/local/bin/commit-email.pl@/usr/lib/codex/bin/commit-email.pl@" "$svnfile"
    cd /var/lib/codex/svnroot
    # change ownership on whole repository
-   $CHOWN -R codexadm.$projname $projname
+   grep -q "^$projname:" /etc/group
+   if [ $? -eq 0 ]; then
+     $CHOWN -R codexadm.$projname $projname
+   fi
 done
 
 
