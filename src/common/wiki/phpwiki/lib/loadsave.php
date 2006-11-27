@@ -1266,7 +1266,10 @@ function SetupWiki (&$request)
     if ($default_pgsrc != $pgsrc) {
         LoadAny($request, $default_pgsrc, $GenericPages);
     }
-    $request->setArg('overwrite', false);
+    // CodeX - Commented-out the following line to make sure that wiki pages are properly instanciated
+    // If the line is not commented, we randomly run into error messages like this at wiki init:
+    // "...pagename has edit conflicts - skipped  (Merge Edit ) (Restore Anyway)"
+    //$request->setArg('overwrite', false);
     LoadAny($request, $pgsrc);
     $dbi =& $request->_dbi;
 
