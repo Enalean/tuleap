@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-29 10:07+0100\n"
+"POT-Creation-Date: 2006-11-27 16:19+0100\n"
 "PO-Revision-Date: 2004-06-22 21:10+0200\n"
 "Last-Translator: Pierrick Meignen <meignen.pierrick@wanadoo.fr>, Roland "
 "Trique <roland.trique@free.fr>, Stéphane Gourichon <stephane.gourichon@lip6."
@@ -509,15 +509,15 @@ msgid "%s: file not found"
 msgstr "%s : fichier non trouvé"
 
 # lib/diff.php:997
-#: ../lib/IniConfig.php:729
+#: ../lib/IniConfig.php:728
 msgid "CategoryGroup"
 msgstr "CatégorieGroupes"
 
-#: ../lib/IniConfig.php:731
+#: ../lib/IniConfig.php:730
 msgid "An unnamed PhpWiki"
 msgstr "Un PhpWiki sans titre"
 
-#: ../lib/IniConfig.php:733 ../lib/upgrade.php:149
+#: ../lib/IniConfig.php:732 ../lib/upgrade.php:149
 #: ../themes/CodeX-lite/templates/userprefs.tmpl:121
 #: ../themes/CodeX/templates/userprefs.tmpl:121
 #: ../themes/default/templates/userprefs.tmpl:123
@@ -558,8 +558,8 @@ msgid "Dump pages as XHTML"
 msgstr "Sauvegarde des pages au format xhtml"
 
 #: ../lib/loadsave.php:82 ../lib/loadsave.php:408 ../lib/loadsave.php:844
-#: ../lib/loadsave.php:850 ../lib/loadsave.php:858 ../lib/main.php:968
-#: ../lib/main.php:1072 ../lib/plugin/WikiAdminSelect.php:192
+#: ../lib/loadsave.php:850 ../lib/loadsave.php:858 ../lib/main.php:970
+#: ../lib/main.php:1074 ../lib/plugin/WikiAdminSelect.php:192
 #: ../lib/WikiPlugin.php:121 ../themes/CodeX-lite/templates/head.tmpl:85
 #: ../themes/CodeX-lite/templates/head.tmpl:86
 #: ../themes/CodeX-lite/templates/navbar.tmpl:55
@@ -573,7 +573,7 @@ msgstr "Sauvegarde des pages au format xhtml"
 msgid "PhpWikiAdministration"
 msgstr "AdministrationDePhpWiki"
 
-#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1044 ../lib/WikiDB.php:1067
+#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1046 ../lib/WikiDB.php:1069
 #, php-format
 msgid "Edited by: %s"
 msgstr "Édité par : %s"
@@ -582,14 +582,14 @@ msgstr "Édité par : %s"
 msgid "LoadDump"
 msgstr "RécupérationDeLaPage"
 
-#: ../lib/loadsave.php:99 ../lib/WikiDB.php:241 ../lib/WikiDB.php:1050
-#: ../lib/WikiDB.php:1075
+#: ../lib/loadsave.php:99 ../lib/WikiDB.php:241 ../lib/WikiDB.php:1052
+#: ../lib/WikiDB.php:1077
 #, php-format
 msgid "PageChange Notification of %s sent to %s"
 msgstr "Les notifications de changement de la page %s ont été envoyés à %s"
 
-#: ../lib/loadsave.php:102 ../lib/WikiDB.php:244 ../lib/WikiDB.php:1053
-#: ../lib/WikiDB.php:1078
+#: ../lib/loadsave.php:102 ../lib/WikiDB.php:244 ../lib/WikiDB.php:1055
+#: ../lib/WikiDB.php:1080
 #, php-format
 msgid "PageChange Notification Error: Couldn't send %s to %s"
 msgstr ""
@@ -699,7 +699,7 @@ msgid "from %s"
 msgstr "du %s"
 
 #: ../lib/loadsave.php:787 ../lib/plugin/RecentChanges.php:107
-#: ../lib/WikiDB.php:1041
+#: ../lib/WikiDB.php:1043
 msgid "New page"
 msgstr "Nouvelle page"
 
@@ -827,17 +827,17 @@ msgstr ""
 "Chargement d'un wiki vierge en cours. Prière d'attendre jusqu'à la fin de "
 "l'opération, Ceci ne prendra que quelques instants. "
 
-#: ../lib/loadsave.php:1305
+#: ../lib/loadsave.php:1308
 msgid "No uploaded file to upload?"
 msgstr "Pas de fichier à déposer ?"
 
-#: ../lib/loadsave.php:1309
+#: ../lib/loadsave.php:1312
 #, php-format
 msgid "Uploading %s"
 msgstr "Dépôt de %s"
 
 # lib/stdlib.php:384 lib/stdlib.php:445
-#: ../lib/loadsave.php:1314 ../lib/plugin/RecentChanges.php:270
+#: ../lib/loadsave.php:1317 ../lib/plugin/RecentChanges.php:270
 #: ../lib/plugin/RecentChanges.php:285 ../lib/plugin/RecentChanges.php:388
 #: ../lib/plugin/RecentChanges.php:464 ../lib/plugin/RecentChanges.php:600
 #: ../lib/plugin/RecentChanges.php:734 ../lib/RSSWriter091.php:113
@@ -850,264 +850,260 @@ msgstr "Dépôt de %s"
 msgid "RecentChanges"
 msgstr "DernièresModifs"
 
-#: ../lib/main.php:96 ../lib/WikiDB.php:908
-msgid "Optimizing database"
-msgstr "Optimisation de database"
-
-#: ../lib/main.php:413
+#: ../lib/main.php:415
 msgid "FORBIDDEN"
 msgstr "INTERDIT"
 
-#: ../lib/main.php:414 ../lib/main.php:424
+#: ../lib/main.php:416 ../lib/main.php:426
 msgid "ANON"
 msgstr "ANONYME"
 
-#: ../lib/main.php:415
+#: ../lib/main.php:417
 msgid "BOGO"
 msgstr "BOGO"
 
-#: ../lib/main.php:416
+#: ../lib/main.php:418
 msgid "USER"
 msgstr "UTILISATEUR"
 
-#: ../lib/main.php:417
+#: ../lib/main.php:419
 msgid "ADMIN"
 msgstr "ADMIN"
 
-#: ../lib/main.php:418
+#: ../lib/main.php:420
 msgid "UNOBTAINABLE"
 msgstr "INACCESSIBLE"
 
-#: ../lib/main.php:446 ../lib/main.php:465
+#: ../lib/main.php:448 ../lib/main.php:467
 #, php-format
 msgid "%s is disallowed on this wiki."
 msgstr "L'action %s est interdite sur ce wiki."
 
-#: ../lib/main.php:454
+#: ../lib/main.php:456
 msgid "authenticated"
 msgstr "authentifié"
 
-#: ../lib/main.php:454
+#: ../lib/main.php:456
 msgid "not authenticated"
 msgstr "non authentifié"
 
-#: ../lib/main.php:456
-msgid "Missing PagePermission:"
-msgstr "Permission de page individuelle absente:"
-
-#: ../lib/main.php:455
+#: ../lib/main.php:457
 #, php-format
 msgid "%s %s %s is disallowed on this wiki for %s user '%s' (level: %s)."
 msgstr ""
 "%s %s %s est interdite sur ce wiki pour %s l'utilisateur '%s' (niveau : %s)."
 
-#: ../lib/main.php:473
+#: ../lib/main.php:458
+msgid "Missing PagePermission:"
+msgstr "Permission de page individuelle absente:"
+
+#: ../lib/main.php:475
 #, php-format
 msgid "You must sign in to %s."
 msgstr "Vous devez vous inscrire pour %s."
 
-#: ../lib/main.php:475
+#: ../lib/main.php:477
 #, php-format
 msgid "You must log in to %s."
 msgstr "Vous devez vous connecter pour %s."
 
-#: ../lib/main.php:477
+#: ../lib/main.php:479
 #, php-format
 msgid "Access for you is forbidden to %s."
 msgstr "L'accès à %s vous est interdit."
 
-#: ../lib/main.php:479 ../lib/plugin/PluginManager.php:65
+#: ../lib/main.php:481 ../lib/plugin/PluginManager.php:65
 #, php-format
 msgid "You must be an administrator to %s."
 msgstr "Vous devez être un administrateur pour %s."
 
-#: ../lib/main.php:491
+#: ../lib/main.php:493
 msgid "view this page"
 msgstr "voir cette page"
 
-#: ../lib/main.php:492
+#: ../lib/main.php:494
 msgid "diff this page"
 msgstr "diff de cette page"
 
-#: ../lib/main.php:493
+#: ../lib/main.php:495
 msgid "dump html pages"
 msgstr "récupération des pages HTML"
 
-#: ../lib/main.php:494
+#: ../lib/main.php:496
 msgid "dump serial pages"
 msgstr "récupération des pages sérialisées"
 
-#: ../lib/main.php:495
+#: ../lib/main.php:497
 msgid "edit this page"
 msgstr "éditer cette page"
 
-#: ../lib/main.php:496
+#: ../lib/main.php:498
 msgid "revert to a previous version of this page"
 msgstr "revenir à une précédente version de cette page."
 
-#: ../lib/main.php:497
+#: ../lib/main.php:499
 msgid "create this page"
 msgstr "créer cette page"
 
-#: ../lib/main.php:498
+#: ../lib/main.php:500
 msgid "load files into this wiki"
 msgstr "chargement des fichiers sur ce wiki"
 
-#: ../lib/main.php:499
+#: ../lib/main.php:501
 msgid "lock this page"
 msgstr "verrouiller cette page"
 
-#: ../lib/main.php:500
+#: ../lib/main.php:502
 msgid "remove this page"
 msgstr "supprimer cette page"
 
-#: ../lib/main.php:501
+#: ../lib/main.php:503
 msgid "unlock this page"
 msgstr "déverrouiller la Page"
 
-#: ../lib/main.php:502
+#: ../lib/main.php:504
 msgid "upload a zip dump"
 msgstr "déposer un fichier zip"
 
 # lib/pageinfo.php:64
-#: ../lib/main.php:503
+#: ../lib/main.php:505
 msgid "verify the current action"
 msgstr "vérifier l'action actuelle"
 
-#: ../lib/main.php:504
+#: ../lib/main.php:506
 msgid "view the source of this page"
 msgstr "voir la source de cette page"
 
-#: ../lib/main.php:505
+#: ../lib/main.php:507
 msgid "access this wiki via XML-RPC"
 msgstr "accéder à ce wiki via XML-RPC"
 
-#: ../lib/main.php:506
+#: ../lib/main.php:508
 msgid "access this wiki via SOAP"
 msgstr "accéder à ce wiki via SOAP"
 
-#: ../lib/main.php:507
+#: ../lib/main.php:509
 msgid "download a zip dump from this wiki"
 msgstr "télécharger une sauvegarde compressée de ce wiki"
 
-#: ../lib/main.php:508
+#: ../lib/main.php:510
 msgid "download an html zip dump from this wiki"
 msgstr "télécharger une sauvegarde HTML compressée de ce wiki"
 
-#: ../lib/main.php:532
+#: ../lib/main.php:534
 msgid "Browsing pages"
 msgstr "Navigation en cours"
 
-#: ../lib/main.php:533
+#: ../lib/main.php:535
 msgid "Diffing pages"
 msgstr "Comparaison des pages"
 
-#: ../lib/main.php:534
+#: ../lib/main.php:536
 msgid "Dumping html pages"
 msgstr "Récupération des pages HTML"
 
-#: ../lib/main.php:535
+#: ../lib/main.php:537
 msgid "Dumping serial pages"
 msgstr "Récupération des pages sérialisées"
 
-#: ../lib/main.php:536
+#: ../lib/main.php:538
 msgid "Editing pages"
 msgstr "Éditions des pages"
 
-#: ../lib/main.php:537
+#: ../lib/main.php:539
 msgid "Reverting to a previous version of pages"
 msgstr ""
 
-#: ../lib/main.php:538
+#: ../lib/main.php:540
 msgid "Creating pages"
 msgstr "Création des pages"
 
-#: ../lib/main.php:539
+#: ../lib/main.php:541
 msgid "Loading files"
 msgstr "Chargement des fichiers"
 
-#: ../lib/main.php:540
+#: ../lib/main.php:542
 msgid "Locking pages"
 msgstr "Verrouillage des pages"
 
-#: ../lib/main.php:541
+#: ../lib/main.php:543
 msgid "Removing pages"
 msgstr "Suppression des pages"
 
-#: ../lib/main.php:542
+#: ../lib/main.php:544
 msgid "Unlocking pages"
 msgstr "Déverrouiller les pages"
 
-#: ../lib/main.php:543
+#: ../lib/main.php:545
 msgid "Uploading zip dumps"
 msgstr "Déposer la sauvegarde compressée"
 
 # lib/pageinfo.php:64
-#: ../lib/main.php:544
+#: ../lib/main.php:546
 msgid "Verify the current action"
 msgstr "Vérifier l'action actuelle"
 
-#: ../lib/main.php:545
+#: ../lib/main.php:547
 msgid "Viewing the source of pages"
 msgstr "Visualisation de la source des pages"
 
-#: ../lib/main.php:546
+#: ../lib/main.php:548
 msgid "XML-RPC access"
 msgstr "Accès XML-RPC"
 
-#: ../lib/main.php:547
+#: ../lib/main.php:549
 msgid "SOAP access"
 msgstr "Accès SOAP"
 
-#: ../lib/main.php:548
+#: ../lib/main.php:550
 msgid "Downloading zip dumps"
 msgstr "Téléchargement des sauvegardes compressées"
 
-#: ../lib/main.php:549
+#: ../lib/main.php:551
 msgid "Downloading html zip dumps"
 msgstr "Téléchargement des sauvegardes html compressées"
 
-#: ../lib/main.php:683
+#: ../lib/main.php:685
 #, php-format
 msgid "%s: action forwarded to a moderator."
 msgstr ""
 
-#: ../lib/main.php:686
+#: ../lib/main.php:688
 msgid "This action requires moderator approval. Please be patient."
 msgstr ""
 
-#: ../lib/main.php:691
+#: ../lib/main.php:693
 msgid "You must wait for moderator approval."
 msgstr ""
 
 # lib/display.php:14
-#: ../lib/main.php:696 ../lib/main.php:1052
+#: ../lib/main.php:698 ../lib/main.php:1054
 msgid "ModeratedPage"
 msgstr "PageModérée"
 
-#: ../lib/main.php:712
+#: ../lib/main.php:714
 #, php-format
 msgid "%s: Bad action"
 msgstr "%s : Mauvaise action"
 
 # lib/stdlib.php:36
-#: ../lib/main.php:729
+#: ../lib/main.php:731
 msgid "Fatal PhpWiki Error"
 msgstr "Erreur Fatale de PhpWiki"
 
-#: ../lib/main.php:981 ../lib/plugin/WikiAdminChown.php:184
+#: ../lib/main.php:983 ../lib/plugin/WikiAdminChown.php:184
 msgid "Chown"
 msgstr "Chown"
 
-#: ../lib/main.php:985 ../lib/plugin/WikiAdminSetAcl.php:184
+#: ../lib/main.php:987 ../lib/plugin/WikiAdminSetAcl.php:184
 msgid "SetAcl"
 msgstr "DéfinirAcl"
 
-#: ../lib/main.php:989 ../lib/plugin/WikiAdminRename.php:208
+#: ../lib/main.php:991 ../lib/plugin/WikiAdminRename.php:208
 msgid "Rename"
 msgstr "Renommer"
 
-#: ../lib/main.php:993 ../lib/main.php:998 ../lib/plugin/PageDump.php:36
+#: ../lib/main.php:995 ../lib/main.php:1000 ../lib/plugin/PageDump.php:36
 #: ../themes/CodeX-lite/templates/actionbar.tmpl:53
 #: ../themes/CodeX/templates/actionbar.tmpl:53
 #: ../themes/default/templates/actionbar.tmpl:35
@@ -1115,13 +1111,13 @@ msgid "PageDump"
 msgstr "RécupérationDeLaPage"
 
 # lib/fullsearch.php:48
-#: ../lib/main.php:1012 ../lib/plugin/FullTextSearch.php:39
+#: ../lib/main.php:1014 ../lib/plugin/FullTextSearch.php:39
 #: ../lib/plugin/WantedPagesOld.php:134
 msgid "FullTextSearch"
 msgstr "RechercheEnTexteIntégral"
 
 # lib/fullsearch.php:48
-#: ../lib/main.php:1015 ../lib/plugin/RecentChanges.php:591
+#: ../lib/main.php:1017 ../lib/plugin/RecentChanges.php:591
 #: ../lib/plugin/TitleSearch.php:43 ../lib/Theme.php:1188
 #: ../themes/CodeX-lite/templates/navbar.tmpl:6
 #: ../themes/CodeX-lite/templates/navbar.tmpl:24
@@ -1147,33 +1143,33 @@ msgstr "RechercheEnTexteIntégral"
 msgid "TitleSearch"
 msgstr "RechercheParTitre"
 
-#: ../lib/main.php:1161 ../lib/main.php:1174 ../lib/Request.php:811
+#: ../lib/main.php:1163 ../lib/main.php:1176 ../lib/Request.php:811
 #, php-format
 msgid "%s is not writable."
 msgstr "%s n'est pas accessible en écriture."
 
-#: ../lib/main.php:1162
+#: ../lib/main.php:1164
 msgid "The session.save_path directory"
 msgstr "Le répertoire 'session.save_path'"
 
-#: ../lib/main.php:1164 ../lib/Request.php:813
+#: ../lib/main.php:1166 ../lib/Request.php:813
 #, php-format
 msgid "Please ensure that %s is writable, or redefine %s in config/config.ini."
 msgstr ""
 "Veuillez vous assurer que %s est disponible en écriture, ou redéfinissez-le "
 "dans config/config.ini."
 
-#: ../lib/main.php:1165
+#: ../lib/main.php:1167
 #, php-format
 msgid "the session.save_path directory '%s'"
 msgstr "le répertoire 'session.save_path' '%s'"
 
-#: ../lib/main.php:1169
+#: ../lib/main.php:1171
 #, php-format
 msgid "Attempting to use the directory '%s' instead."
 msgstr "Tentative d'utilisation du répertoire '%s' à la place."
 
-#: ../lib/main.php:1176
+#: ../lib/main.php:1178
 msgid "Users will not be able to sign in."
 msgstr "Les utilisateurs ne pourront pas s'inscrire."
 
@@ -1588,12 +1584,22 @@ msgid "History of all major and minor edits by %s to page %s."
 msgstr ""
 "Historique de toutes les éditions majeures et mineures par %s sur la page %s."
 
+#: ../lib/plugin/AuthorHistory.php:156
+#, php-format
+msgid "History of all major edits by %s to page %s."
+msgstr "Historique de toutes les éditions majeures par %s sur la page %s."
+
 #: ../lib/plugin/AuthorHistory.php:218
 #, php-format
 msgid "History of all major and minor modifications for any page edited by %s."
 msgstr ""
 "Historique des éditions majeures ou mineures pour n'importe quelle page "
 "éditée par %s."
+
+#: ../lib/plugin/AuthorHistory.php:218
+#, php-format
+msgid "History of major modifications for any page edited by %s."
+msgstr "Historique des éditions majeures de toutes les pages éditées par %s."
 
 #: ../lib/plugin/_BackendInfo.php:30 ../lib/plugin/_WikiTranslation.php:60
 #: ../themes/CodeX-lite/templates/actionbar.tmpl:52
@@ -2526,7 +2532,7 @@ msgstr "Couleur non valable : %s"
 
 #: ../lib/plugin/PluginManager.php:31
 msgid "PluginManager"
-msgstr "GestionsDesPlugins"
+msgstr "GestionDesPlugins"
 
 #: ../lib/plugin/PluginManager.php:35
 msgid "Description: Provides a list of plugins on this wiki."
@@ -2786,14 +2792,14 @@ msgstr "RedirigerVers"
 msgid "Redirects to another url or page."
 msgstr "Redirige vers une autre url ou page."
 
-#: ../lib/plugin/RedirectTo.php:83
-msgid "Redirect to an external url"
-msgstr "Redirige vers une url d'un site extérieur"
-
 #: ../lib/plugin/RedirectTo.php:82
 #, php-format
 msgid "%s is only allowed in locked pages."
 msgstr ""
+
+#: ../lib/plugin/RedirectTo.php:83
+msgid "Redirect to an external url"
+msgstr "Redirige vers une url d'un site extérieur"
 
 #: ../lib/plugin/RedirectTo.php:97
 #, php-format
@@ -3137,6 +3143,10 @@ msgid "Convert Tex mathematicals expressions to cached png files."
 msgstr ""
 "Convertit des expressions mathématiques au format TeX en des fichiers png "
 "mis en cache."
+
+#: ../lib/plugin/TeX2png.php:34
+msgid " This is for small text"
+msgstr "C'est pour des petits textes"
 
 #: ../lib/plugin/TeX2png.php:134
 msgid " (syntax error for latex) "
@@ -4326,7 +4336,7 @@ msgstr "PluginInclureUnCadre"
 # lib/stdlib.php:384 lib/stdlib.php:445
 #: ../lib/plugin/_WikiTranslation.php:67
 msgid "FullRecentChanges"
-msgstr "DernièresModifs"
+msgstr "DernièresModifsComplètes"
 
 #: ../lib/plugin/_WikiTranslation.php:68
 msgid "HelloWorldPlugin"
@@ -5080,17 +5090,17 @@ msgstr "WikiBD::renamePage() pas encore implémentée pour le Principal"
 msgid "%s: Date of new revision is %s"
 msgstr "%s : la date de la nouvelle révision est %s"
 
-#: ../lib/WikiDB.php:1013
+#: ../lib/WikiDB.php:1015
 msgid "Page change"
 msgstr ""
 
-#: ../lib/WikiDB.php:1069
+#: ../lib/WikiDB.php:1071
 #, php-format
 msgid "Page rename %s to %s"
 msgstr "retitrez la page de '%s' à '%s'"
 
 # lib/display.php:31 lib/editpage.php:50
-#: ../lib/WikiDB.php:1629 ../lib/WikiDB.php:1633
+#: ../lib/WikiDB.php:1631 ../lib/WikiDB.php:1635
 #: ../themes/CodeX-lite/templates/homepage.tmpl:7
 #: ../themes/CodeX/templates/homepage.tmpl:7
 #: ../themes/default/templates/homepage.tmpl:7
@@ -5098,7 +5108,7 @@ msgstr "retitrez la page de '%s' à '%s'"
 msgid "Describe %s here."
 msgstr "Décrire %s ici."
 
-#: ../lib/WikiDB.php:1668
+#: ../lib/WikiDB.php:1670
 #, php-format
 msgid "Oops! Revision %s of %s seems to have been deleted!"
 msgstr "Ouille ! La révision %s de %s semble avoir été effacée !"
@@ -5628,12 +5638,6 @@ msgstr "Dialogue"
 msgid "Preview only!  Changes not saved."
 msgstr "Prévisualisation uniquement ! Modifications non enregistrées."
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:9
-#: ../themes/CodeX/templates/editpage.tmpl:9
-#: ../themes/default/templates/editpage.tmpl:9
-msgid "edit area"
-msgstr "Zone d'édition"
-
 #: ../themes/CodeX-lite/templates/editpage.tmpl:8
 #: ../themes/CodeX/templates/editpage.tmpl:8
 #: ../themes/default/templates/editpage.tmpl:8
@@ -5642,6 +5646,12 @@ msgid ""
 "Please continue editing.  (You'll find your %s at the bottom of the page.)"
 msgstr ""
 "Veuillez continuer votre édition. (Vous trouverez votre %s en bas de page)."
+
+#: ../themes/CodeX-lite/templates/editpage.tmpl:9
+#: ../themes/CodeX/templates/editpage.tmpl:9
+#: ../themes/default/templates/editpage.tmpl:9
+msgid "edit area"
+msgstr "Zone d'édition"
 
 #: ../themes/CodeX-lite/templates/editpage.tmpl:20
 #: ../themes/CodeX/templates/editpage.tmpl:20
@@ -5673,8 +5683,9 @@ msgstr "Anciennes règles"
 #: ../themes/CodeX/templates/editpage.tmpl:112
 #: ../themes/default/templates/editpage.tmpl:113
 #: ../themes/default/templates/editpage.tmpl:118
-msgid "GoodStyle"
-msgstr "StyleCorrect"
+#, php-format
+msgid "See %s tips for editing."
+msgstr "Voir les conseils pour éditer les pages dans %s."
 
 #: ../themes/CodeX-lite/templates/editpage.tmpl:107
 #: ../themes/CodeX-lite/templates/editpage.tmpl:112
@@ -5682,9 +5693,8 @@ msgstr "StyleCorrect"
 #: ../themes/CodeX/templates/editpage.tmpl:112
 #: ../themes/default/templates/editpage.tmpl:113
 #: ../themes/default/templates/editpage.tmpl:118
-#, php-format
-msgid "See %s tips for editing."
-msgstr "Voir les conseils pour éditer les pages dans %s."
+msgid "GoodStyle"
+msgstr "StyleCorrect"
 
 #: ../themes/CodeX-lite/templates/editpage.tmpl:108
 #: ../themes/CodeX/templates/editpage.tmpl:108
@@ -6536,6 +6546,9 @@ msgstr "(Utilisateur : %s)"
 msgid "Sidebar"
 msgstr "Barre verticale"
 
+#~ msgid "Optimizing database"
+#~ msgstr "Optimisation de database"
+
 #~ msgid "Loading up virgin wiki"
 #~ msgstr ""
 #~ "Chargement d'un wiki vierge. Prière d'attendre jusqu'à la fin de "
@@ -6544,13 +6557,6 @@ msgstr "Barre verticale"
 # lib/diff.php:1001 lib/diff.php:1019
 #~ msgid "period"
 #~ msgstr "period"
-
-#~ msgid "History of all major edits by %s to page %s."
-#~ msgstr "Historique de toutes les éditions majeures par %s sur la page %s."
-
-#~ msgid "History of major modifications for any page edited by %s."
-#~ msgstr ""
-#~ "Historique des éditions majeures de toutes les pages éditées par %s."
 
 #~ msgid "Support moderated pages"
 #~ msgstr "Supportés pages moderée"
@@ -6563,9 +6569,6 @@ msgstr "Barre verticale"
 
 #~ msgid "%s is not locked!"
 #~ msgstr "%s n'est pas verrouillé!"
-
-#~ msgid " This is for small text"
-#~ msgstr "C'est pour des petits textes"
 
 #~ msgid "Files with extension %s are not allowed."
 #~ msgstr "%s: extension interdit."
