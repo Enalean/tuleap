@@ -904,8 +904,10 @@ class WikiDB_Page
         // We're doing this here rather than in createRevision because
         // postgres can't optimize while locked.
         if ((DEBUG & _DEBUG_SQL) or (time() % 5 == 0)) {
-            if ($backend->optimize())
-                trigger_error(_("Optimizing database"), E_USER_NOTICE);
+            if ($backend->optimize()){
+                // CodeX: don't show this message...
+                //trigger_error(_("Optimizing database"), E_USER_NOTICE);
+            }
         }
 
         /* Generate notification emails? */

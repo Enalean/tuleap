@@ -92,8 +92,10 @@ class WikiRequest extends Request {
         $this->setArg('action', $this->_deduceAction());
 
         if ((DEBUG & _DEBUG_SQL) or (time() % 50 == 0)) {
-            if ($this->_dbi->_backend->optimize())
-                trigger_error(_("Optimizing database"), E_USER_NOTICE);
+            if ($this->_dbi->_backend->optimize()) {
+                // CodeX: don't show this message...
+                //trigger_error(_("Optimizing database"), E_USER_NOTICE);
+            }
         }
 
         // Restore auth state. This doesn't check for proper authorization!
