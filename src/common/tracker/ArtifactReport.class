@@ -1009,7 +1009,8 @@ class ArtifactReport extends Error {
 	      //little special case for severity that is not always in the queryable fields of a report
 	      //but that should be there on default ...
 	      if ($key == 'severity') {
-		$order_by .= "a.severity ".$fields_order[$key];
+              // we use modulo 100 to prevent bad sort when none value is allowed in severity field (none value=100).
+		$order_by .= "a.severity % 100 ".$fields_order[$key];
 	      } else {
 		$order_by .= $fields_order_result[$key]." ".$fields_order[$key];
 	      }
