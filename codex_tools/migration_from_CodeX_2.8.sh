@@ -17,7 +17,7 @@
 #  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
 #  delivered on a CD or by other means
 #
-#  This script migrates a site running CodeX 2.8 to CodeX 3.0
+#  This script migrates a site running CodeX 2.8 to CodeX 3.0.1
 #
 
 
@@ -105,10 +105,10 @@ substitute() {
 }
 
 ##############################################
-# CodeX 2.8 to 3.0 migration
+# CodeX 2.8 to 3.0.1 migration
 ##############################################
-echo "Migration script from CodeX 2.8 data to CodeX 3.0"
-echo "This script must be run AFTER a clean CodeX 3.0 installation, and copy of CodeX 2.8 data."
+echo "Migration script from CodeX 2.8 data to CodeX 3.0.1"
+echo "This script must be run AFTER a clean CodeX 3.0.1 installation, and copy of CodeX 2.8 data."
 echo "Read migration_30.README for details"
 echo
 yn="y"
@@ -203,7 +203,7 @@ while [ $? -eq 0 ]; do
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
-echo "Starting DB update for CodeX 3.0. This might take a few minutes."
+echo "Starting DB update for CodeX 3.0.1. This might take a few minutes."
 
 $CAT <<EOF | $MYSQL $pass_opt codex
 
@@ -346,6 +346,13 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#11',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','4#11',3);
 
+###############################################################################
+# Phpwiki 1.3.12
+ALTER TABLE wiki_page ADD cached_html MEDIUMBLOB;
+
+###############################################################################
+# Survey enhancement: new question type
+INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23');
 
 EOF
 
@@ -579,7 +586,7 @@ do
    # commit changes to file (directly with RCS)
    cd /var/lib/codex/cvsroot/$projname/CVSROOT
    rcs -q -l commitinfo
-   ci -q -m"CodeX 3.0 modifications" commitinfo
+   ci -q -m"CodeX 3.0.1 modifications" commitinfo
    co -q commitinfo
    # Change ownership if group exists
    grep -q "^$projname:" /etc/group
@@ -601,7 +608,7 @@ do
    # commit changes to file (directly with RCS)
    cd /var/lib/codex/cvsroot/$projname/CVSROOT
    rcs -q -l loginfo
-   ci -q -m"CodeX 3.0 modifications" loginfo
+   ci -q -m"CodeX 3.0.1 modifications" loginfo
    co -q loginfo
    # Change ownership if group exists
    grep -q "^$projname:" /etc/group
