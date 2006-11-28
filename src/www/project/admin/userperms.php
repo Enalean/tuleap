@@ -83,7 +83,8 @@ if (isset($submit)) {
 		$doc_flags="doc_user_$row_dev[user_id]";
 		$file_flags="file_user_$row_dev[user_id]";
 		$wiki_flags="wiki_user_$row_dev[user_id]";
-
+		$svn_flags="svn_user_$row_dev[user_id]";
+		
 		$res = db_query('UPDATE user_group SET ' 
 			."admin_flags='".$$admin_flags."',"
 			."bug_flags='".$$bug_flags."',"
@@ -93,7 +94,8 @@ if (isset($submit)) {
 			."file_flags='".$$file_flags."', "
 			."patch_flags='".$$patch_flags."', "
 			."wiki_flags='".$$wiki_flags."', "
-			."support_flags='".$$support_flags."' "
+			."support_flags='".$$support_flags."', "
+			."svn_flags='".$$svn_flags."' "
 			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
 
 		$tracker_error = false;
@@ -134,7 +136,8 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 	. "user_group.doc_flags, "
 	. "user_group.file_flags, "
 	. "user_group.support_flags, "
-        . "user_group.wiki_flags "
+        . "user_group.wiki_flags, "
+	. "user_group.svn_flags "
 	. "FROM user,user_group WHERE "
 	. "user.user_id=user_group.user_id AND user_group.group_id=$group_id "
 	. "ORDER BY user.user_name");
@@ -194,6 +197,10 @@ if ( $project->usesTracker()&&$at_arr ) {
 		echo '<TD><B>'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</B></TD>';
 	}
 }
+if ($project->usesSVN()) {
+    print '<TD><B>'.$Language->getText('project_admin_userperms','svn').'</B></TD>';
+}
+
 print '<TD><B>'.$Language->getText('project_admin_userperms','member_ug').'</B></TD>';
 
 ?>
@@ -304,6 +311,15 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
                 print '</SELECT></FONT></TD>';
             }
         }
+
+	 // svn
+        if ($project->usesSVN()) {
+            print '<TD><FONT size="-1"><SELECT name="svn_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['svn_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
+            print '<OPTION value="2"'.(($row_dev['svn_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
+            print '</SELECT></FONT></TD>';
+        }
+
         
         print '<TD><FONT size="-1">';
         $res_ugroups=ugroup_db_list_all_ugroups_for_user($group_id,$row_dev['user_id']);

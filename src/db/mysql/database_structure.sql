@@ -42,6 +42,7 @@ CREATE TABLE activity_log (
 # Table structure for table 'activity_log_old'
 #
 
+
 CREATE TABLE activity_log_old (
   day int(11) NOT NULL default '0',
   hour int(11) NOT NULL default '0',
@@ -1020,6 +1021,7 @@ CREATE TABLE groups (
   xrx_export_ettm int(11) NOT NULL default '0',
   bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11)   NOT NULL default '1',
+  cvs_watch_mode int(11)   NOT NULL default '0',
   cvs_events_mailing_list text NOT NULL,
   cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
   cvs_preamble text NOT NULL,
@@ -2085,6 +2087,7 @@ CREATE TABLE user_group (
   doc_flags int(11) NOT NULL default '0',
   file_flags int(11) NOT NULL default '0',
   wiki_flags int(11) NOT NULL default '0',
+  svn_flags int(11) NOT NULL default '0',
   PRIMARY KEY  (user_group_id),
   KEY idx_user_group_user_id (user_id),
   KEY idx_user_group_group_id (group_id),

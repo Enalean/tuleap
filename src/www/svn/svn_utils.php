@@ -38,7 +38,7 @@ function svn_header($params) {
         echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('svn_utils','my_ci').'</A>';
         echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_query').'</A>';
     }
-    if (user_ismember($group_id, 'A')) {
+    if (user_ismember($group_id, 'A')||user_ismember($group_id,'SVN_ADMIN') ) {
         echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';
     }
     if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}

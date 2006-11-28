@@ -20,7 +20,7 @@ if (!$group_id) {
 }
 
 // Must be at least Project Admin to configure this
-if (!user_ismember($group_id,'A')) {
+if (!user_ismember($group_id,'A') && !user_ismember($group_id,'SVN_ADMIN')) {
     exit_permission_denied();
 }
 
