@@ -594,7 +594,16 @@ if ($use_cvsnt) {
   close FILE;
 }
 
-
+#
+#  Deleting files older than 1 hour in var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
+#
+print("Deleting old files in /var/run/log_accum");
+$TMPDIR = "/var/run/log_accum";
+@old_files=`find $TMPDIR -name "*.files.*" -amin +60 `;
+ foreach (@old_files) {
+    chomp;
+    unlink $_;
+  }
 ###############################################
 # Begin functions
 ###############################################
