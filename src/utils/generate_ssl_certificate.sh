@@ -29,7 +29,7 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
-SSL_KEY='/etc/httpd/conf/ssl.key/server.key'
+export SSL_KEY='/etc/httpd/conf/ssl.key/server.key'
 SSL_CERT='/etc/httpd/conf/ssl.crt/server.crt'
 # Remove existing key and certificate
 $RM $SSL_KEY
@@ -38,10 +38,12 @@ $RM $SSL_CERT
 # Generate a new key
 $OPENSSL genrsa 1024 > $SSL_KEY
 $CHMOD go-rwx $SSL_KEY
+# pseudo-random serial number
+serialno="0x$((date; echo "$$"; cat $SSL_KEY) | md5sum | cut -b1-7)"
 
 # Create new certificate, valid for 10 years
 umask 77
-$OPENSSL req -new -key $SSL_KEY -x509 -days 3650 -out $SSL_CERT
+$OPENSSL req -new -key $SSL_KEY -x509 -days 3650 -out $SSL_CERT -set_serial "$serialno" 
 
 # Restart httpd server
 #$SERVICE httpd restart
