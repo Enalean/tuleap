@@ -116,7 +116,7 @@ wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Manage Wiki Documents</h2>
 wiki_views_wkserviews	wikidocs_create	<h3>$1Create a new Wiki Document</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Wiki Documents</h3>
 wiki_views_wkserviews	back_admin	Back to admin panel
-wiki_views_wkserviews	createwikidoc	<p>You can add a new link to a Wiki Page with the following form. It will add a new entry in the list of Wiki Documents displayed in Wiki service page (<a href="'.$1.'">View</a> link in the tool bar).</p>
+wiki_views_wkserviews	createwikidoc	<p>You can add a new link to a Wiki Page with the following form. It will add a new entry in the list of Wiki Documents displayed in Wiki service page (<a href="$1">View</a> link in the tool bar).</p>
 wiki_views_wkserviews	act_create	Create
 wiki_views_wkserviews	act_update	Update
 wiki_views_wkserviews	browsedoc	<p>List of all Wiki Documents displayed on the wiki service page. You can:</p><ul><li>edit each Wiki Document with the link on the name.</li><li>set permissions on a Wiki Document.</li><li>delete a Wiki Document (the corresponding Wiki Page will not be deleted)</li></ul>
