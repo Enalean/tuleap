@@ -284,8 +284,10 @@ UPDATE survey_question_types SET type='text_field', rank='31' WHERE type='Text F
 UPDATE survey_question_types SET type='none', rank='40' WHERE type='None';
 
 ## Add new type value 'Radio Buttons', id=6, in 'survey_question_types' table
+## and new type value 'Select Box', id=7, in survey_question_types' table (SR #590)
 DELETE FROM survey_question_types WHERE id='6';
 INSERT INTO survey_question_types (id, type, rank) VALUES (6,'radio_buttons','20');
+INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23');
 
 ## Localize Developer Survey title
 UPDATE surveys SET survey_title = 'dev_survey_title_key' WHERE survey_id='1';
@@ -351,8 +353,8 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 ALTER TABLE wiki_page ADD cached_html MEDIUMBLOB;
 
 ###############################################################################
-# Survey enhancement: new question type
-INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23');
+# SVN admin new role (SR #602)
+ALTER TABLE user_group ADD COLUMN svn_flags int(11) NOT NULL default '0' AFTER wiki_flags;
 
 EOF
 
