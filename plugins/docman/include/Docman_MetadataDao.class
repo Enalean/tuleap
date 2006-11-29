@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2006. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2006.
  * 
@@ -157,13 +157,24 @@ class Docman_MetadataDao extends DataAccessObject {
         }
         return $inserted;
     }
-    
+
     function delete($id) {
         $sql = sprintf('UPDATE plugin_docman_metadata'.
                        ' SET special = 100'.
                        ' WHERE field_id = %d',
                        $id);
         return $this->update($sql);
+    }
+
+    function searchByName($groupId, $name) {
+        $sql = sprintf('SELECT *'.
+                       ' FROM plugin_docman_metadata'.
+                       ' WHERE group_id = %d'.
+                       '  AND name = %s'.
+                       '  AND '.$this->notDeletedStmt,
+                       $groupId,
+                       $this->da->quoteSmart($name));
+        return $this->retrieve($sql);
     }
 
 }

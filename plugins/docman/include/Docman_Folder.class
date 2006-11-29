@@ -35,7 +35,7 @@ class Docman_Folder extends Docman_Item {
     
     function Docman_Folder($data = null) {
         parent::Docman_Item($data);
-        $this->_items = new PrioritizedList();
+        $this->_resetItems();
     }
     
     function toRow() {
@@ -55,7 +55,15 @@ class Docman_Folder extends Docman_Item {
     function &getAllItems() {
         return $this->_items;
     }
-    
+    function removeAllItems() {
+        $this->_resetItems();
+    }
+    function _resetItems() {
+        if (isset($this->_items)) {
+            unset($this->_items);
+        }
+        $this->_items = new PrioritizedList();
+    }
     function accept(&$visitor, $params = array()) {
         return $visitor->visitFolder($this, $params);
     }

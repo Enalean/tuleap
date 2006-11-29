@@ -74,8 +74,13 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
     var $dfltParams = null;
     function _getDefaultUrlParams($params) {
         if($this->dfltParams === null) {
-            $action = isset($params['action']) ? $params['action'] : 'show';
-            $this->dfltParams = array('action' => $action,
+            $urlAction = 'show';
+            if(isset($params['action'])) {
+                if($params['action'] == 'search') {
+                    $urlAction = $params['action'];
+                }
+            }
+            $this->dfltParams = array('action' => $urlAction,
                                       'id'     => $params['item']->getId());
 
             $this->_initSearchAndSortParams($params);

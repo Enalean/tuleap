@@ -261,6 +261,9 @@ fieldset.docman_filters legend {
 .docman_item_option_history {
     background-image:url('../images/ic/history.png');
 }
+.docman_item_option_notifications {
+    background-image:url('../images/ic/notifications.png');
+}
 .docman_item_option_permissions {
     background-image:url('../images/ic/permissions.png');
 }
@@ -272,12 +275,6 @@ fieldset.docman_filters legend {
 }
 
 /**********/
-.docman_new_parentfolder {
-    max-height:170px;
-    height:expression(this.offsetHeight > 170 ? 170 : this.offsetHeight);
-    overflow:auto;
-}
-
 .docman_item_actual_parent {
     font-weight: bold;
 }
@@ -293,10 +290,6 @@ fieldset.docman_filters legend {
   clear: both;
 }
 
-.docman_new_item .properties fieldset.general_properties {
-  float: left;
-  width: 49%;
-}
 
 /* Metadata form row */
 .docman_new_item .properties fieldset.general_properties p { 

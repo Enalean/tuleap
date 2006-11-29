@@ -135,7 +135,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class');
             $this->dfltSortParams = null;
             $this->dfltSearchParams = null;
 
-            if($params['filter'] !== null) {
+            if(isset($params['filter']) && $params['filter'] !== null) {
                 $fi =& $params['filter']->getFilterIterator();
                 if($fi !== null) {
                     $fi->rewind();
@@ -170,8 +170,9 @@ require_once('Docman_View_GetMenuItemsVisitor.class');
     }
 
     function isActionAllowed($action, &$item) {
-        $if =& $this->_getItemFactory(array());
+        $if =& Docman_ItemFactory::instance($item->getGroupId());
         switch ($action) {
+            case 'details&section=notifications':
             case 'details&section=history':
             case 'details':
                 $allowed = $this->_controller->userCanRead($item->getId());
@@ -203,7 +204,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class');
         
         $html = '';
         $html .= '<span class="docman_item_options">';
-        $html .= '<a href="'. $params['default_url'] .'&amp;action=details&amp;id='. $item->getId() .'" id="docman_item_show_menu_'. $item->getId() .'">';
+        $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_docman', 'tooltip_show_actions') .'" href="'. $params['default_url'] .'&amp;action=details&amp;id='. $item->getId() .'" id="docman_item_show_menu_'. $item->getId() .'">';
         $html .= '<img src="'. $docman_icons->getActionIcon('popup') .'" class="docman_item_icon" />';
         $html .= '</a>';
         $html .= '<script type="text/javascript">

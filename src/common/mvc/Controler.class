@@ -35,7 +35,8 @@ class Controler {
   /* protected */ var $gid;
   /* protected */ var $view;
   /* protected */ var $action;
-  /* protected */ var $_viewParams = array();
+  /* protected */ var $_viewParams   = array();
+  /* protected */ var $_actionParams = array();
 
   function request() {
   }
@@ -49,7 +50,7 @@ class Controler {
   function actionsManagement() {
     $className = get_class($this).'Actions';
     $wa = new $className($this, $this->gid);
-    $wa->process($this->action);
+    $wa->process($this->action, $this->_actionParams);
   }
 
   function process() {

@@ -61,7 +61,6 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     
     function visitFolder(&$item, $params = array()) {
         $li_displayed = $this->_displayItem($item, $params);
-
         if($this->_canDisplaySubItems($item)) {
             $items =& $item->getAllItems();
             if ($items) {
@@ -120,7 +119,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $this->html .= '<li id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'">';
                 $params['expanded'] = true;
                 $open = '_open';
-                if(!isset($this->params['item_to_move']) && user_get_preference(PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) !== false) {
+                if(!isset($this->params['item_to_move']) && (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$item->getGroupId().'_'.$item->getId()) === false)) {
                     $params['expanded'] = false;
                     $open   = '';
                 }
@@ -162,7 +161,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $this->html .= '</div>';
                 
                 if (trim($item->getDescription()) != '') {
-                    $this->html .= '<div class="docman_item_description">'. $item->getDescription() .'</div>';
+                    $this->html .= '<div class="docman_item_description">'. util_make_links($item->getDescription(), $item->getGroupId()) .'</div>';
             }
                 $li_displayed = true;
             }

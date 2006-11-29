@@ -49,6 +49,8 @@ class Docman_Item {
         $this->pathId      = array();
         $this->pathTitle   = array();
 
+        $this->titlekey = null;
+
         if ($data) {
             $this->initFromRow($data);
         }
@@ -65,10 +67,20 @@ class Docman_Item {
     }
 
     var $title;
+    var $titlekey;
     function setTitle($title) { 
-        $this->title = strpos($title, '_lbl_key') !== FALSE ? $GLOBALS['Language']->getText('plugin_docman', $title) : $title;
+        if(strpos($title, '_lbl_key') !== FALSE) {
+            $this->title = $GLOBALS['Language']->getText('plugin_docman', $title);
+            $this->titlekey = $title;
+        }
+        else {
+            $this->title = $title;
+        }
     }
-    function getTitle() { 
+    function getTitle($key=false) {
+        if($key && $this->titlekey !== null) {
+            return $this->titlekey;
+        }
         return $this->title; 
     }
 
@@ -178,7 +190,7 @@ class Docman_Item {
     function toRow() {
         $row = array();
         $row['item_id']     = $this->getId();
-        $row['title']       = $this->getTitle();
+        $row['title']       = $this->getTitle(true);
         $row['description'] = $this->getDescription();
         $row['create_date'] = $this->getCreateDate();
         $row['update_date'] = $this->getUpdateDate();
@@ -238,6 +250,9 @@ class Docman_Item {
 
         case 'status': 
             $st = $this->getStatus();
+            if($st === null) {
+                $st = 0;
+            }
             $e = new Docman_MetadataListOfValuesElement();
             $e->setId($st);
             $statusLabels = array(PLUGIN_DOCMAN_ITEM_STATUS_NONE     => 'none',

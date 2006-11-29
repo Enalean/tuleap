@@ -23,26 +23,30 @@
  * $Id$
  */
 
-require_once('common/permission/PermissionsManager.class');
+require_once('Docman_PermissionsManagerDao.class');
 
 class Docman_PermissionsManager {
     var $groupId;
+    var $cache_access;
     var $cache_read;
     var $cache_write;
     var $cache_manage;
     var $cache_admin;
+    var $dao;
 
     function Docman_PermissionsManager($groupId) {
         $this->groupId = $groupId;
+        $this->cache_access = array();
         $this->cache_read = array();
         $this->cache_write = array();
         $this->cache_manage = array();
         $this->cache_admin = array();
+        $this->dao = null;
     }
 
     /**
-    * The manager is a singleton
-    */
+     * The manager is a singleton
+     */
     function &instance($groupId) {
         static $_docman_permissionmanager_instance;
         if (!isset($_docman_permissionmanager_instance[$groupId])) {
@@ -56,6 +60,33 @@ class Docman_PermissionsManager {
         return $pm;
     }
 
+    function &getDao() {
+        if($this->dao === null) {
+            $this->dao = new Docman_PermissionsManagerDao(CodexDataAccess::instance(), $this->groupId);
+        }
+        return $this->dao;
+    }
+    var $item_factory;
+    function &_getItemFactory() {
+        if (!$this->item_factory) {
+            $this->item_factory =& new Docman_ItemFactory();
+        }
+        return $this->item_factory;
+    }
+    function userCanAccess(&$user, $item_id) {
+        if (!isset($this->cache_access[$user->getId()][$item_id])) {
+            $can_read = $this->userCanRead($user, $item_id);
+            if ($can_read) {
+                $item_factory =& $this->_getItemFactory();
+                $item =& $item_factory->getItemFromDb($item_id);
+                $can_access_parent = $item->getParentId() == 0 || $this->userCanAccess(&$user, $item->getParentId());
+                $this->cache_access[$user->getId()][$item_id] = $can_access_parent;
+            } else {
+                $this->cache_access[$user->getId()][$item_id] = false;
+            }
+        }
+        return $this->cache_access[$user->getId()][$item_id];
+    }
     function userCanRead(&$user, $item_id) {
         if(!isset($this->cache_read[$user->getId()][$item_id])) {
             $pm =& $this->_getPermissionManagerInstance();
@@ -129,6 +160,72 @@ class Docman_PermissionsManager {
             $this->cache_admin[$user->getId()][$this->groupId] = $has_permission;
         }
         return $this->cache_admin[$user->getId()][$this->groupId];
+    }
+
+    function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId) {
+        $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+        $pm =& $this->_getPermissionManagerInstance();
+        $pm->clonePermissions($srcItemId, $dstItemId, $perms, $toGroupId);
+    }
+
+    function cloneDocmanPermissions($srcGroupId, $dstGroupId) {
+        $perms = array('PLUGIN_DOCMAN_ADMIN');
+        $pm =& $this->_getPermissionManagerInstance();
+        $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
+    }
+
+    function setDefaultItemPermissions($itemId) {
+        $dao =& $this->getDao();
+
+        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_READ');
+        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_WRITE');
+        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_MANAGE');
+    }
+
+    function setDefaultDocmanPermissions($groupId) {
+        $dao =& $this->getDao();
+
+        $dao->setDefaultPermissions($groupId, 'PLUGIN_DOCMAN_ADMIN');
+    }
+
+    function retreiveReadPermissionsForItems($itemsIds, $user){
+        $dao =& $this->getDao();
+
+        $userId = $user->getId();
+
+        // do not compute a perm twice
+        if(!isset($this->cache_read[$userId]) || count($this->cache_read[$userId]) > 0) {
+            $objIds = array();
+            foreach($itemsIds as $itemid) {
+                if(!isset($this->cache_read[$userId][$itemid])) {
+                    $objIds[] = $itemid;
+                }
+            }
+        }
+        else {
+            $objIds = $itemsIds;
+        }
+
+        if(count($objIds) > 0) {
+            $perms = array("'PLUGIN_DOCMAN_READ'", "'PLUGIN_DOCMAN_WRITE'", "'PLUGIN_DOCMAN_MANAGE'");
+            $dar = $dao->retreivePermissionsForItems($objIds, $perms, $user->getUgroups($this->groupId, array()));
+            $dar->rewind();
+            while($dar->valid()) {
+                $row = $dar->current();
+                
+                $oid = $row['object_id'];
+                switch($row['permission_type']) {
+                case 'PLUGIN_DOCMAN_MANAGE':
+                    $this->cache_manage[$userId][$oid] = true;
+                case 'PLUGIN_DOCMAN_WRITE':
+                    $this->cache_write[$userId][$oid] = true;
+                case 'PLUGIN_DOCMAN_READ':
+                    $this->cache_read[$userId][$oid] = true;
+                }
+                
+                $dar->next();
+            }
+        }
     }
 
 }

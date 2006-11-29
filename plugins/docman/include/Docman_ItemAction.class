@@ -32,12 +32,14 @@ class Docman_ItemAction {
     var $action;
     var $class;
     var $title;
+    var $other_icons;
     
     function Docman_ItemAction(&$item) {
         $this->item             =& $item;
         $this->action           = '';
         $this->classes          = '';
         $this->title            = '';
+        $this->other_icons      = array();
     }
 
     function fetchAction($params) {
@@ -65,7 +67,15 @@ class Docman_ItemAction {
             href   :'". $url ."',
             classes:'". $this->classes ."',
             title  :'". addslashes($this->title) ."',
-            img    :'". $params['docman_icons']->getActionIcon($this->action) ."'
+            img    :'". $params['docman_icons']->getActionIcon($this->action) ."',
+            other_icons: [";
+        if (list(,$ic) = each($this->other_icons)) {
+            $js .= "{src:'". $params['docman_icons']->getIcon($ic . '.png') ."', classe:'". $ic ."', url:'". $url ."'}";
+            while(list(,$ic) = each($this->other_icons)) {
+                $js .= ", {src:'". $params['docman_icons']->getIcon($ic . '.png') ."', classe:'". $ic ."', url:'". $url ."'}";
+            }
+        }
+        $js .= "]
         });
         ";
         return $js;
@@ -109,6 +119,10 @@ class Docman_ItemActionMove extends Docman_ItemAction {
         $this->action           = 'move';
         $this->classes          = 'docman_item_option_move';
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_move');
+        $this->other_icons[]    = 'move-up';
+        $this->other_icons[]    = 'move-down';
+        $this->other_icons[]    = 'move-beginning';
+        $this->other_icons[]    = 'move-end';
     }
 }
 class Docman_ItemActionPermissions extends Docman_ItemAction {
@@ -125,6 +139,14 @@ class Docman_ItemActionHistory extends Docman_ItemAction {
         $this->action           = 'details&section=history';
         $this->classes          = 'docman_item_option_history';
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_history');
+    }
+}
+class Docman_ItemActionNotifications extends Docman_ItemAction {
+    function Docman_ItemActionNotifications(&$item) {
+        parent::Docman_ItemAction($item);
+        $this->action           = 'details&section=notifications';
+        $this->classes          = 'docman_item_option_notifications';
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_notifications');
     }
 }
 class Docman_ItemActionDelete extends Docman_ItemAction {

@@ -5,6 +5,7 @@ plugin_docman	action_move	Move
 plugin_docman	action_newdocument	New document
 plugin_docman	action_newfolder	New folder
 plugin_docman	action_newversion	New version
+plugin_docman	action_notifications	Notifications
 plugin_docman	action_permissions	Permissions
 plugin_docman	action_update	Update
 plugin_docman	action_show	Show
@@ -71,6 +72,9 @@ plugin_docman	breadcrumbs_location	Location:
 
 plugin_docman	browse_viewas	-- View as:
 
+plugin_docman	clone_file_label	Copy from template
+plugin_docman	clone_file_changelog	Copy of <em>$1</em> in <em>$2</em> at version <em>$3</em>.
+
 plugin_docman	descriptor_description	Document Manager
 plugin_docman	descriptor_name	Document Manager
 
@@ -85,6 +89,10 @@ plugin_docman	details_actions_move_canmove_document	You can <a href="$1">move th
 plugin_docman	details_actions_move_canmove_folder	You can <a href="$1">move this folder</a> to another folder or inside the current folder.
 plugin_docman	details_actions_move_cannotmove_document	You cannot move this document.
 plugin_docman	details_actions_move_cannotmove_folder	You cannot move this folder.
+plugin_docman	details_actions_newdocument	New document
+plugin_docman	details_actions_newdocument_cancreate	You can <a href="$1">create a new document</a> in this folder.
+plugin_docman	details_actions_newfolder	New folder
+plugin_docman	details_actions_newfolder_cancreate	You can <a href="$1">create a new folder</a> in this folder.
 plugin_docman	details_actions_newversion	New Version
 plugin_docman	details_actions_newversion_button	Create new version
 plugin_docman	details_actions_newversion_cancreate	You can <a href="$1">create a new version</a>.
@@ -122,6 +130,8 @@ plugin_docman	details_history_versions_label	Label
 plugin_docman	details_history_versions_no	There is no version yet
 plugin_docman	details_history_versions_version	Version
 plugin_docman	details_newversion_title	New version for $1
+plugin_docman	details_notifications	Notifications
+plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	User groups
 plugin_docman	details_permissions_perms	Access Permissions
@@ -144,6 +154,7 @@ plugin_docman	error_field_wiki_required	The page name is required.
 plugin_docman	error_filenotfound	The file cannot be found.
 plugin_docman	error_invalid_md	Invalid property
 plugin_docman	error_md_or_love	There is an error in parameters. Back to previous screen.
+plugin_docman	error_no_perm_install	You need to be a project administrator to initialize this service.
 plugin_docman	error_item_not_deleted	Can't delete item.
 plugin_docman	error_item_not_moved	Can't move item.
 plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the document manager.
@@ -276,6 +287,9 @@ plugin_docman	new_position	Position:
 plugin_docman	new_specificproperties	Document type
 plugin_docman	new_mandatory_help	* Mandatory field
 
+plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
+plugin_docman	notifications_on	You're monitoring '$1'.
+
 plugin_docman	permission_admin	Document Administrator
 plugin_docman	permission_admin_short	Administrator
 plugin_docman	permission_manage	Document Manager
@@ -302,6 +316,8 @@ plugin_docman	title	Project Documentation
 plugin_docman	toolbar_admin	Admin
 plugin_docman	toolbar_docman	Project Documentation
 
+plugin_docman	tooltip_show_actions	Show actions
+
 plugin_docman	view_documenttable_title	Title
 plugin_docman	view_documenttable_desc	Description
 plugin_docman	view_documenttable_owner	Owner
@@ -318,6 +334,7 @@ plugin_docman	view_Icons	Icons
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
 
+plugin_docman	warn_wiki_perms	<em>Warning: the <strong>permissions</strong> on the document you are creating <strong>may be different</strong> than the one set on the wiki page.</em>
 plugin_docman	warning_missingowner	Specified owner does not exist. You are now the item owner. You can change owner in Item properties.
 plugin_docman	warning_invalidowner	Specified owner is not a valid Codex user. You are now the item owner. You can change owner in Item properties.
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.

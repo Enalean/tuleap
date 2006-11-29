@@ -22,7 +22,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     }
     
     function getField() {
-        return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" />';
+        return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" /> '. $GLOBALS['Language']->getText('plugin_docman', 'warn_wiki_perms');
     }
 
     function &getValidator() {

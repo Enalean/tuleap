@@ -16,7 +16,9 @@ CREATE TABLE plugin_docman_item (
   link_url TEXT NULL,
   wiki_page TEXT NULL,
   file_is_embedded INT(11) UNSIGNED NULL,
-  PRIMARY KEY(item_id)
+  PRIMARY KEY(item_id),
+  KEY idx_group_id (group_id),
+  KEY idx_item_id (item_id)
 );
 
 DROP TABLE IF EXISTS plugin_docman_version;
@@ -246,4 +248,33 @@ INSERT INTO permissions(permission_type, ugroup_id, object_id)
 SELECT 'PLUGIN_DOCMAN_MANAGE', 3, item_id
 FROM plugin_docman_item;
 
+-- Instanciate docman in default template project
+INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (0, 100, 'roottitle_lbl_key', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
 
+INSERT INTO  plugin_docman_project_settings (group_id, view, use_obsolescence_date, use_status) 
+VALUES (100, 'Tree', 0, 0);
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+SELECT 'PLUGIN_DOCMAN_READ', 2, item_id
+FROM plugin_docman_item
+WHERE group_id = 100;
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+SELECT 'PLUGIN_DOCMAN_WRITE', 3, item_id
+FROM plugin_docman_item
+WHERE group_id = 100;
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+SELECT 'PLUGIN_DOCMAN_MANAGE', 4, item_id
+FROM plugin_docman_item
+WHERE group_id = 100;
+
+INSERT INTO permissions(permission_type, ugroup_id, object_id) 
+VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 100);
+
+CREATE TABLE ugroup_mapping (
+  to_group_id int(11) NOT NULL,
+  src_ugroup_id int(11) NOT NULL,
+  dst_ugroup_id int(11) NOT NULL,
+  PRIMARY KEY (to_group_id, src_ugroup_id, dst_ugroup_id)
+);

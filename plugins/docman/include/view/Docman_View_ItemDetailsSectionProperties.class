@@ -59,7 +59,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $field->getLabel(false);
     }
     function _showField(&$field) {
-        return $field->getValue();
+        return util_make_links($field->getValue(), $this->item->getGroupId());
     }
     function _getAdditionalRows() {
         $html = '';

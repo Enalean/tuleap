@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -76,6 +76,9 @@ class Docman_ReportBo {
     function setup(&$report, &$request, $groupId, &$feedback) {
         $validateFilterFactory  = new Docman_ValidateFilterFactory();
 
+        $needDefaultSort = true;
+        $updateDateFilter = null;
+
         $fi =& $report->getFilterIterator();
         $fi->rewind();
         while($fi->valid()) {
@@ -91,7 +94,20 @@ class Docman_ReportBo {
                 }
             }
             
+            if($filter->getSort() !== null) {
+                $needDefaultSort = false;
+            }
+
+            // Keep a ref on update date (will be default sort) if needed.
+            if($filter->md->getLabel() == 'update_date') {
+                $updateDateFilter =& $filter; 
+            }
+            
             $fi->next();
+        }
+
+        if($needDefaultSort && $updateDateFilter !== null) {
+            $updateDateFilter->setSort(0);
         }
     }
 }

@@ -486,6 +486,16 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
     return db_error();
   }
 
+  $sql = sprintf('INSERT INTO ugroup_mapping (to_group_id, src_ugroup_id, dst_ugroup_id)'.
+                 ' VALUES (%d, %d, %d)',
+                 $to_group,
+                 $ugroup_id,
+                 $ugid);
+  $result = db_query($sql);
+  if (!$result || db_affected_rows($result) <= 0) {
+    return db_error();
+  }
+
   return $err;
 
 }

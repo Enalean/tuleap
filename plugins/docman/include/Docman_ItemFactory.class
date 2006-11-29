@@ -32,14 +32,28 @@ require_once('Docman_Link.class');
 require_once('Docman_EmbeddedFile.class');
 require_once('Docman_Wiki.class');
 require_once('Docman_Version.class');
+require_once('Docman_ItemBo.class');
+require_once('Docman_CloneItemsVisitor.class');
 
 /**
  * 
  */
 class Docman_ItemFactory {
+    var $rootItems;
+    var $onlyOneChildForRoot;
 
     function Docman_ItemFactory() {
-        
+        // Cache highly used info
+        $this->rootItems[] = array();
+        $this->onlyOneChildForRoot[] = array();
+    }
+
+    function &instance($group_id) {
+        static $_instance_Docman_ItemFactory;
+        if(!isset($_instance_Docman_ItemFactory[$group_id])) {
+            $_instance_Docman_ItemFactory[$group_id] = new Docman_ItemFactory();
+        }
+        return $_instance_Docman_ItemFactory[$group_id];
     }
 
     function &getItemFromRow(&$row) {
@@ -106,10 +120,10 @@ class Docman_ItemFactory {
         }
         return $type;
     }
-    function &getItemFromDb($id) {
+    function &getItemFromDb($id, $params = array()) {
         $_id = (int) $id;
         $dao =& $this->_getItemDao();
-        $dar = $dao->searchById($id);
+        $dar = $dao->searchById($id, $params);
 
         if($dar->isError()){
             return;
@@ -139,13 +153,21 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         $id = $dao->createFromRow($row);
         if ($id) {
-            $this->setNewParent($id, $row['parent_id'], $ordering?$ordering:'beginning');
+            $this->setNewParent($id, $row['parent_id'], $ordering);
         }
         return $id;
     }
+
+    function isItemTheOnlyChildOfRoot($item) {
+        if(!isset($this->onlyOneChildForRoot[$item->getGroupId()])) {
+            $dao = $this->_getItemDao();
+            $this->onlyOneChildForRoot[$item->getGroupId()] = $dao->isItemTheOnlyChildOfRoot($item->getGroupId(), $item->getId());
+        }
+        return $this->onlyOneChildForRoot[$item->getGroupId()];
+    }
+
     function isMoveable(&$item) {
-        $dao =& $this->_getItemDao();
-        return $item->getParentId() != 0 && !$dao->isItemTheOnlyChildOfRoot($item->getGroupId(), $item->getId());
+        return $item->getParentId() != 0 && !$this->isItemTheOnlyChildOfRoot($item);
     }
     function setNewParent($item_id, $new_parent_id, $ordering) {
         $item =& $this->getItemFromDb($item_id);
@@ -172,12 +194,15 @@ class Docman_ItemFactory {
         } while (count($parents) > 0);
     }
     function &getRoot($group_id) {
-        $dao =& $this->_getItemDao();
-        $id = $dao->searchRootIdForGroupId($group_id);
-        return $this->getItemFromDb($id);
+        if(!isset($this->rootItems[$group_id])) {
+            $dao =& $this->_getItemDao();
+            $id = $dao->searchRootIdForGroupId($group_id);
+            $this->rootItems[$group_id] = $this->getItemFromDb($id);
+        }
+        return $this->rootItems[$group_id];
     }
     function isRoot(&$item) {
-        $root =& $this->getRoot($item->getGroupId());
+        $root = $this->getRoot($item->getGroupId());
         return $item->getId() == $root->getId();
     }
     function &createRoot($group_id, $title) {
@@ -187,6 +212,35 @@ class Docman_ItemFactory {
         $root->setTitle($title);
         return $dao->createFromRow($root->toRow());
     }
+
+    function rawCreate($item) {
+        $dao = $this->_getItemDao();
+        return $dao->createFromRow($item->toRow());
+    }
+
+    function cloneItems($srcGroupId, $dstGroupId, $user, $metadataMapping, $ugroupsMapping, $dataRoot) {
+        $itemBo = new Docman_ItemBo($srcGroupId);
+        $params = array('ignore_collapse' => true,
+                        'user'            => $user);
+        $itemTree = $itemBo->getItemTree(0, $params);
+        
+        if ($itemTree) {
+            $cloneItemsVisitor = new Docman_CloneItemsVisitor($dstGroupId);
+            $visitorParams = array('parentId' => 0,
+                               'user' => $user,
+                               'metadataMapping' => $metadataMapping,
+                               'ugroupsMapping'  => $ugroupsMapping,
+                               'data_root' => $dataRoot);
+            $itemTree->accept($cloneItemsVisitor, $visitorParams);
+        }
+    }
+    
+    function preferrencesExist($group_id, $user_id) {
+        $dao =& $this->_getItemDao();
+        $dar =& $dao->searchExpandedUserPrefs($group_id, $user_id);
+        return $dar->valid();
+    }
+
 }
 
 ?>

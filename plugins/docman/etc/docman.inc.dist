@@ -6,5 +6,7 @@ $docman_root = '/var/lib/codex/docman';
 // Are embedded files allowed ?
 $embedded_are_allowed = true;
 
+// Nb max items shown on a page if no preferences
+$docman_max_items = 20;
 
 ?>

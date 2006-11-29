@@ -167,8 +167,8 @@ class PermissionsManager {
         $this->_buildPermissionsCache($dar, $ugroups);
     }
     
-    function clonePermissions($source, $target, $perms) {
-        return $this->_permission_dao->clonePermissions($source, $target, $perms);
+    function clonePermissions($source, $target, $perms, $toGroupId=0) {
+        return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }
 }
 ?>

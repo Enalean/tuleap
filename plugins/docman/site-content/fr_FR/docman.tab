@@ -5,6 +5,7 @@ plugin_docman	action_move	Déplacer
 plugin_docman	action_newdocument	Nouveau document
 plugin_docman	action_newfolder	Nouveau dossier
 plugin_docman	action_newversion	Nouvelle version
+plugin_docman	action_notifications	Notifications
 plugin_docman	action_permissions	Permissions
 plugin_docman	action_update	Mise à jour
 plugin_docman	action_show	Afficher
@@ -56,6 +57,10 @@ plugin_docman	details_actions_move_canmove_document	Vous pouvez <a href="$1">dép
 plugin_docman	details_actions_move_canmove_folder	Vous pouvez <a href="$1">déplacer ce dossier</a> dans un autre dossier ou au sein de son dossier actuel.
 plugin_docman	details_actions_move_cannotmove_document	Vous ne pouvez pas déplacer ce document.
 plugin_docman	details_actions_move_cannotmove_folder	Vous ne pouvez pas déplacer ce dossier.
+plugin_docman	details_actions_newdocument	Nouveau document
+plugin_docman	details_actions_newdocument_cancreate	Vous pouvez <a href="$1">créer un nouveau document</a> dans ce dossier.
+plugin_docman	details_actions_newfolder	Nouveau dossier
+plugin_docman	details_actions_newfolder_cancreate	Vous pouvez <a href="$1">créer un nouveau dossier</a> dans ce dossier.
 plugin_docman	details_actions_newversion	Nouvelle version
 plugin_docman	details_actions_newversion_button	Créer une nouvelle version
 plugin_docman	details_actions_newversion_cancreate	Vous pouvez <a href="$1">créer une nouvelle version</a>.
@@ -93,6 +98,8 @@ plugin_docman	details_history_versions_label	Nom
 plugin_docman	details_history_versions_no	Il n'y a pas encore de versions
 plugin_docman	details_history_versions_version	Version
 plugin_docman	details_newversion_title	Nouvelle version pour $1
+plugin_docman	details_notifications	Notifications
+plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
 plugin_docman	details_permissions_perms	Permissions d'accès
@@ -241,6 +248,9 @@ plugin_docman	new_position	Position :
 plugin_docman	new_specificproperties	Nature du document
 plugin_docman	new_mandatory_help	* Champ obligatoire
 
+plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
+plugin_docman	notifications_on	Vous surveillez désormais '$1'.
+
 plugin_docman	permission_admin	Administrateur de document
 plugin_docman	permission_admin_short	Administrateur
 plugin_docman	permission_manage	Gestionnaire de document
@@ -266,6 +276,8 @@ plugin_docman	title	Documentation du projet
 
 plugin_docman	toolbar_admin	Admin
 plugin_docman	toolbar_docman	Documentation projet
+
+plugin_docman	tooltip_show_actions	Afficher les actions
 
 plugin_docman	view_documenttable_title	Titre
 plugin_docman	view_documenttable_desc	Description

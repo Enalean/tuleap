@@ -76,7 +76,22 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     }
     
     function visitFolder(&$item, $params = array()) {
-        return "";
+        $content = '';
+        if ($this->_controller->userCanWrite($this->item->getid())) {
+            $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newdocument') .'</dt><dd>';
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 
+                'details_actions_newdocument_cancreate', 
+                Docman_View_View::buildUrl($this->url, array('action' => 'newDocument', 'id' => $item->getId()))
+            );
+            $content .= '</dd>';
+            $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newfolder') .'</dt><dd>';
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 
+                'details_actions_newfolder_cancreate', 
+                Docman_View_View::buildUrl($this->url, array('action' => 'newFolder', 'id' => $item->getId()))
+            );
+        }
+        $content .= '</dd>';
+        return $content;
     }
     function visitDocument(&$item, $params = array()) {
         $content = '';

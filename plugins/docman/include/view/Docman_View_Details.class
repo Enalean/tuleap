@@ -56,12 +56,12 @@ class Docman_View_Details extends Docman_View_Display {
             $sections['permissions'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']));
         }
-        /*
+        
         if ($user_can_read) {
             $sections['notifications'] = true;
-            $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url']));
+            $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url'], $this->_controller->notificationsManager));
         }
-        */
+        
         if ($user_can_read) {
             $sections['history'] = true;
             $logger = $this->_controller->getLogger();

@@ -130,8 +130,7 @@ class Docman_FolderBo extends Docman_ItemBo {
      * @param Folder
      */
     function collapse($folder) {
-        user_set_preference(PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
-                            PLUGIN_DOCMAN_COLLAPSE_FOLDER);
+        user_del_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
     }
 
     /**
@@ -140,7 +139,8 @@ class Docman_FolderBo extends Docman_ItemBo {
      * @param Folder
      */
     function expand($folder) {
-        user_del_preference(PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
+        user_set_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
+                            PLUGIN_DOCMAN_COLLAPSE_FOLDER);
     }
     
 }

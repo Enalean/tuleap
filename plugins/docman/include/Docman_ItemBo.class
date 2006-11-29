@@ -26,6 +26,7 @@ require_once('common/dao/CodexDataAccess.class');
 require_once('Docman_ItemDao.class');
 require_once('Docman_ItemFactory.class');
 require_once('Docman_PermissionsManager.class');
+require_once('Docman_SubItemsRemovalVisitor.class');
 
 class Docman_ItemBo {
     var $groupId;
@@ -46,10 +47,10 @@ class Docman_ItemBo {
      * @param $userId Id of current user.
      * @return Array List of items to exclude for a search
      **/
-    function &_getCollapsedUserPrefs($parentId, $userId) {           
+    function &_getExpandedUserPrefs($parentId, $userId) {           
         $collapsedItems = array();     
         // Retreive the list of collapsed folders in prefs        
-        $dar = $this->dao->searchCollapseUserPrefs($this->groupId, 
+        $dar = $this->dao->searchExpandedUserPrefs($this->groupId, 
                                                    $userId);
         while($dar->valid()) {
             $row =& $dar->current();
@@ -80,10 +81,10 @@ class Docman_ItemBo {
         $user =& $params['user'];
 
         // {{1}} Exclude collapsed items      
-        $excludedItems = array();
+        $expandedFolders = array();
         if (!isset($params['ignore_collapse']) 
             || !$params['ignore_collapse']) {
-            $excludedItems =& $this->_getCollapsedUserPrefs($_parentId, 
+            $expandedFolders =& $this->_getExpandedUserPrefs($_parentId, 
                                                              user_getid());
         }
 
@@ -103,9 +104,12 @@ class Docman_ItemBo {
             
             $dar->next();
         }
-        $pm =& PermissionsManager::instance();
-        $ptype = array('"PLUGIN_DOCMAN_READ"', '"PLUGIN_DOCMAN_WRITE"', '"PLUGIN_DOCMAN_MANAGE"');
-        $pm->_retrievePermissionsArray($objectsIds, $ptype, $user->getUgroups($this->groupId, array()));
+        //$pm =& PermissionsManager::instance();
+        //$ptype = array('"PLUGIN_DOCMAN_READ"', '"PLUGIN_DOCMAN_WRITE"', '"PLUGIN_DOCMAN_MANAGE"');
+        //$pm->_retrievePermissionsArray($objectsIds, $ptype, $user->getUgroups($this->groupId, array()));
+
+        $dpm =& Docman_PermissionsManager::instance($this->groupId);
+        $dpm->retreiveReadPermissionsForItems($objectsIds, $user);
 
         $itemFactory =& new Docman_ItemFactory();
 
@@ -127,7 +131,7 @@ class Docman_ItemBo {
                 $row =& $dar->current();
 
                 $item =& $itemFactory->getItemFromRow($row);
-                if($this->userHasPermission($user, $item)) {
+                if($item && $this->userHasPermission($user, $item)) {
                     $insert = false;
                     $type = $itemFactory->getItemTypeForItem($item);
                     if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE 
@@ -176,30 +180,31 @@ class Docman_ItemBo {
         // Build hierarchie
         $keys = array_keys($itemList);
         foreach($keys as $i) {
-            if(isset($itemList[$itemList[$i]->getParentId()])) {         
+            if(isset($itemList[$itemList[$i]->getParentId()])) {
                 $itemList[$itemList[$i]->getParentId()]->addItem($itemList[$i]);
             }
         }        
         
         // @todo: Tailor empty folders      
 
-        // Tailor collapsed folders
-        $keys = array_keys($itemList);
-        foreach($keys as $i) {
-            $item =& $itemList[$i];
-            if(in_array($item->getId(), $excludedItems)) {
-                // @todo: Delete all childrens
-                //$item->setNbOfChildren(0);
-                unset($item->_items);
-                $item->_items = array();
+        // Tailor expanded folders
+        if (!isset($params['ignore_collapse']) || !$params['ignore_collapse']) {
+            $keys = array_keys($itemList);
+            $remove_subitems =& new Docman_SubItemsRemovalVisitor();
+            foreach($keys as $i) {
+                $item =& $itemList[$i];
+                if(!in_array($item->getId(), $expandedFolders) && $item->getParentId() && $item->getId() != $parentId) {
+                    // @todo: Delete all childrens
+                    $item->accept($remove_subitems, array());
+                }
+                unset($item);
             }
-            unset($item);
         }
 
         // If nothing to output, output root (?)
         if(!isset($itemList[$_parentId])) {
             $item =& $this->findById($_parentId);
-            if($this->userHasPermission($user, $item)) {
+            if($item && $this->userHasPermission($user, $item)) {
                 $itemList[$_parentId] =& $item;
             }
         }
@@ -435,6 +440,32 @@ class Docman_ItemBo {
             $this->item_factory =& new Docman_ItemFactory();
         }
         return $this->item_factory;
+    }
+
+    function findByTitle($user, $title) {
+        $ia = array();
+
+        $itemFactory = new Docman_ItemFactory();
+
+        $dar = $this->dao->searchByTitle($title);
+        $dar->rewind();
+        while($dar->valid()) {
+            $row = $dar->current();
+
+            $item = $itemFactory->getItemFromRow($row);
+            if($this->userHasPermission($user, $item)) {
+                $parentItem = $this->findById($item->getParentId());
+                if($this->userHasPermission($user, $parentItem)) {
+                    $ia[] = $item;
+                }
+            }
+
+            $dar->next();
+        }
+
+        $ii = new ArrayIterator($ia);
+
+        return $ii;
     }
 }
 

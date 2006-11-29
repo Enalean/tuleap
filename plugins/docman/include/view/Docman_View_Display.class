@@ -34,7 +34,12 @@ require_once('Docman_View_Docman.class');
                 'title' => $item->getTitle()
             );
         }
-        $urlAction = isset($params['action']) ? $params['action'] : 'show';
+        $urlAction = 'show';
+        if(isset($params['action'])) {
+            if($params['action'] == 'search') {
+                $urlAction = $params['action'];
+            }
+        }
         $this->_initSearchAndSortParams($params);
         $urlParams = array_merge($this->dfltSortParams, 
                                  $this->dfltSearchParams);

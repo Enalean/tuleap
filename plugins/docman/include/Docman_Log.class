@@ -36,19 +36,19 @@ class Docman_Log { /* implements EventListener */
     function log($event, $params) {
         switch ($event) {
             case PLUGIN_DOCMAN_EVENT_EDIT:
-                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, 'old', 'new');
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, 'old', 'new');
                 break;
             case PLUGIN_DOCMAN_EVENT_MOVE:
-                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, null, $params['parent']);
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['item']->getParentId(), $params['parent']->getId());
                 break;
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
-                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, null, $params['version']);
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['version']);
                 break;
             case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
-                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event, $params['old_value'], $params['new_value'], $params['field']);
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value'], $params['field']);
                 break;
             default:
-                $this->dao->create($params['group_id'], $params['item'], $params['user'], $event);
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event);
                 break;
         }
     }

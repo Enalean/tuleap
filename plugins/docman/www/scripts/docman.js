@@ -48,14 +48,28 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         }
         this.group_id = group_id;
         this.options = Object.extend({
+            spinner:false,
             folderSpinner:false,
             action:'browse'
         }, options || {});
+        if (options) {
+            this.options.newItem = Object.extend({
+                update_permissions_on_init:true,
+                hide_permissions:true,
+                default_position:false
+            }, options.newItem || {});
+            this.options.move = Object.extend({
+            }, options.move || {});
+        }
         
-        //Preload spinner
+        //Preload spinners
         if (this.options.folderSpinner) {
             img = new Image();
             img.src = this.options.folderSpinner;
+        }
+        if (this.options.spinner) {
+            img = new Image();
+            img.src = this.options.spinner;
         }
         
         // ShowOptions
@@ -65,6 +79,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         if (this.options.action == 'browse') Event.observe(window, 'load', this.initShowOptionsEvent, true);
         
         // NewItem
+        this.parentFoldersForNewItem = {};
         this.initNewItemEvent        = this.initNewItem.bindAsEventListener(this);
         if (this.options.action == 'browse') Event.observe(window, 'load', this.initNewItemEvent, true);
 
@@ -79,7 +94,6 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);
         Event.observe(window, 'load', this.focusEvent, true);
-        
     },
     dispose: function() {
         // ShowOptions
@@ -94,11 +108,13 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         // ItemHighlight
         Event.stopObserving(window, 'load', this.initItemHighlightEvent, true);
     },
+    //{{{------------------------------ ItemHighlight
     focus: function() {
         if ($('docman_new_form')) {
             Form.focusFirstElement('docman_new_form');
         }
     },
+    //}}}
     //{{{------------------------------ ItemHighlight
     initItemHighlight: function() {
         this._initItemHighlight(document.body);
@@ -174,6 +190,13 @@ Object.extend(com.xerox.codex.Docman.prototype, {
     },
     //}}}
     //{{{------------------------------ NewItem
+    addParentFoldersForNewItem: function (id, parent_id, title) {
+        this.parentFoldersForNewItem[id] = {
+            id:        id,
+            parent_id: parent_id,
+            title:    title
+        };
+    },
     initNewItem: function() {
         var checkboxes = [3, 5, 2, 4,].inject([], function (checkboxes, type) {
             el = $('item_item_type_'+type);
@@ -197,6 +220,107 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             this.onNewItemCheckboxChangeEvent = this.onNewItemCheckboxChange.bindAsEventListener(this);
             Event.observe(checkbox, 'click', this.onNewItemCheckboxChangeEvent);
         }).bind(this));
+        
+        //{{{Location
+        if ($H(this.parentFoldersForNewItem).keys().length) {
+            //1. search for the preselected parent
+            var folder_id = $H(this.parentFoldersForNewItem).keys().find(
+                function (folder_id) {
+                    return $F('item_parent_id_'+folder_id);
+                }
+            );
+            
+            //2. Construct path
+            var folders = [];
+            var parent_id = folder_id;
+            while(parent_id != 0) {
+                folders.push(this.parentFoldersForNewItem[parent_id].title);
+                parent_id = this.parentFoldersForNewItem[parent_id].parent_id;
+            }
+            folders = folders.reverse().join(' / ');
+            new Insertion.Top('docman_new_item_location_current_folder', 'In: '+folders+'&nbsp;');
+            
+            //3. Hide other folders
+            Element.hide('docman_new_item_location_other_folders');
+            
+            //4. Allow user to be able to change folder
+            var a = Builder.node('a', {href:''},'[other folders]');
+            $('docman_new_item_location_current_folder').appendChild(a);
+            Event.observe(a, 'click', function(evt) {
+                Element.hide('docman_new_item_location_current_folder');
+                Element.show('docman_new_item_location_other_folders');
+                
+                //{{{Scroll parents to see the selected parent
+                Element.scrollTo('item_parent_id_'+folder_id);
+                //}}}
+                
+                Event.stop(evt);
+                return false;
+            });
+            
+            //5. Add spinner
+            new Insertion.After('docman_new_item_location_position', '<img src="' + this.options.spinner + '" id="docman_new_item_location_spinner" style="display:none" />');
+            
+            //6. listen for changes => need Ajax call
+            $H(this.parentFoldersForNewItem).keys().each(
+                (function (folder_id) {
+                    Event.observe($('item_parent_id_'+folder_id), 'change', (function (evt) {
+                        return this.onNewItemParentChange(folder_id);
+                    }).bind(this));
+                }).bind(this)
+            );
+            
+            //7. Do manually the first ajax call for the preselected parent
+            this.newItem_update_position(folder_id, this.options.newItem.default_position);
+            if (this.options.newItem.update_permissions_on_init) {
+                this.newItem_update_permissions(folder_id);
+            }
+        }
+        //}}}
+        
+        //{{{ Permissions
+        if ($('docman_new_permissions_panel') && this.options.newItem.hide_permissions) {
+            new Insertion.Before('docman_new_permissions_panel', '<div id="docman_new_permissions_text">Will be created with the same permissions than its parent. [<a href="" onclick="'+
+                'Element.show(\'docman_new_permissions_panel\'); '+
+                'Element.hide(\'docman_new_permissions_text\'); '+
+                'new Insertion.Before(\'docman_new_permissions_panel\', \'<input type=hidden name=user_has_displayed_permissions value=1 />\'); '+
+                'return false;">view/change</a>]</div>');
+            Element.hide('docman_new_permissions_panel');
+        }
+    },
+    onNewItemParentChange: function (folder_id) {
+        this.newItem_update_permissions(folder_id);
+        this.newItem_update_position(folder_id);
+    },
+    newItem_update_position: function (folder_id, default_position) {
+        var parameters = '';
+        if (default_position) {
+            parameters += '&default_position='+default_position;
+        }
+        if (this.options.move.item_id) {
+            parameters += '&exclude='+this.options.move.item_id;
+        }
+        new Ajax.Updater('docman_new_item_location_position', 
+            '?group_id='+ this.group_id +'&action=positionWithinFolder&id=' + folder_id + parameters,
+            {
+                onComplete:(function(){
+                    Element.hide('docman_new_item_location_spinner'); 
+                }).bind(this),
+                onLoading:function() { 
+                    Element.show('docman_new_item_location_spinner'); 
+                }
+            }
+        );
+     },
+    newItem_update_permissions: function (folder_id) {
+        new Ajax.Updater('docman_new_permissions_panel', '?group_id='+ this.group_id +'&action=permissionsForItem&id=' + folder_id);
+    },
+    _highlight: function(element_name) {
+        if (!this['_highlight_'+element_name]) {
+            this['_highlight_'+element_name] = new Effect.Highlight(element_name);
+        } else {
+            this['_highlight_'+element_name].start(this['_highlight_'+element_name].options);
+        }
     },
     onNewItemCheckboxChange: function(event) {
         var selected_checkbox = Event.element(event);
@@ -348,7 +472,7 @@ Object.extend(com.xerox.codex.Menu.prototype, {
             li.appendChild(close);
             ul.appendChild(li);
             this.hideEvent = this.hide.bindAsEventListener(this);
-            Event.observe(close, 'click', this.hideEvent);
+            Event.observe(close, 'click', this.hideEvent, true);
             docman.actionsForItem[this.item_id].actions.each((function (action) {
                 if (!action.created) {
                     var li = Builder.node('li');
@@ -359,6 +483,40 @@ Object.extend(com.xerox.codex.Menu.prototype, {
                     });
                     var title_txt = document.createTextNode(action.action.title);
                     a.appendChild(title_txt);
+                    if (action.action.other_icons.length) {
+                        var sep = Builder.node('span');
+                        sep.innerHTML = '&nbsp;&nbsp;';
+                        a.appendChild(sep);
+                        var ims = [];
+                        action.action.other_icons.each(function (ic) {
+                                var im = Builder.node('img');
+                                im.src = ic.src;
+                                im.title = ic.classe;
+                                var sep = Builder.node('span');
+                                sep.innerHTML = '&nbsp;&nbsp;';
+                                a.appendChild(sep);
+                                a.appendChild(im);
+                                ims.push({
+                                    classe:ic.classe,
+                                    url: ic.url,
+                                    img: im
+                                });
+                        });
+                        Event.observe(a, 'click', function (evt) {
+                            icon = ims.find(function (element) {
+                                return element.img == Event.element(evt);
+                            });
+                            if (icon) {
+                                new Ajax.Request(icon.url+'&quick_move='+icon.classe, {
+                                    onComplete: function() {
+                                        window.location.href = window.location.href;
+                                    }
+                                });
+                                Event.stop(evt);
+                                return false;
+                            }
+                        });
+                    }
                     li.appendChild(a);
                     ul.appendChild(li);
                     action.created = true;
@@ -394,6 +552,10 @@ Object.extend(com.xerox.codex.Menu.prototype, {
             ['docman_item_menu_invisible_iframe', com.xerox.codex.openedMenu].each(function (element) { Element.hide(element); });
             com.xerox.codex.openedMenu = null;
         }
+        if (evt) {
+            Event.stop(evt);
+        }
+        return false;
     }
 });
 

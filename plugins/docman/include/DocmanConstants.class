@@ -31,8 +31,8 @@ define('PLUGIN_DOCMAN_EVENT_NEW_VERSION', 6);
 define('PLUGIN_DOCMAN_EVENT_METADATA_UPDATE', 7);
 
 define('PLUGIN_DOCMAN_VIEW_PREF',            'plugin_docman_view');
-define('PLUGIN_DOCMAN_COLLAPSE_FOLDER_PREF', 'plugin_docman_hide');
-define('PLUGIN_DOCMAN_COLLAPSE_FOLDER',      2);
+define('PLUGIN_DOCMAN_EXPAND_FOLDER_PREF', 'plugin_docman_hide');
+define('PLUGIN_DOCMAN_EXPAND_FOLDER',      2);
 define('PLUGIN_DOCMAN_PREF', 'plugin_docman');
 
 define('PLUGIN_DOCMAN_ITEM_TYPE_FOLDER',       1);

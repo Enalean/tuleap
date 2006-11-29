@@ -84,16 +84,16 @@ class Docman_View_NewDocument extends Docman_View_New {
         $mdFactory = new Docman_MetadataFactory($params['group_id']);
 
         if(isset($params['force_item'])) {
-            $new_document =& $params['force_item'];            
-
-            // append MD list
-            $mdFactory->appendAllListOfValuesToItem($new_document);
+            $new_document =& $params['force_item'];
         }
         else {
             $new_document = new Docman_Document();
             $mdFactory->appendItemMetadataList($new_document);
         }
-        
+
+        // append MD list
+        $mdFactory->appendAllListOfValuesToItem($new_document);
+
         $metadataToSkip = $mdFactory->getMetadataLabelToSkipCreation();
         $get_fields = new Docman_View_GetFieldsVisitor($metadataToSkip);
         $fields = $new_document->accept($get_fields, array('form_name'  => $params['form_name'],

@@ -63,11 +63,17 @@ class Docman_MetadataListOfValuesElementFactory {
 
     function create(&$love) {
         $dao =& $this->getDao();
+
+        $status = $love->getStatus();
+        if($status == null) {
+            $status = 'A';
+        }
+
         return $dao->create($this->metadataId,
                             $love->getName(),
                             $love->getDescription(),
                             $love->getRank(),
-                            'A');
+                            $status);
     }
 
     function update($love) {
@@ -132,6 +138,35 @@ class Docman_MetadataListOfValuesElementFactory {
             }
         }
         return $e;
+    }
+
+    /**
+     * Return the all elements that match given name.
+     */
+    function getByName($name, $mdLabel) {
+        $ea = array();
+        switch($mdLabel) {
+        case 'status':
+            $stElmtArray = $this->getStatusList();
+            foreach($stElmtArray as $elmt) {
+                if($elmt->getName() == $name) {
+                    $ea[] = $elmt;
+                }
+            }
+            break;
+            
+        default:
+            $dao = $this->getDao();
+            $dar = $dao->searchByName($name);
+            $dar->rewind();
+            if($dar->valid()) {
+                $ea[] = $this->instanciateLove($dar->current());
+                $dar->next();
+            }
+        }
+
+        $ei = new ArrayIterator($ea);
+        return $ei;
     }
 
     function &getStatusList() {

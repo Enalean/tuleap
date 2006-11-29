@@ -34,11 +34,13 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
     function visitFolder(&$item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
+        $parent =& $params['parent'];
         $one_item_has_not_been_deleted = false;
         if ($items->size()) {
             $it =& $items->iterator();
             while($it->valid()) {
                 $o =& $it->current();
+                $params['parent'] =& $item;
                 if (!$o->accept($this, $params)) {
                     $one_item_has_not_been_deleted = true;
                 }
@@ -50,7 +52,8 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_delete_notempty', $item->getTitle()));
             return false;
         } else {
-            //Mark the folder as deleted
+            //Mark the folder as deleted;
+            $params['parent'] =& $parent;
             return $this->_deleteItem($item, $params);
         }
     }
@@ -93,8 +96,9 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
             $em =& $this->_getEventManager();
             $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
                 'group_id' => $item->getGroupId(),
-                'item'     => $item->getId(),
-                'user'     => $params['user']->getId())
+                'item'     => &$item,
+                'parent'   => &$params['parent'],
+                'user'     => &$params['user'])
             );
             return true;
         } else {
@@ -108,6 +112,13 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
     function &_getVersionFactory() {
         $f = new Docman_VersionFactory();
         return $f;
+    }
+    var $item_factory;
+    function &_getItemFactory() {
+        if (!$this->item_factory) {
+            $this->item_factory =& new Docman_ItemFactory();
+        }
+        return $this->item_factory;
     }
     function &_getFileStorage() {
         $fs = new Docman_FileStorage();

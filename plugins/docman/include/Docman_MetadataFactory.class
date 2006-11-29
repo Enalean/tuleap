@@ -373,7 +373,8 @@ class Docman_MetadataFactory {
     function create(&$md) {
         $md->setGroupId($this->groupId);
 
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST 
+           && $md->getDefaultValue() != null) {
             $md->setDefaultValue(100);
         }
 
@@ -558,7 +559,6 @@ class Docman_MetadataFactory {
 
         return $md;
     }
-
     function getFilterFromLabel($label) {
         $filter = null;
 
@@ -569,6 +569,98 @@ class Docman_MetadataFactory {
         }
          
         return $filter;
+    }
+
+    // Clone metadata defs and list of values
+    function _cloneMetadata($dstGroupId, &$metadataMapping) {
+        $dstMdFactory = new Docman_MetadataFactory($dstGroupId);
+
+        $mda = $this->getRealMetadataList(false);
+        $mdIter = new ArrayIterator($mda);
+        $mdIter->rewind();
+        while($mdIter->valid()) {
+            $md = $mdIter->current();
+            
+            $newMd = $md;
+            $newMdId = $dstMdFactory->create($newMd);
+            $newMd->setId($newMdId);
+            
+            $metadataMapping['md'][$md->getId()] = $newMdId;
+
+            // If current metadata is a list of values, clone values
+            if($newMdId > 0 && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                $oldLoveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+                $newLoveFactory = new Docman_MetadataListOfValuesElementFactory($newMdId);
+                
+                $loveArray = $oldLoveFactory->getListByFieldId($md->getId(), $md->getLabel(), false);
+                $loveIter = new ArrayIterator($loveArray);
+                $loveIter->rewind();
+                while($loveIter->valid()) {
+                    $love = $loveIter->current();
+                    
+                    // Do not clone value 100 (already created on md creation)
+                    if($love->getId() != 100) {
+                        $newLoveId = $newLoveFactory->create($love);
+                        $metadataMapping['love'][$love->getId()] = $newLoveId;
+
+                        // If we found the loveId that is the default value in
+                        // template: we have to update the metadata field.
+                        if($md->getDefaultValue() == $love->getId()) {
+                            $newMd->setDefaultValue($newLoveId);
+                            $this->update($newMd);
+                        }
+                    }
+
+                    $loveIter->next();
+                }
+            }
+
+            $mdIter->next();
+        }
+    }
+
+    function cloneMetadata($dstGroupId, &$metadataMapping) {
+        // Clone hardcoded metadata prefs
+        $sBo =& Docman_SettingsBo::instance($this->groupId);
+        $sBo->cloneMetadataSettings($dstGroupId);
+
+        // Clone metadata
+        $this->_cloneMetadata($dstGroupId, $metadataMapping);
+    }
+
+    function _findRealMetadataByName($name, &$mda) {
+        $dao =& $this->getDao();
+
+        $dar = $dao->searchByName($this->groupId, $name);
+        $dar->rewind();
+        while($dar->valid()) {
+            $md = $this->_createFromRow($dar->current());
+            $md->setCanChangeName(true);
+            $md->setCanChangeIsEmptyAllowed(true);
+            $md->setCanChangeDescription(true);
+            $md->setCanChangeDefaultValue(true);
+
+            $mda[] = $md;
+
+            $dar->next();
+        }
+    }
+
+    function findByName($name) {
+        $mda = array();
+
+        // Hardcoded
+        $hcmda = $this->_buildHardCodedMetadataList($this->hardCodedMetadata, true);
+        foreach($hcmda as $md) {
+            if($md->getName() == $name) {
+                $mda[] = $md;
+            }
+        }
+
+        // Real
+        $this->_findRealMetadataByName($name, $mda);
+        $ai = new ArrayIterator($mda);
+        return $ai;
     }
 
 }

@@ -21,14 +21,16 @@ class Docman_SettingsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function create($group_id, $view) {
+    function create($group_id, $view, $use_obsolescence_date=0, $use_status=0) {
         $sql = sprintf('INSERT INTO plugin_docman_project_settings('.
-                       'group_id, view'.
+                       'group_id, view, use_obsolescence_date, use_status'.
                        ') VALUES ('.
-                       '%d, %s'.
+                       '%d, %s, %d, %d'.
                        ')',
                        $group_id,
-                       $this->da->quoteSmart($view));
+                       $this->da->quoteSmart($view),
+                       $use_obsolescence_date,
+                       $use_status);
          return $this->update($sql);
     }
 

@@ -10,6 +10,7 @@
 
 require_once('Docman_View_Display.class');
 require_once('Docman_View_ParentsTree.class');
+require_once('Docman_View_PermissionsForItem.class');
 
 /* abstract */ class Docman_View_New extends Docman_View_Display /* implements Visitor */ {
     
@@ -32,6 +33,20 @@ require_once('Docman_View_ParentsTree.class');
     /* protected */ function _getCategories($params) {
         return '';
     }
+    /* protected */ function _getJSDocmanParameters($params) {
+        $doc_params = array();
+        if (isset($params['force_permissions'])) {
+            $doc_params['newItem'] = array(
+                'hide_permissions'           => !$params['display_permissions'],
+                'update_permissions_on_init' => false,
+                'default_position'           => $params['force_ordering']
+            );
+        }
+        return array_merge(
+            parent::_getJSDocmanParameters($params),
+            $doc_params
+        );
+    }
 
     function _content($params) {
         $params['form_name'] = 'new_item';
@@ -41,15 +56,24 @@ require_once('Docman_View_ParentsTree.class');
 
         $html .= '<div class="docman_new_item">'."\n";
 
-        $html .= '<div class="properties">'."\n";
         //{{{ General Properties
+        $html .= '<div class="properties">'."\n";
         $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') . help_button('DocumentManager') .'</legend>';
         $html .= $this->_getGeneralProperties($params);
         $html .= '<p><span class="highlight"><em>'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</em></span></p>';
-        //}}}
         $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';        
         $html .= '</fieldset>';
-
+        $html .= '</div>';
+        //}}}
+        
+        //{{{ Specific Properties
+        $specific = $this->_getSpecificProperties($params);
+        if (trim($specific)) {
+            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') . help_button('DocumentManager') .'</legend>';
+            $html .= $specific;
+            $html .= '</fieldset>';
+        }
+        //}}}
         
         //{{{ Location
         $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') . help_button('DocumentManager') .'</legend>';
@@ -63,25 +87,19 @@ require_once('Docman_View_ParentsTree.class');
             'current'      => $potential_parent_id,
             'hierarchy'    => $params['hierarchy']
         ));
-        $html .= '<div style="border-top:1px solid #e7e7e7">Position : ';
-        $html .= '<input type="radio" name="ordering" id="docma_item_ordering_begin" value="beginning" checked="checked" /><label for="docma_item_ordering_begin">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</label>';
-        $html .= '<input type="radio" name="ordering" id="docma_item_ordering_end" value="end" /><label for="docma_item_ordering_end">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</label><br />';
-        $html .= '</div>';
+        
         $html .= '</fieldset>';
         //}}}        
-        $html .= '</div>'."\n"; // "location"
-
-        $html .= '<div class="categorization">'."\n";
-        //{{{ Specific Properties
-        $specific = $this->_getSpecificProperties($params);
-        if (trim($specific)) {
-            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') . help_button('DocumentManager') .'</legend>';
-            $html .= $specific;
-            $html .= '</fieldset>';
-        }
+        
+        //{{{ Permissions
+        $html .= '<fieldset><legend>Permissions</legend>';
+        $html .= '<div id="docman_new_permissions_panel">';
+        $p =& new Docman_View_PermissionsForItem($this->_controller);
+        $html .= $p->fetch($potential_parent_id, $params);
+        $html .= '</div>';
+        $html .= '</fieldset>';
         //}}}
-        $html .= '</div>'."\n"; // "categorization"  
-
+        
         $html .= '<div class="docman_new_submit">'."\n";
         $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
         $html .= '</div>'."\n";

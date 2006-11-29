@@ -36,7 +36,6 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_move') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
-        $content .=  $GLOBALS['Language']->getText('plugin_docman', 'move_descr', array($this->item->getTitle()));
         
         $parents_tree =& new Docman_View_ParentsTree($this->_controller);
         $content .= $parents_tree->fetch(array(
@@ -46,16 +45,8 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
             'input_name'   => 'id',
             'excludes'     => array($this->item->getId())
         ));
-        
+        $content .= '<script type="text/javascript">docman.options.move.item_id = '. $this->item->getId() .';</script>';
         $content .=  '<br />';
-        
-        //begin-end-select
-        $content .= '<div>'. $GLOBALS['Language']->getText('plugin_docman', 'move_descr2');;
-        $content .= '<div style="padding-left:20px">';
-        $content .= '<input type="radio" name="ordering" id="docma_item_ordering_begin" value="beginning" checked="checked" /><label for="docma_item_ordering_begin">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_beginning') .'</label><br />';
-        $content .= '<input type="radio" name="ordering" id="docma_item_ordering_end" value="end" /><label for="docma_item_ordering_end">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_end') .'</label><br />';
-        $content .= '<input type="radio" name="ordering" id="docma_item_ordering_select" value="select" /><label for="docma_item_ordering_select">'. $GLOBALS['Language']->getText('plugin_docman', 'move_position_select') .'</label>';
-        $content .= '</div></div>';
         
         //submit
         $content .= '<div>';

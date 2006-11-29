@@ -37,6 +37,11 @@ require_once('DocmanOneFolderIsWriteable.class');
 
 require_once('Feedback.class');
 
+require_once('Docman_NotificationsManager.class');
+require_once('Docman_NotificationsManager_Add.class');
+require_once('Docman_NotificationsManager_Delete.class');
+require_once('Docman_NotificationsManager_Move.class');
+
 require_once('Docman_Log.class');
 require_once('common/event/EventManager.class');
 
@@ -57,7 +62,6 @@ class Docman extends Controler {
     var $logger;
     var $feedback;
     var $user_can_admin;
-    var $_actionParams;
 
     function Docman(&$plugin, $pluginPath, $themePath) {
         $this->request        = & HTTPRequest::instance();
@@ -67,7 +71,6 @@ class Docman extends Controler {
         $this->pluginPath     = $pluginPath;
         $this->themePath      = $themePath;
         $this->plugin         = $plugin;
-        $this->_actionParams  = array();
 
         $flash = user_get_preference('plugin_docman_flash');
         if ($flash) {
@@ -77,16 +80,75 @@ class Docman extends Controler {
             $this->feedback =& new Feedback();
         }
         
-        $this->logger  =& new Docman_Log();
         $event_manager =& $this->_getEventManager();
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD,          $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,         $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_MOVE,         $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_DEL,          $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ACCESS,       $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_NEW_VERSION,  $this->logger, 'log', true, 0);
+        
+        $this->logger  =& new Docman_Log();
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD,              $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,             $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_MOVE,             $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_DEL,              $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ACCESS,           $this->logger, 'log', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_NEW_VERSION,      $this->logger, 'log', true, 0);
         $event_manager->addListener(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,  $this->logger, 'log', true, 0);
+        
+        $this->notificationsManager =& new Docman_NotificationsManager($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,            $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_NEW_VERSION,     $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE, $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener('send_notifications',    $this->notificationsManager, 'sendNotifications', true, 0);
+        $this->notificationsManager_Add =& new Docman_NotificationsManager_Add($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD, $this->notificationsManager_Add, 'somethingHappen', true, 0);
+        $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true, 0);
+        $this->notificationsManager_Delete =& new Docman_NotificationsManager_Delete($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_DEL, $this->notificationsManager_Delete, 'somethingHappen', true, 0);
+        $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true, 0);
+        $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_MOVE, $this->notificationsManager_Move, 'somethingHappen', true, 0);
+        $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
     }
+
+    // Franlky, this is not at all the best place to do this.
+    function installDocman($ugroupsMapping) {
+        $request =& HTTPRequest::instance();
+        $_gid = (int) $request->get('group_id');
+
+        $item_factory =& $this->_getItemFactory();
+        $root =& $item_factory->getRoot($_gid);
+        if ($root) {
+            // Docman already install for this project.
+            return false;
+        } else {
+            $project = group_get_object($_gid);
+            $tmplGroupId = (int) $project->getTemplate();
+            $this->_cloneDocman($tmplGroupId, $_gid, $ugroupsMapping);
+        }
+    }
+
+    function _cloneDocman($srcGroupId, $dstGroupId, $ugroupsMapping) {
+        // Clone Docman permissions
+        $dPm =& Docman_PermissionsManager::instance($this->getGroupId());
+        if($ugroupsMapping === false) {
+            $dPm->setDefaultDocmanPermissions($dstGroupId);
+        }
+        else {
+            $dPm->cloneDocmanPermissions($srcGroupId, $dstGroupId);
+        }
+
+        // Clone Metadata definitions
+        $metadataMapping = array();
+        $mdFactory = new Docman_MetadataFactory($srcGroupId);
+        $mdFactory->cloneMetadata($dstGroupId, $metadataMapping);
+
+        // Clone Items, Item's permissions and metadata values
+        $user = $this->getUser();
+        $itemFactory = $this->_getItemFactory();
+        $dataRoot = $this->getProperty('docman_root');
+        $itemFactory->cloneItems($srcGroupId, $dstGroupId, $user, $metadataMapping, $ugroupsMapping, $dataRoot);
+
+        //@todo: verify that key for title for root is copied instead of
+        //       string
+    }
+
     function getLogger() {
         return $this->logger;
     }
@@ -245,6 +307,14 @@ class Docman extends Controler {
             $this->feedback->log('error', 'Project is missing.');
             $this->view = 'Error';
         } else {
+            $_groupId = (int) $this->request->get('group_id');
+            $project = group_get_object($_groupId);
+            if($project == false) {
+                $this->feedback->log('error', 'Project is missing.');
+                $this->view = 'Error';
+                return;
+            }
+            
             // Browser alert
             $this->_checkBrowserCompliance();
 
@@ -281,9 +351,21 @@ class Docman extends Controler {
             $item_factory =& $this->_getItemFactory();
             $root =& $item_factory->getRoot($this->request->get('group_id'));
             if (!$root) {
-                $this->action = 'install';
-                $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
-                $this->view = 'Redirect';
+                // Install
+                $_gid = (int) $this->request->get('group_id');
+                $user = $this->getUser();
+                if($user->isMember($_gid, 'A')) {
+                    $project = group_get_object($_gid);
+                    $tmplGroupId = (int) $project->getTemplate();
+                    $this->_cloneDocman($tmplGroupId, $_gid, false);
+
+                    $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
+                    $this->view = 'Redirect';
+                }
+                else {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_perm_install'));
+                    $this->view = 'ProjectError';
+                }
             } else {
                 $id = $this->request->get('id');
                 if (!$id && $this->request->exist('item')) {
@@ -306,19 +388,8 @@ class Docman extends Controler {
                 }
                 if ($item) {
                     $user     = $this->getUser();
-                    $can_read = $user->isSuperUser();
-                    if (!$can_read) {
-                        $can_read = $this->userCanRead($item->getId());
-                        if ($can_read) {
-                            $parent       = $item;
-                            $pm           =& PermissionsManager::instance();
-                            $user_ugroups =& $user->getUgroups((int)$this->request->get('group_id'), array());
-                            while ($can_read && $parent->getParentId() != 0) {
-                                $parent =& $item_factory->getItemFromDb($parent->getParentId());
-                                $can_read = $this->userCanRead($parent->getId());
-                            }
-                        }
-                    }
+                    $dpm =& Docman_PermissionsManager::instance($this->getGroupId());
+                    $can_read = $dpm->userCanAccess($user, $item->getId());
                     $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                     if (!$can_read) {
                         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
@@ -327,7 +398,6 @@ class Docman extends Controler {
                         $itemBo                         = new Docman_ItemBo($this->request->get('group_id'));
                         $hierarchy                      =& $itemBo->getItemTree($root->getId(), array('ignore_collapse' => true, 'user' => $this->getUser()));
                         $this->_viewParams['hierarchy'] =& $hierarchy;
-                            
                         $get_show_view =& new Docman_View_GetShowViewVisitor();
                         $this->_viewParams['item'] =& $item;
                         if (strpos($view, 'admin') === 0 && !$this->userCanAdmin()) {
@@ -338,6 +408,14 @@ class Docman extends Controler {
                             switch ($view) {
                                 case 'show':
                                     $this->view = $item->accept($get_show_view, $this->request->get('report'));
+                                    if ($item->getId() == $root->getid()) {
+                                        $preferrences_exist   = $item_factory->preferrencesExist($this->request->get('group_id'), $this->_viewParams['user']->getId());
+                                        $max_items_is_reached = $this->getProperty('docman_max_items') >= $this->_count($item, $hierarchy, $item->getId() == $hierarchy->getId());
+                                        if (!$preferrences_exist && $max_items_is_reached) {
+                                            $this->_actionParams['hierarchy'] =& $hierarchy;
+                                            $this->action = 'expandAll';
+                                        }
+                                    }
                                     $this->_initFilters($this->view);
                                     $item->accept($last_browse_request);
                                     break;
@@ -546,10 +624,15 @@ class Docman extends Controler {
                                     break;
                                 case 'move':
                                     if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
-                                       $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
-                                       $this->view = 'Details';
+                                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
+                                        $this->view = 'Details';
                                     } else {
-                                       $this->view = ucfirst($view);
+                                        if ($this->request->exist('quick_move')) {
+                                            $this->action = 'move';
+                                            $this->view = null;
+                                        } else {
+                                            $this->view = ucfirst($view);
+                                        }
                                     }
                                     break;
                                 case 'newGlobalDocument':
@@ -569,6 +652,14 @@ class Docman extends Controler {
                                         $this->view = ucfirst($view);
                                     }
                                     break;
+                                case 'monitor':
+                                    if ($this->request->exist('monitor')) {
+                                        $this->_actionParams['monitor'] =  $this->request->get('monitor');
+                                        $this->_actionParams['item']    =& $item;
+                                        $this->action = 'monitor';
+                                    }
+                                    $this->view   = 'Details';
+                                    break;
                                 case 'move_here':
                                     if (!$this->request->exist('item_to_move')) {
                                         $this->feedback->log('error', 'Missing parameter.');
@@ -581,13 +672,7 @@ class Docman extends Controler {
                                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
                                                 $this->view = 'Details';
                                             } else {
-                                                if ('select' === $this->request->get('ordering')) {
-                                                    $this->_viewParams['selected_parent_id'] = $this->request->get('id');
-                                                    $this->_viewParams['item_to_move'] =& $item_to_move;
-                                                    $this->view = 'MoveSelect';
-                                                } else {
-                                                    $this->action = 'move';
-                                                }
+                                                $this->action = 'move';
                                             }
                                         } 
                                         if (!$this->view) {
@@ -686,7 +771,10 @@ class Docman extends Controler {
                                                 $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
                                                 $this->view = 'RedirectAfterCrud';
                                             } else {
-                                                $this->_viewParams['force_item'] = $new_item;
+                                                $this->_viewParams['force_item']          = $new_item;
+                                                $this->_viewParams['force_permissions']   = $this->request->get('permissions');
+                                                $this->_viewParams['force_ordering']      = $this->request->get('ordering');
+                                                $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
                                                 if ($view == 'createFolder') {
                                                     $this->view = 'NewFolder';
                                                 } else {
@@ -761,6 +849,14 @@ class Docman extends Controler {
                                 case 'search':
                                     $this->view = 'Table';
                                     $this->_initFilters('Table');
+                                    break;
+                                case 'positionWithinFolder':
+                                    $this->_viewParams['force_ordering'] = $this->request->get('default_position');
+                                    $this->_viewParams['exclude'] = $this->request->get('exclude');
+                                    $this->view = ucfirst($view);
+                                    break;
+                                case 'permissionsForItem':
+                                    $this->view = ucfirst($view);
                                     break;
                                 default:
                                     die(htmlspecialchars($view) .' is not supported');
@@ -859,14 +955,32 @@ class Docman extends Controler {
     }
 
     function viewsManagement() {
-        $className = 'Docman_View_'. $this->view;
-        require_once('view/'. $className .'.class');
-        if (class_exists($className)) {
-            $wv = new $className($this);
-            $wv->display($this->_viewParams);
-        } else {
-            die($className .' does not exist.');
+        if ($this->view) {
+            $className = 'Docman_View_'. $this->view;
+            require_once('view/'. $className .'.class');
+            if (class_exists($className)) {
+                $wv = new $className($this);
+                $wv->display($this->_viewParams);
+            } else {
+                die($className .' does not exist.');
+            }
         }
+    }
+    function _count(&$item, &$hierarchy, $go = false) {
+        $nb = $go ? 1 : 0;
+        if (is_a($hierarchy, 'Docman_Folder')) {
+            $list =& $hierarchy->getAllItems();
+            $iter =& $list->iterator();
+            while($iter->valid()) {
+                $o =& $iter->current();
+                $n = $this->_count($item, $o, $go ? $go : $o->getId() == $item->getId());
+                if ($n) {
+                    $nb += $n;
+                }
+                $iter->next();
+            }
+        }
+        return $nb;
     }
 }
 

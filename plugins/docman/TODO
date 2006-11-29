@@ -1,6 +1,51 @@
+<<<<<<< .working
 * Delete Docman_ItemNode.class
 * Make docman new item and update more coherent: since we already created and
   validated an Docman_Item object, DocmanActions should only rely on this
   object. (It imply to develop a validator for Docman_File).
 * getItemMenu() in views make a lot of queries searchById (at least one per item!)
 
+=======
+* Make docman new item and update more coherent: since we already created and
+  validated an Docman_Item object, DocmanActions should only rely on this
+  object. (It imply to develop a validator for Docman_File).
+
+
+-- General test on performances (by MV).
+========================================
+I tested serveral optims around permissions and items to see if we can optimize
+the permission fetching.
+Note: I made the test on a medium-large docman (980 items used) with a lot of
+perms defined (the query that fetch all the perms for all the items return
+17200 rows). So we can consider it as a good example for our tests.
+
+I wanna test 2 things:
+- the way to retreive all the perms for all items (large query vs. join)
+- the influence of the type of 'object_id' in the permission_table.
+
+My tests give to me the following results:
+- The fastest way to retreive all the perms for all items is to make a large
+simple query (select * from permissions where object_id in (...)).
+
+- The influence of the type of 'object_id' seems to exists. Anyway my test is
+not comprehensive because the table I used with an object_id contained less
+data than the real permissions table.
+
+My conclusions are:
+1. To improve perf on perms there are mainly two ways:
+  
+1.1. Reduce the number of rows to handle in PHP. Today, when we retreive all the
+permissions, the number of row to handle in PHP is huge (17000), we should
+reduce it. Maybe by passing ugroup in parms of the request:
+
+SELECT * FROM permissions WHERE  object_id IN (items_ids) AND permission_type IN
+("PLUGIN_DOCMAN_READ","PLUGIN_DOCMAN_WRITE","PLUGIN_DOCMAN_MANAGE") AND
+ugroup_id IN (static_ugroups, dynamic_ugroups)
+
+1.2. To be able to retreive in one query the items with corresponding permissions
+so if an item is not in the row returned: it's not viewable.
+
+2. Split permission table by services will improve
+- performances (because, in docman, we can have object_id as int).
+- security (no risk to affect perms on other services).
+>>>>>>> .merge-right.r4332

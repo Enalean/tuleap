@@ -338,7 +338,9 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             $eIter->rewind();
             while($eIter->valid()) {
                 $e = $eIter->current();
-                $selectedElements[] = $e->getId();
+                if($e->getId() >= 100) {
+                    $selectedElements[] = $e->getId();
+                }
                 $eIter->next();
             }
         }

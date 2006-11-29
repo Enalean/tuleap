@@ -58,6 +58,14 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchByName($name) {
+        $sql = sprintf('SELECT *'.
+                       ' FROM plugin_docman_metadata_love AS love'.
+                       ' WHERE love.name = %s',
+                       $this->da->quoteSmart($name));
+        return $this->retrieve($sql);
+    }
+
     function prepareRanking($metadataId, $rank) {
         // Build the list of values needed in following queries.
         $sql = sprintf('SELECT value_id '.
@@ -142,7 +150,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
                        ')',
                        $metadataId,
                        $elementId);
-        return $this->update($sql);
+        return $this->_createAndReturnId($sql);
     }
 
     function create($metadataId, $name, $description, $rank, $status) {

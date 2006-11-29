@@ -22,6 +22,7 @@ require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
 require_once('common/include/ReferenceManager.class');
 require_once('trove.php');
+require_once('common/event/EventManager.class');
 
 $Language->loadLanguageMsg('register/register');
 
@@ -203,6 +204,11 @@ if (isset($show_confirm) && $show_confirm) {
 	  $reference_manager =& ReferenceManager::instance();
 	  $reference_manager->addProjectReferences($template_id,$group_id);
 	}
+
+    // Raise an event for plugin configuration
+    $em =& EventManager::instance();
+    $em->processEvent('register_project_creation', 
+                      array('ugroupsMapping' => $ugroup_mapping));
 	
 	// Show the final registration complete message and send email
 	// notification (it's all in the content part)

@@ -46,9 +46,9 @@ class Actions {
     return true;
   }
 
-  function process($action) {
+  function process($action, $params = array()) {
     if($this->check()) {
-      $this->$action();
+      $this->$action($params);
     }
   }
 }

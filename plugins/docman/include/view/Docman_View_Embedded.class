@@ -27,9 +27,9 @@ class Docman_View_Embedded extends Docman_View_Display {
                 $event_manager =& EventManager::instance();
                 $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ACCESS, array(
                     'group_id' => $params['group_id'],
-                    'item'     => $params['item']->getId(),
+                    'item'     => &$params['item'],
                     'version'  => $version->getNumber(),
-                    'user'     => $params['user']->getId()
+                    'user'     => &$params['user']
                 ));
                 $mime = explode('/', $version->getFiletype());
                 if (in_array($mime[1], array('plain', 'css', 'javascript'))) {

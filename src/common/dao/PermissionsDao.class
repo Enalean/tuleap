@@ -87,7 +87,7 @@ class PermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function clonePermissions($source, $target, $perms) {
+    function clonePermissions($source, $target, $perms, $toGroupId=0) {
         foreach($perms as $key => $value) {
             $perms[$key] = $this->da->quoteSmart($value);
         }
@@ -99,11 +99,12 @@ class PermissionsDao extends DataAccessObject {
         );
         $this->update($sql);
         $sql = sprintf('INSERT INTO permissions (object_id, permission_type, ugroup_id) '.
-                        ' SELECT %s, permission_type, ugroup_id '.
-                        ' FROM permissions '.
+                        ' SELECT %s, permission_type, IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid '.
+                        ' FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)'.
                         ' WHERE object_id = %s '.
                         '   AND permission_type IN (%s) ',
                         $this->da->quoteSmart($target),
+                        $toGroupId,
                         $this->da->quoteSmart($source),
                         implode(', ', $perms)
         );

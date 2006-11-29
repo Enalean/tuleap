@@ -15,10 +15,11 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
     }
     function visitItem(&$item, $params = array()) {
         $this->items[30] =& new Docman_ItemActionDetails($item);
-        $this->items[40] =& new Docman_ItemActionHistory($item);
-        $this->items[60] =& new Docman_ItemActionPermissions($item);
-        $this->items[70] =& new Docman_ItemActionMove($item);
-        $this->items[80] =& new Docman_ItemActionDelete($item);
+        $this->items[40] =& new Docman_ItemActionNotifications($item);
+        $this->items[50] =& new Docman_ItemActionHistory($item);
+        $this->items[70] =& new Docman_ItemActionPermissions($item);
+        $this->items[80] =& new Docman_ItemActionMove($item);
+        $this->items[90] =& new Docman_ItemActionDelete($item);
         ksort($this->items);
         return $this->items;
     }
@@ -39,7 +40,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $this->visitDocument($item, $params);
     }
     function visitFile(&$item, $params = array()) {
-        $this->items[50] =& new Docman_ItemActionNewVersion($item);
+        $this->items[60] =& new Docman_ItemActionNewVersion($item);
         return $this->visitDocument($item, $params);
     }
     function visitEmbeddedFile(&$item, $params = array()) {
@@ -47,7 +48,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
     }
     
     function _addUpdate(&$item, $params) {
-        $this->items[50] =& new Docman_ItemActionUpdate($item);
+        $this->items[60] =& new Docman_ItemActionUpdate($item);
     }
 }
 ?>
