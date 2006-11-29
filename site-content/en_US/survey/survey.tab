@@ -50,14 +50,12 @@ survey_admin_browse_question	edit_q	Edit Questions
 survey_admin_browse_question	edit_q_msg	Click on the 'Question ID' to edit a question
 #
 #-----------------------------------------------
-#
 # Script: SF/www/survey/admin/browse_survey.php
 #
 survey_admin_browse_survey	edit_s	Edit Surveys
 survey_admin_browse_survey	edit_s_msg	Click on the 'Survey ID' to edit a survey
 #
 #-----------------------------------------------
-#
 # Script: SF/www/survey/admin/index.php
 #
 survey_admin_index	admin	Survey Administration

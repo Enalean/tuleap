@@ -130,6 +130,7 @@ survey_admin_update_question	edit_sb_msg	Cliquer sur l'identifiant (ID) de l'ent
 # Script: SF/www/survey/admin/update_radio.php
 #
 survey_admin_update_radio	update_r	Modifier un bouton radio
+survey_admin_update_radio	update_sb	Modifier un choix de boîte de sélection
 survey_admin_update_radio	fill_r_text	Veuillez remplir le champ Texte.
 survey_admin_update_radio	fill_r_rank	Veuillez remplir le champ Rang.
 #
