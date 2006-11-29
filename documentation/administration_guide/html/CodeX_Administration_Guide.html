@@ -464,7 +464,7 @@ belongs to a given group but to no specific user in particular. More or
 less
 equivalent to the "nobody" user.</li>
   <li> <b>mailman:</b> owner of the mailman directories</li>
-  <li> <b>anoncvs_xxxx</b>: a specific user created for each project
+  <li> <b>anoncvs_xxxx</b> (deprecated - login no longer created): a specific user created for each project
 where xxxx is the project short name .
 These are not real login account but are just used to give source code
 checkout
@@ -1704,7 +1704,7 @@ it
 has not been tested. This method works so let's keep it.</li>
     <li> Change the user ownership of the entire CVS repo to <i>codexadm</i>
 to start with</li>
-    <li> Create the anoncvs_xxxx user in case we want to activate the
+    <li> (deprecated - user no longer created) Create the anoncvs_xxxx user in case we want to activate the
 anonymous
 checkout access to CVS again one day. (today you must be a registered
 user

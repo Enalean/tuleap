@@ -274,7 +274,8 @@ while ($ln = pop(@groupdump_array)) {
 		system("chmod g+rw $cvs_dir");
 
 		# And finally add a user for this repository
-		push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_prefix/$gname:/bin/false\n";
+                # DEPRECATED: no longer create the login automatically: create it on demand only...
+		#push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_prefix/$gname:/bin/false\n";
 	}
 
 	# LJ if the CVS repo has just been created or the user list
@@ -595,15 +596,17 @@ if ($use_cvsnt) {
 }
 
 #
-#  Deleting files older than 1 hour in var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
+#  Deleting files older than 2 hours in var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
 #
-print("Deleting old files in /var/run/log_accum");
+
+#print("Deleting old files in /var/run/log_accum");
 $TMPDIR = "/var/run/log_accum";
-@old_files=`find $TMPDIR -name "*.files.*" -amin +60 `;
- foreach (@old_files) {
-    chomp;
-    unlink $_;
-  }
+@old_files=`find $TMPDIR -name "*.files.*" -amin +120 `;
+foreach (@old_files) {
+  chomp;
+  unlink $_;
+}
+
 ###############################################
 # Begin functions
 ###############################################
