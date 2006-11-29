@@ -1,17 +1,21 @@
 CodeX 3.0 Migration README file
 ===============================
 
-Welcome to CodeX 3.0.
+Welcome to CodeX 3.0.1
 
 This document explains how to upgrade from a CodeX 2.8 server on Red Hat 
-Enterprise Linux 3 (RHEL3), to CodeX 3.0 on RHEL4.
+Enterprise Linux 3 (RHEL3), to CodeX 3.0.1 on RHEL4.
+
+Note: If you wish to upgrade from CodeX 3.0 to CodeX 3.0.1, simply run 
+migration_from_CodeX_3.0_to_CodeX_3.0.1.sh
+
 
 Here is a brief summary of the process:
 - backup the data of the main server, to another server
 - format disks and install RHEL4
-- install CodeX 3.0 
+- install CodeX 3.0.1
 - copy the backed-up files and DB to their new place
-- run the upgrade script...
+- run the upgrade script migration_from_CodeX_2.8_to_CodeX_3.0.1.sh ...
 et voilà!
 
 RedHat recommends a full re-installation of RHEL4, and not un upgrade from RHEL3
@@ -160,8 +164,8 @@ Now, here are the step-by-step instructions for upgrading:
   Ignore errors about DNS or HTTPD if any.
     > /usr/share/codex/src/utils/xerox_crontab.sh
 
-* Database and file migration to CodeX 3.0:
-  Last step of the migration: run the migration_30.sh script from the CodeX CD.
+* Database and file migration to CodeX 3.0.1:
+  Last step of the migration: run the migration_from_CodeX_2.8_to_CodeX_3.0.1.sh script from the CodeX CD.
   Ignore the message about "./mailman file exists".
 
 
@@ -173,7 +177,7 @@ Also verify that emails and mailing lists work as expected.
 In case of problem, please refer to either the DNS or Sendmail configuration 
 instructions from the CodeX Installation Guide.
 
-Enjoy CodeX 3.0
+Enjoy CodeX 3.0.1
 
 
 -- The Xerox CodeX team

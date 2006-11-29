@@ -211,7 +211,7 @@ done
 #
 mysql -u codexadm $pass_opt codex -e "show tables like 'artifact_field_set'" | grep artifact_field_set > /dev/null
 if [ $? -eq 1 ]; then
-    echo "This machine is running CodeX 3.0, but the migration script seems to not have been applied. Please, apply the migration script migration_28.sh before running this one."
+    echo "This machine is running CodeX 3.0, but the migration script seems to not have been applied. You should probably run migration_from_CodeX_2.8_to_CodeX_3.0.1.sh instead"
     exit 1
 fi
 
