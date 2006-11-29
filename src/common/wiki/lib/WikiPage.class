@@ -334,6 +334,36 @@ class WikiPage {
              ,"CategoryCategory","CategoryGroup"
 
              // French pages
+             ,"PluginCommenter" ,"CréerUnePage" ,"DéposerUnFichier" ,"DernièresModifsComplètes"
+             ,"AjouterDesCommentaires" ,"AjouterDesPages" ,"AliasAccueil"
+             ,"AnciennesRèglesDeFormatage" ,"ÉditerLeContenu" ,"ÉditionsRécentes"
+             ,"CarteInterWiki" ,"CatégorieCatégorie " ,"CatégoriePagesAccueil"
+             ,"ChangementsLiés" ,"ChercherUnePage" ,"ClassezLa" ,"CommentairesRécents" 
+             ,"CommentUtiliserUnWiki" ,"DerniersVisiteurs" ,"DocumentationDePhpWiki" 
+             ,"EditerLesMetaDonnées" ,"GestionDesPlugins" ,"HistoriqueDeLaPage" 
+             ,"IcônesDeLien" ,"InfosAuthentification" ,"InfosDeDéboguage" ,"InfosSurLaPage"
+             ,"InterWiki" ,"JoindreUnFichier" ,"LesPlusVisitées" ,"LienGoogle" 
+             ,"ListeDePages" ,"ModifsRécentesPhpWiki" ,"NotesDeVersion" ,"PageAléatoire" 
+             ,"PagesRecherchées" ,"PagesSemblables" ,"PageTestAnciennesMarques" 
+             ,"PageTestNouvellesMarques" ,"PhpWiki" ,"PierrickMeignen" ,"PluginAlbumPhotos"
+             ,"PluginBeauTableau" ,"PluginBonjourLeMonde" ,"PluginÉditerMetaData" 
+             ,"PluginCalendrier" ,"PluginColorationPhp" ,"PluginCréerUnePage" 
+             ,"PluginCréerUneTdm" ,"PluginHistoriqueAuteur" ,"PluginHtmlPur" 
+             ,"PluginInclureUnCadre" ,"PluginInclureUnePage" ,"PluginListeDesSousPages" 
+             ,"PluginListeDuCalendrier" ,"PluginMétéoPhp" ,"PluginRechercheExterne"
+             ,"PluginRedirection" ,"PluginRessourcesRss" ,"PluginTableauAncienStyle" 
+             ,"PluginTeX2png" ,"PluginWiki" ,"PluginWikiBlog" ,"PréférencesUtilisateurs" 
+             ,"QuiEstEnLigne" ,"RèglesDeFormatageDesTextes" ,"RécupérationDeLaPage"
+             ,"RétroLiens" ,"RechercheEnTexteIntégral" ,"RechercheInterWiki"
+             ,"RechercheParTitre" ,"SommaireDuProjet" ,"TestDeCache" ,"TestGroupeDePages"
+             ,"TestGroupeDePages/Deux" ,"TestGroupeDePages/Trois" ,"TestGroupeDePages/Un" 
+             ,"TousLesUtilisateurs" ,"ToutesLesPages" ,"TraduireUnTexte" 
+             ,"URLMagiquesPhpWiki" ,"VersionsRécentes" ,"VisiteursRécents"
+             ,"WabiSabi" ,"WikiWikiWeb" ,"DernièresModifs" ,"CatégorieGroupes" 
+	     ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques" 
+	     ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines" ,"SondagePhpWiki"
+             
+             
              );
   }
 
@@ -352,8 +382,11 @@ class WikiPage {
        ,"PhpWikiAdministration/Rename", "PhpWikiAdministration/Replace"
        ,"PhpWikiAdministration/Chmod","PhpWikiAdministration/Chown"
        ,"PhpWikiAdministration/SetAcl" ,"SandBox", "ProjectWantedPages",
-       "Accueil" ,"AdministrationDePhpWiki",
-       "AdministrationDePhpWiki/Supprimer", "BacASable", );
+       
+       "PageAccueil" ,"AdministrationDePhpWiki","AdministrationDePhpWiki/Supprimer"
+       ,"AdministrationDePhpWiki/Remplacer"
+       ,"AdministrationDePhpWiki/Renommer", "AdministrationDePhpWiki/Droits"
+       ,"BacÀSable",);
   }
 }
 ?>
