@@ -351,6 +351,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 ###############################################################################
 # Phpwiki 1.3.12
 ALTER TABLE wiki_page ADD cached_html MEDIUMBLOB;
+ALTER TABLE wiki_page ADD index group_id (group_id);
 
 ###############################################################################
 # SVN admin new role (SR #602)
@@ -552,6 +553,9 @@ $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL $pass_opt codex
 
 echo "End of main DB upgrade"
 
+###############################################################################
+# Remove sticky bit from /var/run/log_accum. See SR #594
+$CHMOD 0777 /var/run/log_accum
 
 
 ###############################################################################

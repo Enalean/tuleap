@@ -223,6 +223,7 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 ###############################################################################
 # Phpwiki 1.3.12
 ALTER TABLE wiki_page ADD cached_html MEDIUMBLOB;
+ALTER TABLE wiki_page ADD index group_id (group_id); 
 
 ###############################################################################
 # Survey enhancement: new question type (SR #590)
@@ -234,6 +235,10 @@ ALTER TABLE user_group ADD COLUMN svn_flags int(11) NOT NULL default '0' AFTER w
 
 EOF
 
+
+###############################################################################
+# Remove sticky bit from /var/run/log_accum. See SR #594
+$CHMOD 0777 /var/run/log_accum
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
