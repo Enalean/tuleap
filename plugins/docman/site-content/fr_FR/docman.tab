@@ -18,19 +18,48 @@ plugin_docman	admin_md_detail_param_desc	Description :
 plugin_docman	admin_md_detail_param_allowempty	Autorise la valeur vide :
 plugin_docman	admin_md_detail_param_keephistory	Garde l'historique :
 plugin_docman	admin_md_detail_param_useit	Utiliser cette propriété:
+plugin_docman	admin_md_detail_param_type	Type :
+plugin_docman	admin_md_detail_param_dfltvalue	Valeur par défaut :
 plugin_docman	admin_md_detail_param_yes	Oui
 plugin_docman	admin_md_detail_param_no	Non
-plugin_docman	admin_md_details_title	Détails de la propriété "$1"
+plugin_docman	admin_md_detail_param_type_text	Texte
+plugin_docman	admin_md_detail_param_type_string	Chaîne de caractères
+plugin_docman	admin_md_detail_param_type_date	Date
+plugin_docman	admin_md_detail_param_type_list	Liste de valeurs
 plugin_docman	admin_md_detail_val_title	Valeurs de la propriété
 plugin_docman	admin_md_detail_val_name	Nom
 plugin_docman	admin_md_detail_val_desc	Description
 plugin_docman	admin_md_detail_val_rank	Rang
 plugin_docman	admin_md_detail_val_status	Statut
+plugin_docman	admin_md_detail_val_delete	Supprimer
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
+plugin_docman	admin_md_detail_val_perm	Permanent
+plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur \'$1\' de la catégorie courante. Tous les documents déjà étiquetté avec cette valeur se verront affecter la valeur par défaut de la catégory : \'$2\'. Cliquez \'Ok\' pour continuer ou alors cliquez \'Cancel\'.
+plugin_docman	admin_md_detail_val_delete_alt	Supprimer la valeur '$1'
+plugin_docman	admin_md_detail_val_create_title	Créer une nouvelle valeur
+plugin_docman	admin_md_detail_val_create_name	Nom :
+plugin_docman	admin_md_detail_val_create_desc	Description :
+plugin_docman	admin_md_detail_val_create_rank	Rang :
+plugin_docman	admin_md_detail_val_create_rank_beg	Au début
+plugin_docman	admin_md_detail_val_create_rank_end	A la fin
+plugin_docman	admin_md_detail_val_create_rank_after	Après
+plugin_docman	admin_md_detail_val_create_dflt	Par défaut?
+plugin_docman	admin_md_detail_val_create_submit	Créer
+plugin_docman	admin_md_details_title	Détails de la propriété "$1"
+plugin_docman	admin_md_detupdlove_title	Modification de la valeur '$2' de la propriété '$1'
+plugin_docman	admin_md_detupdlove_update	Modifier
+plugin_docman	admin_md_detupdlove_backtomenu	Retour vers les détails de propriété
 plugin_docman	admin_metadata_title	Gérer les propriétés
+plugin_docman	admin_metadata_list_title	Propriétés disponibles
 plugin_docman	admin_metadata_descr	Sélectionnez les propriétés que vous voulez pour vos documents.
 plugin_docman	admin_metadata_instructions	<p>Définissez quelles propriétés sont disponibles dans votre gestionnaire de documents. Chaque propriété sera remplie lors de la soumission d'un document et sera visible dans les propriétés du document.</p><p><strong>Permissions :</strong> les permissions sur les propriétés d'un document sont les mêmes que sur le document lui-même.</p>
+plugin_docman	admin_metadata_list_name	Nom
+plugin_docman	admin_metadata_list_descr	Description
+plugin_docman	admin_metadata_list_status	Status
+plugin_docman	admin_metadata_list_delete	Supprimer
+plugin_docman	admin_metadata_new_title	Créer une nouvelle propriété
+plugin_docman	admin_metadata_new_submit	Créer
 plugin_docman	admin_permissions_title	Gérer les permissions
 plugin_docman	admin_permissions_descr	Définir qui peut administrer le gestionnaire de documents.
 plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
@@ -42,6 +71,9 @@ plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le par
 plugin_docman	breadcrumbs_location	Chemin :
 
 plugin_docman	browse_viewas	-- Vue:
+
+plugin_docman	clone_file_label	Copier du modèle
+plugin_docman	clone_file_changelog	Copie de <em>$1</em> dans <em>$2</em> à la version <em>$3</em>.
 
 plugin_docman	descriptor_description	Gestionnaire de documents
 plugin_docman	descriptor_name	Gestionnaire de Documents
@@ -112,6 +144,7 @@ plugin_docman	details_update_title	Mise à jour de $1
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
 plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
+plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
 plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle version.
 plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il n'est pas vide.
@@ -119,8 +152,11 @@ plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
 plugin_docman	error_filenotfound	Le fichier ne peut être trouvé.
+plugin_docman	error_invalid_md	Propriété invalide
 plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
 plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
+plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.
+plugin_docman	error_no_perm_install	Vous devez être un administrateur projet pour initaliser ce service.
 plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le gestionnaire de documents.
 plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
 plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.
@@ -185,10 +221,13 @@ plugin_docman	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 plugin_docman	md_bo_badlabel	Nom de propriété '$1' inconnu.
 plugin_docman	md_cdate_name	Date de création
 plugin_docman	md_cdate_desc	Date d'ajout du document dans le gestionnaire.
+plugin_docman	md_del_success	"$1" supprimée
+plugin_docman	md_del_failure	Une erreur est survenue lors de la suppression de "$1"
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description du document.
 plugin_docman	md_install_commentkeyword_name	Commentaires
 plugin_docman	md_install_commentkeyword_desc	Informations complémentaires sur le document.
+plugin_docman	md_error_empty_gen	"$1" est requis, merci de remplir le champ.
 plugin_docman	md_html_validity_3_months	3 Mois
 plugin_docman	md_html_validity_6_months	6 Mois
 plugin_docman	md_html_validity_12_months	12 Mois
@@ -295,6 +334,7 @@ plugin_docman	view_Icons	Icônes
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Arbre
 
+plugin_docman	warn_wiki_perms	<em>Attention : les <strong>permissions</strong> sur le document que vous allez créer <strong>peuvent être différent</strong>e que celles définies pour la page wiki.</em>
 plugin_docman	warning_missingowner	Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
 plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
