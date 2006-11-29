@@ -18,6 +18,7 @@ push @alias_array, "codex-contact:         codex-admin\n\n";
 push @alias_array, "sourceforge:           codex-admin\n"; # deprecated user name
 push @alias_array, "$sys_http_user:               codex-admin\n";
 push @alias_array, "noreply:               \"|$codex_bin_prefix/gotohell\"\n";
+push @alias_array, "undisclosed-recipients: \"|$codex_bin_prefix/gotohell\"\n"; # for phpWiki notifications...
 push @alias_array, "webmaster:             codex-admin\n\n";
 push @alias_array, "\n\n### Begin Mailing List Aliases ###\n\n";
 
