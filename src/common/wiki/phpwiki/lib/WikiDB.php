@@ -229,7 +229,9 @@ class WikiDB {
                 $page = new WikiDB_Page($this, $pagename);
                 list($emails, $userids) = $page->getPageChangeEmails($notify);
                 if (!empty($emails)) {
-                    $from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
+                    // CodeX specific
+                    $from = user_getemail(user_getid() );
+                    //$from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
                     $editedby = sprintf(_("Removed by: %s"), $from);
                     $emails = join(',', $emails);
                     $subject = sprintf(_("Page removed %s"), urlencode($pagename));
@@ -1042,7 +1044,9 @@ class WikiDB_Page
                 Iso8601DateTime($meta['mtime']) . "\n";
             $content .= _("New page");
         }
-        $from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
+        // CodeX specific
+        $from = user_getemail(user_getid() );
+        //$from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
         $editedby = sprintf(_("Edited by: %s"), $from);
         $emails = join(',',$emails);
         if (mail("<undisclosed-recipients>",
@@ -1065,7 +1069,9 @@ class WikiDB_Page
                                                                 $to, $meta, $emails, $userids);
         } else {
             $oldname = $this->_pagename;
-            $from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
+            // CodeX specific
+            $from = user_getemail(user_getid() );
+            //$from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
             $editedby = sprintf(_("Edited by: %s"), $from);
             $emails = join(',',$emails);
             $subject = sprintf(_("Page rename %s to %s"), urlencode($oldname), urlencode($to));
