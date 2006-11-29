@@ -3143,7 +3143,8 @@ CREATE TABLE wiki_page (
         pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
 	cached_html 	MEDIUMBLOB,
 	group_id        INT NOT NULL DEFAULT 0,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        INDEX (group_id)
 );
 
 CREATE TABLE wiki_version (
