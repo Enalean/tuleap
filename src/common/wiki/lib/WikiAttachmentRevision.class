@@ -315,6 +315,7 @@ class WikiAttachmentRevision {
      * @param  Iterator
      */
     function &getRevisionIterator($gid=null, $id=null) {
+        $warArray = array();
         if($id !== null) {
             $id  = (int) $id;
             $gid = (int) $gid;            

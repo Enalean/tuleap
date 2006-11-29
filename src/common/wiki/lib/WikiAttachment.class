@@ -109,6 +109,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @param  Iterator
      */
     function &getAttachmentIterator($gid=null) {
+        $waArray = array();
         if($gid !== null) {
             $gid = (int) $gid;
         }
