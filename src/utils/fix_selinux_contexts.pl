@@ -22,8 +22,8 @@ $CHCON='/usr/bin/chcon';
 # /var/lib/codex -> for ftp, etc.
 `$CHCON -R -h -t httpd_sys_content_t $sys_data_dir`;
 
-# /home/codexadm/.subversion -> SVN needs access to codexadm subversion settings
-`$CHCON -R -h -t httpd_sys_content_t /home/$sys_http_user/.subversion`;
+# /home/codexadm. Apache needs access to '.subversion' (Server update plugin), '.cvs' (Passerelle plugin)
+`$CHCON -R -h -t httpd_sys_content_t /home/$sys_http_user`;
 
 # /home/groups -> project web sites
 `$CHCON -R -h -t httpd_sys_content_t $grpdir_prefix`;
