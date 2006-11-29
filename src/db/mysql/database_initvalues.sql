@@ -2145,21 +2145,23 @@ INSERT INTO reference SET \
     scope='S', \
     service_short_name='wiki';
 
-INSERT INTO reference SET \
-    id='10',        \
-    keyword='doc', \
-    description='reference_doc_desc_key', \
-    link='/docman/display_doc.php?docid=$1&group_id=$group_id', \
-    scope='S', \
-    service_short_name='doc';
+-- Now done in docman plugin...
+--
+-- INSERT INTO reference SET \
+--     id='10',        \
+--     keyword='doc', \
+--     description='reference_doc_desc_key', \
+--     link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
+--     scope='S', \
+--     service_short_name='docman';
 
-INSERT INTO reference SET \
-    id='11',        \
-    keyword='document', \
-    description='reference_doc_desc_key', \
-    link='/docman/display_doc.php?docid=$1&group_id=$group_id', \
-    scope='S', \
-    service_short_name='doc';
+-- INSERT INTO reference SET \
+--     id='11',        \
+--     keyword='document', \
+--     description='reference_doc_desc_key', \
+--     link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
+--     scope='S', \
+--     service_short_name='docman';
 
 INSERT INTO reference SET \
     id='12',        \
