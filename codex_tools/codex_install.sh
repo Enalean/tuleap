@@ -311,7 +311,7 @@ build_dir /etc/codex/plugins/docman codexadm codexadm 755
 build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
 build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
 # SCM dirs
-build_dir /var/run/log_accum root root 1777
+build_dir /var/run/log_accum root root 777
 build_dir /var/lib/codex/cvsroot codexadm codexadm 755
 build_dir /var/lib/codex/svnroot codexadm codexadm 755
 build_dir /var/lock/cvs root root 751
