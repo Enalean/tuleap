@@ -1,8 +1,8 @@
 #!/bin/sh
 PACKAGE_DIR=/root/packages-rhel4
 BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 3.0 sup"
-ISO_FILE="/tmp/codex-3.0.sup.iso"
+ISO_LABEL="CodeX 3.0.1 sup"
+ISO_FILE="/tmp/codex-3.0.1.sup.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -42,8 +42,9 @@ $CHMOD +x $BUILD_DIR/codex_install.sh
 # Copy the migration script at the top directory
 echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.README $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_30.sh
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_from_CodeX_2.8_to_CodeX_3.0.1.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.README $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_2.8_to_CodeX_3.0.1.sh
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
@@ -158,7 +159,7 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.8 to 3.0 please read carefully migration_30.README and follow the instructions.
+- For an update from 2.8 to 3.0.1 please read carefully migration_30.README and follow the instructions.
 
 -- The CodeX Team
    <info@codex.xerox.com>
@@ -170,14 +171,14 @@ CodeX: Breaking Down the Barriers to Source Code Sharing
 Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
 http://codex.xrce.xerox.com
 
-This is CodeX 3.0.
+This is CodeX 3.0.1
 
 After downloading the file, read the README and INSTALL files
 carefully. And get in touch with us at codex-contact@codex.xerox.com
 if you have questions.
 
 
-What's new in CodeX 3.0?
+What's new in CodeX 3.0.1?
 
 - New Document Manager
   The CodeX document manager has been completely rewritten. Now, it:
