@@ -236,6 +236,21 @@ ALTER TABLE user_group ADD COLUMN svn_flags int(11) NOT NULL default '0' AFTER w
 EOF
 
 
+
+################################################################################
+# Notifications: create tables
+# 
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+DROP TABLE IF EXISTS notifications;
+CREATE TABLE notifications(
+  user_id int( 11 ) NOT NULL ,
+  object_id int( 11 ) NOT NULL ,
+  type varchar( 100 ) NOT NULL default '',
+  PRIMARY KEY  (user_id, object_id, type)
+);
+EOF
+
 ###############################################################################
 # Remove sticky bit from /var/run/log_accum. See SR #594
 $CHMOD 0777 /var/run/log_accum

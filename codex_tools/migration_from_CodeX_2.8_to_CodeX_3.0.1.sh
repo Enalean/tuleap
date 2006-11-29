@@ -547,6 +547,20 @@ WHERE group_id NOT IN (
 EOF
 
 ################################################################################
+# Notifications: create tables
+# 
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+DROP TABLE IF EXISTS notifications;
+CREATE TABLE notifications(
+  user_id int( 11 ) NOT NULL ,
+  object_id int( 11 ) NOT NULL ,
+  type varchar( 100 ) NOT NULL default '',
+  PRIMARY KEY  (user_id, object_id, type)
+);
+EOF
+
+################################################################################
 # install PLUGIN serverupdate
 #
 $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL $pass_opt codex 
