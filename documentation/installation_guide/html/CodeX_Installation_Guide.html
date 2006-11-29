@@ -46,7 +46,7 @@ configuration that must be done manually.<br>
 <h1><a name="Linux_OS_Installation"></a>Linux OS Installation</h1>
 
 CodeX is designed to run on on a PC server (Intel x86 CPU or
-compatible) running Linux RedHat Linux Enterprise Server 4.0 (RHEL4) wether WS,
+compatible) running Linux RedHat Linux Enterprise Server 4.0 (RHEL4) wether
 ES or AS version. 
 <br>This Linux version is only available with paid-for support. If you
 don't need a fully supported server (e.g. a test server or development
@@ -58,6 +58,13 @@ RHEL, they are not tested, nor supported by Xerox.<br>
 <h2>OS Installation options</h2>
 <p>You are free to choose a full, partial, or minimum installation. The CodeX server does not need an X server, KDE, Gnome, etc. But you might find it useful if you intend to use the graphical administration tools. The CodeX installation script will ask for missing RPMs.
 <p>CodeX fully supports the <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/selinux-guide/">SELinux targeted policy</a> implemented in RHEL4. Feel free to enable it ("enforcing") during the installation.
+<p>If you choose to install a firewall on the server, make sure that all needed ports are open. This includes:
+<ul><li>Apache ports: 80 (HTTP) and 443 (HTTPS)
+<li>CVS pserver port: 2401
+<li>FTP:  port 21
+<li>SSH:  port 22
+<li>SMTP: port 25
+</ul>
 <h2>Disk Partitioning</h2>
 <p>Before choosing a partitioning scheme, it is important to know where CodeX
 data will be located.
