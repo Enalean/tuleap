@@ -181,9 +181,11 @@ CREATE TABLE plugin_docman_metadata_love_md (
   PRIMARY KEY  (field_id, value_id)
 );
 
+-- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 1 , 'system',  95 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=1', 1 , 1 , 'system',  95 );
 
+-- Create service for all other projects (but disabled)
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
 SELECT DISTINCT group_id , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', CONCAT('/plugins/docman/?group_id=', group_id), 1 , 0 , 'system',  95
 FROM service
@@ -191,6 +193,43 @@ WHERE group_id NOT IN (SELECT group_id
     FROM service
     WHERE short_name
     LIKE 'docman');
+
+
+--
+-- Create document references
+--
+
+-- First, remove existing reference to legacy docman.
+-- It was almost never used, and since we keep the same keywords, we can't keep both
+DELETE FROM reference WHERE id='10';
+DELETE FROM reference WHERE id='11';
+
+-- Create new references
+INSERT INTO reference SET \
+    id='10',        \
+    keyword='doc', \
+    description='reference_doc_desc_key', \
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
+    scope='S', \
+    service_short_name='docman';
+
+INSERT INTO reference SET \
+    id='11',        \
+    keyword='document', \
+    description='reference_doc_desc_key', \
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
+    scope='S', \
+    service_short_name='docman';
+
+-- Enable document references for project 1 and 100
+DELETE FROM reference_group WHERE reference_id='10' AND group_id='100';
+DELETE FROM reference_group WHERE reference_id='11' AND group_id='100';
+DELETE FROM reference_group WHERE reference_id='10' AND group_id='1';
+DELETE FROM reference_group WHERE reference_id='11' AND group_id='1';
+INSERT INTO reference_group SET reference_id='10', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='11', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='10', group_id='1', is_active='1';
+INSERT INTO reference_group SET reference_id='11', group_id='1', is_active='1';
 
 
                               
