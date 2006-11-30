@@ -40,7 +40,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('service_public_areas',              'service_public_areas',              false);
         $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('register_project_creation', 'installNewDocman', false);
+        $this->_addHook('register_project_creation',         'installNewDocman',                  false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);

@@ -353,19 +353,13 @@ class Docman extends Controler {
             if (!$root) {
                 // Install
                 $_gid = (int) $this->request->get('group_id');
-                $user = $this->getUser();
-                if($user->isMember($_gid, 'A')) {
-                    $project = group_get_object($_gid);
-                    $tmplGroupId = (int) $project->getTemplate();
-                    $this->_cloneDocman($tmplGroupId, $_gid, false);
+                
+                $project = group_get_object($_gid);
+                $tmplGroupId = (int) $project->getTemplate();
+                $this->_cloneDocman($tmplGroupId, $_gid, false);
 
-                    $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
-                    $this->view = 'Redirect';
-                }
-                else {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_perm_install'));
-                    $this->view = 'ProjectError';
-                }
+                $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
+                $this->view = 'Redirect';
             } else {
                 $id = $this->request->get('id');
                 if (!$id && $this->request->exist('item')) {
