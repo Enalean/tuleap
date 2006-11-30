@@ -140,7 +140,7 @@ class Docman_FolderBo extends Docman_ItemBo {
      */
     function expand($folder) {
         user_set_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
-                            PLUGIN_DOCMAN_COLLAPSE_FOLDER);
+                            PLUGIN_DOCMAN_EXPAND_FOLDER);
     }
     
 }

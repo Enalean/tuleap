@@ -210,6 +210,8 @@ plugin_docman	info_perms_updated	Permissions mises à jour.
 plugin_docman	info_perms_recursive_updated	Permissions pour les sous-éléments mises à jour.
 plugin_docman	info_settings_updated	Paramètres mis à jour.
 
+plugin_docman	item_does_not_belong	$1 ne fait pas parti du projet $2. Vous avez été redirigés vers le projet $3.
+
 plugin_docman	logsdaily_field	Documents
 plugin_docman	logsdaily_title	Accès aux documents
 

@@ -210,6 +210,8 @@ plugin_docman	info_perms_updated	Permissions successfully updated.
 plugin_docman	info_perms_recursive_updated	Permissions for sub-items successfully updated.
 plugin_docman	info_settings_updated	Settings have been updated.
 
+plugin_docman	item_does_not_belong	$1 does not belong to project $2. You have been redirected to project $3.
+
 plugin_docman	logsdaily_field	Documents
 plugin_docman	logsdaily_title	Document Access
 
