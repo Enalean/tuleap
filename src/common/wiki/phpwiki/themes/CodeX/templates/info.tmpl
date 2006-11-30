@@ -135,9 +135,10 @@ if (HOME_PAGE == $page->getName()) {
 if ($page->isUserPage($include_empty=true)) {
     $pagetype []= _("User page");
 }
-if (@$request->isActionPage($page->getName())) {
-    $pagetype []= _("Action page");
-}
+// CodeX - This causes a fatal error in PageInfo page
+//if (@$request->isActionPage($page->getName())) {
+//    $pagetype []= _("Action page");
+//}
 if ($page->get('pagetype') == 'wikiblog') {
     $pagetype []= _("Blog page");
 }
