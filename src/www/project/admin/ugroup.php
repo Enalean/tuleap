@@ -63,13 +63,15 @@ $row_num=0;
 
 $result = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id");
 while ($row = db_fetch_array($result)) {
-    echo '<TR class="'. util_get_alt_row_color($row_num) .'">
-            <TD>'.util_translate_name_ugroup($row['name']).' *</TD>';
-    echo '<TD>'.util_translate_desc_ugroup($row['description']).'</TD>
-<TD align="center">-</TD>
-<TD align="center">-</TD>
-</TR>';
-    $row_num++;
+    if ($project->usesDocman() || ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key')) {
+        echo '<TR class="'. util_get_alt_row_color($row_num) .'">
+                <TD>'.util_translate_name_ugroup($row['name']).' *</TD>';
+        echo '<TD>'.util_translate_desc_ugroup($row['description']).'</TD>
+    <TD align="center">-</TD>
+    <TD align="center">-</TD>
+    </TR>';
+        $row_num++;
+    }
 }
 
 
