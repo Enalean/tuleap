@@ -576,6 +576,8 @@ class PhpErrorOnce extends PhpError {
     }
     
     function _getDetail($count=0) {
+        // CodeX : don't display notices
+        //if ($this->isNotice()) return;
     	if (!$count) $count = $this->_count;
 	    $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__),0,-4);
         if (substr(PHP_OS,0,3) == 'WIN') {
