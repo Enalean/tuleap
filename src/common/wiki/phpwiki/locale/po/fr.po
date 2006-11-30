@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-27 16:19+0100\n"
+"POT-Creation-Date: 2006-11-30 16:25+0100\n"
 "PO-Revision-Date: 2004-06-22 21:10+0200\n"
 "Last-Translator: Pierrick Meignen <meignen.pierrick@wanadoo.fr>, Roland "
 "Trique <roland.trique@free.fr>, Stéphane Gourichon <stephane.gourichon@lip6."
@@ -573,7 +573,7 @@ msgstr "Sauvegarde des pages au format xhtml"
 msgid "PhpWikiAdministration"
 msgstr "AdministrationDePhpWiki"
 
-#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1046 ../lib/WikiDB.php:1069
+#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1050 ../lib/WikiDB.php:1075
 #, php-format
 msgid "Edited by: %s"
 msgstr "Édité par : %s"
@@ -582,14 +582,14 @@ msgstr "Édité par : %s"
 msgid "LoadDump"
 msgstr "RécupérationDeLaPage"
 
-#: ../lib/loadsave.php:99 ../lib/WikiDB.php:241 ../lib/WikiDB.php:1052
-#: ../lib/WikiDB.php:1077
+#: ../lib/loadsave.php:99 ../lib/WikiDB.php:243 ../lib/WikiDB.php:1056
+#: ../lib/WikiDB.php:1083
 #, php-format
 msgid "PageChange Notification of %s sent to %s"
 msgstr "Les notifications de changement de la page %s ont été envoyés à %s"
 
-#: ../lib/loadsave.php:102 ../lib/WikiDB.php:244 ../lib/WikiDB.php:1055
-#: ../lib/WikiDB.php:1080
+#: ../lib/loadsave.php:102 ../lib/WikiDB.php:246 ../lib/WikiDB.php:1059
+#: ../lib/WikiDB.php:1086
 #, php-format
 msgid "PageChange Notification Error: Couldn't send %s to %s"
 msgstr ""
@@ -684,10 +684,10 @@ msgstr "La page n'a aucun titre !"
 #: ../lib/loadsave.php:733 ../lib/PageType.php:134
 #: ../lib/plugin/InterWikiSearch.php:55 ../lib/plugin/WantedPagesOld.php:81
 #: ../lib/plugin/WantedPages.php:54
-#: ../themes/CodeX-lite/templates/info.tmpl:144
 #: ../themes/CodeX-lite/templates/info.tmpl:145
-#: ../themes/CodeX/templates/info.tmpl:144
+#: ../themes/CodeX-lite/templates/info.tmpl:146
 #: ../themes/CodeX/templates/info.tmpl:145
+#: ../themes/CodeX/templates/info.tmpl:146
 #: ../themes/default/templates/info.tmpl:144
 #: ../themes/default/templates/info.tmpl:145
 msgid "InterWikiMap"
@@ -699,7 +699,7 @@ msgid "from %s"
 msgstr "du %s"
 
 #: ../lib/loadsave.php:787 ../lib/plugin/RecentChanges.php:107
-#: ../lib/WikiDB.php:1043
+#: ../lib/WikiDB.php:1045
 msgid "New page"
 msgstr "Nouvelle page"
 
@@ -3357,7 +3357,7 @@ msgstr "Échec du dépôt."
 
 #: ../lib/plugin/UpLoad.php:206
 msgid "Attachment"
-msgstr ""
+msgstr "Fichier joint"
 
 #: ../lib/plugin/UpLoad.php:207
 msgid "Number of revision"
@@ -3365,7 +3365,7 @@ msgstr "révision précédente"
 
 #: ../lib/plugin/UpLoad.php:229
 msgid "Attached files"
-msgstr "le fichier %s"
+msgstr "Fichiers joints"
 
 #: ../lib/plugin/UpLoad.php:256
 msgid "The upload logfile is not writable."
@@ -5066,41 +5066,41 @@ msgstr ""
 "et déplacez le fichier DB vers un emplacement permanent, sinon vous risquez "
 "de perdre toutes vos pages !"
 
-#: ../lib/WikiDB.php:233
+#: ../lib/WikiDB.php:235
 #, php-format
 msgid "Removed by: %s"
 msgstr "Enlevé près : %s"
 
-#: ../lib/WikiDB.php:235
+#: ../lib/WikiDB.php:237
 #, php-format
 msgid "Page removed %s"
 msgstr "Page enlevée %s"
 
-#: ../lib/WikiDB.php:474
+#: ../lib/WikiDB.php:476
 #, php-format
 msgid "renamed from %s"
 msgstr "renommée à partir de %s"
 
-#: ../lib/WikiDB.php:482
+#: ../lib/WikiDB.php:484
 msgid "WikiDB::renamePage() not yet implemented for this backend"
 msgstr "WikiBD::renamePage() pas encore implémentée pour le Principal"
 
-#: ../lib/WikiDB.php:847
+#: ../lib/WikiDB.php:849
 #, php-format
 msgid "%s: Date of new revision is %s"
 msgstr "%s : la date de la nouvelle révision est %s"
 
-#: ../lib/WikiDB.php:1015
+#: ../lib/WikiDB.php:1017
 msgid "Page change"
 msgstr ""
 
-#: ../lib/WikiDB.php:1071
+#: ../lib/WikiDB.php:1077
 #, php-format
 msgid "Page rename %s to %s"
 msgstr "retitrez la page de '%s' à '%s'"
 
 # lib/display.php:31 lib/editpage.php:50
-#: ../lib/WikiDB.php:1631 ../lib/WikiDB.php:1635
+#: ../lib/WikiDB.php:1637 ../lib/WikiDB.php:1641
 #: ../themes/CodeX-lite/templates/homepage.tmpl:7
 #: ../themes/CodeX/templates/homepage.tmpl:7
 #: ../themes/default/templates/homepage.tmpl:7
@@ -5108,7 +5108,7 @@ msgstr "retitrez la page de '%s' à '%s'"
 msgid "Describe %s here."
 msgstr "Décrire %s ici."
 
-#: ../lib/WikiDB.php:1670
+#: ../lib/WikiDB.php:1676
 #, php-format
 msgid "Oops! Revision %s of %s seems to have been deleted!"
 msgstr "Ouille ! La révision %s de %s semble avoir été effacée !"
@@ -5700,7 +5700,7 @@ msgstr "StyleCorrect"
 #: ../themes/CodeX/templates/editpage.tmpl:108
 #: ../themes/default/templates/editpage.tmpl:114
 msgid "OldTextFormattingRules"
-msgstr "RèglesDeFormatageDesTextes"
+msgstr "AnciennesRèglesDeFormatage"
 
 #: ../themes/CodeX-lite/templates/editpage.tmpl:108
 #: ../themes/CodeX-lite/templates/editpage.tmpl:113
@@ -5871,26 +5871,20 @@ msgstr "Page d'accueil"
 msgid "User page"
 msgstr "Page Utilisateur"
 
-#: ../themes/CodeX-lite/templates/info.tmpl:139
-#: ../themes/CodeX/templates/info.tmpl:139
-#: ../themes/default/templates/info.tmpl:139
-msgid "Action page"
-msgstr "Page d'action"
-
-#: ../themes/CodeX-lite/templates/info.tmpl:142
-#: ../themes/CodeX/templates/info.tmpl:142
+#: ../themes/CodeX-lite/templates/info.tmpl:143
+#: ../themes/CodeX/templates/info.tmpl:143
 #: ../themes/default/templates/info.tmpl:142
 msgid "Blog page"
 msgstr "Page de Blog"
 
-#: ../themes/CodeX-lite/templates/info.tmpl:148
-#: ../themes/CodeX/templates/info.tmpl:148
+#: ../themes/CodeX-lite/templates/info.tmpl:149
+#: ../themes/CodeX/templates/info.tmpl:149
 #: ../themes/default/templates/info.tmpl:148
 msgid "Subpage"
 msgstr "Sous-page"
 
-#: ../themes/CodeX-lite/templates/info.tmpl:153
-#: ../themes/CodeX/templates/info.tmpl:153
+#: ../themes/CodeX-lite/templates/info.tmpl:154
+#: ../themes/CodeX/templates/info.tmpl:154
 #: ../themes/default/templates/info.tmpl:153
 msgid "Page Type:"
 msgstr "Type de Page :"
@@ -6396,6 +6390,10 @@ msgstr "L"
 msgid "Adjust"
 msgstr "Ajuster"
 
+#: ../themes/default/templates/info.tmpl:139
+msgid "Action page"
+msgstr "Page d'action"
+
 # lib/savepage.php:76
 #: ../themes/default/templates/savepage.tmpl:6
 #, php-format
@@ -6548,6 +6546,10 @@ msgstr "Barre verticale"
 
 #~ msgid "Optimizing database"
 #~ msgstr "Optimisation de database"
+
+#, fuzzy
+#~ msgid "PageHistory2"
+#~ msgstr "HistoriqueDeLaPage"
 
 #~ msgid "Loading up virgin wiki"
 #~ msgstr ""

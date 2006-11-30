@@ -325,7 +325,9 @@ $locale["Argument '%s' not declared by plugin."] =
 $locale["Arguments"] =
    "Arguments";
 $locale["Attached files"] =
-   "le fichier %s";
+   "Fichiers joints";
+$locale["Attachment"] =
+   "Fichier joint";
 $locale["Attempting to use the directory '%s' instead."] =
    "Tentative d'utilisation du répertoire '%s' à la place.";
 $locale["Auth Level"] =
@@ -1173,7 +1175,7 @@ $locale["OldStyleTable"] =
 $locale["OldStyleTablePlugin"] =
    "PluginTableauAncienStyle";
 $locale["OldTextFormattingRules"] =
-   "RèglesDeFormatageDesTextes";
+   "AnciennesRèglesDeFormatage";
 $locale["Older page:"] =
    "Ancienne page :";
 $locale["One page links to %s:"] =

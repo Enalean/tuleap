@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-27 16:19+0100\n"
+"POT-Creation-Date: 2006-11-30 16:25+0100\n"
 "PO-Revision-Date: 2002-12-14 17:51-0500\n"
 "Last-Translator: Reini Urban <rurban@users.sf.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -543,7 +543,7 @@ msgstr ""
 msgid "PhpWikiAdministration"
 msgstr ""
 
-#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1046 ../lib/WikiDB.php:1069
+#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1050 ../lib/WikiDB.php:1075
 #, php-format
 msgid "Edited by: %s"
 msgstr ""
@@ -552,14 +552,14 @@ msgstr ""
 msgid "LoadDump"
 msgstr ""
 
-#: ../lib/loadsave.php:99 ../lib/WikiDB.php:241 ../lib/WikiDB.php:1052
-#: ../lib/WikiDB.php:1077
+#: ../lib/loadsave.php:99 ../lib/WikiDB.php:243 ../lib/WikiDB.php:1056
+#: ../lib/WikiDB.php:1083
 #, php-format
 msgid "PageChange Notification of %s sent to %s"
 msgstr ""
 
-#: ../lib/loadsave.php:102 ../lib/WikiDB.php:244 ../lib/WikiDB.php:1055
-#: ../lib/WikiDB.php:1080
+#: ../lib/loadsave.php:102 ../lib/WikiDB.php:246 ../lib/WikiDB.php:1059
+#: ../lib/WikiDB.php:1086
 #, php-format
 msgid "PageChange Notification Error: Couldn't send %s to %s"
 msgstr ""
@@ -649,10 +649,10 @@ msgstr ""
 #: ../lib/loadsave.php:733 ../lib/PageType.php:134
 #: ../lib/plugin/InterWikiSearch.php:55 ../lib/plugin/WantedPagesOld.php:81
 #: ../lib/plugin/WantedPages.php:54
-#: ../themes/CodeX-lite/templates/info.tmpl:144
 #: ../themes/CodeX-lite/templates/info.tmpl:145
-#: ../themes/CodeX/templates/info.tmpl:144
+#: ../themes/CodeX-lite/templates/info.tmpl:146
 #: ../themes/CodeX/templates/info.tmpl:145
+#: ../themes/CodeX/templates/info.tmpl:146
 #: ../themes/default/templates/info.tmpl:144
 #: ../themes/default/templates/info.tmpl:145
 msgid "InterWikiMap"
@@ -664,7 +664,7 @@ msgid "from %s"
 msgstr ""
 
 #: ../lib/loadsave.php:787 ../lib/plugin/RecentChanges.php:107
-#: ../lib/WikiDB.php:1043
+#: ../lib/WikiDB.php:1045
 msgid "New page"
 msgstr ""
 
@@ -4897,40 +4897,40 @@ msgid ""
 "the database to a permanent location or risk losing all the pages!"
 msgstr ""
 
-#: ../lib/WikiDB.php:233
+#: ../lib/WikiDB.php:235
 #, php-format
 msgid "Removed by: %s"
 msgstr ""
 
-#: ../lib/WikiDB.php:235
+#: ../lib/WikiDB.php:237
 #, php-format
 msgid "Page removed %s"
 msgstr ""
 
-#: ../lib/WikiDB.php:474
+#: ../lib/WikiDB.php:476
 #, php-format
 msgid "renamed from %s"
 msgstr ""
 
-#: ../lib/WikiDB.php:482
+#: ../lib/WikiDB.php:484
 msgid "WikiDB::renamePage() not yet implemented for this backend"
 msgstr ""
 
-#: ../lib/WikiDB.php:847
+#: ../lib/WikiDB.php:849
 #, php-format
 msgid "%s: Date of new revision is %s"
 msgstr ""
 
-#: ../lib/WikiDB.php:1015
+#: ../lib/WikiDB.php:1017
 msgid "Page change"
 msgstr ""
 
-#: ../lib/WikiDB.php:1071
+#: ../lib/WikiDB.php:1077
 #, php-format
 msgid "Page rename %s to %s"
 msgstr ""
 
-#: ../lib/WikiDB.php:1631 ../lib/WikiDB.php:1635
+#: ../lib/WikiDB.php:1637 ../lib/WikiDB.php:1641
 #: ../themes/CodeX-lite/templates/homepage.tmpl:7
 #: ../themes/CodeX/templates/homepage.tmpl:7
 #: ../themes/default/templates/homepage.tmpl:7
@@ -4938,7 +4938,7 @@ msgstr ""
 msgid "Describe %s here."
 msgstr ""
 
-#: ../lib/WikiDB.php:1670
+#: ../lib/WikiDB.php:1676
 #, php-format
 msgid "Oops! Revision %s of %s seems to have been deleted!"
 msgstr ""
@@ -5667,26 +5667,20 @@ msgstr ""
 msgid "User page"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:139
-#: ../themes/CodeX/templates/info.tmpl:139
-#: ../themes/default/templates/info.tmpl:139
-msgid "Action page"
-msgstr ""
-
-#: ../themes/CodeX-lite/templates/info.tmpl:142
-#: ../themes/CodeX/templates/info.tmpl:142
+#: ../themes/CodeX-lite/templates/info.tmpl:143
+#: ../themes/CodeX/templates/info.tmpl:143
 #: ../themes/default/templates/info.tmpl:142
 msgid "Blog page"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:148
-#: ../themes/CodeX/templates/info.tmpl:148
+#: ../themes/CodeX-lite/templates/info.tmpl:149
+#: ../themes/CodeX/templates/info.tmpl:149
 #: ../themes/default/templates/info.tmpl:148
 msgid "Subpage"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:153
-#: ../themes/CodeX/templates/info.tmpl:153
+#: ../themes/CodeX-lite/templates/info.tmpl:154
+#: ../themes/CodeX/templates/info.tmpl:154
 #: ../themes/default/templates/info.tmpl:153
 msgid "Page Type:"
 msgstr ""
@@ -6172,6 +6166,10 @@ msgstr ""
 
 #: ../themes/default/templates/editpage.tmpl:42
 msgid "Adjust"
+msgstr ""
+
+#: ../themes/default/templates/info.tmpl:139
+msgid "Action page"
 msgstr ""
 
 #: ../themes/default/templates/savepage.tmpl:6
