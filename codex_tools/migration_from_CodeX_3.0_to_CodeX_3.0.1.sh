@@ -196,6 +196,22 @@ $CHOWN -R codexadm.codexadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
+for f in /etc/httpd/conf.d/codex_aliases.conf; do
+    yn="0"
+    fn=`basename $f`
+    [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
+
+    if [ "$yn" = "y" ]; then
+	$CP -f $f $f.orig
+    fi
+
+    if [ "$yn" != "n" ]; then
+	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
+    fi
+
+    $CHOWN codexadm.codexadm $f
+    $CHMOD 640 $f
+done
 
 ##############################################
 # Database Structure and initvalues upgrade
