@@ -176,6 +176,9 @@ function display_tests_as_javascript($tests, $categ, $params) {
         pre { 
             background-color: lightgray; 
         }
+        a img {
+            border:none;
+        }
         </style>
         <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
         <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
@@ -220,9 +223,27 @@ function display_tests_as_javascript($tests, $categ, $params) {
             }
         }
         function init() {
+            var plus = 0;
             document.getElementsByClassName('categ').each(function (element) {
-                    //new Insertion.Top(element, '<img src="plus.png" />');
                     register_events(element);
+                    plus++;
+                    new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="minus.png" /></a>');
+                    var uls = $A(element.childNodes).findAll(function (element) {
+                            return element.tagName == 'UL';
+                    });
+                    var matchPlus = new RegExp("plus.png$");
+                    Event.observe($('plus_'+plus), 'click', function (evt) {
+                            uls.each(function (element) {
+                                    Element.toggle(element);
+                            });
+                            if (Event.element(evt).src.match(matchPlus)) {
+                                Event.element(evt).src = 'minus.png';
+                            } else {
+                                Event.element(evt).src = 'plus.png';
+                            }
+                            Event.stop(evt);
+                            return false;
+                    });
             });
         }
         Event.observe(window, 'load', init, true);
