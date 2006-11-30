@@ -384,7 +384,7 @@ class Docman extends Controler {
                     if ($item->getGroupId() != $this->request->get('group_id')) {
                         $g =& group_get_object($this->request->get('group_id'));
                         $g2 =& group_get_object($item->getGroupId());
-                        $this->feedback->log('warning', $item->getTitle() .' does not belong to project '. $g->getPublicName() .'. You have been redirected to project '. $g2->getPublicName() .'.');
+                        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getTitle(), $g->getPublicName(), $g2->getPublicName())));
                         $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
                         $this->view = 'Redirect';
                     } else {
