@@ -187,6 +187,17 @@ $SERVICE smb stop
 
 
 ##############################################
+# Install the CodeX software 
+#
+echo "Installing the CodeX software..."
+cd $INSTALL_DIR
+$TAR xfz ${CodeX_DIR}/codex*.tgz
+$CHOWN -R codexadm.codexadm $INSTALL_DIR
+$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
+$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
+
+
+##############################################
 # Database Structure and initvalues upgrade
 #
 echo "Updating the CodeX database..."
