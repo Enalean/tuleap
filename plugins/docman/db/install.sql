@@ -203,6 +203,8 @@ WHERE group_id NOT IN (SELECT group_id
 -- It was almost never used, and since we keep the same keywords, we can't keep both
 DELETE FROM reference WHERE id='10';
 DELETE FROM reference WHERE id='11';
+DELETE FROM reference WHERE id='17';
+DELETE FROM reference WHERE id='18';
 
 -- Create new references
 INSERT INTO reference SET \
@@ -221,15 +223,39 @@ INSERT INTO reference SET \
     scope='S', \
     service_short_name='docman';
 
+INSERT INTO reference SET \
+    id='17',        \
+    keyword='folder', \
+    description='reference_doc_desc_key', \
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
+    scope='S', \
+    service_short_name='docman';
+
+INSERT INTO reference SET \
+    id='18',        \
+    keyword='dossier', \
+    description='reference_doc_desc_key', \
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
+    scope='S', \
+    service_short_name='docman';
+
 -- Enable document references for project 1 and 100
 DELETE FROM reference_group WHERE reference_id='10' AND group_id='100';
 DELETE FROM reference_group WHERE reference_id='11' AND group_id='100';
+DELETE FROM reference_group WHERE reference_id='17' AND group_id='100';
+DELETE FROM reference_group WHERE reference_id='18' AND group_id='100';
 DELETE FROM reference_group WHERE reference_id='10' AND group_id='1';
 DELETE FROM reference_group WHERE reference_id='11' AND group_id='1';
+DELETE FROM reference_group WHERE reference_id='17' AND group_id='1';
+DELETE FROM reference_group WHERE reference_id='18' AND group_id='1';
 INSERT INTO reference_group SET reference_id='10', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='11', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='17', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='18', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='10', group_id='1', is_active='1';
 INSERT INTO reference_group SET reference_id='11', group_id='1', is_active='1';
+INSERT INTO reference_group SET reference_id='17', group_id='1', is_active='1';
+INSERT INTO reference_group SET reference_id='18', group_id='1', is_active='1';
 
 
                               

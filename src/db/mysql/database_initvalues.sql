@@ -2203,6 +2203,15 @@ INSERT INTO reference SET \
     scope='S', \
     service_short_name='file';
 
+
+-- Reserved references for plugins:
+
+-- Docman plugin
+--   10 doc
+--   11 document
+--   17 folder
+--   18 dossier
+
 -- Legacy references
 
 INSERT INTO reference SET \
