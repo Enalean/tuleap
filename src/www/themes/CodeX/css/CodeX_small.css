@@ -157,3 +157,42 @@ PRE,TT { font-family: courier,sans-serif; }
 .fieldset_separator { text-align: center; background-color: #CCCCCC; }
 td.artifact_spacer { width: 2%; }
 
+/* {{{ feedback */
+.feedback_error, .feedback_warning, .feedback_info, .feedback_debug {
+        font-family:sans-serif;
+        background-color: #f7f7f7;
+        background-position: 20px 50%;
+        background-repeat:no-repeat;
+        margin-left:0px;
+        margin-bottom:10px;
+        list-style:none;
+        padding:10px 50px;
+}
+
+.feedback_error {
+        border:thick solid #ff0000;
+        color:#ff0000;
+        font-weight:bold;
+        background-image: url(../images/ic/error.png)
+}
+.feedback_warning {
+        border:medium solid darkorange;
+        color:peru;
+        font-weight:normal;
+        background-image: url(../images/ic/warning.png)
+}
+.feedback_info {
+        border:thin solid darkblue;
+        color:darkblue;
+        font-weight:normal;
+        background-image: url(../images/ic/info.png)
+}
+.feedback_debug {
+        font-family:monospace;
+        color:yellow;
+        font-weight:normal;
+        background-color:black;
+        display:none; 
+}
+/* }}} */
+

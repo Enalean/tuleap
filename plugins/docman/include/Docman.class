@@ -35,7 +35,7 @@ require_once('DocmanActions.class');
 require_once('DocmanLastBrowseRequest.class');
 require_once('DocmanOneFolderIsWriteable.class');
 
-require_once('Feedback.class');
+require_once('common/include/Feedback.class');
 
 require_once('Docman_NotificationsManager.class');
 require_once('Docman_NotificationsManager_Add.class');
