@@ -41,6 +41,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->_addHook('register_project_creation',         'installNewDocman',                  false);
+        $this->_addHook('service_is_used',                   'service_is_used',                   false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -202,7 +203,13 @@ class DocmanPlugin extends Plugin {
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
         $controler->installDocman($params['ugroupsMapping']);
     }
-
+    function service_is_used($params) {
+        if (isset($params['shortname']) && $params['shortname'] == 'docman') {
+            if (isset($params['is_used']) && $params['is_used']) {
+                $this->installNewDocman(array('ugroupsMapping' => false));
+            }
+        }
+    }
     function process() {
         require_once('Docman.class');
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());

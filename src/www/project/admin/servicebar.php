@@ -232,10 +232,15 @@ if ($func=='do_update') {
         $feedback .= ' '.$Language->getText('project_admin_servicebar','s_update_success').' ';
     }
 
-    // If this is a global service (i.e. with a shortname), we might need to (de-)activate the corresponding reference 
+    // If this is a global service (i.e. with a shortname)... 
     if (isset($short_name)) {
+        //... we might need to (de-)activate the corresponding reference
         $reference_manager =& ReferenceManager::instance();
         $reference_manager->updateReferenceForService($group_id,$short_name,($is_used?"1":"0"));
+        
+        //... and let plugins do what they have to do.
+        $em =& EventManager::instance();
+        $em->processEvent('service_is_used', array('shortname' => $short_name, 'is_used' => $is_used?true:false));
     }
 }
 
