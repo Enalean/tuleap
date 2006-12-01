@@ -17,8 +17,7 @@ CREATE TABLE plugin_docman_item (
   wiki_page TEXT NULL,
   file_is_embedded INT(11) UNSIGNED NULL,
   PRIMARY KEY(item_id),
-  KEY idx_group_id (group_id),
-  KEY idx_item_id (item_id)
+  KEY idx_group_id (group_id)
 );
 
 DROP TABLE IF EXISTS plugin_docman_version;
