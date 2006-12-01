@@ -299,6 +299,13 @@ $SERVICE mailman start
 $SERVICE smb start
 
 
+todo "If you have custom themes, please :"
+todo " - copy the rules for feedback from the end of CodeXTab/css/style.css in your stylesheets"
+todo " - copy the icons for feedback:"
+todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/info.png /path/to/your/theme/images/ic/"
+todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/error.png /path/to/your/theme/images/ic/"
+todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/warning.png /path/to/your/theme/images/ic/"
+todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
 
