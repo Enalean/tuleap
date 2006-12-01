@@ -29,7 +29,7 @@ require_once('Docman_View_View.class');
             $GLOBALS['HTML']->pv_header($htmlParams);
         }
         else {
-            $GLOBALS['HTML']->header($htmlParams);
+            site_header($htmlParams);
         }
     }
     
