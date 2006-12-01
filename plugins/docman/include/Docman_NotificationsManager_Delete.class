@@ -132,38 +132,36 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
         return $msg;
     }
     function _storeEvents($id, $message_type, $params) {
-        $dpm =& Docman_PermissionsManager::instance($this->group_id);
+        $dpm =& Docman_PermissionsManager::instance($this->_group_id);
         $users =& $this->dao->searchUserIdByObjectIdAndType($id, $this->_getType());
         while($users->valid()) {
             $row  = $users->current();
-            if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['object_id'])) {
-                if (!isset($this->_listeners[$row['user_id']])) {
-                    $um =& UserManager::instance();
-                    $user =& $um->getuserById($row['user_id']);
-                    if ($user) {
-                        $this->_listeners[$user->getId()] = array(
-                            'user'   => &$user,
-                            'items' => array()
-                        );
-                    }
-                }
-                if (isset($this->_listeners[$row['user_id']])) {
-                    if (!isset($this->_listeners[$row['user_id']]['items'][$params['item']->getId()])) {
-                        $this->_listeners[$row['user_id']]['items'][$params['item']->getId()] = array(
-                            'item'   => &$params['item'],
-                            'events' => array()
-                        );
-                    }
-                    $event = array(
-                        'type' => $message_type
+            if (!isset($this->_listeners[$row['user_id']])) {
+                $um =& UserManager::instance();
+                $user =& $um->getuserById($row['user_id']);
+                if ($user && $dpm->userCanRead($user, $params['item']->getId()) && $dpm->userCanAccess($user, $params['item']->getParentId()) && $dpm->userCanAccess($user, $row['object_id'])) {
+                    $this->_listeners[$user->getId()] = array(
+                        'user'   => &$user,
+                        'items' => array()
                     );
-                    if (isset($params['parent'])) {
-                        $event['parent'] =& $params['parent'];
-                    }
-                    $this->_listeners[$row['user_id']]['items'][$params['item']->getId()]['events'][] = $event;
                 }
-                $users->next();
             }
+            if (isset($this->_listeners[$row['user_id']])) {
+                if (!isset($this->_listeners[$row['user_id']]['items'][$params['item']->getId()])) {
+                    $this->_listeners[$row['user_id']]['items'][$params['item']->getId()] = array(
+                        'item'   => &$params['item'],
+                        'events' => array()
+                    );
+                }
+                $event = array(
+                    'type' => $message_type
+                );
+                if (isset($params['parent'])) {
+                    $event['parent'] =& $params['parent'];
+                }
+                $this->_listeners[$row['user_id']]['items'][$params['item']->getId()]['events'][] = $event;
+            }
+            $users->next();
         }
     }
 }
