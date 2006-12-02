@@ -80,7 +80,6 @@ class Docman_NotificationsManager extends NotificationsManager {
                     $cc .= ','. $recipient->getEmail();
                 }
                 $m->setBcc($cc);
-                $this->_feedback->log('info', $cc);
                 $success &= $m->send();
             }
         }
