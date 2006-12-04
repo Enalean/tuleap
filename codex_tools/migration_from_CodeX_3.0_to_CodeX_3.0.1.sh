@@ -236,7 +236,7 @@ done
 # Check the machine is running CodeX 3.0 and that the migration script has been applied
 # If the table 'artifact_field_set' exists, then it means that the migration script migration_30.sh has been applied.
 #
-mysql -u codexadm $pass_opt codex -e "show tables like 'artifact_field_set'" | grep artifact_field_set > /dev/null
+mysql -u root $pass_opt codex -e "show tables like 'artifact_field_set'" | grep -q artifact_field_set
 if [ $? -eq 1 ]; then
     echo "This machine is running CodeX 3.0, but the migration script seems to not have been applied. You should probably run migration_from_CodeX_2.8_to_CodeX_3.0.1.sh instead"
     exit 1
