@@ -281,7 +281,7 @@ EOF
 ################################################################################
 # Upgrade docman
 #
-$INSTALL_DIR/plugins/docman/db/upgrade_v2_001.pl
+cd $INSTALL_DIR/plugins/docman/db/ ; ./upgrade_v2_001.pl ; cd - > /dev/null
 $CAT $INSTALL_DIR/plugins/docman/db/upgrade_v2_002.sql | $MYSQL $pass_opt codex 
 
 ###############################################################################
