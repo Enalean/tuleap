@@ -673,17 +673,6 @@ DocBook processing chain to generate the CodeX User Guide.<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">others<br>
-      </td>
-      <td valign="top">The following non-RHEL RPMs must also be installed <br>
-      <ul>
-        <li>perl-Crypt-SmbHash</li>
-        <li>wu-ftpd</li>
-        </li>
-      </ul>
-      </td>
-    </tr>
-    <tr>
       <td valign="top">Stock RedHat<br>
       </td>
       <td valign="top">These are packages that are provided on the
@@ -1436,18 +1425,6 @@ The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
 <pre>	# cd /usr/local/bin<br>	# chown root.codexadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
 <p>Alternatively, use the compile_fileforge.sh script located in src/utils: it will perform all those steps for you.
-<h2>gensmbpasswd</h2>
-This is a small utility called by CodeX login creation or change
-password script to generate the MD4 encoding of the user password that
-will be given to the Samba server to configure password protected
-access
-to Windows shared resources like the ftp Incoming directory, the user
-personal directory and the project directory the user belong to.<br>
-<br>
-This file used to be quite difficult to compile, but it has been rewritten as a Perl script.
-Ownership and permission
-must be:<br>
-<pre>&nbsp;&nbsp;&nbsp; 	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 892963 Oct&nbsp; 7 21:37 /usr/lib/codex/bin/gensmbpasswd</pre>
 <h2>gotohell</h2>
 A simple shell script to discard all the messages sent to the
 noreply@codex.xerox.com messages. The file must contain:<br>
@@ -1591,6 +1568,9 @@ read-only access.<br>
 <li>You also need to verify that the sserver protocol is installed. Type 'cvs info'. this command should return a line like this one:
 <pre>
 sserver             sserver 2.5.02 (Servalan) Build 2064
+
+GRANT ALL on cvsnt.* to cvsnt@localhost identified by 'dimensions';
+
 </pre>
 <li>Configure xinetd to start the cvs server when needed. The
 /etc/xinetd.d/cvs file must look like this: <br>

@@ -375,16 +375,6 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
 
 
-
-# perl-Crypt-SmbHash needed by gensmbpasswd
-echo "Removing existing perl-Crypt-SmbHash..."
-$RPM -e perl-Crypt-SmbHash 2>/dev/null
-echo "Installing perl-Crypt-SmbHash..."
-cd ${RPMS_DIR}/perl-Crypt-SmbHash
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-SmbHash*.noarch.rpm
-
-
 # -> jre
 echo "Removing existing Java JRE..."
 $RPM -e jre  2>/dev/null
@@ -883,10 +873,6 @@ $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 ##############################################
 # Samba configuration
 #
-cd /usr/lib/codex/bin
-$CP $INSTALL_DIR/src/utils/gensmbpasswd.pl gensmbpasswd
-$CHOWN codexadm.codexadm gensmbpasswd
-$CHMOD 755 gensmbpasswd
 $SERVICE smb start
 todo "Samba service is started. If you want to use it, please configure it (procedure is detailed in the Installation Guide)."
 
@@ -1058,16 +1044,14 @@ echo "Installing log files rotation..."
 $CAT <<'EOF' >/etc/logrotate.d/httpd
 /var/log/httpd/access_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
         /sbin/service httpd reload 2> /dev/null || true
-        # LJ Added for Codex archiving
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codex/$year/$month"
+     destdir="/var/log/codex/$server/$year/$month"
      destfile="http_combined_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/access_log.1 $destdir/$destfile
@@ -1076,17 +1060,15 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
  
 /var/log/httpd/vhosts-access_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
         /sbin/service httpd reload 2> /dev/null || true
-        # LJ Added for Codex archiving
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     server=`hostname`
-     destdir="/var/log/codex/$server/$year/$month"
+     #server=`hostname`
+     destdir="/var/log/codex/$year/$month"
      destfile="vhosts-access_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
@@ -1095,7 +1077,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
                                                                               
 /var/log/httpd/agent_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
@@ -1105,7 +1086,15 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
                                                                               
 /var/log/httpd/error_log {
     missingok
-    # LJ
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd reload 2> /dev/null || true
+    endscript
+}
+
+/var/log/httpd/ssl_request_log {
+    missingok
     daily
     rotate 4
     postrotate
@@ -1115,7 +1104,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
 
 /var/log/httpd/referer_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
@@ -1125,7 +1113,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
                                                                                
 /var/log/httpd/suexec_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
@@ -1147,7 +1134,7 @@ $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codex/$year/$month"
+     destdir="/var/log/codex/$server/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/xferlog.1 $destdir/$destfile
