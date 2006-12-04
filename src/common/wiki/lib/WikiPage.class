@@ -334,33 +334,33 @@ class WikiPage {
              ,"CategoryCategory","CategoryGroup"
 
              // French pages
-             ,"PluginCommenter" ,"Crï¿½erUnePage" ,"Dï¿½poserUnFichier" ,"Derniï¿½resModifsComplï¿½tes"
+             ,"PluginCommenter" ,"CréerUnePage" ,"DéposerUnFichier" ,"DernièresModifsComplètes"
              ,"AjouterDesCommentaires" ,"AjouterDesPages" ,"AliasAccueil"
-             ,"AnciennesRï¿½glesDeFormatage" ,"ï¿½diterLeContenu" ,"ï¿½ditionsRï¿½centes"
-             ,"CarteInterWiki" ,"Catï¿½gorieCatï¿½gorie " ,"Catï¿½goriePagesAccueil"
-             ,"ChangementsLiï¿½s" ,"ChercherUnePage" ,"ClassezLa" ,"CommentairesRï¿½cents" 
+             ,"AnciennesRèglesDeFormatage" ,"ÉditerLeContenu" ,"ÉditionsRécentes"
+             ,"CarteInterWiki" ,"CatégorieCatégorie " ,"CatégoriePagesAccueil"
+             ,"ChangementsLiés" ,"ChercherUnePage" ,"ClassezLa" ,"CommentairesRécents" 
              ,"CommentUtiliserUnWiki" ,"DerniersVisiteurs" ,"DocumentationDePhpWiki" 
-             ,"EditerLesMetaDonnï¿½es" ,"GestionDesPlugins" ,"HistoriqueDeLaPage" 
-             ,"Icï¿½nesDeLien" ,"InfosAuthentification" ,"InfosDeDï¿½boguage" ,"InfosSurLaPage"
-             ,"InterWiki" ,"JoindreUnFichier" ,"LesPlusVisitï¿½es" ,"LienGoogle" 
-             ,"ListeDePages" ,"ModifsRï¿½centesPhpWiki" ,"NotesDeVersion" ,"PageAlï¿½atoire" 
-             ,"PagesRecherchï¿½es" ,"PagesSemblables" ,"PhpWiki" ,"PierrickMeignen" ,"PluginAlbumPhotos"
-             ,"PluginBeauTableau" ,"PluginBonjourLeMonde" ,"Pluginï¿½diterMetaData" 
-             ,"PluginCalendrier" ,"PluginColorationPhp" ,"PluginCrï¿½erUnePage" 
-             ,"PluginCrï¿½erUneTdm" ,"PluginHistoriqueAuteur" ,"PluginHtmlPur" 
+             ,"EditerLesMetaDonnées" ,"GestionDesPlugins" ,"HistoriqueDeLaPage" 
+             ,"IcônesDeLien" ,"InfosAuthentification" ,"InfosDeDéboguage" ,"InfosSurLaPage"
+             ,"InterWiki" ,"JoindreUnFichier" ,"LesPlusVisitées" ,"LienGoogle" 
+             ,"ListeDePages" ,"ModifsRécentesPhpWiki" ,"NotesDeVersion" ,"PageAléatoire" 
+             ,"PagesRecherchées" ,"PagesSemblables" ,"PhpWiki" ,"PierrickMeignen" ,"PluginAlbumPhotos"
+             ,"PluginBeauTableau" ,"PluginBonjourLeMonde" ,"PluginÉditerMetaData" 
+             ,"PluginCalendrier" ,"PluginColorationPhp" ,"PluginCréerUnePage" 
+             ,"PluginCréerUneTdm" ,"PluginHistoriqueAuteur" ,"PluginHtmlPur" 
              ,"PluginInclureUnCadre" ,"PluginInclureUnePage" ,"PluginListeDesSousPages" 
-             ,"PluginListeDuCalendrier" ,"PluginMï¿½tï¿½oPhp" ,"PluginRechercheExterne"
+             ,"PluginListeDuCalendrier" ,"PluginMétéoPhp" ,"PluginRechercheExterne"
              ,"PluginRedirection" ,"PluginRessourcesRss" ,"PluginTableauAncienStyle" 
-             ,"PluginTeX2png" ,"PluginWiki" ,"PluginWikiBlog" ,"Prï¿½fï¿½rencesUtilisateurs" 
-             ,"QuiEstEnLigne" ,"Rï¿½glesDeFormatageDesTextes" ,"Rï¿½cupï¿½rationDeLaPage"
-             ,"Rï¿½troLiens" ,"RechercheEnTexteIntï¿½gral" ,"RechercheInterWiki"
+             ,"PluginTeX2png" ,"PluginWiki" ,"PluginWikiBlog" ,"PréférencesUtilisateurs" 
+             ,"QuiEstEnLigne" ,"RèglesDeFormatageDesTextes" ,"RécupérationDeLaPage"
+             ,"RétroLiens" ,"RechercheEnTexteIntégral" ,"RechercheInterWiki"
              ,"RechercheParTitre" ,"SommaireDuProjet" ,"TestDeCache" ,"TestGroupeDePages"
              ,"TestGroupeDePages/Deux" ,"TestGroupeDePages/Trois" ,"TestGroupeDePages/Un" 
              ,"TousLesUtilisateurs" ,"ToutesLesPages" ,"TraduireUnTexte" 
-             ,"URLMagiquesPhpWiki" ,"VersionsRï¿½centes" ,"VisiteursRï¿½cents"
-             ,"WabiSabi" ,"WikiWikiWeb" ,"Derniï¿½resModifs" ,"Catï¿½gorieGroupes" 
-	     ,"SteveWainstead" ,"PluginInsï¿½rer" ,"StyleCorrect" ,"Dï¿½tailsTechniques" 
-	     ,"PagesFloues" ,"PluginInfosSystï¿½me", "PagesOrphelines" ,"SondagePhpWiki"
+             ,"URLMagiquesPhpWiki" ,"VersionsRécentes" ,"VisiteursRécents"
+             ,"WabiSabi" ,"WikiWikiWeb" ,"DernièresModifs" ,"CatégorieGroupes" 
+	     ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques" 
+	     ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines" ,"SondagePhpWiki"
              
              
              );
@@ -385,7 +385,7 @@ class WikiPage {
        "PageAccueil" ,"AdministrationDePhpWiki","AdministrationDePhpWiki/Supprimer"
        ,"AdministrationDePhpWiki/Remplacer"
        ,"AdministrationDePhpWiki/Renommer", "AdministrationDePhpWiki/Droits"
-       ,"Bacï¿½Sable",);
+       ,"BacÀSable",);
   }
 }
 ?>
