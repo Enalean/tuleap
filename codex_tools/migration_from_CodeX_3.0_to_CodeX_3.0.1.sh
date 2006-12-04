@@ -278,6 +278,12 @@ CREATE TABLE notifications(
 );
 EOF
 
+################################################################################
+# Upgrade docman
+#
+$INSTALL_DIR/plugins/docman/db/upgrade_v2_001.pl
+$CAT $INSTALL_DIR/plugins/docman/db/upgrade_v2_002.sql | $MYSQL $pass_opt codex 
+
 ###############################################################################
 # Remove sticky bit from /var/run/log_accum. See SR #594
 $CHMOD 0777 /var/run/log_accum
