@@ -432,7 +432,7 @@ class ArtifactReportHtml extends ArtifactReport {
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
 					} else {
-						$html_result .= "<TD $width>". $value .'&nbsp;</TD>'."\n";
+						$html_result .= "<TD $width>". util_make_links($value,$group_id) .'&nbsp;</TD>'."\n";
 				    }                            
                                 
                 } // while 
