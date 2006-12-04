@@ -191,6 +191,10 @@ $SERVICE smb stop
 #
 echo "Installing the CodeX software..."
 cd $INSTALL_DIR
+cd ..
+$MV codex codex_30
+$MKDIR codex;
+cd codex
 $TAR xfz ${CodeX_DIR}/codex*.tgz
 $CHOWN -R codexadm.codexadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
@@ -293,6 +297,13 @@ $CHMOD 0777 /var/run/log_accum
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
 mysqlcheck -Aao $pass_opt
 
+
+##############################################
+# Fix SELinux
+#
+cd $INSTALL_DIR
+cd src/utils
+./fix_selinux_contexts.pl
 
 ##############################################
 # Restarting some services
