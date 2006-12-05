@@ -323,14 +323,18 @@ class ArtifactHtml extends Artifact {
                         // original submission is editable
                         $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
                     } else {
-                        $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id,$group_artifact_id);
+                        $value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,true),$group_id, $group_artifact_id);
                     }
                 } else if ($field->getName() == 'submitted_by') {
                     $value = util_user_link(user_getname($field_value));
                 } else if ($field->getName() == 'open_date') {
                     $value = format_date($GLOBALS['sys_datefmt'],$field_value);
                 } else {
-                    $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                	if (user_is_super_user() || $this->ArtifactType->userIsAdmin() || $this->getSubmittedBy()==$user_id ) {
+                		$value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                	}else{
+                		$value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only),$group_id, $group_artifact_id);
+                	}
                 }
                 
                 $html = array('label' => $label, 'value' => $value);

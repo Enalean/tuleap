@@ -9,12 +9,13 @@
 // adduser.php - All the forms and functions to manage unix users
 //
 
-// ***** function account_pwvalid()
-// ***** check for valid password
 require_once('common/mail/Mail.class');
+require_once('common/include/createntlm.inc');
 
 $Language->loadLanguageMsg('include/include');
 
+// ***** function account_pwvalid()
+// ***** check for valid password
 function account_pwvalid($pw) {
   global $Language;
 	if (strlen($pw) < 6) {
@@ -220,13 +221,8 @@ function account_genunixpw($plainpw) {
 
 // generate the 2 windows passwords (win_passwd:winNT_passwd)
 function account_genwinpw($plainpw) {
-    $command = $GLOBALS['codex_bin_prefix']."/gensmbpasswd";
-    $output = array();
-    if (is_executable($command)) {
-	$command .= ' "'.escapeshellcmd($plainpw).'"';
-	exec($command, $output, $ret);
-    }
-    return rtrim($output[0]);
+    $smbhash=new smbHash();
+    return $smbhash->lmhash($plainpw).":".$smbhash->nthash($plainpw);
 }
 
 // returns next userid

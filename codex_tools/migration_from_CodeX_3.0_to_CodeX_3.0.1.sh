@@ -191,6 +191,10 @@ $SERVICE smb stop
 #
 echo "Installing the CodeX software..."
 cd $INSTALL_DIR
+cd ..
+$MV codex codex_30
+$MKDIR codex;
+cd codex
 $TAR xfz ${CodeX_DIR}/codex*.tgz
 $CHOWN -R codexadm.codexadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
@@ -236,7 +240,7 @@ done
 # Check the machine is running CodeX 3.0 and that the migration script has been applied
 # If the table 'artifact_field_set' exists, then it means that the migration script migration_30.sh has been applied.
 #
-mysql -u codexadm $pass_opt codex -e "show tables like 'artifact_field_set'" | grep artifact_field_set > /dev/null
+mysql -u root $pass_opt codex -e "show tables like 'artifact_field_set'" | grep -q artifact_field_set
 if [ $? -eq 1 ]; then
     echo "This machine is running CodeX 3.0, but the migration script seems to not have been applied. You should probably run migration_from_CodeX_2.8_to_CodeX_3.0.1.sh instead"
     exit 1
@@ -260,6 +264,14 @@ INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23')
 # SVN admin new role (SR #602)
 ALTER TABLE user_group ADD COLUMN svn_flags int(11) NOT NULL default '0' AFTER wiki_flags;
 
+
+CREATE TABLE ugroup_mapping (
+  to_group_id int(11) NOT NULL,
+  src_ugroup_id int(11) NOT NULL,
+  dst_ugroup_id int(11) NOT NULL,
+  PRIMARY KEY (to_group_id, src_ugroup_id, dst_ugroup_id)
+);
+
 EOF
 
 
@@ -278,6 +290,12 @@ CREATE TABLE notifications(
 );
 EOF
 
+################################################################################
+# Upgrade docman
+#
+cd $INSTALL_DIR/plugins/docman/db/ ; ./upgrade_v2_001.pl ; cd - > /dev/null
+$CAT $INSTALL_DIR/plugins/docman/db/upgrade_v2_002.sql | $MYSQL $pass_opt codex 
+
 ###############################################################################
 # Remove sticky bit from /var/run/log_accum. See SR #594
 $CHMOD 0777 /var/run/log_accum
@@ -287,6 +305,13 @@ $CHMOD 0777 /var/run/log_accum
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
 mysqlcheck -Aao $pass_opt
 
+
+##############################################
+# Fix SELinux
+#
+cd $INSTALL_DIR
+cd src/utils
+./fix_selinux_contexts.pl
 
 ##############################################
 # Restarting some services
@@ -305,6 +330,7 @@ todo " - copy the icons for feedback:"
 todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/info.png /path/to/your/theme/images/ic/"
 todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/error.png /path/to/your/theme/images/ic/"
 todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/warning.png /path/to/your/theme/images/ic/"
+todo "Have a look at plugins/docman/etc/docman.inc and configure yours (in /etc/codex/plugins/docman/etc/)."
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 

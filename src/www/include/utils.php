@@ -387,14 +387,14 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 
 function util_make_links ($data='',$group_id = 0) {
     if(empty($data)) { return $data; }
-    
+
     // www.yahoo.com => http://www.yahoo.com
-    $data = eregi_replace("([ \t]|^)www\."," http://www.",$data);
+    $data = eregi_replace("[ \t\n]www\."," http://www.",$data);
 
     // http://www.yahoo.com => <a href="...">...</a>
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
-
-    // john.doe@yahoo.com => <a href="mailto:...">...</a>
+    
+	// john.doe@yahoo.com => <a href="mailto:...">...</a>
     $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
     if ($group_id)
