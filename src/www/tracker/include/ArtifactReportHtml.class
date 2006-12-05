@@ -431,9 +431,11 @@ class ArtifactReportHtml extends ArtifactReport {
 					
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
-					} else {
-						$html_result .= "<TD $width>". util_make_links($value,$group_id) .'&nbsp;</TD>'."\n";
-				    }                            
+					} else if( $field->isTextArea()){
+						$html_result .= "<TD $width><pre>". util_make_links($value,$group_id) .'&nbsp;</pre></TD>'."\n";
+				    } else{
+				    	$html_result .= "<TD $width>". util_make_links($value,$group_id) .'&nbsp;</TD>'."\n";
+				    }                             
                                 
                 } // while 
                 $html_result .= "</tr>\n";
