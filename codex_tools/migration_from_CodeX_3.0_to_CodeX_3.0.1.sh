@@ -264,6 +264,14 @@ INSERT INTO survey_question_types (id, type, rank) VALUES (7,'select_box', '23')
 # SVN admin new role (SR #602)
 ALTER TABLE user_group ADD COLUMN svn_flags int(11) NOT NULL default '0' AFTER wiki_flags;
 
+
+CREATE TABLE ugroup_mapping (
+  to_group_id int(11) NOT NULL,
+  src_ugroup_id int(11) NOT NULL,
+  dst_ugroup_id int(11) NOT NULL,
+  PRIMARY KEY (to_group_id, src_ugroup_id, dst_ugroup_id)
+);
+
 EOF
 
 

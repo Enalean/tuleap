@@ -481,12 +481,12 @@ if ($result_docman->fetchrow()) {
     $id = $dbh->{q{mysql_insertid}};
     $permissions->execute($id, $id);
     
-    $insert->execute($root, 'Documentation en français', '', 1, 1, undef, undef);
+    $insert->execute($root, 'Documentation en franï¿½ais', '', 1, 1, undef, undef);
     $id = $dbh->{q{mysql_insertid}};
     $permissions->execute($id, $id);
     $fr = $id;
     
-    $insert->execute($fr, 'Guide de l\'Utilisateur CodeX', 'Un guide complet décrivant tous les services de CodeX et comment les utiliser de manière optimale. Fournit également de nombreuses astuces et explications pour gérer efficacement votre projet CodeX.', -1, 1, undef, undef);
+    $insert->execute($fr, 'Guide de l\'Utilisateur CodeX', 'Un guide complet dï¿½crivant tous les services de CodeX et comment les utiliser de maniï¿½re optimale. Fournit ï¿½galement de nombreuses astuces et explications pour gï¿½rer efficacement votre projet CodeX.', -1, 1, undef, undef);
     $id = $dbh->{q{mysql_insertid}};
     $permissions->execute($id, $id);
     $cug = $id;
@@ -500,7 +500,7 @@ if ($result_docman->fetchrow()) {
     $id = $dbh->{q{mysql_insertid}};
     $permissions->execute($id, $id);
     
-    $insert->execute($fr, 'Interface de Commande en Ligne', 'Un guide complet décrivant toutes les fonctions de l\'Interface de Commande en Ligne de CodeX.', 0, 1, undef, undef);
+    $insert->execute($fr, 'Interface de Commande en Ligne', 'Un guide complet dï¿½crivant toutes les fonctions de l\'Interface de Commande en Ligne de CodeX.', 0, 1, undef, undef);
     $id = $dbh->{q{mysql_insertid}};
     $permissions->execute($id, $id);
     $cli = $id;
@@ -544,6 +544,14 @@ WHERE group_id NOT IN (
   )
   AND short_name = 'docman'
   AND group_id !=100;
+
+CREATE TABLE ugroup_mapping (
+  to_group_id int(11) NOT NULL,
+  src_ugroup_id int(11) NOT NULL,
+  dst_ugroup_id int(11) NOT NULL,
+  PRIMARY KEY (to_group_id, src_ugroup_id, dst_ugroup_id)
+);
+
 EOF
 
 ################################################################################
