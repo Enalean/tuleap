@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// Portion of this file is inspired from the  GForge Command-line Interface
+// contained in GForge.
+// Copyright 2005 GForge, LLC
+// http://gforge.org/
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+//
+// $Id$
+//
+// Written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+
+-->
+  <chapter id="Installation">
+    <title>Installation</title>
+
+    <para>Pour installer le client en ligne de commande CodeX, 
+    vous devez disposer de PHP installé sur votre machine. La 
+    dernière version de PHP4 ou PHP5 est grandement recommandée. 
+    PHP doit également avoir été compilé sans le paramètre 
+    --disable-cli pour pouvoir être exécuté en ligne de commande.</para>
+
+    <para>Vous devez vérifier dans quel répertoire se trouve 
+    l'exécutable PHP installé sur votre machine. Le répertoire 
+    est celui spécifié lors de la compilation de PHP (si aucun 
+    préfixe n'a été spécifié, celui par défaut est /usr, 
+    l'exécutable PHP devrait donc se trouver dans /usr/bin/php).
+    <tip>
+        <title>Comment savoir ou se trouve l'exécutable PHP ?</title>
+        <para>Vous pouvez vérifier dans quel répertoire PHP est 
+            installé en executant la commande suivante :
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+# which php
+/usr/bin/php
+            </programlisting>
+            Dans ce cas, l'exécutable PHP est /usr/bin/php.
+        </para>
+    </tip>
+    </para>
+
+    <para><note>Si vous prévoyez d'utiliser le client en Ligne de Commande 
+    pour administrer une installation de CodeX via une connection HTTPS, 
+    vous devez compiler PHP avec l'extension CURL (en utilisant l'option 
+    --with-curl dans le script de configuration).</note></para>
+
+    <para>Une fois que PHP est proprement installé, vous pouvez télécharger 
+    et décompresser le client en ligne de commande dans un répertoire sur 
+    votre machine locale.</para>
+
+    <para>Après avoir décompressé le client en ligne de commande, vous devez 
+    éditer le fichier $PREFIX/codex.php (où $PREFIX est le répertoire dans 
+    lequel le client a été décompressé) avec votre éditeur préféré et modifier 
+    les choses suivantes :
+    <procedure>
+        <step>
+          <para>Changer la première ligne, qui est : 
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+#!/usr/bin/php -q
+            </programlisting>
+            pour la faire pointer sur le chemin de l'exécutable PHP de votre machine. 
+            (si il est différent de /usr/bin/php)
+          </para>
+        </step>
+        <step>
+          <para>Trouver la section Configuration dans le script (délimitée par des commentaires) 
+                et modifier les constantes suivantes :
+                <para>
+                <itemizedlist mark="bullet" spacing="compact">
+                 <listitem>
+                    <para>NUSOAP_DIR: Pointe vers le répertoire d'installation 
+                        de la librairie PHP NuSOAP. Une copie de cette librairie 
+                        se trouve dans le répertoire $PREFIX/nusoap/.
+                    </para>
+                 </listitem>
+                 <listitem>
+                    <para>CODEX_CLI_DIR: Pointe vers le répertoire dans lequel se 
+                        trouvent les fichiers nécessaires au client. Habituellement, 
+                        il s'agit de $PREFIX/include/.
+                    </para>
+                 </listitem>
+                 <listitem>
+                    <para>WSDL_URL (optionel): l'URL du WSDL de votre serveur CodeX SOAP. 
+                        L'URL est très certainement http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl. 
+                        Vous pouvez vérifier l'exactitude de l'URL en la tapant dans votre navigateur, 
+                        vous devriez alors obtenir un fichier XML renvoyé par le serveur.
+                        Si les variables ne sont pas affectées, le client essaiera d'utiliser 
+                        le WSDL spécifié dans la variable d'environement CODEX_WSDL.
+                    </para>
+                 </listitem>
+                </itemizedlist>
+                </para>
+          </para>
+        </step>
+        <step>
+          <para>Assurez-vous que le script codex.php ait bien les droits d'exécution. 
+                Sinon, donnez-les lui en exécutant la commande suivante :
+                <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+chmod +x $PREFIX/codex.php
+                </programlisting>
+          </para>
+        </step>
+    </procedure>
+    
+    <para>
+        Quand tout est installé correctement, vous pouvez tester l'installation 
+        pour voir si tout fonctionne correctement. Pour cela, essayer de vous 
+        connecter au serveur en exécutant la commande de "login". Placez-vous 
+        tout d'abord dans le répertoire dans lequel vous avez décompressé le 
+        client, et exécutez la commande suivante :
+        <example>
+            <title>commande de login</title>
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php -v login --username=(votre nom d'utilisateur) --password=(votre mot de passe)
+CodeXSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
+CodeXSOAP::Connected!
+CodeXSOAP::Executing command login...
+Logged in as user (your user) , using session string MTAyLSotMTEyMzA4Mjg5My0qLTEyNy4wLjAuMS0qLU51U09BUC8wLjYuOSAoMS4xLjEuMSk=824c9f9010931f7872f4b9826c460ed3
+Logged in.
+            </programlisting>
+        </example>
+     </para>
+    </para>
+
+    <para>Le message peut varier selon la configuration de votre serveur.
+        Si vous obtenez une erreur ressemblant à : 
+        "Fatal error: wsdl error: HTTP ERROR: Couldn't open socket connection to 
+        server http://&SYS_DEFAULT_DOMAIN; prior to connect().",
+        cela veut dire que votre ordinateur n'arrive pas à se connecter au 
+        serveur CodeX. Dans ce cas, vous devez vous assurer que l'adresse du serveur est 
+        correcte et que vous pouvez bien vous connecter au serveur depuis votre ordinateur. 
+    </para>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+End:
+-->
+

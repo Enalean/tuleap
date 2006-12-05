@@ -126,12 +126,51 @@
     </section>
 
     <section>
-      <title>Database Upgrade</title>
-      <para>Sometimes, when developing on CodeX, you might need to modify the database, e.g. to add, delete or alter a column or a table.
-      </para>
-      <para>In this case, you must create a migration script that will transform an existing CodeX DB into one that fits your needs. These scripts are stored in <literal>SF/db/upgrades</literal>. For simple cases, a single SQL file will be enough e.g. to create a new column in an existing table. In some more complex cases, you might need to migrate existing data, and the SQL script will not be enough. For this situation, you may build a Perl script that will do the job.</para>
-      <para>In most cases, you will also need to modify <literal>database_structure.sql</literal> and <literal>database_initvalues.sql</literal> located in <literal>SF/db/mysql</literal>. Don't forget!
-      </para>
+      <title>Updates provided on support branch</title>
+        <section>
+           <title>Committing on the support branch</title>
+           <para>Commits on the support branch are a little bit different than those 
+           on the dev branch because of the plugin ServerUpdate that let the 
+           customers updating their server through the web-interface.</para>
+           <para>When committing on support branch, write your commit message 
+           as always, and then, after your commit message, add some meta-data information:
+           <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+             <para>level=minor|normal|critical  (required)</para>
+            </listitem>
+            <listitem>
+             <para>update=(auto|manual), db (all optionnals, auto by default)</para>
+            </listitem>
+           </itemizedlist>
+           </para>
+           <para>The meta-data syntax will be checked by a pre-commit hook. The error message
+           contains a reminder of the syntax.</para>
+        </section>
+        
+        <section>
+          <title>Database Upgrade</title>
+          <para>Sometimes, when developing on CodeX, you might need to modify the database, e.g. to add, delete or alter a column or a table.
+          </para>
+          <para>In this case, you must create a migration script that will 
+          transform an existing CodeX DB into one that fits your needs.
+          <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+             <para>updates scripts must take place in <literal>/src/updates/scripts/</literal> directory</para>
+            </listitem>
+            <listitem>
+             <para>updates scripts are written in PHP, and extend the CodeXUpgrade class</para>
+            </listitem>
+            <listitem>
+             <para>the file name must be <literal>XXX_patch_description.class.php</literal>, with XXX a number between 001 and 999 (please keep the numerical order -- 002 must be executed before 003)</para>
+            </listitem>
+            <listitem>
+             <para>the core script is the function <literal>_process</literal>, that you need to implement. It will be executed by the mother class when executing the script.</para>
+            </listitem>
+           </itemizedlist>
+          </para>
+          <para>In most cases, you will also need to modify <literal>database_structure.sql</literal> and <literal>database_initvalues.sql</literal> located in <literal>SF/db/mysql</literal>. Don't forget!
+          </para>
+        </section>
     </section>
 
   </chapter>

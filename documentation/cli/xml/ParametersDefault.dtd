@@ -1,0 +1,22 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2006. All Rights Reserved
+// This file is licensed under the Codex Component Software License
+// http://codex.xerox.com
+//
+// $Id: ParametersDefault.dtd 1298 2005-01-04 13:13:21Z guerin $
+//
+// Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
+-->
+
+<!-- DO NOT MODIFY FILE - SEE BELOW!! -->
+
+<!-- This DTD file contains entities that are used to in the CLI
+guide content. If you want to customize the content for your own site
+do not modify this file. Use the 
+/etc/codex/documentation/cli/xml/ParametersLocal.dtd file 
+instead and redefine your entities there. If this file doesn't exist create it.-->
+
+<!ENTITY SYS_DEFAULT_DOMAIN "codex.xerox.com">

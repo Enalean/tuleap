@@ -1,0 +1,14 @@
+<?php
+
+require_once('common/plugin/PluginInfo.class');
+require_once('MySQLMaintenancePluginDescriptor.class');
+
+class MySQLMaintenancePluginInfo extends PluginInfo {
+    
+    function MySQLMaintenancePluginInfo(&$plugin) {
+        $this->PluginInfo($plugin);
+        $this->setPluginDescriptor(new MySQLMaintenancePluginDescriptor());
+    }
+    
+}
+?>

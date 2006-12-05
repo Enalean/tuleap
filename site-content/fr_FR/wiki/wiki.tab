@@ -123,7 +123,7 @@ wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' - Gérer les Documents Wiki</h
 wiki_views_wkserviews	wikidocs_create	<h3>$1Créer un nouveau Document Wiki</h3>
 wiki_views_wkserviews	wikidocs_docs	<h3>$1Documents Wiki</h3>
 wiki_views_wkserviews	back_admin	Retour à la page d'administration
-wiki_views_wkserviews	createwikidoc	<p>Vous pouvez ajouter un nouveau lien vers une Page Wiki avec le formulaire suivant. Cela ajoutera un nouveau document dans la liste des Documents Wiki affichée sur la page du service Wiki (Le lien <a href="'.$1.'">Parcourir</a> de la barre d'outils).</p>
+wiki_views_wkserviews	createwikidoc	<p>Vous pouvez ajouter un nouveau lien vers une Page Wiki avec le formulaire suivant. Cela ajoutera un nouveau document dans la liste des Documents Wiki affichée sur la page du service Wiki (Le lien <a href="$1">Parcourir</a> de la barre d'outils).</p>
 wiki_views_wkserviews	act_create	Créer
 wiki_views_wkserviews	act_update	Modifier
 wiki_views_wkserviews	browsedoc	<p>Liste de tous les Documents Wiki affichée sur la page du service Wiki. Vous pouvez&nbsp;:</p><ul><li>Editer chaque Document Wiki avec un lien sur le nom.</li><li>Donner des permissions sur un Document Wiki.</li><li>supprimer un Document Wiki (La Page Wiki correspondante ne sera pas supprimée)</li></ul>

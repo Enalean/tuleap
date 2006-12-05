@@ -161,6 +161,7 @@ include_html	medium	Medium
 include_html	highest	Highest
 include_html	g_not_exist	That group does not exist.
 include_html	invalid_g	Invalid Group
+include_html	unknown_value	*** unknown value ***
 #
 #-----------------------------------------------
 # Script: SF/www/include/layout.php
@@ -174,6 +175,7 @@ include_layout	logo	Logo
 include_layout	counter	Counter
 include_layout	Help	Help
 include_layout	network_gallery	Network Gallery
+include_layout	template_warning	Beware this project is a template project
 #
 #-----------------------------------------------
 # Script: SF/www/include/license.php
@@ -336,6 +338,7 @@ include_proj_email	account_register	$1 Account Registration
 # Script: SF/www/include/session.php
 #
 include_session	missing_pwd	Missing Password Or User Name
+include_session	invalid_pwd	Invalid Password Or User Name
 include_session	invalid_ldap_name	Invalid LDAP User Name
 include_session	dir_authent	Directory Authentication
 include_session	use_ldap_login	Please use your ldap login
@@ -474,6 +477,13 @@ include_common_error	no_err	No Error
 # Script: SF/common/include/GroupFactory.class
 #
 include_common_groupfactory	none_found	None Found $1
+#
+#-----------------------------------------------
+# Script: SF/common/include/Template.class
+#
+include_common_template	project	Project
+include_common_template	template	Template
+include_common_template	test_project	Test Project
 #
 #-----------------------------------------------
 # Script: SF/common/mvc/View.class

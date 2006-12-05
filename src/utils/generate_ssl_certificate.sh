@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2006. All Rights Reserved
+# http://codex.xrce.xerox.com
+#
+# $Id$
+#
+#  License:
+#    This file is subject to the terms and conditions of the GNU General Public
+#    license. See the file COPYING in the main directory of this archive for
+#    more details.
+#
+# Purpose:
+#    Generate a self-signed certificate to enable SSL support. This script
+#    removes any existing key and certificate.
+
+RM='/bin/rm'
+CHMOD='/bin/chmod'
+SERVICE='/sbin/service'
+OPENSSL='/usr/bin/openssl'
+
+echo "Generating a self-signed certificate to enable SSL support."
+echo "When asked to enter the 'Common Name', please use your server domain name (sys_default_domain)."
+echo "This will remove any existing SSL key and certificate."
+read -p "Continue? [yn]: " yn
+if [ "$yn" = "n" ]; then
+    echo "Bye now!"
+    exit 1
+fi
+
+export SSL_KEY='/etc/httpd/conf/ssl.key/server.key'
+SSL_CERT='/etc/httpd/conf/ssl.crt/server.crt'
+# Remove existing key and certificate
+$RM $SSL_KEY
+$RM $SSL_CERT
+
+# Generate a new key
+$OPENSSL genrsa 1024 > $SSL_KEY
+$CHMOD go-rwx $SSL_KEY
+# pseudo-random serial number
+serialno="0x$((date; echo "$$"; cat $SSL_KEY) | md5sum | cut -b1-7)"
+
+# Create new certificate, valid for 10 years
+umask 77
+$OPENSSL req -new -key $SSL_KEY -x509 -days 3650 -out $SSL_CERT -set_serial "$serialno" 
+
+# Restart httpd server
+#$SERVICE httpd restart
+echo "You will need to restart your HTTP server to take into account the new certificate"

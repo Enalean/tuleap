@@ -7,7 +7,7 @@
 // $Id$
 //
 -->
-<H2>Step 3: Project Registration</H2>
+<H2>Step 4: Project Registration</H2>
 
 <p>We now need to know a little bit more about your project. All information typed here will be accessible to <?php print $GLOBALS['sys_name']; ?> users once your project is registered. So please be as accurate as possible.
 
@@ -19,6 +19,7 @@ Shall the purpose and goals change in the future, you'll have to modify the stat
 <p><font color="red">*</font>: Fields Required</p>
 <FONT size=-1>
 <FORM action="projectname.php" method="post">
+<INPUT TYPE="HIDDEN" NAME="built_from_template" VALUE="<?php print $built_from_template; ?>">
 <INPUT TYPE="HIDDEN" NAME="insert_purpose" VALUE="y">
 
 <P>
@@ -47,6 +48,6 @@ Shall the purpose and goals change in the future, you'll have to modify the stat
 <br>Anything you'd like to say about your projects that is not covered above. For instance, if your software is used in <?php print $GLOBALS['sys_org_name']; ?> products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.
 <br><TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">
 </TEXTAREA>
-<BR><INPUT type=submit name="Submit" value="Step 4: Project Name">
+<BR><INPUT type=submit name="Submit" value="Step 5: Project Name">
 </FORM>
 </FONT>

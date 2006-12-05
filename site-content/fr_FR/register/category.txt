@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Etape 6&nbsp;: Catégories</H2>
+<H2>Etape 7&nbsp;: Catégories</H2>
 
 <p><strong>Catégorisation du projet</strong></p>
 
@@ -17,7 +17,7 @@
 <P>Votre projet ne sera visible dans l'arbre des projets qu'après (1) son approbation et (2) sa catégorisation dans l'arbre des projets que vous pouvez renseigner ci-dessous.
 
 <?php
-print '<P>'.$Language->getText('project_admin_grouptrove','select_3_classifs',$GLOBALS['sys_name']);
+print '<P>'.$Language->getText('register_category','select_3_classifs',$GLOBALS['sys_name']);
 ?>
 
 <FONT size=-1>

@@ -1,0 +1,127 @@
+#
+# Here, we define CodeX specific aliases.
+#
+# They are defined here (and not in httpd.conf) so as to be included in
+# both httpd.conf and ssl.conf. This will make the aliases available in
+# both the 'normal' virtualhost and the https virtual host (and not in
+# other virtualhosts, like project web sites).
+#
+
+#
+# CodeX documentation
+#
+Alias /documentation/ "/usr/share/codex/documentation/"
+
+<Directory "/usr/share/codex/documentation">
+    Options MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+#
+# CodeX downloads
+#
+Alias /downloads/ "/usr/share/codex/downloads/"
+
+<Directory "/usr/share/codex/downloads">
+    Options MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+#
+# CodeX custom themes
+#
+Alias /custom/ "/etc/codex/themes/"
+<Directory "/etc/codex/themes/">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+
+#
+# phpWiki themes
+#
+Alias /wiki/themes "/usr/share/codex/src/common/wiki/phpwiki/themes"
+<Directory "/usr/share/codex/src/common/wiki/phpwiki/themes">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+
+#
+# Plugins directories
+#
+
+# 1- plugins CGI scripts
+ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codex/plugins/$1"
+<Directory "/usr/share/codex/plugins/[^/]*/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
+# 2- plugins web/php pages 
+AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codex/plugins/$1/www/$2
+<DirectoryMatch "/usr/share/codex/plugins/([^/]*)/www/">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
+
+# 3- Custom plugins CGI scripts
+ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codex/plugins/$1"
+<Directory "/etc/codex/plugins/[^/]*/cgi-bin">
+    AllowOverride None
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+</Directory>
+
+# 4- Custom plugins web/php pages
+AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codex/plugins/$1/www/$2
+<DirectoryMatch "/etc/codex/plugins/([^/]*)/www/">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
+
+
+#
+# CGI scripts
+#
+
+ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+
+# FollowSymLinks is needed here because of the rewrite rule (otherwise, other CGIs are forbidden...)
+<Directory "/var/www/cgi-bin">
+    AllowOverride None
+    Options ExecCGI FollowSymLinks
+    Order allow,deny
+    Allow from all
+    RedirectMatch permanent /cgi-bin/cvsweb.cgi/(.*) /cvs/viewvc.php/$1
+    <IfModule mod_rewrite.c>
+      RewriteEngine on
+      RewriteCond %{QUERY_STRING} roottype=svn
+      RewriteRule viewcvs.cgi/(.*) /svn/viewvc.php/$1 [R]
+
+      RewriteRule viewcvs.cgi/(.*) /cvs/viewvc.php/$1 [R]
+    </IfModule>
+</Directory>
+
+# Redirect viewcvs calls to viewvc
+RedirectMatch permanent /svn/viewcvs.php(.*) /svn/viewvc.php$1
+RedirectMatch permanent /cvs/viewcvs.php(.*) /cvs/viewvc.php$1
+
+# Forbid access to .svn directories
+RedirectMatch 404 /\.svn(/|$)
+

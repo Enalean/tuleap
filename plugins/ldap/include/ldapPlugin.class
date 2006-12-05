@@ -9,6 +9,9 @@ class LdapPlugin extends Plugin {
 	function LdapPlugin($id) {
 		$this->Plugin($id);
 
+        // Layout
+        $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
+
         // Search
         $this->_addHook('search_type_entry', 'ldapSearchEntry', false);
         $this->_addHook('search_type', 'ldapSearch', false);
@@ -39,8 +42,8 @@ class LdapPlugin extends Plugin {
         $this->_addHook('before_lostpw', 'cancelChange', false);
         $this->_addHook('display_change_password', 'forbidIfLdapAuth', false);
         $this->_addHook('display_change_email', 'forbidIfLdapAuth', false);
-        # Uncomment if you need to forbid real name change
-        #$this->_addHook('display_change_realname', 'forbidIfLdapAuth', false);
+        // Comment if want to allow real name change in LDAP mode
+        $this->_addHook('display_change_realname', 'forbidIfLdapAuth', false);
 
         // Site Admin
         $this->_addHook('before_admin_change_pw', 'warnNoPwChange', false);
@@ -151,7 +154,7 @@ class LdapPlugin extends Plugin {
             $ldap =& LDAP::instance();
             
             // Perform LDAP authentication        
-            if ($ldap->authenticate($params['loginname'], $params['passwd'])) {
+            if ($ldap->authenticate($params['loginname'], rtrim($params['passwd']))) {
                 $lri =& $ldap->searchLogin($params['loginname']);
                 if($lri->count() === 1) {
                     // Check if this user is a codex user or not. 
@@ -177,7 +180,7 @@ class LdapPlugin extends Plugin {
                         $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
                     }
                     else {                        
-                        UserLdap::synchronizeUserWithLdap(db_result($res,0,'user_id'), $lr->getEdUid(), $params['passwd']);
+                        UserLdap::synchronizeUserWithLdap(db_result($res,0,'user_id'), $lr, $params['passwd']);
 
                         $GLOBALS['auth_user_id']      = db_result($res,0,'user_id');
                         $GLOBALS['auth_user_status']  = db_result($res,0,'status');

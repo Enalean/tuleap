@@ -1,0 +1,115 @@
+#/**
+#  *
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+
+#
+# General
+#
+plugin_serverupdate	descriptor_description	Offers a web interface for updating your server.
+plugin_serverupdate	descriptor_name	Server Update
+plugin_serverupdate	title	Server Update
+#
+# Header menu
+#
+plugin_serverupdate_menu	server_update	Server update
+plugin_serverupdate_menu	script_upgrades	Script upgrades
+plugin_serverupdate_menu	preferences	Preferences
+#
+# Server Update
+#
+plugin_serverupdate_update	WorkingCopyRevision	Current working copy revision: <strong>$1</strong>
+plugin_serverupdate_update	NumberOfUpdates	Number of available updates: <strong>$1</strong>
+plugin_serverupdate_update	RepositoryIs	Subversion repository: <strong>$1</strong>
+plugin_serverupdate_update	norepository	Subversion repository not detected.<br />If you are behind proxy, make sure that the file <em>/home/codexadm/.subversion/servers</em> is weel configured.<br />Before using this plugin, execute the command <strong><em>svn status -u --username [your_login]</em></strong>, accept permanently the certificate and type your password. This needs to be done only one time, or each time you change your password.
+plugin_serverupdate_update	Updates	Updates
+plugin_serverupdate_update	Revision	Revision
+plugin_serverupdate_update	Date	Date
+plugin_serverupdate_update	Message	Message
+plugin_serverupdate_update	Details	Details
+plugin_serverupdate_update	Special	Special
+plugin_serverupdate_update	Actions	Actions
+plugin_serverupdate_update	ChangedFiles	Changed Files
+plugin_serverupdate_update	detail_link	details
+plugin_serverupdate_update	UpdateAction	Update up to this revision
+plugin_serverupdate_update	NeedManualUpdate	Need a manual update. Please read the commit message for details.
+plugin_serverupdate_update	ContainsDBUpdate	Contains a script with a database update. Please read the commit message for details.
+plugin_serverupdate_update	prio_colors	Update level
+plugin_serverupdate_update	UpToDate	Server up to date!
+plugin_serverupdate_update	NoCommitsCriteria	No updates matching
+plugin_serverupdate_update	SimulatingUpdate	Simulating update from revision $1 to revision $2
+plugin_serverupdate_update	ConflictOnFile	Conflict on file(s):
+plugin_serverupdate_update	UpdateManually	Please, do the update manually using the command: (beware you are in the $1 directory to execute the command)
+plugin_serverupdate_update	NoConflicts	No conflicts observed.
+plugin_serverupdate_update	ScriptsInfos	Scripts information:
+plugin_serverupdate_update	ScriptsIgnored	Scripts to be ignored :
+plugin_serverupdate_update	ScriptsExecuted	Scripts to be executed:
+plugin_serverupdate_update	AtRevision	(at revision $1)
+plugin_serverupdate_update	ScriptsErrors	Scripts errors.
+plugin_serverupdate_update	ScriptsInTrouble	Scripts that generate errors:
+plugin_serverupdate_update	ScriptMustBeExecutedAtRevison	$1 must be executed at revision $2. Please update (at least) up to revision $2.
+plugin_serverupdate_update	ScriptMustBeDeletedAtRevison	$1 is deleted at revision $2. Please update (at least) up to revision $2, to ensure the update coherence.
+plugin_serverupdate_update	ScriptDeletedAt	(script deleted at revision $1)
+plugin_serverupdate_update	ScriptAlreadyExecuted	$1 has already been executed before the current revision (revision $2).
+plugin_serverupdate_update	ManualUpdateRequired	Please, do the update manually, and be carefull of what you do. Please read the commit message for details.
+plugin_serverupdate_update	ProcessUpdate	Process Update
+plugin_serverupdate_update	ConfirmUpdate	To process the update, please click the button:
+plugin_serverupdate_update	ForceUpdate	Nevertheless, you can force the update (only if you know what you're doing):
+plugin_serverupdate_update	ForceUpdateButton	Force Update
+plugin_serverupdate_update	RememberUpdateForced	Updates have been forced: $1. Be sure to have done everything written in the commit message.
+plugin_serverupdate_update	CancelUpdate	Otherwise, click the link to come back to the preceding screen.
+plugin_serverupdate_update	UpdatingServer	Updating the server from revision $1 to revision $2.
+plugin_serverupdate_update	UpdateInProgress	Update in progress. Thank you for your patience.
+plugin_serverupdate_update	revision_contains_script	This revision contains script's to execute:
+plugin_serverupdate_update	script_execution	Executing script $1:
+plugin_serverupdate_update	ErrorDuringUpdateCarefull	Please read the error message and act manually if necessary.
+plugin_serverupdate_update	ErrorDuringScriptUpgrade	Error during the execution of script $1:
+plugin_serverupdate_update	ScriptNotWellImplemented	Script $1 is not well implemented.
+plugin_serverupdate_update	ScriptSkipped	Execution of $1 skipped because the script is modified in a further revision
+plugin_serverupdate_update	RevisionNeedManualUpdate	Revision $1 needs a manual update. Please read the commit message for details.
+plugin_serverupdate_update	UpdateDone	Update done.
+plugin_serverupdate_update	ErrorDuringUpdate	An error occured during the update.
+plugin_serverupdate_update	ReturnToUpdates	Return to other updates.
+plugin_serverupdate_update	UpdateFailed	Update failed.
+plugin_serverupdate_update	NoReverseUpdate	Update to older revision is not possible with the web-interface.
+plugin_serverupdate_update	filter	Filter:
+plugin_serverupdate_update	level	level
+#
+# Script Upgrades
+#
+plugin_serverupdate_script	Script_Upgrades	Script Upgrades
+plugin_serverupdate_script	Scripts	Scripts
+plugin_serverupdate_script	Status	Status
+plugin_serverupdate_script	Actions	Actions
+plugin_serverupdate_script	status_applied	Applied
+plugin_serverupdate_script	status_never_applied	Never Applied
+plugin_serverupdate_script	status_applied_with_errors	Applied with Errors
+plugin_serverupdate_script	exec_date	Date
+plugin_serverupdate_script	exec_mode	Mode
+plugin_serverupdate_script	exec_status	Status
+plugin_serverupdate_script	exec_errors	Errors
+plugin_serverupdate_script	exec_success	Success
+plugin_serverupdate_script	exec_failure	Error
+plugin_serverupdate_script	apply_script	Apply script
+plugin_serverupdate_script	NoUpgrades	No script upgrade.
+plugin_serverupdate_script	UpgradeFailed	Upgrade failed
+plugin_serverupdate_script	UpgradeSuccessfullyApplied	Upgrade $1 successfully applied!
+plugin_serverupdate_script	UpgradeScriptFailed	Upgrade $1 not applied.
+plugin_serverupdate_script	ExecutionErrors	Execution errors:
+plugin_serverupdate_script	ScriptNotFound	Script $1 not found in the scripts directory ($2)
+plugin_serverupdate_script	show_hide_execs	show/hide executions
+#
+# Preferences
+#
+plugin_serverupdate_preferences	preferences_title	Preferences:
+plugin_serverupdate_preferences	working_directory	Working directory:
+plugin_serverupdate_preferences	svn_repository	SVN Repository:
+plugin_serverupdate_preferences	script_directory	Script directory:
+plugin_serverupdate_preferences	norepository	SVN Repository not detected.
+

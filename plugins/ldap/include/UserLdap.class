@@ -57,12 +57,11 @@ class UserLdap {
         return UserLdap::getLdapResultSet(db_result($res,0,'ldap_id'));
     }
 
-    function synchronizeUserWithLdap($userId, $ldapId, $password) {
+    function synchronizeUserWithLdap($userId, &$lr, $password) {
         $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
 
-        $pwd = stripslashes($password);
+        $pwd = rtrim(stripslashes($password));
         
-        $lr =& UserLdap::getLdapResultSet($ldapId);
         if($lr !== null) {
                         
             // {{ This part should be tranfered in a dedicated code

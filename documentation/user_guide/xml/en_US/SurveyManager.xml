@@ -252,9 +252,23 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Radio Button Yes/No</emphasis>: this
+            <para><emphasis role="bold">Radio Buttons Yes/No</emphasis>: this
             is a variant of the previous one for questions calling for a Yes
             or No answer.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Custom Radio Buttons</emphasis>: this response 
+	    type allows the project administrator to define a set of answers 
+	    from which the user may choose one. The possible answers are displayed as 
+        radio buttons.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Select Box</emphasis>: this response 
+	    type allows the project administrator to define a set of answers 
+	    from which the user may choose one. The possible answers are displayed in 
+        a select box.</para>
           </listitem>
 
           <listitem>

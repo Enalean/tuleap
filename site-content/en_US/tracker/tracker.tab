@@ -203,6 +203,11 @@ tracker_admin_index	modify_usage_for	 - Modify Field Usage for '$1'
 tracker_admin_index	deletion_failed	Tracker '$1' - Deletion Failed - 
 tracker_admin_index	delete_success	Tracker '$1' - Successfully Deleted
 tracker_admin_index	tracker_deleted	<H2>Tracker '$1' - Deleted</H2> <p>In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:$2">Site Administrator</A> within the next 10 days.</p>
+tracker_admin_index	fieldset_created	Field Set created
+tracker_admin_index	fieldset_updated	Field Set updated
+tracker_admin_index	fieldset_deleted	Field Set deleted
+tracker_admin_index	modify_fieldset	 - Modify Field Set
+tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -236,6 +241,7 @@ tracker_include_field	end	End:
 tracker_include_field	any_time	Any time
 tracker_include_field	pick_date	Click Here to Pick up a date
 tracker_include_field	unknown_display_type	$1: UNKNOW ARTIFACT FIELD DISPLAY TYPE
+tracker_include_field	unknown_value	*** unknown value ***
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactFileHtml.class
@@ -311,6 +317,7 @@ tracker_include_artifact	copy_art	Copy This Artifact
 tracker_include_artifact	is_copy	this $1 is a copy of $2
 tracker_include_artifact	copy_of	Copy of $1
 tracker_include_artifact	copy	Copy
+tracker_include_artifact	references	References:
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class
@@ -514,6 +521,22 @@ tracker_include_type	field_dependencies	Field&nbsp;Dependencies
 tracker_include_type	mng_field_dependencies	Manage Field Dependencies
 tracker_include_type	mng_field_dependencies_title	 - Manage Field Dependencies
 tracker_include_type	define_field_dependencies	Define how values in one field depend upon other field values.
+tracker_include_type	manage_fieldsets	Manage Field Sets
+tracker_include_type	define_manage_fieldsets	Define field sets for the tracker.
+tracker_include_type	fieldsets	Field Sets
+tracker_include_type	fieldset	Field Set
+tracker_include_type	create_fieldset	Create a new field set
+tracker_include_type	list_all_fieldsets	List of all field sets
+tracker_include_type	fieldset_ident	Field set identification and description
+tracker_include_type	fieldset_name	Field set label
+tracker_include_type	fieldset_desc	Description
+tracker_include_type	fieldset_display	Display information
+tracker_include_type	fields_inside	Fields
+tracker_include_type	update_fieldset	Update field set '$1'
+tracker_include_type	warning_delete_fieldset	** WARNING!! ** Delete this field set (no possible restore operation)?
+tracker_include_type	rank_in_fieldset	Rank in Field Set
+tracker_include_type	current_date	Current date.
+tracker_include_type	date_value	Date value:
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class
@@ -551,6 +574,9 @@ tracker_common_artifact	invalid_art	 Invalid artifact #$1
 tracker_common_artifact	depend_add_fail	Dependencies addition for artifact #$1 failed
 tracker_common_artifact	depend_add	Dependencies Added
 tracker_common_artifact	depend_removed	Dependency Removed
+tracker_common_artifact	bad_field_permission_submission	You are not allowed to submit the field $1.
+tracker_common_artifact	bad_field_permission_update	You are not allowed to update the field $1.
+tracker_common_artifact	bad_field_value	The value $2 is not a valid value for the field $1.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class
@@ -582,6 +608,7 @@ tracker_common_field_factory	use_ins_err	Error during inserting artifact_field_u
 tracker_common_field_factory	vl_ins_err	Error during inserting artifact_field_value_list ($1-$2): $3
 tracker_common_field_factory	label_requ	Field label, data type or display type are required.
 tracker_common_field_factory	ins_err	Error during inserting artifact_field ($1-$2): $3
+tracker_common_field_factory	ugroup_not_exist	The field $1 could not be bound to the unkown user group $2
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFile.class
@@ -639,6 +666,7 @@ tracker_common_type	notif_fail	Error during inserting notification role
 tracker_common_type	del_err	Error deleting dependencies $1: $2
 tracker_common_type	none_found	None Found 
 tracker_common_type	invalid_mail	"$1" is not a valid email address
+tracker_common_type	no_view_permission	You don't have the permissions to view this tracker.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactTypes.class
@@ -680,7 +708,7 @@ tracker_common_types	event_NEW_FILE_short_desc	New attachment
 tracker_common_types	event_CC_CHANGE_short_desc	CC Change
 tracker_common_types	event_CLOSED_short_desc	artifact closed
 tracker_common_types	event_PSS_CHANGE_short_desc	PSS change
-tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Any other Changes	
+tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Any other Changes
 tracker_common_types	event_I_MADE_IT_short_desc	I did it
 tracker_common_types	event_NEW_ARTIFACT_short_desc	New artifact
 tracker_common_types	event_ROLE_CHANGE_desc	I'm added to or removed from this role
@@ -736,4 +764,43 @@ tracker_field_dependencies	source	Source:
 tracker_field_dependencies	target	Target:
 tracker_field_dependencies	saved	Saved successfully
 tracker_field_dependencies	inline_help	Select a source field and a target field to edit dependencies between them.
-
+#
+#--------------------------------------
+# Tracker fieldsets
+# Script: SF/www/tracker/admin/fieldset.php
+#
+tracker_admin_fieldset	tracker_admin	Tracker Administration
+tracker_admin_fieldset	fieldset_admin	Field Sets Administration
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSet.class
+#
+tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
+tracker_common_fieldset	name_requ	Field set label is required.
+tracker_common_fieldset	fieldset_default_lbl_key	Details
+tracker_common_fieldset	fieldset_default_desc_key	Details of the artifact
+tracker_common_fieldset	fieldset_default_bugs_lbl_key	Details
+tracker_common_fieldset	fieldset_default_bugs_desc_key	Details of the bug
+tracker_common_fieldset	fieldset_status_bugs_lbl_key	Status
+tracker_common_fieldset	fieldset_status_bugs_desc_key	Status of the bug
+tracker_common_fieldset	fieldset_default_patches_lbl_key	Details
+tracker_common_fieldset	fieldset_default_patches_desc_key	Details of the patch
+tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Paste the patch here (text only)
+tracker_common_fieldset	fieldset_patchtext_patches_desc_key	Paste the patch here (text only) OR attach it as a file in the 'Attachments' section
+tracker_common_fieldset	fieldset_status_patches_lbl_key	Status
+tracker_common_fieldset	fieldset_status_patches_desc_key	Status of the patch
+tracker_common_fieldset	fieldset_default_SR_lbl_key	Details
+tracker_common_fieldset	fieldset_default_SR_desc_key	Details of the support request
+tracker_common_fieldset	fieldset_status_SR_lbl_key	Status
+tracker_common_fieldset	fieldset_status_SR_desc_key	Status of the support request
+tracker_common_fieldset	fieldset_default_tasks_lbl_key	Details
+tracker_common_fieldset	fieldset_default_tasks_desc_key	Details of the task
+tracker_common_fieldset	fieldset_status_tasks_lbl_key	Status
+tracker_common_fieldset	fieldset_status_tasks_desc_key	Status of the task
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class
+#
+tracker_common_fieldset_factory	delete_only_empty_fieldset	Not allowed to delete non-empty field set.
+tracker_common_fieldset_factory	label_requ	Field set label is required.
+tracker_common_fieldset_factory	ins_err	Error during inserting artifact_field_set ($1-$2): $3

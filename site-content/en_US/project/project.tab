@@ -191,10 +191,14 @@ project_admin_index	quick_file_add	[Quick Add File Release]
 project_admin_index	if_1_file_in_rel	if you have only one file to release.
 project_admin_index	packages_available	Package(s) currently available:
 project_admin_index	or	or
+project_admin_index	changed_group_type	Changed Project Type
+project_admin_index	group_type	Project Type
+project_admin_index	built_from_template	Template used for this Project: $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
 #
+project_admin_permissions	news_access	News Read
 project_admin_permissions	pack_download	Package Download
 project_admin_permissions	rel_download	Release Download
 project_admin_permissions	doc_access	Document Access
@@ -334,7 +338,7 @@ project_admin_utils	feedback_history	feedback history
 project_admin_utils	changed_personal_email_notif	Changed Personal Notification Email Settings
 project_admin_utils	changed_bts_form_message	Changed BTS bug form message
 project_admin_utils	changed_bts_allow_anon	Changed BTS bug allow anonymous submission
-project_admin_utils	doc_deleted	Document deleted	
+project_admin_utils	doc_deleted	Document deleted
 project_admin_utils	removed_project	Removed project
 project_admin_utils	added_user	Added user ($1)
 project_admin_utils	removed_user	Removed user
@@ -359,6 +363,7 @@ project_admin_utils	perm_reset_for_tracker	Permission reset for tracker $1
 project_admin_utils	perm_reset_for_package	Permission reset for package $1
 project_admin_utils	perm_reset_for_release	Permission reset for release $1
 project_admin_utils	perm_reset_for_document	Permission reset for document $1
+project_admin_utils	perm_reset_for_folder	Permission reset for folder $1
 project_admin_utils	perm_reset_for_docgroup	Permission reset for document group $1
 project_admin_utils	perm_reset_for_wiki	Permission reset for wiki $1
 project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
@@ -368,6 +373,7 @@ project_admin_utils	perm_granted_for_tracker	Permission granted for tracker $1
 project_admin_utils	perm_granted_for_package	Permission granted for package $1
 project_admin_utils	perm_granted_for_release	Permission granted for release $1
 project_admin_utils	perm_granted_for_document	Permission granted for document $1
+project_admin_utils	perm_granted_for_folder	Permission granted for folder $1
 project_admin_utils	perm_granted_for_docgroup	Permission granted for document group  $1
 project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
 project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1
@@ -375,6 +381,7 @@ project_admin_utils	perm_granted_for_object	Permission granted for object $1
 project_admin_utils	menu_config	Configuration: 
 project_admin_utils	menu_permissions	Permissions: 
 project_admin_utils	menu_data	Data: 
+project_admin_utils	group_type	Changed Project Type
 #... end of values
 #
 #-----------------------------------------------
@@ -465,6 +472,7 @@ project_admin_userperms	cvs_write	CVS Write
 project_admin_userperms	bug_track	Bug Tracking
 project_admin_userperms	forums	Forums
 project_admin_userperms	wiki	Wiki
+project_admin_userperms	svn	SVN
 project_admin_userperms	task_man	Task Manager
 project_admin_userperms	patch_man	Patch Manager
 project_admin_userperms	supp_man	Support Manager
@@ -618,6 +626,7 @@ project_export_support_request_export	follow_up_desc	All follow-up comments in o
 #
 project_export_survey_responses_export	survey_id	Survey ID
 project_export_survey_responses_export	question_id	Question ID
+project_export_survey_responses_export	user_id	User ID
 project_export_survey_responses_export	response	Response
 project_export_survey_responses_export	date_stamp	Date Stamp
 project_export_survey_responses_export	survey_id_desc	Unique survey identifier
@@ -625,6 +634,7 @@ project_export_survey_responses_export	question_id_desc	Unique question identifi
 project_export_survey_responses_export	response_desc	The response to the question
 project_export_survey_responses_export	date_desc	Date/Time the user response was registered
 project_export_survey_responses_export	date_stamp_desc	A unique identifier for the responses that belong to a survey taken by a given user
+project_export_survey_responses_export	user_id_desc	Encrypted user identifier
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php

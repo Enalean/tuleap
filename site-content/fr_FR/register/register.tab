@@ -21,6 +21,7 @@
 register_category	upd_query_fail	Etat invalide. La requête de mise à jour a échoué. Veuillez en informer $1.
 register_category	var_missing	Etat invalide. Des variables de formulaire manquent. Si vous êtes certain d'avoir fourni toutes les informations demandées, veuillez informer $1 de cette erreur en incluant les informations concernant votre système d'exploitation et votre navigateur Web.
 register_category	project_category	Catégories du projet
+register_category	select_3_classifs	Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. Cela permettra aux utilisateurs de trouver rapidement votre projet. Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".<P>REMARQUES IMPORTANTES&nbsp;: <ul><li>Les projets doivent être classifiés dans la catégorie la plus précise possible de l'arbre des projets.</li><li>Si vous sélectionnez simultanément une catégorie et une sous-catégorie plus spécialisée, seule cette dernière sera retenue.</li><li><em><b>Pour la catégorie Topic (Domaine) seulement</b></em>&nbsp;: Si votre projet ne correspond à aucune des valeurs de la catégorie, sélectionner simplement la valeur "Other/Non Listed Topics" ("Autre/Domaine non défini"). Au fur et à mesure de la soumission de nouveaux projets, l'équipe $1 enrichira la catégorie Topic (Domaine) avec des sous-catégories de 2ème ou de 3ème niveau. Toutes les suggestions à ce sujet sont les bienvenues. Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.</li></ul>
 #
 #-----------------------------------------------
 # Script: SF/www/register/confirmation.php
@@ -66,7 +67,7 @@ register_index	project_registration	Enregistrement d'un projet
 #
 register_license	invalid_g_name	Nom de projet (groupe) invalide
 register_license	invalid_short_name	Nom court du projet invalide
-register_license	nospace_in_short_name	Il ne doit pas y avoir d'espace dans le nom court du projet
+register_license	nospace_in_short_name	Il ne doit pas y avoir d'espace ni de _ (tiret bas) dans le nom court du projet
 register_license	g_name_taken	Nom de projet (groupe) déjà utilisé
 register_license	g_name_exist	Ce nom de groupe existe déjà.
 register_license	license	Licence
@@ -88,3 +89,9 @@ register_tos	tos_agree	En cliquant ci-dessous, vous reconnaissez avoir pris conn
 # Script: SF/www/register/why.php
 #
 register_why	why_register	Pourquoi enregistrer un projet ?
+#
+#-----------------------------------------------
+# Script: SF/www/register/template.php
+#
+register_template	choose	Choisir un patron de projet
+register_template	next_step	Etape 4&nbsp;: Informations Projet
