@@ -9,9 +9,10 @@ Content-Type: application/x-phpwiki;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
 
-__C'est une page expérimentale. Pour le moment, elle n'est fonctionnelle que 
-pour l'administrateur du Wiki.__
-
+__Télécharger un fichier qui sera accessible avec la syntaxe:__
+<verbatim>
+Upload:num_rev/nom_fichier
+</verbatim>
 ----
 <?plugin UpLoad ?>
 ----
