@@ -5,10 +5,10 @@
  * $Id$
  *
  * CreateDAO */
-require_once('common/mvc/Controler.class');
-require_once('common/include/HTTPRequest.class');
-require_once('CreateDAOViews.class');
-require_once('CreateDAOActions.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('CreateDAOViews.class.php');
+require_once('CreateDAOActions.class.php');
 class CreateDAO extends Controler {
     
     var $_plugin;
