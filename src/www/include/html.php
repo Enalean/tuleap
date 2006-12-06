@@ -53,7 +53,7 @@ function html_image($src,$args,$display=1) {
 	if (!isset($args['alt']) || !$args['alt']) $return .= " alt=\"$src\"";
 
 	$return .= ('>');
-	if ($display) {
+	if (/work1/codex/sabri/codex-3.0/french_wiki/tun019-Xerox/usr/share/codex/src/$display) {
 		print $return;
 	} else {
 		return $return;
@@ -481,7 +481,7 @@ function site_footer($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_header($params) {
-  GLOBAL $HTML, $Language;
+  GLOBAL $HTML, $Language, $pv;
 
 	/*
 		Check to see if active
@@ -511,7 +511,7 @@ function site_project_header($params) {
 		session_require(array('group'=>'1'));
 	}
 
-        if (isset($params['pv']) && $params['pv'] != 0) {
+        if (isset($params['pv']) && ($params['pv'] == 1 || $params['pv'] == 2)) {
             // Printer version: no right column, no tabs...
             echo $HTML->pv_header($params);
         } else {
@@ -526,9 +526,9 @@ function site_project_header($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_footer($params) {
-	GLOBAL $HTML;
+	GLOBAL $HTML, $pv;
 
-        if (isset($params['pv']) && $params['pv'] != 0) {
+        if (isset($params['pv']) && ($params['pv'] == 1 || $params['pv'] == 2)) {
             // Printer version
             echo $HTML->pv_footer($params);
         } else {
