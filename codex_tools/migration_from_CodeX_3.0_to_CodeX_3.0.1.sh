@@ -330,7 +330,7 @@ todo " - copy the icons for feedback:"
 todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/info.png /path/to/your/theme/images/ic/"
 todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/error.png /path/to/your/theme/images/ic/"
 todo "        cp /usr/share/codex/src/www/themes/CodeXTab/images/ic/warning.png /path/to/your/theme/images/ic/"
-todo "Have a look at plugins/docman/etc/docman.inc and configure yours (in /etc/codex/plugins/docman/etc/)."
+todo "Have a look at plugins/docman/etc/docman.inc.dist and configure yours (in /etc/codex/plugins/docman/etc/)."
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
