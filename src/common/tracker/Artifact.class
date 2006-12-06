@@ -697,7 +697,8 @@ class Artifact extends Error {
                     
                     // we check if the given value is authorized for this field (for select box fields only)
                     // we don't check here the none value, we have already check it before (we can't check here the none value because the function checkValueInPredefinedValues don't take the none value into account)
-                    if (! $masschange && $field->isSelectBox() && $value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $value)) {
+                    // if the value did not change, we don't do the check (because of stored values that can be deleted now)
+                    if (! $masschange && $result[$field_name] != $value && $field->isSelectBox() && $value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $value)) {
                         $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
                         return false;
                     }                    
