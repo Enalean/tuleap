@@ -53,7 +53,7 @@ function html_image($src,$args,$display=1) {
 	if (!isset($args['alt']) || !$args['alt']) $return .= " alt=\"$src\"";
 
 	$return .= ('>');
-	if (/work1/codex/sabri/codex-3.0/french_wiki/tun019-Xerox/usr/share/codex/src/$display) {
+	if ($display) {
 		print $return;
 	} else {
 		return $return;
