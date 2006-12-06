@@ -59,13 +59,22 @@ if ($type_of_search == "soft") {
 	$words2=implode($array,"%' $crit short_description LIKE '%");
 	$words3=implode($array,"%' $crit unix_group_name LIKE '%");
 
+    $user = new User(user_getid());
+    if ($user->isRestricted()) {
+        $from_restricted = ", user_group ";
+        $where_restricted = " AND user_group.group_id = groups.group_id AND user_group.user_id = '".$user->getID()."'";
+    } else {
+        $from_restricted = "";
+        $where_restricted = "";
+    }
+    
 	/*
 		Query to find software
 	*/
-	$sql = "SELECT group_name,unix_group_name,group_id,short_description ".
-		"FROM groups ".
-		"WHERE status='A' AND is_public='1' AND ((group_name LIKE '%$words1%') OR (short_description LIKE '%$words2%') OR (unix_group_name LIKE '%$words3%')) LIMIT $offset,26";
-	$result = db_query($sql);
+	$sql = "SELECT group_name,unix_group_name,groups.group_id,short_description ".
+		"FROM groups ".$from_restricted.
+		"WHERE status='A' AND is_public='1' AND ((group_name LIKE '%$words1%') OR (short_description LIKE '%$words2%') OR (unix_group_name LIKE '%$words3%')) ".$where_restricted." LIMIT $offset,26";
+    $result = db_query($sql);
 	$rows = $rows_returned = db_numrows($result);
 
 	if (!$result || $rows < 1) {
