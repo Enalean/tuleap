@@ -78,7 +78,8 @@ if ($export == 'survey_responses') {
     echo $Language->getText('project_export_bug_deps_export','bug_deps_export_format',array($Language->getText('project_export_index', 'survey_responses')));
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
-    prepare_survey_responses_record($group_id,$record);   
+    $salt = project_export_makesalt();
+    prepare_survey_responses_record($group_id,$record,$salt);   
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record);
 
 
@@ -102,10 +103,10 @@ if ($export == 'survey_responses') {
 	// extract data from the survey table and insert them into
 	// the project database table
 	if ($res) {
-	    
-	    while ($arr = db_fetch_array($result)) {
-		prepare_survey_responses_record($group_id,$arr);
-		insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
+        $salt = project_export_makesalt();
+        while ($arr = db_fetch_array($result)) {
+            prepare_survey_responses_record($group_id,$arr,$salt);
+            insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
 	    }
 
 	} else {

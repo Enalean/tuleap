@@ -93,7 +93,7 @@ $eol = "\n";
     
 //echo "DBG -- $sql<br>";
 
-if ($multiple_queries) {
+if (isset($multiple_queries) && $multiple_queries) {
   $all_results = array();
   foreach($all_queries as $q) {
     $result = db_query($q);
