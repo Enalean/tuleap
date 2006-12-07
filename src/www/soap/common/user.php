@@ -1,6 +1,6 @@
 <?php
 
-require_once('common/include/User.class');
+require_once('common/include/User.class.php');
 
 //
 // Type definition

@@ -1,11 +1,11 @@
 <?php
 
-require_once('common/plugin/PluginInfo.class');
-require_once('PluginsAdministrationPluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('PluginsAdministrationPluginDescriptor.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: Sanitizer.class,v 1.1 2005/05/10 09:48:11 nterray Exp $
+ * $Id: Sanitizer.class.php,v 1.1 2005/05/10 09:48:11 nterray Exp $
  *
  * PluginsAdministrationPluginInfo
  */

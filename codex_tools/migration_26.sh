@@ -344,15 +344,15 @@ $CP -af /home/httpd_24/cgi-bin/viewcvs.cgi /home/httpd/cgi-bin
 		echo "done."
 	#}}}
 	
-	#{{{ Creation of Theme.class
+	#{{{ Creation of Theme.class.php
 		echo -ne "Creation of Theme classes...\t"
 		for i in *
 		do
-		if [ ! -f $i/${i}_Theme.class ]; then
+		if [ ! -f $i/${i}_Theme.class.php ]; then
 		
 			echo "<?php
 
-require_once('www/include/Layout.class');
+require_once('www/include/Layout.class.php');
 
 class ${i}_Theme extends Layout {
 
@@ -361,7 +361,7 @@ class ${i}_Theme extends Layout {
     }
 }
 
-?>" > $i/${i}_Theme.class
+?>" > $i/${i}_Theme.class.php
 			fi
 		done
 		echo "done."

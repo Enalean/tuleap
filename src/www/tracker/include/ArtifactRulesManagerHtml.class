@@ -23,9 +23,9 @@
  * $Id$
  */
 
-require_once('common/tracker/ArtifactRulesManager.class');
-require_once('ArtifactTypeHtml.class');
-require_once('ArtifactRuleValueJavascript.class');
+require_once('common/tracker/ArtifactRulesManager.class.php');
+require_once('ArtifactTypeHtml.class.php');
+require_once('ArtifactRuleValueJavascript.class.php');
 $Language->loadLanguageMsg('tracker/tracker');
 
 /**

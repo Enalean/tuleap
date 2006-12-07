@@ -1,7 +1,7 @@
 <?php
 
-require_once('common/plugin/PluginInfo.class');
-require_once('TemplatePluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('TemplatePluginDescriptor.class.php');
 
 class TemplatePluginInfo extends PluginInfo {
     

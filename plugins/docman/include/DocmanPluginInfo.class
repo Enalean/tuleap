@@ -22,8 +22,8 @@
  *
  * $Id$
  */
-require_once('common/plugin/PluginInfo.class');
-require_once('common/include/PropertyDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('common/include/PropertyDescriptor.class.php');
 require_once('DocmanPluginDescriptor.class');
 
 class DocmanPluginInfo extends PluginInfo {

@@ -11,13 +11,13 @@
   *
   */
 
-//require_once('common/include/Error.class');
-//require_once('common/tracker/ArtifactField.class');
-//require_once('include/ArtifactFieldHtml.class');
-//require_once('common/tracker/ArtifactFieldFactory.class');
+//require_once('common/include/Error.class.php');
+//require_once('common/tracker/ArtifactField.class.php');
+//require_once('include/ArtifactFieldHtml.class.php');
+//require_once('common/tracker/ArtifactFieldFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
-require_once('include/ArtifactRulesManagerHtml.class');
+require_once('include/ArtifactRulesManagerHtml.class.php');
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {

@@ -6,13 +6,13 @@
  *
  * ServerUpdateViews
  */
-require_once('common/mvc/Views.class');
-require_once('common/include/HTTPRequest.class');
-require_once('common/plugin/PluginManager.class');
-require_once('common/plugin/PluginHookPriorityManager.class');
+require_once('common/mvc/Views.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/plugin/PluginManager.class.php');
+require_once('common/plugin/PluginHookPriorityManager.class.php');
 
-require_once('SVNUpdate.class');
-require_once('SVNUpdateFilter.class');
+require_once('SVNUpdate.class.php');
+require_once('SVNUpdateFilter.class.php');
 
 
 define("URL_REPOSITORY_SHOW_DETAILS", "https://partners.xrce.xerox.com/svn/?func=detailrevision&group_id=120&rev_id=");

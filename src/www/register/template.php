@@ -7,7 +7,7 @@
 // $Id: basicinfo.php 1491 2005-05-09 07:18:09Z ljulliar $
 
 require_once('pre.php');    // Initial db and session library, opens session
-require_once('common/include/TemplateSingleton.class');
+require_once('common/include/TemplateSingleton.class.php');
 
 session_require(array('isloggedin'=>'1'));
 $Language->loadLanguageMsg('register/register');

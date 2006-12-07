@@ -23,7 +23,7 @@
  * $Id$
  */
 
-require_once('common/collection/Visitor.class');
+require_once('common/collection/Visitor.class.php');
 
 class Docman_NodeToRootVisitor extends Visitor {
     var $path;

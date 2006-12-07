@@ -9,8 +9,8 @@
 //
 // Originally written by Marie-Luise Schneider 2005, CodeX Team, Xerox
 
-//require_once('common/include/Error.class');
-//require_once('common/include/Permission.class');
+//require_once('common/include/Error.class.php');
+//require_once('common/include/Permission.class.php');
 
 //$Language->loadLanguageMsg('include/include');
 

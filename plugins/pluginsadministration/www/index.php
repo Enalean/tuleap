@@ -8,7 +8,7 @@
  */
  
 require_once('pre.php');
-require_once('common/plugin/PluginManager.class');
+require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
 $p =& $plugin_manager->getPluginByName('pluginsadministration');
 if ($p) {

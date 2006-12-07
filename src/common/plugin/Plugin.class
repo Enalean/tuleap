@@ -1,8 +1,8 @@
 <?php
-require_once('PluginInfo.class');
-require_once('common/include/String.class');
-require_once('common/collection/Map.class');
-require_once('PluginManager.class');
+require_once('PluginInfo.class.php');
+require_once('common/include/String.class.php');
+require_once('common/collection/Map.class.php');
+require_once('PluginManager.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 

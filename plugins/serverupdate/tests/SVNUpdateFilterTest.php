@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__).'/../include/SVNUpdateFilter.class');
-require_once(dirname(__FILE__).'/../include/SVNCommit.class');
+require_once(dirname(__FILE__).'/../include/SVNUpdateFilter.class.php');
+require_once(dirname(__FILE__).'/../include/SVNCommit.class.php');
 Mock::generate('SVNCommit');
 
 

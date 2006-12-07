@@ -10,7 +10,7 @@ require_once('pre.php');
 require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/include/TemplateSingleton.class');
+require_once('common/include/TemplateSingleton.class.php');
 
 $Language->loadLanguageMsg('admin/admin');
 

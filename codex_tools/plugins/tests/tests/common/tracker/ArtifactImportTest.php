@@ -1,14 +1,14 @@
 <?php
-require_once('common/include/Error.class');
+require_once('common/include/Error.class.php');
 require_once('www/include/utils.php');
 
-require_once('common/tracker/ArtifactImport.class');
+require_once('common/tracker/ArtifactImport.class.php');
 //Mock::generatePartial('ArtifactImport','ArtifactImportTestVersion',array());
 
-require_once('BaseLanguage.class');
+require_once('BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-//require_once('common/tracker/ArtifactField.class');
+//require_once('common/tracker/ArtifactField.class.php');
 //Mock::generatePartial('ArtifactField','ArtifactFieldTestVersion',array('getLabel','getName','isEmptyOk','getDisplayType','isDateField'));
 
 //substitute ArtifactField
@@ -23,7 +23,7 @@ class ArtifactImportTest_ArtifactField {
 }
 Mock::generate('ArtifactImportTest_ArtifactField','ArtifactFieldImportVersion');
 
-//require_once('common/tracker/ArtifactFieldFactory.class');
+//require_once('common/tracker/ArtifactFieldFactory.class.php');
 //Mock::generatePartial('ArtifactFieldFactory','ArtifactFieldFactoryTestVersion',array('getFieldFromName','getAllUsedFields'));
 class ArtifactImportTest_ArtifactFieldFactory {
   function getFieldFromName() {}
@@ -31,7 +31,7 @@ class ArtifactImportTest_ArtifactFieldFactory {
 }
 Mock::generate('ArtifactImportTest_ArtifactFieldFactory','ArtifactFieldFactory');
 
-//require_once('common/tracker/ArtifactType.class');
+//require_once('common/tracker/ArtifactType.class.php');
 //Mock::generatePartial('ArtifactType','ArtifactTypeTestVersion',array('getName','allowsAnon','getID','userIsAdmin'));
 class ArtifactType {
   function getName() {}

@@ -1,7 +1,7 @@
 <?php
-require_once('common/collection/Map.class');
-require_once('common/include/String.class');
-require_once('common/collection/Collection.class');
+require_once('common/collection/Map.class.php');
+require_once('common/include/String.class.php');
+require_once('common/collection/Collection.class.php');
 if (!class_exists("FakeValue")) {
     class FakeValue {}
 }

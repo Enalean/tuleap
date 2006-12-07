@@ -1,6 +1,6 @@
 <?php
-require_once('MultiMapTestCase.class');
-require_once('common/collection/PrioritizedMultiMap.class');
+require_once('MultiMapTestCase.class.php');
+require_once('common/collection/PrioritizedMultiMap.class.php');
 
 if (!class_exists("FakeValue")) {
     class FakeValue {}

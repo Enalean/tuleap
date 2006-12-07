@@ -7,11 +7,11 @@
  * Reference Manager
  */
 
-require_once('common/dao/ReferenceDao.class');
-require_once('common/dao/CodexDataAccess.class');
-require_once('common/include/Reference.class');
-require_once('common/include/ReferenceInstance.class');
-require_once('common/include/GroupFactory.class');
+require_once('common/dao/ReferenceDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/include/Reference.class.php');
+require_once('common/include/ReferenceInstance.class.php');
+require_once('common/include/GroupFactory.class.php');
 
 
 /**

@@ -10,7 +10,7 @@ require_once('pre.php');
 
 $Language->loadLanguageMsg('account/account');
 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_lostpw', array());
 

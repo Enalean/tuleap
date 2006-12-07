@@ -1,5 +1,5 @@
 <?php
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'));
 class TestPlugin extends Plugin {
     function addHook($hook, $callback = 'CallHook', $recallHook = true) {
@@ -9,7 +9,7 @@ class TestPlugin extends Plugin {
         $this->_removeHook($hook);
     }
 }
-require_once('common/plugin/PluginManager.class');
+require_once('common/plugin/PluginManager.class.php');
 Mock::generate('PluginManager');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

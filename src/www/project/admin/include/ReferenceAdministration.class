@@ -6,10 +6,10 @@
  *
  * ReferencesAdministration
  */
-require_once('common/mvc/Controler.class');
-require_once('common/include/HTTPRequest.class');
-require_once('ReferenceAdministrationViews.class'); 
-require_once('ReferenceAdministrationActions.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('ReferenceAdministrationViews.class.php'); 
+require_once('ReferenceAdministrationActions.class.php');
 
 class ReferenceAdministration extends Controler {
     

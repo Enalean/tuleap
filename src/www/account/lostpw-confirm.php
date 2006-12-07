@@ -7,11 +7,11 @@
 // $Id$
 
 require_once('pre.php');    
-require_once('common/mail/Mail.class');
+require_once('common/mail/Mail.class.php');
 
 $Language->loadLanguageMsg('account/account');
 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_lostpw-confirm', array());
 

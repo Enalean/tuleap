@@ -1,8 +1,8 @@
 <?php
-require('common/dao/include/DataAccessObject.class');
-require('common/dao/include/DataAccess.class');
+require('common/dao/include/DataAccessObject.class.php');
+require('common/dao/include/DataAccess.class.php');
 Mock::generate('DataAccess');
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 /**

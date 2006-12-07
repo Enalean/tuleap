@@ -1,9 +1,9 @@
 <?php
-require_once('common/mail/Mail.class');
+require_once('common/mail/Mail.class.php');
 
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require_once('common/dao/UserDao.class');
+require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
 Mock::generatePartial('Mail', 'MailTestVersion', array('_getUserDao'));
 /**

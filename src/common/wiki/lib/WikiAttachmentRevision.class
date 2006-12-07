@@ -21,10 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/collection/ArrayIterator.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/collection/ArrayIterator.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
-require_once('common/wiki/lib/WikiAttachmentRevisionDao.class');
+require_once('common/wiki/lib/WikiAttachmentRevisionDao.class.php');
 
 /**
  *

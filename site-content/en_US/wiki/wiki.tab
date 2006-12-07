@@ -11,7 +11,7 @@
 #  */ $Language->loadLanguageMsg('wiki/wiki');
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/views/WikiServiceViews.class
+# Script: SF/common/wiki/views/WikiServiceViews.class.php
 #
 wiki_views_wikiserviceviews	wiki_title	Wiki for $1
 wiki_views_wikiserviceviews	wiki_page_title	$1 on $2
@@ -36,7 +36,7 @@ wiki_views_wikiserviceviews	install_intro	<h2>Wiki Creation</h2><p>This project 
 wiki_views_wikiserviceviews	wiki_language	Wiki Language:
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/views/WikiViews.class
+# Script: SF/common/wiki/views/WikiViews.class.php
 #
 wiki_views_wikiviews	title_error	Exiting with Error
 wiki_views_wikiviews	not_activate	<H2><span class="feedback">Wiki Service not activated</span></H2><p>The Wiki Service of $1 project  require an activation by a Project admin or a Wiki admin.</p>
@@ -45,7 +45,7 @@ wiki_views_wikiviews	empty_page	<h2><span class="feedback">Page doesn't exist</s
 wiki_views_wikiviews	not_empty_page	<p>You can set specific permissions on <strong>$1</strong> Wiki Page. These <strong>permissions only apply to this page</strong>.</p><p>By default, Wiki pages have no specific permissions: access to all Wiki Pages is granted to any registred user.</p><p><strong>Remember:</strong> Access to a page imply that <strong>every members</strong> of <strong>each</strong> following <strong>selected groups</strong> can <strong>read</strong> and <strong>write</strong> the corresponding page.</p><p>Select user groups who are granted access to this Wiki:<p>
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiAttachment.class
+# Script: SF/common/wiki/lib/WikiAttachment.class.php
 #
 wiki_lib_attachment	err_extension	Files with extension $1 are not allowed.
 wiki_lib_attachment	err_alpha	ERROR uploading $1: File names may only contain alphanumeric characters and dot, underscore or dash.
@@ -55,7 +55,7 @@ wiki_lib_attachment	err_create_file_dir	Unable to create file revision area
 wiki_lib_attachment	err_multi_id	There are multiple identifier for an attachment.Please contact an administrator
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiAttachmentRevision.class
+# Script: SF/common/wiki/lib/WikiAttachmentRevision.class.php
 #
 wiki_lib_attachment_rev	err_multi_id	There are multiple identifier for an attachment. Please <a href="mailto:$1?Subject=Wiki Attachment Error (attch:$2,rev:$3)" title="Send a mail to $4 administrators">contact</a> a $4 administrator.
 wiki_lib_attachment_rev	err_upl_mv	Upload of '$1' faild.
@@ -63,7 +63,7 @@ wiki_lib_attachment_rev	err_create	An error occured on attachment revision creat
 wiki_lib_attachment_rev	err_too_big	Sorry but this file is too big.
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiEntry.class
+# Script: SF/common/wiki/lib/WikiEntry.class.php
 #
 wiki_lib_wikientry	insert_err	Can not insert new wiki entry: $1
 wiki_lib_wikientry	delete_err	Can not delete wiki entry: $1
@@ -71,12 +71,12 @@ wiki_lib_wikientry	update_err	Can not update wiki entry: $1
 wiki_lib_wikientry	no_update	Wiki entry "$1" not updated
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiPage.class
+# Script: SF/common/wiki/lib/WikiPage.class.php
 #
 wiki_lib_wikipage	notunique_err	Wiki page is not unique. Please contact an administrator.
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiPageWrapper.class
+# Script: SF/common/wiki/lib/WikiPageWrapper.class.php
 #
 wiki_lib_wikipagewrap	new_page_text	$1 store pages created with main interface:
 wiki_lib_wikipagewrap	page_added	Added $1
@@ -86,7 +86,7 @@ wiki_lib_wikipagewrap	dfltentrydesc	Initial Wiki Document
 wiki_lib_wikipagewrap	dfltentrypage	HomePage
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/actions/WikiServiceAdminActions.class
+# Script: SF/common/wiki/actions/WikiServiceAdminActions.class.php
 #
 wiki_actions_wikiserviceadmin	page_name_empty_err	You try to create a Wiki Document but you didn't select any page. You have to create a Wiki Page before creating a Wiki Document.
 wiki_actions_wikiserviceadmin	update_perm_err	Could not update permissions: <p>$1</p>
@@ -94,13 +94,13 @@ wiki_actions_wikiserviceadmin	update_page_perm_err	Could not update permissions 
 wiki_actions_wikiserviceadmin	update_attachment_perm_err	Could not update permissions on this Wiki Attachment: <p>$1</p>
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/WikiService.class
+# Script: SF/common/wiki/WikiService.class.php
 #
 wiki_wikiservice	acces_denied_whole	You are not authorized to access this Wiki. Please contact a <A HREF="$1">Project Administrator</A>.
 wiki_wikiservice	acces_denied_page	You are not authorized to access this Wiki Page. Please contact a <A HREF="$1">Project Administrator</A>.
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/views/WikiServiceAdminViews.class
+# Script: SF/common/wiki/views/WikiServiceAdminViews.class.php
 #
 wiki_views_wkserviews	title	Wiki Administration for $1
 wiki_views_wkserviews	entry_em	<em>Displayed in wiki service default page (e.g. Development documentations)</em>

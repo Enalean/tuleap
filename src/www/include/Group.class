@@ -7,9 +7,9 @@
 //	      
 // $Id$
 
-//require_once('common/include/Error.class');
+//require_once('common/include/Error.class.php');
 //require_once('common/include/Permission.class');
-require_once('common/include/TemplateSingleton.class');
+require_once('common/include/TemplateSingleton.class.php');
 
 //$Language->loadLanguageMsg('include/include');
 
@@ -19,9 +19,9 @@ require_once('common/include/TemplateSingleton.class');
 
 	Sets up database results and preferences for a group and abstracts this info
 
-	Foundry.class and Project.class call this.
+	Foundry.class.php and Project.class.php call this.
 
-	Project.class contains all the deprecated API from the old group.php file
+	Project.class.php contains all the deprecated API from the old group.php file
 
 
 

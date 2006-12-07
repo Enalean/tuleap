@@ -11,8 +11,8 @@ require_once('proj_email.php');
 require_once('account.php');
 require_once('timezones.php');
 
-require_once('common/mail/Mail.class');
-require_once('common/include/HTTPRequest.class');
+require_once('common/mail/Mail.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 $Language->loadLanguageMsg('account/account');
 
@@ -194,7 +194,7 @@ if (isset($Register)) {
     }
 }
 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_register', array());
 

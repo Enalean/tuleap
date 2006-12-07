@@ -9,8 +9,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class');
-require_once('common/tracker/ArtifactField.class');
+//require_once('common/include/Error.class.php');
+require_once('common/tracker/ArtifactField.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 

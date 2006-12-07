@@ -10,7 +10,7 @@
 
 //$Language->loadLanguageMsg('svnupdate/svnupdate');
 
-require_once("SVNCommit.class");
+require_once("SVNCommit.class.php");
 
 define("LEVEL_CRITERIA", "level");
 

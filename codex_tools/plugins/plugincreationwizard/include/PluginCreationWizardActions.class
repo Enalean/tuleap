@@ -6,9 +6,9 @@
  *
  * PluginCreationWizardActions
  */
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
-require_once('Template.class');
+require_once('common/mvc/Actions.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('Template.class.php');
 
 class PluginCreationWizardActions extends Actions {
     
@@ -128,19 +128,19 @@ class PluginCreationWizardActions extends Actions {
         //{{{create include files
         
             //Create Plugin class
-            $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['short_name'].'Plugin.class', 'w');
+            $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['short_name'].'Plugin.class.php', 'w');
             fwrite($f, '<'."?php\n");
             fwrite($f, $tpl->fetch('tpl/Plugin.tpl'));
             fwrite($f, '?'.">");
             fclose($f);
             //Create PluginInfo class
-            $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'PluginInfo.class', 'w');
+            $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'PluginInfo.class.php', 'w');
             fwrite($f, '<'."?php\n");
             fwrite($f, $tpl->fetch('tpl/Info.tpl'));
             fwrite($f, '?'.">");
             fclose($f);
             //Create PluginDescriptor class
-            $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'PluginDescriptor.class', 'w');
+            $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'PluginDescriptor.class.php', 'w');
             fwrite($f, '<'."?php\n");
             fwrite($f, $tpl->fetch('tpl/Descriptor.tpl'));
             fwrite($f, '?'.">");
@@ -149,19 +149,19 @@ class PluginCreationWizardActions extends Actions {
             //{{{ Create MVC
             if ($params['use_web_space'] && $params['use_mvc']) {
                 //Create Controler class
-                $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'.class', 'w');
+                $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'.class.php', 'w');
                 fwrite($f, '<'."?php\n");
                 fwrite($f, $tpl->fetch('tpl/Controler.tpl'));
                 fwrite($f, '?'.">");
                 fclose($f);
                 //Create Actions class
-                $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'Actions.class', 'w');
+                $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'Actions.class.php', 'w');
                 fwrite($f, '<'."?php\n");
                 fwrite($f, $tpl->fetch('tpl/Actions.tpl'));
                 fwrite($f, '?'.">");
                 fclose($f);
                 //Create Views class
-                $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'Views.class', 'w');
+                $f = fopen($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/include/'.$params['class_name'].'Views.class.php', 'w');
                 fwrite($f, '<'."?php\n");
                 fwrite($f, $tpl->fetch('tpl/Views.tpl'));
                 fwrite($f, '?'.">");

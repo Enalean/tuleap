@@ -11,9 +11,9 @@
 //
 //  Written for CodeX by Stephane Bouhet
 //
-require_once('common/tracker/Artifact.class');
-require_once('common/mail/Mail.class');
-require_once('common/include/ReferenceManager.class');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/mail/Mail.class.php');
+require_once('common/include/ReferenceManager.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

@@ -9,7 +9,7 @@
 
 function service_create_service($arr, $group_id, $template, $force_enable = false) {
     // Convert link to real values
-    // NOTE: if you change link variables here, change them also in src/www/project/admin/servicebar.php and src/www/include/Layout.class
+    // NOTE: if you change link variables here, change them also in src/www/project/admin/servicebar.php and src/www/include/Layout.class.php
     $link=$arr['link'];
     if ($template['system']) {
         $link=str_replace('$projectname',group_getunixname($group_id),$link);

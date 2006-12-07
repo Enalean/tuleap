@@ -11,7 +11,7 @@
 #    more details.
 #
 # Purpose:
-#    This Python file mimics some of the functions in www/include/Group.class
+#    This Python file mimics some of the functions in www/include/Group.class.php
 #    to allow Python scripts to handle group information
 
 import include

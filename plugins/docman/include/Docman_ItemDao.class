@@ -23,7 +23,7 @@
  * $Id$
  */
 require_once('DocmanConstants.class');
-require_once('common/dao/include/DataAccessObject.class');
+require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_ItemDao extends DataAccessObject {
 

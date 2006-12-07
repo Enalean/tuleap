@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../include/SVNCommitMetaData.class');
+require_once(dirname(__FILE__).'/../include/SVNCommitMetaData.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

@@ -9,7 +9,7 @@
 require_once('pre.php');    
 require_once('account.php');
 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_change_email-complete', array());
 

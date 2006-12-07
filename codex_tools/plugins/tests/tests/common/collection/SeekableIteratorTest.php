@@ -1,6 +1,6 @@
 <?php
-require_once('SeekableIteratorTestCase.class');
-require_once('common/collection/SeekableIterator.class');
+require_once('SeekableIteratorTestCase.class.php');
+require_once('common/collection/SeekableIterator.class.php');
 
 class SeekableIteratorTestVersion extends SeekableIterator {
     var $_elements;

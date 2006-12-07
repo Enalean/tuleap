@@ -6,10 +6,10 @@
  *
  * PluginCreationWizard
  */
-require_once('common/mvc/Controler.class');
-require_once('common/include/HTTPRequest.class');
-require_once('PluginCreationWizardViews.class');
-require_once('PluginCreationWizardActions.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('PluginCreationWizardViews.class.php');
+require_once('PluginCreationWizardActions.class.php');
 class PluginCreationWizard extends Controler {
     
     function PluginCreationWizard() {

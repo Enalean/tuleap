@@ -7,10 +7,10 @@
  *
  * CreateDAOViews
  */
-require_once('common/mvc/Views.class');
-require_once('common/include/HTTPRequest.class');
-require_once('common/dao/DBTablesDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/mvc/Views.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/dao/DBTablesDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
 class CreateDAOViews extends Views {
     
@@ -44,7 +44,7 @@ class CreateDAOViews extends Views {
                 $name = substr($name, 0, $pos).ucfirst(substr($name, $pos+1));
             }
             $name = substr($name, 0, strlen($name)-1);
-            if (!is_file($path_to_dao.$name.'Dao.class')) {
+            if (!is_file($path_to_dao.$name.'Dao.class.php')) {
                 $missings[$row['Tables_in_sourceforge']] = $name;
             }
             $result->next();

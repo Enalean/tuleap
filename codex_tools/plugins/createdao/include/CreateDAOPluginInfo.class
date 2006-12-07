@@ -8,9 +8,9 @@
  *
  * CreateDAOPluginInfo
  */
-require_once('common/plugin/PluginInfo.class');
-require_once('common/include/PropertyDescriptor.class');
-require_once('CreateDAOPluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('common/include/PropertyDescriptor.class.php');
+require_once('CreateDAOPluginDescriptor.class.php');
 
 class CreateDAOPluginInfo extends PluginInfo {
     

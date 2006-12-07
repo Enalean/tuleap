@@ -6,8 +6,8 @@
  *
  * <?=$class_name?>Views
  */
-require_once('common/mvc/Views.class');
-require_once('common/include/HTTPRequest.class');
+require_once('common/mvc/Views.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 class <?=$class_name?>Views extends Views {
     

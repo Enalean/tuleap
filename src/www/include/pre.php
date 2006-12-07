@@ -47,7 +47,7 @@ if (isset($location) && $location) {
 }
 
 //Load plugins
-require_once('common/plugin/PluginManager.class');
+require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
 $plugin_manager->loadPlugins();
 
@@ -74,13 +74,13 @@ require_once('session.php');
 
 //user functions like get_name, logged_in, etc
 require_once('user.php');
-require_once('common/include/User.class');
+require_once('common/include/User.class.php');
 
 //group functions like get_name, etc
-require_once('Group.class');
+require_once('Group.class.php');
 
 //Project extends Group and includes preference accessors
-require_once('Project.class');
+require_once('Project.class.php');
 
 //library to set up context help
 require_once('help.php');
@@ -112,7 +112,7 @@ session_set();
 
 */
 
-require('BaseLanguage.class');
+require('BaseLanguage.class.php');
 
 if (!$GLOBALS['sys_lang']) {
 	$GLOBALS['sys_lang']="en_US";
@@ -170,7 +170,7 @@ if ($GLOBALS['sys_is_theme_custom']) {
 }
 $name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
 
-if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
+if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php')) {
     //User wants a theme which doesn't exist
     //We're looking for default theme
     $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
@@ -183,7 +183,7 @@ if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
         $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
     }
 }
-require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class');
+require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php');
 $root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
 $HTML = new $name_of_theme_class($root_for_theme);
 

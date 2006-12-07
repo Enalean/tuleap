@@ -10,7 +10,7 @@
 //
 
 require_once('www/project/export/project_export_utils.php');
-require_once('common/tracker/ArtifactImport.class');
+require_once('common/tracker/ArtifactImport.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 $Language->loadLanguageMsg('include/include');

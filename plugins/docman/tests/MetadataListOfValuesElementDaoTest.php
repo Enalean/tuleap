@@ -23,8 +23,8 @@
  * $Id$
  */
 
-require_once('common/dao/include/DataAccess.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/include/DataAccess.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 require(getenv('CODEX_LOCAL_INC'));
 require($GLOBALS['db_config_file']);
 

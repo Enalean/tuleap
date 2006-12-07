@@ -8,8 +8,8 @@
 
 require_once('pre.php');    
 require_once('www/file/file_utils.php');
-require_once('common/include/SimpleSanitizer.class');
-require_once('common/mail/Mail.class');
+require_once('common/include/SimpleSanitizer.class.php');
+require_once('common/mail/Mail.class.php');
 require_once('www/forum/forum_utils.php');
 $Language->loadLanguageMsg('file/file');
 $Language->loadLanguageMsg('news/news');

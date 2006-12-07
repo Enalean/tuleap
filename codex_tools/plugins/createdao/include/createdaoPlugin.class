@@ -6,7 +6,7 @@
  *
  * CreateDAOPlugin
  */
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 class CreateDAOPlugin extends Plugin {
 	
@@ -17,7 +17,7 @@ class CreateDAOPlugin extends Plugin {
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'CreateDAOPluginInfo')) {
-            require_once('CreateDAOPluginInfo.class');
+            require_once('CreateDAOPluginInfo.class.php');
             $this->pluginInfo =& new CreateDAOPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -28,7 +28,7 @@ class CreateDAOPlugin extends Plugin {
     }
     
     function process() {
-        require_once('CreateDAO.class');
+        require_once('CreateDAO.class.php');
         $controler =& new CreateDAO($this);
         $controler->process();
     }

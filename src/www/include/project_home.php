@@ -9,9 +9,9 @@
 require_once('vars.php');
 require_once('www/news/news_utils.php');
 require_once('trove.php');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/wiki/lib/Wiki.class');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/wiki/lib/Wiki.class.php');
 require_once('www/project/admin/permissions.php');
 
 $Language->loadLanguageMsg('include/include');

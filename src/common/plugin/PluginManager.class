@@ -1,13 +1,13 @@
 <?php
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 
-require_once('common/plugin/PluginFactory.class');
-require_once('common/plugin/PluginHookPriorityManager.class');
+require_once('common/plugin/PluginFactory.class.php');
+require_once('common/plugin/PluginHookPriorityManager.class.php');
 
-require_once('common/dao/DBTablesDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/DBTablesDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
-require_once('common/include/String.class');
+require_once('common/include/String.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

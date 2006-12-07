@@ -1,5 +1,5 @@
 <?php
-require_once('common/include/String.class');
+require_once('common/include/String.class.php');
 if (!class_exists("FakeValue")) {
     class FakeValue {}
 }

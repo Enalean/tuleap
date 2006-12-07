@@ -8,8 +8,8 @@
  *
  * testsPluginInfo
  */
-require_once('common/plugin/PluginInfo.class');
-require_once('testsPluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('testsPluginDescriptor.class.php');
 
 class testsPluginInfo extends PluginInfo {
     

@@ -62,7 +62,7 @@ if (register_valid()) {
 } else { // not valid registration, or first time to page
     $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title')));
 
-    require_once('common/event/EventManager.class');
+    require_once('common/event/EventManager.class.php');
     $em =& EventManager::instance();
     $em->processEvent('before_admin_change_pw', array());
 

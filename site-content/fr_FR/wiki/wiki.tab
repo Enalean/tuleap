@@ -16,7 +16,7 @@
 #  */
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/views/WikiServiceViews.class
+# Script: SF/common/wiki/views/WikiServiceViews.class.php
 #
 wiki_views_wikiserviceviews	wiki_title	Wiki pour $1
 wiki_views_wikiserviceviews	wiki_page_title	$1 dans $2
@@ -41,7 +41,7 @@ wiki_views_wikiserviceviews	install_intro	<h2>Création d'un Wiki</h2><p>Ce proje
 wiki_views_wikiserviceviews	wiki_language	Langue du Wiki&nbsp;:
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/views/WikiViews.class
+# Script: SF/common/wiki/views/WikiViews.class.php
 #
 wiki_views_wikiviews	title_error	Erreur
 wiki_views_wikiviews	not_activate	<H2><span class="feedback">Le Service Wiki n'est pas activé</span></H2><p>Le Service Wiki du projet $1 nécessite un activation par un Administrateur Projet ou un Administrateur Wiki.</p>
@@ -50,7 +50,7 @@ wiki_views_wikiviews	empty_page	<h2><span class="feedback">La Page n'existe pas<
 wiki_views_wikiviews	not_empty_page	<p>Vous pouvez donnez des permissions spécifiques à la Page Wiki $1. Ces <strong>permissions ne s'appliquent que sur cette page</strong>.</p><p>Par défaut, les pages Wiki n'ont pas de permissions&nbsp;: l'accès à toutes les Pages Wiki est permis pour tout utilisateur enregistré.</p><p><strong>Rappel&nbsp;:</strong> Accéder à une page signifie que <strong>tous les membres</strong> de <strong>chaque groupe</strong> ci-dessous <strong>sélectionné</strong> peut <strong>lire</strong> et <strong>modifier</strong> la page correspondante.</p><p>Sélectionner les groupes d'utilisateurs qui sont autorisés à accéder à ce Wiki&nbsp;:<p>
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiAttachmentRevision.class
+# Script: SF/common/wiki/lib/WikiAttachmentRevision.class.php
 #
 wiki_lib_attachment_rev	err_multi_id	Plusieurs identificateurs pour le même fichier joint. Prière de <a href="mailto:$1?Subject=Wiki Attachment Error (attch:$2,rev:$3)" title="envoyer un mail à l'administrateur de $4">contacter</a> l'administrateur de $4.
 wiki_lib_attachment_rev	err_upl_mv	L'upload de '$1' a échoué.
@@ -59,7 +59,7 @@ wiki_lib_attachment_rev	err_too_big	Désolé, ce fichier est très volumineux.
 #
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiAttachment.class
+# Script: SF/common/wiki/lib/WikiAttachment.class.php
 #
 wiki_lib_attachment	err_extension	Les fichiers ayant les extensions $1 ne sont pas autorisés.
 wiki_lib_attachment	err_alpha	ERREUR chargement de $1&nbsp;: Les noms de fichier ne peuvent contenir que des caractères alphanumériques, ainsi que le point, le souligné et le tiret.
@@ -69,7 +69,7 @@ wiki_lib_attachment	err_create_file_dir	Impossible de créer la zone de stockage 
 wiki_lib_attachment	err_multi_id	Il existe plusieurs identifiants pour un fichier joint. Merci de contacter un administrateur.
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiEntry.class
+# Script: SF/common/wiki/lib/WikiEntry.class.php
 #
 wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki&nbsp;: $1
 wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki&nbsp;: $1
@@ -77,12 +77,12 @@ wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki&nbsp;: $1
 wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été modifiée<li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiPage.class
+# Script: SF/common/wiki/lib/WikiPage.class.php
 #
 wiki_lib_wikipage	notunique_err	La page wiki n'est pas unique. Merci de contacter un administrateur.
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/lib/WikiPageWrapper.class
+# Script: SF/common/wiki/lib/WikiPageWrapper.class.php
 #
 wiki_lib_wikipagewrap	new_page_text	$1 enregistre les pages créées avec l'interface principale&nbsp;:
 wiki_lib_wikipagewrap	page_added	$1 ajoutée
@@ -92,7 +92,7 @@ wiki_lib_wikipagewrap	dfltentrydesc	Document initial du Wiki
 wiki_lib_wikipagewrap	dfltentrypage	PageAccueil
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/actions/WikiServiceAdminActions.class
+# Script: SF/common/wiki/actions/WikiServiceAdminActions.class.php
 #
 wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Document Wiki mais vous n'avez pas sélectionné de page. Vous devez créer une Page Wiki avant de créer un Document Wiki.
 wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions&nbsp;: <p>$1</p>
@@ -101,13 +101,13 @@ wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à 
 #      <li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
 
 #-----------------------------------------------
-# Script: SF/common/wiki/WikiService.class
+# Script: SF/common/wiki/WikiService.class.php
 #
 wiki_wikiservice	acces_denied_whole	Vous n'êtes pas autorisé à accéder à ce Wiki. Merci de contacter un <A HREF="$1">Administrateur Projet</A>.
 wiki_wikiservice	acces_denied_page	Vous n'êtes pas autorisé à accéder à cette Page Wiki. Merci de contacter un <A HREF="$1">Administrateur Projet</A>.
 #
 #-----------------------------------------------
-# Script: SF/common/wiki/views/WikiServiceAdminViews.class
+# Script: SF/common/wiki/views/WikiServiceAdminViews.class.php
 #
 wiki_views_wkserviews	title	Administration Wiki pour $1
 wiki_views_wkserviews	entry_em	<em>Affichée dans la page par défaut du service wiki</em>

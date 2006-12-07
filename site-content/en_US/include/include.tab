@@ -469,23 +469,23 @@ include_vars	web_env	Web Environment
 include_vars	other_lang	Other Language
 #
 #-----------------------------------------------
-# Script: SF/common/include/Error.class
+# Script: SF/common/include/Error.class.php
 #
 include_common_error	no_err	No Error
 #
 #-----------------------------------------------
-# Script: SF/common/include/GroupFactory.class
+# Script: SF/common/include/GroupFactory.class.php
 #
 include_common_groupfactory	none_found	None Found $1
 #
 #-----------------------------------------------
-# Script: SF/common/include/Template.class
+# Script: SF/common/include/Template.class.php
 #
 include_common_template	project	Project
 include_common_template	template	Template
 include_common_template	test_project	Test Project
 #
 #-----------------------------------------------
-# Script: SF/common/mvc/View.class
+# Script: SF/common/mvc/View.class.php
 #
 common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1

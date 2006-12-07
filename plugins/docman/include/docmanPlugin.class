@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 class DocmanPlugin extends Plugin {
 	

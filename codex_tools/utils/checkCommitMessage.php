@@ -9,7 +9,7 @@
  * Import the model class of metadata, so the algorithm to parse the message is the same
  */
  
-include("/usr/share/codex/plugins/serverupdate/include/SVNCommitMetaData.class");
+include("/usr/share/codex/plugins/serverupdate/include/SVNCommitMetaData.class.php");
 
 $metadata = new SVNCommitMetaData();
 

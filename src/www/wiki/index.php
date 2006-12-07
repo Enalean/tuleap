@@ -1,6 +1,6 @@
 <?php
 /* 
- * Copyright© STMicroelectronics, 2005
+ * Copyrightï¿½ STMicroelectronics, 2005
  *
  * Originally written by Manuel Vacelet, STMicroelectronics, 2005.
  *
@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('pre.php');
-require_once('common/wiki/WikiService.class');
+require_once('common/wiki/WikiService.class.php');
 
 $Language->loadLanguageMsg('wiki/wiki');
 

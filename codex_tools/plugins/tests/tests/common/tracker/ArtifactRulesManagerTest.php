@@ -1,22 +1,22 @@
 <?php
-require_once('common/tracker/ArtifactRulesManager.class');
+require_once('common/tracker/ArtifactRulesManager.class.php');
 Mock::generatePartial('ArtifactRulesManager', 'ArtifactRulesManagerTestVersion', array('_getArtifactRuleFactory', '_getSelectedValuesForField'));
 
-require_once('common/tracker/ArtifactRuleValue.class');
+require_once('common/tracker/ArtifactRuleValue.class.php');
 Mock::generate('ArtifactRuleValue');
 
-require_once('common/tracker/ArtifactRuleFactory.class');
+require_once('common/tracker/ArtifactRuleFactory.class.php');
 Mock::generate('ArtifactRuleFactory');
 
 //We cannot mock ArtifactField ($Language is undefined)
-//require_once('common/tracker/ArtifactFieldFactory.class');
+//require_once('common/tracker/ArtifactFieldFactory.class.php');
 class ArtifactRulesManagerTest_ArtifactFieldFactory {
     function getFieldFromName() {}
 }
 Mock::generate('ArtifactRulesManagerTest_ArtifactFieldFactory','MockArtifactFieldFactory');
 
 //We cannot mock ArtifactField ($Language is undefined)
-//require_once('common/tracker/ArtifactField.class');
+//require_once('common/tracker/ArtifactField.class.php');
 class ArtifactRulesManagerTest_ArtifactField {
     function getID() {}
     function getFieldPredefinedValues() {}

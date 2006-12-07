@@ -9,7 +9,7 @@
 // adduser.php - All the forms and functions to manage unix users
 //
 
-require_once('common/mail/Mail.class');
+require_once('common/mail/Mail.class.php');
 require_once('common/include/createntlm.inc');
 
 $Language->loadLanguageMsg('include/include');

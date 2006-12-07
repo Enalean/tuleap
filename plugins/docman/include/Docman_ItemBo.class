@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/CodexDataAccess.class.php');
 require_once('Docman_ItemDao.class');
 require_once('Docman_ItemFactory.class');
 require_once('Docman_PermissionsManager.class');

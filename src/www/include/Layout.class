@@ -8,9 +8,9 @@
 // $Id$
 
 
-require_once('common/include/Error.class');
+require_once('common/include/Error.class.php');
 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 
 //$Language->loadLanguageMsg('include/include');
 include($Language->getContent('layout/osdn_sites'));

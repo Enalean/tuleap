@@ -472,7 +472,7 @@ todo "  Default color is yellow. You can customize it for your theme by overidin
 todo "  this css rule in your stylesheets. Please have a look at the end of "
 todo "  CodeX stylesheets for an example."
 todo "Fields Dependencies need javascript files to be updated. Perhaps you have to "
-todo "  modify your Theme.class in order to handle the inclusion of those files."
+todo "  modify your Theme.class.php in order to handle the inclusion of those files."
 todo "  This can only happen if you have overiden the method generic_header_start() "
 todo "  or if you have overiden the method header() and you don't call "
 todo "  generic_header_start. Locates the line \$em->processEvent(\"javascript_file\", null);\" "

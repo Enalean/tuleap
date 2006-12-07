@@ -10,9 +10,9 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactCanned.class');
+//require_once('common/include/Error.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactCanned.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -531,7 +531,7 @@ class ArtifactTypeFactory extends Error {
                 permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id, $ugroup_mapping);
                 
                 //Copy Rules
-                require_once('ArtifactRulesManager.class');
+                require_once('ArtifactRulesManager.class.php');
                 $arm =& new ArtifactRulesManager();
                 $arm->copyRules($atid_template, $id);
 		return $id;

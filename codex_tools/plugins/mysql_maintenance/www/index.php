@@ -7,7 +7,7 @@
  */
  
 require_once('pre.php');
-require_once('common/include/HTTPRequest.class');
+require_once('common/include/HTTPRequest.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('MySQLMaintenance', 'mysql_maintenance');
 
@@ -19,8 +19,8 @@ $request =& HTTPRequest::instance();
 $result_analyze = '';
 
 if ($request->exist('do_analyze')) {
-    require_once('common/dao/DBTablesDao.class');
-    require_once('common/dao/CodexDataAccess.class');
+    require_once('common/dao/DBTablesDao.class.php');
+    require_once('common/dao/CodexDataAccess.class.php');
     require_once('Table.php');
     $dao =& new DBTablesDao(CodeXDataAccess::instance());
     $dar =& $dao->searchAll();

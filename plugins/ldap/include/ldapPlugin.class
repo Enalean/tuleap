@@ -1,8 +1,8 @@
 <?php
 
-require_once('common/plugin/Plugin.class');
-require_once('LDAP.class');
-require_once('UserLdap.class');
+require_once('common/plugin/Plugin.class.php');
+require_once('LDAP.class.php');
+require_once('UserLdap.class.php');
 
 class LdapPlugin extends Plugin {
 	
@@ -57,7 +57,7 @@ class LdapPlugin extends Plugin {
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'LdapPluginInfo')) {
-            require_once('LdapPluginInfo.class');
+            require_once('LdapPluginInfo.class.php');
             $this->pluginInfo =& new LdapPluginInfo($this);
         }
         return $this->pluginInfo;

@@ -21,9 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/mvc/Controler.class');
-require_once(dirname(__FILE__).'/actions/WikiServiceAdminActions.class');
-require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class');
+require_once('common/mvc/Controler.class.php');
+require_once(dirname(__FILE__).'/actions/WikiServiceAdminActions.class.php');
+require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class.php');
 
 /**
  *

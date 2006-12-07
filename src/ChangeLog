@@ -57,20 +57,20 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-11-17 10:33  sbouhet
 
-	* common/tracker/ArtifactFieldFactory.class,
-	common/tracker/ArtifactType.class,
+	* common/tracker/ArtifactFieldFactory.class.php,
+	common/tracker/ArtifactType.class.php,
 	www/project/export/artifact_deps_export.php,
 	www/project/export/artifact_export.php,
 	www/project/export/artifact_history_export.php,
 	www/project/export/index.php,
 	www/project/export/project_export_utils.php,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php: Task #2627: Generic
 	tracker Add tracker export feature.
 
 2003-11-14 18:06  sbouhet
 
-	* common/tracker/ArtifactReport.class: Bug #30356: Add
+	* common/tracker/ArtifactReport.class.php: Bug #30356: Add
 	systematically artifact_id into the SQL query for reports.
 
 2003-11-14 12:19  jacquin
@@ -197,21 +197,21 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-11-04 09:56  sbouhet
 
-	* www/tracker/include/ArtifactHtml.class: Bug #30041: URL in "is
+	* www/tracker/include/ArtifactHtml.class.php: Bug #30041: URL in "is
 	dependent on" list must use the gotoid function (for cross tracker
 	link).
 
 2003-11-03 11:11  sbouhet
 
-	* www/tracker/include/ArtifactHtml.class: Task #2627: Generic
+	* www/tracker/include/ArtifactHtml.class.php: Task #2627: Generic
 	Trackers Fix concerning the notification email: display only once
 	summary and original submission.
 
 2003-11-03 11:03  sbouhet
 
-	* common/tracker/ArtifactField.class,
-	www/tracker/include/ArtifactFieldHtml.class,
-	www/tracker/include/ArtifactHtml.class: Task #2627: Generic
+	* common/tracker/ArtifactField.class.php,
+	www/tracker/include/ArtifactFieldHtml.class.php,
+	www/tracker/include/ArtifactHtml.class.php: Task #2627: Generic
 	Trackers Display alway float fields with 2 digits.
 
 2003-11-01 18:16  ljulliar
@@ -238,12 +238,12 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-30 16:28  sbouhet
 
-	* common/tracker/Artifact.class: Task #2627: Generic Tracker Remove
+	* common/tracker/Artifact.class.php: Task #2627: Generic Tracker Remove
 	extra debug trace.
 
 2003-10-30 16:26  sbouhet
 
-	* common/tracker/Artifact.class: Task #2627: Generic Tracker A fix
+	* common/tracker/Artifact.class.php: Task #2627: Generic Tracker A fix
 	concerning a forgotten return true.
 
 2003-10-30 15:48  sbouhet
@@ -282,38 +282,38 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-29 14:08  sbouhet
 
-	* www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	* www/tracker/include/ArtifactReportHtml.class.php: Task #2627: Generic
 	Tracker Fix concerning the advanced search (default value selected
 	for SelectBox or MultiSelectBox).
 
 2003-10-29 10:41  sbouhet
 
-	* www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	* www/tracker/include/ArtifactReportHtml.class.php: Task #2627: Generic
 	Tracker Fix concerning the advanced search (not all the select box
 	fields were not displayed in multiline mode).
 
 2003-10-29 10:16  sbouhet
 
-	* common/tracker/ArtifactField.class: Task #2627: Generic Tracker
+	* common/tracker/ArtifactField.class.php: Task #2627: Generic Tracker
 	Improve performance for reports to retrieve user name
 
 2003-10-29 09:42  sbouhet
 
-	* common/tracker/: ArtifactField.class, ArtifactReport.class: Task
+	* common/tracker/: ArtifactField.class.php, ArtifactReport.class.php: Task
 	#2627: Generic Tracker Implement a cache to improve performance for
 	reports
 
 2003-10-29 08:22  sbouhet
 
-	* common/tracker/ArtifactField.class: Task #2627: Generic Tracker
+	* common/tracker/ArtifactField.class.php: Task #2627: Generic Tracker
 	Check we can't create a duplicate field value.
 
 2003-10-29 07:50  sbouhet
 
-	* common/tracker/Artifact.class,
-	common/tracker/ArtifactField.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	* common/tracker/Artifact.class.php,
+	common/tracker/ArtifactField.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Tracker Add a selection date button on Default Field Value sreen
 	for Date Field.  Display Float Field with 2 digits on reports.
 
@@ -325,19 +325,19 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-28 15:50  sbouhet
 
-	* www/tracker/include/: ArtifactHtml.class, ArtifactTypeHtml.class:
+	* www/tracker/include/: ArtifactHtml.class.php, ArtifactTypeHtml.class.php:
 	Task #2627: Generic Tracker Fix concerning field display (member or
 	not).
 
 2003-10-28 15:07  sbouhet
 
-	* common/tracker/ArtifactReport.class: Task #2627: Generic Tracker
+	* common/tracker/ArtifactReport.class.php: Task #2627: Generic Tracker
 	Fix concerning advanced search query (date interval)
 
 2003-10-28 10:05  sbouhet
 
-	* common/tracker/ArtifactType.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	* common/tracker/ArtifactType.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Tracker Fix on reporting.
 
 2003-10-28 09:34  ljulliar
@@ -354,12 +354,12 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-28 09:14  sbouhet
 
-	* www/tracker/include/ArtifactHtml.class: Task #2627: Generic
+	* www/tracker/include/ArtifactHtml.class.php: Task #2627: Generic
 	Tracker Fix on notification report.
 
 2003-10-27 18:21  sbouhet
 
-	* common/tracker/ArtifactType.class, www/tracker/add.php,
+	* common/tracker/ArtifactType.class.php, www/tracker/add.php,
 	www/tracker/browse.php, www/tracker/detail.php,
 	www/tracker/index.php, www/tracker/mod.php,
 	www/tracker/admin/field_usage.php,
@@ -370,7 +370,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-27 18:00  sbouhet
 
-	* common/tracker/ArtifactFieldFactory.class: Task #2627: Generic
+	* common/tracker/ArtifactFieldFactory.class.php: Task #2627: Generic
 	Tracker Fix on field addition (default values creation)
 
 2003-10-27 17:34  sbouhet
@@ -381,24 +381,24 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-27 17:16  sbouhet
 
-	* common/tracker/Artifact.class, common/tracker/ArtifactFile.class,
-	www/tracker/index.php, www/tracker/include/ArtifactHtml.class: Task
+	* common/tracker/Artifact.class.php, common/tracker/ArtifactFile.class.php,
+	www/tracker/index.php, www/tracker/include/ArtifactHtml.class.php: Task
 	#2627: Generic Tracker Access control and dependencies fixes.
 
 2003-10-27 14:04  sbouhet
 
-	* common/tracker/ArtifactReport.class: Task #2627: Generic Tracker
+	* common/tracker/ArtifactReport.class.php: Task #2627: Generic Tracker
 	Remove debug trace.
 
 2003-10-27 13:56  sbouhet
 
-	* common/tracker/ArtifactReport.class, www/include/utils.php: Task
+	* common/tracker/ArtifactReport.class.php, www/include/utils.php: Task
 	#2627: Generic Tracker Fix for date criteria search.
 
 2003-10-27 11:41  sbouhet
 
-	* common/tracker/ArtifactType.class,
-	common/tracker/ArtifactTypeFactory.class,
+	* common/tracker/ArtifactType.class.php,
+	common/tracker/ArtifactTypeFactory.class.php,
 	www/bugs/bugs-er-diagram.sda, www/forum/forum-er-diagram.sda,
 	www/include/group-model-er-diagram.sda,
 	www/patch/patch-er-diagram.sda, www/people/people-er-diagram.sda,
@@ -413,8 +413,8 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 	www/tracker/admin/field_values.php,
 	www/tracker/admin/field_values_details.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Tracker Fixes on admin tracker access right.
 
 2003-10-27 09:39  sbouhet
@@ -424,7 +424,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-24 15:51  ljulliar
 
-	* www/tracker/include/ArtifactHtml.class: Add unit (Kbytes) to the
+	* www/tracker/include/ArtifactHtml.class.php: Add unit (Kbytes) to the
 	Size column of attached file list (task #2627)
 
 2003-10-24 15:39  ljulliar
@@ -434,12 +434,12 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-24 15:03  sbouhet
 
-	* www/: include/Foundry.class, tracker/detail.php: Task #2627:
+	* www/: include/Foundry.class.php, tracker/detail.php: Task #2627:
 	generic trackers Remove require_once (invalid in PHP3)
 
 2003-10-24 14:56  sbouhet
 
-	* common/tracker/ArtifactFile.class: Task #2627: generic trackers
+	* common/tracker/ArtifactFile.class.php: Task #2627: generic trackers
 	Fix: Notification/Upload files: in the 'Lastest Modification', file
 	name, size and description are blank.
 
@@ -456,14 +456,14 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-24 14:35  sbouhet
 
-	* common/tracker/Artifact.class, www/tracker/index.php: Task #2627:
+	* common/tracker/Artifact.class.php, www/tracker/index.php: Task #2627:
 	generic trackers Check when we create a new artifact (or update an
 	existing one) if CC or upload files are valid before create or
 	update this artifact.  Add controls.
 
 2003-10-24 13:52  sbouhet
 
-	* www/tracker/: index.php, include/ArtifactHtml.class: Task #2627:
+	* www/tracker/: index.php, include/ArtifactHtml.class.php: Task #2627:
 	generic trackers Check when we create a new artifact (or update an
 	existing one) if CC or upload files are valid before create or
 	update this artifact.
@@ -483,14 +483,14 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-24 11:50  sbouhet
 
-	* common/tracker/ArtifactField.class: Task #2627: generic trackers
+	* common/tracker/ArtifactField.class.php: Task #2627: generic trackers
 	Fix for: All field values for reports could be displayed So no
 	restriction on 'A' and 'P' values.
 
 2003-10-24 11:16  sbouhet
 
-	* common/tracker/ArtifactReport.class, www/tracker/browse.php,
-	www/tracker/include/ArtifactReportHtml.class: Task #2627: generic
+	* common/tracker/ArtifactReport.class.php, www/tracker/browse.php,
+	www/tracker/include/ArtifactReportHtml.class.php: Task #2627: generic
 	trackers Fix for: My Bugs => Default Report => Advanced Search:
 	don't switch to Advanced Search Form Also Open Bugs
 
@@ -504,13 +504,13 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-24 10:15  sbouhet
 
-	* common/tracker/ArtifactReport.class, etc/local.inc.dist,
+	* common/tracker/ArtifactReport.class.php, etc/local.inc.dist,
 	www/.htaccess: Task #2627: generic trackers Sort on user field
 	fixe.
 
 2003-10-23 19:12  ljulliar
 
-	* www/tracker/include/ArtifactReportHtml.class: Search criteria are
+	* www/tracker/include/ArtifactReportHtml.class.php: Search criteria are
 	not correctly fetched from the field object when artifact reported
 	is formatted in the printer version (task #2627).
 
@@ -521,7 +521,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-23 18:41  ljulliar
 
-	* common/tracker/ArtifactReport.class: Make where clause on date
+	* common/tracker/ArtifactReport.class.php: Make where clause on date
 	fields compliant with the old bug tracker (task #2627)
 
 2003-10-23 18:11  ljulliar
@@ -536,7 +536,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-23 11:57  jacquin
 
-	* www/include/: Layout.class, project_home.php: task #2627 :
+	* www/include/: Layout.class.php, project_home.php: task #2627 :
 	usesXx() to be considered in all cases in display of items
 
 2003-10-23 09:48  jacquin
@@ -553,7 +553,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-22 17:02  jacquin
 
-	* www/include/: Layout.class, project_home.php: task #2627 : test
+	* www/include/: Layout.class.php, project_home.php: task #2627 : test
 	for displaying old trackers items in menus or pages must also take
 	into consideration the sys_activate_tracker variable
 
@@ -567,21 +567,21 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-22 15:29  sbouhet
 
-	* common/tracker/ArtifactField.class,
+	* common/tracker/ArtifactField.class.php,
 	db/mysql/database_initvalues.sql, db/upgrades/db0013.sql,
 	db/upgrades/initTrackers.pl,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Trackers Status 'Active' for field value is 'A' not 'V'
 
 2003-10-22 15:27  jacquin
 
-	* www/include/: Layout.class, project_home.php: task #2627 :
+	* www/include/: Layout.class.php, project_home.php: task #2627 :
 	condition with usesXx() and activateOldXx() in menu display: not a
 	&& but a || since usesXx are set to 0 at migration time
 
 2003-10-21 16:02  sbouhet
 
-	* common/tracker/ArtifactField.class: Task #2627: Generic Trackers
+	* common/tracker/ArtifactField.class.php: Task #2627: Generic Trackers
 	For unused field , we need to create records into
 	artifact_field_values if this field is set to used.
 
@@ -599,7 +599,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-17 19:41  ljulliar
 
-	* common/tracker/ArtifactFactory.class: Typo corrected in
+	* common/tracker/ArtifactFactory.class.php: Typo corrected in
 	assignement operator. It was harmless in PHP4 (!?) but failed in
 	PHP3 (task #2627)
 
@@ -615,17 +615,17 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-17 14:12  sbouhet
 
-	* common/tracker/ArtifactField.class,
-	common/tracker/ArtifactFieldFactory.class,
-	common/tracker/ArtifactType.class, www/admin/index.php,
+	* common/tracker/ArtifactField.class.php,
+	common/tracker/ArtifactFieldFactory.class.php,
+	common/tracker/ArtifactType.class.php, www/admin/index.php,
 	www/include/project_home.php, www/include/vote_function.php,
 	www/my/index.php, www/project/admin/editgroupinfo.php,
 	www/tracker/group_selection.php,
 	www/tracker/admin/field_values_details.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactCannedHtml.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	www/tracker/include/ArtifactCannedHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Trackers: . tracker creation: project selection window layout
 	improvement . manage reports: can't remove System reports . field
 	creation and field value creation: id are computed just before the
@@ -637,7 +637,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-17 09:16  ljulliar
 
-	* www/tracker/include/ArtifactTypeHtml.class: Help pointers updated
+	* www/tracker/include/ArtifactTypeHtml.class.php: Help pointers updated
 	to the right location and some cosmetic changes in the page titles
 	and headers (task #2627)
 
@@ -655,26 +655,26 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-15 16:17  sbouhet
 
-	* www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	* www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Trackers Don't display special fields (except comment_type_id) for
 	the values list.
 
 2003-10-15 16:04  sbouhet
 
-	* common/tracker/ArtifactReport.class,
-	www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	* common/tracker/ArtifactReport.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php: Task #2627: Generic
 	Trackers Fix on priority colors.
 
 2003-10-15 15:42  jacquin
 
-	* www/tracker/index.php, common/tracker/ArtifactType.class,
-	www/tracker/include/ArtifactTypeHtml.class: task #2627 - the
+	* www/tracker/index.php, common/tracker/ArtifactType.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: task #2627 - the
 	reporting part for trackers : repartition by age/by field
 
 2003-10-14 15:14  ljulliar
 
-	* common/tracker/Artifact.class,
-	common/tracker/ArtifactField.class, www/bugs/browse_bug.php,
+	* common/tracker/Artifact.class.php,
+	common/tracker/ArtifactField.class.php, www/bugs/browse_bug.php,
 	www/help/browse_bug_query_field.php,
 	www/help/browse_tracker_query_field.php, www/include/help.php,
 	www/tracker/add.php, www/tracker/browse.php,
@@ -684,46 +684,46 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 	www/tracker/admin/field_values.php,
 	www/tracker/admin/field_values_details.php,
 	www/tracker/admin/index.php, www/tracker/admin/restore.php,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Tracker documentation
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Tracker documentation
 	added to the CodeX User Guide and references to online help added
 	to the tracker PHP scripts. (task #2627)
 
 2003-10-14 11:01  sbouhet
 
-	* www/tracker/include/ArtifactReportHtml.class: Task #2627: Generic
+	* www/tracker/include/ArtifactReportHtml.class.php: Task #2627: Generic
 	Trackers Remove specific test on severity field for displaying
 	reports.
 
 2003-10-13 17:15  sbouhet
 
-	* common/include/GroupFactory.class,
-	common/tracker/ArtifactType.class, www/include/utils.php,
+	* common/include/GroupFactory.class.php,
+	common/tracker/ArtifactType.class.php, www/include/utils.php,
 	www/tracker/add.php, www/tracker/index.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactFieldHtml.class,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	www/tracker/include/ArtifactFieldHtml.class.php,
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Trackers Some minor adjustments and fixes.
 
 2003-10-10 17:52  ljulliar
 
-	* www/tracker/include/ArtifactTypeHtml.class: HTML tag <hr> added
+	* www/tracker/include/ArtifactTypeHtml.class.php: HTML tag <hr> added
 	after the default value form (task #2627)
 
 2003-10-10 17:31  sbouhet
 
-	* common/tracker/Artifact.class,
-	common/tracker/ArtifactFactory.class,
-	common/tracker/ArtifactTypeFactory.class, www/my/index.php,
+	* common/tracker/Artifact.class.php,
+	common/tracker/ArtifactFactory.class.php,
+	common/tracker/ArtifactTypeFactory.class.php, www/my/index.php,
 	www/my/my_utils.php: Task #2627: Generic Trackers Add 'My
 	Artifacts' into 'My Personal Page'
 
 2003-10-10 16:32  jacquin
 
-	* www/tracker/include/ArtifactTypeHtml.class,
-	common/tracker/ArtifactType.class: Task #2627. deletion date format
+	* www/tracker/include/ArtifactTypeHtml.class.php,
+	common/tracker/ArtifactType.class.php: Task #2627. deletion date format
 	changed from date to INT - code adaptation
 
 2003-10-10 14:27  jacquin
@@ -745,20 +745,20 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-09 11:46  sbouhet
 
-	* common/tracker/ArtifactField.class,
-	common/tracker/ArtifactFieldFactory.class, etc/local.inc.dist,
+	* common/tracker/ArtifactField.class.php,
+	common/tracker/ArtifactFieldFactory.class.php, etc/local.inc.dist,
 	www/tracker/admin/field_values_details.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactFieldHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627: Generic
+	www/tracker/include/ArtifactFieldHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627: Generic
 	Trackers Additional features and corrections on admin tracker.
 
 2003-10-07 18:22  jacquin
 
 	* www/tracker/admin/index.php, www/tracker/admin/restore.php,
-	www/tracker/include/ArtifactTypeHtml.class,
-	common/tracker/ArtifactType.class,
-	common/tracker/ArtifactTypeFactory.class: task #2627 - Reviewed
+	www/tracker/include/ArtifactTypeHtml.class.php,
+	common/tracker/ArtifactType.class.php,
+	common/tracker/ArtifactTypeFactory.class.php: task #2627 - Reviewed
 	version of tracker deletion
 	
 	now project deletion leads to mark a tracker in artifact_group_list
@@ -781,7 +781,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 2003-10-07 09:11  ljulliar
 
 	* www/tracker/: admin/field_values_details.php, admin/index.php,
-	include/ArtifactTypeHtml.class: Cosmetic changes in the headers of
+	include/ArtifactTypeHtml.class.php: Cosmetic changes in the headers of
 	the field value administration screen to make them look like the
 	old Bug Tracking system. Also changed the term 'Visible' to
 	'Active' for the status of field values as it was in the old bug
@@ -790,24 +790,24 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 2003-10-03 18:18  ljulliar
 
 	* www/tracker/: admin/field_usage.php, admin/index.php,
-	include/ArtifactTypeHtml.class: Some cosmetic changes and typo
+	include/ArtifactTypeHtml.class.php: Some cosmetic changes and typo
 	fixed into the headers of field usage screens and forms.
 
 2003-10-03 17:00  sbouhet
 
-	* common/tracker/ArtifactField.class,
-	common/tracker/ArtifactFieldFactory.class,
-	common/tracker/ArtifactType.class, www/register/confirmation.php,
+	* common/tracker/ArtifactField.class.php,
+	common/tracker/ArtifactFieldFactory.class.php,
+	common/tracker/ArtifactType.class.php, www/register/confirmation.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627:  Generic
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627:  Generic
 	Tracker Create standard trackers (Bug, Task, SR) when a new project
 	is created.  Add a new field type: USER type.  Simplify the field
 	creation form.
 
 2003-10-02 17:44  ljulliar
 
-	* www/tracker/include/ArtifactTypeHtml.class: Some changes in the
+	* www/tracker/include/ArtifactTypeHtml.class.php: Some changes in the
 	layout of the field creation form (task #2627)
 
 2003-10-02 16:14  ljulliar
@@ -817,7 +817,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-02 16:13  ljulliar
 
-	* www/tracker/include/ArtifactTypeHtml.class: Tracker description
+	* www/tracker/include/ArtifactTypeHtml.class.php: Tracker description
 	added in the table that display the list of trackers (task #2627)
 
 2003-10-02 14:56  sbouhet
@@ -826,12 +826,12 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-10-02 14:51  sbouhet
 
-	* common/tracker/ArtifactType.class, etc/local.inc.dist,
-	www/.htaccess, www/include/Layout.class, www/include/Project.class,
+	* common/tracker/ArtifactType.class.php, etc/local.inc.dist,
+	www/.htaccess, www/include/Layout.class.php, www/include/Project.class.php,
 	www/include/project_home.php, www/project/admin/editgroupinfo.php,
 	www/project/admin/userperms.php, www/project/export/index.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627:  Generic
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627:  Generic
 	Tracker Add flags: activate_old_bug, activate_old_task and
 	activate_old_sr to enable or disable old services (BTS,TM,SR) A
 	migration program will initialize these flags.
@@ -839,7 +839,7 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 2003-10-02 09:52  ljulliar
 
 	* www/: images/default.theme/organization_logo.png,
-	images/savannah.theme/organization_logo.png, include/Layout.class:
+	images/savannah.theme/organization_logo.png, include/Layout.class.php:
 	You now have the ability to add your organization logo at the top
 	of the left hand side menu pane when you create your own theme. The
 	Installation Guide has instructions on how to do that. (Requested
@@ -848,12 +848,12 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 2003-10-01 14:08  sbouhet
 
 	* www/tracker/: group_selection.php, tracker_selection.php,
-	include/ArtifactTypeHtml.class: Task #2627:  Generic Tracker Fixes
+	include/ArtifactTypeHtml.class.php: Task #2627:  Generic Tracker Fixes
 	for Mozilla compiliance for tracker creation feature
 
 2003-10-01 12:30  sbouhet
 
-	* common/include/GroupFactory.class: Task #2627:  Generic Tracker
+	* common/include/GroupFactory.class.php: Task #2627:  Generic Tracker
 	Wrong constructor name
 
 2003-10-01 11:52  sbouhet
@@ -876,20 +876,20 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-09-30 11:33  sbouhet
 
-	* common/tracker/ArtifactFieldFactory.class,
-	common/tracker/ArtifactReport.class,
-	common/tracker/ArtifactType.class, www/tracker/add.php,
+	* common/tracker/ArtifactFieldFactory.class.php,
+	common/tracker/ArtifactReport.class.php,
+	common/tracker/ArtifactType.class.php, www/tracker/add.php,
 	www/tracker/index.php, www/tracker/admin/index.php,
-	www/tracker/include/ArtifactCannedHtml.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627 : Generic
+	www/tracker/include/ArtifactCannedHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627 : Generic
 	trackers Fixes on visual aspects.
 
 2003-09-29 16:36  jacquin
 
-	* common/tracker/ArtifactCanned.class,
-	www/tracker/include/ArtifactCannedHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class,
+	* common/tracker/ArtifactCanned.class.php,
+	www/tracker/include/ArtifactCannedHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php,
 	www/tracker/admin/index.php: All the required modifications
 	affected to me having visual impact from UI review.
 	
@@ -906,40 +906,40 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-09-29 14:22  sbouhet
 
-	* common/include/GroupFactory.class: Additional file for generic
+	* common/include/GroupFactory.class.php: Additional file for generic
 	tracker
 
 2003-09-29 10:20  sbouhet
 
-	* common/tracker/Artifact.class,
-	common/tracker/ArtifactField.class,
-	common/tracker/ArtifactFieldFactory.class,
-	common/tracker/ArtifactReport.class,
-	common/tracker/ArtifactReportFactory.class,
-	common/tracker/ArtifactType.class,
-	common/tracker/ArtifactTypeFactory.class, www/.htaccess,
+	* common/tracker/Artifact.class.php,
+	common/tracker/ArtifactField.class.php,
+	common/tracker/ArtifactFieldFactory.class.php,
+	common/tracker/ArtifactReport.class.php,
+	common/tracker/ArtifactReportFactory.class.php,
+	common/tracker/ArtifactType.class.php,
+	common/tracker/ArtifactTypeFactory.class.php, www/.htaccess,
 	www/include/menu.php, www/search/index.php, www/tracker/add.php,
 	www/tracker/browse.php, www/tracker/detail.php,
 	www/tracker/index.php, www/tracker/mod.php,
 	www/tracker/admin/browse_perm.php, www/tracker/admin/index.php,
-	www/tracker/include/ArtifactFieldHtml.class,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: Task #2627 : admin
+	www/tracker/include/ArtifactFieldHtml.class.php,
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: Task #2627 : admin
 	generic trackers . creation,deletion . field usage et values
 
 2003-09-23 09:44  jacquin
 
-	* common/tracker/Artifact.class,
-	common/tracker/ArtifactCanned.class,
-	common/tracker/ArtifactReport.class,
-	common/tracker/ArtifactReportFactory.class,
-	common/tracker/ArtifactType.class, www/tracker/index.php,
+	* common/tracker/Artifact.class.php,
+	common/tracker/ArtifactCanned.class.php,
+	common/tracker/ArtifactReport.class.php,
+	common/tracker/ArtifactReportFactory.class.php,
+	common/tracker/ArtifactType.class.php, www/tracker/index.php,
 	www/tracker/admin/index.php,
-	www/tracker/include/ArtifactCannedHtml.class,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: task #2627 : admin of
+	www/tracker/include/ArtifactCannedHtml.class.php,
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: task #2627 : admin of
 	reports, canned responses and notifications for generic Trackers
 
 2003-08-28 16:45  sbouhet
@@ -952,43 +952,43 @@ CODEX 2.0 (tag: CX_2_0) - 2003-11-25 - 6:25am EST
 
 2003-08-28 15:04  sbouhet
 
-	* common/tracker/Artifact.class,
-	common/tracker/ArtifactCanned.class,
-	common/tracker/ArtifactFactory.class,
-	common/tracker/ArtifactField.class,
-	common/tracker/ArtifactFieldFactory.class,
-	common/tracker/ArtifactFile.class,
+	* common/tracker/Artifact.class.php,
+	common/tracker/ArtifactCanned.class.php,
+	common/tracker/ArtifactFactory.class.php,
+	common/tracker/ArtifactField.class.php,
+	common/tracker/ArtifactFieldFactory.class.php,
+	common/tracker/ArtifactFile.class.php,
 	common/tracker/ArtifactFromID.class,
-	common/tracker/ArtifactGroup.class,
-	common/tracker/ArtifactReport.class,
-	common/tracker/ArtifactReportFactory.class,
-	common/tracker/ArtifactReportField.class,
-	common/tracker/ArtifactType.class,
-	common/tracker/ArtifactTypeFactory.class,
+	common/tracker/ArtifactGroup.class.php,
+	common/tracker/ArtifactReport.class.php,
+	common/tracker/ArtifactReportFactory.class.php,
+	common/tracker/ArtifactReportField.class.php,
+	common/tracker/ArtifactType.class.php,
+	common/tracker/ArtifactTypeFactory.class.php,
 	common/tracker/ArtifactTypes.class, common/tracker/Artifacts.class,
 	www/tracker/add.php, www/tracker/browse.php,
 	www/tracker/detail.php, www/tracker/download.php,
 	www/tracker/index.php, www/tracker/mod.php,
 	www/tracker/admin/browse_perm.php, www/tracker/admin/index.php,
-	www/tracker/include/ArtifactFieldHtml.class,
-	www/tracker/include/ArtifactFileHtml.class,
-	www/tracker/include/ArtifactHtml.class,
-	www/tracker/include/ArtifactReportHtml.class,
-	www/tracker/include/ArtifactTypeHtml.class: This is the second
+	www/tracker/include/ArtifactFieldHtml.class.php,
+	www/tracker/include/ArtifactFileHtml.class.php,
+	www/tracker/include/ArtifactHtml.class.php,
+	www/tracker/include/ArtifactReportHtml.class.php,
+	www/tracker/include/ArtifactTypeHtml.class.php: This is the second
 	commit to prepare the generic tracker integration in CodeX.  Files
 	committed DOESN'T impact the current version.  They are only used
 	for the generic tracker.
 
 2003-08-28 14:54  sbouhet
 
-	* common/include/Error.class: Additionnal file of the first commit
+	* common/include/Error.class.php: Additionnal file of the first commit
 	to prepare the generic tracker integration in CodeX.
 
 2003-08-28 14:23  sbouhet
 
-	* etc/local.inc.dist, www/include/Foundry.class,
-	www/include/Group.class, www/include/Layout.class,
-	www/include/Project.class, www/include/database.php,
+	* etc/local.inc.dist, www/include/Foundry.class.php,
+	www/include/Group.class.php, www/include/Layout.class.php,
+	www/include/Project.class.php, www/include/database.php,
 	www/include/exit.php, www/include/osdn.php, www/include/pre.php,
 	www/include/project_home.php, www/include/session.php,
 	www/include/theme.php, www/include/utils.php: This is a first
@@ -1768,7 +1768,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 	* db/mysql/database_initvalues.sql,
 	db/mysql/database_structure.sql, db/upgrades/db0007.sql,
-	www/include/Project.class, www/my/index.php, www/pm/add_task.php,
+	www/include/Project.class.php, www/my/index.php, www/pm/add_task.php,
 	www/pm/detail_task.php, www/pm/download.php, www/pm/mod_task.php,
 	www/pm/pm_data.php, www/pm/pm_utils.php, www/pm/task.php,
 	www/pm/admin/index.php, www/pm/admin/notification_settings.php,
@@ -2012,7 +2012,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 2002-11-19 18:19  ljulliar
 
 	* www/: account/change_email-confirm.php, account/login.php,
-	bugs/bug_utils.php, help/show_help.php, include/Layout.class,
+	bugs/bug_utils.php, help/show_help.php, include/Layout.class.php,
 	include/osdn.php: When HTTPS was re-activated (see previous commit
 	reference below) a couple of scripts were not properly modified or
 	simply forgotten.  See
@@ -2097,7 +2097,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 2002-11-15 16:18  ljulliar
 
-	* www/include/Layout.class: Image clear.png was not properly
+	* www/include/Layout.class.php: Image clear.png was not properly
 	accessed and $imgroot variable no longer needed. (Bug relates to
 	task #2301)
 
@@ -2156,7 +2156,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 2002-11-15 09:44  sbouhet
 
-	* www/include/Layout.class: Bug fix: Add a div TAG with left align
+	* www/include/Layout.class.php: Bug fix: Add a div TAG with left align
 	to fix the first div with center align which provide the border
 	center.
 
@@ -2170,7 +2170,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 	* www/: css/default/default_large.css,
 	css/default/default_normal.css, css/default/default_small.css,
 	css/savannah/savannah_large.css, css/savannah/savannah_normal.css,
-	css/savannah/savannah_small.css, include/Layout.class: Use of the
+	css/savannah/savannah_small.css, include/Layout.class.php: Use of the
 	stylesheet chosen by the user in the user account maintenance for
 	the help window.  Related task: task #2301
 
@@ -2267,7 +2267,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 2002-11-12 10:31  ljulliar
 
-	* www/include/Layout.class: Extraneous /images/ path appended to
+	* www/include/Layout.class.php: Extraneous /images/ path appended to
 	the image directory. (thanks to cyoder - bug #11839)
 
 2002-11-12 10:24  ljulliar
@@ -2532,7 +2532,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 	www/images/savannah.theme/ic/survey.png,
 	www/images/savannah.theme/ic/survey16b.png,
 	www/images/savannah.theme/ic/taskman16b.png,
-	www/images/savannah.theme/ic/trash.png, www/include/Layout.class,
+	www/images/savannah.theme/ic/trash.png, www/include/Layout.class.php,
 	www/include/calendar.js, www/include/exit.php,
 	www/include/features_boxes.php, www/include/foundry_admin.php,
 	www/include/foundry_home.php, www/include/html.php,
@@ -2652,7 +2652,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 	* etc/local.inc.dist, www/about.php, www/contact.php,
 	www/index.php, www/staff.php, www/thanks.php,
 	www/account/register.php, www/cvs/index.php,
-	www/include/Layout.class, www/include/osdn.php,
+	www/include/Layout.class.php, www/include/osdn.php,
 	www/include/pre.php, www/include/snippet_caching.php,
 	www/include/utils.php, www/my/index.php, www/people/index.php,
 	www/register/basicinfo.php, www/register/category.php,
@@ -2846,7 +2846,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 2002-09-19 11:15  ljulliar
 
-	* www/include/Layout.class: Hardcoded 'CodeX' name replaced with
+	* www/include/Layout.class.php: Hardcoded 'CodeX' name replaced with
 	sys_name variable.
 
 2002-09-16 14:59  ljulliar
@@ -2973,7 +2973,7 @@ CODEX 1.6 (tag: CX_1_6) - 2003-07-08 - 6:00am EST
 
 2002-08-29 10:50  ljulliar
 
-	* www/include/Layout.class: box1_top and box1_middle now accept a
+	* www/include/Layout.class.php: box1_top and box1_middle now accept a
 	new parameter for the number of columns in the box (was hardcoded
 	to 2 before) (task #2214)
 
@@ -3115,7 +3115,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 	images/ic/manual16b.png, images/ic/monitor16b.png,
 	images/ic/ofolder15.png, images/ic/save.png, images/ic/save16b.png,
 	images/ic/survey16b.png, images/ic/taskman16b.png,
-	include/Layout.class, include/Theme.class, include/html.php,
+	include/Layout.class.php, include/Theme.class, include/html.php,
 	include/osdn.php, new/index.php, search/index.php,
 	themes/classic/Theme.class, themes/classic/theme.php,
 	themes/codex/images/bottom_left_corner.gif,
@@ -3233,7 +3233,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-06-18 17:43  ljulliar
 
-	* www/: docs/site/about_codex.php, include/Layout.class,
+	* www/: docs/site/about_codex.php, include/Layout.class.php,
 	register/license.php: Link to CodeX Policy updated to point to the
 	document in the CodeX Document Manager (bug #5964)
 
@@ -3675,7 +3675,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-03-25 16:06  ljulliar
 
-	* www/include/Layout.class: Increase help window size (task #256)
+	* www/include/Layout.class.php: Increase help window size (task #256)
 
 2002-03-25 16:05  ljulliar
 
@@ -3894,7 +3894,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2002-01-18 09:10  ljulliar
 
-	* www/: images/favicon.ico, include/Layout.class: Favicon added to
+	* www/: images/favicon.ico, include/Layout.class.php: Favicon added to
 	the site
 
 2002-01-17 18:20  ljulliar
@@ -3974,7 +3974,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2001-12-19 13:55  ljulliar
 
-	* www/include/Layout.class: Useless <center> tag causing IE 6 to
+	* www/include/Layout.class.php: Useless <center> tag causing IE 6 to
 	center-align page content removed + HTML clean up (Bug #1062)
 
 2001-12-18 15:25  ljulliar
@@ -4278,7 +4278,7 @@ CODEX 1.4 (tag: CX_1_4) - 2002-08-03
 
 2001-07-02 11:39  ljulliar
 
-	* www/include/Layout.class: project main menu updated to reflect
+	* www/include/Layout.class.php: project main menu updated to reflect
 	new SourceForge Layout
 
 2001-06-27 09:13  ljulliar
@@ -4367,7 +4367,7 @@ CODEX 1.3 (tag: CX_1_3) - 2001-05-18
 
 2001-05-18 15:56  ljulliar
 
-	* www/include/Layout.class: Admin toptab added for Project
+	* www/include/Layout.class.php: Admin toptab added for Project
 	Administration pages (instead of 'home'/Summary used before)
 
 2001-05-18 15:54  ljulliar
@@ -4676,7 +4676,7 @@ CODEX 1.1 (tag: CX_1_1) - 2001-03-22
 	www/export/index.php, www/export/rss_sfnewreleases.php,
 	www/export/rss_sfnews.php, www/forum/forum.php,
 	www/forum/forum_utils.php, www/forum/index.php, www/help/index.php,
-	www/include/Group.class, www/include/Layout.class,
+	www/include/Group.class.php, www/include/Layout.class.php,
 	www/include/Theme.class, www/include/account.php,
 	www/include/features_boxes.php, www/include/help.php,
 	www/include/menu.php, www/include/osdn.php,
@@ -4853,9 +4853,9 @@ CODEX 1.0 (tag: CX_1_0) - 2001-03-06
 	www/export/index.php, www/export/rss_utils.inc,
 	www/export/sf_forum_0.1.dtd, www/export/sf_forum_0.1.dtd.txt,
 	www/help/index.php, www/help/trove_cat.php,
-	www/include/Error.class, www/include/Foundry.class,
-	www/include/Group.class, www/include/HTML_Graphs.php,
-	www/include/Layout.class, www/include/Project.class,
+	www/include/Error.class.php, www/include/Foundry.class.php,
+	www/include/Group.class.php, www/include/HTML_Graphs.php,
+	www/include/Layout.class.php, www/include/Project.class.php,
 	www/include/Theme.class, www/include/account.php,
 	www/include/browser.php, www/include/cache.php,
 	www/include/database.php, www/include/exit.php,
@@ -5097,8 +5097,8 @@ SOURCEFORGE 2.0
 
 	- Using some classes to "objectize" things like Groups, Projects, 
 	  and Foundries. Project and Foundry extend Group. See 
-	  /include/Group.class /include/Foundry.class and 
-	  /include/Project.class (Tim)
+	  /include/Group.class.php /include/Foundry.class.php and 
+	  /include/Project.class.php (Tim)
 
 	- Hundreds of misc. interface cleanups sitewide. More user feedback, 
 	  ordering of pop-up list boxes, submit buttons added to the tops of 

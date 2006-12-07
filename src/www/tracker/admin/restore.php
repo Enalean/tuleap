@@ -10,23 +10,23 @@
 //
 
 require_once('pre.php');
-require_once('common/include/GroupFactory.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactCanned.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
-require_once('common/tracker/ArtifactField.class');
-require_once('common/tracker/ArtifactFieldSetFactory.class');
-require_once('common/tracker/ArtifactFieldSet.class');
-require_once('common/tracker/ArtifactReport.class');
-require_once('common/tracker/ArtifactReportFactory.class');
-require_once('common/tracker/ArtifactReportField.class');
-require_once('common/tracker/Artifact.class');
-require_once('common/tracker/ArtifactRuleFactory.class');
-require('../include/ArtifactTypeHtml.class');
-require('../include/ArtifactCannedHtml.class');
-require('../include/ArtifactReportHtml.class');
-require('../include/ArtifactHtml.class');
+require_once('common/include/GroupFactory.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactCanned.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactFieldSetFactory.class.php');
+require_once('common/tracker/ArtifactFieldSet.class.php');
+require_once('common/tracker/ArtifactReport.class.php');
+require_once('common/tracker/ArtifactReportFactory.class.php');
+require_once('common/tracker/ArtifactReportField.class.php');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/tracker/ArtifactRuleFactory.class.php');
+require('../include/ArtifactTypeHtml.class.php');
+require('../include/ArtifactCannedHtml.class.php');
+require('../include/ArtifactReportHtml.class.php');
+require('../include/ArtifactHtml.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

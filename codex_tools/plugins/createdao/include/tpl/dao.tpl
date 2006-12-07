@@ -4,7 +4,7 @@
 // $Id$
 //
 
-require_once('include/DataAccessObject.class');
+require_once('include/DataAccessObject.class.php');
 
 /**
  *  Data Access Object for <?=$classname?> 

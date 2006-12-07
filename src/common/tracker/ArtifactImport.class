@@ -11,7 +11,7 @@
 
   //$Language->loadLanguageMsg('tracker/tracker');
   //$Language->loadLanguageMsg('include/include');
-require_once('common/include/Error.class');
+require_once('common/include/Error.class.php');
 
 class ArtifactImport extends Error {
 
@@ -119,13 +119,13 @@ class ArtifactImport extends Error {
     } else {
       // Assume French
       $this->lbl_list['follow_ups'] = 'Commentaires';
-      $this->lbl_list['is_dependent_on'] = 'Dépend de';
+      $this->lbl_list['is_dependent_on'] = 'Dï¿½pend de';
       $this->lbl_list['add_cc'] = 'Liste CC';
       $this->lbl_list['cc_comment'] = 'Commentaire CC';
 
       $this->dsc_list['follow_ups'] = 'Tout le fil de commentaires en un seul bloc de texte';
-      $this->dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci dépend';
-      $this->dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone of persons to receive a carbon-copy (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, à qui on l\'a confié ou qui a posté un commentaire)';
+      $this->dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci dï¿½pend';
+      $this->dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone of persons to receive a carbon-copy (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, ï¿½ qui on l\'a confiï¿½ ou qui a postï¿½ un commentaire)';
       $this->dsc_list['cc_comment'] = 'Explique pourquoi ces personnes sont en CC ou qui elles sont';
     }
   }

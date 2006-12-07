@@ -16,7 +16,7 @@
 #  */
 #
 #-----------------------------------------------
-# Script: SF/common/include/LDAP.class
+# Script: SF/common/include/LDAP.class.php
 #
 ldap_class	err_bind_nopasswd	Impossible d'initier la liaison sur $1&nbsp;: mot de passe absent
 ldap_class	err_bind_invpasswd	Impossible d'initier la liaison sur $1&nbsp;: mot de passe invalide ?

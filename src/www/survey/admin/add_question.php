@@ -7,7 +7,7 @@
 // $Id$
 
 require_once('www/include/pre.php');
-require_once('common/survey/SurveySingleton.class');
+require_once('common/survey/SurveySingleton.class.php');
 require_once('www/survey/survey_data.php');
 require_once('www/survey/survey_utils.php');
 

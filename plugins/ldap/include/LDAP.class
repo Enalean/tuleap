@@ -8,8 +8,8 @@
 //
 
 
-require_once('common/include/Error.class');
-require_once('LDAPResult.class');
+require_once('common/include/Error.class.php');
+require_once('LDAPResult.class.php');
 
 /**
  * LDAP class definition

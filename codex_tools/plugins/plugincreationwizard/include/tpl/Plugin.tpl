@@ -5,7 +5,7 @@
  *
  * <?=$class_name?>Plugin
  */
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 class <?=$class_name?>Plugin extends Plugin {
 	
@@ -21,7 +21,7 @@ class <?=$class_name?>Plugin extends Plugin {
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, '<?=$class_name?>PluginInfo')) {
-            require_once('<?=$class_name?>PluginInfo.class');
+            require_once('<?=$class_name?>PluginInfo.class.php');
             $this->pluginInfo =& new <?=$class_name?>PluginInfo($this);
         }
         return $this->pluginInfo;
@@ -44,7 +44,7 @@ class <?=$class_name?>Plugin extends Plugin {
 <?php   } ?>
 <?php   if ($use_mvc) { ?>
     function process() {
-        require_once('<?=$class_name?>.class');
+        require_once('<?=$class_name?>.class.php');
         $controler =& new <?=$class_name?>();
         $controler->process();
     }

@@ -1,6 +1,6 @@
 <?
 require_once('pre.php');
-require_once('common/wiki/WikiServiceAdmin.class');
+require_once('common/wiki/WikiServiceAdmin.class.php');
 
 $Language->loadLanguageMsg('wiki/wiki');
 

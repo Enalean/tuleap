@@ -21,10 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('WikiAttachmentRevision.class');
-require_once('WikiAttachmentDao.class');
+require_once('WikiAttachmentRevision.class.php');
+require_once('WikiAttachmentDao.class.php');
 require_once('www/project/admin/permissions.php');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/CodexDataAccess.class.php');
 
 /**
  * Management of external ressources linked on a wiki

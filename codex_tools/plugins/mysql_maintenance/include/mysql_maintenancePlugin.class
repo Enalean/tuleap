@@ -1,6 +1,6 @@
 <?php
 
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 class mysql_maintenancePlugin extends Plugin {
 	
@@ -11,7 +11,7 @@ class mysql_maintenancePlugin extends Plugin {
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'MySQLMaintenancePluginInfo')) {
-            require_once('MySQLMaintenancePluginInfo.class');
+            require_once('MySQLMaintenancePluginInfo.class.php');
             $this->pluginInfo =& new MySQLMaintenancePluginInfo($this);
         }
         return $this->pluginInfo;

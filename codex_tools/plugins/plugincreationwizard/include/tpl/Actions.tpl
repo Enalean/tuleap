@@ -6,8 +6,8 @@
  *
  * <?=$class_name?>Actions
  */
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
+require_once('common/mvc/Actions.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 class <?=$class_name?>Actions extends Actions {
     

@@ -5,10 +5,10 @@
  *
  * <?=$class_name?>
  */
-require_once('common/mvc/Controler.class');
-require_once('common/include/HTTPRequest.class');
-require_once('<?=$class_name?>Views.class');
-require_once('<?=$class_name?>Actions.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('<?=$class_name?>Views.class.php');
+require_once('<?=$class_name?>Actions.class.php');
 class <?=$class_name?> extends Controler {
     
     function <?=$class_name?>() {

@@ -22,8 +22,8 @@
  *
  * $Id$
  */
-require_once('common/event/NotificationsManager.class');
-require_once('common/mail/Mail.class');
+require_once('common/event/NotificationsManager.class.php');
+require_once('common/mail/Mail.class.php');
 require_once('Docman_Path.class');
 class Docman_NotificationsManager extends NotificationsManager { 
 

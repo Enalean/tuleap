@@ -14,7 +14,7 @@ require_once('session.php');
 require_once('user.php');
 require_once('utils.php');
 require_once('theme.php');
-require_once('BaseLanguage.class');
+require_once('BaseLanguage.class.php');
 if (!$GLOBALS['sys_lang']) {
 	$GLOBALS['sys_lang']="en_US";
 }

@@ -1,6 +1,6 @@
 <?php
-require_once('LinkedListTestCase.class');
-require_once('common/collection/PrioritizedList.class');
+require_once('LinkedListTestCase.class.php');
+require_once('common/collection/PrioritizedList.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

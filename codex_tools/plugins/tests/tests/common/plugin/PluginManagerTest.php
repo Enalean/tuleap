@@ -1,19 +1,19 @@
 <?php
-require_once('common/plugin/PluginManager.class');
+require_once('common/plugin/PluginManager.class.php');
 Mock::generatePartial('PluginManager', 'PluginManagerTestVersion', array('_getPluginFactory', '_getEventManager', '_getPluginHookPriorityManager'));
-require_once('common/plugin/PluginHookPriorityManager.class');
+require_once('common/plugin/PluginHookPriorityManager.class.php');
 Mock::generate('PluginHookPriorityManager');
-require_once('common/plugin/PluginFactory.class');
+require_once('common/plugin/PluginFactory.class.php');
 Mock::generate('PluginFactory');
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
-require_once('common/collection/Collection.class');
+require_once('common/collection/Collection.class.php');
 Mock::generate('Collection');
-require_once('common/collection/Iterator.class');
+require_once('common/collection/Iterator.class.php');
 Mock::generate('Iterator');
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require(getenv('CODEX_LOCAL_INC'));
 require($GLOBALS['db_config_file']);

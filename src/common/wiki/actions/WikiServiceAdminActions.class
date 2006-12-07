@@ -21,11 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('WikiActions.class');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
-require_once(dirname(__FILE__).'/../lib/WikiPage.class');
-require_once(dirname(__FILE__).'/../lib/WikiAttachment.class');
-require_once(dirname(__FILE__).'/../lib/Wiki.class');
+require_once('WikiActions.class.php');
+require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
+require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');
+require_once(dirname(__FILE__).'/../lib/WikiAttachment.class.php');
+require_once(dirname(__FILE__).'/../lib/Wiki.class.php');
 
 /**
  *

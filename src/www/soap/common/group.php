@@ -171,7 +171,7 @@ function row_group_to_soap($sessionKey, $row_group)
  */
 function getGroupByName($sessionKey, $unix_group_name) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class
+        $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
         if (! $group) {
             return new soap_fault('2002','getGroupByName','Could Not Get Groups by Name','Could Not Get Groups by Name');
         }
@@ -205,7 +205,7 @@ function getGroupById($sessionKey, $group_id) {
 /*
 function getGroupAdmins($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class
+        $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
         if (! $group) {
             return new soap_fault('2002','getGroupAdmins','Could Not Get Groups by group_id','Could Not Get Groups by group_id');
         }

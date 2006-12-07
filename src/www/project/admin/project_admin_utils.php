@@ -11,7 +11,7 @@
 	Standard header to be used on all /project/admin/* pages
 
 */
-require_once('common/include/TemplateSingleton.class');
+require_once('common/include/TemplateSingleton.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('project/project');
 

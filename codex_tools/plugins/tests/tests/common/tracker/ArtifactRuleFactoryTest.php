@@ -1,9 +1,9 @@
 <?php
-require_once('common/tracker/ArtifactRuleFactory.class');
+require_once('common/tracker/ArtifactRuleFactory.class.php');
 
-require_once('common/dao/ArtifactRuleDao.class');
+require_once('common/dao/ArtifactRuleDao.class.php');
 Mock::generate('ArtifactRuleDao');
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

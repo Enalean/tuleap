@@ -20,9 +20,9 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once(dirname(__FILE__).'/WikiViews.class');
-require_once(dirname(__FILE__).'/../lib/WikiPage.class');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class');
+require_once(dirname(__FILE__).'/WikiViews.class.php');
+require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');
+require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
 
 /**
  * 
@@ -253,10 +253,10 @@ class WikiServiceViews extends WikiViews {
 			 $preferences_menu = 'Preferences';
 			 $help_menu = 'Help';
 			 break;
-	    case 'fr_FR': $attatch_page = "DéposerUnFichier";
+	    case 'fr_FR': $attatch_page = "Dï¿½poserUnFichier";
 			 $attatch_menu = "Joindre un fichier";
-			 $preferences_page = "PréférencesUtilisateurs";   
-			 $preferences_menu = "Préférences";
+			 $preferences_page = "Prï¿½fï¿½rencesUtilisateurs";   
+			 $preferences_menu = "Prï¿½fï¿½rences";
 			 $help_menu = 'Aide';
 			 break;   
 	    default :     $attatch_page = 'UpLoad';

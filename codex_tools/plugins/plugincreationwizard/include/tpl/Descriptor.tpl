@@ -6,7 +6,7 @@
  *
  * <?=$class_name?>PluginDescriptor
  */
-require_once('common/plugin/PluginDescriptor.class');
+require_once('common/plugin/PluginDescriptor.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('<?=$short_name?>', '<?=$short_name?>');
 

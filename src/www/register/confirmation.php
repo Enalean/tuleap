@@ -12,17 +12,17 @@ require_once('vars.php');
 require_once('service.php');
 require_once('www/forum/forum_utils.php');
 require_once('www/admin/admin_utils.php');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
-require_once('common/tracker/ArtifactField.class');
-require_once('common/tracker/ArtifactFieldSetFactory.class');
-require_once('common/tracker/ArtifactFieldSet.class');
-require_once('common/tracker/ArtifactReport.class');
-require_once('common/tracker/ArtifactReportFactory.class');
-require_once('common/include/ReferenceManager.class');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactFieldSetFactory.class.php');
+require_once('common/tracker/ArtifactFieldSet.class.php');
+require_once('common/tracker/ArtifactReport.class.php');
+require_once('common/tracker/ArtifactReportFactory.class.php');
+require_once('common/include/ReferenceManager.class.php');
 require_once('trove.php');
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('register/register');
 

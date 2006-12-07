@@ -225,7 +225,7 @@ tracker_admin_restore	pending_deletions	Outil de suivi en attente de destruction
 tracker_admin_restore	tracker_deleted	Outil de suivi détruit
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/include/ArtifactCannedHtml.class
+# Script: SF/www/tracker/include/ArtifactCannedHtml.class.php
 #
 tracker_include_canned	create_response	Créer une nouvelle réponse
 tracker_include_canned	save_time	Créer des réponses type peut vous économiser beaucoup de temps si vous postez couramment les mêmes réponses aux utilisateurs.
@@ -238,7 +238,7 @@ tracker_include_canned	delete_canned	Détruire cette réponse type&nbsp;: $1 ?
 tracker_include_canned	no_canned_response	Aucune réponse type définie pour cet outil de suivi
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/include/ArtifactFieldHtml.class
+# Script: SF/www/tracker/include/ArtifactFieldHtml.class.php
 #
 tracker_include_field	error_no_atid	ERREUR - pas group_artifact_id
 tracker_include_field	start	Début&nbsp;:
@@ -249,13 +249,13 @@ tracker_include_field	unknown_display_type	$1&nbsp;: Type d'affichage du champ i
 tracker_include_field	unknown_value	*** valeur inconnue ***
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/include/ArtifactFileHtml.class
+# Script: SF/www/tracker/include/ArtifactFileHtml.class.php
 #
 tracker_include_artifactfile	invalid_name	ArtifactFile&nbsp;: Nom de fichier invalide
 tracker_include_artifactfile	not_attached	Fichier pas attaché&nbsp;: la taille doit être inférieure à $1 Mb
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/include/ArtifactHtml.class
+# Script: SF/www/tracker/include/ArtifactHtml.class.php
 #
 tracker_include_artifact	project	Projet :
 tracker_include_artifact	submit	Valider
@@ -325,7 +325,7 @@ tracker_include_artifact	copy	Copie
 tracker_include_artifact	references	Références :
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/include/ArtifactReportHtml.class
+# Script: SF/www/tracker/include/ArtifactReportHtml.class.php
 #
 tracker_include_report	prio_colors	Echelle de priorité&nbsp;:
 tracker_include_report	items	Items
@@ -370,7 +370,7 @@ tracker_include_report	btn_export	Exporter artefacts correspondants
 tracker_include_report	export_only_report_fields	Exporter uniquement les champs du rapport
 #
 #-----------------------------------------------
-# Script: SF/www/tracker/include/ArtifactTypeHtml.class
+# Script: SF/www/tracker/include/ArtifactTypeHtml.class.php
 #
 tracker_include_type	submit_new	Nouveau
 tracker_include_type	my	Mes $1
@@ -544,7 +544,7 @@ tracker_include_type	current_date	Date courante.
 tracker_include_type	date_value	Date particulière :
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactCanned.class
+# Script: SF/common/tracker/ArtifactCanned.class.php
 #
 tracker_common_canned	not_valid	Aucun objet ArtifactType valide
 tracker_common_canned	name_requ	le nom et la description sont requis
@@ -553,7 +553,7 @@ tracker_common_canned	invalid_id	ID ArtifactCanned invalide
 tracker_common_canned	missing_param	Paramètres manquants
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/Artifact.class
+# Script: SF/common/tracker/Artifact.class.php
 #
 tracker_common_artifact	view_private	Vous n'êtes pas autorisé à accéder à cet outil de suivi
 tracker_common_artifact	invalid_id	ID Artefact invalide
@@ -584,12 +584,12 @@ tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à m
 tracker_common_artifact	bad_field_value	La valeur $2 n'est pas autorisée pour le champ $1.
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactFactory.class
+# Script: SF/common/tracker/ArtifactFactory.class.php
 #
 tracker_common_factory	db_err	Erreur base de données
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactField.class
+# Script: SF/common/tracker/ArtifactField.class.php
 #
 tracker_common_field	unkown	Type d'affichage inconnu
 tracker_common_field	not_found	(Erreur - Introuvable)
@@ -606,7 +606,7 @@ tracker_common_field	val_exist	Cet ID de valeur existe déjà.
 tracker_common_field	val_id_requ	L'ID de la valeur et son nom sont obligatoires.
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactFieldFactory.class
+# Script: SF/common/tracker/ArtifactFieldFactory.class.php
 #
 tracker_common_field_factory	missing	Champs manquants&nbsp;: $1 <p>La valeur vide n'est pas autorisée pour les champs listés ci-dessus. Retournez à la page précédente et essayez à nouveau.
 tracker_common_field_factory	use_ins_err	Erreur lors de l'insertion de artifact_field_usage ($1-$2) : $3
@@ -616,7 +616,7 @@ tracker_common_field_factory	ins_err	Erreur lors de l'insertion de artifact_fiel
 tracker_common_field_factory	ugroup_not_exist	Le champ $1 n'a pu être associé au groupe inconnu $2
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactFile.class
+# Script: SF/common/tracker/ArtifactFile.class.php
 #
 tracker_common_file	invalid	Aucun artefact valide
 tracker_common_file	name_requ	 Le nom du fichier, son type, sa taille et ses données sont obligatoires
@@ -624,36 +624,36 @@ tracker_common_file	del_err	Destruction impossible
 tracker_common_file	invalid_id	ID ArtifactFile invalide
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactFromID.class
+# Script: SF/common/tracker/ArtifactFromID.class.php
 #
 tracker_common_fromid	not_create	L'ArtifactType n'a pas pu être créé
 tracker_common_fromid	not_create_a	L'Artifact n'a pas pu être créé
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactGroup.class
+# Script: SF/common/tracker/ArtifactGroup.class.php
 #
 tracker_common_group	name_requ	Le nom est obligatoire
 tracker_common_group	invalid	ID ArtifactGroup invalide
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactReport.class
+# Script: SF/common/tracker/ArtifactReport.class.php
 #
 tracker_common_report	name_requ	Nom ,description et portée sont obligatoires
 tracker_common_report	not_found	fetchData rapport introuvable
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactReportFactory.class
+# Script: SF/common/tracker/ArtifactReportFactory.class.php
 #
 tracker_common_reportfactory	ins_err	Erreur lors de l'insertion de artifact_report ($1-$2) : $3
 tracker_common_reportfactory	f_ind_err	Erreur lors de l'insertion de artifact_report_field ($1-$2) : $3
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/Artifacts.class
+# Script: SF/common/tracker/Artifacts.class.php
 #
 tracker_common_artifacts	not_get	Récupération impossible des artefacts&nbsp;: $1
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactTypes.class
+# Script: SF/common/tracker/ArtifactTypes.class.php
 #
 tracker_common_type	invalid	Pas d'objet de groupe valide
 tracker_common_type	no_match	Group_id dans la BDD ne correspond pas à l'objet Group
@@ -674,7 +674,7 @@ tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
 tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactTypes.class
+# Script: SF/common/tracker/ArtifactTypes.class.php
 #
 tracker_common_types	err_bugs	Erreur à la création de ArtifactType pour l'outil de suivi de Bug
 tracker_common_types	bugs	Bugs
@@ -778,7 +778,7 @@ tracker_admin_fieldset	tracker_admin	Administration outil de suivi
 tracker_admin_fieldset	fieldset_admin	Administration des groupes de champs
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactFieldSet.class
+# Script: SF/common/tracker/ArtifactFieldSet.class.php
 #
 tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
 tracker_common_fieldset	name_requ	Le nom du groupoe de champ est obligatoire.
@@ -804,7 +804,7 @@ tracker_common_fieldset	fieldset_status_tasks_lbl_key	Etat
 tracker_common_fieldset	fieldset_status_tasks_desc_key	Etat d'avancement de la tâche
 #
 #-----------------------------------------------
-# Script: SF/common/tracker/ArtifactFieldSetFactory.class
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class.php
 #
 tracker_common_fieldset_factory	delete_only_empty_fieldset	Impossible de supprimer un groupe de champs non vide.
 tracker_common_fieldset_factory	label_requ	Le nom du groupe de champs est obligatoire.

@@ -12,7 +12,7 @@
 	Heavily refactored by Laurent Julliard, 2002
 */
 
-require_once('common/survey/SurveySingleton.class');
+require_once('common/survey/SurveySingleton.class.php');
 
 $Language->loadLanguageMsg('survey/survey');
 

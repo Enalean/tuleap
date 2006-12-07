@@ -7,7 +7,7 @@
 // $Id$
 
 require_once('pre.php');
-require_once('common/survey/SurveySingleton.class');
+require_once('common/survey/SurveySingleton.class.php');
 require('../survey/survey_utils.php');
 
 $Language->loadLanguageMsg('survey/survey');

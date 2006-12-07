@@ -23,7 +23,7 @@
 #
 #DirectoryIndex index.php
 AddType application/x-httpd-php .php
-AddType application/x-httpd-php .class
+
 
 # PHP variables
 php_flag register_globals on

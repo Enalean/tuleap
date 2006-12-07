@@ -3,8 +3,8 @@
  * $Id$
  */
 
-require_once('common/dao/UserDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/UserDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
 class Mail {
     

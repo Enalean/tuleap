@@ -1,6 +1,6 @@
 <?php
 
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 class PluginCreationWizardPlugin extends Plugin {
 	
@@ -12,7 +12,7 @@ class PluginCreationWizardPlugin extends Plugin {
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginCreationWizardPluginInfo')) {
-            require_once('PluginCreationWizardPluginInfo.class');
+            require_once('PluginCreationWizardPluginInfo.class.php');
             $this->pluginInfo =& new PluginCreationWizardPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -31,7 +31,7 @@ class PluginCreationWizardPlugin extends Plugin {
     }
     
     function process() {
-        require_once('PluginCreationWizard.class');
+        require_once('PluginCreationWizard.class.php');
         $controler =& new PluginCreationWizard();
         $controler->process();
     }

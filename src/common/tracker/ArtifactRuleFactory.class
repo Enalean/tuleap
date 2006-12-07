@@ -22,9 +22,9 @@
  *
  * $Id$
  */
-require_once('common/dao/ArtifactRuleDao.class');
+require_once('common/dao/ArtifactRuleDao.class.php');
 
-require_once('ArtifactRuleValue.class');
+require_once('ArtifactRuleValue.class.php');
 
 
 /**

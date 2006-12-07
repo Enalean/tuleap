@@ -19,17 +19,17 @@ define ('get_artifact_field_fault', '3015');
 require_once ('nusoap.php');
 require_once ('pre.php');
 require_once ('session.php');
-require_once ('common/include/Error.class');
-require_once ('common/tracker/ArtifactType.class');
-require_once ('common/tracker/ArtifactTypeFactory.class');
-require_once ('common/tracker/Artifact.class');
-require_once ('common/tracker/ArtifactFactory.class');
-require_once ('common/tracker/ArtifactField.class');
-require_once ('common/tracker/ArtifactFieldFactory.class');
-require_once ('common/tracker/ArtifactFieldSet.class');
-require_once ('common/tracker/ArtifactFieldSetFactory.class');
-require_once ('common/tracker/ArtifactReportFactory.class');
-require_once ('www/tracker/include/ArtifactFieldHtml.class');
+require_once ('common/include/Error.class.php');
+require_once ('common/tracker/ArtifactType.class.php');
+require_once ('common/tracker/ArtifactTypeFactory.class.php');
+require_once ('common/tracker/Artifact.class.php');
+require_once ('common/tracker/ArtifactFactory.class.php');
+require_once ('common/tracker/ArtifactField.class.php');
+require_once ('common/tracker/ArtifactFieldFactory.class.php');
+require_once ('common/tracker/ArtifactFieldSet.class.php');
+require_once ('common/tracker/ArtifactFieldSetFactory.class.php');
+require_once ('common/tracker/ArtifactReportFactory.class.php');
+require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
 
 
 //
@@ -1426,7 +1426,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         $data = setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields);
         
         //Check Field Dependencies
-        require_once('common/tracker/ArtifactRulesManager.class');
+        require_once('common/tracker/ArtifactRulesManager.class.php');
         $arm =& new ArtifactRulesManager();
         if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
             return new soap_fault(invalid_field_dependency_fault, 'addArtifact', 'Invalid Field Dependency', 'Invalid Field Dependency');
@@ -1580,7 +1580,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
         $data = setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields);
         
         //Check Field Dependencies
-        require_once('common/tracker/ArtifactRulesManager.class');
+        require_once('common/tracker/ArtifactRulesManager.class.php');
         $arm =& new ArtifactRulesManager();
         if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
             return new soap_fault(invalid_field_dependency_fault, 'updateArtifact', 'Invalid Field Dependency', 'Invalid Field Dependency');

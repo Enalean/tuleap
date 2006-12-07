@@ -7,10 +7,10 @@
  * ServerUpdate
  */
 
-require_once('common/mvc/Controler.class');
-require_once('common/include/HTTPRequest.class');
-require_once('ServerUpdateViews.class');
-require_once('ServerUpdateActions.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('ServerUpdateViews.class.php');
+require_once('ServerUpdateActions.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
 

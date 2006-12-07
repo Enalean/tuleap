@@ -7,7 +7,7 @@
  * Tests the class Reference
  */
 
-require_once('common/include/Reference.class');
+require_once('common/include/Reference.class.php');
 
 
 class ReferenceTest extends UnitTestCase {

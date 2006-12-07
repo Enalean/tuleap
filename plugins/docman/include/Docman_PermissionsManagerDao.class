@@ -23,7 +23,7 @@
  * $Id$
  */
 
-require_once('common/permission/PermissionsManager.class');
+require_once('common/permission/PermissionsManager.class.php');
 
 class Docman_PermissionsManagerDao extends DataAccessObject {
 

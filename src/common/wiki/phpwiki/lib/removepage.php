@@ -50,7 +50,7 @@ function RemovePage (&$request) {
     }
     else {
         // CodeX specific: remove permissions for this page @codextodo: may be transferable otherwhere.
-        require_once('common/wiki/lib/WikiPage.class');
+        require_once('common/wiki/lib/WikiPage.class.php');
         $wiki_page = new WikiPage(GROUP_ID, $_REQUEST['pagename']);
         $wiki_page->resetPermissions();
         // Real delete.

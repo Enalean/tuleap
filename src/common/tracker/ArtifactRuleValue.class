@@ -24,7 +24,7 @@
  * $Id$
  */
 
- require_once('ArtifactRule.class');
+ require_once('ArtifactRule.class.php');
 
 /**
 * RuleValue  between two dynamic fields

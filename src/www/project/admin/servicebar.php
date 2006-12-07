@@ -11,8 +11,8 @@
 require_once('pre.php');
 require_once('vars.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/include/ReferenceManager.class');
-require_once('common/event/EventManager.class');
+require_once('common/include/ReferenceManager.class.php');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -145,7 +145,7 @@ if (($func=='do_create')||($func=='do_update')) {
     }
     // Substitute variables in link
     if ($group_id!=100) {
-        // NOTE: if you change link variables here, change them also below, and  in src/www/register/confirmation.php and src/www/include/Layout.class
+        // NOTE: if you change link variables here, change them also below, and  in src/www/register/confirmation.php and src/www/include/Layout.class.php
         if (strstr($link,'$projectname')) {
             // Don't check project name if not needed.
             // When it is done here, the service bar will not appear updated on the current page

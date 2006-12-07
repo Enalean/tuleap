@@ -23,8 +23,8 @@ require_once('nusoap.php');
 require_once('pre.php');
 require_once('timezones.php');
 require_once('session.php'); 
-require_once('common/tracker/ArtifactType.class');
-require_once('Group.class');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('Group.class.php');
 
 
 //

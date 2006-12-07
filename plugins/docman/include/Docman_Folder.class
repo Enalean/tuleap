@@ -25,7 +25,7 @@
 require_once('Docman_Item.class');
 require_once('view/Docman_View_Browse.class');
 
-require_once('common/collection/PrioritizedList.class');
+require_once('common/collection/PrioritizedList.class.php');
 
 /**
  * Folder is a transport object (aka container) used to share data between

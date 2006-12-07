@@ -7,7 +7,7 @@
 // $Id$
 
 require_once('pre.php');    
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 
 session_require(array('isloggedin'=>'1'));
 
@@ -186,7 +186,7 @@ while (list(,$dirname) = each($theme_dirs)) {
         $dir = opendir($dirname);
         while ($file = readdir($dir)) {
             if (is_dir("$dirname/$file") && $file != "." && $file != ".." && $file != "CVS" && $file != "custom" && $file != ".svn") {
-                if (is_file($dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class')) {
+                if (is_file($dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php')) {
                     $theme_list[] = $file;
                 }
             }

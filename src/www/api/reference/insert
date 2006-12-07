@@ -14,8 +14,8 @@
  * output: HTML text with embedded references (links to goto script)
 */
 require_once('pre.php');
-require_once('common/include/HTTPRequest.class');
-require_once('common/include/ReferenceManager.class');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/ReferenceManager.class.php');
 
 header('Content-type: text/html');
 

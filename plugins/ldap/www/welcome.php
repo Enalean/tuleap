@@ -36,7 +36,7 @@
 require_once('pre.php');
 require_once('timezones.php');
 require_once('account.php');
-require_once('../include/UserLdap.class');
+require_once('../include/UserLdap.class.php');
 
 function welcome_exit_error($title,$text) {
     global $HTML,$Language;

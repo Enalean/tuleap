@@ -6,10 +6,10 @@
  *
  * PluginsAdministrationActions
  */
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
-require_once('common/plugin/PluginManager.class');
-require_once('common/plugin/PluginHookPriorityManager.class');
+require_once('common/mvc/Actions.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/plugin/PluginManager.class.php');
+require_once('common/plugin/PluginHookPriorityManager.class.php');
 
 class PluginsAdministrationActions extends Actions {
     

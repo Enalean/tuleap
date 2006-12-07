@@ -8,7 +8,7 @@
 
   //$Language->loadLanguageMsg('include/include');
 
-require_once('common/include/ReferenceManager.class');
+require_once('common/include/ReferenceManager.class.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.

@@ -8,10 +8,10 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/tracker/ArtifactFactory.class');
+//require_once('common/tracker/ArtifactFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
-require_once('include/ArtifactRulesManagerHtml.class');
+require_once('include/ArtifactRulesManagerHtml.class.php');
 // Check if a user can submit a new without loggin
 if ( !user_isloggedin() && !$ath->allowsAnon() ) {
 	exit_not_logged_in();

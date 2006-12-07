@@ -24,7 +24,7 @@
 define('PHPWIKI_DIR',$GLOBALS['codex_dir'].'/src/common/wiki/phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
-require_once('common/wiki/lib/WikiEntry.class');
+require_once('common/wiki/lib/WikiEntry.class.php');
 
 /**
  * Wrapper to access to PhpWiki WikiPage objects

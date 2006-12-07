@@ -1537,7 +1537,7 @@ install in one go httpd, mod_ssl, apr, apr-util
   ALTER TABLE groups ADD COLUMN svn_preamble TEXT NOT NULL;
 
 - DONE - (Upgrade) CREATE table group_svn_history
-- DONE - Modify Project.class and usesSvn
+- DONE - Modify Project.class.php and usesSvn
 - DONE - (Upgrade) Add sys_svn_host to local.inc
 - DONE - (Upgrade) Add SYS_SVN_HOST to /etc/codex/documentation/user_guide/xml/en_US/ParametersLocal.dtd
 - DONE - (Upgrade) Add a svn entry into the service table for each project. Set the svn service to disabled by default for all projects except project 100.

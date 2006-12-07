@@ -1,6 +1,6 @@
 <?php
 /**
- * ArtifactCanned.class - Class to handle canned responses
+ * ArtifactCanned.class.php - Class to handle canned responses
  *
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
@@ -9,7 +9,7 @@
  * @version   $Id$
  *
  */
-//require_once('common/include/Error.class');
+//require_once('common/include/Error.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

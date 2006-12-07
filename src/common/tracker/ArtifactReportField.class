@@ -7,7 +7,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/tracker/ArtifactField.class');
+//require_once('common/tracker/ArtifactField.class.php');
 
 //
 // This class inherits from ArtifactField

@@ -1,6 +1,6 @@
 <?php
-require_once('common/tracker/ArtifactRuleValueView.class');
-require_once('common/tracker/ArtifactRuleValue.class');
+require_once('common/tracker/ArtifactRuleValueView.class.php');
+require_once('common/tracker/ArtifactRuleValue.class.php');
 Mock::generate('ArtifactRuleValue');
 
 /**

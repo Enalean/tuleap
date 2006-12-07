@@ -133,7 +133,7 @@ function & searchByID ($id) {
 			<section>
 				<title>Naming Convention</title>
 				<para>The short-name of a plugin must be unique and composed of lowercase letters and digits only, because it is going to be used in table names and we don't want namespace conflicts.</para>
-				<para>The main class of the plugin must be composed of the short-name followed by "Plugin.class" e.g: "templatePlugin.class".</para>
+				<para>The main class of the plugin must be composed of the short-name followed by "Plugin.class.php" e.g: "templatePlugin.class.php".</para>
 				<para>SQL tables of the plugin must follow this pattern <literal><![CDATA[plugin_<plugin-shortname>_<table-name>]]></literal> to avoid conflicts.</para>
 			</section>
 			<section>
@@ -331,9 +331,9 @@ cp -r /home/httpd/plugins/template/site-content /etc/codex/plugins/template/.]]>
 			<orderedlist>
 				<listitem><simpara>Copy the theme in themes directory:<programlisting><![CDATA[
 cp -r /path/to/your/gforge_theme /etc/codex/themes/.]]></programlisting></simpara></listitem>
-				<listitem><simpara>Rename your Theme.class file :<programlisting><![CDATA[
-mv /etc/codex/themes/gforge_theme/Theme.class 
-   /etc/codex/themes/gforge_theme/gforge_theme_Theme.class ]]></programlisting></simpara>
+				<listitem><simpara>Rename your Theme.class.php file :<programlisting><![CDATA[
+mv /etc/codex/themes/gforge_theme/Theme.class.php 
+   /etc/codex/themes/gforge_theme/gforge_theme_Theme.class.php ]]></programlisting></simpara>
    					<simpara>(Rename also your Theme class)</simpara>
 					<simpara>This is to prevent from name clash with other Theme class, like with PhpWiki.</simpara>
 				</listitem>

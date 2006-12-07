@@ -6,7 +6,7 @@
  *
  * testsPlugin
  */
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 class testsPlugin extends Plugin {
 	
@@ -18,7 +18,7 @@ class testsPlugin extends Plugin {
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'testsPluginInfo')) {
-            require_once('testsPluginInfo.class');
+            require_once('testsPluginInfo.class.php');
             $this->pluginInfo =& new testsPluginInfo($this);
         }
         return $this->pluginInfo;

@@ -1,6 +1,6 @@
 <?php
 
-require_once('common/plugin/PluginDescriptor.class');
+require_once('common/plugin/PluginDescriptor.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('template', 'template');
 

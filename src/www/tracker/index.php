@@ -13,26 +13,26 @@
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/tracker/Artifact.class');
-require_once('common/tracker/ArtifactFile.class');
-require('./include/ArtifactFileHtml.class');
-require_once('common/tracker/ArtifactType.class');
-require('./include/ArtifactTypeHtml.class');
-require('./include/ArtifactHtml.class');
-require_once('common/tracker/ArtifactCanned.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/tracker/ArtifactFieldSet.class');
-require_once('common/tracker/ArtifactFieldSetFactory.class');
-require_once('common/tracker/ArtifactField.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
-require_once('common/tracker/ArtifactReportFactory.class');
-require_once('common/tracker/ArtifactReport.class');
-require_once('common/tracker/ArtifactReportField.class');
-require('./include/ArtifactFieldHtml.class');
-require('./include/ArtifactReportHtml.class');
-require('./include/ArtifactImportHtml.class');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/tracker/ArtifactFile.class.php');
+require('./include/ArtifactFileHtml.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require('./include/ArtifactTypeHtml.class.php');
+require('./include/ArtifactHtml.class.php');
+require_once('common/tracker/ArtifactCanned.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactFieldSet.class.php');
+require_once('common/tracker/ArtifactFieldSetFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactReportFactory.class.php');
+require_once('common/tracker/ArtifactReport.class.php');
+require_once('common/tracker/ArtifactReportField.class.php');
+require('./include/ArtifactFieldHtml.class.php');
+require('./include/ArtifactReportHtml.class.php');
+require('./include/ArtifactImportHtml.class.php');
 require_once('www/project/admin/permissions.php');
-require_once('common/include/SimpleSanitizer.class');
+require_once('common/include/SimpleSanitizer.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -159,7 +159,7 @@ if ( $func == 'gotoid' ) {
                         }
                         
                         //Check Field Dependencies
-                        require_once('common/tracker/ArtifactRulesManager.class');
+                        require_once('common/tracker/ArtifactRulesManager.class.php');
                         $arm =& new ArtifactRulesManager();
                         if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
@@ -447,7 +447,7 @@ if ( $func == 'gotoid' ) {
                         }
 
                         //Check Field Dependencies
-                        require_once('common/tracker/ArtifactRulesManager.class');
+                        require_once('common/tracker/ArtifactRulesManager.class.php');
                         $arm =& new ArtifactRulesManager();
                         if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));

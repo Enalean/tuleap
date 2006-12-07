@@ -8,13 +8,13 @@
 require_once('pre.php');
 require('../admin/project_admin_utils.php');
 require('./project_export_utils.php');
-require_once('common/tracker/Artifact.class');
-require_once('www/tracker/include/ArtifactHtml.class');
-require_once('common/tracker/ArtifactType.class');
-require_once('www/tracker/include/ArtifactTypeHtml.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/tracker/ArtifactField.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
+require_once('common/tracker/Artifact.class.php');
+require_once('www/tracker/include/ArtifactHtml.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('www/tracker/include/ArtifactTypeHtml.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
 
 $Language->loadLanguageMsg('project/project');
 

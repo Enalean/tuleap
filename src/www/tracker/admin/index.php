@@ -10,26 +10,26 @@
 //
 
 require_once('pre.php');
-require_once('common/include/HTTPRequest.class');
-require_once('common/include/GroupFactory.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactFieldSetFactory.class');
-require_once('common/tracker/ArtifactFieldSet.class');
-require_once('common/tracker/ArtifactCanned.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
-require_once('common/tracker/ArtifactField.class');
-require_once('common/tracker/ArtifactReport.class');
-require_once('common/tracker/ArtifactReportFactory.class');
-require_once('common/tracker/ArtifactReportField.class');
-require_once('common/tracker/Artifact.class');
-require_once('common/include/ReferenceManager.class');
-require('../include/ArtifactTypeHtml.class');
-require('../include/ArtifactCannedHtml.class');
-require('../include/ArtifactReportHtml.class');
-require('../include/ArtifactHtml.class');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/GroupFactory.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactFieldSetFactory.class.php');
+require_once('common/tracker/ArtifactFieldSet.class.php');
+require_once('common/tracker/ArtifactCanned.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactReport.class.php');
+require_once('common/tracker/ArtifactReportFactory.class.php');
+require_once('common/tracker/ArtifactReportField.class.php');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/include/ReferenceManager.class.php');
+require('../include/ArtifactTypeHtml.class.php');
+require('../include/ArtifactCannedHtml.class.php');
+require('../include/ArtifactReportHtml.class.php');
+require('../include/ArtifactHtml.class.php');
 
-require_once('common/include/SimpleSanitizer.class');
+require_once('common/include/SimpleSanitizer.class.php');
 $sanitizer =& new SimpleSanitizer();
 
 $Language->loadLanguageMsg('tracker/tracker');
@@ -430,7 +430,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->updateValueFunction($atid,$value_function) ) {
 				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
-                require_once('common/tracker/ArtifactRulesManager.class');
+                require_once('common/tracker/ArtifactRulesManager.class.php');
                 $arm =& new ArtifactRulesManager();
                 $arm->deleteRulesByFieldId($atid, $field_id);
 				$feedback = $Language->getText('tracker_admin_index','values_updated');
@@ -553,7 +553,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 if ($status == $ath->FIELD_VALUE_STATUS_HIDDEN) {
-                    require_once('common/tracker/ArtifactRulesManager.class');
+                    require_once('common/tracker/ArtifactRulesManager.class.php');
                     $arm =& new ArtifactRulesManager();
                     $arm->deleteRulesByValueId($atid, $field_id, $value_id);
                 }
@@ -579,7 +579,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->deleteValueList($atid,$value_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
-                require_once('common/tracker/ArtifactRulesManager.class');
+                require_once('common/tracker/ArtifactRulesManager.class.php');
                 $arm =& new ArtifactRulesManager();
                 $arm->deleteRulesByValueId($atid, $field_id, $value_id);
 				$feedback = $Language->getText('tracker_admin_index','value_deleted');
@@ -639,7 +639,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 if (!(isset($use_it) && $use_it)) {
-                    require_once('common/tracker/ArtifactRulesManager.class');
+                    require_once('common/tracker/ArtifactRulesManager.class.php');
                     $arm =& new ArtifactRulesManager();
                     $arm->deleteRulesByFieldId($atid, $field_id);
                 }
@@ -674,7 +674,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ( !$field->delete($atid) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
-                require_once('common/tracker/ArtifactRulesManager.class');
+                require_once('common/tracker/ArtifactRulesManager.class.php');
                 $arm =& new ArtifactRulesManager();
                 $arm->deleteRulesByFieldId($atid, $field_id);
                 
@@ -734,7 +734,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		} else {
 		  $feedback = $Language->getText('tracker_admin_index','delete_success',$ath->getName());
 		  echo $Language->getText('tracker_admin_index','tracker_deleted',array($ath->getName(),$GLOBALS['sys_email_admin']));
-                require_once('common/tracker/ArtifactRulesManager.class');
+                require_once('common/tracker/ArtifactRulesManager.class.php');
                 $arm =& new ArtifactRulesManager();
                 $arm->deleteRulesByArtifactType($atid);
                   // Delete related reference if it exists
@@ -763,7 +763,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 	
-	    require_once('../include/ArtifactRulesManagerHtml.class');
+	    require_once('../include/ArtifactRulesManagerHtml.class.php');
         $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=field_dependencies');
         $request =& HTTPRequest::instance();
         if ($request->get('save') === 'save' ) {

@@ -24,8 +24,8 @@
 * $Id$
 */
 
-require_once('common/dao/PermissionsDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/PermissionsDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
 /**
 * Manage permissions

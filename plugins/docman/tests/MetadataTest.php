@@ -30,10 +30,10 @@ require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class');
 
 Mock::generate('Docman_MetadataDao');
 
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once('BaseLanguage.class');
+require_once('BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class MetadataTest extends UnitTestCase {

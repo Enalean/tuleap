@@ -7,7 +7,7 @@
 * Docman_SettingsDao
 */
 
-require_once('common/dao/include/DataAccessObject.class');
+require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_SettingsDao extends DataAccessObject {
     

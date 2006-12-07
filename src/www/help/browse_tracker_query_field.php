@@ -13,9 +13,9 @@
 //
 
 require_once('pre.php');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
-require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
 $Language->loadLanguageMsg('help/help');
 
 

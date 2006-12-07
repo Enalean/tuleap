@@ -21,9 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('HTMLCleaner.class');
-require_once('WikiPage.class');
-require_once('common/collection/ArrayIterator.class');
+require_once('HTMLCleaner.class.php');
+require_once('WikiPage.class.php');
+require_once('common/collection/ArrayIterator.class.php');
 
 /**
  *

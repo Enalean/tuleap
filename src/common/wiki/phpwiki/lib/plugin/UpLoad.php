@@ -23,7 +23,7 @@ rcs_id('$Id: UpLoad.php,v 1.19 2005/04/11 19:40:15 rurban Exp $');
 
 /// MV add
 /// Wiki attachments
-require_once('common/wiki/lib/WikiAttachment.class');
+require_once('common/wiki/lib/WikiAttachment.class.php');
 
 /**
  * UpLoad:  Allow Administrator to upload files to a special directory,

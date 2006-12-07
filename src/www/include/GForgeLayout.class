@@ -7,8 +7,8 @@
  * Base GForge layout class.
  *
  */
-require_once('TabbedLayout.class');
-require_once('common/event/EventManager.class');
+require_once('TabbedLayout.class.php');
+require_once('common/event/EventManager.class.php');
 class GForgeLayout extends TabbedLayout {
 
 	/**

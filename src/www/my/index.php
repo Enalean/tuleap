@@ -8,18 +8,18 @@
 
 require_once('pre.php');
 require('./my_utils.php');
-require_once('common/survey/SurveySingleton.class');
-require_once('common/tracker/Artifact.class');
-require_once('common/tracker/ArtifactFile.class');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/ArtifactCanned.class');
-require_once('common/tracker/ArtifactTypeFactory.class');
-require_once('common/tracker/ArtifactField.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
-require_once('common/tracker/ArtifactReportFactory.class');
-require_once('common/tracker/ArtifactReport.class');
-require_once('common/tracker/ArtifactReportField.class');
-require_once('common/tracker/ArtifactFactory.class');
+require_once('common/survey/SurveySingleton.class.php');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/tracker/ArtifactFile.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactCanned.class.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactReportFactory.class.php');
+require_once('common/tracker/ArtifactReport.class.php');
+require_once('common/tracker/ArtifactReportField.class.php');
+require_once('common/tracker/ArtifactFactory.class.php');
 
 $Language->loadLanguageMsg('my/my');
 

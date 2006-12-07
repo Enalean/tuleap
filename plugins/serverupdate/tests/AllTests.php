@@ -2,7 +2,7 @@
 //We want to be able to run one test AND many tests
 if (! defined('CODEX_RUNNER')) {
     define('CODEX_RUNNER', __FILE__);
-    require_once('../../../codex_tools/tests/CodexReporter.class');
+    require_once('../../../codex_tools/tests/CodexReporter.class.php');
 }
 
 require_once('../../../codex_tools/tests/simpletest/unit_tester.php');

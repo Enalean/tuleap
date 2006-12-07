@@ -3,8 +3,8 @@
 require_once('pre.php');
 require_once('user.php');
 
-require_once('LDAP.class');
-require_once('LDAPResult.class');
+require_once('LDAP.class.php');
+require_once('LDAPResult.class.php');
 
 class UserLdap {
    

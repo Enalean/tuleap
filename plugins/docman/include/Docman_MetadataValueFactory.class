@@ -22,10 +22,10 @@
  * 
  * $Id$
  */
-require_once('common/include/Error.class');
+require_once('common/include/Error.class.php');
 require_once('Docman_MetadataValue.class');
 require_once('Docman_MetadataValueDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/CodexDataAccess.class.php');
 
 /**
  * High level object for Metadata Values management.

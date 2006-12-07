@@ -1,6 +1,6 @@
 <?php
-require_once('Map.class');
-require_once('Collection.class');
+require_once('Map.class.php');
+require_once('Collection.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 

@@ -7,8 +7,8 @@
  *
  * <?=$class_name?>PluginInfo
  */
-require_once('common/plugin/PluginInfo.class');
-require_once('<?=$class_name?>PluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('<?=$class_name?>PluginDescriptor.class.php');
 
 class <?=$class_name?>PluginInfo extends PluginInfo {
     

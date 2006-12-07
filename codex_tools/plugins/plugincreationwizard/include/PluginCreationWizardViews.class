@@ -6,9 +6,9 @@
  *
  * PluginCreationWizardViews
  */
-require_once('common/mvc/Views.class');
-require_once('common/include/HTTPRequest.class');
-require_once('Template.class');
+require_once('common/mvc/Views.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('Template.class.php');
 
 class PluginCreationWizardViews extends Views {
     

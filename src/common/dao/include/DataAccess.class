@@ -1,6 +1,6 @@
 <?php
 
-require_once('DataAccessResult.class');
+require_once('DataAccessResult.class.php');
 
 /**
  *  A simple class for querying MySQL

@@ -2,13 +2,13 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2006. All rights reserved
 //
-// $Id: GroupFactory.class 1553 2005-05-20 16:38:25Z nterray $
+// $Id: GroupFactory.class.php 1553 2005-05-20 16:38:25Z nterray $
 //
 //
 
 require_once('pre.php');
-require_once('common/include/HTTPRequest.class');
-require_once('common/include/ReferenceManager.class');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/ReferenceManager.class.php');
 
 $reference_manager =& ReferenceManager::instance();
 $request =& HTTPRequest::instance();

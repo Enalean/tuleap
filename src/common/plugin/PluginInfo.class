@@ -1,6 +1,6 @@
 <?php
-require_once('common/collection/Map.class');
-require_once('PluginDescriptor.class');
+require_once('common/collection/Map.class.php');
+require_once('PluginDescriptor.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 

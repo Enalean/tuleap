@@ -23,7 +23,7 @@
  * $Id$
  */
 
-require_once('common/dao/include/DataAccessObject.class');
+require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_MetadataDao extends DataAccessObject {
     var $deletedStmt;

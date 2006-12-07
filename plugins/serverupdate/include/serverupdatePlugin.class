@@ -1,6 +1,6 @@
 <?php
 
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -20,7 +20,7 @@ class ServerUpdatePlugin extends Plugin {
     
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ServerUpdatePluginInfo')) {
-            require_once('ServerUpdatePluginInfo.class');
+            require_once('ServerUpdatePluginInfo.class.php');
             $this->pluginInfo =& new ServerUpdatePluginInfo($this);
         }
         return $this->pluginInfo;
@@ -52,7 +52,7 @@ class ServerUpdatePlugin extends Plugin {
     }
     
     function process() {
-        require_once('ServerUpdate.class');
+        require_once('ServerUpdate.class.php');
         $controler =& new ServerUpdate($this->_getThemePath());
         $controler->process();
     }

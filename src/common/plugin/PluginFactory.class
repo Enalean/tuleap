@@ -1,12 +1,12 @@
 <?php
-require_once('common/dao/PluginDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/dao/PluginDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
-require_once('common/collection/Map.class');
+require_once('common/collection/Map.class.php');
 
-require_once('common/include/String.class');
+require_once('common/include/String.class.php');
 
-require_once('Plugin.class');
+require_once('Plugin.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -113,7 +113,7 @@ class PluginFactory {
         $class_name = $name."Plugin";
         $custom     = false;
         if (!class_exists($class_name)) {
-            $file_name = '/'.$name.'/include/'.$class_name.'.class';
+            $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
             //Custom ?
             if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
                 require_once($this->_getCustomPluginsRoot().$file_name);

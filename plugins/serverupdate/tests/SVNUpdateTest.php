@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__).'/../include/SVNUpdate.class');
-require_once(dirname(__FILE__).'/../include/SVNCommit.class');
+require_once(dirname(__FILE__).'/../include/SVNUpdate.class.php');
+require_once(dirname(__FILE__).'/../include/SVNCommit.class.php');
 Mock::generate('SVNCommit');
 
 Mock::generatePartial(
@@ -84,14 +84,14 @@ class SVNUpdateTest extends UnitTestCase {
     function testGetConflictedLines() {
         $merge_output = "U      /server/directory/path/file.txt\n";
         $merge_output .= "A      /server/directory/path/path2\n";
-        $merge_output .= "C      /server/directory/path/file2.class\n";
-        $merge_output .= "G      /server/directory/path/path2/file2.class\n";
+        $merge_output .= "C      /server/directory/path/file2.class.php\n";
+        $merge_output .= "G      /server/directory/path/path2/file2.class.php\n";
         $merge_output .= "Skipped missing target: 'foo.php'";
         
         $conflictedLines = SVNUpdate::getConflictedLines($merge_output);
         
         $this->assertEqual(count($conflictedLines), 2);
-        $this->assertEqual($conflictedLines[0], "C      /server/directory/path/file2.class");
+        $this->assertEqual($conflictedLines[0], "C      /server/directory/path/file2.class.php");
         $this->assertEqual($conflictedLines[1], "Skipped missing target: 'foo.php'");   
     }
     

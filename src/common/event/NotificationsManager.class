@@ -22,7 +22,7 @@
  *
  * $Id$
  */
-require_once('common/dao/NotificationsDao.class');
+require_once('common/dao/NotificationsDao.class.php');
 /* abstract */ class NotificationsManager { /* implements EventListener */
 
     function NotificationsManager() {

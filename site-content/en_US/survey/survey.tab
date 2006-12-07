@@ -11,7 +11,7 @@
 #  */
 #
 #-----------------------------------------------
-# Script: SF/common/survey/Survey.class
+# Script: SF/common/survey/Survey.class.php
 #
 survey_common_survey	radio_buttons_1_5	Radio Buttons 1-5
 survey_common_survey	text_area	Text Area

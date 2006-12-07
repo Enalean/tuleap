@@ -1,8 +1,8 @@
 <?php
-require_once('common/event/EventManager.class');
-require_once('common/event/EventListener.class');
-require_once('common/collection/Collection.class');
-require_once('common/collection/LinkedList.class');
+require_once('common/event/EventManager.class.php');
+require_once('common/event/EventListener.class.php');
+require_once('common/collection/Collection.class.php');
+require_once('common/collection/LinkedList.class.php');
 Mock::generate('EventListener', 'Event1MockEventListener', array('doSomething'));
 Mock::generate('EventListener', 'Event2MockEventListener', array('CallHook'));
 class TestEventManager extends EventManager {

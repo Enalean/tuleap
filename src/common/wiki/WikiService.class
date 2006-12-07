@@ -20,11 +20,11 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('common/mvc/Controler.class');
-require_once('common/wiki/views/WikiServiceViews.class');
-require_once('common/wiki/actions/WikiServiceActions.class');
-require_once('common/wiki/lib/WikiPage.class');
-require_once('common/wiki/lib/Wiki.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/wiki/views/WikiServiceViews.class.php');
+require_once('common/wiki/actions/WikiServiceActions.class.php');
+require_once('common/wiki/lib/WikiPage.class.php');
+require_once('common/wiki/lib/Wiki.class.php');
 
 /**
  * Entry point of WikiService

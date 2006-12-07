@@ -59,7 +59,7 @@ function register_valid()	{
 	return 1;
 }
 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_change_pw', array());
 

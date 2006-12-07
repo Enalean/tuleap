@@ -29,7 +29,7 @@ if (!user_isloggedin()) {
 			"VALUES ('".user_getid()."','$flag','$vote_on_id','$response','".time()."')";
 		$result=db_query($sql);
 		if (!$result) {
-			$feedback .= " ".$Language->getText('global','error')". ";
+			$feedback .= " ".$Language->getText('global','error')." ";
 			echo "<H1>".$Language->getText('survey_rating_resp','ins_err')."</H1>";
 			echo db_error();
 		} else {

@@ -7,14 +7,14 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class');
-//require_once('common/tracker/ArtifactReportField.class');
+//require_once('common/include/Error.class.php');
+//require_once('common/tracker/ArtifactReportField.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
-require_once('common/include/UserManager.class');
-require_once('common/dao/ArtifactFieldDao.class');
-require_once('common/dao/CodexDataAccess.class');
-require_once('common/tracker/ArtifactReportField.class');
+require_once('common/include/UserManager.class.php');
+require_once('common/dao/ArtifactFieldDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/tracker/ArtifactReportField.class.php');
 
 //
 // Sort functions - Must be outside the classes

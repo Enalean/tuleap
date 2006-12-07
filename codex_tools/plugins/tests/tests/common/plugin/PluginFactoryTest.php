@@ -1,11 +1,11 @@
 <?php
-require_once('common/plugin/PluginFactory.class');
+require_once('common/plugin/PluginFactory.class.php');
 Mock::generatePartial('PluginFactory', 'PluginFactoryTestVersion', array('_getClassNameForPluginName'));
-require_once('common/dao/PluginDao.class');
+require_once('common/dao/PluginDao.class.php');
 Mock::generate('PluginDao');
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
 require(getenv('CODEX_LOCAL_INC'));
 require($GLOBALS['db_config_file']);

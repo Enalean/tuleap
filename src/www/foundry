@@ -7,7 +7,7 @@
 // $Id$
 
 require_once('pre.php');
-require_once('Foundry.class');
+require_once('Foundry.class.php');
 
 $expl_pathinfo = explode('/',$REQUEST_URI);
 

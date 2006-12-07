@@ -7,10 +7,10 @@
  *
  * CreateDAOActions
  */
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
-require_once('common/dao/DBTablesDao.class');
-require_once('common/dao/CodexDataAccess.class');
+require_once('common/mvc/Actions.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/dao/DBTablesDao.class.php');
+require_once('common/dao/CodexDataAccess.class.php');
 
 class CreateDAOActions extends Actions {
     
@@ -33,9 +33,9 @@ class CreateDAOActions extends Actions {
                 $name = substr($name, 0, $pos).ucfirst(substr($name, $pos+1));
             }
             $name = substr($name, 0, strlen($name)-1);
-            if (!is_file($path_to_dao.$name.'Dao.class')) {
+            if (!is_file($path_to_dao.$name.'Dao.class.php')) {
                 if (isset($_REQUEST['name']) && $_REQUEST['name'] === $row['Tables_in_'.$GLOBALS['sys_dbname']]) {
-                    require_once('Template.class');
+                    require_once('Template.class.php');
                     $tpl =& new Template();
                     $tpl->set('classname', $name);
                     $tpl->set('table', $row['Tables_in_'.$GLOBALS['sys_dbname']]);
@@ -79,7 +79,7 @@ class CreateDAOActions extends Actions {
                     $accessors .= $tpl_create->fetch('tpl/create.tpl');
                     
                     $tpl->set('accessors', $accessors);
-                    if ($f = fopen($path_to_dao.$name.'Dao.class', "w")) {
+                    if ($f = fopen($path_to_dao.$name.'Dao.class.php', "w")) {
                         fwrite($f, "<");
                         fwrite($f, "?php\n");
                         fwrite($f, $tpl->fetch('tpl/dao.tpl'));

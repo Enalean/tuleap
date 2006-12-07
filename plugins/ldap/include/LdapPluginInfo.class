@@ -1,7 +1,7 @@
 <?php
 
-require_once('common/plugin/PluginInfo.class');
-require_once('LdapPluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('LdapPluginDescriptor.class.php');
 
 class LdapPluginInfo extends PluginInfo {
     

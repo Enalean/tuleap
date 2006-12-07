@@ -6,10 +6,10 @@
  *
  * PluginsAdministration
  */
-require_once('common/mvc/Controler.class');
-require_once('common/include/HTTPRequest.class');
-require_once('PluginsAdministrationViews.class');
-require_once('PluginsAdministrationActions.class');
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('PluginsAdministrationViews.class.php');
+require_once('PluginsAdministrationActions.class.php');
 class PluginsAdministration extends Controler {
     
     function PluginsAdministration() {

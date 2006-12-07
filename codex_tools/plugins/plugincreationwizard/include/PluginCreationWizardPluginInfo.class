@@ -1,7 +1,7 @@
 <?php
 
-require_once('common/plugin/PluginInfo.class');
-require_once('PluginCreationWizardPluginDescriptor.class');
+require_once('common/plugin/PluginInfo.class.php');
+require_once('PluginCreationWizardPluginDescriptor.class.php');
 
 class PluginCreationWizardPluginInfo extends PluginInfo {
     

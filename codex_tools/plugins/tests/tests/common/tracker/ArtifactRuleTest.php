@@ -1,5 +1,5 @@
 <?php
-require_once('common/tracker/ArtifactRule.class');
+require_once('common/tracker/ArtifactRule.class.php');
 Mock::generate('ArtifactCondition');
 
 /**

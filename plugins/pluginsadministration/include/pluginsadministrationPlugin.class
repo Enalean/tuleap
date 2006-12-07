@@ -1,6 +1,6 @@
 <?php
 
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -20,7 +20,7 @@ class PluginsAdministrationPlugin extends Plugin {
     
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
-            require_once('PluginsAdministrationPluginInfo.class');
+            require_once('PluginsAdministrationPluginInfo.class.php');
             $this->pluginInfo =& new PluginsAdministrationPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -52,7 +52,7 @@ class PluginsAdministrationPlugin extends Plugin {
     }
     
     function process() {
-        require_once('PluginsAdministration.class');
+        require_once('PluginsAdministration.class.php');
         $controler =& new PluginsAdministration();
         $controler->process();
     }

@@ -59,7 +59,7 @@ if ($action=='remove_user_from_group') {
 		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
 	}
         // Update in plugin
-        require_once('common/event/EventManager.class');
+        require_once('common/event/EventManager.class.php');
         $em =& EventManager::instance();
         $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
                                                     'user_id' => $user_id ));        
@@ -149,7 +149,7 @@ $row_user = db_fetch_array($res_user);
 
 <P>
 <?php 
-require_once('common/event/EventManager.class');
+require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('usergroup_update_form', array());
 

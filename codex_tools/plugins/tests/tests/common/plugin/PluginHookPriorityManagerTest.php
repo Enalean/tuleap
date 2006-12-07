@@ -1,11 +1,11 @@
 <?php
-require_once('common/plugin/PluginHookPriorityManager.class');
+require_once('common/plugin/PluginHookPriorityManager.class.php');
 Mock::generatePartial('PluginHookPriorityManager', 'PluginHookPriorityManagerTestVersion', array('_getPriorityPluginHookDao'));
-require_once('common/dao/PriorityPluginHookDao.class');
+require_once('common/dao/PriorityPluginHookDao.class.php');
 Mock::generate('PriorityPluginHookDao');
-require_once('common/dao/include/DataAccessResult.class');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require_once('common/plugin/Plugin.class');
+require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

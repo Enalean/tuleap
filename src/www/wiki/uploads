@@ -1,6 +1,6 @@
 <?php
 require_once('pre.php');
-require_once('common/wiki/lib/WikiAttachment.class');
+require_once('common/wiki/lib/WikiAttachment.class.php');
 
 $Language->loadLanguageMsg('wiki/wiki');
 

@@ -11,7 +11,7 @@
 #  */
 #
 #-----------------------------------------------
-# Script: SF/common/include/LDAP.class
+# Script: SF/common/include/LDAP.class.php
 #
 ldap_class	err_bind_nopasswd	Could not bind to $1: no password
 ldap_class	err_bind_invpasswd	Could not bind to $1: invalid password?

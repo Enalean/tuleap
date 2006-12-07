@@ -8,7 +8,7 @@
 
 require_once('pre.php');
 require('../survey/survey_utils.php');
-require_once('common/include/SimpleSanitizer.class');
+require_once('common/include/SimpleSanitizer.class.php');
 
 $Language->loadLanguageMsg('survey/survey');
 
