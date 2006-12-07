@@ -192,8 +192,8 @@ while ($ln = pop(@groupdump_array)) {
 	}
 
 	# make all user names lower case.
-	#$userlist =~ tr/A-Z/a-z/;
-	#$ugrouplist =~ tr/A-Z/a-z/;
+	$userlist =~ tr/A-Z/a-z/;
+	$ugrouplist =~ tr/A-Z/a-z/;
 
 	$group_exists = getgrnam($gname);
 
