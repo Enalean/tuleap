@@ -1,18 +1,18 @@
 <?php
 /**
  *
- * Artifact.class - Main Artifact class
+ * Artifact.class.php - Main Artifact class
  *
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * @version   $Id$
+* @version   $Id$
  *
  * Written for CodeX by Stephane Bouhet
  *
  */
-require_once('common/tracker/ArtifactFile.class');
+require_once('common/tracker/ArtifactFile.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 $Language->loadLanguageMsg('include/include');
