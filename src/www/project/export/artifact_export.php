@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require_once('common/tracker/ArtifactFieldSetFactory.class');
+require_once('common/tracker/ArtifactFieldSetFactory.class.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -72,10 +72,10 @@ if ( $atid ) {
         } else {
             // Assume French
             $lbl_list['follow_ups'] = "Fil de commentaires";
-            $lbl_list['is_dependent_on'] = "Dépend de";
+            $lbl_list['is_dependent_on'] = "Dï¿½pend de";
             
             $dsc_list['follow_ups'] = "Tout le fil de commentaires en un seul bloc de texte";
-            $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci dépend";
+            $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci dï¿½pend";
         }
 
 }

@@ -7,11 +7,11 @@
 // $Id$
 
 require_once('pre.php');
-require_once('www/tracker/include/ArtifactTypeHtml.class');
-require_once('www/tracker/include/ArtifactHtml.class');
-require_once('common/tracker/ArtifactType.class');
-require_once('common/tracker/Artifact.class');
-require_once('common/tracker/ArtifactFieldFactory.class');
+require_once('www/tracker/include/ArtifactTypeHtml.class.php');
+require_once('www/tracker/include/ArtifactHtml.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
 
 $Language->loadLanguageMsg('search/search');
 
@@ -533,7 +533,7 @@ if ($type_of_search == "soft") {
 	$language_id = mysql_fetch_array($result);
 	//Build the search pagename in the wiki language
 	if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
-	else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+	else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntï¿½gral';}
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));
 } else {
