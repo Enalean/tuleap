@@ -24,8 +24,8 @@
  */
 require_once('service.php');
 
-require_once('common/mvc/Actions.class');
-require_once('common/include/HTTPRequest.class');
+require_once('common/mvc/Actions.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 require_once('DocmanActionsDeleteVisitor.class');
 require_once('Docman_Folder.class');
@@ -38,7 +38,7 @@ require_once('Docman_ExpandAllHierarchyVisitor.class');
 
 require_once('view/Docman_View_Browse.class');
 
-require_once('common/permission/PermissionsManager.class');
+require_once('common/permission/PermissionsManager.class.php');
 
 require_once('www/project/admin/permissions.php');
 
