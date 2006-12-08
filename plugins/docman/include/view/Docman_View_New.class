@@ -79,7 +79,7 @@ require_once('Docman_View_PermissionsForItem.class');
         $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') . help_button('DocumentManager') .'</legend>';
         
         $potential_parent_id = isset($params['force_item']) ? $params['force_item']->getParentId() : $params['item']->getId();
-        $potential_parent_id = $this->_controller->userCanWrite($potential_parent_id) ? $potential_parent_id : false;
+        $potential_parent_id = $this->_controller->userCanWrite($potential_parent_id) ? $potential_parent_id : $params['hierarchy']->getId();
         
         $parents_tree =& new Docman_View_ParentsTree($this->_controller);
         $html .= $parents_tree->fetch(array(
@@ -95,6 +95,7 @@ require_once('Docman_View_PermissionsForItem.class');
         $html .= '<fieldset><legend>Permissions</legend>';
         $html .= '<div id="docman_new_permissions_panel">';
         $p =& new Docman_View_PermissionsForItem($this->_controller);
+        $params['user_can_manage'] = $this->_controller->userCanWrite($potential_parent_id);
         $html .= $p->fetch($potential_parent_id, $params);
         $html .= '</div>';
         $html .= '</fieldset>';

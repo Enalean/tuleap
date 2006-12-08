@@ -151,7 +151,12 @@ class DocmanActions extends Actions {
             if ($id) {
                 $new_item =& $item_factory->getItemFromDb($id);
                 $parent   =& $item_factory->getItemFromDb($item['parent_id']);
-                $this->permissions(array('id' => $id));
+                if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
+                    $this->permissions(array('id' => $id));
+                } else {
+                    $pm =& PermissionsManager::instance();
+                    $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+                }
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
                     'group_id' => $request->get('group_id'),
                     'parent'   => &$parent,
@@ -201,7 +206,12 @@ class DocmanActions extends Actions {
                 if ($id) {
                     $new_item =& $item_factory->getItemFromDb($id);
                     $parent   =& $item_factory->getItemFromDb($item['parent_id']);
-                    $this->permissions(array('id' => $id));
+                    if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
+                        $this->permissions(array('id' => $id));
+                    } else {
+                        $pm =& PermissionsManager::instance();
+                        $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+                    }
                     $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
                         'group_id' => $request->get('group_id'),
                         'parent'   => &$parent,

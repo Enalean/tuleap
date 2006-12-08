@@ -857,6 +857,7 @@ class Docman extends Controler {
                                         $this->view = ucfirst($view);
                                         break;
                                     case 'permissionsForItem':
+                                        $this->_viewParams['user_can_manage'] = $this->userCanManage($item->getId());
                                         $this->view = ucfirst($view);
                                         break;
                                     default:
