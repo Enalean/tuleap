@@ -114,15 +114,21 @@ class PluginFactory {
         $custom     = false;
         if (!class_exists($class_name)) {
             $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
+            $file_name_class = '/'.$name.'/include/'.$class_name.'.class';
             //Custom ?
             if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
                 require_once($this->_getCustomPluginsRoot().$file_name);
+                $custom = true;
+            } else if (file_exists($this->_getCustomPluginsRoot().$file_name_class)) {
+                require_once($this->_getCustomPluginsRoot().$file_name_class);
                 $custom = true;
             } else {
                 // Official !!!
                 if (file_exists($this->_getOfficialPluginsRoot().$file_name)) {
                     require_once($this->_getOfficialPluginsRoot().$file_name);
-                }
+                } else if (file_exists($this->_getOfficialPluginsRoot().$file_name_class)) {
+                    require_once($this->_getOfficialPluginsRoot().$file_name_class);
+                } 
             }
         }
         if (!class_exists($class_name)) {
