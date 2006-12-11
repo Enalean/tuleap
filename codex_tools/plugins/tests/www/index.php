@@ -5,91 +5,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
-require($GLOBALS['db_config_file']);
-
-require_once('../include/simpletest/unit_tester.php');
-require_once('../include/simpletest/mock_objects.php');
-require_once('../include/simpletest/reporter.php');
-
-
-class CodeXHtmlReporter extends HtmlReporter {
-    function paintHeader($test_name) {
-        print "<h1>$test_name</h1>\n";
-        flush();
-    }
-    function paintFooter($test_name) {
-        $colour = ($this->getFailCount() + $this->getExceptionCount() > 0 ? "red" : "green");
-        print "<div style=\"";
-        print "padding: 8px; margin-top: 1em; background-color: $colour; color: white;";
-        print "\">";
-        print $this->getTestCaseProgress() . "/" . $this->getTestCaseCount();
-        print " test cases complete:\n";
-        print "<strong>" . $this->getPassCount() . "</strong> passes, ";
-        print "<strong>" . $this->getFailCount() . "</strong> fails and ";
-        print "<strong>" . $this->getExceptionCount() . "</strong> exceptions.";
-        print "</div>\n";
-    }
-    function paintPass($message) {
-        parent::paintPass($message);
-        if (isset($_REQUEST['show_pass'])) {
-            print "<span class=\"pass\">Pass</span>: ";
-            $breadcrumb = $this->getTestList();
-            array_shift($breadcrumb);
-            print implode(" -&gt; ", $breadcrumb);
-            print " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
-        }
-    }
-}
-
-$GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
-$GLOBALS['config']['tests_root']   = '/tests/';
-$GLOBALS['config']['excludes']     = array('.', '..', '.svn');
-$GLOBALS['config']['suffix']       = 'Test.php';
-
-$GLOBALS['tests']                  = array();
-
-function clean_plugins_root(&$entry) {
-    $entry = substr($entry, strlen($GLOBALS['config']['plugins_root']), -strlen($GLOBALS['config']['tests_root']));
-}
-function search_tests_rec($dir, &$tab, $entry) {
-    if (is_dir($dir)) {
-        if ($dh = opendir($dir)) {
-            while (($file = readdir($dh)) !== false) {
-                if (!in_array($file, $GLOBALS['config']['excludes'])) {
-                    if (is_dir("$dir/$file")) {
-                        search_tests_rec("$dir/$file", $tab[($entry == 'tests'?'CodeX':$entry)], $file);
-                    } else if(substr($file, -strlen($GLOBALS['config']['suffix'])) === $GLOBALS['config']['suffix']) {
-                        $tab[($entry == 'tests'?'CodeX':$entry)]['_tests'][] = $file;
-                    }
-                }
-            }
-            closedir($dh);
-        }
-    }
-}
-function search_tests($entry) {
-    search_tests_rec($GLOBALS['config']['plugins_root'] . $entry . $GLOBALS['config']['tests_root'], $GLOBALS['tests'], $entry);
-}
-$roots = glob($GLOBALS['config']['plugins_root'] .'*'. $GLOBALS['config']['tests_root']);
-array_map('clean_plugins_root', $roots);
-array_map('search_tests', $roots);
-
-//{{{ Tri
-function sort_by_key_and_by_value_depending_of_type($a, $b) {
-    return strnatcasecmp((is_array($a) ? key($a) : $a), (is_array($b) ? key($b) : $b));
-}
-function sort_tests(&$entry, $key) {
-    if ($key == '_tests') {
-        usort($entry, 'strnatcasecmp');
-    } else {
-        uksort($entry, 'strnatcasecmp');
-        array_walk($entry, 'sort_tests');
-    }
-}
-uksort($GLOBALS['tests'], 'strnatcasecmp');
-array_walk($GLOBALS['tests'], 'sort_tests');
-//}}}
+require_once('utils.php');
 
 function display_tests($tests, $categ, $params) {
     $prefixe  = ($params['is_cat'] && $categ !== "_tests") ? $params['prefixe'] .'['. $categ .']' : $params['prefixe'];
@@ -296,19 +212,8 @@ function display_tests_as_javascript($tests, $categ, $params) {
                                     }
                                 }
                             }
-                            $g =& new GroupTest("All Tests");
-                            foreach($_REQUEST['tests_to_run'] as $plugin => $tests) {
-                                $o =& new GroupTest($plugin .' Tests');
-                                foreach($tests as $c => $t) {
-                                    add_test_to_group($t, $c, 
-                                        array(
-                                        'group' => &$o, 
-                                        'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'CodeX' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
-                                    ));
-                                }
-                                $g->addTestCase($o);
-                            }
-                            $g->run(new CodeXHtmlReporter());
+                            $g =& get_group_tests($_REQUEST['tests_to_run']);
+                            $g->run(CodeXReporterFactory::reporter());
                         }
                         ?>
                     </fieldset>
