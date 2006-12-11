@@ -1849,16 +1849,19 @@ EOS;
 		
 		    $rank = $row['order_id']?$row['order_id']:"-";
 		    $status = $this->getLabelValueStatus($row['status']);
-		
+		    $field_value = $row['value'];
+		    
 			$html .= '<TR class="'. 
 			    util_get_alt_row_color($iu) .'">';
 		
 			if ( $field->getName() == "severity" ) {
 				$html .= '<TD align="center">'.$row['value_id'].'</TD>';
+				//allow html tag support for Severity field values
+				$field_value = html_entity_decode($row['value']);				
 			}
 		    $html .= '<TD><A HREF="'.$PHP_SELF.'?group_id='.$this->Group->getID()."&atid=".$this->getID().
 			'&func=display_field_value&field_id='.$field->getID().'&value_id='.$row['value_id'].'">'.
-			$row['value'].'</A></td>'.
+			$field_value.'</A></td>'.
 			"\n<td>".$row['description'].'</td>'.
 			"\n<td align =\"center\">".$rank.'</td>'.
 			"\n<td align =\"center\">".$status.'</td>';
