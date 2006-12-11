@@ -85,7 +85,6 @@ function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
-    $pagetitle = $request->getArg('pagetitle');
     $page = $request->getPage();
     if ($version) {
         $revision = $page->getRevision($version);
@@ -111,7 +110,7 @@ function displayPage(&$request, $template=false) {
                                                   'class' => 'backlinks'),
                                             $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)));
 	    }else{	// Remove Backlinks
-	    $pageheader = HTML::h1($pagename);
+	    $pageheader->pushContent(HTML::h1($pagename));
 	    }
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
@@ -121,10 +120,11 @@ function displayPage(&$request, $template=false) {
 					  'class' => 'backlinks'),
 				    $WikiTheme->maybeSplitWikiWord($last_page));
 		$backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
-		$pageheader->pushContent($backlink);
 	}else{
-		$pageheader = HTML::h1($pagename); // Remove Backlinks
+		$backlink = HTML::h1($pagename);
 	}
+	$pageheader->pushContent($backlink);
+	
     } else {
 	if ($pv != 2){
 		$pageheader = HTML::a(array('href' => WikiURL($pagename,
