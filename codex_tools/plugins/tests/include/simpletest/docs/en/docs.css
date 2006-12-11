@@ -2,16 +2,24 @@ body {
     padding-left: 3%;
     padding-right: 3%;
 }
+h1, h2, h3 {
+	font-family: sans-serif;
+}
+h1 {
+    text-align: center;
+}
 pre {
-    font-family: courier;
-    font-size: 80%;
+    font-family: courier, typewriter, monospace;
+    font-size: 90%;
     border: 1px solid;
-    background-color: #cccccc;
+	border-color: #999966;
+    background-color: #ffffcc;
     padding: 5px;
-    margin-left: 5%;
-    margin-right: 8%;
+    margin-left: 20px;
+    margin-right: 40px;
 }
 .code, .new_code, pre.new_code {
+    font-family: courier, typewriter, monospace;
     font-weight: bold;
 }
 div.copyright {
@@ -19,18 +27,23 @@ div.copyright {
     color: gray;
 }
 div.copyright a {
+    margin-top: 1em;
     color: gray;
 }
 ul.api {
-    padding-left: 0em;
-    padding-right: 25%;
+    border: 2px outset;
+    border-color: gray;
+    background-color: white;
+    margin: 5px;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 ul.api li {
     margin-top: 0.2em;
     margin-bottom: 0.2em;
     list-style: none;
     text-indent: -3em;
-    padding-left: 3em;
+    padding-left: 1em;
 }
 div.demo {
     border: 4px ridge;
@@ -52,6 +65,9 @@ div.demo h1 {
     text-align: left;
     font-weight: bold;
 }
+div.menu {
+    text-align: center;
+}
 table {
     border: 2px outset;
     border-color: gray;
@@ -61,7 +77,7 @@ table {
     margin-right: 5%;
 }
 td {
-    font-size: 80%;
+    font-size: 90%;
 }
 .shell {
     color: white;
@@ -73,7 +89,20 @@ pre.shell {
     margin: 5px;
     margin-left: 20px;
     margin-right: 40px;
-    background-color: black;
+    background-color: #000100;
+	color: #99ff99;
+    font-size: 90%;
+}
+pre.file {
+    color: black;
+    border: 1px solid;
+    border-color: black;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 20px;
+    margin-right: 40px;
+    background-color: white;
+    font-size: 90%;
 }
 form.demo {
     background-color: lightgray;
@@ -81,4 +110,12 @@ form.demo {
     border-color: lightgray;
     padding: 10px;
     margin-right: 40%;
+}
+dl, dd {
+	margin:  10px;
+	margin-left:  30px;
+}
+em {
+    font-weight: bold;
+    font-family: courier, typewriter, monospace;
 }

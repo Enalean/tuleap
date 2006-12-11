@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	MockObjects
-     *	@version	$Id: parser.php,v 1.72 2006/01/04 03:15:05 lastcraft Exp $
+     *	@version	$Id: parser.php,v 1.73 2006/11/21 00:26:55 lastcraft Exp $
      */
 
     /**#@+
@@ -645,13 +645,15 @@
          *    @access public
          */
         function acceptAttributeToken($token, $event) {
-            if ($event == LEXER_UNMATCHED) {
-                $this->_attributes[$this->_current_attribute] .=
-                        SimpleHtmlSaxParser::decodeHtml($token);
-            }
-            if ($event == LEXER_SPECIAL) {
-                $this->_attributes[$this->_current_attribute] .=
-                        preg_replace('/^=\s*/' , '', SimpleHtmlSaxParser::decodeHtml($token));
+            if ($this->_current_attribute) {
+                if ($event == LEXER_UNMATCHED) {
+                    $this->_attributes[$this->_current_attribute] .=
+                            SimpleHtmlSaxParser::decodeHtml($token);
+                }
+                if ($event == LEXER_SPECIAL) {
+                    $this->_attributes[$this->_current_attribute] .=
+                            preg_replace('/^=\s*/' , '', SimpleHtmlSaxParser::decodeHtml($token));
+                }
             }
             return true;
         }

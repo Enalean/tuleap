@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	UnitTester
-     *	@version	$Id: shell_tester.php,v 1.19 2005/08/03 17:26:55 lastcraft Exp $
+     *	@version	$Id: shell_tester.php,v 1.21 2006/11/10 20:59:57 lastcraft Exp $
      */
 
     /**#@+
@@ -63,7 +63,7 @@
 
     /**
      *    Test case for testing of command line scripts and
-     *    utilities. Usually scripts taht are external to the
+     *    utilities. Usually scripts that are external to the
      *    PHP code, but support it in some way.
 	 *	  @package SimpleTest
 	 *	  @subpackage UnitTester
@@ -127,6 +127,33 @@
             $shell = &$this->_getShell();
             return $shell->getOutputAsList();
 		}
+
+        /**
+         *    Called from within the test methods to register
+         *    passes and failures.
+         *    @param boolean $result    Pass on true.
+         *    @param string $message    Message to display describing
+         *                              the test state.
+         *    @return boolean           True on pass
+         *    @access public
+         */
+        function assertTrue($result, $message = false) {
+            return $this->assert(new TrueExpectation(), $result, $message);
+        }
+
+        /**
+         *    Will be true on false and vice versa. False
+         *    is the PHP definition of false, so that null,
+         *    empty strings, zero and an empty array all count
+         *    as false.
+         *    @param boolean $result    Pass on false.
+         *    @param string $message    Message to display.
+         *    @return boolean           True on pass
+         *    @access public
+         */
+        function assertFalse($result, $message = '%s') {
+            return $this->assert(new FalseExpectation(), $result, $message);
+        }
         
         /**
          *    Will trigger a pass if the two parameters have

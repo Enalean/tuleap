@@ -3,7 +3,7 @@
      *	adapter for SimpleTest to use PHPUnit test cases
      *	@package	SimpleTest
      *	@subpackage Extensions
-     *	@version	$Id: phpunit_test_case.php,v 1.6 2006/01/03 01:17:08 lastcraft Exp $
+     *	@version	$Id: phpunit_test_case.php,v 1.7 2006/11/10 20:59:59 lastcraft Exp $
      */
     
     /**#@+
@@ -38,7 +38,7 @@
          *    @public
          */
         function assert($condition, $message = false) {
-            parent::assertTrue($condition, $message);
+            parent::assert(new TrueExpectation(), $condition, $message);
         }
         
         /**

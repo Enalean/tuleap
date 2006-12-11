@@ -1,5 +1,5 @@
 <?php
-    // $Id: url_test.php,v 1.24 2005/07/26 01:27:20 lastcraft Exp $
+    // $Id: url_test.php,v 1.25 2006/09/26 20:07:28 maugrim_t_r Exp $
     
     require_once(dirname(__FILE__) . '/../url.php');
     
@@ -158,6 +158,13 @@
             $this->assertEqual(
                     SimpleUrl::normalisePath('https://host.com/I/am/here/../there/somewhere.php'),
                     'https://host.com/I/am/there/somewhere.php');
+        }
+
+		// regression test for #1535407
+        function testPathNormalisationWithSinglePeriod() {
+            $this->assertEqual(
+                SimpleUrl::normalisePath('https://host.com/I/am/here/./../there/somewhere.php'),
+                'https://host.com/I/am/there/somewhere.php');
         }
         
         function testUsernameAndPasswordAreUrlDecoded() {

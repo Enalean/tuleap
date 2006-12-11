@@ -1,5 +1,5 @@
 <?php
-    // $Id: interfaces_test.php,v 1.4 2006/02/05 21:39:08 lastcraft Exp $
+    // $Id: interfaces_test.php,v 1.7 2006/11/08 19:08:00 lastcraft Exp $
     if (function_exists('spl_classes')) {
         include(dirname(__FILE__) . '/support/spl_examples.php');
     }
@@ -73,7 +73,6 @@
         function &referenceMethod(&$a) { }
         function extraMethod($a = false) { }
     }
-
     Mock::generate('ImplementsDummy');
 
     class TestOfImplementations extends UnitTestCase {

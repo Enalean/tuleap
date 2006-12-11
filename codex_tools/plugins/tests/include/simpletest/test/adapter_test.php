@@ -1,5 +1,5 @@
 <?php
-    // $Id: adapter_test.php,v 1.8 2006/01/03 01:17:08 lastcraft Exp $
+    // $Id: adapter_test.php,v 1.9 2006/11/10 20:59:59 lastcraft Exp $
     
     class SameTestClass {
     }
@@ -56,7 +56,7 @@
         }
         
         function testName() {
-            $this->assertTrue($this->name() == 'TestOfPhpUnitAdapter');
+            $this->assert($this->name() == 'TestOfPhpUnitAdapter');
         }
         
         function testEquals() {

@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	UnitTester
-     *	@version	$Id: remote.php,v 1.12 2005/08/03 17:26:55 lastcraft Exp $
+     *	@version	$Id: remote.php,v 1.13 2006/11/20 23:57:16 lastcraft Exp $
      */
 
     /**#@+
@@ -75,7 +75,8 @@
          *    @access protected
          */
         function &_createBrowser() {
-            return new SimpleBrowser();
+            $browser = &new SimpleBrowser();
+            return $browser;
         }
         
         /**
@@ -85,7 +86,8 @@
          *    @access protected
          */
         function &_createParser(&$reporter) {
-            return new SimpleTestXmlParser($reporter);
+            $parser = &new SimpleTestXmlParser($reporter);
+            return $parser;
         }
         
         /**

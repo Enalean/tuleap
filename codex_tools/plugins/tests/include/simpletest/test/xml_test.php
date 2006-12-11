@@ -1,5 +1,5 @@
 <?php
-    // $Id: xml_test.php,v 1.21 2006/02/06 06:05:22 lastcraft Exp $
+    // $Id: xml_test.php,v 1.22 2006/11/08 00:32:22 lastcraft Exp $
     require_once(dirname(__FILE__) . '/../xml.php');
     Mock::generate('SimpleScorer');
 
@@ -141,6 +141,15 @@
             $parser = &new SimpleTestXmlParser($listener);
             $this->sendValidStart($parser);
             $this->assertTrue($parser->parse("<exception>a_message</exception>\n"));
+            $this->sendValidEnd($parser);
+        }
+
+        function testSkip() {
+            $listener = &new MockSimpleScorer();
+            $listener->expectOnce('paintSkip', array('a_message'));
+            $parser = &new SimpleTestXmlParser($listener);
+            $this->sendValidStart($parser);
+            $this->assertTrue($parser->parse("<skip>a_message</skip>\n"));
             $this->sendValidEnd($parser);
         }
 

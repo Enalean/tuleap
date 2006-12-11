@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	WebTester
-     *	@version	$Id: url.php,v 1.29 2006/01/14 02:45:34 lastcraft Exp $
+     *	@version	$Id: url.php,v 1.30 2006/09/26 20:07:28 maugrim_t_r Exp $
      */
 
     /**#@+
@@ -507,8 +507,8 @@
          *    @access public
          */
         function normalisePath($path) {
-            $path = preg_replace('|/[^/]+/\.\./|', '/', $path);
-            return preg_replace('|/\./|', '/', $path);
+            $path = preg_replace('|/\./|', '/', $path);
+            return preg_replace('|/[^/]+/\.\./|', '/', $path);
         }
         
         /**

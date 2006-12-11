@@ -1,5 +1,5 @@
 <?php
-    // $Id: compatibility_test.php,v 1.2 2005/09/10 22:35:33 tswicegood Exp $
+    // $Id: compatibility_test.php,v 1.3 2006/10/08 18:06:12 pp11 Exp $
     require_once(dirname(__FILE__) . '/../compatibility.php');
     
     class ComparisonClass {
@@ -25,6 +25,12 @@
             $this->assertTrue(SimpleTestCompatibility::isA(
                     new ComparisonSubclass(),
                     'ComparisonClass'));
+        }
+        
+        function testIdentityOfNumericStrings() {
+            $numericString1 = "123";
+            $numericString2 = "00123";
+            $this->assertNotIdentical($numericString1, $numericString2);
         }
         
         function testIdentityOfObjects() {

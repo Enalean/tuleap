@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	WebTester
-     *	@version	$Id: encoding.php,v 1.17 2005/07/20 13:41:40 lastcraft Exp $
+     *	@version	$Id: encoding.php,v 1.18 2006/11/06 09:55:20 lastcraft Exp $
      */
      
     /**#@+
@@ -37,7 +37,7 @@
          *    @access public
          */
         function asRequest() {
-            return $this->_key . '=' . urlencode($this->_value);
+            return urlencode($this->_key) . '=' . urlencode($this->_value);
         }
         
         /**

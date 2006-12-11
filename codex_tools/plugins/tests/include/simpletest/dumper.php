@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	UnitTester
-     *	@version	$Id: dumper.php,v 1.28 2006/01/03 01:17:07 lastcraft Exp $
+     *	@version	$Id: dumper.php,v 1.29 2006/05/13 14:37:16 lastcraft Exp $
      */
     /**
      * does type matter
@@ -355,48 +355,6 @@
             $formatted = ob_get_contents();
             ob_end_clean();
             return $formatted;
-        }
-
-        /**
-         *    Extracts the last assertion that was not within
-         *    Simpletest itself. The name must start with "assert".
-         *    @param array $stack      List of stack frames.
-         *    @access public
-         *    @static
-         */
-        function getFormattedAssertionLine($stack) {
-            foreach ($stack as $frame) {
-                if (isset($frame['file'])) {
-                    if (strpos($frame['file'], SIMPLE_TEST) !== false) {
-                        if (dirname($frame['file']) . '/' == SIMPLE_TEST) {
-                            continue;
-                        }
-                    }
-                }
-                if (SimpleDumper::_stackFrameIsAnAssertion($frame)) {
-                    return ' at [' . $frame['file'] . ' line ' . $frame['line'] . ']';
-                }
-            }
-            return '';
-        }
-        
-        /**
-         *    Tries to determine if the method call is an assertion.
-         *    @param array $frame     PHP stack frame.
-         *    @access private
-         *    @static
-         */
-        function _stackFrameIsAnAssertion($frame) {
-            if (($frame['function'] == 'fail') || ($frame['function'] == 'pass')) {
-                return true;
-            }
-            if (strncmp($frame['function'], 'assert', 6) == 0) {
-                return true;
-            }
-            if (strncmp($frame['function'], 'expect', 6) == 0) {
-                return true;
-            }
-            return false;
         }
     }
 ?>

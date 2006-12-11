@@ -1,5 +1,5 @@
 <?php
-    // $Id: acceptance_test.php,v 1.94 2006/02/05 02:04:24 lastcraft Exp $
+    // $Id: acceptance_test.php,v 1.95 2006/05/13 14:37:17 lastcraft Exp $
     require_once(dirname(__FILE__) . '/../compatibility.php');
     require_once(dirname(__FILE__) . '/../browser.php');
     require_once(dirname(__FILE__) . '/../web_tester.php');
@@ -143,9 +143,15 @@
             $this->assertText('target for the SimpleTest');
         }
         
+        function testLinkAssertions() {
+            $this->get('http://www.lastcraft.com/test/link_confirm.php');
+            $this->assertLink('Absolute', 'http://www.lastcraft.com/test/network_confirm.php');
+            $this->assertLink('Absolute', new PatternExpectation('/confirm/'));
+            $this->assertClickable('Absolute');
+        }
+        
         function testAbsoluteLinkFollowing() {
             $this->get('http://www.lastcraft.com/test/link_confirm.php');
-            $this->assertLink('Absolute');
             $this->assertTrue($this->clickLink('Absolute'));
             $this->assertText('target for the SimpleTest');
         }
@@ -179,6 +185,7 @@
             $this->get('http://www.lastcraft.com/test/front_controller_style/a_page.php');
             $this->assertEqual($this->getUrl(), 'http://www.lastcraft.com/test/front_controller_style/a_page.php');
             $this->assertTitle('Simple test page with links');
+            $this->assertLink('Self');
             $this->clickLink('Self');
             $this->assertTitle('Simple test page with links');
         }
@@ -508,6 +515,8 @@
             $this->assertFieldByName('g', 'g3');
             $this->assertFieldByName('h', 2);
             $this->assertFieldByName('go', 'Go!');
+            $this->assertClickable('Go!');
+            $this->assertSubmit('Go!');
             $this->assertTrue($this->clickSubmit('Go!'));
             $this->assertText('go=[Go!]');
             $this->assertText('a=[]');
@@ -662,6 +671,7 @@
 
 		function testImageSubmissionByLabel() {
             $this->get('http://www.lastcraft.com/test/form.html');
+            $this->assertImage('Image go!');
             $this->assertTrue($this->clickImage('Image go!', 10, 12));
             $this->assertText('go_x=[10]');
             $this->assertText('go_y=[12]');

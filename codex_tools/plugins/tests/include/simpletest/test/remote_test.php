@@ -1,5 +1,5 @@
 <?php
-    // $Id: remote_test.php,v 1.5 2005/12/08 19:35:07 lastcraft Exp $
+    // $Id: remote_test.php,v 1.6 2006/11/20 23:44:37 lastcraft Exp $
     require_once('../remote.php');
     require_once('../reporter.php');
 
@@ -11,10 +11,8 @@
     };
     $test_url = str_replace('remote_test.php', 'visual_test.php', $base_uri);
 
-    $test = &new GroupTest('Remote tests');
-    $test->addTestCase(new RemoteTestCase(
-            $test_url . '?xml=yes',
-            $test_url . '?xml=yes&dry=yes'));
+    $test = &new TestSuite('Remote tests');
+    $test->addTestCase(new RemoteTestCase($test_url . '?xml=yes', $test_url . '?xml=yes&dry=yes'));
     if (SimpleReporter::inCli()) {
         exit ($test->run(new TextReporter()) ? 0 : 1);
     }

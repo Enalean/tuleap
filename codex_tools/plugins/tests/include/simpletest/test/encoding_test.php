@@ -1,5 +1,5 @@
 <?php
-    // $Id: encoding_test.php,v 1.15 2005/08/05 22:30:02 lastcraft Exp $
+    // $Id: encoding_test.php,v 1.16 2006/11/06 09:55:21 lastcraft Exp $
     
     require_once(dirname(__FILE__) . '/../url.php');
     require_once(dirname(__FILE__) . '/../socket.php');
@@ -94,6 +94,12 @@
             $encoding = &new SimplePostEncoding();
             $encoding->add('a', 'Hello there!');
             $this->assertWritten($encoding, 'a=Hello+there%21');
+        }
+        
+        function testUrlEncodingOfKey() {
+            $encoding = &new SimplePostEncoding();
+            $encoding->add('a!', 'Hello');
+            $this->assertWritten($encoding, 'a%21=Hello');
         }
         
         function testMultipleParameter() {

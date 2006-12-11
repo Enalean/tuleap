@@ -1,5 +1,5 @@
 <?php
-    // $Id: unit_tester_test.php,v 1.9 2005/11/23 01:53:15 lastcraft Exp $
+    // $Id: unit_tester_test.php,v 1.11 2006/11/06 13:56:37 lastcraft Exp $
     
     class ReferenceForTesting {
     }
@@ -49,21 +49,6 @@
             $a = 25;
             $b = 25;
             $this->assertClone($a, $b);
-        }
-    }
-    
-    class TestOfJBehaveStyle extends UnitTestCase {
-        
-        function _isTest($method) {
-            return strtolower(substr($method, 0, 6)) == 'should';
-        }
-        
-        function testFail() {
-            $this->fail('This should not be run');
-        }
-        
-        function shouldBeRun() {
-            $this->pass('This should be run');
         }
     }
 ?>

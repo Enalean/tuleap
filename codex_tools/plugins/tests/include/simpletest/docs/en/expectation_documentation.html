@@ -9,47 +9,48 @@
 <body>
 <div class="menu_back">
 <div class="menu">
-<h2>
 <a href="index.html">SimpleTest</a>
-</h2>
-<ul>
-<li>
-<a href="overview.html">Overview</a>
-</li>
-<li>
-<a href="unit_test_documentation.html">Unit tester</a>
-</li>
-<li>
-<a href="group_test_documentation.html">Group tests</a>
-</li>
-<li>
-<a href="mock_objects_documentation.html">Mock objects</a>
-</li>
-<li>
-<a href="partial_mocks_documentation.html">Partial mocks</a>
-</li>
-<li>
-<a href="reporter_documentation.html">Reporting</a>
-</li>
-<li>
-<span class="chosen">Expectations</span>
-</li>
-<li>
-<a href="web_tester_documentation.html">Web tester</a>
-</li>
-<li>
-<a href="form_testing_documentation.html">Testing forms</a>
-</li>
-<li>
-<a href="authentication_documentation.html">Authentication</a>
-</li>
-<li>
-<a href="browser_documentation.html">Scriptable browser</a>
-</li>
-</ul>
+                |
+                <a href="overview.html">Overview</a>
+                |
+                <a href="unit_test_documentation.html">Unit tester</a>
+                |
+                <a href="group_test_documentation.html">Group tests</a>
+                |
+                <a href="mock_objects_documentation.html">Mock objects</a>
+                |
+                <a href="partial_mocks_documentation.html">Partial mocks</a>
+                |
+                <a href="reporter_documentation.html">Reporting</a>
+                |
+                <span class="chosen">Expectations</span>
+                |
+                <a href="web_tester_documentation.html">Web tester</a>
+                |
+                <a href="form_testing_documentation.html">Testing forms</a>
+                |
+                <a href="authentication_documentation.html">Authentication</a>
+                |
+                <a href="browser_documentation.html">Scriptable browser</a>
 </div>
 </div>
 <h1>Expectation documentation</h1>
+        This page...
+        <ul>
+<li>
+            Using expectations for
+            <a href="#mock">more precise testing with mock objects</a>
+        </li>
+<li>
+            <a href="#behaviour">Changing mock object behaviour</a> with expectations
+        </li>
+<li>
+            <a href="#extending">Extending the expectations</a>
+        </li>
+<li>
+            Underneath SimpleTest <a href="#unit">uses expectation classes</a>
+        </li>
+</ul>
 <div class="content">
         <p>
 <a class="target" name="mock">
@@ -160,6 +161,9 @@ class TestOfNewsService extends UnitTestCase {
                 <table>
 <tbody>
                     <tr>
+<td><span class="new_code">AnythingExpectation</span></td><td>Will always match</td>
+</tr>
+                    <tr>
 <td><span class="new_code">EqualExpectation</span></td><td>An equality, rather than the stronger identity comparison</td>
 </tr>
                     <tr>
@@ -170,6 +174,12 @@ class TestOfNewsService extends UnitTestCase {
 </tr>
                     <tr>
 <td><span class="new_code">NotIndenticalExpectation</span></td><td>Inverts the mock object logic</td>
+</tr>
+                    <tr>
+<td><span class="new_code">WithinMarginExpectation</span></td><td>Compares a value to within a margin</td>
+</tr>
+                    <tr>
+<td><span class="new_code">OutsideMarginExpectation</span></td><td>Checks that a value is out side the margin</td>
 </tr>
                     <tr>
 <td><span class="new_code">PatternExpectation</span></td><td>Uses a Perl Regex to match a string</td>
@@ -193,6 +203,38 @@ class TestOfNewsService extends UnitTestCase {
                 and the <span class="new_code">IsAExpectation</span> and <span class="new_code">NotAExpectation</span> which takes a type
                 or class name as a string.
             </p>
+            <p>
+                Some examples...
+            </p>
+            <p>
+<pre>
+$mock-&gt;expectOnce('method', array(new IdenticalExpectation(14)));
+</pre>
+                This is the same as <span class="new_code">$mock-&gt;expectOnce('method', array(14))</span>.
+<pre>
+$mock-&gt;expectOnce('method', array(new EqualExpectation(14)));
+</pre>
+                This is different from the previous version in that the string
+                <span class="new_code">"14"</span> as a parameter will also pass.
+                Sometimes the additional type checks of SimpleTest are too restrictive.
+<pre>
+$mock-&gt;expectOnce('method', array(new AnythingExpectation(14)));
+</pre>
+                This is the same as <span class="new_code">$mock-&gt;expectOnce('method', array('*'))</span>.
+<pre>
+$mock-&gt;expectOnce('method', array(new IdenticalExpectation('*')));
+</pre>
+                This is handy if you want to assert a literal <span class="new_code">"*"</span>.
+<pre>
+new NotIdenticalExpectation(14)
+</pre>
+                This matches on anything other than integer 14.
+                Even the string <span class="new_code">"14"</span> would pass.
+<pre>
+new WithinMarginExpectation(14.0, 0.001)
+</pre>
+                This will accept any value from 13.999 to 14.001 inclusive.
+            </p>
         
         <p>
 <a class="target" name="behaviour">
@@ -207,8 +249,8 @@ class TestOfNewsService extends UnitTestCase {
                 can be inserted instead.
             </p>
             <p>
-                Suppose we want an authorisation server mock to simulate a successful login
-                only if it receives a valid session object.
+                Suppose we want a mock authorisation server to simulate a successful login,
+                but only if it receives a valid session object.
                 We can do this as follows...
 <pre>
 Mock::generate('Authorisation');
@@ -339,8 +381,51 @@ class TestOfNetworking extends UnitTestCase {
             </p>
         
     </div>
+        References and related information...
+        <ul>
+<li>
+            SimpleTest project page on <a href="http://sourceforge.net/projects/simpletest/">SourceForge</a>.
+        </li>
+<li>
+            SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
+        </li>
+<li>
+            The expectations mimic the constraints in <a href="http://www.jmock.org/">JMock</a>.
+        </li>
+<li>
+            <a href="http://simpletest.sourceforge.net/">Full API for SimpleTest</a>
+            from the PHPDoc.
+        </li>
+</ul>
+<div class="menu_back">
+<div class="menu">
+<a href="index.html">SimpleTest</a>
+                |
+                <a href="overview.html">Overview</a>
+                |
+                <a href="unit_test_documentation.html">Unit tester</a>
+                |
+                <a href="group_test_documentation.html">Group tests</a>
+                |
+                <a href="mock_objects_documentation.html">Mock objects</a>
+                |
+                <a href="partial_mocks_documentation.html">Partial mocks</a>
+                |
+                <a href="reporter_documentation.html">Reporting</a>
+                |
+                <span class="chosen">Expectations</span>
+                |
+                <a href="web_tester_documentation.html">Web tester</a>
+                |
+                <a href="form_testing_documentation.html">Testing forms</a>
+                |
+                <a href="authentication_documentation.html">Authentication</a>
+                |
+                <a href="browser_documentation.html">Scriptable browser</a>
+</div>
+</div>
 <div class="copyright">
-            Copyright<br>Marcus Baker, Jason Sweat, Perrick Penet 2004
+            Copyright<br>Marcus Baker 2006
         </div>
 </body>
 </html>
