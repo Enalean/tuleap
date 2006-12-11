@@ -196,6 +196,7 @@ function menu_notloggedin() {
     if ($display_new_user) {
         $HTML->menu_entry('/account/register.php',$Language->getText('include_menu','new_user'));
     }
+    $HTML->menu_entry('/my/',$Language->getText('include_menu','my_perso_page'));
     $HTML->menuhtml_bottom();
 }
 
