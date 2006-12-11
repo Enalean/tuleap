@@ -26,14 +26,6 @@ if (browserVersion() >= 4.0)
 <link rel="author" title="<?=AUTHORPAGE_TITLE?>" href="<?=AUTHORPAGE_URL?>" />
 
 <?= $WikiTheme->getCSS() ?>
-<?php
-  // avoid redundant bookmark title for custom home page
-  if ($page->getName() == WIKI_NAME && HOME_PAGE == WIKI_NAME)
-      $pagetitle = "";
-  else
-      $pagetitle = " - ". AsString($TITLE);
-?>
-<title><?=WIKI_NAME.$pagetitle?></title>
 </head>
 <?= Template('body') ?>
 <?php
