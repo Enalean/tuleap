@@ -11,6 +11,19 @@
 #  */
 #
 #-----------------------------------------------
+# Script: SF/common/survey/Survey.class
+#
+survey_common_survey	radio_buttons_1_5	Radio Buttons 1-5
+survey_common_survey	text_area	Text Area
+survey_common_survey	radio_buttons_yes_no	Radio Buttons Yes/No
+survey_common_survey	comment_only	Comment Only
+survey_common_survey	text_field	Text Field
+survey_common_survey	radio_buttons	Custom Radio Buttons
+survey_common_survey	select_box	Select Box
+survey_common_survey	none	None
+survey_common_survey	dev_survey_title_key	Developer Survey
+#
+#-----------------------------------------------
 # Script: SF/www/survey/admin/add_question.php
 #
 survey_admin_add_question	add_q	Add A Question
@@ -76,6 +89,8 @@ survey_admin_show_r_aggregate	avg	Average:
 survey_admin_show_r_aggregate	type	Type:
 survey_admin_show_r_aggregate	cmmts	Comments
 survey_admin_show_r_aggregate	view_cmmts	View Comments
+survey_admin_show_r_aggregate	blank	blank
+survey_admin_show_r_aggregate	no_active_question	No active questions defined
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/show_results_comments.php
@@ -100,6 +115,19 @@ survey_admin_update_question	edit_a_q	Edit A Question
 survey_admin_update_question	warn	<span class="highlight">WARNING! It is a bad idea to change a question after responses to it have been submitted. This can lead to misleading  or inconsistent results.</span>
 survey_admin_update_question	q	Question:
 survey_admin_update_question	subm_changes	Submit Changes
+survey_admin_update_question	edit_r	Edit Radio Buttons
+survey_admin_update_question	existing_r	Existing Radio Button Choices
+survey_admin_update_question	edit_r_msg	Click on the 'Button ID' to edit a radio button
+survey_admin_update_question	existing_sb	Existing Select Box Choices
+survey_admin_update_question	edit_sb_msg	Click on the 'Item ID' to edit a select-box choice
+#
+#-----------------------------------------------
+# Script: SF/www/survey/admin/update_radio.php
+#
+survey_admin_update_radio	update_r	Update A Radio Button Choice
+survey_admin_update_radio	update_sb	Update A Select Box Choice
+survey_admin_update_radio	fill_r_text	Please, fill the Text field.
+survey_admin_update_radio	fill_r_rank	Please, fill the Rank field.
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
@@ -151,6 +179,13 @@ survey_s_data	q_create_succ	Question #$1 successfully created
 survey_s_data	q_create_fail	Question Creation Failed $1
 survey_s_data	q_del_fail	Error deleting question #$1: $2
 survey_s_data	q_del_succ	Question #$1 successfully deleted
+survey_s_data	r_create_succ	Choice #$1 successfully created
+survey_s_data	r_create_fail	Choice creation failed $1
+survey_s_data	r_del_fail	Error deleting choice #$1: $2
+survey_s_data	r_del_succ	Choice #$1 successfully deleted
+survey_s_data	r_create_duplicate	Creation failed - Duplicate choice.
+survey_s_data	r_update_duplicate	Update failed - Duplicate choice.
+survey_s_data	r_rank_int	Submit failed. Rank type should be integer.
 #
 #-----------------------------------------------
 # Script: SF/www/survey/survey.php
@@ -179,9 +214,20 @@ survey_s_utils	del	Delete?
 survey_s_utils	del_s	Delete this survey?\n\n** Important **\nIf you delete a survey, all associated responses will be lost.
 survey_s_utils	found	$1 Found
 survey_s_utils	q_id	Question ID
-survey_s_utils	del_q	Delete this question?\n\n** Important **\nIf you delete a question, all associated responses in all surveys using this question will be lost.
 survey_s_utils	del_txt	DELETE
 survey_s_utils	resp	Response
-survey_s_utils	occ	# of occurences
+survey_s_utils	occ	Number of occurences
 survey_s_utils	blank	- BLANK RESPONSES -
 survey_s_utils	total_no	Total number of answers: $1
+survey_s_utils	create	Create
+survey_s_utils	update	Update
+survey_s_utils	text_r	Text
+survey_s_utils	add_button	Create a New Radio Button Choice
+survey_s_utils	add_sb_item	Create a New Select Box Choice
+survey_s_utils	button_id	Button ID
+survey_s_utils	item_id	Item ID
+survey_s_utils	rank	Rank
+survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will lose ALL the associated choices and responses in all surveys using this question.Continue?
+survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will lose responses in all surveys using this question.Continue?
+survey_s_utils	warn_loose_button	** WARNING!! ** If you update this question type, you lose all choices associated to this question. Continue?
+survey_s_utils	required_fields	fields required

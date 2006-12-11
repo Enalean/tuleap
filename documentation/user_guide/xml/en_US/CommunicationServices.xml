@@ -138,14 +138,16 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
       the News Service menu at the top of the page. From there type the title
       of the news and its text body. You can type URLs in the body. CodeX will
       detect them and transform them into a hyperlink in the published
-      version.</para>
+      version. You can also choose whether you want the news to be public this means
+      visible on your Project Summary page for all CodeX users or private 
+      which means visible for your project members only.</para>
 
-      <para>All posted news will appear on your Project Summary page and will
-      therefore be visible to all users visiting your project on CodeX.
-      Any CodeX visitor can attach a follow-up comment to the news making each
+      <para>
+      Any CodeX visitor can attach a follow-up comment to the news visible for
+      her on your project page making each
       piece of news a potential forum of discussion<footnote><para>Behind the
       scene, each piece of news is actually managed exactly like a CodeX Web
-      Forum.</para></footnote>. In addition the CodeX Team sees all the news
+      Forum.</para></footnote>. In addition the CodeX Team sees all the public news
       published by all CodeX projects and can decide that a project news is
       worth publishing on the CodeX front page. A big splash indeed!!</para>
     </section>

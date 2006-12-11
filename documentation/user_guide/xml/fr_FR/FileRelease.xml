@@ -432,7 +432,25 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">&Eacute;tape 4 - Envoyer une notification par email (optionnel)</emphasis></para>
+            <para><emphasis role="bold">&Eacute;tape 4 - Créer automatiquement une annonce
+            (optionnel)</emphasis></para>
+
+            <para>Cette étape est optionnelle, vous pouvez choisir de ne pas en 
+            tenir compte. Cette étape donne la possibilité aux administrateurs du 
+            projet de soumettre automatiquement une annonce concernant la nouvelle 
+            version tout juste créée (si vous n'êtes pas administrateur du projet, 
+            vous ne verrez tout simplement pas cette étape). Le sujet et 
+            le message de l'annonce sont préremplis avec un texte par défaut. Vous pouvez 
+            bien entendu les modifier avant de valider. L'annonce apparaîtra sur la page 
+            de sommaire de votre projet. Il s'agit là d'un bon moyen d'avertir vos 
+            utilisateurs de la disponibilité d'une nouvelle version. 
+            L'annonce apparaîtra ensuite dans la page d'administration des annonces, comme 
+            toute autre annonce.
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">&Eacute;tape 5 - Envoyer une notification par email (optionnel)</emphasis></para>
 
             <para>Cette étape est optionnelle, c'est à dire qu'elle peut
             ne pas apparaître à l'écran. Si certains utilisateurs
@@ -628,7 +646,10 @@
       <para>N'oubliez pas de préciser l'architecture matérielle
       associée à votre fichier ainsi que son type. Ensuite cliquez
       sur le bouton 'Créer la version' au bas de l'écran.</para>
-
+      <para>Comme pour la configuration de version usuelle, les administrateurs 
+      du projet ont la possiblité de pouvoir soumettre une annonce directement 
+      en relation avec la nouvelle version créée. Pour ceci, cochez la case et 
+      remplissez le formulaire correspondant avant de valider.</para>
       <para>Si certains utilisateurs ont placé sous surveillance le
       paquet contenant la nouvelle version, ils recevront
       automatiquement une notification email à moins que vous n'ayez

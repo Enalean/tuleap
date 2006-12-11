@@ -8,7 +8,7 @@
 //
 ?>
 
-<H2>Etape 4&nbsp;: Nom du projet</H2>
+<H2>Etape 5&nbsp;: Nom du projet</H2>
 
 
 <P><B>Nom du projet</B>
@@ -45,6 +45,6 @@ Nom complet&nbsp;:
 <INPUT type=text maxlength="15" SIZE="15" name="form_unix_name">
 <P>
 <H2><FONT COLOR="RED">Pas de retour arrière au delà de ce point</FONT></H2>
-<INPUT type=submit name="Submit" value="Etape 5 : Politique d'échange">
+<INPUT type=submit name="Submit" value="Etape 6 : Politique d'échange">
 </FORM>
 </FONT>

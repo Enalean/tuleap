@@ -1,0 +1,375 @@
+.dir, .subdir {
+ padding: 0;
+ margin: 0;
+ border: 0;
+}
+
+.dir img, .dir p, .dir form{
+ display: inline;
+ padding: 0;
+ margin: 0;
+ border:0px;
+}
+
+.dir img {
+ vertical-align: middle;
+}
+
+.dir p {
+ vertical-align: middle;
+}
+
+.newDocument {
+ background-color: #CCCCCC;
+ border: 1px solid black;
+ padding: 0.5em;
+}
+
+.newDocument h4 {
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.5em;
+}
+
+.dir input {
+ border: 1px solid black;
+}
+
+/**
+UL/LI Based
+*/
+
+ul.docman_items {
+   list-style:none;
+   padding:0;
+   margin:0;
+   padding-left:24px;
+}
+li.docman_item {
+    background:transparent url(../images/line.gif) left top repeat-y;
+}
+li.docman_item_last {
+}
+
+.docman_properties_navlist
+{
+    padding: 3px 0;
+    margin: 0;
+    border-bottom: 1px solid #bcbcad;
+    font: bold 12px Verdana, sans-serif;
+}
+
+.docman_properties_navlist li
+{
+    list-style: none;
+    margin: 0;
+    display: inline;
+}
+
+.docman_properties_navlist li a
+{
+    padding: 3px 0.5em;
+    margin-left: 3px;
+    border: 1px solid #bcbcad;
+    border-bottom: none;
+    background: #e8e8e0;
+    text-decoration: none;
+}
+
+
+.docman_properties_navlist li a:hover
+{
+    background-color:#e8e8e0;
+    color:#8b4020;
+}
+
+.docman_properties_navlist li a.docman_properties_navlist_current
+{
+    background: white;
+    border-bottom: 1px solid white;
+}
+.docman_properties_content {
+    border:1px solid #bcbcad;
+    border-top:none;
+    padding:10px 20px;
+    background: white;
+}
+.docman_properties_content dl dt {
+    font-weight:bold;
+    font-size:1.1em;
+}
+
+.docman_confirm_delete {
+    border:medium solid red; 
+	background:#FFC; 
+	padding:4px 10px;
+
+}
+.docman_confirm_delete_buttons {
+    text-align:center;
+}
+
+.docman_item_title {
+    font-weight: bold;
+    padding-left:6px;
+}
+.docman_item_description {
+    margin-left:30px;
+    font-size:0.9em;
+    padding-bottom:6px;
+}
+.docman_item_icon {
+    vertical-align:middle;
+    margin-right:4px;
+}
+.docman_item_options {
+    margin-left:4px;
+}
+.docman_item_show_options {
+    margin-left:24px;
+    font-size:0.7em;
+}
+a.docman_item_show_options {
+    color:#ccc;
+}
+a.docman_item_show_options:hover {
+    color:red;
+}
+
+form {
+    margin:0;
+}
+a img {
+    border:none;
+}
+
+.feedback_error h3,
+.feedback_warning h3,
+.feedback_info h3 {
+        display:none;
+}
+
+fieldset.docman_filters { 
+  margin-bottom:1em;
+}
+
+fieldset.docman_filters legend {
+  font-size:1.3em; 
+  font-weight:bold;
+}
+
+.plugin_docman_fielderror input,
+.plugin_docman_fielderror select {
+    border:medium solid red;
+}
+/* .plugin_docman_fielderror  {
+    padding:  4px;
+    background: red;
+    display:inline;
+}
+*/
+
+.docman_item_menu {
+  border: 1px solid #bcbcad;
+  border-right: 2px solid #bcbcad;
+  border-bottom: 2px solid #bcbcad;
+  position: absolute;
+  z-index:100;
+  background:#e8e8e0;
+ /*background:#e8e8e0 url('../images/bg-menu.png') 0 0 repeat-y;*/
+}
+
+.docman_item_menu ul {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+}
+.docman_item_menu ul li a { 
+  border:1px solid #e8e8e0;
+  padding-top: 0px;
+  padding-right: 1em;
+  padding-bottom: 0px;
+  padding-left: 24px;
+  text-decoration: none;
+  display: block;
+  background-repeat:no-repeat;
+  background-position:2px 1px;
+}
+.docman_item_menu ul li a:hover {
+    border:1px solid #bcbcad;
+    background-color: #f0f0e7;
+}
+.docman_item_menu_close {
+    text-align:right;
+    height:inherit;
+    font-size:0.8em;
+    padding-left:2px;
+}
+.docman_item_option_details {
+    background-image:url('../images/ic/item-details.png');
+}
+.docman_item_option_newdocument {
+    background-image:url('../images/ic/document-new.png');
+}
+.docman_item_option_newfolder {
+    background-image:url('../images/ic/folder-new.png');
+}
+.docman_item_option_newversion {
+    background-image:url('../images/ic/file-newversion.png');
+}
+.docman_item_option_move {
+    background-image:url('../images/ic/item-move.png');
+}
+.docman_item_option_history {
+    background-image:url('../images/ic/history.png');
+}
+.docman_item_option_notifications {
+    background-image:url('../images/ic/notifications.png');
+}
+.docman_item_option_permissions {
+    background-image:url('../images/ic/permissions.png');
+}
+.docman_item_option_delete {
+    background-image:url('../images/ic/delete.png');
+}
+.docman_item_option_update {
+    background-image:url('../images/ic/file-newversion.png');
+}
+
+/**********/
+.docman_item_actual_parent {
+    font-weight: bold;
+}
+
+/*
+ * New item Layout
+ */
+.docman_new_item fieldset legend {
+  font-weight: bold;
+}
+
+.docman_new_item .properties { 
+  clear: both;
+}
+
+
+/* Metadata form row */
+.docman_new_item .properties fieldset.general_properties p { 
+ clear: both;
+ padding-left: 0px;
+ padding-right: 0px;
+ margin-left: 0px;
+ margin-right: 0px;
+}
+
+/* Metadata form label */
+.docman_new_item .properties fieldset.general_properties label {
+ float: left;
+ width: 20%;
+ text-align: left;
+ margin: 0 0 0 0;
+ padding: 0 0 0 0;
+}
+
+.docman_new_item .properties fieldset.general_properties textarea {
+  width: 75%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+.docman_new_item .properties fieldset.general_properties input.text_field {
+  width: 75%;
+}
+
+.docman_new_item .properties fieldset.location { 
+}
+
+.docman_new_item .categorization {
+  clear: both;
+}
+
+.docman_new_item .docman_new_submit { 
+}
+
+/*
+ * Details view. Edit properties and view properties
+ * * Docman_View_ItemDetailsSectionProperties.class
+ * * Docman_View_ItemDetailsSectionEditProperties.class
+ */
+.docman_item_details_properties { 
+
+}
+
+.docman_item_details_properties td.label { 
+
+}
+
+.docman_item_details_properties td.value input.text_field { 
+  width: 30em;
+}
+
+.docman_item_details_properties td.value textarea { 
+  width: 40em;
+  height: 7em;
+}
+
+/* 
+ * Metadata admin create 
+ */
+.docman_admin_metadata p { 
+  clear: both;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+.docman_admin_metadata label {
+ float: left;
+ width: 20%;
+ text-align: left;
+}
+
+.docman_admin_metadata textarea {
+  width: 50%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+.docman_admin_metadata input.text_field {
+  width: 50%;
+}
+
+/* 
+ * Metadata listofvalues admin
+ */
+.docman_admin_list_values tr.default_value { 
+  font-weight: bold;
+}
+
+/* 
+ * Metadata listofvalues create
+ */
+
+form.md_create_love p { 
+  clear: both;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+form.md_create_love label {
+ float: left;
+ width: 20%;
+ text-align: left;
+}
+
+form.md_create_love textarea {
+  width: 50%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+form.md_create_love .text_field {
+  width: 50%;
+}

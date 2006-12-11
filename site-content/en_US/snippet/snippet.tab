@@ -101,6 +101,7 @@ snippet_details	download_s	Click on the &quot;<B>Snippet Version</B>&quot; label
 snippet_details	submit_s	- You can <A HREF="$1"><b><u>submit a new version</u></b></A> of this snippet if you have modified it.
 snippet_details	latest_s_v	Latest Snippet Version: $1
 snippet_details	view_s	[View Code Snippet]
+snippet_details	down_s	[Download Code Snippet]
 snippet_details	p_upd_fail	ERROR DOING SNIPPET PACKAGE UPDATE!
 snippet_details	p_upd_success	Snippet Package Updated Successfully
 snippet_details	versions_of_p	Versions Of This Package:
@@ -108,6 +109,8 @@ snippet_details	p_version	Package Version
 snippet_details	edit	Edit
 snippet_details	submit_p	You can <A HREF="$1"><b><u>submit a new version</u></b></A> of this package if you have modified it.
 snippet_details	latest_p_v	Latest Package Version: $1
+snippet_details	download	Download Code Snippet
+snippet_details	view	View Code Snippet
 #
 #-----------------------------------------------
 # Script: SF/www/snippet/download.php

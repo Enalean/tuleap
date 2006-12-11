@@ -116,5 +116,5 @@ svn_utils	write_err	Error: Can't write to file $1
 #-----------------------------------------------
 # Script: SF/www/svn/svn_utils.php
 #
-svn_viewcvs	access_denied	Access Denied
-svn_viewcvs	acc_den_comment	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
+svn_viewvc	access_denied	Access Denied
+svn_viewvc	acc_den_comment	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.

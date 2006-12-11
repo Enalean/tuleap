@@ -105,6 +105,73 @@
     </section>
 
 
+    <section id="ProjectType">
+      <title>Project Type</title>
+
+      <para><emphasis>Location: Page Admin Content</emphasis></para>
+
+      <para>CodeX proposes three types of projects:</para>
+        
+      <itemizedlist mark="bullet">
+          <listitem> 
+	    <para><emphasis role="bold">Project</emphasis>:
+	      This is the type of standard projects hosted on CodeX.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Template Project</emphasis>:
+	      If you choose this project type new projects can reuse
+	      this projects service configuration.
+	      When registering a new project (see <xref linkend="ProjectRegistration" />)
+	      your template project is listed as available template. When choosing your template project
+	      then the new project will use exactly the same configuration. This includes that
+	      
+	      <itemizedlist spacing="compact">
+	        <listitem>
+	          <para>the new project is classified into the same trove categories as the 
+		  template project (see <xref linkend="SoftwareMap" />).</para>
+	        </listitem>
+	        <listitem>
+	          <para>the same services are enabled (see 
+		  <xref linkend="ServiceConfiguration" />).</para>
+	        </listitem>
+	        <listitem>
+	          <para>the same reference patterns are defined (see 
+		  <xref linkend="ReferenceConfiguration" />).</para>
+	        </listitem>
+		<listitem>
+	          <para>the same project specific user groups exist 
+		  (see <xref linkend="UserGroups" />).</para>
+		</listitem>
+		<listitem>
+	          <para>all trackers with the option "instantiate for new projects"
+		  are copied with their associated fields, field values, field dependencies, reports, 
+		  and permissions (see <xref linkend="TrackerAdministration" />).</para>
+		</listitem>
+	    
+	      </itemizedlist>
+	    
+	      Just notice that the project members of the template projects will 
+	      not automatically be part of the newly registered project.
+	      A template project does not appear any more in the Software 
+	      Map and is excluded from project statistics on the CodeX Dashboard
+	      (see <xref linkend="TheCodeXDashboard" />) like the newest projets 
+	      listing, most active projects, etc.
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Test Project</emphasis>:
+	      If you just need to test what is feasible with CodeX projects
+	      use the Test Project type for your project. Having defined
+	      that type, your project will not appear any more in the CodeX 
+	      Software Map nor on the CodeX Dashboard.
+	    </para>
+	  </listitem>
+       </itemizedlist>
+    </section>
+
+
     <section id="ServiceConfiguration">
       <title>Service Configuration</title>
 

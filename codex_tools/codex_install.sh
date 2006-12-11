@@ -22,16 +22,16 @@
 # ./codex_install.sh 2>&1 | tee /tmp/codex_install.log
 
 progname=$0
+#scriptdir=/mnt/cdrom
 if [ -z "$scriptdir" ]; then 
     scriptdir=`dirname $progname`
 fi
-cd ${scriptdir};TOP_DIR=`pwd`;cd -
+cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
-TODO_FILE=/tmp/todo_codex.txt
-CODEX_TOPDIRS="SF site-content documentation cgi-bin codex_tools"
-INSTALL_DIR="/home/httpd"
+TODO_FILE=/root/todo_codex.txt
+export INSTALL_DIR="/usr/share/codex"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -49,6 +49,7 @@ MKDIR='/bin/mkdir'
 RPM='/bin/rpm'
 CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
+CHCON='/usr/bin/chcon'
 FIND='/usr/bin/find'
 MYSQL='/usr/bin/mysql'
 TOUCH='/bin/touch'
@@ -99,7 +100,9 @@ die() {
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
-  $PERL -pi -e "s/$2/$3/g" $1
+  # Allow '/' is $3, so we need to double-escape the string
+  replacement=`echo $3 | sed "s|/|\\\\\/|g"`
+  $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
 ##############################################
@@ -115,9 +118,9 @@ do
 done
 
 ##############################################
-# Check we are running on RHEL 3 ES
+# Check we are running on RHEL 4
 #
-RH_RELEASE="3"
+RH_RELEASE="4"
 yn="y"
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
@@ -125,7 +128,7 @@ if [ $? -eq 1 ]; then
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
 script may cause data loss or corruption.
 EOF
-read -p "Continue? [yn]: " yn
+read -p "Continue? [y|n]: " yn
 else
     echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
@@ -141,14 +144,23 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 
 ##############################################
 # Check Required Stock RedHat RPMs are installed
-# (note: gcc is required to recompile mailman)
 #
+# gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
+# xorg-x11-deprecated-libs -> docbook/java
+# neon -> subversion
+# libart_lgpl perl-Time-HiRes -> munin
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   openssl openldap perl perl-DBI perl-CGI gd gcc \
-   sendmail telnet bind ntp samba python enscript \
+   httpd httpd-suexec mod_ssl vsftpd \
+   openssl openldap perl perl-DBI perl-DBD-MySQL gd \
+   sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
-   perl-HTML-Parser perl-libwww-perl
+   perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
+   mysql MySQL-python php-mbstring \
+   perl-DateManip sysstat curl aspell \
+   gd-devel freetype-devel libpng-devel libjpeg-devel \
+   xorg-x11-deprecated-libs neon \
+   libart_lgpl perl-Time-HiRes
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -173,13 +185,13 @@ make_backup /etc/shadow
 make_backup /etc/group
 
 # Delete users that could be part of the groups (otherwise groupdel fails!)
-for u in mailman dummy sourceforge ftp ftpadmin
+for u in mailman dummy codexadm ftp ftpadmin
 do
     $USERDEL $u 2>/dev/null 1>&2
 done
 
 # Create Groups
-create_group sourceforge 104
+create_group codexadm 104
 create_group dummy 103
 create_group mailman 106
 create_group ftpadmin 96
@@ -194,6 +206,7 @@ read -p "Codex Server IP address: " sys_ip_address
 read -p "LDAP server name: " sys_ldap_server
 read -p "Windows domain (Samba): " sys_win_domain
 read -p "Activate user shell accounts? [y|n]:" active_shell
+read -p "Generate a self-signed SSL certificate to enable HTTPS support? [y|n]:" create_ssl_certificate
 
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
@@ -204,11 +217,11 @@ while [ "$rt_passwd" != "$rt_passwd2" ]; do
     echo
 done
 
-sf_passwd="a"; sf_passwd2="b";
-while [ "$sf_passwd" != "$sf_passwd2" ]; do
-    read -s -p "Password for user sourceforge: " sf_passwd
+codexadm_passwd="a"; codexadm_passwd2="b";
+while [ "$codexadm_passwd" != "$codexadm_passwd2" ]; do
+    read -s -p "Password for user codexadm: " codexadm_passwd
     echo
-    read -s -p "Retype sourceforge password: " sf_passwd2
+    read -s -p "Retype codexadm password: " codexadm_passwd2
     echo
 done
 
@@ -222,229 +235,259 @@ done
 
 py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
 rt_encpasswd=`python -c "$py_cmd"`
-py_cmd="import crypt; print crypt.crypt(\"$sf_passwd\",\"\$1\$h67e4niB\$\")"
-sf_encpasswd=`python -c "$py_cmd"`
+py_cmd="import crypt; print crypt.crypt(\"$codexadm_passwd\",\"\$1\$h67e4niB\$\")"
+codex_encpasswd=`python -c "$py_cmd"`
 py_cmd="import crypt; print crypt.crypt(\"$mm_passwd\",\"\$1\$eniB4h67\$\")"
 mm_encpasswd=`python -c "$py_cmd"`
 
 # Create Users
 $USERMOD -p "$rt_encpasswd" root
 
-$USERDEL sourceforge 2>/dev/null 1>&2
-$USERADD -c 'Owner of CodeX directories' -M -d '/home/httpd' -p "$sf_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin sourceforge
+$USERDEL codexadm 2>/dev/null 1>&2
+$USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin,mailman codexadm
+# mailman group needed to write in /var/log/mailman/ directory
 
 $USERDEL mailman 2>/dev/null 1>&2
-$USERADD -c 'Owner of Mailman directories' -M -d '/home/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/bin/bash' mailman
+$USERADD -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/sbin/nologin' mailman
 
 $USERDEL ftpadmin 2>/dev/null 1>&2
-$USERADD -c 'FTP Administrator' -M -d '/home/ftp' -u 96 -g 96 ftpadmin
+$USERADD -c 'FTP Administrator' -M -d '/var/lib/codex/ftp' -u 96 -g 96 ftpadmin
 
 $USERDEL ftp 2>/dev/null 1>&2
-$USERADD -c 'FTP User' -M -d '/home/ftp' -u 14 -g 50 ftp
+$USERADD -c 'FTP User' -M -d '/var/lib/codex/ftp' -u 14 -g 50 ftp
 
 $USERDEL dummy 2>/dev/null 1>&2
-$USERADD -c 'Dummy CodeX User' -M -d '/home/dummy' -u 103 -g 103 dummy
+$USERADD -c 'Dummy CodeX User' -M -d '/var/lib/codex/dumps' -u 103 -g 103 dummy
 
 # Build file structure
 
-build_dir $INSTALL_DIR sourceforge sourceforge 775
-build_dir /home/users sourceforge sourceforge 775
-build_dir /home/groups sourceforge sourceforge 775
+build_dir $INSTALL_DIR codexadm codexadm 775
+#build_dir $INSTALL_DIR/downloads codexadm codexadm 775
+build_dir /home/users codexadm codexadm 775
+build_dir /home/groups codexadm codexadm 775
 
-build_dir /home/dummy dummy dummy 700
-build_dir /home/dummy/dumps dummy dummy 755
-
-build_dir /home/ftp root ftp 755
-build_dir /home/ftp/bin ftpadmin ftpadmin 111
-build_dir /home/ftp/etc ftpadmin ftpadmin 111
-build_dir /home/ftp/lib ftpadmin ftpadmin 755
-build_dir /home/ftp/codex root root 755
-build_dir /home/ftp/pub ftpadmin ftpadmin 755
-build_dir /home/ftp/incoming ftpadmin ftpadmin 3777
-
-build_dir /home/large_tmp root root 1777
-build_dir /home/log sourceforge sourceforge 755
-build_dir /home/log/cvslogs sourceforge sourceforge 775
-build_dir /home/mailman mailman mailman 2775
-build_dir /home/sfcache sourceforge sourceforge 755
-build_dir /home/tools root root 755
-build_dir /home/data root root 755
-build_dir /home/data/wiki sourceforge sourceforge 700
-build_dir /home/subversion_backup root root 700
-#build_dir /home/var root root 755
-#build_dir /home/var/lib root root 755
-#build_dir /home/var/lib/mysql mysql bin 755 # see CodeX DB installation
+# home directories
+build_dir /home/codexadm codexadm codexadm 700
+# data dirs
+build_dir /var/lib/codex codexadm codexadm 755
+build_dir /var/lib/codex/dumps dummy dummy 755
+build_dir /var/lib/codex/ftp root ftp 755
+#build_dir /var/lib/codex/ftp/bin ftpadmin ftpadmin 111
+#build_dir /var/lib/codex/ftp/etc ftpadmin ftpadmin 111
+#build_dir /var/lib/codex/ftp/lib ftpadmin ftpadmin 755
+build_dir /var/lib/codex/ftp/codex root root 711
+build_dir /var/lib/codex/ftp/pub ftpadmin ftpadmin 755
+build_dir /var/lib/codex/ftp/incoming ftpadmin ftpadmin 3777
+build_dir /var/lib/codex/wiki codexadm codexadm 700
+build_dir /var/lib/codex/backup codexadm codexadm 711
+build_dir /var/lib/codex/backup/mysql mysql mysql 770 
+build_dir /var/lib/codex/backup/mysql/old root root 700
+build_dir /var/lib/codex/backup/subversion root root 700
+build_dir /var/lib/codex/docman codexadm codexadm 700
+# log dirs
+build_dir /var/log/codex codexadm codexadm 755
+build_dir /var/log/codex/cvslogs codexadm codexadm 775
+build_dir /var/tmp/codex_cache codexadm codexadm 755
+# bin dirs
+build_dir /usr/lib/codex codexadm codexadm 755
+build_dir /usr/lib/codex/bin codexadm codexadm 755
+# config dirs
 build_dir /etc/skel_codex root root 755
-build_dir /etc/codex sourceforge sourceforge 755
-build_dir /etc/codex/conf sourceforge sourceforge 755
-build_dir /etc/codex/documentation sourceforge sourceforge 755
-build_dir /etc/codex/documentation/user_guide sourceforge sourceforge 755
-build_dir /etc/codex/documentation/user_guide/xml sourceforge sourceforge 755
-build_dir /etc/codex/site-content sourceforge sourceforge 755
-build_dir /etc/codex/site-content/en_US sourceforge sourceforge 755
-build_dir /etc/codex/site-content/en_US/others sourceforge sourceforge 755
-build_dir /etc/codex/site-content/fr_FR sourceforge sourceforge 755
-build_dir /etc/codex/site-content/fr_FR/others sourceforge sourceforge 755
-build_dir /etc/codex/themes sourceforge sourceforge 755
-build_dir /etc/codex/plugins sourceforge sourceforge 755
-build_dir /etc/codex/plugins/pluginsadministration sourceforge sourceforge 755
-
-build_dir /var/run/log_accum root root 1777
-build_dir /cvsroot sourceforge sourceforge 755
-build_dir /svnroot sourceforge sourceforge 755
+build_dir /etc/codex codexadm codexadm 755
+build_dir /etc/codex/conf codexadm codexadm 700
+build_dir /etc/codex/documentation codexadm codexadm 755
+build_dir /etc/codex/documentation/user_guide codexadm codexadm 755
+build_dir /etc/codex/documentation/user_guide/xml codexadm codexadm 755
+build_dir /etc/codex/documentation/cli codexadm codexadm 755
+build_dir /etc/codex/documentation/cli/xml codexadm codexadm 755
+build_dir /etc/codex/site-content codexadm codexadm 755
+build_dir /etc/codex/site-content/en_US codexadm codexadm 755
+build_dir /etc/codex/site-content/en_US/others codexadm codexadm 755
+build_dir /etc/codex/site-content/fr_FR codexadm codexadm 755
+build_dir /etc/codex/site-content/fr_FR/others codexadm codexadm 755
+build_dir /etc/codex/themes codexadm codexadm 755
+build_dir /etc/codex/plugins codexadm codexadm 755
+build_dir /etc/codex/plugins/docman codexadm codexadm 755
+build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
+build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
+# SCM dirs
+build_dir /var/run/log_accum root root 777
+build_dir /var/lib/codex/cvsroot codexadm codexadm 755
+build_dir /var/lib/codex/svnroot codexadm codexadm 755
 build_dir /var/lock/cvs root root 751
+$LN -sf /var/lib/codex/cvsroot /cvsroot
+$LN -sf /var/lib/codex/svnroot /svnroot
 
-$TOUCH /home/ftp/incoming/.delete_files
-$CHOWN sourceforge.ftpadmin /home/ftp/incoming/.delete_files
-$CHMOD 755 /home/ftp/incoming/.delete_files
-$TOUCH /home/ftp/incoming/.delete_files.work
-$CHOWN sourceforge.ftpadmin /home/ftp/incoming/.delete_files.work
-$CHMOD 755 /home/ftp/incoming/.delete_files.work
-build_dir /home/ftp/codex/DELETED sourceforge sourceforge 755
 
+$TOUCH /var/lib/codex/ftp/incoming/.delete_files
+$CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files
+$CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files
+$TOUCH /var/lib/codex/ftp/incoming/.delete_files.work
+$CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files.work
+$CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files.work
+build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
+
+
+# SELinux specific
+$CHCON -R -h -t httpd_sys_content_t /usr/share/codex
+$CHCON -R -h -t httpd_sys_content_t /etc/codex
+$CHCON -R -h -t httpd_sys_content_t /var/lib/codex
+$CHCON -R -h -t httpd_sys_content_t /home/groups
+$CHCON -h -t httpd_sys_content_t /svnroot
+$CHCON -h -t httpd_sys_content_t /cvsroot
+
+
+##############################################
+# Move away useless Apache configuration files
+# before installing our own config files.
+#
+echo "Renaming existing Apache configuration files..."
+cd /etc/httpd/conf.d/
+for f in *.conf
+do
+    yn="0"
+    current_name="$f"
+    orig_name="$f.rhel"
+    [ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
+
+    if [ "$yn" != "n" ]; then
+	$MV -f $current_name $orig_name
+    fi
+
+    if [ "$yn" = "n" ]; then
+	$RM -f $current_name
+    fi
+done
+cd - > /dev/null
 
 ######
 # Now install CodeX specific RPMS (and remove RedHat RPMs)
 #
 
-# -> wu-ftpd
-echo "Removing Redhat vsftp daemon.."
-$RPM -e --nodeps vsftpd 2>/dev/null
-echo "Removing existing wu-ftp daemon.."
-$RPM -e --nodeps wu-ftpd 2>/dev/null
-echo "Installing wu-ftpd..."
-cd ${RPMS_DIR}/wu-ftpd
+
+# SELinux CodeX-specific policy
+echo "Removing existing SELinux policy .."
+$RPM -e selinux-policy-targeted-sources 2>/dev/null
+$RPM -e selinux-policy-targeted 2>/dev/null
+echo "Installing SELinux targeted policy for CodeX...."
+cd ${RPMS_DIR}/selinux-policy-targeted
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/wu-ftpd*.i386.rpm
+$RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
 
-# -> perlsuid
-echo "Removing Perl suid if any..."
-$RPM -e --nodeps perl-suidperl 2>/dev/null
-echo "Installing Perl suid..."
-cd ${RPMS_DIR}/perl-suidperl
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/perl-suidperl*.i386.rpm
-
-
-# -> Perl DBD for MySQL
-echo "Removing Redhat Perl DBD MySQL if any..."
-$RPM -e --nodeps perl-DBD-MySQL 2>/dev/null
-echo "Installing Perl DBD MySQL..."
-cd ${RPMS_DIR}/perl-dbd-mysql
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/perl-DBD-MySQL-*.i386.rpm
-
-# perl-Crypt-SmbHash needed by gensmbpasswd
-echo "Removing existing perl-Crypt-SmbHash..."
-$RPM -e --nodeps perl-Crypt-SmbHash 2>/dev/null
-echo "Installing perl-Crypt-SmbHash..."
-cd ${RPMS_DIR}/perl-Crypt-SmbHash
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/perl-Crypt-SmbHash*.noarch.rpm
-
-# -> mysql
-echo "Removing RedHat MySQL..."
-$SERVICE mysql stop 2>/dev/null
-sleep 2
-[ -e /usr/bin/mysqladmin ] && /usr/bin/mysqladmin shutdown 2>/dev/null
-sleep 2
-$RPM -e --nodeps mysql mysql-devel mysql-server 2>/dev/null
-echo "Installing MySQL RPMs for CodeX...."
-cd ${RPMS_DIR}/mysql
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/MySQL-*.i386.rpm
-$CHKCONFIG mysql on
-
-# Now user mysql exists...
-build_dir /cvsroot/.mysql_backup mysql mysql 755
-build_dir /cvsroot/.mysql_backup/old root root 775
-
-# -> mysql module for Python
-echo "Removing RedHat MySQL module for Python..."
-$RPM -e --nodeps MySQL-python 2>/dev/null
-echo "Installing Python MySQL module RPM for CodeX...."
-cd ${RPMS_DIR}/mysql-python
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/MySQL-python-*.i386.rpm
-
-# -> apache
-echo "Removing RedHat Apache..."
-$SERVICE httpd stop
-$RPM -e --nodeps httpd httpd-devel httpd-manual 'apr*' apr-util mod_ssl 2>/dev/null
-$RPM -e --nodeps db4-devel db4-utils 2>/dev/null
-echo "Installing Apache RPMs for CodeX...."
-cd ${RPMS_DIR}/apache
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/db42-4.*.i386.rpm ${newest_rpm}/db42-utils*.i386.rpm 
-$RPM -Uvh --force ${newest_rpm}/apr-0.*.i386.rpm ${newest_rpm}/apr-util-0.*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/httpd-2*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/mod_ssl-*.i386.rpm
-$CHKCONFIG httpd on
-# restart Apache after subversion installation - see below
-
-# PHP
-# We need custom packages because RHEL3 PHP comes with MySQL 3 support, while we use MySQL 4.
-echo "Removing RedHat PHP..."
-$RPM -e --nodeps php php-ldap php-mysql 2>/dev/null
-echo "Installing PHP RPMs for CodeX..."
-cd ${RPMS_DIR}/php
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/php-4*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/php-ldap*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/php-mysql*.i386.rpm
 
 # -> jre
-echo "Removing RedHat Java JRE..."
-$RPM -e --nodeps jre j2re 2>/dev/null
+echo "Removing existing Java JRE..."
+$RPM -e jre  2>/dev/null
+$RPM -e j2re 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/j2re-*i?86.rpm
+$RPM -Uvh ${newest_rpm}/j2re-*i?86.rpm
 cd /usr/java
 newest_jre=`$LS -1d j2re* | $TAIL -1`
 $LN -sf $newest_jre jre
 
 # -> cvs
-echo "Removing RedHat CVS .."
-$RPM -e --nodeps cvs 2>/dev/null
+echo "Removing existing CVS .."
+$RPM -e cvs 2>/dev/null
 echo "Installing CVS RPMs for CodeX...."
 cd ${RPMS_DIR}/cvs
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/cvs-*.i386.rpm
+$RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 
 # -> subversion
 echo "Removing RedHat subversion .."
-$RPM -e --nodeps `rpm -qa 'subversion*' 'swig*' 'neon*' 'rapidsvn*'` 2>/dev/null
+$RPM -e `rpm -qa 'subversion*' mod_dav_svn` 2>/dev/null
 echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/neon-0*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
-$RPM -Uvh --force --nodeps ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
-$RPM -Uvh --force ${newest_rpm}/mod_dav_svn*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-perl*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-python*.i386.rpm
-$RPM -Uvh --force ${newest_rpm}/subversion-tools*.i386.rpm
+#$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
+$RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
 
-# Restart Apache after subversion is installed
-# so that mod_dav_svn module is taken into account
-$SERVICE httpd restart
-$SERVICE mysql start
 
-# -> cvsgraph
-$RPM -e --nodeps cvsgraph 2>/dev/null
+# -> cvsgraph 
+$RPM -e cvsgraph 2>/dev/null
 echo "Installing cvsgraph RPM for CodeX...."
 cd ${RPMS_DIR}/cvsgraph
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/cvsgraph-*i?86.rpm
+$RPM -Uvh ${newest_rpm}/cvsgraph-1*i?86.rpm
 
-# -> viewcvs 
-echo "Removing installed viewcvs if any .."
-$RPM -e --nodeps viewcvs 2>/dev/null
-echo "Installing viewcvs RPM for CodeX...."
-cd ${RPMS_DIR}/viewcvs
+# -> enscript
+$RPM -e enscript 2>/dev/null
+echo "Installing enscript RPM for CodeX...."
+cd ${RPMS_DIR}/enscript
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --force ${newest_rpm}/viewcvs-*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/enscript-1*i?86.rpm
+
+# -> ViewVC
+echo "Removing installed viewcvs/viewvc if any .."
+$RPM -e --nodeps viewcvs 2>/dev/null
+$RPM -e --nodeps viewvc 2>/dev/null
+echo "Installing viewvc RPM for CodeX...."
+cd ${RPMS_DIR}/viewvc
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
+
+# -> phpMyAdmin
+echo "Removing installed phpMyAdmin if any .."
+$RPM -e phpMyAdmin 2>/dev/null
+echo "Installing phpMyAdmin RPM for CodeX...."
+cd ${RPMS_DIR}/phpMyAdmin
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/phpMyAdmin-*.noarch.rpm
+
+# -> mailman
+echo "Removing installed mailman if any .."
+$RPM -e mailman 2>/dev/null
+echo "Installing mailman RPM for CodeX...."
+cd ${RPMS_DIR}/mailman
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
+
+# Munin
+echo "Removing installed Munin if any .."
+$RPM -e `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*'` 2>/dev/null
+echo "Installing Munin RPMs for CodeX...."
+cd ${RPMS_DIR}/munin
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdtool-*.i386.rpm
+$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
+
+# Create Apache config file for Munin (not in RPM...)
+$CAT <<'EOF' >/etc/httpd/conf.d/munin.conf
+#
+# Apache configuration to support munin and munin-cgi-graph
+#
+
+ScriptAlias /munin/dyn/ /var/www/html/munin/cgi
+
+<Directory /var/www/html/munin/cgi>
+        AllowOverride None
+        Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Order allow,deny
+        Allow from all
+</Directory>
+
+Alias /munin "/var/www/html/munin"
+
+<Directory "/var/www/html/munin">
+    AllowOverride None
+    Options None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+EOF
+
+# enable service by default
+$CHKCONFIG munin-node on
 
 # Create an http password file
 $TOUCH /etc/httpd/conf/codex_htpasswd
@@ -494,17 +537,22 @@ $TAR xfz ${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz
 dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
+
+# Start database
+$SERVICE mysqld start
+
+
 ##############################################
 # Now install various precompiled utilities
 #
 cd ${nonRPMS_DIR}/utilities
 for f in *
 do
-  $CP -a $f /usr/local/bin
-  $CHOWN sourceforge.sourceforge /usr/local/bin/$f
+  $CP -a $f /usr/lib/codex/bin
+  $CHOWN codexadm.codexadm /usr/lib/codex/bin/$f
 done
-$CHOWN root.root /usr/local/bin/fileforge
-$CHMOD u+s /usr/local/bin/fileforge
+$CHOWN root.root /usr/lib/codex/bin/fileforge
+$CHMOD u+s /usr/lib/codex/bin/fileforge
 
 ##############################################
 # Install the CodeX software 
@@ -512,15 +560,15 @@ $CHMOD u+s /usr/local/bin/fileforge
 echo "Installing the CodeX software..."
 cd $INSTALL_DIR
 $TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR
+$CHOWN -R codexadm.codexadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
-/etc/httpd/conf/mailman.conf /etc/httpd/conf.d/ssl.conf \
+/etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
-/etc/codex/conf/local.inc /etc/httpd/conf/codex_aliases.conf; do
+/etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf.d/codex_aliases.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -530,12 +578,13 @@ for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
     fi
 
     if [ "$yn" != "n" ]; then
-	$CP -f $INSTALL_DIR/SF/etc/$fn.dist $f
+	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
     fi
 
-    $CHOWN sourceforge.sourceforge $f
+    $CHOWN codexadm.codexadm $f
     $CHMOD 640 $f
 done
+    
 
 # CodeX User Guide
 # a) copy the local parameters file in custom area and customize it
@@ -543,31 +592,36 @@ done
 # c) create the PDF target directory
 #
 
-$CP $INSTALL_DIR/SF/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+$CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+$CP $INSTALL_DIR/src/etc/ParametersLocal.cli.dtd.dist /etc/codex/documentation/cli/xml/ParametersLocal.dtd
 # replace string patterns in ParametersLocal.dtd
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' "$sys_win_domain" 
+# For CLI: only one parameter
+substitute '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 
 for lang in en_US fr_FR
 do
     $MKDIR -p  /etc/codex/documentation/user_guide/xml/$lang
-    $CHOWN -R sourceforge.sourceforge /etc/codex/documentation
-    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
-    $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/html/$lang
+    $MKDIR -p  /etc/codex/documentation/cli/xml/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
-    $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation/user_guide/pdf/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/cli/pdf/$lang
+    $MKDIR -p  $INSTALL_DIR/documentation/cli/html/$lang
 done
+$CHOWN -R codexadm.codexadm /etc/codex/documentation
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 $TOUCH /etc/httpd/conf/codex_vhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts.conf
 $TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
-$CP $INSTALL_DIR/SF/utils/backup_job /home/tools
-$CHOWN root.root /home/tools/backup_job
-$CHMOD 740 /home/tools/backup_job
-$CP $INSTALL_DIR/SF/utils/svn/backup_subversion.sh /home/tools
-$CHOWN root.root /home/tools/backup_subversion.sh
-$CHMOD 740 /home/tools/backup_subversion.sh
+$CP $INSTALL_DIR/src/utils/backup_job /usr/lib/codex/bin
+$CHOWN root.root /usr/lib/codex/bin/backup_job
+$CHMOD 740 /usr/lib/codex/bin/backup_job
+$CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /usr/lib/codex/bin
+$CHOWN root.root /usr/lib/codex/bin/backup_subversion.sh
+$CHMOD 740 /usr/lib/codex/bin/backup_subversion.sh
 # needed by newparse.pl
 $TOUCH /etc/httpd/conf/htpasswd
 $CHMOD 644 /etc/httpd/conf/htpasswd
@@ -575,20 +629,22 @@ $CHMOD 644 /etc/httpd/conf/htpasswd
 
 # replace string patterns in local.inc
 substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codex/conf/local.inc' '%sys_dbpasswd%' "$sf_passwd" 
 substitute '/etc/codex/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
 substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
 substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain" 
 
+# replace string patterns in database.inc
+substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd" 
+
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
 # replace string patterns in ssl.conf
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf.d/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
+substitute '/etc/httpd/conf/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
 # replace string patterns in codex.zone
 sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
@@ -599,37 +655,28 @@ substitute '/var/named/codex.zone' '%sys_ip_address%' "$sys_ip_address"
 substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
 substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
+# Make sure SELinux contexts are valid
+chcon -R -h -t httpd_sys_content_t /usr/share/codex
 
-todo "Customize /etc/codex/conf/local.inc"
-todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd"
-todo "You may also want to customize /etc/httpd/conf/httpd.conf /etc/httpd/conf/mailman.conf /home/tools/backup_job and /home/tools/backup_subversion.sh"
+# Create .subversion directory in codexadm home dir.
+su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
+
+
+todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
+todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codex/documentation/cli/xml/ParametersLocal.dtd"
+todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/bin/backup_job and /usr/lib/codex/bin/backup_subversion.sh"
 
 ##############################################
 # Installing phpMyAdmin
 #
-echo "Installing phpMyAdmin..."
-cd $INSTALL_DIR
-$RM -rf phpMyAdmin*
-$TAR xfj ${nonRPMS_DIR}/phpMyAdmin/phpMyAdmin-*
-dir_entry=`$LS -1d phpMyAdmin-*`
-$LN -sf ${dir_entry} phpMyAdmin
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/phpMyAdmin*
 
-#todo "Customize phpMyAdmin. Edit $INSTALL_DIR/phpMyAdmin/config.inc.php"
-#todo "  - $cfg['PmaAbsoluteUri'] = 'http://$sys_default_domain/phpMyAdmin';"
-#todo "  - $cfg['Servers'][$i]['auth_type']     = 'http'; "
-#todo "  - $cfg['Servers'][$i]['user']          = 'sourceforge';"
-#todo "  - $cfg['Servers'][$i]['only_db']       = 'sourceforge';";
+# Sometimes, PHP does not seem to set the proper access rights on /var/lib/php/session.
+# This is needed by phpMyAdmin
+$CHMOD o+rwx /var/lib/php/session
 
-export sys_default_domain
-$PERL -i'.orig' -p - $INSTALL_DIR/phpMyAdmin/config.inc.php <<'EOF'
-s/.*cfg\['PmaAbsoluteUri'\] =.*/\$cfg\['PmaAbsoluteUri'\] = 'http:\/\/$ENV{'sys_default_domain'}\/phpMyAdmin';/;
-s/(.*Servers.*'auth_type'.*')config('.*)$/$1http$2/g;
-s/(.*Servers.*'user'.*')root('.*)$/$1sourceforge$2/g;
-s/(.*Servers.*'only_db'.*').*('.*)$/$1sourceforge$2/g;
-EOF
-
-todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /home/httpd/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
+# Add PmaAbsoluteUri parameter? seems useless now
+#$PERL -i'.orig' -p -e "s/(\?\>)/\\\$cfg['PmaAbsoluteUri'] = 'http:\/\/$sys_default_domain\/phpMyAdmin'\;\n\1/;" /var/www/phpMyAdmin/config.inc.php
+#todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
 
 ##############################################
 # Installing the CodeX database
@@ -639,7 +686,7 @@ echo "Creating the CodeX database..."
 yn="-"
 freshdb=0
 pass_opt=""
-if [ -d "/var/lib/mysql/sourceforge" ]; then
+if [ -d "/var/lib/mysql/codex" ]; then
     read -p "CodeX Database already exists. Overwrite? [y|n]:" yn
 fi
 
@@ -654,14 +701,14 @@ done
 
 # Delete the CodeX DB if asked for
 if [ "$yn" = "y" ]; then
-    $MYSQL -u root $pass_opt -e "drop database sourceforge"
+    $MYSQL -u root $pass_opt -e "drop database codex"
 fi
 
-if [ ! -d "/var/lib/mysql/sourceforge" ]; then
+if [ ! -d "/var/lib/mysql/codex" ]; then
     freshdb=1
-    $MYSQL -u root $pass_opt -e "create database sourceforge"
+    $MYSQL -u root $pass_opt -e "create database codex"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT ALL PRIVILEGES on *.* to sourceforge@localhost identified by '$sf_passwd' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF
@@ -669,65 +716,60 @@ fi
 
 if [ $freshdb -eq 1 ]; then
 echo "Populating the CodeX database..."
-cd $INSTALL_DIR/SF/db/mysql/
-$MYSQL -u sourceforge sourceforge --password=$sf_passwd < database_structure.sql   # create the DB
+cd $INSTALL_DIR/src/db/mysql/
+$MYSQL -u codexadm codex --password=$codexadm_passwd < database_structure.sql   # create the DB
 cp database_initvalues.sql /tmp/database_initvalues.sql
 substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
-$MYSQL -u sourceforge sourceforge --password=$sf_passwd < /tmp/database_initvalues.sql  # populate with init values.
+$MYSQL -u codexadm codex --password=$codexadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
 rm -f /tmp/database_initvalues.sql
 fi
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
-# The MySQL server
 [mysqld]
-log-bin=/cvsroot/.mysql_backup/codex-bin
+log-bin=codex-bin
 skip-innodb
 # file attachment can be 16M in size so take a bit of slack
 # on the mysql packet size
 set-variable = max_allowed_packet=24M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+# Default to using old password format for compatibility with mysql 3.x
+# clients (those using the mysqlclient10 compatibility package).
+old_passwords=1
 
-[safe_mysqld]
+[mysql.server]
+user=mysql
+basedir=/var/lib
+
+[mysqld_safe]
 err-log=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
 EOF
 
-todo "You may want to move /var/lib/mysql to a larger file system (e.g. /home/var/lib/mysql) and create a symbolic link"
 
 ##############################################
-# Mailman installation
-#
-# - First make sure any mailman RPM is deleted
-# - Compile and install our own version
-#
-echo "Removing installed mailman RPM if any .."
-$RPM -e --nodeps mailman 2>/dev/null
-MAILMAN_DIR="/home/mailman"
-echo "Installing the mailman software in $MAILMAN_DIR..."
-yn="-"
-[ -d "$MAILMAN_DIR/bin" ] && read -p "Mailman already installed. Overwrite? [y|n]:" yn
+# SSL Certificate creation
 
-if [ "$yn" = "y" -o "$yn" = "-" ]; then
-    $RM -rf /tmp/mailman; $MKDIR -p /tmp/mailman; cd /tmp/mailman;
-    $RM -rf $MAILMAN_DIR/*
-    $TAR xfz $nonRPMS_DIR/mailman/mailman-*.tgz
-    newest_ver=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-    cd $newest_ver
-    mail_gid=`id -g mail`
-    cgi_gid=`id -g sourceforge`
-    ./configure --prefix=$MAILMAN_DIR --with-mail-gid=$mail_gid --with-cgi-gid=$cgi_gid
-    $MAKE install
+if [ "$create_ssl_certificate" = "y" ]; then
+    /usr/share/codex/src/utils/generate_ssl_certificate.sh
 fi
-$CHOWN -R mailman.mailman $MAILMAN_DIR
-$CHMOD a+rx,g+ws $MAILMAN_DIR
-# make sure permissions are OK
-$MAILMAN_DIR/bin/check_perms -f
-#... a second time!
-$MAILMAN_DIR/bin/check_perms -f
-$MAILMAN_DIR/bin/mmsitepass $mm_passwd
-$LN -sf $MAILMAN_DIR /usr/local/mailman
+
+
+##############################################
+# Mailman configuration
+# RPM was intalled previously
+#
+echo "Configuring Mailman..."
+
+# Setup admin password
+/usr/lib/mailman/bin/mmsitepass $mm_passwd
+
+#$LN -sf $MAILMAN_DIR /usr/local/mailman ???
 
 # Update Mailman config
-$CAT <<EOF >> $MAILMAN_DIR/Mailman/mm_cfg.py
+$CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
 DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
 DEFAULT_URL_HOST = 'lists.$sys_default_domain'
 add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
@@ -735,19 +777,42 @@ add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
 # Remove images from Mailman pages (GNU, Python and Mailman logos)
 IMAGE_LOGOS = 0
 
-# Uncomment to run Mailman on secure server
+# Uncomment to run Mailman on secure server only
 #DEFAULT_URL_PATTERN = 'https://%s/mailman/'
 #PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
 
 EOF
 # Compile file
-`python -O $MAILMAN_DIR/Mailman/mm_cfg.py`
+`python -O /usr/lib/mailman/Mailman/mm_cfg.py`
 
-# install service
-$CP $MAILMAN_DIR/scripts/mailman /etc/init.d/mailman
-$CHKCONFIG --add mailman
+# Create site wide ML
+/usr/lib/mailman/bin/newlist -q mailman codex-admin@$sys_default_domain $mm_passwd > /dev/null
 
-todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newlist mailman', then 'bin/config_list -i data/sitelist.cfg mailman'. Update /etc/aliases as precised (remove existing mailman aliases!), and run newaliases. Last, don't forget to subscribe to this ML: 'echo \"your.email@address.com\" | bin/add_members -r - mailman'"
+# Comment existing mailman aliases in /etc/aliases
+$PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
+
+
+# Add new aliases
+cat << EOF >> /etc/aliases
+
+## mailman mailing list
+mailman:              "|/usr/lib/mailman/mail/mailman post mailman"
+mailman-admin:        "|/usr/lib/mailman/mail/mailman admin mailman"
+mailman-bounces:      "|/usr/lib/mailman/mail/mailman bounces mailman"
+mailman-confirm:      "|/usr/lib/mailman/mail/mailman confirm mailman"
+mailman-join:         "|/usr/lib/mailman/mail/mailman join mailman"
+mailman-leave:        "|/usr/lib/mailman/mail/mailman leave mailman"
+mailman-owner:        "|/usr/lib/mailman/mail/mailman owner mailman"
+mailman-request:      "|/usr/lib/mailman/mail/mailman request mailman"
+mailman-subscribe:    "|/usr/lib/mailman/mail/mailman subscribe mailman"
+mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
+
+EOF
+
+# Subscribe codex-admin to this ML
+echo \"codex-admin@$sys_default_domain\" | /usr/lib/mailman/bin/add_members -r - mailman
+
+$SERVICE mailman start
 
 ##############################################
 # Installing and configuring Sendmail
@@ -755,8 +820,8 @@ todo "Mailman: Create a site-wide mailing list: in $MAILMAN_DIR, type 'bin/newli
 echo "##############################################"
 echo "Installing sendmail shell wrappers and configuring sendmail..."
 cd /etc/smrsh
-$LN -sf /usr/local/bin/gotohell
-$LN -sf $MAILMAN_DIR/mail/mailman
+$LN -sf /usr/lib/codex/bin/gotohell
+#$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
 $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codex:' /etc/mail/sendmail.cf
 cat <<EOF >/etc/mail/local-host-names
@@ -773,7 +838,7 @@ todo "Finish sendmail settings (see installation Guide) and create codex-contact
 #
 echo "Configuring the CVS server and CVS tracking tools..."
 $TOUCH /etc/cvs_root_allow
-$CHOWN sourceforge.sourceforge /etc/cvs_root_allow
+$CHOWN codexadm.codexadm /etc/cvs_root_allow
 $CHMOD 644 /etc/cvs_root_allow
 
 make_backup /etc/xinetd.d/cvs
@@ -786,48 +851,45 @@ service cvspserver
         wait                = no
         user                = root
         server              = /usr/bin/cvs
-        server_args         = -f -z3 -T/home/large_tmp --allow-root-file=/etc/cvs_root_allow pserver
+        server_args         = -f -z3 -T/var/tmp --allow-root-file=/etc/cvs_root_allow pserver
 }
 EOF
 
-cd $INSTALL_DIR/SF/utils/cvs1
-$CP log_accum /usr/local/bin
-$CP commit_prep /usr/local/bin
-$CP cvssh /usr/local/bin
-$CP cvssh-restricted /usr/local/bin
+cd $INSTALL_DIR/src/utils/cvs1
+$CP log_accum /usr/lib/codex/bin
+$CP commit_prep /usr/lib/codex/bin
+$CP cvssh /usr/lib/codex/bin
+$CP cvssh-restricted /usr/lib/codex/bin
 $CAT <<'EOF' >> /etc/shells
-/usr/local/bin/cvssh
-/usr/local/bin/cvssh-restricted
+/usr/lib/codex/bin/cvssh
+/usr/lib/codex/bin/cvssh-restricted
 EOF
   	 
-cd /usr/local/bin
-$CHOWN sourceforge.sourceforge log_accum commit_prep
+cd /usr/lib/codex/bin
+$CHOWN codexadm.codexadm log_accum commit_prep
 $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
-
-cd $INSTALL_DIR/SF/etc
-#$CP cvsweb.conf.dist /etc/httpd/conf/cvsweb.conf
-#$CHOWN root.root /etc/httpd/conf/cvsweb.conf
-#$CHMOD 644 /etc/httpd/conf/cvsweb.conf
 
 ##############################################
 # Samba configuration
 #
-cd /usr/local/bin
-$CP $INSTALL_DIR/SF/utils/gensmbpasswd.pl gensmbpasswd
-$CHOWN sourceforge.sourceforge gensmbpasswd
-$CHMOD 755 gensmbpasswd
+$SERVICE smb start
+todo "Samba service is started. If you want to use it, please configure it (procedure is detailed in the Installation Guide)."
 
 ##############################################
 # Subversion configuration
 #
 echo "Configuring the Subversion server and tracking tools..."
-cd $INSTALL_DIR/SF/utils/svn
-$CP commit-email.pl /usr/local/bin
-cd /usr/local/bin
-$CHOWN sourceforge.sourceforge commit-email.pl
+cd $INSTALL_DIR/src/utils/svn
+$CP commit-email.pl /usr/lib/codex/bin
+cd /usr/lib/codex/bin
+$CHOWN codexadm.codexadm commit-email.pl
 $CHMOD 755 commit-email.pl
-$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x)
+#$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x) NG: useless? and issue with SELinux
+
+
+# Set proper SELinux context on codexadm .subversion directory: it should be created now :-)
+$CHCON -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
@@ -837,59 +899,33 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 ##############################################
 # FTP server configuration
 #
-make_backup "/etc/xinetd.d/wu-ftpd"
-echo "Configuring FTP servers and directories..."
-$CAT <<EOF >/etc/xinetd.d/wu-ftpd
-service ftp
-{
-        disable = no
-        socket_type             = stream
-        wait                    = no
-        user                    = root
-        server                  = /usr/sbin/in.ftpd
-        server_args             = -l -a
-        log_on_success          += DURATION
-        nice                    = 10
-}
+
+# Configure vsftpd
+$PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
+$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
+
+# Add welcome messages
+$CAT <<'EOF' > /var/lib/codex/ftp/.message
+********************************************************************
+Welcome to CodeX FTP server
+
+On This Site:
+/incoming          Place where to upload your new file release
+/pub               Projects Anonymous FTP space
+*********************************************************************
+
 EOF
+$CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/.message
 
-make_backup "/etc/ftpaccess"
-$CAT <<EOF >/etc/ftpaccess
-class   all   real,guest,anonymous  *
-class anonftp anonymous *
+# Add welcome messages
+$CAT <<'EOF' >/var/lib/codex/ftp/incoming/.message
 
-upload /home/ftp * no
-upload /home/ftp /bin no
-upload /home/ftp /etc no
-upload /home/ftp /lib no
-noretrieve .notar
-upload /home/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs
-noretrieve /home/ftp/incoming
-noretrieve /home/ftp/codex
+Upload new file releases here
 
-email root@localhost
-
-loginfails 5
-
-readme  README*    login
-readme  README*    cwd=*
-
-message /welcome.msg            login
-message .message                cwd=*
-
-compress        yes             all
-tar             yes             all
-chmod        no        guest,anonymous
-delete        no        guest,anonymous
-overwrite    no        guest,anonymous
-rename        no        guest,anonymous
-
-log transfers anonymous,real inbound,outbound
-
-shutdown /etc/shutmsg
-
-passwd-check rfc822 warn
 EOF
+$CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/incoming/.message
+
+$SERVICE vsftpd start
 
 ##############################################
 # Create the custom default page for the project Web sites
@@ -900,7 +936,7 @@ yn="y"
 [ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
 if [ "$yn" = "y" ]; then
     $MKDIR -p /etc/codex/site-content/en_US/others
-    $CHOWN sourceforge.sourceforge /etc/codex/site-content/en_US/others
+    $CHOWN codexadm.codexadm /etc/codex/site-content/en_US/others
     $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
 todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
@@ -913,24 +949,26 @@ todo "  svn/intro.txt include/new_project_email.txt, etc."
 
 if [ "$active_shell" = "n" ]; then
     echo "Shell access configuration defaulted to 'No shell account'..."
-    $MYSQL -u sourceforge sourceforge --password=$sf_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
+    $MYSQL -u codexadm codex --password=$codexadm_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
 fi
 
 ##############################################
 # DNS Configuration
 #
 todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
-todo "- update /var/named/codex.zone - replace all words starting with %%"
-todo "- cp /var/named/codex.zone /var/named/codex_full.zone"
-todo "- edit /etc/named.conf :"
-todo "   - add DNS forwarders"
-todo "   - make sure the dns cache file exists (or 'touch' it)"
-todo "   - add at the end of the file (before the include):"
+todo "    update /var/named/codex.zone - replace all words starting with %%, and copy it:"
+todo "      > cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
+todo "    make sure the file is readable by 'other':"
+todo "      > chmod o+r /var/named/chroot/var/named/codex_full.zone"
+todo "    edit /etc/named.conf :"
+todo "      add DNS forwarders"
+todo "      make sure the dns cache file exists (or 'touch' it)"
+todo "      add at the end of the file (before the include):"
 todo "zone \"$sys_default_domain\" {"
 todo "          type master;"
 todo "          file \"codex_full.zone\";"
 todo "};"
-todo "- start 'named' service (or reboot)"
+todo "    start 'named' service (or reboot)"
 
 ##############################################
 # Crontab configuration
@@ -940,76 +978,49 @@ $CAT <<'EOF' >/tmp/cronfile
 # run the Codex crontab script once every 2 hours
 # this script synchronizes user, groups, cvs repo,
 # directories, mailing lists, etc...
-0 0-23/2 * * * /home/httpd/SF/utils/xerox_crontab.sh
+0 0-23/2 * * * /usr/share/codex/src/utils/xerox_crontab.sh
 #
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
-30 0 * * * /home/httpd/SF/utils/xerox_all_daily_stats.sh
+30 0 * * * /usr/share/codex/src/utils/xerox_all_daily_stats.sh
 #
 # run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
 # Run on Monday at 1am
-0 1 * * Mon (cd /home/httpd/SF/utils/underworld-root; ./db_project_weekly_metric.pl)
+0 1 * * Mon (cd /usr/share/codex/src/utils/underworld-root; ./db_project_weekly_metric.pl)
 #
 # daily incremental backup of subversion repositories
-45 23 * * 1-6 /home/tools/backup_subversion.sh -i
+45 23 * * 1-6 /usr/lib/codex/bin/backup_subversion.sh -i
 #
 # weekly full backup of subversion repositories (0:15 on Sunday)
-15 0 * * Sun /home/tools/backup_subversion.sh -noarchives
+15 0 * * Sun /usr/lib/codex/bin/backup_subversion.sh -noarchives
 #
 # weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /home/tools/backup_job
+45 0 * * Sun /usr/lib/codex/bin/backup_job
 
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
-0 3 * * * /usr/sbin/tmpwatch -m -f 336 /home/ftp/incoming
+0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codex/ftp/incoming
 #
 # It looks like we have memory leaks in Apache in some versions so restart it
 # on Sunday. Do it while the DB is down for backup
 50 0 * * Sun /etc/rc.d/init.d/httpd restart
 #
 # Once a minute make sure that the setuid bit is set on some critical files
-* * * * * (cd /usr/local/bin; /bin/chmod u+s commit-email.pl log_accum fileforge)
+* * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s log_accum fileforge)
 EOF
 crontab -u root /tmp/cronfile
 
-echo "Installing  sourceforge user crontab..."
+echo "Installing  codexadm user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# Re-generate the CodeX User and Programmer Guides on a daily basis
-00 03 * * * /home/httpd/SF/utils/generate_doc.sh
-30 03 * * * /home/httpd/SF/utils/generate_programmer_doc.sh
+# Re-generate the CodeX User Guides on a daily basis
+00 03 * * * /usr/share/codex/src/utils/generate_doc.sh
+30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh
+45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh
 EOF
-crontab -u sourceforge /tmp/cronfile
+crontab -u codexadm /tmp/cronfile
 
-echo "Installing  mailman user crontab..."
-$CAT <<'EOF' >/tmp/cronfile
-# At 8AM every day, mail reminders to admins as to pending requests.
-# They are less likely to ignore these reminders if they're mailed
-# early in the morning, but of course, this is local time... ;)
-0 8 * * * /usr/bin/python -S /home/mailman/cron/checkdbs
-#
-# At 9AM, send notifications to disabled members that are due to be
-# reminded to re-enable their accounts.
-0 9 * * * /usr/bin/python -S /home/mailman/cron/disabled
-#
-# Noon, mail digests for lists that do periodic as well as threshhold delivery.
-0 12 * * * /usr/bin/python -S /home/mailman/cron/senddigests
-#
-# 5 AM on the first of each month, mail out password reminders.
-0 5 1 * * /usr/bin/python -S /home/mailman/cron/mailpasswds
-#
-# Every 5 mins, try to gate news to mail.  You can comment this one out
-# if you don't want to allow gating, or don't have any going on right now,
-# or want to exclusively use a callback strategy instead of polling.
-#0,5,10,15,20,25,30,35,40,45,50,55 * * * * /usr/bin/python -S /home/mailman/cron/gate_news
-#
-# At 3:27am every night, regenerate the gzip'd archive file.  Only
-# turn this on if the internal archiver is used and
-# GZIP_ARCHIVE_TXT_FILES is false in mm_cfg.py
-27 3 * * * /usr/bin/python -S /home/mailman/cron/nightly_gzip
-EOF
-crontab -u mailman /tmp/cronfile
 
 ##############################################
 # Make ISO latin characters the default charset for the
@@ -1033,16 +1044,14 @@ echo "Installing log files rotation..."
 $CAT <<'EOF' >/etc/logrotate.d/httpd
 /var/log/httpd/access_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
         /sbin/service httpd reload 2> /dev/null || true
-        # LJ Added for Codex archiving
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/home/log/$year/$month"
+     destdir="/var/log/codex/$server/$year/$month"
      destfile="http_combined_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/access_log.1 $destdir/$destfile
@@ -1051,17 +1060,15 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
  
 /var/log/httpd/vhosts-access_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
         /sbin/service httpd reload 2> /dev/null || true
-        # LJ Added for Codex archiving
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     server=`hostname`
-     destdir="/home/log/$server/$year/$month"
+     #server=`hostname`
+     destdir="/var/log/codex/$year/$month"
      destfile="vhosts-access_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
@@ -1070,7 +1077,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
                                                                               
 /var/log/httpd/agent_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
@@ -1080,7 +1086,15 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
                                                                               
 /var/log/httpd/error_log {
     missingok
-    # LJ
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd reload 2> /dev/null || true
+    endscript
+}
+
+/var/log/httpd/ssl_request_log {
+    missingok
     daily
     rotate 4
     postrotate
@@ -1090,7 +1104,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
 
 /var/log/httpd/referer_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
@@ -1100,7 +1113,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
                                                                                
 /var/log/httpd/suexec_log {
     missingok
-    # LJ
     daily
     rotate 4
     postrotate
@@ -1112,38 +1124,35 @@ $CHOWN root.root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
 
-#make_backup "/etc/logrotate.d/ftpd" # don't make backup, or both backup and original will be used.
-$CAT <<'EOF' >/etc/logrotate.d/ftpd
+$CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
 /var/log/xferlog {
     # ftpd doesn't handle SIGHUP properly
     nocompress
-    # LJ Modified for codex
+    missingok
     daily
     postrotate
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/home/log/$year/$month"
+     destdir="/var/log/codex/$server/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/xferlog.1 $destdir/$destfile
     endscript
 }
 EOF
-$CHOWN root.root /etc/logrotate.d/ftpd
-$CHMOD 644 /etc/logrotate.d/ftpd
+$CHOWN root.root /etc/logrotate.d/vsftpd.log
+$CHMOD 644 /etc/logrotate.d/vsftpd.log
 
 ##############################################
-# Create CodeX Shell skeleton files
+# Create CodeX profile script
 #
-echo "Create CodeX Shell skeleton files..."
-$MKDIR -p /etc/skel_codex
 
 # customize the global profile 
 $GREP profile_codex /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
     cat <<'EOF' >>/etc/profile
-# LJ Now the Part specific to CodeX users
+# Now the Part specific to CodeX users
 #
 if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
         . /etc/profile_codex
@@ -1184,14 +1193,9 @@ for i in $grplist
 do
         echo "    - /home/groups/$i"
 done
-                                                                               
-echo "Your project CVS root directories are in:"
-for i in $grplist
-do
-        echo "    - /cvsroot/$i"
-done
-                                                                               
+
 cat <<EOM
+Corresponding CVS and Subversion repositories are in /cvsroot and /svnroot
                                                                                
              *** IMPORTANT REMARK ***
 The CodeX server hosts very valuable yet publicly available
@@ -1206,10 +1210,11 @@ EOF
 ##############################################
 # Generate Documentation
 #
-echo "Generating the User and Programmer Manuals. This might take a few minutes."
-/home/httpd/SF/utils/generate_doc.sh -f
-/home/httpd/SF/utils/generate_programmer_doc.sh -f
-$CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
+echo "Generating the CodeX Manuals. This might take a few minutes."
+/usr/share/codex/src/utils/generate_doc.sh -f
+/usr/share/codex/src/utils/generate_programmer_doc.sh -f
+/usr/share/codex/src/utils/generate_cli_package.sh -f
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 
 ##############################################
 # Make sure all major services are on
@@ -1217,20 +1222,43 @@ $CHOWN -R sourceforge.sourceforge $INSTALL_DIR/documentation
 $CHKCONFIG named on
 $CHKCONFIG sshd on
 $CHKCONFIG httpd on
-$CHKCONFIG mysql on
+$CHKCONFIG mysqld on
 $CHKCONFIG cvs on
 $CHKCONFIG mailman on
+$CHKCONFIG munin-node on
+$CHKCONFIG smb on
+$CHKCONFIG vsftpd on
 
+##############################################
+# *Last* step: install plugins
+#
+# docman plugin
+$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+build_dir /etc/codex/plugins/docman/etc codexadm codexadm 755
+$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codex/plugins/docman/etc/docman.inc
+$CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/docman.inc
+$CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
+
+# serverupdate plugin
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 ##############################################
 # End of installation
 #
-todo "To customize the network gallery, copy /home/httpd/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
-todo "Add the following parameter in /etc/php.ini: 'upload_tmp_dir = /home/large_tmp'"
+todo "If you are behind a proxy, then you need to configure the file "
+todo "   /home/codexadm/.subversion/servers to declare your proxy"
+todo "   To enable the subversion update, type the following commands (as codexadm):"
+todo "     cd /usr/share/codex/"
+todo "     svn status -u --username <your_login_on_partners>"
+todo "   Accept the certificate permanently, and type in your password."
+
+todo "Project web site CGIs are currently disabled. If you want to use them, you"
+todo "   should install the custom httpd-suexec RPM provided "
+todo "   (e.g. 'rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm')."
+todo "To customize the network gallery, copy /usr/share/codex/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
-todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/local/bin/cvssh, etc."
-todo "Create an SSL certificate for Apache to support encryption (https) (see CodeX installation guide)."
-todo "Last, run the main crontab script manually: /home/httpd/SF/utils/xerox_crontab.sh"
+todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codex/bin/cvssh, etc.)"
+todo "Last, run the main crontab script manually: /usr/share/codex/src/utils/xerox_crontab.sh"
 
 todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."
 todo "If you plan to use CVSNT, please refer to the installation guide"
@@ -1239,7 +1267,7 @@ todo "This TODO list is available in $TODO_FILE"
 
 # End of it
 echo "=============================================="
-echo "Installation completed succesfully!"
+echo "Installation completed successfully!"
 $CAT $TODO_FILE
 
 exit 0

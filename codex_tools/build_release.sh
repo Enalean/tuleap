@@ -1,8 +1,8 @@
 #!/bin/sh
-PACKAGE_DIR=/root/packages-rhel3
+PACKAGE_DIR=/root/packages-rhel4
 BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 2.8sup"
-ISO_FILE="/tmp/codex-2.8sup.iso"
+ISO_LABEL="CodeX 3.0.1 sup"
+ISO_FILE="/tmp/codex-3.0.1.sup.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -12,6 +12,9 @@ TAIL='/usr/bin/tail'
 MKDIR='/bin/mkdir'
 CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
+RSYNC='/usr/bin/rsync'
+GREP='/bin/grep'
+RM='/bin/rm'
 
 # Misc functions
 die() {
@@ -25,7 +28,10 @@ die() {
 
 # Clean up build dir
 echo "Creating clean build directory..."
-rm -rf $BUILD_DIR; mkdir -p $BUILD_DIR
+#rm -rf $BUILD_DIR; 
+$MKDIR -p $BUILD_DIR
+cd $BUILD_DIR
+$RM codex_install.sh INSTALL migration_* README  RELEASE_NOTES
 
 # Copy the install script at the top directory
 echo "Copying the CodeX installation script..."
@@ -33,16 +39,18 @@ cd $PACKAGE_DIR
 $CP -af $PACKAGE_DIR/CodeX/src/codex_tools/codex_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codex_install.sh
 
-# Copy the 2.6 to 2.8 migration script at the top directory
-echo "Copying the CodeX 2.6 to 2.8 migration script..."
+# Copy the migration script at the top directory
+echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_28.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_28.sh
+$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_from_CodeX_2.8_to_CodeX_3.0.1.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_30.README $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_2.8_to_CodeX_3.0.1.sh
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
-$CP -af $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
-$CP -af $PACKAGE_DIR/CodeX $BUILD_DIR
+$RSYNC -av --delete $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
+mkdir -p $BUILD_DIR/CodeX
+$RSYNC -a --delete $PACKAGE_DIR/CodeX/src $BUILD_DIR/CodeX
 
 # Only copy the latest RPMs from RPMS CodeX
 echo "Copying the CodeX RPMS packages..."
@@ -54,7 +62,26 @@ do
     cd $PACKAGE_DIR/RPMS_CodeX/$i
     newest_rpm=`$LS -1 -I old | $TAIL -1`
     $MKDIR -p $BUILD_DIR/RPMS_CodeX/$i
-    $CP -af $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
+    $RSYNC -a --delete $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
+    cd $BUILD_DIR/RPMS_CodeX/$i
+    old_rpms=`$LS -1 | $GREP -v $newest_rpm`
+    for j in $old_rpms
+    do
+      echo "deleting $i/$j from build dir"
+      $RM -rf $j
+    done
+done
+
+# Remove deprecated packages
+cd $BUILD_DIR/RPMS_CodeX 
+RPM_LIST=`ls -1`
+for i in $RPM_LIST
+do
+    if [ ! -e $PACKAGE_DIR/RPMS_CodeX/$i ];
+    then
+        echo "Removing depracted package: $i"
+        echo $RM -rf $BUILD_DIR/RPMS_CodeX/$i
+    fi
 done
 
 # Change ownership of everything
@@ -132,8 +159,7 @@ http://codex.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 2.6 to 2.8 run the migration script ./migration_28.sh 
-- Follow the instructions of the migration script
+- For an update from 2.8 to 3.0.1 please read carefully migration_30.README and follow the instructions.
 
 -- The CodeX Team
    <info@codex.xerox.com>
@@ -141,53 +167,60 @@ EOF
 
 # create a RELEASE_NOTES file at the top
 cat <<'EOF' >RELEASE_NOTES
-CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+CodeX: Breaking Down the Barriers to Source Code Sharing
 Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
-http://codex.xerox.com
+http://codex.xrce.xerox.com
 
-This is CodeX 2.8.
+This is CodeX 3.0.1
 
 After downloading the file, read the README and INSTALL files
 carefully. And get in touch with us at codex-contact@codex.xerox.com
 if you have questions.
 
 
-Major improvements of CodeX 2.8 over 2.6:
-- Field dependencies in trackers: Field dependencies allow you to link source 
-  field values to target field values. In other words, the values proposed to
-  a final user for a field will depend upon the value selected for another field.
-- New Reference system. With earlier versions of CodeX, it was possible to 
-  automatically create links in commit messages or artifact follow-ups by using
-  certain patterns: 'commit #123' to reference a CVS commit, 'rev #234' for 
-  subversion, or 'art #246' for an artifact. This made a direct link to the 
-  object. With CodeX 2.8, it is now possible to reference any kind of object
-  (documents, files, artifacts, revisions, external objects, etc.), and to
-  customize the list of recognized patterns per project.
-- new LDAP authentication mechanism. It is now provided as a plugin, which is a
-  contribution from ST.
-- Improved scalability and response time.
-- User guide is now available in French
-- Menus (e.g. 'admin') are only displayed if the user has enough permission to 
-  use them.
- 
+What's new in CodeX 3.0.1?
+
+- New Document Manager
+  The CodeX document manager has been completely rewritten. Now, it:
+  - can host an "unlimited" hierarchy of documents
+  - accepts files, wiki pages, URLs and embedded documents
+  - allows deletion, move
+  - enforces read/write/manage permissions, 
+  - allows document versioning and history access
+  - is more scalable
+  - has a nice javascript-based UI with multiple views
+  While new CodeX projects will immediately benefit from the new document
+  manager, existing projects will need to activate the tool in the project 
+  service administration page. Existing projects that had not used the 
+  legacy document manager now automatically have access to the new one.
+
+- SOAP API foundation in CodeX.
+  CodeX now offers SOAP API for programmatical access to your project data.
+  For the moment, only tracker access is available through this API.
+
+- Command-line client for CodeX
+  CodeX provides a command line script that allows project members to
+  consult or update tracker data. The tool and its documentation is available
+  from the CodeX welcome page.
+
+- An experimental server update mechanism is now provided to CodeX administrators
+  to help manage CodeX updates.
+
+- Tracker improvement: you may now group tracker fields in 'field sets', that
+  simplify tracker management and improve readability for complex trackers.
+  
+- Project templates: you may now create project templates with a specific configuration
+  (trackers, user groups, services, etc.). 
+  A project created with a specific template will inherit its configuration.
+
+- Platform update: CodeX now runs on Red Hat Enterprise Linux 4 and benefits
+  from many updated packages and improved security.
 
 Other changes:
-- Improved plugin architecture
-- File download popup is not mandatory any longer (see local.inc)
-- artifact status simplified: only 'open' and 'close' values allowed. Use the 
-  new 'stage' field to specify more info (new, analyzed, accepted, under 
-  implementation, etc.)
-- Subversion permission file improved: you may now use ugroups in your 
-  permissions.
-- CVS lockdir moved from /cvsroot/projectname/.lockdir to 
-  /var/lock/cvs/projectname
-- updated SVN backup script
-- allow anonymous access to wiki
+- survey manager has been improved
+- project news may now be private, i.e. only visible to project members
+- tracker fields may now be bound to multiple user groups
 - and many bugs fixed!
-
-Package Update:
-- Now install Subversion 1.2.3 (without BDB support) on new CodeX servers (do
-  not upgrade existing servers)
 
 -- The CodeX Team
    <info@codex.xerox.com>
@@ -197,7 +230,7 @@ EOF
 echo "Building ISO image in $ISO_FILE..."
 mkisofs -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -o "$ISO_FILE" $BUILD_DIR
 
-echo "CodeX ISO image available at $ISO_FILE..."
+echo "CodeX ISO image available at $ISO_FILE ..."
 echo "Done!"
 exit 0
 # end of it

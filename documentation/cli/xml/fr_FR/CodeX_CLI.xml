@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+-->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"file:/usr/local/docbook-dtd/docbookx.dtd"
+[
+<!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
+<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/cli/xml/ParametersLocal.dtd">
+%ParametersLocal;
+%ParametersDefault;
+
+<!-- Entities for inclusion of document chapters -->
+<!ENTITY BookInfo SYSTEM "BookInfo.xml">
+<!ENTITY ChapterInstallation SYSTEM "Installation.xml">
+<!ENTITY ChapterUsage SYSTEM "Usage.xml">
+<!ENTITY ChapterModules SYSTEM "Modules.xml">
+
+<!-- Entity definition and inclusion for default and custom parameters
+(e.g. site name, server names, company name,etc.)
+Remark: local redefinition must be first because once defined
+an entity cannot be redefined. Hence this particular order  -->
+
+]>
+
+<book>
+  <title>Documentation de l'Interface en Ligne de Commande CodeX</title>
+
+  <subtitle><emphasis role="bold">&SYS_DEFAULT_DOMAIN;</emphasis></subtitle>
+
+  &BookInfo;
+
+  &ChapterInstallation;
+  &ChapterUsage;
+  &ChapterModules;
+
+</book>

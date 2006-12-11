@@ -1,0 +1,121 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id: fr_FR.tab,v 1.10 2005/06/24 08:10:38 nterray Exp $
+#  *
+#  */
+
+#
+# General
+#
+plugin_serverupdate	descriptor_description	Interface web de mise à jour du serveur.
+plugin_serverupdate	descriptor_name	Mise à jour du serveur
+plugin_serverupdate	title	Mise à jour du serveur
+#
+# Header menu
+#
+plugin_serverupdate_menu	server_update	Mise à jour du serveur
+plugin_serverupdate_menu	script_upgrades	Scripts
+plugin_serverupdate_menu	preferences	Préférences
+#
+# Server Update
+#
+plugin_serverupdate_update	WorkingCopyRevision	Révision de la copie de travail : <strong>$1</strong>
+plugin_serverupdate_update	NumberOfUpdates	Nombre de mises à jour disponibles : <strong>$1</strong>
+plugin_serverupdate_update	RepositoryIs	Dépôt Subversion : <strong>$1</strong>
+plugin_serverupdate_update	norepository	Dépôt Subversion non détecté.<br />Si vous êtes derrière un proxy, assurez-vous d'avoir bien configuré le fichier <em>/home/codexadm/.subversion/servers</em>.<br />Avant d'utiliser ce plugin, veuillez exécuter la commande <strong><em>svn status -u --username [votre_login]</em></strong>, acceptez de manière permanente le certificat, puis tapez votre mot de passe. Cette opération n'est à faire qu'une seule fois, ou à chaque fois que vous changerez de mot de passe.
+plugin_serverupdate_update	Updates	Mises à jour
+plugin_serverupdate_update	Revision	Révision
+plugin_serverupdate_update	Date	Date
+plugin_serverupdate_update	Message	Message
+plugin_serverupdate_update	Details	Détails
+plugin_serverupdate_update	Special	Spécial
+plugin_serverupdate_update	Actions	Actions
+plugin_serverupdate_update	ChangedFiles	Fichiers modifiés
+plugin_serverupdate_update	detail_link	détails
+plugin_serverupdate_update	UpdateAction	Mettre à jour jusqu'à cette révision
+plugin_serverupdate_update	NeedManualUpdate	Nécessite une mise à jour manuelle. Merci de lire le message de commit pour plus de détails.
+plugin_serverupdate_update	ContainsDBUpdate	Contient un script de mise à jour de la base de données. Merci de lire le message de commit pour plus de détails.
+plugin_serverupdate_update	prio_colors	Importance des mises à jour
+plugin_serverupdate_update	UpToDate	Serveur à jour !
+plugin_serverupdate_update	NoCommitsCriteria	Aucune mise à jour ne répond aux critères de tri.
+plugin_serverupdate_update	SimulatingUpdate	Simulation de mise à jour de la révision $1 à la révision $2
+plugin_serverupdate_update	ConflictOnFile	Conflits sur le(s) fichier(s):
+plugin_serverupdate_update	UpdateManually	Merci d'effectuer la mise à jour manuellement en utilisant la commande : (veillez à vous trouver dans le répertoire $1 pour exécuter la commande)
+plugin_serverupdate_update	NoConflicts	Aucun conflit détecté.
+plugin_serverupdate_update	ScriptsInfos	Informations sur les scripts :
+plugin_serverupdate_update	ScriptsIgnored	Scripts qui seront ignorés :
+plugin_serverupdate_update	ScriptsExecuted	Scripts qui seront exécutés :
+plugin_serverupdate_update	AtRevision	(à la révision $1)
+plugin_serverupdate_update	ScriptsErrors	Erreurs de scripts.
+plugin_serverupdate_update	ScriptsInTrouble	Scripts qui posent problème :
+plugin_serverupdate_update	ScriptMustBeExecutedAtRevison	$1 doit être exécuté à la révision $2. Merci de bien vouloir mettre à jour (au moins) jusqu'à la révision $2.
+plugin_serverupdate_update	ScriptMustBeDeletedAtRevison	$1 est supprimé à la révision $2. Merci de bien vouloir mettre à jour (au moins) jusqu'à la révision $2, pour assurer la cohérence de la mise à jour.
+plugin_serverupdate_update	ScriptDeletedAt	(script supprimé à la révision $1)
+plugin_serverupdate_update	ScriptAlreadyExecuted	$1 a été exécuté avant la révision courante (révision $2).
+plugin_serverupdate_update	ManualUpdateRequired	Merci de bien vouloir faire la mise à jour manuellement, en prenant bien garde à ce que vous faîtes. Merci de lire le message de commit pour plus de détails.
+plugin_serverupdate_update	ProcessUpdate	Effectuer la mise à jour
+plugin_serverupdate_update	ConfirmUpdate	Pour effectuer la mise à jour, veuillez cliquer sur le bouton :
+plugin_serverupdate_update	ForceUpdate	Cependant, vous pouvez forcer la mise à jour (seulement si vous savez ce que vous faîtes) :
+plugin_serverupdate_update	ForceUpdateButton	Forcer la mise à jour
+plugin_serverupdate_update	RememberUpdateForced	Les mises à jour suivantes ont été forcées : $1. Veuillez vous assurer que vous avez fait tout ce qui était préconisé dans les messages de commit.
+plugin_serverupdate_update	CancelUpdate	Sinon, cliquez sur le lien pour revenir à l'écran précédent.
+plugin_serverupdate_update	UpdatingServer	Mise à jour du serveur de la révision $1 à la révision $2.
+plugin_serverupdate_update	UpdateInProgress	Mise à jour en cours. Merci de bien vouloir patienter.
+plugin_serverupdate_update	revision_contains_script	Cette revision contient des scripts à exécuter :
+plugin_serverupdate_update	script_execution	Execution du script $1 :
+plugin_serverupdate_update	ErrorDuringUpdateCarefull	Merci de lire le message d'erreur et d'agir en conséquence.
+plugin_serverupdate_update	ErrorDuringScriptUpgrade	Erreur lors de l'exécution du script $1 :
+plugin_serverupdate_update	ScriptNotWellImplemented	Le script $1 n'est pas implémenté correctement.
+plugin_serverupdate_update	ScriptSkipped	Script $1 non exécuté car modifié dans une révision ultérieure.
+plugin_serverupdate_update	RevisionNeedManualUpdate	La révision $1 nécessite une mise à jour manuelle. Merci de lire le message de commit pour plus de détails.
+plugin_serverupdate_update	UpdateDone	Mise à jour effectuée.
+plugin_serverupdate_update	ErrorDuringUpdate	Une erreur est survenue lors de la mise à jour.
+plugin_serverupdate_update	ReturnToUpdates	Retour vers les mises à jour
+plugin_serverupdate_update	UpdateFailed	Mise à jour non effectuée.
+plugin_serverupdate_update	NoReverseUpdate	La Mise à jour vers une révision antérieure n'est pas autorisée par l'intermédiaire de l'interface web.
+plugin_serverupdate_update	filter	Filtre :
+plugin_serverupdate_update	level	Niveau d'importance
+#
+# Script Upgrades
+#
+plugin_serverupdate_script	Script_Upgrades	Scripts de mise à jour
+plugin_serverupdate_script	Scripts	Scripts
+plugin_serverupdate_script	Status	Statut
+plugin_serverupdate_script	Actions	Actions
+plugin_serverupdate_script	status_applied	Appliqué
+plugin_serverupdate_script	status_never_applied	Pas appliqué
+plugin_serverupdate_script	status_applied_with_errors	Appliqué avec erreurs
+plugin_serverupdate_script	exec_date	Date
+plugin_serverupdate_script	exec_mode	Mode
+plugin_serverupdate_script	exec_status	Statut
+plugin_serverupdate_script	exec_errors	Erreurs
+plugin_serverupdate_script	exec_success	Succes
+plugin_serverupdate_script	exec_failure	Erreur
+plugin_serverupdate_script	apply_script	Appliquer le script
+plugin_serverupdate_script	NoUpgrades	Aucun script de mise à jour.
+plugin_serverupdate_script	UpgradeFailed	Erreur lors de la mise à jour
+plugin_serverupdate_script	UpgradeSuccessfullyApplied	Script $1 appliqué avec succès !
+plugin_serverupdate_script	UpgradeScriptFailed	Script $1 non appliqué.
+plugin_serverupdate_script	ExecutionErrors	Erreurs d'exécution :
+plugin_serverupdate_script	ScriptNotFound	Script $1 non trouvé dans le répertoire des scripts ($2)
+plugin_serverupdate_script	show_hide_execs	montrer/cacher les exécutions
+#
+# Preferences
+#
+plugin_serverupdate_preferences	preferences_title	Préférences:
+plugin_serverupdate_preferences	working_directory	Copie de travail :
+plugin_serverupdate_preferences	svn_repository	Dépôt SVN :
+plugin_serverupdate_preferences	script_directory	Répertoire des scripts :
+plugin_serverupdate_preferences	norepository	Dépôt SVN non détecté.
+

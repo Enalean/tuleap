@@ -15,8 +15,9 @@
 #  *
 #  */
 system	locale	fr_FR
-system	strftimefmt	%Y %B %e  %H:%M
-system	datefmt	Y-m-d H:i
+system	strftimefmt	%e %B %Y  %H:%M
+system	datefmt	d/m/Y H:i
+system	datefmt_short	d/m/Y
 conf	content_encoding	iso-8859-1
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	fr

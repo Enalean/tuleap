@@ -1,0 +1,307 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: DocumentManager.xml 2681 2006-03-02 12:37:39Z guerin $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<chapter id="DocumentManagerPlugin">
+  <title>Document Manager</title>
+
+  <para>Documentation is probably the second most important deliverable in a
+    software project after the software work products themselves. CodeX
+    provides a specific service to manage your project documents.</para>
+
+  <para>Although the CodeX Document Manager cannot be compared
+    with dedicated document management systems, it
+    is however very handy to publish documents that are critical to
+    your community of users. Examples are: Installation, Administration
+    or User Guide, API documentation, Frequently Asked Questions,
+    etc...</para>
+
+  <para>The Document Manager features are as follows:</para>
+
+  <itemizedlist mark="bullet" spacing="compact">
+    <listitem>
+      <para>The CodeX Document Manager can handle any type of
+      document.</para>
+    </listitem>
+
+    <listitem>
+      <para>Documents are stored in folders. You can have subfolders in a
+        folder.</para>
+    </listitem>
+
+    <listitem>
+      <para>Documents can be edited on line (if in text or HTML format).</para>
+    </listitem>
+
+    <listitem>
+      <para>Access control rules can be defined for each document or folder.</para>
+    </listitem>
+
+    <listitem>
+        <para>Documents have properties and searchable metadata.</para>
+    </listitem>
+  </itemizedlist>
+
+  <section>
+    <title>Structure</title>
+    <para>You can structure as you want your document manager by creating folders 
+    and subfolders to classify your documents.</para>
+    <figure id="docman2_folders">
+        <title>Folders and subfolders</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_folders.png" />
+          </imageobject>
+        </mediaobject>
+    </figure>
+  </section>
+  
+  <section>
+    <title>Actions</title>
+    <para>The Document Manager allows some actions on folders or documents. Those 
+    actions are available or not depending on permissions. In order to display the 
+    action panel, you must click on the pencil icon next to the document or folder 
+    name.</para>
+    <figure id="docman2_actions">
+        <title>Actions</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_actions.png" />
+          </imageobject>
+        </mediaobject>
+    </figure>
+    <para>We will now describe all the actions that can be performed on a folder
+    or document.</para>
+    <section><title>New Document</title>
+      <para>This action is only available for folders and allow the user to create 
+      a new document in a folder. When you select this action, a "new document" 
+      window is displayed, where you can enter information concerning the new 
+      document.</para>
+      <figure id="docman2_newdocument">
+          <title>Create a new document</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_newdocument.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>The new document inherits the permissions of the parent folder.</para>
+      <section>
+        <title>Metadata</title>
+        <para>The title of the document is mandatory. The user can provide a description 
+        wich will be displayed on the browse view. Owner corresponds to official
+        owner of the document. Depending on the project, there 
+        may be additionnal metadata required to classify the document.</para>
+      </section>
+      <section>
+        <title>Document Type</title>
+        <para>4 types of documents are available :</para>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis>Link:</emphasis> allow the user to target a document 
+            with a URL. The document will not be stored locally in the docman.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis>Wiki:</emphasis> the document could be created with 
+            the wiki service. Just enter the name of the corresponding wiki page.
+            You can also use an existing wiki page name.
+            </para>
+          </listitem>
+          <listitem>
+            <para><emphasis>File:</emphasis> any type of document could be uploaded.
+            From a powerpoint presentation, to a simple picture or a full office 
+            document. Files are versionned, so you can add new versions on existing 
+            document.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis>Embedded file:</emphasis> html or plain text can be 
+            edited online. Embedded files are versionned.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+      
+      <section>
+        <title>Location</title>
+        <para>By default, the system creates a document in the folder that was selected.
+        The user can also choose another folder. He can also select the position 
+        of the new document in the folder: at the beginning or at the end.</para>
+      </section>
+    </section>
+    
+    <section><title>New Folder</title>
+      <para>This action is only available for folders and allow the user to create 
+      a sub folder in a folder.</para>
+      <figure id="docman2_newfolder">
+          <title>Create a new folder</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_newfolder.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>The new folder inherits the permissions of the parent folder.</para>
+      <section>
+        <title>Metadata</title>
+        <para>Like for documents, the title of the folder is mandatory. The user can 
+        provide a description wich will be displayed on the browse view. 
+        Owner corresponds to official owner of the folder. Depending 
+        on the project, there may be additionnal metadata required to classify 
+        the document.</para>
+      </section>
+      <section>
+        <title>Location</title>
+        <para>Like for documents, by default, the system creates a folder in the folder 
+        that was selected. The user can choose another folder. He can also select 
+        the position of the new folder in the parent folder: at the beginning or at the end.</para>
+      </section>
+    </section>
+    
+    <section><title>Properties</title>
+      <para>This action allows the user to view the properties of a document or
+      folder. If he has enough permissions, he will be able to modify those properties.</para>
+      <figure id="docman2_properties">
+          <title>Display and edit properties</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_properties.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    <para>From the property panel, it is possible to view/edit permissions, history 
+    and actions. There are also shortcuts to these panels in the initial "Actions" 
+    window.</para>
+    
+    <section><title>History</title>
+      <para>This action allows the user to see logs and old versions (if available).</para>
+      <figure id="docman2_history">
+          <title>Update a link</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_history.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Update</title>
+      <para>This action allows the user to update the name of a wiki page or the url of a link.</para>
+      <figure id="docman2_update">
+          <title>Update a link</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_update.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>New version</title>
+      <para>This action allows the user to update a new version of a file or an embedded file.</para>
+      <figure id="docman2_newversion">
+          <title>Create a new version for embedded file</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_newversion.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Permissions</title>
+      <para>This action allows the user to manage the permissions of a document 
+      or folder. Permissions for folders can be applied recusively to its hierarchy.</para>
+      <figure id="docman2_permissions">
+          <title>Define permissions</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_permissions.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>There is 3 types of permissions.</para>
+      
+      <section>
+        <title>Readers</title>
+        <para>Those who can "read" a document or access the content of a folder.</para>
+        <para>"read" means access to the document, see it in the browse view, 
+        see its properties or metadata, see its history.</para>
+        <para>Please note that if a user cannot read a folder, then he cannot access 
+        to all of its subitems whatever their permissions, even deep in the hierarchy.</para>
+      </section>
+      
+      <section>
+        <title>Writers</title>
+        <para>Writers are readers who can also modify the document.</para>
+        <para>"Modify" means update a new version, modify the link or the wiki 
+        page name, edit properties, move the item or delete it.</para>
+      </section>
+      
+      <section>
+        <title>Managers</title>
+        <para>Managers are writers who can also set permissions on a document or folder and can access to logs.</para>
+      </section>
+    </section>
+    
+    <section><title>Move</title>
+      <para>Documents or folders can be moved elsewhere in the project documentation.</para>
+      <para>They can only be moved in a folder where the user has write permissions.</para>
+      <figure id="docman2_move">
+          <title>Move a document</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_move.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+      <para>If the writer wants a specific ordering of the content of a folder, he can 
+      move subitems relatively to others (at the beginning of the folder, at the 
+      end or after an item).</para>
+      <figure id="docman2_move2">
+          <title>Move a document at a specific position</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_move2.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
+    <section><title>Delete</title>
+      <para>Documents or folders can be deleted. If the user wants to delete a 
+      folder, he will be warned that all subitems will be deleted (if the user has enough permissions).</para>
+      <para>To be able to delete an item, the user must have write permissions on the parent folder.</para>
+    </section>
+  </section>
+  
+  <section><title>Administration</title>
+    <section>
+      <title>Permissions</title>
+      <para>This section defines who can administrate the document manager.</para>
+      <para>Document manager administrators have all access to all items of the manager.</para>
+    </section>
+    <section>
+      <title>Display preferences</title>
+      <para>This section allows you to define the default view for the document manager. The settings will be overridden by user preferences.</para>
+    </section>
+    <section>
+      <title>Properties</title>
+      <para>This section manage the properties of documents. Each property can be edited during document submission and updated in the document properties panel.</para>
+      <para>There is no specific permissions. If a user can read(modify) a document, he can read(modify) all of its properties.</para>
+    </section>
+  </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

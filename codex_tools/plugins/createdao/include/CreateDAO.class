@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * 
+ * $Id$
+ *
+ * CreateDAO */
+require_once('common/mvc/Controler.class');
+require_once('common/include/HTTPRequest.class');
+require_once('CreateDAOViews.class');
+require_once('CreateDAOActions.class');
+class CreateDAO extends Controler {
+    
+    var $_plugin;
+    function CreateDAO(&$plugin) {
+        $this->_plugin =& $plugin;
+        session_require(array('group'=>'1','admin_flags'=>'A'));
+    }
+    
+    function &getPlugin() {
+        return $this->_plugin;
+    }
+    
+    function request() {
+        $request =& HTTPRequest::instance();
+        if ($request->get('action') === 'create' && $request->exist('action')) {
+            $this->action = 'create';
+        }
+        $this->view = 'browse';
+    }
+}
+
+?>

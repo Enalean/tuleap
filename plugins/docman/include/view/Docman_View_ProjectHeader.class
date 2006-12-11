@@ -1,0 +1,61 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_ProjectHeader
+*/
+
+require_once('Docman_View_Header.class');
+
+/* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header {
+    
+    /* protected */ function _scripts($params) {
+        echo '<script type="text/javascript"> var docman = new com.xerox.codex.Docman('. $params['group_id'] .', ';
+        $di =& $this->_getDocmanIcons($params);
+        echo $this->phpArrayToJsArray(array_merge(array(
+                'folderSpinner' => $di->getFolderSpinner(),
+                'spinner'       => $di->getSpinner()
+            ),
+            $this->_getJSDocmanParameters($params)
+        ));
+        echo '); </script>';
+    }
+    
+    /* protected */ function _getAdditionalHtmlParams($params) {
+        return  array(
+            'group'  => $params['group_id'],
+            'toptab' => 'docman');
+    }
+
+    
+    /* protected */ function _getJSDocmanParameters($params) {
+        return array();
+    }
+    
+    function phpArrayToJsArray($array) {
+        if (is_array($array)) {
+            if (count($array)) {
+                $output = '{';
+                reset($array);
+                $comma = '';
+                do {
+                    if(list($key, $value) = each($array)) {
+                        $output .= $comma . $key .': '. $this->phpArrayToJsArray($value);
+                        $comma = ', ';
+                    }
+                } while($key);
+                $output .= '}';
+            }
+        } else if (is_bool($array)) {
+            $output = $array?'true':'false';
+        } else {
+            $output = "'". $array ."'";
+        }
+        return $output;
+    }
+}
+
+?>

@@ -193,14 +193,16 @@
         l'enregistrement des projets.</para>
 
         <para>En utilisant l'arbre des projets il est possible de
-        visualiser les projets répondants à certains critères. Le
+        visualiser les projets répondants à certains critères. Les
         projets sont présentés avec leurs nom, description, date de
         création, taux d'activité et d'autres informations utiles. Les
         valeurs des sept critères du projet sont affichées à la suite
         de la description. Notez qu'à côté de chaque valeur d'un
         critère figure un lien hypertexte appelé [Filtre]. Cliquer sur
         l'un de ces liens a pour effet de n'afficher que les projets
-        qui correspondent à cette valeur du critère.</para>
+        qui correspondent à cette valeur du critère.Les projets de type
+	patron et les projets de test (voir <xref linkend="ProjectType" />) 
+	ne sont pas listés dans l'arbre des projets.</para>
 
         <para>Un exemple d'affichage de l'arbre des projets est montré
         <xref linkend="FigureSoftwareMapSampleBrowsing" />. Dans cet
@@ -585,7 +587,9 @@
                     spacing="compact">
         <listitem>
           <para><emphasis role="bold">Statistiques CodeX</emphasis> :
-          indique le nombre total de projets hébergés sur CodeX, le
+          indique le nombre total de projets hébergés sur CodeX
+	  (à part ceux qui ont le statut privé ainsi que les projets 
+	  de patron et les projets de test), le
           nombre d'utilisateurs enregistrés, le nombre total de
           téléchargements et le nombre de pages visitées depuis
           l'ouverture du site.</para>
