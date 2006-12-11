@@ -179,6 +179,12 @@ class PageEditor
         }
 
         $title = new FormattedText ($title_fs, $pagelink);
+      
+        require_once("lib/WysiwygEdit/Wikiwyg.php");
+        $class = "WysiwygEdit_Wikiwyg";
+        $this->WysiwygEdit = new $class();
+        $WikiTheme->addMoreHeaders($this->WysiwygEdit->Head());
+
         if (USE_HTMLAREA and $template == 'editpage') {
             $WikiTheme->addMoreHeaders(Edit_HtmlArea_Head());
             //$tokens['PAGE_SOURCE'] = Edit_HtmlArea_ConvertBefore($this->_content);
@@ -499,7 +505,7 @@ class PageEditor
 
         $textarea = HTML::textarea(array('class'=> 'wikiedit',
                                          'name' => 'edit[content]',
-                                         'id'   => 'edit[content]',
+                                         'id'   => 'edit:content',
                                          'rows' => $request->getPref('editHeight'),
                                          'cols' => $request->getPref('editWidth'),
                                          'readonly' => (bool) $readonly),
