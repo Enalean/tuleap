@@ -38,8 +38,8 @@ class SeekableIteratorTestCase extends IteratorTestCase {
         $i->seek(0);
         $this->assertNoErrors();
         $this->assertReference($obj1, $i->current());
+        $this->expectError();
         $i->seek(10);
-        $this->assertError();
     }
 }
 //We just tells SimpleTest to always ignore this testcase
