@@ -350,11 +350,11 @@ if (isset($params['group']) && $params['group']) {
 
 		$TABS_DIRS[]='/';
 		$TABS_TITLES[]=$Language->getText('menu','home');
-
-		if (user_isloggedin()) {
+		
             $TABS_DIRS[]='/my/';
             $TABS_TITLES[]=$Language->getText('menu','my_personal_page');
-
+	
+	if (user_isloggedin()) {
             $TABS_DIRS[]='/account/';
             $TABS_TITLES[]=$Language->getText('include_menu','account_maintenance');
         }
