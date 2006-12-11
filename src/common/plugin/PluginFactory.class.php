@@ -199,7 +199,7 @@ class PluginFactory {
      * available plugin
      */
     function availablePlugin(&$plugin) {
-        if (!$this->isPluginAvailable(&$plugin)) {
+        if (!$this->isPluginAvailable($plugin)) {
             $this->plugin_dao->updateAvailableByPluginId('1', $plugin->getId());
             $this->available_plugins->put(new String($plugin->getId()), $plugin);
             $this->unavailable_plugins->removeKey(new String($plugin->getId()));
@@ -209,7 +209,7 @@ class PluginFactory {
      * unavailable plugin
      */
     function unavailablePlugin(&$plugin) {
-        if ($this->isPluginAvailable(&$plugin)) {
+        if ($this->isPluginAvailable($plugin)) {
             $this->plugin_dao->updateAvailableByPluginId('0', $plugin->getId());
             $this->unavailable_plugins->put(new String($plugin->getId()), $plugin);
             $this->available_plugins->removeKey(new String($plugin->getId()));
