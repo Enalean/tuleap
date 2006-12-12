@@ -47,9 +47,8 @@ class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Vis
             }
             $html .= '</table>';
         } else {
-            $html .= "Will be created with the same permissions than its parent.";
-            $html .= "<br />";
-            $html .= "You need Manage permission to define permissions.";
+            $html .= $GLOBALS['Language']->getText('plugin_docman','new_same_perms_as_parent'); // Will be created with the same permissions than its parent.
+            $html .= $GLOBALS['Language']->getText('plugin_docman','new_need_to_be_manager'); // <br />You need Manage permission to define permissions.
         }
         return $html;
     }

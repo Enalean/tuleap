@@ -284,10 +284,15 @@ plugin_docman	new_document_wiki	Wiki Page
 plugin_docman	new_folder	New folder
 plugin_docman	new_folder_action	Create folder
 plugin_docman	new_generalproperties	Properties
+plugin_docman	new_in	In:&nbsp;
 plugin_docman	new_location	Location
+plugin_docman	new_need_to_be_manager	<br />You need Manage permission to define permissions.
+plugin_docman	new_other_folders	other folders:
 plugin_docman	new_position	Position:
+plugin_docman	new_same_perms_as_parent	Will be created with the same permissions than its parent.
 plugin_docman	new_specificproperties	Document type
 plugin_docman	new_mandatory_help	* Mandatory field
+plugin_docman	new_view_change	view/change
 
 plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.

@@ -60,6 +60,8 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             }, options.newItem || {});
             this.options.move = Object.extend({
             }, options.move || {});
+            this.options.language = Object.extend({
+            }, options.language || {});
         }
         
         //Preload spinners
@@ -184,7 +186,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 this.showOptions_Menus = {};
             }
             if (!this.showOptions_Menus[item_id]) {
-                this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this);
+                this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.close});
             }
         }).bind(this));
     },
@@ -238,13 +240,13 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 parent_id = this.parentFoldersForNewItem[parent_id].parent_id;
             }
             folders = folders.reverse().join(' / ');
-            new Insertion.Top('docman_new_item_location_current_folder', 'In: '+folders+'&nbsp;');
+            new Insertion.Top('docman_new_item_location_current_folder', this.options.language.new_in +folders+'&nbsp;');
             
             //3. Hide other folders
             Element.hide('docman_new_item_location_other_folders');
             
             //4. Allow user to be able to change folder
-            var a = Builder.node('a', {href:''},'[other folders]');
+            var a = Builder.node('a', {href:''},'['+this.options.language.new_other_folders+']');
             $('docman_new_item_location_current_folder').appendChild(a);
             Event.observe(a, 'click', function(evt) {
                 Element.hide('docman_new_item_location_current_folder');
@@ -280,11 +282,11 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         
         //{{{ Permissions
         if ($('docman_new_permissions_panel') && this.options.newItem.hide_permissions) {
-            new Insertion.Before('docman_new_permissions_panel', '<div id="docman_new_permissions_text">Will be created with the same permissions than its parent. [<a href="" onclick="'+
+            new Insertion.Before('docman_new_permissions_panel', '<div id="docman_new_permissions_text">'+this.options.language.new_same_perms_as_parent+' <a href="" onclick="'+
                 'Element.show(\'docman_new_permissions_panel\'); '+
                 'Element.hide(\'docman_new_permissions_text\'); '+
                 'new Insertion.Before(\'docman_new_permissions_panel\', \'<input type=hidden name=user_has_displayed_permissions value=1 />\'); '+
-                'return false;">view/change</a>]</div>');
+                'return false;">['+this.options.language.new_view_change+']</a></div>');
             Element.hide('docman_new_permissions_panel');
         }
     },
@@ -441,6 +443,7 @@ Object.extend(com.xerox.codex.Menu.prototype, {
     initialize:function(item_id, docman, options) {
         this.item_id = item_id;
         this.docman = docman;
+        this.close = this.options.close
         Event.observe($('docman_item_show_menu_'+item_id), 'click', this.show.bind(this));
     },
     show:function(evt) {
@@ -467,7 +470,7 @@ Object.extend(com.xerox.codex.Menu.prototype, {
             var close = Builder.node('a', {
                 href:'#close-menu'
             });
-            var close_txt = document.createTextNode('[close]');
+            var close_txt = document.createTextNode('['+this.close+']');
             close.appendChild(close_txt);
             li.appendChild(close);
             ul.appendChild(li);
