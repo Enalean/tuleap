@@ -84,6 +84,7 @@ if (isset($submit)) {
 		$file_flags="file_user_$row_dev[user_id]";
 		$wiki_flags="wiki_user_$row_dev[user_id]";
 		$svn_flags="svn_user_$row_dev[user_id]";
+		$news_flags="news_user_$row_dev[user_id]";
 		
 		$res = db_query('UPDATE user_group SET ' 
 			."admin_flags='".$$admin_flags."',"
@@ -94,6 +95,7 @@ if (isset($submit)) {
 			."file_flags='".$$file_flags."', "
 			."patch_flags='".$$patch_flags."', "
 			."wiki_flags='".$$wiki_flags."', "
+			."news_flags='".$$news_flags."', "
 			."support_flags='".$$support_flags."', "
 			."svn_flags='".$$svn_flags."' "
 			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
@@ -137,7 +139,8 @@ $res_dev = db_query("SELECT user.user_name AS user_name,"
 	. "user_group.file_flags, "
 	. "user_group.support_flags, "
         . "user_group.wiki_flags, "
-	. "user_group.svn_flags "
+	. "user_group.svn_flags, "
+	. "user_group.news_flags "
 	. "FROM user,user_group WHERE "
 	. "user.user_id=user_group.user_id AND user_group.group_id=$group_id "
 	. "ORDER BY user.user_name");
@@ -172,6 +175,9 @@ if ($project->usesForum()) {
 }
 if ($project->usesWiki()) {
     print '<TD><B>'.$Language->getText('project_admin_userperms','wiki').'</B></TD>';
+}
+if ($project->usesNews()) {
+    print '<TD><B>'.$Language->getText('project_admin_userperms','news').'</B></TD>';
 }
 if ($project->usesPm()) {
 	print '<TD><B>'.$Language->getText('project_admin_userperms','task_man').'</B></TD>';
@@ -247,7 +253,16 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
             print '</SELECT></FONT></TD>';
         }
 
-        // project selects
+        // News
+	if ($project->usesNews()) {
+	    print '<TD><FONT size="-1"><SELECT name="news_user_'.$row_dev['user_id'].'">';
+	    print '<OPTION value="0"'.(($row_dev['news_flags']==0)?" selected":"").'>'.$Language->getText('project_admin_userperms','read_perms');
+            print '<OPTION value="1"'.(($row_dev['news_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','write_perms');
+            print '<OPTION value="2"'.(($row_dev['news_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
+	    print '</SELECT></FONT></TD>';
+	}
+	    
+	// project selects
         if ($project->usesPm()) {
             print '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
             print '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>'.$Language->getText('global','none');

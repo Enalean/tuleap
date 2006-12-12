@@ -159,6 +159,16 @@ function user_ismember($group_id,$type=0) {
 			$query .= " AND wiki_flags = '2'";
 			break;
 		}
+		case 'N1': {
+			//News write perm
+			$query .= " AND news_flags = '1'";
+			break;
+		}
+		case 'N2': {
+			//News admin
+			$query .= " AND news_flags = '2'";
+			break;
+		}
 		case 'SVN_ADMIN': {
 			//svn release admin
 			$query .= " AND svn_flags = '2'";

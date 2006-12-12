@@ -79,7 +79,7 @@ if (isset($show_confirm) && $show_confirm) {
 
 	// make the current user a project admin as well as admin
 	// on all CodeX services
-	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags,wiki_flags) VALUES ("
+	$result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags,wiki_flags,news_flags) VALUES ("
 		. user_getid() . ","
 		. $group_id . ","
 		. "'A'," // admin flags
@@ -90,7 +90,8 @@ if (isset($show_confirm) && $show_confirm) {
 		. "2," // support flags
 		. "2," // doc flags
 		. "2," // file_flags	
-		. "2)"); // wiki_flags	
+		. "2," // wiki_flags
+		 . "2)"); // news_flags	
 	if (!$result) {
 	    exit_error($Language->getText('global','error'),$Language->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
 	}

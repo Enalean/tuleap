@@ -472,6 +472,7 @@ project_admin_userperms	cvs_write	CVS Write
 project_admin_userperms	bug_track	Bug Tracking
 project_admin_userperms	forums	Forums
 project_admin_userperms	wiki	Wiki
+project_admin_userperms	news	News
 project_admin_userperms	svn	SVN
 project_admin_userperms	task_man	Task Manager
 project_admin_userperms	patch_man	Patch Manager
@@ -487,6 +488,8 @@ project_admin_userperms	admin	Admin
 project_admin_userperms	tech&admin	Tech & Admin
 project_admin_userperms	moderator	Moderator
 project_admin_userperms	upd_user_perm	Update User Permissions
+project_admin_userperms	read_perms	Read
+project_admin_userperms	write_perms	Write
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_deps_export.php
