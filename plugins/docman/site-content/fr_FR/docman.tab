@@ -284,10 +284,15 @@ plugin_docman	new_document_wiki	Page wiki
 plugin_docman	new_folder	Nouveau dossier
 plugin_docman	new_folder_action	Créer le dossier
 plugin_docman	new_generalproperties	Propriétés
+plugin_docman	new_in	Dans :&nbsp;
 plugin_docman	new_location	Chemin
+plugin_docman	new_need_to_be_manager	<br />Vous devez avoir les droits de Gestionnaire pour définir les permissions.
+plugin_docman	new_other_folders	autres dossiers:
 plugin_docman	new_position	Position :
+plugin_docman	new_same_perms_as_parent	Les même permissions que celles du parent.
 plugin_docman	new_specificproperties	Nature du document
 plugin_docman	new_mandatory_help	* Champ obligatoire
+plugin_docman	new_view_change	voir/changer
 
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
