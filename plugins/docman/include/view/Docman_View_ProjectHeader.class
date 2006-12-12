@@ -19,6 +19,7 @@ require_once('Docman_View_Header.class');
                 'folderSpinner' => $di->getFolderSpinner(),
                 'spinner'       => $di->getSpinner(),
                 'language'      => array(
+                    'btn_close'                => $GLOBALS['Language']->getText('global','btn_close'),
                     'new_in'                   => $GLOBALS['Language']->getText('plugin_docman','new_in'),
                     'new_other_folders'        => $GLOBALS['Language']->getText('plugin_docman','new_other_folders'),
                     'new_same_perms_as_parent' => $GLOBALS['Language']->getText('plugin_docman','new_same_perms_as_parent'),

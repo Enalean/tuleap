@@ -186,7 +186,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 this.showOptions_Menus = {};
             }
             if (!this.showOptions_Menus[item_id]) {
-                this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.close});
+                this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.btn_close});
             }
         }).bind(this));
     },
@@ -443,7 +443,7 @@ Object.extend(com.xerox.codex.Menu.prototype, {
     initialize:function(item_id, docman, options) {
         this.item_id = item_id;
         this.docman = docman;
-        this.close = this.options.close
+        this.close = options.close;
         Event.observe($('docman_item_show_menu_'+item_id), 'click', this.show.bind(this));
     },
     show:function(evt) {
