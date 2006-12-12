@@ -36,7 +36,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
     function retreivePermissionsForItems($itemsIds, $perms, $ugroupIds) {
         $sql = 'SELECT *'.
             ' FROM permissions'.
-            ' WHERE object_id IN ('.implode(',', $itemsIds).')'.
+            " WHERE object_id IN ('".implode("','", $itemsIds)."')".
             ' AND permission_type IN ('.implode(',', $perms).')'.
             ' AND ugroup_id IN ('.implode(',', $ugroupIds).')';
         return $this->retrieve($sql);
