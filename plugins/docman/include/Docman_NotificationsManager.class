@@ -23,6 +23,7 @@
  * $Id$
  */
 require_once('common/event/NotificationsManager.class');
+require_once('Docman_ItemFactory.class');
 require_once('common/mail/Mail.class');
 require_once('Docman_Path.class');
 class Docman_NotificationsManager extends NotificationsManager { 
@@ -43,22 +44,36 @@ class Docman_NotificationsManager extends NotificationsManager {
         $this->_url          =  $url;
         $this->_listeners    =  array();
         $this->_feedback     =& $feedback;
-        $this->_item_factory =& new Docman_ItemFactory();
+        $this->_item_factory =& $this->_getItemFactory();
         $this->_messages     =  array();
-        if ($g = group_get_object($group_id)) {
+        if ($g =& $this->_groupGetObject($group_id)) {
             $this->_group_name = $g->getPublicName();
         }
     }
-    
+    function &_getItemFactory() {
+        return new Docman_ItemFactory();
+    }
+    function &_groupGetObject($group_id) {
+        return group_get_object($group_id);
+    }
+    function &_getUserManager() {
+        return UserManager::instance();
+    }
+    function &_getPermissionsManager() {
+        return Docman_PermissionsManager::instance($this->_group_id);
+    }
+    function &_getDocmanPath() {
+        return new Docman_Path();
+    }
     function somethingHappen($event, $params) {
-        $um =& UserManager::instance();
-        $params['path'] =& new Docman_Path();
+        $um =& $this->_getUserManager();
+        $params['path'] =& $this->_getDocmanPath();
         $users = $this->_getListeningUsers($event, $params);
         if ($users) {
             while($users->valid()) {
                 $u = $users->current();
                 $user =& $um->getUserById($u['user_id']);
-                $dpm =& Docman_PermissionsManager::instance($this->_group_id);
+                $dpm =& $this->_getPermissionsManager();
                 if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['object_id'])) {
                     $this->_buildMessage($event, $params, $user);
                 }

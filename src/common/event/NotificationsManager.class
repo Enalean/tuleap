@@ -26,7 +26,7 @@ require_once('common/dao/NotificationsDao.class');
 /* abstract */ class NotificationsManager { /* implements EventListener */
 
     function NotificationsManager() {
-        $this->_getDao();
+        $this->dao =& $this->_getDao();
     }
     
     function add($user_id, $object_id) {
@@ -50,7 +50,7 @@ require_once('common/dao/NotificationsDao.class');
     }
     
     var $dao;
-    function _getDao() {
+    function &_getDao() {
         if (!$this->dao) {
             $this->dao = new NotificationsDao(CodexDataAccess::instance());
         }
