@@ -56,7 +56,7 @@ class FRSPackageFactory {
 
         $data_array =& $dar->current();
 
-        return(FRSPackageFactory::getPackageFromArray($data_array));
+        return(FRSPackageFactory::getFRSPackageFromArray($data_array));
     }
     
     function &getFRSPackagesFromDb($group_id) {
