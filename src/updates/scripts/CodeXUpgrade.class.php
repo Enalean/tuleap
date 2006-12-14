@@ -41,8 +41,9 @@ class Update_001 extends CodeXUpgrade {
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
 require_once((getenv('SF_LOCAL_INC_PREFIX')?getenv('SF_LOCAL_INC_PREFIX'):'').'/etc/codex/conf/local.inc');
+require($GLOBALS['db_config_file']);
 //database abstraction
-require_once('database.php');
+require_once(dirname(__FILE__).'/../../www/include/database.php');
 
 define("WEB_ENVIRONMENT", "web");
 define("CONSOLE_ENVIRONMENT", "console");
@@ -179,9 +180,13 @@ define("CONSOLE_ENVIRONMENT", "console");
     function storeUpgrade() {
         $upgrade_stored = false;
         if ($this->isDatabaseconnected()) {
+            $errors = array();
+            foreach( $this->getUpgradeErrors() as $e) {
+                $errors[] = mysql_real_escape_string($e);
+            }
             // Store the upgrade into database
             $sql = "INSERT INTO plugin_serverupdate_upgrade(date, script, execution_mode, success, error) ";
-            $sql .= "VALUES (UNIX_TIMESTAMP(), '".get_class($this)."', '".$this->getEnvironment()."', '".(($this->isUpgradeError())?0:1)."', '".implode( "; ", $this->getUpgradeErrors())."')";
+            $sql .= "VALUES (UNIX_TIMESTAMP(), '".get_class($this)."', '".$this->getEnvironment()."', '".(($this->isUpgradeError())?0:1)."', '".implode( "; ", $errors)."')";
             $resource = db_query($sql);
             if (db_affected_rows($resource) == 1) {
                 $upgrade_stored = true;
