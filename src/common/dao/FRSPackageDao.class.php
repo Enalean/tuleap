@@ -53,10 +53,8 @@ class FRSPackageDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function searchByGroupId($id) {
-        $_id = (int) $id;
-        $sql = sprintf("SELECT * FROM frs_package WHERE group_id = %s",
-                $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+        $_id = (int) $id; 
+        return $this->_search(' p.group_id = '.$_id, '', ' ORDER BY rank ASC ');
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
@@ -66,6 +64,15 @@ class FRSPackageDao extends DataAccessObject {
             .(trim($where) != '' ? ' WHERE '.$where.' ' : '') 
             .$group
             .$order;
+        return $this->retrieve($sql);
+    }
+    
+    
+    function isPackageNameExists($package_name, $group_id){
+    	$_group_id = (int) $group_id;
+    	$sql = sprintf("SELECT * FROM frs_package WHERE group_id = %s AND name = %s",
+                $this->da->quoteSmart($_group_id),
+                $this->da->quoteSmart(htmlspecialchars($package_name)));
         return $this->retrieve($sql);
     }
     
@@ -112,6 +119,7 @@ class FRSPackageDao extends DataAccessObject {
             .' VALUES ('.implode(', ', $values).')';
         return $this->_createAndReturnId($sql);
     }
+    
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();

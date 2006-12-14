@@ -60,12 +60,19 @@ class FRSReleaseDao extends DataAccessObject {
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
-        $sql = 'SELECT p.* '
+        $sql = 'SELECT r.* '
             .' FROM frs_release AS r '
             .(count($from) > 0 ? ', '.implode(', ', $from) : '') 
             .(trim($where) != '' ? ' WHERE '.$where.' ' : '') 
             .$group
             .$order;
+        return $this->retrieve($sql);
+    }
+    
+    function searchActiveReleasesByPackageId($id){
+    	$_id = (int) $id;
+        $sql = sprintf("SELECT * FROM frs_release WHERE package_id = %s AND status_id = 1",
+                $this->da->quoteSmart($_id));
         return $this->retrieve($sql);
     }
     
