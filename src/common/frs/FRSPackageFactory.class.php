@@ -63,7 +63,6 @@ class FRSPackageFactory {
         $_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();
         $dar = $dao->searchByGroupId($_id);
-
         if($dar->isError()){
             return;
         }
@@ -73,12 +72,26 @@ class FRSPackageFactory {
         }
         
         $packages = array();
-		while ($dar->valid()){
+		while ($dar->valid()){		
         	$data_array =& $dar->current();
-        	$packages[] = FRSPackageFactory::getPackageFromArray($data_array);
+        	$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+        	$dar->next();
 		}
 
         return $packages;
+    }
+
+    
+    function isPackageNameExists($package_name, $group_id){
+    	$_id = (int) $group_id;
+        $dao =& $this->_getFRSPackageDao();
+        $dar = $dao->isPackageNameExists($package_name, $_id);
+
+        if($dar->isError()){
+            return;
+        }
+        
+        return $dar->valid();
     }
     
     

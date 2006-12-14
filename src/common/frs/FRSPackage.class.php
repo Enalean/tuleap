@@ -13,7 +13,7 @@
  */
  
 require_once('common/include/Error.class.php');
-//require_once('common/frs/FRSRelease.class');
+require_once('common/frs/FRSReleaseFactory.class.php');
 
 
 
@@ -242,10 +242,8 @@ class FRSPackage extends Error {
 	function &getReleases() {
 		if (!is_array($this->package_releases) || count($this->package_releases) < 1) {
 			$this->package_releases=array();
-			$res=db_query("SELECT * FROM frs_release WHERE package_id='".$this->getID()."'");
-			while ($arr = db_fetch_array($res)) {
-				$this->package_releases[]=new FRSRelease($this,$arr['release_id'],$arr);
-			}
+			$frspf = new FRSReleaseFactory();
+			$this->package_releases = $frspf->getFRSReleasesFromDb($this->getID());
 		}
 		return $this->package_releases;
 	}

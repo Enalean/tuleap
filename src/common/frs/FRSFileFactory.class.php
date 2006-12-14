@@ -56,7 +56,7 @@ class FRSFileFactory {
 
         $data_array =& $dar->current();
 
-        return(FRSFileFactory::getFileFromArray($data_array));
+        return(FRSFileFactory::getFRSFileFromArray($data_array));
     }
     
     function &getFRSFilesFromDb($release_id) {
@@ -75,7 +75,8 @@ class FRSFileFactory {
         $files = array();
 		while ($dar->valid()){
         	$data_array =& $dar->current();
-        	$files[] = FRSFileFactory::getFileFromArray($data_array);
+        	$files[] = FRSFileFactory::getFRSFileFromArray($data_array);
+        	$dar->next();
 		}
 
         return $files;
@@ -100,6 +101,12 @@ class FRSFileFactory {
         $dao =& $this->_getFRSFileDao();
         $id = $dao->createFromArray($data_array);
         return $id;
+    }
+    
+    function delete($file_id){
+    	$_id = (int) $file_id;
+    	$dao =& $this->_getFRSFileDao();
+    	return $dao->delete($_id);
     }
 
 }

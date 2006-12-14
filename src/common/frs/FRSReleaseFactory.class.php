@@ -56,7 +56,7 @@ class FRSReleaseFactory {
 
         $data_array =& $dar->current();
 
-        return(FRSReleaseFactory::getReleaseFromArray($data_array));
+        return(FRSReleaseFactory::getFRSReleaseFromArray($data_array));
     }
     
     function &getFRSReleasesFromDb($package_id) {
@@ -75,10 +75,24 @@ class FRSReleaseFactory {
         $releases = array();
 		while ($dar->valid()){
         	$data_array =& $dar->current();
-        	$releases[] = FRSReleaseFactory::getReleaseFromArray($data_array);
+        	$releases[] = FRSReleaseFactory::getFRSReleaseFromArray($data_array);
+        	$dar->next();
 		}
 
         return $releases;
+    }
+    
+    function isActiveReleases($package_id){
+    	$_id = (int) $package_id;
+        $dao =& $this->_getFRSReleaseDao();
+        $dar = $dao->searchActiveReleasesByPackageId($_id);
+
+        if($dar->isError()){
+            return;
+        }
+        
+        return $dar->valid();
+
     }
     
     var $dao;
