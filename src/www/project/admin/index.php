@@ -13,6 +13,7 @@ require_once('common/include/TemplateSingleton.class');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('pfamily.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -37,7 +38,6 @@ $group = group_get_object($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
   exit_no_group();
 }
-
 
 if (isset($func)) {
     /*
@@ -133,7 +133,11 @@ if (isset($func)) {
        }
        $mode = "admin";
        require('../../tracker/import.php');
-    } */
+    } */ else if (ProjectFamilyActionHandler($group_id, $func)) {
+		// project family handler did it all!
+	} else {
+		exit_error("unknown action: ".$func, "");	//should not occur (no translation required) 
+	}
 }
 
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',group_getname($group_id)),'group'=>$group_id,
@@ -213,6 +217,7 @@ print '
 <HR NoShade SIZE="1">
 <P>
 '.$Language->getText('project_admin_index','built_from_template','<A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_name.' </B></A>');
+
 $HTML->box1_bottom(); 
 
 echo '
@@ -395,5 +400,4 @@ if ($project->usesFile()) {
 
 <?php
 project_admin_footer(array());
-
 ?>

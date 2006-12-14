@@ -14,6 +14,7 @@
 require_once('common/include/TemplateSingleton.class');
 
 $GLOBALS['Language']->loadLanguageMsg('project/project');
+$GLOBALS['Language']->loadLanguageMsg('pfamily', 'pfamily');
 
 function project_admin_header($params) {
 	global $group_id,$feedback,$Language;
@@ -27,7 +28,8 @@ function project_admin_header($params) {
         echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
-	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
+	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A> |
+	<A HREF="/project/admin/pfamilyadmin.php?group_id='.$group_id.'">'.$Language->getText('plugin_pfamily', 'project_families_admin').'</A>';
         echo '</td><td>';
 	if (isset($params['help'])) {
 	    echo help_button($params['help'],false,$Language->getText('global','help'));
