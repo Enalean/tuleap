@@ -13,6 +13,7 @@ require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactTypeFactory.class');
 require_once('common/wiki/lib/Wiki.class');
 require_once('www/project/admin/permissions.php');
+require_once('pfamily.php');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -25,7 +26,6 @@ if ($project->isFoundry()) {
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 
 site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
-
 
 // ########################################### end top area
 
@@ -56,6 +56,8 @@ if ($project->getDescription()) {
 }
 
 print '<a href="/project/showdetails.php?group_id='.$group_id.'"> '. $details_prompt .'</a>';
+
+showProjectFamilyLinkButton($group_id);
 
 // trove info
 print '<BR>&nbsp;<BR>';
@@ -100,6 +102,13 @@ if (! $project->hideMembers()) {
     print "&nbsp;";
  }
 
+print '
+</TD><TD NoWrap VALIGN="top">
+';
+
+//================== Project Family
+showProjectFamilylinks($group_id, FALSE);
+ 
 print '
 </TD></TR>
 </TABLE>
@@ -471,7 +480,7 @@ if ($project->usesNews()) {
 	<?php
 	// ############################# Latest News
 
-				 echo $HTML->box1_top($Language->getText('include_project_home','latest_news').'&nbsp;<A href="/export/rss_sfnews.php?group_id='.$group_id.'" title="'.$Language->getText('include_project_home','latest_news').' - '.$Language->getText('include_features_boxes','rss_format').'">['.$Language->getText('include_features_boxes','xml').']</A>');
+	echo $HTML->box1_top($Language->getText('include_project_home','latest_news').'&nbsp;<A href="/export/rss_sfnews.php?group_id='.$group_id.'" title="'.$Language->getText('include_project_home','latest_news').' - '.$Language->getText('include_features_boxes','rss_format').'">['.$Language->getText('include_features_boxes','xml').']</A>');
 
 	echo news_show_latest($group_id,10,false);
 
