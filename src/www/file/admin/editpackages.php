@@ -7,7 +7,9 @@
 // $Id$
 
 require_once('pre.php');    
-require_once('www/project/admin/permissions.php');    
+require_once('www/project/admin/permissions.php');   
+require_once('common/frs/FRSPackageFactory.class.php'); 
+require_once('common/frs/FRSReleaseFactory.class.php'); 
 require_once('www/file/file_utils.php');
 $Language->loadLanguageMsg('file/file');
 
@@ -22,7 +24,8 @@ if (!user_ismember($group_id,'R2')) {
 
 
 */
-
+ $frspf = new FRSPackageFactory();
+ $frsrf = new FRSReleaseFactory();
 if (isset($submit)) {
     /*
 		make updates to the database
@@ -31,14 +34,13 @@ if (isset($submit)) {
 	if ($func=='add_package' && $package_name) {
 
 	  //make sure that the package_name does not already exist
-          $query = "SELECT * from frs_package where group_id=".$group_id." AND name='".htmlspecialchars($package_name)."'";
-	  $res = db_query($query);
-	  if ($res && (db_numrows($res) > 0)) {
+	  if ($frspf->isPackageNameExists($package_name, $group_id)) {
 	    $feedback .= ' '.$Language->getText('file_admin_editpackages','p_name_exists').' ';
 	  } else {
 		//create a new package
-		db_query("INSERT INTO frs_package (group_id,name,rank,status_id,approve_license) ".
-			"VALUES ('$group_id','". htmlspecialchars($package_name)."','$rank','1','$approve_license')");
+		$array = array('group_id' => $group_id, 'name' => htmlspecialchars($package_name), 
+						'rank' => $rank, 'status_id' => 1, 'approve_license' => $approve_license);
+		$frspf->create($array);
 		$feedback .= ' '.$Language->getText('file_admin_editpackages','p_added').' ';
 	  }
 	} else if ($func=='update_package' && $package_id && $package_name && $status_id) {
@@ -48,15 +50,15 @@ if (isset($submit)) {
 // LJ active packages. If only hidden releases are in this package
 // LJ then we can safely hide it.
 // LJ $res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
-			$res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id' AND status_id=1");
-			if (db_numrows($res) > 0) {
+			if ($frsrf->isActiveReleases($package_id)) {
 				$feedback .= ' '.$Language->getText('file_admin_editpackages','cannot_hide').' ';
 				$status_id=1;
 			}
 		}
 		//update an existing package
-		db_query("UPDATE frs_package SET name='". htmlspecialchars($package_name)  ."', status_id='$status_id', rank='$rank', approve_license='$approve_license' ".
-			"WHERE package_id='$package_id' AND group_id='$group_id'");
+		$array = array('package_id' => $package_id, 'name' => htmlspecialchars($package_name), 
+						'rank' => $rank, 'status_id' => $status_id, 'approve_license' => $approve_license);
+		$frspf->update($array);
 		$feedback .= ' '.$Language->getText('file_admin_editpackages','p_updated').' ';
 
 	} else if ($func=='update_permissions') {
@@ -92,8 +94,11 @@ echo '<H3>'.$Language->getText('file_admin_editpackages','packages').'</H3>
 // LJ status_id field was missing from the select statement
 // LJ Causing the displayed status of packages to be wrong
 // LJ $res=db_query("SELECT package_id,name AS package_name FROM frs_packag
-$res=db_query("SELECT status_id,package_id,name AS package_name,rank,approve_license FROM frs_package WHERE group_id='$group_id' ORDER BY rank");
-$rows=db_numrows($res);
+
+
+$res = $frspf->getFRSPackagesFromDb($group_id);
+$rows=count($res);
+
 if (!$res || $rows < 1) {
 	echo '<h4>'.$Language->getText('file_admin_editpackages','no_p_defined').'</h4>';
 } else {
@@ -115,14 +120,14 @@ if (!$res || $rows < 1) {
 		<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_package">
-		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. db_result($res,$i,'package_id') .'">
+		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. $res[$i]->getPackageID().'">
 		<TR class="'. util_get_alt_row_color($i) .'">
 			<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="package_name" VALUE="'. 
-				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
-                        <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.db_result($res,$i,'rank').'"/></TD>
-			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>';
+				$res[$i]->getName().'" SIZE="20" MAXLENGTH="30"></TD>
+                        <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.$res[$i]->getRank().'"/></TD>
+			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', $res[$i]->getStatusID()) .'</TD>';
                 if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
-                    $approve_license=db_result($res,$i,'approve_license');
+                    $approve_license=$res[$i]->getApproveLicense();
                     echo '<TD align="center"><FONT SIZE="-1"><SELECT name="approve_license"> '.
                         '<OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$Language->getText('global','yes').'</OPTION>'.
                         '<OPTION VALUE="0"'.(($approve_license == '0') ? ' SELECTED':'').'>'.$Language->getText('global','no').'</OPTION>'.
@@ -133,10 +138,10 @@ if (!$res || $rows < 1) {
                 echo '
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','update').'"></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
-				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_edit_releases').']</B></A></TD>
+				$res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_edit_releases').']</B></A></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editpackagepermissions.php?package_id='. 
-				db_result($res,$i,'package_id') .'&group_id='. $group_id .'"><B>['; 
-                if (permission_exist('PACKAGE_READ',db_result($res,$i,'package_id'))) {
+				$res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['; 
+                if (permission_exist('PACKAGE_READ',$res[$i]->getPackageID())) {
                     echo $Language->getText('file_admin_editpackages','edit');
                 } else echo $Language->getText('file_admin_editpackages','define');
                 echo ' '.$Language->getText('file_admin_editpackages','perms').']</B></A></TD>';

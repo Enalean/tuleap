@@ -13,6 +13,7 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 require_once('www/file/file_utils.php');
 $Language->loadLanguageMsg('file/file');
 
@@ -21,7 +22,9 @@ if (!user_ismember($group_id,'R2')) {
 }
 
 $package_id=$_GET['package_id']?$_GET['package_id']:$_POST['object_id'];
-$package_name=file_get_package_name_from_id($package_id);
+$frspf = new FRSPackageFactory();
+$package =& $frspf->getFRSPackageFromDb($package_id);
+$package_name = $package->getName();
 if (!$package_name) {
     exit_error($Language->getText('global','error'), $Language->getText('file_admin_editpackagepermissions','p_not_exist'));
 }

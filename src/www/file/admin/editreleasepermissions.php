@@ -13,6 +13,8 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/frs/FRSPackageFactory.class.php');
+require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('www/file/file_utils.php');
 $Language->loadLanguageMsg('file/file');
 
@@ -22,22 +24,24 @@ if (!user_ismember($group_id,'R2')) {
 
 $release_id=$_GET['release_id']?$_GET['release_id']:$_POST['object_id'];
 $package_id=$_GET['package_id'];
+$frspf = new FRSPackageFactory();
+$frsrf = new FRSReleaseFactory();
 
+$res =& $frsrf->getFRSReleaseFromDb($release_id);
 
-$res=db_query("SELECT * FROM frs_release WHERE release_id=$release_id AND package_id=$package_id");
-if (db_numrows($res)<1) {
+if (count($res)<1) {
     exit_error($Language->getText('global','error'), $Language->getText('file_admin_editreleasepermissions','rel_not_exist'));
 }
-$res2=db_query("SELECT * FROM frs_package WHERE package_id=$package_id");
-$package_name=db_result($res2,0,'name');
 
+$package =& $frspf->getFRSPackageFromDb($package_id);
+$package_name=$package->getName();
 file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleasepermissions','edit_rel_perm'), 
 			 'help' => 'FileReleaseDelivery.html#FileAccessPermissions'));
 
 
 
 echo '<H3>'.$Language->getText('file_admin_editreleasepermissions','release').': <a href="/file/admin/editreleases.php?release_id='.$release_id.'&group_id='.$group_id.'">'.
-     db_result($res,0,'name') .
+     $res->getName() .
      '</a> '.$Language->getText('file_admin_editreleasepermissions','from_p').': <a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.
      $package_name.'</a></h3>
 <P>
