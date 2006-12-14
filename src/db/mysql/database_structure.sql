@@ -3263,6 +3263,13 @@ CREATE TABLE ugroup_mapping (
   PRIMARY KEY (to_group_id, src_ugroup_id, dst_ugroup_id)
 );
 
+CREATE TABLE notifications(
+  user_id int( 11 ) NOT NULL ,
+  object_id int( 11 ) NOT NULL ,
+  type varchar( 100 ) NOT NULL default '',
+  PRIMARY KEY  (user_id, object_id, type)
+);
+
 #
 # EOF
 #
