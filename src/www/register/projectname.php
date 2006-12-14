@@ -9,12 +9,12 @@
 require_once('pre.php');    // Initial db and session library, opens session
 session_require(array('isloggedin'=>'1'));
 require_once('account.php');
+require_once('pfamily.php');
 
 $Language->loadLanguageMsg('register/register');
 
 // push received vars
 if ($insert_purpose && $form_purpose && $form_short_description && $built_from_template) { 
-
 	srand((double)microtime()*1000000);
 	$random_num=rand(0,1000000);
 
@@ -59,7 +59,7 @@ if ($insert_purpose && $form_purpose && $form_short_description && $built_from_t
 			   ."group_id,trove_cat_root) VALUES (".$row['trove_cat_id'].",".time().",$group_id,".$row['trove_cat_root'].")");
 		}
 	}
-
+	ProjectFamilyInheritFromTemplate($group_id, $built_from_template);	// copy project family links and types
 } else {
 	exit_error($Language->getText('global','error'),$Language->getText('register_projectname','info_missed'));
 }

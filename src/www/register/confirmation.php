@@ -22,6 +22,7 @@ require_once('common/tracker/ArtifactReport.class');
 require_once('common/tracker/ArtifactReportFactory.class');
 require_once('common/include/ReferenceManager.class');
 require_once('trove.php');
+require_once('pfamily.php');
 
 $Language->loadLanguageMsg('register/register');
 
@@ -217,7 +218,7 @@ if (isset($show_confirm) && $show_confirm) {
 	$result=db_query("DELETE FROM groups ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
-	$result=db_query("DELETE FROM trove_group_link WHERE group_id='$group_id'");
+	ProjectFamilyDeleteAll($group_id);
 
 	echo '
 		<H2>'.$Language->getText('register_confirmation','project_deleted').'</H2>
