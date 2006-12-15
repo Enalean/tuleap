@@ -26,7 +26,7 @@
 
 
 require_once('common/include/Error.class.php');
-//require_once('common/frs/FRSFile.class');
+require_once('common/frs/FRSFile.class.php');
 
 /**
  *	  Factory method which creates a FRSRelease from an release id
@@ -260,12 +260,12 @@ class FRSRelease extends Error {
 	function &getFiles() {
 		if (!is_array($this->release_files) || count($this->release_files) < 1) {
 			$this->release_files=array();
-			$res=db_query("SELECT * FROM frs_file_vw WHERE release_id='".$this->getID()."'");
+			$res=db_query("SELECT * FROM frs_file WHERE release_id='".$this->getReleaseID()."'");
 			while ($arr = db_fetch_array($res)) {
-				$this->release_files[]=new FRSFile($this,$arr['file_id'],$arr);
+				$this->release_files[] = new FRSFile($arr);
 			}
 		}
-		return $this->release_files;
+        return $this->release_files;
 	}
 }
 

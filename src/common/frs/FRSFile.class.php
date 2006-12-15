@@ -143,7 +143,7 @@ class FRSFile extends Error {
 
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
-		if (isset($array['file_name']))     $this->setFileName($array['file_name']);
+		if (isset($array['filename']))     $this->setFileName($array['filename']);
 		if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
         if (isset($array['type_id']))       $this->setTypeID($array['type_id']);
         if (isset($array['processor_id']))  $this->setProcessorID($array['processor_id']);
@@ -155,7 +155,7 @@ class FRSFile extends Error {
     function toArray() {
         $array = array();
         $array['file_id']       = $this->getFileID();
-        $array['file_name']     = $this->getFileName();
+        $array['filename']     = $this->getFileName();
         $array['release_id']    = $this->getReleaseID();
         $array['type_id']       = $this->getTypeID();
         $array['processor_id']  = $this->getProcessorID();
