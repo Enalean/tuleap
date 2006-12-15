@@ -389,7 +389,7 @@ function util_make_links ($data='',$group_id = 0) {
     if(empty($data)) { return $data; }
 
     // www.yahoo.com => http://www.yahoo.com
-    $data = eregi_replace("[ \t\n]www\."," http://www.",$data);
+    $data = eregi_replace("([ \t\n])www\.","\\1http://www.",$data);
 
     // http://www.yahoo.com => <a href="...">...</a>
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]>#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
