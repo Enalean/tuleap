@@ -22,7 +22,10 @@ class Docman_View_Docman extends Docman_View_ProjectHeader {
         $tools = array();
         $this->_addDocmanTool($params, $tools);
         
-        if ($params['hierarchy']->accept(new DocmanOneFolderIsWriteable($this->_controller))) {
+        $dPm  =& Docman_PermissionsManager::instance(($params['group_id']));
+        $user =& $this->_controller->getUser();
+        $oneFolderWritable = $dPm->oneFolderIsWritable($user);
+        if ($oneFolderWritable) {
             $url_params = array('action' => 'newGlobalDocument');
             if (isset($params['item'])) {
                 $url_params['id'] = $params['item']->accept(new Docman_View_ToolbarNewDocumentVisitor());

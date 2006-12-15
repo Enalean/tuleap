@@ -33,7 +33,7 @@ require_once('view/Docman_View_GetFieldsVisitor.class');
 
 require_once('DocmanActions.class');
 require_once('DocmanLastBrowseRequest.class');
-require_once('DocmanOneFolderIsWriteable.class');
+//require_once('DocmanOneFolderIsWriteable.class');
 
 require_once('common/include/Feedback.class');
 
@@ -637,7 +637,7 @@ class Docman extends Controler {
                                         }
                                         break;
                                     case 'newGlobalDocument':
-                                        if ($hierarchy->accept(new DocmanOneFolderIsWriteable($this))) {
+                                        if ($dpm->oneFolderIsWritable($user)) {
                                             $this->view = 'NewDocument';
                                         } else {
                                             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
