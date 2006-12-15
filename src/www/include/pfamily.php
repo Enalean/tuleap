@@ -166,7 +166,7 @@ function showProjectFamilyLinkButton($group_id)
     }
     $ProjectFamilyMaster = user_get_preference("ProjectFamilies_GroupId_master");
     if ($ProjectFamilyMaster && ($ProjectFamilyMaster != $group_id)) {
-        print ' '.MkAH(pf_get_img_link(), "/project/admin/pfamilyadmin.php?disp=".PROJECT_FAMILY_ADMIN_LINK_SHOW."&amp;target_group_id=$group_id&amp;group_id=$ProjectFamilyMaster", $Language->getText('plugin_pfamily','link_to_me', group_getname($ProjectFamilyMaster)));
+        print ' '.MkAH(pf_get_img_add_link(), "/project/admin/pfamilyadmin.php?disp=".PROJECT_FAMILY_ADMIN_LINK_SHOW."&amp;target_group_id=$group_id&amp;group_id=$ProjectFamilyMaster", $Language->getText('plugin_pfamily','link_to_me', group_getname($ProjectFamilyMaster)));
     }
 }
 
@@ -420,7 +420,7 @@ function pf_get_img_main_icon()
 {
     return "<IMG SRC='".util_get_image_theme("project_linking.png")."' HEIGHT='40' WIDTH='101' BORDER='0' ALT='project linking'>";
 }
-function pf_get_img_link()
+function pf_get_img_add_link()
 {
     // returns the HTML to display the project linking create icon
     return '<IMG SRC="'.util_get_image_theme("project_linking_plus.png").'" HEIGHT="21" WIDTH="58" BORDER="0" ALT="add project link">';

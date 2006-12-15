@@ -73,9 +73,9 @@ function pfAdminPage_default($group_id)
     form_SectionStart(pf_get_img_main_icon()." ".$Language->getText('plugin_pfamily','project_families'));
     form_SectionStart();
     form_genCheckbox("EnableProjectLink", $Language->getText('plugin_pfamily','link_enable'), "Y", ((user_get_preference("ProjectFamilies_GroupId_master") == $group_id)?"Y":""), SUBMIT_ON_CHANGE);
-    form_text($Language->getText('plugin_pfamily','link_enable_explanation', pf_get_img_link()));
+    form_text($Language->getText('plugin_pfamily','link_enable_explanation', pf_get_img_add_link()));
     form_Text($Language->getText('plugin_pfamily', 'note_personal_settings'));
-    form_End(FORM_NO_SUBMIT_BUTTON);
+    form_End(FORM_NO_SUBMIT_BUTTON, FORM_NO_RESET_BUTTON);  // this form is submitted when the checkbox is clicked
     $HTML->box1_bottom();
 
     // link types
@@ -149,7 +149,7 @@ function pfAdminPage_updateLink($group_id, $target_group_id, $link_id = NULL)
     $pfLinks = pfamily_get_links($group_id); // check if project already has project link types - otherwise create the defaults
     echo '<TABLE width=100% cellpadding="3" cellspacing="0" border="0">
         <TR valign=top><TD width=50%>';
-    $HTML->box1_top(pf_get_img_link()." ".$Language->getText('plugin_pfamily','link_update_head', array(group_getname($group_id), group_getname($target_group_id))));
+    $HTML->box1_top(pf_get_img_main_icon()." ".$Language->getText('plugin_pfamily','link_update_head', array(group_getname($group_id), group_getname($target_group_id))));
     print MkAH("[".$Language->getText('global', 'btn_cancel')."]", "/project/admin/pfamilyadmin.php?group_id=$group_id");
     print "<hr>\n";
     print "<TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -230,7 +230,9 @@ function pfAdminPage_linkTypeUpdate($group_id, $link_type_id)
                 'uri_plus' => PF_DEFAULT_PROJECT_LINK
             );
     }
-    $HTML->box1_top($Language->getText('plugin_pfamily', 'link_type_update'));
+    $HTML->box1_top(pf_get_img_main_icon()." ".$Language->getText('plugin_pfamily', 'link_type_update'));
+    print MkAH("[".$Language->getText('global', 'btn_cancel')."]", "/project/admin/pfamilyadmin.php?group_id=$group_id");
+    print "<hr>\n";
     form_Start("");
     form_HiddenParams(array(
         "func" => PROJECT_FAMILY_ADMIN_TYPE_UPDATE,

@@ -16,13 +16,12 @@ form_HiddenParams($params) - use passed arry to create for hidden params - typic
 
 form_End($SubmitLegend = NULL, $HaveResetButton = FORM_NO_RESET_BUTTON)
     $SubmitLegend:
-        a value used as the legend on the submit button
-        left null for default "update"
-        FORM_NO_SUBMIT_BUTTON
+        a value used as the legend on the submit button - NULL becomes "update"
+        use FORM_NO_SUBMIT_BUTTON to have no submit button at form end
 
     $HaveResetButton:
-        FORM_HAVE_RESET_BUTTON (default)
-        FORM_NO_RESET_BUTTON
+        FORM_HAVE_RESET_BUTTON
+        FORM_NO_RESET_BUTTON (default)
 
 
 Additional submit buttong can be created:
@@ -61,6 +60,7 @@ form_genCheckbox($ParamName, $Caption, $ValueIfChecked, $DefaultValue = "", $Sub
 form_SelectAllCheckbox($GroupName = "", $isChecked=False) - controls javascript to check all controls in the form, or those on the named group
 
 form_genJSButton($Caption, $JavaScript, $ImageFileHTMLPath = NULL) - creates a button that runs some javaScript
+        - can be called outside a form
 
 =====================
 Each of the form items can include valildation, run as javascript before form submit:
@@ -151,8 +151,10 @@ form_End();
 
 //============================================================================
 // Options for form_End() parameters:
-// HaveResetButton:
+// $SubmitLegend
 define("FORM_NO_SUBMIT_BUTTON", "");
+define("DEFAULT_SUBMIT_BUTTON", NULL);
+// $HaveResetButton:
 define("FORM_HAVE_RESET_BUTTON", 1);
 define("FORM_NO_RESET_BUTTON", 0);
 
@@ -221,7 +223,7 @@ function form_Start($serviceURI = "")
 }
 
 //============================================================================
-function form_End($SubmitLegend = NULL, $HaveResetButton = FORM_NO_RESET_BUTTON)
+function form_End($SubmitLegend = DEFAULT_SUBMIT_BUTTON, $HaveResetButton = FORM_HAVE_RESET_BUTTON )
 {
     global $gInForm, $gFormName, $gFormUsedDateBox, $gFormHiddenParams;
     global $gValidationCollection, $gFormSectionLevel, $gFormGroupLevel, $gPageDateCodeWritten, $gFormCaptions;
@@ -245,7 +247,7 @@ function form_End($SubmitLegend = NULL, $HaveResetButton = FORM_NO_RESET_BUTTON)
         form_genSubmit($SubmitLegend);
     }
     if ($HaveResetButton) {
-        print "<td><INPUT TYPE='reset' Value='Cancel Changes'></td>\n";
+        print "<td><INPUT TYPE='reset' Value='".$Language->getText('form_utils', 'Cancel_Changes')."'></td>\n";
     }
     while ($gFormGroupLevel > 0) {
         form_GroupEnd();
@@ -591,7 +593,7 @@ function form_SelectAllCheckbox($GroupName = "", $isChecked=False)
         print "//-->\n";
         print "</script>\n";
     }
-    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'".($isChecked?" CHECKED":"")." Title='".$Language->getText('form_utils_error', 'Select_All')."'>\n";
+    print "<INPUT onclick=\"formSelectDeselectAll(this, '$gFormName', '$GroupName');\" type='checkbox'".($isChecked?" CHECKED":"")." Title='".$Language->getText('form_utils', 'Select_All')."'>\n";
 }
 
 //============================================================================
@@ -615,18 +617,25 @@ function form_HiddenParams($params)
 function form_genJSButton($Caption, $JavaScript, $ImageFileHTMLPath = NULL)
 {
 // JavaScript must use only single quotes, since the double quotes are used to enclose it
+    global $gInForm;
+
     $CaptionReplaced = addslashes(strip_tags(Nz($Caption, "Go")));
     if (stristr($JavaScript, '"')) {
         trigger_error("form_GenJSButton: JavaScript must not use double quotes");
     }
-    print "<td><button type='button'".FORM_BUTTON_STYLE." onclick=\"javascript:$JavaScript;\" title='$CaptionReplaced' name='$CaptionReplaced'>";
+    if ($gInForm) {
+        print "<td>";
+    }
+    print "<button type='button'".FORM_BUTTON_STYLE." onclick=\"javascript:$JavaScript;\" title='$CaptionReplaced' name='$CaptionReplaced'>";
     if (is_null($ImageFileHTMLPath)) {
         print $Caption;
     } else {
         print "<img src='$ImageFileHTMLPath' alt='$Caption'>";
     }
     print "</button>";
-    print "</td>\n";
+    if ($gInForm) {
+        print "</td>\n";
+    }
 }
 
 //============================================================================
@@ -955,17 +964,26 @@ function Nz($item, $default)
 //============================================================================
 function MkAH($caption, $URL, $title = "", $params = NULL)
 {
-    $str = "<a href='".str_replace("'", "&#039;", $URL)."'";
-    if (! is_null($params)) {
+    // $params = array("param" => "value"); e.g. $params = array("onclick" => "function()") - NOTE: additional parameters must not use double quotes
+    return "<a href='".str_replace("'", "&#039;", $URL)."'".
+        _parseAdditionalParams($params).
+        ((strlen($title) <= 0)?"":" title='".str_replace("'", "&#039;", $title)."'").
+        ">$caption</a>";
+}
 
-    foreach ($params as $item => $value) {
-        if (stristr($value, '"')) {
-            trigger_error("MkAH: additional parameters must not use double quotes");
-        }
+//============================================================================
+function _parseAdditionalParams($params = NULL)
+{
+    $str = "";
+    if (! is_null($params)) {
+        foreach ($params as $item => $value) {
+            if (stristr($value, '"')) {
+                trigger_error("MkAH: additional parameters must not use double quotes");
+            }
             $str .= " ".$item."=\"".$value."\"";
         }
     }
-    return $str.((strlen($title) <= 0)?"":" title='".str_replace("'", "&#039;", $title)."'").">$caption</a>";;
+    return $str;
 }
 
 //==================================================================================
