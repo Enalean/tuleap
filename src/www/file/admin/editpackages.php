@@ -34,7 +34,7 @@ if (isset($submit)) {
 	if ($func=='add_package' && $package_name) {
 
 	  //make sure that the package_name does not already exist
-	  if ($frspf->isPackageNameExists($package_name, $group_id)) {
+	  if ($frspf->isPackageNameExist($package_name, $group_id)) {
 	    $feedback .= ' '.$Language->getText('file_admin_editpackages','p_name_exists').' ';
 	  } else {
 		//create a new package
