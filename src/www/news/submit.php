@@ -24,9 +24,14 @@ if (user_isloggedin()) {
              if one isn't already there
             */
 
-            $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
+            //if news is declared as private, force the $promote_news to '0' value (to not be promoted)
+	    if ($promote_news == '3' && $private_news == '3') {
+		$promote_news="0";
+	    }	    
+	    
+	    $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
             $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
-                " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
+                " VALUES ('$group_id','".user_getid()."','$promote_news','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
             $result=db_query($sql);
                
 	    if (!$result) {
@@ -34,10 +39,9 @@ if (user_isloggedin()) {
             } else {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
 		// set permissions on this piece of news
-		if ($private_news) {
-		  news_insert_permissions($new_id,$group_id);
-		}
-            }
+		$ugroup_id=$private_news;  
+		news_insert_permissions($new_id,$ugroup_id);
+            }		
 	}
 
 	//news must now be submitted from a project page - 
@@ -72,12 +76,18 @@ if (user_isloggedin()) {
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>
 		<P><TABLE BORDER=0>
 		<TR><TD><B>'.$Language->getText('news_submit','news_privacy').':</B></TD>
-		<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="0" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
-		<TR><TD></TD><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1">'. $Language->getText('news_submit','private_news').'</TD></TR> 
+		<TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
+		<TR><TD></TD><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="3">'. $Language->getText('news_submit','private_news').'</TD></TR> 
 		</TABLE><P>
+		<TABLE BORDER=0>
+		<TR><TD><B>'.$Language->getText('news_submit','news_promote',$GLOBALS['sys_name']).' : </B></TD>
+		<TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="3" CHECKED>'.$Language->getText('global','yes').'</TD>
+		<TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="0">'.$Language->getText('global','no').'</TD>
+		</TR></TABLE><P>		
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
+	$feedback = $Language->getText('news_submit','promote_warn',$GLOBALS['sys_name']);
 	news_footer(array());
 
     } else {

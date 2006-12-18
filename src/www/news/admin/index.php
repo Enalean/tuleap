@@ -116,8 +116,8 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index','delete').'<BR>
 	        
 		<B>'.$Language->getText('news_submit','news_privacy').':</B><BR> 
-		<INPUT TYPE="RADIO" NAME="is_private" VALUE="0" '.$check_public.'> '.$Language->getText('news_submit','public_news').'<BR>
-		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_private.'> '.$Language->getText('news_submit','private_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_public.'> '.$Language->getText('news_submit','public_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="3" '.$check_private.'> '.$Language->getText('news_submit','private_news').'<BR>
 		
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="44" MAXLENGTH="60"><BR>
@@ -240,7 +240,17 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			Show list of waiting news items
 		*/
 
-		$sql="SELECT * FROM news_bytes WHERE is_approved=0";
+		if ($approve_all) {
+		    $sql="UPDATE news_bytes SET is_approved='1' WHERE is_approved='3'";
+		    $res=db_query($sql);
+		    if (!$res) {
+		        $feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
+		    } else {
+		        $feedback .= ' '.$Language->getText('news_admin_index','newsbyte_updated').' ';
+		    }
+		}
+				
+		$sql="SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
 		$result=db_query($sql);
 		$rows=db_numrows($result);
 		if ($rows < 1) {
@@ -249,7 +259,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 		} else {
 			echo '
 				<H4>'.$Language->getText('news_admin_index','need_approve').'</H4>
-				<P>';
+				<P><ul><li><strong>'.$Language->getText('news_admin_index','approve_legend',$GLOBALS['sys_name']).'
+				</strong></ul><P>';
+				
 			for ($i=0; $i<$rows; $i++) {
 			    //if the news is private, not display it in the list of news to be approved
 			    $forum_id=db_result($result,$i,'forum_id');  
@@ -257,10 +269,27 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			    // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
 			    // with ST DB state
 			    if ((db_numrows($res) < 1) || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
-			        echo '
-				    <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+			        $is_approved=db_result($result,$i,'is_approved');
+				if ($is_approved == '3'){				    
+				    //the submitter of this news asked to promote it ==>  display an icon
+				    echo '
+				        <IMG SRC="'.util_get_image_theme("ic/p_news.png").'" BORDER="0"> <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+				} else {				    							        
+				    echo '
+				        <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+			        }
 			    }
 			}
+		}
+
+		//Display [Approve All] hyper-link when there are news asked for promotion
+		$sql="SELECT * FROM news_bytes WHERE is_approved=3";
+		$res=db_query($sql);
+		if (db_numrows($res) > 0) {
+		    echo '<P>
+			 <A HREF="/news/admin/?approve_all=1">'.$Language->getText('news_admin_index','approve_all').'</A>';   
+		} else {
+		    echo '<P>'.$Language->getText('news_admin_index','approved');   
 		}
 
 		/*
