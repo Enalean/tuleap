@@ -33,9 +33,9 @@ class FRSFile extends Error {
      */
     var $file_id;	
     /**
-     * @var int $file_name the name of this FRSFile
+     * @var int $filename the name of this FRSFile
      */
-    var $file_name;
+    var $filename;
     /**
      * @var int $release_id the ID of the release this FRSFile belong to
      */
@@ -63,7 +63,7 @@ class FRSFile extends Error {
     
     function FRSFile($data_array = null) {
         $this->file_id       = null;
-        $this->file_name     = null;
+        $this->filename     = null;
         $this->release_id    = null;
         $this->type_id       = null;
         $this->processor_id  = null;
@@ -85,11 +85,11 @@ class FRSFile extends Error {
     }
     
     function getFileName() {
-        return $this->file_name;
+        return $this->filename;
     }
     
-    function setFileName($file_name) {
-        $this->file_name = $file_name;
+    function setFileName($filename) {
+        $this->filename = $filename;
     }
     
     function getReleaseID() {

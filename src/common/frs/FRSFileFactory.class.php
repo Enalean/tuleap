@@ -41,10 +41,15 @@ class FRSFileFactory {
         return $frs_file;
     }
 
-    function &getFRSFileFromDb($file_id) {
+    function &getFRSFileFromDb($file_id, $group_id=null) {
         $_id = (int) $file_id;
         $dao =& $this->_getFRSFileDao();
-        $dar = $dao->searchById($_id);
+        if($group_id){
+        	$_group_id = (int) $group_id;
+        	$dar = $dao->searchInReleaseById($_id, $group_id);
+        }else{
+        	$dar = $dao->searchById($_id);
+        }
 
         if($dar->isError()){
             return;
@@ -82,6 +87,18 @@ class FRSFileFactory {
         return $files;
     }
     
+    function isFileNameExist($file_name, $group_id){
+    	$_id = (int) $group_id;
+        $dao =& $this->_getFRSFileDao();
+        $dar = $dao->isFileNameExist($file_name, $_id);
+
+        if($dar->isError()){
+            return;
+        }
+        
+        return $dar->valid();
+    }
+    
     var $dao;
     
     function &_getFRSFileDao() {
@@ -103,11 +120,44 @@ class FRSFileFactory {
         return $id;
     }
     
-    function delete($file_id){
+    function _delete($file_id){
     	$_id = (int) $file_id;
     	$dao =& $this->_getFRSFileDao();
     	return $dao->delete($_id);
     }
+    
+/*
+
+Physically delete a file from the download server and database
+
+First, make sure the file is theirs
+Second, delete it from the db
+Third, delete it from the download server
+
+return 0 if file not deleted, 1 otherwise
+*/
+    function delete_file ($group_id,$file_id) {
+	  	GLOBAL $ftp_incoming_dir;
+
+
+	  	$file =& $this->getFRSFileFromDb($file_id, $group_id); 
+	  	
+	  	if (!$file) {
+	    	//file not found for this project
+	    	return 0;
+	  	} else {
+	    	/*
+	    	   delete the file from the database
+	    	*/
+	    	$file_name = $file->getFileName();
+	    	$this->_delete($file_id);
+	    //append the filename and project name to a temp file for the root perl job to grab
+	    	$time = time();
+	    	exec ("/bin/echo \"". $file_name ."::". group_getunixname($group_id) ."::$time\" >> $ftp_incoming_dir/.delete_files");
+	
+	    	return 1;
+	  	}
+	}
 
 }
 

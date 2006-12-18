@@ -41,10 +41,34 @@ class FRSPackageFactory {
         return $frs_package;
     }
 
-    function &getFRSPackageFromDb($package_id) {
+    function &getFRSPackageFromDb($package_id = null, $group_id=null, $release_id=null) {
         $_id = (int) $package_id;
         $dao =& $this->_getFRSPackageDao();
-        $dar = $dao->searchById($_id);
+        if($group_id){
+        	$_group_id = (int) $group_id;
+        	$dar = $dao->searchInGroupById($_id, $_group_id);
+        }else{
+        	$dar = $dao->searchById($_id);
+        }
+
+        if($dar->isError()){
+            return;
+        }
+        
+        if(!$dar->valid()) {
+            return;
+        }
+
+        $data_array =& $dar->current();
+
+        return(FRSPackageFactory::getFRSPackageFromArray($data_array));
+    }
+    
+    function &getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
+        $_id = (int) $release_id;
+        $_group_id = (int) $group_id;
+        $dao =& $this->_getFRSPackageDao();
+        $dar = $dao->searchInGroupByReleaseId($_id, $_group_id);
 
         if($dar->isError()){
             return;
@@ -82,10 +106,10 @@ class FRSPackageFactory {
     }
 
     
-    function isPackageNameExists($package_name, $group_id){
+    function isPackageNameExist($package_name, $group_id){
     	$_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();
-        $dar = $dao->isPackageNameExists($package_name, $_id);
+        $dar = $dao->isPackageNameExist($package_name, $_id);
 
         if($dar->isError()){
             return;

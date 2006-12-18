@@ -242,8 +242,8 @@ class FRSPackage extends Error {
 	function &getReleases() {
 		if (!is_array($this->package_releases) || count($this->package_releases) < 1) {
 			$this->package_releases=array();
-			$frspf = new FRSReleaseFactory();
-			$this->package_releases = $frspf->getFRSReleasesFromDb($this->getID());
+			$frsrf = new FRSReleaseFactory();
+			$this->package_releases = $frsrf->getFRSReleasesFromDb($this->getPackageID());
 		}
 		return $this->package_releases;
 	}

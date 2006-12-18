@@ -39,6 +39,20 @@ class FRSFileDao extends DataAccessObject {
         $_id = (int) $id;
         return $this->_search(' f.file_id = '.$_id, '', ' ORDER BY release_time DESC LIMIT 1');
     }
+    
+    function searchInReleaseById($id, $group_id) {
+        $_id = (int) $id;
+        $_group_id = (int) $group_id;
+        
+        $sql = sprintf("SELECT f.* "
+              ."FROM frs_file AS f, frs_release AS r, frs_package AS p WHERE p.group_id = %s " 
+			  ."AND r.release_id = f.release_id "
+			  ."AND r.package_id = p.package_id "
+			  ."AND f.file_id = %s ORDER BY release_date DESC LIMIT 1",
+			  $this->da->quoteSmart($_group_id),
+			  $this->da->quoteSmart($_id));
+        return $this->retrieve($sql);
+    }
 
     function searchByIdList($idList) {
         if(is_array($idList) && count($idList) > 0) {
@@ -60,7 +74,7 @@ class FRSFileDao extends DataAccessObject {
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
-        $sql = 'SELECT p.* '
+        $sql = 'SELECT f.* '
             .' FROM frs_file AS f '
             .(count($from) > 0 ? ', '.implode(', ', $from) : '') 
             .(trim($where) != '' ? ' WHERE '.$where.' ' : '') 
@@ -69,6 +83,15 @@ class FRSFileDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    function isFileNameExist($file_name, $group_id){
+    	$_group_id = (int) $group_id;
+    	$sql = sprintf("SELECT f.* FROM frs_release AS r, frs_file AS f, frs_package AS p WHERE "
+    					."p.group_id = %s AND r.release_id = f.release_id "
+    					."AND r.package_id = p.package_id AND name = %s",
+                $this->da->quoteSmart($_group_id),
+                $this->da->quoteSmart($file_name));
+        return $this->retrieve($sql);
+    }
 
     /**
      * create a row in the table frs_file
@@ -102,20 +125,17 @@ class FRSFileDao extends DataAccessObject {
             $values[] = ((int) $processor_id);
         }
 
-        if($release_time !== null) {
-            $arg[] = 'release_time';
-            $values[] = ((int) $release_time);
-        }
+
+        $arg[] = 'release_time';
+        $values[] = ((int) time);
         
         if($file_size !== null) {
             $arg[] = 'file_size';
             $values[] = ((int) $file_size);
         }
 
-        if($post_date !== null) {
-            $arg[] = 'post_date';
-            $values[] = ((int) $post_date);
-        }
+        $arg[] = 'post_date';
+        $values[] = ((int) time());
 
         $sql = 'INSERT INTO frs_file'
             .'('.implode(', ', $arg).')'
@@ -127,13 +147,17 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('file_name', 'release_id', 'type_id', 'processor_id', 'release_time', 'file_size', 'post_date');
+        $cols   = array('file_name', 'release_id', 'type_id', 'processor_id', 'file_size');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
                 $values[] = $this->da->quoteSmart($value);
             }
         }
+        $arg[]    = 'release_time';
+        $values[] = $this->da->quoteSmart(time());
+        $arg[]    = 'post_date';
+        $values[] = $this->da->quoteSmart(time());
         if (count($arg)) {
             $sql = 'INSERT INTO frs_file '
                 .'('.implode(', ', $arg).')'
@@ -163,8 +187,7 @@ class FRSFileDao extends DataAccessObject {
      * @return true if there is no error
      */
     function updateById($file_id, $file_name=null, $release_id=null, $type_id=null,
-    				$processor_id=null, $release_time=null, $file_size=null, 
-    				$post_date=null) {       
+    				$processor_id=null, $release_time=null, $file_size=null) {       
        
         $argArray = array();
 
@@ -192,9 +215,6 @@ class FRSFileDao extends DataAccessObject {
             $argArray[] = 'file_size='.((int) $file_size);
         }
 
-        if($post_date !== null) {
-            $argArray[] = 'post_date='.((int) $post_date);
-        }
 
 
         $sql = 'UPDATE frs_file'
@@ -217,7 +237,7 @@ class FRSFileDao extends DataAccessObject {
                 $current =& $dar->current();
                 $set_array = array();
                 foreach($data_array as $key => $value) {
-                    if ($key != 'id' && $value != $current[$key]) {
+                    if ($key != 'id' && $key!= 'post_date' && $value != $current[$key]) {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }

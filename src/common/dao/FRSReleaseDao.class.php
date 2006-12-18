@@ -23,6 +23,7 @@
  * $Id$
  */
 require_once('include/DataAccessObject.class.php');
+require_once('common/include/UserManager.class.php');
 
 class FRSReleaseDao extends DataAccessObject {
 
@@ -38,6 +39,52 @@ class FRSReleaseDao extends DataAccessObject {
     function searchById($id) {
         $_id = (int) $id;
         return $this->_search(' r.release_id = '.$_id, '', ' ORDER BY release_date DESC LIMIT 1');
+    }
+    
+    function searchInGroupById($id, $group_id) {
+        $_id = (int) $id;
+        $_group_id = (int) $group_id;
+        $sql = sprintf("SELECT r.* "
+              ."FROM frs_release AS r, frs_package AS p WHERE p.group_id= %s " 
+			  ."AND r.release_id=%s "
+			  ."AND r.package_id=p.package_id ORDER BY release_date DESC LIMIT 1",
+			  $this->da->quoteSmart($_group_id),
+			  $this->da->quoteSmart($_id));
+        return $this->retrieve($sql);
+    }
+    
+    function searchByGroupPackageReleaseID($release_id, $group_id, $package_id){
+    	$_id = (int) $release_id;
+        $_group_id = (int) $group_id;
+        $_package_id = (int) $package_id;
+        
+        $sql = sprintf("SELECT r.* "
+              ."FROM frs_release AS r, frs_package AS p WHERE p.package_id=%s " 
+			  ."AND p.group_id= %s "
+			  ."AND r.release_id=%s "
+			  ."AND r.package_id=p.package_id ORDER BY release_date DESC LIMIT 1",
+			  $this->da->quoteSmart($_package_id),
+			  $this->da->quoteSmart($_group_id),
+			  $this->da->quoteSmart($_id));
+        return $this->retrieve($sql);
+    }
+    
+    function searchByGroupPackageID($group_id, $package_id=null){
+        $_group_id = (int) $group_id;
+        if($package_id){
+        	$_package_id = (int) $package_id;
+        }
+        
+        $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, "
+        		      ."r.status_id, s.name AS status_name "
+              		  ."FROM frs_release AS r, frs_package AS p, frs_status AS s "
+              		  ."WHERE p.group_id= %s "
+			  		  ."AND r.package_id = p.package_id "
+			  		  .($package_id ? "AND p.package_id = %s " : "")
+			  		  ."AND s.status_id=r.status_id",
+			  			$this->da->quoteSmart($_group_id),
+			  			$this->da->quoteSmart($_package_id));
+        return $this->retrieve($sql);
     }
 
     function searchByIdList($idList) {
@@ -76,6 +123,14 @@ class FRSReleaseDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    function isReleaseNameExist($release_name, $package_id){
+    	$_package_id = (int) $package_id;
+    	$sql = sprintf("SELECT * FROM frs_release WHERE package_id = %s AND name = %s",
+                $this->da->quoteSmart($_package_id),
+                $this->da->quoteSmart(htmlspecialchars($release_name)));
+        return $this->retrieve($sql);
+    }
+    
 
     /**
      * create a row in the table frs_release
@@ -84,8 +139,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function create($package_id=null, $name=null,
     				$notes=null, $changes=null, 
-                    $status_id=null, $preformatted=null, 
-                    $release_date=null, $released_by=null) {
+                    $status_id=null, $preformatted=null) {
 
         $arg    = array();
         $values = array();
@@ -120,15 +174,14 @@ class FRSReleaseDao extends DataAccessObject {
             $values[] = ((int) $preformatted);
         }
 
-        if($release_date !== null) {
-            $arg[] = 'release_date';
-            $values[] = ((int) $release_date);
-        }
 
-        if($released_by !== null) {
-            $arg[] = 'released_by';
-            $values[] = $this->da->quoteSmart($released_by);
-        }
+        $arg[] = 'release_date';
+        $values[] = ((int) time);
+
+		$um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $arg[] = 'released_by';
+        $values[] = $this->da->quoteSmart($user->getID());
 
         $sql = 'INSERT INTO frs_release'
             .'('.implode(', ', $arg).')'
@@ -140,13 +193,21 @@ class FRSReleaseDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('package_id', 'name', 'notes', 'changes', 'status_id', 'preformatted', 'release_date', 'released_by');
+        $cols   = array('package_id', 'name', 'notes', 'changes', 'status_id', 'preformatted');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
                 $values[] = $this->da->quoteSmart($value);
             }
         }
+        $arg[] = 'release_date';
+        $values[] = $this->da->quoteSmart(time());
+        
+        $arg[] = 'released_by';
+        $um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $values[] = $this->da->quoteSmart($user->getID());
+        
         if (count($arg)) {
             $sql = 'INSERT INTO frs_release '
                 .'('.implode(', ', $arg).')'
@@ -177,8 +238,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function updateById($release_id, $package_id=null, $name=null,
     				$notes=null, $changes=null, $status_id=null, 
-    				$preformatted=null, $release_date=null, 
-    				$released_by=null) {       
+    				$preformatted=null, $release_date=null) {       
        
         $argArray = array();
 
@@ -209,10 +269,7 @@ class FRSReleaseDao extends DataAccessObject {
         if($release_date !== null) {
             $argArray[] = 'release_date='.((int) $release_date);
         }
-        
-        if($released_by !== null) {
-            $argArray[] = 'released_by='.((int) $released_by);
-        }
+
 
         $sql = 'UPDATE frs_release'
             .' SET '.implode(', ', $argArray)
@@ -234,7 +291,7 @@ class FRSReleaseDao extends DataAccessObject {
                 $current =& $dar->current();
                 $set_array = array();
                 foreach($data_array as $key => $value) {
-                    if ($key != 'id' && $value != $current[$key]) {
+                    if ($key != 'id' && $key != 'released_by' && $value != $current[$key]) {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }

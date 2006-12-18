@@ -26,34 +26,9 @@
 
 
 require_once('common/include/Error.class.php');
-require_once('common/frs/FRSFile.class.php');
+require_once('common/frs/FRSFileFactory.class.php');
 
-/**
- *	  Factory method which creates a FRSRelease from an release id
- *
- *	  @param int	  The release id
- *	  @param array	The result array, if it's passed in
- *	  @return object  FRSRelease object
- */
-/*function &frsrelease_get_object($release_id, $data=false) {
-	global $FRSRELEASE_OBJ;
-	if (!isset($FRSRELEASE_OBJ['_'.$release_id.'_'])) {
-		if ($data) {
-					//the db result handle was passed in
-		} else {
-			$res=db_query("SELECT * FROM frs_release WHERE
-			release_id='$release_id'");
-			if (db_numrows($res)<1 ) {
-				$FRSRELEASE_OBJ['_'.$release_id.'_']=false;
-				return false;
-			}
-			$data =& db_fetch_array($res);
-		}
-		$FRSPackage =& frspackage_get_object($data['package_id']);
-		$FRSRELEASE_OBJ['_'.$release_id.'_']= new FRSRelease($FRSPackage,$data['release_id'],$data);
-	}
-	return $FRSRELEASE_OBJ['_'.$release_id.'_'];
-}*/
+
 
 class FRSRelease extends Error {
 
@@ -260,12 +235,10 @@ class FRSRelease extends Error {
 	function &getFiles() {
 		if (!is_array($this->release_files) || count($this->release_files) < 1) {
 			$this->release_files=array();
-			$res=db_query("SELECT * FROM frs_file WHERE release_id='".$this->getReleaseID()."'");
-			while ($arr = db_fetch_array($res)) {
-				$this->release_files[] = new FRSFile($arr);
-			}
+			$frsff = new FRSFileFactory();
+			$this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
 		}
-        return $this->release_files;
+		return $this->release_files;
 	}
 }
 
