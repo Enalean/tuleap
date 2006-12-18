@@ -143,7 +143,12 @@ class FRSReleaseFactory {
             return;
         }
         
-        return $dar->valid();
+        if(!$dar->valid()){
+        	return;
+        }else{
+        	$res =& $dar->current();
+        	return $res['release_id'];
+        }
     }
 
 	var $dao;
