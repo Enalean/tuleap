@@ -87,6 +87,30 @@ class FRSFileFactory {
         return $files;
     }
     
+    function getFRSFileInfoListFromDb($group_id, $file_id) {
+		$_group_id = (int) $group_id;
+		$_file_id = (int) $file_id;
+		$dao = & $this->_getFRSFileDao();
+		
+		$dar = $dao->searchInfoByGroupFileID($_group_id, $_file_id);
+
+		if ($dar->isError()) {
+			return;
+		}
+
+		if (!$dar->valid()) {
+			return;
+		}	
+		
+		$file_info = array ();
+		while ($dar->valid()) {
+			$file_info[] = $dar->current();
+			$dar->next();
+		}
+		return $file_info;
+
+	}
+    
     function isFileNameExist($file_name, $group_id){
     	$_id = (int) $group_id;
         $dao =& $this->_getFRSFileDao();
