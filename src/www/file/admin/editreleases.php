@@ -93,8 +93,8 @@ if (isset($submit)) {
 				echo db_error();
 			} else {
 			  //check if release name exists already
-
-			  if (!$frsrf->isReleaseNameExist($release_name, $package_id)) {
+			  $release_exists = $frsrf->getReleaseIdByName($release_name, $package_id);
+			  if (!$release_exists || count($release_exists) < 1) { echo 'ok create';
 			    //package_id was fine - now insert the release
 			    $array = array('package_id' => $package_id, 'name' => $release_name, 'status_id' => '1');
 			    $res= $frsrf->create($array);
@@ -341,7 +341,6 @@ if (isset($submit)) {
 							    echo '<h3>'.$exec_res[0],$exec_res[1].'</H3><P>';
 							  }
 							  //add the file to the database
-							  $file_size = 
 							  $array = array('filename' => $upload_subdir.'/'.$file_list[$i], 'release_id' => $release_id, 
 											'file_size' => filesize("$project_files_dir/$upload_subdir/$file_list[$i]"));
 							  $res =& $frsff->create($array);
