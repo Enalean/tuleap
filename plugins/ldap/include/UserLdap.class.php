@@ -89,6 +89,7 @@ class UserLdap {
     }
 
     function register(&$lr, $password) {     	          
+        $form_loginname = $lr->getLogin();
         include($GLOBALS['Language']->getContent('ldap/register_ldap_get_data'));
 
         // Create codex account
@@ -96,11 +97,11 @@ class UserLdap {
                                         ,$password
                                         ,$lr->getEdUid()
                                         ,addslashes($lr->getCommonName())
-                                        ,''
+                                        ,'LDAP'
                                         ,$lr->getEmail()
                                         ,'A'
                                         ,''
-                                        ,0
+                                        ,1
                                         ,0
                                         ,'None'
                                         ,$GLOBALS['Language']->getText('conf','language_id')
