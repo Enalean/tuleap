@@ -55,12 +55,7 @@ while ( $row_memb=db_fetch_array($res_memb) ) {
 	}
 	print "\t\t<td align=\"center\"><A href=\"/users/$row_memb[user_name]/\">$row_memb[user_name]</A></td>\n";
 
-/* LJ new version below
-print "\t\t<td align=\"center\">
-<A href=\"/sendmessage.php?touser=".$row_memb['user_id']."\">".$row_memb['user_name']." at ".$GLOBALS['sys_users_host']."</td>\n";
-LJ */
-
-	print "\t\t<td align=\"center\"><A href=\"/sendmessage.php?touser=".$row_memb['user_id']."\">".$row_memb['email']."</A></td>\n";
+	print "\t\t<td align=\"center\"><A href=\"mailto:".$row_memb['email']."\">".$row_memb['email']."</A></td>\n";
 
 
 	print "\t\t<td align=\"center\"><A href=\"/people/viewprofile.php?user_id=".
