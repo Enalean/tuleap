@@ -41,7 +41,7 @@ class FRSPackageFactory {
         return $frs_package;
     }
 
-    function &getFRSPackageFromDb($package_id = null, $group_id=null, $release_id=null) {
+    function &getFRSPackageFromDb($package_id = null, $group_id=null) {
         $_id = (int) $package_id;
         $dao =& $this->_getFRSPackageDao();
         if($group_id){
