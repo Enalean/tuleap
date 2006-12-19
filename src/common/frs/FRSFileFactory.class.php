@@ -90,7 +90,7 @@ class FRSFileFactory {
     function isFileNameExist($file_name, $group_id){
     	$_id = (int) $group_id;
         $dao =& $this->_getFRSFileDao();
-        $dar = $dao->isFileNameExist($file_name, $_id);
+        $dar = $dao->searchReleaseByName($file_name, $_id);
 
         if($dar->isError()){
             return;

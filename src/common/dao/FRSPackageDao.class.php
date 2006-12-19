@@ -46,6 +46,16 @@ class FRSPackageDao extends DataAccessObject {
         return $this->_search(' p.package_id = '.$_id.' AND p.group_id = '.$_group_id, '', ' ORDER BY rank DESC LIMIT 1');
     }
     
+    function searchByFileId($file_id){
+       $_file_id = (int) $file_id;
+       
+       $sql = sprintf("SELECT p.approuve_license FROM frs_package AS p, frs_release AS r, frs_file AS f " .
+       		          "WHERE f.file_id = %s AND f.release_id = r.release_id " .
+       		          "AND r.package_id = p.package_id",
+                $this->da->quoteSmart($_file_id));
+        return $this->retrieve($sql);
+    }
+    
     function searchInGroupByReleaseId($id, $group_id) {
        $_id = (int) $id;
        $_group_id = (int) $group_id;
@@ -84,7 +94,7 @@ class FRSPackageDao extends DataAccessObject {
     }
     
     
-    function isPackageNameExist($package_name, $group_id){
+    function searchPackageByName($package_name, $group_id){
     	$_group_id = (int) $group_id;
     	$sql = sprintf("SELECT * FROM frs_package WHERE group_id = %s AND name = %s",
                 $this->da->quoteSmart($_group_id),

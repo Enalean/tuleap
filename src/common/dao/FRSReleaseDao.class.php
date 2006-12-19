@@ -123,7 +123,7 @@ class FRSReleaseDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function isReleaseNameExist($release_name, $package_id){
+    function searchReleaseByName($release_name, $package_id){
     	$_package_id = (int) $package_id;
     	$sql = sprintf("SELECT * FROM frs_release WHERE package_id = %s AND name = %s",
                 $this->da->quoteSmart($_package_id),

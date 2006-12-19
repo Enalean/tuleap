@@ -134,10 +134,11 @@ class FRSReleaseFactory {
 
 	}
 	
-	function isReleaseNameExist($release_name, $package_id){
+    
+    function getReleaseIdByName($release_name, $package_id){
     	$_id = (int) $package_id;
         $dao =& $this->_getFRSReleaseDao();
-        $dar = $dao->isReleaseNameExist($release_name, $_id);
+        $dar = $dao->searchReleaseByName($release_name, $_id);
 
         if($dar->isError()){
             return;

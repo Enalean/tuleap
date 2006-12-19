@@ -83,7 +83,7 @@ class FRSFileDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function isFileNameExist($file_name, $group_id){
+    function searchFileByName($file_name, $group_id){
     	$_group_id = (int) $group_id;
     	$sql = sprintf("SELECT f.* FROM frs_release AS r, frs_file AS f, frs_package AS p WHERE "
     					."p.group_id = %s AND r.release_id = f.release_id "

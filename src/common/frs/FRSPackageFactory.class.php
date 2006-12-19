@@ -64,6 +64,24 @@ class FRSPackageFactory {
         return(FRSPackageFactory::getFRSPackageFromArray($data_array));
     }
     
+    function &getFRSPackageByFileIdFromDb($file_id){
+    	$_id = (int) $file_id;
+        $dao =& $this->_getFRSPackageDao();
+        $dar = $dao->searchByFileId($_id);
+        
+        if($dar->isError()){
+            return;
+        }
+        
+        if(!$dar->valid()) {
+            return;
+        }
+        
+        $data_array =& $dar->current();
+
+        return(FRSPackageFactory::getFRSPackageFromArray($data_array));
+    }
+    
     function &getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
         $_id = (int) $release_id;
         $_group_id = (int) $group_id;
@@ -109,7 +127,7 @@ class FRSPackageFactory {
     function isPackageNameExist($package_name, $group_id){
     	$_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();
-        $dar = $dao->isPackageNameExist($package_name, $_id);
+        $dar = $dao->searchPackageByName($package_name, $_id);
 
         if($dar->isError()){
             return;
