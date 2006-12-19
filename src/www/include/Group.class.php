@@ -7,7 +7,7 @@
 //	      
 // $Id$
 
-//require_once('common/include/Error.class.php');
+require_once('common/include/Error.class.php');
 //require_once('common/include/Permission.class');
 require_once('common/include/TemplateSingleton.class.php');
 
