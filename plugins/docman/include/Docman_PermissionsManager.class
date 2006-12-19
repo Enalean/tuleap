@@ -228,6 +228,21 @@ class Docman_PermissionsManager {
         }
     }
 
+    function oneFolderIsWritable($user) {
+        $oneWritable = false;
+
+        $dao =& $this->getDao();
+
+        if($this->userCanAdmin($user)) {
+            $oneWritable = true;
+        }
+        else {
+            $oneWritable = $dao->oneFolderIsWritable($this->groupId, $user->getUgroups($this->groupId, array()));
+        }
+
+        return $oneWritable;
+    }
+
 }
 
 ?>
