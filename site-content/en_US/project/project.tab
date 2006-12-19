@@ -318,6 +318,7 @@ project_admin_utils	edit_public_info	Edit Public Info
 project_admin_utils	user_perms	User Permissions
 project_admin_utils	references	Reference Configuration
 project_admin_utils	ug_admin	User Groups Admin
+project_admin_utils	import_user	User Import
 project_admin_utils	project_data_export	Project Data Export
 project_admin_utils	tracker_import	Tracker Import
 project_admin_utils	access_logs	Access Logs
@@ -487,6 +488,28 @@ project_admin_userperms	admin	Admin
 project_admin_userperms	tech&admin	Tech & Admin
 project_admin_userperms	moderator	Moderator
 project_admin_userperms	upd_user_perm	Update User Permissions
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/userimport.php
+#
+project_admin_userimport	import_members	Import Project Members $1
+project_admin_userimport	import_welcome	<P>You can import users into your project, by specifying a text file. <br>See the <a href="$1">Import Format</a> for more details.<P>
+project_admin_userimport	upload_file	Upload File :
+project_admin_userimport	submit	Load users
+project_admin_userimport	parse_report	User Parsing Report
+project_admin_userimport	ready	Ready to import these new users :
+project_admin_userimport	import	Import
+project_admin_userimport	success_import	Users Successfully Imported
+project_admin_userimport	fail_import	User Import Failed.
+project_admin_userimport	format_hdr	User Import Format
+project_admin_userimport	missing_file	Missing or unreadable file.
+project_admin_userimport	username	Codex username
+project_admin_userimport	mail_addr	Email address
+project_admin_userimport	invalid_mail	Parse error : '$1' is an invalid email address.
+project_admin_userimport	unknown_user	Parse error : User '$1' does not exist.
+project_admin_userimport	member_user	Parse error : User '$1' is already a member of this project.
+project_admin_userimport	active_user	Parse error : User '$1' account is not active.
+project_admin_userimport	import_format	To import users, you need to provide a simple text file, containing in each line the email address of the user.<BR>You can include empty lines in the import file. <P>Please make sure the users, who will be imported, are already registered in Codex and have an active account.<P><B>Sample import file</B> : <BR><BR>john.doe@st.com<BR>jacques.dupont@st.com<BR><BR> $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_deps_export.php

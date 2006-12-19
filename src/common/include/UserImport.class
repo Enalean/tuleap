@@ -1,0 +1,157 @@
+<?php
+
+/* 
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ *
+ * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+require('www/include/account.php');
+require_once('common/include/Error.class');
+
+class UserImport extends Error {
+
+  //the group our users is part of
+  var $group;
+
+
+  /**
+   *  Constructor.
+   *
+   *    
+   *  
+   *
+   *      @return boolean success.
+   */
+  function UserImport($group) {
+    // Error constructor
+    $this->Error();
+    $this->group = $group;    
+    
+  }
+
+  /** parse a file in simple text  format containing users to be imported into the project
+   * @param $user_filename (IN): the complete file name of the file to be parsed
+   * @param $parsed_users (OUT): the users mail adresses parsed in the import file
+   *                              array of the form (column_number => fuser mail address)
+   * @param $errors (OUT): string containing explanation what error occurred
+   * @return true if parse ok, false if errors occurred
+   */
+  function parse($user_filename,&$errors,&$parsed_users) {
+    global $Language;
+    
+    $user_file = fopen($user_filename, "r");
+    $ok=true;  
+    
+    //parsing ... 
+    while (!feof($user_file)) {
+        $line = trim(fgets($user_file));
+	if ($line != "") {
+	    if (!validate_email($line)) {
+	        //check whether non-empty lines contain valid email addresses  
+	        $ok=false;
+	        $errors=$Language->getText('project_admin_userimport','invalid_mail',$line);
+		break;
+	    } else {
+	        //check if user  exist (has connected, at least once, to Codex)
+		$sql = sprintf('SELECT *'.
+			       ' FROM user'.
+			       ' WHERE email = "%s"',
+			       $line);
+		$res = db_query($sql);		
+		if (db_numrows($res) < 1) {		    
+		    $ok=false;
+		    $errors=$Language->getText('project_admin_userimport','unknown_user',$line);
+		    break;		    
+		} else {
+		    //check if user account status is active		
+		    $user_status = db_result($res,0,'status');
+		    $realname = db_result($res,0,'realname');		    
+		    if ($user_status != "A") {
+		        $ok=false;
+			$errors=$Language->getText('project_admin_userimport','active_user',$realname);
+			break;
+		    } else {
+		        //check if user is already a member of the project  
+		        $user_id = db_result($res,0,'user_id');			
+			$qry = sprintf('SELECT *'.
+				       ' FROM user_group'.
+				       ' WHERE group_id = %d'.
+				       ' AND user_id = %d',
+				       $this->group,$user_id);
+		        $result = db_query($qry);
+		        if (db_numrows($result) > 0) {			    
+		            $ok=false;
+			    $errors=$Language->getText('project_admin_userimport','member_user',$realname);
+			    break;
+			}    
+		    }
+	        }	
+	    }
+	}
+    }
+    
+    //store users list in $parsed_users table
+    if ($ok) { 
+        $j=0;  
+        $data = file($user_filename);
+        for ($i=0;$i<count($data);$i++) {
+            //exclude empty lines from users list
+	    if (trim($data[$i]) != "") {
+	        $parsed_users[$j] = trim($data[$i]);
+	        $j++;
+	    }    
+        }
+    }
+    
+    fclose($user_file);
+    return $ok;
+    
+  }
+
+  /**
+   * Insert the imported users into the db
+   * @param parsed_users: array of the form (column_number => user mail address) containing
+   *                              all the users parsed from import file
+   * @param $errors (OUT): string containing explanation what error occurred
+   * @return true if parse ok, false if errors occurred
+   */
+  function updateDB($parsed_users) {
+        
+    //add users to the project
+    for ($i=0;$i<count($parsed_users);$i++) { 
+	$res = account_add_user_to_group($this->group,$parsed_users[$i]);
+	
+        if ($res) {
+            group_add_history('added_user',$parsed_users[$i],$this->group,array($parsed_users[$i]));	    
+        } else {
+	    return false;
+	    exit;
+	}    
+    }
+    
+    return true;
+  
+  }
+
+
+}
+
+
+?>
