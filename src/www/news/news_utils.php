@@ -299,7 +299,7 @@ function news_update_permissions($forum_id,$is_private,$group_id) {
 	$_forum_id = (int) $forum_id;
 	$_is_private = (int) $is_private;
 	
-	if ($_is_private) {
+	if ($_is_private == 3) {
 	  permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false);
 	  if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
 	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';

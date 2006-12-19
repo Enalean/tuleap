@@ -59,7 +59,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				    news_update_permissions($forum_id,$is_private,$group_id);
 				} else {
 				    //permission of this news not yet defined
-				    if ($is_private) {
+				    if ($is_private == 3) {
 				      news_insert_permissions($forum_id,$group_id);
 				    }
 				}

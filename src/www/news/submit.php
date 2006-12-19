@@ -39,8 +39,9 @@ if (user_isloggedin()) {
             } else {
                 $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
 		// set permissions on this piece of news
-		$ugroup_id=$private_news;  
-		news_insert_permissions($new_id,$ugroup_id);
+		if ($private_news == 3) {  
+		    news_insert_permissions($new_id,$group_id);
+		}    
             }		
 	}
 
