@@ -29,9 +29,9 @@ AddType application/x-httpd-php .php
 php_flag register_globals on
 php_flag magic_quotes_gpc on
 php_value include_path "/usr/share/codex/src/www/include:/usr/share/codex/src:."
-php_value memory_limit 30M
-php_value post_max_size 20M
-php_value upload_max_filesize 20M
+php_value memory_limit 196M
+php_value post_max_size 128M
+php_value upload_max_filesize 128M
 php_admin_value upload_tmp_dir /var/tmp
 
 # For phpwiki

@@ -339,14 +339,14 @@ $sys_frs_license_mandatory = 1;
 $sys_session_lifetime = 15811200;
 
 // Max upload size for quick release, documentation, patch and code snippet.
-// in bytes. E.g. 16777216 for 16 MB
+// in bytes. E.g. 67108864 for 64 MB
 // Make sure that php.ini and mysql configuration file (/etc/my.cnf)
 // are also configured to allow this size.
-$sys_max_size_upload = 16777216;
+$sys_max_size_upload = 67108864;
 
 // Max upload size for attachments (bugs, SR, artifacts, etc.)
-// in bytes. E.g. 2097152 for 2 MB
-$sys_max_size_attachment = 2097152;
+// in bytes. E.g. 16777216 for 16 MB
+$sys_max_size_attachment = 16777216;
 
 
 // End of customizations -- place nothing after the closing PHP tag!
