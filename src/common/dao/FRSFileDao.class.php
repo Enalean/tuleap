@@ -72,6 +72,24 @@ class FRSFileDao extends DataAccessObject {
                 $this->da->quoteSmart($_id));
         return $this->retrieve($sql);
     }
+    		
+   
+   function searchInfoByGroupFileID($group_id, $file_id){
+        $_group_id = (int) $group_id;
+        $_file_id = (int) $file_id;
+        
+        $sql = sprintf("SELECT f.filename, f.file_id AS file_id, p.group_id AS group_id, " .
+        				"p.package_id, r.release_id "
+              		  ."FROM frs_release AS r, frs_package AS p, frs_file AS f "
+              		  ."WHERE p.group_id= %s "
+			  		  ."AND r.package_id = p.package_id "
+			  		  ."AND f.release_id = r.release_id "
+			  		  ."AND f.file_id=%s ",
+			  			$this->da->quoteSmart($_group_id),
+			  			$this->da->quoteSmart($_file_id));
+        return $this->retrieve($sql);
+    }
+   
    
     function _search($where, $group = '', $order = '', $from = array()) {
         $sql = 'SELECT f.* '
