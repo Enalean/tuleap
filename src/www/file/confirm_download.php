@@ -6,10 +6,14 @@
 //
 // $Id$
 require_once('pre.php');
+require_once('common/frs/FRSFileFactory.class.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 $Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
-
+	
+  $frsff = new FRSFileFactory();
+  $frspf = new FRSPackageFactory();
   // Must have a group_id and file_id otherwise
   // we cannot do much
   if (!$file_id || !$group_id) {
@@ -45,20 +49,21 @@ if (user_isloggedin()) {
 
     if (!$filename) {
         # Get it from DB
-        $sql="SELECT filename FROM frs_file WHERE file_id=$file_id";
-        $res = db_query( $sql );
-        if (db_numrows( $res ) > 0) {
-            $filename = db_result($res,0,'filename');
+        $res =& $frsff->getFRSFileFromDb($file_id);
+
+        if (count( $res ) > 0) {
+            $filename = $res->getFileName();
         }
     }
- 
+
     if (!$GLOBALS['sys_frs_license_mandatory']) {
         // Display license popup?
         // This is useful when using a 'file #123' reference, that points to this script
-        $sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
-        $res = db_query( $sql);
-        if (db_numrows( $res ) > 0) {
-            if (db_result($res,0,'approve_license')==0) {
+        $res =& $frspf->getFRSPackageByFileIdFromDb($file_id);
+        //$sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
+        //res = db_query( $sql);
+        if (count( $res ) > 0) {
+            if ($res->getApproveLicence()==0) {
                 // Directly display file
                 $location = "Location: /file/download.php/$group_id/$file_id/$filename";
                 header($location);

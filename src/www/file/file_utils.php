@@ -10,7 +10,8 @@
 //
 
 // Provide various functions for file manager
-
+require_once('common/frs/FRSPackageFactory.class.php');
+require_once('common/frs/FRSReleaseFactory.class.php');
 $Language->loadLanguageMsg('file/file');
 
 function file_utils_header($params) {
@@ -58,20 +59,24 @@ function file_utils_footer($params) {
 
 
 function file_get_package_name_from_id($package_id) {
-    $res=db_query("SELECT name FROM frs_package WHERE package_id=$package_id");
-    return db_result($res,0,'name');
+	$frspf = new FRSPackageFactory();	
+	$res =& $frspf->getFRSPackageFromDb($package_id);
+    return $res->getName();
 }
 
 
 function file_get_release_name_from_id($release_id) {
-    $res=db_query("SELECT name FROM frs_release WHERE release_id=$release_id");
-    return db_result($res,0,'name');
+	$frsrf = new FRSReleaseFactory();
+	$res = $frsrf->getFRSReleaseFromDb($release_id);	
+    return $res->getName();
 }
 
 
 function file_get_package_id_from_release_id($release_id) {
+	$frsrf = new FRSReleaseFactory();
+	$res = $frsrf->getFRSReleaseFromDb($release_id);
     $res=db_query("SELECT package_id FROM frs_release WHERE release_id=$release_id");
-    return db_result($res,0,'package_id');
+    return $res->getPackageID();
 }
 
 /*
@@ -159,18 +164,21 @@ function frs_show_release_popup ($group_id, $name='release_id', $checked_val="xz
 	/*
 		return a pop-up select box of releases for the project
 	*/
-	global $FRS_RELEASE_RES,$Language;
+	global $FRS_RELEASE_ID_RES,$FRS_RELEASE_NAME_RES,$Language;
+	$frsrf = new FRSReleaseFactory();
 	if (!$group_id) {
 		return $Language->getText('file_file_utils','g_id_err');
 	} else {
 		if (!isset($FRS_RELEASE_RES)) {
-			$FRS_RELEASE_RES=db_query("SELECT frs_release.release_id,concat(frs_package.name,' : ',frs_release.name) ".
-				"FROM frs_release,frs_package ".
-				"WHERE frs_package.group_id='$group_id' ".
-				"AND frs_release.package_id=frs_package.package_id");
-			echo db_error();
+			$res = $frsrf->getFRSReleasesInfoListFromDb($group_id);
+			$FRS_RELEASE_ID_RES = array();
+			$FRS_RELEASE_NAME_RES = array();
+			foreach($res as $release){
+				$FRS_RELEASE_ID_RES[] = $release['release_id'];
+				$FRS_RELEASE_NAME_RES[] = $release['package_name'].':'.$release['release_name'];
+			}
 		}
-		return html_build_select_box ($FRS_RELEASE_RES,$name,$checked_val,false);
+		return html_build_select_box_from_arrays ($FRS_RELEASE_ID_RES, $FRS_RELEASE_NAME_RES,$name,$checked_val,false);
 	}
 }
 
@@ -184,14 +192,20 @@ function frs_show_package_popup ($group_id, $name='package_id', $checked_val="xz
 	/*
 		return a pop-up select box of packages for this project
 	*/
-	global $FRS_PACKAGE_RES,$Language;
+	global $FRS_PACKAGE_RES,$FRS_PACKAGE_NAME_RES,$Language;
+	$frspf = new FRSPackageFactory();
 	if (!$group_id) {
 		return $Language->getText('file_file_utils','g_id_err');
 	} else {
 		if (!isset($FRS_PACKAGE_RES)) {
-			$FRS_PACKAGE_RES=db_query("SELECT package_id,name FROM frs_package WHERE group_id='$group_id'");
-			echo db_error();
+			$res =& $frspf->getFRSPackagesFromDb($group_id);
+			$FRS_PACKAGE_ID_RES = array();
+			$FRS_PACKAGE_NAME_RES = array();
+			foreach($res as $package){
+				$FRS_PACKAGE_ID_RES[] = $package->getPackageID();
+				$FRS_PACKAGE_NAME_RES[] = $package->getName();
+			}			
 		}
-		return html_build_select_box ($FRS_PACKAGE_RES,$name,$checked_val,false);
+		return html_build_select_box_from_arrays($FRS_PACKAGE_ID_RES, $FRS_PACKAGE_NAME_RES, $name,$checked_val,false);
 	}
 }

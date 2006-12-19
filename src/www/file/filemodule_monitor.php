@@ -7,6 +7,7 @@
 // $Id$
 
 require_once('pre.php');
+require_once('common/frs/FileModuleMonitorFactory.class.php');
 $Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
@@ -26,19 +27,16 @@ if (user_isloggedin()) {
 
 		echo '
 			<H2>'.$Language->getText('file_filemodule_monitor','monitor_package').'</H2>';
+		$frsfmf = new FileModuleMonitorFactory();
 
-		$sql="SELECT * FROM filemodule_monitor WHERE user_id='".user_getid()."' AND filemodule_id='$filemodule_id';";
 
-		$result = db_query($sql);
-
-		if (!$result || db_numrows($result) < 1) {
+		if (!$frsfmf->isMonitoring($filemodule_id)) {
 			/*
 				User is not already monitoring this filemodule, so 
 				insert a row so monitoring can begin
 			*/
-			$sql="INSERT INTO filemodule_monitor (filemodule_id,user_id) VALUES ('$filemodule_id','".user_getid()."')";
-
-			$result = db_query($sql);
+			
+			$result = $frsfmf->setMonitor($filemodule_id);
 
 			if (!$result) {
 				echo '
@@ -54,8 +52,7 @@ if (user_isloggedin()) {
 
 		} else {
 
-			$sql="DELETE FROM filemodule_monitor WHERE user_id='".user_getid()."' AND filemodule_id='$filemodule_id';";
-			$result = db_query($sql);
+			$result = $frsfmf->stopMonitor($filemodule_id);
 			echo '
 				<span class="highlight"><H3>'.$Language->getText('file_filemodule_monitor','monitor_turned_off').'</H3></span>
 				<P>
