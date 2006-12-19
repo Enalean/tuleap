@@ -23,6 +23,7 @@
  * $Id$
  */
 require_once('include/DataAccessObject.class.php');
+require_once('common/include/UserManager.class.php');
 
 class FileModuleMonitorDao extends DataAccessObject {
 
@@ -53,6 +54,16 @@ class FileModuleMonitorDao extends DataAccessObject {
         return $this->_search(' fm.filemodule_id = '.$_id, '', ' ORDER BY filemodule_id DESC');
     }
     
+
+	function searchMonitoringFileByUserAndPackageId($package_id) {
+		$_package_id = (int) $package_id;		
+		$um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $arg[] = 'released_by';
+        $_user_id = $user->getID();
+		return $this->_search(' fm.filemodule_id = '.$_package_id.' AND fm.user_id ='.$_user_id, '', ' ORDER BY filemodule_id DESC');
+	}
+    
     function _search($where, $group = '', $order = '', $from = array()) {
         $sql = 'SELECT fm.* '
             .' FROM filemodule_monitor AS fm '
@@ -61,6 +72,47 @@ class FileModuleMonitorDao extends DataAccessObject {
             .$group
             .$order;
         return $this->retrieve($sql);
+    }
+    
+    /**
+     * create a row in the table filemodule_monitor
+     *
+     * @return true or id(auto_increment) if there is no error
+     */
+    function create($filemodule_id) {
+
+        $arg    = array();
+        $values = array();
+
+        $arg[] = 'filemodule_id';
+        $values[] = ((int) $filemodule_id);
+        
+		$um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $arg[] = 'user_id';
+        $values[] = $this->da->quoteSmart($user->getID());
+
+        $sql = 'INSERT INTO filemodule_monitor'
+            .'('.implode(', ', $arg).')'
+            .' VALUES ('.implode(', ', $values).')';
+        return $this->update($sql);
+    }
+
+    
+     /**
+     * Delete entry that match $package_id and $user_id (current user) in filemodule_monitor
+     *
+     * @param $package_id int
+     * @return true if there is no error
+     */
+    function delete($filemodule_id) {
+    	$um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $sql = sprintf("DELETE FROM filemodule_monitor WHERE filemodule_id=%d AND user_id=%d",
+                       $filemodule_id, $user->getID());
+
+        $deleted = $this->update($sql);
+        return $deleted;
     }
 }
 

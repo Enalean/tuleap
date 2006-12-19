@@ -78,6 +78,29 @@ class FileModuleMonitorFactory {
 		}
         return $data_array;
     }
+    
+    /**
+	 *  isMonitoring - Is the current user in the list of people monitoring this package.
+	 *
+	 *  @return	boolean	is_monitoring.
+	 */
+	function isMonitoring($filemodule_id) {
+
+		$_filemodule_id = (int) $filemodule_id;
+        $dao =& $this->_getFileModuleMonitorDao();
+        $dar = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id);
+		
+		if($dar->isError()){
+            return;
+        }
+
+
+		if (!$dar->valid() || $dar->rowCount() < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 
 	var $dao;
@@ -88,10 +111,19 @@ class FileModuleMonitorFactory {
 		}
 		return $this->dao;
 	}
-    
 
+	function setMonitor($filemodule_id) {
+		$dao = & $this->_getFileModuleMonitorDao();
+		$res = $dao->create($filemodule_id);
+		return $res;
+	}
     
-
+    function stopMonitor($filemodule_id){
+    	$_id = (int) $filemodule_id;
+    	$dao =& $this->_getFileModuleMonitorDao();
+    	return $dao->delete($_id);
+    }
+     
 }
 
 ?>
