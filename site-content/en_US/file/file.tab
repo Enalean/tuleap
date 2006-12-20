@@ -160,6 +160,8 @@ file_admin_index	edit_release_files	Edit/Release Files
 file_admin_index	manage_explain	Create or modify packages and releases, set status and access permissions.
 file_admin_index	quick_add	Quick Add File Release
 file_admin_index	quick_add_explain	One step process where you can specify all the necessary information at the same time. The counterpart is that you can only attach one single file to a given release and not several as in the full File Release process.
+file_admin_index	manage_proc	Manage List of Processors
+file_admin_index	manage_proc_explain	Customize your own list of processors.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/qrs.php
@@ -228,6 +230,20 @@ file_filemodule_monitor	choose_p	Error - Choose a package First
 file_file_utils	admin	Admin
 file_file_utils	must_choose_one	Must Choose One
 file_file_utils	g_id_err	Erreur - Project identifier (group_id) required
+file_file_utils	proc_id	Processor ID
+file_file_utils	proc_name	Name
+file_file_utils	proc_rank	Rank
+file_file_utils	del	Delete?
+file_file_utils	add_proc	Add
+file_file_utils	update_proc	Update
+file_file_utils	required_fields	fields required
+file_file_utils	add_proc_success	Processor Added.
+file_file_utils	add_proc_fail	Submit Failed.
+file_file_utils	update_proc_success	Processor Updated.
+file_file_utils	update_proc_fail	Update Failed.
+file_file_utils	delete_proc_success	Processor Deleted.
+file_file_utils	delete_proc_fail	Delete Failed.
+file_file_utils	del_proc	Delete this processor ?
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php
