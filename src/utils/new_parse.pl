@@ -193,7 +193,7 @@ while ($ln = pop(@groupdump_array)) {
 
 	# make all user names lower case.
 	$userlist =~ tr/A-Z/a-z/;
-	$ugrouplist =~ tr/A-Z/a-z/;
+	#$ugrouplist =~ tr/A-Z/a-z/;
 
 	$group_exists = getgrnam($gname);
 
@@ -397,7 +397,14 @@ while ($ln = pop(@groupdump_array)) {
 
 	    @ugroup_array = split(" ",$ugrouplist);
 	    while ($ln = pop(@ugroup_array)) {
-		print SVNACCESS join(", ", split(",", $ln)),"\n";
+            # we want username to be in lowercase, but ugroupname keep the original case
+            # so we split the line UgroupName = MemBer1,MEMBER2,member3, ...
+            @ugroupdef_array = split("=", $ln);
+            my $ugroup_members = pop(@ugroupdef_array);
+            my $ugroup_name = pop(@ugroupdef_array);
+            # and then join the line with the correct case.
+            # UgroupName = member1,member2,member3, ...
+            print SVNACCESS $ugroup_name," = ",lc(join(", ", split(",", $ugroup_members))),"\n";
 	    }
 	    print SVNACCESS "\n";
 
