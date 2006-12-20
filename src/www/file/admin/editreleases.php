@@ -747,7 +747,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 			<INPUT TYPE="HIDDEN" NAME="file_id" VALUE="'. db_result($res,$i,'file_id') .'">
 			<TR class="'. util_get_alt_row_color($i) .'">
 				<TD NOWRAP><FONT SIZE="-1">'. $fname .'</TD>
-				<TD><FONT SIZE="-1">'. frs_show_processor_popup ('processor_id', db_result($res,$i,'processor_id')) .'</TD>
+				<TD><FONT SIZE="-1">'. frs_show_processor_popup ($group_id,'processor_id', db_result($res,$i,'processor_id')) .'</TD>
 				<TD><FONT SIZE="-1">'. frs_show_filetype_popup ('type_id', db_result($res,$i,'type_id')) .'</TD>
 			</TR>
 			<TR class="'. util_get_alt_row_color($i) .'">

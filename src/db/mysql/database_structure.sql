@@ -869,6 +869,8 @@ CREATE TABLE frs_package (
 CREATE TABLE frs_processor (
   processor_id int(11) NOT NULL auto_increment,
   name text,
+  rank int(11) NOT NULL,
+  group_id int(11) NOT NULL,
   PRIMARY KEY  (processor_id)
 ) TYPE=MyISAM;
 

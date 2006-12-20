@@ -180,6 +180,18 @@ file_admin_qrs	release_file	Release File
 file_admin_qrs	adding_file	Adding File
 #
 #-----------------------------------------------
+# Script: SF/www/file/admin/manageprocessors.php
+#
+file_admin_manageprocessors	manage_proclist	Manage List of Processors
+file_admin_manageprocessors	edit_proc	Click on the 'Processor ID' to edit a processor
+file_admin_manageprocessors	add_proc	Add a new processor
+file_admin_manageprocessors	update_proc	Update a processor
+file_admin_manageprocessors	rank_error	Error. Processor rank should be an integer.
+file_admin_manageprocessors	proc_fill	Error. Processor $1 should not be empty.
+file_admin_manageprocessors	invalid_procid	Error. Invalid Processor ID.
+file_admin_manageprocessors	predef_procid	Warning. Pre-defined processors can not be edited.
+#
+#-----------------------------------------------
 # Script: SF/www/file/confirm_download.php
 #
 file_confirm_download	download_agreement	CodeX download agreement
