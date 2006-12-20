@@ -65,7 +65,7 @@ def fetch_access_file(svnrepo):
                 if m is not None:
                     group = m.group(1)
                     users = m.group(2)
-                    SVNGROUPS[group] = string.split(string.replace(users,' ',''),",")
+                    SVNGROUPS[group.lower()] = string.split(string.replace(users.lower(),' ',''),",")
                 
             elif state == ST_PATH: 
                 m = perm_pat.match(line)
@@ -74,13 +74,14 @@ def fetch_access_file(svnrepo):
                     perm = m.group(2)
 
                     if who[0] == '@':
-                        for who in SVNGROUPS[who[1:]]:
+                        this_group=who[1:]
+                        for who in SVNGROUPS[this_group.lower()]:
                             if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
                             SVNACCESS[who][path] = string.strip(perm)
                             #SVNACCESS[who][path] = perm
                     else:
-                        if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
-                        SVNACCESS[who][path] = string.strip(perm)
+                        if not SVNACCESS.has_key(who.lower()): SVNACCESS[who.lower()] = {}
+                        SVNACCESS[who.lower()][path] = string.strip(perm)
                         #SVNACCESS[who][path] = perm
 
         f.close()
@@ -91,7 +92,10 @@ def fetch_access_file(svnrepo):
 def check_read_access(username, svnrepo, svnpath):
     
     global SVNACCESS, SVNGROUPS
-
+    
+    # make sure that usernames are lowercase
+    username = username.lower()
+    
     if user.user_is_super_user():
         return True
 

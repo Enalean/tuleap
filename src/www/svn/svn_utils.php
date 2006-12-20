@@ -556,7 +556,7 @@ function svn_utils_parse_access_file($gname) {
         if ($m) {
           $group = $matches[1];
           $users = $matches[2];
-          $SVNGROUPS[$group] = split(",", str_replace(' ','',$users));
+          $SVNGROUPS[strtolower($group)] = split(",", str_replace(' ','',strtolower($users)));
         }
       } else if ($state == $ST_PATH) {
         $m = preg_match($perm_pat, $line, $matches);
@@ -566,17 +566,17 @@ function svn_utils_parse_access_file($gname) {
 
 
           if (strpos($who,'@') === 0) {
-            if (array_key_exists(substr($who,1),$SVNGROUPS)) {
-              reset($SVNGROUPS[substr($who,1)]); 
-	      while (list(,$user) = each($SVNGROUPS[substr($who,1)])) {
+            if (array_key_exists(strtolower(substr($who,1)),$SVNGROUPS)) {
+              reset($SVNGROUPS[strtolower(substr($who,1))]); 
+	      while (list(,$user) = each($SVNGROUPS[strtolower(substr($who,1))])) {
 		if (array_key_exists($user,$SVNACCESS) === false) $SVNACCESS[$user] = array();
                 $SVNACCESS[$user][$path] = $perm;
                 //echo "SVNACCESS[$user][$path] = $perm <br>\n";
               }
             }
           } else {
-            if (array_key_exists($who,$SVNACCESS) === false) $SVNACCESS[$who] = array();
-            $SVNACCESS[$who][$path] = $perm;
+            if (array_key_exists(strtolower($who),$SVNACCESS) === false) $SVNACCESS[strtolower($who)] = array();
+            $SVNACCESS[strtolower($who)][$path] = $perm;
             //echo "SVNACCESS[$who][$path] = $perm <br>\n";
           }
         }
@@ -623,6 +623,9 @@ function svn_utils_check_access($username, $gname, $svnpath) {
 
   if ( (user_getname()==$username) && (user_is_super_user())) return true;
 
+  # make sure that usernames are lowercase
+  $username = strtolower($username);
+  
   if ($SVNACCESS == "None") {
     svn_utils_parse_access_file($gname);
   }
