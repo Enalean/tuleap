@@ -69,6 +69,7 @@ class PermissionsManager {
         if (!isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
         }
+        
         if (count(array_diff($ugroups, array_keys($this->_permissions[$object_id]))) > 0) {
             $this->_retrievePermissions($object_id, $ugroups);
         }
@@ -76,6 +77,7 @@ class PermissionsManager {
         $has_permission = false;
         reset($ugroups);
         while (!$has_permission && (list(,$ugroup) = each($ugroups))) {
+		        	
             if (isset($this->_permissions[$object_id][$ugroup])) {
                 $has_permission = in_array($permission_type, $this->_permissions[$object_id][$ugroup]);
             }
@@ -169,6 +171,11 @@ class PermissionsManager {
     
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
+    }
+    
+    function isPermissionExist($object_id, $ptype){    	
+    	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
+    	return $dar->valid();
     }
 }
 ?>
