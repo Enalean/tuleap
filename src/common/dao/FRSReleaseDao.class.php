@@ -44,13 +44,8 @@ class FRSReleaseDao extends DataAccessObject {
     function searchInGroupById($id, $group_id) {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
-        $sql = sprintf("SELECT r.* "
-              ."FROM frs_release AS r, frs_package AS p WHERE p.group_id= %s " 
-			  ."AND r.release_id=%s "
-			  ."AND r.package_id=p.package_id ORDER BY release_date DESC LIMIT 1",
-			  $this->da->quoteSmart($_group_id),
-			  $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+        return $this->_search(' p.group_id='.$_group_id.' AND r.release_id='.$_id.' AND r.package_id=p.package_id',
+        					  '', ' ORDER BY release_date DESC LIMIT 1', array('frs_package AS p'));
     }
     
     function searchByGroupPackageReleaseID($release_id, $group_id, $package_id){
@@ -58,15 +53,9 @@ class FRSReleaseDao extends DataAccessObject {
         $_group_id = (int) $group_id;
         $_package_id = (int) $package_id;
         
-        $sql = sprintf("SELECT r.* "
-              ."FROM frs_release AS r, frs_package AS p WHERE p.package_id=%s " 
-			  ."AND p.group_id= %s "
-			  ."AND r.release_id=%s "
-			  ."AND r.package_id=p.package_id ORDER BY release_date DESC LIMIT 1",
-			  $this->da->quoteSmart($_package_id),
-			  $this->da->quoteSmart($_group_id),
-			  $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+        return $this->_search(' p.package_id='.$_package_id.' AND p.group_id='.$_group_id.' AND r.release_id='.$_id
+        					   .' AND r.package_id=p.package_id', '', 'ORDER BY release_date DESC LIMIT 1',
+        					   array('frs_package AS p'));
     }
     
     function searchByGroupPackageID($group_id, $package_id=null){
@@ -74,7 +63,6 @@ class FRSReleaseDao extends DataAccessObject {
         if($package_id){
         	$_package_id = (int) $package_id;
         }
-        
         $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, "
         		      ."r.status_id, s.name AS status_name "
               		  ."FROM frs_release AS r, frs_package AS p, frs_status AS s "
@@ -85,6 +73,15 @@ class FRSReleaseDao extends DataAccessObject {
 			  			$this->da->quoteSmart($_group_id),
 			  			$this->da->quoteSmart($_package_id));
         return $this->retrieve($sql);
+    }
+    
+    function searchInfoByReleaseID($release_id){
+    	$_release_id = $release_id;
+    	$sql = sprintf("SELECT frs_release.notes,frs_release.changes,frs_release.preformatted,frs_release.name,frs_package.group_id ".
+					   "FROM frs_release,frs_package ".
+					   "WHERE frs_release.package_id=frs_package.package_id AND frs_release.release_id=%s",
+					   $this->da->quoteSmart($_release_id));
+		return $this->retrieve($sql);		   
     }
 
     function searchByIdList($idList) {
@@ -101,9 +98,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function searchByPackageId($id) {
         $_id = (int) $id;
-        $sql = sprintf("SELECT * FROM frs_release WHERE package_id = %s",
-                $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+        return $this->_search(' package_id='.$_id,'', '');
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
@@ -118,17 +113,13 @@ class FRSReleaseDao extends DataAccessObject {
     
     function searchActiveReleasesByPackageId($id){
     	$_id = (int) $id;
-        $sql = sprintf("SELECT * FROM frs_release WHERE package_id = %s AND status_id = 1",
-                $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+    	return $this->_search(' package_id='.$_id.' AND status_id = 1','','ORDER BY release_date DESC, release_id DESC');
     }
     
     function searchReleaseByName($release_name, $package_id){
     	$_package_id = (int) $package_id;
-    	$sql = sprintf("SELECT * FROM frs_release WHERE package_id = %s AND name = %s",
-                $this->da->quoteSmart($_package_id),
-                $this->da->quoteSmart(htmlspecialchars($release_name)));
-        return $this->retrieve($sql);
+    	return $this->_search(' package_id='.$_package_id
+    	                      .' AND name='.$this->da->quoteSmart(htmlspecialchars($release_name)),'','');
     }
     
 

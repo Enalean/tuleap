@@ -48,22 +48,15 @@ class FRSPackageDao extends DataAccessObject {
     
     function searchByFileId($file_id){
        $_file_id = (int) $file_id;
-       
-       $sql = sprintf("SELECT p.approuve_license FROM frs_package AS p, frs_release AS r, frs_file AS f " .
-       		          "WHERE f.file_id = %s AND f.release_id = r.release_id " .
-       		          "AND r.package_id = p.package_id",
-                $this->da->quoteSmart($_file_id));
-        return $this->retrieve($sql);
+       return $this->_search(' f.file_id ='.$_file_id.' AND f.release_id = r.release_id AND r.package_id = p.package_id','',
+			   				 'ORDER BY rank DESC LIMIT 1', array('frs_release AS r','frs_file AS f'));
     }
     
     function searchInGroupByReleaseId($id, $group_id) {
        $_id = (int) $id;
        $_group_id = (int) $group_id;
-       $sql = sprintf("SELECT p.* FROM frs_package AS p, frs_release AS r WHERE p.group_id = %s AND r.release_id = %s " .
-       		          "AND p.package_id = r.package_id ORDER BY rank DESC LIMIT 1",
-                $this->da->quoteSmart($_group_id),
-                $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+       return $this->_search('p.group_id = '.$_group_id.' AND r.release_id = '.$_id.' AND p.package_id = r.package_id','',
+	   						 'ORDER BY rank DESC LIMIT 1', array('frs_release AS r'));
     }
 
     function searchByIdList($idList) {
@@ -82,6 +75,11 @@ class FRSPackageDao extends DataAccessObject {
         $_id = (int) $id; 
         return $this->_search(' p.group_id = '.$_id, '', ' ORDER BY rank ASC ');
     }
+    
+    function searchActivePackagesByGroupId($id){
+    	$_id = (int) $id;
+    	return $this->_search(' group_id='.$_id.' AND status_id = 1','','ORDER BY rank');
+    }
    
     function _search($where, $group = '', $order = '', $from = array()) {
         $sql = 'SELECT p.* '
@@ -96,10 +94,7 @@ class FRSPackageDao extends DataAccessObject {
     
     function searchPackageByName($package_name, $group_id){
     	$_group_id = (int) $group_id;
-    	$sql = sprintf("SELECT * FROM frs_package WHERE group_id = %s AND name = %s",
-                $this->da->quoteSmart($_group_id),
-                $this->da->quoteSmart(htmlspecialchars($package_name)));
-        return $this->retrieve($sql);
+    	return $this->_search(' group_id='.$_group_id.' AND name='.$this->da->quoteSmart(htmlspecialchars($package_name)),'','');
     }
     
 

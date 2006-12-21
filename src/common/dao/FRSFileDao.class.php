@@ -43,15 +43,9 @@ class FRSFileDao extends DataAccessObject {
     function searchInReleaseById($id, $group_id) {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
-        
-        $sql = sprintf("SELECT f.* "
-              ."FROM frs_file AS f, frs_release AS r, frs_package AS p WHERE p.group_id = %s " 
-			  ."AND r.release_id = f.release_id "
-			  ."AND r.package_id = p.package_id "
-			  ."AND f.file_id = %s ORDER BY release_date DESC LIMIT 1",
-			  $this->da->quoteSmart($_group_id),
-			  $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+        return $this->_search(' p.group_id='.$_group_id.' AND r.release_id = f.release_id' .
+        		              ' AND r.package_id = p.package_id AND f.file_id ='.$_id,'',
+        		              'ORDER BY post_date DESC LIMIT 1',array('frs_package AS p', 'frs_release AS r'));
     }
 
     function searchByIdList($idList) {
@@ -68,9 +62,7 @@ class FRSFileDao extends DataAccessObject {
      */
     function searchByReleaseId($id) {
         $_id = (int) $id;
-        $sql = sprintf("SELECT * FROM frs_file WHERE release_id = %s",
-                $this->da->quoteSmart($_id));
-        return $this->retrieve($sql);
+        return $this->_search(' release_id='.$_id,'','');
     }
     		
    
@@ -90,6 +82,18 @@ class FRSFileDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
    
+       
+    function searchInfoFileByReleaseID($release_id){
+    	$_release_id = (int) $release_id;
+    	
+    	$sql = sprintf("SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size," 
+				 	. "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor," 
+				 	. "frs_dlstats_filetotal_agg.downloads AS downloads  FROM frs_file " 
+				 	. "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id " 
+				 	. "WHERE release_id=%s" , 	
+				 	$this->da->quoteSmart($_release_id));
+		return $this->retrieve($sql);
+    }
    
     function _search($where, $group = '', $order = '', $from = array()) {
         $sql = 'SELECT f.* '
@@ -103,12 +107,9 @@ class FRSFileDao extends DataAccessObject {
     
     function searchFileByName($file_name, $group_id){
     	$_group_id = (int) $group_id;
-    	$sql = sprintf("SELECT f.* FROM frs_release AS r, frs_file AS f, frs_package AS p WHERE "
-    					."p.group_id = %s AND r.release_id = f.release_id "
-    					."AND r.package_id = p.package_id AND name = %s",
-                $this->da->quoteSmart($_group_id),
-                $this->da->quoteSmart($file_name));
-        return $this->retrieve($sql);
+    	return $this->_search(' p.group_id='.$_group_id.' AND r.release_id = f.release_id' .
+    						  ' AND r.package_id = p.package_id AND filename='.$this->da->quoteSmart($file_name),'',
+							  '', array('frs_package AS p', 'frs_release AS r'));
     }
 
     /**
