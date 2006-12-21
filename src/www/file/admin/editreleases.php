@@ -94,7 +94,7 @@ if (isset($submit)) {
 			} else {
 			  //check if release name exists already
 			  $release_exists = $frsrf->getReleaseIdByName($release_name, $package_id);
-			  if (!$release_exists || count($release_exists) < 1) { echo 'ok create';
+			  if (!$release_exists || count($release_exists) < 1) {
 			    //package_id was fine - now insert the release
 			    $array = array('package_id' => $package_id, 'name' => $release_name, 'status_id' => '1');
 			    $res= $frsrf->create($array);
