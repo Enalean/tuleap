@@ -13,6 +13,7 @@ require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FRSReleaseFactory.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/permission/PermissionsManager.class.php');
+require_once ('common/include/UserManager.class.php');
 $Language->loadLanguageMsg('file/file');
 
 // LJ Now only for registered users on CodeX
@@ -208,7 +209,7 @@ while (list ($package_id, $package_name) = each($res_package)) {
 
 }
 
-if ($proj_stats['size']) {
+if (isset ($proj_stats['size'])) {
 	print '<TR><TD COLSPAN="8">&nbsp;</TR>' . "\n";
 	print '<TR><TD><B>' . $Language->getText('file_showfiles', 'proj_total') . ': </B></TD>' . '<TD><B><I>' . $proj_stats['releases'] . '</I></B></TD>' . '<TD><B><I>' . $proj_stats['files'] . '</I></B></TD>' . '<TD><B><I>' . $proj_stats['size'] . '</I></B></TD>' . '<TD><B><I>' . $proj_stats['downloads'] . '</I></B></TD>' . '<TD COLSPAN="3">&nbsp;</TD></TR>' . "\n";
 }

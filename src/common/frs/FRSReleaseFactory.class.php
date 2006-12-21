@@ -28,6 +28,7 @@ require_once ('FRSRelease.class.php');
 require_once ('common/dao/FRSReleaseDao.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
+require_once('www/project/admin/ugroup_utils.php');
 /**
  * 
  */
@@ -265,7 +266,7 @@ class FRSReleaseFactory {
         $um =& UserManager::instance();
         $user =& $um->getUserById($user_id);
         if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
-        	$ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A')
+        	$ok = $user->isSuperUser() 
               	|| $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
 		} else{
         	$frspf = new FRSPackageFactory();
