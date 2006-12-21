@@ -63,7 +63,7 @@ if (user_isloggedin()) {
         //$sql="SELECT approve_license FROM frs_package,frs_release,frs_file WHERE frs_file.file_id=$file_id and frs_file.release_id=frs_release.release_id and  frs_release.package_id=frs_package.package_id";
         //res = db_query( $sql);
         if (count( $res ) > 0) {
-            if ($res->getApproveLicence()==0) {
+            if ($res->getApproveLicense()==0) {
                 // Directly display file
                 $location = "Location: /file/download.php/$group_id/$file_id/$filename";
                 header($location);
