@@ -298,7 +298,7 @@ function package_to_soap($package) {
                 'name' => $package->getName(),
                 'status_id' => $package->getStatusID(),
                 'rank' => $package->getRank(),
-                'approve_license' => $package->getApproveLicence()
+                'approve_license' => $package->getApproveLicense()
                 );
         } 
     }
