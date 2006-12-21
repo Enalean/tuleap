@@ -40,9 +40,9 @@ class FRSPackage extends Error {
      */
     var $rank;
     /**
-     * @var boolean $approve_licence true if the licence has been approved, false otherwise
+     * @var boolean $approve_license true if the license has been approved, false otherwise
      */
-    var $approve_licence;
+    var $approve_license;
     
     function FRSPackage($data_array = null) {
         $this->package_id       = null;
@@ -50,7 +50,7 @@ class FRSPackage extends Error {
         $this->name             = null;
         $this->status_id        = null;
         $this->rank             = null;
-        $this->approve_licence  = null;
+        $this->approve_license  = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -87,11 +87,11 @@ class FRSPackage extends Error {
     function setRank($rank) {
         $this->rank = (int) $rank;
     }
-    function getApproveLicence() {
-        return $this->approve_licence;
+    function getApproveLicense() {
+        return $this->approve_license;
     }
-    function setApproveLicence($approve_licence) {
-        $this->approve_licence = $approve_licence;
+    function setApproveLicense($approve_license) {
+        $this->approve_license = $approve_license;
     }
     
     function initFromArray($array) {
@@ -100,7 +100,7 @@ class FRSPackage extends Error {
         if (isset($array['name']))            $this->setName($array['name']);
         if (isset($array['status_id']))       $this->setStatusID($array['status_id']);
         if (isset($array['rank']))            $this->setRank($array['rank']);
-        if (isset($array['approve_licence'])) $this->setApproveLicence($array['approve_licence']);
+        if (isset($array['approve_license'])) $this->setApproveLicense($array['approve_license']);
     }
 
     function toArray() {
@@ -110,7 +110,7 @@ class FRSPackage extends Error {
         $array['name']            = $this->getName();
         $array['status_id']       = $this->getStatusID();
         $array['rank']            = $this->getRank();
-        $array['approve_licence'] = $this->getApproveLicence();
+        $array['approve_license'] = $this->getApproveLicense();
         return $array;
     }
     
