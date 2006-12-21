@@ -22,7 +22,7 @@
  * 
  * $Id$
  */
-require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class');
+require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 require_once('common/include/User.class.php');
 
 Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin'));

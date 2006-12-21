@@ -23,7 +23,7 @@
  * $Id$
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_NotificationsManager_Move.class');
+require_once(dirname(__FILE__).'/../include/Docman_NotificationsManager_Move.class.php');
 Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsManager_MoveTestVersion', 
     array(
         '_groupGetObject', 
@@ -54,16 +54,16 @@ Mock::generate('User');
 require_once('common/include/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class');
+require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 Mock::generate('Docman_ItemFactory');
 
-require_once(dirname(__FILE__).'/../include/Docman_Item.class');
+require_once(dirname(__FILE__).'/../include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
 
-require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class');
+require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');
 
-require_once(dirname(__FILE__).'/../include/Docman_Path.class');
+require_once(dirname(__FILE__).'/../include/Docman_Path.class.php');
 Mock::generate('Docman_Path');
 
 require_once('common/dao/NotificationsDao.class.php');

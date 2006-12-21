@@ -1,8 +1,8 @@
 <?php
-/* 
- * Copyright 2005, STMicroelectronics
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet
+ * Originally written by Nicolas Terray, 2006
  *
  * This file is a part of CodeX.
  *
@@ -19,26 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
  */
-
-require_once('WikiActions.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
-//require_once('InterWikiLink.class.php');
+require_once('Docman_Item.class.php');
 
 /**
- *
- * @package WikiService
- * @copyright STMicroelectronics, 2005
- * @author Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license http://opensource.org/licenses/gpl-license.php GPL
+ * Document is a transport object (aka container) used to share data between
+ * Model/Controler and View layer of the application
  */
-class WikiServiceActions extends WikiActions {
-  /* private */ var $gid;
-
-  function WikiServiceActions(&$controler, $id) {
-      $this->WikiActions($controler);
-    $this->gid = $id;
-  }
-
+class Docman_Document extends Docman_Item {
+    
+    function Docman_Document($data = null) {
+        parent::Docman_Item($data);
+    }
+    
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitDocument($this, $params);
+    }
 }
+
 ?>

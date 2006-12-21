@@ -28,7 +28,7 @@ require_once('common/dao/CodexDataAccess.class.php');
 require(getenv('CODEX_LOCAL_INC'));
 require($GLOBALS['db_config_file']);
 
-require_once(dirname(__FILE__).'/../include/Docman_MetadataListOfValuesElementDao.class');
+require_once(dirname(__FILE__).'/../include/Docman_MetadataListOfValuesElementDao.class.php');
 
 Mock::generate('DataAccess');
 Mock::generatePartial('Docman_MetadataListOfValuesElementDao', 'MetadataListOfValuesElementDaoTestVersion', array('update', 'retreive', 'prepareRanking'));

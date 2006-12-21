@@ -23,10 +23,10 @@
  * $Id$
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_MetadataFactory.class');
-require_once(dirname(__FILE__).'/../include/Docman_MetadataValueFactory.class');
+require_once(dirname(__FILE__).'/../include/Docman_MetadataFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Docman_MetadataValueFactory.class.php');
 
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class');
+require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 
 Mock::generate('Docman_MetadataDao');
 

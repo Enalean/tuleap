@@ -127,7 +127,7 @@ function createClass($fd, $className, $classFields, $dbFields, $extends='') {
     fwrite($fd, "}\n");
 }
 
-$cFileName = $className.'.class';
+$cFileName = $className.'.class.php';
 
 $cFd = fopen($cFileName, 'w');
 

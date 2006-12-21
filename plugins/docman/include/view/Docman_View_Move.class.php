@@ -1,0 +1,40 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_Move
+*/
+
+require_once('Docman_View_Details.class.php');
+
+require_once('Docman_View_ItemDetailsSectionMove.class.php');
+
+
+class Docman_View_Move extends Docman_View_Details {
+    
+    function _getTitle($params) {
+        return $GLOBALS['Language']->getText('plugin_docman', 'move', $params['item']->getTitle());
+    }
+    
+    function _content($params) {
+        parent::_content(
+            $params, 
+            new Docman_View_ItemDetailsSectionMove(
+                $params['item'], 
+                $params['default_url'], 
+                $this->_controller, 
+                array_merge(
+                    array('docman_icons' => $this->_getDocmanIcons($params)),
+                    $params
+                )
+            ), 
+            'actions'
+        );
+        
+    }
+}
+
+?>

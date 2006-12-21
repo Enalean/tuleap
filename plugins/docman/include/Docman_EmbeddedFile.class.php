@@ -1,8 +1,8 @@
 <?php
-/* 
- * Copyright 2005, STMicroelectronics
+/**
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet
+ * Originally written by Nicolas Terray, 2006
  *
  * This file is a part of CodeX.
  *
@@ -19,26 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * $Id$
  */
-
-require_once('WikiActions.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
-//require_once('InterWikiLink.class.php');
+require_once('Docman_File.class.php');
 
 /**
- *
- * @package WikiService
- * @copyright STMicroelectronics, 2005
- * @author Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license http://opensource.org/licenses/gpl-license.php GPL
+ * URL is a transport object (aka container) used to share data between
+ * Model/Controler and View layer of the application
  */
-class WikiServiceActions extends WikiActions {
-  /* private */ var $gid;
-
-  function WikiServiceActions(&$controler, $id) {
-      $this->WikiActions($controler);
-    $this->gid = $id;
-  }
-
+class Docman_EmbeddedFile extends Docman_File {
+    
+    function Docman_EmbeddedFile($data = null) {
+        parent::Docman_File($data);
+    }
+    
+    function accept(&$visitor, $params = array()) {
+        return $visitor->visitEmbeddedFile($this, $params);
+    }
+    
+    function toRow() {
+        $row = parent::toRow();
+        $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
+        return $row;
+    }
 }
+
 ?>
