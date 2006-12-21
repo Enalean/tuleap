@@ -57,7 +57,7 @@ echo '
 	<TD>'.$Language->getText('include_user_home','email_addr').': </TD>
 	<TD>
 	<B>
-	<A HREF="/sendmessage.php?touser='.db_result($res_user,0,'user_id').'">
+	<A HREF="mailto:'.db_result($res_user,0,'email').'">
 	'.db_result($res_user,0,'email').'	
 	</A></B>
 	</TD>
