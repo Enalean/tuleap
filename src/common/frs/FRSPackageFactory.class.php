@@ -25,7 +25,9 @@
 
 require_once('FRSPackage.class.php');
 require_once('common/dao/FRSPackageDao.class.php');
-
+require_once('common/include/UserManager.class.php');
+require_once('common/permission/PermissionsManager.class.php');
+require_once('FRSReleaseFactory.class.php');
 /**
  * 
  */
@@ -101,10 +103,16 @@ class FRSPackageFactory {
         return(FRSPackageFactory::getFRSPackageFromArray($data_array));
     }
     
-    function &getFRSPackagesFromDb($group_id) {
+    function &getFRSPackagesFromDb($group_id, $status_id=null) {
         $_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();
-        $dar = $dao->searchByGroupId($_id);
+        if($status_id){
+			$_status_id= (int) $status_id;  	
+        	$dar = $dao->searchActivePackagesByGroupId($_id);
+        }else{
+        	$dar = $dao->searchByGroupId($_id);
+        }
+        
         if($dar->isError()){
             return;
         }
@@ -112,11 +120,25 @@ class FRSPackageFactory {
         if(!$dar->valid()) {
             return;
         }
+        $um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
         
         $packages = array();
 		while ($dar->valid()){		
         	$data_array =& $dar->current();
-        	$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+        	if ($status_id){
+        		if($this->userCanRead($group_id, $data_array['package_id'],$user->getID())){
+        			$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+        		}else{
+        			$frsrf = new FRSReleaseFactory();
+        			$authorised_releases = $frsrf->getFRSReleasesFromDb($data_array['package_id'], 1, $group_id);
+        			if($authorised_releases && count($authorised_releases)>0){
+        				$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+        			}
+        		}
+        	}else{
+        		$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+        	}
         	$dar->next();
 		}
 
@@ -157,6 +179,35 @@ class FRSPackageFactory {
         $id = $dao->createFromArray($data_array);
         return $id;
     }
+    
+	/** return true if user has Read or Update permission on this package 
+	 * @param group_id: the project this package is in
+	 * @param package_id: the package id 
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanRead($group_id,$package_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A')
+              || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()))
+              || !$pm->isPermissionExist($package_id, 'PACKAGE_READ');
+        return $ok;
+	}
+
+	/** return true if user has Update permission on this package 
+	 * @param group_id: the project this field is in
+	 * @param group_artifact_id: the trackers id this field is in
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanUpdate($group_id,$package_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $user->isSuperUser() 
+              || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()));
+        return $ok;
+	}
 
 }
 

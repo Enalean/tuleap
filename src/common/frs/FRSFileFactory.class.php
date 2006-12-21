@@ -110,11 +110,34 @@ class FRSFileFactory {
 		return $file_info;
 
 	}
+	
+	function getFRSFileInfoListByReleaseFromDb($release_id) {
+		$_release_id = (int) $release_id;
+		$dao = & $this->_getFRSFileDao();
+		
+		$dar = $dao->searchInfoFileByReleaseID($_release_id);
+
+		if ($dar->isError()) {
+			return;
+		}
+
+		if (!$dar->valid()) {
+			return;
+		}	
+		
+		$file_info = array ();
+		while ($dar->valid()) {
+			$file_info[] = $dar->current();
+			$dar->next();
+		}
+		return $file_info;
+
+	}
     
     function isFileNameExist($file_name, $group_id){
     	$_id = (int) $group_id;
         $dao =& $this->_getFRSFileDao();
-        $dar = $dao->searchReleaseByName($file_name, $_id);
+        $dar = $dao->searchFileByName($file_name, $_id);
 
         if($dar->isError()){
             return;

@@ -27,6 +27,7 @@
 require_once ('FRSRelease.class.php');
 require_once ('common/dao/FRSReleaseDao.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
+require_once ('common/frs/FRSPackageFactory.class.php');
 /**
  * 
  */
@@ -70,10 +71,14 @@ class FRSReleaseFactory {
 		return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
 	}
 
-	function & getFRSReleasesFromDb($package_id) {
+	function & getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
-		$dar = $dao->searchByPackageId($_id);
+		if($status_id && $group_id){
+			$dar = $dao->searchActiveReleasesByPackageId($_id);
+		}else{
+			$dar = $dao->searchByPackageId($_id);
+		}
 
 		if ($dar->isError()) {
 			return;
@@ -82,11 +87,19 @@ class FRSReleaseFactory {
 		if (!$dar->valid()) {
 			return;
 		}
-
+		
+		$um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
 		$releases = array ();
 		while ($dar->valid()) {
 			$data_array = & $dar->current();
-			$releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+			if($status_id && $group_id){			
+				if($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())){
+					$releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+				}
+			}else{
+				$releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+			}
 			$dar->next();
 		}
 
@@ -119,7 +132,22 @@ class FRSReleaseFactory {
 		return $releases;
 	}
 	
-	
+	function getFRSReleasesInfoByReleaseIdFromDb($release_id) {
+		$_id = (int) $release_id;
+		$dao = & $this->_getFRSReleaseDao();
+
+		$dar = $dao->searchInfoByReleaseID($_id);
+
+		if ($dar->isError()) {
+			return;
+		}
+
+		if (!$dar->valid()) {
+			return;
+		}	
+
+		return $dar->current();
+	}
 
 	function isActiveReleases($package_id) {
 		$_id = (int) $package_id;
@@ -225,6 +253,39 @@ class FRSReleaseFactory {
 
 			return 1;
 		}
+	}
+	
+		/** return true if user has Read or Update permission on this release 
+	 * @param group_id: the package this release is in
+	 * @param release_id: the release id 
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanRead($group_id,$package_id,$release_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
+        	$ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A')
+              	|| $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
+		} else{
+        	$frspf = new FRSPackageFactory();
+        	$ok = $frspf->userCanRead($group_id, $package_id, $user_id);
+        }
+        return $ok;
+	}
+
+	/** return true if user has Update permission on this release 
+	 * @param group_id: the package this release is in
+	 * @param release_id: the release id
+	 * @param user_id: if not given or 0 take the current user
+	**/ 
+	function userCanUpdate($group_id,$release_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $user->isSuperUser() 
+              || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
+        return $ok;
 	}
 
 }
