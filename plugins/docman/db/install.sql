@@ -17,7 +17,9 @@ CREATE TABLE plugin_docman_item (
   wiki_page TEXT NULL,
   file_is_embedded INT(11) UNSIGNED NULL,
   PRIMARY KEY(item_id),
-  KEY idx_group_id (group_id)
+  KEY idx_group_id (group_id),
+  KEY parent_id (parent_id),
+  KEY rank (rank)
 );
 
 DROP TABLE IF EXISTS plugin_docman_version;
@@ -33,7 +35,8 @@ CREATE TABLE plugin_docman_version (
   filesize INT(11) UNSIGNED NULL,
   filetype TEXT NULL,
   path TEXT NULL,
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  KEY item_id (item_id)
 );
 
 DROP TABLE IF EXISTS plugin_docman_log;
@@ -98,7 +101,7 @@ CREATE TABLE plugin_docman_metadata (
   default_value text NOT NULL default '',
   use_it TINYINT(4)  NOT NULL default '0',
   PRIMARY KEY  (field_id,group_id),
-  KEY idx_name (name),
+  KEY idx_name (name (10)),
   KEY idx_group_id (group_id)
 );
 
@@ -126,8 +129,7 @@ CREATE TABLE plugin_docman_metadata_value (
   valueText text,
   valueDate int(11),
   valueString text,
-  KEY idx_field_id (field_id),
-  KEY idx_artifact_id (item_id)
+  KEY idx_field_item_id (field_id, item_id)
 );
 
 --
@@ -157,7 +159,8 @@ CREATE TABLE plugin_docman_metadata_love (
   rank int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
   PRIMARY KEY  (value_id),
-  KEY idx_fv_value_id (value_id),
+  KEY rank (rank),
+  KEY name (name (10)),
   KEY idx_fv_status (status)
 );
 
