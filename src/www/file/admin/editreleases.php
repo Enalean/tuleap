@@ -201,7 +201,6 @@ if (isset($submit)) {
 					  				'package_id' => $new_package_id, 'notes' =>$notes, 'changes' => $changes, 'release_id' => $release_id);
 					  $res = $frsrf->update($array);
 					} else {
-					
 					  $date_list = split("-",$release_date,3);
 					  $unix_release_time = mktime(0,0,0,$date_list[1],$date_list[2],$date_list[0]);
 					  $array = array('release_date' =>$unix_release_time, 'name' => $release_name, 'preformatted' => $preformatted, 'status_id' => $status_id, 
@@ -461,7 +460,6 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 */
 	$package =& $frspf->getFRSPackageByReleaseIDFromDb($release_id, $group_id);
 	$release =& $frsrf->getFRSReleaseFromDb($release_id, $group_id);
-
 	if (!$release || count($release) < 1 || !$package || count($package) < 1) {
 		//this result wasn't found
 		exit_error($Language->getText('global','error'),$Language->getText('file_admin_editreleases','rel_id_not_found'));

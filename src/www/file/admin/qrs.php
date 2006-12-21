@@ -14,6 +14,7 @@ require_once ('common/mail/Mail.class.php');
 require_once ('www/forum/forum_utils.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FRSReleaseFactory.class.php');
+require_once ('common/frs/FRSFileFactory.class.php');
 $Language->loadLanguageMsg('file/file');
 $Language->loadLanguageMsg('news/news');
 
@@ -32,6 +33,7 @@ file_utils_admin_header(array (
 ), 'help' => 'QuickFileRelease.html'));
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
+$frsff = new FRSFileFactory();
 if (isset ($submit)) {
 	//Sanitize some fields
 	$strings_to_sanitize = array (
@@ -142,6 +144,7 @@ if (isset ($submit)) {
 		if ($release_changes != "") {
 			$array['changes'] = $release_changes;
 		}
+		$array['release_id'] = $release_id;
 		$resupdate = $frsrf->update($array);
 		//$resupdate = db_query("UPDATE frs_release SET $fields_str WHERE release_id='$release_id'");
 	}
