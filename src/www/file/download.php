@@ -23,7 +23,7 @@ if (user_isloggedin()) {
   // Now make an innerjoin on the 4 tables to be sure
   // that the file_id we have belongs to the given group_id
 
-  $frsff = new FRSFileFactory(); echo $file_id;
+  $frsff = new FRSFileFactory();
   $res_file = $frsff->getFRSFileInfoListFromDb($group_id, $file_id);
 
   $num_files = count($res_file );
@@ -34,7 +34,6 @@ if (user_isloggedin()) {
     exit_error($Language->getText('file_download','incorrect_release_id'), $Language->getText('file_download','report_error',$GLOBALS['sys_name']));
   }
   $file_release = $res_file[0];
-echo 'bla';
 
   // Check permissions for release, then package
   if (permission_exist('RELEASE_READ', $file_release['release_id'])) {
