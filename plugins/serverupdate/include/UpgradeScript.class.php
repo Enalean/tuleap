@@ -128,7 +128,21 @@ class UpgradeScript extends SVNCommitedFile {
         return false;
     }
     
-    
+    /**
+    * @static
+    */
+    function isTheGenericScript($branch, $path) {
+        // Check if the file is located in the script directory
+        if (! UpgradeScript::isInScriptDirectory($branch, $path)) {
+            return false;
+        }
+        if (basename($path) == 'CodeXUpgrade.class.php') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function showSpecials($iconsPath) {
         return '<img src="'.$iconsPath.'script_update.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_script','Script_Upgrades').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_script','Script_Upgrades').'"/>';
     }

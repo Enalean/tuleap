@@ -117,9 +117,10 @@ class SVNUpdate {
     /**
      * Returns all the available upgrade scripts :
      * - located in the scripts directory, and
-     * - has the extension .class, and
+     * - has the extension .php, and
      * - under version control, and
-     * - implementing the generic Upgrade Script CodeXUpgrade
+     * - implementing the generic Upgrade Script CodeXUpgrade and
+     * - is not CodeXUpgrade itself !
      *
      * @return array all the script-upgrades found in the script directory and well formed. Array of {UpgradeScript} Object
      */
@@ -461,7 +462,8 @@ class SVNUpdate {
                 break;
             case XML_COMMIT_PATH:
                 // a file can be a simple file or a script
-                if (UpgradeScript::isInScriptDirectory($this->getBranch(), $current_data)) {
+                if (UpgradeScript::isInScriptDirectory($this->getBranch(), $current_data) &&
+                    ! UpgradeScript::isTheGenericScript($this->getBranch(), $current_data)) {
                     $current_script = new UpgradeScript($this->getBranch());
                     $current_script->setAction($current_file->getAction());
                     $current_script->setPath($current_data);
