@@ -62,6 +62,8 @@ class FRSReleaseDao extends DataAccessObject {
         $_group_id = (int) $group_id;
         if($package_id){
         	$_package_id = (int) $package_id;
+        }else{
+        	$_package_id = null;
         }
         $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, "
         		      ."r.status_id, s.name AS status_name "
