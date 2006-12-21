@@ -62,7 +62,7 @@ class PermissionsDao extends DataAccessObject {
     * Searches Permissions by ObjectId and Ugroups
     * @return DataAccessResult
     */
-    function & searchPermissionsByObjectId($objectId, $ptype=null) {
+    function & searchPermissionsByObjectId($objectId, $ptype=null) { 	
         if(is_array($objectId)) {
             $_where_clause = ' object_id IN ('.implode(',',$objectId).')';
         }
@@ -70,7 +70,7 @@ class PermissionsDao extends DataAccessObject {
             $_where_clause = ' object_id = '.$objectId;
         }
         if($ptype !== null) {
-            $_where_clause .= ' AND permission_type IN ('.implode(',',$ptype).')';
+            $_where_clause .= ' AND permission_type IN (\''.implode(',',$ptype).'\')';
         }
 
         $sql = sprintf("SELECT * FROM permissions WHERE ".$_where_clause);
