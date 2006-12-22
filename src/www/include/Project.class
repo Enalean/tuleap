@@ -147,7 +147,7 @@ class Project extends Group {
     }
 
     function usesDocman() {
-        return $this->use_service['doc'];
+        return isset($this->use_service['doc']) && $this->use_service['doc'];
     }
 
     function usesPatch() {
