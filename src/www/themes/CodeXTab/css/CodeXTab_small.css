@@ -19,6 +19,11 @@
 .smaller,
 .header_actions ul       { font-size: xx-small;  }
 
+/*input text fields*/
+input[type="text"] { background-color: #ffffff; }
+.small { width: 150px; }
+.medium { width: 324px; }
+
 body,
 .menutable,
 .disable,

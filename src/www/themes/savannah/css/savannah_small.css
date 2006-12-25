@@ -27,6 +27,11 @@ a:hover { text-decoration: underline; color: #ff0000; }
 a:visited { text-decoration:none; color: #8b4020}
 a:active { text-decoration:none; color: #000000}
 
+/*input text fields*/
+input[type="text"] { background-color: #fff4a8; }
+.small { width: 150px; }
+.medium { width: 324px; }
+
 img { border: none; }
 
 .smaller { font-size: xx-small; }
