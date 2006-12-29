@@ -84,6 +84,7 @@ forum_forum_utils	proj_latest_news	Project Latest News
 forum_forum_utils	discuss_forum	Discussion Forums
 forum_forum_utils	stop_monitor	Stop Monitoring Forum
 forum_forum_utils	monitor	Monitor Forum
+forum_forum_utils	monitor_thread	Monitor Threads
 forum_forum_utils	save_place	Save Place
 forum_forum_utils	start_thread	Start New Thread
 forum_forum_utils	admin	Admin

@@ -677,6 +677,18 @@ CREATE TABLE forum_monitored_forums (
 ) TYPE=MyISAM;
 
 #
+# Table structure for 'forum_monitored_threads' table
+#
+
+CREATE TABLE forum_monitored_threads (
+  thread_monitor_id int(11) NOT NULL auto_increment,
+  forum_id int(11) NOT NULL default '0',
+  thread_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  PRIMARY KEY (thread_monitor_id)
+) TYPE=MyISAM;
+
+#
 # Table structure for table 'forum_saved_place'
 #
 

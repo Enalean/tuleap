@@ -94,20 +94,22 @@ function forum_header($params) {
             echo '<P><B>';
 
             if ($forum_id && user_isloggedin() ) {
-                if (forum_is_monitored($forum_id,user_getid()) )
+                if (forum_is_monitored($forum_id,user_getid()) ) {
                     $msg = $Language->getText('forum_forum_utils','stop_monitor');
-                else 
+                } else {
                     $msg = $Language->getText('forum_forum_utils','monitor');
-                
-		echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
-        echo html_image("ic/check.png",array()).' '.$msg.'</A> | '.
-                    '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
-		echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
+                }
+	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
+                echo html_image("ic/check.png",array()).' '.$msg.'</A> | ';
+		echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'">';
+		echo html_image("ic/check.png",array()).' '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | '.
+	        '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
+	        echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
                 print ' <a href="#start_new_thread">';
-		echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
+	        echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
                 if (isset($msg_id) && $msg_id) {
                     echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
-                } else {
+	        } else {
                     echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
                 }
 	    }
