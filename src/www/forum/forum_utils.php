@@ -673,4 +673,14 @@ function forum_utils_news_access($forum_id) {
     return true;
 }
 
+function forum_thread_monitor($forum_id, $thread_id, $user_id) {
+    
+}
+
+function forum_thread_is_monitored($thread_id, $user_id) {
+    $sql="SELECT * FROM forum_monitored_threads WHERE user_id='".$user_id."' AND thread_id='$thread_id';";
+    $result = db_query($sql);
+    return ($result && db_numrows($result) >= 1);
+}
+
 ?>

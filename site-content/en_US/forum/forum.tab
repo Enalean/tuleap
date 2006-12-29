@@ -163,3 +163,8 @@ forum_thread	post_to_thread	Post to this thread
 forum_thread	choose_thread	Choose Thread
 forum_thread	choose_thread_first	Sorry, Choose A Thread First
 forum_thread	view_thread	View Thread
+#
+#-----------------------------------------------
+# Script: src/www/forum/monitor_thread.php
+#
+forum_monitor_thread	tmonitor	Monitor?

@@ -25,18 +25,22 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
-$Language->loadLanguageMsg('forum/forum');
+$GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 if ( !user_isloggedin()) {
     exit_not_logged_in();
     return;
 }
 
+if(array_key_exists('submit', $_POST) && isset($_POST['submit'])) {
+    
+}
+
 if ($forum_id) {
 
     // Check permissions
     if (!forum_utils_access_allowed($forum_id)) {
-        exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
+        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('forum_forum','forum_restricted'));            
     }
 
     //If the forum is associated to a private news, non-allowed users shouldn't be able to save their places in this forum
@@ -44,7 +48,7 @@ if ($forum_id) {
     $res = db_query($qry);
     if (db_numrows($res) > 0) {
         if (!forum_utils_news_access($forum_id)) {	    
-	    exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
+	    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('news_admin_index','permission_denied'));
 	}
     }
 
@@ -77,21 +81,33 @@ if ($forum_id) {
 
     if (!$result || $rows < 1) {
 	//empty forum
-	$ret_val .= $Language->getText('forum_forum','no_msg',$forum_name) .'<P>'. db_error();
+	$ret_val .= $GLOBALS['Language']->getText('forum_forum','no_msg',$forum_name) .'<P>'. db_error();
     } else {
         $title_arr=array();
-        $title_arr[]=$Language->getText('forum_forum','thread');
-        $title_arr[]=$Language->getText('forum_forum','author');
-	$title_arr[]=$Language->getText('forum_forum','date');
+        $title_arr[]=$GLOBALS['Language']->getText('forum_monitor_thread','tmonitor');
+	$title_arr[]=$GLOBALS['Language']->getText('forum_forum','thread');
+        $title_arr[]=$GLOBALS['Language']->getText('forum_forum','author');
+	$title_arr[]=$GLOBALS['Language']->getText('forum_forum','date');
 
         $ret_val .= html_build_list_table_top ($title_arr);
     
         $total_rows=0;
         $i=0;
         while (($total_rows < $max_rows) && ($i < $rows)) {
+	    if (forum_thread_is_monitored(db_result($result, $i, 'thread_id'), db_result($result, $i, 'user_id'))) {
+	        $tmvalue = 1;
+		$checked = "CHECKED";
+	    } else {
+	        $tmvalue = 0;
+		$checked = "";
+	    }
+	    
 	    $total_rows++;  
 	    $ret_val .= '
-		        <TR class="'. util_get_alt_row_color($total_rows) .'"><TD><A HREF="/forum/message.php?msg_id='.
+		        <TR class="'. util_get_alt_row_color($total_rows) .'">'.
+			'<TD align="center"><FORM NAME="thread_monitor" action="/forum/forum.php?forum_id='.$forum_id.'" METHOD="POST">'.
+			'<INPUT TYPE="checkbox" NAME="mthread[]" VALUE="'.$tmvalue.'" '.$checked.'></TD>'.
+			'<TD><A HREF="/forum/message.php?msg_id='.
 		        db_result($result, $i, 'msg_id').'">'.
 		        '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
 	    $ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
@@ -99,7 +115,7 @@ if ($forum_id) {
 			'<TD>'.format_date($GLOBALS['sys_datefmt'],db_result($result,$i,'date')).'</TD></TR>';	
   	    $i++;
         }
-	$ret_val .= '</TABLE>';
+	$ret_val .= '</TABLE><P><INPUT TYPE="submit" NAME="submit"></FORM>';
     }	
     
     echo $ret_val;
@@ -108,8 +124,8 @@ if ($forum_id) {
 
 } else {
 
-    forum_header(array('title'=>$Language->getText('global','error')));
-    echo '<H1'.$Language->getText('forum_forum','choose_forum_first').'</H1>';
+    forum_header(array('title'=>$GLOBALS['Language']->getText('global','error')));
+    echo '<H1'.$GLOBALS['Language']->getText('forum_forum','choose_forum_first').'</H1>';
     forum_footer(array());
 
 }
