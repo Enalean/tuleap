@@ -673,8 +673,28 @@ function forum_utils_news_access($forum_id) {
     return true;
 }
 
-function forum_thread_monitor($forum_id, $thread_id, $user_id) {
-    
+function forum_thread_monitor($mthread, $user_id, $forum_id) {
+
+    $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
+	 "FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by AND forum.is_followup_to=0 AND forum_group_list.group_forum_id = forum.group_forum_id ".
+	 "ORDER BY forum.date DESC";
+
+    $result=db_query($sql);
+    while ($rows = db_fetch_array($result)) {
+        $thread_id = $rows['thread_id'];
+	if (in_array($thread_id,$mthread)) {
+	    if (! forum_thread_is_monitored($thread_id, $user_id)) {
+	        $qry = "INSERT INTO forum_monitored_threads (forum_id, thread_id, user_id) VALUES ('$forum_id','$thread_id','$user_id')";
+		$res = db_query($qry);
+	    }
+	} else {
+	    if (forum_thread_is_monitored($thread_id, $user_id)) {
+	        $qry = "DELETE FROM forum_monitored_threads WHERE forum_id='$forum_id' AND thread_id='$thread_id' AND user_id='$user_id'";
+	        $res = db_query($qry);  
+	    }
+	}	
+    }
+
 }
 
 function forum_thread_is_monitored($thread_id, $user_id) {

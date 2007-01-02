@@ -32,8 +32,9 @@ if ( !user_isloggedin()) {
     return;
 }
 
-if(array_key_exists('submit', $_POST) && isset($_POST['submit'])) {
-    
+if($mthread) {
+    //set user-specific thread monitoring preferences
+    forum_thread_monitor($mthread, $user_id, $forum_id);
 }
 
 if ($forum_id) {
@@ -90,23 +91,25 @@ if ($forum_id) {
 	$title_arr[]=$GLOBALS['Language']->getText('forum_forum','date');
 
         $ret_val .= html_build_list_table_top ($title_arr);
-    
+
         $total_rows=0;
         $i=0;
         while (($total_rows < $max_rows) && ($i < $rows)) {
-	    if (forum_thread_is_monitored(db_result($result, $i, 'thread_id'), db_result($result, $i, 'user_id'))) {
-	        $tmvalue = 1;
-		$checked = "CHECKED";
+	    $thr_id = db_result($result, $i, 'thread_id');
+	    if (forum_thread_is_monitored($thr_id, user_getid())) {
+	        $monitored = "CHECKED";
 	    } else {
-	        $tmvalue = 0;
-		$checked = "";
+	        $monitored = "";
 	    }
 	    
 	    $total_rows++;  
 	    $ret_val .= '
 		        <TR class="'. util_get_alt_row_color($total_rows) .'">'.
-			'<TD align="center"><FORM NAME="thread_monitor" action="/forum/forum.php?forum_id='.$forum_id.'" METHOD="POST">'.
-			'<INPUT TYPE="checkbox" NAME="mthread[]" VALUE="'.$tmvalue.'" '.$checked.'></TD>'.
+			'<TD align="center"><FORM NAME="thread_monitor" action="'.$PHP_SELF.'" METHOD="POST">'.
+			'<INPUT TYPE="hidden" NAME="thread_id" VALUE="'.$thr_id.'">'.
+			'<INPUT TYPE="hidden" NAME="user_id" VALUE="'.user_getid().'">'.
+			'<INPUT TYPE="hidden" NAME="forum_id" VALUE="'.$forum_id.'">'.
+			'<INPUT TYPE="checkbox" NAME="mthread[]" VALUE="'.$thr_id.'" '.$monitored.'></TD>'.
 			'<TD><A HREF="/forum/message.php?msg_id='.
 		        db_result($result, $i, 'msg_id').'">'.
 		        '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
