@@ -43,6 +43,8 @@ forum_admin_index	add_forum	Add Forum
 forum_admin_index	del_msg	Delete Message
 forum_admin_index	update_forum_status	Update Forum Info/Status
 forum_admin_index	params_missing	Missing forum name or description, please press the "Back" button and complete this information
+forum_admin_index	thread_monitoring	Monitoring
+forum_admin_index	enable_thread_monitoring	Enable Thread Monitoring?
 #
 #-----------------------------------------------
 # Script: SF/www/forum/expand.php
@@ -117,6 +119,7 @@ forum_forum_utils	people_monitoring	people monitoring
 forum_forum_utils	no_one_monitoring	no one monitoring
 forum_forum_utils	on_post_monitoring	You are monitoring this forum.
 forum_forum_utils	on_post_not_monitoring	$1<strong>Monitor the forum</strong>
+forum_forum_utils	monitor_this_thread	<strong>Monitor this thread</strong>
 #
 #-----------------------------------------------
 # Script: SF/www/forum/index.php
@@ -168,3 +171,4 @@ forum_thread	view_thread	View Thread
 # Script: src/www/forum/monitor_thread.php
 #
 forum_monitor_thread	tmonitor	Monitor?
+forum_monitore_thread	now_thread_monitoring	Thread is now being monitored

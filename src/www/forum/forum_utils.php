@@ -101,9 +101,13 @@ function forum_header($params) {
                 }
 	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
                 echo html_image("ic/check.png",array()).' '.$msg.'</A> | ';
-		echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'">';
-		echo html_image("ic/check.png",array()).' '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | '.
-	        '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
+		
+		if (thread_monitoring_is_enabled($group_id,$forum_id)) {
+		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'">';
+		    echo html_image("ic/check.png",array()).' '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
+		}
+	        
+		echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 	        echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
                 print ' <a href="#start_new_thread">';
 	        echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
@@ -470,6 +474,15 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		}
 
 		$msg_id=db_insertid($result);
+		
+		if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring']) {
+		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
+		    /*if (forum_thread_add_monitor ($forum_id, $thread_id, user_getid()) ) {
+                        $feedback .= $Language->getText('forum_monitor_thread','now_thread_monitoring');              
+                    } else {
+                        $feedback .= $Language->getText('forum_forum_utils','insert_err');
+                    }*/
+		}    
 		handle_monitoring($group_forum_id,$msg_id);
 
 	} else {
@@ -514,14 +527,15 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	  <TR><TD COLSPAN="2" ALIGN="center">
 		<B><span class="highlight"><?php echo $Language->getText('forum_forum_utils','html_displays_as_text'); ?></span></B>
 	  </TR>
+	  <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" <?php if (forum_is_monitored($forum_id,user_getid())) echo "disabled"; ?> checked></TD>
+	  <TD><?php echo $GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread'); ?></TD>
+	  </TR>
           <TR><td>&nbsp;</td><TD ALIGN="left">
 <?php
 if(forum_is_monitored($forum_id,user_getid())){
     print '<EM>'.$Language->getText('forum_forum_utils','on_post_monitoring').'</EM>';
 }
-else {
-    print $Language->getText('forum_forum_utils','on_post_not_monitoring', array('<INPUT TYPE="checkbox" name="enable_monitoring" value="1">'));
-}
+
 ?>               
 
 	  </TR>
@@ -698,9 +712,26 @@ function forum_thread_monitor($mthread, $user_id, $forum_id) {
 }
 
 function forum_thread_is_monitored($thread_id, $user_id) {
+    
     $sql="SELECT * FROM forum_monitored_threads WHERE user_id='".$user_id."' AND thread_id='$thread_id';";
     $result = db_query($sql);
     return ($result && db_numrows($result) >= 1);
+
+}
+
+function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
+           
+    $sql = "INSERT INTO forum_monitored_threads (forum_id, thread_id, user_id) VALUES ('$forum_id', '$thread_id', '$user_id')";
+    $res = db_query($sql);
+	    
+}
+
+function thread_monitoring_is_enabled($group_id, $forum_id) {
+    
+    $sql = "SELECT * FROM forum_group_list WHERE group_id='$group_id' AND group_forum_id='$forum_id'";
+    $res = db_query($sql);
+    return db_result($res,0,'thread_monitored');
+    
 }
 
 ?>

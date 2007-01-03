@@ -174,6 +174,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			$title_arr=array();
 			$title_arr[]=$Language->getText('forum_admin_index','forum');
 			$title_arr[]=$Language->getText('global','status');
+			$title_arr[]=$GLOBALS['Language']->getText('forum_admin_index','thread_monitoring');
 			$title_arr[]=$Language->getText('forum_admin_index','update');
 		
 			echo html_build_list_table_top ($title_arr);
@@ -193,11 +194,15 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"'.((db_result($result,$i,'is_public')=='1')?' CHECKED':'').'> '.$Language->getText('global','yes').'<BR>
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"'.((db_result($result,$i,'is_public')=='0')?' CHECKED':'').'> '.$Language->getText('global','no').'<BR>
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> '.$Language->getText('forum_admin_index','deleted').'<BR>
+					</TD><TD valign="top">
+						<B>'.$GLOBALS['Language']->getText('forum_admin_index','enable_thread_monitoring').'</B><BR>
+						<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="1"'.((db_result($result,$i,'thread_monitored')=='1')?' CHECKED':'').'>'.$GLOBALS['Language']->getText('global','yes').'<BR>
+						<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="0"'.((db_result($result,$i,'thread_monitored')=='0')?' CHECKED':'').'>'.$GLOBALS['Language']->getText('global','no').'<BR>						
 					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 					</TD></TR>
-					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
+					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">
 						<B>'.$Language->getText('forum_admin_index','forum_name').':</B><BR>
 						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="'. db_result($result,$i,'forum_name').'" SIZE="30" MAXLENGTH="50"><BR>
 						<B>'.$Language->getText('forum_admin_index','description').':</B><BR>
