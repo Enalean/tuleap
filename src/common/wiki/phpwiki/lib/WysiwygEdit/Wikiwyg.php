@@ -18,33 +18,29 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 
     function WysiwygEdit_Wikiwyg() {
         global $LANG;
+	
         $this->_transformer_tags = false;
 	$this->BasePath = DATA_PATH.'/themes/default/Wikiwyg';
 	$this->_htmltextid = "edit:content";
         $this->_wikitextid = "editareawiki";
-    	$this->_jsdefault = "
-var base_url = '".DATA_PATH."';
-var data_url = '$this->BasePath';
-var script_url = '".deduce_script_name()."';
-";
     }
 
     function Head($name='edit[content]') {
-        global $WikiTheme;
-        foreach (array("Wikiwyg.js","Wikiwyg/Toolbar.js","Wikiwyg/Preview.js","Wikiwyg/Wikitext.js",
-                       "Wikiwyg/Wysiwyg.js","Wikiwyg/Phpwiki.js","Wikiwyg/HTML.js",
-                       "Wikiwyg/Toolbar.js") as $js) {
-            $WikiTheme->addMoreHeaders
-                (Javascript('', array('src' => $this->BasePath . '/' . $js,
-                                      'language' => 'JavaScript')));
-        }
-        $doubleClickToEdit = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT) 
-            ? 'true' : 'false';
-        return JavaScript($this->_jsdefault . "
+        global $WikiTheme, $wysiwyg_editor_params;
+	
+	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Debug.js", "Wikiwyg/HTML.js", 
+				 "Wikiwyg/Phpwiki.js", "Wikiwyg/Preview.js", "Wikiwyg/Toolbar.js", 
+				 "Wikiwyg/Wikitext.js", "Wikiwyg/Wysiwyg.js");
+	
+	$wysiwyg_editor_params['WYSIWYG_SCRIPT'] = "
+var base_url = '/wiki';
+var data_url = '/wiki/themes/MacOSX/Wikiwyg';
+var script_url = '/wiki/index.php';
+
 window.onload = function() {
    var wikiwyg = new Wikiwyg.Phpwiki();
    var config = {
-            doubleClickToEdit:  $doubleClickToEdit,
+            doubleClickToEdit:  false,
             javascriptLocation: base_url+'/themes/default/Wikiwyg/',
             toolbar: {
 	        imagesLocation: base_url+'/themes/default/Wikiwyg/images/',
@@ -66,18 +62,18 @@ window.onload = function() {
 		       'label', 'p', 'h2', 'h3', 'h4', 'pre'
 				], 
 		controlLabels: {
-	               save:     '"._("Apply changes")."',
-		       cancel:   '"._("Exit toolbar")."',
-		       h2:       '"._("Title 1")."',
-		       h3:       '"._("Title 2")."',
-		       h4:       '"._("Title 3")."',
-		       verbatim: '"._("Verbatim")."',
-                       toc:   '"._("Table of content")."', 
-                       wikitext:   '"._("Insert Wikitext section")."', 
-                       sup:      '"._("Sup")."', 
-                       sub:      '"._("Sub")."',
-                       preview:  '"._("Preview")."',   
-                       save_button:'"._("Save")."'   
+	               save:     'Apply changes',
+		       cancel:   'Exit toolbar',
+		       h2:       'Title 1',
+		       h3:       'Title 2',
+		       h4:       'Title 3',
+		       verbatim: 'Verbatim',
+                       toc:   'Table of content', 
+                       wikitext:   'Insert Wikitext section', 
+                       sup:      'Sup', 
+                       sub:      'Sub',
+                       preview:  'Preview',   
+                       save_button:'Save'   
 	              }
             },
             wysiwyg: {
@@ -87,21 +83,28 @@ window.onload = function() {
 	      supportCamelCaseLinks: true
 	    }
    };
-   var div = document.getElementById(\"" . $this->_htmltextid . "\");
+   var div = document.getElementById(\"edit[content]\");
    wikiwyg.createWikiwygArea(div, config);
    wikiwyg_divs.push(wikiwyg);
    wikiwyg.editMode();
-}");
+}";
+	
+	//FIXME: Find a way to move this variable content to "/wiki/views/WikiViews.class " 
+	//where wysiwyg script is inserted into $params array.   
+        $wysiwyg_editor_params['doubleClickToEdit'] = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT) 
+            ? 'true' : 'false';
+	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = '';
     }
 
     function Textarea ($textarea, $wikitext, $name='edit[content]') {
+        global $wysiwyg_editor_params;
         $htmltextid = $this->_htmltextid;
         $textarea->SetAttr('id', $htmltextid);
         $iframe0 = new RawXml('<iframe id="iframe0" height="0" width="0" frameborder="0"></iframe>');
         $out = HTML($textarea,
                     $iframe0,
 		    "\n");
-	return $out;
+	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = $out;
     }
 
     /**

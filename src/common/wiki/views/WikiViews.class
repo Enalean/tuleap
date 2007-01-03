@@ -139,7 +139,15 @@ class WikiViews extends Views {
    * Display Wiki Service header
    */
   function header() {
+    global $wysiwyg_editor_params;
     $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki-codex.css';
+  
+    //Get wysiwyg editor scripts and parameters  
+    $this->html_params['WIKIWYG_SCRIPTS'] = $wysiwyg_editor_params['WIKIWYG_SCRIPTS'];
+    $this->html_params['WYSIWYG_SCRIPT'] = $wysiwyg_editor_params['WYSIWYG_SCRIPT'];
+    //$this->html_params['doubleClickToEdit'] = $wysiwyg_editor_params['doubleClickToEdit'];
+    $this->html_params['WYSIWYG_TEXTAREA'] = $wysiwyg_editor_params['WYSIWYG_TEXTAREA'];
+    
     parent::header();
     $this->displayMenu();
   }
