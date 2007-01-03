@@ -200,11 +200,35 @@ class Layout extends Error {
                 if (isset($project_feed)) {
                     echo $project_feed;
                 }
+		
+		//Here we add  wysiwyg scripts output
+		// These were moved from TextArea() function in "phpwiki-root/WysiwygEdit/Wikiwyg.php"
+		if(isset($params['WIKIWYG_SCRIPTS']) && is_array($params['WIKIWYG_SCRIPTS'])) {
+		    print "\n";
+		    print "<!--\nHere we load WIKIWYG basic scripts\n-->";
+		    foreach($params['WIKIWYG_SCRIPTS'] as $js) {
+			print "\n";
+			print '<script type="text/javascript" langage="JavaScript" src="/wiki/themes/default/Wikiwyg/'.$js.'"></script>';
+		    }
+		    print "\n";
+		}
+		if(isset($params['WYSIWYG_SCRIPT'])) {
+		    print "\n<!--\nHere is the main WYSIWYG script\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print $params['WYSIWYG_SCRIPT'];
+		    print "</script> \n";
+		}
+		if(isset($params['WYSIWYG_TEXTAREA'])){
+		    echo $params['WYSIWYG_TEXTAREA'];
+		    print "\n";
+		}
+
+	
 	}
 
 	function generic_header_end($params) {
 	?>
-   </HEAD>
+</HEAD>
 <?php
 	}
 
@@ -248,12 +272,13 @@ class Layout extends Error {
 	function header($params) {
 	global $Language;
 	
-	        $this->generic_header_start($params); 
+	    $this->generic_header_start($params); 
 
-        	//themable someday?
-	        $site_fonts='verdana,arial,helvetica,sans-serif';
-
-        $this->generic_header_end($params); 
+	    //themable someday?
+	    $site_fonts='verdana,arial,helvetica,sans-serif';
+	    
+	    $this->generic_header_end($params); 
+	
 ?>
 
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0">
