@@ -443,7 +443,7 @@ function form_NewRow()
     if (! $gInForm) {
         trigger_error("Form item outside form: Form_NewRow()");
     }
-    print "</tr>\n<tr>\n";
+    print "</tr>\n<tr style='vertical-align: top;'>\n";
 }
 
 //============================================================================
@@ -464,7 +464,7 @@ function form_Text($Text, $SectionSpan = 1)
     if (! $gInForm) {
         trigger_error("Form item outside form: form_Text()");
     }
-    print "</tr>\n<tr><td colspan='".(ceil($SectionSpan)*2)."'>".Nz($Text, "&nbsp;")."</td></tr>\n<tr>\n";
+    print "</tr>\n<tr style='vertical-align: top;'><td colspan='".(ceil($SectionSpan)*2)."'>".Nz($Text, "&nbsp;")."</td></tr>\n<tr style='vertical-align: top;'>\n";
 }
 
 //============================================================================
@@ -926,7 +926,7 @@ function form_genTextArea($ParamName, $Caption, $DefaultValue = "", $MinRows = F
 //============================================================================
 function form_TableStart($BorderWidth)
 {
-    print "\n<table border='$BorderWidth' cellspacing='1' cellpadding='2'><tr>\n";
+    print "\n<table border='$BorderWidth' cellspacing='1' cellpadding='2'><tr style='vertical-align: top;'>\n";
 }
 
 //============================================================================

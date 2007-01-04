@@ -9,10 +9,14 @@ define("PROJECT_FAMILY_ADMIN_LINK_DELETE", "project_family_admin_link_delete");
 define("PROJECT_FAMILY_ADMIN_TYPE_DELETE", "project_family_admin_type_delete");
 define("PROJECT_FAMILY_ADMIN_LINK_UPDATE", "project_family_admin_link_update");
 define("PROJECT_FAMILY_ADMIN_TYPE_UPDATE", "project_family_admin_type_update");
+define("PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC_UPDATE", "project_family_admin_template_sync_update");
+define("PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC_TYPE_ADD", "project_family_admin_template_sync_type_add");
+define("PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC_TYPE_UPDATE", "project_family_admin_template_sync_type_update");
 
 // forms for user to inspect/update data
 define("PROJECT_FAMILY_ADMIN_LINK_SHOW", "project_family_admin_link_show");
 define("PROJECT_FAMILY_ADMIN_TYPE_SHOW", "project_family_admin_type_show");
+define("PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC", "project_family_admin_template_sync");
 
 // default values for linking uri
 define("PF_DEFAULT_PROJECT_LINK", '/projects/$projname/');
@@ -96,7 +100,7 @@ function ProjectFamilyActionHandler($group_id, $func)
             $pfcheck = db_query("SELECT name FROM plugin_related_project_link_type WHERE (
                     ((name=".DataAccess::quoteSmart($name).") OR (reverse_name=".DataAccess::quoteSmart($reverse_name)."))
                     AND ((group_id=$group_id)".(isset($link_type_id)?" AND (link_type_id<>$link_type_id)":"").")
-                );", True);
+                );");
             if (db_numrows($pfcheck) > 0) {
                 $feedback .= ' '.$Language->getText('plugin_pfamily', 'project_link_type_change_makes_duplicate');
             } elseif (db_update("plugin_related_project_link_type", array(
@@ -124,35 +128,71 @@ function ProjectFamilyActionHandler($group_id, $func)
                     exit_error("invalid data", "3.2"); // unexpected error - no translation reqd.
                 }
             }
-            // check the change would not create a duplicate:
-            //   same target project and link type
-            $pfcheck = db_query("SELECT link_type_id FROM plugin_related_project_relationship WHERE (
-                    (target_group_id=$target_group_id)
-                    AND (master_group_id=$group_id)
-                    AND (link_type_id=$link_type_id)
-                    ".(isset($link_id)?" AND (link_id<>$link_id)":"")."
-                )");
-            if (db_numrows($pfcheck) > 0) {
-                $feedback .= ' '.$Language->getText('plugin_pfamily', 'project_link_change_makes_duplicate');
-            } else {
-                $updates = array(
-                        "link_type_id" => $link_type_id,
-                        "target_group_id" => $target_group_id,
-                        "master_group_id" => $group_id
-                        );
-                if (! isset($link_id)) {
-                    $updates["creation_date"] = time(); // new item - set date, otherwise leave it alone
-                }
-                if (db_update("plugin_related_project_relationship", $updates, isset($link_id)?"link_id=$link_id":"")) {
-                    $feedback .= ' '.$Language->getText('plugin_pfamily', 'update_ok').' ';
-                } else {
-                    $feedback .= ' '.$Language->getText('plugin_pfamily', 'update_failed', db_error());
+            $feedback .= ' '.pf_link_unique_update($group_id, $target_group_id, $link_type_id, (isset($link_id)?$link_id:NULL));
+            if (! isset($link_id)) {
+                // if this is a new link to a template: add links to all the projects created from the template already
+                $db_res = db_query("SELECT group_id
+                    FROM groups
+                    WHERE (built_from_template = $target_group_id);");
+                while ($row = db_fetch_array($db_res)) {
+                    $feedback .= ' '.pf_link_unique_update($group_id, $row['group_id'], $link_type_id);
                 }
             }
             $handledIt = TRUE;
             break;
+
+        case PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC_TYPE_ADD:
+            // add template-defined type
+            //template_type_id
+            $handledIt = TRUE;
+            break;
+
+        case PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC_TYPE_UPDATE:
+            // copy from template into existing link type
+            //template_type_id
+            //link_type_id
+            $handledIt = TRUE;
+            break;
+
+        case PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC_UPDATE:
+            // add template-defined links
+            //link_id
+            $handledIt = TRUE;
+            break;
     }
     return $handledIt;
+}
+
+//======================================================================================================
+function pf_link_unique_update($group_id, $target_group_id, $link_type_id, $link_id = NULL)
+{
+    // check the change would not create a duplicate (same target project and link type)
+    global $Language;
+
+    $pfcheck = db_query("SELECT link_type_id FROM plugin_related_project_relationship WHERE (
+            (target_group_id=$target_group_id)
+            AND (master_group_id=$group_id)
+            AND (link_type_id=$link_type_id)
+            ".(is_null($link_id)?"":" AND (link_id<>$link_id)")."
+        )");
+    if (db_numrows($pfcheck) > 0) {
+        $feedback = $Language->getText('plugin_pfamily', 'project_link_change_makes_duplicate', group_getname($target_group_id));
+    } else {
+        $updates = array(
+                "link_type_id" => $link_type_id,
+                "target_group_id" => $target_group_id,
+                "master_group_id" => $group_id
+                );
+        if (is_null($link_id)) {
+            $updates["creation_date"] = time(); // new item - set date, otherwise leave it alone
+        }
+        if (db_update("plugin_related_project_relationship", $updates, is_null($link_id)?"":"link_id=$link_id")) {
+            $feedback = $Language->getText('plugin_pfamily', 'update_ok_named', group_getname($target_group_id)).' ';
+        } else {
+            $feedback = $Language->getText('plugin_pfamily', 'update_failed_named', array(db_error(), group_getname($target_group_id)));
+        }
+    }
+    return $feedback;
 }
 
 //======================================================================================================
@@ -166,7 +206,7 @@ function showProjectFamilyLinkButton($group_id)
     }
     $ProjectFamilyMaster = user_get_preference("ProjectFamilies_GroupId_master");
     if ($ProjectFamilyMaster && ($ProjectFamilyMaster != $group_id)) {
-        print ' '.MkAH(pf_get_img_add_link(), "/project/admin/pfamilyadmin.php?disp=".PROJECT_FAMILY_ADMIN_LINK_SHOW."&amp;target_group_id=$group_id&amp;group_id=$ProjectFamilyMaster", $Language->getText('plugin_pfamily','link_to_me', group_getname($ProjectFamilyMaster)));
+        print " ".MkAH(pf_get_img_add_link(), "/project/admin/pfamilyadmin.php?disp=".PROJECT_FAMILY_ADMIN_LINK_SHOW."&amp;target_group_id=$group_id&amp;group_id=$ProjectFamilyMaster", $Language->getText('plugin_pfamily','link_to_me', group_getname($ProjectFamilyMaster)));
     }
 }
 
@@ -188,7 +228,7 @@ function showProjectFamilylinks($group_id, $ShowAsAdmin)
 
         if (! $doneHeader) {
             $doneHeader = TRUE;
-            echo $HTML->box1_top("<span style='white-space: nowrap;'>".$Language->getText('plugin_pfamily', 'project_families')."</span>
+            print $HTML->box1_top("<span style='white-space: nowrap;'>".$Language->getText('plugin_pfamily', 'project_families')."</span>
                 <div style='width: 18em;'>");
         }
     }
@@ -244,7 +284,7 @@ function showProjectFamilylinks($group_id, $ShowAsAdmin)
             if ((time() - $row_pfLinks['creation_date']) < 604800) {    //created within the week?
                 print pf_get_img_new($row_pfLinks['creation_date']) . " ";
             }
-            print '</span>';
+            print "</span>";
         }
         if ($twistieOpen) {
             TwistieEnd();
