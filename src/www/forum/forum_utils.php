@@ -102,7 +102,7 @@ function forum_header($params) {
 	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
                 echo html_image("ic/check.png",array()).' '.$msg.'</A> | ';
 		
-		if (thread_monitoring_is_enabled($group_id,$forum_id)) {
+		if (thread_monitoring_is_enabled($forum_id)) {
 		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'">';
 		    echo html_image("ic/check.png",array()).' '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
 		}
@@ -183,13 +183,13 @@ function forum_delete_monitor ($forum_id, $user_id) {
 /**
  * @return forum_id = -1 if error
  */
-function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='') {
+function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='',$thread_monitor) {
   global $feedback,$Language;
 	/*
 		Adding forums to this group
 	*/
-	$sql="INSERT INTO forum_group_list (group_id,forum_name,is_public,description) ".
-		"VALUES ('$group_id','". htmlspecialchars($forum_name) ."','$is_public','". htmlspecialchars($description) ."')";
+	$sql="INSERT INTO forum_group_list (group_id,forum_name,is_public,description,thread_monitored) ".
+		"VALUES ('$group_id','". htmlspecialchars($forum_name) ."','$is_public','". htmlspecialchars($description) ."','$thread_monitor')";
 
 	$result=db_query($sql);
 	if (!$result) {
@@ -726,9 +726,9 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
 	    
 }
 
-function thread_monitoring_is_enabled($group_id, $forum_id) {
+function thread_monitoring_is_enabled($forum_id) {
     
-    $sql = "SELECT * FROM forum_group_list WHERE group_id='$group_id' AND group_forum_id='$forum_id'";
+    $sql = "SELECT * FROM forum_group_list WHERE group_forum_id='$forum_id'";
     $res = db_query($sql);
     return db_result($res,0,'thread_monitored');
     

@@ -171,4 +171,5 @@ forum_thread	view_thread	View Thread
 # Script: src/www/forum/monitor_thread.php
 #
 forum_monitor_thread	tmonitor	Monitor?
-forum_monitore_thread	now_thread_monitoring	Thread is now being monitored
+forum_monitor_thread	now_thread_monitoring	Thread is now being monitored
+forum_monitor_thread	thread_monitor_disabled	Thread monitoring is disabled in this forum.

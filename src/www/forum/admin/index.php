@@ -65,7 +65,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		        if (!$forum_name || $forum_name == '' || !$description || $description == '') {
 			  $feedback .= exit_error($Language->getText('global','error'),$Language->getText('forum_admin_index','params_missing'));
 		        } else {
-			    $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
+			    $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description,$thread_monitor_enable);
 			    if ($is_monitored) {
 			       forum_add_monitor($fid, user_getid());
 			    }
@@ -76,7 +76,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 				Change a forum to public/private
 			*/
 			$sql="UPDATE forum_group_list SET is_public='$is_public',forum_name='". htmlspecialchars($forum_name) ."',".
-				"description='". htmlspecialchars($description) ."' ".
+				"description='". htmlspecialchars($description) ."' ,thread_monitored='$thread_monitor_enable' ".
 				"WHERE group_forum_id='$group_forum_id' AND group_id='$group_id'";
 			$result=db_query($sql);
 			if (!$result || db_affected_rows($result) < 1) {
@@ -136,7 +136,9 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<P><B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> '.$Language->getText('global','no').'<P>
-			<P>
+			<P><B>'.$GLOBALS['Language']->getText('forum_admin_index','enable_thread_monitoring').'</B><BR>
+			<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
+			<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="0"> '.$Language->getText('global','no').'<P>			
 			<P><B>'.$Language->getText('forum_admin_index','monitor').'</B><BR>
                                                       '.$Language->getText('forum_admin_index','monitor_recommendation').' <br>
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
@@ -181,7 +183,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 			for ($i=0; $i<$rows; $i++) {
 				echo '
-					<TR class="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
+					<TR class="'.util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
 				echo '
 					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -196,8 +198,8 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 						<INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> '.$Language->getText('forum_admin_index','deleted').'<BR>
 					</TD><TD valign="top">
 						<B>'.$GLOBALS['Language']->getText('forum_admin_index','enable_thread_monitoring').'</B><BR>
-						<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="1"'.((db_result($result,$i,'thread_monitored')=='1')?' CHECKED':'').'>'.$GLOBALS['Language']->getText('global','yes').'<BR>
-						<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="0"'.((db_result($result,$i,'thread_monitored')=='0')?' CHECKED':'').'>'.$GLOBALS['Language']->getText('global','no').'<BR>						
+						<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="1"'.((db_result($result,$i,'thread_monitored')=='1')?' CHECKED':'').'> '.$GLOBALS['Language']->getText('global','yes').'<BR>
+						<INPUT TYPE="RADIO" NAME="thread_monitor_enable" VALUE="0"'.((db_result($result,$i,'thread_monitored')=='0')?' CHECKED':'').'> '.$GLOBALS['Language']->getText('global','no').'<BR>						
 					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
