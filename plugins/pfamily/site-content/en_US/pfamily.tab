@@ -13,16 +13,30 @@ plugin_pfamily	link_enable_explanation	Checking this makes visible a <i>[link to
 plugin_pfamily	link_update_head	Project Family link for <span style='font-size: larger;'>$1</span>: link to <i>$2</i>
 plugin_pfamily	project_link_deleted_OK	Project link deleted OK
 plugin_pfamily	update_ok	update OK
-plugin_pfamily	set_to_default	Set to default
+plugin_pfamily	update_ok_named	update OK ($1)
 plugin_pfamily	update_failed	update failed (MySQL reason: "$1")
+plugin_pfamily	update_failed_named	update failed [$2] (MySQL reason: "$1")
+plugin_pfamily	set_to_default	Set to default
 plugin_pfamily	delete_invalid	Delete link invalid - check with the administrator
 plugin_pfamily	template_marker	template project
 plugin_pfamily	back_links	Linking Projects
 plugin_pfamily	newly_added	link added: $1
 plugin_pfamily	note_personal_settings	Please note that this is a personal setting that applies only to you, not to the project.
 plugin_pfamily	project_link_type_change_makes_duplicate	That change would create a duplicate link name or reverse-name - link type not updated
-plugin_pfamily	project_link_change_makes_duplicate	That change would create a duplicate link - link not updated
+plugin_pfamily	project_link_change_makes_duplicate	Update cancelled (it would create a duplicate link to "$1")
 plugin_pfamily	tooltip_update	update details
+#
+plugin_pfamily	synchronise_with_template	Re-Synchronise with Template
+plugin_pfamily	synchronise_checkit	Check the box to add the links from the template
+plugin_pfamily	sync_type	Additional &amp; Modified project link types
+plugin_pfamily	sync_link_new	Additional links to other projects
+plugin_pfamily	sync_link_new_no_type	The link cannot be added because there is no matching link type "$1" defined in the project.
+plugin_pfamily	sync_link_add	add
+plugin_pfamily	sync_link_template	template
+plugin_pfamily	sync_link_project	project
+plugin_pfamily	sync_link_update	update
+plugin_pfamily	sync_link_needs_type	link type required
+plugin_pfamily	sync_link_matched	matched
 #
 # default link types
 #
