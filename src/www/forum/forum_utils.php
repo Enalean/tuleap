@@ -483,7 +483,8 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
                         $feedback .= $Language->getText('forum_forum_utils','insert_err');
                     }*/
 		}    
-		handle_monitoring($group_forum_id,$msg_id);
+		//handle_monitoring($group_forum_id,$msg_id);
+		handle_thread_monitoring($group_forum_id,$thread_id,$msg_id);
 
 	} else {
 
@@ -583,7 +584,7 @@ function handle_monitoring($forum_id,$msg_id) {
 
 	if ($result && $rows > 0) {
 		$tolist=implode(result_column_to_array($result),', ');
-		//echo $tolist;
+		echo $tolist;
 		$sql="SELECT groups.unix_group_name,user.user_name,user.realname,forum_group_list.forum_name,".
 			"forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
 			"FROM forum,user,forum_group_list,groups ".
@@ -626,6 +627,18 @@ function handle_monitoring($forum_id,$msg_id) {
 		$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' - '.$Language->getText('forum_forum_utils','no_one_monitoring').' ';
 		echo db_error();
 	}
+}
+
+function handle_thread_monitoring ($forum_id, $thread_id, $msg_id) {
+    
+    $sql="SELECT user.email from forum_monitored_threads,user ".
+	 "WHERE forum_monitored_threads.user_id=user.user_id AND forum_monitored_threads.forum_id='$forum_id' AND forum_monitored_threads.thread_id='$thread_id' AND ( user.status='A' OR user.status='R' )";
+    $result=db_query($sql);
+    $rows=db_numrows($result);
+    if ($result && $rows > 0) {
+        $tolist=implode(result_column_to_array($result),', ');
+    }
+    
 }
 
 function recursive_delete($msg_id,$forum_id) {
@@ -721,8 +734,10 @@ function forum_thread_is_monitored($thread_id, $user_id) {
 
 function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
            
-    $sql = "INSERT INTO forum_monitored_threads (forum_id, thread_id, user_id) VALUES ('$forum_id', '$thread_id', '$user_id')";
-    $res = db_query($sql);
+    if (! forum_thread_is_monitored($thread_id,$user_id)) {  
+        $sql = "INSERT INTO forum_monitored_threads (forum_id, thread_id, user_id) VALUES ('$forum_id', '$thread_id', '$user_id')";
+        $res = db_query($sql);
+    }
 	    
 }
 
