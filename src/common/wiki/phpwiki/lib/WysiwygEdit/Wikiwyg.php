@@ -28,13 +28,12 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
     function Head($name='edit[content]') {
         global $WikiTheme, $wysiwyg_editor_params;
 	
-	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Debug.js", "Wikiwyg/HTML.js", 
-				 "Wikiwyg/Phpwiki.js", "Wikiwyg/Preview.js", "Wikiwyg/Toolbar.js", 
-				 "Wikiwyg/Wikitext.js", "Wikiwyg/Wysiwyg.js");
+	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
+				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
 	
 	$wysiwyg_editor_params['WYSIWYG_SCRIPT'] = "
 var base_url = '/wiki';
-var data_url = '/wiki/themes/MacOSX/Wikiwyg';
+var data_url = '/wiki/themes/default/Wikiwyg';
 var script_url = '/wiki/index.php';
 
 window.onload = function() {
@@ -83,7 +82,7 @@ window.onload = function() {
 	      supportCamelCaseLinks: true
 	    }
    };
-   var div = document.getElementById(\"edit[content]\");
+   var div = document.getElementById(\"edit:content\");
    wikiwyg.createWikiwygArea(div, config);
    wikiwyg_divs.push(wikiwyg);
    wikiwyg.editMode();
