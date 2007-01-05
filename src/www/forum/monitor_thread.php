@@ -32,9 +32,13 @@ if ( !user_isloggedin()) {
     return;
 }
 
-if($mthread) {
+if($submit) {
     //set user-specific thread monitoring preferences
-    forum_thread_monitor($mthread, $user_id, $forum_id);
+    if (forum_thread_monitor($mthread, $user_id, $forum_id)) {
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_success'); 
+    } else {
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_fail'); 
+    }
 }
 
 if ($forum_id) {
@@ -49,15 +53,6 @@ if ($forum_id) {
         exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('forum_forum','forum_restricted'));            
     }
 
-    //If the forum is associated to a private news, non-allowed users shouldn't be able to save their places in this forum
-    $qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
-    $res = db_query($qry);
-    if (db_numrows($res) > 0) {
-        if (!forum_utils_news_access($forum_id)) {	    
-	    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('news_admin_index','permission_denied'));
-	}
-    }
-
     $result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
     $group_id=db_result($result,0,'group_id');
     $forum_name=db_result($result,0,'forum_name');
@@ -66,24 +61,11 @@ if ($forum_id) {
                       'pv'   =>isset($pv)?$pv:false);
     forum_header($params);
     
-    if ((!isset($offset)) || ($offset < 0)) {
-	$offset=0;
-    } 
-
-    if (!isset($max_rows) || $max_rows < 5) {
-	$max_rows=25;
-    }  
-    
     $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
 	"FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by AND forum.is_followup_to=0 AND forum_group_list.group_forum_id = forum.group_forum_id ".
-	"ORDER BY forum.date DESC LIMIT $offset,".($max_rows+1);
-
+	"ORDER BY forum.date DESC" ;
     $result=db_query($sql);
-    $rows=db_numrows($result);
-
-    if ($rows > $max_rows) {
-	$rows=$max_rows;
-    }
+    $rows=db_numrows($result);    
 
     if (!$result || $rows < 1) {
 	//empty forum
@@ -96,10 +78,15 @@ if ($forum_id) {
 	$title_arr[]=$GLOBALS['Language']->getText('forum_forum','date');
 
         $ret_val .= html_build_list_table_top ($title_arr);
-
-        $total_rows=0;
+	
+	if (forum_is_monitored ($forum_id, user_getid())) {
+	    $disabled = "disabled";
+	} else {
+	    $disabled = "";
+	}
+        
         $i=0;
-        while (($total_rows < $max_rows) && ($i < $rows)) {
+        while ($i < $rows) {
 	    $thr_id = db_result($result, $i, 'thread_id');
 	    if (forum_thread_is_monitored($thr_id, user_getid())) {
 	        $monitored = "CHECKED";
@@ -107,14 +94,26 @@ if ($forum_id) {
 	        $monitored = "";
 	    }
 	    
-	    $total_rows++;  
+	    $ret_val .= '<script language="JavaScript">
+		        <!--
+			function checkAll(val) {
+			    al=document.thread_monitor;
+			    len = al.elements.length;
+                            var i=0;
+                            for(i=0 ; i<len ; i++) {
+                                if (al.elements[i].name==\'mthread[]\') {al.elements[i].checked=val;}
+                            }
+			}
+		       //-->
+		       </script>';
+
 	    $ret_val .= '
-		        <TR class="'. util_get_alt_row_color($total_rows) .'">'.
+		        <TR class="'. util_get_alt_row_color($i) .'">'.
 			'<TD align="center"><FORM NAME="thread_monitor" action="'.$PHP_SELF.'" METHOD="POST">'.
 			'<INPUT TYPE="hidden" NAME="thread_id" VALUE="'.$thr_id.'">'.
 			'<INPUT TYPE="hidden" NAME="user_id" VALUE="'.user_getid().'">'.
 			'<INPUT TYPE="hidden" NAME="forum_id" VALUE="'.$forum_id.'">'.
-			'<INPUT TYPE="checkbox" NAME="mthread[]" VALUE="'.$thr_id.'" '.$monitored.'></TD>'.
+			'<INPUT TYPE="checkbox" '.$disabled.' NAME="mthread[]" VALUE="'.$thr_id.'" '.$monitored.'></TD>'.
 			'<TD><A HREF="/forum/message.php?msg_id='.
 		        db_result($result, $i, 'msg_id').'">'.
 		        '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
@@ -123,10 +122,16 @@ if ($forum_id) {
 			'<TD>'.format_date($GLOBALS['sys_datefmt'],db_result($result,$i,'date')).'</TD></TR>';	
   	    $i++;
         }
-	$ret_val .= '</TABLE><P><INPUT TYPE="submit" NAME="submit"></FORM>';
+	$ret_val .= '</TABLE><a href="javascript:checkAll(1)">'.$GLOBALS['Language']->getText('tracker_include_report','check_all_items').'</a>'.
+               	    ' - <a href="javascript:checkAll(0)">'.$GLOBALS['Language']->getText('tracker_include_report','clear_all_items').' </a>'.
+		    '<P><INPUT TYPE="submit" '.$disabled.' NAME="submit"></FORM>';
     }	
     
     echo $ret_val;
+    
+    if (forum_is_monitored ($forum_id, user_getid())) {  
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','notice');
+    }
     
     forum_footer($params);
 

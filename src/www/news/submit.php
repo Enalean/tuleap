@@ -24,7 +24,7 @@ if (user_isloggedin()) {
              if one isn't already there
             */
 
-            $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
+            $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0,'',0);
             $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
                 " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
             $result=db_query($sql);

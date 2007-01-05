@@ -103,8 +103,7 @@ function forum_header($params) {
                 echo html_image("ic/check.png",array()).' '.$msg.'</A> | ';
 		
 		if (thread_monitoring_is_enabled($forum_id)) {
-		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'">';
-		    echo html_image("ic/check.png",array()).' '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
+		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
 		}
 	        
 		echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
@@ -477,14 +476,8 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		
 		if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring']) {
 		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
-		    /*if (forum_thread_add_monitor ($forum_id, $thread_id, user_getid()) ) {
-                        $feedback .= $Language->getText('forum_monitor_thread','now_thread_monitoring');              
-                    } else {
-                        $feedback .= $Language->getText('forum_forum_utils','insert_err');
-                    }*/
 		}    
-		//handle_monitoring($group_forum_id,$msg_id);
-		handle_thread_monitoring($group_forum_id,$thread_id,$msg_id);
+		handle_monitoring($group_forum_id,$thread_id,$msg_id);
 
 	} else {
 
@@ -528,9 +521,21 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	  <TR><TD COLSPAN="2" ALIGN="center">
 		<B><span class="highlight"><?php echo $Language->getText('forum_forum_utils','html_displays_as_text'); ?></span></B>
 	  </TR>
-	  <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" <?php if (forum_is_monitored($forum_id,user_getid())) echo "disabled"; ?> checked></TD>
-	  <TD><?php echo $GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread'); ?></TD>
-	  </TR>
+	  <?php 
+	  if (thread_monitoring_is_enabled($forum_id)) { 
+	      if (forum_is_monitored($forum_id,user_getid())) {
+	          $disabled = "disabled";
+	      } else {
+	          $disabled = "";
+	      }	  
+	      if (!$subject) {
+	          echo '
+	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" '.$disabled.' checked></TD>
+	           <TD> '.$GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread').'</TD>
+	           </TR>'; 
+	      }
+	  }
+	 ?>
           <TR><td>&nbsp;</td><TD ALIGN="left">
 <?php
 if(forum_is_monitored($forum_id,user_getid())){
@@ -558,7 +563,7 @@ if(forum_is_monitored($forum_id,user_getid())){
 
 }
 
-function handle_monitoring($forum_id,$msg_id) {
+function handle_monitoring($forum_id,$thread_id,$msg_id) {
     global $feedback,$sys_lf,$Language;
 	/*
 		Checks to see if anyone is monitoring this forum
@@ -567,8 +572,14 @@ function handle_monitoring($forum_id,$msg_id) {
 
 	$res=news_read_permissions($forum_id);
 	if ((db_numrows($res) < 1)) {
-	    $sql="SELECT user.email from forum_monitored_forums,user ".
-		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
+	    if (! thread_monitoring_is_enabled($forum_id)) {
+	        $sql="SELECT user.email from forum_monitored_forums,user ".
+		     "WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
+	    } else {
+	        //check if there are users monitoring specific threads
+		$sql="(SELECT user.email from forum_monitored_forums,user WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )) ".
+		     "UNION (SELECT user.email from forum_monitored_threads,user WHERE forum_monitored_threads.user_id=user.user_id AND forum_monitored_threads.forum_id='$forum_id' AND forum_monitored_threads.thread_id='$thread_id' AND ( user.status='A' OR user.status='R' ))"; 
+	    }
 	} else {
 	    //we are dealing with private news, only project members are allowed to monitor
 	    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'";
@@ -584,7 +595,6 @@ function handle_monitoring($forum_id,$msg_id) {
 
 	if ($result && $rows > 0) {
 		$tolist=implode(result_column_to_array($result),', ');
-		echo $tolist;
 		$sql="SELECT groups.unix_group_name,user.user_name,user.realname,forum_group_list.forum_name,".
 			"forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
 			"FROM forum,user,forum_group_list,groups ".
@@ -627,18 +637,6 @@ function handle_monitoring($forum_id,$msg_id) {
 		$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' - '.$Language->getText('forum_forum_utils','no_one_monitoring').' ';
 		echo db_error();
 	}
-}
-
-function handle_thread_monitoring ($forum_id, $thread_id, $msg_id) {
-    
-    $sql="SELECT user.email from forum_monitored_threads,user ".
-	 "WHERE forum_monitored_threads.user_id=user.user_id AND forum_monitored_threads.forum_id='$forum_id' AND forum_monitored_threads.thread_id='$thread_id' AND ( user.status='A' OR user.status='R' )";
-    $result=db_query($sql);
-    $rows=db_numrows($result);
-    if ($result && $rows > 0) {
-        $tolist=implode(result_column_to_array($result),', ');
-    }
-    
 }
 
 function recursive_delete($msg_id,$forum_id) {
@@ -702,25 +700,33 @@ function forum_utils_news_access($forum_id) {
 
 function forum_thread_monitor($mthread, $user_id, $forum_id) {
 
-    $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-	 "FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by AND forum.is_followup_to=0 AND forum_group_list.group_forum_id = forum.group_forum_id ".
-	 "ORDER BY forum.date DESC";
+    if ($mthread == NULL) {
+	//no thread is monitored    
+        $del = "DELETE FROM forum_monitored_threads WHERE user_id='$user_id' AND forum_id='$forum_id'";
+	$res = db_query($del);
+    } else {
+        $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
+	     "FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by AND forum.is_followup_to=0 AND forum_group_list.group_forum_id = forum.group_forum_id ".
+	     "ORDER BY forum.date DESC";
 
-    $result=db_query($sql);
-    while ($rows = db_fetch_array($result)) {
-        $thread_id = $rows['thread_id'];
-	if (in_array($thread_id,$mthread)) {
-	    if (! forum_thread_is_monitored($thread_id, $user_id)) {
-	        $qry = "INSERT INTO forum_monitored_threads (forum_id, thread_id, user_id) VALUES ('$forum_id','$thread_id','$user_id')";
-		$res = db_query($qry);
-	    }
-	} else {
-	    if (forum_thread_is_monitored($thread_id, $user_id)) {
-	        $qry = "DELETE FROM forum_monitored_threads WHERE forum_id='$forum_id' AND thread_id='$thread_id' AND user_id='$user_id'";
-	        $res = db_query($qry);  
-	    }
-	}	
+        $result=db_query($sql);
+        while ($rows = db_fetch_array($result)) {
+            $thread_id = $rows['thread_id'];
+	    if (in_array($thread_id,$mthread)) {
+	        if (! forum_thread_is_monitored($thread_id, $user_id)) {
+	            $qry1 = "INSERT INTO forum_monitored_threads (forum_id, thread_id, user_id) VALUES ('$forum_id','$thread_id','$user_id')";
+		    $res1 = db_query($qry1);
+	        }
+	    } else {
+	        if (forum_thread_is_monitored($thread_id, $user_id)) {
+	            $qry2 = "DELETE FROM forum_monitored_threads WHERE forum_id='$forum_id' AND thread_id='$thread_id' AND user_id='$user_id'";
+	            $res2 = db_query($qry2);  
+	        }
+	    }	
+        }
     }
+    
+    return true;
 
 }
 
@@ -739,6 +745,20 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
         $res = db_query($sql);
     }
 	    
+}
+
+function forum_thread_delete_monitor($forum_id,$msg_id) {
+    
+    $sql = "SELECT * FROM forum WHERE group_forum_id='$forum_id' AND msg_id='$msg_id'";
+    $res = db_query($sql);
+    $is_followup_to = db_result($res,0,'is_followup_to');
+    //delete monitor settings only if the message (to be deleted) is the parent  
+    if ($is_followup_to == 0) {
+        $thread_id = db_result($res,0,'thread_id');
+        $qry = "DELETE FROM forum_monitored_threads WHERE forum_id='$forum_id' AND thread_id='$thread_id'";
+        $result= db_query($qry);
+    }	
+    
 }
 
 function thread_monitoring_is_enabled($forum_id) {
