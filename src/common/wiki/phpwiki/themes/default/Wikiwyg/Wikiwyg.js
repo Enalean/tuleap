@@ -123,7 +123,7 @@ proto.createWikiwygArea = function(div, config) {
 };
 
 proto.config = {
-    javascriptLocation: 'lib/',
+    javascriptLocation: 'Wikiwyg/',
     doubleClickToEdit: false,
     toolbarClass: 'Wikiwyg.Toolbar',
     modeClasses: [ 
