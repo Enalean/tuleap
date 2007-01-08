@@ -6,7 +6,7 @@
 //
 // $Id$
 
-require((getenv('CODEX_LOCAL_INC')||'/etc/codex/conf/local.inc'));
+require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 require_once('browser.php');
 require_once('database.php');
