@@ -14,6 +14,12 @@
 #    This Python file fetches the SVN access file and determine whether
 #    a given user has access to a given path in the repository
 #
+# Warning:
+#    Some of this code source is writing in PHP too.
+#    If you modify part of this code, thanks to check if
+#    the corresponding PHP code needs to be updated too.
+#    (see src/www/svn/svn_utils.php)
+#
 
 import re
 import sys

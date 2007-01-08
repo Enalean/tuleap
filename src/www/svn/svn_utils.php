@@ -509,6 +509,20 @@ function svn_utils_svn_repo_exists($gname) {
 $SVNACCESS = "None";
 $SVNGROUPS = "None";
 
+/**
+ * Function svn_utils_parse_access_file : parse the .SVNAccessFile of the project $gname 
+ * and populate the global arrays $SVNACCESS and $SVNGROUPS.
+ * 
+ * @param string $gname the unix name of the group (project) we want to parse the access file
+ * @global array $SVNACCESS the array populated with the rights for each user for this project $gname
+ * @global array $SVNGROUPS the array populated with the members of each ugroup of this project
+ *
+ * Warning:
+ *    The code source of this function is writing in Python too.
+ *    If you modify part of this code, thanks to check if
+ *    the corresponding Python code needs to be updated too.
+ *    (see src/utils/svn/svnaccess.py)
+ */
 function svn_utils_parse_access_file($gname) {
   global $SVNACCESS, $SVNGROUPS,$Language;
   $filename = "/svnroot/$gname/.SVNAccessFile";
@@ -617,6 +631,23 @@ global $SVNACCESS, $SVNGROUPS;
  return $forbidden;
 }
 
+
+/**
+ * Function svn_utils_check_access : check if the user $username can access the path $svnpath of the project $gname 
+ * regarding the global arrays $SVNACCESS and $SVNGROUPS.
+ * 
+ * @param string $username the login name of the user we want to check the perms
+ * @param string $gname the unix name of the group (project)
+ * @param string $svnpath the subversion path to check
+ * @global array $SVNACCESS the array populated with the rights for each user for this project $gname
+ * @global array $SVNGROUPS the array populated with the members of each ugroup of this project
+ *
+ * Warning:
+ *    The code source of this function is writing in Python too.
+ *    If you modify part of this code, thanks to check if
+ *    the corresponding Python code needs to be updated too.
+ *    (see src/utils/svn/svnaccess.py)
+ */
 
 function svn_utils_check_access($username, $gname, $svnpath) {
   global $SVNACCESS, $SVNGROUPS;
