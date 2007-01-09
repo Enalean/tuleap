@@ -13,8 +13,9 @@
 
 require_once('www/project/admin/permissions.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('www/forum/forum_utils.php');
 
-$Language->loadLanguageMsg('news/news');
+$GLOBALS['Language']->loadLanguageMsg('news/news');
 
 function news_header($params) {
   global $HTML,$group_id,$news_name,$news_id,$Language;
@@ -253,6 +254,28 @@ function get_news_name_from_forum_id($id) {
 	}
 }
 
+function news_submit($group_id,$summary,$details,$private_news) {
+        
+        /*
+		Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
+	*/
+    
+	$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
+        $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
+             " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
+        $result=db_query($sql);
+               
+	if (!$result) {
+            $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('news_submit','insert_err').' ';
+        } else {
+            $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('news_submit','news_added').' ';
+	    // set permissions on this piece of news
+	    if ($private_news) {
+	        news_insert_permissions($new_id,$group_id);
+	    }
+        }
+}
+
 function news_check_permission($forum_id,$group_id) {
 	/*
 		Takes a forum_id and checks if user is authorized to read the piece of news associated to this forum_id
@@ -281,9 +304,9 @@ function news_insert_permissions($forum_id,$group_id) {
 	$_forum_id = (int) $forum_id;
 	
 	if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
-	    $feedback .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
+	    $GLOBALS['feedback'] .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
 	} else {
-	    $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
+	    $GLOBALS['feedback'] .= ' '.$Language->getText('news_submit','insert_err').' ';
 	}
 }
 

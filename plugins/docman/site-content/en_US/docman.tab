@@ -147,6 +147,9 @@ plugin_docman	error_alreadyinstalled	Document Manager already installed.
 plugin_docman	error_cannot_delete_hc_md	You are not allowed to delete system properties.
 plugin_docman	error_create_initversion	Error while creating initial version.
 plugin_docman	error_create_newversion	Error while creating new version.
+plugin_docman	error_create_news	Error while creating news. Check that you have right permissions.
+plugin_docman	error_create_news_details	Error while creating news. Check that details field is not empty.
+plugin_docman	error_create_news_summary	Error while creating news. Check that subject field is not empty.
 plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not empty.
 plugin_docman	error_field_link_required	The URL is required.
 plugin_docman	error_field_title_required	The Title is required.
@@ -206,6 +209,7 @@ plugin_docman	info_folder_created	Folder successfully created.
 plugin_docman	info_item_deleted	Item successfully deleted.
 plugin_docman	info_item_updated	Item successfully updated.
 plugin_docman	info_item_moved	Item successfully moved form <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> to <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
+plugin_docman	info_news_created	News successfully created.
 plugin_docman	info_perms_updated	Permissions successfully updated.
 plugin_docman	info_perms_recursive_updated	Permissions for sub-items successfully updated.
 plugin_docman	info_settings_updated	Settings have been updated.
@@ -287,6 +291,9 @@ plugin_docman	new_generalproperties	Properties
 plugin_docman	new_in	In:&nbsp;
 plugin_docman	new_location	Location
 plugin_docman	new_need_to_be_manager	<br />You need Manage permission to define permissions.
+plugin_docman	new_news_displayform	Display news form
+plugin_docman	new_news_explain	You can post news about your new item if you are admin of this project.
+plugin_docman	new_news_letblank	Let fields blank if you do not want news.
 plugin_docman	new_other_folders	other folders:
 plugin_docman	new_position	Position:
 plugin_docman	new_same_perms_as_parent	Will be created with the same permissions than its parent.

@@ -56,6 +56,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             this.options.newItem = Object.extend({
                 update_permissions_on_init:true,
                 hide_permissions:true,
+                hide_news:true,
                 default_position:false
             }, options.newItem || {});
             this.options.move = Object.extend({
@@ -281,14 +282,34 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         //}}}
         
         //{{{ Permissions
-        if ($('docman_new_permissions_panel') && this.options.newItem.hide_permissions) {
-            new Insertion.Before('docman_new_permissions_panel', '<div id="docman_new_permissions_text">'+this.options.language.new_same_perms_as_parent+' <a href="" onclick="'+
-                'Element.show(\'docman_new_permissions_panel\'); '+
-                'Element.hide(\'docman_new_permissions_text\'); '+
-                'new Insertion.Before(\'docman_new_permissions_panel\', \'<input type=hidden name=user_has_displayed_permissions value=1 />\'); '+
-                'return false;">['+this.options.language.new_view_change+']</a></div>');
-            Element.hide('docman_new_permissions_panel');
+        if ($('docman_new_permissions_panel')) {
+            if (this.options.newItem.hide_permissions) {
+                new Insertion.Before('docman_new_permissions_panel', '<div id="docman_new_permissions_text">'+this.options.language.new_same_perms_as_parent+' <a href="" onclick="'+
+                    'Element.show(\'docman_new_permissions_panel\'); '+
+                    'Element.hide(\'docman_new_permissions_text\'); '+
+                    'new Insertion.Before(\'docman_new_permissions_panel\', \'<input type=hidden name=user_has_displayed_permissions value=1 />\'); '+
+                    'return false;">['+this.options.language.new_view_change+']</a></div>');
+                Element.hide('docman_new_permissions_panel');
+            } else {
+                new Insertion.Before('docman_new_permissions_panel', '<input type=hidden name=user_has_displayed_permissions value=1 />');
+            }
         }
+        //}}}
+        
+        //{{{ News
+        if ($('docman_new_news_panel')) {
+            if (this.options.newItem.hide_news) {
+                new Insertion.Before('docman_new_news_panel', '<div id="docman_new_news_text">'+this.options.language.new_news_explaination+' <a href="" onclick="'+
+                    'Element.show(\'docman_new_news_panel\'); '+
+                    'Element.hide(\'docman_new_news_text\'); '+
+                    'new Insertion.Before(\'docman_new_news_panel\', \'<input type=hidden name=user_has_displayed_news value=1 />\'); '+
+                    'return false;">['+this.options.language.new_news_displayform+']</a></div>');
+                Element.hide('docman_new_news_panel');
+            } else {
+                new Insertion.Before('docman_new_news_panel', '<input type=hidden name=user_has_displayed_news value=1 />');
+            }
+        }
+        //}}}
     },
     onNewItemParentChange: function (folder_id) {
         this.newItem_update_permissions(folder_id);
