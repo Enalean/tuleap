@@ -41,6 +41,7 @@ require_once('view/Docman_View_Browse.class');
 require_once('common/permission/PermissionsManager.class');
 
 require_once('www/project/admin/permissions.php');
+require_once('www/news/news_utils.php');
 
 class DocmanActions extends Actions {
     
@@ -293,6 +294,21 @@ class DocmanActions extends Actions {
 
                     // Change owner if needed
                     //$this->_updateOwnerOnItemCreation($id, $item['group_id'], $item['owner'], $user);
+                    
+                    //Submit News about this document
+                    if ($request->exist('news')) {
+                        if ($user->isMember($request->get('group_id'), 'A')) { //only for admins
+                            $news = $request->get('news');
+                            if (isset($news['summary']) && $news['summary'] && isset($news['details']) && $news['details'] && isset($news['is_private'])) {
+                                news_submit($request->get('group_id'), $news['summary'], $news['details'], $news['is_private']);
+                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_news_created'));
+                            } else {
+                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
+                            }
+                        } else {
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
+                        }
+                    }
                 }
             }
         }

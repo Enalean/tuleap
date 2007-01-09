@@ -147,6 +147,9 @@ plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
 plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
 plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle version.
+plugin_docman	error_create_news	Erreur lors de la création de la news. Vérifiez que vous avez les bonnes permissions.
+plugin_docman	error_create_news_details	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ détails.
+plugin_docman	error_create_news_summary	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ sujet.
 plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il n'est pas vide.
 plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
@@ -206,6 +209,7 @@ plugin_docman	info_folder_created	Dossier créé.
 plugin_docman	info_item_deleted	Elément supprimé.
 plugin_docman	info_item_updated	Elément mis à jour.
 plugin_docman	info_item_moved	Elément déplacé de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
+plugin_docman	info_news_created	News créée.
 plugin_docman	info_perms_updated	Permissions mises à jour.
 plugin_docman	info_perms_recursive_updated	Permissions pour les sous-éléments mises à jour.
 plugin_docman	info_settings_updated	Paramètres mis à jour.
@@ -287,6 +291,9 @@ plugin_docman	new_generalproperties	Propriétés
 plugin_docman	new_in	Dans :&nbsp;
 plugin_docman	new_location	Chemin
 plugin_docman	new_need_to_be_manager	<br />Vous devez avoir les droits de Gestionnaire pour définir les permissions.
+plugin_docman	new_news_displayform	Afficher le formulaire de news
+plugin_docman	new_news_explain	En tant qu'administrateur du projet, vous pouvez publier une news.
+plugin_docman	new_news_letblank	Laissez les champs vides si vous ne voulez pas envoyer de news.
 plugin_docman	new_other_folders	autres dossiers:
 plugin_docman	new_position	Position :
 plugin_docman	new_same_perms_as_parent	Les même permissions que celles du parent.

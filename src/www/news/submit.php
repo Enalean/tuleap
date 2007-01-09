@@ -7,7 +7,7 @@
 // $Id$
 
 require_once('pre.php');
-require('../forum/forum_utils.php');
+require('../news/news_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
@@ -24,20 +24,8 @@ if (user_isloggedin()) {
              if one isn't already there
             */
 
-            $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
-            $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
-                " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
-            $result=db_query($sql);
-               
-	    if (!$result) {
-                $feedback .= ' '.$Language->getText('news_submit','insert_err').' ';
-            } else {
-                $feedback .= ' '.$Language->getText('news_submit','news_added').' ';
-		// set permissions on this piece of news
-		if ($private_news) {
-		  news_insert_permissions($new_id,$group_id);
-		}
-            }
+	    news_submit($group_id,$summary,$details,$private_news);
+	
 	}
 
 	//news must now be submitted from a project page - 

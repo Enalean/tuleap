@@ -23,7 +23,9 @@ require_once('Docman_View_Header.class');
                     'new_in'                   => $GLOBALS['Language']->getText('plugin_docman','new_in'),
                     'new_other_folders'        => $GLOBALS['Language']->getText('plugin_docman','new_other_folders'),
                     'new_same_perms_as_parent' => $GLOBALS['Language']->getText('plugin_docman','new_same_perms_as_parent'),
-                    'new_view_change'          => $GLOBALS['Language']->getText('plugin_docman','new_view_change')
+                    'new_view_change'          => $GLOBALS['Language']->getText('plugin_docman','new_view_change'),
+                    'new_news_explaination'    => $GLOBALS['Language']->getText('plugin_docman','new_news_explain'),
+                    'new_news_displayform'     => $GLOBALS['Language']->getText('plugin_docman','new_news_displayform'),
                 )
             ),
             $this->_getJSDocmanParameters($params)
@@ -59,7 +61,7 @@ require_once('Docman_View_Header.class');
         } else if (is_bool($array)) {
             $output = $array?'true':'false';
         } else {
-            $output = "'". $array ."'";
+            $output = "'". addslashes($array) ."'";
         }
         return $output;
     }

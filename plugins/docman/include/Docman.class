@@ -763,6 +763,22 @@ class Docman extends Controler {
                                                     $new_item->accept(new Docman_View_GetFieldsVisitor()), 
                                                     $new_item->accept(new Docman_View_GetSpecificFieldsVisitor())
                                                 ));
+                                                
+                                                if ($user->isMember($this->getGroupId(), 'A')) {
+                                                    $news = $this->request->get('news');
+                                                    if ($news) {
+                                                        $is_news_details = isset($news['details']) && trim($news['details']);
+                                                        $is_news_summary = isset($news['summary']) && trim($news['summary']);
+                                                        if ($is_news_details && !$is_news_summary) {
+                                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_summary'));
+                                                            $valid = false;
+                                                        }
+                                                        if (!$is_news_details && $is_news_summary) {
+                                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_details'));
+                                                            $valid = false;
+                                                        }
+                                                    }
+                                                }
                                                 //Actions
                                                 if ($valid) {
                                                     $this->action = $view;
@@ -773,9 +789,11 @@ class Docman extends Controler {
                                                     $this->view = 'RedirectAfterCrud';
                                                 } else {
                                                     $this->_viewParams['force_item']          = $new_item;
+                                                    $this->_viewParams['force_news']          = $this->request->get('news');
                                                     $this->_viewParams['force_permissions']   = $this->request->get('permissions');
                                                     $this->_viewParams['force_ordering']      = $this->request->get('ordering');
                                                     $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
+                                                    $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
                                                     if ($view == 'createFolder') {
                                                         $this->view = 'NewFolder';
                                                     } else {
