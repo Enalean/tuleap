@@ -1005,7 +1005,7 @@ $CAT <<'EOF' >/tmp/cronfile
 #
 # It looks like we have memory leaks in Apache in some versions so restart it
 # on Sunday. Do it while the DB is down for backup
-50 0 * * Sun $SERVICE httpd restart
+50 0 * * Sun /sbin/service httpd restart
 #
 # Once a minute make sure that the setuid bit is set on some critical files
 * * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s log_accum fileforge)
