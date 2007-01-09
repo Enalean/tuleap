@@ -82,6 +82,7 @@ admin_approve_pending	approve	Approve Project
 admin_approve_pending	delete	Delete Project
 admin_approve_pending	remove_category	Remove from Category
 admin_approve_pending	approve_all	Approve All On This Page
+admin_approve_pending	creator_and_creation_date	Created: $3 by <a href="/admin/usergroup.php?user_id=$1">$2</a>
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php

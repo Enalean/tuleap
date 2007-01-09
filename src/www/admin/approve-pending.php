@@ -93,6 +93,20 @@ if (db_numrows($res_grp) < 1) {
     
         ?>
         <H2><?php echo $row_grp['group_name']; ?></H2>
+        
+<?php
+        $group = new Group($row_grp['group_id']);
+        $members_id = $group->getMembersId();
+        if (count($members_id) > 0) {
+            $admin_id = $members_id[0]; // the first (and normally the only one) is the project creator)
+            $admin = new User($admin_id);
+            if ($admin->getID() != 0) {
+                $project_date_creation = util_timestamp_to_userdateformat($group->getStartDate());
+                // Display the project admin (the project creator) and the creation date
+                echo $Language->getText('admin_approve_pending', 'creator_and_creation_date', array($admin->getID(), $admin->getName(), $project_date_creation));
+            }
+        }
+?>
     
         <p>
         <A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_edit'); ?>]</H3></A>
