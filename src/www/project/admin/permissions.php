@@ -750,8 +750,8 @@ function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
  * Effectively update permissions for the given object.
  * Access rights to this function are checked.
  */
-function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id) {
-    if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
+function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id, $force = false) {
+    if (!$force && !permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
     $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('$permission_type', '$object_id', $ugroup_id)";
     $res=db_query($sql);
     if (!$res) {

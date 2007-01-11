@@ -153,7 +153,7 @@ class DocmanActions extends Actions {
                 $new_item =& $item_factory->getItemFromDb($id);
                 $parent   =& $item_factory->getItemFromDb($item['parent_id']);
                 if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
-                    $this->permissions(array('id' => $id));
+                    $this->permissions(array('id' => $id, 'force' => true));
                 } else {
                     $pm =& PermissionsManager::instance();
                     $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
@@ -208,7 +208,7 @@ class DocmanActions extends Actions {
                     $new_item =& $item_factory->getItemFromDb($id);
                     $parent   =& $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
-                        $this->permissions(array('id' => $id));
+                        $this->permissions(array('id' => $id, 'force' => true));
                     } else {
                         $pm =& PermissionsManager::instance();
                         $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
@@ -578,6 +578,7 @@ class DocmanActions extends Actions {
     function permissions($params) {
         $request =& HTTPRequest::instance();
         $id = isset($params['id']) ? $params['id'] : $request->get('id');
+        $force = isset($params['force']) ? $params['force'] : false;
         if ($id && $request->exist('permissions')) {
             $user =& $this->_controler->getUser();
             
@@ -619,7 +620,7 @@ class DocmanActions extends Actions {
                     'PLUGIN_DOCMAN_MANAGE' => false
                 );
                 foreach($permissions as $ugroup_id => $wanted_permission) {
-                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, &$history);
+                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, &$history, $force);
                 }
                 
                 $updated = false;
@@ -645,10 +646,10 @@ class DocmanActions extends Actions {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
     }
-    function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history) {
+    function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history, $force = false) {
         if (!isset($done_permissions[$ugroup_id])) {
             if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
-                $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history);
+                $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history, $force);
                 if ($parent = $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permissions[$ugroup_id])) {
                     $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_perms', array($old_permissions[$ugroup_id]['ugroup']['name'],$old_permissions[$parent]['ugroup']['name'],$permission_definition[$done_permissions[$parent]]['label'])));
                     if (count($old_permissions[$ugroup_id]['permissions'])) {
@@ -677,7 +678,7 @@ class DocmanActions extends Actions {
                 }
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
-                    permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id);
+                    permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id, $force);
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {
