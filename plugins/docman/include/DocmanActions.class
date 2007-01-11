@@ -299,11 +299,9 @@ class DocmanActions extends Actions {
                     if ($request->exist('news')) {
                         if ($user->isMember($request->get('group_id'), 'A')) { //only for admins
                             $news = $request->get('news');
-                            if (isset($news['summary']) && $news['summary'] && isset($news['details']) && $news['details'] && isset($news['is_private'])) {
+                            if (isset($news['summary']) && trim($news['summary']) && isset($news['details']) && trim($news['details']) && isset($news['is_private'])) {
                                 news_submit($request->get('group_id'), $news['summary'], $news['details'], $news['is_private']);
                                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_news_created'));
-                            } else {
-                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
                             }
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
