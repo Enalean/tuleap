@@ -28,9 +28,9 @@ a:visited { text-decoration:none; color: #8b4020}
 a:active { text-decoration:none; color: #000000}
 
 /*input text fields*/
-input[type="text"] { background-color: #ffffff; }
-.small { width: 150px; }
-.medium { width: 324px; }
+input[type="text"] {}
+.small { width: 10em; }
+.medium { width: 25em; }
 
 img { border: none; }
 
