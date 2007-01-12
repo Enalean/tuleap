@@ -1307,15 +1307,32 @@ any other MTA like Postfix, Exim or other. You need to setup <br>
 <h2>Sendmail settings</h2>
 <u>In /etc/mail/sendmail.cf:</u><br>
 <ul>
-  <li>Set Cw to codex.xerox.com (or change the domain name to your own)</li>
-  <li>Set DM to codex.xerox.com (this is what we masquerade as)</li>
-<li>To modify sendmail to accept remote connections in the sendmail.cf file, comment out (or deletd) the following line:
+  <li>Set Cw to codex.xerox.com (or change the domain name to your own). If you get errors like "config error: mail loops back to me (MX problem?)" when sending emails to lists.codex.xerox.com, you may need to add this domain in the CW. Then the line looks like:
+<pre>
+Cwcodex.xerox.com lists.codex.xerox.com
+<pre></li>
+  <li>Set DM to codex.xerox.com (this is what we masquerade as):
+<pre>
+DMcodex.xerox.com
+<pre></li>
+  <li>To modify sendmail to accept remote connections in the sendmail.cf file, comment out (or delete) the following line:
 <pre>O DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA</pre>
 The commented out version of this line would then look like so:
 <pre>#O DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA</pre>
   <li>Aliases files should have been automatically set up. They are:<br>
     <pre>O AliasFile=/etc/aliases,/etc/aliases.codex</pre>
   </li>
+  <li>If you have errors when using mailman like this one:
+<pre>
+Group mismatch error. Mailman expected the mail wrapper script to be
+executed as one of the following groups:
+[mail, postfix, mailman, nobody, daemon],
+but the system's mail server executed the mail script as group: "mailnull".
+</pre>
+This seems to be related to a sendmail bug. Then you should add this line in sendmail.cf:
+<pre>O DefaultUser=root:mailman</pre>
+  </li>
+
 </ul>
 <u>In /etc/mail/local-host-names:</u><br>
 <ul>
