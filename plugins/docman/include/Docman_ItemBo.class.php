@@ -295,24 +295,34 @@ class Docman_ItemBo {
                     // @todo: register in DB path to avoid such crapy "on the
                     // fly" item search.
                     $parentItem =& $this->findById($pid);
-                    $k = count($itemLocationInList);
-                    $itemLocationInList[$parentItem->getId()] = $k;
-                    $itemList[$k] =& $parentItem;
+                    if($parentItem !== null) {
+                        $k = count($itemLocationInList);
+                        $itemLocationInList[$parentItem->getId()] = $k;
+                        $itemList[$k] =& $parentItem;
                     unset($parentItem);
+                    }
+                    else {
+                        // Found a parent that doesn't exist (probably deleted)
+                        $itemToDelete[] = $itemList[$itemOffset]->getId();
+                        $deleteCurrentItem = true;
+                    }
                 }
-                $itemOffset = $itemLocationInList[$pid];
 
-                if($this->userHasPermission($user, $itemList[$itemOffset])) {
-                    $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
-                    $locationId[$i]    = $itemList[$itemOffset]->getId();
-                    $i++;
-                    $pid = $itemList[$itemOffset]->getParentId();
-                }
-                else {
-                    // If current user don't have the right to read item's
-                    // parent: delete it and delete the parent.
-                    $itemToDelete[] = $itemList[$itemOffset]->getId();
-                    $deleteCurrentItem = true;
+                if(!$deleteCurrentItem) {
+                    $itemOffset = $itemLocationInList[$pid];
+
+                    if($this->userHasPermission($user, $itemList[$itemOffset])) {
+                        $locationTitle[$i] = $itemList[$itemOffset]->getTitle();
+                        $locationId[$i]    = $itemList[$itemOffset]->getId();
+                        $i++;
+                        $pid = $itemList[$itemOffset]->getParentId();
+                    }
+                    else {
+                        // If current user don't have the right to read item's
+                        // parent: delete it and delete the parent.
+                        $itemToDelete[] = $itemList[$itemOffset]->getId();
+                        $deleteCurrentItem = true;
+                    }
                 }
             }
             
