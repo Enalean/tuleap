@@ -528,12 +528,18 @@ if ($type_of_search == "soft") {
 	//Wiki language extraction
 	$sql =	"SELECT DISTINCT wiki_group_list.language_id"
 		." FROM wiki_group_list"
-		." WHERE wiki_group_list.group_id=".$group_id;
+		." WHERE wiki_group_list.group_id=".$group_id." AND"
+        ."       wiki_group_list.language_id <> 0";
 	$result = db_query($sql);
-	$language_id = mysql_fetch_array($result);
-	//Build the search pagename in the wiki language
-	if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
-	else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+    if (db_numrows($result) == 0) {
+        // there is not any language specified for this wiki, default search page is english
+        $search_page = 'FullTextSearch';
+    } else {
+        $language_id = db_fetch_array($result);
+        //Build the search pagename in the wiki language
+        if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
+        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+    }
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));
 } else {
