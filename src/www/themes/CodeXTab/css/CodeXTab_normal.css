@@ -20,6 +20,10 @@
 .smaller,
 .header_actions ul      { font-size: x-small;  }
 
+/*input text fields*/
+input[type="text"].textfield_small { width: 10em; }
+input[type="text"].textfield_medium { width: 25em; }
+
 body,
 .menutable,
 .disable,
@@ -38,7 +42,5 @@ body,
 .vspace-bottom { margin-bottom: 3ex; }
 .vspace-top { margin-top: 3ex; }
 .vspace-both { margin-top: 3ex; margin-bottom: 3ex; }
-
-
 
 

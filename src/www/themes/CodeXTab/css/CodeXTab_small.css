@@ -19,6 +19,10 @@
 .smaller,
 .header_actions ul       { font-size: xx-small;  }
 
+/*input text fields*/
+input[type="text"].textfield_small { width: 10em; }
+input[type="text"].textfield_medium { width: 25em; }
+
 body,
 .menutable,
 .disable,

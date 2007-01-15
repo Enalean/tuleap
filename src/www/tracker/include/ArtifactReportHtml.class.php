@@ -789,7 +789,7 @@ class ArtifactReportHtml extends ArtifactReport {
                    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
                    <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
                    <B>'.$Language->getText('tracker_include_artifact','name').':</B>
-                   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" SIZE="20" MAXLENGTH="20">
+                   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" CLASS="textfield_small" MAXLENGTH="80">
                    &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','scope').': </B>';
             
             if ($ath->userIsAdmin())
@@ -887,7 +887,7 @@ class ArtifactReportHtml extends ArtifactReport {
                    <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.$this->report_id.'">
                    <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
                    <B>'.$Language->getText('tracker_include_artifact','name').': </B>
-                   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'.$this->name.'" SIZE="20" MAXLENGTH="20">
+                   <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'.$this->name.'" CLASS="textfield_small" MAXLENGTH="80">
                          &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','scope').': </B>';
             $scope = $this->scope;
             if ($ath->userIsAdmin())

@@ -501,7 +501,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 		<INPUT TYPE="TEXT" NAME="release_date" VALUE="'. format_date('Y-m-d',$release->getReleaseDate()) .'" SIZE="10" MAXLENGTH="10">
 		<P>
 		<B>'.$Language->getText('file_admin_editreleases','release_name').':</B> <span class="highlight"><strong>*</strong></span><BR>
-		<INPUT TYPE="TEXT" NAME="release_name" VALUE="'. $release_name .'" SIZE="20" MAXLENGTH="25">
+		<INPUT TYPE="TEXT" NAME="release_name" VALUE="'. $release_name .'" class="textfield_small">
 		<P>
 		<B>'.$Language->getText('global','status').':</B><BR>
 		'. frs_show_status_popup ('status_id',$release->getStatusID()) .'
@@ -830,7 +830,7 @@ if (isset($release_id) && (!isset($func) || $func != 'delete_release')) {
 	<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="add_release">
-	<INPUT TYPE="TEXT" NAME="release_name" VALUE="" SIZE="20" MAXLENGTH="25">
+	<INPUT TYPE="TEXT" NAME="release_name" VALUE="" CLASS="textfield_small">
 
 	&nbsp;&nbsp;&nbsp;'.$Language->getText('file_admin_editreleases','belongs_to_p').':
 	'. frs_show_package_popup ($group_id,'package_id',$package_id) .'

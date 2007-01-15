@@ -505,7 +505,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 		<INPUT TYPE="HIDDEN" NAME="is_followup_to" VALUE="<?php echo $is_followup_to; ?>">
 		<B><?php echo $Language->getText('forum_forum_utils','subj'); ?>:
             </TD><TD>
-		<INPUT TYPE="TEXT" NAME="subject" VALUE="<?php echo $subject; ?>" SIZE="45" MAXLENGTH="45">
+		<INPUT TYPE="TEXT" NAME="subj" VALUE="<?php echo $subject; ?>" CLASS="textfield_medium">
           </TD></TR>
 	  <TR><TD><B><?php echo $Language->getText('forum_forum_utils','msg'); ?>:
             </TD><TD>
