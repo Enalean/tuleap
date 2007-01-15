@@ -28,8 +28,8 @@ a:visited { text-decoration:none; color: #8b4020}
 a:active { text-decoration:none; color: #000000}
 
 /*input text fields*/
-input[type="text"].small { width: 10em; }
-input[type="text"].medium { width: 25em; }
+input[type="text"].textfield_small { width: 10em; }
+input[type="text"].textfield_medium { width: 25em; }
 
 img { border: none; }
 
