@@ -17,6 +17,7 @@
 
 require_once('www/news/news_utils.php');
 require_once('common/mail/Mail.class');
+require_once('common/include/HTTPRequest.class');
 
 $GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
@@ -86,45 +87,46 @@ function forum_header($params) {
 	/*
 		Show horizontal forum links
 	*/
-	if ($forum_id && $forum_name) {
-		echo '<P><H3>'.$Language->getText('forum_forum_utils','discuss_forum').': <A HREF="/forum/forum.php?forum_id='.$forum_id.'">'.$forum_name.'</A></H3>';
-	}
+    if ($forum_id && $forum_name) {
+        echo '<P><H3>'.$Language->getText('forum_forum_utils','discuss_forum').': <A HREF="/forum/forum.php?forum_id='.$forum_id.'">'.$forum_name.'</A></H3>';
+    }
 
-        if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
-            echo '<P><B>';
-
-            if ($forum_id && user_isloggedin() ) {
-                if (forum_is_monitored($forum_id,user_getid()) )
-                    $msg = $Language->getText('forum_forum_utils','stop_monitor');
-                else 
-                    $msg = $Language->getText('forum_forum_utils','monitor');
-                
-		echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
-        echo html_image("ic/check.png",array()).' '.$msg.'</A> | '.
-                    '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
-		echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
-                print ' <a href="#start_new_thread">';
-		echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
-                if (isset($msg_id) && $msg_id) {
-                    echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
-                } else {
-                    echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
-                }
-	    }
+    if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
+        echo '<P><B>';
+    
+        $request =& HTTPRequest::instance();
+        if ($forum_id && user_isloggedin() && !$request->exist('delete')) {
+            if (forum_is_monitored($forum_id,user_getid()) )
+                $msg = $Language->getText('forum_forum_utils','stop_monitor');
+            else 
+                $msg = $Language->getText('forum_forum_utils','monitor');
             
-            // The forum admin link is only displayed for the forum administrators (and the project administrator of course)
-            if (user_ismember($group_id, 'A') || user_ismember($group_id, 'F2')) {
-                echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';
-                if (isset($params['help']) && $params['help']) {
-                    echo ' | ';
-                }
-            }
-            
-            if (isset($params['help']) && $params['help']) {
-                echo help_button($params['help'],false,$Language->getText('global','help'));
+            echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
+            echo html_image("ic/check.png",array()).' '.$msg.'</A> | '.
+                        '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
+            echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
+                    print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
+            echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
+            if (isset($msg_id) && $msg_id) {
+                echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+            } else {
+                echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
             }
         }
-	echo '</B><P>';
+        
+        // The forum admin link is only displayed for the forum administrators (and the project administrator of course)
+        if (user_ismember($group_id, 'A') || user_ismember($group_id, 'F2')) {
+            echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';
+            if (isset($params['help']) && $params['help']) {
+                echo ' | ';
+            }
+        }
+        
+        if (isset($params['help']) && $params['help']) {
+            echo help_button($params['help'],false,$Language->getText('global','help'));
+        }
+        echo '</B><P>';
+    }
 }
 
 function forum_footer($params) {
