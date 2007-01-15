@@ -127,9 +127,10 @@ if ($group_id && user_ismember($group_id,'A')) {
 		// if the user is super user then he has the right to choose the 
 		// full mailing list name
 		if (user_is_super_user()) {
-		    echo '<INPUT TYPE="TEXT" NAME="list_name" VALUE="'.group_getunixname($group_id).'-xxxxx" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
+		    echo '<INPUT TYPE="TEXT" NAME="list_name"
+		    VALUE="'.group_getunixname($group_id).'-xxxxx" CLASS="textfield_small">@'.$GLOBALS['sys_lists_host'].'</B><BR>';		    
 		} else {
-		    echo '<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
+		    echo '<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" CLASS="textfield_small">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
 		}
 		echo '	<P>
 			<B>'.$Language->getText('mail_admin_index','is_public').' </B>'.$Language->getText('mail_admin_index','public_explain').'<BR>

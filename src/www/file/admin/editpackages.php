@@ -118,7 +118,7 @@ if (!$res || $rows < 1) {
 		<INPUT TYPE="HIDDEN" NAME="package_id" VALUE="'. db_result($res,$i,'package_id') .'">
 		<TR class="'. util_get_alt_row_color($i) .'">
 			<TD><FONT SIZE="-1"><INPUT TYPE="TEXT" NAME="package_name" VALUE="'. 
-				db_result($res,$i,'package_name') .'" SIZE="20" MAXLENGTH="30"></TD>
+				db_result($res,$i,'package_name') .'" CLASS="textfield_small"></TD>
                         <TD align="center"><INPUT TYPE="TEXT" NAME="rank" SIZE="3" MAXLENGTH="3" VALUE="'.db_result($res,$i,'rank').'"/></TD>
 			<TD align="center"><FONT SIZE="-1">'. frs_show_status_popup ('status_id', db_result($res,$i,'status_id')) .'</TD>';
                 if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
@@ -159,7 +159,7 @@ echo '<p><hr><P>
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="add_package">
 <table>
-<tr><th>'.$Language->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package_name" size="20" MAXLENGTH="30"></td></tr>
+<tr><th>'.$Language->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package_name" CLASS="textfield_small"></td></tr>
 <tr><th>'.$Language->getText('file_admin_editpackages','rank_on_screen').':</th>  <td><input type="text" name="rank" size="4" maxlength="4"></td></tr>';
 if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
     echo '<tr><th>'.$Language->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="approve_license">
