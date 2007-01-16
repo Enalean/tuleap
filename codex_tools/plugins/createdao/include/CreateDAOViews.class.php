@@ -45,7 +45,7 @@ class CreateDAOViews extends Views {
             }
             $name = substr($name, 0, strlen($name)-1);
             if (!is_file($path_to_dao.$name.'Dao.class.php')) {
-                $missings[$row['Tables_in_sourceforge']] = $name;
+                $missings[$row['Tables_in_'.$GLOBALS['sys_dbname']]] = $name;
             }
             $result->next();
         }

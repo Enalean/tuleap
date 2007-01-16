@@ -27,7 +27,7 @@ class CreateDAOActions extends Actions {
         $result   =& $tables->searchAll();
         while ($result->valid()) {
             $row = $result->current();
-            $name = $row['Tables_in_sourceforge']."\n";
+            $name = $row['Tables_in_'.$GLOBALS['sys_dbname']]."\n";
             $name = ucfirst($name);
             while ($pos = strpos($name, "_")) {
                 $name = substr($name, 0, $pos).ucfirst(substr($name, $pos+1));
@@ -87,7 +87,7 @@ class CreateDAOActions extends Actions {
                         fclose($f);
                     } else {
                         echo "<pre>".$tpl->fetch('tpl/dao.tpl');
-                        $missings[$row['Tables_in_sourceforge']] = $name;
+                        $missings[$row['Tables_in_'.$GLOBALS['sys_dbname']]] = $name;
                     }
                 }
             }
