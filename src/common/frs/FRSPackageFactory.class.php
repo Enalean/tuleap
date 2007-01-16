@@ -196,11 +196,12 @@ class FRSPackageFactory {
         return $ok;
 	}
 
-	/** return true if user has Update permission on this package 
-	 * @param group_id: the project this field is in
-	 * @param group_artifact_id: the trackers id this field is in
-	 * @param user_id: if not given or 0 take the current user
-	**/ 
+    /** return true if user has Update permission on this package 
+     * @param int $group_id the project this package is in
+     * @param int $package_id the ID of the package to update
+     * @param int $user_id if not given or 0, take the current user
+     * @return boolean true of user can update the package $package_id, false otherwise
+     */ 
 	function userCanUpdate($group_id,$package_id,$user_id=0) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
@@ -209,6 +210,24 @@ class FRSPackageFactory {
               || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()));
         return $ok;
 	}
+    
+    /** 
+     * Returns true if user has permissions to Create packages
+     * 
+     * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
+     * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
+     * 
+     * @param int $group_id the project ID this release is in
+     * @param int $user_id the ID of the user. If not given or 0, take the current user
+     * @return boolean true if the user has permission to create packages, false otherwise
+     */ 
+    function userCanCreate($group_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
+        return $ok;
+    }
 
 }
 

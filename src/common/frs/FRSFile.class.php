@@ -140,7 +140,6 @@ class FRSFile extends Error {
         $this->post_date = (int) $post_date;
     }
 
-
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
 		if (isset($array['filename']))     $this->setFileName($array['filename']);
@@ -164,7 +163,60 @@ class FRSFile extends Error {
         $array['post_date']     = $this->getPostDate();
         return $array;
     }
+    
+    /**
+     * Determine if the file exists really on the server or not
+     *
+     * @return boolean true if the file exists on the server, false otherwise
+     */
+    function fileExists() {
+        return file_exists($this->getFileLocation());
+    }
+    
+    /**
+     * Returns the location of the file on the server
+     *
+     * @global $GLOBALS['ftp_frs_dir_prefix']
+     * @return string the location of this file on the server
+     */
+    function getFileLocation() {
+        global $GLOBALS;
+        
+        $group = $this->getGroup();
+        $group_unix_name = $group->getUnixName();
+        $basename = $this->getFileName();
+        $file_location = $GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$basename;
+        return $file_location;
+    }
 
+    /**
+     * Get the Group (the project) of this File
+     *
+     * @return Object{Group} the group the file belongs to
+     */
+    function getGroup() {
+        // retrieve the release the file belongs to
+        $release_id = $this->getReleaseID();
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $group_id = $release->getGroupID();
+        $group = new Group($group_id);
+        return $group;
+    }
+    
+    /**
+     * Returns the content of the file, in a raw resource
+     *
+     * @return mixed the content of the file
+     */
+    function getContent() {
+        $file_location = $this->getFileLocation();
+        if ($fp = fopen($file_location,"rb")) {
+            return fread($fp, filesize($file_location));
+        } else {
+            return null;
+        }
+    }
 
 }
 

@@ -75,7 +75,7 @@ class FRSReleaseFactory {
 	function & getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
-		if($status_id && $group_id){
+		if(isset($status_id) && $status_id == 1){
 			$dar = $dao->searchActiveReleasesByPackageId($_id);
 		}else{
 			$dar = $dao->searchByPackageId($_id);
@@ -181,6 +181,17 @@ class FRSReleaseFactory {
         }
     }
 
+    /**
+     * Determine if a release has already the name $release_name in the package $package_id
+     *
+     * @return boolean true if there is already a release named $release_name in the package package_id, false otherwise
+     */
+     function isReleaseNameExist($release_name, $package_id) {
+         $release_exists = $this->getReleaseIdByName($release_name, $package_id);
+         return ($release_exists && count($release_exists) >=1);
+     }
+
+    
 	var $dao;
 
 	function & _getFRSReleaseDao() {
@@ -275,17 +286,36 @@ class FRSReleaseFactory {
         return $ok;
 	}
 
-	/** return true if user has Update permission on this release 
-	 * @param group_id: the package this release is in
-	 * @param release_id: the release id
-	 * @param user_id: if not given or 0 take the current user
-	**/ 
+    /** return true if user has Update permission on this release 
+     * @param int $group_id the project this release is in
+     * @param int $release_id the ID of the release to update
+     * @param int $user_id if not given or 0, take the current user
+     * @return boolean true if user can update the release $release_id, false otherwise
+     */ 
 	function userCanUpdate($group_id,$release_id,$user_id=0) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
         $user =& $um->getUserById($user_id);
         $ok = $user->isSuperUser() 
               || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
+        return $ok;
+	}
+    
+    /** 
+     * Returns true if user has permissions to Create releases
+     * 
+     * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
+     * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
+     * 
+     * @param int $group_id the project ID this release is in
+     * @param int $user_id the ID of the user. If not given or 0, take the current user
+     * @return boolean true if the user has permission to create releases, false otherwise
+     */ 
+	function userCanCreate($group_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
         return $ok;
 	}
 

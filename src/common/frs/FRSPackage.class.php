@@ -94,6 +94,14 @@ class FRSPackage extends Error {
         $this->approve_license = $approve_license;
     }
     
+    /**
+     * Determines if the package is active or not
+     * @return boolean true if the package is active, false otherwise
+     */
+    function isActive() {
+        return $this->getStatusID() == 1;
+    }
+    
     function initFromArray($array) {
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
         if (isset($array['group_id']))        $this->setGroupID($array['group_id']);
@@ -136,6 +144,17 @@ class FRSPackage extends Error {
 		}
 		return $this->package_releases;
 	}
+    
+    /**
+     * Function userCanRead : determine if the user can view this package or not
+     *
+	 * @param int $user_id if not given or 0 take the current user
+     * @return boolean true if user has Read access to this package, false otherwise
+	 */ 
+	function userCanRead($user_id=0) {
+        return FRSPackageFactory::userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
+	}
+
 
 }
 

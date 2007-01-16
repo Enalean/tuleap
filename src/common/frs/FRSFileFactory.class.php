@@ -167,6 +167,30 @@ class FRSFileFactory {
         return $id;
     }
     
+    /**
+     * create a new file from a temporary file
+     *
+     * @return true or id(auto_increment) if there is no error
+     */
+    function createFromTmpFile($name=null, $tmp_name=null,
+                               $release_id=null, 
+                               $type_id=null, $processor_id=null) {
+        $file = new FRSFile();
+        $file->setFileName($name);
+        $file->setFileSize(filesize($tmp_name));
+        $file->setReleaseID($release_id);
+        $file->setTypeID($type_id);
+        $file->setProcessorID($processor_id);
+        $file_location = $file->getFileLocation();
+        // move the file from temp dir to its real storage place
+        if (rename($tmp_name, $file_location)) {
+            $file->setFileName($file_location);
+            return $this->create($file->toArray());
+        } else {
+            return false;
+        }
+    }
+    
     function _delete($file_id){
     	$_id = (int) $file_id;
     	$dao =& $this->_getFRSFileDao();
@@ -205,6 +229,23 @@ return 0 if file not deleted, 1 otherwise
 	    	return 1;
 	  	}
 	}
+    
+    /** 
+     * Returns true if user has permissions to add files
+     * 
+     * NOTE : For the moment, only super admin, project admin (A) and file admin (R2) can add files
+     * 
+     * @param int $group_id the project ID this file is in
+     * @param int $user_id the ID of the user. If not given or 0, take the current user
+     * @return boolean true if the user has permission to add files, false otherwise
+     */ 
+    function userCanAdd($group_id,$user_id=0) {
+        $pm =& PermissionsManager::instance();
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
+        return $ok;
+    }
 
 }
 

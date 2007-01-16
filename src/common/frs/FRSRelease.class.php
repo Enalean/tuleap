@@ -157,7 +157,25 @@ class FRSRelease extends Error {
         $this->released_by = $released_by;
     }
     
-
+    /**
+     * Determines if the release is active or not
+     * @return boolean true if the release is active, false otherwise
+     */
+    function isActive() {
+        return $this->getStatusID() == 1;
+    }
+    
+    /**
+     * Returns the group ID the release belongs to
+     */
+    function getGroupID() {
+        $package_id = $this->getPackageID();
+        $package_fact = new FRSPackageFactory();
+        $package =& $package_fact->getFRSPackageFromDb($package_id);
+        $group_id = $package->getGroupID();
+        return $group_id;
+    }
+    
 	function initFromArray($array) {
 		if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
@@ -239,6 +257,16 @@ class FRSRelease extends Error {
 			$this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
 		}
 		return $this->release_files;
+	}
+    
+    /**
+     * Function userCanRead : determine if the user can view this release or not
+     *
+	 * @param int $user_id if not given or 0 take the current user
+     * @return boolean true if user has Read access to this release, false otherwise
+	 */ 
+	function userCanRead($user_id=0) {
+        return FRSReleaseFactory::userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
 	}
 }
 
