@@ -25,8 +25,11 @@
 require_once('Docman_View_ItemDetailsSectionProperties.class.php');
 
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties {
-    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force) {
+    
+    var $token;
+    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force, $token) {
         parent::Docman_View_ItemDetailsSectionProperties($item, $url, $theme_path, true, $force);
+        $this->token = $token;
     }
     function getContent() {
         $params = array('form_name' => 'update_metadata');
@@ -40,6 +43,9 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     }
     function _getAdditionalRows() {
         $html  = '<tr><td>';
+        if ($this->token) {
+            $html .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
         $html .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
         $html .= '<input type="hidden" name="action" value="update" />';
         $html .= '</td><td>';

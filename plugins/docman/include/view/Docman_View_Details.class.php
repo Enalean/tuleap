@@ -27,6 +27,8 @@ class Docman_View_Details extends Docman_View_Display {
     function _content($params, $view = null, $section = null) {
         $url = $params['default_url'];
         
+        $token = isset($params['token']) ? $params['token'] : null;
+        
         $user_can_manage = $this->_controller->userCanManage($params['item']->getId());
         $user_can_write = $user_can_manage || $this->_controller->userCanWrite($params['item']->getId());
         $user_can_read  = $user_can_write || $this->_controller->userCanRead($params['item']->getId());
@@ -38,7 +40,7 @@ class Docman_View_Details extends Docman_View_Display {
             if ($view && $section == 'properties') {
                 $props =& $view;
             } else {
-                $props =& new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $params['theme_path'], $user_can_write);
+                $props =& new Docman_View_ItemDetailsSectionProperties($params['item'], $params['default_url'], $params['theme_path'], $user_can_write, $token);
             }
             $sections['properties'] = true;
             $details->addSection($props);
@@ -47,19 +49,19 @@ class Docman_View_Details extends Docman_View_Display {
             if ($view && $section == 'actions') {
                 $actions =& $view;
             } else {
-                $actions =& new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), !$item_factory->isRoot($params['item']), $this->_controller);
+                $actions =& new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), !$item_factory->isRoot($params['item']), $this->_controller, $token);
             }
             $sections['actions'] = true;
             $details->addSection($actions);
         }
         if ($user_can_manage) {
             $sections['permissions'] = true;
-            $details->addSection(new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']));
+            $details->addSection(new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url'], $token));
         }
         
         if ($user_can_read) {
             $sections['notifications'] = true;
-            $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url'], $this->_controller->notificationsManager));
+            $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url'], $this->_controller->notificationsManager, $token));
         }
         
         if ($user_can_read) {

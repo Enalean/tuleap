@@ -25,8 +25,11 @@
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions {
-    function Docman_View_ItemDetailsSectionDelete(&$item, $url, &$controller) {
+    
+    var $token;
+    function Docman_View_ItemDetailsSectionDelete(&$item, $url, &$controller, $token) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
+        $this->token = $token;
     }
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
@@ -37,6 +40,9 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '<div class="docman_confirm_delete">';
         $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document, $this->item->getTitle());
         $content .= '<div class="docman_confirm_delete_buttons">';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
         $content .= '     <input type="hidden" name="section" value="actions" />';
         $content .= '     <input type="hidden" name="action" value="delete" />';
         $content .= '     <input type="hidden" name="id" value="'. $this->item->getId() .'" />';

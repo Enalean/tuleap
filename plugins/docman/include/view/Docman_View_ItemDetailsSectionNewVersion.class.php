@@ -28,9 +28,11 @@ require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
 class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions {
     
     var $force;
-    function Docman_View_ItemDetailsSectionNewVersion(&$item, $url, &$controller, $force) {
+    var $token;
+    function Docman_View_ItemDetailsSectionNewVersion(&$item, $url, &$controller, $force, $token) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
         $this->force    = $force;
+        $this->token = $token;
     }
     function getContent() {
         return $this->item->accept($this);
@@ -63,6 +65,9 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
             $content .= '<td>'. $field->getField() .'</td></tr>';
         }
         $content .= '<tr style="vertical-align:top"><td></td><td>';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
         $content .= '<input type="hidden" name="action" value="new_version" />';
         $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_button').'" />';
         $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel').'" /></td></tr>';

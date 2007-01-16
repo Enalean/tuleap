@@ -20,6 +20,7 @@ class Docman_View_Move extends Docman_View_Details {
     }
     
     function _content($params) {
+        $token = isset($params['token']) ? $params['token'] : null;
         parent::_content(
             $params, 
             new Docman_View_ItemDetailsSectionMove(
@@ -29,7 +30,8 @@ class Docman_View_Move extends Docman_View_Details {
                 array_merge(
                     array('docman_icons' => $this->_getDocmanIcons($params)),
                     $params
-                )
+                ),
+                $token
             ), 
             'actions'
         );

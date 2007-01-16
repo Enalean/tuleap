@@ -32,7 +32,7 @@ require_once('view/Docman_View_GetShowViewVisitor.class.php');
 require_once('view/Docman_View_GetFieldsVisitor.class.php');
 
 require_once('DocmanActions.class.php');
-require_once('DocmanLastBrowseRequest.class.php');
+require_once('Docman_Token.class.php');
 //require_once('DocmanOneFolderIsWriteable.class.php');
 
 require_once('common/include/Feedback.class.php');
@@ -317,9 +317,13 @@ class Docman extends Controler {
             
             // Browser alert
             $this->_checkBrowserCompliance();
-
+            
+            //token for redirection
+            $tok =& new Docman_Token();
+            
             $this->_viewParams['docman']         =& $this;
             $this->_viewParams['user']           =& $this->getUser();
+            $this->_viewParams['token']          =  $tok->getToken();
             $this->_viewParams['default_url']    =  $this->getDefaultUrl();
             $this->_viewParams['theme_path']     =  $this->getThemePath();
             $this->_viewParams['group_id']       = (int) $this->request->get('group_id');                
@@ -405,7 +409,6 @@ class Docman extends Controler {
                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_admin'));
                                 $this->view = $item->accept($get_show_view, $this->request->get('report'));
                             } else {
-                                $last_browse_request =& new DocmanLastBrowseRequest();
                                 switch ($view) {
                                     case 'show':
                                         $this->view = $item->accept($get_show_view, $this->request->get('report'));
@@ -418,7 +421,6 @@ class Docman extends Controler {
                                             }
                                         }
                                         $this->_initFilters($this->view);
-                                        $item->accept($last_browse_request);
                                         break;
                                     case 'expandFolder':
                                         $this->action = 'expandFolder';
@@ -677,11 +679,9 @@ class Docman extends Controler {
                                                 }
                                             } 
                                             if (!$this->view) {
-                                                $this->_viewParams['default_url_params'] = array(
-                                                    'action'  => 'details',
-                                                    'section' => 'actions',
-                                                    'id'      => $item_to_move->getId()
-                                                );
+                                                if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
+                                                    $this->_viewParams['redirect_to'] = $redirect_to;
+                                                }
                                                 $this->view = 'RedirectAfterCrud';
                                             }
                                         }
@@ -735,10 +735,9 @@ class Docman extends Controler {
                                             $this->view = 'Details';
                                         } else if ($this->request->exist('confirm')) {
                                             $this->action = $view;
-                                            $this->_viewParams['default_url_params'] = array(
-                                                'action'  => 'show',
-                                                'id'      => $item->getParentId()
-                                            );
+                                            if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
+                                                $this->_viewParams['redirect_to'] = $redirect_to;
+                                            }
                                             $this->view = 'RedirectAfterCrud';
                                         } else {
                                             $this->view = 'Details';
@@ -785,7 +784,9 @@ class Docman extends Controler {
                                                 }
                                                 //Views
                                                 if ($valid) {
-                                                    $this->_viewParams['redirect_to'] = $last_browse_request->getUrl();
+                                                    if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
+                                                        $this->_viewParams['redirect_to'] = $redirect_to;
+                                                    }
                                                     $this->view = 'RedirectAfterCrud';
                                                 } else {
                                                     $this->_viewParams['force_item']          = $new_item;
@@ -832,16 +833,9 @@ class Docman extends Controler {
                                             }
                                             //Views
                                             if ($valid) {
-                                                if ($view == 'update_wl' || $view == 'new_version') {
-                                                    $section = 'actions';
-                                                } else {
-                                                    $section = 'properties';
+                                                if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
+                                                    $this->_viewParams['redirect_to'] = $redirect_to;
                                                 }
-                                                $this->_viewParams['default_url_params'] = array(
-                                                    'action'  => 'details',
-                                                    'section' => $section,
-                                                    'id'      => $item->getId()
-                                                );
                                                 $this->view = 'RedirectAfterCrud';
                                             } else {
                                                 if ($view == 'update_wl') {

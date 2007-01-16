@@ -55,7 +55,7 @@ require_once('Docman_View_Docman.class.php');
         $url = $this->buildActionUrl($params, $urlParams);
         echo '&nbsp;<a href="'.$url.'"><b>'. $current_item_title .'</b></a>';
         
-        echo $this->getItemMenu($current_item, $params);
+        echo $this->getItemMenu($current_item, $params, $bc = true);
         echo '</div>';
     }
 }

@@ -20,7 +20,8 @@ class Docman_View_Delete extends Docman_View_Details {
     }
     
     /* protected */ function _content($params) {
-        parent::_content($params, new Docman_View_ItemDetailsSectionDelete($params['item'], $params['default_url'], $this->_controller), 'actions');
+        $token = isset($params['token']) ? $params['token'] : null;
+        parent::_content($params, new Docman_View_ItemDetailsSectionDelete($params['item'], $params['default_url'], $this->_controller, $token), 'actions');
     }
 }
 

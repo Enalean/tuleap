@@ -198,7 +198,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         }
         return $allowed;
     }
-    function getItemMenu(&$item, $params) {
+    function getItemMenu(&$item, $params, $bc = false) {
         
         $docman_icons =& $this->_getDocmanIcons($params);
         
@@ -213,7 +213,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         $user_actions = $item->accept(new Docman_View_GetMenuItemsVisitor());
         foreach($user_actions as $key => $nop) {
             if ($this->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
-                $html .= $user_actions[$key]->fetchAsJavascript(array_merge($params, array('docman_icons' => &$docman_icons)));
+                $html .= $user_actions[$key]->fetchAsJavascript(array_merge($params, array('docman_icons' => &$docman_icons, 'bc' => $bc)));
             }
         }
         $html .= '

@@ -63,6 +63,14 @@ CREATE TABLE plugin_docman_project_settings (
   KEY group_id (group_id)
 );
 
+DROP TABLE IF EXISTS plugin_docman_tokens;
+CREATE TABLE plugin_docman_tokens (
+   user_id INT(11) NOT NULL,
+   token CHAR(32) NOT NULL,
+   url text NOT NULL default '',
+   PRIMARY KEY(user_id, token)
+);
+
 --
 -- Table structure for table 'plugin_docman_metadata'
 --

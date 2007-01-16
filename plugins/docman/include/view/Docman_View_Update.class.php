@@ -20,8 +20,9 @@ class Docman_View_Update extends Docman_View_Details {
     }
     
     /* protected */ function _content($params) {
-        $force    = isset($params['force_item']) ? $params['force_item'] : null;
-        parent::_content($params, new Docman_View_ItemDetailsSectionUpdate($params['item'], $params['default_url'], $this->_controller, $force), 'actions');
+        $force = isset($params['force_item']) ? $params['force_item'] : null;
+        $token = isset($params['token']) ? $params['token'] : null;
+        parent::_content($params, new Docman_View_ItemDetailsSectionUpdate($params['item'], $params['default_url'], $this->_controller, $force, $token), 'actions');
     }
 }
 

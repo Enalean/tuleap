@@ -57,9 +57,13 @@ class Docman_ItemAction {
         return $html;
     }
     function fetchAsJavascript($params) {
+        $action_params = array('action' => $this->action,
+                              'id' => $this->item->getId());
+        if (isset($params['bc']) && $params['bc']) {
+            $action_params['bc'] = '1';
+        }
         $url = Docman_View_View::buildActionUrl($params, 
-                                                array('action' => $this->action,
-                                                      'id' => $this->item->getId()),
+                                                $action_params,
                                                 true,
                                                 true);
         $js = "

@@ -28,9 +28,11 @@ require_once('Docman_View_ParentsTree.class.php');
 require_once(dirname(__FILE__).'/../Docman_ItemBo.class.php');
 class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions {
     
-    function Docman_View_ItemDetailsSectionMove(&$item, $url, &$controller, $params) {
+    var $token;
+    function Docman_View_ItemDetailsSectionMove(&$item, $url, &$controller, $params, $token) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
         $this->params = $params;
+        $this->token = $token;
     }
     function getContent() {
         $content = '';
@@ -50,6 +52,9 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         
         //submit
         $content .= '<div>';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
         $content .= '<input type="hidden" name="action" value="move_here" />';
         $content .= '<input type="hidden" name="item_to_move" value="'. $this->item->getId() .'" />';
         $content .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';

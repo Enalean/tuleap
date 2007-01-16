@@ -27,9 +27,11 @@ require_once('Docman_View_ItemDetailsSectionActions.class.php');
 class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions {
     var $validate;
     var $force;
-    function Docman_View_ItemDetailsSectionUpdate(&$item, $url, &$controller, $force) {
+    var $token;
+    function Docman_View_ItemDetailsSectionUpdate(&$item, $url, &$controller, $force, $token) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false, true, $controller);
         $this->force = $force;
+        $this->token = $token;
     }
     function getContent() {
         return $this->item->accept($this);
@@ -50,6 +52,9 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
         }
         $content .= '</table>';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
         $content .= '<input type="hidden" name="item[id]" value="'. $item->getId() .'" />';
         $content .= '<input type="hidden" name="action" value="update_wl" />';
         $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';

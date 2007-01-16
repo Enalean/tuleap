@@ -26,15 +26,20 @@ require_once('Docman_View_ItemDetailsSection.class.php');
 
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection {
     var $notificationsManager;
-    function Docman_View_ItemDetailsSectionNotifications(&$item, $url, &$notificationsManager) {
+    var $token;
+    function Docman_View_ItemDetailsSectionNotifications(&$item, $url, &$notificationsManager, $token) {
         parent::Docman_View_ItemDetailsSection($item, $url, 'notifications', $GLOBALS['Language']->getText('plugin_docman', 'details_notifications'));
         $this->notificationsManager =& $notificationsManager;
+        $this->token = $token;
     }
     function getContent() {
         $content = '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</dt>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
         $content .= '<input type="hidden" name="action" value="monitor" />';
         $content .= '<input type="hidden" name="id" value="'. $this->item->getId() .'" />';
         $um   =& UserManager::instance();

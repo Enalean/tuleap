@@ -145,6 +145,9 @@ require_once('Docman_View_PermissionsForItem.class.php');
         //}}}	
         
         $html .= '<div class="docman_new_submit">'."\n";
+        if (isset($params['token']) && $params['token']) {
+            $html .= '<input type="hidden" name="token" value="'. $params['token'] .'" />';
+        }
         $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
         $html .= '</div>'."\n";
 
