@@ -125,7 +125,7 @@ class FRSFileDao extends DataAccessObject {
         $values = array();
 
         if($file_name !== null) {
-            $arg[] = 'file_name';
+            $arg[] = 'filename';
             $values[] = $this->da->quoteSmart($file_name);
         }
 
@@ -146,11 +146,14 @@ class FRSFileDao extends DataAccessObject {
 
 
         $arg[] = 'release_time';
-        $values[] = ((int) time);
+        $values[] = ((int) time());
         
         if($file_size !== null) {
             $arg[] = 'file_size';
             $values[] = ((int) $file_size);
+        } else {
+            $arg[] = 'file_size';
+            $values[] = filesize($file_name); 
         }
 
         $arg[] = 'post_date';
@@ -166,7 +169,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('file_name', 'release_id', 'type_id', 'processor_id', 'file_size');
+        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;

@@ -115,7 +115,7 @@ class FRSReleaseDao extends DataAccessObject {
     
     function searchActiveReleasesByPackageId($id){
     	$_id = (int) $id;
-    	return $this->_search(' package_id='.$_id.' AND status_id = 1','','ORDER BY release_date DESC, release_id DESC');
+        return $this->_search(' package_id='.$_id.' AND status_id = 1','','ORDER BY release_date DESC, release_id DESC');
     }
     
     function searchReleaseByName($release_name, $package_id){
@@ -169,7 +169,7 @@ class FRSReleaseDao extends DataAccessObject {
 
 
         $arg[] = 'release_date';
-        $values[] = ((int) time);
+        $values[] = ((int) time());
 
 		$um =& UserManager::instance();
         $user =& $um->getCurrentUser();
@@ -210,8 +210,7 @@ class FRSReleaseDao extends DataAccessObject {
             return false;
         }
     }
-    
-    
+
     function _createAndReturnId($sql) {
         $inserted = $this->update($sql);
         if ($inserted) {
