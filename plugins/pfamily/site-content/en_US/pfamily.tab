@@ -21,7 +21,7 @@ plugin_pfamily	delete_invalid	Delete link invalid - check with the administrator
 plugin_pfamily	template_marker	template project
 plugin_pfamily	back_links	Linking Projects
 plugin_pfamily	newly_added	link added: $1
-plugin_pfamily	note_personal_settings	Please note that this is a personal setting that applies only to you, not to the project.
+plugin_pfamily	note_personal_settings	Please note that this setting applies only to you, not to the project.
 plugin_pfamily	project_link_type_change_makes_duplicate	That change would create a duplicate link name or reverse-name - link type not updated
 plugin_pfamily	project_link_change_makes_duplicate	Update cancelled (it would create a duplicate link to "$1")
 plugin_pfamily	tooltip_update	update details

@@ -1,13 +1,3 @@
-DROP TABLE IF EXISTS plugin_related_project_link_type;
-CREATE TABLE plugin_related_project_link_type (
-	link_type_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-	group_id INT(11) UNSIGNED NOT NULL,
-	name TEXT NOT NULL,
-	reverse_name TEXT NOT NULL,
-	description TEXT NULL,
-	uri_plus TEXT NULL,
-	PRIMARY KEY(link_type_id)
-);
 --
 -- Table structure for table 'plugin_related_project_link_type'
 --
@@ -18,18 +8,18 @@ CREATE TABLE plugin_related_project_link_type (
 -- description:       Long description of what this relationship type means
 -- uri_plus:            URI with replaceable parameters: %group_id% %project_name%
 --
-DROP TABLE IF EXISTS plugin_related_project_relationship;
-CREATE TABLE plugin_related_project_relationship (
-	link_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-	link_type_id INT(11) UNSIGNED NOT NULL,
-	master_group_id INT(11) UNSIGNED NOT NULL,
-	target_group_id INT(11) UNSIGNED NOT NULL,
-	creation_date INT(11) UNSIGNED NOT NULL,
-	PRIMARY KEY(link_id)
+DROP TABLE IF EXISTS plugin_related_project_link_type;
+CREATE TABLE plugin_related_project_link_type (
+    link_type_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    group_id INT(11) UNSIGNED NOT NULL,
+    name TEXT NOT NULL,
+    reverse_name TEXT NOT NULL,
+    description TEXT NULL,
+    uri_plus TEXT NULL,
+    PRIMARY KEY(link_type_id)
 );
 --
 -- Table structure for table 'plugin_related_project_relationship'
---
 --
 -- link_type_id:      Index to plugin_related_project_link_type table to define the link
 --                             Or 0 to mean a ring link when the target is a ringmaster project.
@@ -37,4 +27,12 @@ CREATE TABLE plugin_related_project_relationship (
 -- target_group_id:   Project linked to.
 -- creation_date:     (date) Date link was created
 --
-
+DROP TABLE IF EXISTS plugin_related_project_relationship;
+CREATE TABLE plugin_related_project_relationship (
+    link_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    link_type_id INT(11) UNSIGNED NOT NULL,
+    master_group_id INT(11) UNSIGNED NOT NULL,
+    target_group_id INT(11) UNSIGNED NOT NULL,
+    creation_date INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY(link_id)
+);
