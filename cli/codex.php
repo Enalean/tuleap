@@ -156,6 +156,7 @@ codex [options] [module name] [function] [parameters]
 
 Available modules:
    * tracker
+   * frs
    
 Available functions for the default module:
    * login: Begin a session with the server.
