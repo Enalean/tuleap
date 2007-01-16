@@ -1,10 +1,32 @@
 <?php
+//Copyright © STMicroelectronics, 2006. All Rights Reserved.
+//
+//Originally written by Dave Kibble, 2006.
+//
+//This file is a part of CodeX.
+//
+//CodeX is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 2 of the License, or
+//(at your option) any later version.
+//
+//CodeX is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with CodeX; if not, write to the Free Software
+//Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
 //
 // this is a service for twisties - it just stores teh preference sent by javascript from a twistie page - see twistie.php
 //
 require_once('pre.php');
-if (isset($item)) {
-    if (isset($val)) {
+if (isset($_REQUEST['item'])) {
+    $item = $_REQUEST['item'];
+    if (isset($_REQUEST['val'])) {
+        $val = $_REQUEST['val'];
         user_set_preference($item, $val);
     } else {
         user_del_preference($item);

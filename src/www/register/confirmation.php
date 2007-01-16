@@ -218,7 +218,8 @@ if (isset($show_confirm) && $show_confirm) {
 	$result=db_query("DELETE FROM groups ".
 		"WHERE group_id='$group_id' AND rand_hash='__$rand_hash'");
 
-	ProjectFamilyDeleteAll($group_id);
+	$result=db_query("DELETE FROM trove_group_link WHERE group_id='$group_id'");
+	pf_deleteAll($group_id);
 
 	echo '
 		<H2>'.$Language->getText('register_confirmation','project_deleted').'</H2>

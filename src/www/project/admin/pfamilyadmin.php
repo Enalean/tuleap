@@ -1,4 +1,24 @@
 <?php
+//Copyright © STMicroelectronics, 2006. All Rights Reserved.
+//
+//Originally written by Dave Kibble, 2006.
+//
+//This file is a part of CodeX.
+//
+//CodeX is free software; you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation; either version 2 of the License, or
+//(at your option) any later version.
+//
+//CodeX is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with CodeX; if not, write to the Free Software
+//Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
 require_once('pre.php');
 require_once('vars.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -6,6 +26,7 @@ require_once('pfamily.php');
 require_once('form_utils.php');
 
 $Language->loadLanguageMsg('project/project');
+$group_id = (int) $_REQUEST['group_id'];
 
 // get current information
 $res_grp = group_get_result($group_id);
@@ -29,51 +50,57 @@ if (!$group || !is_object($group) || $group->isError()) {
   exit_no_group();
 }
 
-if (isset($func)) { // updating the database?
-    if (! ProjectFamilyActionHandler($group_id, $func)) {
+if (isset($_REQUEST['func'])) { // updating the database?
+    $func = $_REQUEST['func'];
+    if (! pf_ActionHandler($group_id, $func)) {
         exit_error("unknown action: ".$func, "");    //should not occur (no translation required)
     }
 }
-
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id, 'help' => 'ServiceConfiguration.html'));
-if (isset($disp)) {
+if (isset($_REQUEST['disp'])) {
+    $disp = $_REQUEST['disp'];
     switch ($disp) {
-        case PROJECT_FAMILY_ADMIN_LINK_SHOW:
-            pfAdminPage_updateLink($group_id, $target_group_id, isset($link_id)?$link_id:NULL);
+        case PF_ADMIN_LINK_SHOW:
+            if (isset($_REQUEST['link_id'])) {
+                $link_id = (int) $_REQUEST['link_id'];
+            } else {
+                $link_id = NULL;
+            }
+            pf_adminPage_updateLink($group_id, $target_group_id, $link_id);
             break;
-        case PROJECT_FAMILY_ADMIN_TYPE_SHOW:
-            pfAdminPage_linkTypeUpdate($group_id, $link_type_id);
-            break;
-        case PROJECT_FAMILY_ADMIN_TEMPLATE_SYNC:
-            pfAdminPage_syncTemplate($group_id, $template_id);
+        case PF_ADMIN_TYPE_SHOW:
+            if (isset($_REQUEST['link_type_id'])) {
+                $link_type_id = (int) $_REQUEST['link_type_id'];
+            } else {
+                $link_type_id = NULL;
+            }
+            $link_type_id = (int) $_REQUEST['link_type_id'];
+            pf_adminPage_linkTypeUpdate($group_id, $link_type_id);
             break;
     }
 } else {
-    pfAdminPage_default($group_id);
+    pf_adminPage_default($group_id, $group);
 }
 project_admin_footer(array());
 
-//======================================================================================================
-//======================================================================================================
-//======================================================================================================
+//=============================================================================
+//=============================================================================
+//=============================================================================
 
-//======================================================================================================
-function pfAdminPage_default($group_id)
+//=============================================================================
+function pf_adminPage_default($group_id, $group)
 {
     // show the default configuration page
-    global $HTML, $Language, $group;
+    global $HTML, $Language;
 
-    if (!(is_numeric($group_id))) {
-        exit_error("invalid data", "4"); // unexpected error - no translation reqd.
-    }
     print "<TABLE width='100%' cellpadding='2' cellspacing='2' border='0'>
         <TR valign='top'><TD width='70%'>";
     // admin set-up
     $HTML->box1_top($Language->getText('plugin_pfamily', 'project_setup'));
     //project families: allow the admin user to enable linking to other projects
     form_Start();
-    form_HiddenParams(array("func" => PROJECT_FAMILY_ADMIN_CONFIG_UPDATE, "group_id" => $group_id));
-    form_SectionStart(pf_get_img_main_icon()." ".$Language->getText('plugin_pfamily','project_families'));
+    form_HiddenParams(array("func" => PF_ADMIN_CONFIG_UPDATE, "group_id" => $group_id));
+    form_SectionStart(pf_getImg_mainIcon()." ".$Language->getText('plugin_pfamily','project_families'));
     form_SectionStart();
     form_genCheckbox("EnableProjectLink", $Language->getText('plugin_pfamily','link_enable'), "Y", ((user_get_preference("ProjectFamilies_GroupId_master") == $group_id)?"Y":""), SUBMIT_ON_CHANGE);
     form_text($Language->getText('plugin_pfamily','link_enable_explanation', pf_get_img_add_link()));
@@ -83,8 +110,8 @@ function pfAdminPage_default($group_id)
 
     // link types
     $HTML->box1_top($Language->getText('plugin_pfamily', 'link_types').
-        " &nbsp; &nbsp; &nbsp; &nbsp; ".MkAH($Language->getText('plugin_pfamily', 'create_type'), "/project/admin/pfamilyadmin.php?disp=".PROJECT_FAMILY_ADMIN_TYPE_SHOW."&group_id=$group_id"));
-    $db_res = pfamily_get_links($group_id);
+        " &nbsp; &nbsp; &nbsp; &nbsp; ".mkAH($Language->getText('plugin_pfamily', 'create_type'), "/project/admin/pfamilyadmin.php?disp=".PF_ADMIN_TYPE_SHOW."&group_id=$group_id"));
+    $db_res = pf_getLinks($group_id);
     print "<TABLE width='100%' cellpadding='2' cellspacing='2' border='0'>
         <TR valign='top'>";
     print "<th style='text-align: left;'>".htmlentities($Language->getText('plugin_pfamily', 'dbfn_name'))."</th>
@@ -94,12 +121,12 @@ function pfAdminPage_default($group_id)
         ";
     while ($row = db_fetch_array($db_res)) {
         print "<TR>
-            <td style='white-space: nowrap; vertical-align: top;'>".MkAH(htmlentities($row['name']), "/project/admin/pfamilyadmin.php?disp=".PROJECT_FAMILY_ADMIN_TYPE_SHOW."&group_id=".$row["group_id"]."&link_type_id=".$row["link_type_id"], $Language->getText('plugin_pfamily', 'tooltip_update')).
+            <td style='white-space: nowrap; vertical-align: top;'>".mkAH(htmlentities($row['name']), "/project/admin/pfamilyadmin.php?disp=".PF_ADMIN_TYPE_SHOW."&group_id=".$row["group_id"]."&link_type_id=".$row["link_type_id"], $Language->getText('plugin_pfamily', 'tooltip_update')).
             "</td>
             <td style='white-space: nowrap; vertical-align: top;'>".htmlentities($row['reverse_name'])."</td>
             <td style='vertical-align: top;'>".htmlentities($row['description'])."</td>
             <td style='vertical-align: top;'>".htmlentities($row['uri_plus'])."</td>
-            <td style='vertical-align: top;'>".MkAH(pf_get_img_trash(), "/project/admin/pfamilyadmin.php?func=".PROJECT_FAMILY_ADMIN_TYPE_DELETE."&group_id=".htmlentities($group_id)."&link_type_id=".$row["link_type_id"],
+            <td style='vertical-align: top;'>".mkAH(pf_getImg_trash(), "/project/admin/pfamilyadmin.php?func=".PF_ADMIN_TYPE_DELETE."&group_id=".htmlentities($group_id)."&link_type_id=".$row["link_type_id"],
                 $Language->getText('plugin_pfamily', 'delete_type'), @array('onclick'=>"return confirm('".$Language->getText('plugin_pfamily', 'delete_type')."?')"))."
             </td>
             </TR>";
@@ -117,13 +144,13 @@ function pfAdminPage_default($group_id)
     </TD>&nbsp;</TD><TD width='30%'>";
 
     // project family links
-    showProjectFamilylinks($group_id, TRUE);
+    pf_showLinks($group_id, TRUE);
 
     print "</TABLE> <HR NoShade SIZE='1'>";
 }
 
-//======================================================================================================
-function pfAdminPage_updateLink($group_id, $target_group_id, $link_id = NULL)
+//=============================================================================
+function pf_adminPage_updateLink($group_id, $target_group_id, $link_id = NULL)
 {
     // $link_id NULL to create a new one
     global $HTML, $Language;
@@ -155,17 +182,17 @@ function pfAdminPage_updateLink($group_id, $target_group_id, $link_id = NULL)
         $def_link_type_id = $row["link_type_id"];
         $creation_date = $row["creation_date"];
     }
-    $pfLinks = pfamily_get_links($group_id); // check if project already has project link types - otherwise create the defaults
+    $pfLinks = pf_getLinks($group_id); // check if project already has project link types - otherwise create the defaults
     print "<TABLE width='100%' cellpadding='3' cellspacing='0' border='0'>
         <TR valign='top'><TD width='50%'>";
-    $HTML->box1_top($Language->getText('plugin_pfamily','project_families')." ".pf_get_img_main_icon()." ".$Language->getText('plugin_pfamily','link_update_head', array(group_getname($group_id), group_getname($target_group_id))));
-    print MkAH("[".$Language->getText('global', 'btn_cancel')."]", "/project/admin/pfamilyadmin.php?group_id=$group_id");
+    $HTML->box1_top($Language->getText('plugin_pfamily','project_families')." ".pf_getImg_mainIcon()." ".$Language->getText('plugin_pfamily','link_update_head', array(group_getname($group_id), group_getname($target_group_id))));
+    print mkAH("[".$Language->getText('global', 'btn_cancel')."]", "/project/admin/pfamilyadmin.php?group_id=$group_id");
     print "<hr>\n";
     print "<TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
     print "<tr><td>\n";
     form_start();
     form_hiddenParams(array(
-        "func" => PROJECT_FAMILY_ADMIN_LINK_UPDATE,
+        "func" => PF_ADMIN_LINK_UPDATE,
         "group_id" => $group_id,
         "target_group_id" => $target_group_id));
     if (isset($link_id)) {
@@ -193,7 +220,7 @@ function pfAdminPage_updateLink($group_id, $target_group_id, $link_id = NULL)
             ";
     while ($row_pfLinks = db_fetch_array($pfLinks)) {
         print "<tr><td style='white-space: nowrap; vertical-align:top;'>".htmlentities($row_pfLinks['name'])."</td>
-            <td style='vertical-align:top;'>".Nz(htmlentities($row_pfLinks['description']), "&nbsp;")."</td>
+            <td style='vertical-align:top;'>".nz(htmlentities($row_pfLinks['description']), "&nbsp;")."</td>
             </tr>";
     }
     print "</TABLE>\n";
@@ -206,8 +233,8 @@ function pfAdminPage_updateLink($group_id, $target_group_id, $link_id = NULL)
         ";
 }
 
-//======================================================================================================
-function pfAdminPage_linkTypeUpdate($group_id, $link_type_id)
+//=============================================================================
+function pf_adminPage_linkTypeUpdate($group_id, $link_type_id)
 {
     global $HTML, $Language;
 
@@ -239,12 +266,12 @@ function pfAdminPage_linkTypeUpdate($group_id, $link_type_id)
                 'uri_plus' => PF_DEFAULT_PROJECT_LINK
             );
     }
-    $HTML->box1_top($Language->getText('plugin_pfamily','project_families')." ".pf_get_img_main_icon()." ".$Language->getText('plugin_pfamily', 'link_type_update'));
-    print MkAH("[".$Language->getText('global', 'btn_cancel')."]", "/project/admin/pfamilyadmin.php?group_id=$group_id");
+    $HTML->box1_top($Language->getText('plugin_pfamily','project_families')." ".pf_getImg_mainIcon()." ".$Language->getText('plugin_pfamily', 'link_type_update'));
+    print mkAH("[".$Language->getText('global', 'btn_cancel')."]", "/project/admin/pfamilyadmin.php?group_id=$group_id");
     print "<hr>\n";
     form_Start("");
     form_HiddenParams(array(
-        "func" => PROJECT_FAMILY_ADMIN_TYPE_UPDATE,
+        "func" => PF_ADMIN_TYPE_UPDATE,
         "group_id" => $group_id));
     if (isset($link_type_id)) {
         form_HiddenParams(array("link_type_id" => $link_type_id));

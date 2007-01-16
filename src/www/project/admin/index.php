@@ -43,6 +43,7 @@ if (isset($func)) {
     /*
       updating the database
     */
+    $group_id = (int) $_REQUEST['group_id'];
     if ($func=='adduser') {
         /*
 	    add user to this project
@@ -133,7 +134,7 @@ if (isset($func)) {
        }
        $mode = "admin";
        require('../../tracker/import.php');
-    } */ else if (ProjectFamilyActionHandler($group_id, $func)) {
+    } */ else if (pf_ActionHandler($group_id, $func)) {
 		// project family handler did it all!
 	} else {
 		exit_error("unknown action: ".$func, "");	//should not occur (no translation required) 
@@ -162,6 +163,11 @@ print '&nbsp;
 if ($project->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
  }
+
+print '&nbsp;
+<BR><P>
+'.$Language->getText('include_project_home','view_proj_activity',"/project/stats/?group_id=$group_id");
+
 print '<!-- Not implemented on CodeX
 <P align=center>
 <A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>

@@ -57,7 +57,7 @@ if ($project->getDescription()) {
 
 print '<a href="/project/showdetails.php?group_id='.$group_id.'"> '. $details_prompt .'</a>';
 
-showProjectFamilyLinkButton($group_id);
+pf_showLinkButton($group_id);
 
 // trove info
 print '<BR>&nbsp;<BR>';
@@ -107,7 +107,7 @@ print '
 ';
 
 //================== Project Family
-showProjectFamilylinks($group_id, FALSE);
+pf_showLinks($group_id, FALSE);
  
 print '
 </TD></TR>
