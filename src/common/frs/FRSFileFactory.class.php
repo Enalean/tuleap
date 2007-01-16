@@ -184,7 +184,6 @@ class FRSFileFactory {
         $file_location = $file->getFileLocation();
         // move the file from temp dir to its real storage place
         if (rename($tmp_name, $file_location)) {
-            $file->setFileName($file_location);
             return $this->create($file->toArray());
         } else {
             return false;
