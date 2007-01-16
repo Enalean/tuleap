@@ -281,6 +281,80 @@ EOF;
     show_output($res);
 }
 
+function frs_do_getfile() {
+    global $PARAMS, $SOAP, $LOG;
+    
+    if (get_parameter($PARAMS, "help")) {
+        echo <<<EOF
+Get the content of the file
+Parameters:
+--project=<name>: Name of the project the file belongs to. If you specified the name of
+    the working project when you logged in, this parameter is not needed.
+--package_id=<package_id>: Id of the package the file belongs to.
+--release_id=<package_id>: Id of the release the file belongs to.
+--output=<location>: name of the file to write the file to
+EOF;
+        return;
+    }
+    
+    if (!($package_id = get_parameter($PARAMS, "package_id", true))) {
+        exit_error("You must define a package with the --package parameter");
+    }
+
+    if (!($release_id = get_parameter($PARAMS, "release_id", true))) {
+        exit_error("You must define a release with the --release parameter");
+    }
+
+    if (!($file_id = get_parameter($PARAMS, "file_id", true))) {
+        exit_error("You must define a file with the --id parameter");
+    }
+
+    // Should we save the contents to a file?
+    $output = get_parameter($PARAMS, "output", true); 
+    if (isset($output) && trim($output) != '') {
+        if (file_exists($output)) {
+            $sure = get_user_input("File $output already exists. Do you want to overwrite it? (y/n): ");
+            if (strtolower($sure) != "y" && strtolower($sure) != "yes") {
+                exit_error("Retrieval of file aborted");
+            }
+        }
+    }
+
+    $group_id = get_working_group($PARAMS);
+
+    $cmd_params = array(
+                    "group_id" => $group_id,
+                    "package_id" => $package_id,
+                    "release_id" => $release_id,
+                    "file_id" => $file_id
+                );
+
+    $res = $SOAP->call("getFile", $cmd_params);
+    if (($error = $SOAP->getError())) {
+        $LOG->add($SOAP->responseData);
+        exit_error($error, $SOAP->faultcode);
+    }
+    
+    $file = base64_decode($res);
+
+    if ($output) {
+        while (!($fh = @fopen($output, "wb"))) {
+            echo "Couldn't open file ".$output." for writing.\n";
+            $output = "";
+            while (!$output) {
+                $output = get_user_input("Please specify a new file name: ");
+            }
+        }
+        
+        fwrite($fh, $file, strlen($file));
+        fclose($fh);
+        
+        echo "File retrieved successfully.\n";
+    } else {
+        echo $file;     // if not saving to a file, output to screen
+    }
+}
+
 function frs_do_addfile() {
     global $PARAMS, $SOAP, $LOG;
 
@@ -292,6 +366,7 @@ Parameters:
     the working project when you logged in, this parameter is not needed.
 --package_id=<package_id>: Id of the package the file will belong to.
 --release_id=<package_id>: Id of the release the file will belong to.
+--file=<file_location>: file to add
 --type_id=<type_id>: Id of the type of the file.
 --processor_id=<processor_id>: Id of the processor of the file
 EOF;
