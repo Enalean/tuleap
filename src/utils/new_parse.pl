@@ -160,7 +160,7 @@ while ($ln = pop(@userdump_array)) {
 		
 	} elsif ($username eq 'none') {
 		# simply ignore: this is a dummy user
-	} else {
+        } elsif ($user_active) {
 		print("Unknown Status Flag: $username\n");
 		++$error_user;
 	}
