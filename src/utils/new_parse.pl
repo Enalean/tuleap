@@ -44,7 +44,7 @@ require("include.pl");  # Include all the predefined functions and variables
 my $verbose=0;
 my $user_file = $dump_dir . "/user_dump";
 my $group_file = $dump_dir . "/group_dump";
-my ($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
+my ($uid, $unix_status, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
 my ($gname, $gstatus, $gid, $userlist, $ugrouplist);
 my $server_url;
 if ($sys_force_ssl) {
@@ -101,7 +101,7 @@ if ($cvsversion =~ /CVSNT/) {
 print ("\n\n	Processing Users\n\n");
 while ($ln = pop(@userdump_array)) {
 	chop($ln);
-	($uid, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname) = split(":", $ln);
+	($uid, $unix_status, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname) = split(":", $ln);
 
 	# if win passwords are empty in the SQL database then it means
 	# that it's a user that was created before Win Account were put in place
@@ -121,21 +121,23 @@ while ($ln = pop(@userdump_array)) {
 	$username =~ tr/A-Z/a-z/;
 	
 	$user_exists = getpwnam($username);
-	
-	if ($status eq 'A' && $user_exists) {
+	$user_active=0;
+        if ($status eq 'A' || $status eq 'R') {$user_active=1;}
+
+	if ($unix_status eq 'A' && $user_exists && $user_active) {
 		update_user($uid, $username, $realname, $shell, $passwd, $email);
                 update_user_group($uid, $username);
 		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		update_httpuser($username, $passwd);
 		++$up_user;
 
-	} elsif ($status eq 'A' && !$user_exists) {
+	} elsif ($unix_status eq 'A' && !$user_exists && $user_active) {
 		add_user($uid, $username, $realname, $shell, $passwd, $email);
 		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		add_httpuser($username, $passwd);
 		++$new_user;
 	
-	} elsif ($status eq 'D') {
+	} elsif ($unix_status eq 'D') {
 
                 # delete the user if it exists. Otherwise it means it has
 	        # already been deleted so do nothing
@@ -146,13 +148,13 @@ while ($ln = pop(@userdump_array)) {
 		  ++$del_user;
 		}
 		
-	} elsif ($status eq 'S' && $user_exists) {
+	} elsif ($unix_status eq 'S' && $user_exists) {
 		suspend_user($username);
 		suspend_winuser($username);
 		suspend_httpuser($username);
 		++$suspend_user;
 		
-	} elsif ($status eq 'S' && !$user_exists) {
+	} elsif ($unix_status eq 'S' && !$user_exists) {
 		print("Error trying to suspend user: $username\n");
 		++$error_user;
 		
