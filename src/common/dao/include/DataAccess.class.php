@@ -67,10 +67,11 @@ class DataAccess {
     * @see http://php.net/mysql-real-escape-string
     * @static
     */
-    function quoteSmart($value) {
+    function quoteSmart($value, $params = array()) {
         // Quote if not integer
-        if (!is_numeric($value)) {
-            $value = "'" . mysql_real_escape_string($value) . "'";
+        $value = mysql_real_escape_string($value);
+        if (!is_numeric($value) || (isset($params['force_string']) && $params['force_string'])) {
+            $value = "'" . $value . "'";
         }
         return $value;
     }

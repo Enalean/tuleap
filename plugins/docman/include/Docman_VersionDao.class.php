@@ -149,7 +149,7 @@ class Docman_VersionDao extends DataAccessObject {
 				$this->da->quoteSmart($item_id),
 				$this->da->quoteSmart($number),
 				$this->da->quoteSmart($user_id),
-				$this->da->quoteSmart($label),
+				$this->da->quoteSmart($label, array('force_string' => true)),
 				$this->da->quoteSmart($changelog),
 				$this->da->quoteSmart($date),
 				$this->da->quoteSmart($filename),
@@ -162,11 +162,13 @@ class Docman_VersionDao extends DataAccessObject {
         $row['date'] = time();
         $arg    = array();
         $values = array();
+        $params = array('force_string' => false);
         $cols   = array('item_id', 'number', 'user_id', 'label', 'changelog', 'date', 'filename', 'filesize', 'filetype', 'path');
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
-                $values[] = $this->da->quoteSmart($value);
+                $params['force_string'] = ($key == 'label');
+                $values[] = $this->da->quoteSmart($value, $params);
             }
         }
         if (count($arg)) {
