@@ -35,7 +35,7 @@ class Docman_TokenDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($user_id, $token, $url) {
-		$sql = sprintf("INSERT INTO plugin_docman_tokens (user_id, token, url) VALUES (%s, %s, %s)",
+		$sql = sprintf("INSERT INTO plugin_docman_tokens (user_id, token, url, created_at) VALUES (%s, %s, %s, NOW())",
 				$this->da->quoteSmart($user_id),
 				$this->da->quoteSmart($token),
 				$this->da->quoteSmart($url));
@@ -48,7 +48,7 @@ class Docman_TokenDao extends DataAccessObject {
     * delete a row in the table plugin_docman_tokens
     */
     function delete($user_id, $token) {
-        $sql = sprintf("DELETE FROM plugin_docman_tokens WHERE user_id = %s AND token = %s",
+        $sql = sprintf("DELETE FROM plugin_docman_tokens WHERE (TO_DAYS(NOW()) - TO_DAYS(created_at)) > 1 OR (user_id = %s AND token = %s)",
 				$this->da->quoteSmart($user_id),
 				$this->da->quoteSmart($token));
         $deleted = $this->update($sql);
