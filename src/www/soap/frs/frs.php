@@ -438,7 +438,10 @@ function release_to_soap($release) {
 function releases_to_soap($release_arr) {
     $return = array();
     foreach ($release_arr as $release) {
-        $return[] = release_to_soap($release);
+        $soap_release = release_to_soap($release);
+        if ($soap_release != null) {
+            $return[] = $soap_release;
+        }
     }
     return $return;
 }
@@ -648,7 +651,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         }
         
         if (!$file->fileExists()) {
-            return new soap_fault(invalid_file_fault,'getFile','File doesn\'t exist on the server','File doesn\'t exist on the server');
+            return new soap_fault(invalid_file_fault,'getFile','File doesn\'t exist on the server','File "'.$file->getFileName().'" doesn\'t exist on the server');
         }
         
         $contents = $file->getContent();
