@@ -245,6 +245,20 @@ $server->register(
      or if the add failed.'
 );
 
+$server->register(
+    'getUploadedFiles',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int'
+        ),
+    array('getUploadedFilesResponse'=>'tns:ArrayOfstring'),
+    $uri,
+    $uri.'#getUploadedFiles',
+    'rpc',
+    'encoded',
+    'Get the file names of the file present in the incoming directory on the server.'
+);
+
 //
 // Function implementation
 //
@@ -732,5 +746,30 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
         }
     } else {
         return new soap_fault(invalid_session_fault,'addFile','Invalid Session','');
+    }
+}
+
+/**
+ * getUploadedFiles - get the names of the files present in the incoming directory
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to add the file
+ * @return array of string the names of the files present in the incoming directory, 
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - the user does not have the permissions to see the incoming directory (must be project admin, file admin or super user)
+ */
+function getUploadedFiles($sessionKey, $group_id) {
+    if (session_continue($sessionKey)) {
+        $file_fact = new FRSFileFactory();
+        if ($file_fact->userCanAdd($group_id)) {
+            $soap_files = array();
+            $file_names = $file_fact->getUploadedFileNames();
+            return $file_names;
+        } else {
+            return new soap_fault('', 'getUploadedFiles', 'User not allowed to see the uploaded files', 'User not allowed to see the uploaded files');
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'getUploadedFiles','Invalid Session','');
     }
 }

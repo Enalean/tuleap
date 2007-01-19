@@ -181,13 +181,27 @@ class FRSFileFactory {
         $file->setReleaseID($release_id);
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
-        $file_location = $file->getFileLocation();
+        
+        // retrieve the group_id
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $group_id = $release->getGroupID();
+        
+        // get the sub directory where to move the file
+        $upload_sub_dir = 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
+        
+        $exec_return = $this->moveFileForge($group_id, $tmp_name, $upload_sub_dir);
+        
+        $file->setFileName($upload_sub_dir.'/'.$name);
+        return $this->create($file->toArray());
+        
+        /*$file_location = $file->getFileLocation();
         // move the file from temp dir to its real storage place
         if (rename($tmp_name, $file_location)) {
             return $this->create($file->toArray());
         } else {
             return false;
-        }
+        }*/
     }
     
     function _delete($file_id){
@@ -244,6 +258,42 @@ return 0 if file not deleted, 1 otherwise
         $user =& $um->getUserById($user_id);
         $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
         return $ok;
+    }
+
+    /**
+     * Returns the names of the files present in the incoming directory
+     *
+     * @return array of string : the names of the files present in the incoming directory
+     */
+    function getUploadedFileNames() {
+        $uploaded_file_names = array();
+        $dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
+        //iterate and show the files in the upload directory
+        while ($file = @ readdir($dirhandle)) {
+            if ((!ereg('^\.', $file[0])) && is_file($GLOBALS['ftp_incoming_dir'] . '/' . $file)) {
+                $uploaded_file_names[] = $file;
+            }
+        }
+        return $uploaded_file_names;
+    }
+    
+    /**
+     * Force the upload directory creation, and move the file $file_name in the good directory
+     *
+     * @global $GLOBALS['codex_bin_prefix']
+     *
+     * @param int $group_id the ID of the project we want to upload the file
+     * @param string $file_name the name of the file we want to upload
+     * @param string $upload_sub_dir the name of the sub-directory the file will be moved in
+     * @return string the feedback returned by the fileforge command.
+     */
+    function moveFileForge($group_id, $file_name, $upload_sub_dir) {
+        $group = new Group($group_id);
+        $group_unix_name = $group->getUnixName();
+        exec("/bin/date > /tmp/" . $group_unix_name . "$group_id", $exec_res);
+		exec($GLOBALS['codex_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
+		exec($GLOBALS['codex_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir, $exec_res);
+        return $exec_res;
     }
 
 }

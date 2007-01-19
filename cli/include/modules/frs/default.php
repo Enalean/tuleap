@@ -38,6 +38,9 @@ case "getfile":
 case "addfile":
     frs_do_addfile();
     break;
+case "uploadedfiles":
+    frs_do_uploadedfilelist();
+    break;
 default:
     exit_error("Unknown function name: ".$function_name);
     break;
@@ -421,6 +424,34 @@ EOF;
                 );
 
     $res = $SOAP->call("addFile", $add_params);
+    if (($error = $SOAP->getError())) {
+        $LOG->add($SOAP->responseData);
+        exit_error($error, $SOAP->faultcode);
+    }
+    
+    show_output($res);
+}
+
+/**
+ * frs_do_uploadedfilelist - List of uploaded files
+ */
+function frs_do_uploadedfilelist() {
+    global $PARAMS, $SOAP, $LOG;
+    
+    if (get_parameter($PARAMS, "help")) {
+        echo <<<EOF
+Returns the list of files that are present in the incoming directory
+Parameters:
+--project=<name>: Name of the project you are working in. If you specified the name of
+    the working project when you logged in, this parameter is not needed.
+EOF;
+        return;
+    }
+
+    $group_id = get_working_group($PARAMS);
+    $user_id = $SOAP->getSessionUserID();
+    
+    $res = $SOAP->call("getUploadedFiles", array("group_id" => $group_id));
     if (($error = $SOAP->getError())) {
         $LOG->add($SOAP->responseData);
         exit_error($error, $SOAP->faultcode);
