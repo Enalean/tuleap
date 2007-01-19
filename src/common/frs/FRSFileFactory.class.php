@@ -176,7 +176,7 @@ class FRSFileFactory {
                                $type_id=null, $processor_id=null) {
         $file = new FRSFile();
         $file->setFileName($name);
-        $file->setFileSize(filesize($GLOBALS['ftp_incoming_dir'].'/'.$name));
+        $file->setFileSize(filesize($GLOBALS['ftp_incoming_dir'] . '/' . $name));
         $file->setReleaseID($release_id);
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
@@ -189,7 +189,7 @@ class FRSFileFactory {
         // get the sub directory where to move the file
         $upload_sub_dir = 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
         
-        $exec_return = $this->moveFileForge($group_id, $tmp_name, $upload_sub_dir);
+        $exec_return = $this->moveFileForge($group_id, $name, $upload_sub_dir);
         // shall we test the result of fileforge ???
         
         // set the new name of the file: we add the sub-directory

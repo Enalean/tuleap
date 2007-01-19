@@ -734,11 +734,11 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             fclose($fh);
             
             // move the file in the incoming dir
-            if (! rename($tmp_name, $GLOBALS['ftp_incoming_dir'].'/'.$name)) {
+            if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
                 return new soap_fault ('','addFile','Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir']);
             }
             
-            $file_id = $file_fact->createFromIncomingFile($filename, $name,$release_id,$type_id,$processor_id);
+            $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
             if (! $file_id) {
                 @unlink($tmpname);
                 return new soap_fault ('','addFile',$file_fact->getErrorMessage(),$file_fact->getErrorMessage());
