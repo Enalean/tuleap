@@ -17,6 +17,7 @@ $ALL_USERS_GROUPS = array();
 $ALL_USERS_TRACKERS = array();
 
 function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
+    $GLOBALS['auth_success'] = false;
     $em =& EventManager::instance();
     $em->processEvent('session_before_login', array('loginname' => $form_loginname
                                                    ,'passwd'=>$form_pw));
