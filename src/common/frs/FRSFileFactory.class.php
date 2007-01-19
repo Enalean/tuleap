@@ -168,16 +168,15 @@ class FRSFileFactory {
     }
     
     /**
-     * create a new file from a temporary file
+     * create a new file from a file present in the incoming dir
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function createFromTmpFile($name=null, $tmp_name=null,
-                               $release_id=null, 
+    function createFromIncomingFile($name=null, $release_id=null, 
                                $type_id=null, $processor_id=null) {
         $file = new FRSFile();
         $file->setFileName($name);
-        $file->setFileSize(filesize($tmp_name));
+        $file->setFileSize(filesize($GLOBALS['ftp_incoming_dir'].'/'.$name));
         $file->setReleaseID($release_id);
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
@@ -191,17 +190,11 @@ class FRSFileFactory {
         $upload_sub_dir = 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
         
         $exec_return = $this->moveFileForge($group_id, $tmp_name, $upload_sub_dir);
+        // shall we test the result of fileforge ???
         
+        // set the new name of the file: we add the sub-directory
         $file->setFileName($upload_sub_dir.'/'.$name);
         return $this->create($file->toArray());
-        
-        /*$file_location = $file->getFileLocation();
-        // move the file from temp dir to its real storage place
-        if (rename($tmp_name, $file_location)) {
-            return $this->create($file->toArray());
-        } else {
-            return false;
-        }*/
     }
     
     function _delete($file_id){
