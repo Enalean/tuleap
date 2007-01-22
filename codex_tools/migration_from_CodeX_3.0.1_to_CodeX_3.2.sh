@@ -267,6 +267,8 @@ ALTER TABLE permissions ADD INDEX object_id (object_id (10));
 # SR #634
 ALTER TABLE svn_commits ADD INDEX revision (revision);
 
+# SR #633
+ALTER TABLE artifact_field_value ADD INDEX valueInt (valueInt);
 EOF
 
 
