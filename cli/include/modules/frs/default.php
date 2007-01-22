@@ -387,7 +387,7 @@ EOF;
         exit_error("You must specify the ID of the release with the --release_id parameter");
     }
     
-    $upload_file = get_parameter($PARAMS, "uploaded_file", true);
+    $uploaded_file = get_parameter($PARAMS, "uploaded_file", true);
     $local_file = get_parameter($PARAMS, "local_file", true);
     if (! isset($uploaded_file) && ! isset($local_file)) {
         exit_error("You must specify a file name with either the --local_file or --uploaded_file parameter, depending the way you want to add the file.");
@@ -432,7 +432,6 @@ EOF;
         $res = $SOAP->call("addUploadedFile", $add_params);
     } else {
         // the file will be uploaded on the server
-        $name = basename($local_file);
         $contents = fread($fh, filesize($local_file));
         $base64_contents = base64_encode($contents);
         fclose($fh);
@@ -441,7 +440,7 @@ EOF;
                     "group_id"        => $group_id,
                     "package_id"      => $package_id,
                     "release_id"      => $release_id,
-                    "filename"        => $name,
+                    "filename"        => $local_file,
                     "base64_contents" => $base64_contents,
                     "type_id"         => $type_id,
                     "processor_id"    => $processor_id,

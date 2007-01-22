@@ -146,8 +146,18 @@ class FRSFileFactory {
         return $dar->valid();
     }
     
-    function isFileBaseNameExists($file_basename, $group_id) {
-        return $this->isFileNameExist($this->getUploadSubDirectory($file_basename).'/'.$file_basename, $group_id);
+    /**
+     * Determine if there is already a file named $file_basename in the release $release_id for the project $group_id
+     *
+     * @param string $file_basename the file name (base, without directory) we want to check
+     * @param int $release_id the ID of the release the file belongs to
+     * @param int $group_id the ID of the project the file belongs to
+     * @return boolean true if a file named $file_basename already exists in the release $release_id, false otherwise
+     */
+    function isFileBaseNameExists($file_basename, $release_id, $group_id) {
+        $subdir = $this->getUploadSubDirectory($release_id);
+        $file_name = $subdir.'/'.$file_basename;
+        return $this->isFileNameExist($file_name, $group_id);
     }
     
     var $dao;
