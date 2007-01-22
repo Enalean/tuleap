@@ -369,7 +369,8 @@ Parameters:
     the working project when you logged in, this parameter is not needed.
 --package_id=<package_id>: Id of the package the file will belong to.
 --release_id=<package_id>: Id of the release the file will belong to.
---file=<file_location>: file to add
+--local_file=<file_location>: local file location to add (the file will be uploaded on the server)
+--uploaded_file=<file_name>: file name of the file to add (file must already be in the incoming dir)
 --type_id=<type_id>: Id of the type of the file.
 --processor_id=<processor_id>: Id of the processor of the file
 EOF;
@@ -386,13 +387,20 @@ EOF;
         exit_error("You must specify the ID of the release with the --release_id parameter");
     }
     
-    $file_name = get_parameter($PARAMS, "file", true);
-    if (! $file_name) {
-        exit_error("You must define a file with the --file parameter");
-    } else if (!file_exists($file_name)) {
-        exit_error("File '$file_name' doesn't exist");
-    } else if (!($fh = fopen($file_name, "rb"))) {
-        exit_error("Could not open '$file_name' for reading");
+    $upload_file = get_parameter($PARAMS, "uploaded_file", true);
+    $local_file = get_parameter($PARAMS, "local_file", true);
+    if (! isset($uploaded_file) && ! isset($local_file)) {
+        exit_error("You must specify a file name with either the --local_file or --uploaded_file parameter, depending the way you want to add the file.");
+    }
+    if (! isset($local_file)) {
+        $is_upload = false;     // by default, we take the file in the incoming directory
+    } else {
+        $is_upload = true;
+        if (!file_exists($local_file)) {
+            exit_error("File '$local_file' doesn't exist");
+        } else if (!($fh = fopen($local_file, "rb"))) {
+            exit_error("Could not open '$local_file' for reading");
+        }
     }
     
     $type_id = get_parameter($PARAMS, "type_id", true);
@@ -405,25 +413,44 @@ EOF;
         $processor_id = 9999;            // 9999 = "other"
     }
 
-    $name = basename($file_name);
-    $contents = fread($fh, filesize($file_name));
-    $base64_contents = base64_encode($contents);
-    
-    fclose($fh);
-    
     $group_id = get_working_group($PARAMS);
-    
-    $add_params = array(
+
+    if (! $is_upload) {
+        // we will test if the file is present in the incoming directory
+        $uploaded_files = $SOAP->call("getUploadedFiles", array('group_id' => $group_id));
+        if (! in_array($uploaded_file, $uploaded_files)) {
+            exit_error("File '$uploaded_file' not found in incoming directory.");
+        }
+        $add_params = array(
+                    "group_id"        => $group_id,
+                    "package_id"      => $package_id,
+                    "release_id"      => $release_id,
+                    "filename"        => $uploaded_file,
+                    "type_id"         => $type_id,
+                    "processor_id"    => $processor_id
+                );
+        $res = $SOAP->call("addUploadedFile", $add_params);
+    } else {
+        // the file will be uploaded on the server
+        $name = basename($local_file);
+        $contents = fread($fh, filesize($local_file));
+        $base64_contents = base64_encode($contents);
+        fclose($fh);
+        
+        $add_params = array(
                     "group_id"        => $group_id,
                     "package_id"      => $package_id,
                     "release_id"      => $release_id,
                     "filename"        => $name,
                     "base64_contents" => $base64_contents,
                     "type_id"         => $type_id,
-                    "processor_id"    => $processor_id
+                    "processor_id"    => $processor_id,
+                    "is_upload"       => $is_upload
                 );
 
-    $res = $SOAP->call("addFile", $add_params);
+        $res = $SOAP->call("addFile", $add_params);
+    }
+    
     if (($error = $SOAP->getError())) {
         $LOG->add($SOAP->responseData);
         exit_error($error, $SOAP->faultcode);

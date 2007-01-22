@@ -146,6 +146,10 @@ class FRSFileFactory {
         return $dar->valid();
     }
     
+    function isFileBaseNameExists($file_basename, $group_id) {
+        return $this->isFileNameExist($this->getUploadSubDirectory($file_basename).'/'.$file_basename, $group_id);
+    }
+    
     var $dao;
     
     function &_getFRSFileDao() {
@@ -187,7 +191,7 @@ class FRSFileFactory {
         $group_id = $release->getGroupID();
         
         // get the sub directory where to move the file
-        $upload_sub_dir = 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
+        $upload_sub_dir = $this->getUploadSubDirectory($release->getReleaseID()); //'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
         
         $exec_return = $this->moveFileForge($group_id, $name, $upload_sub_dir);
         // shall we test the result of fileforge ???
@@ -195,6 +199,21 @@ class FRSFileFactory {
         // set the new name of the file: we add the sub-directory
         $file->setFileName($upload_sub_dir.'/'.$name);
         return $this->create($file->toArray());
+    }
+    
+    /**
+     * Get the sub directory where to upload the files
+     *
+     * @static
+     *
+     * @param int $release_id the ID of the release the file belongs to
+     * @return string the sub-directory (wihtout any /) where to upload the file
+     */
+    function getUploadSubDirectory($release_id) {
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        // get the sub directory where to upload the file
+        return 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
     }
     
     function _delete($file_id){

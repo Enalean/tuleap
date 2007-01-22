@@ -226,7 +226,7 @@ $server->register(
         'package_id'=>'xsd:int',
         'release_id'=>'xsd:int',
         'filename'=>'xsd:string',
-        'base64_contents'=>'xsd:string',
+        'base64_contents'=>'xsd:base64Binary', //'xsd:string',
         'type_id'=>'xsd:int',
         'processor_id'=>'xsd:int'
         ),
@@ -238,6 +238,32 @@ $server->register(
     'Add a File to the File Release Manager of the project group_id with the values given by 
      package_id, release_id, filename, base64_contents, type_id and processor_id. 
      The content of the file must be encoded in base64.
+     Returns the ID of the created file if the creation succeed.
+     Returns a soap fault if the group_id is not a valid one, 
+     if the package does not match with the group ID, 
+     if the release does not match with the package ID,
+     or if the add failed.'
+);
+
+$server->register(
+    'addUploadedFile',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'package_id'=>'xsd:int',
+        'release_id'=>'xsd:int',
+        'filename'=>'xsd:string',
+        'type_id'=>'xsd:int',
+        'processor_id'=>'xsd:int'
+        ),
+    array('addUploadedFile'=>'xsd:string'),
+    $uri,
+    $uri.'#addUploadedFile',
+    'rpc',
+    'encoded',
+    'Add a File to the File Release Manager of the project group_id with the values given by 
+     package_id, release_id, filename, type_id and processor_id. 
+     The file must already be present in the incoming directory.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
      if the package does not match with the group ID, 
@@ -738,13 +764,78 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
                 return new soap_fault ('','addFile','Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir']);
             }
             
-            $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
-            if (! $file_id) {
-                @unlink($tmpname);
-                return new soap_fault ('','addFile',$file_fact->getErrorMessage(),$file_fact->getErrorMessage());
+            // call addUploadedFile function
+            $uploaded_filename = basename($filename);
+            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id);
+            
+        } else {
+            return new soap_fault('', 'addFile', 'User is not allowed to add a file', 'User is not allowed to add a file');
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'addFile','Invalid Session','');
+    }
+}
+
+/**
+ * addUploadedFile - add a file in the file release manager, in the release $release_id, in package $package_id of the project $group_id with given values
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to add the file
+ * @param int $package_id the ID of the package we want to add the file
+ * @param int $release_id the ID of the release we want to add the file
+ * @param string $filename the name of the file we want to add (only file name, not directory)
+ * @param int $type_id the ID of the type of the file
+ * @param int $processor_id the ID of the processor of the file
+ * @return int the ID of the new created file, 
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - package_id does not match with a valid package,
+ *              - package_id does not belong to the project group_id,
+ *              - release_id does not match with a valid release,
+ *              - release_id does not belong to the project group_id,
+ *              - the user does not have the permissions to create a file
+ *              - the file creation failed.
+ */
+function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id) {
+    if (session_continue($sessionKey)) {
+
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'addFile','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'addFile', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'addFile', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        // retieve the package
+        $pkg_fact = new FRSPackageFactory();
+        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        if (!$package || $package->getGroupID() != $group_id) {
+            return new soap_fault(invalid_package_fault,'addFile','Invalid Package','Invalid Package');
+        }
+        
+        // retrieve the release
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        if (!$release || $release->getPackageID() != $package_id) {
+            return new soap_fault(invalid_release_fault,'addFile','Invalid Release','Invalid Release');
+        }
+        
+        $file_fact = new FRSFileFactory();
+        if ($file_fact->userCanAdd($group_id)) {
+            if (! $file_fact->isFileBaseNameExists($filename, $group_id)) {
+                $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
+                if (! $file_id) {
+                    @unlink($tmpname);
+                    return new soap_fault ('','addFile',$file_fact->getErrorMessage(),$file_fact->getErrorMessage());
+                } else {
+                    @unlink($tmpname);
+                    return $file_id;
+                }
             } else {
-                @unlink($tmpname);
-                return $file_id;
+                return new soap_fault('', 'addFile', 'Filename "'.$filename.'" already exists', 'Filename "'.$filename.'" already exists');
             }
         } else {
             return new soap_fault('', 'addFile', 'User is not allowed to add a file', 'User is not allowed to add a file');
