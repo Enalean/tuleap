@@ -26,7 +26,7 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
     }
 
     function Head($name='edit[content]') {
-        global $WikiTheme, $wysiwyg_editor_params;
+        global $wysiwyg_editor_params, $group_id;
 	
 	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
 				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
@@ -35,6 +35,7 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 var base_url = '/wiki';
 var data_url = '/wiki/themes/default/Wikiwyg';
 var script_url = '/wiki/index.php';
+var groupid = $group_id;
 
 window.onload = function() {
    var wikiwyg = new Wikiwyg.Phpwiki();
