@@ -256,6 +256,9 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE artifact_history CHANGE field_name field_name VARCHAR(255) NOT NULL default '';
 ALTER TABLE artifact_history ADD INDEX field_name (field_name (10));
 
+# SR #637 - fixes issue with large tracker reports
+ALTER TABLE artifact_field_value ADD INDEX idx_art_field_id (artifact_id, field_id);
+
 
 EOF
 

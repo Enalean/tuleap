@@ -2692,7 +2692,8 @@ CREATE TABLE artifact_field_value (
   valueFloat float(10,4),
   valueDate int(11),
   KEY idx_field_id (field_id),
-  KEY idx_artifact_id (artifact_id)
+  KEY idx_artifact_id (artifact_id),
+  KEY idx_art_field_id (artifact_id, field_id)
 );
 
 #
