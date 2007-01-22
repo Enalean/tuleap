@@ -249,6 +249,16 @@ CREATE TABLE plugin_docman_tokens(
 
 EOF
 
+echo "Optimizing database structure."
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+# SR #636
+ALTER TABLE artifact_history CHANGE field_name field_name VARCHAR(255) NOT NULL default '';
+ALTER TABLE artifact_history ADD INDEX field_name (field_name (10));
+
+
+EOF
+
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB

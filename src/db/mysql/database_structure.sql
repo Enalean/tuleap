@@ -2808,7 +2808,7 @@ CREATE TABLE artifact_perm (
 CREATE TABLE artifact_history (
   artifact_history_id int(11) NOT NULL auto_increment,
   artifact_id int(11) NOT NULL default '0',
-  field_name text NOT NULL,
+  field_name VARCHAR(255) NOT NULL,
   old_value text NOT NULL,
   new_value text NOT NULL,
   mod_by int(11) NOT NULL default '0',
@@ -2816,7 +2816,8 @@ CREATE TABLE artifact_history (
   date int(11) default NULL,
   type int(11) default NULL,
   PRIMARY KEY  (artifact_history_id),
-  KEY idx_artifact_history_artifact_id (artifact_id)
+  KEY idx_artifact_history_artifact_id (artifact_id),
+  KEY field_name (field_name (10))
 );
 
 #
