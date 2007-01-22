@@ -259,6 +259,10 @@ ALTER TABLE artifact_history ADD INDEX field_name (field_name (10));
 # SR #637 - fixes issue with large tracker reports
 ALTER TABLE artifact_field_value ADD INDEX idx_art_field_id (artifact_id, field_id);
 
+# SR #635 - Permission table
+ALTER TABLE permissions CHANGE permission_type permission_type VARCHAR(255) NOT NULL;
+ALTER TABLE permissions CHANGE object_id object_id VARCHAR(255) NOT NULL;
+ALTER TABLE permissions ADD INDEX object_id (object_id (10));
 
 EOF
 

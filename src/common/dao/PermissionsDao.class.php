@@ -43,7 +43,7 @@ class PermissionsDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByObjectId($objectId) {
-        $sql = sprintf("SELECT permission_type, ugroup_id FROM permissions WHERE object_id = %s",
+        $sql = sprintf("SELECT permission_type, ugroup_id FROM permissions WHERE object_id = '%s'",
 				"'".$objectId."'");
         return $this->retrieve($sql);
     }
@@ -64,10 +64,10 @@ class PermissionsDao extends DataAccessObject {
     */
     function & searchPermissionsByObjectId($objectId, $ptype=null) { 	
         if(is_array($objectId)) {
-            $_where_clause = ' object_id IN ('.implode(',',$objectId).')';
+            $_where_clause = " object_id IN ('".implode("','",$objectId)."')";
         }
         else {
-            $_where_clause = ' object_id = '.$objectId;
+            $_where_clause = " object_id = '".$objectId."'";
         }
         if($ptype !== null) {
             $_where_clause .= ' AND permission_type IN (\''.implode(',',$ptype).'\')';
@@ -91,18 +91,18 @@ class PermissionsDao extends DataAccessObject {
         foreach($perms as $key => $value) {
             $perms[$key] = $this->da->quoteSmart($value);
         }
-        $sql = sprintf('DELETE FROM permissions '.
-                        ' WHERE object_id = %s '.
-                        '   AND permission_type IN (%s) ',
+        $sql = sprintf("DELETE FROM permissions ".
+                        " WHERE object_id = '%s' ".
+                        "   AND permission_type IN (%s) ",
                         $this->da->quoteSmart($target),
                         implode(', ', $perms)
         );
         $this->update($sql);
-        $sql = sprintf('INSERT INTO permissions (object_id, permission_type, ugroup_id) '.
-                        ' SELECT %s, permission_type, IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid '.
-                        ' FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)'.
-                        ' WHERE object_id = %s '.
-                        '   AND permission_type IN (%s) ',
+        $sql = sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id) ".
+                        " SELECT %s, permission_type, IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid ".
+                        " FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)".
+                        " WHERE object_id = '%s' ".
+                        "   AND permission_type IN (%s) ",
                         $this->da->quoteSmart($target),
                         $toGroupId,
                         $this->da->quoteSmart($source),

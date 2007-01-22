@@ -3059,9 +3059,10 @@ CREATE TABLE ugroup_user (
 -- permissions table, used to store specific access rights (for packages, releases, documentation, etc.)
 --
 CREATE TABLE permissions (
-  permission_type text NOT NULL,
-  object_id text NOT NULL,
+  permission_type VARCHAR(255) NOT NULL,
+  object_id VARCHAR(255) NOT NULL,
   ugroup_id int(11) NOT NULL
+  INDEX object_id (object_id (10))
 );
 
 
