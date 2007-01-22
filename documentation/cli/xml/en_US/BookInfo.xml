@@ -54,6 +54,16 @@
 
         <revremark>Initial draft by M. Nazarian</revremark>
       </revision>
+      
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>16-Jan-2007</date>
+
+        <authorinitials>Marc Nazarian</authorinitials>
+
+        <revremark>Add FRS module</revremark>
+      </revision>
 
     </revhistory>
   </bookinfo>

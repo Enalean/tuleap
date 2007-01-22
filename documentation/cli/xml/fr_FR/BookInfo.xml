@@ -55,6 +55,15 @@
         <revremark>Version initiale par M. Nazarian</revremark>
       </revision>
 
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>17-Janvier-2007</date>
+
+        <authorinitials>Marc Nazarian</authorinitials>
+
+        <revremark>Ajout du module de gestion des fichiers</revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
