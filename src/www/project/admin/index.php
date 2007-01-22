@@ -259,6 +259,11 @@ echo '
           </TABLE>
 
          <HR NoShade SIZE="1">
+	 <div align="center">
+	 <A href="/project/admin/userimport.php?group_id='. $group_id.'">'.$Language->getText('project_admin_index','import_user').'</A>
+	 </div>
+	 
+	 <HR NoShade SIZE="1">
          <div align="center">
          <A href="/project/admin/userperms.php?group_id='. $group_id.'">'.$Language->getText('project_admin_index','edit_member_perm').'</A>
          </div>

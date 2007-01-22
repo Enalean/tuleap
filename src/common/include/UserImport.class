@@ -79,6 +79,11 @@ class UserImport extends Error {
 		    $ok=false;
 		    $errors=$Language->getText('project_admin_userimport','unknown_user',$line);
 		    break;		    
+		} else if (db_numrows($res) > 1) {
+		    //test users, or site admin can have more than 1 login, with same email address ==> display a warning, and  not import
+		    $ok=false;
+		    $errors=$Language->getText('project_admin_userimport','special_user',$line);
+		    break;		    
 		} else {
 		    //check if user account status is active		
 		    $user_status = db_result($res,0,'status');

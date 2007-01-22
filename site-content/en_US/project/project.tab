@@ -194,6 +194,7 @@ project_admin_index	or	or
 project_admin_index	changed_group_type	Changed Project Type
 project_admin_index	group_type	Project Type
 project_admin_index	built_from_template	Template used for this Project: $1
+project_admin_index	import_user	[Import List Of Users]
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
@@ -318,7 +319,6 @@ project_admin_utils	edit_public_info	Edit Public Info
 project_admin_utils	user_perms	User Permissions
 project_admin_utils	references	Reference Configuration
 project_admin_utils	ug_admin	User Groups Admin
-project_admin_utils	import_user	User Import
 project_admin_utils	project_data_export	Project Data Export
 project_admin_utils	tracker_import	Tracker Import
 project_admin_utils	access_logs	Access Logs
@@ -507,6 +507,7 @@ project_admin_userimport	username	Codex username
 project_admin_userimport	mail_addr	Email address
 project_admin_userimport	invalid_mail	Parse error : '$1' is an invalid email address.
 project_admin_userimport	unknown_user	Parse error : User '$1' does not exist.
+project_admin_userimport	special_user	Warning : There are more than 1 username corresponding to this mail address '$1'. User Import will not continue.
 project_admin_userimport	member_user	Parse error : User '$1' is already a member of this project.
 project_admin_userimport	active_user	Parse error : User '$1' account is not active.
 project_admin_userimport	import_format	To import users, you need to provide a simple text file, containing in each line the email address of the user.<BR>You can include empty lines in the import file. <P>Please make sure the users, who will be imported, are already registered in Codex and have an active account.<P><B>Sample import file</B> : <BR><BR>john.doe@st.com<BR>jacques.dupont@st.com<BR><BR> $1
