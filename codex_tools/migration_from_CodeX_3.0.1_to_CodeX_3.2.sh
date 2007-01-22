@@ -264,6 +264,9 @@ ALTER TABLE permissions CHANGE permission_type permission_type VARCHAR(255) NOT 
 ALTER TABLE permissions CHANGE object_id object_id VARCHAR(255) NOT NULL;
 ALTER TABLE permissions ADD INDEX object_id (object_id (10));
 
+# SR #634
+ALTER TABLE svn_commits ADD INDEX revision (revision);
+
 EOF
 
 

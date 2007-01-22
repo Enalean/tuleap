@@ -2523,6 +2523,7 @@ CREATE TABLE svn_commits (
   PRIMARY KEY (id),
   UNIQUE uniq_commits_idx (repositoryid,revision),
   KEY whoid (whoid),
+  KEY revision (revision),
   FULLTEXT (description)
 );
 
