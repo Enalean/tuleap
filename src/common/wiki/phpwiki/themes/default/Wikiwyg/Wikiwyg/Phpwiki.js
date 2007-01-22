@@ -55,6 +55,7 @@ proto.submit_action_form = function(action, value) {
 
 }
 
+
 // Convert to wikitext mode if needed
 // and save changes in the textarea of phpwiki 
 proto.saveChanges = function() {
@@ -193,7 +194,7 @@ proto.clean_wikitext = function(text_to_clean) {
 proto.call_action = function(action, content, func) {
 
   content = this.clean_wikitext(content);
-  var postdata = 'action=wikitohtml' + 
+  var postdata = 'pagename=a_page' + '&action=wikitohtml' + '&group_id='+ groupid +
                  '&content=' + encodeURIComponent(content);
   Wikiwyg.liveUpdate(
 		     'POST',
