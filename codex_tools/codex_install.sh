@@ -149,6 +149,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # xorg-x11-deprecated-libs -> docbook/java
 # neon -> subversion
 # libart_lgpl perl-Time-HiRes -> munin
+# zip, unzip -> CLI client
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd httpd-suexec mod_ssl vsftpd \
@@ -160,7 +161,8 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
    xorg-x11-deprecated-libs neon \
-   libart_lgpl perl-Time-HiRes
+   libart_lgpl perl-Time-HiRes \
+   zip unzip
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -729,6 +731,7 @@ $CAT <<'EOF' >/etc/my.cnf
 [mysqld]
 log-bin=codex-bin
 skip-innodb
+skip-bdb
 # file attachment can be 16M in size so take a bit of slack
 # on the mysql packet size
 set-variable = max_allowed_packet=128M
