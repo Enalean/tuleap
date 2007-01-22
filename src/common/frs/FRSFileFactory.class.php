@@ -201,7 +201,7 @@ class FRSFileFactory {
         $group_id = $release->getGroupID();
         
         // get the sub directory where to move the file
-        $upload_sub_dir = $this->getUploadSubDirectory($release->getReleaseID()); //'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
+        $upload_sub_dir = $this->getUploadSubDirectory($release->getReleaseID());
         
         $exec_return = $this->moveFileForge($group_id, $name, $upload_sub_dir);
         // shall we test the result of fileforge ???

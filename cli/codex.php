@@ -39,7 +39,7 @@ if (array_key_exists("CODEX_WSDL", $_ENV)) {
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "0.1";
+$CLI_VERSION = "0.2";
 
 error_reporting(E_ALL);
 
