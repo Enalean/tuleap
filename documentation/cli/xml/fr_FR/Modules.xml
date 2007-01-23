@@ -729,6 +729,12 @@ Array
                     </example>
                     <note>Note: La valeur retournée (627) est l'identifiant du nouveau fichier créé.</note>
                </para>
+               <para>
+                <note>Note: Si vous rencontrez des problèmes de mémoire en essayant de télécharger des fichiers volumineux, vous pouvez augmenter
+                la mémoire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
+                Si les problèmes persistent, il est conseillé de charger auparavant les fichiers sur le serveur (via scp ou ftp), puis d'utiliser 
+                la deuxième méthode (--uploaded_file)</note>
+               </para>
             </para>
         </section>
         

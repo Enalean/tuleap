@@ -711,6 +711,12 @@ Array
                     </example>
                     <note>Note: The value returned (627) is the ID of the new file.</note>
                </para>
+               <para>
+                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
+                the memory_limit directive in PHP file configuration (php.ini).
+                If problems still remain, please upload your files on the server before (using scp or ftp), and then use 
+                the second method (--uploaded_file)</note>
+               </para>
             </para>
         </section>
         
