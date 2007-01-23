@@ -75,7 +75,7 @@ class FRSReleaseFactory {
 	function & getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
-		if(isset($status_id) && $status_id == 1){
+		if(isset($status_id) && $status_id == 1 && isset($group_id) && $group_id){
 			$dar = $dao->searchActiveReleasesByPackageId($_id);
 		}else{
 			$dar = $dao->searchByPackageId($_id);
