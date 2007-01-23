@@ -196,7 +196,7 @@ class FRSFileFactory {
         $file->setProcessorID($processor_id);
         
         // retrieve the group_id
-        $release_fact = new FRSReleaseFactory();
+        $release_fact =& $this->_getFRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
         $group_id = $release->getGroupID();
         
@@ -220,10 +220,19 @@ class FRSFileFactory {
      * @return string the sub-directory (wihtout any /) where to upload the file
      */
     function getUploadSubDirectory($release_id) {
-        $release_fact = new FRSReleaseFactory();
+        $release_fact =& $this->_getFRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
         // get the sub directory where to upload the file
         return 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
+    }
+    
+    /**
+     * Get a Release Factory
+     *
+     * @return Object{FRSReleaseFactory} a FRSReleaseFactory Object.
+     */
+    function &_getFRSReleaseFactory() {
+        return new FRSReleaseFactory();
     }
     
     function _delete($file_id){
@@ -231,7 +240,6 @@ class FRSFileFactory {
     	$dao =& $this->_getFRSFileDao();
     	return $dao->delete($_id);
     }
-    
 /*
 
 Physically delete a file from the download server and database

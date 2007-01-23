@@ -28,7 +28,6 @@ require_once('common/dao/FRSPackageDao.class.php');
 require_once('common/include/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
-require_once('www/project/admin/ugroup_utils.php');
 /**
  * 
  */
@@ -190,7 +189,7 @@ class FRSPackageFactory {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
         $user =& $um->getUserById($user_id);
-        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A')
+        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A')
               || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()))
               || !$pm->isPermissionExist($package_id, 'PACKAGE_READ');
         return $ok;
@@ -225,7 +224,7 @@ class FRSPackageFactory {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
         $user =& $um->getUserById($user_id);
-        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
+        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
         return $ok;
     }
 

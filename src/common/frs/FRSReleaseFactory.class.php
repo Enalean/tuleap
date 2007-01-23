@@ -28,7 +28,6 @@ require_once ('FRSRelease.class.php');
 require_once ('common/dao/FRSReleaseDao.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
-require_once('www/project/admin/ugroup_utils.php');
 /**
  * 
  */
@@ -241,7 +240,7 @@ class FRSReleaseFactory {
 			//delete all corresponding files from the database
 			$res =& $release->getFiles();
 			$rows = count($res);
-			$frsff = new FRSFileFactory();
+			$frsff =& $this->_getFRSFileFactory();
 			for ($i = 0; $i < $rows; $i++) {
 				$frsff->delete_file($group_id, $res[$i]->getFileID());
 				$filename = $res[$i]->getFileName();
@@ -266,12 +265,30 @@ class FRSReleaseFactory {
 			return 1;
 		}
 	}
+    
+    /**
+     * Get a Package Factory
+     *
+     * @return Object{FRSPackageFactory} a FRSPackageFactory Object.
+     */
+    function &_getFRSPackageFactory() {
+        return new FRSPackageFactory();
+    }
+    
+    /**
+     * Get a File Factory
+     *
+     * @return Object{FRSFileFactory} a FRSFileFactory Object.
+     */
+    function &_getFRSFileFactory() {
+        return new FRSFileFactory();
+    }
 	
-		/** return true if user has Read or Update permission on this release 
+	/** return true if user has Read or Update permission on this release 
 	 * @param group_id: the package this release is in
 	 * @param release_id: the release id 
 	 * @param user_id: if not given or 0 take the current user
-	**/ 
+     */ 
 	function userCanRead($group_id,$package_id,$release_id,$user_id=0) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
@@ -280,7 +297,7 @@ class FRSReleaseFactory {
         	$ok = $user->isSuperUser() 
               	|| $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
 		} else{
-        	$frspf = new FRSPackageFactory();
+        	$frspf =& $this->_getFRSPackageFactory();
         	$ok = $frspf->userCanRead($group_id, $package_id, $user_id);
         }
         return $ok;
@@ -315,7 +332,7 @@ class FRSReleaseFactory {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
         $user =& $um->getUserById($user_id);
-        $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
+        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
         return $ok;
 	}
 
