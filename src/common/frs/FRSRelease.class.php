@@ -266,7 +266,8 @@ class FRSRelease extends Error {
      * @return boolean true if user has Read access to this release, false otherwise
 	 */ 
 	function userCanRead($user_id=0) {
-        return FRSReleaseFactory::userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
+        $release_factory = new FRSReleaseFactory();
+        return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
 	}
 }
 
