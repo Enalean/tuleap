@@ -25,10 +25,12 @@ include($Language->getContent('layout/osdn_sites'));
 
 */
 
-
+require_once('common/include/Feedback.class.php');
 
 class Layout extends Error {
 
+    var $_feedback;
+    
 	//Define all the icons for this theme
 	var $icons = array('Summary' => 'ic/anvil24.png',
 		'Homepage' => 'ic/home.png',
@@ -51,7 +53,9 @@ class Layout extends Error {
 	// Constuctor
 	function Layout($root) {
 		GLOBAL $bgpri;
-
+        
+        $this->_feedback =& new Feedback();
+        
 		// Constructor for parent class...
 		$this->Error();
         
@@ -72,6 +76,10 @@ class Layout extends Error {
 
 	}
 
+    function addFeedback($level, $message) {
+        $this->_feedback->log($level, $message);
+    }
+    
     function includeJavascriptFile($file) {
         $this->javascript_files[] = $file;
     }
@@ -326,10 +334,11 @@ echo html_blankimage(5,100);
         <td class="contenttable">
         <BR>
 <?php
-        echo $this->_getFeedback();
         if (isset($params['group']) && $params['group']) {
             echo $this->project_tabs($params['toptab'],$params['group']);
         }
+        echo $this->_getFeedback();
+        $this->_feedback->display();
 	}
 
     function feedback($feedback) {

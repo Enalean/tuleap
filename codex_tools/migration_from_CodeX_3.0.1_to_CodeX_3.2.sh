@@ -297,6 +297,7 @@ $SERVICE smb start
 
 
 todo "If you have custom themes, please :"
+??? todo " - update usage of feedback (maybe need to display it at the end of header(). See rev #4756 for details"
 ??? todo " - copy the rules for textfield_small/textfield_medium from CodeXTab/css/style.css in your stylesheets"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"

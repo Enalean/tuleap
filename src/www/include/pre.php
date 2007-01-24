@@ -186,6 +186,7 @@ if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php'
 require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php');
 $root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
 $HTML = new $name_of_theme_class($root_for_theme);
+$GLOBALS['Response'] =& $HTML;
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid

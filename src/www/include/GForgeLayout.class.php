@@ -698,7 +698,7 @@ if (isset($params['group']) && $params['group']) {
 				<td valign="top" width="99%" bgcolor="white">
 
 	<?php
-
+        $this->_feedback->display();
 	}
 
 	function footer($params) {
