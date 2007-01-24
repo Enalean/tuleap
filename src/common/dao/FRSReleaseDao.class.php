@@ -132,7 +132,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function create($package_id=null, $name=null,
     				$notes=null, $changes=null, 
-                    $status_id=null, $preformatted=null) {
+                    $status_id=null, $preformatted=null, $release_date=null) {
 
         $arg    = array();
         $values = array();
@@ -167,9 +167,13 @@ class FRSReleaseDao extends DataAccessObject {
             $values[] = ((int) $preformatted);
         }
 
-
-        $arg[] = 'release_date';
-        $values[] = ((int) time());
+		if($release_date !== null) {
+        	$arg[] = 'release_date';
+       		$values[] = ((int) $release_date);
+		} else {
+			$arg[] = 'release_date';
+       		$values[] = ((int) time);
+		}
 
 		$um =& UserManager::instance();
         $user =& $um->getCurrentUser();
@@ -186,15 +190,22 @@ class FRSReleaseDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('package_id', 'name', 'notes', 'changes', 'status_id', 'preformatted');
+        $cols   = array('package_id', 'name', 'notes', 'changes', 'status_id', 'preformatted', 'release_date');
+        $is_date = false;
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
+            	if($key=='release_date')	{
+            		$is_date=true;
+            	}
                 $arg[]    = $key;
                 $values[] = $this->da->quoteSmart($value);
             }
         }
-        $arg[] = 'release_date';
-        $values[] = $this->da->quoteSmart(time());
+        
+        if(!$is_date){
+        	$arg[] = 'release_date';
+        	$values[] = $this->da->quoteSmart(time());
+        }
         
         $arg[] = 'released_by';
         $um =& UserManager::instance();
