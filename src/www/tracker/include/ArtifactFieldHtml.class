@@ -31,6 +31,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		$this->required = $art_field->required;
 		$this->empty_ok = $art_field->empty_ok;
 		$this->keep_history = $art_field->keep_history;
+		$this->enable_notification = $art_field->enable_notification;
 		$this->special = $art_field->special;
 		$this->value_function = $art_field->value_function;
 		$this->use_it = $art_field->use_it;

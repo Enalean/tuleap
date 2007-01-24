@@ -378,7 +378,28 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		$ath->displayNotificationForm(user_getid());
 		$ath->footer(array());
 		break;
-	  
+	
+	case 'date_field_notification':
+		if ( !user_isloggedin() ) {
+		    exit_not_logged_in();
+		    return;
+		}
+		
+	        if ( !$ath->userIsAdmin() ) {
+		    exit_permission_denied();
+		    return;
+		}
+		
+		$ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','admin_date_field_notif'),
+		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
+		
+		if (isset($submit)) {		
+		}
+		
+		$ath->displayDateFieldNotificationSettings();   
+		$ath->footer(array());
+		break;
+		
 	case 'editoptions':
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();
@@ -606,7 +627,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
                 $description = $sanitizer->sanitize($description);
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it,$field_set_id) ) {
+						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),(isset($enable_notification)?$enable_notification:0),$special,$use_it,$field_set_id) ) {
 			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
             // Reload the field factory
@@ -635,7 +656,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
                      $description = $sanitizer->sanitize($description);
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,
-							 $empty_ok,$keep_history,$special,$use_it,$field_set_id) ) {
+							 $empty_ok,$keep_history,$enable_notification,$special,$use_it,$field_set_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 if (!(isset($use_it) && $use_it)) {
@@ -711,7 +732,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 						    $field->getDisplaySize(),$field->getPlace(),
-						    $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
+						    $field->getEmptyOk(),$field->getKeepHistory(),$field->getNotificationStatus(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
 			$ath->footer(array());
 		}
 		break;

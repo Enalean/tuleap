@@ -1305,7 +1305,7 @@ EOS;
 	 */
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
 								   $display_size=false,$rank_on_screen=false,
-								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
+								   $empty_ok=false,$keep_history=false,$enable_notification=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
 		global $art_field_fact,$Language;
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
@@ -1445,8 +1445,18 @@ EOS;
 			}
 		}
 				
-		echo '
-		      </td></tr>';
+		echo '</td>';
+		
+		if ($field && $field->isDateField() && !$field->isSpecial()) {
+		    echo '<td>'.$Language->getText('tracker_include_type','enable_notifications').': ';  
+		    if ($enable_notification) {
+		        echo '<input type="checkbox" name="enable_notification" value="1" checked> </td>';
+		    } else {
+		        echo '<input type="checkbox" name="enable_notification" value="1"> </td>';
+		    }		    
+		}
+
+		echo '</tr>';
 		      
 		if ( $show_use ) {
 		    echo  '
@@ -1943,7 +1953,7 @@ EOS;
 	 */
 	
 	function displayNotificationForm($user_id) {
-	  global $Language;
+	  global $Language,$art_field_fact;
 
 		// By default it's all 'yes'
 		for ($i=0; $i<$this->num_roles; $i++) {
@@ -2069,15 +2079,67 @@ EOS;
 		}
 		
 		echo'
-		</table>
+		</table>';
 		
-		<HR>
+		if ($this->userIsAdmin()) {
+		    echo '<br><h3>'.$Language->getText('tracker_include_type','date_fields_mail_notif').' '.
+		    help_button('TrackerAdministration.html#DateFieldsNotification').'</h3>';
+				
+		    $title_arr=array();
+                    $title_arr[]=$Language->getText('tracker_include_type','df');
+                    $title_arr[]=$Language->getText('tracker_include_type','notification_status');
+                    $title_arr[]=$Language->getText('tracker_include_type','notification_settings');            	
+        
+                    $out .= html_build_list_table_top ($title_arr);
+                    $fmt = "\n".'<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
+		    $fields = $art_field_fact->getUsedDateFields();
+		    $row_color = 0;
+		
+		    while (list($field_name,$field) = each($fields)	) {
+ 		    
+		        // no notification status/settings for special Date field (Submitted on)
+		        if ($field->isSpecial()) {
+		            $notif_settings = "-";
+			    $notif_status = "-";
+		        } else {		        
+			    if ($field->getNotificationStatus()) {
+			        $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$group_id.'&atid='.$this->getID().'&field_id='.$field->getID().'">'.$Language->getText('tracker_include_type','edit_notif_settings').'</A>';
+			        $notif_status = $Language->getText('tracker_include_type','active');
+			    } else {
+			        $notif_settings = $Language->getText('tracker_include_type','edit_notif_settings');
+		                $notif_status = $Language->getText('tracker_include_type','disabled');
+		            }
+		        }
+		    
+		        $out .= sprintf($fmt,
+				    util_get_alt_row_color($row_color),
+				    $field->getLabel(),
+				    $notif_status,
+                       		    $notif_settings);
+		        $row_color++;
+		    }
+		
+		    $out .= "</table>";
+		    echo $out;
+		}    
+		
+		echo '<HR>
 		<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('tracker_include_artifact','submit').'">
 		</FORM>';
 			
 		
 	}
 
+	/**
+	*  Display Date Field Notification Settings form
+	* 
+	* @param
+	* @return void
+	*/
+	function displayDateFieldNotificationSettings() {
+	
+	}
+	
 	/**
 	 *  Display the default value form
 	 *

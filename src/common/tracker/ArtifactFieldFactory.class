@@ -74,7 +74,7 @@ class ArtifactFieldFactory extends Error {
 	function fetchData($group_artifact_id) {
 	    
 	    $sql='SELECT af.field_id, field_name, display_type, data_type, '.
-		'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
+		'display_size,label, description,scope,required,empty_ok,keep_history,notification,special, '.
 		'value_function,'.
 		'af.group_artifact_id, use_it, place, default_value, field_set_id '.
 		'FROM artifact_field_usage afu, artifact_field af '.
@@ -145,6 +145,25 @@ class ArtifactFieldFactory extends Error {
 		uasort($result_fields,"art_field_factory_cmp_place");
 		return $result_fields;
 
+	}
+	
+	/**
+	* Return all date fields used
+	* 
+	*                @return array
+	*/
+	function getUsedDateFields() {
+	    $result_fields = array();
+	    //reset($this->USAGE_BY_NAME);
+	//$field = $this->getFieldFromName($key);
+	    while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+		if ( $field->getUseIt() == 1 && $field->isDateField()) {
+	    	    $result_fields[$key] = $field;
+		}
+	    }
+		
+	    //uasort($result_fields,"art_field_factory_cmp_place");
+	    return $result_fields;
 	}
 
 	/**
@@ -391,7 +410,7 @@ class ArtifactFieldFactory extends Error {
 		',"'.$field->getDisplayType().'","'.$field->getDisplaySize().'","'.addslashes($field->getLabel()).
 		'","'.addslashes($field->getDescription()).'","'.$field->getScope().'",'.$field->getRequired().
 		','.$field->getEmptyOk().','.$field->getKeepHistory().','.$field->getSpecial().
-		',"'.implode(",",$dest_val_func).'","'.$field->getDefaultValue(true).'")';
+		',"'.implode(",",$dest_val_func).'","'.$field->getDefaultValue(true).'","'.$field->getNotificationStatus().'")';
 	      
 	      $res_insert = db_query($sql_insert);
 	      //echo $sql_insert;
@@ -585,7 +604,7 @@ class ArtifactFieldFactory extends Error {
 	 */
 	function createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 $empty_ok,$keep_history,$special,$use_it,$field_set_id) {
+						 $empty_ok,$keep_history,$enable_notification,$special,$use_it,$field_set_id) {
 
 	  global $Language;
 
@@ -603,6 +622,7 @@ class ArtifactFieldFactory extends Error {
 		// Default values
 		$empty_ok = ($empty_ok?$empty_ok:0);
 		$keep_history = ($keep_history?$keep_history:0);
+		$enable_notification = ($enable_notification?$enable_notification:0);
 		$use_it = ($use_it?$use_it:0);
 		$special = ($special?$special:0);
 		$display_size = (($display_size != "N/A") ? $display_size : "" );
@@ -611,7 +631,7 @@ class ArtifactFieldFactory extends Error {
 		// First create the artifact_field
 		$sql = "INSERT INTO artifact_field VALUES (".
 				$field_id.",".$this->ArtifactType->getID().",".$field_set_id.",'".$field_name."',".$data_type.",'".$display_type."','".$display_size."','".
-				$label."','".$description."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".$default_value."')";
+				$label."','".$description."','',0,".$empty_ok.",".$keep_history.",".$special.",'','".$default_value."',".$enable_notification.")";
 								
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
