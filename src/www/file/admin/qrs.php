@@ -216,7 +216,7 @@ if (isset ($submit)) {
 			'release_id' => $release_id,
 			'file_size' => filesize("$project_files_dir/$upload_subdir/$file_name"
 		), 'type_id' => $type_id, 'processor_id' => $processor_id);
-
+		$res =& $frsff->create($array);
 		if (!$res) {
 			$feedback .= ' | ' . $Language->getText('file_admin_editreleases', 'not_add_file') . ": $file_name ";
 			file_utils_footer(array ());
