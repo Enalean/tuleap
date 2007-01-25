@@ -194,7 +194,7 @@ proto.clean_wikitext = function(text_to_clean) {
 proto.call_action = function(action, content, func) {
 
   content = this.clean_wikitext(content);
-  var postdata = 'pagename=a_page' + '&action=wikitohtml' + '&group_id='+ groupid +
+  var postdata = 'pagename=a' + pagename + '&action=wikitohtml' + '&group_id='+ groupid +
                  '&content=' + encodeURIComponent(content);
   Wikiwyg.liveUpdate(
 		     'POST',

@@ -16,13 +16,14 @@ require_once("lib/WysiwygEdit.php");
 
 class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 
-    function WysiwygEdit_Wikiwyg() {
+    function WysiwygEdit_Wikiwyg($request) {
         global $LANG;
 	
         $this->_transformer_tags = false;
 	$this->BasePath = DATA_PATH.'/themes/default/Wikiwyg';
 	$this->_htmltextid = "edit:content";
         $this->_wikitextid = "editareawiki";
+	$this->_pagename = $request->getArg('pagename');
     }
 
     function Head($name='edit[content]') {
@@ -36,6 +37,7 @@ var base_url = '/wiki';
 var data_url = '/wiki/themes/default/Wikiwyg';
 var script_url = '/wiki/index.php';
 var groupid = $group_id;
+var pagename = '$this->_pagename';
 
 window.onload = function() {
    var wikiwyg = new Wikiwyg.Phpwiki();
@@ -48,7 +50,7 @@ window.onload = function() {
 		       'save','preview','|','save_button','|',
                        'mode_selector', '/',
 		       'p','|',
-		       'h2', 'h3', 'h4','|',
+		       'h2', 'h3', 'h4', '|',
 		       'bold', 'italic', '|',
                        'sup', 'sub', '|',
                        'toc',

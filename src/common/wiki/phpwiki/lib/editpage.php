@@ -182,7 +182,7 @@ class PageEditor
       
         require_once("lib/WysiwygEdit/Wikiwyg.php");
         $class = "WysiwygEdit_Wikiwyg";
-        $this->WysiwygEdit = new $class();
+        $this->WysiwygEdit = new $class($this->request);
         $WikiTheme->addMoreHeaders($this->WysiwygEdit->Head());
 
         if (USE_HTMLAREA and $template == 'editpage') {
