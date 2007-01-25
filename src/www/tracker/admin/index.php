@@ -390,13 +390,26 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		    return;
 		}
 		
+		//check if  field_id exist
+		$sql = "SELECT field_id FROM artifact_field WHERE group_artifact_id=".$ath->getID()." AND field_id=".$field_id;
+		$result = db_query($sql);
+		if (db_numrows($result) < 1) {		    
+		    exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','wrong_field',array($field_id)));
+		} else {
+		    $field = $art_field_fact->getFieldFromId($field_id);  
+		    if (! $field->getNotificationStatus()) {
+		        exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','wrong_field',array($field_id)));
+		    }
+		}    
+		
 		$ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','admin_date_field_notif'),
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		
-		if (isset($submit)) {		
+		if (isset($submit_notif_settings)) {
+		    $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$submitter,$assignee,$cc,$commenter);
 		}
 		
-		$ath->displayDateFieldNotificationSettings();   
+		$ath->displayDateFieldNotificationSettings($field_id);   
 		$ath->footer(array());
 		break;
 		

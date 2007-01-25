@@ -915,7 +915,41 @@ class ArtifactType extends Error {
 	  return $result;
 	}
 	
-	function deleteWatchees($user_id) {
+	/**
+	 *  updateDateFieldReminderSettings - use this to update the date-fields reminder settings in the database.
+	 *
+	 *  @param	$group_id	The project id
+	 *  @param	$field_id	The date field concerned by the notification.
+	 *  @param	$group_artifact_id	The tracker id
+	 *  @param	$start	When will the notification start taking effect, with regards to date occurence (in days)
+	 *  @param	$type	What is the type of the notification (after date occurence, before date occurence)
+	 *  @param	$frequency	At which frequency (in days) the notification wil occur
+	 *  @param	$recurse	How many times the notification mail will be sent
+	 *  @param	$submitter	Is submitter notified ?
+	 *  @param	$assignee	Is assignee notified ?
+	 *  @param	$cc	Is cc notified ?
+	 *  @param	$commenter	Is commetner notified ?
+	 *  @return true on success, false on failure.
+	 */	
+	function updateDateFieldReminderSettings($group_id,$field_id,$group_artifact_id,$start,$notif_type,$frequency,$recurse,$submitter,$assignee,$cc,$commenter) {
+	    
+	    $sql = "SELECT * FROM artifact_date_reminder_settings WHERE group_id=".$group_id." AND group_artifact_id=".$group_artifact_id." AND field_id=".$field_id;
+	    $res = db_query($sql);
+	    if (db_numrows($res) < 1) {
+	        //create reminder settings
+		$insert = "INSERT INTO artifact_date_reminder_settings (field_id,group_artifact_id,group_id,notification_start,notification_type,frequency,recurse,notified_people) VALUES ('$field_id','$group_artifact_id','$group_id','$start','$notif_type','$frequency','$recurse','$notified_users')";
+		$result = db_query($insert);
+	    } else {
+	        //update reminder settings
+		$update = "";
+		$result = db_query($update);
+	    }
+	    
+	    return $result;
+	    
+	}
+	
+	function deleteWatchees($user_id) {	
 
     		$sql = "DELETE FROM artifact_watcher WHERE user_id='$user_id' AND artifact_group_id='".$this->getID()."'";
 		//echo $sql."<br>";
