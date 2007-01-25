@@ -308,4 +308,7 @@ function session_delete($sessionKey) {
     return db_query("DELETE FROM session WHERE session_hash='$sessionKey'");
 }
 
+function session_hash() {
+    return isset($GLOBALS['session_hash']) ? $GLOBALS['session_hash'] : false;
+}
 ?>

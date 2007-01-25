@@ -3268,6 +3268,13 @@ CREATE TABLE ugroup_mapping (
   PRIMARY KEY (to_group_id, src_ugroup_id, dst_ugroup_id)
 );
 
+CREATE TABLE feedback (
+  session_hash CHAR( 32 ) NOT NULL ,
+  feedback TEXT NOT NULL ,
+  created_at DATETIME NOT NULL ,
+  PRIMARY KEY ( session_hash )
+);
+
 #
 # EOF
 #

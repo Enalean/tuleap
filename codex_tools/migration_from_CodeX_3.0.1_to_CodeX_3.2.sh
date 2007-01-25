@@ -237,6 +237,14 @@ done
 echo "Starting DB update for CodeX 3.2 This might take a few minutes."
 
 $CAT <<EOF | $MYSQL $pass_opt codex
+###############################################################################
+# Feedback
+CREATE TABLE feedback (
+  session_hash CHAR( 32 ) NOT NULL ,
+  feedback TEXT NOT NULL ,
+  created_at DATETIME NOT NULL ,
+  PRIMARY KEY ( session_hash )
+);
 
 ###############################################################################
 # Plugin docman

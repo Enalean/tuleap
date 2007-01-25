@@ -63,3 +63,4 @@ global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez <a href='mail
 global	open	Ouvert
 global	closed	Fermé
 global	status	Statut
+global	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>

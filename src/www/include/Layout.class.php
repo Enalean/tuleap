@@ -10,11 +10,16 @@
 
 require_once('common/include/Error.class.php');
 
+require_once('common/include/Feedback.class.php');
+require_once('common/dao/FeedbackDao.class.php');
+
 require_once('common/event/EventManager.class.php');
+
+
 
 //$Language->loadLanguageMsg('include/include');
 include($Language->getContent('layout/osdn_sites'));
-
+            
 /*
 
 	Extends the basic Error class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -54,7 +59,18 @@ class Layout extends Error {
 	function Layout($root) {
 		GLOBAL $bgpri;
         
-        $this->_feedback =& new Feedback();
+        if (session_hash()) {
+            $dao =& $this->_getFeedbackDao();
+            $dar =& $dao->search(session_hash());
+            if ($dar && $dar->valid()) {
+                $row = $dar->current();
+                $this->_feedback = unserialize($row['feedback']);
+                $dao->delete(session_hash());
+            }
+        }
+        if (!$this->_feedback) {
+            $this->_feedback =& new Feedback();
+        }
         
 		// Constructor for parent class...
 		$this->Error();
@@ -78,6 +94,28 @@ class Layout extends Error {
 
     function addFeedback($level, $message) {
         $this->_feedback->log($level, $message);
+    }
+    
+    function redirect($url) {
+        if (session_hash()) {
+            $dao =& $this->_getFeedbackDao();
+            $dao->create(session_hash(), serialize($this->_feedback));
+            header('Location: '. $url);
+        } else {
+            $this->header(array('title' => 'Redirection'));
+            echo '<p>'. $GLOBALS['Language']->getText('global', 'return_to', array($url)) .'</p>';
+            echo '<script type="text/javascript">';
+            echo 'setTimeout(function() {';
+            echo " location.href = '". $url ."';";
+            echo '}, 5000);';
+            echo '</script>';
+            $this->footer(array());
+        }
+        exit();
+    }
+    
+    function &_getFeedbackDao() {
+        return new FeedbackDao(CodexDataAccess::instance());
     }
     
     function includeJavascriptFile($file) {

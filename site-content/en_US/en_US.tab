@@ -58,4 +58,4 @@ global	mail_failed	The mail was not accepted for the delivery. Please contact <a
 global	open	Open
 global	closed	Closed
 global	status	Status
-
+global	return_to	<p>Requested page currently loading. If it does not, try <a href="$1">$1</a>.</p>
