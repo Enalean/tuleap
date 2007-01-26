@@ -241,7 +241,7 @@ class WikiServiceViews extends WikiViews {
    */
   function displayMenu() {
     $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
-
+    
     print '
     <table class="ServiceMenu">
       <tr>
@@ -265,7 +265,6 @@ class WikiServiceViews extends WikiViews {
 			 $preferences_menu = 'Preferences';
  			 $help_menu = 'Help';
     }	
-    
     print '
     <ul class="ServiceMenu">
       <li><a href="'.$this->wikiLink.'">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menudocuments') . '</a>&nbsp;|&nbsp;</li>
@@ -344,10 +343,14 @@ class WikiServiceViews extends WikiViews {
     $wp->log(user_getid());
 
     $lite = false;
+    $full_screen = false;
     if(isset($_GET['pv']) && ( $_GET['pv'] == 1)) {
       $lite = true;
     }
-    $wp->render($lite);
+    if(isset($_GET['pv']) && ( $_GET['pv'] == 2)) {
+      $full_screen = true;
+    }
+    $wp->render($lite, $full_screen);
   }
 
   /**

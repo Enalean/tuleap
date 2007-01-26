@@ -82,7 +82,7 @@ function actionPage(&$request, $action) {
 }
 
 function displayPage(&$request, $template=false) {
-    global $WikiTheme;
+    global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
     $page = $request->getPage();
@@ -105,23 +105,36 @@ function displayPage(&$request, $template=false) {
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
         array_shift($pages);
         foreach ($pages as $p)  {
+	    if ($pv != 2){	//Add the Backlink in page title
             $pageheader->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
                                                   'class' => 'backlinks'),
                                             $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)));
+	    }else{	// Remove Backlinks
+	    $pageheader->pushContent(HTML::h1($pagename));
+	    }
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
-        $backlink = HTML::a(array('href' => WikiURL($pagename,
-                                                    array('action' => _("BackLinks"))),
-                                  'class' => 'backlinks'),
-                            $WikiTheme->maybeSplitWikiWord($last_page));
-        $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
-        $pageheader->pushContent($backlink);
+	if ($pv != 2){
+		$backlink = HTML::a(array('href' => WikiURL($pagename,
+							    array('action' => _("BackLinks"))),
+					  'class' => 'backlinks'),
+				    $WikiTheme->maybeSplitWikiWord($last_page));
+		$backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+	}else{
+		$backlink = HTML::h1($pagename);
+	}
+	$pageheader->pushContent($backlink);
+	
     } else {
-        $pageheader = HTML::a(array('href' => WikiURL($pagename,
-                                                     array('action' => _("BackLinks"))),
-                                   'class' => 'backlinks'),
-                             $WikiTheme->maybeSplitWikiWord($pagename));
-        $pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+	if ($pv != 2){
+		$pageheader = HTML::a(array('href' => WikiURL($pagename,
+							     array('action' => _("BackLinks"))),
+					   'class' => 'backlinks'),
+				     $WikiTheme->maybeSplitWikiWord($pagename));
+		$pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
+	}else{
+		$pageheader = HTML::h1($pagename); //Remove Backlinks
+	}
         if ($request->getArg('frame'))
             $pageheader->setAttr('target', '_top');
     }

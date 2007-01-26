@@ -1,0 +1,187 @@
+<?php // -*-html-*- ?>
+<!-- $Id: userprefs.tmpl,v 1.57 2005/06/05 05:38:02 rurban Exp $ -->
+<?php
+// Todo: Move the logic and code to the plugin
+// This is very experimental and the read-only part an ugly hack so far.
+foreach (explode(',','errmsg,isForm') as $var) {
+    if (empty($$var)) $$var = false;
+}
+
+$plugin = $request->getArg('pagename');
+if ($request->isActionPage($request->getArg('pagename')) 
+    and $isForm and $plugin == _("PreferencesInfo")) {
+    $isForm = false;
+}
+$time = time();
+$user = &$request->getUser();
+$pref = &$request->_prefs;
+
+$offset = $pref->get('timeOffset');
+$serverTime = $time - $offset * 3600;
+if ( $isForm )
+    $timeOffsetInput = HTML::input(array('type' => "text",
+                                         'size' => 6,
+                                         'maxlength' => 6,
+                                         'name' => "pref[timeOffset]",
+                                         'class' => "numeric",
+                                         'value' => $offset));
+else
+    $timeOffsetInput = $pref->get('timeOffset');
+
+$RelativeDatesCB = HTML::input(array('type' => 'checkbox',
+                                     'name' => 'pref[relativeDates]',
+                                     'value' => '1',
+                                     'checked' => (bool) $pref->get('relativeDates')));
+$NoLinkIconsCB = HTML::input(array('type' => 'checkbox',
+                                   'name' => 'pref[noLinkIcons]',
+                                   'value' => '1',
+                                   'checked' => (bool) $pref->get('noLinkIcons')));
+$GoogleLinkCB = HTML::input(array('type' => 'checkbox',
+                                  'name' => 'pref[googleLink]',
+                                  'value' => '1',
+                                  'checked' => (bool) $pref->get('googleLink')));
+$DoubleClickCB = HTML::input(array('type' => 'checkbox',
+                                  'name' => 'pref[doubleClickEdit]',
+                                  'value' => '1',
+                                  'checked' => (bool) $pref->get('doubleClickEdit')));
+if (!function_exists('selectedOption')) {
+  function selectedOption ($value, $label = false) {
+    return HTML::option(array('value' => $value,'selected'=>"selected"), ($label ? $label : $value) . "\n");
+  }
+  function unselectedOption ($value, $label = false) {
+    return HTML::option(array('value' => $value), ($label ? $label : $value) . "\n");
+  }
+}
+
+$SelectThemes = ''; $SelectLanguages = '';
+$SelectThemesDesc = ''; $SelectLanguagesDesc = '';
+if ( $isForm ) {
+    $SelectOptions = HTML(); 
+    if (!empty($available_themes) and is_array($available_themes)) {
+	if (!$pref->get('theme') or $pref->get('theme') == THEME)
+	    $SelectOptions->pushContent(selectedOption("",_("<system theme>")));
+	else
+	    $SelectOptions->pushContent(unselectedOption("",_("<system theme>")));
+	foreach ($available_themes as $theme) {
+	    if ($theme == $pref->get('theme') and $theme != THEME)
+		$SelectOptions->pushContent(selectedOption($theme));
+	    else
+		$SelectOptions->pushContent(unselectedOption($theme));
+	}
+	$SelectThemes = HTML::select(array('name' => "pref[theme]",'id' => 'theme'),
+				     $SelectOptions);
+	$SelectThemesDesc = _("Personal theme:");
+    }
+    
+    $SelectOptions = HTML();
+    if (!empty($available_languages) and is_array($available_languages)) {
+	if (!$pref->get('lang') or $pref->get('lang') == DEFAULT_LANGUAGE)
+	    $SelectOptions->pushContent(selectedOption("",_("<system language>")));
+	else
+	    $SelectOptions->pushContent(unselectedOption("",_("<system language>")));
+	foreach ($available_languages as $lang) {
+	    if ($lang == $pref->get('lang') and $lang != DEFAULT_LANGUAGE)
+		$SelectOptions->pushContent(selectedOption($lang));
+	    else
+		$SelectOptions->pushContent(unselectedOption($lang));
+	}
+	$SelectLanguages = HTML::select(array('name' => "pref[lang]",'id' => 'lang'),
+					$SelectOptions);
+	$SelectLanguagesDesc = _("Personal language:");
+    } else {
+	if ($SelectThemes == '') {
+	    $appearance = false;
+	    $SelectThemesDesc = '';
+	    $SelectLanguagesDesc = '';
+	}
+    }
+} else {
+    $SelectThemesDesc = _("Personal theme:");
+    $SelectLanguagesDesc = _("Personal language:");
+    $SelectThemes = $pref->get('theme');
+    $SelectLanguages = $pref->get('lang');
+}
+
+if ($errmsg) $msg = HTML(HTML::h4(array('class' => 'errors'), $errmsg),HTML::hr());
+?>
+<?= $errmsg ?>
+
+<?php if ($isForm) { ?>
+<form action="<?=$request->getPostURL()?>" method="post">
+<?php } else { 
+  $fill = "&nbsp;";
+  // See also plugin _AuthInfo
+  $authmethod = ENABLE_USER_NEW ? @$user->_authmethod : @$user->auth_how;
+?>
+<?= HTML::pre(sprintf("%12s: [% 10s]  %s\n",_("UserId"),$pref->get('userid'), " from " . $authmethod),
+	      sprintf("%12s: [% 10s]  %16s: [% 10s] | %8s: [%2s]\n","getId",$user->getId(),"getAuthenticatedId",$user->getAuthenticatedId(),"isSignedIn", $user->isSignedIn()),
+	      //sprintf("%12s: [% 10s]\n",_("Password"),empty($pref->get('passwd')) ? _("<empty>") : _("<not empty>")),
+	      sprintf("%12s: [% 10s]  %15s: [% 8s]\n",
+		      _("Auth Level"),$user->_level,_("Auth Method"),$authmethod),
+	      sprintf("%12s: [% 10s]\n",_("HomePage"),$user->hasHomePage() ? (ENABLE_USER_NEW ? $user->_HomePagehandle->_pagename : $user->_homepage->_pagename ) : ''),
+	      sprintf("%12s: [% 10s]\n",_("E-Mail"),$pref->get('email')),
+	      //sprintf("%12s: [% 10s]\n",_("Notify"),$pref->get('notifyPages')),
+	      sprintf("%12s: [% 10s] %16s: [% 10s] \n",_("Theme"), $pref->get('theme'), _("Current Theme"),$WikiTheme->_name),
+	      sprintf("%12s: [% 10s] %16s: [% 10s] \n",_("Language"),$pref->get('lang'),_("Current Language"),$GLOBALS['LANG'])
+	      ) ?>
+<?php } ?>
+
+<table border="0">
+<?php if ($isForm and $user->mayChangePass()) { ?>
+  <tr><td colspan="3"><h2><?= ($request->getPref('passwd') ?  _("Change Password") :  _("Set Password")) ?></h2></td></tr>
+
+    <tr><td align="right"><?=_("New password")?>:</td>
+        <td><input type="password" name="pref[passwd]" size="16" maxlength="16" class="text" value="" /></td>
+        <td></td></tr>
+    <tr><td align="right"><?=_("Type it again")?>:</td>
+        <td><input type="password" name="pref[passwd2]" size="16" maxlength="16" class="text" value="" /></td>
+        <td></td></tr>
+<?php } ?>
+
+<?php if (ENABLE_USER_NEW) { ?>
+  <tr><td colspan="3"><h2><?=_("E-mail")?></h2></td></tr>
+  
+   <tr><td colspan="2">
+    <?=_("Get an email notification at changes of the following pages:")?><br />
+    <?php if ($isForm) { ?>
+      <blockquote><textarea name="pref[notifyPages]" cols="50" rows="4"><?=$pref->get('notifyPages')?></textarea></blockquote></td>
+    <td><p class="hint"><?=_("Enter pages seperated by space or comma. Wildcards (fileglobbing) allowed.")?></p></td>
+    <?php } else { ?>
+     <td><?=$pref->get('notifyPages')?></td><td></td>
+    <?php } ?>
+   </tr>
+<?php } ?>
+
+  <tr><td colspan="3"><h2><?=_("Edit Area Size")?></h2></td></tr>
+
+  <tr><td colspan="2">
+    <?=_("Height")?>:&nbsp;
+    <?php if ($isForm) { ?>
+     <input type="text" name="pref[editHeight]" size="4" maxlength="4" class="numeric"
+            value="<?=$pref->get('editHeight')?>" />
+    <?php } else { ?>
+      <?=$pref->get('editHeight')?>
+    <?php } ?>
+    &nbsp;&nbsp;<?=_("Width")?>:&nbsp;
+    <?php if ($isForm) { ?>
+     <input type="text" name="pref[editWidth]" size="4" maxlength="4" class="numeric"
+            value="<?=$pref->get('editWidth')?>" />
+    <?php } else { ?>
+      <?=$pref->get('editWidth')?>
+    <?php } ?>
+    </td>
+    <td><p class="hint">
+      <?=_("Note that many browsers will automatically adjust the width of the editing area so that it fills the browser window.  In this case, the width preference will be ignored.")?></p>
+    </td></tr>
+  
+</table>
+
+<?php if ($isForm) { ?>
+  <hr />
+  <p><?=Button("submit:", _("Update Preferences"), 'wikiadmin')?>
+  <?=Button("submit:delete", _("Remove Preferences"), 'wikiadmin')?>
+  <?=Button("submit:cancel", _("Cancel"), 'button')?></p>
+
+<?= HiddenInputs($request->getArgs(), false, array('pref')) ?>
+</form>
+<?php } ?>
