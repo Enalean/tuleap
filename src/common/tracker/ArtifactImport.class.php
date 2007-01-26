@@ -251,7 +251,7 @@ function getUsedFields() {
 	}
       }
     } else {
-      if (!array_key_exists($val,$predef_vals) && $val != $Language->getText('global','none')) {
+      if (!array_key_exists($val,$predef_vals) && $val != $Language->getText('global','none') && $val != "") {
 	if (($field_name == 'severity') &&
 	    (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
 	  //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
