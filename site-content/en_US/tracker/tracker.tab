@@ -210,6 +210,12 @@ tracker_admin_index	modify_fieldset	 - Modify Field Set
 tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
 tracker_admin_index	admin_date_field_notif	Tracker Administration - Date Fields Notification Settings
 tracker_admin_index	wrong_field	Wrong field_id '$1'.
+tracker_admin_index	notif_update_success	'$1' Reminder Settings Update Successful.
+tracker_admin_index	notif_update_fail	'$1' Reminder Settings Update Failed.
+tracker_admin_index	specify_notified_users	Error. You must specify the users to be notified.
+tracker_admin_index	specify_notification_start	Error. You must specify the notification start date.
+tracker_admin_index	specify_notification_frequency	Error. You must specify the notification frequency.
+tracker_admin_index	specify_notification_recurse	Error. You must specify the notification recurse.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php

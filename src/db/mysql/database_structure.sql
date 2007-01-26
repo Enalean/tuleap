@@ -2676,6 +2676,7 @@ CREATE TABLE artifact_field (
   special int(11) NOT NULL default '0',
   value_function TEXT,
   default_value text NOT NULL,
+  notification int(11) default NULL;
   PRIMARY KEY  (field_id,group_artifact_id),
   KEY idx_fk_field_name (field_name),
   KEY idx_fk_group_artifact_id (group_artifact_id)
@@ -2936,6 +2937,22 @@ CREATE TABLE artifact_notification_role_default (
   description_msg varchar(255) default NULL,
   KEY role_id_idx (role_id)
 );
+
+#
+# Table structure for table 'artifact_date_reminder_settings'
+#
+CREATE TABLE artifact_date_reminder_settings (
+  reminder_id int(11) NOT NULL auto_increment,
+  field_id int(11) NOT NULL default '0',
+  group_artifact_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  notification_start int(11) NOT NULL default '0',
+  notification_type int(11) NOT NULL default '0',
+  frequency int(11) NOT NULL default '0',
+  recurse int(11) NOT NULL default '0',
+  notified_people varchar(255) NOT NULL default '',
+  PRIMARY KEY (reminder_id)
+  ) TYPE=MyISAM;
 
 #
 # Table structure for table 'artifact_dependencies'

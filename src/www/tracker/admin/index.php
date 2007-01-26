@@ -391,7 +391,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		}
 		
 		//check if  field_id exist
-		$sql = "SELECT field_id FROM artifact_field WHERE group_artifact_id=".$ath->getID()." AND field_id=".$field_id;
+		$sql = sprintf('SELECT field_id FROM artifact_field'
+				.' WHERE group_artifact_id=%d'
+				.' AND field_id=%d',
+				$ath->getID(),$field_id);
 		$result = db_query($sql);
 		if (db_numrows($result) < 1) {		    
 		    exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','wrong_field',array($field_id)));
@@ -405,8 +408,23 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		$ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','admin_date_field_notif'),
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		
-		if (isset($submit_notif_settings)) {
-		    $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$submitter,$assignee,$cc,$commenter);
+		if (isset($submit_notif_settings)) {		    
+		    if ($notified_users == NULL) {
+		        $feedback .= $Language->getText('tracker_admin_index','specify_notified_users');
+		    } else if (! $start) {
+		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_start');
+		    } else if (! $frequency) {
+		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_frequency');
+		    } else if (! $recurse) {
+		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_recurse');
+		    } else {
+		        $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);
+		        if ($res) {
+		            $feedback .= $Language->getText('tracker_admin_index','notif_update_success',array($field->getLabel()));		        
+		        } else {
+		            $feedback .= $Language->getText('tracker_admin_index','notif_update_fail',array($field->getLabel()));
+		        }
+		    }
 		}
 		
 		$ath->displayDateFieldNotificationSettings($field_id);   

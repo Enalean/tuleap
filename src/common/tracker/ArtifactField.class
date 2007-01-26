@@ -1342,7 +1342,7 @@ class ArtifactField extends Error {
 	 *
 	 *  @param group_artifact_id: the group artifact id
 	 *  @param value_function: the value function
-	 *
+	 *get
 	 *  @return boolean - succeed or failed
 	 */
 	function updateValueFunction($group_artifact_id,$value_function) {

@@ -2102,8 +2102,8 @@ EOS;
 		            $notif_settings = "-";
 			    $notif_status = "-";
 		        } else {		        
-			    if ($field->getNotificationStatus()) {
-			        $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$group_id.'&atid='.$this->getID().'&field_id='.$field->getID().'">'.$Language->getText('tracker_include_type','edit_notif_settings').'</A>';
+			    if ($field->getNotificationStatus()) {			        
+				$notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$group_id.'&atid='.$this->getID().'&field_id='.$field->getID().'">'.$Language->getText('tracker_include_type','edit_notif_settings').'</A>';		
 			        $notif_status = $Language->getText('tracker_include_type','active');
 			    } else {
 			        $notif_settings = $Language->getText('tracker_include_type','edit_notif_settings');
@@ -2141,6 +2141,21 @@ EOS;
 	    
 	    
 	    $field = $art_field_fact->getFieldFromId($field_id);  
+	    //get date field reminder settings from database
+	    $res = $this->getDateFieldReminderSettings($this->Group->getID(),$this->getID(),$field_id);
+	    $start = db_result($res,0,'notification_start');
+	    $frequency = db_result($res,0,'frequency');
+	    $recurse = db_result($res,0,'recurse');
+	    $notified_users = explode(",",db_result($res,0,'notified_people'));
+	    $notif_type = db_result($res,0,'notification_type');
+	    if ($notif_type == 1) {
+	        $after = "selected";
+		$before = "";
+	    } else {
+	        $after = "";
+		$before = "selected";
+	    }
+	    
 	    $out = '<P><h3>'.$Language->getText('tracker_include_type','notif_settings_field',array($field->getLabel())).'</h3><P>';
 	    
 	    $out .= '
@@ -2151,28 +2166,48 @@ EOS;
 	         <TABLE BORDER=0>
 		 <TR>
 		   <TD>'.$Language->getText('tracker_include_type','notif_start').'</TD>
-		   <TD><INPUT TYPE="TEXT" NAME="start" SIZE="5"> '.$Language->getText('tracker_include_type','days').'</TD>
+		   <TD><INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="'.$start.'"> '.$Language->getText('tracker_include_type','days').'</TD>
 		   <TD><SELECT NAME="notif_type">
-		       <OPTION VALUE="0">'.$Language->getText('tracker_include_type','notify_before').'
-		       <OPTION VALUE="1">'.$Language->getText('tracker_include_type','notify_after').'
+		       <OPTION VALUE="0" '.$before.'>'.$Language->getText('tracker_include_type','notify_before').'
+		       <OPTION VALUE="1" '.$after.'>'.$Language->getText('tracker_include_type','notify_after').'
 		       </SELECT> '.$Language->getText('tracker_include_type','date_occurence').'</TD>
 		 </TR>
 	         <TR>
 		   <TD>'.$Language->getText('tracker_include_type','frequency').'</TD>
-		   <TD><INPUT TYPE="TEXT" NAME="frequency" SIZE="5"> '.$Language->getText('tracker_include_type','days').'</TD>
+		   <TD><INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$Language->getText('tracker_include_type','days').'</TD>
 		 </TR>
 		 <TR>
 		   <TD>'.$Language->getText('tracker_include_type','recurse').'</TD>
-		   <TD><INPUT TYPE="TEXT" NAME="recurse" SIZE="5"></TD>
+		   <TD><INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"></TD>
 		 </TR>
 		 <TR>
 		   <TD valign="top">'.$Language->getText('tracker_include_type','notified_users').'</TD>
-		   <TD><INPUT TYPE="checkbox" NAME="submitter" VALUE="1">'.$Language->getText('tracker_common_types','role_SUBMITTER_short_desc').'
-		       <BR><INPUT TYPE="checkbox" NAME="assignee" VALUE="2">'.$Language->getText('tracker_common_types','role_ASSIGNEE_short_desc').'
-		       <BR><INPUT TYPE="checkbox" NAME="cc" VALUE="3">'.$Language->getText('tracker_common_types','role_CC_short_desc').'
-		       <BR><INPUT TYPE="checkbox" NAME="commenter" VALUE="4">'.$Language->getText('tracker_common_types','role_COMMENTER_short_desc').'
-		   </TD>
-		 </TR></TABLE>';
+		   <TD><SELECT MULTIPLE NAME="notified_users[]">';
+	
+	    $selected = "";
+	    if (in_array("1",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="1" '.$selected.'>'.$Language->getText('tracker_common_types','role_SUBMITTER_short_desc');
+
+	    $selected = "";
+	    if (in_array("2",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="2" '.$selected.'>'.$Language->getText('tracker_common_types','role_ASSIGNEE_short_desc');
+
+    	    $selected = "";
+	    if (in_array("3",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="3" '.$selected.'>'.$Language->getText('tracker_common_types','role_CC_short_desc');
+	
+	    $selected = "";
+	    if (in_array("4",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="4" '.$selected.'>'.$Language->getText('tracker_common_types','role_COMMENTER_short_desc').'
+		 </SELECT></TD></TR></TABLE>';
 	    
 	    $out .= '<P><INPUT TYPE="SUBMIT" NAME="submit_notif_settings"></FORM>';	 
 	    echo $out;
