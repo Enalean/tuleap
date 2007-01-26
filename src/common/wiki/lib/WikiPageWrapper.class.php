@@ -158,9 +158,12 @@ Upload:num_rev/filename
     }
 
 
-  function render($lite=false) {
+  function render($lite=false, $full_screen=false) {
     if($lite) {
       define('THEME', 'CodeX-lite'); 
+    }
+    if ($full_screen) {
+      define('THEME', 'Codex-light-printer-version');  
     }
 
     IniConfig(PHPWIKI_DIR."/config/config.ini");

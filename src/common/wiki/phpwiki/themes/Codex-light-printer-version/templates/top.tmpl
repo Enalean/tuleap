@@ -1,0 +1,15 @@
+<?php // -*-html-*-
+rcs_id('$Id: top.tmpl,v 1.27 2005/02/27 18:19:21 rurban Exp $');
+
+global $HIDE_TOOLBARS;
+$HIDE_NAVBAR = true;
+if (!$HIDE_TOOLBARS && !$HIDE_NAVBAR) {
+?>
+<!-- The logo -->
+<div id="logo"><img src="<?=$WikiTheme->getImageURL('logo')?>" id="logo-img"
+      border="0" alt="<?=fmt("%s: %s", WIKI_NAME, HOME_PAGE) ?>" align="right" /></div>
+
+<?php } ?>
+
+<!-- Page title -->
+<h1><?= $HEADER ?></h1>

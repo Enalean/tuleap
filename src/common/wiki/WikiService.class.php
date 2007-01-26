@@ -121,8 +121,7 @@ class WikiService extends Controler {
        ($_REQUEST['format'] == 'rss') )
         $this->view = 'empty'; 
 
-    if(isset($_REQUEST['pv']) && 
-       ($_REQUEST['pv'] == '1')) 
+    if(isset($_REQUEST['pv']) && ($_REQUEST['pv'] == 1 || $_REQUEST['pv'] == 2)) 
         $this->view = 'empty'; 
 
     if(isset($_REQUEST['action'])) {
