@@ -149,6 +149,18 @@
     </section>
     <para>Depuis le paneau des propriétés, il est possible de voir/éditer les permissions, voir l'historique et d'accèder aux actions (mise à jour/déplacement/suppression).</para>
     
+    <section><title>Notifications</title>
+      <para>Cette action permet à l'utilisateur de s'abonner à toute modification d'un élément. Ainsi il pourra être prévenu de l'ajout d'un document dans un dossier, de la modification d'un document, de son déplacement, ... Il suffit de cocher la case prévue à cet effet.</para>
+      <figure id="docman2_notifications">
+          <title>Notifications</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_notifications.png" />
+            </imageobject>
+          </mediaobject>
+      </figure>
+    </section>
+    
     <section><title>Historique</title>
       <para>Cette action permet à l'utilisateur de voir les journeaux et les anciennes versions (si disponibles).</para>
       <figure id="docman2_history">
@@ -188,7 +200,7 @@
     <section><title>Permissions</title>
       <para>Cette action permet à l'utilisateur de gérer les permissions d'un document ou d'un dossier. les permissions d'un dossier peuvent être appliquées recursivement à sa sous-hiérarchie.</para>
       <figure id="docman2_permissions">
-          <title>Define permissions</title>
+          <title>Definir les permissions</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_permissions.png" />
@@ -219,20 +231,27 @@
     <section><title>Déplacer</title>
       <para>Les documents ou les dossiers peuvent être déplacé au sein des documents du projets.</para>
       <para>L'utilisateur ne peut déplacé un élément que si les dossiers source et destination sont modifiables.</para>
+      <para>Vous pouvez déplacer un item de différentes façons.</para>
+      <para>La façon usuelle est de selectionnez déplacer dans le menu popup d'un élément. 
+      Vous aurez alors à choisir un dossier de destination (ou éventuellement le laisser
+      au même endroit) et la nouvelle position (au début, à la fin ou à une position spécifique). 
+      Les permissions de l'élément ne seront pas changées.</para>
       <figure id="docman2_move">
-          <title>Move a document</title>
+          <title>Déplacer un document</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_move.png" />
             </imageobject>
           </mediaobject>
       </figure>
-      <para>Si l'utilisateur veut ordonné le contenu d'un dossier, il peut déplacer les éléments les uns par rapport aux autres (au début du dossier, à la fin du dossier ou après un autre élément).</para>
-      <figure id="docman2_move2">
-          <title>Move a document at a specific position</title>
+      <para>Si vous ne voulez que réordonnez le contenu d'un dossier, vous pouvez cliquez sur 
+      les raccourcis à coté de "déplacer" dans le menu popup : décaler une place vers le haut, une place vers le bas, placer au début du dossier ou à la fin.</para>
+      <figure id="docman2_move_shortcuts">
+          <title>Raccourcis pour déplacer un élément au sein d'un dossier</title>
           <mediaobject>
             <imageobject>
-              <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_docman2_move2.png" />
+              <imagedata format="PNG" 
+                fileref="../../screenshots/en_US/sc_docman2_move_shortcuts.png" />
             </imageobject>
           </mediaobject>
       </figure>
@@ -240,7 +259,7 @@
     
     <section><title>Delete</title>
       <para>Les documents ou dossiers peuvent être supprimés. Si un utilisateur veut supprimer un dossier, il sera averti que tous les sous-éléments seront supprimés (si il a les permissions ad-hoc).</para>
-      <para>Pour pouvoir supprimer un item, l'utilisateur doit avoir le droit "rédacteur" sur le répertoir parent.</para>
+      <para>Pour pouvoir supprimer un élément, l'utilisateur doit avoir le droit "rédacteur" sur le répertoir parent.</para>
     </section>
   </section>
   
@@ -251,7 +270,7 @@
       <para>Document manager administrators have all access to all items of the manager.</para>
     </section>
     <section>
-      <title>Afficher les performances</title>
+      <title>Afficher les permissions</title>
       <para>Cette section permet de définir la vue par défaut du gestionnaire de documents. Ce paramètres peut être surchargé par les préférences de l'utilisateur.</para>
     </section>
     <section>
