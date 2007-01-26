@@ -481,7 +481,7 @@ function site_footer($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_header($params) {
-  GLOBAL $HTML, $Language, $pv;
+  GLOBAL $HTML, $Language;
 
 	/*
 		Check to see if active
@@ -526,7 +526,7 @@ function site_project_header($params) {
 	@result text - echos HTML to the screen directly
 */
 function site_project_footer($params) {
-	GLOBAL $HTML, $pv;
+	GLOBAL $HTML;
 
         if (isset($params['pv']) && ($params['pv'] == 1 || $params['pv'] == 2)) {
             // Printer version
