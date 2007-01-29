@@ -234,7 +234,7 @@ class FRSFile extends Error {
      * @return boolean true if there is no error, false otherwise
      */
     function LogDownload($user_id = 0) {
-        $dao =& $this->getFrsFileDao();
+        $dao =& $this->_getFrsFileDao();
         $ok = $dao->logDownload($this, $user_id);
         return $ok;
     }

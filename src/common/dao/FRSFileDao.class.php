@@ -302,7 +302,7 @@ class FRSFileDao extends DataAccessObject {
     	   }
        //Insert a new entry in the file release download log table
        $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
-             ."VALUES ('".$user_id."','".$file->getID()."','".time()."')";
+             ."VALUES ('".$user_id."','".$file->getFileID()."','".time()."')";
        $inserted = $this->update($sql);
        return $inserted;	
     }
