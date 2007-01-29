@@ -167,14 +167,15 @@ $server->register(
         'name'=>'xsd:string',
         'notes'=>'xsd:string',
         'changes'=>'xsd:string',
-        'status_id'=>'xsd:int'),
+        'status_id'=>'xsd:int',
+        'release_date'=>'xsd:int'),
     array('addRelease'=>'xsd:int'),
     $uri,
     $uri.'#addRelease',
     'rpc',
     'encoded',
     'Add a Release to the File Release Manager of the project group_id with the values given by 
-     package_id, name, notes, changes and status_id. 
+     package_id, name, notes, changes, status_id and release_date. 
      Returns the ID of the created release if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
      if the package does not match with the group ID, or if the add failed.'
@@ -496,6 +497,7 @@ function releases_to_soap($release_arr) {
  * @param string $notes the notes of the release
  * @param string $changes the changes of the release
  * @param int $status_id the ID of the status of the release
+ * @param int $release_date the release date, in timestamp format
  * @return int the ID of the new created release, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -504,7 +506,7 @@ function releases_to_soap($release_arr) {
  *              - the user does not have the permissions to create a release
  *              - the release creation failed.
  */
-function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$status_id) {
+function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$status_id,$release_date) {
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -529,7 +531,7 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
                 return new soap_fault('', 'addRelease', 'Release name already exists in this package', 'Release name already exists in this package');
             } else {
                 $dao =& $release_fact->_getFRSReleaseDao();
-                $dar = $dao->create($package_id, $name, $notes, $changes, $status_id);
+                $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 0, $release_date);
                 if (!$dar) {
                     return new soap_fault('', 'addRelease', $dar->isError(), $dar->isError());
                 } else {
@@ -831,10 +833,8 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
                 $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
                 if (! $file_id) {
-                    @unlink($tmpname);
                     return new soap_fault ('','addUploadedFile',$file_fact->getErrorMessage(),$file_fact->getErrorMessage());
                 } else {
-                    @unlink($tmpname);
                     return $file_id;
                 }
             } else {

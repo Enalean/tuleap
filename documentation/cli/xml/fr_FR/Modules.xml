@@ -635,6 +635,8 @@ Array
                         </para>
                         <para>--status_id: status_id de la nouvelle version. Par défaut (si non spécifié), le statut est actif.
                         </para>
+                        <para>--release_date: date de la nouvelle version, au format YYYY-MM-DD. Par défaut, la date de la version est la date courante.
+                        </para>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>

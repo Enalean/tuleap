@@ -191,6 +191,7 @@ Parameters:
 --notes=<notes>: Notes associated with this release
 --changes=<changes>: Change log associated with this release
 --status_id=<status_id>: status of this release
+--release_date=<release_date>: the date of the release, in format YYYY-MM-DD
 EOF;
         return;
     }
@@ -224,6 +225,20 @@ EOF;
         // status_id is optionnal, by default, set to 1 (active)
         $status_id = 1;
     }
+    
+    $release_date = get_parameter($PARAMS, "release_date", true);
+    if (! isset($release_date)) {
+        // by default, release date is the current date/time.	
+        $release_date = time();
+    } else {
+        // check the date and convert it into timestamp
+        $date_check = check_date($release_date);
+        if ($date_check != "") {
+            exit_error($release_date . ' ' . $date_check);	
+        } else {
+            $release_date = convert_date($release_date);	
+        }
+    }
 
     $cmd_params = array(
                     "group_id"        => $group_id,
@@ -231,7 +246,8 @@ EOF;
                     "name"            => $name,
                     "notes"           => $notes,
                     "changes"         => $changes,
-                    "status_id"       => $status_id
+                    "status_id"       => $status_id,
+                    "release_date"    => $release_date
                 );
                 
     $res = $SOAP->call("addRelease", $cmd_params);

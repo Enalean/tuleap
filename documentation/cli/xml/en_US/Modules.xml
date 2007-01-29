@@ -617,6 +617,8 @@ Array
                         </para>
                         <para>--status_id: status_id of the new release. By default, the status is active.
                         </para>
+                        <para>--release_date: date of the new release, with YYYY-MM-DD format. By default, the release_date is the current date/time.
+                        </para>
                         <para>--project: UNIX name of the project you want to add the release in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
