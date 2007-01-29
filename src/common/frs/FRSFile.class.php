@@ -164,6 +164,15 @@ class FRSFile extends Error {
         return $array;
     }
     
+    var $dao;
+    
+    function &_getFRSFileDao() {
+        if (!$this->dao) {
+            $this->dao =& new FRSFileDao(CodexDataAccess::instance());
+        }
+        return $this->dao;
+    }
+    
     /**
      * Determine if the file exists really on the server or not
      *
@@ -216,6 +225,18 @@ class FRSFile extends Error {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Log the download of the file in the log system
+     * 
+     * @param int $user_id the user that download the file (if 0, the current user will be taken)
+     * @return boolean true if there is no error, false otherwise
+     */
+    function LogDownload($user_id = 0) {
+        $dao =& $this->getFrsFileDao();
+        $ok = $dao->logDownload($this, $user_id);
+        return $ok;
     }
 
 }

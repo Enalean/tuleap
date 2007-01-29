@@ -694,6 +694,9 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
             return new soap_fault(invalid_file_fault,'getFile','File doesn\'t exist on the server','File "'.$file->getFileName().'" doesn\'t exist on the server');
         }
         
+        // Log the download action
+        $file->logDownload();
+        
         $contents = $file->getContent();
         return base64_encode($contents);
     } else {
