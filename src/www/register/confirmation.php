@@ -146,7 +146,7 @@ if (isset($show_confirm) && $show_confirm) {
         $reference_manager->addSystemReferencesWithoutService($template_id,$group_id);
 
 
-        // Create default document group
+        // Create default document group XXX Remove?
         $query = "INSERT INTO doc_groups(groupname,group_id,group_rank) " 
 	."values ("
 	."'Documents',"

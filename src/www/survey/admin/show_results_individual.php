@@ -131,7 +131,7 @@ for ($i=0; $i<$count; $i++) {
 	if ($question_type == "1") {
 
 		/*
-			This is a rædio-button question. Values 1-5.	
+			This is a rï¿½dio-button question. Values 1-5.	
 		*/
 
 
@@ -183,7 +183,7 @@ for ($i=0; $i<$count; $i++) {
 		*/
 
 		if ($question_type != $last_question_type) {
-	                echo '<B>'.$Language->getText('global','yes').' / .'$Language->getText('global','no')."</B><BR>\n";
+	                echo '<B>'.$Language->getText('global','yes')." / ".$Language->getText('global','no')."</B><BR>\n";
 		}
 
 		echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$quest_array[$i]."\" VALUE=\"1\"";
