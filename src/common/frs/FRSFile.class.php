@@ -25,6 +25,7 @@
  */
 
 require_once('common/include/Error.class.php');
+require_once('FRSReleaseFactory.class.php');
 
 class FRSFile extends Error {
 	
@@ -198,6 +199,20 @@ class FRSFile extends Error {
         return $file_location;
     }
 
+    /**
+     * Get the Package ID of this File
+     *
+     * @return int the packahe ID of this file
+     */
+    function getPackageID() {
+        // retrieve the release the file belongs to
+        $release_id = $this->getReleaseID();
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $package_id = $release->getPackageID();
+        return $package_id;
+    }
+    
     /**
      * Get the Group (the project) of this File
      *

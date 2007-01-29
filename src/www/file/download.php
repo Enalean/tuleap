@@ -24,43 +24,32 @@ if (user_isloggedin()) {
   // that the file_id we have belongs to the given group_id
 
   $frsff = new FRSFileFactory();
-  $res_file = $frsff->getFRSFileInfoListFromDb($group_id, $file_id);
+  $file =& $frsff->getFRSFileFromDb($file_id, $group_id);
 
-  $num_files = count($res_file );
-
-  // there must be only just one release - Not 0
-  // Not more than one. Just one.
-  if ( !$res_file || $num_files != 1 ) {
+  if (! $file || $file->isError()) {
     exit_error($Language->getText('file_download','incorrect_release_id'), $Language->getText('file_download','report_error',$GLOBALS['sys_name']));
   }
-  $file_release = $res_file[0];
 
   // Check permissions for release, then package
-  if (permission_exist('RELEASE_READ', $file_release['release_id'])) {
-      if (!permission_is_authorized('RELEASE_READ',$file_release['release_id'],user_getid(),$group_id)) {
+  if (permission_exist('RELEASE_READ', $file->getReleaseID())) {
+      if (!permission_is_authorized('RELEASE_READ',$file->getReleaseID(),user_getid(),$group_id)) {
           exit_error($Language->getText('file_download','access_denied'), 
 		     $Language->getText('file_download','access_not_authorized',session_make_url("/project/memberlist.php?group_id=$group_id")));
       } 
-  } else if (!permission_is_authorized('PACKAGE_READ',$file_release['package_id'],user_getid(),$group_id)) {
+  } else if (!permission_is_authorized('PACKAGE_READ',$file->getPackageID(),user_getid(),$group_id)) {
       exit_error($Language->getText('file_download','access_denied'), 
 		 $Language->getText('file_download','access_not_authorized',session_make_url("/project/memberlist.php?group_id=$group_id")));
   } 
 
+  // Get the URL to download the file
+  $file_location = $file->getFileLocation();
 
+  if ($fp=fopen($file_location,"r")) {
+      $size = filesize($file_location);
 
-  //Build the URL to download the file
-  $group_unix_name=group_getunixname($group_id);
-  $basename = $file_release['filename'];
-  $file = $ftp_frs_dir_prefix.'/'.$group_unix_name.'/'.$basename;
-
-  if ($fp=fopen($file,"r")) {
-      $size = filesize($file);
-
-      //Insert a new entry in the file release download log table
-      $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
-	  ."VALUES ('".user_getid()."','".$file_release['file_id']."','".time()."')";
-      $res_insert = db_query( $sql );
-
+      // Log the download in the Log system
+      $file->logDownload(user_getid());
+      
       // Now transfer the file to the client
       // Make sure this URL is not cached anywhere otherwise download
       // would be wrong
@@ -74,7 +63,7 @@ if (user_isloggedin()) {
 	  header("Cache-Control: must-revalidate");  // HTTP 1.1
 	  header("Pragma: no-cache");  // HTTP 1.0
       }
-      $bn = basename($basename);
+      $bn = basename($file->getFileName());
       header("Content-Type: application/octet-stream");
 	  header("Content-Disposition: attachment; filename=$bn");
       header("Content-Length:  $size");
