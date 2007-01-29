@@ -28,7 +28,7 @@ $server->wsdl->addComplexType(
         'package_id' => array('name'=>'package_id', 'type' => 'xsd:int'),
         'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
-        'status_id' => array('name'=>'description', 'type' => 'xsd:string'),
+        'status_id' => array('name'=>'status_id', 'type' => 'xsd:int'),
         'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
         'approve_license' => array('name'=>'approve_license', 'type' => 'xsd:boolean'),
     )
