@@ -131,7 +131,7 @@ for ($i=0; $i<$count; $i++) {
 	if ($question_type == "1") {
 
 		/*
-			This is a r�dio-button question. Values 1-5.	
+			This is a radio-button question. Values 1-5.	
 		*/
 
 
