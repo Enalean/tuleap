@@ -83,7 +83,7 @@ if (!$result || $rows < 1) {
 	for ($j = 0; $j < $rows; $j++) {
 		echo '
 			<A HREF="/forum/forum.php?forum_id='. db_result($result, $j, 'group_forum_id') .'">'.
-			'<IMG SRC="'.util_get_image_theme("'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+			'<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
 			db_result($result, $j, 'forum_name').'</A> ';
 		//message count
 		echo '('.db_result(db_query("SELECT count(*) FROM forum WHERE group_forum_id='".db_result($result, $j, 'group_forum_id')."'"),0,0).' msgs)';
