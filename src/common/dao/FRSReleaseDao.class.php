@@ -172,7 +172,7 @@ class FRSReleaseDao extends DataAccessObject {
        		$values[] = ((int) $release_date);
 		} else {
 			$arg[] = 'release_date';
-       		$values[] = ((int) time);
+       		$values[] = ((int) time());
 		}
 
 		$um =& UserManager::instance();
