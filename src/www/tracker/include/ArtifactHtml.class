@@ -330,11 +330,8 @@ class ArtifactHtml extends Artifact {
                 } else if ($field->getName() == 'open_date') {
                     $value = format_date($GLOBALS['sys_datefmt'],$field_value);
                 } else {
-                	if (user_is_super_user() || $this->ArtifactType->userIsAdmin() || $this->getSubmittedBy()==$user_id ) {
-                		$value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
-                	}else{
-                		$value = util_make_links($field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only),$group_id, $group_artifact_id);
-                	}
+                    $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                    if ($read_only) $value = util_make_links($value,$group_id, $group_artifact_id);
                 }
                 
                 $html = array('label' => $label, 'value' => $value);
