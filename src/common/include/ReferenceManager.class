@@ -301,7 +301,7 @@ class ReferenceManager {
      */
     function extractReferences($html,$group_id) {
 
-        $references=array();
+        $referencesInstances=array();
         $count=preg_match_all('/(\w+) #(\w+:)?([\w\/]+)+/', $html, $matches,PREG_SET_ORDER);
         foreach ($matches as $match) {
             $ref_instance=$this->_getReferenceInstanceFromMatch($match);
