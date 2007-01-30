@@ -26,8 +26,24 @@ class Feedback {
         }
         return $html;
     }
+    function fetchAsPlainText() {
+    	   $txt = '';
+       foreach($this->logs as $log) {
+       	   $txt .= $log['level'] .': '. $log['msg'] ."\n"; 
+       }
+       return $txt;
+    }
+    
     function display() {
         echo $this->fetch();
+    }
+    function hasWarningsOrErrors() {
+    	   $found = false;
+       reset($this->logs);
+       while(!$found && list(,$log) = each($this->logs)) {
+            $found = ($log['level'] == 'warning' || $log['level'] == 'error');
+       }
+       return $found;
     }
 }
 

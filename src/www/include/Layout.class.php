@@ -95,6 +95,12 @@ class Layout extends Error {
     function addFeedback($level, $message) {
         $this->_feedback->log($level, $message);
     }
+    function feedbackHasWarningsOrErrors() {
+    	   return $this->_feedback->hasWarningsOrErrors();
+    }
+    function getRawFeedback() {
+    	   return $this->_feedback->fetchAsPlainText();
+    }
     
     function redirect($url) {
         if (session_hash()) {

@@ -23,36 +23,36 @@
  * $Id$
  */
 require_once('DocmanController.class.php');
-require_once('DocmanActions.class.php');
-class Docman extends DocmanController {
+require_once('SOAPDocmanActions.class.php');
+class SOAPDocman extends DocmanController {
 
-    function Docman(&$plugin, $pluginPath, $themePath) {
-    	   $this->DocmanController($plugin, $pluginPath, $themePath, HTTPRequest::instance());
+    function SOAPDocman(&$plugin, $pluginPath, $themePath, &$request) {
+    	   $this->DocmanController($plugin, $pluginPath, $themePath, $request);
     }
 
 
     /* protected */ function _checkBrowserCompliance() {
-        if($this->request->browserIsNetscape4()) {
-            $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'docman_browserns4'));
-        }
     }
 
     /* protected */ function _includeView() {
-        $className = 'Docman_View_'. $this->view;
-        require_once('view/'. $className .'.class.php');
+        $className = 'Docman_View_SOAP_'. $this->view;
+        require_once('view/soap/'. $className .'.class.php');
         return $className;
     }
+    
     /* protected */ function _set_deleteView_errorPerms() {
-        $this->view = 'Details';
+    	    $this->_setView('SOAP');
     }
     /* protected */ function _set_deleteView_confirmed() {
-        if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
-            $this->_viewParams['redirect_to'] = $redirect_to;
-        }
-        $this->view = 'RedirectAfterCrud';
+    	   $this->_setView('SOAP');
     }
+    
     /* protected */ function _setView($view) {
-    	   $this->view = $view;
+        switch($view) {
+        	   default:
+               $this->view = 'SOAP';
+               break;
+        }
     }
 }
 

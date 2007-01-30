@@ -22,16 +22,10 @@
  *
  * $Id$
  */
-//apd_set_pprof_trace(); 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once('common/include/HTTPRequest.class.php');
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('docman');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $p->process();
-} else {
-    header('Location: '.get_server_url());
+require_once('DocmanActions.class.php');
+
+class SOAPDocmanActions extends DocmanActions {
+
 }
 
 ?>

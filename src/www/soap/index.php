@@ -41,6 +41,13 @@ require_once('./tracker/tracker.php');
 // include the FRS API
 require_once('./frs/frs.php');
 
+// include the Docman API (only if docman plugin is available)
+require_once('common/plugin/PluginManager.class.php');
+$plugin_manager =& PluginManager::instance();
+$p =& $plugin_manager->getPluginByName('docman');
+if ($p && $plugin_manager->isPluginAvailable($p)) {
+    require_once('docman/www/soap/docman.php');    
+}
 
 // Call the service method to initiate the transaction and send the response
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';

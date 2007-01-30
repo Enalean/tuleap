@@ -44,7 +44,7 @@ class Controler {
   function viewsManagement() {
     $className = get_class($this).'Views';
     $wv = new $className($this, $this->gid, $this->view, $this->_viewParams);
-    $wv->display($this->view);
+    return $wv->display($this->view);
   }
 
   function actionsManagement() {
@@ -59,7 +59,7 @@ class Controler {
     if($this->action)
       $this->actionsManagement();
     
-    $this->viewsManagement();
+    return $this->viewsManagement();
   }
 
 }

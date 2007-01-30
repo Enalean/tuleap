@@ -720,7 +720,7 @@ class DocmanActions extends Actions {
     
     function delete() {
         $user =& $this->_controler->getUser();
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         
         $item_factory =& $this->_getItemFactory();
         $item =& $item_factory->getItemFromDb($request->get('id'));

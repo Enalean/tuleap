@@ -210,9 +210,15 @@ class DocmanPlugin extends Plugin {
             }
         }
     }
+    
     function process() {
         require_once('Docman.class.php');
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+        $controler->process();
+    }
+    function processSOAP(&$request) {
+        require_once('SOAPDocman.class.php');
+        $controler =& new SOAPDocman($this, $this->_getPluginPath(), $this->_getThemePath(), $request);
         $controler->process();
     }
 }

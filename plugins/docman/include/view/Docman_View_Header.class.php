@@ -51,7 +51,7 @@ require_once('Docman_View_View.class.php');
     }
     
     /* protected */ function _feedback($params) {
-        $this->_controller->feedback->display();
+        //$this->_controller->feedback->display();
     }
     
 }
