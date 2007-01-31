@@ -39,13 +39,15 @@ file_admin_editpackages	update	Update
 file_admin_editpackages	releases	Releases
 file_admin_editpackages	perms	Permissions
 file_admin_editpackages	license	License Approval
-file_admin_editpackages	add_edit_releases	Add/Edit Releases
+file_admin_editpackages	edit_releases	Edit Releases
+file_admin_editpackages	add_releases	Add Release
 file_admin_editpackages	edit	Edit
 file_admin_editpackages	define	Define
 file_admin_editpackages	create_new_p	Create a New Package
 file_admin_editpackages	create_this_p	Create This Package
 file_admin_editpackages	status_active	Active
 file_admin_editpackages	status_hidden	Hidden
+
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php
@@ -75,10 +77,11 @@ file_admin_editreleases	p_not_yours	Trying to change a package that isn't yours
 file_admin_editreleases	cannot_del_rel	Sorry - you cannot delete a release that still contains files
 file_admin_editreleases	rel_updated	Updated Release
 file_admin_editreleases	rel_update_failed	Updating Release Failed
-file_admin_editreleases	f_not_yours	Not Your File Or File Doesn't Exist
-file_admin_editreleases	rel_not_yours	Not Your Release Or Release Doesn't Exist
-file_admin_editreleases	data_not_parsed	Sorry - Date entry could not be parsed. It must be in YYYY-MM-DD format.
-file_admin_editreleases	file_updated	File Updated
+file_admin_editreleases	f_not_yours	Not Your File $1 Or File Doesn't Exist
+file_admin_editreleases	rel_not_yours	Not Your Release Or Release Doesn't Exist (for the file : $1)
+file_admin_editreleases	data_not_parsed	Sorry - File Date entry could not be parsed. It must be in YYYY-MM-DD format.
+file_admin_editreleases	data_not_parsed_file	Sorry - File $1 : Date entry could not be parsed. It must be in YYYY-MM-DD format.
+file_admin_editreleases	file_updated	File Updated : $1
 file_admin_editreleases	add_files	Adding File(s)
 file_admin_editreleases	illegal_file_name	Illegal FileName
 file_admin_editreleases	p_rel_not_yours	Package/Release Doesn't Exist Or Isn't Yours
@@ -86,7 +89,7 @@ file_admin_editreleases	not_add_file	Couldn't Add FileName
 file_admin_editreleases	filename_invalid	FileName Invalid Or Does Not Exist
 file_admin_editreleases	filename_exists	FileName Already Exists For This Project
 file_admin_editreleases	no_files_selected	No Files Selected
-file_admin_editreleases	file_deleted	File Deleted
+file_admin_editreleases	file_deleted	File Deleted : $1
 file_admin_editreleases	file_rel_notice	File Release Notice
 file_admin_editreleases	file_rel_notice_project	Project $1
 file_admin_editreleases	download_explain_modified_file	A new version of $2 (package $1) has been released.
@@ -151,6 +154,22 @@ file_admin_editreleases	details	Details
 file_admin_editreleases	file_news_details	A new release $1 is now available at this URL : $2
 file_admin_editreleases	submit_news	Submit News
 file_admin_editreleases	relname	<release-name>
+file_admin_editreleases	fieldset_properties	Properties
+file_admin_editreleases	fieldset_uploaded_files	Uploaded Files
+file_admin_editreleases	fieldset_notes	Notes
+file_admin_editreleases	fieldset_permissions	Permissions
+file_admin_editreleases	fieldset_news	News
+file_admin_editreleases	fieldset_notification	Notification
+file_admin_editreleases	browse	browse...
+file_admin_editreleases	local_file	local file
+file_admin_editreleases	scp_ftp_files	scp/ftp files
+file_admin_editreleases	add_file	Add file
+file_admin_editreleases	upload	Upload
+file_admin_editreleases	add_change_log	Add change log
+file_admin_editreleases	view_change	[view/change]
+file_admin_editreleases	default_permissions	Will be created with the same permissions than its parent package.
+file_admin_editreleases	delete_col	Delete
+file_admin_editreleases	release_perm	The release permissions are :  
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
