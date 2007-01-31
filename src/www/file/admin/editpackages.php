@@ -10,6 +10,8 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');   
 require_once('common/frs/FRSPackageFactory.class.php'); 
 require_once('common/frs/FRSReleaseFactory.class.php'); 
+require_once('common/frs/FRSReleaseFactory.class.php'); 
+require_once('common/permission/PermissionsManager.class.php'); 
 require_once('www/file/file_utils.php');
 $Language->loadLanguageMsg('file/file');
 
@@ -40,7 +42,12 @@ if (isset($submit)) {
 		//create a new package
 		$array = array('group_id' => $group_id, 'name' => htmlspecialchars($package_name), 
 						'rank' => $rank, 'status_id' => 1, 'approve_license' => $approve_license);
-		$frspf->create($array);
+		$res_id =& $frspf->create($array);
+        //add default permission on the new package (register users)
+        if($res_id){
+            $pm = & PermissionsManager :: instance();
+            $pm->addPermission('PACKAGE_READ', $res_id, '2');
+        }
 		$feedback .= ' '.$Language->getText('file_admin_editpackages','p_added').' ';
 	  }
 	} else if ($func=='update_package' && $package_id && $package_name && $status_id) {
@@ -82,7 +89,9 @@ echo '<H3>'.$Language->getText('file_admin_editpackages','packages').'</H3>
 <P>
 '.$Language->getText('file_admin_editpackages','p_explain').'
 <P>';
-
+echo '<H3>'.$Language->getText('file_admin_editreleases','define_new_release').'</H3>
+    <P>
+    '.$Language->getText('file_admin_editreleases','contain_multiple_files');
 /*
 
 	Show a list of existing packages
@@ -139,10 +148,13 @@ if (!$res || $rows < 1) {
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','update').'"></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1">' .
                     '<A HREF="createrelease.php?package_id='. 
-                        $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_releases').']</B></A>'.
-                    '<A HREF="editreleases.php?package_id='. 
-				        $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','edit_releases').']</B></A></TD>
-			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editpackagepermissions.php?package_id='. 
+                        $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_releases').']</B></A>';
+              if(count($res[$i]->getReleases())){
+                  echo '<A HREF="editreleases.php?package_id='. 
+                        $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','edit_releases').']</B></A></TD>';
+              }
+              
+			   echo '<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editpackagepermissions.php?package_id='. 
 				$res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['; 
                 if (permission_exist('PACKAGE_READ',$res[$i]->getPackageID())) {
                     echo $Language->getText('file_admin_editpackages','edit');

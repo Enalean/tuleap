@@ -70,11 +70,6 @@ $frsff = new FRSFileFactory();
   file_utils_admin_header(array('title'=>$Language->getText('file_admin_editreleases','release_new_file_version'),
 				   'help' => 'FileReleaseDelivery.html#ReleaseCreation'));
 
-	echo '<H3>'.$Language->getText('file_admin_editreleases','define_new_release').'</H3>
-	<P>
-	'.$Language->getText('file_admin_editreleases','contain_multiple_files').'
-
-	<h4>'.$Language->getText('file_admin_editreleases','your_release').':</H4>';
 
 	/*
 
@@ -98,6 +93,7 @@ $frsff = new FRSFileFactory();
 	if (!$res || $rows < 1) {
 	  echo '<h4>'.$Language->getText('file_admin_editreleases','no_releases_defined',(($package_id)?$Language->getText('file_admin_editreleases','of_this_package').' ':'')).'</h4>';
 	} else {
+        echo '<h4>'.$Language->getText('file_admin_editreleases','your_release').':</H4>';	    
 		/*
 
 			Show a list of releases
