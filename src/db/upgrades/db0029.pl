@@ -22,7 +22,7 @@ sub add_packages_permissions {
 		
 			if($ugroup_id=='NULL'){
 				$q="INSERT INTO permissions (object_id, permission_type, ugroup_id) VALUES ('".$package_id."', 'PACKAGE_READ', '2')";
-				print $q."\n";
+				#print $q."\n";
 				$d = $dbh->prepare($q);
   				$d->execute();
 			}
@@ -43,7 +43,7 @@ sub add_releases_permissions {
 		
 			if($r_ugroup_id=='NULL'){
 				$q="INSERT INTO permissions (object_id, permission_type, ugroup_id) VALUES ('".$release_id."', 'RELEASE_READ',".$p_ugroup_id.")";
-				print $q."\n";
+				#print $q."\n";
 				$d = $dbh->prepare($q);
   				$d->execute();
 			}
