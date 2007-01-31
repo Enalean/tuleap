@@ -1,5 +1,5 @@
 function replace(expr,a,b) {
-	var i=0
+	var i=0;
 	while (i!=-1) {
 		i=expr.indexOf(a,i);
 		if (i>=0) {
