@@ -137,8 +137,11 @@ if (!$res || $rows < 1) {
                 }
                 echo '
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','update').'"></TD>
-			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editreleases.php?package_id='. 
-				$res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_edit_releases').']</B></A></TD>
+			<TD  align="center" NOWRAP><FONT SIZE="-1">' .
+                    '<A HREF="createrelease.php?package_id='. 
+                        $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_releases').']</B></A>'.
+                    '<A HREF="editreleases.php?package_id='. 
+				        $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','edit_releases').']</B></A></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1"><A HREF="editpackagepermissions.php?package_id='. 
 				$res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['; 
                 if (permission_exist('PACKAGE_READ',$res[$i]->getPackageID())) {
