@@ -120,6 +120,13 @@ class PermissionsDao extends DataAccessObject {
         );
         return $this->update($sql);
     }
+    
+    function addPermission($permission_type, $object_id, $ugroup_id){
+        $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
+                     " VALUES ('%s', '%s', '%s')", 
+                     $object_id, $permission_type, $ugroup_id);
+        return $this->update($sql);
+    }
 
 }
 

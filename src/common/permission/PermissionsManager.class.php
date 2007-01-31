@@ -206,6 +206,8 @@ class PermissionsManager {
     	return $dar->valid();
     }
     
-    
+    function addPermission($permission_type, $object_id, $ugroup_id){
+        return $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
+    }
 }
 ?>
