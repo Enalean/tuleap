@@ -114,12 +114,7 @@ $pm = & PermissionsManager :: instance();
 while (list ($package_id, $package_name) = each($res_package)) {
 
 	print '<TR><TD><B>' . $package_name;
-	if ($authorized_user) {
-		if ($pm->isPermissionExist($package_id, 'PACKAGE_READ')) {
-			print ' <a href="/file/admin/editpackagepermissions.php?package_id=' . $package_id .
-			'&group_id=' . $group_id . '"><img src="' . util_get_image_theme("ic/lock.png") . '" border="0"></a>';
-		}
-	}
+	
 	print '</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>' . "\n";
 
 	// get the releases of the package
@@ -147,12 +142,7 @@ while (list ($package_id, $package_name) = each($res_package)) {
 			}
 
 			print "\t" . '<TR class="' . $bgcolor . '"><TD>&nbsp;</TD><TD><B>' . '<A HREF="shownotes.php?release_id=' . $package_release->getReleaseID() . '" title="' . $package_release->getReleaseID() . " - " . $package_release->getName() . '">' . $package_release->getName() . '</A></B>';
-			if ($authorized_user) {
-				if ($permission_exists) {
-					print ' <a href="/file/admin/editreleasepermissions.php?release_id=' . $package_release->getReleaseID() .
-					'&group_id=' . $group_id . '&package_id=' . $package_id . '"><img src="' . util_get_image_theme("ic/lock.png") . '" border="0"></a>';
-				}
-			}
+			
 
 			print '</TD><TD COLSPAN="5">&nbsp;</TD><TD>' . format_date("Y-m-d", $package_release->getReleaseDate()) . '</TD></TR>' . "\n";
 
