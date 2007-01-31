@@ -11,9 +11,9 @@ function replace(expr,a,b) {
 }
 
 function update_news() {
-	var rel_name = $(release_name);
-	var subject = $(release_news_subject);      
-	var details = $(release_news_details);
+	var rel_name = $('release_name');
+	var subject = $('release_news_subject');      
+	var details = $('release_news_details');
 
 	var a = this.relname;
 	var b = rel_name.value;
@@ -56,17 +56,17 @@ function add_new_file() {
 			
 	//TD tag constuction, add the trash image this tag (used to remove the line)
 	var cell_trash = Builder.node('td');
-	var image = Builder.node('img', {src:'./../images/delete.png', onclick:'delete_file(row_'+id+','+id+')', style:'cursor:pointer'});
+	var image = Builder.node('img', {src:'./../images/delete.png', onclick:'delete_file(\'row_'+id+'\','+id+')', style:'cursor:pointer'});
 			
 	row.appendChild(cell_trash);
 			
 	//TD tag constuction, add the select file boxe to this tag (used to choose the file)
 	var cell = Builder.node('td', {id:'td_file_'+id});
-	var select = Builder.node('select', {name:'ftp_file'}, 
-		[Builder.node('option', {value:'-1'}, '-- Choose file'),
-		Builder.node('optgroup', {label:'local file'}, 
-		[Builder.node('option', {value:'-2'}, 'choose...')]),
-		Builder.node('optgroup', {label:'scp/ftp files'}, 
+	var select = Builder.node('select', {name:'ftp_file_list'}, 
+		[Builder.node('option', {value:'-1'}, choose),
+		Builder.node('optgroup', {label:local_file}, 
+		[Builder.node('option', {value:'-2'}, browse)]),
+		Builder.node('optgroup', {label:scp_ftp_files}, 
 		builder_node_files)
 		]);
 	select.options[0].selected = 'selected';
@@ -114,9 +114,9 @@ function add_new_file() {
 			
 			
 	//for each processor, add a corresponding option ligne 			
-	builder_node_processor.push(Builder.node('option', {value:'100'}, '--Choose processor type'));
-	processor_id.each(function(num, item){
-	 		builder_node_processor.push(Builder.node('option', {value:num}, processor_name[item]));
+	builder_node_processor.push(Builder.node('option', {value:'100'}, choose));
+	processor_id.each(function(id, item){
+	 		builder_node_processor.push(Builder.node('option', {value:id}, processor_name[item]));
 		 	});
 			
 	//TD tag constuction, add the select processor type boxe to this tag (used to choose the processor)
@@ -127,9 +127,9 @@ function add_new_file() {
 	row.appendChild(cell);
 	
 	//for each type, add a corresponding option ligne 			
-	builder_node_type.push(Builder.node('option', {value:'100'}, '--Choose file type'));
-	type_id.each(function(num, item){
-		 		builder_node_type.push(Builder.node('option', {value:num}, type_name[item]));
+	builder_node_type.push(Builder.node('option', {value:'100'}, choose));
+	type_id.each(function(id, item){
+		 		builder_node_type.push(Builder.node('option', {value:id}, type_name[item]));
 			 	});
 			
 	//TD tag constuction, add the select file type boxe to this tag (used to choose the type)
@@ -145,12 +145,12 @@ function add_new_file() {
 function delete_file(row_id, id){
 	nb_files --;
 	var file = $('file_'+id);
-	if($('file_'+id).style.display=="none"){
+	if($('file_'+id)==null){
 		// we remove the file from the used ftp files list
 		used_ftp_files = used_ftp_files.without($('ftp_file_'+id).value);
 	}
 	Element.remove(row_id);
-	if(nb_files==0){
+	if((release_mode == 'creation' && nb_files==0) || (release_mode == 'edition' && $('nb_files').value==0 && nb_files==0)){
 		add_new_file();
 	}
 }
@@ -159,36 +159,38 @@ function add_change_log(){
 	Element.hide('add_change_log');
 	Element.show('change_log_title');
 	Element.show('change_log_area');
-	new Insertion.After('change_log', '<a id="cl_upload_link" href="#upload_change_log" onclick="Element.show( \'upload_change_log\'); Element.hide( \'cl_upload_link\'); return false;">Upload</a>');
+	new Insertion.After('change_log', '<a id="cl_upload_link" href="#upload_change_log" onclick="Element.show( \'upload_change_log\'); Element.hide( \'cl_upload_link\'); return false;">'+upload_text+'</a>');
 }
 		
 function view_change_permissions(){
 	Element.hide('default_permissions');
 	Element.show('permissions'); 
-	new Ajax.Updater('permissions_list', 'frsPerm.php?group_id='+ this.group_id +'&action=permissions_frs&package_id=' + $('package_id').value,{ method:'get' });
 }
 		
 Event.observe(window, 'load', function() {
 	//Add new file part
 	//Element.hide('row_0');
 	Element.remove('row_0');
-	add_new_file();
+	if(release_mode == 'creation' || (release_mode == 'edition' && $('nb_files').value==0)){
+		add_new_file();
+	}
 	new Insertion.After('files', '<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>');
-	new Insertion.After('files', '<a href="#add_new_file" onclick="add_new_file(); return false;">Add a file<a>');
+	new Insertion.After('files', '<a href="#add_new_file" onclick="add_new_file(); return false;">'+add_file_text+'<a>');
 	
 	//Upload files help
 	Element.hide('files_help');
 			
 	//Release Notes
 	Element.hide('upload_release_notes');
-	new Insertion.After('release_notes', '<a id="rn_upload_link" href="#upload_release_notes" onclick="Element.show( \'upload_release_notes\'); Element.hide( \'rn_upload_link\');return false;">Upload</a>');
+	new Insertion.After('release_notes', '<a id="rn_upload_link" href="#upload_release_notes" onclick="Element.show( \'upload_release_notes\'); Element.hide( \'rn_upload_link\');return false;">'+upload_text+'</a>');
 		
 	//Change Log
-	Element.hide('change_log_title');
-	Element.hide('upload_change_log');
-	Element.hide('change_log_area');
-	new Insertion.Before('change_log_title', '<TR id="add_change_log"><TD><a href="#add_change_log" onclick="add_change_log(); return false;">Add change log</a></TD></TR>');
-			
+	if((release_mode == 'edition' && $('text_area_change_log').value=='') || release_mode == 'creation'){
+		Element.hide('change_log_title');
+		Element.hide('upload_change_log');
+		Element.hide('change_log_area');
+		new Insertion.Before('change_log_title', '<TR id="add_change_log"><TD><a href="#add_change_log" onclick="add_change_log(); return false;">'+add_change_log_text+'</a></TD></TR>');
+	}		
 	//News
 	Element.hide('tr_subject');
 	Element.hide('tr_details');
@@ -214,15 +216,49 @@ Event.observe(window, 'load', function() {
 	//Permissions
 	if($('package_id')!=null){
 		Event.observe($('package_id'), 'change', function(){
-			if($('permissions').style.display!="none"){
-				new Ajax.Updater('permissions_list', 'frsPerm.php?group_id='+group_id +'&action=permissions_frs&package_id=' + $('package_id').value,{ method:'get' });
-			}
+			if(release_mode == 'creation'){
+				new Ajax.Updater('permissions_list', 'frsajax.php?group_id='+group_id +'&action=permissions_frs_package&package_id=' + $('package_id').value,{ method:'get' });
+			}		
+				
+			
 		});
 	}
 	Element.hide('permissions');
+	if(release_mode == 'edition'){default_permissions_text += '<B>'+ ugroups_name+'</B>';}
 	new Insertion.Before('permissions', '<TR id="default_permissions">'+
-											'<TD>Will be created with the same permissions than its parent package.'+
-												'<a href="#change_permissions" onclick="view_change_permissions(); return false;">[view/change]</a></TD></TR>');
+											'<TD>'+default_permissions_text+
+												'<a href="#change_permissions" onclick="view_change_permissions(); return false;">'+view_change_text+'</a></TD></TR>');
+
 		
+		Event.observe($('frs_form'), 'submit', function(evt){
+			$('feedback').innerHTML = '';
+			var valide = false;
+			if(release_mode == 'creation'){
+				if( $('package_id')){
+					var package_id = $('package_id').value;
+				}else { var package_id = null; }
+				var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
+								'&name=' + $('release_name').value;
+			}else{
+				var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('new_package_id').value+'&date=' + $('release_date').value+
+								'&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
+			}
+			new Ajax.Request(url,
+			  {
+			    method:'get',
+			    onSuccess: (function(transport, json) {
+            	if (json.valid) {
+            		this.submit();
+                	
+            	} else {
+            		$('feedback').innerHTML = json.msg;
+            		Element.scrollTo('feedback');
+            	}
+        	   }).bind(this) 
+			  });
+			  Event.stop(evt);
+              return false;
+		});	
+	
 });
 		
