@@ -28,6 +28,7 @@ require_once('common/dao/FRSPackageDao.class.php');
 require_once('common/include/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
+require_once('www/project/admin/ugroup_utils.php');
 /**
  * 
  */
