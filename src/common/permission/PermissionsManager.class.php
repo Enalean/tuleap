@@ -112,6 +112,34 @@ class PermissionsManager {
     }
     
     /**
+     * Returns all ugroup name for a given object_id and permission_type
+     * @param  int     $object_id       The id of the object
+     * @param  string  $permission_type The type of permission asked
+     */
+     function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type){
+         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
+         if ($dar->isError()) {
+            return;
+        }
+
+        if (!$dar->valid()) {
+            return;
+        }   
+
+        $ugroups_name = array ();
+        while ($dar->valid()) {
+            $ugroup = $dar->current();
+            $new_name = $ugroup['name'];
+            if (strpos($new_name, "ugroup_") === 0 && strpos($new_name, "_name_key")+strlen("_name_key") === strlen($new_name)) {
+                $new_name = $GLOBALS['Language']->getText('project_ugroup', $new_name);
+            }
+            $ugroups_name[] = $new_name;
+            $dar->next();
+        }
+        return $ugroups_name;
+     }
+    
+    /**
     * Returns true if user has full permissions in all cases
     * 
     * @access protected
@@ -177,5 +205,7 @@ class PermissionsManager {
     	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
     	return $dar->valid();
     }
+    
+    
 }
 ?>
