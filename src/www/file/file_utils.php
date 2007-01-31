@@ -25,7 +25,7 @@ function file_utils_header($params) {
     if (!array_key_exists('pv', $params) || !$params['pv']) {
         if (user_ismember($group_id,"R2")) {
             echo '<strong>'
-                .'<a href="/file/admin/index.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
+                .'<a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
             if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
             echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
             echo "</strong><p>";
@@ -43,9 +43,7 @@ function file_utils_admin_header($params) {
 
     if (user_ismember($group_id,"R2")) {
         echo '<strong>'
-            .'<a href="/file/admin/index.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>'
-            .' | <a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.$Language->getText('file_admin_index','edit_release_files').'</a>';
-        echo ' | <a href="/file/admin/qrs.php?group_id='.$group_id.'">'.$Language->getText('file_admin_index','quick_add').'</a>';
+            .'<a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
 	if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
         echo "</strong><br><hr>";
