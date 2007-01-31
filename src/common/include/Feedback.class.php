@@ -35,7 +35,7 @@ class Feedback {
     }
     
     function display() {
-        echo $this->fetch();
+        echo '<div id="feedback">'.$this->fetch().'</div>';
     }
     function hasWarningsOrErrors() {
     	   $found = false;
