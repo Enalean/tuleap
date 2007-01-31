@@ -294,7 +294,7 @@ class FRSReleaseDao extends DataAccessObject {
                 $current =& $dar->current();
                 $set_array = array();
                 foreach($data_array as $key => $value) {
-                    if ($key != 'id' && $key != 'released_by' && $value != $current[$key]) {
+                    if ($key != 'release_id' && $key != 'released_by' && $value != $current[$key]) {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }
@@ -304,6 +304,7 @@ class FRSReleaseDao extends DataAccessObject {
                         .' WHERE release_id='. $this->da->quoteSmart($release_id);
                     $updated = $this->update($sql);
                 }
+                if(count($set_array)==0) { $updated = true;}
             }
         }
         return $updated;
