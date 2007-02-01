@@ -42,6 +42,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->_addHook('register_project_creation',         'installNewDocman',                  false);
         $this->_addHook('service_is_used',                   'service_is_used',                   false);
+        $this->_addHook('soap',                              'soap',                              false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -210,7 +211,9 @@ class DocmanPlugin extends Plugin {
             }
         }
     }
-    
+    function soap($arams) {
+        require_once('soap.php');
+    }
     function process() {
         require_once('Docman.class.php');
         $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());

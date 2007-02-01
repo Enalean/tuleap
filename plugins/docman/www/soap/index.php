@@ -19,7 +19,7 @@ $server = new soap_server();
 $server->configureWSDL('CodeXPluginDocmanAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
 // include the DOCMAN API
-require_once('./docman.php');
+require_once('../../include/soap.php');
 
 
 // Call the service method to initiate the transaction and send the response

@@ -3,8 +3,8 @@ require_once ('nusoap.php');
 require_once ('pre.php');
 require_once ('session.php');
 require_once('common/include/Error.class.php');
-require_once('docman/include/Docman_Item.class.php');
-require_once('docman/include/Docman_ItemFactory.class.php');
+require_once('Docman_Item.class.php');
+require_once('Docman_ItemFactory.class.php');
 require_once('common/include/SOAPRequest.class.php');
 
 // define fault code constants
@@ -16,7 +16,7 @@ define('PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
 //
 // Type definition
 //
-$server->wsdl->addComplexType(
+$GLOBALS['server']->wsdl->addComplexType(
     'Docman_Item',
     'complexType',
     'struct',
@@ -42,7 +42,7 @@ $server->wsdl->addComplexType(
     )
 );
 
-$server->wsdl->addComplexType(
+$GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfDocman_Item',
     'complexType',
     'array',
@@ -53,7 +53,7 @@ $server->wsdl->addComplexType(
     'tns:Docman_Item'
 );
 
-$server->wsdl->addComplexType(
+$GLOBALS['server']->wsdl->addComplexType(
     'Docman_Metadata',
     'complexType',
     'struct',
@@ -75,7 +75,7 @@ $server->wsdl->addComplexType(
     )
 );
 
-$server->wsdl->addComplexType(
+$GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfDocman_Metadata',
     'complexType',
     'array',
@@ -90,42 +90,42 @@ $server->wsdl->addComplexType(
 // Function definition
 //
 
-$server->register(
+$GLOBALS['server']->register(
     'delete',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
     array('deleteResponse'=>'xsd:boolean'),
-    $uri,
-    $uri.'#delete',
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#delete',
     'rpc',
     'encoded',
     'Delete an item (document or folder)'
 );
-$server->register(
+$GLOBALS['server']->register(
     'monitor',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
     array('monitorResponse'=>'xsd:boolean'),
-    $uri,
-    $uri.'#monitor',
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#monitor',
     'rpc',
     'encoded',
     'Monitor an item (document or folder)'
 );
 
-$server->register(
+$GLOBALS['server']->register(
     'getProperties',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
     array('getPropertiesResponse'=>'tns:ArrayOfDocman_Metadata'),
-    $uri,
-    $uri.'#getProperties',
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getProperties',
     'rpc',
     'encoded',
     'Returns the properties of the document item_id'
