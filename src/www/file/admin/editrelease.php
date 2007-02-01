@@ -63,7 +63,7 @@ if ($submit) {
     //get all inputs from $request
     $release = $request->get('release');
     $js = $request->get('js');
-    $ftp_file = $request->get('ftp_file');
+    $ftp_file = $request->get('ftp_file') ? $request->get('ftp_file'):array();
     $file_processor = $request->get('file_processor');
     $file_type = $request->get('file_type');
     $ftp_file_processor = $request->get('ftp_file_processor');
@@ -74,8 +74,8 @@ if ($submit) {
     $ugroups = $request->get('ugroups');
     $release_submit_news = (int) $request->get('release_submit_news');
     $preformatted = (int) $request->get('preformatted');
-    $release_files_to_delete = $request->get('release_files_to_delete');
-    $release_files = $request->get('release_files');
+    $release_files_to_delete = $request->get('release_files_to_delete') ? $request->get('release_files_to_delete'):array();
+    $release_files = $request->get('release_files') ? $request->get('release_files') : array();
     $release_file_processor = $request->get('release_file_processor');
     $release_file_type = $request->get('release_file_type');
     $new_release_id = $request->get('new_release_id');

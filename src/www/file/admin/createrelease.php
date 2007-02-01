@@ -63,7 +63,7 @@ if ($submit) {
     //get all inputs from $request
     $release = $request->get('release');
     $js = $request->get('js');
-    $ftp_file = $request->get('ftp_file');
+    $ftp_file = $request->get('ftp_file') ? $request->get('ftp_file') : array();
     $file_processor = $request->get('file_processor');
     $file_type = $request->get('file_type');
     $ftp_file_processor = $request->get('ftp_file_processor');
@@ -496,29 +496,11 @@ echo html_build_list_table_top($titles, false, false, false, 'files');
 $file_list = $frsff->getUploadedFileNames();
 foreach ($file_list as $incoming_file) {
     echo '<option value="' . $incoming_file . '">' . $incoming_file . '</option>';
-    $atleastone = 1; // TODO remove this line only use for local test
 }
 echo '<script type="text/javascript">';
 echo "var available_ftp_files = ['" . implode("', '", $file_list) . "'];";
 echo '</script>';
 
-// TODO remove this block only use for local test
-if (!isset ($atleastone)) {
-    $files = array (
-        "file1",
-        "file2",
-        "file3",
-        "file4",
-        "file5"
-    );
-    echo '<script type="text/javascript">';
-    echo "var available_ftp_files = ['file1', 'file2', 'file3', 'file4', 'file5'];";
-    echo '</script>';
-    foreach ($files as $incoming_file) {
-        echo '<option value="' . $incoming_file . '">' . $incoming_file . '</option>';
-    }
-
-}
 ?>
 							</select>
 
