@@ -23,10 +23,6 @@ class CLI_Action_Docman_Monitor extends CLI_Action {
         }
         return true;
     }
-    function validate_group_id(&$group_id) {
-        $group_id = $this->get_working_group($group_id);
-        return true;
-    }
 }
 
 ?>
