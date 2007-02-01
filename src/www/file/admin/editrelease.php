@@ -604,29 +604,12 @@ if ($release == null) {
     $file_list = $frsff->getUploadedFileNames();
     foreach ($file_list as $file) {
         echo '<option value="' . $file . '">' . $file . '</option>';
-        $atleastone = 1; // TODO remove this line only use for local test
     }
     echo '<script type="text/javascript">';
     echo "var available_ftp_files = ['" . implode("', '", $file_list) . "'];";
     echo '</script>';
 
-    // TODO remove this block only use for local test
-    if (!isset ($atleastone)) {
-        $files = array (
-            "file1",
-            "file2",
-            "file3",
-            "file4",
-            "file5"
-        );
-        echo '<script type="text/javascript">';
-        echo "var available_ftp_files = ['file1', 'file2', 'file3', 'file4', 'file5'];";
-        echo '</script>';
-        foreach ($files as $file) {
-            echo '<option value="' . $file . '">' . $file . '</option>';
-        }
 
-    }
 ?>
 							</select>
 
