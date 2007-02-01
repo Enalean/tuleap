@@ -596,7 +596,7 @@ $Language->getText('file_admin_editreleases', 'preserve_preformatted');
 						<TR id="permissions">
 							<TD>
 								<DIV id="permissions_list">
-									<?php permission_display_selection_frs("PACKAGE_READ", null, $group_id); ?>
+									<?php permission_display_selection_frs("PACKAGE_READ", $package_id, $group_id); ?>
 								</DIV>
 							</TD>
 						</TR>
