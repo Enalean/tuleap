@@ -23,7 +23,7 @@ function search_tests_rec($dir, &$tab, $entry) {
     if (is_dir($dir)) {
         if ($dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
-                if (!in_array($file, $GLOBALS['config']['excludes'])) {
+                if (!in_array($file, $GLOBALS['config']['excludes']) && $file[0] !== '_') {
                     if (is_dir("$dir/$file")) {
                         search_tests_rec("$dir/$file", $tab[($entry == 'tests'?'CodeX':$entry)], $file);
                     } else if(substr($file, -strlen($GLOBALS['config']['suffix'])) === $GLOBALS['config']['suffix']) {

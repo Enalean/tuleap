@@ -39,7 +39,7 @@ if (array_key_exists("CODEX_WSDL", $_ENV)) {
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "0.2";
+$CLI_VERSION = "0.3";
 
 error_reporting(E_ALL);
 
@@ -48,6 +48,7 @@ require_once(NUSOAP_DIR."nusoap.php");		// Main NuSOAP library
 require_once(CODEX_CLI_DIR."common.php");	// Common functions, variables and defines
 require_once(CODEX_CLI_DIR."CodeXSOAP.class.php");	// CodeX SOAP wrapper
 require_once(CODEX_CLI_DIR."Log.class.php");	// Logging class
+require_once(CODEX_CLI_DIR."CLI_ModuleFactory.class.php");
 
 // This is automatically done by PHP >= 4.3.0
 // Code copied from http://ar2.php.net/install.unix.commandline
@@ -60,6 +61,8 @@ if (! defined("STDIN") || ! defined("STDOUT") || ! defined("STDERR")) {
 
 // Global logging object
 $LOG = new Log();
+$soap = new CodeXSOAP();
+$modules =& new CLI_ModuleFactory(CODEX_CLI_DIR."modules/");
 
 $function_index = 0;		// Points to the position where the information about which function to execute begins
 
@@ -67,7 +70,7 @@ $function_index = 0;		// Points to the position where the information about whic
 for ($i = 1; $i <= $argc-1; $i++) {
 	// Show user the help screen
 	if ($argv[$i] == "--help" || $argv[$i] == "-h") {
-		display_help();
+		display_help($modules);
 		exit(0);
 	}
 
@@ -103,24 +106,24 @@ for ($i = 1; $i <= $argc-1; $i++) {
 }
 
 if (!$function_index) {		// No function was specified. Show the help.
-	display_help();
+	display_help($modules);
 	exit(0);
 }
 
 // Get the name of the module or the function to execute
 $name = trim($argv[$function_index]);
+$params = array_slice($argv, $function_index);
 
-// Now, check if the name corresponds to a module. It corresponds to a module
-// if there exists a directory with that name. In that case, execute the "default.php"
-// script in that directory
-if (is_dir(CODEX_CLI_DIR."modules/".$name)) {		// We've found a module with that name
-	$script = CODEX_CLI_DIR."modules/".$name."/default.php";
+// Now, check if the name corresponds to a module.
+if (!$modules->exist($name)) {
+    $name = 'default';
 } else {
-	$script = CODEX_CLI_DIR."modules/default.php";
+    array_shift($params); //consume the module name
 }
+$module =& $modules->getModule($name);
 
-if (!file_exists($script)) {
-	exit_error("Could not find file ".$script);
+if (!$module) {
+	exit_error("Could not find module ".$name);
 }
 
 // At this point, we know which script we should execute.
@@ -129,11 +132,11 @@ if (!file_exists($script)) {
 
 // Set up the parameters for the script... we don't need to pass that script the parameters that were
 // passed to THIS script
-$PARAMS = array_slice($argv, $function_index);
-$SOAP = new CodeXSOAP();
+
+
 
 // Pass control to the appropiate script
-include($script);
+$module->execute($params);
 
 // End script
 echo "\n";
@@ -145,7 +148,7 @@ exit(0);
 /**
  * display_help - Show the help string
  */
-function display_help() {
+function display_help(&$modules) {
 	echo <<<EOT
 Syntax:
 codex [options] [module name] [function] [parameters]
@@ -154,6 +157,35 @@ codex [options] [module name] [function] [parameters]
     --version       Display the software version
     -v              Verbose
 
+
+EOT;
+    $all_modules = $modules->getAllModules();
+    $default_module = '';
+    if (isset($all_modules['default'])) {
+        $actions = $all_modules['default']->getAllActions();
+        if (count($actions)) {
+            $default_module .= "Available functions for the default module:\n";
+            ksort($actions);
+            foreach($actions as $action) {
+                $default_module .= "   * ". $action->getName() ."\n";
+                $default_module .= "     ". $action->getDescription() ."\n";
+            }
+            $default_module .= "\n";
+        }
+        unset($all_modules['default']);
+    }
+    if (count($all_modules)) {
+        echo "Available modules:\n";
+        ksort($all_modules);
+        foreach($all_modules as $module) {
+            echo "   * ". $module->getName() ."\n";
+            echo "     ". $module->getDescription() ."\n";
+        }
+        echo "\n";
+    }
+    echo $default_module;
+}
+/*
 Available modules:
    * tracker
    * frs
@@ -163,6 +195,6 @@ Available functions for the default module:
    * logout: Terminate a session
 
 EOT;
-}
+*/
 ?>
 
