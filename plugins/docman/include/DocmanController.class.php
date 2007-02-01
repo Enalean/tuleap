@@ -673,16 +673,13 @@ class DocmanController extends Controler {
                                             if ($this->request->exist('confirm')) {
                                                 if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
                                                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
-                                                    $this->view = 'Details';
+                                                    $this->_set_moveView_errorPerms();
                                                 } else {
                                                     $this->action = 'move';
                                                 }
                                             } 
                                             if (!$this->view) {
-                                                if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
-                                                    $this->_viewParams['redirect_to'] = $redirect_to;
-                                                }
-                                                $this->view = 'RedirectAfterCrud';
+                                                $this->_set_redirectView();
                                             }
                                         }
                                         break;
@@ -735,7 +732,7 @@ class DocmanController extends Controler {
                                             $this->_set_deleteView_errorPerms();
                                         } else if ($this->request->exist('confirm')) {
                                             $this->action = $view;
-                                            $this->_set_deleteView_confirmed();
+                                            $this->_set_redirectView();
                                         } else {
                                             $this->view = 'Details';
                                         }

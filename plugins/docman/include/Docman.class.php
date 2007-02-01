@@ -27,7 +27,7 @@ require_once('DocmanActions.class.php');
 class Docman extends DocmanController {
 
     function Docman(&$plugin, $pluginPath, $themePath) {
-    	   $this->DocmanController($plugin, $pluginPath, $themePath, HTTPRequest::instance());
+        $this->DocmanController($plugin, $pluginPath, $themePath, HTTPRequest::instance());
     }
 
 
@@ -45,7 +45,7 @@ class Docman extends DocmanController {
     /* protected */ function _set_deleteView_errorPerms() {
         $this->view = 'Details';
     }
-    /* protected */ function _set_deleteView_confirmed() {
+    /* protected */ function _set_redirectView() {
         if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
             $this->_viewParams['redirect_to'] = $redirect_to;
         }
@@ -53,6 +53,9 @@ class Docman extends DocmanController {
     }
     /* protected */ function _setView($view) {
     	   $this->view = $view;
+    }
+    /* protected */ function _set_moveView_errorPerms() {
+        $this->view = 'Details';
     }
 }
 

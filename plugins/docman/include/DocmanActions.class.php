@@ -507,7 +507,7 @@ class DocmanActions extends Actions {
         return $sanitized_data;
     }
     function move() {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         if ($request->exist('id')) {
             $user =& $this->_controler->getUser();
             

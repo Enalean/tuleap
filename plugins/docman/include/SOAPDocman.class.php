@@ -27,7 +27,7 @@ require_once('SOAPDocmanActions.class.php');
 class SOAPDocman extends DocmanController {
 
     function SOAPDocman(&$plugin, $pluginPath, $themePath, &$request) {
-    	   $this->DocmanController($plugin, $pluginPath, $themePath, $request);
+        $this->DocmanController($plugin, $pluginPath, $themePath, $request);
     }
 
 
@@ -41,10 +41,10 @@ class SOAPDocman extends DocmanController {
     }
     
     /* protected */ function _set_deleteView_errorPerms() {
-    	    $this->_setView('SOAP');
+        $this->_setView('SOAP');
     }
-    /* protected */ function _set_deleteView_confirmed() {
-    	   $this->_setView('SOAP');
+    /* protected */ function _set_redirectView() {
+        $this->_setView('SOAP');
     }
     
     /* protected */ function _setView($view) {
@@ -53,6 +53,9 @@ class SOAPDocman extends DocmanController {
                $this->view = 'SOAP';
                break;
         }
+    }
+    /* protected */ function _set_moveView_errorPerms() {
+        $this->_setView('SOAP');
     }
 }
 

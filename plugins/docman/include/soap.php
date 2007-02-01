@@ -118,6 +118,21 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
+    'move',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'  =>'xsd:int',
+        'item_id'   =>'xsd:int',
+        'parent'    =>'xsd:int'),
+    array('moveResponse'=>'xsd:boolean'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#move',
+    'rpc',
+    'encoded',
+    'Move an item in a new folder'
+);
+
+$GLOBALS['server']->register(
     'getProperties',
     array(
         'sessionKey'=>'xsd:string',
@@ -220,6 +235,44 @@ function monitor($sessionKey,$group_id,$item_id) {
     }
 }
 
+function move($sessionKey, $group_id, $item_id, $new_parent) {
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'delete','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'delete', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'delete', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        // TO DO : monitor !
+        $request =& new SOAPRequest(array(
+            'group_id'     => $group_id,
+            'item_to_move' => $item_id,
+            'id'           => $new_parent,
+            //needed internally in docman vvv
+            'action'       => 'move_here',
+            'confirm'      => true,
+        ));
+        $plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new soap_fault('', 'monitor', $msg, $msg);
+            } else {
+                return true;
+            }
+        } else {
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'monitor','Unavailable plugin','Unavailable plugin');;
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'monitor','Invalid Session','');
+    }
+}
 /**
  * getProperties - returns an array of Docman_Metadata of the document $item_id
  *
