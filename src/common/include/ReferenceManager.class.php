@@ -262,12 +262,11 @@ class ReferenceManager {
         return true;
     }
 
-    function createSystemReferenceGroup($template_id,$group_id,$refid) {
+     function createSystemReferenceGroup($template_id,$group_id,$refid) {
         $reference_dao =& $this->_getReferenceDao();
-	$proj_ref=& $this->loadReference($refid, $template_id);// Is it active in template project ?
-        $sys_ref=& $this->loadReference($refid,'100');// Is it active in project 100 ?
+        $proj_ref=& $this->loadReference($refid, $template_id);// Is it active in template project ?
         $rgid = $reference_dao->create_ref_group($refid,
-                                                 ($proj_ref->isActive() && $sys_ref->isActive()),
+                                                 ($proj_ref==null?false:$proj_ref->isActive()),
                                                  $group_id);
     }
        
