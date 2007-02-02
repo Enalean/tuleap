@@ -33,6 +33,8 @@ name:
 description
 
 Available parameters:
+   --project=<name>   Name of the project the item belongs to. If you specified the name of
+      the working project when you logged in, this parameter is not needed.
    --username=<username> or -U <username>    Specify the user name
 
    --help    Show this screen
