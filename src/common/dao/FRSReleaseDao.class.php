@@ -76,15 +76,6 @@ class FRSReleaseDao extends DataAccessObject {
 			  			$this->da->quoteSmart($_package_id));
         return $this->retrieve($sql);
     }
-    
-    function searchInfoByReleaseID($release_id){
-    	$_release_id = $release_id;
-    	$sql = sprintf("SELECT frs_release.notes,frs_release.changes,frs_release.preformatted,frs_release.name,frs_package.group_id ".
-					   "FROM frs_release,frs_package ".
-					   "WHERE frs_release.package_id=frs_package.package_id AND frs_release.release_id=%s",
-					   $this->da->quoteSmart($_release_id));
-		return $this->retrieve($sql);		   
-    }
 
     function searchByIdList($idList) {
         if(is_array($idList) && count($idList) > 0) {

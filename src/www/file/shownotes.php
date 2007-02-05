@@ -19,42 +19,39 @@ if (!user_isloggedin()) {
     exit_not_logged_in();
 }
 $frsrf = new FRSReleaseFactory();
-$result = $frsrf->getFRSReleasesInfoByReleaseIdFromDb($release_id);
+$release =& $frsrf->getFRSReleaseFromDb($release_id);
 
 
-if (!$result || count($result) < 1) {
+if (!$release) {
 	exit_error($Language->getText('file_shownotes','not_found_err'),$Language->getText('file_shownotes','release_not_found'));
 } else {
 
-	$group_id=$result['group_id'];
+	$group_id = $release->getGroupID();
 
 	file_utils_header(array('title'=>$Language->getText('file_shownotes','release_notes'),'group'=>$group_id));
 
 	$HTML->box1_top($Language->getText('file_shownotes','notes'));
 
-	echo '<h3>'.$Language->getText('file_shownotes','release_name').': <A HREF="showfiles.php?group_id='.$result['group_id'].'">'.$result['name'].'</A></H3>
+	echo '<h3>'.$Language->getText('file_shownotes','release_name').': <A HREF="showfiles.php?group_id='.$group_id.'">'.$release->getName().'</A></H3>
 		<P>';
 
 /*
 	Show preformatted or plain notes/changes
 */
-	if ($result['preformatted']) {
-		echo '<PRE><B>'.$Language->getText('file_shownotes','notes').':</B>
-'.$result['notes'].'
+	if ($release->isPreformatted()) {
+		echo '<PRE>';
+    }
+    
+    echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
+'.$release->getNotes().'
 
 <HR NOSHADE>
 <B>'.$Language->getText('file_shownotes','changes').':</B>
-'.$result['changes'].'</PRE>';
+'.$release->getChanges();
 
-	} else {
-		echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
-'.$result['notes'].'
-
-<HR NOSHADE>
-<B>'.$Language->getText('file_shownotes','changes').':</B>
-'.$result['changes'];
-
-	}
+    if ($release->isPreformatted()) {
+        echo '</PRE>';
+    }
 
 	$HTML->box1_bottom();
 

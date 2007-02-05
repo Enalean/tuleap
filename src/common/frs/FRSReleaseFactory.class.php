@@ -132,23 +132,6 @@ class FRSReleaseFactory {
 		}
 		return $releases;
 	}
-	
-	function getFRSReleasesInfoByReleaseIdFromDb($release_id) {
-		$_id = (int) $release_id;
-		$dao = & $this->_getFRSReleaseDao();
-
-		$dar = $dao->searchInfoByReleaseID($_id);
-
-		if ($dar->isError()) {
-			return;
-		}
-
-		if (!$dar->valid()) {
-			return;
-		}	
-
-		return $dar->current();
-	}
 
 	function isActiveReleases($package_id) {
 		$_id = (int) $package_id;

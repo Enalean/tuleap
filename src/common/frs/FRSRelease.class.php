@@ -166,6 +166,14 @@ class FRSRelease extends Error {
     }
     
     /**
+     * Determines if the release notes and changes are preformatted or not
+     * @return boolean true if the release notes and changes are preformatted, false otherwise
+     */
+    function isPreformatted() {
+        return $this->getPreformatted() == 1;
+    }
+    
+    /**
      * Returns the group ID the release belongs to
      */
     function getGroupID() {
