@@ -13,6 +13,8 @@
 
 $Language->loadLanguageMsg('tracker/tracker');
 
+require_once('common/include/HTTPRequest.class.php');
+
 class ArtifactFieldHtml extends ArtifactField {
 
 	/**
@@ -362,7 +364,15 @@ class ArtifactFieldHtml extends ArtifactField {
 				   $show_any=false, $text_any=0,
 				   $show_unchanged=false,$text_unchanged=0) {
 	    global $sys_datefmt,$Language;
-	
+        
+        //Use url parameters to populate fields
+        if (!$ro) {
+            $request =& HTTPRequest::instance();
+            if ($request->get('func') == 'add' && $request->exist($this->field_name)) {
+                $value = htmlentities($request->get($this->field_name), ENT_QUOTES);
+            }
+        }
+        
 	    if (!$text_none) $text_none=$Language->getText('global','none');
 	    if (!$text_any) $text_any=$Language->getText('global','any');
 	    if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
