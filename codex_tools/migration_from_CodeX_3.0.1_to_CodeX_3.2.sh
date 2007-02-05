@@ -255,6 +255,10 @@ CREATE TABLE plugin_docman_tokens(
   PRIMARY KEY ( user_id, token )
 );
 
+###############################################################################
+# Add a status for Files in FRS
+ALTER TABLE `frs_file` ADD `status` CHAR( 1 ) NOT NULL DEFAULT 'A';
+
 EOF
 
 echo "Optimizing database structure."

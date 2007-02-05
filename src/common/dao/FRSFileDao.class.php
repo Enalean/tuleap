@@ -58,11 +58,17 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Return the list of files for a given release according to filters
      *
+     * @param int $id the ID of the release the files belong to
+     * @param int $only_active_files 1 means that only files with an active status will be retrieved. 0 means all files
      * @return DataAccessResult
      */
-    function searchByReleaseId($id) {
+    function searchByReleaseId($id, $only_active_files = 1) {
         $_id = (int) $id;
-        return $this->_search(' release_id='.$_id,'','');
+        $where_status = "";
+        if ($only_active_files == 1) {
+            $where_status = " AND status='A' ";
+        }
+        return $this->_search(' release_id='.$_id.' '.$where_status,'','');
     }
     		
    
@@ -76,21 +82,31 @@ class FRSFileDao extends DataAccessObject {
               		  ."WHERE p.group_id= %s "
 			  		  ."AND r.package_id = p.package_id "
 			  		  ."AND f.release_id = r.release_id "
-			  		  ."AND f.file_id=%s ",
+                      ."AND f.file_id=%s ",
 			  			$this->da->quoteSmart($_group_id),
 			  			$this->da->quoteSmart($_file_id));
         return $this->retrieve($sql);
     }
    
-       
-    function searchInfoFileByReleaseID($release_id){
+    /**
+     * Retrieve file info from database.
+     * 
+     * @param int $release_id the ID of the release the files belong to
+     * @param int $only_active_files 1 means that only files with an active status will be retrieved. 0 means all files
+     */
+    function searchInfoFileByReleaseID($release_id, $only_active_files = 1){
     	$_release_id = (int) $release_id;
+    
+    $where_status = "";
+    if ($only_active_files) {
+        $where_status = " AND status='A' ";
+    }
     	
     	$sql = sprintf("SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size," 
 				 	. "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor," 
 				 	. "frs_dlstats_filetotal_agg.downloads AS downloads  FROM frs_file " 
 				 	. "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id " 
-				 	. "WHERE release_id=%s" , 	
+				 	. "WHERE release_id=%s".$where_status , 	
 				 	$this->da->quoteSmart($_release_id));
 		return $this->retrieve($sql);
     }
@@ -119,7 +135,7 @@ class FRSFileDao extends DataAccessObject {
      */
     function create($file_name=null, $release_id=null, $type_id=null,
     				$processor_id=null, $release_time=null, 
-                    $file_size=null, $post_date=null) {
+                    $file_size=null, $post_date=null, $status ='A') {
 
         $arg    = array();
         $values = array();
@@ -159,6 +175,9 @@ class FRSFileDao extends DataAccessObject {
         $arg[] = 'post_date';
         $values[] = ((int) time());
 
+        $arg[] = 'status';
+        $values[] = $status;
+        
         $sql = 'INSERT INTO frs_file'
             .'('.implode(', ', $arg).')'
             .' VALUES ('.implode(', ', $values).')';
@@ -169,7 +188,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size');
+        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size', 'status');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -209,7 +228,7 @@ class FRSFileDao extends DataAccessObject {
      * @return true if there is no error
      */
     function updateById($file_id, $file_name=null, $release_id=null, $type_id=null,
-    				$processor_id=null, $release_time=null, $file_size=null) {       
+    				$processor_id=null, $release_time=null, $file_size=null, $status=null) {       
        
         $argArray = array();
 
@@ -237,7 +256,9 @@ class FRSFileDao extends DataAccessObject {
             $argArray[] = 'file_size='.((int) $file_size);
         }
 
-
+        if($status !== null) {
+            $argArray[] = 'status='.$this->da->quoteSmart($file_size);
+        }
 
         $sql = 'UPDATE frs_file'
             .' SET '.implode(', ', $argArray)
@@ -281,7 +302,7 @@ class FRSFileDao extends DataAccessObject {
      * @return true if there is no error
      */
     function delete($file_id) {
-        $sql = sprintf("DELETE FROM frs_file WHERE file_id=%d",
+        $sql = sprintf("UPDATE frs_file SET status='D' WHERE file_id=%d",
                        $file_id);
 
         $deleted = $this->update($sql);

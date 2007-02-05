@@ -64,6 +64,11 @@ class FRSFileFactory {
         return(FRSFileFactory::getFRSFileFromArray($data_array));
     }
     
+    /**
+     * get the files of the release.
+     * 
+     * @param int $relase_id the ID of the release the files belong to
+     */
     function &getFRSFilesFromDb($release_id) {
         $_id = (int) $release_id;
         $dao =& $this->_getFRSFileDao();
@@ -194,6 +199,7 @@ class FRSFileFactory {
         $file->setReleaseID($release_id);
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
+        $file->setStatus('A');
         
         // retrieve the group_id
         $release_fact =& $this->_getFRSReleaseFactory();

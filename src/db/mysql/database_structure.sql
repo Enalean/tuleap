@@ -829,6 +829,7 @@ CREATE TABLE frs_file (
   release_time int(11) NOT NULL default '0',
   file_size int(11) NOT NULL default '0',
   post_date int(11) NOT NULL default '0',
+  status char(1) NOT NULL default 'A',
   PRIMARY KEY  (file_id),
   KEY idx_frs_file_release_id (release_id),
   KEY idx_frs_file_type (type_id),

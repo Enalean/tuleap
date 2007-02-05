@@ -61,6 +61,10 @@ class FRSFile extends Error {
      * @var int $post_date the ??? of this FRSFile
      */
     var $post_date;
+    /**
+     * @var string $status the status of this FRSFile (A=>Active; D=>Deleted)
+     */
+    var $status;
     
     function FRSFile($data_array = null) {
         $this->file_id       = null;
@@ -71,6 +75,7 @@ class FRSFile extends Error {
         $this->release_time  = null;
         $this->file_size     = null;
         $this->post_date     = null;
+        $this->status        = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -140,6 +145,22 @@ class FRSFile extends Error {
     function setPostDate($post_date) {
         $this->post_date = (int) $post_date;
     }
+    
+    function getStatus() {
+        return $this->status;
+    }
+    
+    function setStatus($status) {
+        $this->status = $status;
+    }
+    
+    function isActive() {
+        return ($this->status == 'A');
+    }
+    
+    function isDeleted() {
+        return ($this->status == 'D');
+    }
 
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
@@ -150,6 +171,7 @@ class FRSFile extends Error {
         if (isset($array['release_time']))  $this->setReleaseTime($array['release_time']);
         if (isset($array['file_size']))     $this->setFileSize($array['file_size']);
         if (isset($array['post_date']))     $this->setPostDate($array['post_date']);
+        if (isset($array['status']))        $this->setStatus($array['status']);
     }
 
     function toArray() {
@@ -162,6 +184,7 @@ class FRSFile extends Error {
         $array['release_time']  = $this->getReleaseTime();
         $array['file_size']     = $this->getFileSize();
         $array['post_date']     = $this->getPostDate();
+        $array['status']     = $this->getStatus();
         return $array;
     }
     
@@ -213,6 +236,7 @@ class FRSFile extends Error {
         return $package_id;
     }
     
+    
     /**
      * Get the Group (the project) of this File
      *
@@ -253,7 +277,42 @@ class FRSFile extends Error {
         $ok = $dao->logDownload($this, $user_id);
         return $ok;
     }
-
+    
+    /**
+     * userCanDownload : determine if the user can download the file or not
+     *
+     * WARNING : for the moment, user can download the file if the user can view the package and can view the release the file belongs to.  
+     *  
+     * @param int $user_id the ID of the user. If $user_id is 0, then we take the current user.
+     * @return boolean true if the user has permissions to download the file, false otherwise
+     */
+    function userCanDownload($user_id = 0) {
+        if ($user_id == 0) {
+            $user_id = user_getid();
+        }
+        
+        $user = new User($user_id);
+        if ($user) {
+            if ($user->isSuperUser()) {
+                return true;
+            }
+        }
+        
+        $user_can_download = false;
+        if (! $this->isDeleted()) { 
+            $group = $this->getGroup();
+            $group_id = $group->getID();
+            if (permission_exist('RELEASE_READ', $this->getReleaseID())) {
+                if (permission_is_authorized('RELEASE_READ',$this->getReleaseID(),$user_id,$group_id)) {
+                    $user_can_download = true;
+                } 
+            } else if (permission_is_authorized('PACKAGE_READ',$this->getPackageID(),$user_id,$group_id)) {
+                $user_can_download = true;
+            }
+        }
+        return $user_can_download; 	
+    }
+    
 }
 
 ?>
