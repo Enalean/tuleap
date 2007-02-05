@@ -257,7 +257,7 @@ class FRSFileDao extends DataAccessObject {
         }
 
         if($status !== null) {
-            $argArray[] = 'status='.$this->da->quoteSmart($file_size);
+            $argArray[] = 'status='.$this->da->quoteSmart($status);
         }
 
         $sql = 'UPDATE frs_file'
