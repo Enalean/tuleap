@@ -2326,17 +2326,23 @@ project for re-use later in this howto)</LI>
 Alternatively you can start the MySQL shell and type the following SQL statement:<br>
 <tt>update user set user_name='new_name' where user_name='old_name';</tt></LI>
 
-<LI>Do the same for the from_email column in the support messages table. Or use the following SQL statement:<br>
-<tt>update support_messages set from_email='new_name' where from_email='old_name';</tt></LI>
-
-<LI>Do the same for the email column in the bug_cc table. Or use the following SQL statement:<br>
-<tt>update bug_cc set email='new_name' where email='old_name';</tt></LI>
-
-<LI>Do the same for the email column in the project_cc table. Or use the following SQL statement:<br>
-<tt>update project_cc set email='new_name' where email='old_name';</tt></LI>
-
 <LI>Do the same for the email column in the artifact_cc table. Or use the following SQL statement:<br>
 <tt>update artifact_cc set email='new_name' where email='old_name';</tt></LI>
+
+<LI>Do the same for the email_address column in the artifact_group_list table (global email notifications). Or use the following SQL statement:<br>
+<tt>update artifact_group_list set email_address='new_name' where email_address='old_name';</tt></LI>
+
+<LI>To keep wiki preferences and notifications, rename the user wiki page (make sure the new page does not exist yet):<br>
+<tt>update wiki_page set pagename = 'new_name' where page_name = 'old_name';</tt></LI>
+
+<LI><b>Legacy tracker only: </b>Do the same for the from_email column in the support messages table. Or use the following SQL statement:<br>
+<tt>update support_messages set from_email='new_name' where from_email='old_name';</tt></LI>
+
+<LI><b>Legacy tracker only: </b>Do the same for the email column in the bug_cc table. Or use the following SQL statement:<br>
+<tt>update bug_cc set email='new_name' where email='old_name';</tt></LI>
+
+<LI><b>Legacy tracker only: </b>Do the same for the email column in the project_cc table. Or use the following SQL statement:<br>
+<tt>update project_cc set email='new_name' where email='old_name';</tt></LI>
 
 </UL>
 <p>
