@@ -468,7 +468,7 @@ if ($release == null) {
         'release_new_file_version'
     ), 'help' => 'QuickFileRelease.html'));
 
-    $sql = "SELECT * FROM frs_processor ORDER BY processor_id";
+    $sql = "SELECT * FROM frs_processor ORDER BY rank";
     $result = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
     $processor_name = util_result_column_to_array($result, 1);
@@ -583,7 +583,7 @@ if ($release == null) {
         echo '<TR>';
         echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
         echo '<TD>' . $fname . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
-        echo '<TD>' . frs_show_processor_popup($name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
+        echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
         echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
         echo '<TD>' . frs_show_release_popup($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
         echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
@@ -617,7 +617,7 @@ if ($release == null) {
 							<input type="file" name="file[]" id="file_0" />
 						</td>
 						<td>
-							<?php print frs_show_processor_popup($name = 'file_processor'); ?>
+							<?php print frs_show_processor_popup($group_id,$name = 'file_processor'); ?>
 						</td>
 						<td>
 							<?php print frs_show_filetype_popup($name = 'file_type'); ?>

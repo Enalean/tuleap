@@ -44,6 +44,7 @@ function file_utils_admin_header($params) {
     if (user_ismember($group_id,"R2")) {
         echo '<strong>'
             .'<a href="/file/admin/editpackages.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
+	echo ' | <a href="/file/admin/manageprocessors.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','manage_proc').'</a>';
 	if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
         echo "</strong><br><hr>";
@@ -140,16 +141,17 @@ function frs_show_filetype_popup ($name='type_id', $checked_val="xzxz") {
 
 */
 
-function frs_show_processor_popup ($name='processor_id', $checked_val="xzxz") {
+function frs_show_processor_popup ($group_id, $name='processor_id', $checked_val="xzxz") {
 	/*
 		return a pop-up select box of the available processors 
 	*/
 	global $FRS_PROCESSOR_RES,$Language;
 	if (!isset($FRS_PROCESSOR_RES)) {
-		$FRS_PROCESSOR_RES=db_query("SELECT * FROM frs_processor");
+		$FRS_PROCESSOR_RES=db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=$group_id ORDER BY rank");
 	}
 	return html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,$Language->getText('file_file_utils','must_choose_one'));
 }
+
 
 /*
 
@@ -206,4 +208,107 @@ function frs_show_package_popup ($group_id, $name='package_id', $checked_val="xz
 		}
 		return html_build_select_box_from_arrays($FRS_PACKAGE_ID_RES, $FRS_PACKAGE_NAME_RES, $name,$checked_val,false);
 	}
+}
+
+function file_utils_show_processors ($result) {
+    global $group_id,$Language;
+
+    $rows  =  db_numrows($result);
+
+    $title_arr=array();
+    $title_arr[]=$Language->getText('file_file_utils','proc_id');
+    $title_arr[]=$Language->getText('file_file_utils','proc_name');
+    $title_arr[]=$Language->getText('file_file_utils','proc_rank');
+    $title_arr[]=$Language->getText('file_file_utils','del'); 
+
+    echo html_build_list_table_top ($title_arr);
+
+    for($j=0; $j<$rows; $j++)  {
+
+	$proc_id = db_result($result,$j,'processor_id');
+	$proc_name = db_result($result,$j,'name');
+	$proc_rank = db_result($result,$j,'rank');
+	$gr_id = db_result($result,$j,'group_id');
+	
+	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
+	
+	if ($gr_id == "100") {
+	    #pre-defined processors are not manageable  
+	    echo "<TD>$proc_id</TD>\n";
+	} else {
+	    echo "<TD><A HREF=\"/file/admin/editproc.php?group_id=$group_id&proc_id=$proc_id\">$proc_id</A></TD>\n";
+	}	
+	
+	echo '<TD>'.$proc_name."</TD>\n".
+	     '<TD>'.$proc_rank."</TD>\n";     
+	
+	if ($gr_id == "100") {
+	    #pre-defined processors are not manageable  
+	    echo '<TD align=center>-</TD>';
+	} else { 
+	    echo '<TD align=center>'.
+		"<a href=\"/file/admin/manageprocessors.php?mode=delete&group_id=$group_id&proc_id=$proc_id\" ".
+		'" onClick="return confirm(\''.$Language->getText('file_file_utils','del_proc').'\')">'.		
+		'<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('file_file_utils','del').'"></A></TD>';
+	}
+	
+	echo "</tr>";
+    }
+    echo "</table>";
+}
+
+function file_utils_add_proc ($pname,$prank) {
+
+    global $group_id,$Language,$feedback;
+    
+    $sql = sprintf('INSERT INTO frs_processor'.
+		   ' (name,group_id,rank)'.
+		   ' VALUES'.
+		   '("%s",%d,%d)',
+		   $pname, $group_id, $prank);
+    $result = db_query($sql);
+    
+    if ($result) {
+        $feedback .= " ".$Language->getText('file_file_utils','add_proc_success');
+    } else {
+        $feedback .= " ".$Language->getText('file_file_utils','add_proc_fail');
+    }
+    
+}
+
+function file_utils_update_proc ($pid,$pname,$prank) {
+    
+    global $group_id,$Language,$feedback;
+    
+    $sql = sprintf('UPDATE frs_processor'.
+		   ' SET name = "%s",rank = %d'.
+		   ' WHERE processor_id=%d'.
+		   ' AND group_id=%d',
+		   $pname, $prank, $pid, $group_id);
+    $result = db_query($sql);
+    
+    if ($result) {
+        $feedback .= " ".$Language->getText('file_file_utils','update_proc_success');
+    } else {
+        $feedback .= " ".$Language->getText('file_file_utils','update_proc_fail');
+    }
+    
+}
+
+function file_utils_delete_proc ($pid) {
+    
+    global $group_id,$Language,$feedback;
+    
+    $sql = sprintf('DELETE FROM frs_processor'.
+		   ' WHERE group_id=%d'.
+		   ' AND processor_id=%d',
+		   $group_id, $pid);
+    $result = db_query($sql);
+
+    if ($result) {
+        $feedback .= " ".$Language->getText('file_file_utils','delete_proc_success');
+    } else {
+        $feedback .= " ".$Language->getText('file_file_utils','delete_proc_fail');
+    }
+
 }
