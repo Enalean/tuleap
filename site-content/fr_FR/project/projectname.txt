@@ -1,0 +1,38 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+?>
+<P><B>Nom du projet</B>
+
+<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet&nbsp;:
+
+<P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitée à 40 caractères) et il peut être modifié à tout moment.</P>
+
+<p>Le "nom court" (aussi appelé "nom du groupe") présentent certaines restrictions&nbsp;:
+
+<UL>
+<LI>Il ne doit correspondre à aucun nom court existant
+<LI>Sa longueur est comprise entre 3 et 15 caractères
+<LI>Il ne doit comporter que des caractères alphanumériques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
+<LI>Contrairement au nom long, le nom court ne peut être modifié par la suite.
+</UL>
+
+<P>En dépit de ces restrictions, veillez à choisir un nom évocateur car il sera utilisé à plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dépôt CVS ou Subversion.
+</UL>
+
+<P>Veuillez remplir les champs suivants&nbsp;:
+
+<P><B>Nom du projet</B></p>
+<div style="font-size:0.85em">
+Nom complet&nbsp;:
+<BR>
+<INPUT size="40" maxlength="40" type=text name="form_full_name" value="<?=$full_name?>" />
+<P>Nom court&nbsp;:
+<BR>
+<INPUT type=text maxlength="15" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />
+</div>

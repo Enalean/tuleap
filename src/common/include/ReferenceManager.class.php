@@ -230,7 +230,7 @@ class ReferenceManager {
 
     /** Add project references which are not system references.
      Make sure that references for trackers that have been added
-     separately in register/confirmation script are not created twice
+     separately in project/register.php script are not created twice
     */
     function addProjectReferences($template_id, $group_id) {
       $reference_dao =& $this->_getReferenceDao();

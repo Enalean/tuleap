@@ -108,8 +108,8 @@ class DocmanController extends Controler {
     }
 
     // Franlky, this is not at all the best place to do this.
-    function installDocman($ugroupsMapping) {
-        $_gid = (int) $this->request->get('group_id');
+    function installDocman($ugroupsMapping, $group_id = false) {
+        $_gid = $group_id ? $group_id : (int) $this->request->get('group_id');
 
         $item_factory =& $this->_getItemFactory();
         $root =& $item_factory->getRoot($_gid);

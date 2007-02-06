@@ -47,7 +47,7 @@ class TabbedLayout extends Layout {
             
             $output .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
             $output .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
-            $output .= '<li><a href="/register/">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
+            $output .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
                                     
             if (!$GLOBALS['HTTP_POST_VARS']) {
                 $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));

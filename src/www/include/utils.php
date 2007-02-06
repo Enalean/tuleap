@@ -1206,7 +1206,7 @@ function util_check_restricted_access($request_uri, $script_name) {
           '/people/',      // people skills and profile
           '/stats/',       // CodeX site statistics
           '/top/',         // projects rankings (active, downloads, etc)
-          '/register/',    // Register a new project
+          '/project/register.php',    // Register a new project
           '/export/',      // CodeX XML feeds
           '/info.php'      // PHP info
           );

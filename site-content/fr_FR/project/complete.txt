@@ -1,0 +1,45 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<?php
+
+$content = "
+<H2>Enregistrement terminé !</H2>
+	<P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
+	Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
+	<P>
+	Merci d'utiliser ".$GLOBALS['sys_name'].".
+	<P>";
+
+// Do not touch this URL, to and From unless you know what you are doing
+$href_approval = get_server_url().'/admin/approve-pending.php';
+$to = $GLOBALS['sys_email_admin'];
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+$from = $GLOBALS['sys_noreply'];
+$hdrs = 'From: '.$from."\n";
+
+// subject and body can be customized to your liking
+$subject = "Nouveau projet enregistré : ".$data['project']['form_full_name'];
+$body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
+"Nom du projet : ".$data['project']['form_full_name']."\n\n".
+"Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
+$href_approval."\n";
+
+// Send a notification message to the Site administrator
+require_once('common/mail/Mail.class.php');
+$mail =& new Mail();
+$mail->setTo($to);
+$mail->setFrom($from);
+$mail->setBody($body);
+$mail->setSubject($subject);
+if (!$mail->send()) {
+   $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+}
+
+?>

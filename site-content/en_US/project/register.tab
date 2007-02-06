@@ -1,0 +1,116 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: src/common/project//category.php
+#
+register_category	upd_query_fail	This is an invalid state. Update query failed. <B>PLEASE</B> report to $1
+register_category	var_missing	This is an invalid state. Some form variables were missing. If you are certain you entered everything, <B>PLEASE</B> report to $1 and include info on your browser and platform configuration
+register_category	project_category	Project Category
+register_category	select_3_classifs	Please select up to three classifications for this project in each of the Trove root categories. This will help potential developers and users to find your project and engage. If the project does not require any or all of these classification, simply select "None Selected".<P>IMPORTANT REMARKS: <ul><li>Projects should be categorized in the most specific locations available in the map.</li><li>Simultaneous categorization in a specific category AND a parent category will result in only the more specific categorization being accepted.</li><li><em><b>Topic Trove only</b></em>: If your project does not seem to fit into any of the categories or sub-categories, simply select "Other/Non Listed Topics". As new projects are submitted, the $1 Team will refine the Topic Trove by defining 2nd and possibly 3rd level subcategories.  We welcome any suggestions on this. You can change the trove categories for this project at any time.</li></ul>
+#
+#-----------------------------------------------
+# Script: src/common/project//confirmation.php
+#
+register_confirmation	registration_complete	Registration Complete
+register_confirmation	upd_fail	UDPATING TO ACTIVE FAILED. <B>PLEASE</B> report to $1 $2
+register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@$1 $2
+register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to $1 $2
+register_confirmation	open_discussion	Open Discussion
+register_confirmation	general_discussion	General Discussion
+register_confirmation	get_help	Get Help
+register_confirmation	developers	Developers
+register_confirmation	proj_dev_discussion	Project Developer Discussion
+register_confirmation	cant_create_service	ERROR - Can not create service
+register_confirmation	cant_create_docgroup	ERROR - Can not create default Document Group
+register_confirmation	registration_deleted	Registration Deleted
+register_confirmation	project_deleted	Project registration deleted
+register_confirmation	try_again	Please try again in the future.
+#
+#-----------------------------------------------
+# Script: src/common/project//form.php
+#
+register_form	new_project_registration	New Project Registration
+register_form	register_form	New Project Registration Form
+register_form	fill_form	Simply fill out this form to request an account on $1. Fields with an asterisk (*) are required.
+register_form	first_name	First Name
+register_form	last_name	Last Name
+register_form	email	Email
+register_form	project_name	Project Name
+register_form	proj_description	Brief Description<br>of Project:
+register_form	desired_subdomain	Desired Subdomain:<br>(e.g. 
+register_form	passwd	Desired Password:<br>(enter twice)
+register_form	comments	Comments/Questions:
+register_form	clear_form	Clear Form
+register_form	cancel	Cancel Registration
+register_form	next	Next Step >>
+register_form	must_agree	You must agree to the $1 Terms os Service Agreement.
+#
+#-----------------------------------------------
+# Script: src/common/project//index.php
+#
+register_index	project_registration	Project Registration
+#
+#-----------------------------------------------
+# Script: src/common/project//license.php
+#
+register_license	invalid_g_name	Invalid Group Name
+register_license	invalid_short_name	Invalid Short Name
+register_license	nospace_in_short_name	There cannot be any spaces neither any _ (underscore) in the Short Name
+register_license	g_name_taken	Group Name Taken
+register_license	g_name_exist	That group name already exists.
+register_license	license	License
+#
+#-----------------------------------------------
+# Script: src/common/project//projectname.php
+#
+register_projectname	ins_query_fail	INSERT QUERY FAILED. Please notify $1
+register_projectname	info_missed	Missing Information. <B>PLEASE</B> fill in all required information.
+#
+#-----------------------------------------------
+# Script: src/common/project//tos.php
+#
+register_tos	tos	Terms of Service
+register_tos	tos_agreement	Step 2: Terms of Service Agreement
+register_tos	tos_agree	By clicking below, you acknowledge that you have read and understand the Terms of Service agreement. Clicking "I AGREE" will constitute your legal signature on this document.<P><H3 align=center><A href="$1">[I AGREE]</A>&nbsp;&nbsp;<A href="/">[I DISAGREE]</A></H3>
+#
+#-----------------------------------------------
+# Script: src/common/project//why.php
+#
+register_why	why_register	Why Register?
+#
+#-----------------------------------------------
+# Script: src/common/project//template.php
+#
+register_template	choose	Choose A Project Template
+register_template	next_step	Step 4: Basic Project Information
+
+register_title	intro	Project Registration
+register_title	registration	$1 Services & Requirements
+register_title	tos	$1 Terms of Service Agreement
+register_title	template	Project Template
+register_title	basic	Project Description
+register_title	name	Project Name
+register_title	license	Software Policy
+register_title	category	Project Categorization
+register_title	confirm	Final Confirmation
+
+register_confirmation	built_from_template	Template
+register_confirmation	form_short_description	Short Project Description
+register_confirmation	form_purpose	Full Project Description
+register_confirmation	form_required_sw	Required Software
+register_confirmation	form_patents	Intellectual Property
+register_confirmation	form_comments	Other Comments
+register_confirmation	form_full_name	Full Name
+register_confirmation	form_unix_name	Short Name
+register_confirmation	form_license	Policy
+register_confirmation	trove	Categories

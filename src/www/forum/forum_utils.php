@@ -192,7 +192,7 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 		$feedback .= ' '.$Language->getText('forum_forum_utils','add_err', array($forum_name)).' ';
 		return -1;
 	} else {
-	  $feedback .= ' '.$Language->getText('forum_forum_utils','forum_added', array($forum_name)).' ';
+	  $GLOBALS['Response']->addFeedback('info', $Language->getText('forum_forum_utils','forum_added', array($forum_name)));
 	
 	  $forum_id=db_insertid($result);
 	  

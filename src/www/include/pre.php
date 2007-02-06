@@ -191,7 +191,7 @@ $GLOBALS['Response'] =& $HTML;
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
 // loading the license.php file in the register directory when
-// invoking register/index.php
+// invoking project/register.php
 require_once($DOCUMENT_ROOT.'/include/license.php');
 if (license_already_declined()) {
   exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));

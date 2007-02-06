@@ -1,0 +1,51 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<p>Nous souhaitons en savoir un peu plus sur votre projet. Toutes les
+informations saisies sur cette page seront visibles pour les
+utilisateurs de <?php print $GLOBALS['sys_name']; ?> une fois votre
+projet enregistré. Veuillez donc fournir des informations aussi
+précise que possible.
+
+<P>Si l'équipe <?php print $GLOBALS['sys_name']; ?> approuve votre
+projet, votre environnement de projet devra être uniquement utilisé à
+des fins correspondant à la description ci-dessous. Si les objectifs
+du projet devaient changer par la suite, il vous faudra procéder à la
+mise à jour de ces informations.
+
+<P><em>Remarque</em>&nbsp;: Le formattage de votre texte (saut de lignes)
+est préservé. Les URLs seront automatiquement transformés en liens
+hypertextes dans le texte final. <p><font color="red">*</font>&nbsp;: Saisie
+obligatoire</p> 
+<P>
+<B><u>Description courte du projet<font color="red">*</font>&nbsp;:</u></B>
+<BR>Quel est le sujet de votre projet (description de 3 ou 4 lignes). Balises HTML autorisées.
+<br><TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="3"><?=isset($data['project']['form_short_description']) ? $data['project']['form_short_description'] : '' ?>
+</TEXTAREA>
+
+<P>
+<B><u>Description complète du projet<font color="red">*</font>&nbsp;:</u></B>
+<BR><b>*** REMARQUE IMPORTANTE ***</b> Veuillez fournir une description contenant tous les mots-clés qui permettront aux utilisateurs de trouver facilement votre projet lors d'une recherche. Une description trop courte ou incomplète ne fera que retarder l'approbation de votre projet.
+<br><TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12"><?=isset($data['project']['form_purpose']) ? $data['project']['form_purpose'] : '' ?>
+</TEXTAREA>
+
+<P><B><u>Propriété intellectuelle&nbsp;:</u></B>
+<br> Brevets ou propositions d'invention relatifs à ce projet&nbsp;:
+<br><TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6"><?=isset($data['project']['form_patents']) ? $data['project']['form_patents'] : '' ?>
+</TEXTAREA>
+
+<P><B><u>Autres logiciels requis&nbsp;:</u></B>
+<br>Si votre projet nécessite l'emploi d'autres composants logicielles internes ou externes pour fonctionner correctement, merci de les mentionner ici&nbsp;:
+<br><TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6"><?=isset($data['project']['form_required']) ? $data['project']['form_required'] : '' ?>
+</TEXTAREA>
+
+<P><B><u>Autres Commentaires&nbsp;:</u></B>
+<br>Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi fournir des informations de prix ou un contact commercial, etc.
+<br><TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4"><?=isset($data['project']['form_comments']) ? $data['project']['form_comments'] : '' ?>
+</TEXTAREA>

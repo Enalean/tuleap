@@ -535,7 +535,7 @@ echo html_blankimage(5,100);
             $link=$service_data['link'];
             if ($group_id==100) {
                 if (strstr($link,'$projectname')) {
-                    // NOTE: if you change link variables here, change them also in src/www/register/confirmation.php and src/www/project/admin/servicebar.php
+                    // NOTE: if you change link variables here, change them also in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/project/admin/servicebar.php
                     // Don't check project name if not needed.
                     // When it is done here, the service bar will not appear updated on the current page
                     $link=str_replace('$projectname',group_getunixname($group_id),$link);

@@ -1,0 +1,24 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+?>
+<P>So that visitors to the site can find your project, you should select
+categories that are most appropriate to your project's purpose.
+
+<P>Your project will not be visible in the Trove software map until
+(1) it is approved and (2) you have categorized it just below.
+
+<?php
+print '<P>'.$GLOBALS['Language']->getText('register_category','select_3_classifs',$GLOBALS['sys_name']). '</p>';
+?>
+
+<?php
+// HTML select for all available categories for this group
+print trove_get_html_allcat_selectfull($data['project']['built_from_template']);
+?>
+<hr />

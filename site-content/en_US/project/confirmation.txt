@@ -1,0 +1,51 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+	echo '
+	<B>Short Project Description<font color="red">*</font>:</B><BR>
+	<TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="12">'.$data['project']['form_short_description'].'</TEXTAREA>
+	<P>
+	<B>Full Project Description<font color="red">*</font>:</B><BR>
+	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.$data['project']['form_purpose'].'</TEXTAREA>
+	<P>
+	<B>Intellectual Property:</B><BR>
+	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.$data['project']['form_patents'].'</TEXTAREA>
+	<P>
+	<B>Other Software Required:</B><BR>
+	<TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">'.$data['project']['form_required_sw'].'</TEXTAREA>
+	<P>
+	<B>Other Comments:</B><BR>
+	<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.$data['project']['form_comments'].'</TEXTAREA>
+
+	<P>	<B>Full Name:</B><BR>
+	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.$data['project']['form_full_name'].'">
+	<P>
+	<B>Unix Name:</B><BR>
+	'.$data['project']['form_unix_name'].'
+	<P>
+	<B>License:</B><BR>
+	<SELECT NAME="form_license">
+	';
+
+	while (list($k,$v) = each($LICENSE)) {
+		print "<OPTION value=\"$k\"";
+		if ($k==$data['project']['form_license']) {
+			echo ' SELECTED';
+		}
+		print ">$v\n";
+	}
+	echo '</SELECT>';
+	echo '
+	<P>
+	<B>If Other License:</B><BR>
+	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.$data['project']['form_license_other'].'</TEXTAREA>
+	<P>';
+	
+
+?>
