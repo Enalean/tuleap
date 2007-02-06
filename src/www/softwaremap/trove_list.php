@@ -151,6 +151,7 @@ $res_sub = db_query('SELECT trove_cat.trove_cat_id AS trove_cat_id,'
 	.'OR trove_treesums.limit_1 IS NULL) AND ' // need no discriminators
 	.'trove_cat.parent='.$form_cat.' ORDER BY fullname');
 echo db_error();
+$nb_listed_projects=0;
 while ($row_sub = db_fetch_array($res_sub)) {
 	for ($sp=0;$sp<($folders_len*2);$sp++) {
 		print " &nbsp; ";
@@ -158,20 +159,27 @@ while ($row_sub = db_fetch_array($res_sub)) {
         if (!isset($discrim_url)) $discrim_url="";
 	print ('<a href="trove_list.php?form_cat='.$row_sub['trove_cat_id'].$discrim_url.'">');
 	html_image("ic/cfolder15.png",array());
+        $nb_proj_in_cat=($row_sub['subprojects']?$row_sub['subprojects']:'0');
+        $nb_listed_projects+=$nb_proj_in_cat;
 	print ('&nbsp; '.$row_sub['fullname'].'</a> <I>('
-		.($row_sub['subprojects']?$row_sub['subprojects']:'0')
+		.$nb_proj_in_cat
 		.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>');
 }
 
 // MV: Add a None case
 if($folders_len == 1) {
+
+    $res_nb = db_query("SELECT count(*) as count FROM groups WHERE is_public=1 AND (status='A') AND type=1");
+    $row_nb = db_fetch_array($res_nb);
+
+    $nb_not_cat=$row_nb['count']-$nb_listed_projects;
     for ($sp=0;$sp<($folders_len*2);$sp++) {
         print " &nbsp; ";
     }
     html_image("ic/cfolder15.png",array());
     print "&nbsp; ";
 
-    print '<a href="/softwaremap/trove_list.php?form_cat='.$form_cat.'&special_cat=none"><em>'.$Language->getText('softwaremap_trove_list','not_categorized').'</em></a>';
+    print '<a href="/softwaremap/trove_list.php?form_cat='.$form_cat.'&special_cat=none"><em>'.$Language->getText('softwaremap_trove_list','not_categorized').'</em></a> <I>('.$nb_not_cat.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>';
 
     print "<br />";
 }
