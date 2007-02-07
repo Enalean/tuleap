@@ -418,7 +418,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		    } else if (! $recurse) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_recurse');
 		    } else {
-		        $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);
+		        $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);			
 		        if ($res) {
 		            $feedback .= $Language->getText('tracker_admin_index','notif_update_success',array($field->getLabel()));		        
 		        } else {

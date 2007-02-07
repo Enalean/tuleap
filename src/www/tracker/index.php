@@ -195,6 +195,21 @@ if ( $func == 'gotoid' ) {
                                 // send an email to notify the user of the artifact update
 				//                                $ah->mailFollowup($ath->getEmailAddress(),$null);
                                 $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
+				
+				// add the artifact to date reminder processing table, if relevant
+				$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+						.' WHERE group_id=%d'
+						.' AND group_artifact_id=%d',
+						$group_id,$atid);
+				$res = db_query($sql);
+				if (db_numrows($res) > 0) {
+				    while ($rows = db_fetch_array($res)) {
+				        $reminder_id = $rows['reminder_id'];
+					$field_id = $rows['field_id'];
+					$ath->addArtifactToDateReminderProcessing($reminder_id,$ah->getID(),$field_id,$atid,$group_id);
+				    }
+				}
+				
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
                         }

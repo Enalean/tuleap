@@ -949,6 +949,26 @@ class ArtifactType extends Error {
 				.' VALUES(%d,%d,%d,%d,%d,%d,%d,"%s")',
 				$field_id,$group_artifact_id,$group_id,$start,$notif_type,$frequency,$recurse,$notified_users);		
 		$result = db_query($insert);
+		//get reminder_id
+		$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+				.' WHERE field_id=%d'
+				.' AND group_artifact_id=%d'
+				.' AND group_id=%d',
+				$field_id,$group_artifact_id,$group_id);
+		$res = db_query($sql);
+		$reminder_id = db_result($res,0,'reminder_id');
+		//populate 'artifact_date_reminder_processing' table with concerned artifacts
+		$sql = sprintf('SELECT * FROM artifact'
+				.' WHERE group_artifact_id=%d'
+				.' AND status_id <> 3',
+				$group_artifact_id);
+		$res = db_query($sql);
+		if (db_numrows($res) > 0) {
+		    while ($arr = db_fetch_array($res)) {
+		        $artifact_id = $arr['artifact_id'];
+			$this->addArtifactToDateReminderProcessing($reminder_id,$artifact_id,$field_id,$group_artifact_id,$group_id);
+		    }
+		}
 	    } else {
 	        //update reminder settings
 		$update = sprintf('UPDATE artifact_date_reminder_settings'
@@ -966,6 +986,20 @@ class ArtifactType extends Error {
 	    
 	    return $result;	  
 	    
+	}
+	
+	function addArtifactToDateReminderProcessing($reminder_id,$artifact_id,$field_id,$group_artifact_id,$group_id) {
+	
+	    //to do : check if date field value is set  
+	    $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
+			   .' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
+			   .' VALUES(%d,%d,%d,%d,%d,%d)',
+			   $reminder_id,$artifact_id,$field_id,$group_artifact_id,$group_id,0);
+	    $result = db_query($ins);
+
+	}
+	
+	function deleteArtifactFromDateReminderProcessing($reminder_id,$artifact_id,$field_id,$group_artifact_id,$group_id) {
 	}
 	
 	function deleteWatchees($user_id) {	
