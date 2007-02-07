@@ -49,7 +49,6 @@ MKDIR='/bin/mkdir'
 RPM='/bin/rpm'
 CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
-CHCON='/usr/bin/chcon'
 FIND='/usr/bin/find'
 MYSQL='/usr/bin/mysql'
 TOUCH='/bin/touch'
@@ -60,6 +59,14 @@ GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
+
+CHCON='/usr/bin/chcon'
+SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
+if [ ! -e $CHCON ] || [ ! -e "/etc/selinux" ]; then
+   # SELinux not installed
+   CHCON="echo ignored: chcon"
+fi
+
 
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
@@ -331,12 +338,14 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
 
 
 # SELinux specific
-$CHCON -R -h -t httpd_sys_content_t /usr/share/codex
-$CHCON -R -h -t httpd_sys_content_t /etc/codex
-$CHCON -R -h -t httpd_sys_content_t /var/lib/codex
-$CHCON -R -h -t httpd_sys_content_t /home/groups
-$CHCON -h -t httpd_sys_content_t /svnroot
-$CHCON -h -t httpd_sys_content_t /cvsroot
+$CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
+$CHCON -R -h $SELINUX_CONTEXT /etc/codex
+$CHCON -R -h $SELINUX_CONTEXT /var/lib/codex
+$CHCON -R -h $SELINUX_CONTEXT /home/groups
+$CHCON -R -h $SELINUX_CONTEXT /home/codexadm
+$CHCON -h $SELINUX_CONTEXT /svnroot
+$CHCON -h $SELINUX_CONTEXT /cvsroot
+
 
 
 ##############################################
@@ -658,7 +667,7 @@ substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
 substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
 
 # Make sure SELinux contexts are valid
-chcon -R -h -t httpd_sys_content_t /usr/share/codex
+$CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
 
 # Create .subversion directory in codexadm home dir.
 su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
@@ -890,9 +899,6 @@ $CHOWN codexadm.codexadm commit-email.pl
 $CHMOD 755 commit-email.pl
 #$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x) NG: useless? and issue with SELinux
 
-
-# Set proper SELinux context on codexadm .subversion directory: it should be created now :-)
-$CHCON -R -h -t httpd_sys_content_t /home/codexadm/.subversion
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
