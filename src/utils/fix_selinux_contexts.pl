@@ -12,21 +12,22 @@
 
 require("include.pl");  # Include all the predefined functions and variables
 $CHCON='/usr/bin/chcon';
+$context="root:object_r:httpd_sys_content_t";
 
 # /usr/share/codex -> CodeX main Web tree, documentation, plugins, etc.
-`$CHCON -R -h -t httpd_sys_content_t $codex_dir`;
+`$CHCON -R -h $context $codex_dir`;
 
 # /etc/codex -> for licence, site-content...
-`$CHCON -R -h -t httpd_sys_content_t $sys_custom_dir`;
+`$CHCON -R -h $context $sys_custom_dir`;
 
 # /var/lib/codex -> for ftp, etc.
-`$CHCON -R -h -t httpd_sys_content_t $sys_data_dir`;
+`$CHCON -R -h $context $sys_data_dir`;
 
 # /home/codexadm. Apache needs access to '.subversion' (Server update plugin), '.cvs' (Passerelle plugin)
-`$CHCON -R -h -t httpd_sys_content_t /home/$sys_http_user`;
+`$CHCON -R -h $context /home/$sys_http_user`;
 
 # /home/groups -> project web sites
-`$CHCON -R -h -t httpd_sys_content_t $grpdir_prefix`;
+`$CHCON -R -h $context $grpdir_prefix`;
 
-`$CHCON -h -t httpd_sys_content_t /svnroot`;
-`$CHCON -h -t httpd_sys_content_t /cvsroot`;
+`$CHCON -h $context /svnroot`;
+`$CHCON -h $context /cvsroot`;
