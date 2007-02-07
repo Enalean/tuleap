@@ -18,4 +18,9 @@ php_value max_execution_time "1800"
 php_value memory_limit "64M"
 </IfModule>
 
+# Prevent IE7 from caching the tracker reports.
+<Files index.php>
+  ExpiresActive On
+  ExpiresDefault A0
+</Files>
 
