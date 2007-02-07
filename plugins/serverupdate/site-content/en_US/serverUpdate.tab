@@ -27,7 +27,7 @@ plugin_serverupdate_menu	preferences	Preferences
 plugin_serverupdate_update	WorkingCopyRevision	Current working copy revision: <strong>$1</strong>
 plugin_serverupdate_update	NumberOfUpdates	Number of available updates: <strong>$1</strong>
 plugin_serverupdate_update	RepositoryIs	Subversion repository: <strong>$1</strong>
-plugin_serverupdate_update	norepository	Subversion repository not detected.<br />If you are behind proxy, make sure that the file <em>/home/codexadm/.subversion/servers</em> is weel configured.<br />Before using this plugin, execute the command <strong><em>svn status -u --username [your_login]</em></strong>, accept permanently the certificate and type your password. This needs to be done only one time, or each time you change your password.
+plugin_serverupdate_update	norepository	Subversion repository not detected.<br />If you are behind a proxy, make sure that the file <em>/home/codexadm/.subversion/servers</em> is well configured.<br />Before using this plugin, execute the command <strong><em>svn status -u --username [your_login]</em></strong>, accept permanently the certificate and type your password. This needs to be done only one time, or each time you change your password.
 plugin_serverupdate_update	Updates	Updates
 plugin_serverupdate_update	Revision	Revision
 plugin_serverupdate_update	Date	Date
