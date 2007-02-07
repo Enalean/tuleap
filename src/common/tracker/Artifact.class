@@ -870,7 +870,7 @@ class Artifact extends Error {
             
             //
             //  Enter the timestamp if we are changing to closed or declined
-            //
+            //  
             if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
                 $now=time();
                 $upd_list .= "close_date='$now',";
@@ -878,6 +878,8 @@ class Artifact extends Error {
                 if ( $field ) {
                     $this->addHistory ($field,$result['close_date'],'');
                 }
+		//Delete corresponding entry in artifact_date_reminder_processing table
+		$this->ArtifactType->deleteArtifactFromDateReminderProcessing($this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
             }
         
             //

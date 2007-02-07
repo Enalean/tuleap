@@ -249,8 +249,11 @@ function showErrors() {
     $errors = "";
     $ok = $this->updateDB($parsed_labels,$artifacts_data,$aid_column,$errors, $notify);
     
-    if ($ok) $feedback = $Language->getText('tracker_import','success_import',$count_artifacts)." ";
-    else $feedback = $errors;
+    if ($ok) {			
+        $feedback = $Language->getText('tracker_import','success_import',$count_artifacts)." ";
+    } else {
+        $feedback = $errors;
+    }	
       
     //update group history
     group_add_history('import',$this->ath->getName(),$this->group->group_id);
