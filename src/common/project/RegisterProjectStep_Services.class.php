@@ -32,7 +32,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
         echo html_build_list_table_top($title_arr);
         $row_num = 0;
         foreach($p->services as $key => $nop) {
-            if (!in_array($p->services[$key]->getShortName(), array('summary', 'admin'))) {
+            if (!in_array($p->services[$key]->getShortName(), array('summary', 'admin')) && $p->services[$key]->isActive()) {
                 $short_name  = $p->services[$key]->getShortName();
                 $description = $p->services[$key]->getDescription();
                 $label       = $p->services[$key]->getLabel();

@@ -38,6 +38,9 @@ class Service {
     function isUsed() {
         return $this->data['is_used'];
     }
+    function isActive() {
+        return $this->data['is_active'];
+    }
 }
 
 ?>
