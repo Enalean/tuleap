@@ -407,6 +407,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		
 		$ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','admin_date_field_notif'),
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
+		   
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$ath->getID().'">'.$ath->getName().'</a>\' - '.$Language->getText('tracker_include_type','mail_notif').'</h2>';		   
 		
 		if (isset($submit_notif_settings)) {		    
 		    if ($notified_users == NULL) {

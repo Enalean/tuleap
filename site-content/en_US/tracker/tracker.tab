@@ -208,7 +208,7 @@ tracker_admin_index	fieldset_updated	Field Set updated
 tracker_admin_index	fieldset_deleted	Field Set deleted
 tracker_admin_index	modify_fieldset	 - Modify Field Set
 tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
-tracker_admin_index	admin_date_field_notif	Tracker Administration - Date Fields Notification Settings
+tracker_admin_index	admin_date_field_notif	Tracker Administration - Date Fields Reminder Settings
 tracker_admin_index	wrong_field	Wrong field_id '$1'.
 tracker_admin_index	notif_update_success	'$1' Reminder Settings Update Successful.
 tracker_admin_index	notif_update_fail	'$1' Reminder Settings Update Failed.
@@ -551,8 +551,8 @@ tracker_include_type	current_date	Current date.
 tracker_include_type	date_value	Date value:
 tracker_include_type	active	active
 tracker_include_type	disabled	disabled
-tracker_include_type	edit_notif_settings	[Edit Notification Settings]
-tracker_include_type	notif_settings_field	Notification Settings For '$1' Field
+tracker_include_type	edit_notif_settings	[Edit Reminder Settings]
+tracker_include_type	notif_settings_field	Reminder Settings For '$1' Field
 tracker_include_type	notif_start	Notification starts:
 tracker_include_type	days	day(s)
 tracker_include_type	date_occurence	date occurence.

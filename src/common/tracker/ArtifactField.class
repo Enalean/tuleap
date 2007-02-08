@@ -1258,13 +1258,27 @@ class ArtifactField extends Error {
 			   "keep_history=".$keep_history.",".
 			   "notification=".$enable_notification.",".
 			   "special=".$special.",".
-               "field_set_id=".$fieldset_id." ".
+		           "field_set_id=".$fieldset_id." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
 				
 		$res = db_query($sql);
 		if (!$res) {
 			$this->setError($Language->getText('tracker_common_field','upd_err',array($this->field_id,$group_artifact_id,db_error())));
 			return false;
+		}
+		
+		//If it is a date field, on which the notification is disabled, then remove the corresponding date reminder settings in db  
+		if ($this->isDateField() && $enable_notification == 0) {
+		    $del = sprintf('DELETE FROM artifact_date_reminder_settings'
+				    .' WHERE field_id=%d'
+				    .' AND group_artifact_id=%d',
+				    $this->field_id,$group_artifact_id);
+		    $result = db_query($del);
+		    $rem = sprintf('DELETE FROM artifact_date_reminder_processing'
+				    .' WHERE field_id=%d'
+				    .' AND group_artifact_id=%d',
+				    $this->field_id,$group_artifact_id);
+		    $result = db_query($rem);		    
 		}
 		
 		// Then, update the artifact_field_usage
