@@ -1844,6 +1844,13 @@ width="14.5cm" />
         artefacts.</para>
         </listitem>
         
+       <listitem id="TrackerGeneralSettingsInstantiateForNewProjects">
+	  <para><emphasis role="bold">Instancier dans les nouveaux projets</emphasis>: 
+          Ce paramètre n'est affiché que lorsque le projet courant est du type &#34;patron de projet&#34; (voir <xref linkend="ProjectType" />).
+          Si ce paramètre est sélectionné, alors les projets créés depuis ce patron de projet auront cet outil de suivi.
+          S'il n'est pas sélectionné, cet outil de suivi ne sera pas disponible dans le nouveau projet.</para>
+	</listitem>
+
         <listitem id="TrackerGeneralSettingsSubmitInstructions">
           <para><emphasis role="bold">Instructions de
           soumission</emphasis> : un message d'introduction qui
