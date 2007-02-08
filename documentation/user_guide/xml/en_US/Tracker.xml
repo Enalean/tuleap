@@ -1749,6 +1749,13 @@ width="14.5cm" />
       are able to duplicate artifacts.</para>
 	</listitem>
     
+    <listitem id="TrackerGeneralSettingsInstantiateForNewProjects">
+	  <para><emphasis role="bold">Instantiate for new projects</emphasis>: 
+          This parameter is only displayed when working on a &#34;template&#34; type of project (see <xref linkend="ProjectType" />) .
+          If the parameter is selected, then projects created from this template project will have this tracker created.
+          If not selected, the tracker will not be available in the new project.</para>
+	</listitem>
+
 	<listitem id="TrackerGeneralSettingsSubmitInstructions">
 	  <para><emphasis role="bold">Submit instructions</emphasis>:
 	  an introductory message that displays at the top of the

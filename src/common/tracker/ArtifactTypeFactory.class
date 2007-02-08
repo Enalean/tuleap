@@ -452,9 +452,12 @@ class ArtifactTypeFactory extends Error {
 		$at_template = new ArtifactType($template_group,$atid_template);
 		
 		// First, we create a new ArtifactType into artifact_group_list
+                // By default, set 'instantiate_for_new_projects' to '1', so that a project that is not yet a
+                // template will be able to have its trackers cloned by default when it becomes a template.
 		$sql="INSERT INTO 
 			artifact_group_list 
-			(group_id, name, description, item_name, allow_copy,email_all_updates,email_address,submit_instructions,browse_instructions
+                       (group_id, name, description, item_name, allow_copy,email_all_updates,email_address,
+                         submit_instructions,browse_instructions,instantiate_for_new_projects
                          ) 
 			VALUES 
 			('". $group_id ."',
@@ -465,7 +468,7 @@ class ArtifactTypeFactory extends Error {
                         '". $at_template->emailAll()."',
                         '". $at_template->getEmailAddress()."',
                         '". db_escape_string($at_template->getSubmitInstructions())."',
-                        '". db_escape_string($at_template->getBrowseInstructions())."')";
+                        '". db_escape_string($at_template->getBrowseInstructions())."',1)";
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
