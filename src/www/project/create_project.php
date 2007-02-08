@@ -95,14 +95,14 @@ function create_project($data) {
         //Add a couple of forums for this group and make the project creator 
         // (current user) monitor these forums
         $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('register_confirmation','open_discussion')),1,1,
-                      addslashes($GLOBALS['Language']->getText('register_confirmation','general_discussion')));
+                      addslashes($GLOBALS['Language']->getText('register_confirmation','general_discussion')), $need_feedback = false);
         if ($fid != -1) forum_add_monitor($fid, user_getid());
         
         $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('global','help')),1,1,
-                      addslashes($GLOBALS['Language']->getText('register_confirmation','get_help')));
+                      addslashes($GLOBALS['Language']->getText('register_confirmation','get_help')), $need_feedback = false);
         if ($fid != -1) forum_add_monitor($fid, user_getid());
         $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('register_confirmation','developers')),0,1,
-                      addslashes($GLOBALS['Language']->getText('register_confirmation','proj_dev_discussion')));
+                      addslashes($GLOBALS['Language']->getText('register_confirmation','proj_dev_discussion')), $need_feedback = false);
         if ($fid != -1) forum_add_monitor($fid, user_getid());
         
             
@@ -129,10 +129,12 @@ function create_project($data) {
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
+            $is_used = isset($data['project']['services'][$arr['service_id']]['is_used']) ? $data['project']['services'][$arr['service_id']]['is_used'] : '1';
             if (!service_create_service($arr, $group_id, array(
                 'system' => $system_template,
                 'name'   => $system_template ? '' : $template_name,
-                'id'     => $template_id
+                'id'     => $template_id,
+                'is_used' => $is_used,
             ))) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service'));
             }

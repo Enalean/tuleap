@@ -11,24 +11,28 @@ require_once('common/project/RegisterProjectStep_Name.class.php');
 require_once('common/project/RegisterProjectStep_License.class.php');
 require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
+require_once('common/project/RegisterProjectStep_Services.class.php');
 
+$Language->loadLanguageMsg('project/project');
 $Language->loadLanguageMsg('project/register');
 
-//Register steps
-$steps = array(
-    new RegisterProjectStep_Intro(),
-    new RegisterProjectStep_Name(),
-    new RegisterProjectStep_Template(),
-    new RegisterProjectStep_BasicInfo(),
-    new RegisterProjectStep_Category(),
-    new RegisterProjectStep_License(),
-    new RegisterProjectStep_Confirmation(),
-);
-
-//Process request
 $request =& HTTPRequest::instance();
 $current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
 $data         = $request->exist('data') ? unserialize($request->get('data')) : array();
+
+//Register steps
+$steps = array(
+    new RegisterProjectStep_Intro($data),
+    new RegisterProjectStep_Name($data),
+    new RegisterProjectStep_Template($data),
+    new RegisterProjectStep_BasicInfo($data),
+    new RegisterProjectStep_Services($data),
+    new RegisterProjectStep_Category($data),
+    new RegisterProjectStep_License($data),
+    new RegisterProjectStep_Confirmation($data),
+);
+
+//Process request
 if ($request->exist('cancel')) {
     $HTML->addFeedback('info', 'Project creation cancelled');
     $HTML->redirect('/');
@@ -87,7 +91,7 @@ echo '<td style="text-align:center">';
 echo '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('register_form', 'cancel') .'" /> ';
 echo '<input type="hidden" name="current_step" value="'. $current_step .'" />';
 echo '<input type="hidden" name="data" value="'. htmlentities(serialize($data), ENT_QUOTES) .'" />';
-echo '<input type="submit" name="next" id="project_register_next" value="'. $GLOBALS['Language']->getText('register_form', 'next') .'" />';
+echo '<input type="submit" name="next" id="project_register_next" value="'. ($current_step < count($steps) - 1 ? $GLOBALS['Language']->getText('register_form', 'next') : $GLOBALS['Language']->getText('register_title', 'intro')) .'" />';
 echo '</td></tr>';
 //{{{ Debug
 //echo '<tr><td colspan="2"><pre>';var_dump($data);echo '</pre></td></tr>';

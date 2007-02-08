@@ -9,7 +9,7 @@
 
 
 //require_once('common/include/Error.class.php');
-
+require_once('common/project/Service.class.php');
 /*
 
 	An object wrapper for project (as opposed to foundry) data
@@ -61,6 +61,7 @@ class Project extends Group {
     // All data concerning services for this project
     var $service_data_array;
     var $use_service;
+    var $services;
     
     /*
 		basically just call the parent to set up everything
@@ -93,6 +94,7 @@ class Project extends Group {
                 $em->processEvent("plugin_load_language_file", null);
 
 		// needed for localisation
+        $matches = array();
 		if ($res_row['description'] == "service_".$short_name."_desc_key") {
 		  $res_row['description'] = $Language->getText('project_admin_editservice',$res_row['description']);
 		}
@@ -109,6 +111,10 @@ class Project extends Group {
                 if ($short_name) {
                     $this->use_service[$short_name]= $res_row['is_used'];
                 }
+                
+                $s =& new Service($res_row);
+                $this->services[] =& $s;
+                unset($s);
             }
         }
     }

@@ -179,7 +179,7 @@ function forum_delete_monitor ($forum_id, $user_id) {
 /**
  * @return forum_id = -1 if error
  */
-function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='') {
+function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='', $need_feedback = true) {
   global $feedback,$Language;
 	/*
 		Adding forums to this group
@@ -189,10 +189,14 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 
 	$result=db_query($sql);
 	if (!$result) {
-		$feedback .= ' '.$Language->getText('forum_forum_utils','add_err', array($forum_name)).' ';
+		if ($need_feedback) {
+            $feedback .= ' '.$Language->getText('forum_forum_utils','add_err', array($forum_name)).' ';
+        }
 		return -1;
 	} else {
-	  $GLOBALS['Response']->addFeedback('info', $Language->getText('forum_forum_utils','forum_added', array($forum_name)));
+	  if ($need_feedback) {
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('forum_forum_utils','forum_added', array($forum_name)));
+      }
 	
 	  $forum_id=db_insertid($result);
 	  

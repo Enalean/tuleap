@@ -100,7 +100,6 @@ register_template	choose	Choisir un patron de projet
 register_template	next_step	Etape 4&nbsp;: Informations Projet
 
 register_title	intro	Enregistrement d'un projet
-register_title	intro	Services et conditions d'utilisation de $1
 register_title	tos	Conditions générales d'utilisation de $1
 register_title	template	Patron de projet
 register_title	basic	Description du projet
@@ -108,3 +107,6 @@ register_title	name	Nom du projet
 register_title	license	Politique d'échange des logiciels
 register_title	category	Catégorisation du projet
 register_title	confirm	Confirmation finale
+register_title	services	Services du projet
+
+register_services	desc	Sélectionnez vos services
