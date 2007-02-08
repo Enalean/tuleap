@@ -785,11 +785,22 @@ proto.format_p = function(element) {
 
 proto.format_a = function(element) {
     var label = Wikiwyg.htmlUnescape(element.innerHTML);
+    var href = element.getAttribute('href');
+    
+    
     label = label.replace(/<[^>]*?>/g, ' ');
     label = label.replace(/\s+/g, ' ');
     label = label.replace(/^\s+/, '');
     label = label.replace(/\s+$/, '');
-    this.make_wikitext_link(label, element.getAttribute('href'), element);
+    
+    
+    if (! href.match(/index.php\?pagename=([a-zA-Z]+)\&group_id\=[0-9]+/))
+        this.make_wikitext_link(label, href, element);
+    else{
+        href = href.replace(/index.php\?pagename=([a-zA-Z]+)\&group_id\=[0-9]+/, '$1');
+	this.make_wikitext_link(label, href, element);
+    }
+        
 }
 
 proto.format_table = function(element) {
