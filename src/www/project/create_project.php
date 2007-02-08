@@ -129,12 +129,14 @@ function create_project($data) {
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
-            $is_used = isset($data['project']['services'][$arr['service_id']]['is_used']) ? $data['project']['services'][$arr['service_id']]['is_used'] : '1';
+            $is_used   = isset($data['project']['services'][$arr['service_id']]['is_used'])   ? $data['project']['services'][$arr['service_id']]['is_used']   : '1';
+            $server_id = isset($data['project']['services'][$arr['service_id']]['server_id']) ? $data['project']['services'][$arr['service_id']]['server_id'] : 'null';
             if (!service_create_service($arr, $group_id, array(
                 'system' => $system_template,
                 'name'   => $system_template ? '' : $template_name,
                 'id'     => $template_id,
-                'is_used' => $is_used,
+                'is_used'   => $is_used,
+                'server_id' => $server_id,
             ))) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service'));
             }

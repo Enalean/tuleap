@@ -41,6 +41,9 @@ class Service {
     function isActive() {
         return $this->data['is_active'];
     }
+    function getServerId() {
+        return $this->data['server_id'];
+    }
 }
 
 ?>

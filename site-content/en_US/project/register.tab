@@ -106,6 +106,7 @@ register_title	confirm	Final Confirmation
 register_title	services	Project Services
 
 register_services	desc	Please select your services
+register_services	server	Server
 
 register_confirmation	built_from_template	Template
 register_confirmation	form_short_description	Short Project Description

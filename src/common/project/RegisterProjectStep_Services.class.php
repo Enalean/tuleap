@@ -1,6 +1,7 @@
 <?php
 
 require_once('RegisterProjectStep.class.php');
+require_once('common/server/ServerFactory.class.php');
 
 /**
 * RegisterProjectStep_Services
@@ -21,6 +22,10 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
     function display($data) {
         echo '<p>'. $GLOBALS['Language']->getText('register_services', 'desc') .'</p>';
         
+        $sf =& new ServerFactory();
+        $servers = $sf->getAllServers();
+        $can_display_servers = count($servers) > 1;
+        
         $em =& EventManager::instance();
         $em->processEvent("plugin_load_language_file", null);
         
@@ -29,6 +34,9 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
         $title_arr[]=''; //$GLOBALS['Language']->getText('project_admin_editservice','enabled');
         $title_arr[]=$GLOBALS['Language']->getText('project_admin_editservice','s_label');
         $title_arr[]=$GLOBALS['Language']->getText('project_admin_editservice','s_desc');
+        if ($can_display_servers) {
+            $title_arr[]=$GLOBALS['Language']->getText('register_services','server');
+        }
         echo html_build_list_table_top($title_arr);
         $row_num = 0;
         foreach($p->services as $key => $nop) {
@@ -66,6 +74,18 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                 //}}}
                 echo '<td>'. $label .'</td>';
                 echo '<td>'. $description .'</td>';
+                //{{{ server
+                if ($can_display_servers) {
+                    echo '<td>';
+                    echo '<select name="services['. $id .'][server_id]">';
+                    foreach($servers as $server_id => $nop) {
+                        $selected = $server_id == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
+                        echo '<option value="'. $servers[$server_id]->getId() .'" '. $selected .'>'. $servers[$server_id]->getName() .'</option>';
+                    }
+                    echo '</select>';
+                    echo '</td>';
+                }
+                //}}}
                 echo '</tr>';
             }
         }

@@ -3030,6 +3030,7 @@ CREATE TABLE service (
 	is_used int(11) DEFAULT 0 NOT NULL,
         scope text NOT NULL,
         rank int(11) NOT NULL default '0',
+        server_id INT( 11 ) UNSIGNED NULL,
 	primary key (service_id),
         key idx_group_id(group_id)
 );
@@ -3274,6 +3275,13 @@ CREATE TABLE feedback (
   feedback TEXT NOT NULL ,
   created_at DATETIME NOT NULL ,
   PRIMARY KEY ( session_hash )
+);
+
+CREATE TABLE server (
+  id INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  name VARCHAR( 255 ) NOT NULL ,
+  description TEXT NOT NULL ,
+  url TEXT NOT NULL
 );
 
 #

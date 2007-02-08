@@ -238,6 +238,16 @@ echo "Starting DB update for CodeX 3.2 This might take a few minutes."
 
 $CAT <<EOF | $MYSQL $pass_opt codex
 ###############################################################################
+# Servers
+CREATE TABLE server (
+  id INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  name VARCHAR( 255 ) NOT NULL ,
+  description TEXT NOT NULL ,
+  url TEXT NOT NULL
+);
+ALTER TABLE service ADD server_id INT( 11 ) UNSIGNED NULL ;
+
+###############################################################################
 # Feedback
 CREATE TABLE feedback (
   session_hash CHAR( 32 ) NOT NULL ,
