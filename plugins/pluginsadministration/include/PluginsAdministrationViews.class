@@ -186,6 +186,45 @@ class PluginsAdministrationViews extends Views {
                 $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_hooks:').' </td>';
                 $output .=     '<td>'.$link_to_hooks.'</td>';
                 $output .=   '</tr>';
+                if($plugin->getScope() == $plugin->SCOPE_PROJECT) {
+                    $output .=   '<tr>';
+                    $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_projects:').' </td>';
+                    $output .=     '<td>';
+                    $_isProjectPluginRestricted = $plugin_manager->isProjectPluginRestricted($plugin);
+                    if($_isProjectPluginRestricted) {
+                        $projectIds = $plugin_manager->getAllowedProjects($plugin);
+                        if(count($projectIds) > 0) {
+                            $output .= implode(', ', $projectIds);
+                        }
+                        else {
+                            $output .= $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_no_prj_for_plugin');
+                        }
+                    }
+                    else {
+                        $output .= $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_av_for_prj');
+                    }
+
+                    $output .=       '<br>';
+                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_addproject').' <input name="gen_prop[allowed_project]" type="text" value="" />';
+                    $output .=       '&nbsp;';
+                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_delproject').' <input name="gen_prop[disallowed_project]" type="text" value="" />';
+
+                    $yesChecked = 'checked="checked" ';
+                    $noChecked  = '';
+                    if($_isProjectPluginRestricted) {
+                        $yesChecked = '';
+                        $noChecked  = 'checked="checked" ';
+                    }
+
+                    $output .=       '<br>';
+                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'properties_is_av_for_prj').'&nbsp;';
+                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'properties_yes').' <input type="radio" name="gen_prop[prj_restricted]" value="0" '.$yesChecked.' />';
+                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'properties_no').' <input type="radio" name="gen_prop[prj_restricted]" value="1" '.$noChecked.' />';
+
+                    $output .=     '</td>';
+                    $output .=   '</tr>';
+                    
+                }
                 if ($props !== '') {
                     $output .=   '<tr><td colspan="2"><hr /></td></tr>';
                     $output .=   $props;

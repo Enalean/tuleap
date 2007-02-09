@@ -5,7 +5,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: en_US.tab,v 1.11 2005/06/24 08:10:37 nterray Exp $
+#  * @version   $Id$
 #  *
 #  */
 plugin_pluginsadministration	descriptor_description	Offers a web interface for managing plugins.
@@ -54,10 +54,18 @@ plugin_pluginsadministration	scope_2	Users
 #
 #
 plugin_pluginsadministration_properties	display_priorities	Display priorities of hook $1
+plugin_pluginsadministration_properties	properties_addproject	Add project:
+plugin_pluginsadministration_properties	properties_av_for_prj	Available for all projects
+plugin_pluginsadministration_properties	properties_delproject	Remove project:
 plugin_pluginsadministration_properties	properties_description:	Description:
+plugin_pluginsadministration_properties	properties_is_av_for_prj	This plugin available for all projects:
 plugin_pluginsadministration_properties	properties_hooks:	Listened Hooks:
 plugin_pluginsadministration_properties	properties_name:	Name:
+plugin_pluginsadministration_properties	properties_no	No
+plugin_pluginsadministration_properties	properties_no_prj_for_plugin	No project can use this plugin
 plugin_pluginsadministration_properties	properties_plugin	Properties of plugin "$1"
+plugin_pluginsadministration_properties	properties_projects:	Projects:
 plugin_pluginsadministration_properties	properties_scope:	Scope:
 plugin_pluginsadministration_properties	properties_version:	Version:
+plugin_pluginsadministration_properties	properties_yes	Yes
 plugin_pluginsadministration_properties	return	<< Return to plugins

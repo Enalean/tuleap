@@ -205,5 +205,73 @@ class PluginManager {
         }
         return $this->plugins_name[$plugin->getId()];
     }
+
+    function getAllowedProjects($plugin) {
+        $prjIds = null;
+        //if($plugin->getScope() == $plugin->SCOPE_PROJECT) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $prjIds = $plugin_factory->getProjectsByPluginId($plugin);
+        //}
+        return $prjIds;
+    }
+    
+    function _updateProjectForPlugin($action, $plugin, $projectIds) {
+        $plugin_factory =& $this->_getPluginFactory();
+        
+        $success     = true;
+        $successOnce = false;
+        
+        if(is_array($projectIds)) {
+            foreach($projectIds as $prjId) {
+                switch($action){
+                case 'add':
+                    $success = $success && $plugin_factory->addProjectForPlugin($plugin, $prjId);
+                    break;
+                case 'del':
+                    $success = $success && $plugin_factory->delProjectForPlugin($plugin, $prjId);
+                    break;
+                }
+                
+                if($success === true)
+                    $successOnce = true;
+            }
+        }
+        elseif(is_numeric($projectIds)) {
+            switch($action){
+            case 'add':
+                $success = $success && $plugin_factory->addProjectForPlugin($plugin, $prjId);
+                break;
+            case 'del':
+                $success = $success && $plugin_factory->delProjectForPlugin($plugin, $prjId);
+                break;
+            }
+            $successOnce = $success;
+        }
+        
+        if($successOnce && ($action == 'add')) {
+            $plugin_factory->restrictProjectPluginUse($plugin, true);
+        }
+    }
+
+    function addProjectForPlugin($plugin, $projectIds) {
+        $this->_updateProjectForPlugin('add', $plugin, $projectIds);
+    }
+
+    function delProjectForPlugin($plugin, $projectIds) {
+        $this->_updateProjectForPlugin('del', $plugin, $projectIds);
+    }
+
+    function isProjectPluginRestricted($plugin) {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->isProjectPluginRestricted($plugin);
+    }
+
+    function updateProjectPluginRestriction($plugin, $restricted) {
+        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory->restrictProjectPluginUse($plugin, $restricted);
+        if($restricted == false) {
+            $plugin_factory->truncateProjectPlugin($plugin);
+        }
+    }
 }
 ?>
