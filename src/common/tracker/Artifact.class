@@ -802,8 +802,8 @@ class Artifact extends Error {
                         if ($differ) {
                             // The userCanUpdate test is only done on modified fields
                             if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
-                                
-                                if ($is_text) {
+                                		
+				if ($is_text) {
                                     if ( $field->isStandardField() ) {
                                         $upd_list .= "$field_name='".htmlspecialchars($value)."',";                                                 
                                     } else {
@@ -832,6 +832,17 @@ class Artifact extends Error {
                                 $field_html = new ArtifactFieldHtml($field);
                                 $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
                                 $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+				
+				//update date reminder processing data, according to date field value
+				if ($field->isDateField()) {
+				    if (($old_value == 0 || $old_value == NULL) && $value <> 0 && $value <> NULL) {
+				        //field date value is set
+					$this->ArtifactType->addArtifactToDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());					
+				    } else if ($old_value <> 0 && $old_value <> NULL && $value == 0) {
+				        //field date value is unset
+					$this->ArtifactType->deleteArtifactFromDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
+				    }
+				}
                             } else {
                                 // The user does not have the permissions to update the current field,
                                 // we exit the function with an error message
@@ -879,7 +890,7 @@ class Artifact extends Error {
                     $this->addHistory ($field,$result['close_date'],'');
                 }
 		//Delete corresponding entry in artifact_date_reminder_processing table
-		$this->ArtifactType->deleteArtifactFromDateReminderProcessing($this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
+		$this->ArtifactType->deleteArtifactFromDateReminderProcessing(0,$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
             }
         
             //

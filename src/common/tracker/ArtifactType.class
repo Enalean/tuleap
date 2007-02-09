@@ -959,7 +959,7 @@ class ArtifactType extends Error {
 		if (db_numrows($res) > 0) {
 		    while ($arr = db_fetch_array($res)) {
 		        $artifact_id = $arr['artifact_id'];
-			$this->addArtifactToDateReminderProcessing($artifact_id,$group_artifact_id,$group_id);
+			$this->addArtifactToDateReminderProcessing($field_id,$artifact_id,$group_artifact_id,$group_id);
 		    }
 		}
 	    } else {
@@ -981,44 +981,78 @@ class ArtifactType extends Error {
 	    
 	}
 	
-	function addArtifactToDateReminderProcessing($artifact_id,$group_artifact_id,$group_id) {
+	function addArtifactToDateReminderProcessing($field_id,$artifact_id,$group_artifact_id,$group_id) {
 	
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
-			   .' WHERE group_id=%d'
-			   .' AND group_artifact_id=%d',
-			   $group_id,$group_artifact_id);
+	    if ($field_id <> 0) {
+		$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+			       .' WHERE group_id=%d'
+			       .' AND group_artifact_id=%d'
+			       .' AND field_id=%d',
+			       $group_id,$group_artifact_id,$field_id);
+	    } else {
+	  	$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+			       .' WHERE group_id=%d'
+			       .' AND group_artifact_id=%d',
+			       $group_id,$group_artifact_id);
+	    }
 	    $res = db_query($sql);
 	    if (db_numrows($res) > 0) {
 	        while ($rows = db_fetch_array($res)) {
 		    $reminder_id = $rows['reminder_id'];
-		    $field_id = $rows['field_id'];
-		    
+		    $fid = $rows['field_id'];		    
 		    $sql = sprintf('SELECT * FROM artifact_field_value'
-			    .' WHERE artifact_id=%d'
-			    .' AND field_id=%d',
-			    $artifact_id,$field_id);
-	            $res = db_query($sql);
-	            $value = db_result($res,0,'valueDate');
-	            if ($value <> 0 && $value <> NULL) {    
-	                $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
-					.' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
-					.' VALUES(%d,%d,%d,%d,%d,%d)',
-					$reminder_id,$artifact_id,$field_id,$group_artifact_id,$group_id,0);
-	                $result = db_query($ins);
-		    }
+			           .' WHERE artifact_id=%d'
+			           .' AND field_id=%d',
+				   $artifact_id,$fid);
+		    $res = db_query($sql);
+		    if (db_numrows($res) > 0) {
+		        //the date field is not special (value is stored in 'artifact_field_value' table)
+	                $value = db_result($res,0,'valueDate');
+	                if ($value <> 0 && $value <> NULL) {    
+	                    $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
+					   .' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
+					   .' VALUES(%d,%d,%d,%d,%d,%d)',
+					   $reminder_id,$artifact_id,$fid,$group_artifact_id,$group_id,0);
+			    $result = db_query($ins);
+		        }
+		    } else {
+		        //the date field is special : End Date in task tracker (value is stored in 'artifact' table)
+			$sql = sprintf('SELECT * FROM artifact'
+					.' WHERE artifact_id=%d'
+					.' AND group_artifact_id=%d',
+					$artifact_id,$group_artifact_id);
+			$res = db_query($sql);
+			$value = db_result($res,0,'close_date');
+			if ($value <> 0 && $value <> NULL) {    
+	                    $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
+					   .' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
+					   .' VALUES(%d,%d,%d,%d,%d,%d)',
+					   $reminder_id,$artifact_id,$fid,$group_artifact_id,$group_id,0);
+			    $result = db_query($ins);
+		        }
+		    }    
 		}
-	    }		
+	    }
 
 	}
 	
-	function deleteArtifactFromDateReminderProcessing($artifact_id,$group_artifact_id,$group_id) {
+	function deleteArtifactFromDateReminderProcessing($field_id,$artifact_id,$group_artifact_id,$group_id) {
 	    
-	    $del = sprintf('DELETE FROM artifact_date_reminder_processing'
-			    .' WHERE artifact_id=%d'
-			    .' AND group_artifact_id=%d'
-			    .' AND group_id=%d',
-			    $artifact_id,$group_artifact_id,$group_id);
-	    $result = db_query($del);		    
+	    if ($field_id == 0) {  
+	        $del = sprintf('DELETE FROM artifact_date_reminder_processing'
+			       .' WHERE artifact_id=%d'
+			       .' AND group_artifact_id=%d'
+			       .' AND group_id=%d',
+			       $artifact_id,$group_artifact_id,$group_id);	        		    
+	    } else {
+	        $del = sprintf('DELETE FROM artifact_date_reminder_processing'
+				.' WHERE artifact_id=%d'
+				.' AND field_id=%d'
+				.' AND group_artifact_id=%d'
+				.' AND group_id=%d',
+				$artifact_id,$field_id,$group_artifact_id,$group_id);
+	    }
+	    $result = db_query($del);	    
 	    
 	}
 	

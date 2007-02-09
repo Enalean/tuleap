@@ -197,7 +197,7 @@ if ( $func == 'gotoid' ) {
                                 $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
 				
 				// add the artifact to date reminder processing table, if relevant
-				$ath->addArtifactToDateReminderProcessing($ah->getID(),$atid,$group_id);
+				$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid,$group_id);
 				    
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');
@@ -282,7 +282,7 @@ if ( $func == 'gotoid' ) {
                                 $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
 				
 				// add the artifact to date reminder processing table, if relevant
-				$ath->addArtifactToDateReminderProcessing($ah->getID(),$atid,$group_id);
+				$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid,$group_id);
 
                                 $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
                             require('./browse.php');

@@ -722,6 +722,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
             
+	    //if the field is date field, clear corresponding date reminder settings
+	    $field->deleteFieldReminderSettings($field->getID(),$atid);
+	    
             //clear permissions
             permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
             
