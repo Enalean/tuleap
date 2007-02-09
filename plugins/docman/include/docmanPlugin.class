@@ -28,6 +28,8 @@ class DocmanPlugin extends Plugin {
 	
 	function DocmanPlugin($id) {
 		$this->Plugin($id);
+        $this->setScope($this->SCOPE_PROJECT);
+
         $this->_addHook('cssfile',                           'cssFile',                           false);
         $this->_addHook('javascript_file',                   'jsFile',                            false);
         $this->_addHook('plugin_load_language_file',         'loadPluginLanguageFile',            false);
