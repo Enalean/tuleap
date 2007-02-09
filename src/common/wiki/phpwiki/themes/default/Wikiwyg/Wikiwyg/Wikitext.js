@@ -794,10 +794,10 @@ proto.format_a = function(element) {
     label = label.replace(/\s+$/, '');
     
     
-    if (! href.match(/index.php\?pagename=([a-zA-Z]+)\&group_id\=[0-9]+/))
+    if (! href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/))
         this.make_wikitext_link(label, href, element);
     else{
-        href = href.replace(/index.php\?pagename=([a-zA-Z]+)\&group_id\=[0-9]+/, '$1');
+        href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
 	this.make_wikitext_link(label, href, element);
     }
         
