@@ -692,7 +692,7 @@ class Artifact extends Error {
                     // skip over special fields  except for details which in this 
                     // particular case can be processed normally
                     if ($field->isSpecial()) {
-                        continue; 
+			continue; 
                     }
                     
                     // we check if the given value is authorized for this field (for select box fields only)
@@ -796,10 +796,13 @@ class Artifact extends Error {
 				list($old_val,$ok) = util_date_to_unixtime($old_date);
                             	$differ = ($old_val != $value);
 			    }
+
                         } else {
                             $differ = ($old_value != $value);
                         }
+			
                         if ($differ) {
+			
                             // The userCanUpdate test is only done on modified fields
                             if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
                                 		
@@ -833,7 +836,7 @@ class Artifact extends Error {
                                 $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
                                 $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
 				
-				//update date reminder processing data, according to date field value
+				//update date reminder processing data, according to date field value update
 				if ($field->isDateField()) {
 				    if (($old_value == 0 || $old_value == NULL) && $value <> 0 && $value <> NULL) {
 				        //field date value is set
@@ -905,7 +908,15 @@ class Artifact extends Error {
                 return false;
             }
                 
-            //
+   	    //get the End Date value before update
+	    $before_up = sprintf('SELECT * FROM artifact'
+	  		    .' WHERE artifact_id=%d'
+			    .' AND group_artifact_id=%d',
+			    $this->getID(),$this->ArtifactType->getID());
+	    $res_before = db_query($before_up);
+	    $end_date_before = db_result($res_before,0,'close_date');
+
+	    //
             //  Finally, build the full SQL query and update the artifact itself (if need be)
             //
         
@@ -913,12 +924,24 @@ class Artifact extends Error {
             if ($upd_list) {
                 // strip the excess comma at the end of the update field list
                 $upd_list = substr($upd_list,0,-1);
-                
+              
                 $sql="UPDATE artifact SET $upd_list ".
                     " WHERE artifact_id=".$this->getID();
                 
                 $res_upd=db_query($sql);
             }
+	    
+	    //get the End Date value after update, if it is set ==> add artifact to 'date reminder processing' table
+	    $after_up =  sprintf('SELECT * FROM artifact'
+	  		    .' WHERE artifact_id=%d'
+			    .' AND group_artifact_id=%d',
+			    $this->getID(),$this->ArtifactType->getID());
+	    $res_after = db_query($after_up);
+	    $end_date_after = db_result($res_after,0,'close_date');
+	    if (($end_date_before == 0 || $end_date_before == NULL) && ($end_date_after <> 0 || $end_date_after <> NULL) && $end_date_before <> $end_date_after) {
+	        $end_date_field = $art_field_fact->getFieldFromName('close_date');  
+	        $this->ArtifactType->addArtifactToDateReminderProcessing($end_date_field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
+	    }
         
             if (!$res_upd) {
                 exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
