@@ -292,5 +292,8 @@ class PluginFactory {
         return $restricted;
     }
 
+    function isPluginAllowedForProject($plugin, $projectId) {
+        return $this->plugin_dao->isPluginAllowedForProject($plugin->getId(), $projectId);
+    }
 }
 ?>

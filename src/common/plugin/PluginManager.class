@@ -273,5 +273,10 @@ class PluginManager {
             $plugin_factory->truncateProjectPlugin($plugin);
         }
     }
+
+    function isPluginAllowedForProject($plugin, $projectId) {
+        $plugin_factory =& $this->_getPluginFactory();
+        return $plugin_factory->isPluginAllowedForProject($plugin, $projectId);
+    }
 }
 ?>

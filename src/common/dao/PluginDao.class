@@ -139,6 +139,21 @@ class PluginDao extends DataAccessObject {
                        $pluginId);
         return $this->retrieve($sql);
     }
+    
+    function isPluginAllowedForProject($pluginId, $projectId) {
+        $sql = sprintf('SELECT project_id'.
+                       ' FROM project_plugin'.
+                       ' WHERE plugin_id = %d'.
+                       ' AND project_id = %d',
+                       $pluginId, $projectId);
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            if($dar->rowCount() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
 
