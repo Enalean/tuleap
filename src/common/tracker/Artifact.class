@@ -938,6 +938,7 @@ class Artifact extends Error {
 			    $this->getID(),$this->ArtifactType->getID());
 	    $res_after = db_query($after_up);
 	    $end_date_after = db_result($res_after,0,'close_date');
+
 	    if (($end_date_before == 0 || $end_date_before == NULL) && ($end_date_after <> 0 || $end_date_after <> NULL) && $end_date_before <> $end_date_after) {
 	        $end_date_field = $art_field_fact->getFieldFromName('close_date');  
 	        $this->ArtifactType->addArtifactToDateReminderProcessing($end_date_field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());

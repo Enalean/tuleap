@@ -940,7 +940,6 @@ class ArtifactType extends Error {
 			    .' AND group_artifact_id=%d'
 			    .' AND field_id=%d',
 			    $group_id,$group_artifact_id,$field_id);  
-	    //$sql = "SELECT * FROM artifact_date_reminder_settings WHERE group_id=".$group_id." AND group_artifact_id=".$group_artifact_id." AND field_id=".$field_id;
 	    $res = db_query($sql);
 	    if (db_numrows($res) < 1) {
 	        //create reminder settings
@@ -983,6 +982,8 @@ class ArtifactType extends Error {
 	
 	function addArtifactToDateReminderProcessing($field_id,$artifact_id,$group_artifact_id,$group_id) {
 	
+	    $art_field_fact = new ArtifactFieldFactory($this);
+	    
 	    if ($field_id <> 0) {
 		$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
 			       .' WHERE group_id=%d'
@@ -999,38 +1000,47 @@ class ArtifactType extends Error {
 	    if (db_numrows($res) > 0) {
 	        while ($rows = db_fetch_array($res)) {
 		    $reminder_id = $rows['reminder_id'];
-		    $fid = $rows['field_id'];		    
+		    $fid = $rows['field_id'];
+		    $field = $art_field_fact->getFieldFromId($fid);  		    
+		    
 		    $sql1 = sprintf('SELECT * FROM artifact_field_value'
 			           .' WHERE artifact_id=%d'
 			           .' AND field_id=%d',
 				   $artifact_id,$fid);
 		    $res1 = db_query($sql1);
-		    if (db_numrows($res1) > 0) {
-		        //the date field is not special (value is stored in 'artifact_field_value' table)
-	                $value = db_result($res1,0,'valueDate');
-	                if ($value <> 0 && $value <> NULL) {    
-	                    $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
-					   .' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
-					   .' VALUES(%d,%d,%d,%d,%d,%d)',
-					   $reminder_id,$artifact_id,$fid,$group_artifact_id,$group_id,0);
-			    $result = db_query($ins);
-		        }
+
+		    
+		    
+		    if (! $field->isStandardField()) {
+		        if (db_numrows($res1) > 0) {
+			    $valueDate = db_result($res1,0,'valueDate');
+	                    if ($valueDate <> 0 && $valueDate <> NULL) {    
+			        //the date field is not special (value is stored in 'artifact_field_value' table)
+	                        $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
+						.' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
+						.' VALUES(%d,%d,%d,%d,%d,%d)',
+						$reminder_id,$artifact_id,$fid,$group_artifact_id,$group_id,0);
+			        $result = db_query($ins);
+			    }
+			}
 		    } else {
-		        //the date field is special : End Date in task tracker (value is stored in 'artifact' table)
-			$sql2 = sprintf('SELECT * FROM artifact'
+		        //End Date
+		        $sql2 = sprintf('SELECT * FROM artifact'
 					.' WHERE artifact_id=%d'
 					.' AND group_artifact_id=%d',
 					$artifact_id,$group_artifact_id);
-			$res2 = db_query($sql2);
-			$value = db_result($res2,0,'close_date');
-			if ($value <> 0 && $value <> NULL) {    
-	                    $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
-					   .' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
-					   .' VALUES(%d,%d,%d,%d,%d,%d)',
-					   $reminder_id,$artifact_id,$fid,$group_artifact_id,$group_id,0);
-			    $result = db_query($ins);
-		        }
-		    }    
+		        $res2 = db_query($sql2);
+			if (db_numrows($res2) > 0) {
+		            $close_date = db_result($res2,0,'close_date');
+			    if ($close_date <> 0 && $close_date <> NULL) {
+			        $ins = sprintf('INSERT INTO artifact_date_reminder_processing'
+						.' (reminder_id,artifact_id,field_id,group_artifact_id,group_id,notification_sent)'
+						.' VALUES(%d,%d,%d,%d,%d,%d)',
+						$reminder_id,$artifact_id,$fid,$group_artifact_id,$group_id,0);
+			        $result = db_query($ins);
+			    }
+			}
+		    }
 		}
 	    }
 
