@@ -407,7 +407,7 @@ class ArtifactHtml extends Artifact {
                     
                 // if the field is a special field (except summary and details) 
                 // then skip it.
-                if ( !$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details' ) {
+                if ( $field->userCanSubmit($group_id, $group_artifact_id) && (!$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details' )) {
                   
                     // display the artifact field
                     // if field size is greatest than max_size chars then force it to
