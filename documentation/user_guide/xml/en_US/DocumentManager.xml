@@ -11,7 +11,7 @@
 //
 -->
 <chapter id="DocumentManager">
-  <title>Document Manager</title>
+  <title>Legacy Document Manager (deprecated)</title>
 
   <para><tip><title>** The Document Manager is DEPRECATED
   **</title> <para>In CodeX version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
