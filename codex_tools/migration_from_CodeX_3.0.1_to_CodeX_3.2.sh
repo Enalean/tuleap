@@ -271,24 +271,18 @@ ALTER TABLE `frs_file` ADD `status` CHAR( 1 ) NOT NULL DEFAULT 'A';
 
 ###############################################################################
 # Processor types in FRS (possible to add custom processor types per project)
-DROP TABLE frs_processor;
+ALTER TABLE frs_processor ADD rank INT( 11 ) NOT NULL DEFAULT '0';
+ALTER TABLE frs_processor ADD group_id INT( 11 ) NOT NULL DEFAULT '0';
 
-CREATE TABLE frs_processor (
-  processor_id int(11) NOT NULL auto_increment,
-  name text,
-  rank int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  PRIMARY KEY (processor_id)
-);
-
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('i386','10','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('PPC','20','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('MIPS','30','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('Sparc','40','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('UltraSparc','50','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('IA64','60','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('Alpha','70','100');
-INSERT INTO frs_processor (name,rank,group_id) VALUES ('Any','80','100');
+UPDATE frs_processor SET rank = '10', group_id = '100' WHERE processor_id=1000;
+UPDATE frs_processor SET rank = '20', group_id = '100' WHERE processor_id=2000;
+UPDATE frs_processor SET rank = '30', group_id = '100' WHERE processor_id=3000;
+UPDATE frs_processor SET rank = '40', group_id = '100' WHERE processor_id=4000;
+UPDATE frs_processor SET rank = '50', group_id = '100' WHERE processor_id=5000;
+UPDATE frs_processor SET rank = '60', group_id = '100' WHERE processor_id=6000;
+UPDATE frs_processor SET rank = '70', group_id = '100' WHERE processor_id=7000;
+UPDATE frs_processor SET rank = '80', group_id = '100' WHERE processor_id=8000;
+UPDATE frs_processor SET rank = '90', group_id = '100' WHERE processor_id=9999;
 
 EOF
 
