@@ -39,7 +39,10 @@ class ServerDao extends DataAccessObject {
     * create a row in the table Server 
     * @return true if there is no error
     */
-    function create($name, $description, $url) {
+    function create($server) {
+        $name        = isset($server['name'])        ? $server['name']        : '';
+        $description = isset($server['description']) ? $server['description'] : '';
+        $url         = isset($server['url'])         ? $server['url']         : '';
         $sql = sprintf("INSERT INTO server (name, description, url) VALUES (%s, %s, %s)",
 				$this->da->quoteSmart($name),
 				$this->da->quoteSmart($description),
@@ -54,6 +57,23 @@ class ServerDao extends DataAccessObject {
             }
         } 
         return $inserted;
+    }
+    function delete($id) {
+        $sql = sprintf("DELETE FROM server WHERE id = %s",
+            $this->da->quoteSmart($id));
+        return $this->update($sql);
+    }
+    function modify($server) {
+        $id          = isset($server['id'])          ? $server['id']          : 'null';
+        $name        = isset($server['name'])        ? $server['name']        : '';
+        $description = isset($server['description']) ? $server['description'] : '';
+        $url         = isset($server['url'])         ? $server['url']         : '';
+        $sql = sprintf("UPDATE server SET name = %s, description = %s, url = %s WHERE id = %s",
+				$this->da->quoteSmart($name),
+				$this->da->quoteSmart($description),
+				$this->da->quoteSmart($url),
+                $this->da->quoteSmart($id));
+        return $this->update($sql);
     }
 }
 

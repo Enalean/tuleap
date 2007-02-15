@@ -10,19 +10,30 @@
 */
 class Server {
     
-    var $data;
-	
+    var $id;
+	var $name;
+    var $description;
+    var $url;
     /**
     * Constructor
     */
-    function Server($data) {
-        $this->data = $data;
+    function Server($data = array()) {
+        $this->id          = isset($data['id'])          ? $data['id']          : null;
+        $this->name        = isset($data['name'])        ? $data['name']        : '';
+        $this->description = isset($data['description']) ? $data['description'] : '';
+        $this->url         = isset($data['url'])         ? $data['url']         : '';
     }
     function getId() {
-        return $this->data['id'];
+        return $this->id;
     }
     function getName() {
-        return $this->data['name'];
+        return $this->name;
+    }
+    function getDescription() {
+        return $this->description;
+    }
+    function getUrl() {
+        return $this->url;
     }
 }
 ?>

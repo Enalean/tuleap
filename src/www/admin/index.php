@@ -106,6 +106,7 @@ echo ")</b>";?>
 <h3><?php echo $Language->getText('admin_main', 'header_svc'); ?></h3>
 <ul>
 <li><a href="/project/admin/servicebar.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_svc'); ?></A>
+<li><a href="/admin/servers/">Manage Servers</A>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_ref'); ?></h3>

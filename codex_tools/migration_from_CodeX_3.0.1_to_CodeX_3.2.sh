@@ -245,7 +245,9 @@ CREATE TABLE server (
   description TEXT NOT NULL ,
   url TEXT NOT NULL
 );
+ALTER TABLE service ADD location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'same';
 ALTER TABLE service ADD server_id INT( 11 ) UNSIGNED NULL ;
+
 
 ###############################################################################
 # Feedback

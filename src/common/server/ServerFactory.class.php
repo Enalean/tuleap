@@ -28,5 +28,44 @@ class ServerFactory {
         }
         return $servers;
     }
+    function delete($id) {
+        $dao =& new ServerDao(CodeXDataAccess::instance());
+        return $dao->delete($id);
+    }
+    function create($arr) {
+        if (!$arr || !is_array($arr)) {
+            $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
+        } else if ($this->validate($arr)) {
+            $dao =& new ServerDao(CodeXDataAccess::instance());
+            return $dao->create($arr);
+        }
+        return false;
+    }
+    function validate($arr) {
+        if (!isset($arr['name']) || !trim($arr['name'])) {
+            $GLOBALS['Response']->addFeedback('error', 'Name cannot be empty');
+            return false;
+        }
+        return true;
+    }
+    function getServerById($id) {
+        $s = null;
+        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dar =& $dao->searchById($id);
+        if ($dar && $dar->valid()) {
+            $row = $dar->current();
+            $s = new Server($row);
+        }
+        return $s;
+    }
+    function update($arr) {
+        if (!$arr || !is_array($arr)) {
+            $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
+        } else if ($this->validate($arr)) {
+            $dao =& new ServerDao(CodeXDataAccess::instance());
+            return $dao->modify($arr);
+        }
+        return false;
+    }
 }
 ?>

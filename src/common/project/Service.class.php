@@ -44,6 +44,28 @@ class Service {
     function getServerId() {
         return $this->data['server_id'];
     }
+    function getUrl() {
+        $url = $this->data['link'];
+        if (!$this->isAbsolute($url) && $this->data['location'] != 'same') {
+            $sf =& $this->_getServerFactory();
+            if ($s =& $sf->getServerById($this->getServerId())) {
+                $url = $s->getUrl() . $url;
+            }
+        }
+        return $url;
+    }
+    function &_getServerFactory() {
+        return new ServerFactory();
+    }
+    
+    /**
+    * @see http://www.ietf.org/rfc/rfc2396.txt Annex B
+    */
+    function isAbsolute($url) {
+        $components = array();
+        preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
+        return isset($components[1]) && $components[1] ? true : false;
+    }
 }
 
 ?>
