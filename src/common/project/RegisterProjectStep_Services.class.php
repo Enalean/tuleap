@@ -86,6 +86,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                         echo '</select>';
                     } else {
                         echo '-';
+                        echo '<input type="hidden" name="services['. $id .'][server_id]" value="'. $p->services[$key]->getServerId() .'" />';
                     }
                     echo '</td>';
                 }
