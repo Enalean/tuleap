@@ -1,4 +1,7 @@
 <?php
+define('SERVICE_MASTER',    'master');
+define('SERVICE_SAME',      'same');
+define('SERVICE_SATELLITE', 'satellite');
 
 /**
 * Service
@@ -49,7 +52,7 @@ class Service {
     }
     function getUrl() {
         $url = $this->data['link'];
-        if (!$this->isAbsolute($url) && $this->getLocation() != 'same') {
+        if (!$this->isAbsolute($url) && $this->getLocation() != SERVICE_SAME) {
             $sf =& $this->_getServerFactory();
             if ($s =& $sf->getServerById($this->getServerId())) {
                 $url = $s->getUrl() . $url;
