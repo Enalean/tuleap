@@ -76,13 +76,17 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                 echo '<td>'. $description .'</td>';
                 //{{{ server
                 if ($can_display_servers) {
-                    echo '<td>';
-                    echo '<select name="services['. $id .'][server_id]">';
-                    foreach($servers as $server_id => $nop) {
-                        $selected = $server_id == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
-                        echo '<option value="'. $servers[$server_id]->getId() .'" '. $selected .'>'. $servers[$server_id]->getName() .'</option>';
+                    echo '<td style="text-align:center">';
+                    if ($p->services[$key]->getLocation() == 'satellite') {
+                        echo '<select name="services['. $id .'][server_id]">';
+                        foreach($servers as $server_id => $nop) {
+                            $selected = $server_id == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
+                            echo '<option value="'. $servers[$server_id]->getId() .'" '. $selected .'>'. $servers[$server_id]->getName() .'</option>';
+                        }
+                        echo '</select>';
+                    } else {
+                        echo '-';
                     }
-                    echo '</select>';
                     echo '</td>';
                 }
                 //}}}

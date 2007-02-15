@@ -44,9 +44,12 @@ class Service {
     function getServerId() {
         return $this->data['server_id'];
     }
+    function getLocation() {
+        return $this->data['location'];
+    }
     function getUrl() {
         $url = $this->data['link'];
-        if (!$this->isAbsolute($url) && $this->data['location'] != 'same') {
+        if (!$this->isAbsolute($url) && $this->getLocation() != 'same') {
             $sf =& $this->_getServerFactory();
             if ($s =& $sf->getServerById($this->getServerId())) {
                 $url = $s->getUrl() . $url;
