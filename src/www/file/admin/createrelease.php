@@ -379,7 +379,7 @@ file_utils_admin_header(array (
     'release_new_file_version'
 ), 'help' => 'QuickFileRelease.html'));
 
-$sql = "SELECT * FROM frs_processor ORDER BY processor_id";
+$sql = "SELECT * FROM frs_processor ORDER BY rank";
 $result = db_query($sql);
 $processor_id = util_result_column_to_array($result, 0);
 $processor_name = util_result_column_to_array($result, 1);
@@ -508,7 +508,7 @@ echo '</script>';
 							<input type="file" name="file[]" id="file_0" />
 						</td>
 						<td>
-							<?php print frs_show_processor_popup($name = 'file_processor'); ?>
+							<?php print frs_show_processor_popup($group_id,$name = 'file_processor'); ?>
 						</td>
 						<td>
 							<?php print frs_show_filetype_popup($name = 'file_type'); ?>

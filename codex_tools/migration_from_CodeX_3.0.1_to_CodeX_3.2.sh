@@ -105,7 +105,7 @@ substitute() {
 }
 
 ##############################################
-# CodeX 3.0 to 3.0.1 migration
+# CodeX 3.0.1 to 3.2 migration
 ##############################################
 echo "Migration script from CodeX 3.0.1 data to CodeX 3.2"
 echo
@@ -268,6 +268,27 @@ CREATE TABLE plugin_docman_tokens(
 ###############################################################################
 # Add a status for Files in FRS
 ALTER TABLE `frs_file` ADD `status` CHAR( 1 ) NOT NULL DEFAULT 'A';
+
+###############################################################################
+# Processor types in FRS (possible to add custom processor types per project)
+DROP TABLE frs_processor;
+
+CREATE TABLE frs_processor (
+  processor_id int(11) NOT NULL auto_increment,
+  name text,
+  rank int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  PRIMARY KEY (processor_id)
+);
+
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('i386','10','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('PPC','20','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('MIPS','30','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('Sparc','40','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('UltraSparc','50','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('IA64','60','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('Alpha','70','100');
+INSERT INTO frs_processor (name,rank,group_id) VALUES ('Any','80','100');
 
 EOF
 

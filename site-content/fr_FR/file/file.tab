@@ -203,6 +203,18 @@ file_admin_qrs	release_file	Créer la version
 file_admin_qrs	adding_file	Ajout du fichier
 #
 #-----------------------------------------------
+# Script: src/www/file/admin/manageprocessors.php
+#
+file_admin_manageprocessors	manage_proclist	Gérer la liste des processeurs
+file_admin_manageprocessors	edit_proc	Cliquer sur l'Identifiant du processeur pour le modifier
+file_admin_manageprocessors	add_proc	Ajouter un nouveau processeur
+file_admin_manageprocessors	update_proc	Modifier un processeur
+file_admin_manageprocessors	rank_error	Erreur. Le rang du processeur doit être un entier.
+file_admin_manageprocessors	proc_fill	Erreur. Le $1 du processeur ne doit pas être vide.
+file_admin_manageprocessors	invalid_procid	Erreur. Identifiant de processeur invalide.
+file_admin_manageprocessors	predef_procid	Attention. Les processeurs prédéfinis ne peuvent être modifiés.
+#
+#-----------------------------------------------
 # Script: SF/www/file/confirm_download.php
 #
 file_confirm_download	download_agreement	Accord de téléchargement CodeX
@@ -239,6 +251,21 @@ file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
 file_file_utils	admin	Administration
 file_file_utils	must_choose_one	Choisir...
 file_file_utils	g_id_err	ERREUR - Identifiant de projet (group_id) obligatoire
+file_file_utils	manage_proc	Gérer la liste des processeurs
+file_file_utils	proc_id	ID du processeur
+file_file_utils	proc_name	Nom
+file_file_utils	proc_rank	Rang
+file_file_utils	del	Effacer ?
+file_file_utils	add_proc	Ajouter
+file_file_utils	update_proc	Modifier
+file_file_utils	required_fields	champs obligatoires
+file_file_utils	add_proc_success	Processeur ajouté.
+file_file_utils	add_proc_fail	Ajout non effectué.
+file_file_utils	update_proc_success	Processeur modifié.
+file_file_utils	update_proc_fail	Modification non effectuée.
+file_file_utils	delete_proc_success	Processeur effacé.
+file_file_utils	delete_proc_fail	Suppression non effectuée.
+file_file_utils	del_proc	Effacer ce processeur ?
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php

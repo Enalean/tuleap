@@ -273,15 +273,14 @@ INSERT INTO frs_filetype VALUES ('9999','Other');
 INSERT INTO frs_status VALUES ('1','status_active');
 INSERT INTO frs_status VALUES ('3','status_hidden');
 
-INSERT INTO frs_processor VALUES ('1000','i386');
-INSERT INTO frs_processor VALUES ('2000','PPC');
-INSERT INTO frs_processor VALUES ('3000','MIPS');
-INSERT INTO frs_processor VALUES ('4000','Sparc');
-INSERT INTO frs_processor VALUES ('5000','UltraSparc');
-INSERT INTO frs_processor VALUES ('6000','IA64');
-INSERT INTO frs_processor VALUES ('7000','Alpha');
-INSERT INTO frs_processor VALUES ('8000','Any');
-INSERT INTO frs_processor VALUES ('9999','Other');
+INSERT INTO frs_processor VALUES ('i386','10','100');
+INSERT INTO frs_processor VALUES ('PPC','20','100');
+INSERT INTO frs_processor VALUES ('MIPS','30','100');
+INSERT INTO frs_processor VALUES ('Sparc','40','100');
+INSERT INTO frs_processor VALUES ('UltraSparc','50','100');
+INSERT INTO frs_processor VALUES ('IA64','60','100');
+INSERT INTO frs_processor VALUES ('Alpha','70','100');
+INSERT INTO frs_processor VALUES ('Any','80','100');
 
 #
 # Default data for Patch Manager

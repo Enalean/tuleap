@@ -870,6 +870,8 @@ CREATE TABLE frs_package (
 CREATE TABLE frs_processor (
   processor_id int(11) NOT NULL auto_increment,
   name text,
+  rank int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (processor_id)
 ) TYPE=MyISAM;
 
@@ -2941,6 +2943,39 @@ CREATE TABLE artifact_notification_role_default (
   description_msg varchar(255) default NULL,
   KEY role_id_idx (role_id)
 );
+
+#
+<<<<<<< .mine
+# Table structure for table 'artifact_date_reminder_settings'
+#
+CREATE TABLE artifact_date_reminder_settings (
+  reminder_id int(11) NOT NULL auto_increment,
+  field_id int(11) NOT NULL default '0',
+  group_artifact_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  notification_start int(11) NOT NULL default '0',
+  notification_type int(11) NOT NULL default '0',
+  frequency int(11) NOT NULL default '0',
+  recurse int(11) NOT NULL default '0',
+  notified_people varchar(255) NOT NULL default '',
+  PRIMARY KEY (reminder_id)
+) TYPE=MyISAM;
+
+#
+=======
+>>>>>>> .r4828
+# Table structure for table 'artifact_date_reminder_processing'
+#
+CREATE TABLE artifact_date_reminder_processing (
+  notification_id int(11) NOT NULL auto_increment,
+  reminder_id int(11) NOT NULL default '0',
+  artifact_id int(11) NOT NULL default '0',
+  field_id int(11) NOT NULL default '0',
+  group_artifact_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  notification_sent int(11) NOT NULL default '0',
+  PRIMARY KEY (notification_id)
+) TYPE=MyISAM;
 
 #
 # Table structure for table 'artifact_dependencies'

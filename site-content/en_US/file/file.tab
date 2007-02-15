@@ -199,6 +199,18 @@ file_admin_qrs	release_file	Release File
 file_admin_qrs	adding_file	Adding File
 #
 #-----------------------------------------------
+# Script: src/www/file/admin/manageprocessors.php
+#
+file_admin_manageprocessors	manage_proclist	Manage List of Processors
+file_admin_manageprocessors	edit_proc	Click on the 'Processor ID' to edit a processor
+file_admin_manageprocessors	add_proc	Add a new processor
+file_admin_manageprocessors	update_proc	Update a processor
+file_admin_manageprocessors	rank_error	Error. Processor rank should be an integer.
+file_admin_manageprocessors	proc_fill	Error. Processor $1 should not be empty.
+file_admin_manageprocessors	invalid_procid	Error. Invalid Processor ID.
+file_admin_manageprocessors	predef_procid	Warning. Pre-defined processors can not be edited.
+#
+#-----------------------------------------------
 # Script: SF/www/file/confirm_download.php
 #
 file_confirm_download	download_agreement	CodeX download agreement
@@ -235,6 +247,21 @@ file_filemodule_monitor	choose_p	Error - Choose a package First
 file_file_utils	admin	Admin
 file_file_utils	must_choose_one	Must Choose One
 file_file_utils	g_id_err	Erreur - Project identifier (group_id) required
+file_file_utils	manage_proc	Manage List of Processors
+file_file_utils	proc_id	Processor ID
+file_file_utils	proc_name	Name
+file_file_utils	proc_rank	Rank
+file_file_utils	del	Delete?
+file_file_utils	add_proc	Add
+file_file_utils	update_proc	Update
+file_file_utils	required_fields	fields required
+file_file_utils	add_proc_success	Processor Added.
+file_file_utils	add_proc_fail	Submit Failed.
+file_file_utils	update_proc_success	Processor Updated.
+file_file_utils	update_proc_fail	Update Failed.
+file_file_utils	delete_proc_success	Processor Deleted.
+file_file_utils	delete_proc_fail	Delete Failed.
+file_file_utils	del_proc	Delete this processor ?
 #
 #-----------------------------------------------
 # Script: SF/www/file/showfiles.php
