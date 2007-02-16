@@ -40,8 +40,8 @@ class Server {
     function getHttps() {
         return $this->https;
     }
-    function getUrl() {
-        return $this->http;
+    function getUrl($secure) {
+        return $this->https && ($secure || !$this->http) ? $this->https : $this->http;
     }
 }
 ?>
