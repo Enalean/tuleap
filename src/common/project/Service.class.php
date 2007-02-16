@@ -2,7 +2,7 @@
 define('SERVICE_MASTER',    'master');
 define('SERVICE_SAME',      'same');
 define('SERVICE_SATELLITE', 'satellite');
-
+require_once('common/server/ServerFactory.class.php');
 /**
 * Service
 * 
@@ -55,7 +55,7 @@ class Service {
         if (!$this->isAbsolute($url) && $this->getLocation() != SERVICE_SAME) {
             $sf =& $this->_getServerFactory();
             if ($s =& $sf->getServerById($this->getServerId())) {
-                $url = $s->getUrl() . $url;
+                $url = $s->getUrl($this->_sessionIsSecure()) . $url;
             }
         }
         return $url;
@@ -71,6 +71,9 @@ class Service {
         $components = array();
         preg_match('`^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?`i', $url, $components);
         return isset($components[1]) && $components[1] ? true : false;
+    }
+    function _sessionIsSecure() {
+        return session_issecure();
     }
 }
 

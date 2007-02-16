@@ -5,7 +5,7 @@
 * $Id$
 */
 require_once('common/project/Service.class.php');
-Mock::generatePartial('Service', 'ServiceTestVersion', array('_getServerFactory'));
+Mock::generatePartial('Service', 'ServiceTestVersion', array('_getServerFactory', '_sessionIsSecure'));
 require_once('common/server/Server.class.php');
 Mock::generate('Server');
 require_once('common/server/ServerFactory.class.php');
@@ -33,6 +33,7 @@ class ServiceTest extends UnitTestCase {
         
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
+        $service->setReturnValue('_sessionIsSecure', false);
         $service->Service(array(
             'link' => $link,
             'location' => 'satellite',
@@ -42,6 +43,7 @@ class ServiceTest extends UnitTestCase {
         
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
+        $service->setReturnValue('_sessionIsSecure', false);
         $service->Service(array(
             'link' => $link,
             'location' => 'satellite',
@@ -51,6 +53,7 @@ class ServiceTest extends UnitTestCase {
         
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
+        $service->setReturnValue('_sessionIsSecure', false);
         $service->Service(array(
             'link' => $link,
             'location' => 'same',
@@ -71,6 +74,7 @@ class ServiceTest extends UnitTestCase {
         
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
+        $service->setReturnValue('_sessionIsSecure', false);
         $service->Service(array(
             'link' => $link,
             'location' => 'satellite',
@@ -80,6 +84,7 @@ class ServiceTest extends UnitTestCase {
         
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
+        $service->setReturnValue('_sessionIsSecure', false);
         $service->Service(array(
             'link' => $link,
             'location' => 'same',

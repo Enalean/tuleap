@@ -113,7 +113,7 @@ class Project extends Group {
                 }
                 
                 $s =& new Service($res_row);
-                $this->services[] =& $s;
+                $this->services[$s->getShortName()] =& $s;
                 unset($s);
             }
         }

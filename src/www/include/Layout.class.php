@@ -532,7 +532,7 @@ echo html_blankimage(5,100);
             if (!$service_data['is_used']) continue;
             if (!$service_data['is_active']) continue;
             // Get URL, and eval variables
-            $link=$service_data['link'];
+            $link = $project->services[$short_name]->getUrl(); //$service_data['link'];
             if ($group_id==100) {
                 if (strstr($link,'$projectname')) {
                     // NOTE: if you change link variables here, change them also in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/project/admin/servicebar.php
