@@ -28,6 +28,9 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 
     function Head($name='edit[content]') {
         global $WikiTheme, $wysiwyg_editor_params, $group_id;
+	 
+	$doubleClickToEdit = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT)
+	    ? 'true' : 'false';
 	
 	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
 				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
@@ -42,7 +45,7 @@ var pagename = '$this->_pagename';
 window.onload = function() {
    var wikiwyg = new Wikiwyg.Phpwiki();
    var config = {
-            doubleClickToEdit:  false,
+            doubleClickToEdit:  $doubleClickToEdit,
             javascriptLocation: base_url+'/themes/default/Wikiwyg/',
             toolbar: {
 	        imagesLocation: base_url+'/themes/default/Wikiwyg/images/',
