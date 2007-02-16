@@ -23,6 +23,9 @@ class Service {
         $this->data = $data;
     }
     
+    function getGroupId() {
+        return $this->data['group_id'];
+    }
     function getId() {
         return $this->data['service_id'];
     }
@@ -74,6 +77,8 @@ class Service {
     }
     function _sessionIsSecure() {
         return session_issecure();
+    }
+    function getPublicArea() {
     }
 }
 

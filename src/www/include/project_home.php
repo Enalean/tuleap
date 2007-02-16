@@ -406,10 +406,7 @@ if ($project->usesService('svn')) {
 // ######################### File Releases (only for Active)
 
 if ($project->usesFile()) {
-	print '<HR SIZE="1" NoShade><A href="/file/showfiles.php?group_id='.$group_id.'">';
-	html_image("ic/file.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','files')));
-	print ' '.$Language->getText('include_project_home','file_releases').'</A>';
-        echo ' ( '.$Language->getText('include_project_home','packages',$nb_packages).' )';
+    echo $project->services['file']->getPublicArea();
 }
 
 // ######################### Trackers (only for Active)
