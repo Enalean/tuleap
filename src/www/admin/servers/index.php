@@ -21,7 +21,8 @@ class ServerAdmin {
             $title_arr = array(
                 'Name',
                 'Description',
-                'URL',
+                'HTTP',
+                'HTTPS',
                 '',
             );
             $html .= html_build_list_table_top($title_arr);
@@ -30,7 +31,8 @@ class ServerAdmin {
                 $html .= '<tr class="'. util_get_alt_row_color($row_num++) .'">';
                 $html .= '<td><a title="Edit server" href="/admin/servers/edit/'. $servers[$key]->getId() .'">'. $servers[$key]->getName() .'</a></td>';
                 $html .= '<td>'. $servers[$key]->getDescription() .'</td>';
-                $html .= '<td>'. $servers[$key]->getUrl() .'</td>';
+                $html .= '<td>'. $servers[$key]->getHttp() .'</td>';
+                $html .= '<td>'. $servers[$key]->getHttps() .'</td>';
                 $html .= '<td><a title="Delete server" href="/admin/servers/delete/'. $servers[$key]->getId() .'">'. $GLOBALS['Response']->getImage('ic/trash.png', array('alt' => 'Delete server')) .'</a></td>';
                 $html .= '</tr>';
             }
@@ -78,11 +80,14 @@ class ServerAdmin {
         return $html;
     }
     function _form(&$server, $action) {
+        $http = $server->getHttp() ? $server->getHttp() : 'http://';
+        
         $html  = '<form action="'. $action .'" method="POST">';
         $html .= '<table>';
         $html .= '<tr><td>Name:</td><td><input type="text" name="server[name]" value="'. htmlentities($server->getName(), ENT_QUOTES) .'" /></td></tr>';
         $html .= '<tr><td>Description:</td><td><input type="text" name="server[description]" value="'. htmlentities($server->getDescription(), ENT_QUOTES) .'" /></td></tr>';
-        $html .= '<tr><td>Url:</td><td><input type="text" name="server[url]" value="'. htmlentities($server->getUrl(), ENT_QUOTES) .'" /></td></tr>';
+        $html .= '<tr><td>Url:</td><td><input type="text" name="server[http]" value="'. htmlentities($http, ENT_QUOTES) .'" /></td></tr>';
+        $html .= '<tr><td>Url:</td><td><input type="text" name="server[https]" value="'. htmlentities($server->getHttps(), ENT_QUOTES) .'" /></td></tr>';
         
         $html .= '<tr><td><input type="hidden" name="server[id]" value="'. $server->getId() .'" /></td><td><input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></td></tr>';
         $html .= '</table>';

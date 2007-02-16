@@ -13,7 +13,8 @@ class Server {
     var $id;
 	var $name;
     var $description;
-    var $url;
+    var $http;
+    var $https;
     /**
     * Constructor
     */
@@ -21,7 +22,8 @@ class Server {
         $this->id          = isset($data['id'])          ? $data['id']          : null;
         $this->name        = isset($data['name'])        ? $data['name']        : '';
         $this->description = isset($data['description']) ? $data['description'] : '';
-        $this->url         = isset($data['url'])         ? $data['url']         : '';
+        $this->http        = isset($data['http'])        ? $data['http']        : '';
+        $this->https       = isset($data['https'])       ? $data['https']       : '';
     }
     function getId() {
         return $this->id;
@@ -32,8 +34,14 @@ class Server {
     function getDescription() {
         return $this->description;
     }
+    function getHttp() {
+        return $this->http;
+    }
+    function getHttps() {
+        return $this->https;
+    }
     function getUrl() {
-        return $this->url;
+        return $this->http;
     }
 }
 ?>

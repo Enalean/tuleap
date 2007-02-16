@@ -243,7 +243,8 @@ CREATE TABLE server (
   id INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   name VARCHAR( 255 ) NOT NULL ,
   description TEXT NOT NULL ,
-  url TEXT NOT NULL
+  http TEXT NOT NULL,
+  https TEXT NOT NULL
 );
 ALTER TABLE service ADD location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'same';
 ALTER TABLE service ADD server_id INT( 11 ) UNSIGNED NULL ;

@@ -42,11 +42,13 @@ class ServerDao extends DataAccessObject {
     function create($server) {
         $name        = isset($server['name'])        ? $server['name']        : '';
         $description = isset($server['description']) ? $server['description'] : '';
-        $url         = isset($server['url'])         ? $server['url']         : '';
-        $sql = sprintf("INSERT INTO server (name, description, url) VALUES (%s, %s, %s)",
+        $http        = isset($server['http'])        ? $server['http']        : '';
+        $https       = isset($server['https'])       ? $server['https']       : '';
+        $sql = sprintf("INSERT INTO server (name, description, http, https) VALUES (%s, %s, %s, %s)",
 				$this->da->quoteSmart($name),
 				$this->da->quoteSmart($description),
-				$this->da->quoteSmart($url));
+				$this->da->quoteSmart($http),
+				$this->da->quoteSmart($https));
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -67,11 +69,13 @@ class ServerDao extends DataAccessObject {
         $id          = isset($server['id'])          ? $server['id']          : 'null';
         $name        = isset($server['name'])        ? $server['name']        : '';
         $description = isset($server['description']) ? $server['description'] : '';
-        $url         = isset($server['url'])         ? $server['url']         : '';
-        $sql = sprintf("UPDATE server SET name = %s, description = %s, url = %s WHERE id = %s",
+        $http        = isset($server['http'])        ? $server['http']        : '';
+        $https       = isset($server['https'])       ? $server['https']       : '';
+        $sql = sprintf("UPDATE server SET name = %s, description = %s, http = %s, https = %s WHERE id = %s",
 				$this->da->quoteSmart($name),
 				$this->da->quoteSmart($description),
-				$this->da->quoteSmart($url),
+				$this->da->quoteSmart($http),
+				$this->da->quoteSmart($https),
                 $this->da->quoteSmart($id));
         return $this->update($sql);
     }
