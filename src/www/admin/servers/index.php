@@ -80,14 +80,12 @@ class ServerAdmin {
         return $html;
     }
     function _form(&$server, $action) {
-        $http = $server->getHttp() ? $server->getHttp() : 'http://';
-        
         $html  = '<form action="'. $action .'" method="POST">';
         $html .= '<table>';
         $html .= '<tr><td>Name:</td><td><input type="text" name="server[name]" value="'. htmlentities($server->getName(), ENT_QUOTES) .'" /></td></tr>';
         $html .= '<tr><td>Description:</td><td><input type="text" name="server[description]" value="'. htmlentities($server->getDescription(), ENT_QUOTES) .'" /></td></tr>';
-        $html .= '<tr><td>Url:</td><td><input type="text" name="server[http]" value="'. htmlentities($http, ENT_QUOTES) .'" /></td></tr>';
-        $html .= '<tr><td>Url:</td><td><input type="text" name="server[https]" value="'. htmlentities($server->getHttps(), ENT_QUOTES) .'" /></td></tr>';
+        $html .= '<tr><td>Http:</td><td><input type="text" name="server[http]" value="'. htmlentities($server->getHttp(), ENT_QUOTES) .'" /></td></tr>';
+        $html .= '<tr><td>Https:</td><td><input type="text" name="server[https]" value="'. htmlentities($server->getHttps(), ENT_QUOTES) .'" /></td></tr>';
         
         $html .= '<tr><td><input type="hidden" name="server[id]" value="'. $server->getId() .'" /></td><td><input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></td></tr>';
         $html .= '</table>';
@@ -106,13 +104,18 @@ class ServerAdmin {
     }
     function edit(&$request) {
         $html = '';
-        $server =& $this->server_factory->getServerById($request->get('id'));
+        if ($request->exist('server')) {
+            $server =& new Server($request->get('server'));
+        } else if ($request->exist('id')) {
+            $server =& $this->server_factory->getServerById($request->get('id'));
+        }
         if (!$server) {
             $GLOBALS['Response']->addFeedback('error', 'Server not found');
             $GLOBALS['Response']->redirect('/admin/servers/');
+        } else {
+            $this->title = 'Edit server '. $server->getName();
+            $html .= $this->_form($server, '/admin/servers/update/'.$server->getId());
         }
-        $this->title = 'Edit server '. $server->getName();
-        $html .= $this->_form($server, '/admin/servers/update/'.$server->getId());
         return $html;
     }
     function update(&$request) {
