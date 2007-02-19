@@ -382,8 +382,7 @@ if ($project->usesFile()) {
     echo '
 	&nbsp;<BR>
 	<CENTER>
-	<A href="/file/admin/editpackages.php?group_id='.$group_id.'"><B>'.$Language->getText('project_admin_index','edit_add_rel').'</B></A><BR> '.$Language->getText('project_admin_index','or').'... <BR>
-	<A href="/file/admin/qrs.php?group_id='.$group_id.'"><B>'.$Language->getText('project_admin_index','quick_file_add').'</B></A><BR>'.$Language->getText('project_admin_index','if_1_file_in_rel').'
+	<A href="/file/admin/editpackages.php?group_id='.$group_id.'"><B>'.$Language->getText('project_admin_index','edit_add_rel').'</B></A><BR>
 	</CENTER>
 
 	<HR>
