@@ -76,7 +76,7 @@ if (! $project->hideMembers()) {
                   
                   echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','proj_admins').':</SPAN><BR>';
                   while ($row_admin = db_fetch_array($res_admin)) {
-                      print "<A href=\"/users/$row_admin[user_name]/\">$row_admin[user_name]</A><BR>";
+                      print '<A href="/users/'. $row_admin['user_name'] .'">'. $row_admin['user_name'] .'</A><BR>';
                   }
                   ?>
                       <HR WIDTH="100%" SIZE="1" NoShade>
@@ -110,90 +110,12 @@ print '
 // ############################# File Releases
 
 if ($project->usesFile()) {
-    echo $HTML->box1_top($Language->getText('include_project_home','latest_file_releases')); 
-    $unix_group_name = $project->getUnixName();
-
-    echo '
-	<TABLE cellspacing="1" cellpadding="5" width="100%" border="0">
-		<TR class="boxitem">
-		<TD align="left"">
-			'.$Language->getText('include_project_home','package').'
-		</td>
-		<TD align="center">
-			'.$Language->getText('include_project_home','version').'
-		</td>
-		<TD align="center">
-			'.$Language->getText('include_project_home','notes').'
-		</td>
-		<TD align="center">
-			'.$Language->getText('include_project_home','download').'
-		</td>
-		</TR>';
-
-$sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
-"FROM frs_package,frs_release ".
-"WHERE frs_package.package_id=frs_release.package_id ".
-"AND frs_package.group_id='$group_id' ".
-"AND frs_release.status_id=1 ".
-"ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
-
-$res_files = db_query($sql);
-$rows_files=db_numrows($res_files);
-$nb_packages=0;
-if (!$res_files || $rows_files < 1) {
-    echo db_error();
-    // No releases
-    echo '<TR class="boxitem"><TD COLSPAN="4"><B>'.$Language->getText('include_project_home','no_files_released').'</B></TD></TR>';
-    
-} else {
-    /*
-       This query actually contains ALL releases of all packages
-       We will test each row and make sure the package has changed before printing the row
-    */
-    for ($f=0; $f<$rows_files; $f++) {
-        $package_id=db_result($res_files,$f,'package_id');
-        $release_id=db_result($res_files,$f,'release_id');
-
-        if (isset($package_displayed[$package_id]) && $package_displayed[$package_id]) {
-            //if ($package_id==db_result($res_files,($f-1),'package_id')) {
-            //same package as last iteration - don't show this release
-        } else {
-            $authorized=false;
-            // check access.
-            if (permission_exist('RELEASE_READ', $release_id)) {
-                $authorized=permission_is_authorized('RELEASE_READ',$release_id ,user_getid(),$group_id);
-            } else {  
-                $authorized=permission_is_authorized('PACKAGE_READ',$package_id ,user_getid(),$group_id);
-            }
-            if ($authorized) {
-                $nb_packages++;
-                echo '
-                  <TR class="boxitem" ALIGN="center">
-                  <TD ALIGN="left">
-                  <B>' . db_result($res_files,$f,'package_name'). '</B></TD>';
-                // Releases to display
-                print '<TD>'.db_result($res_files,$f,'release_name') .'
-                  </TD>
-                  <TD align="center"><A href="/file/shownotes.php?group_id=' . $group_id . '&release_id=' . $release_id . '">';
-                echo	html_image("ic/manual16b.png",array('alt'=>$Language->getText('include_project_home','release_notes')));
-                echo '</A> - <A HREF="/file/filemodule_monitor.php?filemodule_id=' .	$package_id . '">';
-                echo html_image("ic/mail16b.png",array('alt'=>$Language->getText('include_project_home','monitor_pack')));
-                echo '</A>
-                  </TD>
-                  <TD align="center"><A HREF="/file/showfiles.php?group_id=' . $group_id . '&release_id=' . $release_id . '">'.$Language->getText('include_project_home','download').'</A></TD></TR>';
-                $package_displayed[$package_id]=true;
-            }
-        }
+    if ($spc = $project->services['file']->getSummaryPageContent()) {
+        echo $HTML->box1_top($spc['title']); 
+        echo $spc['content'];
+        echo $HTML->box1_bottom();
     }
-    
 }
-echo '</TABLE>
-<div align="center">
-<a href="/file/showfiles.php?group_id='.$group_id.'">['.$Language->getText('include_project_home','view_all_files').']</A>
-</div>
-';
-	echo $HTML->box1_bottom();
- }
 ?>
 <P>
 <TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0">
@@ -212,7 +134,7 @@ if ($project->usesHomePage()) {
         // Absolute link -> open new window on click
         print "target=_blank ";
     }
-    print "href=\"" . $project->getHomePage() . "\">";
+    print 'href="' . $project->getHomePage() . '">';
     html_image("ic/home16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','homepage')));
     print '&nbsp;'.$Language->getText('include_project_home','proj_home').'</A>';
 }
