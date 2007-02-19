@@ -130,7 +130,11 @@ function session_issecure() {
 function session_cookie($n,$v, $expire = 0) {
     // Make sure there isn't a port number in the default domain name
     // or the setcookie for the entire domain won't work
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+    if (isset($GLOBALS['sys_cookie_domain'])) {
+        $host = $GLOBALS['sys_cookie_domain'];
+    } else {
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+    }
     if (browser_is_netscape4()) {
         $cookie_host=$host;
     } else {
