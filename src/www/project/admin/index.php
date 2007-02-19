@@ -12,6 +12,7 @@ require_once('account.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('project/project');
@@ -389,16 +390,21 @@ if ($project->usesFile()) {
 	<B>'.$Language->getText('project_admin_index','packages_available').'</B>
 
      <P>';
-
-    $res_module = db_query("SELECT * FROM frs_package WHERE group_id=$group_id");
-    if (db_numrows($res_module) <= 0) {
-        echo $Language->getText('global','none').'<br>';
-    } else {
-        while ($row_module = db_fetch_array($res_module)) {
-            print "$row_module[name]<BR>";
+    
+    // Display the list of the packages available in this project
+    $package_factory = new FRSPackageFactory();
+    $packages = $package_factory->getFRSPackagesFromDb($group_id);
+    if (count($packages) > 0) {
+        foreach ($packages as $package) {
+            echo $package->getName();
+            echo '<br />';
         }
+    } else {
+    	   echo $Language->getText('global','none').'<br />';
     }
+    
     echo $HTML->box1_bottom();
+    
 }
 ?>
 </TD>
