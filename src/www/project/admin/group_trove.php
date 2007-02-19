@@ -10,13 +10,16 @@ require_once('pre.php');
 require_once('trove.php');
 require_once('www/project/admin/project_admin_utils.php');
 
+require_once('common/include/HTTPRequest.class.php');
+$request =& HTTPRequest::instance();
+
 $Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 // Check for submission. If so, make changes and redirect
 
-if ($GLOBALS['Submit'] && $root1) {
+if ($request->exist('Submit') && $request->exist('root1')) {
 	group_add_history ('changed_trove',"",$group_id);
 
 	// there is at least a $root1[xxx]

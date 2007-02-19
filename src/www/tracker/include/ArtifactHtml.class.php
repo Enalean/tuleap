@@ -1291,7 +1291,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
-            global $sys_datefmt,$feedback,$art_field_fact,$sys_lf,$Language;
+            global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
 
 
             $group = $this->ArtifactType->getGroup();
@@ -1371,7 +1371,7 @@ class ArtifactHtml extends Artifact {
           }
 	    }
 
-	    $feedback .= ' '.$Language->getText('tracker_include_artifact','update_sent').' '; //to '.$to;
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_include_artifact','update_sent')); //to '.$to;
         }
 
 

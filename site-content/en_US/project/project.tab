@@ -442,9 +442,9 @@ project_admin_ugroup_utils	ug__exist	User group '$1' already exists in this proj
 project_admin_ugroup_utils	cant_create_ug	ERROR - Can not create user group: $1
 project_admin_ugroup_utils	ug_create_success	Successfully Created User Group
 project_admin_ugroup_utils	ug_created_but_no_id	ERROR - User group created but cannot get ID: 
-project_admin_ugroup_utils	no_g_template	- no group template selected
+project_admin_ugroup_utils	no_g_template	No group template selected
 project_admin_ugroup_utils	cant_insert_u_in_g	ERROR - Can not insert user $1 in group $2: $3
-project_admin_ugroup_utils	u_added	- $1 users added
+project_admin_ugroup_utils	u_added	$1 users added
 project_admin_ugroup_utils	ug_name_missed	The group name is missing, please press the "Back" button and complete this information
 project_admin_ugroup_utils	invalid_ug_name	Invalid group name: $1. Please use only alphanumerical characters. Press the "Back" button and complete this information
 project_admin_ugroup_utils	cant_update_ug	ERROR - Can not update user group: $1
@@ -452,10 +452,10 @@ project_admin_ugroup_utils	cant_reset_ug	ERROR - Can not reset user group $1: $2
 project_admin_ugroup_utils	ug_upd_success	Successfully Updated User Group $1 ($2 members)
 project_admin_ugroup_utils	ug_not_given	FAILED: ugroup ID was not specified
 project_admin_ugroup_utils	g_del	User group deleted
-project_admin_ugroup_utils	cant_remove_u	- Error: cannot remove users! $1
-project_admin_ugroup_utils	all_u_removed	- all users removed from this group
-project_admin_ugroup_utils	cant_remove_perm	- Error: cannot remove permissions! $1
-project_admin_ugroup_utils	perm_warning	- WARNING: $1 associated permissions deleted. <br>Note: If this group was the only one authorized to access an object, permissions are now reset to default for this object.
+project_admin_ugroup_utils	cant_remove_u	Error: cannot remove users! $1
+project_admin_ugroup_utils	all_u_removed	all users removed from this group
+project_admin_ugroup_utils	cant_remove_perm	Error: cannot remove permissions! $1
+project_admin_ugroup_utils	perm_warning	WARNING: $1 associated permissions deleted. <br>Note: If this group was the only one authorized to access an object, permissions are now reset to default for this object.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/userperms.php

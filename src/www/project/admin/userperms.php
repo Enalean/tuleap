@@ -68,7 +68,7 @@ if (isset($submit)) {
                             }
                         }
                         if (!$other_admin_exists) {
-                            $feedback .= ' '.$Language->getText('project_admin_userperms','cannot_remove_admin_stat').' ';
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
                             $$admin_flags='A';
                         }
                     }
@@ -118,12 +118,11 @@ if (isset($submit)) {
 		}
 
 		if (!$res || $tracker_error) {
-			echo db_error();
-			$feedback .= ' '.$Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' ';
+			$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' '.db_error());
 		}
 	}
 
-	$feedback .= ' '.$Language->getText('project_admin_userperms','perm_upd').' ';
+	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
 }
 
 $res_dev = db_query("SELECT user.user_name AS user_name,"
@@ -261,13 +260,15 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 		
         // patch selects
         if ($project->usesPatch()) {
-	    print '<TD><FONT size="-1"><SELECT name="patch_user_'.$row_dev['user_id'].'">';
-	    print '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-	    print '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
-	    print '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
-	    print '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
-	    print '</SELECT></FONT></TD>';
-	}
+            print '<TD><FONT size="-1"><SELECT name="patch_user_'.$row_dev['user_id'].'">';
+            print '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
+            print '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
+            print '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
+            print '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
+            print '</SELECT></FONT></TD>';
+        } else {
+            print '<input type="hidden" name="patch_user_'.$row_dev['user_id'].'" value="'.$row_dev['patch_flags'].'" />';
+        }
 
         // support selects
         if ($project->usesSupport()) {

@@ -44,10 +44,10 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 			$result=db_query($sql);
 			
 			if (!$result) {
-				$feedback .= ' '.$Language->getText('news_admin_index','group_update_err').' ';
+				$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','group_update_err'));
 				
 			} else {
-				$feedback .= ' '.$Language->getText('news_admin_index','project_newsbyte_updated').' ';
+				$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','project_newsbyte_updated'));
 				
 				// update/create  news permissions
 				$qry1="SELECT * FROM news_bytes WHERE id='$id'";
@@ -172,9 +172,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 					"summary='".htmlspecialchars($summary)."', details='".htmlspecialchars($details)."' WHERE id='$id'";
 				$result=db_query($sql);
 				if (!$result || db_affected_rows($result) < 1) {
-					$feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
+					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
 				} else {
-					$feedback .= ' '.$Language->getText('news_admin_index','newsbyte_updated').' ';
+					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_updated'));
 				}
 			} else if ($status==2) {
 				/*
@@ -183,10 +183,9 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 				$sql="UPDATE news_bytes SET is_approved='2' WHERE id='$id'";
 				$result=db_query($sql);
 				if (!$result || db_affected_rows($result) < 1) {
-					$feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
-					$feedback .= db_error();
+					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err').' '.db_error());
 				} else {
-					$feedback .= ' '.$Language->getText('news_admin_index','newsbyte_deleted').' ';
+					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_deleted'));
 				}
 			}
 

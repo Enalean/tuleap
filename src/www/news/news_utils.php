@@ -266,9 +266,9 @@ function news_submit($group_id,$summary,$details,$private_news) {
         $result=db_query($sql);
                
 	if (!$result) {
-            $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('news_submit','insert_err').' ';
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','insert_err'));
         } else {
-            $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('news_submit','news_added').' ';
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
 	    // set permissions on this piece of news
 	    if ($private_news) {
 	        news_insert_permissions($new_id,$group_id);
@@ -304,9 +304,9 @@ function news_insert_permissions($forum_id,$group_id) {
 	$_forum_id = (int) $forum_id;
 	
 	if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
-	    $GLOBALS['feedback'] .= ' '.$Language->getText('news_submit','news_perm_create_success').' ';
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_create_success'));
 	} else {
-	    $GLOBALS['feedback'] .= ' '.$Language->getText('news_submit','insert_err').' ';
+	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_submit','insert_err'));
 	}
 }
 
@@ -325,15 +325,15 @@ function news_update_permissions($forum_id,$is_private,$group_id) {
 	if ($_is_private) {
 	  permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false);
 	  if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
-	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
 	  } else {
-	    $feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
+	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
 	  }
 	} else {
 	  if (permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false)) {
-	    $feedback .= ' '.$Language->getText('news_submit','news_perm_update_success').' ';
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
 	  } else {
-	    $feedback .= ' '.$Language->getText('news_admin_index','update_err').' ';
+	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
 	  }	
 	}
 	

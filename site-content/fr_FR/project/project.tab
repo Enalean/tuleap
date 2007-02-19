@@ -447,9 +447,9 @@ project_admin_ugroup_utils	ug__exist	Le groupe d'utilisateurs '$1' existe déjà p
 project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer le groupe d'utilisateurs&nbsp;: $1
 project_admin_ugroup_utils	ug_create_success	Le groupe d'utilisateurs a été créé avec succès
 project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID&nbsp;: 
-project_admin_ugroup_utils	no_g_template	- Aucun modèle de groupe sélectionné
+project_admin_ugroup_utils	no_g_template	Aucun modèle de groupe sélectionné
 project_admin_ugroup_utils	cant_insert_u_in_g	ERREUR - Impossible d'insérer l'utilisateur $1 dans le groupe $2 : $3
-project_admin_ugroup_utils	u_added	- $1 ajouté
+project_admin_ugroup_utils	u_added	$1 ajouté
 project_admin_ugroup_utils	ug_name_missed	Le nom de groupe est manquant. Veuillez cliquer sur le bouton "Retour" de votre navigateur et remplir ce champ.
 project_admin_ugroup_utils	invalid_ug_name	Nom de groupe invalidenbsp;: $1. Veuillez n'utiliser que des caractères alphanumériques. Cliquer sur le bouton "Retour" de votre navigateur et modifier ce champ.
 project_admin_ugroup_utils	cant_update_ug	ERREUR - Impossible de mettre à jour le groupe d'utilisateurs&nbsp;: $1
@@ -457,10 +457,10 @@ project_admin_ugroup_utils	cant_reset_ug	ERREUR - Impossible de réinitialiser le
 project_admin_ugroup_utils	ug_upd_success	Groupe d'utilisateurs $1 mis à jour avec succès ($2 membres)
 project_admin_ugroup_utils	ug_not_given	ECHEC&nbsp;: l'ID de ugroup ID n'est pas spécifié
 project_admin_ugroup_utils	g_del	Groupe d'utilisateurs détruit
-project_admin_ugroup_utils	cant_remove_u	- Erreur&nbsp;: Impossible d'enlever l'utilisateur ! $1
-project_admin_ugroup_utils	all_u_removed	- Tous les utilisateurs ont été enlevés de ce groupe
-project_admin_ugroup_utils	cant_remove_perm	- Erreur&nbsp;: impossible d'enlever les permissions ! $1
-project_admin_ugroup_utils	perm_warning	- AVERTISSEMENT&nbsp;: permissions associées à $1 détruites. <br>Note&nbsp;: Si ce groupe était le seul autorisé à accéder à cet objet, les permissions seront réinitialisées à leurs valeurs par défaut.
+project_admin_ugroup_utils	cant_remove_u	Erreur&nbsp;: Impossible d'enlever l'utilisateur ! $1
+project_admin_ugroup_utils	all_u_removed	Tous les utilisateurs ont été enlevés de ce groupe
+project_admin_ugroup_utils	cant_remove_perm	Erreur&nbsp;: impossible d'enlever les permissions ! $1
+project_admin_ugroup_utils	perm_warning	AVERTISSEMENT&nbsp;: permissions associées à $1 détruites. <br>Note&nbsp;: Si ce groupe était le seul autorisé à accéder à cet objet, les permissions seront réinitialisées à leurs valeurs par défaut.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/userperms.php

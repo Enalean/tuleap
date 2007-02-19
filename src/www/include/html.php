@@ -461,8 +461,7 @@ function site_header($params) {
     if (isset($params['group'])) {
 	  $project=project_get_object($params['group']);
 	  if ($project->isTemplate()) {
-	    $warning = $GLOBALS['Language']->getText('include_layout','template_warning').'<BR>';
-	    $GLOBALS['feedback'] = $warning.$GLOBALS['feedback'];
+	    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout','template_warning'));
 	  }
 	}
     echo $HTML->header($params);

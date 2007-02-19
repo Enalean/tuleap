@@ -160,7 +160,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['feedback'] .= '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>';
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>');
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -178,7 +178,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['feedback'] .= '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>';
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>');
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -193,7 +193,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     
     function badRequest() {
         header("HTTP/1.1 400 Bad Request");
-        $GLOBALS['feedback'] .= 'Bad Request';
+        $GLOBALS['Response']->addFeedback('info', 'Bad Request');
         $this->_header();
         echo "The server is unable to process your request.";
         $this->_footer();

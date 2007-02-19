@@ -323,7 +323,7 @@ class Artifact extends Error {
      *  @return boolean
      */
     function create($vfl=false,$import=false,$row=0) {
-        global $feedback,$ath,$art_field_fact,$Language;
+        global $ath,$art_field_fact,$Language;
         
         $group = $ath->getGroup();
         $group_artifact_id = $ath->getID();
@@ -542,7 +542,7 @@ class Artifact extends Error {
      */
     function addComment($comment,$email=false,&$changes) {
                         
-        global $feedback,$art_field_fact,$Language;
+        global $art_field_fact,$Language;
 
         // Add a new comment if there is one
         if ($comment != '') {
@@ -552,7 +552,7 @@ class Artifact extends Error {
                 if ( $email ) {
                     $this->addHistory('comment',htmlspecialchars($comment), "", 100, $email);
                 } else {
-                    $feedback .= $Language->getText('tracker_common_artifact','enter_email');
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','enter_email'));
                     return false;
                 }
             } else {
@@ -561,7 +561,7 @@ class Artifact extends Error {
             $changes['comment']['add'] = stripslashes($comment);
             $changes['comment']['type'] = $Language->getText('global','none');
                         
-            $feedback .= $Language->getText('tracker_common_artifact','add_comment');               
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','add_comment'));               
             return true;
         } else {
             return false;
@@ -589,10 +589,10 @@ class Artifact extends Error {
 	
 	if ($res3 && db_numrows($res3) > 0) {
 	  $comment = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
-	  $feedback .= $Language->getText('tracker_common_artifact','canned_used');
+	  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','canned_used'));
 	} else {
-	  $feedback .= $Language->getText('tracker_common_artifact','unable_canned');
-	  $feedback .= ' - '.db_error();
+	  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','unable_canned'));
+	  $GLOBALS['Response']->addFeedback('error', db_error());
 	}
       }
       
@@ -657,7 +657,7 @@ class Artifact extends Error {
      */
     function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false)
         {
-            global $feedback,$art_field_fact,$HTTP_POST_VARS,$Language;
+            global $art_field_fact,$HTTP_POST_VARS,$Language;
 
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
@@ -757,7 +757,7 @@ class Artifact extends Error {
                                 
                             // Update the field value
                             if ( !$field->updateValues($this->getID(),$values) ) {
-                                $feedback .= $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel());
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
                             }
                                     
                             // Keep track of the change
@@ -824,7 +824,7 @@ class Artifact extends Error {
                                 // Update the field value
                                 if ( !$field->isStandardField() ) {
                                     if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                        $feedback .= $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel());
+                                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
                                     }
                                 }
                                         
@@ -911,7 +911,7 @@ class Artifact extends Error {
                 exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
                 return false;
             } else {
-                if (!$masschange) $feedback .= $Language->getText('tracker_common_artifact','upd_success');
+                if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','upd_success'));
                 return true;
             }
 
@@ -961,7 +961,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function addCC($email,$comment,&$changes,$masschange=false) {
-        global $feedback,$Language;
+        global $Language;
         
         $user_id = (user_isloggedin() ? user_getid(): 100);
         
@@ -993,9 +993,9 @@ class Artifact extends Error {
 	}
 
         if (!$ok) {
-            $feedback .= ' - '.$Language->getText('tracker_common_artifact','cc_add_fail');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','cc_add_fail'));
         } else {
-            if (!$masschange) $feedback .= '- '.$Language->getText('tracker_common_artifact','cc_added');
+            if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','cc_added'));
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }
@@ -1011,7 +1011,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function updateCC($email,$comment) {
-        global $feedback,$Language;
+        global $Language;
         
         $user_id = (user_isloggedin() ? user_getid(): 100);
         
@@ -1033,7 +1033,7 @@ class Artifact extends Error {
 	if (count($deleted_values) == 0 && count($added_values) == 0) return true;
 
 	if (!$this->deleteAllCC()) {
-		$feedback = $Language->getText('tracker_common_artifact','prob_cc_list',$this->getID());
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','prob_cc_list',$this->getID()));
 		$ok = false;
 	}
 
@@ -1045,7 +1045,7 @@ class Artifact extends Error {
         }
 
         if (!$ok) {
-            $feedback .= ' - '.$Language->getText('tracker_common_artifact','cc_add_fail');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','cc_add_fail'));
         } else {
 	    $this->addHistory('cc',$old_value,$new_value);
         }
@@ -1063,14 +1063,14 @@ class Artifact extends Error {
      * @return boolean
      */
     function deleteCC($artifact_cc_id=false,&$changes,$masschange=false) {
-        global $feedback,$Language;
+        global $Language;
         
         // If both bug_id and bug_cc_id are given make sure the cc belongs 
         // to this bug (it's a bit paranoid but...)
         $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='$artifact_cc_id'";
         $res1 = db_query($sql);
         if ((db_numrows($res1) <= 0) || (db_result($res1,0,'artifact_id') != $this->getID()) ) {
-            $feedback .= " - ".$Language->getText('tracker_common_artifact','err_cc_id',$artifact_cc_id);
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','err_cc_id',$artifact_cc_id));
             return false;
         }
         	
@@ -1080,10 +1080,10 @@ class Artifact extends Error {
 	// Now delete the CC address
         $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='$artifact_cc_id'");
         if (!$res2) {
-            $feedback .= " - ".$Language->getText('tracker_common_artifact','err_del_cc',array($artifact_cc_id,db_error($res2)));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','err_del_cc',array($artifact_cc_id,db_error($res2))));
             return false;
         } else {
-            if (!$masschange) $feedback .= " - ".$Language->getText('tracker_common_artifact','cc_remove');
+            if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','cc_remove'));
 	    $new_value=$this->getCCEmails();
 	    $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['del'] = db_result($res1,0,'email');
@@ -1187,7 +1187,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function addDependencies($artifact_id_dependent,&$changes,$masschange) {
-        global $feedback,$Language;
+        global $Language;
         
         if ( !$artifact_id_dependent ) 
             return true;
@@ -1201,7 +1201,7 @@ class Artifact extends Error {
             // Check existance
             if (!$this->validArtifact($id)) {
                 $ok = false;
-                $feedback .= $Language->getText('tracker_common_artifact','invalid_art',$id);
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','invalid_art',$id));
             }
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
                 $res = $this->insertDependency($id);
@@ -1210,9 +1210,9 @@ class Artifact extends Error {
         }
         
         if (!$ok) {
-            $feedback .= ' - '.$Language->getText('tracker_common_artifact','depend_add_fail',$this->getID());
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
         } else {
-            if (!$masschange) $feedback .= '- '.$Language->getText('tracker_common_artifact','depend_add');
+            if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','depend_add'));
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }
         return $ok;
@@ -1227,16 +1227,16 @@ class Artifact extends Error {
      * @return boolean
      */
     function deleteDependency($dependent_on_artifact_id,&$changes) {
-        global $feedback,$Language;
+        global $Language;
         
         // Delete the dependency
         $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=$dependent_on_artifact_id AND artifact_id=".$this->getID();
         $res2 = db_query($sql);
         if (!$res2) {
-            $feedback .= " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2);
+            $GLOBALS['Response']->addFeedback('error', " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2));
             return false;
         } else {
-            $feedback .= " - ".$Language->getText('tracker_common_artifact','depend_removed');
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','depend_removed'));
             $changes['Dependencies']['del'] = $dependent_on_artifact_id;
             return true;
         }
@@ -1823,7 +1823,6 @@ class Artifact extends Error {
      * belong to
      */
     function groupNotificationList($user_ids,&$user_sets,&$ugroup_sets) {
-      global $feedback;
       
       $group_id = $this->ArtifactType->getGroupID();
       $group_artifact_id = $this->ArtifactType->getID();

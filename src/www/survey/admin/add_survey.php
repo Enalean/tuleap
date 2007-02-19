@@ -10,22 +10,28 @@ require_once('pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
+require_once('common/include/HTTPRequest.class.php');
+$request =& HTTPRequest::instance();
+
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
-survey_header(array('title'=>$Language->getText('survey_admin_add_survey','add_s'),
-		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
+    survey_header(array('title'=>$Language->getText('survey_admin_add_survey','add_s'),
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 	echo '<H1>'.$Language->getText('survey_admin_add_question','perm_denied').'</H1>';
 	survey_footer(array());
 	exit;
 }
 
-if ($post_changes) {
+if ($request->exist('post_changes')) {
     survey_data_survey_create($group_id,$survey_title,$survey_questions,
 			      $is_active, $is_anonymous);
 }
+
+survey_header(array('title'=>$Language->getText('survey_admin_add_survey','add_s'),
+		    'help'=>'AdministeringSurveys.html#CreatingorEditingaSurvey'));
 
 ?>
 <SCRIPT LANGUAGE="JavaScript">

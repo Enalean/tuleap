@@ -10,6 +10,9 @@ require_once('pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
+require_once('common/include/HTTPRequest.class.php');
+$request =& HTTPRequest::instance();
+
 $Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
@@ -32,12 +35,13 @@ switch ($func) {
      break;
 
  case 'update_survey':
-     if ($post_changes) {
+     if ($request->exist('post_changes')) {
 	 // Update the survey
 	 survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_questions,$is_active,$is_anonymous);
 	 // Display the list after the update
 	 require('./browse_survey.php');
      } else {
+         $GLOBALS['Response']->addFeedback('warning', $Language->getText('survey_admin_update_survey','warn'));
 	 // Show the form to update the survey
 	 require('./update_survey.php');
      }

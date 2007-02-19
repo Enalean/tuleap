@@ -132,7 +132,7 @@ survey_admin_update_radio	fill_r_rank	Please, fill the Rank field.
 #-----------------------------------------------
 # Script: SF/www/survey/admin/update_survey.php
 #
-survey_admin_update_survey	warn	<span class="highlight">WARNING! It is a bad idea to edit a survey after responses have been posted.This can lead to misleading or inconsistent results.</span>
+survey_admin_update_survey	warn	WARNING! It is a bad idea to edit a survey after responses have been posted.This can lead to misleading or inconsistent results.
 survey_admin_update_survey	q	Questions:
 survey_admin_update_survey	anon_allow	Anonymous answer ok?
 survey_admin_update_survey	edit_a_s	Edit a survey

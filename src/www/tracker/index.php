@@ -195,7 +195,7 @@ if ( $func == 'gotoid' ) {
                                 // send an email to notify the user of the artifact update
 				//                                $ah->mailFollowup($ath->getEmailAddress(),$null);
                                 $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
-                                $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
                         }
                 }
@@ -276,7 +276,7 @@ if ( $func == 'gotoid' ) {
                                 // send an email to notify the user of the artifact update
                                 //$ah->mailFollowup($ath->getEmailAddress());
                                 $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
-                                $feedback .= $Language->getText('tracker_index','create_success',$ah->getID());
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
                         }
                 }
@@ -506,7 +506,7 @@ if ( $func == 'gotoid' ) {
                         //      Show just one feedback entry if no errors
                         //
                         if (!$was_error) {
-                                $feedback .= $Language->getText('tracker_index','update_success');
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
                         }
                         require('./browse.php');
                 }
@@ -838,7 +838,7 @@ if ( $func == 'gotoid' ) {
                         return;
                 }
 
-            if ($field) {
+            if (isset($field) && $field) {
               if ($field == 'aging') {
                         $ath->reportingByAge();
               } else {

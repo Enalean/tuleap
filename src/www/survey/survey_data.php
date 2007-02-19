@@ -11,19 +11,19 @@ $Language->loadLanguageMsg('survey/survey');
 function survey_data_survey_create($group_id,$survey_title,$survey_questions,
 				   $is_active, $is_anonymous)
 {
-    global $feedback,$Language;
+    global $Language;
 
     $survey_questions = survey_utils_cleanup_questions($survey_questions);
 
     // Check that the question list only lists existing questions
     if (!survey_utils_all_questions_exist($survey_questions)) {
-        $feedback .= " ".$Language->getText('survey_s_data','create_unknown_question',$survey_questions)." ";
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','create_unknown_question',$survey_questions));
         return;
     }
 
     // Check that the same question does not appear several times
     if (!survey_utils_unique_questions($survey_questions)) {
-        $feedback .= " ".$Language->getText('survey_s_data','create_duplicate',$survey_questions)." ";
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','create_duplicate',$survey_questions));
         return;
     }
 
@@ -31,43 +31,42 @@ function survey_data_survey_create($group_id,$survey_title,$survey_questions,
 	"VALUES ('$group_id','$survey_title','$survey_questions','$is_active','$is_anonymous')";
     $result=db_query($sql);
     if ($result) {
-	$feedback .= " ".$Language->getText('survey_s_data','create_succ',db_insertid($result))." ";
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','create_succ',db_insertid($result)));
     } else {
-	$feedback .= " ".$Language->getText('survey_s_data','create_fail',db_error());
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','create_fail',db_error()));
     }
 }
 
 function survey_data_survey_delete($group_id,$survey_id) {
 
-    global $feedback,$Language;
+    global $Language;
 
     // Delete first the data associated with the survey if any
     $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$survey_id");
     // Then delete the survey itself
     $res = db_query("DELETE FROM surveys WHERE survey_id=$survey_id");
     if (db_affected_rows($res) <= 0) {
-	    $feedback .= $Language->getText('survey_s_data','del_err',array($survey_id,db_error($res)));
+	    $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','del_err',array($survey_id,db_error($res))));
     } else {
-	    $feedback .= $Language->getText('survey_s_data','del_succ');
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','del_succ'));
     }    
 }
 
 function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_questions,$is_active,$is_anonymous) {
     
-    global $feedback,$Language;
+    global $Language;
     
-    $feedback = '';
     $survey_questions = survey_utils_cleanup_questions($survey_questions);
 
     // Check that the question list only lists existing questions
     if (!survey_utils_all_questions_exist($survey_questions)) {
-        $feedback .= " ".$Language->getText('survey_s_data','upd_unknown_question',$survey_questions)." ";
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_unknown_question',$survey_questions));
         return;
     }
 
     // Check that the same question does not appear several times
     if (!survey_utils_unique_questions($survey_questions)) {
-        $feedback .= " ".$Language->getText('survey_s_data','upd_duplicate',$survey_questions)." ";
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_duplicate',$survey_questions));
         return;
     }
 
@@ -75,33 +74,32 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
 		"WHERE survey_id='$survey_id' AND group_id='$group_id'";
     $result=db_query($sql);
     if (db_affected_rows($result) < 1) {
-	$feedback .= $Language->getText('survey_s_data','upd_fail',db_error());
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_fail',db_error()));
     } else {
-	$feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','upd_succ'));
     }
 }
 
 function survey_data_question_create($group_id,$question,$question_type)
 {   
-    global $feedback,$Language;
+    global $Language;
 
     $sql='INSERT INTO survey_questions (group_id,question,question_type) '.
 	"VALUES ('$group_id','$question','$question_type')";
     $result=db_query($sql);
     if ($result) {
         $question_id = db_insertid($result);
-        $feedback .= " ".$Language->getText('survey_s_data','q_create_succ',$question_id)." ";
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','q_create_succ',$question_id));
         return $question_id;
     } else {
-        $feedback .= " ".$Language->getText('survey_s_data','q_create_fail',db_error());
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','q_create_fail',db_error()));
     }
 }
 
 function survey_data_question_delete($group_id,$question_id) {
 
-    global $feedback,$Language;
+    global $Language;
 
-    $feedback = '';
     // Delete first the responses associated with to the question  if any
     $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
     // Delete the radio choices if it is a radio button question
@@ -109,30 +107,29 @@ function survey_data_question_delete($group_id,$question_id) {
     // Then delete the question itself
     $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
     if (db_affected_rows($res) <= 0) {
-	    $feedback .= $Language->getText('survey_s_data','q_del_fail',db_error($res));
+	    $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','q_del_fail',db_error($res)));
     } else {
-	    $feedback .= $Language->getText('survey_s_data','q_del_succ',$question_id);
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','q_del_succ',$question_id));
     }    
 }
 
 function survey_data_question_update($group_id,$question_id,$question,$question_type) {
     
-    global $feedback,$Language;
+    global $Language;
     
-    $feedback = '';
 	$sql="UPDATE survey_questions SET question='$question', question_type='$question_type' ".
 		"WHERE question_id='$question_id' AND group_id='$group_id'";
 	$result=db_query($sql);
 	if (db_affected_rows($result) < 1) {
-		$feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_fail',db_error()));
 	} else {
-		$feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
+		$GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','upd_succ'));
 	}
 }
 
 function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     
-    global $feedback,$Language;
+    global $Language;
         
     // cast inputs
     $_question_id = (int) $question_id;
@@ -146,13 +143,13 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     $old_rank=db_result($res1,0,'choice_rank');
     
     if (($old_text==$_radio) && ($old_rank==$_rank)) {
-        $feedback .= " ".$Language->getText('survey_s_data','upd_fail');
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_fail'));
     } else {            
         if ($old_text != $_radio) {            
 	    if (check_for_duplicata($_question_id,$_radio)) {
 	        $update=true;
 	    } else {
-	        $feedback .= " ".$Language->getText('survey_s_data','r_update_duplicate');
+	        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','r_update_duplicate'));
 	    }	    	
         } else {
 	    $update=true;
@@ -164,9 +161,9 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
             " WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
         $result=db_query($sql);
         if (db_affected_rows($result) < 1) {
-	    $feedback .= ' '.$Language->getText('survey_s_data','upd_fail',db_error());
+	        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_fail',db_error()));
         } else {
-	    $feedback .= ' '.$Language->getText('survey_s_data','upd_succ').' ';
+	        $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','upd_succ'));
         }	   
     }   
 }
@@ -174,7 +171,7 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
 
 function survey_data_radio_create($question_id, $radio, $rank) {
     
-    global $feedback,$Language;
+    global $Language;
          		
     // cast inputs
     $_question_id = (int) $question_id;    
@@ -186,18 +183,18 @@ function survey_data_radio_create($question_id, $radio, $rank) {
             "VALUES ('$_question_id','$_radio','$_rank')";
         $result=db_query($sql);
         if ($result) {
-	    $feedback .= " ".$Language->getText('survey_s_data','r_create_succ',db_insertid($result))." ";
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','r_create_succ',db_insertid($result)));
         } else {
-	    $feedback .= " ".$Language->getText('survey_s_data','r_create_fail',db_error());
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','r_create_fail',db_error()));
         }
     } else {
-        $feedback .= " ".$Language->getText('survey_s_data','r_create_duplicate');		    
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','r_create_duplicate'));		    
     }
 }
 
 function survey_data_radio_delete($question_id, $choice_id) {
     
-    global $feedback,$Language;
+    global $Language;
 
     // cast inputs
     $_question_id = (int) $question_id;
@@ -206,16 +203,16 @@ function survey_data_radio_delete($question_id, $choice_id) {
     $sql="DELETE FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
     $result=db_query($sql);
     if (db_affected_rows($result) <= 0) {
-	    $feedback .= $Language->getText('survey_s_data','r_del_fail',db_error($result));
+	    $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','r_del_fail',db_error($result)));
     } else {
-	    $feedback .= $Language->getText('survey_s_data','r_del_succ',$_choice_id);
+	    $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','r_del_succ',$_choice_id));
     }    
     
 }   
 
 function check_for_duplicata($question_id, $radio) {
 
-    global $feedback,$Language;
+    global $Language;
         
     //check if the radio button text is already existing. If so, creation or update fails
     $update=false;

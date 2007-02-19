@@ -239,7 +239,7 @@ function showErrors() {
    *
    */
   function displayImport($parsed_labels,$artifacts_data,$aid_column,$count_artifacts) {
-    global $feedback,$Language;
+    global $Language;
 
     $notify = false;
     if(user_get_preference('tracker_import_notify_'.$this->ath->getID()) == '1') {
@@ -249,8 +249,8 @@ function showErrors() {
     $errors = "";
     $ok = $this->updateDB($parsed_labels,$artifacts_data,$aid_column,$errors, $notify);
     
-    if ($ok) $feedback = $Language->getText('tracker_import','success_import',$count_artifacts)." ";
-    else $feedback = $errors;
+    if ($ok) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_import','success_import',$count_artifacts));
+    else $GLOBALS['Response']->addFeedback('error', $errors);
       
     //update group history
     group_add_history('import',$this->ath->getName(),$this->group->group_id);

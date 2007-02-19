@@ -50,7 +50,6 @@ if ($survey_id) {
 ?>
 <H2><?php echo $Language->getText('survey_admin_update_survey','edit_a_s'); ?></H2><P>
 
-<H3><span class="highlight"><?php echo $Language->getText('survey_admin_update_survey','warn'); ?></h3>
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_survey">
