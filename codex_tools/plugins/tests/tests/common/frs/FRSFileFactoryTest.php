@@ -1,4 +1,13 @@
 <?php
+
+//{{{ Ugly fix to by pass error with ugroup_utils
+//TODO: Fix it !
+require_once('BaseLanguage.class.php');
+$name = 'Fake_BaseLanguage_'. md5(uniqid(rand(), true));
+eval("class $name extends BaseLanguage {}");
+$GLOBALS['Language'] = new $name();
+//}}}
+
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 
