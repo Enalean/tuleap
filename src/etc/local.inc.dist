@@ -59,6 +59,15 @@ $sys_default_domain = "%sys_default_domain%";
 // to indicate a specific port for the https traffic (default 443)
 $sys_https_host = "%sys_default_domain%";
 
+//This is used for cookie authentication. If you have distributed servers, 
+//please use a generic domain to allow single sign on.
+//Examples:
+//- you have 1 server (s1.codex.com) 
+//   => cookie domain is "s1.codex.com"
+//- you have 2 servers (s1.codex.com & s2.codex.com) 
+//   => cookie domain should be "codex.com" for SSO
+$sys_cookie_domain = "%sys_default_domain%";
+
 // Machine that hosts CVS.
 // Note that while this machine need not be the same as the CodeX host,
 // the "cvsweb" interface currently must run on the CodeX host system.

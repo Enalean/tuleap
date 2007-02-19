@@ -396,6 +396,7 @@ $SERVICE mailman start
 $SERVICE smb start
 
 !!! Déplacer le site-content/register des clients vers site-content/project
+!!! cookie domain in local.inc
 todo "register has been moved !!!"
 todo "If you have custom themes, please :"
 ??? todo " - update usage of feedback (maybe need to display it at the end of header(). See rev #4756 for details"
