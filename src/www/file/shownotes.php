@@ -22,7 +22,7 @@ $frsrf = new FRSReleaseFactory();
 $release =& $frsrf->getFRSReleaseFromDb($release_id);
 
 
-if (!$release) {
+if (!$release || !$release->isActive() || !$release->userCanRead()) {
 	exit_error($Language->getText('file_shownotes','not_found_err'),$Language->getText('file_shownotes','release_not_found'));
 } else {
 
