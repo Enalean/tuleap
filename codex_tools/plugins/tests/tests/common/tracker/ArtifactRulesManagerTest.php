@@ -15,6 +15,9 @@ class ArtifactRulesManagerTest_ArtifactFieldFactory {
 }
 Mock::generate('ArtifactRulesManagerTest_ArtifactFieldFactory','MockArtifactFieldFactory');
 
+require_once('common/include/Response.class.php');
+Mock::generate('Response');
+
 //We cannot mock ArtifactField ($Language is undefined)
 //require_once('common/tracker/ArtifactField.class.php');
 class ArtifactRulesManagerTest_ArtifactField {
@@ -125,7 +128,8 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         
         /**/
         //S1
-        $GLOBALS['feedback'] = '';
+        $GLOBALS['Response'] =& new MockResponse();
+        $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertTrue(
             $arm->validate(
                 1, 
@@ -138,10 +142,11 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'], '');
+        //$this->assertEqual($GLOBALS['feedback'], '');
         /**/
         //S2
-        $GLOBALS['feedback'] = '';
+        $GLOBALS['Response'] =& new MockResponse();
+        $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_3(c_2) -> f_2(b_3)'));
         $this->assertFalse(
             $arm->validate(
                 1, 
@@ -154,10 +159,11 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
+        //$this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
         /**/
         //S3
-        $GLOBALS['feedback'] = '';
+        $GLOBALS['Response'] =& new MockResponse();
+        $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertTrue(
             $arm->validate(
                 1, 
@@ -170,10 +176,11 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'],  '');
+        //$this->assertEqual($GLOBALS['feedback'],  '');
         /**/
         //S4
-        $GLOBALS['feedback'] = '';
+        $GLOBALS['Response'] =& new MockResponse();
+        $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertTrue(
             $arm->validate(
                 1, 
@@ -186,10 +193,11 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'],  '');
+        //$this->assertEqual($GLOBALS['feedback'],  '');
         /**/
         //S5
-        $GLOBALS['feedback'] = '';
+        $GLOBALS['Response'] =& new MockResponse();
+        $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertTrue(
             $arm->validate(
                 1, 
@@ -202,10 +210,11 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'],  '');
+        //$this->assertEqual($GLOBALS['feedback'],  '');
         /**/
         //S6
-        $GLOBALS['feedback'] = '';
+        $GLOBALS['Response'] =& new MockResponse();
+        $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_1(a_1) -> f_2(b_2)'));
         $this->assertFalse(
             $arm->validate(
                 1, 
@@ -218,7 +227,7 @@ class ArtifactRulesManagerTest extends UnitTestCase {
                 $aff
             )
         );
-        $this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2) : ');
+        //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
         /**/
     }
 }

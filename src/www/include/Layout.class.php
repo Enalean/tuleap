@@ -8,10 +8,7 @@
 // $Id$
 
 
-require_once('common/include/Error.class.php');
-
-require_once('common/include/Feedback.class.php');
-require_once('common/dao/FeedbackDao.class.php');
+require_once('common/include/Response.class.php');
 
 require_once('common/event/EventManager.class.php');
 
@@ -30,11 +27,10 @@ include($Language->getContent('layout/osdn_sites'));
 
 */
 
-require_once('common/include/Feedback.class.php');
 
-class Layout extends Error {
 
-    var $_feedback;
+class Layout extends Response {
+
     
 	//Define all the icons for this theme
 	var $icons = array('Summary' => 'ic/anvil24.png',
@@ -59,21 +55,9 @@ class Layout extends Error {
 	function Layout($root) {
 		GLOBAL $bgpri;
         
-        if (session_hash()) {
-            $dao =& $this->_getFeedbackDao();
-            $dar =& $dao->search(session_hash());
-            if ($dar && $dar->valid()) {
-                $row = $dar->current();
-                $this->_feedback = unserialize($row['feedback']);
-                $dao->delete(session_hash());
-            }
-        }
-        if (!$this->_feedback) {
-            $this->_feedback =& new Feedback();
-        }
         
 		// Constructor for parent class...
-		$this->Error();
+		$this->Response();
         
         $this->javascript_files = array();
         
@@ -92,20 +76,10 @@ class Layout extends Error {
 
 	}
 
-    function addFeedback($level, $message) {
-        $this->_feedback->log($level, $message);
-    }
-    function feedbackHasWarningsOrErrors() {
-    	   return $this->_feedback->hasWarningsOrErrors();
-    }
-    function getRawFeedback() {
-    	   return $this->_feedback->fetchAsPlainText();
-    }
     
     function redirect($url) {
         if (session_hash()) {
-            $dao =& $this->_getFeedbackDao();
-            $dao->create(session_hash(), serialize($this->_feedback));
+            $this->_serializeFeedback();
             header('Location: '. $url);
         } else {
             $this->header(array('title' => 'Redirection'));
@@ -120,9 +94,6 @@ class Layout extends Error {
         exit();
     }
     
-    function &_getFeedbackDao() {
-        return new FeedbackDao(CodexDataAccess::instance());
-    }
     
     function includeJavascriptFile($file) {
         $this->javascript_files[] = $file;
@@ -532,7 +503,7 @@ echo html_blankimage(5,100);
             if (!$service_data['is_used']) continue;
             if (!$service_data['is_active']) continue;
             // Get URL, and eval variables
-            $link = $project->services[$short_name]->getUrl(); //$service_data['link'];
+            $link = $service_data['link']; //$project->services[$short_name]->getUrl(); <- to use when service will be fully served by satellite
             if ($group_id==100) {
                 if (strstr($link,'$projectname')) {
                     // NOTE: if you change link variables here, change them also in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/project/admin/servicebar.php
