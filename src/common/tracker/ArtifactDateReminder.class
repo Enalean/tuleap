@@ -1,0 +1,361 @@
+<?php
+/* 
+ * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ *
+ * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+require_once('pre-cli.php');
+
+require_once('common/tracker/ArtifactType.class');
+require_once('common/tracker/ArtifactFieldFactory.class');
+//require_once('common/tracker/ArtifactField.class');
+require_once('common/tracker/Artifact.class');
+
+
+//
+// The artifact date reminder object
+//
+class ArtifactDateReminder extends Error {
+	
+	// The notification id
+	var $notification_id;
+	
+	// The reminder id
+	var $reminder_id;
+	
+	// The group id
+	var $group_id;
+	
+	// The tracker id
+	var $group_artifact_id;
+	
+	// The artifact id
+	var $artifact_id;
+	
+	// The field id
+	var $field_id;
+	
+	// Number of notifications sent, for this event
+	var $notification_sent;
+
+	/**
+	 *  Constructor.
+	 *
+	 */
+	function ArtifactDateReminder($notification_id) {
+	    // Error constructor
+	    $this->Error();
+	    
+	    // Set object attributes
+	    $this->notification_id = $notification_id;  
+	    $notif_array = $this->getNotificationData($notification_id);
+	    $this->setFromArray($notif_array);
+	    
+	}	
+	
+	/**
+	 *  Set the attributes values
+	 *
+	 * @param notif_array: the notification data array
+	 *
+	 * @return void
+	 */
+	function setFromArray($notif_array) {
+	    
+	    $this->reminder_id = $notif_array['reminder_id'];
+	    $this->group_id = $notif_array['group_id'];
+	    $this->group_artifact_id = $notif_array['group_artifact_id'];
+	    $this->artifact_id = $notif_array['artifact_id'];
+	    $this->field_id = $notif_array['field_id'];
+	    $this->notification_sent = $notif_array['notification_sent'];
+	
+	}
+	
+	/**
+	* Get notification data from a given notification_id
+	* 
+	* @param notification_id: the notification id
+	* 
+	* @return array
+	*/
+	function getNotificationData($notification_id) {
+	    
+	    $qry = sprintf('SELECT * FROM artifact_date_reminder_processing'
+			    .' WHERE notification_id=%d',
+			    $notification_id);
+	    $result = db_query($qry);
+	    $rows = db_fetch_array($result);
+	    
+	    return $rows;   
+	    
+	}
+	
+	/**
+	* Get the reminder_id attribute value
+	* 
+	* @return int
+	*/
+	function getReminderId() {
+	    return $this->reminder_id;
+	}
+	
+	/**
+	* Get the group_id attribute value
+	* 
+	* @return int
+	*/
+	function getGroupId() {
+	    return $this->group_id;
+	}
+	
+	/**
+	* Get the group_artifact_id attribute value
+	* 
+	* @return int
+	*/
+	function getGroupArtifactId() {
+	    return $this->group_artifact_id;
+	}
+	
+	/**
+	* Get the artifact_id attribute value
+	* 
+	* @return int
+	*/
+	function getArtifactId() {
+	    return $this->artifact_id;
+	}
+	
+	/**
+	* Get the field_id attribute value
+	* 
+	* @return int
+	*/
+	function getFieldId() {
+	    return $this->field_id;
+	}
+	
+	/**
+	* Get the notification_sent attribute value
+	* 
+	* @return int
+	*/
+	function getNotificationSent() {
+	    return $this->notification_sent;
+	}
+	
+	
+	/**
+	* Get the date field value corresponding to this object
+	* 
+	* @return int
+	*/
+	function getDateValue() {
+		    
+	    $group = group_get_object($this->getGroupId());   
+	    $at = new ArtifactType($group,$this->getGroupArtifactId());
+	    $art_field_fact = new ArtifactFieldFactory($at);
+	    $field = $art_field_fact->getFieldFromId($this->getFieldId());
+
+	    if (! $field->isStandardField()) {
+	        $qry = sprintf('SELECT * FROM artifact_field_value'
+				.' WHERE artifact_id=%d'
+				.' AND field_id=%d',
+				$this->getArtifactId(),$this->getFieldId());
+	        $result = db_query($qry);
+	        $valueDate = db_result($result,0,'valueDate');	    
+	    } else {
+	        //End Date
+	        $qry = sprintf('SELECT * FROM artifact'
+				.' WHERE artifact_id=%d'
+				.' AND group_artifact_id=%d',
+				$this->getArtifactId(),$this->getGroupArtifactId());
+	        $result = db_query($qry);		    	    
+	        $valueDate = db_result($result,0,'close_date');
+	    }
+	    
+	    return $valueDate;
+	    
+	}
+	
+	/**
+	* Get the list of users to be notified by the event
+	* 
+	* @return array
+	*/
+	function getNotifiedPeople() {
+	
+	    $notified_people = array();
+	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+			    .' WHERE reminder_id=%d'
+			    .' AND group_id=%d'
+			    .' AND group_artifact_id=%d'
+			    .' AND field_id=%d',
+			    $this->getReminderId(),$this->getGroupId(),$this->getGroupArtifactId(),$this->getFieldId());
+	    $res = db_query($sql);
+	    $notif = db_result($res,0,'notified_people');
+	    $notif_array = explode(",",$notif);
+	    foreach ($notif_array as $item) {
+	        switch ($item) {
+		  case 1:
+		    //Submitter
+		    $qry = sprintf('SELECT * FROM artifact'
+				    .' WHERE artifact_id=%d'
+				    .' AND group_artifact_id=%d',
+				    $this->getArtifactId(),$this->getGroupArtifactId());
+		    $result = db_query($qry);
+		    $submitter = db_result($result,0,'submitted_by');
+		    //add submitter in the 'notified_people' array
+		    if (! in_array(user_getemail($submitter),$notified_people) && $submitter != 100) {
+		        $count = count($notified_people);
+		        $notified_people[$count] = user_getemail($submitter);
+		    }
+		    break;
+		  case 2:
+		    //Assigned To
+		    $assignee_fid = $this->getAssignedToFieldId($this->getGroupArtifactId());
+		    if ($assignee_fid) {
+		        //Assigned To (or Assigned To multiple) is enabled and used
+			//echo $assignee_fid;
+		        //echo "\n";
+		        $qry = sprintf('SELECT * FROM artifact_field_value'
+					.' WHERE artifact_id=%d'
+					.' AND field_id=%d',
+					$this->getArtifactId(),$assignee_fid);
+		        $result = db_query($qry);
+		        if (db_numrows($result) > 0) {
+		            //add assignees in the 'notified_people' array  
+		            $index = count($notified_people);
+		            while ($rows = db_fetch_array($result)) {
+			        $assignee = $rows['valueInt'];
+			        if (! in_array(user_getemail($assignee),$notified_people) && $assignee != 100) {
+			            $notified_people[$index] = user_getemail($assignee);
+			            $index ++;
+			        }
+			    }
+		        }
+		    }
+		    break;
+		  case 3:
+		    //CC
+		    $group = group_get_object($this->getGroupId());   
+		    $at = new ArtifactType($group,$this->getGroupArtifactId());
+		    $art_array = array($this->getArtifactId());
+		    $result = $at->getCC($art_array);
+		    if (db_numrows($result) > 0) {
+		        //add cc list in the 'notified_people' array
+		        $index = count($notified_people);
+		        while ($rows = db_fetch_array($result)) {
+			    $cc = $rows['email'];
+			    if (! in_array($cc,$notified_people)) {
+			        $notified_people[$index] = $cc;
+				$index++;
+			    }
+			}
+		    }
+		    break;
+		  case 4:
+		    //Commenter
+		    $group = group_get_object($this->getGroupId());   
+		    $at = new ArtifactType($group,$this->getGroupArtifactId());
+		    $art = new Artifact($at,$this->getArtifactId());
+		    //$test = $art->getValue('submitted_by');
+		    //echo $test;
+		    //echo "\n";
+		    //$result = $art->getCommenters();
+		    //$result = $art->getCCList();
+		    print_r($art);
+		    /*if (db_numrows($result) > 0) {
+		        echo "ça marche \n";
+		        /*$index = count($notified_people);
+		        while ($rows = db_fetch_array($result)) {
+			    $commenter_id = $rows['mod_by'];
+			    $commenter = user_getemail($commenter_id);
+			    if (! in_array($commenter,$notified_people)) {
+			        $notified_people[$index] = $commenter;
+				$index++;
+			    }
+			}
+		    } else {
+		        echo "marche pas \n";
+		    }
+		    if (is_object($art)) {
+		        print_r($art);
+		    } else {
+		        echo "not object \n";
+		    }*/
+		    break;
+		}
+	    }
+	    
+	    return $notified_people;
+	
+	}
+	
+	/**
+	* Get the Assigned To or Assigned To (multiple) field id
+	* 
+	* @param the tracker id: group_artifact_id 
+	* 
+	* @return array
+	*/
+	function getAssignedToFieldId($group_artifact_id) {
+	
+	    $assignee_lbl = "";
+	    $group = group_get_object($this->getGroupId());   
+	    $at = new ArtifactType($group,$group_artifact_id);
+	    $art_field_fact = new ArtifactFieldFactory($at);
+	    $multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
+	        
+	    if (is_object($multi_assigned_to)) {
+	        //Multi-Assigned To field
+	        if ($multi_assigned_to->isUsed()) {
+		    $assignee_lbl = "multi_assigned_to";
+		}		
+	    } else {
+	        //Assigned To field
+	        $assigned_to = $art_field_fact->getFieldFromName('assigned_to');
+		if (is_object($assigned_to)) {
+		    if ($assigned_to->isUsed()) {
+		        $assignee_lbl = "assigned_to";
+		    }
+		}
+	    }
+	    
+	    $sql = sprintf('SELECT * FROM artifact_field'
+			    .' WHERE field_name="%s"'
+			    .' AND group_artifact_id=%d',
+			    $assignee_lbl,$group_artifact_id);
+	    $result = db_query($sql);
+	    return db_result($result,0,'field_id');
+	
+	}
+	
+	function makeTest() {
+	
+	    $group = group_get_object($this->getGroupId());   
+	    $at = new ArtifactType($group,$this->getGroupArtifactId());
+	    $art = new Artifact($at,$this->getArtifactId());
+	
+	}
+	
+}
+
+?>
