@@ -39,7 +39,7 @@ function account_set_password($user_id,$password) {
 
 // Add user to an existing project
 function account_add_user_to_group ($group_id,&$user_unix_name) {
-  global $feedback,$Language;
+  global $Language;
 	
 	$ret = false;
 
@@ -51,7 +51,7 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 	    //user was found but if it's a pending account adding
 	    //is not allowed
 	    if (db_result($res_newuser,0,'status') == 'P') {
-	      $feedback .= $Language->getText('include_account','account_pending',$user_unix_name);
+	      $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','account_pending',$user_unix_name));
 		return false;
 	    }
 
@@ -67,16 +67,16 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 			if ((db_result($res_newuser,0,'unix_status') == 'N') || (!db_result($res_newuser,0,'unix_uid') )) {
 				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
 			}
-			$feedback .= ' '.$Language->getText('include_account','user_added').' ';
+			$GLOBALS['Response']->addFeedback('info', $Language->getText('include_account','user_added'));
             account_send_add_user_to_group_email($group_id,$form_newuid);
 			$ret = true;
 		} else {
 			//user was a member
-			$feedback .= ' '.$Language->getText('include_account','user_already_member').' ';
+			$GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','user_already_member'));
 		}
 	} else {
 		//user doesn't exist
-		$feedback .= $Language->getText('include_account','user_not_exist');
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','user_not_exist'));
 	}
 
 	return $ret;
@@ -105,7 +105,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
             $mail->setBody($message);
             if (!$mail->send()) {
-                $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
         }
     }

@@ -57,11 +57,11 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
 
 // Standard CodeX authentication, based on password stored in DB
 function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
-  global $feedback,$Language;
+  global $Language;
     $usr=null;
 
     if (!$form_loginname || !$form_pw) {
-        $feedback = $Language->getText('include_session','missing_pwd');
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','missing_pwd'));
         return false;
     }
 
@@ -71,7 +71,7 @@ function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
                     . "AND user_pw='" . md5($form_pw) . "'");
 	if (!$res || db_numrows($res) < 1) {
 		//invalid password or user_name
-		$feedback .= $Language->getText('include_session','invalid_pwd');
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','invalid_pwd'));
 		return false;
 	} 
     else {
@@ -82,7 +82,7 @@ function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
 }
 
 function session_login_valid_status($status, $allowpending=0) {
-    global $feedback, $Language;
+    global $Language;
 
     // if allowpending (for verify.php) then allow
     if (($status == 'A') || ($status == 'R') || ($allowpending && ($status == 'P'))) {
@@ -90,22 +90,22 @@ function session_login_valid_status($status, $allowpending=0) {
     } else {
         if ($status == 'S') { 
             //acount suspended
-            $feedback .= $Language->getText('include_session','account_suspended');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','account_suspended'));
             return false;
         }
         if ($status == 'P') { 
             //account pending
-            $feedback .= $Language->getText('include_session','account_pending');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','account_pending'));
             return false;
         } 
         if ($status == 'D') { 
             //account deleted
-            $feedback .= $Language->getText('include_session','account_deleted');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','account_deleted'));
             return false;
         }
         if (($status != 'A')&&($status != 'R')) {
             //unacceptable account flag
-            $feedback .= $Language->getText('include_session','account_not_active');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','account_not_active'));
             return false;
         }
     }
