@@ -118,7 +118,6 @@ class ArtifactReportFactory extends Error {
 	 *	@return	boolean
 	 */
 	function deleteReports($atid) {
-		global $feedback;
 		
 		//
 		// Delete artifact_report_field records

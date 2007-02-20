@@ -1756,7 +1756,6 @@ class ArtifactType extends Error {
      	* @return boolean
      	*/
     	function deleteCC($delete_cc) {
-        	global $feedback;
         	
 		$ok=true;
 		while (list(,$artifact_ccs) = each($delete_cc)) {
@@ -1793,7 +1792,6 @@ class ArtifactType extends Error {
 	* @return bool
 	*/
 	function deleteAttachedFiles($delete_attached) {
-		global $feedback;
 		$ok=true;
 		$i = 0;
 		while (list(,$id_list) = each($delete_attached)) {
@@ -1806,13 +1804,13 @@ class ArtifactType extends Error {
 					$ah = new ArtifactHtml($this,$aid);
 					$afh=new ArtifactFileHtml($ah,$id);
                         		if (!$afh || !is_object($afh)) {
-                               	 		$feedback .= 'Could Not Create File Object::'.$afh->getName();
+                               	 		$GLOBALS['Response']->addFeedback('error', 'Could Not Create File Object::'.$afh->getName());
                         		} elseif ($afh->isError()) {
-                                		$feedback .= $afh->getErrorMessage().'::'.$afh->getName();
+                                		$GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'.$afh->getName());
                         		} else {
 						$i++;
                                 		$okthis = $afh->delete();
-						if (!$okthis) $feedback .= ' <br>File Delete: '.$afh->getErrorMessage();
+						if (!$okthis) $GLOBALS['Response']->addFeedback('error', '<br>File Delete: '.$afh->getErrorMessage());
 						$ok &= $okthis;
                         		}	
 				}
@@ -1840,17 +1838,17 @@ class ArtifactType extends Error {
 
 	/** delete all the dependencies specified in delete_dependend */
 	function deleteDependencies($delete_depend) {
-	    global $feedback,$Language;
+	    global $Language;
 		$changed = true;
 		while (list(,$depend) = each($delete_depend)) {
 			$sql = "DELETE FROM artifact_dependencies WHERE artifact_depend_id IN ($depend)";
         		$res = db_query($sql);
         		if (!$res) {
-            			$feedback .= " - ".$Language->getText('tracker_common_type','del_err',array($dependent,db_error($res)));
+            			$GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_type','del_err',array($dependent,db_error($res))));
 				$changed = false;
         		}
 		}
-		if ($changed) $feedback .= " - ".$Language->getText('tracker_common_artifact','depend_removed');
+		if ($changed) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','depend_removed'));
 		return $changed;
         }	
 	

@@ -103,7 +103,7 @@ class PluginManager {
                     $plugin =& $plugin_factory->createPlugin($name);
                     $this->_createEtc($name);
                 } else {
-                    $GLOBALS['feedback'] .= 'DB may be corrupted';
+                    $GLOBALS['Response']->addFeedback('error', 'DB may be corrupted');
                 }
             }
         }

@@ -228,7 +228,7 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	boolean
 	 */
 	function checkEmptyFields($field_array) {
-	    global $feedback,$Language;
+	    global $Language;
 	
 	    $bad_fields = array();
 	    reset($field_array);
@@ -249,7 +249,7 @@ class ArtifactFieldFactory extends Error {
 	    }
 	
 	    if (count($bad_fields) > 0) {
-	      $feedback = $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
             $this->setError($Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
 			return false;
 	    } else {
@@ -331,7 +331,7 @@ class ArtifactFieldFactory extends Error {
 	 *	@return	boolean
 	 */
     function copyFields($atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
-	  global $Language,$feedback;
+	  global $Language;
 
 	  reset($this->USAGE_BY_NAME);
 	
@@ -358,7 +358,7 @@ class ArtifactFieldFactory extends Error {
 		      $name = $this->_getForeignUgroupName($ug,$atid_dest);
 		      if ($name !== false) {
 			//don't copy this ugroup
-			$feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field->getLabel(),$name));
+			$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field->getLabel(),$name)));
 		      } else {
 			$dest_val_func[] = "ugroup_$ug";
 		      }
@@ -371,7 +371,7 @@ class ArtifactFieldFactory extends Error {
 			$name = $this->_getForeignUgroupName($ug,$atid_dest);
 			if ($name !== false) {
 			  //don't copy this ugroup
-			  $feedback .= $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field->getLabel(),$name));
+			  $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_common_field_factory','ugroup_not_exist',array($field->getLabel(),$name)));
 			}
 			
 		      }

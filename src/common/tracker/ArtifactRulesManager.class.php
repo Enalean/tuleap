@@ -91,7 +91,6 @@ class ArtifactRulesManager {
      * @param int $artifact_type_id the artifact id to test
      * @param array $value_field_list the selected values to test for the artifact
      * @param {ArtifactFieldFactory Object} $art_field_fact reference to the artifact field factory of this artifact
-     * @global string $feedback the error message updated to give more detail about the error
      * @return boolean true if the submitted values are coherent regarding the dependencies, false otherwise
      */
     function validate($artifact_type_id, $value_field_list, &$art_field_fact) {
@@ -167,7 +166,7 @@ class ArtifactRulesManager {
                                 $pb_target_values = $this->_getSelectedValuesForField($pb_target_field_values, $target, $target_value);
                                 
                                 // detailled error message
-                                $GLOBALS['feedback'] .= $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .') : ';
+                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
                             }
                         }
                     }

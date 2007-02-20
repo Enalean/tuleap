@@ -1009,7 +1009,7 @@ function getUsedFields() {
 
 
   function updateArtifact($row,$data,$aid,&$errors,$notify=false) {
-  global $feedback,$Language;
+  global $Language;
 
   $ah=new ArtifactHtml($this->ath,$aid);
   if (!$ah || !is_object($ah)) {
@@ -1033,7 +1033,7 @@ function getUsedFields() {
 
     //data control layer
     if (!$ah->handleUpdate($artifact_depend_id,100,$changes,false,$vfl,true)) {
-      exit_error($Language->getText('global','error'),$feedback);
+      exit_error($Language->getText('global','error'),'');
     }
     if ($add_cc) {
       if (!$ah->updateCC($add_cc,$cc_comment)) {

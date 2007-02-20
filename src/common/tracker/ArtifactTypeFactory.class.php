@@ -423,7 +423,7 @@ class ArtifactTypeFactory extends Error {
 	 *	@return id on success, false on failure.
 	 */
 	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false) {
-		global $feedback,$Language;
+		global $Language;
 
 		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
 			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','name_requ'));
