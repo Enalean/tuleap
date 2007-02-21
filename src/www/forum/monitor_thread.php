@@ -53,7 +53,11 @@ if ($forum_id) {
         exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('forum_forum','forum_restricted'));            
     }
 
-    $result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+    $qry = sprintf('SELECT group_id,forum_name,is_public'
+		    .' FROM forum_group_list'
+		    .' WHERE group_forum_id=%d',
+		    $forum_id);
+    $result=db_query($qry);
     $group_id=db_result($result,0,'group_id');
     $forum_name=db_result($result,0,'forum_name');
     
@@ -61,9 +65,13 @@ if ($forum_id) {
                       'pv'   =>isset($pv)?$pv:false);
     forum_header($params);
     
-    $sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-	"FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by AND forum.is_followup_to=0 AND forum_group_list.group_forum_id = forum.group_forum_id ".
-	"ORDER BY forum.date DESC" ;
+    $sql = sprintf('SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id'
+		    .' FROM forum,user,forum_group_list'
+		    .' WHERE forum.group_forum_id=%d'
+		    .' AND user.user_id=forum.posted_by'
+		    .' AND forum.is_followup_to=0'
+		    .' AND forum_group_list.group_forum_id = forum.group_forum_id',
+		    $forum_id);
     $result=db_query($sql);
     $rows=db_numrows($result);    
 
