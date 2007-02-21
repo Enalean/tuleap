@@ -200,3 +200,28 @@ td.artifact_spacer { width: 8%; }
 }
 /* }}} */
 
+/* File Release System */
+.frs_package_col {
+    width: 20%;
+}
+.frs_release_col {
+    width: 20%;
+}
+.frs_filename_col {
+    width: 20%;
+}
+.frs_size_col {
+    width: 8%;
+}
+.frs_downloads_col {
+    width: 8%;
+}
+.frs_architecture_col {
+    width: 8%;
+}
+.frs_filetype_col {
+    width: 8%;
+}
+.frs_date_col {
+    width: 8%;
+}

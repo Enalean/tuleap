@@ -136,6 +136,18 @@ $group_unix_name = group_getunixname($group_id);
 // print the header row
 echo html_build_list_table_top($title_arr) . "\n";
 
+// colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
+echo '<colgroup>';
+echo ' <col class="frs_package_col">';
+echo ' <col class="frs_release_col">';
+echo ' <col class="frs_filename_col">';
+echo ' <col class="frs_size_col">';
+echo ' <col class="frs_downloads_col">';
+echo ' <col class="frs_architecture_col">';
+echo ' <col class="frs_filetype_col">';
+echo ' <col class="frs_date_col">';
+echo '</colgroup>';
+
 $proj_stats['packages'] = $num_packages;
 $pm = & PermissionsManager :: instance();
 
@@ -144,9 +156,9 @@ $javascript_packages_array = array();
 // Iterate and show the packages
 while (list ($package_id, $package_name) = each($res_package)) {
 
-	print '<TR><TD><B><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>' . $package_name;
+	print '<TR><TD COLSPAN="8"><B><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>' . $package_name;
 	
-	print '</B></TD><TD COLSPAN="7">&nbsp;</TD></TR>' . "\n";
+	print '</B></TD></tr>'; //<TD COLSPAN="7">&nbsp;</TD></TR>' . "\n";
 
 	// get the releases of the package
 	// Order by release_date and release_id in case two releases
@@ -175,9 +187,9 @@ while (list ($package_id, $package_name) = each($res_package)) {
 			} else {
 				$bgcolor = 'boxitem';
 			}
-            print "\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'" class="' . $bgcolor . '"><TD>&nbsp;</TD><TD><a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a><B>' . '<A HREF="shownotes.php?release_id=' . $package_release->getReleaseID() . '" title="' . $package_release->getReleaseID() . " - " . $package_release->getName() . '">' . $package_release->getName() . '</A></B>';
+            print "\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'" class="' . $bgcolor . '"><TD>&nbsp;</TD><TD colspan="6"><a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a><B>' . '<A HREF="shownotes.php?release_id=' . $package_release->getReleaseID() . '" title="' . $package_release->getReleaseID() . " - " . $package_release->getName() . '">' . $package_release->getName() . '</A></B>';
 			
-			print '</TD><TD COLSPAN="5">&nbsp;</TD><TD>' . format_date("Y-m-d", $package_release->getReleaseDate()) . '</TD></TR>' . "\n";
+			print '</TD><TD>' . format_date("Y-m-d", $package_release->getReleaseDate()) . '</TD></TR>' . "\n";
             
 			// get the files in this release....
 			
