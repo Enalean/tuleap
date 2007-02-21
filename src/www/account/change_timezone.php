@@ -20,11 +20,11 @@ if (!user_isloggedin()) {
 	exit_not_logged_in();
 }
 
-if ($submit) {	
+if (isset($submit) && $submit) {	
 	if (!$timezone) {
-		$feedback .= ' '.$Language->getText('account_change_timezone', 'no_update').' ';
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'no_update'));
 	} else if ($timezone == 'None') {
-		$feedback .= ' '.$Language->getText('account_change_timezone', 'choose_tz').' ';
+		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'choose_tz'));
 	  
 	} else {
 		// if we got this far, it must be good
@@ -42,8 +42,6 @@ $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'titl
 <P>
 <FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
 <?php
-
-echo '<H4><span class="feedback">'.$feedback.'</span></H4>';
 
 echo html_get_timezone_popup ('timezone',user_get_timezone());
 

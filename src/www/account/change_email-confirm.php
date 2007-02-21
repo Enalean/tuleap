@@ -34,6 +34,9 @@ $mail->setSubject($GLOBALS['sys_name'].': '.$Language->getText('account_change_e
 $mail->setBody($message);
 $mail->setFrom($GLOBALS['sys_noreply']);
 $mail_is_sent = $mail->send();
+if (!$mail_is_sent) {
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+}
 site_header(array('title'=>$Language->getText('account_change_email-confirm', 'title'))); ?>
 
 
@@ -41,12 +44,9 @@ site_header(array('title'=>$Language->getText('account_change_email-confirm', 't
 
 <P><?php echo $Language->getText('account_change_email-confirm', 'mailsent'); ?>.
 
-<P><A href="/">[ <?php echo $Language->getText('global', 'back_home'); ?> ]</A>
-
 <?php
-} else {
-    $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
 }
+echo '<p><a href="/">['. $Language->getText('global', 'back_home'). ']</a></p>';
 site_footer(array());
 
 ?>

@@ -50,9 +50,7 @@ if (isset($login) && $login && !$success) {
 	echo "<P><B>".$Language->getText('account_suspended', 'title')."</B>";
 	echo "<P>".$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
 	echo "<br><hr><p>";
-    } else {
-	echo '<h2><span class="feedback">'. $feedback .'</span></H2>';
-    } //end else
+    }
 }
 
 if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
