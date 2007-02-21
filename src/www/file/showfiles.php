@@ -158,7 +158,7 @@ while (list ($package_id, $package_name) = each($res_package)) {
 
 	print '<TR><TD COLSPAN="8"><B><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>' . $package_name;
 	
-	print '</B></TD></tr>'; //<TD COLSPAN="7">&nbsp;</TD></TR>' . "\n";
+	print '</B></TD></tr>';
 
 	// get the releases of the package
 	// Order by release_date and release_id in case two releases
