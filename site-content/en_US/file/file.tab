@@ -271,7 +271,7 @@ file_showfiles	no_file_p	No File Packages
 file_showfiles	no_p_available	There are no file packages available
 file_showfiles	p_releases	Package Releases
 file_showfiles	select_release	Select Release to see Release Notes and Change Log.&nbsp;Select File to request file download.
-file_showfiles	release_notes	Release<BR>&amp; Notes
+file_showfiles	release_notes	Release &amp; Notes
 file_showfiles	size	Size
 file_showfiles	d_l	D/L
 file_showfiles	arch	Arch.
