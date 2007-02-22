@@ -139,7 +139,7 @@ class DocmanActions extends Actions {
     }
 
     function createFolder() {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
             $item = $request->get('item');

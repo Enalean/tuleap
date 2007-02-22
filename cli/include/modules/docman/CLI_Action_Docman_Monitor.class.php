@@ -9,7 +9,7 @@ require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Docman_Monitor extends CLI_Action {
     function CLI_Action_Docman_Monitor() {
-        $this->CLI_Action('monitor', 'Monitor a document or a folder');
+        $this->CLI_Action('monitorDocmanItem', 'Monitor a document or a folder');
         $this->addParam(array(
             'name'           => 'item_id',
             'description'    => '--id=<item_id>     ID of the item we want to monitor',

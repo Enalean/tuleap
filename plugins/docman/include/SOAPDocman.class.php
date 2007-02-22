@@ -57,6 +57,12 @@ class SOAPDocman extends DocmanController {
     /* protected */ function _set_moveView_errorPerms() {
         $this->_setView('SOAP');
     }
+    /* protected */ function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
+        $this->_setView('SOAP');
+    }
+    /* protected */ function _set_createItemView_afterCreate($view) {
+        $this->_setView('SOAP');
+    }
 }
 
 ?>

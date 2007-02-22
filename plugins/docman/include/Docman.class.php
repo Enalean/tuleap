@@ -57,6 +57,16 @@ class Docman extends DocmanController {
     /* protected */ function _set_moveView_errorPerms() {
         $this->view = 'Details';
     }
+    /* protected */ function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
+    	   $this->view = $item->accept($get_show_view, $this->request->get('report'));
+    }
+    /* protected */ function _set_createItemView_afterCreate($view) {
+        if ($view == 'createFolder') {
+            $this->view = 'NewFolder';
+        } else {
+            $this->view = 'NewDocument';
+        }
+    }
 }
 
 ?>

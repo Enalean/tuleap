@@ -89,58 +89,74 @@ $GLOBALS['server']->wsdl->addComplexType(
 //
 // Function definition
 //
-
 $GLOBALS['server']->register(
-    'delete',
+    'createDocmanFolder',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'parent_id'=>'xsd:int',
+        'title'=>'xsd:string',
+        'description'=>'xsd:string',
+        'ordering'=>'xsd:string',
+        ),
+    array('createDocmanFolderResponse'=>'xsd:boolean'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#createDocmanFolder',
+    'rpc',
+    'encoded',
+    'Create a folder.'
+);
+$GLOBALS['server']->register(
+    'deleteDocmanItem',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
-    array('deleteResponse'=>'xsd:boolean'),
+    array('deleteDocmanItemResponse'=>'xsd:boolean'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#delete',
+    $GLOBALS['uri'].'#deleteDocmanItem',
     'rpc',
     'encoded',
     'Delete an item (document or folder)'
 );
 $GLOBALS['server']->register(
-    'monitor',
+    'monitorDocmanItem',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
-    array('monitorResponse'=>'xsd:boolean'),
+    array('monitorDocmanItemResponse'=>'xsd:boolean'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#monitor',
+    $GLOBALS['uri'].'#monitorDocmanItem',
     'rpc',
     'encoded',
     'Monitor an item (document or folder)'
 );
 
 $GLOBALS['server']->register(
-    'move',
+    'moveDocmanItem',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'  =>'xsd:int',
         'item_id'   =>'xsd:int',
         'parent'    =>'xsd:int'),
-    array('moveResponse'=>'xsd:boolean'),
+    array('moveDocmanItemResponse'=>'xsd:boolean'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#move',
+    $GLOBALS['uri'].'#moveDocmanItem',
     'rpc',
     'encoded',
     'Move an item in a new folder'
 );
 
 $GLOBALS['server']->register(
-    'getProperties',
+    'getDocmanItemProperties',
     array(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
-    array('getPropertiesResponse'=>'tns:ArrayOfDocman_Metadata'),
+    array('getDocmanItemPropertiesResponse'=>'tns:ArrayOfDocman_Metadata'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getProperties',
+    $GLOBALS['uri'].'#getDocmanItemProperties',
     'rpc',
     'encoded',
     'Returns the properties of the document item_id'
@@ -154,20 +170,66 @@ $GLOBALS['server']->register(
 /**
  * 
  */
-function delete($sessionKey,$group_id,$item_id) {
+function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $description, $ordering) {
     global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'delete','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'createDocmanFolder','Could Not Get Group','Could Not Get Group');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'delete', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'createDocmanFolder', $group->getErrorMessage(),$group->getErrorMessage());
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'delete', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'createDocmanFolder', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
-        // TO DO : delete !
+        $request =& new SOAPRequest(array(
+            'group_id' => $group_id,
+            'item' => array(
+                'parent_id'       => $parent_id,
+                'title' => $title,
+                'description' => $description,
+                'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            ),
+            'ordering' => $ordering,
+            //needed internally in docman vvv
+            'action'       => 'createFolder',
+            'confirm'      => true,
+        ));
+        $plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new soap_fault('', 'createDocmanFolder', $msg, $msg);
+            } else {
+                return true;
+            }
+        } else {
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'createDocmanFolder','Unavailable plugin','Unavailable plugin');;
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'createDocmanFolder','Invalid Session','');
+    }
+}
+
+/**
+ * 
+ */
+function deleteDocmanItem($sessionKey,$group_id,$item_id) {
+    global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'deleteDocmanItem','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'deleteDocmanItem', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'deleteDocmanItem', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
         $request =& new SOAPRequest(array(
             'group_id' => $group_id,
             'id'       => $item_id,
@@ -181,35 +243,34 @@ function delete($sessionKey,$group_id,$item_id) {
             $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new soap_fault('', 'delete', $msg, $msg);
+                   return new soap_fault('', 'deleteDocmanItem', $msg, $msg);
             } else {
                 return true;
             }
         } else {
-            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'delete','Unavailable plugin','Unavailable plugin');;
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'deleteDocmanItem','Unavailable plugin','Unavailable plugin');;
         }
     } else {
-        return new soap_fault(invalid_session_fault,'delete','Invalid Session','');
+        return new soap_fault(invalid_session_fault,'deleteDocmanItem','Invalid Session','');
     }
 }
 
 /**
  * 
  */
-function monitor($sessionKey,$group_id,$item_id) {
+function monitorDocmanItem($sessionKey,$group_id,$item_id) {
     global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'delete','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'monitorDocmanItem','Could Not Get Group','Could Not Get Group');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'delete', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'monitorDocmanItem', $group->getErrorMessage(),$group->getErrorMessage());
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'delete', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'monitorDocmanItem', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
-        // TO DO : monitor !
         $request =& new SOAPRequest(array(
             'group_id' => $group_id,
             'id'       => $item_id,
@@ -223,7 +284,7 @@ function monitor($sessionKey,$group_id,$item_id) {
             $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new soap_fault('', 'monitor', $msg, $msg);
+                   return new soap_fault('', 'monitorDocmanItem', $msg, $msg);
             } else {
                 return true;
             }
@@ -231,23 +292,22 @@ function monitor($sessionKey,$group_id,$item_id) {
             return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'monitor','Unavailable plugin','Unavailable plugin');;
         }
     } else {
-        return new soap_fault(invalid_session_fault,'monitor','Invalid Session','');
+        return new soap_fault(invalid_session_fault,'monitorDocmanItem','Invalid Session','');
     }
 }
 
-function move($sessionKey, $group_id, $item_id, $new_parent) {
+function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'delete','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'moveDocmanItem','Could Not Get Group','Could Not Get Group');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'delete', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'moveDocmanItem', $group->getErrorMessage(),$group->getErrorMessage());
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'delete', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'moveDocmanItem', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
-        // TO DO : monitor !
         $request =& new SOAPRequest(array(
             'group_id'     => $group_id,
             'item_to_move' => $item_id,
@@ -262,15 +322,15 @@ function move($sessionKey, $group_id, $item_id, $new_parent) {
             $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new soap_fault('', 'monitor', $msg, $msg);
+                   return new soap_fault('', 'moveDocmanItem', $msg, $msg);
             } else {
                 return true;
             }
         } else {
-            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'monitor','Unavailable plugin','Unavailable plugin');;
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'moveDocmanItem','Unavailable plugin','Unavailable plugin');;
         }
     } else {
-        return new soap_fault(invalid_session_fault,'monitor','Invalid Session','');
+        return new soap_fault(invalid_session_fault,'moveDocmanItem','Invalid Session','');
     }
 }
 /**
@@ -281,7 +341,7 @@ function move($sessionKey, $group_id, $item_id, $new_parent) {
  * @param int $item_id the ID of the document we want to retrieve the properties
  * @return array the array of SOAPDocmanMetadata of the document identified by $item_id, or a soap fault if group_id does not match with a valid project.
  */
-function getProperties($sessionKey,$group_id,$item_id) {
+function getDocmanItemProperties($sessionKey,$group_id,$item_id) {
     global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);

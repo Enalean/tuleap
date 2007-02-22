@@ -747,7 +747,7 @@ class DocmanController extends Controler {
                                             $parent =& $item_factory->getItemFromDb($i['parent_id']);
                                             if (!$parent || !$this->userCanWrite($parent->getId())) {
                                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
-                                                $this->view = $item->accept($get_show_view, $this->request->get('report'));
+                                                $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
                                             } else {
                                                 //Validations
                                                 $new_item = $this->createItemFromUserInput();
@@ -778,10 +778,7 @@ class DocmanController extends Controler {
                                                 }
                                                 //Views
                                                 if ($valid) {
-                                                    if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
-                                                        $this->_viewParams['redirect_to'] = $redirect_to;
-                                                    }
-                                                    $this->view = 'RedirectAfterCrud';
+                                                    $this->_set_redirectView();
                                                 } else {
                                                     $this->_viewParams['force_item']          = $new_item;
                                                     $this->_viewParams['force_news']          = $this->request->get('news');
@@ -789,11 +786,7 @@ class DocmanController extends Controler {
                                                     $this->_viewParams['force_ordering']      = $this->request->get('ordering');
                                                     $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
                                                     $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
-                                                    if ($view == 'createFolder') {
-                                                        $this->view = 'NewFolder';
-                                                    } else {
-                                                        $this->view = 'NewDocument';
-                                                    }
+                                                    $this->_set_createItemView_afterCreate($view);
                                                 }
                                             }
                                         }
