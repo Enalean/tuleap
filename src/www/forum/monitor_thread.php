@@ -32,9 +32,9 @@ if ( !user_isloggedin()) {
     return;
 }
 
-if($submit) {
+if(array_key_exists('submit', $_POST) && isset($_POST['submit'])) {
     //set user-specific thread monitoring preferences
-    if (forum_thread_monitor($mthread, $user_id, $forum_id)) {
+    if (forum_thread_monitor($_POST['mthread'], $_POST['user_id'], $_POST['forum_id'])) {
         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_success'); 
     } else {
         $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_monitor_thread','monitor_fail'); 
@@ -146,7 +146,7 @@ if ($forum_id) {
 } else {
 
     forum_header(array('title'=>$GLOBALS['Language']->getText('global','error')));
-    echo '<H1'.$GLOBALS['Language']->getText('forum_forum','choose_forum_first').'</H1>';
+    $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('forum_forum','choose_forum_first');
     forum_footer(array());
 
 }
