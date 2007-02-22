@@ -29,7 +29,7 @@ class ServerAdmin {
             $row_num = 0;
             foreach($servers as $key => $nop) {
                 $html .= '<tr class="'. util_get_alt_row_color($row_num++) .'">';
-                $html .= '<td><a title="Edit server" href="/admin/servers/edit/'. $servers[$key]->getId() .'">'. $servers[$key]->getName() .'</a></td>';
+                $html .= '<td><a title="Edit server" href="/admin/servers/edit/'. $servers[$key]->getId() .'">'. $servers[$key]->getId() .'. '. $servers[$key]->getName() .'</a></td>';
                 $html .= '<td>'. $servers[$key]->getDescription() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttp() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttps() .'</td>';
@@ -82,14 +82,16 @@ class ServerAdmin {
     function _form(&$server, $action) {
         $html  = '<form action="'. $action .'" method="POST">';
         $html .= '<table>';
+        $html .= '<tr><td>Id:</td><td><input type="text" name="server[id]" value="'. $server->getID() .'" /></td></tr>';
         $html .= '<tr><td>Name:</td><td><input type="text" name="server[name]" value="'. htmlentities($server->getName(), ENT_QUOTES) .'" /></td></tr>';
         $html .= '<tr><td>Description:</td><td><input type="text" name="server[description]" value="'. htmlentities($server->getDescription(), ENT_QUOTES) .'" /></td></tr>';
         $html .= '<tr><td>Http:</td><td><input type="text" name="server[http]" value="'. htmlentities($server->getHttp(), ENT_QUOTES) .'" /></td></tr>';
         $html .= '<tr><td>Https:</td><td><input type="text" name="server[https]" value="'. htmlentities($server->getHttps(), ENT_QUOTES) .'" /></td></tr>';
         
-        $html .= '<tr><td><input type="hidden" name="server[id]" value="'. $server->getId() .'" /></td><td><input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></td></tr>';
+        $html .= '<tr><td></td><td><input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></td></tr>';
         $html .= '</table>';
         $html .= '</form>';
+        $html .= '<p><a href="/admin/servers/">Go back to servers</a></p>';
         return $html;
     }
     function create(&$request) {
@@ -124,7 +126,7 @@ class ServerAdmin {
             $GLOBALS['Response']->addFeedback('error', 'Server not found');
         } else if ($request->exist('cancel')) {
             $GLOBALS['Response']->addFeedback('info', 'Not updated');
-        } else if ($this->server_factory->update($request->get('server'))) {
+        } else if ($this->server_factory->update($request->get('id'), $request->get('server'))) {
             $GLOBALS['Response']->addFeedback('info', 'Updated');
         } else {
             return $this->edit($request);

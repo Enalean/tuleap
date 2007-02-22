@@ -36,13 +36,23 @@ class ServerFactory {
         if (!$arr || !is_array($arr)) {
             $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
         } else if ($this->validate($arr)) {
-            $dao =& new ServerDao(CodeXDataAccess::instance());
-            return $dao->create($arr);
+            if ($this->getServerById($arr['id'])) {
+                $GLOBALS['Response']->addFeedback('error', 'A server with id '. $arr['id'] .' already exists');
+            } else {
+                $dao =& new ServerDao(CodeXDataAccess::instance());
+                return $dao->create($arr);
+            }
         }
         return false;
     }
     function validate($arr) {
-        if ($this->_field_is_empty($arr, 'name')) {
+        if ($this->_field_is_empty($arr, 'id')) {
+            $GLOBALS['Response']->addFeedback('error', 'Id cannot be empty');
+            return false;
+        } else if (is_numeric($arr['id']) && (int)$arr['id'] != $arr['id']) {
+            $GLOBALS['Response']->addFeedback('error', 'Id must be an integer');
+            return false;
+        } else if ($this->_field_is_empty($arr, 'name')) {
             $GLOBALS['Response']->addFeedback('error', 'Name cannot be empty');
             return false;
         } else if ($this->_field_is_empty($arr, 'http') && $this->_field_is_empty($arr, 'https')) {
@@ -64,12 +74,12 @@ class ServerFactory {
         }
         return $s;
     }
-    function update($arr) {
+    function update($server_id, $arr) {
         if (!$arr || !is_array($arr)) {
             $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
         } else if ($this->validate($arr)) {
             $dao =& new ServerDao(CodeXDataAccess::instance());
-            return $dao->modify($arr);
+            return $dao->modify($server_id, $arr);
         }
         return false;
     }

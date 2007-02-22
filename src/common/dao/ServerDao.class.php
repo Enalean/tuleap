@@ -20,7 +20,7 @@ class ServerDao extends DataAccessObject {
     }
     
     function &searchAll() {
-        $sql = "SELECT * FROM server";
+        $sql = "SELECT * FROM server ORDER BY id";
         return $this->retrieve($sql);
     }
     
@@ -40,43 +40,37 @@ class ServerDao extends DataAccessObject {
     * @return true if there is no error
     */
     function create($server) {
+        $id          = isset($server['id'])          ? $server['id']          : '';
         $name        = isset($server['name'])        ? $server['name']        : '';
         $description = isset($server['description']) ? $server['description'] : '';
         $http        = isset($server['http'])        ? $server['http']        : '';
         $https       = isset($server['https'])       ? $server['https']       : '';
-        $sql = sprintf("INSERT INTO server (name, description, http, https) VALUES (%s, %s, %s, %s)",
+        $sql = sprintf("INSERT INTO server (id, name, description, http, https) VALUES (%s, %s, %s, %s, %s)",
+				$this->da->quoteSmart($id),
 				$this->da->quoteSmart($name),
 				$this->da->quoteSmart($description),
 				$this->da->quoteSmart($http),
 				$this->da->quoteSmart($https));
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+        return $this->update($sql);
     }
     function delete($id) {
         $sql = sprintf("DELETE FROM server WHERE id = %s",
             $this->da->quoteSmart($id));
         return $this->update($sql);
     }
-    function modify($server) {
-        $id          = isset($server['id'])          ? $server['id']          : 'null';
+    function modify($server_id, $server) {
+        $id          = isset($server['id'])          ? $server['id']          : $server_id;
         $name        = isset($server['name'])        ? $server['name']        : '';
         $description = isset($server['description']) ? $server['description'] : '';
         $http        = isset($server['http'])        ? $server['http']        : '';
         $https       = isset($server['https'])       ? $server['https']       : '';
-        $sql = sprintf("UPDATE server SET name = %s, description = %s, http = %s, https = %s WHERE id = %s",
+        $sql = sprintf("UPDATE server SET id = %s, name = %s, description = %s, http = %s, https = %s WHERE id = %s",
+                $this->da->quoteSmart($id),
 				$this->da->quoteSmart($name),
 				$this->da->quoteSmart($description),
 				$this->da->quoteSmart($http),
 				$this->da->quoteSmart($https),
-                $this->da->quoteSmart($id));
+                $this->da->quoteSmart($server_id));
         return $this->update($sql);
     }
 }

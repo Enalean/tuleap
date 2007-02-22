@@ -240,11 +240,12 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 ###############################################################################
 # Servers
 CREATE TABLE server (
-  id INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  id INT( 11 ) UNSIGNED NOT NULL PRIMARY KEY ,
   name VARCHAR( 255 ) NOT NULL ,
   description TEXT NOT NULL ,
   http TEXT NOT NULL,
-  https TEXT NOT NULL
+  https TEXT NOT NULL,
+  is_master TINYINT(1) NOT NULL default 0
 );
 ALTER TABLE service ADD location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'same';
 ALTER TABLE service ADD server_id INT( 11 ) UNSIGNED NULL ;
