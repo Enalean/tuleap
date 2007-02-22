@@ -171,7 +171,7 @@ forum_thread	view_thread	View Thread
 # Script: src/www/forum/monitor_thread.php
 #
 forum_monitor_thread	tmonitor	Monitor?
-forum_monitor_thread	thread_monitor_disabled	Thread monitoring is disabled in this forum.
+forum_monitor_thread	thread_monitor_disabled	That forum does not exist or thread monitoring is disabled.
 forum_monitor_thread	notice	You are monitoring the whole forum. If you want to monitor only specific threads, Stop Monitoring Forum.
 forum_monitor_thread	monitor_success	Thread monitoring updated.
 forum_monitor_thread	monitor_fail	Thread monitoring update failed.
