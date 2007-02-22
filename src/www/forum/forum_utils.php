@@ -573,12 +573,23 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 	$res=news_read_permissions($forum_id);
 	if ((db_numrows($res) < 1)) {
 	    if (! thread_monitoring_is_enabled($forum_id)) {
-	        $sql="SELECT user.email from forum_monitored_forums,user ".
-		     "WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
+	        $sql = sprintf('SELECT user.email FROM forum_monitored_forums,user'
+				.' WHERE forum_monitored_forums.user_id=user.user_id'
+				.' AND forum_monitored_forums.forum_id=%d'
+				.' AND ( user.status="A" OR user.status="R" )',
+				$forum_id);
 	    } else {
 	        //check if there are users monitoring specific threads
-		$sql="(SELECT user.email from forum_monitored_forums,user WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )) ".
-		     "UNION (SELECT user.email from forum_monitored_threads,user WHERE forum_monitored_threads.user_id=user.user_id AND forum_monitored_threads.forum_id='$forum_id' AND forum_monitored_threads.thread_id='$thread_id' AND ( user.status='A' OR user.status='R' ))"; 
+		$sql = sprintf('(SELECT user.email FROM forum_monitored_forums,user'
+				.' WHERE forum_monitored_forums.user_id=user.user_id'
+				.' AND forum_monitored_forums.forum_id=%d'
+				.' AND ( user.status="A" OR user.status="R" ))'
+				.' UNION (SELECT user.email FROM forum_monitored_threads,user'
+				.' WHERE forum_monitored_threads.user_id=user.user_id'
+				.' AND forum_monitored_threads.forum_id=%d'
+				.' AND forum_monitored_threads.thread_id=%d'
+				.' AND ( user.status="A" OR user.status="R" ))',
+				$forum_id,$forum_id,$thread_id);
 	    }
 	} else {
 	    //we are dealing with private news, only project members are allowed to monitor
@@ -808,7 +819,12 @@ function thread_monitoring_is_enabled($forum_id) {
 		    .' WHERE group_forum_id=%d',
 		    $forum_id);
     $res = db_query($sql);
-    return db_result($res,0,'thread_monitored');
+    if (db_numrows($res) < 1) {
+        //wrong forum id (non-existing forum)
+	return false;
+    } else {
+        return db_result($res,0,'thread_monitored');
+    }	
     
 }
 
