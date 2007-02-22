@@ -53,8 +53,10 @@ class Service {
     function getLocation() {
         return $this->data['location'];
     }
-    function getUrl() {
-        $url = $this->data['link'];
+    function getUrl($url = null) {
+        if (is_null($url)) {
+            $url = $this->data['link'];
+        }
         if (!$this->isAbsolute($url) && $this->getLocation() != SERVICE_SAME) {
             $sf =& $this->_getServerFactory();
             if ($s =& $sf->getServerById($this->getServerId())) {

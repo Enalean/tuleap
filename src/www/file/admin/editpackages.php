@@ -122,8 +122,12 @@ if (!$res || $rows < 1) {
 	$title_arr[]=$Language->getText('file_admin_editpackages','releases');
 	$title_arr[]=$Language->getText('file_admin_editpackages','perms');
 
+    $url = '';
+    $p =& project_get_object($group_id);
+    if ($p->usesService('file')) {
+        $url = $p->services['file']->getUrl('');
+    }
 	echo html_build_list_table_top ($title_arr);
-
 	for ($i=0; $i<$rows; $i++) {
 		echo '
 		<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
@@ -147,7 +151,7 @@ if (!$res || $rows < 1) {
                 echo '
 			<TD align="center"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('file_admin_editpackages','update').'"></TD>
 			<TD  align="center" NOWRAP><FONT SIZE="-1">' .
-                    '<A HREF="createrelease.php?package_id='. 
+                    '<A HREF="'. $url .'/file/admin/createrelease.php?package_id='. 
                         $res[$i]->getPackageID() .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_releases').']</B></A>';
               if(count($res[$i]->getReleases())){
                   echo '<A HREF="editreleases.php?package_id='. 

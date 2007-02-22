@@ -57,9 +57,9 @@ $frsff = new FRSFileFactory();
     */
     $res = $frsrf->delete_release($group_id, $release_id);
     if ($res == 0) {
-      $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_not_yours').' ';
+      $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases','rel_not_yours'));
     } else {
-      $feedback .= ' '.$Language->getText('file_admin_editreleases','rel_del').' ';
+      $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases','rel_del'));
     }
   } 
 	/*
@@ -106,11 +106,16 @@ $frsff = new FRSFileFactory();
 		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('file_admin_editreleases','delete');
 
+        $url = '';
+        $p =& project_get_object($group_id);
+        if ($p->usesService('file')) {
+            $url = $p->services['file']->getUrl('');
+        }
 		echo html_build_list_table_top ($title_arr);
 		$i = 0;
 		foreach($res as $result) {
 		  echo '<TR class="'. util_get_alt_row_color($i) .'">'.
-		    '<TD><FONT SIZE="-1"><A HREF="editrelease.php?release_id='. 
+		    '<TD><FONT SIZE="-1"><A HREF="'. $url .'/file/admin/editrelease.php?release_id='. 
 		    $result['release_id'] .'&group_id='. $group_id .'" title="'.$Language->getText('file_admin_editreleases','edit_this_release').'">'.
 		    $result['release_name'] .'</A></TD>'.
 		    '<TD><FONT SIZE="-1"><A HREF="editpackages.php?group_id='.
