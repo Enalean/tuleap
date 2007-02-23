@@ -41,7 +41,7 @@ if(array_key_exists('submit', $_POST) && isset($_POST['submit'])) {
     }
 }
 
-if ($forum_id) {
+if (isset($_REQUEST['forum_id'])) {
 
     //Check if thread monitoring is enabled in this forum
     if (! thread_monitoring_is_enabled($forum_id)) {
