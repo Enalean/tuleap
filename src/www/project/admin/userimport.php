@@ -34,21 +34,21 @@ if ( !user_isloggedin()) {
     return;
 }
 
-if (!$group_id) {
+if (!isset($_REQUEST['group_id'])) {
   exit_no_group();
 }
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+session_require(array('group'=>$_REQUEST['group_id'],'admin_flags'=>'A'));
 
 project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
 			     'help' => 'UserImport.html'));
 			     
-$import = new UserImportHtml($group_id);
-if (isset($mode) && $mode == "parse") {
+$import = new UserImportHtml($_REQUEST['group_id']);
+if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "parse") {
     $import->displayParse($user_filename);
-} else if (isset($mode) && $mode == "import") {
+} else if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "import") {
     $import->displayImport($parsed_users);    
-} else if (isset($mode) && $mode == "showformat") {
+} else if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "showformat") {
     $import->displayShowFormat();
 } else {
     $import->displayInput();
