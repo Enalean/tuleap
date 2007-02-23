@@ -68,7 +68,7 @@ news_utils	submit_news	Submit News
 #
 news_submit	insert_err	ERROR doing insert
 news_submit	news_added	News Added.
-news_submit	only_writer_submits	Permission Denied. You cannot submit news for a project unless you have Write permissions on News service of that project
+news_submit	only_writer_submits	Permission Denied. You cannot submit news for a project unless you have Write or Admin permissions on News service.
 news_submit	submit_news_for	Submit News For $1
 news_submit	post_explain	You can post news about your project if you are an admin on your project.<P>All posts <B>for your project</B> will appear instantly on your project summary page. Posts that are of special interest to the community will have to be approved by a member of the news team before they will appear on the $1 home page. <p>You may include URLs, but not HTML in your submissions.URLs that start with http:// are made clickable.</p>
 news_submit	for_project	For Project: $1

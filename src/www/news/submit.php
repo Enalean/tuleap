@@ -66,7 +66,7 @@ if (user_isloggedin()) {
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<P>
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
-		<INPUT TYPE="TEXT" NAME="summary" VALUE="" CLASS="large_input">
+		<INPUT TYPE="TEXT" NAME="summary" VALUE="" CLASS="textfield_medium">
 		<P>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>
@@ -77,11 +77,11 @@ if (user_isloggedin()) {
 		</TABLE><P>
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
-//<INPUT TYPE="TEXT" NAME="summary" VALUE="" SIZE="44" MAXLENGTH="60">
+
 	news_footer(array());
 
     } else {
-        exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_submit','only_admin_submits'));
+        exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_submit','only_writer_submits'));
     }
 } else {
     exit_not_logged_in();

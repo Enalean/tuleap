@@ -41,5 +41,5 @@
 # 
 
 
-ALTER TABLE user_group ADD news_flags INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE user_group ADD news_flags INT(11) NOT NULL DEFAULT '0' AFTER wiki_flags;
 
