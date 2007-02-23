@@ -90,6 +90,25 @@ $GLOBALS['server']->wsdl->addComplexType(
 // Function definition
 //
 $GLOBALS['server']->register(
+    'createDocmanDocument',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'parent_id'=>'xsd:int',
+        'title'=>'xsd:string',
+        'description'=>'xsd:string',
+        'type' => 'xsd:string',
+        'content' => 'xsd:string',
+        'ordering'=>'xsd:string',
+        ),
+    array('createDocmanDocumentResponse'=>'xsd:boolean'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#createDocmanDocument',
+    'rpc',
+    'encoded',
+    'Create a document.'
+);
+$GLOBALS['server']->register(
     'createDocmanFolder',
     array(
         'sessionKey'=>'xsd:string',
@@ -166,6 +185,77 @@ $GLOBALS['server']->register(
 //
 // Function implementation
 //
+
+/**
+ * 
+ */
+function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $description, $type, $content, $ordering) {
+    global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'createDocmanDocument','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'createDocmanDocument', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'createDocmanDocument', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        switch ($type) {
+        	    case "file":
+                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_FILE;
+                $content_param_name = 'file';
+                break;
+            case "link":
+                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_LINK;
+                $content_param_name = 'link_url';
+                break;
+            case "wiki":
+                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
+                $content_param_name = 'wiki_page';
+                break;
+            case "embedded_file":
+                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
+                $content_param_name = 'content';
+                break;	
+            default:
+                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_LINK;
+                $content_param_name = 'link_url';
+                break;
+        }
+        
+        $request =& new SOAPRequest(array(
+            'group_id' => $group_id,
+            'item' => array(
+                'parent_id' => $parent_id,
+                'title' => $title,
+                'description' => $description,
+                'item_type' => $item_type, //PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                $content_param_name => $content
+            ),
+            'ordering' => $ordering,
+            //needed internally in docman vvv
+            'action'       => 'createDocument',
+            'confirm'      => true,
+        ));
+        $plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new soap_fault('', 'createDocmanDocument', $msg, $msg);
+            } else {
+                return true;
+            }
+        } else {
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'createDocmanDocument','Unavailable plugin','Unavailable plugin');;
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'createDocmanDocument','Invalid Session','');
+    }
+}
 
 /**
  * 
