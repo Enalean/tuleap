@@ -100,10 +100,10 @@ function forum_header($params) {
                     $msg = $Language->getText('forum_forum_utils','monitor');
                 }
 	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
-                echo html_image("ic/check.png",array()).' '.$msg.'</A> | ';
+                echo html_image("ic/monitor_forum.png",array()).' '.$msg.'</A> | ';
 		
 		if (thread_monitoring_is_enabled($forum_id)) {
-		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
+		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.html_image("ic/monitor_thread.png",array()).$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
 		}
 	        
 		echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
