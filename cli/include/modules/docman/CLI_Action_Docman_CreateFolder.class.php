@@ -43,10 +43,14 @@ class CLI_Action_Docman_CreateFolder extends CLI_Action {
     }
     function validate_ordering(&$ordering) {
         $allowed_ordering = array("begin", "end");	    
-        if (isset($ordering) && !array_key_exists($ordering, $allowed_ordering)) {
-            exit_error("You must specify the ordering of the folder with the --parent_id parameter");
-        } else{
-        	    $ordering = "begin";  
+        if (isset($ordering)) {
+            // check that the value is allowed 	
+            if (!in_array($ordering, $allowed_ordering)) {
+                exit_error("You must specify the ordering of the folder with the --ordering parameter, taking the value {".implode(",", $allowed_ordering)."}");
+            }
+        } else {
+            // $ordering is not set
+            $ordering = "begin";  
         }
         return true;
     }
