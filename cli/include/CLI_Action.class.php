@@ -37,6 +37,9 @@ class CLI_Action {
     function setModule(&$module) {
         $this->module =& $module;
     }
+    function setSoapCommand($commandName) {
+        $this->soapCommand = $commandName;
+    }
     function addParam($param) {
         $this->params[] = $param;
     }

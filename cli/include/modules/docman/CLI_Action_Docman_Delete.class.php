@@ -9,7 +9,8 @@ require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Docman_Delete extends CLI_Action {
     function CLI_Action_Docman_Delete() {
-        $this->CLI_Action('deleteDocmanItem', 'Delete a document or a folder');
+        $this->CLI_Action('delete', 'Delete a document or a folder');
+        $this->setSoapCommand('deleteDocmanItem');
         $this->addParam(array(
             'name'           => 'item_id',
             'description'    => '--id=<item_id>     ID of the item we want to delete',

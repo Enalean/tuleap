@@ -10,7 +10,8 @@ require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 class CLI_Action_Docman_CreateFolder extends CLI_Action {
 	
     function CLI_Action_Docman_CreateFolder() {
-        $this->CLI_Action('createDocmanFolder', 'Create a folder');
+        $this->CLI_Action('createFolder', 'Create a folder');
+        $this->setSoapCommand('createDocmanFolder');
         $this->addParam(array(
             'name'           => 'parent_id',
             'description'    => '--parent_id=<item_id>     ID of the parent the folder will be created in'
