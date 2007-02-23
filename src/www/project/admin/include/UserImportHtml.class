@@ -58,13 +58,14 @@ class UserImportHtml extends UserImport {
         project_admin_footer(array());   
         exit;
     }
-    
-    echo '<h2>'.$Language->getText('project_admin_userimport','parse_report').'</h2>';
+        
     $ok = $this->parse($user_filename,$errors,$parsed_users);
 
-    if (!$ok) {
-	$this->showErrors($errors);
+    if (!$ok) {        
+        $this->displayInput();
+	$this->showErrors($errors);	
     } else {
+        echo '<h2>'.$Language->getText('project_admin_userimport','parse_report').'</h2>';
 	$this->showParseResults($parsed_users);
     }
   
@@ -165,8 +166,9 @@ class UserImportHtml extends UserImport {
    */
   function displayShowFormat() {
     global $Language;
-
-    echo '<h2>'.$Language->getText('project_admin_userimport','format_hdr').'</h2>';
+    
+    $this->displayInput();
+    echo '<hr><h2>'.$Language->getText('project_admin_userimport','format_hdr').'</h2>';
     echo $Language->getText('project_admin_userimport','import_format',array(user_getemail(user_getid())));
     
   }

@@ -34,10 +34,11 @@ if ( !user_isloggedin()) {
     return;
 }
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-
-if (!$group_id) 
+if (!$group_id) {
   exit_no_group();
+}
+
+session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
 			     'help' => 'UserImport.html'));
