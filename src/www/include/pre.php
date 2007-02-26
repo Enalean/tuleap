@@ -245,9 +245,14 @@ if ($request->exist('group_id')) {
     $p =& project_get_object($request->get('group_id'));
     //get service from url
     $url = explode('/', $_SERVER['SCRIPT_NAME']);
-    $service_name = $url[1];
-    if ($p->usesService($service_name)) {
-        $p->services[$service_name]->redirectIfNeeded();
+    if (isset($url[1])) {
+        $service_name = $url[1];
+        if ($service_name == 'plugins' && isset($url[2])) {
+            $service_name = $url[2];
+        }
+        if ($p->usesService($service_name)) {
+            $p->services[$service_name]->redirectIfNeeded();
+        }
     }
 }
 ?>
