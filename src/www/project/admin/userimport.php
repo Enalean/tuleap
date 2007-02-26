@@ -45,9 +45,9 @@ project_admin_header(array('title'=>$Language->getText('project_admin_userimport
 			     
 $import = new UserImportHtml($_REQUEST['group_id']);
 if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "parse") {
-    $import->displayParse($user_filename);
+    $import->displayParse($_FILES['user_filename']['tmp_name']);
 } else if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "import") {
-    $import->displayImport($parsed_users);    
+    $import->displayImport($_REQUEST['parsed_users']);    
 } else if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "showformat") {
     $import->displayShowFormat();
 } else {
