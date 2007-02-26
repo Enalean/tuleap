@@ -103,13 +103,14 @@ $sys_win_domain = "%sys_win_domain%";
 $sys_fullname = "%sys_fullname%";
 
 
-
 //
 //
 // PART II - Paths and system settings
 //
 //
 
+// The id of the server.
+$sys_server_id = 0;
 
 // In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
 // Please update the following variables:

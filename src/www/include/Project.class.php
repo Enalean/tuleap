@@ -9,6 +9,7 @@
 
 
 //require_once('common/include/Error.class.php');
+require_once('Group.class.php');
 require_once('common/project/Service.class.php');
 require_once('common/frs/ServiceFile.class.php');
 /*

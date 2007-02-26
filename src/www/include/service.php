@@ -27,7 +27,8 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
 
     $is_used   = isset($template['is_used'])   ? $template['is_used']   : $arr['is_used'];
     $server_id = isset($template['server_id']) ? $template['server_id'] : $arr['server_id'];
-    $sql    = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id) VALUES ($group_id, '".$arr['label']."', '".$arr['description']."', '".$arr['short_name']."', '".$link."', ".$arr['is_active'].", ". ($force_enable ? 1 : $is_used) .", '".$arr['scope']."', ".$arr['rank'].",  ".$arr['location'].", ". $server_id .")";
+    $sql    = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id) VALUES ($group_id, '".$arr['label']."', '".$arr['description']."', '".$arr['short_name']."', '".$link."', ".$arr['is_active'].", ". ($force_enable ? 1 : $is_used) .", '".$arr['scope']."', ".$arr['rank'].",  '".$arr['location']."', ". $server_id .")";
+    echo $sql;
     $result = db_query($sql);
     
     if ($result) {

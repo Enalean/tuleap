@@ -125,5 +125,8 @@ class ServiceFile extends Service {
         }
         return $packages;
     }
+    function _getDistributedPages() {
+        return array('/file/admin/createrelease.php');
+    }
 }
 ?>

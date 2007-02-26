@@ -59,7 +59,7 @@ if ($request->exist('previous')) {
 }
 
 //Display current step
-$HTML->header(array('title'=>$Language->getText('register_index','project_registration')));
+$HTML->header(array('title'=>$Language->getText('register_index','project_registration') .' - '. $steps[$current_step]->name));
 echo '<style>
 .current_step {
     font-weight:bold;

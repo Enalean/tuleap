@@ -74,6 +74,16 @@ class ServerFactory {
         }
         return $s;
     }
+    function getMasterServer() {
+        $s = null;
+        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dar =& $dao->searchByIsMaster($is_master = true);
+        if ($dar && $dar->valid()) {
+            $row = $dar->current();
+            $s = new Server($row);
+        }
+        return $s;
+    }
     function update($server_id, $arr) {
         if (!$arr || !is_array($arr)) {
             $GLOBALS['Response']->addFeedback('error', 'Missing parameters');

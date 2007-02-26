@@ -15,6 +15,7 @@ class Server {
     var $description;
     var $http;
     var $https;
+    var $is_master;
     /**
     * Constructor
     */
@@ -24,6 +25,7 @@ class Server {
         $this->description = isset($data['description']) ? $data['description'] : '';
         $this->http        = isset($data['http'])        ? $data['http']        : '';
         $this->https       = isset($data['https'])       ? $data['https']       : '';
+        $this->is_master   = isset($data['is_master'])   ? $data['is_master']   : 0;
     }
     function getId() {
         return $this->id;
@@ -39,6 +41,9 @@ class Server {
     }
     function getHttps() {
         return $this->https;
+    }
+    function isMaster() {
+        return $this->is_master;
     }
     /**
     * @param secure boolean

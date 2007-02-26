@@ -237,4 +237,17 @@ if (user_isrestricted()) {
         exit_restricted_user_permission_denied();
     }
 }
+
+require_once('common/include/HTTPRequest.class.php');
+$request =& new HTTPRequest();
+if ($request->exist('group_id')) {
+    require_once('Project.class.php');
+    $p =& project_get_object($request->get('group_id'));
+    //get service from url
+    $url = explode('/', $_SERVER['SCRIPT_NAME']);
+    $service_name = $url[1];
+    if ($p->usesService($service_name)) {
+        $p->services[$service_name]->redirectIfNeeded();
+    }
+}
 ?>

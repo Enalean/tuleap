@@ -34,6 +34,12 @@ class ServerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function & searchByIsMaster($is_master) {
+        $sql = sprintf("SELECT * FROM server WHERE is_master = %s",
+            $this->da->quoteSmart($is_master ? 1 : 0));
+        return $this->retrieve($sql);
+    }
+
 
     /**
     * create a row in the table Server 
@@ -71,7 +77,14 @@ class ServerDao extends DataAccessObject {
 				$this->da->quoteSmart($http),
 				$this->da->quoteSmart($https),
                 $this->da->quoteSmart($server_id));
-        return $this->update($sql);
+        $updated = $this->update($sql);
+        if (isset($server['id']) && $server_id != $server['id']) {
+            $sql = sprintf("UPDATE service SET server_id = %s where server_id = %s",
+                $this->da->quoteSmart($id),
+                $this->da->quoteSmart($server_id));
+            $this->update($sql);
+        }
+        return $updated;
     }
 }
 
