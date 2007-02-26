@@ -123,7 +123,7 @@ class UserImportHtml extends UserImport {
     }
 	
     echo '	
-	</FORM><A href="/project/admin/userimport.php?group_id='.$this->group.'"> '.$Language->getText('project_admin_userimport','back_import').'</A>';
+	</FORM><A href="/project/admin/userimport.php?group_id='.$this->group.'"> ['.$Language->getText('global','back').']</A>';
     
   }
   
