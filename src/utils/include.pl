@@ -63,17 +63,19 @@ sub open_array_file {
 
 #############################
 # File write function.
+# Now use a temporary file first, then rename once the file is fully written.
 #############################
 sub write_array_file {
         my ($file_name, @file_array) = @_;
         
-        open(FD, ">$file_name") || die "Can't open $file_name: $!.\n";
+        open(FD, ">$file_name.codextemp") || die "Can't open $file_name: $!.\n";
         foreach (@file_array) { 
                 if ($_ ne '') { 
                         print FD;
                 }       
         }       
         close(FD);
+        rename "$file_name.codextemp","$file_name" || die "Can't rename $file_name.codextemp to $file_name: $!.\n";
 }
 
     
