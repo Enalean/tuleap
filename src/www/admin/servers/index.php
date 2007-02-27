@@ -23,6 +23,7 @@ class ServerAdmin {
                 'Description',
                 'HTTP',
                 'HTTPS',
+                'Is Master?',
                 '',
             );
             $html .= html_build_list_table_top($title_arr);
@@ -33,6 +34,7 @@ class ServerAdmin {
                 $html .= '<td>'. $servers[$key]->getDescription() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttp() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttps() .'</td>';
+                $html .= '<td style="text-align:center">'. ($servers[$key]->isMaster() ? 'Master' : '-') .'</td>';
                 $html .= '<td><a title="Delete server" href="/admin/servers/delete/'. $servers[$key]->getId() .'">'. $GLOBALS['Response']->getImage('ic/trash.png', array('alt' => 'Delete server')) .'</a></td>';
                 $html .= '</tr>';
             }
@@ -41,6 +43,9 @@ class ServerAdmin {
             $html .= '<p>No servers</p>';
         }
         $html .= '<p><a href="/admin/servers/add">Add a server</a></p>';
+        if (count($servers)) {
+            $html .= '<p><a href="/admin/servers/master">Select the master</a></p>';
+        }
         return $html;
     }
     function delete(&$request) {
@@ -130,6 +135,39 @@ class ServerAdmin {
             $GLOBALS['Response']->addFeedback('info', 'Updated');
         } else {
             return $this->edit($request);
+        }
+        $GLOBALS['Response']->redirect('/admin/servers/');
+    }
+    function master(&$request) {
+        $servers = $this->server_factory->getAllServers();
+        if (count($servers)) {
+            $this->title = 'Select the Master';
+            $html  = '<form action="/admin/servers/setmaster" method="POST">';
+            $html .= 'Server: <select name="master">';
+            foreach($servers as $key => $nop) {
+                $selected = $servers[$key]->isMaster() ? 'selected="selected"' : '';
+                $html .= '<option value="'. $servers[$key]->getId(). '" '. $selected .'>'. $servers[$key]->getName() .'</option>';
+            }
+            $html .= '</select>';
+            $html .= '<br />';
+            $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> ';
+            $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+            return $html;
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'There is no server');
+            $GLOBALS['Response']->redirect('/admin/servers/');
+        }
+    }
+    function setmaster(&$request) {
+        $server =& $this->server_factory->getServerById($request->get('master'));
+        if (!$server) {
+            $GLOBALS['Response']->addFeedback('error', 'Server not found');
+        } else if ($request->exist('cancel')) {
+            $GLOBALS['Response']->addFeedback('info', 'Not updated');
+        } else if ($this->server_factory->setMaster($request->get('master'))) {
+            $GLOBALS['Response']->addFeedback('info', 'Updated');
+        } else {
+            return $this->master($request);
         }
         $GLOBALS['Response']->redirect('/admin/servers/');
     }

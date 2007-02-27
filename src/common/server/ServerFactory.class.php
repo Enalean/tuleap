@@ -93,5 +93,9 @@ class ServerFactory {
         }
         return false;
     }
+    function setMaster($server_id) {
+        $dao =& new ServerDao(CodeXDataAccess::instance());
+        return $dao->setMaster($server_id);
+    }
 }
 ?>

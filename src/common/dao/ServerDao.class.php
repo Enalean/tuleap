@@ -86,6 +86,12 @@ class ServerDao extends DataAccessObject {
         }
         return $updated;
     }
+    function setMaster($id) {
+        $this->update('UPDATE server SET is_master = 0');
+        $sql = sprintf("UPDATE server SET is_master = 1 WHERE id = %s",
+                $this->da->quoteSmart($id));
+        return $this->update($sql);
+    }
 }
 
 
