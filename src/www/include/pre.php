@@ -258,14 +258,12 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
                 $redirect_to_master_if_needed = false;
                 //If we request a page wich IS NOT distributed...
                 if (!$p->services[$service_name]->isPageDistributed($_SERVER['SCRIPT_NAME'])) {
-                    $GLOBALS['Response']->addFeedback('info', 'The page is not distributed');
                     //...and we are not on the master...
                     if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
                         //...then go to the master.
                         $GLOBALS['Response']->redirect($master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
                     }
                 } else { //If we request a page wich is distributed...
-                    $GLOBALS['Response']->addFeedback('info', 'The page is distributed');
                     //...and we are not on the good server...
                     if ($p->services[$service_name]->getServerId() != $GLOBALS['sys_server_id']) {
                         if ($s =& $sf->getServerById($p->services[$service_name]->getServerId())) {
