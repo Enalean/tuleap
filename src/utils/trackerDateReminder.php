@@ -28,17 +28,9 @@ $sql = "SELECT * FROM artifact_date_reminder_processing ORDER BY notification_id
 $res = db_query($sql);
 if (db_numrows($res) > 0) {    
     while ($rows = db_fetch_array($res)) {
-	//echo "-------------- \n";
-	$notification_id = $rows['notification_id'];
-	//echo $notification_id;
-	//echo "\n";
-	$rem = new ArtifactDateReminder($notification_id);
-	$rem->makeTest();
-	//$users = $rem->getNotifiedPeople();
-	//print_r ($users);
-	//$date_value = $rem->getDateValue();
-	//echo $date_value;
-	//echo "\n";
+	$notification_id = $rows['notification_id'];	
+	$adr = new ArtifactDateReminder($notification_id);
+	$adr->checkReminderStatus();
     }
 }
 

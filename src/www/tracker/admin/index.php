@@ -413,11 +413,11 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		if (isset($submit_notif_settings)) {		    
 		    if ($notified_users == NULL) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notified_users');
-		    } else if (! $start) {
+		    } else if ($start == NULL) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_start');
-		    } else if (! $frequency) {
+		    } else if ($frequency == NULL || $frequency == 0) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_frequency');
-		    } else if (! $recurse) {
+		    } else if ($recurse == NULL || $recurse == 0) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_recurse');
 		    } else {
 		        $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);			

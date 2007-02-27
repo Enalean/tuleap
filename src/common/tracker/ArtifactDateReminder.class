@@ -22,7 +22,7 @@
  */
 
 require_once('pre-cli.php');
-
+require_once('common/mail/Mail.class');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
 //require_once('common/tracker/ArtifactField.class');
@@ -161,6 +161,100 @@ class ArtifactDateReminder extends Error {
 	    return $this->notification_sent;
 	}
 	
+	/**
+	*  Get the tracker name
+	* 
+	* @return string
+	*/
+	function getTrackerName() {
+	
+	    $group = group_get_object($this->getGroupId());   
+	    $at = new ArtifactType($group,$this->getGroupArtifactId());
+	    return $at->getName();
+	
+	}
+	
+	/**
+	* Get the notification start date (Unix timestamp) for a given event 
+	* 
+	* @return int
+	*/
+	function getNotificationStartDate() {
+	
+	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+			    .' WHERE reminder_id=%d'
+			    .' AND field_id=%d'
+			    .' AND group_artifact_id=%d'
+			    .' AND group_id=%d',
+			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId(),$this->getGroupId());
+	    $res  =db_query($sql);
+	    $start = db_result($res,0,'notification_start');    
+	    $type = db_result($res,0,'notification_type');
+	    $date_value = $this->getDateValue();    
+	    $shift = intval($start * 24 * 3600);
+	    if ($type == 0) {
+	        //notification starts before occurence date
+	        $notif_start_date = intval($date_value - $shift);
+	    } else {
+	        //notification starts after occurence date
+	        $notif_start_date = intval($date_value + $shift);
+	    }
+
+	    return $notif_start_date;	    
+	    
+	}
+	
+	/**
+	* Get the recurse of the event : how many reminders have to be sent
+	*
+	* @return int
+	*/
+	function getRecurse() {
+	    
+	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+			    .' WHERE reminder_id=%d'
+			    .' AND field_id=%d'
+			    .' AND group_artifact_id=%d'
+			    .' AND group_id=%d',
+			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId(),$this->getGroupId());
+	    $res = db_query($sql);
+	    
+	    return db_result($res,0,'recurse');
+	    
+	}
+
+	/**
+	* Get the frequency of the event : interval of reminder mails
+	*
+	* @return int
+	*/
+	function getFrequency() {
+	    
+	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+			    .' WHERE reminder_id=%d'
+			    .' AND field_id=%d'
+			    .' AND group_artifact_id=%d'
+			    .' AND group_id=%d',
+			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId(),$this->getGroupId());
+	    $res = db_query($sql);
+	    
+	    return db_result($res,0,'frequency');
+	    
+	}
+	
+	/**
+	* Get the date (unix timestamp) of next reminder mail
+	* 
+	* @return int
+	*/
+	function getNextReminderDate() {
+	
+	    if ($this->getNotificationSent() < $this->getRecurse()) {
+	        $shift = intval($this->getFrequency() * $this->getNotificationSent() * 24 * 3600);
+	        return intval($this->getNotificationStartDate() + $shift);
+	    }
+	
+	}
 	
 	/**
 	* Get the date field value corresponding to this object
@@ -172,7 +266,7 @@ class ArtifactDateReminder extends Error {
 	    $group = group_get_object($this->getGroupId());   
 	    $at = new ArtifactType($group,$this->getGroupArtifactId());
 	    $art_field_fact = new ArtifactFieldFactory($at);
-	    $field = $art_field_fact->getFieldFromId($this->getFieldId());
+	    $field = $art_field_fact->getFieldFromId($this->getFieldId());  	     
 
 	    if (! $field->isStandardField()) {
 	        $qry = sprintf('SELECT * FROM artifact_field_value'
@@ -202,6 +296,14 @@ class ArtifactDateReminder extends Error {
 	*/
 	function getNotifiedPeople() {
 	
+	    global $art_field_fact;
+	    
+	    //Instantiate a new Artifact object
+	    $group = group_get_object($this->getGroupId());   
+	    $at = new ArtifactType($group,$this->getGroupArtifactId());
+	    $art_field_fact = new ArtifactFieldFactory($at);
+	    $art = new Artifact($at,$this->getArtifactId());
+	    
 	    $notified_people = array();
 	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
@@ -216,55 +318,50 @@ class ArtifactDateReminder extends Error {
 	        switch ($item) {
 		  case 1:
 		    //Submitter
-		    $qry = sprintf('SELECT * FROM artifact'
-				    .' WHERE artifact_id=%d'
-				    .' AND group_artifact_id=%d',
-				    $this->getArtifactId(),$this->getGroupArtifactId());
-		    $result = db_query($qry);
-		    $submitter = db_result($result,0,'submitted_by');
+		    $submitter = $art->getSubmittedBy();
 		    //add submitter in the 'notified_people' array
-		    if (! in_array(user_getemail($submitter),$notified_people) && $submitter != 100) {
+		    if (! in_array(user_getemail($submitter),$notified_people) && $submitter != 100 && $this->isUserAllowedToBeNotified($submitter)) {
 		        $count = count($notified_people);
 		        $notified_people[$count] = user_getemail($submitter);
 		    }
 		    break;
 		  case 2:
 		    //Assigned To
-		    $assignee_fid = $this->getAssignedToFieldId($this->getGroupArtifactId());
-		    if ($assignee_fid) {
-		        //Assigned To (or Assigned To multiple) is enabled and used
-			//echo $assignee_fid;
-		        //echo "\n";
-		        $qry = sprintf('SELECT * FROM artifact_field_value'
-					.' WHERE artifact_id=%d'
-					.' AND field_id=%d',
-					$this->getArtifactId(),$assignee_fid);
-		        $result = db_query($qry);
-		        if (db_numrows($result) > 0) {
-		            //add assignees in the 'notified_people' array  
-		            $index = count($notified_people);
-		            while ($rows = db_fetch_array($result)) {
-			        $assignee = $rows['valueInt'];
-			        if (! in_array(user_getemail($assignee),$notified_people) && $assignee != 100) {
-			            $notified_people[$index] = user_getemail($assignee);
-			            $index ++;
-			        }
-			    }
+		    $assignee_array = array();
+		    $multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
+		    if (is_object($multi_assigned_to)) {
+	                //Multi-Assigned To field
+	                if ($multi_assigned_to->isUsed()) {
+		             $assignee_array = $art->getMultiAssignedTo();
+		        }		
+	            } else {	                
+	                $assigned_to = $art_field_fact->getFieldFromName('assigned_to');
+			if (is_object($assigned_to)) {
+			    //Assigned To field
+			    if ($assigned_to->isUsed()) {
+				$assignee_array = array($art->getValue('assigned_to'));
+		            }
 		        }
+		    }	    		    
+		    $index = count($notified_people);
+		    if (count($assignee_array) > 0) {  
+		        foreach ($assignee_array as $assignee) {
+			    if (! in_array(user_getemail($assignee),$notified_people) && $assignee != 100 && $this->isUserAllowedToBeNotified($assignee)) {
+			        $notified_people[$index] = user_getemail($assignee);
+			        $index ++;
+			    }
+			}
 		    }
 		    break;
 		  case 3:
-		    //CC
-		    $group = group_get_object($this->getGroupId());   
-		    $at = new ArtifactType($group,$this->getGroupArtifactId());
-		    $art_array = array($this->getArtifactId());
-		    $result = $at->getCC($art_array);
-		    if (db_numrows($result) > 0) {
-		        //add cc list in the 'notified_people' array
+		    //CC		      
+		    $cc_array = $art->getCCIdList();
+		    if (count($cc_array) > 0) {
 		        $index = count($notified_people);
-		        while ($rows = db_fetch_array($result)) {
-			    $cc = $rows['email'];
-			    if (! in_array($cc,$notified_people)) {
+			foreach ($cc_array as $cc_id) {
+			    $cc = user_getemail($cc_id);
+			    if (! in_array($cc,$notified_people) && $this->isUserAllowedToBeNotified($cc_id)) {
+			        //add CC list in the 'notified_people' array
 			        $notified_people[$index] = $cc;
 				$index++;
 			    }
@@ -273,34 +370,18 @@ class ArtifactDateReminder extends Error {
 		    break;
 		  case 4:
 		    //Commenter
-		    $group = group_get_object($this->getGroupId());   
-		    $at = new ArtifactType($group,$this->getGroupArtifactId());
-		    $art = new Artifact($at,$this->getArtifactId());
-		    //$test = $art->getValue('submitted_by');
-		    //echo $test;
-		    //echo "\n";
-		    //$result = $art->getCommenters();
-		    //$result = $art->getCCList();
-		    print_r($art);
-		    /*if (db_numrows($result) > 0) {
-		        echo "ça marche \n";
-		        /*$index = count($notified_people);
-		        while ($rows = db_fetch_array($result)) {
-			    $commenter_id = $rows['mod_by'];
-			    $commenter = user_getemail($commenter_id);
-			    if (! in_array($commenter,$notified_people)) {
-			        $notified_people[$index] = $commenter;
-				$index++;
-			    }
+		    $res_com = $art->getCommenters();
+		    if (db_numrows($res_com) > 0) {
+		        $index = count($notified_people);
+		        while ($row = db_fetch_array($res_com)) {
+			    $commenter = $row['mod_by'];
+			    if (! in_array(user_getemail($commenter),$notified_people) && $commenter != 100 && $this->isUserAllowedToBeNotified($commenter)) {
+			        //add Commenters in the 'notified_people' array
+				$notified_people[$index] = user_getemail($commenter);
+			        $index ++;
+			    }			
 			}
-		    } else {
-		        echo "marche pas \n";
 		    }
-		    if (is_object($art)) {
-		        print_r($art);
-		    } else {
-		        echo "not object \n";
-		    }*/
 		    break;
 		}
 	    }
@@ -308,54 +389,118 @@ class ArtifactDateReminder extends Error {
 	    return $notified_people;
 	
 	}
+		
+	/**
+	* Increment the number of notifications sent
+	* 
+	*/
+	function updateNotificationSent() {
+	    
+	    $upd = $this->getNotificationSent() + 1;
+	    $sql = sprintf('UPDATE artifact_date_reminder_processing'
+			    .' SET notification_sent=%d'
+			    .' WHERE notification_id=%d',
+			    $upd,$this->notification_id);
+	    $res = db_query($sql);		    
+	    
+	    return $res;
+	}
 	
 	/**
-	* Get the Assigned To or Assigned To (multiple) field id
-	* 
-	* @param the tracker id: group_artifact_id 
-	* 
-	* @return array
+	* Get the nature of the notification to be sent : instant, prior to event, or post-event
+	*
+	* @return int
 	*/
-	function getAssignedToFieldId($group_artifact_id) {
+	function getNotificationNature() {
 	
-	    $assignee_lbl = "";
+	    if ($this->getNextReminderDate() == $this->getDateValue()) {
+	        //Instant notification
+		return 0;
+	    }
+	    if ($this->getNextReminderDate() < $this->getDateValue()) {
+	        //Prior notification 
+		return 1;
+	    }
+	    if ($this->getNextReminderDate() > $this->getDateValue()) {
+	        //Post notification
+		return 2;
+	    }
+	
+	}
+	
+	/**
+	* Check if user (user_id) is allowed to receive reminder mail
+	*
+	* @return boolean
+	*/
+	function isUserAllowedToBeNotified($user_id) {
+	    
+	    global $art_field_fact;
+	    
 	    $group = group_get_object($this->getGroupId());   
-	    $at = new ArtifactType($group,$group_artifact_id);
+	    $at = new ArtifactType($group,$this->getGroupArtifactId());
 	    $art_field_fact = new ArtifactFieldFactory($at);
-	    $multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
-	        
-	    if (is_object($multi_assigned_to)) {
-	        //Multi-Assigned To field
-	        if ($multi_assigned_to->isUsed()) {
-		    $assignee_lbl = "multi_assigned_to";
-		}		
+	    $art = new Artifact($at,$this->getArtifactId());
+	    $field = $art_field_fact->getFieldFromId($this->getFieldId());
+	    
+	    return ($art->userCanView($user_id) && $field->userCanRead($this->getGroupId(),$this->getGroupArtifactId(),$user_id));
+	    
+	}
+	
+	/**
+	* Send the notification mail, about an event
+	*
+	* @return boolean
+	*/
+	function handleNotification() {
+	    	    
+  	    $group = group_get_object($this->getGroupId());   
+	    $at = new ArtifactType($group,$this->getGroupArtifactId());
+	    $art_field_fact = new ArtifactFieldFactory($at);
+	    $field =  $art_field_fact->getFieldFromId($this->getFieldId());
+	    	    
+	    $prj_name = util_get_group_name_from_id($this->getGroupId());
+	    $tolist = implode($this->getNotifiedPeople(),',');
+            $mail =& new Mail();
+            $mail->setFrom($GLOBALS['sys_noreply']);
+	    //echo "[" . $prj_name. " - " . $this->getTrackerName()." Tracker] ".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_subject',array($field->getName()));
+            $mail->setSubject("[" . $prj_name. " - " . $this->getTrackerName()." - ] ");
+            $body = $GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body').": ".
+		    "\n".get_server_url()."/tracker/?func=detail&aid=".$this->getArtifactId()."&atid=".$this->getGroupArtifactId()."&group_id=".$this->getGroupId().
+		    "\n\n______________________________________________________________________".
+		    "\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_footer');
+            $mail->setBody($body);
+            if ($mail->send()) {
+	        return true;
 	    } else {
-	        //Assigned To field
-	        $assigned_to = $art_field_fact->getFieldFromName('assigned_to');
-		if (is_object($assigned_to)) {
-		    if ($assigned_to->isUsed()) {
-		        $assignee_lbl = "assigned_to";
+	        return false;
+	    }
+	    
+	}
+	
+	/**
+	* compare current time/date with getNextReminder (are they in the same day ?)
+	* if (ok) {
+	*    (a)  get users to be notified
+	*    (b)  send mail
+	*    (c)  increment notifications sent
+	* }
+	*/
+	function checkReminderStatus() {
+	
+	    if ($this->getNotificationSent() < $this->getRecurse()) {		
+		$current_time = time();
+		$next_day = intval($this->getNextReminderDate() + 24 * 3600);
+		if ($current_time >= $this->getNextReminderDate() && $current_time < $next_day) {
+		    if ($this->handleNotification()) {
+		        //Increment 'notification_sent' field
+			$this->updateNotificationSent();	
 		    }
 		}
 	    }
-	    
-	    $sql = sprintf('SELECT * FROM artifact_field'
-			    .' WHERE field_name="%s"'
-			    .' AND group_artifact_id=%d',
-			    $assignee_lbl,$group_artifact_id);
-	    $result = db_query($sql);
-	    return db_result($result,0,'field_id');
-	
+
 	}
-	
-	function makeTest() {
-	
-	    $group = group_get_object($this->getGroupId());   
-	    $at = new ArtifactType($group,$this->getGroupArtifactId());
-	    $art = new Artifact($at,$this->getArtifactId());
-	
-	}
-	
+
 }
 
 ?>

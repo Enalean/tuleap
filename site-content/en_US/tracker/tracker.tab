@@ -216,6 +216,9 @@ tracker_admin_index	specify_notified_users	Error. You must specify the users to 
 tracker_admin_index	specify_notification_start	Error. You must specify the notification start date.
 tracker_admin_index	specify_notification_frequency	Error. You must specify the notification frequency.
 tracker_admin_index	specify_notification_recurse	Error. You must specify the notification recurse.
+tracker_admin_index	reminder_mail_body	This is a Codex tracker reminder.
+tracker_admin_index	reminder_mail_subject	Reminder on <$1> Field
+tracker_admin_index	reminder_mail_footer	This is an automatic message sent by Codex. Please do not reply to this email.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
