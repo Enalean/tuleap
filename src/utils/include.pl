@@ -30,7 +30,7 @@ sub load_local_config {
 	while (<FILE>) {
 		next if ( /^\s*\/\// );
                 # remove trailing comment if any
-                s/\/\/.*//;
+                s/;\s*\/\/.*//;
 		($foo, $bar) = split /=/;
 		if ($foo) { eval $_ };
 	}
