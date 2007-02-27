@@ -657,7 +657,6 @@ CREATE TABLE forum_group_list (
   group_id int(11) NOT NULL default '0',
   forum_name text NOT NULL,
   is_public int(11) NOT NULL default '0',
-  thread_monitored int(11) NOT NULL default '0',
   description text,
   PRIMARY KEY  (group_forum_id),
   FULLTEXT (description),

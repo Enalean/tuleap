@@ -42,11 +42,6 @@ if(array_key_exists('submit', $_POST) && isset($_POST['submit'])) {
 }
 
 if (isset($_REQUEST['forum_id'])) {
-
-    //Check if thread monitoring is enabled in this forum
-    if (! thread_monitoring_is_enabled($forum_id)) {
-        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('forum_monitor_thread','thread_monitor_disabled'));
-    }
     
     // Check permissions
     if (!forum_utils_access_allowed($forum_id)) {

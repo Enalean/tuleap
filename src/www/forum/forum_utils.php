@@ -101,11 +101,9 @@ function forum_header($params) {
                 }
 	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
                 echo html_image("ic/monitor_forum.png",array()).' '.$msg.'</A> | ';
-		
-		if (thread_monitoring_is_enabled($forum_id)) {
-		    echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.html_image("ic/monitor_thread.png",array()).$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
-		}
-	        
+				
+		echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.html_image("ic/monitor_thread.png",array()).$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
+			        
 		echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
 	        echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
                 print ' <a href="#start_new_thread">';
@@ -182,13 +180,13 @@ function forum_delete_monitor ($forum_id, $user_id) {
 /**
  * @return forum_id = -1 if error
  */
-function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='',$thread_monitor) {
+function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_message=1,$description='') {
   global $feedback,$Language;
 	/*
 		Adding forums to this group
 	*/
-	$sql="INSERT INTO forum_group_list (group_id,forum_name,is_public,description,thread_monitored) ".
-		"VALUES ('$group_id','". htmlspecialchars($forum_name) ."','$is_public','". htmlspecialchars($description) ."','$thread_monitor')";
+	$sql="INSERT INTO forum_group_list (group_id,forum_name,is_public,description) ".
+		"VALUES ('$group_id','". htmlspecialchars($forum_name) ."','$is_public','". htmlspecialchars($description) ."')";
 
 	$result=db_query($sql);
 	if (!$result) {
@@ -521,8 +519,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	  <TR><TD COLSPAN="2" ALIGN="center">
 		<B><span class="highlight"><?php echo $Language->getText('forum_forum_utils','html_displays_as_text'); ?></span></B>
 	  </TR>
-	  <?php 
-	  if (thread_monitoring_is_enabled($forum_id)) { 
+	  <?php 	  
 	      if (forum_is_monitored($forum_id,user_getid())) {
 	          $disabled = "disabled";
 	      } else {
@@ -533,8 +530,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" '.$disabled.' checked></TD>
 	           <TD> '.$GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread').'</TD>
 	           </TR>'; 
-	      }
-	  }
+	      }	  
 	 ?>
           <TR><td>&nbsp;</td><TD ALIGN="left">
 <?php
@@ -571,26 +567,18 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 	*/
 
 	$res=news_read_permissions($forum_id);
-	if ((db_numrows($res) < 1)) {
-	    if (! thread_monitoring_is_enabled($forum_id)) {
-	        $sql = sprintf('SELECT user.email FROM forum_monitored_forums,user'
-				.' WHERE forum_monitored_forums.user_id=user.user_id'
-				.' AND forum_monitored_forums.forum_id=%d'
-				.' AND ( user.status="A" OR user.status="R" )',
-				$forum_id);
-	    } else {
-	        //check if there are users monitoring specific threads
-		$sql = sprintf('(SELECT user.email FROM forum_monitored_forums,user'
-				.' WHERE forum_monitored_forums.user_id=user.user_id'
-				.' AND forum_monitored_forums.forum_id=%d'
-				.' AND ( user.status="A" OR user.status="R" ))'
-				.' UNION (SELECT user.email FROM forum_monitored_threads,user'
-				.' WHERE forum_monitored_threads.user_id=user.user_id'
-				.' AND forum_monitored_threads.forum_id=%d'
-				.' AND forum_monitored_threads.thread_id=%d'
-				.' AND ( user.status="A" OR user.status="R" ))',
-				$forum_id,$forum_id,$thread_id);
-	    }
+	if ((db_numrows($res) < 1)) {	    
+	    //check if there are users monitoring specific threads
+	    $sql = sprintf('(SELECT user.email FROM forum_monitored_forums,user'
+			    .' WHERE forum_monitored_forums.user_id=user.user_id'
+			    .' AND forum_monitored_forums.forum_id=%d'
+			    .' AND ( user.status="A" OR user.status="R" ))'
+			    .' UNION (SELECT user.email FROM forum_monitored_threads,user'
+			    .' WHERE forum_monitored_threads.user_id=user.user_id'
+			    .' AND forum_monitored_threads.forum_id=%d'
+			    .' AND forum_monitored_threads.thread_id=%d'
+			    .' AND ( user.status="A" OR user.status="R" ))',
+			    $forum_id,$forum_id,$thread_id);	    
 	} else {
 	    //we are dealing with private news, only project members are allowed to monitor
 	    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'";
@@ -806,24 +794,6 @@ function forum_thread_delete_monitor($forum_id,$msg_id) {
 			.' AND thread_id=%d',
 			$forum_id,$thread_id);
         $result= db_query($qry);
-    }	
-    
-}
-
-function thread_monitoring_is_enabled($forum_id) {
-    /*
-	   Check if thread monitoring is enabled in forum (forum_id)
-         */   
-    
-    $sql = sprintf('SELECT * FROM forum_group_list'
-		    .' WHERE group_forum_id=%d',
-		    $forum_id);
-    $res = db_query($sql);
-    if (db_numrows($res) < 1) {
-        //wrong forum id (non-existing forum)
-	return false;
-    } else {
-        return db_result($res,0,'thread_monitored');
     }	
     
 }

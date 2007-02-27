@@ -44,7 +44,6 @@ forum_admin_index	del_msg	Delete Message
 forum_admin_index	update_forum_status	Update Forum Info/Status
 forum_admin_index	params_missing	Missing forum name or description, please press the "Back" button and complete this information
 forum_admin_index	thread_monitoring	Monitoring
-forum_admin_index	enable_thread_monitoring	Enable Thread Monitoring?
 #
 #-----------------------------------------------
 # Script: SF/www/forum/expand.php
@@ -171,7 +170,6 @@ forum_thread	view_thread	View Thread
 # Script: src/www/forum/monitor_thread.php
 #
 forum_monitor_thread	tmonitor	Monitor?
-forum_monitor_thread	thread_monitor_disabled	That forum does not exist or thread monitoring is disabled.
 forum_monitor_thread	notice	You are monitoring the whole forum. If you want to monitor only specific threads, Stop Monitoring Forum.
 forum_monitor_thread	monitor_success	Thread monitoring updated.
 forum_monitor_thread	monitor_fail	Thread monitoring update failed.

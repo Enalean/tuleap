@@ -55,5 +55,3 @@ CREATE TABLE forum_monitored_threads (
   user_id int(11) NOT NULL default '0',
   PRIMARY KEY (thread_monitor_id)
 ) TYPE=MyISAM;
-
-ALTER TABLE forum_group_list ADD thread_monitored INT(11) NOT NULL default '0' AFTER is_public;
