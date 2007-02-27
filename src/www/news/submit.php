@@ -82,8 +82,8 @@ if (user_isloggedin()) {
 		</TABLE><P>
 		<TABLE BORDER=0>
 		<TR><TD><B>'.$Language->getText('news_submit','news_promote',$GLOBALS['sys_name']).' : </B></TD>
-		<TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="3" CHECKED>'.$Language->getText('global','yes').'</TD>
-		<TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="0">'.$Language->getText('global','no').'</TD>
+		<TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="3">'.$Language->getText('global','yes').'</TD>
+		<TD><INPUT TYPE="RADIO" NAME="promote_news" VALUE="0" CHECKED>'.$Language->getText('global','no').'</TD>
 		</TR></TABLE><P>		
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
