@@ -239,19 +239,53 @@ if (user_isrestricted()) {
 }
 
 require_once('common/include/HTTPRequest.class.php');
-$request =& new HTTPRequest();
-if ($request->exist('group_id')) {
-    require_once('Project.class.php');
-    $p =& project_get_object($request->get('group_id'));
-    //get service from url
-    $url = explode('/', $_SERVER['SCRIPT_NAME']);
-    if (isset($url[1])) {
-        $service_name = $url[1];
-        if ($service_name == 'plugins' && isset($url[2])) {
-            $service_name = $url[2];
+//Do nothing if we are not in a distributed architecture
+if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
+    $redirect_to_master_if_needed = true;
+    $sf      =& new ServerFactory();
+    $request =& new HTTPRequest();
+    if ($request->exist('group_id')) {
+        require_once('Project.class.php');
+        $p =& project_get_object($request->get('group_id'));
+        //get service from url
+        $url = explode('/', $_SERVER['SCRIPT_NAME']);
+        if (isset($url[1])) {
+            $service_name = $url[1];
+            if ($service_name == 'plugins' && isset($url[2])) {
+                $service_name = $url[2];
+            }
+            if ($p->usesService($service_name)) {
+                $redirect_to_master_if_needed = false;
+                //If we request a page wich IS NOT distributed...
+                if (!$p->services[$service_name]->isPageDistributed($_SERVER['SCRIPT_NAME'])) {
+                    $GLOBALS['Response']->addFeedback('info', 'The page is not distributed');
+                    //...and we are not on the master...
+                    if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
+                        //...then go to the master.
+                        $GLOBALS['Response']->redirect($master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
+                    }
+                } else { //If we request a page wich is distributed...
+                    $GLOBALS['Response']->addFeedback('info', 'The page is distributed');
+                    //...and we are not on the good server...
+                    if ($p->services[$service_name]->getServerId() != $GLOBALS['sys_server_id']) {
+                        if ($s =& $sf->getServerById($p->services[$service_name]->getServerId())) {
+                            //...then go to the server
+                            $GLOBALS['Response']->redirect($s->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
+                        }
+                    }
+                }
+            }
         }
-        if ($p->usesService($service_name)) {
-            $p->services[$service_name]->redirectIfNeeded();
+    }
+    if ($redirect_to_master_if_needed) {
+        if (!in_array($_SERVER['SCRIPT_NAME'], array(
+            '/current_css.php',
+            '/account/login.php',
+            )
+        )) {
+            if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
+                $GLOBALS['Response']->redirect($master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
+            }
         }
     }
 }
