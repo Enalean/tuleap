@@ -608,7 +608,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 
 		$result = db_query ($sql);
 
-		if ($result && db_numrows($result) > 0) {
+	if ($result && db_numrows($result) > 0) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
             $mail =& new Mail();
             $mail->setFrom($GLOBALS['sys_noreply']);
@@ -616,7 +616,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
             $mail->setBcc($tolist);
             
 		    
-		    $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
+	    $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
 			"\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
 		      "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .' ('.db_result($result,0, 'realname').')' .
 			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
@@ -625,17 +625,19 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 			"\n".get_server_url()."/forum/monitor.php?forum_id=$forum_id";
             $mail->setBody($body);
             
-			if ($mail->send()) {
+	    if ($mail->send()) {
                 $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');		
             } else {//ERROR
                 $feedback .= ' - '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])); 
             }
-
-			$feedback .= ' - '.$Language->getText('forum_forum_utils','people_monitoring').' ';
-		} else {
-			$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' - '.$Language->getText('forum_forum_utils','people_monitoring').' ';
-			echo db_error();
-		}
+		
+	    if (forum_thread_is_monitored($thread_id, user_getid()) || forum_is_monitored($forum_id,user_getid())) {	
+	        $feedback .= ' - '.$Language->getText('forum_forum_utils','user_monitoring').' ';
+	    }
+	} else {
+		$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' ';
+		echo db_error();
+	}
 	} else {
 		$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' - '.$Language->getText('forum_forum_utils','no_one_monitoring').' ';
 		echo db_error();

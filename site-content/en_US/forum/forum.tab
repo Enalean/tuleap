@@ -112,10 +112,10 @@ forum_forum_utils	post_comment	Post Comment
 forum_forum_utils	log_to_post	<A HREF="$1"><u>Log in first</u></A><span class="highlight"> to post messages</span>
 forum_forum_utils	read_and_respond	Read and respond to this message at
 forum_forum_utils	stop_monitor_explain	You are receiving this email because you elected to monitor this forum. \nTo stop monitoring this forum, login and visit
-forum_forum_utils	mail_sent	email sent
-forum_forum_utils	mail_not_sent	email not sent
-forum_forum_utils	people_monitoring	people monitoring
-forum_forum_utils	no_one_monitoring	no one monitoring
+forum_forum_utils	mail_sent	Email sent
+forum_forum_utils	mail_not_sent	Email not sent
+forum_forum_utils	user_monitoring	You are monitoring this thread.
+forum_forum_utils	no_one_monitoring	No one monitoring
 forum_forum_utils	on_post_monitoring	You are monitoring this forum.
 forum_forum_utils	on_post_not_monitoring	$1<strong>Monitor the forum</strong>
 forum_forum_utils	monitor_this_thread	<strong>Monitor this thread</strong>
