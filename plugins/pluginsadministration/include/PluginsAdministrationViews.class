@@ -228,6 +228,8 @@ class PluginsAdministrationViews extends Views {
                 if ($props !== '') {
                     $output .=   '<tr><td colspan="2"><hr /></td></tr>';
                     $output .=   $props;
+                }
+                if(($props !== '') || ($plugin->getScope() == $plugin->SCOPE_PROJECT)) {
                     $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" value="Change Properties" /></td></tr>';
                 }
                 $output .= '</tbody>';
