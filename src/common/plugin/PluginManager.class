@@ -275,8 +275,13 @@ class PluginManager {
     }
 
     function isPluginAllowedForProject($plugin, $projectId) {
-        $plugin_factory =& $this->_getPluginFactory();
-        return $plugin_factory->isPluginAllowedForProject($plugin, $projectId);
+        if($this->isProjectPluginRestricted($plugin)) {
+            $plugin_factory =& $this->_getPluginFactory();
+            return $plugin_factory->isPluginAllowedForProject($plugin, $projectId);
+        }
+        else {
+            return true;
+        }
     }
 }
 ?>
