@@ -78,7 +78,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 				Change a forum to public/private
 			*/
 			$sql="UPDATE forum_group_list SET is_public='$is_public',forum_name='". htmlspecialchars($forum_name) ."',".
-				"description='". htmlspecialchars($description) ."' , ".
+				"description='". htmlspecialchars($description) ."' ".
 				"WHERE group_forum_id='$group_forum_id' AND group_id='$group_id'";
 			$result=db_query($sql);
 			if (!$result || db_affected_rows($result) < 1) {

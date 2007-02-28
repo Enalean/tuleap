@@ -522,15 +522,19 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 	  <?php 	  
 	      if (forum_is_monitored($forum_id,user_getid())) {
 	          $disabled = "disabled";
+		  $checked = "checked";
 	      } else {
 	          $disabled = "";
-	      }	  
-	      if (!$subject) {
-	          echo '
-	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" '.$disabled.' checked></TD>
+		  if (forum_thread_is_monitored($thread_id, user_getid())) {
+		      $checked = "checked";
+		  } else {
+		      $checked = "";
+		  }
+	      }	  	      
+	      echo '
+	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" '.$disabled.' '.$checked.'></TD>
 	           <TD> '.$GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread').'</TD>
 	           </TR>'; 
-	      }	  
 	 ?>
           <TR><td>&nbsp;</td><TD ALIGN="left">
 <?php
