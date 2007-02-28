@@ -42,10 +42,11 @@ class ServerAdmin {
         } else {
             $html .= '<p>No servers</p>';
         }
-        $html .= '<p><a href="/admin/servers/add">Add a server</a></p>';
+        $html .= '<p><a href="/admin/servers/add">Add a server</a> ';
         if (count($servers)) {
-            $html .= '<p><a href="/admin/servers/master">Select the master</a></p>';
+            $html .= '| <a href="/admin/servers/master">Select the master</a>';
         }
+        $html .= '</p>';
         return $html;
     }
     function delete(&$request) {
