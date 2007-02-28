@@ -404,29 +404,7 @@ class ArtifactDateReminder extends Error {
 	    
 	    return $res;
 	}
-	
-	/**
-	* Get the nature of the notification to be sent : instant, prior to event, or post-event
-	*
-	* @return int
-	*/
-	function getNotificationNature() {
-	
-	    if ($this->getNextReminderDate() == $this->getDateValue()) {
-	        //Instant notification
-		return 0;
-	    }
-	    if ($this->getNextReminderDate() < $this->getDateValue()) {
-	        //Prior notification 
-		return 1;
-	    }
-	    if ($this->getNextReminderDate() > $this->getDateValue()) {
-	        //Post notification
-		return 2;
-	    }
-	
-	}
-	
+		
 	/**
 	* Check if user (user_id) is allowed to receive reminder mail
 	*
@@ -453,25 +431,32 @@ class ArtifactDateReminder extends Error {
 	*/
 	function handleNotification() {
 	    	    
+	    global $art_field_fact;
+	    
   	    $group = group_get_object($this->getGroupId());   
 	    $at = new ArtifactType($group,$this->getGroupArtifactId());
 	    $art_field_fact = new ArtifactFieldFactory($at);
 	    $field =  $art_field_fact->getFieldFromId($this->getFieldId());
-	    	    
+	    $art = new Artifact($at,$this->getArtifactId());
+	    
+	    $date_value = date("l, F jS Y",$this->getDateValue());
+	    $week = date("W",$this->getDateValue());
 	    $prj_name = util_get_group_name_from_id($this->getGroupId());
 	    $tolist = implode($this->getNotifiedPeople(),',');
             $mail =& new Mail();
-            $mail->setFrom($GLOBALS['sys_noreply']);
-	    //echo "[" . $prj_name. " - " . $this->getTrackerName()." Tracker] ".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_subject',array($field->getName()));
-            $mail->setSubject("[" . $prj_name. " - " . $this->getTrackerName()." - ] ");
-            $body = $GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body').": ".
+            $mail->setFrom($GLOBALS['sys_noreply']);	    
+            $mail->setSubject("[" . $prj_name. " - '" . $this->getTrackerName()."' Tracker] ".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_subject',array($art->getSummary())));
+	    $mail->setBcc($tolist);
+            $body = "\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_header').
+		    "\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body',array($field->getLabel(),$date_value,$week)).
+		    "\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_art_link').
 		    "\n".get_server_url()."/tracker/?func=detail&aid=".$this->getArtifactId()."&atid=".$this->getGroupArtifactId()."&group_id=".$this->getGroupId().
 		    "\n\n______________________________________________________________________".
-		    "\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_footer');
-            $mail->setBody($body);
+		    "\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_footer')."\n";
+	    $mail->setBody($body);
             if ($mail->send()) {
 	        return true;
-	    } else {
+	    } else {	        
 	        return false;
 	    }
 	    

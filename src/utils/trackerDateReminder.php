@@ -28,7 +28,7 @@ $sql = "SELECT * FROM artifact_date_reminder_processing ORDER BY notification_id
 $res = db_query($sql);
 if (db_numrows($res) > 0) {    
     while ($rows = db_fetch_array($res)) {
-	$notification_id = $rows['notification_id'];	
+	$notification_id = $rows['notification_id'];
 	$adr = new ArtifactDateReminder($notification_id);
 	$adr->checkReminderStatus();
     }
