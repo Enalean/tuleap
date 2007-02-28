@@ -2955,6 +2955,20 @@ CREATE TABLE artifact_date_reminder_settings (
   ) TYPE=MyISAM;
 
 #
+# Table structure for table 'artifact_date_reminder_processing'
+#
+CREATE TABLE artifact_date_reminder_processing (
+  notification_id int(11) NOT NULL auto_increment,
+  reminder_id int(11) NOT NULL default '0',
+  artifact_id int(11) NOT NULL default '0',
+  field_id int(11) NOT NULL default '0',
+  group_artifact_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  notification_sent int(11) NOT NULL default '0',
+  PRIMARY KEY (notification_id)
+  ) TYPE=MyISAM;
+
+#
 # Table structure for table 'artifact_dependencies'
 #
 

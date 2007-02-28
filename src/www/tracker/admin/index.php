@@ -409,15 +409,15 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		   
 		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$ath->getID().'">'.$ath->getName().'</a>\' - '.$Language->getText('tracker_include_type','mail_notif').'</h2>';		   
-		
-		if (isset($submit_notif_settings)) {		    
-		    if ($notified_users == NULL) {
+				
+		if (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
+		    if ($_REQUEST['notified_users'] == NULL) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notified_users');
-		    } else if ($start == NULL) {
+		    } else if ($_REQUEST['start'] == NULL) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_start');
-		    } else if ($frequency == NULL || $frequency == 0) {
+		    } else if ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_frequency');
-		    } else if ($recurse == NULL || $recurse == 0) {
+		    } else if ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_recurse');
 		    } else {
 		        $res = $ath->updateDateFieldReminderSettings($group_id,$field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);			
