@@ -13,12 +13,12 @@ $there_are_specific_permissions = true;
 if (isset($_REQUEST['group_id'])) {
     $obj                            = group_get_object($_REQUEST['group_id']);
     $group_name                     = $obj->getUnixName();
-    $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
  }
 
 
 
 if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'detailrevision') {
+    $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
 
     require('./detail_revision.php');
 
@@ -30,6 +30,7 @@ if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'detailrevision') {
     if (isset($_REQUEST['rev_id']) && $_REQUEST['rev_id'] != '') {
         $_rev_id = $_REQUEST['rev_id'];
     }
+    $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
 
     require('./browse_revision.php');
 
