@@ -244,9 +244,7 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
     $redirect_to_master_if_needed = true;
     $sf      =& new ServerFactory();
     $request =& new HTTPRequest();
-    if ($request->exist('group_id')) {
-        $p =& project_get_object($request->get('group_id'));
-    } else if ($request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
+    if ($_SERVER['SCRIPT_NAME'] == '/svn/viewvc.php' && $request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
         $res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='". $request->get('root') ."'");
         if (db_numrows($res_grp) < 1) {
             //group was not found
@@ -255,6 +253,8 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
         } else {
             $p =& project_get_object(db_result($res_grp,0,'group_id'));
         }
+    } else if ($request->exist('group_id')) {
+        $p =& project_get_object($request->get('group_id'));
     }
     if (isset($p)) {
         //get service from url

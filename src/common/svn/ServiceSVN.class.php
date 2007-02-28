@@ -10,7 +10,8 @@
 */
 class ServiceSVN extends Service {
     function isRequestedPageDistributed(&$request) {
-        return ($_SERVER['SCRIPT_NAME'] == '/svn/index.php' && $request->exist('func') && $request->get('func') != 'info')
+        return ($_SERVER['SCRIPT_NAME'] == '/svn/viewvc.php')
+            || ($_SERVER['SCRIPT_NAME'] == '/svn/index.php' && $request->exist('func') && $request->get('func') != 'info')
             || ($_SERVER['SCRIPT_NAME'] == '/svn/admin/index.php' && $request->exist('func') && $request->get('func') == 'access_control');
     }
 }
