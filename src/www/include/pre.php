@@ -14,6 +14,13 @@
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
+// Detect whether this file is called by a script running in cli mode, or in normal web mode
+if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
+    define('IS_SCRIPT', false); ;
+} else {
+    define('IS_SCRIPT', true); 
+}
+
 //{{{ define undefined variables
 if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
@@ -21,29 +28,31 @@ if (!isset($GLOBALS['feedback'])) {
 $location = "";
 //}}}
 
-// Check URL for valid hostname and valid protocol
-if (($HTTP_HOST != $GLOBALS['sys_default_domain'])
-    && ($SERVER_NAME != 'localhost')
-    && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)
-    && (strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0)
-    && (!isset($GLOBALS['sys_https_host'])||($HTTP_HOST != $GLOBALS['sys_https_host']))) {
-    if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-	$location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
-    } else {
-	$location = "Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI";
+if (! IS_SCRIPT) {
+    // Check URL for valid hostname and valid protocol
+    if (($HTTP_HOST != $GLOBALS['sys_default_domain'])
+        && ($SERVER_NAME != 'localhost')
+        && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)
+        && (strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0)
+        && (!isset($GLOBALS['sys_https_host'])||($HTTP_HOST != $GLOBALS['sys_https_host']))) {
+        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+	    $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
+        } else {
+ 	    $location = "Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI";
+        }
     }
-}
 
 // Force SSL mode if required except if request comes from localhost, or for api scripts
 // HTTP needed by fopen calls (e.g.  in www/include/cache.php)
 
-if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost') && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)) {
-    $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
-}
+    if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost') && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)) {
+        $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
+    }
 
-if (isset($location) && $location) {
-    header($location);
-    exit;
+    if (isset($location) && $location) {
+        header($location);
+        exit;
+    }
 }
 
 //Load plugins
@@ -55,8 +64,10 @@ $sys_datefmt = "Y-M-d H:i";
 $sys_datefmt_short = "Y-M-d";
 $feedback=''; // Initialize global var
 
-//library to determine browser settings
-require_once('browser.php');
+if (! IS_SCRIPT) {
+    //library to determine browser settings
+    require_once('browser.php');
+}
 
 //various html utilities
 require_once('utils.php');
@@ -88,8 +99,10 @@ require_once('help.php');
 //exit_error library
 require_once('exit.php');
 
-//various html libs like button bar, themable
-require_once('html.php');
+if (! IS_SCRIPT) {
+    //various html libs like button bar, themable
+    require_once('html.php');
+}
 
 //left-hand nav library, themable
 require_once('menu.php');
@@ -103,8 +116,10 @@ if (!$conn) {
 	exit;
 }
 
-//determine if they're logged in
-session_set();
+if (! IS_SCRIPT) {
+    //determine if they're logged in
+    session_set();
+}    
 
 /*
 
@@ -141,8 +156,10 @@ $sys_datefmt_short = $Language->getText('system','datefmt_short');
 
 $Language->loadLanguageMsg('include/include');
 
-//insert this page view into the database
-require_once('logger.php');
+if (! IS_SCRIPT) {
+    //insert this page view into the database
+    require_once('logger.php');
+}
 
 /*
 
@@ -157,78 +174,80 @@ if (user_isloggedin()) {
 	//just use pacific time as always
 }
 
-//Set up the vars and theme functions 
-require_once('theme.php');
+if (! IS_SCRIPT) {
+    //Set up the vars and theme functions 
+    require_once('theme.php');
 
 
 // HTML layout class, may be overriden by the Theme class
 
-if ($GLOBALS['sys_is_theme_custom']) {
-    $GLOBALS['path_to_theme'] = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-} else {
-    $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-}
-$name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
-
-if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
-    //User wants a theme which doesn't exist
-    //We're looking for default theme
-    $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
-    $name_of_theme_class       = $GLOBALS['sys_user_theme'].'_Theme';
-    if (is_dir($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'])) {
-        $GLOBALS['sys_is_theme_custom'] = false;
-        $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+    if ($GLOBALS['sys_is_theme_custom']) {
+        $GLOBALS['path_to_theme'] = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
     } else {
-        $GLOBALS['sys_is_theme_custom'] = true;
-        $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+        $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
     }
-}
-require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class');
-$root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
-$HTML = new $name_of_theme_class($root_for_theme);
+    $name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
+
+    if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class')) {
+        //User wants a theme which doesn't exist
+        //We're looking for default theme
+        $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
+        $name_of_theme_class       = $GLOBALS['sys_user_theme'].'_Theme';
+	if (is_dir($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'])) {
+            $GLOBALS['sys_is_theme_custom'] = false;
+            $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+        } else {
+            $GLOBALS['sys_is_theme_custom'] = true;
+            $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+        }
+    }
+    require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class');
+    $root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
+    $HTML = new $name_of_theme_class($root_for_theme);
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
 // loading the license.php file in the register directory when
 // invoking register/index.php
-require_once($DOCUMENT_ROOT.'/include/license.php');
-if (license_already_declined()) {
-  exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
-}
+    require_once($DOCUMENT_ROOT.'/include/license.php');
+    if (license_already_declined()) {
+        exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
+    }
 
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:
 // a) all scripts where you are not logged in by definition
 // b) if it is a local access from localhost 
 
-/*
-print "<p>DBG: SERVER_NAME = ".$SERVER_NAME;
-print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
-print "<p>DBG: user_isloggedin= ".user_isloggedin();
-print "<p>DBG: SCRIPT_NAME = ".$SCRIPT_NAME";
-*/
+    /*
+    print "<p>DBG: SERVER_NAME = ".$SERVER_NAME;
+    print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
+    print "<p>DBG: user_isloggedin= ".user_isloggedin();
+    print "<p>DBG: SCRIPT_NAME = ".$SCRIPT_NAME";
+    */
 
-if ($SERVER_NAME != 'localhost' && 
-    $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
-    $SCRIPT_NAME != '/current_css.php'  && 
-    $SCRIPT_NAME != '/account/login.php'  && 
-    $SCRIPT_NAME != '/account/register.php'&& 
-    $SCRIPT_NAME != '/account/lostpw.php' &&
-    $SCRIPT_NAME != '/account/lostlogin.php' &&
-    $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
-    $SCRIPT_NAME != '/account/pending-resend.php' &&
-    $SCRIPT_NAME != '/account/verify.php' &&
-    strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0 &&
-    strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0 ) {
+    if ($SERVER_NAME != 'localhost' && 
+        $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
+        $SCRIPT_NAME != '/current_css.php'  && 
+        $SCRIPT_NAME != '/account/login.php'  && 
+        $SCRIPT_NAME != '/account/register.php'&& 
+        $SCRIPT_NAME != '/account/lostpw.php' &&
+        $SCRIPT_NAME != '/account/lostlogin.php' &&
+        $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
+        $SCRIPT_NAME != '/account/pending-resend.php' &&
+        $SCRIPT_NAME != '/account/verify.php' &&
+        strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0 &&
+        strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0 ) {
     
-    $return_to = urlencode((($REQUEST_URI === "/")?"/my/":$REQUEST_URI));
+        $return_to = urlencode((($REQUEST_URI === "/")?"/my/":$REQUEST_URI));
 
-    if ($GLOBALS['sys_force_ssl'] == 1 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
-        header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
-    } else {
-        header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".$return_to);
+        if ($GLOBALS['sys_force_ssl'] == 1 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
+            header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
+        } else {
+            header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".$return_to);
+        }
+        exit;
     }
-    exit;
 }
 
 if (user_isrestricted()) {

@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-require_once('pre-cli.php');
+require_once('pre.php');
 require_once('common/tracker/ArtifactDateReminder.class');
 
 $sql = "SELECT * FROM artifact_date_reminder_processing ORDER BY notification_id";

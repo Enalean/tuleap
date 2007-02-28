@@ -909,12 +909,7 @@ class Artifact extends Error {
             }
                 
    	    //get the End Date value before update
-	    $before_up = sprintf('SELECT * FROM artifact'
-	  		    .' WHERE artifact_id=%d'
-			    .' AND group_artifact_id=%d',
-			    $this->getID(),$this->ArtifactType->getID());
-	    $res_before = db_query($before_up);
-	    $end_date_before = db_result($res_before,0,'close_date');
+	    $old_close_date = $this->getCloseDate();
 
 	    //
             //  Finally, build the full SQL query and update the artifact itself (if need be)
@@ -937,9 +932,9 @@ class Artifact extends Error {
 			    .' AND group_artifact_id=%d',
 			    $this->getID(),$this->ArtifactType->getID());
 	    $res_after = db_query($after_up);
-	    $end_date_after = db_result($res_after,0,'close_date');
+	    $new_close_date = db_result($res_after,0,'close_date');
 
-	    if (($end_date_before == 0 || $end_date_before == NULL) && ($end_date_after <> 0 || $end_date_after <> NULL) && $end_date_before <> $end_date_after) {
+	    if (($old_close_date == 0 || $old_close_date == NULL) && ($new_close_date <> 0 || $new_close_date <> NULL) && $old_close_date <> $new_close_date) {
 	        $end_date_field = $art_field_fact->getFieldFromName('close_date');  
 	        $this->ArtifactType->addArtifactToDateReminderProcessing($end_date_field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
 	    }

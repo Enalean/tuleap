@@ -21,11 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('pre-cli.php');
+require_once('pre.php');
 require_once('common/mail/Mail.class');
 require_once('common/tracker/ArtifactType.class');
 require_once('common/tracker/ArtifactFieldFactory.class');
-//require_once('common/tracker/ArtifactField.class');
 require_once('common/tracker/Artifact.class');
 
 
