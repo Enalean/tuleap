@@ -82,11 +82,8 @@ class Service {
     }
     function getPublicArea() {
     }
-    function _getDistributedPages() {
-        return array();
-    }
-    function isPageDistributed($page) {
-        return in_array($page, $this->_getDistributedPages());
+    function isRequestedPageDistributed(&$request) {
+        return false;
     }
 }
 

@@ -237,16 +237,26 @@ if (user_isrestricted()) {
         exit_restricted_user_permission_denied();
     }
 }
-
 require_once('common/include/HTTPRequest.class.php');
 //Do nothing if we are not in a distributed architecture
 if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
+    require_once('Project.class.php');
     $redirect_to_master_if_needed = true;
     $sf      =& new ServerFactory();
     $request =& new HTTPRequest();
     if ($request->exist('group_id')) {
-        require_once('Project.class.php');
         $p =& project_get_object($request->get('group_id'));
+    } else if ($request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
+        $res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='". $request->get('root') ."'");
+        if (db_numrows($res_grp) < 1) {
+            //group was not found
+            echo db_error();
+            exit_error("Invalid Group","That group does not exist.");
+        } else {
+            $p =& project_get_object(db_result($res_grp,0,'group_id'));
+        }
+    }
+    if (isset($p)) {
         //get service from url
         $url = explode('/', $_SERVER['SCRIPT_NAME']);
         if (isset($url[1])) {
@@ -257,7 +267,7 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
             if ($p->usesService($service_name)) {
                 $redirect_to_master_if_needed = false;
                 //If we request a page wich IS NOT distributed...
-                if (!$p->services[$service_name]->isPageDistributed($_SERVER['SCRIPT_NAME'])) {
+                if (!$p->services[$service_name]->isRequestedPageDistributed(&$request)) {
                     //...and we are not on the master...
                     if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
                         //...then go to the master.

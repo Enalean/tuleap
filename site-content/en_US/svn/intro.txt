@@ -19,11 +19,7 @@ if (!user_isloggedin()) {
 print ' Enter your site password when
 prompted.';
 
-if ($GLOBALS['sys_force_ssl']) {
-   echo '<P><span class="command">svn checkout --username '.$username.' https://'.$GLOBALS['sys_default_domain'].'/svnroot/'.$row_grp['unix_group_name'].'</span>';
-} else {
-   echo '<P><span class="command">svn checkout --username '.$username.' http://svn.'.$row_grp['http_domain'].'/svnroot/'.$row_grp['unix_group_name'].'</span>';
-}
+echo '<P><span class="command">svn checkout --username '.$username.' '. $svn_url .'</span>';
 
 print '<P>'.help_button('VersionControlWithSubversion.html',false,'[More on how to use Subversion &hellip;]');
 ?>

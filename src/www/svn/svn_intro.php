@@ -9,6 +9,8 @@
 //	Originally written by Laurent Julliard 2001- 2003 CodeX Team, Xerox
 //
 
+require_once('common/server/ServerFactory.class.php');
+require_once('common/include/URL.class.php');
 
 $Language->loadLanguageMsg('svn/svn');
 
@@ -24,11 +26,24 @@ print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 // Get group properties
 $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 $row_grp = db_fetch_array($res_grp);
+$p =& project_get_object($group_id);
 
 // Show CVS access information
 if ($row_grp['svn_preamble'] != '') {
     echo util_unconvert_htmlspecialchars($row_grp['svn_preamble']);
 } else {
+    if ($GLOBALS['sys_force_ssl']) {
+       $svn_url = 'https://'.$GLOBALS['sys_default_domain'] .'/svnroot/'. $row_grp['unix_group_name'];
+    } else {
+       $host = $GLOBALS['sys_default_domain'];
+       if ($p && $p->usesService('svn')) {
+           $sf =& new ServerFactory();
+           if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
+               $host = URL::getHost($server->getUrl(session_issecure()));
+           }
+       }
+       $svn_url = 'http://svn.'. $host .'/svnroot/'. $row_grp['unix_group_name'];
+    }
     include($Language->getContent('svn/intro'));
 }
 

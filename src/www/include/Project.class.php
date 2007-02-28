@@ -12,6 +12,7 @@
 require_once('Group.class.php');
 require_once('common/project/Service.class.php');
 require_once('common/frs/ServiceFile.class.php');
+require_once('common/svn/ServiceSVN.class.php');
 /*
 
 	An object wrapper for project (as opposed to foundry) data
@@ -118,6 +119,9 @@ class Project extends Group {
                 switch ($res_row['short_name']) {
                     case 'file':
                         $classname .= 'File';
+                        break;
+                    case 'svn':
+                        $classname .= 'SVN';
                         break;
                     default:
                         break;

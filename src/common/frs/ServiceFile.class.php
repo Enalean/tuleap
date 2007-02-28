@@ -125,8 +125,8 @@ class ServiceFile extends Service {
         }
         return $packages;
     }
-    function _getDistributedPages() {
-        return array('/file/admin/createrelease.php', '/file/admin/frsajax.php', '/file/admin/editrelease.php');
+    function isRequestedPageDistributed(&$request) {
+        return in_array($_SERVER['SCRIPT_NAME'], array('/file/admin/createrelease.php', '/file/admin/frsajax.php', '/file/admin/editrelease.php'));
     }
 }
 ?>
