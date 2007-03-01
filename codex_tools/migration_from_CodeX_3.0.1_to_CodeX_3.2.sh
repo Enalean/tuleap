@@ -247,7 +247,7 @@ CREATE TABLE server (
   https TEXT NOT NULL,
   is_master TINYINT(1) NOT NULL default 0
 );
-ALTER TABLE service ADD location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'same';
+ALTER TABLE service ADD location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master';
 ALTER TABLE service ADD server_id INT( 11 ) UNSIGNED NULL ;
 
 
