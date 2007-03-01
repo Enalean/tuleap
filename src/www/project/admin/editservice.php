@@ -5,7 +5,7 @@
 // $Id$
 //
 //
-//  Written for CodeX by Nicolas Guérin
+//  Written for CodeX by Nicolas Guï¿½rin
 //
 // This script displays service details
 
@@ -135,9 +135,25 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
 echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').':&nbsp;</a><font color="red">*</font></td><td>';
 echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';
-echo '
-</td></tr>
-</table>
+echo '</td></tr>';
+
+//{{{ Distributed architecture
+if ($service['location'] == 'satellite') {
+    $sf =& new ServerFactory();
+    $servers = $sf->getAllServers();
+    if ($servers && count($servers) > 1) {
+        echo '<tr><td colspan="2"><b>Server</b></tr>';
+        echo '<tr><td><label><a href="#" title="Location">Location:</a></label></td><td>';
+        echo '<select name="server_id">';
+        foreach($servers as $key => $nop) {
+            $selected = $servers[$key]->getId() == $service['server_id'] ? 'selected="selected"' : '';
+            echo '<option name="'. $servers[$key]->getId() .'" '. $selected .'>'. $servers[$key]->getName() .'</option>';
+        }
+    }
+    echo '</td></tr>';
+}
+//}}}
+echo '</table>
 
 <P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
 </form>		
