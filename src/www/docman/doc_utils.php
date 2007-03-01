@@ -333,7 +333,8 @@ $mime_type_exceptions = array(
     'application/msword' => array(
         'ppt' => 'application/vnd.ms-powerpoint',
         'pps' => 'application/vnd.ms-powerpoint',
-        'xls' => 'application/vnd.ms-excel'
+        'xls' => 'application/vnd.ms-excel',
+        'vsd' => 'application/vnd.visio' // other options: application/visio application/vnd.ms-visio application/x-visio
     ),
     'text/plain, English' => array(
         'htm'  => 'text/html',
