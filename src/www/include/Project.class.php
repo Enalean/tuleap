@@ -212,7 +212,7 @@ class Project extends Group {
     // Generic versions
 
     function usesService($service_short_name) {
-        return $this->use_service[$service_short_name];
+        return isset($this->use_service[$service_short_name]) && $this->use_service[$service_short_name];
     }
 
 
