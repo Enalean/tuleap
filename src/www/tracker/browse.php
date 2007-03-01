@@ -31,6 +31,7 @@
 // $pv = printable version (=1)
 //
 
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -312,6 +313,9 @@ $ath->header($params);
 
 // Display the artifact items according to all the parameters
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:0),$masschange);
+
+$em =& EventManager::instance();
+$em->processEvent('tracker_after_report',null);
 
 $ath->footer($params);
 
