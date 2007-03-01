@@ -244,7 +244,12 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
     $redirect_to_master_if_needed = true;
     $sf      =& new ServerFactory();
     $request =& new HTTPRequest();
-    if ($_SERVER['SCRIPT_NAME'] == '/svn/viewvc.php' && $request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
+    if ($_SERVER['SCRIPT_NAME'] == '/file/download.php') { //There is no group_id for /file/download.php
+        $components = explode('/', $_SERVER['REQUEST_URI']);
+        if (isset($components[3])) {
+            $p =& project_get_object($components[3]);
+        }
+    } else if ($_SERVER['SCRIPT_NAME'] == '/svn/viewvc.php' && $request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
         $res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='". $request->get('root') ."'");
         if (db_numrows($res_grp) < 1) {
             //group was not found
