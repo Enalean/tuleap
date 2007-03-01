@@ -222,8 +222,12 @@ if ($func=='do_update') {
     if (!$service_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','s_id_missed'));
     }
+    $set_server_id = '';
+    if (user_is_super_user() && $server_id) {
+        $set_server_id = ", location = 'satellite', server_id = ". (int)$server_id .' ';
+    }
     $sql = "UPDATE service SET label='$label', description='$description', link='$link', is_active=".($is_active?"1":"0").
-        ", is_used=".($is_used?"1":"0").", scope='$scope', rank='$rank' WHERE service_id=$service_id";
+        ", is_used=".($is_used?"1":"0").", scope='$scope', rank='$rank' $set_server_id WHERE service_id=$service_id";
     $result=db_query($sql);
 
     if (!$result) {
