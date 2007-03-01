@@ -42,7 +42,7 @@ if ($row_grp['svn_preamble'] != '') {
                $host = URL::getHost($server->getUrl(session_issecure()));
            }
        }
-       $svn_url = 'http://svn.'. $host .'/svnroot/'. $row_grp['unix_group_name'];
+       $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host .'/svnroot/'. $row_grp['unix_group_name'];
     }
     include($Language->getContent('svn/intro'));
 }
