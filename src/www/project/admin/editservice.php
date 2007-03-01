@@ -148,7 +148,7 @@ if ($su) {
             echo '<select name="server_id">';
             foreach($servers as $key => $nop) {
                 $selected = $servers[$key]->getId() == $service['server_id'] ? 'selected="selected"' : '';
-                echo '<option name="'. $servers[$key]->getId() .'" '. $selected .'>'. $servers[$key]->getName() .'</option>';
+                echo '<option value="'. $servers[$key]->getId() .'" '. $selected .'>'. $servers[$key]->getName() .'</option>';
             }
         }
         echo '</td></tr>';
