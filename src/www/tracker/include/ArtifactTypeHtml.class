@@ -1171,64 +1171,56 @@ EOS;
 		echo '<script language="JavaScript">
 
 			  function onChangeFieldType(form) {
-			  		var notif_chkbx = document.getElementById("enable_notification");
-					var notif_lbl = document.getElementById("notification_lbl");
+			  		var notif_chkbx = document.getElementById("enable_notification");					
 					switch ( form.field_type.value ) {
 			  		// Select Box
 			  		case "1":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "SB";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.style.visibility = "hidden";
-						notif_lbl.style.visibility = "hidden";
+						notif_chkbx.disabled=true;
 					  	break;
 			  		// Multi Select Box
 			  		case "2":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "MB";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.style.visibility = "hidden";
-						notif_lbl.style.visibility = "hidden";
+						notif_chkbx.disabled=true;
 					  	break;
 			  		// TextField
 			  		case "3":
 			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.style.visibility = "hidden";
-						notif_lbl.style.visibility = "hidden";
+						notif_chkbx.disabled=true;
 					  	break;
 			  		// TextArea
 			  		case "4":
 			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TA";
 					  	form.display_size.value = "60/7";
-						notif_chkbx.style.visibility = "hidden";
-						notif_lbl.style.visibility = "hidden";
+						notif_chkbx.disabled=true;
 					  	break;
 			  		// DateField
 			  		case "5":
 			  			form.data_type.value = '.$af->DATATYPE_DATE.';
 					  	form.display_type.value = "DF";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.style.visibility = "visible";
-						notif_lbl.style.visibility = "visible";
+						notif_chkbx.disabled=false;
 					  	break;
 			  		// FloatField
 			  		case "6":
 			  			form.data_type.value = '.$af->DATATYPE_FLOAT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.style.visibility = "hidden";
-						notif_lbl.style.visibility = "hidden";
+						notif_chkbx.disabled=true;
 					  	break;
 			  		// IntegerField
 			  		case "7":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.style.visibility = "hidden";
-						notif_lbl.style.visibility = "hidden";
+						notif_chkbx.disabled=true;
 					  	break;
 					default:
 						alert("Unknow field type!");
@@ -1463,12 +1455,19 @@ EOS;
 				
 		echo '</td>';
 		
-		echo '<td><label id=notification_lbl>'.$Language->getText('tracker_include_type','enable_notifications').': </label>';  
+		echo '<td><label>'.$Language->getText('tracker_include_type','enable_notifications').': </label>';  		
 		if ($enable_notification) {
-		    echo '<input type="checkbox" id="enable_notification" name="enable_notification" value="1" checked> </td>';
+		    $checked = "checked";		    
 		} else {
-		    echo '<input type="checkbox" id="enable_notification" name="enable_notification" value="1"> </td>';
-		}		    
+		    $checked = "";
+		}
+		//in field creation form, SB is the default selected value, so the 'enable_notification' checkbox should be disabled by default
+		if ( $func == "field_create" ) {
+		    $disabled = "disabled";		    
+		} else {
+		    $disabled = "";
+		}
+		echo '<input type="checkbox" id="enable_notification" name="enable_notification" value="1" '.$checked.' '.$disabled.'> </td>';		
 
 		echo '</tr>';
 		      
