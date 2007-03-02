@@ -338,7 +338,7 @@ admin_servers	all_is_master	Principal ?
 admin_servers	all_master	Principal
 admin_servers	all_name	Nom
 admin_servers	delete	Oui, je veux supprimer ce serveur !
-admin_servers	delete_using	Les services suivants utilisent le serveur <em>$1</em> :
+admin_servers	delete_using	Les services suivants utilisent ce serveur :
 admin_servers	delete_R_U_sure	Êtes-vous sûr de vouloir supprimer ce serveur ?
 admin_servers	error_notfound	Serveur introuvable
 admin_servers	form_descr	Description :

@@ -37,7 +37,13 @@ class ServerAdmin {
                 $html .= '<td>'. $servers[$key]->getHttp() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttps() .'</td>';
                 $html .= '<td style="text-align:center">'. ($servers[$key]->isMaster() ? $GLOBALS['Language']->getText('admin_servers', 'all_master') : '-') .'</td>';
-                $html .= '<td><a title="'. $GLOBALS['Language']->getText('admin_servers', 'all_delete', array(htmlentities($servers[$key]->getName(), ENT_QUOTES))) .'" href="/admin/servers/delete/'. $servers[$key]->getId() .'">'. $GLOBALS['Response']->getImage('ic/trash.png', array('alt' => 'Delete server')) .'</a></td>';
+                $html .= '<td>';
+                if (!$servers[$key]->isMaster()) {
+                    $html .= '<a title="'. $GLOBALS['Language']->getText('admin_servers', 'all_delete', array(htmlentities($servers[$key]->getName(), ENT_QUOTES))) .'" href="/admin/servers/delete/'. $servers[$key]->getId() .'">'. $GLOBALS['Response']->getImage('ic/trash.png', array('alt' => 'Delete server')) .'</a>';
+                } else {
+                    $html .= '-';
+                }
+                $html .= '</td>';
                 $html .= '</tr>';
             }
             $html .= '</table>';
@@ -56,13 +62,26 @@ class ServerAdmin {
         if (!$server) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_servers', 'error_notfound'));
             $GLOBALS['Response']->redirect('/admin/servers/');
+        } else if ($server->isMaster()) {
+            $GLOBALS['Response']->addFeedback('error', 'Cannot delete master');
+            $GLOBALS['Response']->redirect('/admin/servers/');
         }
         $this->title = $GLOBALS['Language']->getText('admin_servers', 'all_delete', array($server->getName()));
         $html = '';
         $html .= '<form action="/admin/servers/destroy/'. $server->getId() .'" method="POST">';
         $html .= '<div style="border:medium solid red;background:#FFC;padding:4px 10px;">';
         $html .= '<h3>'. $GLOBALS['Language']->getText('admin_servers', 'delete_R_U_sure') .'</h3>';
-        //{{{ Fetch services that use this server
+        $html .= $this->_fetchServices($server);
+        $html .= '<div style="text-align:center">';
+        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> ';
+        $html .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('admin_servers', 'delete') .'" />';
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '</form>';
+        return $html;
+    }
+    function _fetchServices(&$server) {
+        $html = '';
         $service_dao =& new ServiceDao(CodeXDataAccess::instance());
         $dar =& $service_dao->searchByServerId($server->getId());
         if ($dar) {
@@ -79,36 +98,33 @@ class ServerAdmin {
                 } else if(preg_match('/(.*):(.*)/', $label, $matches)) {
                     $label = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
-                $projects[$row['group_id']][] = $label;
+                $projects[$row['group_id']][] = array('label' => $label, 'id' => $row['service_id']);
                 $dar->next();
             }
             if (count($projects)) {
-                $html .= '<p>'. $GLOBALS['Language']->getText('admin_servers', 'delete_using', $server->getName()) .'</p>';
+                $html .= '<p>'. $GLOBALS['Language']->getText('admin_servers', 'delete_using') .'</p>';
                 $html .= '<dl>';
                 foreach($projects as $project_id => $services) {
                     if ($p =& project_get_object($project_id)) {
-                        $html .= '<dt><b><a title="Project admin" href="/project/admin/?group_id='. $project_id .'">'. $p->getPublicName() .'</a></b></dt>';
+                        $html .= '<dt><a title="Project admin" href="/project/admin/?group_id='. $project_id .'">'. $p->getPublicName() .'</a></dt>';
                         $html .= '<dd><ul>';
-                        $html .= '<li>'. implode('</li><li>', $services) .'</li>';
+                        foreach($services as $service) {
+                            $html .= '<li><a href ="/project/admin/editservice.php?group_id='. $project_id .'&amp;service_id='. $service['id'] .'">'. $service['label'] .'</a></li>';
+                        }
                         $html .= '</ul></dd>';
                     }
                 }
                 $html .= '</dl>';
             }
         }
-        //}}}
-        $html .= '<div style="text-align:center">';
-        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> ';
-        $html .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('admin_servers', 'delete') .'" />';
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</form>';
         return $html;
     }
     function destroy(&$request) {
         $server =& $this->server_factory->getServerById($request->get('id'));
         if (!$server) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_servers', 'error_notfound'));
+        } else if ($server->isMaster()) {
+            $GLOBALS['Response']->addFeedback('error', 'Cannot delete master');
         } else if ($request->exist('cancel')) {
             //$GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_servers', 'info_notdeleted', array($server->getName())));
         } else if ($this->server_factory->delete($request->get('id'))) {
@@ -163,6 +179,7 @@ class ServerAdmin {
         } else {
             $this->title = $GLOBALS['Language']->getText('admin_servers', 'all_edit', array($server->getName()));
             $html .= $this->_form($server, '/admin/servers/update/'.$server->getId());
+            $html .= $this->_fetchServices($server);
         }
         return $html;
     }
