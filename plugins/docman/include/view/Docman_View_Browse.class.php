@@ -56,7 +56,8 @@ require_once(dirname(__FILE__).'/../Docman_SettingsBo.class.php');
         return $li_classes;
     }
     /* static */ function isViewAllowed($view) {
-        return in_array($view, Docman_View_Browse::getAllViews());
+        //List is part of SOAP api
+        return in_array($view, array_merge(Docman_View_Browse::getAllViews(), array('List')));
     }
     /* static */ function getViewForCurrentUser($group_id, $report = '') {
         if($report != '') {

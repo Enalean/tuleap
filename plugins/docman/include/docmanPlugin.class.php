@@ -98,7 +98,7 @@ class DocmanPlugin extends Plugin {
                 if ($item) {
                     $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                     $name = $item->getTitle();
-                    $params['object_fullname'] = $name .' '. $title; //TODO i18n
+                    $params['object_fullname'] = $type .' '. $name; //TODO i18n
                 }
             }
         }
@@ -222,7 +222,7 @@ class DocmanPlugin extends Plugin {
     function processSOAP(&$request) {
         require_once('SOAPDocman.class.php');
         $controler =& new SOAPDocman($this, $this->_getPluginPath(), $this->_getThemePath(), $request);
-        $controler->process();
+        return $controler->process();
     }
 }
 

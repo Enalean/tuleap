@@ -958,7 +958,7 @@ class DocmanController extends Controler {
 
     function viewsManagement() {
         if ($this->view) {
-        	    $className = $this->_includeView();
+            $className = $this->_includeView();
             if (class_exists($className)) {
                 $wv = new $className($this);
                 return $wv->display($this->_viewParams);

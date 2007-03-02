@@ -36,9 +36,9 @@ $GLOBALS['server']->wsdl->addComplexType(
         'obsolescence_date' => array('name'=>'obsolescence_date', 'type' => 'xsd:int'),
         'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
         'item_type' => array('name'=>'item_type', 'type' => 'xsd:int'),
-        'link_url' => array('name'=>'link_url', 'type' => 'xsd:string'),
-        'wiki_page' => array('name'=>'wiki_page', 'type' => 'xsd:string'),
-        'file_is_embedded' => array('name'=>'file_is_embedded', 'type' => 'xsd:boolean')
+        //'link_url' => array('name'=>'link_url', 'type' => 'xsd:string'),
+        //'wiki_page' => array('name'=>'wiki_page', 'type' => 'xsd:string'),
+        //'file_is_embedded' => array('name'=>'file_is_embedded', 'type' => 'xsd:boolean')
     )
 );
 
@@ -89,6 +89,20 @@ $GLOBALS['server']->wsdl->addComplexType(
 //
 // Function definition
 //
+$GLOBALS['server']->register(
+    'listFolder',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'item_id'=>'xsd:int',
+        ),
+    array('listFolderResponse'=>'tns:ArrayOfDocman_Item'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#listFolder',
+    'rpc',
+    'encoded',
+    'List folder contents.'
+);
 $GLOBALS['server']->register(
     'createDocmanDocument',
     array(
@@ -185,6 +199,49 @@ $GLOBALS['server']->register(
 //
 // Function implementation
 //
+/**
+* listFolder
+* 
+* TODO: description
+*
+*/
+function listFolder($sessionKey,$group_id,$item_id) {
+    global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'listFolder','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'listFolder', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'listFolder', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        $request =& new SOAPRequest(array(
+            'group_id' => $group_id,
+            'id'       => $item_id,
+            //needed internally in docman vvv
+            'action'       => 'show',
+            'report'       => 'List',
+        ));
+        $plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $result = $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new soap_fault('', 'listFolder', $msg, $msg);
+            } else {
+                return $result;
+            }
+        } else {
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'monitor','Unavailable plugin','Unavailable plugin');;
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'monitorDocmanItem','Invalid Session','');
+    }
+}
 
 /**
  * 
@@ -490,3 +547,4 @@ function docman_metadatas_to_soap(&$docman_metadata_arr) {
     return $return;
 }
 
+?>
