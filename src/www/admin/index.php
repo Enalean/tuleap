@@ -108,9 +108,9 @@ echo ")</b>";?>
 <li><a href="/project/admin/servicebar.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_svc'); ?></A>
 </ul>
 
-<h3>Manage Servers</h3>
+<h3><?php echo $Language->getText('admin_main', 'servers'); ?></h3>
 <ul>
-<li><a href="/admin/servers/">Manage Servers</A>
+<li><a href="/admin/servers/"><?php echo $Language->getText('admin_main', 'servers_admin'); ?></A>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_ref'); ?></h3>

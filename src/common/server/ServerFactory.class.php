@@ -14,7 +14,9 @@ require_once('common/server/Server.class.php');
 */
 class ServerFactory {
     
-    
+    function ServerFactory() {
+        $GLOBALS['Language']->loadLanguageMsg('server/server');
+    }
     function getAllServers() {
         $servers = array();
         $dao =& new ServerDao(CodeXDataAccess::instance());
@@ -34,10 +36,10 @@ class ServerFactory {
     }
     function create($arr) {
         if (!$arr || !is_array($arr)) {
-            $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_missingparams'));
         } else if ($this->validate($arr)) {
             if ($this->getServerById($arr['id'])) {
-                $GLOBALS['Response']->addFeedback('error', 'A server with id '. $arr['id'] .' already exists');
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_alreadyid', array($arr['id'])));
             } else {
                 $dao =& new ServerDao(CodeXDataAccess::instance());
                 return $dao->create($arr);
@@ -47,16 +49,16 @@ class ServerFactory {
     }
     function validate($arr) {
         if ($this->_field_is_empty($arr, 'id')) {
-            $GLOBALS['Response']->addFeedback('error', 'Id cannot be empty');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_emptyid'));
             return false;
         } else if (is_numeric($arr['id']) && (int)$arr['id'] != $arr['id']) {
-            $GLOBALS['Response']->addFeedback('error', 'Id must be an integer');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_integerid'));
             return false;
         } else if ($this->_field_is_empty($arr, 'name')) {
-            $GLOBALS['Response']->addFeedback('error', 'Name cannot be empty');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_emptyname'));
             return false;
         } else if ($this->_field_is_empty($arr, 'http') && $this->_field_is_empty($arr, 'https')) {
-            $GLOBALS['Response']->addFeedback('error', 'You must provide a http or a https url');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_missinghttp'));
             return false;
         }
         return true;
@@ -86,7 +88,7 @@ class ServerFactory {
     }
     function update($server_id, $arr) {
         if (!$arr || !is_array($arr)) {
-            $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_missingparams'));
         } else if ($this->validate($arr)) {
             $dao =& new ServerDao(CodeXDataAccess::instance());
             return $dao->modify($server_id, $arr);

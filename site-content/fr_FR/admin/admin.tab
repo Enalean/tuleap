@@ -50,6 +50,8 @@ admin_main	header_utils	Utilitaires site
 admin_main	mail_engine	Envoi d'e-mails en masse
 admin_main	header_sstat	Statistiques site
 admin_main	header_plugins	Plugins
+admin_main	servers	Serveurs
+admin_main	servers_admin	Administration des serveurs 
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
 admin_main	sstat_reg_g	Projets enregistrés
 admin_main	sstat_reg_act_g	Projets enregistrés actifs
@@ -324,3 +326,31 @@ admin_trove_cat_list	title	Arbre des projets - Liste des catégories
 admin_trove_cat_list	header	Lister les catégories
 admin_trove_cat_list	edit	Modifier
 admin_trove_cat_list	delete	Détruire
+#-----------------------------------------------
+# Script: src/www/admin/index.php
+#
+admin_servers	all_add	Ajouter un serveur
+admin_servers	all_choose	Choisir le serveur principal
+admin_servers	all_delete	Supprimer le serveur $1
+admin_servers	all_description	Description
+admin_servers	all_edit	Editer le serveur $1
+admin_servers	all_is_master	Principal ?
+admin_servers	all_master	Principal
+admin_servers	all_name	Nom
+admin_servers	delete	Oui, je veux supprimer ce serveur !
+admin_servers	delete_using	Les services suivants utilisent le serveur <em>$1</em> :
+admin_servers	delete_R_U_sure	Êtes-vous sûr de vouloir supprimer ce serveur ?
+admin_servers	error_notfound	Serveur introuvable
+admin_servers	form_descr	Description :
+admin_servers	form_http	HTTP :
+admin_servers	form_https	HTTPS :
+admin_servers	form_id	Id :
+admin_servers	form_name	Nom :
+admin_servers	info_created	Le serveur <em>$1</em> a été créé
+admin_servers	info_deleted	Le serveur <em>$1</em> a été supprimé
+admin_servers	info_mastered	Le serveur <em>$1</em> est désormais le serveur principal
+admin_servers	info_updated	Le serveur <em>$1</em> a été modifié
+admin_servers	info_notcreated	Le serveur n'a pas été créé
+admin_servers	info_notdeleted	Le serveur <em>$1</em> n'a pas été supprimé
+admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
+

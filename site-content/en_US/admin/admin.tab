@@ -45,6 +45,8 @@ admin_main	header_utils	Site Utilities
 admin_main	mail_engine	Mass Mail Engine
 admin_main	header_sstat	Site Statistics
 admin_main	header_plugins	Plugins
+admin_main	servers	Servers
+admin_main	servers_admin	Servers administration
 admin_main	sstat_reg_u	Registered active or restricted site users
 admin_main	sstat_reg_g	Registered projects
 admin_main	sstat_reg_act_g	Registered active projects
@@ -319,3 +321,30 @@ admin_trove_cat_list	title	Trove - Category List
 admin_trove_cat_list	header	List of Trove Categories
 admin_trove_cat_list	edit	Edit
 admin_trove_cat_list	delete	Delete
+#-----------------------------------------------
+# Script: src/www/admin/index.php
+#
+admin_servers	all_add	Add a server
+admin_servers	all_choose	Choose the master
+admin_servers	all_delete	Delete server $1
+admin_servers	all_description	Description
+admin_servers	all_edit	Edit server $1
+admin_servers	all_is_master	Is Master?
+admin_servers	all_master	Master
+admin_servers	all_name	Name
+admin_servers	delete	Yes, I want to delete this server!
+admin_servers	delete_using	The following services are still using the server <em>$1</em>:
+admin_servers	delete_R_U_sure	Are you sure that you want to delete this server?
+admin_servers	error_notfound	Server not found
+admin_servers	form_descr	Description:
+admin_servers	form_http	HTTP:
+admin_servers	form_https	HTTPS:
+admin_servers	form_id	Id:
+admin_servers	form_name	Name:
+admin_servers	info_created	Server <em>$1</em> has been created
+admin_servers	info_deleted	Server <em>$1</em> has been deleted
+admin_servers	info_mastered	Server <em>$1</em> is now master
+admin_servers	info_updated	Server <em>$1</em> has been updated
+admin_servers	info_notcreated	Server has not been created
+admin_servers	info_notdeleted	Server <em>$1</em> has not been deleted
+admin_servers	info_notupdated	Server <em>$1</em> has not been updated

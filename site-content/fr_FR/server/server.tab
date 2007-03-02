@@ -1,0 +1,25 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+server	error_alreadyid	Un serveur avec l'idd $1 existe déjà
+server	error_emptyid	L'id ne peut être vide
+server	error_emptyname	Le nom ne peut être vide
+server	error_integerid	L'id doit être un entier
+server	error_missinghttp	Vous devez fournir une url http ou https
+server	error_missingparams	Paramètres manquants
+
