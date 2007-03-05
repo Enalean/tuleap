@@ -310,6 +310,10 @@ ALTER TABLE svn_commits ADD INDEX revision (revision);
 
 # SR #633
 ALTER TABLE artifact_field_value ADD INDEX valueInt (valueInt);
+
+# SR #683
+ALTER TABLE cvs_checkins ADD INDEX commitid (commitid);
+
 EOF
 
 ################################################################################

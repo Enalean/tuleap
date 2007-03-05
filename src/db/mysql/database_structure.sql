@@ -2440,7 +2440,8 @@ CREATE TABLE cvs_checkins (
   KEY repositoryid_2 (repositoryid),
   KEY dirid (dirid),
   KEY fileid (fileid),
-  KEY branchid (branchid)
+  KEY branchid (branchid),
+  KEY commitid (commitid)
 ) TYPE=MyISAM;
 
 CREATE TABLE cvs_commits (
