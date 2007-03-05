@@ -613,7 +613,7 @@ proto.make_wikitext_link = function(label, href, element) {
 
     this.assert_space_or_newline();
     if (! href) {
-        this.appendOutput(before + label + after);
+        this.appendOutput(label);
     }
     else if (href == label) {
       if (this.camel_case_link(label))
