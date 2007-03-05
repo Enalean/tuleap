@@ -46,7 +46,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
         
         require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force));
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
         $content .= '<table>';
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';

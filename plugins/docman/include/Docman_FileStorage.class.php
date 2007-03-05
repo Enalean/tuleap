@@ -43,7 +43,7 @@ class Docman_FileStorage {
         }
     }
     function store($content, $group_id, $item_id, $version_number) {
-        $path = $this->_getPath('embedded_file', $group_id, $item_id, $version_number);
+        $path = $this->_getPath('file', $group_id, $item_id, $version_number);
         if ($f = fopen($path, 'w')) {
             fwrite($f, $content);
             fclose($f);

@@ -107,7 +107,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         /*$content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
         
         require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor());
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->controller->request));
         $content .= '<table>';
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';

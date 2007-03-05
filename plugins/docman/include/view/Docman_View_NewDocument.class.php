@@ -67,7 +67,7 @@ class Docman_View_NewDocument extends Docman_View_New {
             $html .= '<div><input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
             $html .= '<b><label for="item_item_type_'. $specific['type'] .'">'. $specific['label'] .'</label></b></div>';
             $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
-            $fields = $specific['obj']->accept($get_specific_fields);
+            $fields = $specific['obj']->accept($get_specific_fields, array('request' => &$this->controller->request));
             $html .= '<table>';
             foreach($fields as $field) {
                 $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';

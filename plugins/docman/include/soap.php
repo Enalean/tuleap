@@ -275,7 +275,7 @@ function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $descrip
         switch ($type) {
         	case "file":
                 $soap_request_params['item']['item_type'] =  PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-                //$soap_request_params['file'] = $content;
+                $soap_request_params['upload_content'] = base64_decode($content);
                 break;
             case "wiki":
                 $soap_request_params['item']['item_type'] =  PLUGIN_DOCMAN_ITEM_TYPE_WIKI;

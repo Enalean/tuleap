@@ -754,7 +754,7 @@ class DocmanController extends Controler {
     
                                                 $valid = $this->_validateRequest(array_merge(
                                                     $new_item->accept(new Docman_View_GetFieldsVisitor()), 
-                                                    $new_item->accept(new Docman_View_GetSpecificFieldsVisitor())
+                                                    $new_item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request))
                                                 ));
                                                 
                                                 if ($user->isMember($this->getGroupId(), 'A')) {
@@ -807,7 +807,7 @@ class DocmanController extends Controler {
                                                     $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                                                 } else {
                                                     $this->updateItemFromUserInput($item);
-                                                    $valid = $this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor()));
+                                                    $valid = $this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)));
                                                 }
                                                 //Actions
                                                 if ($valid) {
@@ -891,7 +891,7 @@ class DocmanController extends Controler {
         foreach($fields as $field) {
             $validatorList = null;
             if(is_a($field, 'Docman_MetadataHtml')) {
-                $fv = $field->getValidator();
+                $fv = $field->getValidator($this->request);
                 if($fv !== null) {
                     if(!is_array($fv)) {
                         $validatorList = array($fv);

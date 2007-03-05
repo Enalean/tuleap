@@ -224,7 +224,22 @@ class DocmanActions extends Actions {
                     switch ($item['item_type']) {
                         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                             $fs =& $this->_getFileStorage();
-                            if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $id, 0)) {
+                            if ($request->exist('upload_content')) {
+                                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $id, 0);
+                                if ($path) {
+                                    $filename = basename($path);
+                                    $filesize = filesize($path);
+                                    $filetype = mime_content_type($path); //be careful with false detection
+                                }
+                            } else {
+                                $path = $fs->upload($_FILES['file'], $request->get('group_id'), $id, 0);
+                                if ($path) {
+                                    $filename = $_FILES['file']['name'];
+                                    $filesize = $_FILES['file']['size'];
+                                    $filetype = $_FILES['file']['type']; //TODO detect mime type server side
+                                }
+                            }
+                            if ($path) {
                                 $version_factory =& $this->_getVersionFactory();
                                 $version_id = $version_factory->create(array(
                                     'item_id'   => $id,
@@ -232,9 +247,9 @@ class DocmanActions extends Actions {
                                     'user_id'   => $user->getId(),
                                     'label'     => '',
                                     'changelog' => 'Initial version',
-                                    'filename'  => $_FILES['file']['name'],
-                                    'filesize'  => $_FILES['file']['size'],
-                                    'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
+                                    'filename'  => $filename,
+                                    'filesize'  => $filesize,
+                                    'filetype'  => $filetype, 
                                     'path'      => $path)
                                 );
                                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(

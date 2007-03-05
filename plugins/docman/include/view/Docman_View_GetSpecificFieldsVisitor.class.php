@@ -73,8 +73,8 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
         return $html;
     }
 
-    function &getValidator() {
-        $validator = new Docman_ValidateUpload();
+    function &getValidator(&$request) {
+        $validator = new Docman_ValidateUpload($request);
         return $validator;
     }
 
@@ -133,7 +133,7 @@ class Docman_View_GetSpecificFieldsVisitor {
     }
     
     function visitFile(&$item, $params = array()) {
-        return array(new Docman_MetadataHtmlFile());
+        return array(new Docman_MetadataHtmlFile($params['request']));
     }
     
     function visitEmbeddedFile(&$item, $params = array()) {
