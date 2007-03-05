@@ -186,7 +186,7 @@ class ArtifactHtml extends Artifact {
                             echo '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                                  $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                     }
-                    echo '<TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+                    echo '<TEXTAREA NAME="comment" ROWS="7" COLS="80" WRAP="SOFT"></TEXTAREA><p>';
             } else {
                     if ($pv == 0) {
                             echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
