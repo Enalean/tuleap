@@ -2683,7 +2683,8 @@ CREATE TABLE artifact_field (
   default_value text NOT NULL,
   PRIMARY KEY  (field_id,group_artifact_id),
   KEY idx_fk_field_name (field_name),
-  KEY idx_fk_group_artifact_id (group_artifact_id)
+  KEY idx_fk_group_artifact_id (group_artifact_id),
+  KEY idx_grp_name (group_artifact_id, field_name (20))
 );
 
 #

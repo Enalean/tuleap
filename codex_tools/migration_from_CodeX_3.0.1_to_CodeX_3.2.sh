@@ -314,6 +314,9 @@ ALTER TABLE artifact_field_value ADD INDEX valueInt (valueInt);
 # SR #683
 ALTER TABLE cvs_checkins ADD INDEX commitid (commitid);
 
+# SR #636
+ALTER TABLE artifact_field ADD INDEX idx_grp_name (group_artifact_id, field_name (20));
+
 EOF
 
 ################################################################################
