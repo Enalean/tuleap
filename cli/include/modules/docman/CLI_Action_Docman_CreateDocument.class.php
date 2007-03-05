@@ -34,18 +34,20 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'content',
-            'description'    => '--content=<local_file_location>|<url>|<WikiPage|<raw content>     content of the document, according to the type of the document'
+            'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document'
         ));
     }
     
     function validate_parent_id(&$parent_id) {
         if (!isset($parent_id)) {
+            echo $this->help();
             exit_error("You must specify the parent ID of the document with the --parent_id parameter");
         }
         return true;
     }
     function validate_title(&$title) {
         if (!isset($title) || trim($title) == '') {
+            echo $this->help();
             exit_error("You must specify the title of the document with the --title parameter");
         }
         return true;
@@ -53,12 +55,14 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
     function validate_type(&$type) {
         $allowed_types= array("file", "link", "wiki", "embedded_file");      
         if (! isset($type) || !in_array($type, $allowed_types)) {
+            echo $this->help();
             exit_error("You must specify the type of the document with the --type parameter, taking the value {".implode(",", $allowed_types)."}");
         }
         return true;
     }
     function validate_content(&$content) {
         if (!isset($content) || trim($content) == '') {
+            echo $this->help();
             exit_error("You must specify the content of the document with the --content parameter, according to the document type");
         }
         return true;
@@ -68,6 +72,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
         if (isset($ordering)) {
             // check that the value is allowed  
             if (!in_array($ordering, $allowed_ordering)) {
+                echo $this->help();
                 exit_error("You must specify the ordering of the document with the --ordering parameter, taking the value {".implode(",", $allowed_ordering)."}");
             }
         } else {

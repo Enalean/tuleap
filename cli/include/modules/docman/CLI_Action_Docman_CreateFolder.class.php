@@ -32,12 +32,14 @@ class CLI_Action_Docman_CreateFolder extends CLI_Action {
     
     function validate_parent_id(&$parent_id) {
         if (!isset($parent_id)) {
+            echo $this->help();
             exit_error("You must specify the parent ID of the folder with the --parent_id parameter");
         }
         return true;
     }
     function validate_title(&$title) {
         if (!isset($title) || trim($title) == '') {
+            echo $this->help();
             exit_error("You must specify the title of the folder with the --title parameter");
         }
         return true;
@@ -47,6 +49,7 @@ class CLI_Action_Docman_CreateFolder extends CLI_Action {
         if (isset($ordering)) {
             // check that the value is allowed 	
             if (!in_array($ordering, $allowed_ordering)) {
+            echo $this->help();
                 exit_error("You must specify the ordering of the folder with the --ordering parameter, taking the value {".implode(",", $allowed_ordering)."}");
             }
         } else {
