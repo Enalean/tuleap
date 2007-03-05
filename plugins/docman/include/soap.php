@@ -259,43 +259,40 @@ function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $descrip
             return new soap_fault(get_group_fault, 'createDocmanDocument', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
         
-        switch ($type) {
-        	    case "file":
-                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-                $content_param_name = 'file';
-                break;
-            case "link":
-                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_LINK;
-                $content_param_name = 'link_url';
-                break;
-            case "wiki":
-                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
-                $content_param_name = 'wiki_page';
-                break;
-            case "embedded_file":
-                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
-                $content_param_name = 'content';
-                break;	
-            default:
-                $item_type =  PLUGIN_DOCMAN_ITEM_TYPE_LINK;
-                $content_param_name = 'link_url';
-                break;
-        }
         
-        $request =& new SOAPRequest(array(
+        $soap_request_params = array(
             'group_id' => $group_id,
             'item' => array(
                 'parent_id' => $parent_id,
                 'title' => $title,
                 'description' => $description,
-                'item_type' => $item_type, //PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-                $content_param_name => $content
             ),
             'ordering' => $ordering,
             //needed internally in docman vvv
             'action'       => 'createDocument',
             'confirm'      => true,
-        ));
+        );
+        switch ($type) {
+        	case "file":
+                $soap_request_params['item']['item_type'] =  PLUGIN_DOCMAN_ITEM_TYPE_FILE;
+                //$soap_request_params['file'] = $content;
+                break;
+            case "wiki":
+                $soap_request_params['item']['item_type'] =  PLUGIN_DOCMAN_ITEM_TYPE_WIKI;
+                $soap_request_params['item']['wiki_page'] = $content;
+                break;
+            case "embedded_file":
+                $soap_request_params['item']['item_type'] =  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
+                $soap_request_params['content'] = $content;
+                break;	
+            default:
+                $soap_request_params['item']['item_type'] =  PLUGIN_DOCMAN_ITEM_TYPE_LINK;
+                $soap_request_params['item']['link_url'] = $content;
+                break;
+        }
+        
+        $request =& new SOAPRequest($soap_request_params);
+        
         $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
