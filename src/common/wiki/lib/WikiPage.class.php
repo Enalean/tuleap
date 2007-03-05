@@ -359,9 +359,21 @@ class WikiPage {
              ,"TousLesUtilisateurs" ,"ToutesLesPages" ,"TraduireUnTexte" 
              ,"URLMagiquesPhpWiki" ,"VersionsRécentes" ,"VisiteursRécents"
              ,"WabiSabi" ,"WikiWikiWeb" ,"DernièresModifs" ,"CatégorieGroupes" 
-	     ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques" 
-	     ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines" ,"SondagePhpWiki"
+             ,"SteveWainstead" ,"PluginInsérer" ,"StyleCorrect" ,"DétailsTechniques" 
+             ,"PagesFloues" ,"PluginInfosSystème", "PagesOrphelines" ,"SondagePhpWiki"
              
+             // Old projects initialised their wiki with the old set of internal pages (pgsrc folder)
+             // In the current version of PHPWiki, we initialise wiki with a different folder. 
+             // The following pages are added in order not to consider them as user pages.
+             ,"AddingPages", "AllUsers","TranslateText","WhoIsOnline"
+             ,"_AuthInfo","CategoryHomePages","EditText","ExternalSearchPlugin"
+             ,"GoodStyle","GoogleLink","HowToUseWiki","LinkIcons"
+             ,"MagicPhpWikiURLs","MoreAboutMechanics","NewMarkupTestPage"
+             ,"OldMarkupTestPage","PageGroupTest","PageGroupTest/One"
+             ,"PageGroupTest/Two","PageGroupTest/Three","PageGroupTest/Four"
+             ,"PgsrcRefactoring","PgsrcTranslation","PhpWikiRecentChanges"
+             ,"ProjectSummary","RecentVisitors","ReleaseNotes","SystemInfoPlugin"
+             ,"HomePageAlias","PhpWeatherPlugin","RateIt","RawHtmlPlugin"
              
              );
   }
