@@ -9,6 +9,8 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
+require_once('common/event/EventManager.class.php');
+
 $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactReportHtml extends ArtifactReport {
@@ -568,6 +570,11 @@ class ArtifactReportHtml extends ArtifactReport {
 		($pv == 0) ? ($url_nomorder = $url) : ($url_nomorder = $url . "&pv=$pv");
 		
                 $url .= "&morder=$morder";
+
+                $em =& EventManager::instance();
+                $params = array('url'=>&$url);
+                $em->processEvent('tracker_urlparam_processing', $params);
+                $url_nomorder = $url;
                 
                 // Build the URL for alternate Search
                 if ($advsrch) { 
@@ -581,6 +588,8 @@ class ArtifactReportHtml extends ArtifactReport {
                 if ($pv == 0) {
                      $html_result .= '<small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('.$Language->getText('tracker_include_report','or_use').' <a href="'.
                          $url_alternate_search.'">'.$text.'</a>)</small></h3><p>';
+                     $params = array('html_result' =>&$html_result);
+                     $em->processEvent('tracker_form_browse_add_in', $params);
                 }
                 
                 //$html_result .= $html_select;
