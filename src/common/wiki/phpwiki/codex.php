@@ -42,7 +42,13 @@ function codex_main () {
     // Initialize with system defaults in case user not logged in.
     // Should this go into constructor?
     $request->initializeTheme();
-
+    
+    // convert wiki to html
+    if ($action == 'wikitohtml') {
+      $request->handleAction();
+      return;
+    }
+    
     $request->updateAuthAndPrefs();
     $request->initializeLang();
     
