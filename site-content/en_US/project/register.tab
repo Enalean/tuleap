@@ -52,6 +52,7 @@ register_form	passwd	Desired Password:<br>(enter twice)
 register_form	comments	Comments/Questions:
 register_form	clear_form	Clear Form
 register_form	cancel	Cancel Registration
+register_form	cancelled	Project registration cancelled
 register_form	next	Next Step >>
 register_form	must_agree	You must agree to the $1 Terms os Service Agreement.
 #

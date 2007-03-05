@@ -34,7 +34,7 @@ $steps = array(
 
 //Process request
 if ($request->exist('cancel')) {
-    $HTML->addFeedback('info', 'Project creation cancelled');
+    $HTML->addFeedback('info', $GLOBALS['Language']->getText('register_form', 'cancelled'));
     $HTML->redirect('/');
 }
 if ($request->exist('next') && $steps[$current_step]->onLeave($request, $data) && (!isset($steps[$current_step + 1]) || $steps[$current_step + 1]->onEnter($request, $data))) {

@@ -60,4 +60,4 @@ In the course of the registration process you will be presented with the <?php p
 </p>
 
 <br /><hr /><br />
-<P align=center><input type="checkbox" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">I agree</label> to the <a href="/tos/tos.php"><?=$GLOBALS['sys_name']?> Terms of Service Agreement</a>.</p>
+<P align=center><input type="checkbox" autocomplete="off" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">I agree</label> to the <a href="/tos/tos.php"><?=$GLOBALS['sys_name']?> Terms of Service Agreement</a>.</p>

@@ -57,6 +57,7 @@ register_form	passwd	Mot de passe souhaité&nbsp;:<br>(à saisir deux fois)
 register_form	comments	Commentaires/Questions&nbsp;:
 register_form	clear_form	Effacer le formulaire
 register_form	cancel	Abandonner l'enregistrement
+register_form	cancelled	Enregistrement du projet abandonné
 register_form	next	Prochaine étape >>
 register_form	must_agree	Vous devez accepter les Condition Générales d'Utilisation de $1.
 #
