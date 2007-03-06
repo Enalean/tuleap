@@ -81,6 +81,19 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
         }
         return true;
     }
+    function before_soapCall(&$loaded_params) {
+        if ($loaded_params['soap']['type'] == 'file') {
+            if (!file_exists($loaded_params['soap']['content'])) {
+                exit_error("File '". $loaded_params['soap']['content'] ."' doesn't exist");
+            } else if (!($fh = fopen($loaded_params['soap']['content'], "rb"))) {
+                exit_error("Could not open '". $loaded_params['soap']['content'] ."' for reading");
+            } else {
+                $contents = fread($fh, filesize($loaded_params['soap']['content']));
+                $loaded_params['soap']['content'] = base64_encode($contents);
+                fclose($fh);
+            }
+        }
+    }
 }
 
 ?>
