@@ -91,7 +91,70 @@ class PluginDao extends DataAccessObject {
                 $this->da->quoteSmart($id));
         return $this->update($sql);
     }
-}
 
+    function searchProjectsForPlugin($pluginId) {
+        $sql = sprintf('SELECT project_id'.
+                       ' FROM project_plugin'.
+                       ' WHERE plugin_id = %d'.
+                       ' ORDER BY project_id ASC',
+                       $pluginId);
+        return $this->retrieve($sql);
+    }
+
+    function bindPluginToProject($pluginId, $projectId) {
+        $sql = sprintf('INSERT INTO project_plugin(plugin_id, project_id)'.
+                       ' VALUES (%d, %d)',
+                       $pluginId, $projectId);
+        return $this->update($sql);
+    }
+
+    function unbindPluginToProject($pluginId, $projectId) {
+        $sql = sprintf('DELETE FROM project_plugin'.
+                       ' WHERE plugin_id = %d'.
+                       ' AND project_id = %d',
+                       $pluginId, $projectId);
+        return $this->update($sql);
+    }
+
+    function truncateProjectPlugin($pluginId) {
+        $sql = sprintf('DELETE FROM project_plugin'.
+                       ' WHERE plugin_id = %d',
+                       $pluginId);
+        return $this->update($sql);
+    }
+
+    function restrictProjectPluginUse($pluginId, $restrict) {
+        $_usage = ($restrict === true ? 1 : 0);
+        $sql = sprintf('UPDATE plugin'.
+                       ' SET prj_restricted = %d'.
+                       ' WHERE id = %d',
+                       $_usage, $pluginId);
+        return $this->update($sql);
+    }
+
+    function searchProjectPluginRestrictionStatus($pluginId) {
+        $sql = sprintf('SELECT prj_restricted'.
+                       ' FROM plugin'.
+                       ' WHERE id = %d',
+                       $pluginId);
+        return $this->retrieve($sql);
+    }
+    
+    function isPluginAllowedForProject($pluginId, $projectId) {
+        $sql = sprintf('SELECT project_id'.
+                       ' FROM project_plugin'.
+                       ' WHERE plugin_id = %d'.
+                       ' AND project_id = %d',
+                       $pluginId, $projectId);
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            if($dar->rowCount() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}
 
 ?>

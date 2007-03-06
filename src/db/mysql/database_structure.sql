@@ -3200,17 +3200,24 @@ plugin_id INT NOT NULL,
 hook VARCHAR(100) NOT NULL,
 priority INT NOT NULL
 );
+
 CREATE TABLE plugin (
   id int(11) NOT NULL auto_increment,
   name varchar(100) NOT NULL,
   available tinyint(4) NOT NULL default '0',
+  prj_restricted tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (id),
   UNIQUE name (name)
 );
+
 CREATE TABLE project_plugin (
-project_id INT NOT NULL ,
-plugin_id INT NOT NULL
+  project_id INT NOT NULL ,
+  plugin_id INT NOT NULL,
+  KEY project_id_idx (project_id),
+  KEY plugin_id_idx (plugin_id),
+  UNIQUE project_plugin (project_id, plugin_id)
 );
+
 CREATE TABLE user_plugin (
 user_id INT NOT NULL ,
 plugin_id INT NOT NULL

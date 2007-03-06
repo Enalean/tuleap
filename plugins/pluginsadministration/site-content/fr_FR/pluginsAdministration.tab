@@ -60,10 +60,18 @@ plugin_pluginsadministration	scope_2	Utilisateurs
 #
 #
 plugin_pluginsadministration_properties	display_priorities	Afficher les priorités du hook $1
+plugin_pluginsadministration_properties	properties_addproject	Ajouter un projet :
+plugin_pluginsadministration_properties	properties_av_for_prj	Disponible pour tous les projets
+plugin_pluginsadministration_properties	properties_delproject	Enlever un projet :
 plugin_pluginsadministration_properties	properties_description:	Description :
+plugin_pluginsadministration_properties	properties_is_av_for_prj	Ce plugin est disponible pour tous les projets :
 plugin_pluginsadministration_properties	properties_hooks:	Hooks écoutés :
 plugin_pluginsadministration_properties	properties_name:	Nom :
+plugin_pluginsadministration_properties	properties_no	Non
+plugin_pluginsadministration_properties	properties_no_prj_for_plugin	Aucun projet ne peut utiliser ce plugin
 plugin_pluginsadministration_properties	properties_plugin	Propriétés du plugin "$1"
+plugin_pluginsadministration_properties	properties_projects:	Projets:
 plugin_pluginsadministration_properties	properties_scope:	Portée :
 plugin_pluginsadministration_properties	properties_version:	Version :
+plugin_pluginsadministration_properties	properties_yes	Oui
 plugin_pluginsadministration_properties	return	<< Retourner aux plugins

@@ -288,6 +288,14 @@ UPDATE frs_processor SET rank = '70', group_id = '100' WHERE processor_id=7000;
 UPDATE frs_processor SET rank = '80', group_id = '100' WHERE processor_id=8000;
 UPDATE frs_processor SET rank = '90', group_id = '100' WHERE processor_id=9999;
 
+###############################################################################
+# Plugin / Project
+ALTER TABLE plugin ADD COLUMN prj_restricted TINYINT(4) NOT NULL DEFAULT 0 AFTER available;
+
+ALTER TABLE project_plugin ADD UNIQUE project_plugin (project_id, plugin_id);
+ALTER TABLE project_plugin ADD INDEX project_id_idx (project_id);
+ALTER TABLE project_plugin ADD INDEX plugin_id_idx (plugin_id);
+
 EOF
 
 echo "Optimizing database structure."

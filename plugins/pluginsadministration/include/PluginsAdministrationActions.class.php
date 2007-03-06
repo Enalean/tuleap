@@ -82,9 +82,56 @@ class PluginsAdministrationActions extends Actions {
             }
         }
     }
-    
+
+    // Secure args: force each value to be an integer.    
+    function _validateProjectList($usList) {
+        $sPrjList = null;
+        $usList = trim(rtrim($usList));
+        if($usList) {
+            $usPrjList = explode(',', $usList);
+            $sPrjList = array_map('intval', $usPrjList);
+        }
+        return $sPrjList;
+    }
+
+    function _addAllowedProjects($prjList) {
+        $plugin = $this->_getPluginFromRequest();
+        $plugin_manager =& PluginManager::instance();
+        $plugin_manager->addProjectForPlugin($plugin['plugin'], $prjList);
+    }
+
+    function _delAllowedProjects($prjList) {
+        $plugin = $this->_getPluginFromRequest();
+        $plugin_manager =& PluginManager::instance();
+        $plugin_manager->delProjectForPlugin($plugin['plugin'], $prjList);
+    }
+
+    function _changePluginGenericProperties($properties) {
+        if(isset($properties['allowed_project'])) {
+            $sPrjList = $this->_validateProjectList($properties['allowed_project']);
+            if($sPrjList !== null) {
+                $this->_addAllowedProjects($sPrjList);
+            }
+        }
+        if(isset($properties['disallowed_project'])) {
+            $sPrjList = $this->_validateProjectList($properties['disallowed_project']);
+            if($sPrjList !== null) {
+                $this->_delAllowedProjects($sPrjList);
+            }
+        }
+        if(isset($properties['prj_restricted'])) {
+            $plugin = $this->_getPluginFromRequest();
+            $plugin_manager =& PluginManager::instance();
+            $resricted = ($properties['prj_restricted'] == 1 ? true : false);
+            $plugin_manager->updateProjectPluginRestriction($plugin['plugin'], $resricted);
+        }
+    }
+
     function changePluginProperties() {
         $request =& HTTPRequest::instance();
+        if($request->exist('gen_prop')) {
+            $this->_changePluginGenericProperties($request->get('gen_prop'));
+        }
         $user_properties = $request->get('properties');
         if ($user_properties) {
             $plugin = $this->_getPluginFromRequest();

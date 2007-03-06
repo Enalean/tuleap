@@ -254,5 +254,46 @@ class PluginFactory {
     function pluginIsCustom(&$plugin) {
         return isset($this->custom_plugins[$plugin->getId()]);
     }
+
+    function getProjectsByPluginId($plugin) {
+        $projectIds = array();
+        $dar = $this->plugin_dao->searchProjectsForPlugin($plugin->getId());
+        if($dar && !$dar->isError()) {
+            while($row = $dar->getRow()) {
+                $projectIds[] = $row['project_id'];
+            }
+        }
+        return $projectIds;
+    }
+
+    function addProjectForPlugin($plugin, $projectId) {
+        return $this->plugin_dao->bindPluginToProject($plugin->getId(), $projectId);
+    }
+
+    function delProjectForPlugin($plugin, $projectId) {
+        return $this->plugin_dao->unbindPluginToProject($plugin->getId(), $projectId);
+    }
+
+    function restrictProjectPluginUse($plugin, $usage) {
+        return $this->plugin_dao->restrictProjectPluginUse($plugin->getId(), $usage);
+    }
+
+    function truncateProjectPlugin($plugin) {
+        return $this->plugin_dao->truncateProjectPlugin($plugin->getId());
+    }
+
+    function isProjectPluginRestricted($plugin) {
+        $restricted = false;
+        $dar =$this->plugin_dao->searchProjectPluginRestrictionStatus($plugin->getId());
+        if($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            $restricted = $row['prj_restricted'];
+        }
+        return $restricted;
+    }
+
+    function isPluginAllowedForProject($plugin, $projectId) {
+        return $this->plugin_dao->isPluginAllowedForProject($plugin->getId(), $projectId);
+    }
 }
 ?>
