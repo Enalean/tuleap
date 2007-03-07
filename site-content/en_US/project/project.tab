@@ -194,6 +194,7 @@ project_admin_index	or	or
 project_admin_index	changed_group_type	Changed Project Type
 project_admin_index	group_type	Project Type
 project_admin_index	built_from_template	Template used for this Project: $1
+project_admin_index	import_user	[Import List Of Users]
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
@@ -487,6 +488,29 @@ project_admin_userperms	admin	Admin
 project_admin_userperms	tech&admin	Tech & Admin
 project_admin_userperms	moderator	Moderator
 project_admin_userperms	upd_user_perm	Update User Permissions
+#
+#-----------------------------------------------
+# Script: SF/www/project/admin/userimport.php
+#
+project_admin_userimport	import_members	Import Project Members $1
+project_admin_userimport	import_welcome	<P>You can import users into your project, by specifying a text file. <br>See the <a href="$1">Import Format</a> for more details.<P>
+project_admin_userimport	upload_file	Upload File :
+project_admin_userimport	submit	Load users
+project_admin_userimport	parse_report	User Parsing Report
+project_admin_userimport	ready	Ready to import these new users :
+project_admin_userimport	import	Import
+project_admin_userimport	success_import	Users Successfully Imported
+project_admin_userimport	fail_import	User Import Failed.
+project_admin_userimport	format_hdr	User Import Format
+project_admin_userimport	missing_file	Missing or unreadable file.
+project_admin_userimport	username	CodeX username
+project_admin_userimport	mail_addr	Email address
+project_admin_userimport	invalid_mail_or_username	Parse error : '$1' is not a valid email address or username.
+project_admin_userimport	unknown_user	Parse error : User '$1' does not exist.
+project_admin_userimport	special_user	Warning : There are more than 1 username corresponding to this mail address or username '$1'. User Import will not continue.
+project_admin_userimport	member_user	Parse error : User '$1' is already a member of this project.
+project_admin_userimport	active_user	Parse error : User '$1' account is not active.
+project_admin_userimport	import_format	To import users, you need to provide a simple text file, containing in each line the email address or the username of the user.<BR>You can include empty lines in the import file. <P>Please make sure the users, who will be imported, are already registered in Codex and have an active account.<P><B>Sample import file</B> : <BR><BR>john.doe@xerox.com<BR>jacques.dupont@xerox.com<BR>durandb<BR><BR> $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_deps_export.php
