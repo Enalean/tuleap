@@ -712,17 +712,19 @@ function buildAdminUI() {
                         }) 
                     )
                 ) {
-                var so = document.createElement('option');
-                so.value     = source_field.id;
-                so.selected  = (preselected_source_field == so.value);
-                so.innerHTML = source_field.label;
                 //If a rule exist for this field, highlight it
+                var so_className = ''
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.source_field == source_field.id;
                 })) {
-                    so.className = 'boxhighlight';
+                    so_className = 'boxhighlight';
                 }
+                var so = Builder.node('option', {
+                        value:source_field.id,
+                        className:so_className
+                }, source_field.label);
                 select_source.appendChild(so);
+                so.selected = (preselected_source_field == source_field.id) ? 'selected' : '';
             }
     });
     //}}}
@@ -744,17 +746,19 @@ function buildAdminUI() {
                     }) 
                 )
             ) {
-                var to = document.createElement('option');
-                to.value     = target_field.id;
-                to.selected  = (preselected_target_field == to.value);
-                to.innerHTML = target_field.label;
                 //If a rule exist for this field, highlight it
+                var to_className = ''
                 if ($H(rules_definitions).values().find(function (rule_definition) {
                             return rule_definition.target_field == target_field.id;
                 })) {
-                    to.className = 'boxhighlight';
+                    to_className = 'boxhighlight';
                 }
+                var to = Builder.node('option', {
+                        value:target_field.id,
+                        className:to_className
+                }, target_field.label);
                 select_target.appendChild(to);
+                to.selected = (preselected_target_field == target_field.id) ? 'selected' : '';
             }
     });
     //}}}
@@ -969,9 +973,8 @@ function buildAdminUI() {
     select_target.onchange = function() {
         //{{{ re-build source selectbox
         var previous_selected = $F('source_field');
-        var len = $('source_field').options.length;
-        for(var i = len ; i >= 0 ; i--) {
-            $('source_field').options[i] = null;
+        while($('source_field').options.length) {
+            $('source_field').remove($('source_field').options.length - 1);
         }
         $('source_field').appendChild(choose = document.createElement('option'));
         choose.value = '-1';
@@ -986,18 +989,19 @@ function buildAdminUI() {
                         }) 
                     )
                 ) {
-                    var so = document.createElement('option');
-                    so.value     = source_field.id;
-                    so.selected  = source_field.id == previous_selected ? 'selected' : '';
-                    so.innerHTML = source_field.label;
                     //If a rule exist for this field, highlight it
+                    var so_className = '';
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.source_field == source_field.id;
                     })) {
-                        so.className = 'boxhighlight';
+                        so_className = 'boxhighlight';
                     }
-
+                    var so = Builder.node('option', {
+                            value: source_field.id,
+                            className:so_className
+                    }, source_field.label);
                     $('source_field').appendChild(so);
+                    so.selected = (source_field.id == previous_selected) ? 'selected' : '';
                 }
         });
         //}}}
@@ -1023,18 +1027,19 @@ function buildAdminUI() {
                         }) 
                     )
                 ) {
-                    var to = document.createElement('option');
-                    to.value     = target_field.id;
-                    to.selected  = target_field.id == previous_selected ? 'selected' : '';
-                    to.innerHTML = target_field.label;
                     //If a rule exist for this field, highlight it
+                    var to_className = '';
                     if ($H(rules_definitions).values().find(function (rule_definition) {
                                 return rule_definition.target_field == target_field.id;
                     })) {
-                        to.className = 'boxhighlight';
+                        to_className = 'boxhighlight';
                     }
-
+                    var to = Builder.node('option', {
+                            value: target_field.id,
+                            className: to_className
+                    }, target_field.label);
                     $('target_field').appendChild(to);
+                    to.selected = (target_field.id == previous_selected) ? 'selected' : '';
                 }
         });
         //}}}

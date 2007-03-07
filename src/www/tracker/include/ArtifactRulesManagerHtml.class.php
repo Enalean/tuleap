@@ -133,7 +133,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
             echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."'\n";
         echo "};\n";
-        echo "Event.observe(window, 'load', buildAdminUI, true);";
+        echo "Event.observe(window, 'load', buildAdminUI);";
         echo "\n//------------------------------------------------------\n";
         echo "\n".'//]]></script>';
     }
