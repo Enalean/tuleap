@@ -268,9 +268,7 @@
         <para>Lorsque vous modifiez le nom, le rang ou le statut d'un paquet n'oubliez pas de cliquer sur le bouton &#34;Valider&#34; !</para>
 
         <figure id="FigureAPartOfThePackageAdministrationScreenGSAProject">
-          <title>Une partie de l'écran d'administration des paquets du
-          projet GSA (3 paquets créés, 2 actifs et 1
-          caché)</title>
+          <title>Une partie de l'écran d'administration des paquets d'un projet</title>
 
           <mediaobject>
             <imageobject>
@@ -297,8 +295,19 @@
         L'écran de configuration des versions est composé de 6 courtes
         parties .</para>
 
+			
+		  <figure id="FigureReleaseCreation">
+        <title>Création d'une version</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/fr_FR/sc_frsreleasecreation.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+			
         <itemizedlist mark="bullet">
-          <listitem id="ReleaseProperties">
+          <listitem>
             <para><emphasis role="bold">&Eacute;tape 1 - Donnez les informations concernant la version</emphasis></para>
 
             <para>La première étape permet de renseigner les informations
@@ -307,17 +316,17 @@
             fournir une date de publication, la date courrante est remplie par défaut.</para>
 			 </listitem>
 
-          <listitem id="ReleaseFiles">
+          <listitem>
             <para><emphasis role="bold">&Eacute;tape 2 - Télécharger et attacher les fichiers à une version</emphasis></para>
 
             <para>Comme expliqué précédemment plusieurs fichiers
             peuvent être attachés à une version. Le téléchargement
             de fichiers peut se faire de deux façons : soit en indiquant directement
             via l'interface
-             Web (HTTP) le approprié sur votre disque local, soit en les chargeant sur le
+             Web (HTTP) le fichier approprié sur votre disque local, soit en les chargeant sur le
             serveur CodeX. Pour ce faire, le serveur CodeX offre un
             mécanisme de chargement via FTP (ou SCP). Pour télécharger
-            vos fichiers, cliquer sur le &#34;?&#34; situé à droite du lien &#34;Ajouter un fichier&#34;
+            vos fichiers, cliquez sur le &#34;?&#34; situé à droite du lien &#34;Ajouter un fichier&#34;
             puis suivez les instructions à l'écran. Par ailleurs,
             si vous êtes un utilisateur Windows, vous pouvez aussi
             accéder à l'espace de chargement FTP directement depuis
@@ -334,13 +343,13 @@
             
             <para>Une fois les fichiers chargés, vous allez pouvoir les
             ajouter à votre version. Pour ce faire, cliquez sur le menu déroulant 
-            &#34;choisir...&#34; de la colonne &#34;Nom de fichier&#34;, puis sélectionner
+            &#34;choisir...&#34; de la colonne &#34;Nom de fichier&#34;, puis sélectionnez
             &#34;parcourir&#34; si vous souhaitez ajouter un fichier depuis son emplacement local ou
-            le nom du fichier chargé (en scp ou ftp) que vous souhaitez ajouter.
+            sélectionnez le nom du fichier chargé (en scp ou ftp) que vous souhaitez ajouter.
             Pour chaque fichier il est possible de préciser l'architecture matérielle auquel il 
             est destiné, son type (source, binaire, documentation ainsi que le type de compression). 
             Ceci n'est pas absolument necessaire mais ces informations sont très utiles aux utilisateurs.
-            Vous pouvez également supprimer des fichiés en cliquant sur la poubelle à gauche de la ligne 
+            Vous pouvez également supprimer des fichiers en cliquant sur la poubelle à gauche de la ligne 
             correpondant au fichier à supprimer.</para>
 
 
@@ -354,12 +363,12 @@
             Linux/Unix.</para></tip></para>
           </listitem>
 
-		    <listitem id="ReleaseNotes">
+		    <listitem>
             <para><emphasis role="bold">&Eacute;tape 3 - Renseigner les notes concernant la version et les modifications</emphasis></para>
 				
 				<para>Vous pouvez copier-coller ou télécharger des notes concernant
-				la version et ses modifications. Pour télécharger cliquer sur le lien 
-				&#34;Télécharger&#34; correspondant puis séléctionner le fichier.</para>
+				la version et ses modifications. Pour télécharger cliquez sur le lien 
+				&#34;Télécharger&#34; correspondant puis séléctionnez le fichier.</para>
 				
             <para>Les notes concernant la version sont typiquement un
             texte court (10 à 20 lignes) et de haut niveau résumant
@@ -394,18 +403,18 @@
             base pour un document de type ChangeLog.</para></tip></para>
           </listitem>
           
-          <listitem id="ReleasePermissions">
+          <listitem>
             <para><emphasis role="bold">&Eacute;tape 4 - Modification des permissions d'une version</emphasis></para>
             	
             <para>Si vous ne spécifiez aucune permission d'accès pour
           une version, la version hérite des permissions définies pour le
           paquet dans lequel elle se trouve. (Par défaut un paquet a la permission
-            "utilisatuers-enregistrés".)Si vous avez besoin d'un contrôle d'accès plus fin sur
+            &#34;utilisateurs-enregistrés&#34;.)Si vous avez besoin d'un contrôle d'accès plus fin sur
           vos délivrables logiciels, vous pouvez aussi définir des
           permissions au niveau de chaque version.</para>
 
-          <para>Pour cela, séléctionner le lien &#34;[Voir/Modifier]&#34; de la 
-          partie permissions, puis procéder à la sélection des groupes d'utilisateurs
+          <para>Pour cela, séléctionnez le lien &#34;[Voir/Modifier]&#34; de la 
+          partie permissions, puis procédez à la sélection des groupes d'utilisateurs
           autorisés pour définir des permissions sur une
           version.</para>
 
@@ -416,8 +425,8 @@
           permissions du paquet dans lequel elle se trouve.</para>
           </listitem>
           
-          <listitem id="ReleaseNews">
-            <para><emphasis role="bold">&Eacute;tape 4 - Créer automatiquement une annonce
+          <listitem>
+            <para><emphasis role="bold">&Eacute;tape 5 - Créer automatiquement une annonce
             (optionnel)</emphasis></para>
 
             <para>Cette étape est optionnelle, vous pouvez choisir de ne pas en 
@@ -437,8 +446,8 @@
             </para>
           </listitem>
           
-          <listitem id="ReleaseNotification">
-            <para><emphasis role="bold">&Eacute;tape 5 - Envoyer une notification par email (optionnel)</emphasis></para>
+          <listitem>
+            <para><emphasis role="bold">&Eacute;tape 6 - Envoyer une notification par email (optionnel)</emphasis></para>
 
             <para>Cette étape est optionnelle, c'est à dire qu'elle peut
             ne pas apparaître à l'écran. Si certains utilisateurs
@@ -469,14 +478,23 @@
 	<section id="ReleaseModification">
         <title>Modification d'une version</title>
 
-        <para>Une fois vote version créé vous pouvez la modifier. Pour ce faire, cliquez sur
+        <para>Une fois votre version créée vous pouvez la modifier. Pour ce faire, cliquez sur
         le lien [Modifier une version] situé en regard du paquet
-        approprié sur l'écran d'administration des paquets.(voir <xref
-        linkend="FigureAPartOfThePackageAdministrationScreenGSAProject"
-        />).</para>
+        approprié sur l'écran d'administration des paquets.</para>
+        
+        <figure id="FigureAPartOfTheReleasesAdministrationScreenGSAProject">
+          <title>Une partie de l'écran d'administration des versions d'un projet </title>
 
-        <para>L'écran suivant permet de gérer les versionset, dans l'esprit est similaire à celui d'administration des paquets. 
-        Veuillez notez que l'essentiel de cette étape de modification d'une version
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/fr_FR/sc_frsreleases.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>L'écran suivant permet de gérer les versions, il est dans l'esprit similaire à celui d'administration des paquets. 
+        Veuillez notez que l'essentiel des étapes de modification d'une version
         est similaire à la création d'une version. (voir  <xref linkend="ReleaseCreation" />)
         L'écran de configuration des versions est composé de 6 courtes
         parties .</para>
@@ -486,14 +504,14 @@
             <para><emphasis role="bold">&Eacute;tape 1 - Modifier les informations concernant la version</emphasis></para>
 
             <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseProperties" />.)</para>
+            (voir <xref linkend="ReleaseCreation" />, étape 1.)</para>
 			 </listitem>
 
           <listitem>
             <para><emphasis role="bold">&Eacute;tape 2 - Télécharger et attacher les fichiers à une version</emphasis></para>
 
             <para>L'ajout de fichier est identique à celui lors de la création d'une version.
-            (voir <xref linkend="ReleaseFiles" />.) En revanche, pour les fichiers
+            (voir <xref linkend="ReleaseCreation" />, étape 2.) En revanche, pour les fichiers
             déjà ajoutés à une version, vous avez la possibilité de les supprimer
             en séléctionnant la case de la colonne supprimer correpondant au fichier à supprimer.
             Vous avez également la possibilité de changer le fichier de version et de modifier la date
@@ -504,27 +522,30 @@
             <para><emphasis role="bold">&Eacute;tape 3 - Renseigner les notes concernant la version et les modifications</emphasis></para>
 				
 				<para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseNotes" />.)</para>
+            (voir <xref linkend="ReleaseCreation" />, étape 3.)</para>
           </listitem>
           
           <listitem>
             <para><emphasis role="bold">&Eacute;tape 4 - Modification des permissions d'une version</emphasis></para>
             	
             <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseNotification" />.)</para>
+            (voir <xref linkend="ReleaseCreation" />, étape 4.)</para>
 
           </listitem>
           
           <listitem>
+          	<para><emphasis role="bold">&Eacute;tape 5 - Créer automatiquement une annonce
+            (optionnel)</emphasis></para>
+
             <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseNews" />.)</para>
+            (voir <xref linkend="ReleaseCreation" />, étape 5.)</para>
           </listitem>
           
           <listitem>
             <para><emphasis role="bold">&Eacute;tape 5 - Envoyer une notification par email (optionnel)</emphasis></para>
 
             <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseNotification" />.)</para>
+            (voir <xref linkend="ReleaseCreation" />, étape 6.)</para>
           </listitem>
         </itemizedlist>
     </section>
