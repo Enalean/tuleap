@@ -38,29 +38,70 @@
 
       <para><emphasis>Location: Page Admin Content</emphasis></para>
 
-      <para>User administration in CodeX is easy. To add a new member to a
-      project team one of the project administrator just has to type the login
-      name of the invited member and click on the &#34;Add User&#34; button.
-      If you don&#39;t know the login name of the new project member you want
-      to add, open a new browser window on CodeX and use the search box in the
-      CodeX Main Menu to search for the person&#39;s real name (first or last
-      name or both) and don&#39;t forget to select &#34;People&#34; in the
-      Search pull-down menu. The result list will show you the user real name
-      and login name.</para>
+      <para>User administration in CodeX is easy. Regarding the number of
+      users to need to add, you can use one the two following ways:
+      </para>
+      
+      <section id="AddingSingleUser">
+        <title>Add a user</title>
+          <para> To add a new member to a
+          project team one of the project administrator just has to type the login
+          name of the invited member and click on the &#34;Add User&#34; button.
+          If you don&#39;t know the login name of the new project member you want
+          to add, open a new browser window on CodeX and use the search box in the
+          CodeX Main Menu to search for the person&#39;s real name (first or last
+          name or both) and don&#39;t forget to select &#34;People&#34; in the
+          Search pull-down menu. The result list will show you the user real name
+          and login name.</para>
+      </section>
+      
+      <section id="UserImport">
+        <title>Import a list of users</title>
+        <para>If the number of users to add is important, 
+          one of the project team member can import a list
+          of users from a simple text file. In order to do it,
+          just click the link &#34;Import List Of Users&#34;.
+          Then, you can browse your local directory to select a file
+          containing the list of users you want to import. The file will 
+          host one user per line, by specifying her email address, or her
+          CodeX username (login name).</para>
+          <example>
+            <title>Sample of users import file</title>
+               <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+johnd
+steve.robinson@xerox.com
 
-      <para>Removing a project member is even easier. Just click on the trash
-      icon (<inlinemediaobject><imageobject><imagedata format="PNG"
-      fileref="../../icons/trash.png" /></imageobject></inlinemediaobject>) next
-      to the person&#39;s name to revoke his/her membership. Revoking
-      membership has absolutely no effect on the history and the data
-      integrity of the project. In other words all tracker artefacts assigned or submitted by this person will continue to show
-      up as before in the project database. Only the ability of this person to
-      perform project management tasks is affected. Also notice that in order
-      to remove a project administrator from the project member list, another
-      project administrator must first change the &#34;Project Admin&#34; flag
-      of this user to &#34;No&#34; in the User Permission table. In other
-      words, a Project Administrator cannot be removed from the project
-      members as long as she has administrator privilege.</para>
+bob.johnson@xerox.com
+smith3
+john.smith@xerox.com</programlisting>
+          </example>
+          <para>The import process has two steps.
+          First, it checks if the file is well formed, and it displays
+          the users detected to be imported.
+          After a confirmation, the import is done and the users are added
+          to the project.
+          The system doesn't perform the import in case of error (unknown user,
+          user not recorded in CodeX, user not active, unknown email address, etc.)
+          If a user is two times in the file, only one user is added and there is no
+          error.</para>
+      </section>
+      
+      <section id="RemovingUser">
+        <title>Removing a user</title>
+          <para>Removing a project member is even easier. Just click on the trash
+          icon (<inlinemediaobject><imageobject><imagedata format="PNG"
+          fileref="../../icons/trash.png" /></imageobject></inlinemediaobject>) next
+          to the person&#39;s name to revoke his/her membership. Revoking
+          membership has absolutely no effect on the history and the data
+          integrity of the project. In other words all tracker artefacts assigned or submitted by this person will continue to show
+          up as before in the project database. Only the ability of this person to
+          perform project management tasks is affected. Also notice that in order
+          to remove a project administrator from the project member list, another
+          project administrator must first change the &#34;Project Admin&#34; flag
+          of this user to &#34;No&#34; in the User Permission table. In other
+          words, a Project Administrator cannot be removed from the project
+          members as long as she has administrator privilege.</para>
+      </section>
 
       <note><para>You have probably noticed that project member&#39;s
       name on the Project Administration page are actually hyperlinks. On this

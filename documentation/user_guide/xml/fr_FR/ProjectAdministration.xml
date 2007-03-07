@@ -41,38 +41,78 @@
 
       <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
-      <para>L'administration des membres d'un projet est aisée. Pour
-      ajouter un utilisateur aux membres du groupe, un des
-      administrateurs du projet doit simplement taper le nom de
-      l'utilisateur invité dans le champ réservé à cet effet et
-      cliquer sur le bouton &#34;Ajouter un utilisateur&#34;. Si vous
-      ne connaissez pas le nom du nouveau membre à ajouter, ouvrez une
-      nouvelle fenêtre et utilisez la boîte de recherche par mots-clés
-      en tapant une partie du nom ou du prénom de l'utilisateur et en
-      n'oubliant pas de préciser que la recherche porte sur les
-      &#34;Utilisateurs&#34;. La liste de résultat fera
-      vraisemblablement apparaître le nom complet et le nom
-      d'utilisateur de la personne que vous recherchez.</para>
+      <para>L'administration des membres d'un projet est aisée. Selon le nombre 
+       d'utilisateurs à ajouter au projet, vous pouvez utiliser
+       l'une des deux méthodes ci-dessous :
+      </para>
 
-      <para>Supprimer un utilisateur des membres du projet est encore
-      plus simple. Il suffit de cliquer sur l'icône corbeille
-      (<inlinemediaobject><imageobject><imagedata format="PNG"
-      fileref="../../icons/trash.png"
-      /></imageobject></inlinemediaobject>) située à proximité du nom
-      de l'utilisateur. Supprimer un utilisateur des membres du projet
-      n'a absolument aucun effet sur l'historique ou l'intégrité des
-      données du projet. En d'autres termes tous les artefacts des
-      outils de suivi soumis par ou assignés à cette personne restent
-      présents et inchangés dans la base de données. Seul la capacité
-      de cette personne à gérer le projet est affectée. Notez aussi
-      que pour supprimer un administrateur de la liste des membres du
-      projet, un autre administrateur doit d'abord lui ôter son statut
-      d'administrateur en positionnant la valeur de la permission
-      &#34;Admin. Projet&#34; à &#34;Non&#34; dans la table d'édition
-      des permissions utilisateurs. En d'autres termes, un
-      administrateur de projet ne peut être supprimé de la liste des
-      membres tant qu'il a le statut d'administrateur.</para>
+      <section id="AddingSingleUser">
+        <title>Ajout d'un utilisateur</title>
+          <para>Pour ajouter un utilisateur aux membres du groupe, un des
+          administrateurs du projet doit simplement taper le nom de
+          l'utilisateur invité dans le champ réservé à cet effet et
+          cliquer sur le bouton &#34;Ajouter un utilisateur&#34;. Si vous
+          ne connaissez pas le nom du nouveau membre à ajouter, ouvrez une
+          nouvelle fenêtre et utilisez la boîte de recherche par mots-clés
+          en tapant une partie du nom ou du prénom de l'utilisateur et en
+          n'oubliant pas de préciser que la recherche porte sur les
+          &#34;Utilisateurs&#34;. La liste de résultat fera
+          vraisemblablement apparaître le nom complet et le nom
+          d'utilisateur de la personne que vous recherchez.</para>
+      </section>
+      <section id="UserImport">
+        <title>Import d'une liste d'utilisateurs</title>
+          <para>Si le nombre d'utilisateurs à ajouter est important, 
+          un des administrateurs du projet peut importer une liste
+          d'utilisateurs à partir d'un fichier texte. Pour cela, cliquer
+          sur le lien &#34;Importer une liste d'utilisateurs&#34;.
+          On vous proposera alors de choisir un fichier texte comportant
+          la liste des utilisateurs à importer. Le fichier doit comporter
+          un utilisateur par ligne, soit en spécifiant son adresse email,
+          soit en spécifiant son nom de login CodeX.</para>
+          <example>
+            <title>Exemple de fichier pour l'import d'utilisateurs</title>
+               <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+johnd
+steve.robinson@xerox.com
 
+bob.johnson@xerox.com
+smith3
+john.smith@xerox.com</programlisting>
+          </example>
+          <para>Le processus d'import se déroule alors en deux temps.
+          Une première vérification du fichier est effectuée, qui donne lui
+          à un compte-rendu des utilisateurs détectés. Après validation,
+          les utilisateurs sont effectivement ajoutés au projet.
+          Le système n'effectuera pas l'import en cas d'erreur (utilisateur inconnu,
+          non enregistré sur CodeX, utilisateur non actif, adresse mail inconnue, etc.).
+          Les doublons ne produisent pas d'erreur. Un seul utilisateur est ajouté dans
+          ce cas.</para>
+      </section>
+
+      <section id="RemovingUsers">
+        <title>Suppression d'utilisateurs</title>
+        
+          <para>Supprimer un utilisateur des membres du projet est encore
+          plus simple. Il suffit de cliquer sur l'icône corbeille
+          (<inlinemediaobject><imageobject><imagedata format="PNG"
+          fileref="../../icons/trash.png"
+          /></imageobject></inlinemediaobject>) située à proximité du nom
+          de l'utilisateur. Supprimer un utilisateur des membres du projet
+          n'a absolument aucun effet sur l'historique ou l'intégrité des
+          données du projet. En d'autres termes tous les artefacts des
+          outils de suivi soumis par ou assignés à cette personne restent
+          présents et inchangés dans la base de données. Seul la capacité
+          de cette personne à gérer le projet est affectée. Notez aussi
+          que pour supprimer un administrateur de la liste des membres du
+          projet, un autre administrateur doit d'abord lui ôter son statut
+          d'administrateur en positionnant la valeur de la permission
+          &#34;Admin. Projet&#34; à &#34;Non&#34; dans la table d'édition
+          des permissions utilisateurs. En d'autres termes, un
+          administrateur de projet ne peut être supprimé de la liste des
+          membres tant qu'il a le statut d'administrateur.</para>
+      </section>
+      
       <note><para>Vous avez probablement remarqué que tous les noms
       d'utilisateurs figurant sur la la page d'administration sont en
       fait des liens hypertextes. Sur cette page comme sur beaucoup

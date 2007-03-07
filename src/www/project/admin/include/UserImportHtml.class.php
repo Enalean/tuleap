@@ -151,7 +151,7 @@ class UserImportHtml extends UserImport {
     function displayInput() {
         global $PHP_SELF, $Language;
     
-        echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('UserImport.html'))).'</h2>';
+        echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('AddingRemovingUsers.html'))).'</h2>';
         echo $Language->getText('project_admin_userimport','import_welcome',array('/project/admin/userimport.php?group_id='.$this->group_id.'&mode=showformat&func=import'));
 
         echo '<FORM NAME="importdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
