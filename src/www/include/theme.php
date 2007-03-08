@@ -9,9 +9,9 @@
 //
 
 // define the theme
-if (isset($HTTP_COOKIE_VARS["CODEX_THEME"])&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["CODEX_THEME"],0,6))) ) {
+if (isset($_COOKIE["CODEX_THEME"])&&(user_getid() == (int)(substr($_COOKIE["CODEX_THEME"],0,6))) ) {
     // define the global var $theme
-    $theme = substr($HTTP_COOKIE_VARS["CODEX_THEME"],6);
+    $theme = substr($_COOKIE["CODEX_THEME"],6);
 } else {
     // No cookie defined
     // Read the user preferences
@@ -38,9 +38,9 @@ $GLOBALS['sys_user_theme'] = $theme;
 $GLOBALS['sys_is_theme_custom'] = is_dir($GLOBALS['sys_custom_themeroot'].'/'.$theme);
 
 // define the font size cookie for performance
-if ( (isset($HTTP_COOKIE_VARS["CODEX_FONTSIZE"]))&&(user_getid() == (int)(substr($HTTP_COOKIE_VARS["CODEX_FONTSIZE"],0,6))) ) {
+if ( (isset($_COOKIE["CODEX_FONTSIZE"]))&&(user_getid() == (int)(substr($_COOKIE["CODEX_FONTSIZE"],0,6))) ) {
     // define the global var $font_size
-    $font_size = (int)(substr($HTTP_COOKIE_VARS["CODEX_FONTSIZE"],6));
+    $font_size = (int)(substr($_COOKIE["CODEX_FONTSIZE"],6));
 } else {
     // No cookie defined
     // Read the user preferences
