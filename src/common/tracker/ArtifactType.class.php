@@ -308,24 +308,6 @@ class ArtifactType extends Error {
 	}
 
 	/**
-	 *	  emailAll - determine if we're supposed to email on every event.
-	 *
-	 *	  @return	boolean	email_all.
-	 */
-	function emailAll() {
-		return $this->data_array['email_all_updates'];
-	}
-
-	/**
-	 *	  emailAddress - defined email address to send events to.
-	 *
-	 *	  @return	string	email.
-	 */
-	function getEmailAddress() {
-		return $this->data_array['email_address'];
-	}
-
-	/**
 	 *	  getSubmitInstructions - get the free-form string strings.
 	 *
 	 *	  @return	string	instructions.
@@ -866,53 +848,15 @@ class ArtifactType extends Error {
 	/**
 	 *  updateNotificationSettings - use this to update this ArtifactType in the database.
 	 *
-	 *  @param	bool	(1) true (0) false - whether to email on all updates.
-	 *  @param	string	The address to send new entries and updates to.
 	 *  @param	int	uid the user to set watches on
 	 *  @param	string	the list of users to watch
 	 *  @param	string	the list of watching users
 	 *  @return true on success, false on failure.
 	 */
-	function updateNotificationSettings($email_all,$email_address,$user_id, $watchees, &$feedback) {
-	  global $Language;
-	  
-	  $result = true;
-	  
-	  if ($email_address) {
-          $arr_email_address = split('[,;]', $email_address);
-          if (!util_validateCCList($arr_email_address, $feedback, false)) {
-              $email_address='';
-              $result = false;
-          } else {
-              $email_address = implode(", ", $arr_email_address);
-              $email_address = util_cleanup_emails($email_address);
-          }
-	  }
-
-	  if ($email_all && !$email_address) {
-	    $email_all=0;
-	  }
-	  
-	  $email_all = ((!$email_all) ? 0 : $email_all); 
-	  $sql="UPDATE artifact_group_list SET 
-			email_all_updates='$email_all',
-			email_address='$email_address' 
-			WHERE 
-			group_artifact_id='".$this->getID()."' 
-			AND group_id='".$this->Group->getID()."'";
-	  
-	  $res=db_query($sql);
-	  //echo $sql."<br>";
-	  if (!$res ) {
-	    $this->setError('ArtifactType::Update(): '.db_error());
-	    return false;
-	  } else {
-	    // set watchees 
+	function updateNotificationSettings($user_id, $watchees, &$feedback) {
 	    $this->setWatchees($user_id, $watchees);
-	    
-	    $this->fetchData($this->getID());
-	  }
-	  return $result;
+        $this->fetchData($this->getID());
+        return true;
 	}
 	
 	function deleteWatchees($user_id) {

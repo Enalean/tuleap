@@ -334,14 +334,60 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_not_logged_in();
 			return;
 		}
+        $request =& HTTPRequest::instance();
+        switch($request->get('action')) {
+          case 'remove_global':
+              $ok = false;
+              $global_notification_id = $request->get('global_notification_id');
+              if ($global_notification_id) {
+                  $agnf =& new ArtifactGlobalNotificationFactory();
+                  if ($agnf->removeGlobalNotificationForTracker($global_notification_id, $atid)) {
+                      $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_include_type', 'info_gn_deleted'));
+                      $ok = true;
+                      //Add a default if needed
+                      if (!count($agnf->getGlobalNotificationsForTracker($atid))) {
+                          if ($agnf->addGlobalNotificationForTracker($atid)) {
+                              $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_include_type', 'info_gn_default_added'));
+                          } else {
+                              $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'info_gn_default_not_added'));
+                          }
+                      }
+                  } else {
+                      $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'error_gn_not_deleted'));
+                  }
+              } else {
+                  $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'error_missing_param'));
+              }
+              break;
+          case 'add_global':
+              $agnf =& new ArtifactGlobalNotificationFactory();
+              if (!($ok = $agnf->addGlobalNotificationForTracker($atid))) {
+                  $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'error_gn_not_added'));
+              }
+              break;
+          default:
+              break;
+        }
 
-		$ath->adminHeader(
-		array ('title'=>$Language->getText('tracker_admin_index','art_admin'),
-		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		if (isset($submit)) {
-		  $res_new = true;
+		  $ok = true;
 		  if ($ath->userIsAdmin()) {
-			$res_new = $ath->updateNotificationSettings($send_all_artifacts, ($new_artifact_address?$new_artifact_address : ''), user_getid(), $watchees,$feedb);
+              $ok = $ath->updateNotificationSettings(user_getid(), $watchees,$feedb);
+              //{{{ Global Notifications
+              if ($submitted_notifications = $request->get('global_notification')) {
+                  $agnf =& new ArtifactGlobalNotificationFactory();
+                  $notifs = $agnf->getGlobalNotificationsForTracker($atid);
+                  foreach($notifs as $id => $nop) {
+                      if (isset($submitted_notifications[$id]) && (
+                          $submitted_notifications[$id]['addresses'] != $notifs[$id]->getAddresses() ||
+                          $submitted_notifications[$id]['all_updates'] != $notifs[$id]->isAllUpdates() ||
+                          $submitted_notifications[$id]['check_permissions'] != $notifs[$id]->isCheckPermissions()
+                          )) {
+                        $ok = $agnf->updateGlobalNotification($id, $submitted_notifications[$id]) && $ok;
+                      }
+                  }
+              }
+              //}}}
 		  }
 
 		    // Event/Role specific settings
@@ -361,10 +407,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			$res_notif = $ath->setNotification(user_getid(), $arr_notif);
 			
 			// Give Feedback
-			if ($res_notif && $res_new) {
+			if ($res_notif && $ok) {
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','update_success'));
 			} else {
-			  if (!$res_new && $feedb) {
+			  if (!$ok && $feedb) {
 			    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','update_failed',$feedb));
 			  } else {
 			    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','update_failed',$ath->getErrorMessage()));
@@ -373,6 +419,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			$ath->fetchData($ath->getID());
 		
 		}
+		$ath->adminHeader(
+		array ('title'=>$Language->getText('tracker_admin_index','art_admin'),
+		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
 		$ath->displayNotificationForm(user_getid());
 		$ath->footer(array());
 		break;

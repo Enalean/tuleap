@@ -478,7 +478,8 @@ tracker_include_type	no_hidden_val	---- NO HIDDEN VALUES ----
 tracker_include_type	hidden_val	---- HIDDEN VALUES ----
 tracker_include_type	global_mail_notif	Global Email Notification
 tracker_include_type	admin_note	<B>As a project administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.
-tracker_include_type	send_all	(send on all updates)
+tracker_include_type	send_all	send on all updates
+tracker_include_type	check_perms	check permissions
 tracker_include_type	admin_conf	<P>The project administrators have configured the following email addresses to receive notification of new artifact submission (and possibly updates).<P><u>Recipients</u>:
 tracker_include_type	send_all_or_not	(Send on all updates: $1)
 tracker_include_type	admin_not_conf	<P>The project administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.
@@ -537,6 +538,14 @@ tracker_include_type	warning_delete_fieldset	** WARNING!! ** Delete this field s
 tracker_include_type	rank_in_fieldset	Rank in Field Set
 tracker_include_type	current_date	Current date.
 tracker_include_type	date_value	Date value:
+
+tracker_include_type	add	Add
+tracker_include_type	error_gn_default_not_added	Unable to add default global notification
+tracker_include_type	error_gn_not_added	Unable to add global notification
+tracker_include_type	error_gn_not_deleted	Unable to delete global notification
+tracker_include_type	error_missing_param	Missing Parameters
+tracker_include_type	info_gn_default_added	Default global notification added
+tracker_include_type	info_gn_deleted	Global notification has been deleted
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class.php

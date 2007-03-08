@@ -192,9 +192,10 @@ if ( $func == 'gotoid' ) {
                                     $ah->addCC($add_cc,$cc_comment,$changes);
                                 }
 
-                                // send an email to notify the user of the artifact update
-				//                                $ah->mailFollowup($ath->getEmailAddress(),$null);
-                                $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
+                                // send an email to notify the user of the artifact add
+                                $agnf =& new ArtifactGlobalNotificationFactory();
+                                $addresses = $agnf->getAllAddresses($ath->getID());
+                                $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
                         }
@@ -274,8 +275,9 @@ if ( $func == 'gotoid' ) {
 				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$feedback);
 
                                 // send an email to notify the user of the artifact update
-                                //$ah->mailFollowup($ath->getEmailAddress());
-                                $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()));
+                                    $agnf =& new ArtifactGlobalNotificationFactory();
+                                    $addresses = $agnf->getAllAddresses($ath->getID());
+                                    $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
                         }
@@ -304,19 +306,9 @@ if ( $func == 'gotoid' ) {
 
                                 $changed = $ah->deleteCC($artifact_cc_id,$changes);
                                 if ($changed) {
-                                    //
-                                    //  see if we're supposed to send all modifications to an address
-                                    //
-                                    if ($ath->emailAll()) {
-                                                $address=$ath->getEmailAddress();
-                                    }
-                                    
-                                    //
-                                    //  now send the email
-                                    //  it's no longer optional due to the group-level notification address
-                                    //
-				    //                                    $ah->mailFollowup($address,$changes);
-                                    $ah->mailFollowupWithPermissions(explode(',',$address),$changes);
+                                    $agnf =& new ArtifactGlobalNotificationFactory();
+                                    $addresses = $agnf->getAllAddresses($ath->getID(), true);
+                                    $ah->mailFollowupWithPermissions($addresses, $changes);
                                 }
         
                                 // unsent artifact_id var to make sure that it doesn;t
@@ -355,19 +347,9 @@ if ( $func == 'gotoid' ) {
                 } else {
                         $changed = $ah->deleteDependency($dependent_on_artifact_id,$changes);
                         if ($changed) {
-                            //
-                            //  see if we're supposed to send all modifications to an address
-                            //
-                            if ($ath->emailAll()) {
-                                        $address=$ath->getEmailAddress();
-                            }
-                            
-                            //
-                            //  now send the email
-                            //  it's no longer optional due to the group-level notification address
-                            //
-			    //                            $ah->mailFollowup($address,$changes);
-                            $ah->mailFollowupWithPermissions(explode(',',$address),$changes);
+                            $agnf =& new ArtifactGlobalNotificationFactory();
+                            $addresses = $agnf->getAllAddresses($ath->getID(), true);
+                            $ah->mailFollowupWithPermissions($addresses, $changes);
                         }
 
                         // unsent artifact_id var to make sure that it doesn;t
@@ -483,22 +465,10 @@ if ( $func == 'gotoid' ) {
                         if ($add_cc) {
                             $changed |= $ah->addCC($add_cc,$cc_comment,$changes);
                         }
-			
-                        if ($changed) {
-                            //
-                            //  see if we're supposed to send all modifications to an address
-                            //
-                            if ($ath->emailAll()) {
-                                        $address=$ath->getEmailAddress();
-                            }
-                            
-                            //
-                            //  now send the email
-                            //  it's no longer optional due to the group-level notification address
-                            //
-			    if ($changes)
-			      //			      $ah->mailFollowup($address,$changes);
-			      $ah->mailFollowupWithPermissions(explode(',',$address),$changes);
+                        if ($changed && $changes) {
+                            $agnf =& new ArtifactGlobalNotificationFactory();
+                            $addresses = $agnf->getAllAddresses($ath->getID(), true);
+                            $ah->mailFollowupWithPermissions($addresses, $changes);
                         }
 
         
@@ -689,8 +659,9 @@ if ( $func == 'gotoid' ) {
             }
             
             // send an email to notify the user of the bug update
-	    //            $ah->mailFollowup($ath->getEmailAddress(),$changes);
-            $ah->mailFollowupWithPermissions(explode(',',$ath->getEmailAddress()),$changes);
+            $agnf =& new ArtifactGlobalNotificationFactory();
+            $addresses = $agnf->getAllAddresses($ath->getID(), true);
+            $ah->mailFollowupWithPermissions($addresses, $changes);
             require('./browse.php');
             break;
         }

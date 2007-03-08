@@ -456,7 +456,7 @@ class ArtifactTypeFactory extends Error {
                 // template will be able to have its trackers cloned by default when it becomes a template.
 		$sql="INSERT INTO 
 			artifact_group_list 
-			(group_id, name, description, item_name, allow_copy,email_all_updates,email_address,
+			(group_id, name, description, item_name, allow_copy,
                          submit_instructions,browse_instructions,instantiate_for_new_projects
                          ) 
 			VALUES 
@@ -465,8 +465,6 @@ class ArtifactTypeFactory extends Error {
 			'". $description ."',
 			'". $itemname."',
                         '". $at_template->allowsCopy()."',
-                        '". $at_template->emailAll()."',
-                        '". $at_template->getEmailAddress()."',
                         '". db_escape_string($at_template->getSubmitInstructions())."',
                         '". db_escape_string($at_template->getBrowseInstructions())."',1)";
 		//echo $sql;
@@ -481,6 +479,17 @@ class ArtifactTypeFactory extends Error {
 				$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','load_fail'));
 				return false;
 			} else {
+                
+                //create global notifications
+                $sql = "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
+                SELECT $id, addresses, all_updates, check_permissions
+                FROM artifact_global_notification
+                WHERE tracker_id = $atid_template";
+                $res = db_query($sql);
+                if (!$res || db_affected_rows($res) <= 0) {
+                    $this->setError('ArtifactTypeFactory: '.db_error());
+                }
+                
                 // Create fieldset factory
                 $art_fieldset_fact = new ArtifactFieldSetFactory($at_template);
                 // Then copy all the field sets.

@@ -296,6 +296,24 @@ ALTER TABLE project_plugin ADD UNIQUE project_plugin (project_id, plugin_id);
 ALTER TABLE project_plugin ADD INDEX project_id_idx (project_id);
 ALTER TABLE project_plugin ADD INDEX plugin_id_idx (plugin_id);
 
+###############################################################################
+# Tracker global notification
+CREATE TABLE artifact_global_notification (
+  id                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  tracker_id        INT(11) NOT NULL ,
+  addresses         TEXT NOT NULL ,
+  all_updates       TINYINT(1) NOT NULL ,
+  check_permissions TINYINT(1) NOT NULL ,
+  INDEX (tracker_id)
+);
+
+INSERT INTO artifact_global_notification(tracker_id, adresses, all_updates, check_permissions) 
+SELECT group_artifact_id, email_address, email_all_updates, 1 
+FROM artifact_group_list;
+
+ALTER TABLE artifact_group_list DROP email_address;
+ALTER TABLE artifact_group_list DROP email_all_updates;
+
 EOF
 
 echo "Optimizing database structure."

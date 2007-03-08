@@ -13,6 +13,7 @@
 require_once('common/tracker/ArtifactType.class.php');
 require_once('HTML_Graphs.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -1939,7 +1940,7 @@ EOS;
 	 * return void
 	 *
 	 *
-	 *
+	 * "
 	 */
 	
 	function displayNotificationForm($user_id) {
@@ -1982,20 +1983,49 @@ EOS;
 		echo '<h3><a name="GlobalEmailNotification"></a>'.$Language->getText('tracker_include_type','global_mail_notif').' '.
 		help_button('TrackerAdministration.html#TrackerGlobalEmailNotification').'</h3>';
 		
+        $agnf =& new ArtifactGlobalNotificationFactory();
+        $notifs = $agnf->getGlobalNotificationsForTracker($this->getID());
 		if ($this->userIsAdmin()) {
-		    echo '
-		              <P>'.$Language->getText('tracker_include_type','admin_note').'<BR>
-			<BR><INPUT TYPE="TEXT" NAME="new_artifact_address" VALUE="'.$this->getEmailAddress().'" SIZE="55" MAXLENGTH="255"> 
-			&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_type','send_all').' <INPUT TYPE="CHECKBOX" NAME="send_all_artifacts" VALUE="1" '. (($this->emailAll())?'CHECKED':'') .'><BR><br>';
+		    echo '<p>'. $Language->getText('tracker_include_type','admin_note') .'</p>';
+            if (count($notifs)) {
+                foreach($notifs as $key => $nop) {
+                    echo '<div>';
+                    echo '<a href="?func=notification&amp;group_id='. $group_id .'&amp;atid='. $this->getId() .'&amp;action=remove_global&amp;global_notification_id='. $notifs[$key]->getId() .'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a> &nbsp;';
+                    //addresses
+                    echo '<input type="text" name="global_notification['. $notifs[$key]->getId() .'][addresses]" value="'. $notifs[$key]->getAddresses() .'" size="55" />';
+                    //all_updates
+                    echo '&nbsp;&nbsp;&nbsp;'. $Language->getText('tracker_include_type','send_all') .' ';
+                    echo '<input type="hidden" name="global_notification['. $notifs[$key]->getId() .'][all_updates]" value="0" />';
+                    echo '<input type="checkbox" name="global_notification['. $notifs[$key]->getId() .'][all_updates]" value="1" '. (($notifs[$key]->isAllUpdates())?'checked="checked"':'') .' />';
+                    //check_permissions
+                    echo '&nbsp;&nbsp;&nbsp;'. $Language->getText('tracker_include_type','check_perms') .' ';
+                    echo '<input type="hidden" name="global_notification['. $notifs[$key]->getId() .'][check_permissions]" value="0" />';
+                    echo '<input type="checkbox" name="global_notification['. $notifs[$key]->getId() .'][check_permissions]" value="1" '. (($notifs[$key]->isCheckPermissions())?'checked="checked"':'') .' />';
+                    
+                    echo '</div>';
+                }
+            }
+            echo '<p><a href="?func=notification&amp;group_id='. $group_id .'&amp;atid='. $this->getId() .'&amp;action=add_global">'. $Language->getText('tracker_include_type','add') .'</a></p>';
 		} else {
-		    if ($this->getEmailAddress())
-				echo '
-			              '.$Language->getText('tracker_include_type','admin_conf').' '.
-				    $this->getEmailAddress().'
-				&nbsp;&nbsp;&nbsp; '.$Language->getText('tracker_include_type','send_all_or_not',($this->emailAll()?$Language->getText('global','yes'):$Language->getText('global','no'))).'<p>';
-		    else
-				echo '
-			                '.$Language->getText('tracker_include_type','admin_not_conf');
+            $ok = false;
+            if (count($notifs)) {
+                reset($notifs);
+                while(!$ok && (list($id,) = each($notifs))) {
+                    $ok = $notifs[$id]->getAddresses();
+                }
+            }
+            if ($ok) {
+                echo $Language->getText('tracker_include_type','admin_conf');
+                foreach($notifs as $key => $nop) {
+                    if ($notifs[$key]->getAddresses()) {
+                        echo '<div>'. $notifs[$key]->getAddresses() .'&nbsp;&nbsp;&nbsp; ';
+                        echo $Language->getText('tracker_include_type','send_all_or_not',($notifs[$key]->isAllUpdates()?$Language->getText('global','yes'):$Language->getText('global','no')));
+                        echo '</div>';
+                    }
+                }
+            } else {
+				echo $Language->getText('tracker_include_type','admin_not_conf');
+            }
 		}
 		 
 		

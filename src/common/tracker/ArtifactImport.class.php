@@ -12,6 +12,7 @@
   //$Language->loadLanguageMsg('tracker/tracker');
   //$Language->loadLanguageMsg('include/include');
 require_once('common/include/Error.class.php');
+require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 
 class ArtifactImport extends Error {
 
@@ -999,7 +1000,8 @@ function getUsedFields() {
       }
     }    
     if($notify) {
-        $ah->mailFollowupWithPermissions(explode(',',$this->ath->getEmailAddress()));
+        $agnf =& new ArtifactGlobalNotificationFactory();
+        $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = false));
     }
   }
   return true;
@@ -1054,7 +1056,8 @@ function getUsedFields() {
         }
     }
     if($notify && (count($changes)>0 || $add_cc || $comments_ok)) {
-        $ah->mailFollowupWithPermissions(explode(',',$this->ath->getEmailAddress()), $changes);
+        $agnf =& new ArtifactGlobalNotificationFactory();
+        $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = true), $changes);
     }
   }  
   return true;

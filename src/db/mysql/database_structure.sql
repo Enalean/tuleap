@@ -2567,8 +2567,6 @@ CREATE TABLE artifact_group_list (
 	description text,
 	item_name text,
 	allow_copy int(11) DEFAULT 0 NOT NULL,
-	email_all_updates int(11) DEFAULT 0 NOT NULL,
-	email_address text NOT NULL,
 	submit_instructions text,
 	browse_instructions text,
 	status char(1) DEFAULT 'A' NOT NULL,
@@ -3296,6 +3294,15 @@ CREATE TABLE server (
   http TEXT NOT NULL,
   https TEXT NOT NULL,
   is_master TINYINT(1) NOT NULL default 0
+);
+
+CREATE TABLE artifact_global_notification (
+  id                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+  tracker_id        INT(11) NOT NULL ,
+  addresses         TEXT NOT NULL ,
+  all_updates       TINYINT(1) NOT NULL ,
+  check_permissions TINYINT(1) NOT NULL ,
+  INDEX (tracker_id)
 );
 
 #

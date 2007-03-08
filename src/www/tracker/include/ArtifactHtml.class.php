@@ -1281,42 +1281,53 @@ class ArtifactHtml extends Artifact {
     }
 
         
-        /**
-         * Send different messages to persons affected by this artifact with respect 
-	 * to their different permissions 
-         *
-         * @param more_addresses: additional addresses
-         * @param changes: array of changes
-         *
-         * @return void
-         */
-        function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
-            global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
-
-
-            $group = $this->ArtifactType->getGroup();
-            $group_artifact_id = $this->ArtifactType->getID();
-            $group_id = $group->getGroupId();
-
+    /**
+    * Send different messages to persons affected by this artifact with respect 
+	* to their different permissions 
+    *
+    * @param more_addresses: additional addresses
+    * @param changes: array of changes
+    *
+    * @return void
+    */
+    function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
+        global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
         
-	    // See who is going to receive the notification. Plus append any other email 
-	    // given at the end of the list.
-	    $this->buildNotificationArrays($changes,$concerned_ids,$concerned_addresses);
-	    
-	    if ($more_addresses) {
-	      foreach ($more_addresses as $address) {
-		if ($address && $address != '') {
-		  $res_username = user_get_result_set_from_unix($address);
-		  if ($res_username && (db_numrows($res_username) == 1)) {
-		    $u_id = db_result($res_username,0,'user_id');
-		    $concerned_ids[$u_id] = true;
-		  } else {
-		    $concerned_addresses[$address] = true;
-		  }
-		}
-	      }
-	    }
-
+        $group = $this->ArtifactType->getGroup();
+        $group_artifact_id = $this->ArtifactType->getID();
+        $group_id = $group->getGroupId();
+        
+        // See who is going to receive the notification. Plus append any other email 
+        // given at the end of the list.
+        $withoutpermissions_concerned_addresses = array();
+        $this->buildNotificationArrays($changes, $concerned_ids, $concerned_addresses);
+        if ($more_addresses) {
+            foreach ($more_addresses as $address) {
+                if ($address['address'] && $address['address'] != '') {
+                    $res_username = user_get_result_set_from_unix($address['address']);
+                    if ($res_username && (db_numrows($res_username) == 1)) {
+                        $u_id = db_result($res_username,0,'user_id');
+                        if (!$address['check_permissions']) {
+                            $withoutpermissions_concerned_addresses[user_getemail($u_id)] = true;
+                            unset($concerned_ids[$u_id]);
+                        } else {
+                            $concerned_ids[$u_id] = true;
+                        }
+                    } else {
+                        if (!$address['check_permissions']) {
+                            $withoutpermissions_concerned_addresses[$address['address']] = true;
+                            unset($concerned_addresses[$address['address']]);
+                        } else {
+                            $concerned_addresses[$address['address']] = true;
+                        }
+                    }
+                }
+            }
+        }
+        //concerned_ids contains users for wich we have to check permissions
+        //concerned_addresses contains emails for which there is no existing user. Permissions will be checked (Anonymous users)
+        //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
+        
         //Prepare e-mail
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
         $mail =& new Mail();
@@ -1338,8 +1349,19 @@ class ArtifactHtml extends Artifact {
                 $mail->send();
             }
 	    }
-
-	      //now group other registered users
+        
+        //treat 'without permissions' emails
+        if (count($withoutpermissions_concerned_addresses)) {
+            $body = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            if ($ok) {
+                $mail->setTo(join(',', array_keys($withoutpermissions_concerned_addresses)));
+                $mail->setSubject($subject);
+                $mail->setBody($body);
+                $mail->send();
+            }
+        }
+        
+        //now group other registered users
 
 	    //echo "<br>concerned_ids = ".implode(',',array_keys($concerned_ids));
 
@@ -1349,30 +1371,28 @@ class ArtifactHtml extends Artifact {
 
 	    reset($ugroup_sets);
 	    while (list($x,$ugroups) = each($ugroup_sets)) {
-	      unset($arr_addresses);
+            unset($arr_addresses);
+            
+            $user_ids = $user_sets[$x];
+            //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
+            $body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            
+            if (!$ok) continue; //don't send the mail if nothing permitted for this user group
 
-	      $user_ids = $user_sets[$x];
-	      //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
+            foreach ($user_ids as $user_id) {
+                $arr_addresses[] = user_getemail($user_id);
+            }
 
-	      $body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-
-	      if (!$ok) continue; //don't send the mail if nothing permitted for this user group
-
-	      foreach ($user_ids as $user_id) {
-		$arr_addresses[] = user_getemail($user_id);
-	      }
-
-	      $to = join(',',$arr_addresses);
-	      if ($to) { 
-              $mail->setTo($to);
-              $mail->setSubject($subject);
-              $mail->setBody($body);
-              $mail->send();
-          }
+            $to = join(',',$arr_addresses);
+            if ($to) { 
+                $mail->setTo($to);
+                $mail->setSubject($subject);
+                $mail->setBody($body);
+                $mail->send();
+            }
 	    }
-
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_include_artifact','update_sent')); //to '.$to;
-        }
+    }
 
 
 	/** for a certain set of users being part of the same ugroups
@@ -1393,10 +1413,13 @@ class ArtifactHtml extends Artifact {
 	    
 	  //generate the field permissions (TRACKER_FIELD_READ, TRACKER_FIEDL_UPDATE or nothing)
 	  //for all fields of this tracker given the $ugroups the user is part of
-	  $field_perm = $this->ArtifactType->getFieldPermissions($ugroups);
+      $field_perm = false;
+	  if ($ugroups) {
+          $field_perm = $this->ArtifactType->getFieldPermissions($ugroups);
+      }
 
 	  $summ = "";
-	  if ($field_perm && $field_perm['summary'] && permission_can_read_field($field_perm['summary'])) {
+	  if (!$field_perm || ($field_perm['summary'] && permission_can_read_field($field_perm['summary']))) {
 	    $summ = util_unconvert_htmlspecialchars($this->getValue('summary'));
 	  }
 	  $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.$summ;
@@ -1438,7 +1461,7 @@ class ArtifactHtml extends Artifact {
 
                 $field_name = $field->getName();
 
-                if ($field_perm && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name])) {
+                if (!$field_perm || ($field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
             
                     $field_html = new ArtifactFieldHtml($field);
                     
@@ -1532,7 +1555,7 @@ class ArtifactHtml extends Artifact {
          * Format the changes
          *
          * @param changes: array of changes
-	 * @param $field_perm an array with the permission associated to each field
+	 * @param $field_perm an array with the permission associated to each field. false to no check perms
 	 * @param $visible_change only needed when using permissions. Returns true if there is any change 
 	 * that the user has permission to see
          *
@@ -1547,10 +1570,10 @@ class ArtifactHtml extends Artifact {
             $fmt = "%20s | %-25s | %s$sys_lf";
         
 
-	    if ($field_perm && 
+	    if (!$field_perm || ( 
 		(($field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
 		 ($field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
-         (!$field_perm['assigned_to'] && !$field_perm['multi_assigned_to']))) {
+         (!$field_perm['assigned_to'] && !$field_perm['multi_assigned_to'])))) {
 	      if (user_isloggedin()) {
 		$user_id = user_getid();
 		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
@@ -1587,9 +1610,9 @@ class ArtifactHtml extends Artifact {
 	      
 	      // If both removed and added items are empty skip - Sanity check
 	      if (!$h['del'] && !$h['add'] ||
-		  !$field_perm || 
+		  $field_perm && (
 		  !$field_perm[$field_name] || 
-		  !permission_can_read_field($field_perm[$field_name])) { continue; }
+		  !permission_can_read_field($field_perm[$field_name]))) { continue; }
 	      
 	      $visible_change = true;
 	      $label = $field_name;
