@@ -979,6 +979,7 @@ function buildAdminUI() {
         $('source_field').appendChild(choose = document.createElement('option'));
         choose.value = '-1';
         choose.innerHTML = messages['choose_field'];
+        var value_to_select = choose;
         $H(fields).values().each(function(source_field) {
                 //Don't add field if it is forbidden
                 if (forbidden_targets[source_field.id].length != $H(fields).keys().length
@@ -1001,9 +1002,12 @@ function buildAdminUI() {
                             className:so_className
                     }, source_field.label);
                     $('source_field').appendChild(so);
-                    so.selected = (source_field.id == previous_selected) ? 'selected' : '';
+                    if (source_field.id == previous_selected) {
+                        value_to_select = so;
+                    }
                 }
         });
+        value_to_select.selected = 'selected';
         //}}}
         admin_displayFields($F('source_field'), $F('target_field'));
     };
@@ -1017,6 +1021,7 @@ function buildAdminUI() {
         $('target_field').appendChild(choose = document.createElement('option'));
         choose.value = '-1';
         choose.innerHTML = messages['choose_field'];
+        var value_to_select = choose;
         $H(fields).values().each(function(target_field) {
                 //Don't add field if it is forbidden
                 if (forbidden_sources[target_field.id].length != $H(fields).keys().length
@@ -1039,9 +1044,12 @@ function buildAdminUI() {
                             className: to_className
                     }, target_field.label);
                     $('target_field').appendChild(to);
-                    to.selected = (target_field.id == previous_selected) ? 'selected' : '';
+                    if (target_field.id == previous_selected) {
+                        value_to_select = to;
+                    }
                 }
         });
+        value_to_select.selected = 'selected';
         //}}}
         admin_displayFields($F('source_field'), $F('target_field'));
     };
