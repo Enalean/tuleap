@@ -59,7 +59,7 @@ class CacheableMarkup extends XmlContent {
                 // user our php lib. TESTME
                 include_once("ziplib.php");
                 $zip = new ZipReader($packed);
-                list(,$data,$§attrib) = $zip->readFile();
+                list(,$data,$attrib) = $zip->readFile();
                 return unserialize($data);
             }
         }
