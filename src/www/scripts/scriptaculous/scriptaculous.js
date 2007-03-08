@@ -1,4 +1,6 @@
-// Copyright (c) 2005 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// script.aculo.us scriptaculous.js v1.7.0, Fri Jan 19 19:16:36 CET 2007
+
+// Copyright (c) 2005, 2006 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,18 +20,22 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+// For details, see the script.aculo.us web site: http://script.aculo.us/
 
 var Scriptaculous = {
-  Version: '1.5.3',
+  Version: '1.7.0',
   require: function(libraryName) {
     // inserting via DOM fails in Safari 2.0, so brute force approach
     document.write('<script type="text/javascript" src="'+libraryName+'"></script>');
   },
   load: function() {
-    if((typeof Prototype=='undefined') ||
-      parseFloat(Prototype.Version.split(".")[0] + "." +
-                 Prototype.Version.split(".")[1]) < 1.4)
-      throw("script.aculo.us requires the Prototype JavaScript framework >= 1.4.0");
+    if((typeof Prototype=='undefined') || 
+       (typeof Element == 'undefined') || 
+       (typeof Element.Methods=='undefined') ||
+       parseFloat(Prototype.Version.split(".")[0] + "." +
+                  Prototype.Version.split(".")[1]) < 1.5)
+       throw("script.aculo.us requires the Prototype JavaScript framework >= 1.5.0");
     
     $A(document.getElementsByTagName("script")).findAll( function(s) {
       return (s.src && s.src.match(/scriptaculous\.js(\?.*)?$/))
