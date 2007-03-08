@@ -14,7 +14,7 @@ class LanguageFilesTest extends UnitTestCase {
         $cmd = 'cd '.$GLOBALS['codex_utils_prefix'].' ; CODEX_LOCAL_INC='. getenv('CODEX_LOCAL_INC') .' '.$GLOBALS['codex_utils_prefix'].'/analyse_language_files.pl 2>&1';
         $output = `$cmd`;
         if (preg_match('/[1-9]\s*missing keys/', $output)) {
-            echo $output;
+            echo "<pre>\n$output\n</pre>";
             $this->fail();
         } else {
             $this->pass();
