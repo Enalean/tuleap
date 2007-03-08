@@ -251,7 +251,7 @@ file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
 file_file_utils	admin	Administration
 file_file_utils	must_choose_one	Choisir...
 file_file_utils	g_id_err	ERREUR - Identifiant de projet (group_id) obligatoire
-file_file_utils	manage_proc	Gérer la liste des processeurs
+file_file_utils	manage_proc	Liste des processeurs
 file_file_utils	proc_id	ID du processeur
 file_file_utils	proc_name	Nom
 file_file_utils	proc_rank	Rang

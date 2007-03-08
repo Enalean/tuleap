@@ -247,7 +247,7 @@ file_filemodule_monitor	choose_p	Error - Choose a package First
 file_file_utils	admin	Admin
 file_file_utils	must_choose_one	Must Choose One
 file_file_utils	g_id_err	Erreur - Project identifier (group_id) required
-file_file_utils	manage_proc	Manage List of Processors
+file_file_utils	manage_proc	Processors List
 file_file_utils	proc_id	Processor ID
 file_file_utils	proc_name	Name
 file_file_utils	proc_rank	Rank

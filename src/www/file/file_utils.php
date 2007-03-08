@@ -216,7 +216,6 @@ function file_utils_show_processors ($result) {
     $rows  =  db_numrows($result);
 
     $title_arr=array();
-    $title_arr[]=$Language->getText('file_file_utils','proc_id');
     $title_arr[]=$Language->getText('file_file_utils','proc_name');
     $title_arr[]=$Language->getText('file_file_utils','proc_rank');
     $title_arr[]=$Language->getText('file_file_utils','del'); 
@@ -232,15 +231,13 @@ function file_utils_show_processors ($result) {
 	
 	echo "<tr class=\"". html_get_alt_row_color($j) ."\">\n";
 	
-	if ($gr_id == "100") {
-	    #pre-defined processors are not manageable  
-	    echo "<TD>$proc_id</TD>\n";
-	} else {
-	    echo "<TD><A HREF=\"/file/admin/editproc.php?group_id=$group_id&proc_id=$proc_id\">$proc_id</A></TD>\n";
-	}	
-	
-	echo '<TD>'.$proc_name."</TD>\n".
-	     '<TD>'.$proc_rank."</TD>\n";     
+    if ($gr_id == "100") {
+        echo '<td>'.$proc_name.'</td>';
+    } else {
+	    echo '<td><A HREF="/file/admin/editproc.php?group_id=$group_id&proc_id=$proc_id" title="'.$proc_id.' - '.$proc_name.'">'.$proc_name.'</td>';
+    }
+    
+    echo '<td>'.$proc_rank."</td>\n";     
 	
 	if ($gr_id == "100") {
 	    #pre-defined processors are not manageable  
