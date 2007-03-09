@@ -702,6 +702,7 @@ function buildAdminUI() {
     choose.value    = '-1';
     choose.selected = (preselected_source_field == choose.value);
     choose.innerHTML = messages['choose_field'];
+    var value_to_select = choose;
     $H(fields).values().each(function(source_field) {
             //Don't add field if it is forbidden
             if (forbidden_targets[source_field.id].length != $H(fields).keys().length 
@@ -724,9 +725,12 @@ function buildAdminUI() {
                         className:so_className
                 }, source_field.label);
                 select_source.appendChild(so);
-                so.selected = (preselected_source_field == source_field.id) ? 'selected' : '';
+                if (preselected_source_field == source_field.id) {
+                    value_to_select = so;
+                }
             }
     });
+    value_to_select.selected = 'selected';
     //}}}
     
     //{{{ build target selectbox
@@ -736,6 +740,7 @@ function buildAdminUI() {
     choose.value = '-1';
     choose.selected = (preselected_target_field == choose.value);
     choose.innerHTML = messages['choose_field'];
+    var value_to_select = choose;
     $H(fields).values().each(function(target_field) {
             //Don't add field if it is forbidden
             if (forbidden_sources[target_field.id].length != $H(fields).keys().length
@@ -758,9 +763,12 @@ function buildAdminUI() {
                         className:to_className
                 }, target_field.label);
                 select_target.appendChild(to);
-                to.selected = (preselected_target_field == target_field.id) ? 'selected' : '';
+                if (preselected_target_field == target_field.id) {
+                    value_to_select = to;
+                }
             }
     });
+    value_to_select.selected = 'selected';
     //}}}
     
     //{{{ Build rows of the table
