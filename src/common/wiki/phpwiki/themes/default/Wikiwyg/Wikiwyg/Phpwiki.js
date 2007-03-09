@@ -174,9 +174,9 @@ else if( mode=="Wikiwyg.Wikitext.Phpwiki" ){
 Hack to clean not supported conversion to html yet
  =============================================================================*/
 proto.clean_wikitext = function(text_to_clean) {
-    var text_cleaned = text_to_clean.replace(/\~*\<\?plugin/g,'~<?plugin');
+    var text_cleaned = text_to_clean.replace(/\~*\<\?plugin/g, '~<?plugin');
 
-    if( text_to_clean.match(/^\#{3,}/gm) ) {
+    /*if( text_to_clean.match(/^\#{3,}/gm) ) {
       alert("Warning : Only two levels of indentation is allowed for ordered lists.\n More won't be converted");
       text_cleaned = text_to_clean.replace(/^\#{3,}/gm,'## ');
       
@@ -186,7 +186,7 @@ proto.clean_wikitext = function(text_to_clean) {
       alert("Warning : Only two levels of indentation is allowed for unordered lists. \n More won't be converted");
       text_cleaned = text_to_clean.replace(/^\*{3,}/gm,'## ');
       
-    }
+    }*/
 
     return(text_cleaned);
 }
