@@ -566,19 +566,18 @@ proto.format_li = function(element) {
     var type = this.list_type[level - 1];
     var markup = this.config.markupRules[type];
 
-    if(level<=2) 
+    //if(level<=2) 
       this.appendOutput(markup[1].times(level) + ' ');
-    else {
+    /*else {
       this.appendOutput(markup[1].times(2) + ' ');
       alert("Only two levels of indentation is possible");
-    }
+    }*/
 
     this.walk(element);
 
     this.chomp();
     this.insert_new_line();
 }
-
 
 /*==============================================================================
 Support for <br> tag
