@@ -14,6 +14,32 @@
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
+//{{{ Sanitize $_REQUEST : remove cookies
+while(count($_REQUEST)) {
+    array_pop($_REQUEST);
+}
+$g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
+$p_pos = strpos(strtolower(ini_get('variables_order')), 'p');
+if ($g_pos === FALSE) {
+    if ($p_pos !== FALSE) {
+        $_REQUEST = $_POST;
+    }
+} else {
+    if ($p_pos === FALSE) {
+        $_REQUEST = $_GET;
+    } else {
+        if ($g_pos < $p_pos) {
+            $first = '_GET';
+            $second = '_POST';
+        } else {
+            $first = '_POST';
+            $second = '_GET';
+        }
+        $_REQUEST = array_merge($$first, $$second);
+    }
+}
+//}}}
+
 //{{{ define undefined variables
 if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
