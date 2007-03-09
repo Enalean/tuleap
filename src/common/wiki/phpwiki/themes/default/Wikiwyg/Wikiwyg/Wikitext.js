@@ -796,22 +796,27 @@ proto.format_a = function(element) {
         if (href.match(/http(.+)goto\?key\=(.+)/)){
 	    this.make_wikitext_link(label, '', element);
 	}
-        if (href.match(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/)){
+        else if (href.match(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/)){
 	    href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/, '$2');
 	    this.make_wikitext_link(label, href, element);
 	}
-	if (href.match(/http(.+)\/wiki\/(.+)/)){
+	else if (href.match(/http(.+)\/wiki\/(.+)/)){
 	    href = href.replace(/http(.+)\/wiki\/(.+)/, '$2');
+	    this.make_wikitext_link(label, href, element);
+	}else{
 	    this.make_wikitext_link(label, href, element);
 	}
     }else{
         if (href.match(/\/goto\?key=(.+)/)){
 	    this.make_wikitext_link(label, '', element);
 	}
-        if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
+        else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
 	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
+	else{
+	    this.make_wikitext_link(label, href, element);
+	}
     }        
 
 }
