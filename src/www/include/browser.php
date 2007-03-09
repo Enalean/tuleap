@@ -7,23 +7,20 @@
 // $Id$
 
 
-unset ($BROWSER_AGENT);
-unset ($BROWSER_VER);
-unset ($BROWSER_PLATFORM);
+unset ($GLOBALS['BROWSER_AGENT']);
+unset ($GLOBALS['BROWSER_VER']);
+unset ($GLOBALS['BROWSER_PLATFORM']);
 
 function browser_get_agent () {
-	global $BROWSER_AGENT;
-	return $BROWSER_AGENT;
+	return $GLOBALS['BROWSER_AGENT'];
 }
 
 function browser_get_version() {
-	global $BROWSER_VER;
-	return $BROWSER_VER;
+	return $GLOBALS['BROWSER_VER'];
 }
 
 function browser_get_platform() {
-	global $BROWSER_PLATFORM;
-	return $BROWSER_PLATFORM;
+	return $GLOBALS['BROWSER_PLATFORM'];
 }
 
 function browser_is_mac() {
@@ -75,21 +72,21 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
 }
 
 if (ereg( 'MSIE ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
-	$BROWSER_VER=$log_version[1];
-	$BROWSER_AGENT='IE';
+	$GLOBALS['BROWSER_VER']=$log_version[1];
+	$GLOBALS['BROWSER_AGENT']='IE';
 } elseif (ereg( 'Opera ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
-	$BROWSER_VER=$log_version[1];
-	$BROWSER_AGENT='OPERA';
+	$GLOBALS['BROWSER_VER']=$log_version[1];
+	$GLOBALS['BROWSER_AGENT']='OPERA';
 } elseif (ereg( 'Mozilla/([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
-	$BROWSER_VER=$log_version[1];
-        if (preg_match( '/^4/',$BROWSER_VER)) {
-         	$BROWSER_AGENT='NETSCAPE4';
+	$GLOBALS['BROWSER_VER']=$log_version[1];
+        if (preg_match( '/^4/',$GLOBALS['BROWSER_VER'])) {
+         	$GLOBALS['BROWSER_AGENT']='NETSCAPE4';
         } else {
-            $BROWSER_AGENT='MOZILLA';
+            $GLOBALS['BROWSER_AGENT']='MOZILLA';
         }
 } else {
-	$BROWSER_VER=0;
-	$BROWSER_AGENT='OTHER';
+	$GLOBALS['BROWSER_VER']=0;
+	$GLOBALS['BROWSER_AGENT']='OTHER';
 }
 
 /*
@@ -97,15 +94,15 @@ if (ereg( 'MSIE ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
 */
 
 if (strstr($HTTP_USER_AGENT,'Win')) {
-	$BROWSER_PLATFORM='Win';
+	$GLOBALS['BROWSER_PLATFORM']='Win';
 } else if (strstr($HTTP_USER_AGENT,'Mac')) {
-	$BROWSER_PLATFORM='Mac';
+	$GLOBALS['BROWSER_PLATFORM']='Mac';
 } else if (strstr($HTTP_USER_AGENT,'Linux')) {
-	$BROWSER_PLATFORM='Linux';
+	$GLOBALS['BROWSER_PLATFORM']='Linux';
 } else if (strstr($HTTP_USER_AGENT,'Unix')) {
-	$BROWSER_PLATFORM='Unix';
+	$GLOBALS['BROWSER_PLATFORM']='Unix';
 } else {
-	$BROWSER_PLATFORM='Other';
+	$GLOBALS['BROWSER_PLATFORM']='Other';
 }
 
 /*
