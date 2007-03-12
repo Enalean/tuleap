@@ -35,6 +35,7 @@ if (!user_ismember($group_id, 'R2')) {
 }
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar.js");
 $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
 
 $frspf = new FRSPackageFactory();
@@ -250,7 +251,6 @@ if ($submit) {
             }
 
             if (count($http_files_processor_type_list) > 0 || count($ftp_files_processor_type_list) > 0) {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'add_files'));
                 //see if this release belongs to this project
                 $res1 = & $frsrf->getFRSReleaseFromDb($release_id, $group_id);
                 if (!$res1 || count($res1) < 1) {
@@ -258,7 +258,7 @@ if ($submit) {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_not_yours'));
                 } else {
                     $now = time();
-
+                    $addingFiles = false;
                     //iterate and add the http files to the frs_file table
                     foreach ($http_files_processor_type_list as $file) {
 
@@ -302,6 +302,8 @@ if ($submit) {
                                             if (!$res) {
                                                 $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
                                                 echo db_error();
+                                            } else {
+                                                $addingFiles = true;
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
@@ -353,6 +355,8 @@ if ($submit) {
                                     if (!$res) {
                                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
                                         echo db_error();
+                                    } else {
+                                        $addingFiles = true;
                                     }
                                 } else {
                                     $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
@@ -362,6 +366,9 @@ if ($submit) {
                             }
                         }
                     }
+                }
+                if ($addingFiles){
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'add_files'));
                 }
             }
             //redirect to update release page
@@ -403,6 +410,7 @@ echo "var add_file_text = '" . $Language->getText('file_admin_editreleases', 'ad
 echo "var add_change_log_text = '" . $Language->getText('file_admin_editreleases', 'add_change_log') . "';";
 echo "var view_change_text = '" . $Language->getText('file_admin_editreleases', 'view_change') . "';";
 echo "var default_permissions_text = '" . $Language->getText('file_admin_editreleases', 'default_permissions') . "';";
+echo "var refresh_files_list = '". $Language->getText('file_admin_editreleases','refresh_file_list') . "';";
 echo "var release_mode = 'creation'";
 
 echo '</script>';
@@ -410,9 +418,10 @@ $dirhandle = @ opendir($ftp_incoming_dir);
 //set variables for news template 
 $url = get_server_url() . "/file/showfiles.php?group_id=" . $group_id;
 $relname = $Language->getText('file_admin_editreleases', 'relname');
+echo '<P>'.$Language->getText('file_admin_editreleases','contain_multiple_files');
 ?>
 
-<FORM id="frs_form" NAME="frsMockup" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF."?group_id=".$group_id; ?>">
+<FORM id="frs_form" NAME="frsCreationRelease" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $PHP_SELF."?group_id=".$group_id; ?>">
 	<INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $sys_max_size_upload; ?>">
 	<TABLE BORDER="0" width="100%">
 	<TR><TD><FIELDSET><LEGEND><?php echo $Language->getText('file_admin_editreleases','fieldset_properties'); ?></LEGEND>
@@ -423,7 +432,6 @@ $relname = $Language->getText('file_admin_editreleases', 'relname');
 			</TD>
 			<TD>
 				<?php
-
 
 $res = & $frspf->getFRSPackagesFromDb($group_id);
 //$sql = "SELECT * FROM frs_package WHERE group_id='$group_id'";
@@ -456,6 +464,8 @@ if (!$res || $rows < 1) {
 			</TD>
 			<TD>
 				<INPUT TYPE="TEXT" id="release_date" NAME="release[date]" VALUE="<?php echo date('Y-m-d')?>" SIZE="10" MAXLENGTH="10">
+                <a href="<?php echo 'javascript:show_calendar(\'document.frsCreationRelease.release_date\', $(\'release_date\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+                '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date');?> "></a>
 			</TD><td></td>
 			<TD>
 				<B><?php echo $Language->getText('global','status'); ?>:</B>
@@ -626,7 +636,7 @@ if (user_ismember($group_id, 'A')) {
         																<B> ' . $Language->getText('news_submit', 'news_privacy') . ' :</B>
         															</TD>
         															<TD>
-        																<INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED> ' . $Language->getText('news_submit', 'public_news') . '
+        																<INPUT TYPE="RADIO" ID="publicnews" NAME="private_news" VALUE="0" CHECKED>' . $Language->getText('news_submit', 'public_news') . '
         															</TD>
         														</TR > 
         														<TR id="tr_private">
@@ -638,12 +648,16 @@ if (user_ismember($group_id, 'A')) {
         												</TD></TR>';
 }
 
+$fmmf = new FileModuleMonitorFactory();
+$count = count($fmmf->getFilesModuleMonitorFromDb($package_id));
+if ($count > 0) {
     echo '<TR><TD><FIELDSET><LEGEND>' . $Language->getText('file_admin_editreleases', 'fieldset_notification') . '</LEGEND>';
     echo '<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">';
-    echo '<TR><TD><B>' . $Language->getText('file_admin_editreleases', 'mail_file_rel_notice') . '</B><INPUT TYPE="CHECKBOX" NAME="notification" VALUE="1">';
+    echo '<TR><TD>' . $Language->getText('file_admin_editreleases', 'users_monitor', $count) . '</TD></TR>';
+    echo '<TR><TD><B>' . $Language->getText('file_admin_editreleases', 'mail_file_rel_notice') . '</B><INPUT TYPE="CHECKBOX" NAME="notification" VALUE="1" CHECKED>';
     echo '</TD></TR>';
     echo '</TABLE></FIELDSET></TD></TR>';
-
+}
 ?>
 		
 		<TR>
