@@ -155,8 +155,9 @@ while ($ln = pop(@userdump_array)) {
 		++$suspend_user;
 		
 	} elsif ($unix_status eq 'S' && !$user_exists) {
-		print("Error trying to suspend user: $username\n");
-		++$error_user;
+		# This might happen e.g. after a server migration 
+		# (/etc/passwd not copied but re-generated)
+		# Nothing specific to do in this case.
 		
 	} elsif ($username eq 'none') {
 		# simply ignore: this is a dummy user
