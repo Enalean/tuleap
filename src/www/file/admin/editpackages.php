@@ -89,9 +89,8 @@ echo '<H3>'.$Language->getText('file_admin_editpackages','packages').'</H3>
 <P>
 '.$Language->getText('file_admin_editpackages','p_explain').'
 <P>';
-echo '<H3>'.$Language->getText('file_admin_editreleases','define_new_release').'</H3>
-    <P>
-    '.$Language->getText('file_admin_editreleases','contain_multiple_files');
+
+    
 /*
 
 	Show a list of existing packages
