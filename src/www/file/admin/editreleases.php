@@ -86,6 +86,7 @@ $frsff = new FRSFileFactory();
 	if ($package_id) {
 		//narrow the list to just this package's releases
 		$res = $frsrf->getFRSReleasesInfoListFromDb($group_id, $package_id);
+        $package =& $frspf->getFRSPackageFromDb($package_id); 
 	}else{
 		$res = $frsrf->getFRSReleasesInfoListFromDb($group_id);
 	}
@@ -93,7 +94,7 @@ $frsff = new FRSFileFactory();
 	if (!$res || $rows < 1) {
 	  echo '<h4>'.$Language->getText('file_admin_editreleases','no_releases_defined',(($package_id)?$Language->getText('file_admin_editreleases','of_this_package').' ':'')).'</h4>';
 	} else {
-        echo '<h4>'.$Language->getText('file_admin_editreleases','your_release').':</H4>';	    
+        echo '<h4>'.$Language->getText('file_admin_editreleases','your_release', $package->getName()).'</H4>';	    
 		/*
 
 			Show a list of releases
@@ -102,7 +103,6 @@ $frsff = new FRSFileFactory();
 		*/
 		$title_arr=array();
 		$title_arr[]=$Language->getText('file_admin_editreleases','release_name');
-		$title_arr[]=$Language->getText('file_admin_editpackages','p_name');
 		$title_arr[]=$Language->getText('global','status');
 		$title_arr[]=$Language->getText('file_admin_editreleases','delete');
 
@@ -118,11 +118,7 @@ $frsff = new FRSFileFactory();
 		    '<TD><FONT SIZE="-1"><A HREF="'. $url .'/file/admin/editrelease.php?release_id='. 
 		    $result['release_id'] .'&group_id='. $group_id .'" title="'.$Language->getText('file_admin_editreleases','edit_this_release').'">'.
 		    $result['release_name'] .'</A></TD>'.
-		    '<TD><FONT SIZE="-1"><A HREF="editpackages.php?group_id='.
-		    $group_id.'" title="'.$Language->getText('file_admin_editreleases','edit_this_p').'">'. 
-		    $result['package_name'] 
-		    .' </TD>'.
-                      '<TD><FONT SIZE="-1">'. $Language->getText('file_admin_editpackages',$result['status_name']) .'</TD>'.
+		    '<TD><FONT SIZE="-1">'. $Language->getText('file_admin_editpackages',$result['status_name']) .'</TD>'.
 		    '<TD align="center"><FONT SIZE="-1">'. 
 		    '<a href="/file/admin/editreleases.php?func=delete_release&group_id='. $group_id .'&release_id='.$result['release_id'].'&package_id='.$package_id.'">'.
 		    '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$Language->getText('file_admin_editreleases','warn').'\')"></a>'.'</TD>'.
@@ -132,7 +128,8 @@ $frsff = new FRSFileFactory();
 		echo '</TABLE><BR/>';
 	}
 
-	
+	echo '<A HREF="createrelease.php?package_id='. 
+                        $package_id .'&group_id='. $group_id .'"><B>['.$Language->getText('file_admin_editpackages','add_releases').']</B></A><BR/><BR/>';
 
 file_utils_footer(array());
 
