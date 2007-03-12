@@ -3,6 +3,7 @@ require_once ('pre.php');
 require_once ('www/project/admin/permissions.php');
 require_once ('frsValidator.class.php');
 require_once ('common/include/Feedback.class.php');
+require_once ('common/frs/FRSFileFactory.class.php');
 
 if ($_GET['action'] == 'permissions_frs_package') {
 
@@ -50,5 +51,11 @@ if ($_GET['action'] == 'permissions_frs_package') {
                     header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
                 }
 
-            }
+            } else
+                if ($_GET['action'] == 'refresh_file_list'){
+                    $frsff = new FRSFileFactory();
+                    $file_list = $frsff->getUploadedFileNames();
+                    $available_ftp_files = implode(", ", $file_list);
+                    header("X-JSON: ({valid:true, msg:'".$available_ftp_files."'})");
+                }
 ?>
