@@ -40,7 +40,7 @@ function add_new_file() {
 	var builder_node_processor = [];
 	var builder_node_type = [];
 	var non_used_ftp_files = available_ftp_files;
-			
+
 	//remove all ftp files aldready selected in the avalaible ftp file list (result in the non_used_ftp_files)
 	used_ftp_files.each(function(num){
 		non_used_ftp_files = non_used_ftp_files.without(num);
@@ -166,6 +166,18 @@ function view_change_permissions(){
 	Element.hide('default_permissions');
 	Element.show('permissions'); 
 }
+
+function refresh_file_list(){
+	var url = 'frsajax.php?group_id='+group_id +'&action=refresh_file_list';
+
+	new Ajax.Request(url,
+			  {
+			    method:'get',
+			    onSuccess: (function(transport, json) {
+            		available_ftp_files = (json.msg).split(',');
+        	   }).bind(this) 
+			  });
+}
 		
 Event.observe(window, 'load', function() {
 	//Add new file part
@@ -174,6 +186,7 @@ Event.observe(window, 'load', function() {
 	if(release_mode == 'creation' || (release_mode == 'edition' && $('nb_files').value==0)){
 		add_new_file();
 	}
+	new Insertion.After('files_help', '<br/><a href="#refresh_file_list" onclick="refresh_file_list(); return false;">'+refresh_files_list+'<a>');
 	new Insertion.After('files', '<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>');
 	new Insertion.After('files', '<a href="#add_new_file" onclick="add_new_file(); return false;">'+add_file_text+'<a>');
 	
