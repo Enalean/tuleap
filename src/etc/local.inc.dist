@@ -102,6 +102,10 @@ $sys_win_domain = "%sys_win_domain%";
 // Fully qualified name
 $sys_fullname = "%sys_fullname%";
 
+//This is used for cookie authentication. If you have distributed servers, 
+//please use same cookie prefix for a "cluster"
+$sys_cookie_prefix = "CODEX";
+
 
 //
 //

@@ -66,7 +66,7 @@ sub session_set {
 #  print "value =",$cookies{'session_hash'}->value,"<BR>";
 
   # if hash value given by browser then check to see if it is OK.
-  if ($cookies{'session_hash'}) {
+  if ($cookies{sys_cookie_prefix.'_session_hash'}) {
 
     my $sth = $dbh->prepare("SELECT * FROM session WHERE session_hash='".$cookies{'session_hash'}->value."'");
     $sth->execute();

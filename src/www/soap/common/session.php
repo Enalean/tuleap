@@ -1,6 +1,7 @@
 <?php
 
 require_once('session.php'); 
+require_once('common/include/CookieManager.class.php');
 
 define('invalid_session_fault', '3001');
 
@@ -81,7 +82,8 @@ function logout($sessionKey) {
         if (isset($session_hash)) {
             session_delete($session_hash);
         }
-        session_cookie('session_hash','');
+        $cookie_manager =& new CookieManager();
+        $cookie_manager->removeCookie('session_hash');
     } else {
         return new soap_fault(invalid_session_fault, 'logout', 'Invalid Session','');
     }

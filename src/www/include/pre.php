@@ -13,6 +13,7 @@
 // Defines all of the CodeX settings first (hosts, databases, etc.)
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
+require_once('common/include/CookieManager.class.php');
 
 //{{{ Sanitize $_REQUEST : remove cookies
 while(count($_REQUEST)) {
@@ -45,6 +46,8 @@ if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
 }
 $location = "";
+$cookie_manager =& new CookieManager();
+$GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
 //}}}
 
 // Check URL for valid hostname and valid protocol

@@ -12,6 +12,7 @@ Header( "Cache-Control: must-revalidate");
 
 require_once('pre.php');
 require_once('account.php');
+require_once('common/include/CookieManager.class.php');
 
 $Language->loadLanguageMsg('account/account');
 
@@ -29,10 +30,11 @@ if (isset($login) && $login) {
         account_redirect_after_login();
     }
 }
-if (isset($session_hash) && $session_hash) {
+$cookie_manager =& new CookieManager();
+if ($cookie_manager->isCookie('session_hash') && $cookie_manager->getCookie('session_hash')) {
 	//nuke their old session
-	session_cookie('session_hash','');
-	session_delete($session_hash);
+    $cookie_manager->removeCookie('session_hash');
+	session_delete($cookie_manager->getCookie('session_hash'));
 }
 $HTML->header(array('title'=>$Language->getText('account_login', 'title')));
 

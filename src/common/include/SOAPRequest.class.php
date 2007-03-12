@@ -7,8 +7,8 @@
  * SOAPRequest
  */
 
-
-class SOAPRequest {
+require_once('common/include/Request.class.php');
+class SOAPRequest extends Request {
     
     var $params;
     function SOAPRequest($params) {

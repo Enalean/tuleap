@@ -6,6 +6,7 @@
 //
 // $Id$
 //
+require_once('common/include/CookieManager.class.php');
 
 //$Language->loadLanguageMsg('include/include');
 
@@ -127,22 +128,6 @@ function session_issecure() {
 	return (getenv('HTTPS') == 'on');
 }
 
-function session_cookie($n,$v, $expire = 0) {
-    // Make sure there isn't a port number in the default domain name
-    // or the setcookie for the entire domain won't work
-    if (isset($GLOBALS['sys_cookie_domain'])) {
-        $host = $GLOBALS['sys_cookie_domain'];
-    } else {
-        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-    }
-    if (browser_is_netscape4()) {
-        $cookie_host=$host;
-    } else {
-        $cookie_host=".".$host;
-    }
-    setcookie($n,$v,$expire,'/',$cookie_host);
-}
-
 function session_make_url($loc) {
 	 return get_server_url(). $loc;
 }
@@ -227,7 +212,8 @@ function session_set_new($user_id) {
 	}
 
 	// set session cookie
-	session_cookie("session_hash",$GLOBALS['session_hash'],$expire);
+    $cookie_manager =& new CookieManager();
+    $cookie_manager->setCookie('session_hash', $GLOBALS['session_hash'], $expire);
 
 	// make new session entries into db
 	db_query("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES "

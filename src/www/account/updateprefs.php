@@ -7,6 +7,8 @@
 // $Id$
 
 require_once('pre.php');    
+require_once('common/include/CookieManager.class.php');
+$cookie_manager =& new CookieManager();
 
 session_require(array('isloggedin'=>1));
 
@@ -19,8 +21,8 @@ db_query("UPDATE user SET "
 	. "language_id=" . $language_id . " WHERE "
 	. "user_id=" . user_getid());
 
-setcookie("CODEX_THEME", sprintf("%06d%s",user_getid(),$user_theme), time() + 60*60*24*365, "/");
-setcookie("CODEX_FONTSIZE", sprintf("%06d%d",user_getid(),$user_fontsize), time() + 60*60*24*365, "/");
+$cookie_manager->setCookie('THEME', sprintf("%06d%s",user_getid(),$user_theme), time() + 60*60*24*365);
+$cookie_manager->setCookie('FONTSIZE', sprintf("%06d%s",user_getid(),$user_fontsize), time() + 60*60*24*365);
 
 // we check if the given value is authorized
 // $csv_separators is defined in src/www/include/utils.php

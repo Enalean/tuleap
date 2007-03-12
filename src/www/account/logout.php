@@ -7,11 +7,13 @@
 // $Id$
 
 require_once('pre.php');    
+require_once('common/include/CookieManager.class.php');
 
 if (isset($session_hash)) {
     session_delete($session_hash);
 }
-session_cookie('session_hash','');
+$cookie_manager =& new CookieManager();
+$cookie_manager->removeCookie('session_hash');
 session_redirect('/');
 
 ?>

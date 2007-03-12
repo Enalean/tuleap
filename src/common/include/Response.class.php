@@ -1,7 +1,7 @@
 <?php
 require_once('common/include/Feedback.class.php');
 require_once('common/dao/FeedbackDao.class.php');
-
+require_once('common/include/CookieManager.class.php');
 /**
 * Response
 * 
@@ -47,6 +47,14 @@ class Response {
     function _serializeFeedback() {
         $dao =& $this->_getFeedbackDao();
         $dao->create(session_hash(), serialize($this->_feedback));
+    }
+    function setCookie($name, $value, $expire = 0) {
+        $cookie_manager =& new CookieManager();
+        $cookie_manager->setCookie($name, $value, $expire);
+    }
+    function removeCookie($name) {
+        $cookie_manager =& new CookieManager();
+        $cookie_manager->removeCookie($name);
     }
 }
 ?>

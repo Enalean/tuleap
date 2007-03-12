@@ -8,8 +8,8 @@
  */
 
 require_once('browser.php');
-
-class HTTPRequest {
+require_once('common/include/Request.class.php');
+class HTTPRequest extends Request {
     
     function HTTPRequest() {    
     }
