@@ -309,3 +309,19 @@ function file_utils_delete_proc ($pid) {
     }
 
 }
+
+function file_utils_convert_bytes_to_kbytes($size_in_bytes, $decimals_precision = 0) {
+    global $Language;
+    
+    $size_in_kbytes = $size_in_bytes / 1024;
+    
+    $decimal_separator = $Language->getText('system','decimal_separator');
+    $thousand_separator = $Language->getText('system','thousand_separator'); 
+    // because I don't know how to specify a space in a .tab file
+    if ($thousand_separator == "' '") {
+        $thousand_separator = ' ';  
+    }
+    return number_format($size_in_kbytes, $decimals_precision, $decimal_separator, $thousand_separator); 
+}
+
+?>

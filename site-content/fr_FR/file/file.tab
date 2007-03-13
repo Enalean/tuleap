@@ -289,7 +289,7 @@ file_showfiles	start_monitoring	Surveiller ce paquet
 file_showfiles	stop_monitoring	Arrêter de surveiller ce paquet
 file_showfiles	stat_total_nb_releases	versions
 file_showfiles	stat_total_nb_files	fichiers
-file_showfiles	stat_total_size	octets
+file_showfiles	stat_total_size	Ko
 file_showfiles	stat_total_nb_downloads	téléchargements
 #
 #-----------------------------------------------

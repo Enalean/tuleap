@@ -18,6 +18,8 @@ system	locale	fr_FR
 system	strftimefmt	%e %B %Y  %H:%M
 system	datefmt	d/m/Y H:i
 system	datefmt_short	d/m/Y
+system	decimal_separator	,
+system	thousand_separator	' '
 conf	content_encoding	iso-8859-1
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	fr

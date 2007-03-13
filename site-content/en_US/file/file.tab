@@ -285,7 +285,7 @@ file_showfiles	start_monitoring	Monitor this package
 file_showfiles	stop_monitoring	Stop monitoring this package
 file_showfiles	stat_total_nb_releases	releases
 file_showfiles	stat_total_nb_files	files
-file_showfiles	stat_total_size	bytes
+file_showfiles	stat_total_size	Kb
 file_showfiles	stat_total_nb_downloads	downloads
 #
 #-----------------------------------------------

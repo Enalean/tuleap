@@ -297,11 +297,14 @@ $H(packages).keys().each(function(package_id) {
 
 // project totals (statistics) 
 if (isset ($proj_stats['size'])) {
+	
+    $total_size = file_utils_convert_bytes_to_kbytes($proj_stats['size'], 2);
+
     print '<p>';
     print '<b>' . $Language->getText('file_showfiles', 'proj_total') . ': </b>';
     print $proj_stats['releases'].' '.$Language->getText('file_showfiles', 'stat_total_nb_releases').', ';
     print $proj_stats['files'].' '.$Language->getText('file_showfiles', 'stat_total_nb_files').', ';
-    print $proj_stats['size'].' '.$Language->getText('file_showfiles', 'stat_total_size').', ';
+    print $total_size.' '.$Language->getText('file_showfiles', 'stat_total_size').', ';
     print $proj_stats['downloads'].' '.$Language->getText('file_showfiles', 'stat_total_nb_downloads').'.';
     print '</p>';
 }
