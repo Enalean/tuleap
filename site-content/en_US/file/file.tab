@@ -236,7 +236,7 @@ file_filemodule_monitor	monitor_package	Monitor a Package
 file_filemodule_monitor	insert_err	Error inserting into filemodule_monitor
 file_filemodule_monitor	p_monitored	Package is now being monitored
 file_filemodule_monitor	now_emails	You will now be emailed when new files are released.
-file_filemodule_monitor	turn_monitor_off	To turn off monitoring, simply click the <B>Monitor Package</B> link again.
+file_filemodule_monitor	turn_monitor_off	To turn off monitoring, simply click the <B>Stop Monitoring</B> icon.
 file_filemodule_monitor	monitor_turned_off	Monitoring has been turned off
 file_filemodule_monitor	no_emails	You will not receive any more emails from this package.
 file_filemodule_monitor	choose_p	Error - Choose a package First
@@ -280,6 +280,13 @@ file_showfiles	date	Date
 file_showfiles	no_releases	No Releases
 file_showfiles	proj_total	Project Totals
 file_showfiles	no_files	No Files
+file_showfiles	read_notes	Read release notes and changelog
+file_showfiles	start_monitoring	Monitor this package
+file_showfiles	stop_monitoring	Stop monitoring this package
+file_showfiles	stat_total_nb_releases	releases
+file_showfiles	stat_total_nb_files	files
+file_showfiles	stat_total_size	bytes
+file_showfiles	stat_total_nb_downloads	downloads
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php

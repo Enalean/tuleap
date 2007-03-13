@@ -38,35 +38,39 @@ class ServiceFile extends Service {
             $ret['content'] .= '
                 <table cellspacing="1" cellpadding="5" width="100%" border="0">
                     <tr class="boxitem">
-                        <td align="left"">
+                        <td>
                             '.$GLOBALS['Language']->getText('include_project_home','package').'
                         </td>
-                        <td align="center">
+                        <td>
                             '.$GLOBALS['Language']->getText('include_project_home','version').'
                         </td>
-                        <td align="center">
-                            '.$GLOBALS['Language']->getText('include_project_home','notes').'
-                        </td>
-                        <td align="center">
+                        <td>
                             '.$GLOBALS['Language']->getText('include_project_home','download').'
                         </td>
                     </tr>
             ';
+            $fmmf =& new FileModuleMonitorFactory();
             foreach($packages as $package) {
+                // the icon is different whether the package is monitored or not
+                if ($fmmf->isMonitoring($package['package_id'])) {
+                    $monitor_img = $GLOBALS['HTML']->getImage("ic/notification_stop.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'stop_monitoring')));
+                } else {
+                    $monitor_img = $GLOBALS['HTML']->getImage("ic/notification_start.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring')));
+                }
+            
                 $ret['content'] .= '
-                  <TR class="boxitem" ALIGN="center">
-                  <TD ALIGN="left">
-                  <B>' . $package['package_name']. '</B></TD>';
+                  <TR class="boxitem">
+                  <TD>
+                    <B>' . $package['package_name']. '</B>&nbsp;
+                    <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '">'.
+                        $monitor_img . '     
+                    </a>
+                  </TD>';
                 // Releases to display
-                $ret['content'] .= '<TD>'. $package['release_name'] .'
+                $ret['content'] .= '<TD>'. $package['release_name'] .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
+                    $GLOBALS['HTML']->getImage("ic/text.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','release_notes'), 'title'=>$GLOBALS['Language']->getText('include_project_home','release_notes'))) . ' 
                   </TD>
-                  <TD align="center"><A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">';
-                $ret['content'] .= $GLOBALS['HTML']->getImage("ic/manual16b.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','release_notes')));
-                $ret['content'] .= '</A> - <A HREF="/file/filemodule_monitor.php?filemodule_id=' .	$package['package_id'] . '">';
-                $ret['content'] .= $GLOBALS['HTML']->getImage("ic/mail16b.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','monitor_pack')));
-                $ret['content'] .= '</A>
-                  </TD>
-                  <TD align="center"><A HREF="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</A></TD></TR>';
+                  <TD><A HREF="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</A></TD></TR>';
             }
             $ret['content'] .= '</table>';
         } else {

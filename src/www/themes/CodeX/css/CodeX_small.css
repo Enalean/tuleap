@@ -200,28 +200,46 @@ td.artifact_spacer { width: 2%; }
 }
 /* }}} */
 
-/* File Release System */
-.frs_package_col {
-    width: 20%;
-}
-.frs_release_col {
-    width: 20%;
-}
+/* {{{ File Release System */
 .frs_filename_col {
-    width: 20%;
+    width: 50%;
 }
 .frs_size_col {
-    width: 8%;
+    width: 10%;
 }
 .frs_downloads_col {
-    width: 8%;
+    width: 10%;
 }
 .frs_architecture_col {
-    width: 8%;
+    width: 10%;
 }
 .frs_filetype_col {
-    width: 8%;
+    width: 10%;
 }
 .frs_date_col {
-    width: 8%;
+    width: 10%;
 }
+fieldset.package {
+    margin-bottom: 20px;
+}
+fieldset.package legend {
+    font-size: larger;
+    padding-right: 10px;
+}
+.release {
+    background-color: #D1CEC4; /*#DFD1D1;*/ /*#CFC2C2;*/ /*#dfdfdf;*/ /*#cfcfcf;*/ /*#bcbcad;*/ /*#DAD7CC;*/  /* same as body background-color */    
+    border-spacing: 0px;
+    border-collapse: collapse;
+    margin-top: 1px;
+}
+.release_date {
+    width: 10%;
+    text-align: right;
+}
+table.release tr td img {
+    vertical-align: bottom;
+}
+.files_table {
+    margin-bottom: 20px;
+}
+/* }}} */

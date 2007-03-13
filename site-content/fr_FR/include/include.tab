@@ -282,10 +282,9 @@ include_project_home	view_members	Voir les membres
 include_project_home	latest_file_releases	Derniers fichiers publiés
 include_project_home	package	Paquet
 include_project_home	version	Version
-include_project_home	notes	Notes / Surveiller
 include_project_home	download	Téléchargement
-include_project_home	no_files_released	CE projet n'a publié aucun fichier
-include_project_home	release_notes	Notes
+include_project_home	no_files_released	Ce projet n'a publié aucun fichier
+include_project_home	release_notes	Lire les notes et les modifications de cette version
 include_project_home	monitor_pack	Surveiller ce paquet
 include_project_home	view_all_files	Voir tous les fichiers du projet
 include_project_home	public_areas	Zones publiques
@@ -329,6 +328,9 @@ include_project_home	no_arttypefact	Impossible d'obtenir un ArtifactTypeFactory
 include_project_home	no_trackers_accessible	Aucun outil de suivi accessible
 include_project_home	anon_ftp_space	Espace FTP anonyme
 include_project_home	latest_news	Dernières annonces
+include_project_home	start_monitoring	Surveiller ce paquet
+include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
+
 #
 #-----------------------------------------------
 # Script: SF/www/include/proj_email.php

@@ -277,10 +277,9 @@ include_project_home	view_members	View Members
 include_project_home	latest_file_releases	Latest File Releases
 include_project_home	package	Package
 include_project_home	version	Version
-include_project_home	notes	Notes / Monitor
 include_project_home	download	Download
 include_project_home	no_files_released	This Project Has Not Released Any Files
-include_project_home	release_notes	Release Notes
+include_project_home	release_notes	Read Release Notes and Changelog
 include_project_home	monitor_pack	Monitor This Package
 include_project_home	view_all_files	View ALL Project Files
 include_project_home	public_areas	Public Areas
@@ -324,6 +323,8 @@ include_project_home	no_arttypefact	Could Not Get ArtifactTypeFactory
 include_project_home	no_trackers_accessible	No Accessible Trackers Found
 include_project_home	anon_ftp_space	Anonymous FTP Space
 include_project_home	latest_news	Latest News
+include_project_home	start_monitoring	Monitor this package
+include_project_home	stop_monitoring	Stop monitoring this package
 #
 #-----------------------------------------------
 # Script: SF/www/include/proj_email.php
