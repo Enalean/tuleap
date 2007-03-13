@@ -243,7 +243,7 @@ Event.observe(window, 'load', function() {
 												'<a href="#change_permissions" onclick="view_change_permissions(); return false;">'+view_change_text+'</a></TD></TR>');
 
 		
-		Event.observe($('frs_form'), 'submit', function(evt){
+		Event.observe($('frs_form'), 'submit', (function(evt){
 			$('feedback').innerHTML = '';
 			var valide = false;
 			if(release_mode == 'creation'){
@@ -262,7 +262,7 @@ Event.observe(window, 'load', function() {
 			    onSuccess: (function(transport, json) {
             	if (json.valid) {
             		this.submit();
-                	
+
             	} else {
             		$('feedback').innerHTML = json.msg;
             		Element.scrollTo('feedback');
@@ -271,7 +271,7 @@ Event.observe(window, 'load', function() {
 			  });
 			  Event.stop(evt);
               return false;
-		});	
+		}).bind($('frs_form')));	
 	
 });
 		

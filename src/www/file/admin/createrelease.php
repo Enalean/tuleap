@@ -529,10 +529,10 @@ echo '</script>';
     		<?php
 
 
-echo '<div id=\'files_help\'><span class="smaller"><i>';
+echo '<div id=\'files_help\'><span class="smaller">';
 global $Language;
 include ($Language->getContent('file/qrs_attach_file'));
-echo '</i></span></div>';
+echo '</span></div>';
 ?>
 		</FIELDSET>
 		</TD></TR>
@@ -548,7 +548,7 @@ echo '</i></span></div>';
 				<input type="file" name="uploaded_release_notes"  size="30">
 			</TD>
 		</TR>
-		<TR>
+		<TR id="release_notes_area">
 			<TD width="100%">
 				<TEXTAREA NAME="release[release_notes]" rows="7" cols="70"></TEXTAREA>
 			</TD>
