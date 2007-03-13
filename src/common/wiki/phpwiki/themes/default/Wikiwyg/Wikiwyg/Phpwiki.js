@@ -353,7 +353,7 @@ Insert escape char in the string ( escape char is '~' for phpwiki )
 proto.insert_escape_char = function(string) {
     // Insert the escape charater before
     // interpreted markups      
-    var basic_markup = /(\*|\_|^\!|\[|^\>|\~|\%\%\%|^\-\-\-|^\-|\|)/g;
+    var basic_markup = /(\*|^\!|\[|^\>|\~|\%\%\%|^\-\-\-)/g;
     string = string.replace(basic_markup, "~$1");
     
     var tag_markup = 
