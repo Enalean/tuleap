@@ -227,7 +227,7 @@ fieldset.package legend {
     padding-right: 10px;
 }
 .release {
-    background-color: #D1CEC4; /*#DFD1D1;*/ /*#CFC2C2;*/ /*#dfdfdf;*/ /*#cfcfcf;*/ /*#bcbcad;*/ /*#DAD7CC;*/  /* same as body background-color */    
+    background-color: #D1CEC4;
     border-spacing: 0px;
     border-collapse: collapse;
     margin-top: 1px;
