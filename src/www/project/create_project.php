@@ -92,7 +92,8 @@ function create_project($data) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
         }
         
-        //Add a couple of forums for this group and make the project creator 
+        
+        /*//Add a couple of forums for this group and make the project creator 
         // (current user) monitor these forums
         $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('register_confirmation','open_discussion')),1,1,
                       addslashes($GLOBALS['Language']->getText('register_confirmation','general_discussion')), $need_feedback = false);
@@ -104,7 +105,7 @@ function create_project($data) {
         $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('register_confirmation','developers')),0,1,
                       addslashes($GLOBALS['Language']->getText('register_confirmation','proj_dev_discussion')), $need_feedback = false);
         if ($fid != -1) forum_add_monitor($fid, user_getid());
-        
+        */
             
         // Instanciate all services from the project template that are 'active'
         $group = group_get_object($group_id);
@@ -144,6 +145,15 @@ function create_project($data) {
             ))) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
             }
+        }
+        
+        //Copy forums from template project 
+        $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
+        $result=db_query($sql);
+        while ($arr = db_fetch_array($result)) {
+            $fid = forum_create_forum($group_id,$arr['forum_name'],$arr['is_public'],1,
+                      $arr['description'], $need_feedback = false);
+            if ($fid != -1) forum_add_monitor($fid, user_getid());
         }
         
         //copy cvs infos

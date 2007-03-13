@@ -2057,7 +2057,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Franï¿½ais','French_FR.tab','fr_FR','ISO-8859-1',1);
 
 
 -- install and enable pluginsadministration
@@ -2299,6 +2299,15 @@ INSERT INTO reference_group SET reference_id='16', group_id='1', is_active='1';
 INSERT INTO reference_group SET reference_id='12', group_id='46', is_active='1';
 INSERT INTO reference_group SET reference_id='13', group_id='46', is_active='1';
 INSERT INTO reference_group SET reference_id='14', group_id='46', is_active='1';
+
+
+--
+--Add forums in Template project (group 100)
+--
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Open Discussion','1' ,'General Discussion');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help','1' ,'Get Help');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers','0' ,'Project Developer Discussion');
+
 
 #
 # EOF
