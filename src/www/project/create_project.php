@@ -146,6 +146,37 @@ function create_project($data) {
             }
         }
         
+        //copy cvs infos
+        $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble FROM groups WHERE group_id=$template_id ";
+        $result = db_query($sql);
+        $arr = db_fetch_array($result);
+        $query = "UPDATE groups SET cvs_tracker='".$arr['cvs_tracker']."',  cvs_watch_mode='".$arr['cvs_watch_mode']."' , cvs_preamble='".$arr['cvs_preamble']."' " .
+                 "WHERE group_id = '$group_id'";
+        var_dump($result);
+        echo "<br>";
+        var_dump($arr);
+        echo "<br>".$query;
+        $result=db_query($query);
+        if (!$result) {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_cvs_info'));
+        }
+        
+        //copy svn infos
+        $sql = "SELECT svn_tracker, svn_preamble FROM groups WHERE group_id=$template_id ";
+        $result = db_query($sql);
+        $arr = db_fetch_array($result);
+        $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."',  svn_preamble='".$arr['svn_preamble']."' " .
+                 "WHERE group_id = $group_id";
+        echo "<br>";
+        var_dump($result);
+        echo "<br>";
+        var_dump($arr);
+        echo "<br>".$query;
+        $result=db_query($query);
+        if (!$result) {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_info'));
+        }
+        
         // Activate other system references not associated with any service
         $reference_manager =& ReferenceManager::instance();
         $reference_manager->addSystemReferencesWithoutService($template_id,$group_id);

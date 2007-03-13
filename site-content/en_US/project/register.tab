@@ -32,6 +32,8 @@ register_confirmation	developers	Developers
 register_confirmation	proj_dev_discussion	Project Developer Discussion
 register_confirmation	cant_create_service	ERROR - Can not create service
 register_confirmation	cant_create_docgroup	ERROR - Can not create default Document Group
+register_confirmation	cant_copy_cvs_infos	ERROR - Can not copy default CVS information
+register_confirmation	cant_copy_svn_infos	ERROR - Can not copy default SVN information
 register_confirmation	registration_deleted	Registration Deleted
 register_confirmation	project_deleted	Project registration deleted
 register_confirmation	try_again	Please try again in the future.
