@@ -15,7 +15,7 @@ require_once('www/project/admin/ugroup_utils.php');
 $Language->loadLanguageMsg('news/news');
 
 
-if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'A')) {
+if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'N2')) {
 	/*
 
 		Per-project admin pages.
@@ -308,7 +308,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group
 
 } else {
 
-  exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_admin_index','need_to_be_admin',$GLOBALS['sys_name']));
+  exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_admin_index','need_to_be_admin'));
 
 }
 ?>

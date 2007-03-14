@@ -35,10 +35,15 @@ function news_header($params) {
 	}
         if (!isset($params['pv']) || !$params['pv']){
             echo '<P><B>';
-            // submit link and admin link are only displayed if the user is a project administrator.
-            if (user_ismember($group_id, 'A')) {
+            // 'Admin' tab is only displayed if the user is News admin
+            if (user_ismember($group_id, 'N2')) {
                 echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
-                if (isset($params['help'])) {
+	    } else if (user_ismember($group_id, 'N1')) {
+		// 'Submit News' tab is only displayed if the user is News writer
+		echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A>';
+	    }
+	    if (user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
+		if (isset($params['help'])) {
                     echo ' | ';
                 }
             }

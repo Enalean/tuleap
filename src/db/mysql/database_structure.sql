@@ -2089,6 +2089,7 @@ CREATE TABLE user_group (
   doc_flags int(11) NOT NULL default '0',
   file_flags int(11) NOT NULL default '0',
   wiki_flags int(11) NOT NULL default '0',
+  news_flags int(11) NOT NULL default '0',
   svn_flags int(11) NOT NULL default '0',
   PRIMARY KEY  (user_group_id),
   KEY idx_user_group_user_id (user_id),

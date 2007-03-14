@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('news/news');
 
 if (user_isloggedin()) {
 
-    if (user_ismember($group_id,'A')) {
+    if (user_ismember($group_id,'N1') || user_ismember($group_id,'N2')) {
  	if (isset($post_changes)) {
             /*
              Insert the row into the db if it's a generic message
@@ -69,7 +69,7 @@ if (user_isloggedin()) {
 	news_footer(array());
 
     } else {
-        exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_submit','only_admin_submits'));
+        exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_submit','only_writer_submits'));
     }
 } else {
     exit_not_logged_in();
