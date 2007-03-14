@@ -363,8 +363,8 @@ proto.insert_escape_char = function(string) {
     /*var tag_plugin = /(\<\?)/g;
     string = string.replace(tag_plugin, "~$1");*/
 
-    var links =  /(http|https|ftp:\/\/)/g;
-    string = string.replace(links, "~$1");
+    /*var links =  /(http|https|ftp:\/\/)/g;
+    string = string.replace(links, "~$1");*/
 
 
     return string;
