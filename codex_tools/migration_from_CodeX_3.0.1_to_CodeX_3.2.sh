@@ -343,6 +343,9 @@ ALTER TABLE cvs_checkins ADD INDEX commitid (commitid);
 # SR #636
 ALTER TABLE artifact_field ADD INDEX idx_grp_name (group_artifact_id, field_name (20));
 
+# SR #625
+ALTER TABLE user_group ADD news_flags INT(11) NOT NULL DEFAULT '0';
+
 EOF
 
 ################################################################################

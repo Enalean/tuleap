@@ -173,8 +173,9 @@ INSERT INTO groups SET \
 #
 # Make the 'admin' user part of the default Admin Project so that he
 # becomes a super user
+# flags after 'A' are: bug,forum,project,patch,support,doc,file,wiki,svn,news
 
-INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1, 2, 2, 2);
+INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1, 2, 2, 2, 2);
 
 #
 # Default bug (None)
