@@ -3149,13 +3149,13 @@ CREATE TABLE wiki_attachment_log (
 --
 CREATE TABLE wiki_page (
 	id              INT NOT NULL AUTO_INCREMENT,
-        pagename        VARCHAR(100) BINARY NOT NULL,
+    pagename        VARCHAR(100) BINARY NOT NULL,
 	hits            INT NOT NULL DEFAULT 0,
-        pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
+    pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
 	cached_html 	MEDIUMBLOB,
 	group_id        INT NOT NULL DEFAULT 0,
-        PRIMARY KEY (id),
-        INDEX (group_id)
+    PRIMARY KEY (id),
+    KEY idx_page_group (group_id,pagename(10))
 );
 
 CREATE TABLE wiki_version (
