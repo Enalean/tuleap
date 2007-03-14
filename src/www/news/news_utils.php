@@ -259,26 +259,26 @@ function get_news_name_from_forum_id($id) {
 	}
 }
 
-function news_submit($group_id,$summary,$details,$private_news) {
+function news_submit($group_id,$summary,$details,$private_news, $promote_news) {
         
-        /*
+    /*
 		Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
 	*/
     
 	$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
-        $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
-             " VALUES ('$group_id','".user_getid()."','0','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
-        $result=db_query($sql);
+    $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
+             " VALUES ('$group_id','".user_getid()."','$promote_news','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
+    $result=db_query($sql);
                
 	if (!$result) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','insert_err'));
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
-	    // set permissions on this piece of news
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','insert_err'));
+    } else {
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
+	     // set permissions on this piece of news
 	    if ($private_news) {
 	        news_insert_permissions($new_id,$group_id);
 	    }
-        }
+    }
 }
 
 function news_check_permission($forum_id,$group_id) {
