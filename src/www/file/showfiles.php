@@ -251,7 +251,7 @@ while (list ($package_id, $package_name) = each($res_package)) {
                         // Display popup
                         print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $file_release['filename'] . '\')" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
                     }
-                    print '</B></TD>' . '<TD>' . $file_release['file_size'] . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>' . '<TD>' . (isset ($processor[$file_release['processor']]) ? $processor[$file_release['processor']] : "") . '</TD>' . '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
+                    print '</B></TD>' . '<TD>' . file_utils_convert_bytes_to_kbytes($file_release['file_size']) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>' . '<TD>' . (isset ($processor[$file_release['processor']]) ? $processor[$file_release['processor']] : "") . '</TD>' . '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
                     if (!isset ($proj_stats['size']))
                         $proj_stats['size'] = 0;
                     $proj_stats['size'] += $file_release['file_size'];
@@ -298,7 +298,7 @@ $H(packages).keys().each(function(package_id) {
 // project totals (statistics) 
 if (isset ($proj_stats['size'])) {
 	
-    $total_size = file_utils_convert_bytes_to_kbytes($proj_stats['size'], 2);
+    $total_size = file_utils_convert_bytes_to_kbytes($proj_stats['size']);
 
     print '<p>';
     print '<b>' . $Language->getText('file_showfiles', 'proj_total') . ': </b>';
