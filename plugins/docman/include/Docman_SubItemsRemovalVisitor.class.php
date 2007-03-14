@@ -42,5 +42,9 @@ class Docman_SubItemsRemovalVisitor /* implements Visitor */ {
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
+    
+    function visitEmpty(&$item, $params = array()) {
+        $this->visitDocument($item, $params);
+    }
 }
 ?>

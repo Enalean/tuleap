@@ -29,6 +29,7 @@ class Docman_View_RawTree extends Docman_View_View {
             'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false),
             'pv'                     => isset($params['pv']) ? $params['pv'] : false,
             'report'                 => isset($params['report']) ? $params['report'] : false,
+            'item'                   => $params['item'],
         ));
         $itemTree->accept($displayItemTreeVisitor);
         

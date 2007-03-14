@@ -92,6 +92,31 @@ class Docman_MetaMetadataHtml {
         return $mdContent;
     }
 
+    function getMultipleValuesAllowed(&$sthCanChange) {
+        $mdContent = '';
+        $mdContent .= '<p>';
+        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowmultiplevalue').'</label>';
+        if($this->md->canChangeIsMultipleValuesAllowed()) {
+            $sthCanChange = true;
+            $selected = '';
+            if($this->md->isMultipleValuesAllowed()) {
+                $selected = 'checked="checked"';
+            }          
+            $mdContent .= '<input type="checkbox" name="multiplevalues_allowed" value="1" '.$selected.' />';
+        }
+        else {
+            if($this->md->isMultipleValuesAllowed()) {
+                $mdContent .= $this->str_yes;
+            }
+            else {
+                $mdContent .= $this->str_no;
+            }
+        }
+        $mdContent .= '</p>';
+
+        return $mdContent;
+    }
+
     function getUseIt(&$sthCanChange) {
         $mdContent = '';
         $mdContent .= '<p>';

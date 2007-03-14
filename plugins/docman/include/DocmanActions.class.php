@@ -35,6 +35,7 @@ require_once('Docman_VersionFactory.class.php');
 require_once('Docman_FileStorage.class.php');
 require_once('Docman_MetadataValueFactory.class.php');
 require_once('Docman_ExpandAllHierarchyVisitor.class.php');
+require_once('Docman_ApprovalTableFactory.class.php');
 
 require_once('view/Docman_View_Browse.class.php');
 
@@ -138,6 +139,119 @@ class DocmanActions extends Actions {
         }
     }
 
+    /**
+     * This function handle file storage regarding user parameters.
+     *
+     * @access: private
+     */
+    function _storeFile($item) {
+        $fs       =& $this->_getFileStorage();
+        $user     =& $this->_controler->getUser();
+        $request  =& $this->_controler->request;
+        $iFactory =& $this->_getItemFactory();
+
+        $uploadSucceded = false;
+
+        $number = 0;
+        $version = $item->getCurrentVersion();
+        if($version) {
+            $number = $version->getNumber() + 1;
+        }
+
+        $_action_type = 'initversion';
+        if($number > 0) {
+            $_action_type = 'newversion';
+        }
+
+        //
+        // Prepare label and changelog from user input
+        $_label = '';
+        $_changelog = '';
+        $data_version = $request->get('version');
+        if ($data_version) {
+            if (isset($data_version['label'])) {
+                $_label = $data_version['label'];
+            }
+            if (isset($data_version['changelog'])) {
+                $_changelog = $data_version['changelog'];
+            }
+        }
+        else {
+            if($number == 0) {
+                $_changelog = 'Initial version';
+            }
+        }
+
+        switch ($iFactory->getItemTypeForItem($item)) {
+        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+            if ($request->exist('upload_content')) {
+                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $id, 0);
+                if ($path) {
+                    $filename = basename($path);
+                    $filesize = filesize($path);
+                    $filetype = mime_content_type($path); //be careful with false detection
+                }
+            } else {
+                $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
+                if ($path) {
+                    $filename = $_FILES['file']['name'];
+                    $filesize = $_FILES['file']['size'];
+                    $filetype = $_FILES['file']['type']; //TODO detect mime type server side
+                }
+            }
+            if ($path) {
+                $uploadSucceded = true;
+                
+                //TODO detect mime type server side
+                $_filename = $_FILES['file']['name'];
+                $_filesize = (int) $_FILES['file']['size'];
+                $_filetype = $_FILES['file']['type'];
+                
+            } 
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            if ($path = $fs->store($request->get('content'), $item->getGroupId(), $item->getId(), $number)) {
+                $uploadSucceded = true;
+
+                //TODO take mimetype once the file has been written ?
+                $_filename = basename($path);
+                $_filesize = filesize($path);
+                $_filetype = 'text/html';
+            }
+            break;
+        default:
+            break;
+        }
+
+        if($uploadSucceded) {
+            $vFactory =& $this->_getVersionFactory();
+
+            $vArray = array('item_id'   => $item->getId(),
+                            'number'    => $number,
+                            'user_id'   => $user->getId(),
+                            'label'     => $_label,
+                            'changelog' => $_changelog,
+                            'filename'  => $_filename,
+                            'filesize'  => $_filesize,
+                            'filetype'  => $_filetype, 
+                            'path'      => $path);
+            $vId = $vFactory->create($vArray);
+            
+            $eArray = array('group_id' => $item->getGroupId(),
+                            'item'     => &$item, 
+                            'version'  => $vId,
+                            'user'     => &$user);
+            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION,
+                                               $eArray);
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
+        }
+        else {
+            //TODO What should we do if upload failed ?
+            //Maybe cancel item ?
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
+        }
+    }
+
     function createFolder() {
         $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
@@ -221,80 +335,9 @@ class DocmanActions extends Actions {
                     );
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
                     
-                    switch ($item['item_type']) {
-                        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                            $fs =& $this->_getFileStorage();
-                            if ($request->exist('upload_content')) {
-                                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $id, 0);
-                                if ($path) {
-                                    $filename = basename($path);
-                                    $filesize = filesize($path);
-                                    $filetype = mime_content_type($path); //be careful with false detection
-                                }
-                            } else {
-                                $path = $fs->upload($_FILES['file'], $request->get('group_id'), $id, 0);
-                                if ($path) {
-                                    $filename = $_FILES['file']['name'];
-                                    $filesize = $_FILES['file']['size'];
-                                    $filetype = $_FILES['file']['type']; //TODO detect mime type server side
-                                }
-                            }
-                            if ($path) {
-                                $version_factory =& $this->_getVersionFactory();
-                                $version_id = $version_factory->create(array(
-                                    'item_id'   => $id,
-                                    'number'    => 0,
-                                    'user_id'   => $user->getId(),
-                                    'label'     => '',
-                                    'changelog' => 'Initial version',
-                                    'filename'  => $filename,
-                                    'filesize'  => $filesize,
-                                    'filetype'  => $filetype, 
-                                    'path'      => $path)
-                                );
-                                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
-                                    'group_id' => $request->get('group_id'),
-                                    'item'     => &$new_item, 
-                                    'version'  => $version_id,
-                                    'user'     => &$user)
-                                );
-                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion'));
-                            } else {
-                                //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
-                                //Annulation du nouvel item ?
-                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_initversion'));
-                            }
-                            break;
-                        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-                            $fs =& $this->_getFileStorage();
-                            if ($path = $fs->store($request->get('content'), $request->get('group_id'), $id, 0)) {
-                                $version_factory =& $this->_getVersionFactory();
-                                $version_id = $version_factory->create(array(
-                                    'item_id'   => $id,
-                                    'number'    => 0,
-                                    'user_id'   => $user->getId(),
-                                    'label'     => '',
-                                    'changelog' => 'Initial version',
-                                    'filename'  => basename($path),
-                                    'filesize'  => filesize($path),
-                                    'filetype'  => 'text/html',     //TODO take mimetype once the file has been written ?
-                                    'path'      => $path)
-                                );
-                                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
-                                    'group_id' => $request->get('group_id'),
-                                    'item'     => &$new_item, 
-                                    'version'  => $version_id,
-                                    'user'     => &$user)
-                                );
-                                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_initversion'));
-                            } else {
-                                //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
-                                //Annulation du nouvel item ?
-                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_initversion'));
-                            }
-                            break;
-                        default:
-                            break;
+                    if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
+                       $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                        $this->_storeFile($new_item);
                     }
                     
                     // Create metatata
@@ -369,6 +412,24 @@ class DocmanActions extends Actions {
                 }
             }
 
+            // For empty document, check if type changed
+            $createFile = false;
+            $itemType = $item_factory->getItemTypeForItem($item);
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+                && isset($data['item_type'])
+               && $itemType != $data['item_type']
+               && ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                   || $this->_controler->getProperty('embedded_are_allowed'))) {
+                
+                if($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                   || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                    $createFile = true;
+                }
+            }
+            else {
+                $data['item_type'] =  $itemType;
+            }
+
             $item_factory->update($this->sanitizeItemData($data));
             if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
@@ -397,6 +458,12 @@ class DocmanActions extends Actions {
                                                    $logEventParam);
             }
 
+            if($createFile) {
+                // Re-create from DB (because of type changed)
+                $item = $item_factory->getItemFromDb($data['id']);
+                $this->_storeFile($item);
+            }
+
             // Update real metatata
             if($request->exist('metadata')) {
                 $metadata_array = $request->get('metadata');
@@ -411,6 +478,7 @@ class DocmanActions extends Actions {
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
+
     function new_version() {
         $request =& HTTPRequest::instance();
         if ($request->exist('id')) {
@@ -419,72 +487,7 @@ class DocmanActions extends Actions {
             $item =& $item_factory->getItemFromDb($request->get('id'));
             $item_type = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                $label = '';
-                $changelog = '';
-                $data_version = $request->get('version');
-                if ($data_version) {
-                    if (isset($data_version['label'])) {
-                        $label = $data_version['label'];
-                    }
-                    if (isset($data_version['changelog'])) {
-                        $changelog = $data_version['changelog'];
-                    }
-                }
-                $version =& $item->getCurrentVersion();
-                $number = ($version ? $version->getNumber() : 0) + 1;
-                $fs =& $this->_getFileStorage();
-                if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE && isset($_FILES['file'])) {
-                    if ($path = $fs->upload($_FILES['file'], $request->get('group_id'), $request->get('id'), $number)) {
-                        
-                        $version_factory =& $this->_getVersionFactory();
-                        $version_id = $version_factory->create(array(
-                            'item_id'   => $request->get('id'),
-                            'number'    => $number,
-                            'user_id'   => $user->getId(),
-                            'label'     => $label,
-                            'changelog' => $changelog,
-                            'filename'  => $_FILES['file']['name'],
-                            'filesize'  => $_FILES['file']['size'],
-                            'filetype'  => $_FILES['file']['type'], //TODO detect mime type server side
-                            'path'      => $path)
-                        );
-                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
-                            'group_id' => $request->get('group_id'),
-                            'item'     => &$item,
-                            'version'  => $version_id,
-                            'user'     => &$user)
-                        );
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
-                    } else {
-                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
-                    }
-                } else if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE && $request->exist('content')) {
-                    if ($path = $fs->store($request->get('content'), $request->get('group_id'), $request->get('id'), $number)) {
-                        $version_factory =& $this->_getVersionFactory();
-                        $version_id = $version_factory->create(array(
-                            'item_id'   => $request->get('id'),
-                            'number'    => $number,
-                            'user_id'   => $user->getId(),
-                            'label'     => $label,
-                            'changelog' => $changelog,
-                            'filename'  => basename($path),
-                            'filesize'  => filesize($path),
-                            'filetype'  => 'text/html', //TODO take mimetype once the file has been written ?
-                            'path'      => $path)
-                        );
-                        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION, array(
-                            'group_id' => $request->get('group_id'),
-                            'item'     => &$item, 
-                            'version'  => $version_id,
-                            'user'     => &$user)
-                        );
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
-                    } else {
-                        //TODO L'upload s'est mal passé. Qu'est-ce qu'on fait ?
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_newversion'));
-                    }
-                }
+                $this->_storeFile($item);
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
@@ -823,6 +826,17 @@ class DocmanActions extends Actions {
                     }
                 }
 
+                if($md->canChangeIsMultipleValuesAllowed()) {
+                    $_isMultipleValuesAllowed = (int) $request->get('multiplevalues_allowed');
+
+                    if($_isMultipleValuesAllowed === 1) {
+                        $md->setIsMultipleValuesAllowed(PLUGIN_DOCMAN_DB_TRUE);
+                    }
+                    else {
+                        $md->setIsMultipleValuesAllowed(PLUGIN_DOCMAN_DB_FALSE);
+                    }
+                }
+
                 // Usage
                 if(!$md->isRequired()) {
                     $_useIt = (int) $request->get('use_it');
@@ -1055,6 +1069,289 @@ class DocmanActions extends Actions {
             }
         }
     }
+
+    function action_copy($params) {
+        //
+        // Param
+        $user = $this->_controler->getUser();
+        $item = $this->_controler->_actionParams['item'];
+
+        //
+        // Action
+        $itemFactory =& $this->_getItemFactory();
+
+        $itemFactory->delCopyPreference();
+        $itemFactory->setCopyPreference($item);
+
+        //
+        // Message
+        $type = $itemFactory->getItemTypeForItem($item);
+        if(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER == $type) {
+            $_itemtype = 'folder';
+        }
+        else {
+            $_itemtype = 'doc';
+        }
+        
+        $_logmsg = $GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp_'.$_itemtype).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
+        
+        $this->_controler->feedback->log('info', $_logmsg);
+    }
+
+    function paste($params) {
+        //
+        // Param
+        $user        = $this->_controler->getUser();
+        $item        = $this->_controler->_actionParams['item'];
+        $rank        = $this->_controler->_actionParams['rank'];
+        $itemToPaste = $this->_controler->_actionParams['itemToPaste'];
+        $dataRoot    = $this->_controler->getProperty('docman_root');
+        $mdMapping   = false;
+
+        
+        if($itemToPaste->getGroupId() != $item->getGroupId()) {
+            // Permissions
+            $ugroupsMapping = false;
+
+            // Metadata
+            $mdMapping = array();
+            $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
+            $dstMdFactory = new Docman_MetadataFactory($item->getGroupId());
+
+            // Get the list of metadata in source project
+            $srcMda = $srcMdFactory->getRealMetadataList(true);
+            $srcMdIter = new ArrayIterator($srcMda);
+            while($srcMdIter->valid()) {
+                $srcMd = $srcMdIter->current();
+
+                // For each source metadata, try to find one in this project
+                // with the same name and the same type. By default take the
+                // first that match these 2 conditions.
+                $dstMda = array();
+                $dstMdFactory->_findRealMetadataByName($srcMd->getName(),
+                                                       $dstMda);
+                $dstMdIter = new ArrayIterator($dstMda);
+                $found = false;
+                while(!$found && $dstMdIter->valid()) {
+                    $dstMd = $dstMdIter->current();
+                    if($dstMd->getType() == $srcMd->getType() &&
+                       $dstMd->isUsed()) {
+                        $found = true;
+                    }
+                    $dstMdIter->next();
+                }
+                if($found) {
+                    $mdMapping['md'][$srcMd->getId()] = $dstMd->getId();
+                
+                    // Now for ListOfValues metadata, applies same approach for
+                    // values
+                    if($srcMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                        $srcLoveFactory = new Docman_MetadataListOfValuesElementFactory($srcMd->getId());
+                        $dstLoveFactory = new Docman_MetadataListOfValuesElementFactory($dstMd->getId());
+                        $srcLoveArray = $srcLoveFactory->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
+                        $srcLoveIter = new ArrayIterator($srcLoveArray);
+                        while($srcLoveIter->valid()) {
+                            $srcLove = $srcLoveIter->current();
+                            
+                            $dstLoveIter = $dstLoveFactory->getByName($srcLove->getName(),
+                                                                      $srcMd->getLabel());
+                            // Take the first one
+                            if($dstLoveIter->valid()) {
+                                $dstLove = $dstLoveIter->current();
+                                $mdMapping['love'][$srcLove->getId()] = $dstLove->getId();
+                            }
+                            $srcLoveIter->next();
+                        }
+                    }
+                }
+
+                $srcMdIter->next();
+            }
+        } else {
+            // Permissions
+            $ugroupsMapping = true;
+
+            // Metadata
+            $mdMapping = array();
+            $mdFactory = new Docman_MetadataFactory($item->getGroupId());
+            $mda = $mdFactory->getRealMetadataList(true);
+            $mdIter = new ArrayIterator($mda);
+            while($mdIter->valid()) {
+                $md = $mdIter->current();
+                $mdMapping['md'][$md->getId()] = $md->getId();
+                if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                    $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+                    $loveArray = $loveFactory->getListByFieldId($md->getId(), $md->getLabel(), false);
+                    $loveIter = new ArrayIterator($loveArray);
+                    while($loveIter->valid()) {
+                        $love = $loveIter->current();
+                        $mdMapping['love'][$love->getId()] = $love->getId();
+                        $loveIter->next();
+                    }
+                }
+                $mdIter->next();
+            }
+        }
+
+        //
+        // Action
+        $itemFactory =& $this->_getItemFactory();
+        $itemFactory->cloneItems($itemToPaste->getGroupId(),
+                                 $item->getGroupId(),
+                                 $user, 
+                                 $mdMapping,
+                                 $ugroupsMapping,
+                                 $dataRoot, 
+                                 $itemToPaste->getId(),
+                                 $item->getId(), 
+                                 $rank);
+
+        $itemFactory->delCopyPreference();
+
+        //
+        // Message
+        
+    }
+
+    function approval_update() {
+        // Params
+        $item       = $this->_controler->_actionParams['item'];
+        $user       = $this->_controler->getUser();
+        $sStatus    = $this->_controler->_actionParams['status'];
+        $notification = $this->_controler->_actionParams['notification'];
+        $description =  $this->_controler->_actionParams['description'];
+
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        if($atf->createTableIfNotExist($user->getId())) {
+            $updated = $atf->updateTable($sStatus, $notification, $description);
+            if($updated) {
+                $this->_controler->feedback->log('info', Docman::txt('approval_tableupd_success'));
+            } else {
+                $this->_controler->feedback->log('warning', Docman::txt('approval_tableupd_failure'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('approval_tableins_failure'));
+        }
+    }
+
+    function approval_delete() {
+        // Params
+        $item = $this->_controler->_actionParams['item'];
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        if($atf->tableExist()) {
+            $deleted = $atf->deleteTable();
+            if($deleted) {
+                $this->_controler->feedback->log('info', Docman::txt('approval_tabledel_success'));
+            } else {
+                $this->_controler->feedback->log('error', Docman::txt('approval_tabledel_failure'));
+            }
+        }
+    }
+
+    function approval_add_user() {
+        // Params
+        $item       = $this->_controler->_actionParams['item'];
+        $user       = $this->_controler->getUser();
+        $usUserList = $this->_controler->_actionParams['user_list'];
+        $sUgroup    = $this->_controler->_actionParams['ugroup'];
+
+        // Extract info
+        $usUserArray = explode(',', $usUserList);
+
+        // Action
+        $_canAddUsers = false;
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        if($atf->createTableIfNotExist($user->getId())) {
+            $userAdded = $atf->addUsers($usUserArray);
+
+            $ugrpAdded = false;
+            if($sUgroup > 0 && $sUgroup != 100) {
+                $ugrpAdded = $atf->addUgroup($sUgroup);
+            }
+
+            if($userAdded || $ugrpAdded) {
+                $this->_controler->feedback->log('info', Docman::txt('approval_useradd_success'));
+            }
+            else {
+                $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_failure'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('approval_tableins_failure'));
+        }
+    }
+
+   function approval_upd_user() {
+        // Params
+        $item    = $this->_controler->_actionParams['item'];
+        $sUserId = $this->_controler->_actionParams['user_id'];
+        $usRank  = $this->_controler->_actionParams['rank'];
+
+        // Action
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $atf->updateUser($sUserId, $usRank);
+    }
+
+    function approval_del_user() {
+        // Params
+        $item       = $this->_controler->_actionParams['item'];
+        $sUserId = $this->_controler->_actionParams['user_id'];
+
+        // Action
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $deleted = $atf->delUser($sUserId);
+        if($deleted) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_userdel_success'));
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('approval_userdel_failure'));
+        }
+    }
+
+    function approval_user_commit() {
+        // Params
+        $item      = $this->_controler->_actionParams['item'];
+        $svState   = $this->_controler->_actionParams['svState'];
+        $sVersion  = $this->_controler->_actionParams['sVersion'];
+        $usComment = $this->_controler->_actionParams['usComment'];
+        $user      = $this->_controler->getUser();
+
+        $review = new Docman_ApprovalReviewer();
+        $review->setId($user->getId());
+        $review->setState($svState);
+        $review->setComment($usComment);
+        if($svState != PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET) {
+            $review->setVersion($sVersion);
+            $review->setReviewDate(time());
+        }
+        else {
+            $review->setVersion(null);
+            $review->setReviewDate(null);
+        }
+
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $updated = $atf->updateReview($review);
+        if($updated) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_review_success'));
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('approval_review_failure'));
+        }
+
+        $this->monitor($this->_controler->_actionParams);
+    }
+
+    function approval_notif_resend() {
+        // Params
+        $item      = $this->_controler->_actionParams['item'];
+
+        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $res = $atf->notifyReviewers();
+        if($res) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_notification_success'));
+        }
+        else {
+            $this->_controler->feedback->log('warning', Docman::txt('approval_notification_failure'));
+        }
+    }
+
 }
 
 ?>

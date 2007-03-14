@@ -65,12 +65,19 @@ function util_sysdatefmt_to_userdateformat($date) {
 * @global $sys_datefmt the user preference date format defined in the language file, and set by pre.php
 *
 * @param string $date the date in the unix timestamp format
+* @param boolean $day_only false: return the day AND the time, true only the date.
 * @return string the date in the user format, or null if the conversion was not possible or wrong
 */
-function util_timestamp_to_userdateformat($date) {
-    global $sys_datefmt;
+function util_timestamp_to_userdateformat($date, $day_only=false) {
+    global $sys_datefmt, $sys_datefmt_short;
+    
+    if($day_only) {
+        $user_date = format_date($sys_datefmt_short, $date, null);
+    }
+    else {
+        $user_date = format_date($sys_datefmt, $date, null);
+    }
 
-    $user_date = format_date($sys_datefmt, $date, null);
     return $user_date;
 }
 

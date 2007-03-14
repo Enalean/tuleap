@@ -20,8 +20,10 @@ require_once('common/tracker/ArtifactReportFactory.class.php');
 require_once('common/tracker/ArtifactReport.class.php');
 require_once('common/tracker/ArtifactReportField.class.php');
 require_once('common/tracker/ArtifactFactory.class.php');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('my/my');
+$em =& EventManager::instance();
 
 // define undefined vars
 if (!isset($hide_item_id)) {
@@ -587,8 +589,10 @@ if (user_isloggedin()) {
 	echo $html_my_survey;
 	echo $html_my_projects;
 	echo $html_my_bookmarks;
+    $em->processEvent("my_page_after_bookmark", null);
 	echo $html_my_monitored_forums;
 	echo $html_my_monitored_fp;	
+    $em->processEvent("my_page_left_column_bottom", null);
 ?>
 	</TD><TD VALIGN="TOP" WIDTH="50%">
 <?
@@ -596,6 +600,7 @@ if (user_isloggedin()) {
 	echo $html_my_bugs;
 	echo $html_my_tasks;
 	echo $html_my_srs;
+    $em->processEvent("my_page_right_column_bottom", null);
 ?>
 	</TD></TR><TR><TD COLSPAN=2>
 	<?

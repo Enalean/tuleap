@@ -80,5 +80,9 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
+
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
 }
 ?>

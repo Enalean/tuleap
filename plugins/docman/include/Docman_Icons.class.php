@@ -79,6 +79,9 @@ class Docman_Icons {
                 $type = $v ? $v->getFiletype() : null;
                 $icon .= $this->getIconForMimeType($type);
                 break;
+            case 'docman_empty':
+                $icon .= 'empty';
+                break;
             default:
                 $icon .= 'binary';
                 break;

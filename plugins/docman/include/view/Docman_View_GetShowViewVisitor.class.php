@@ -26,5 +26,8 @@ class Docman_View_GetShowViewVisitor /* implements Visitor*/ {
         return 'Embedded';
     }
     
+    function visitEmpty(&$item, $params = array()) {
+        return 'Empty';
+    }
 }
 ?>

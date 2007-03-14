@@ -157,7 +157,7 @@ class Docman_MetadataListOfValuesElementFactory {
             
         default:
             $dao = $this->getDao();
-            $dar = $dao->searchByName($name);
+            $dar = $dao->searchByName($this->metadataId, $name, true);
             $dar->rewind();
             if($dar->valid()) {
                 $ea[] = $this->instanciateLove($dar->current());

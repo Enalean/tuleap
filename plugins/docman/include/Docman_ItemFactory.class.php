@@ -31,6 +31,7 @@ require_once('Docman_File.class.php');
 require_once('Docman_Link.class.php');
 require_once('Docman_EmbeddedFile.class.php');
 require_once('Docman_Wiki.class.php');
+require_once('Docman_Empty.class.php');
 require_once('Docman_Version.class.php');
 require_once('Docman_ItemBo.class.php');
 require_once('Docman_CloneItemsVisitor.class.php');
@@ -41,11 +42,13 @@ require_once('Docman_CloneItemsVisitor.class.php');
 class Docman_ItemFactory {
     var $rootItems;
     var $onlyOneChildForRoot;
+    var $copiedItem;
 
     function Docman_ItemFactory() {
         // Cache highly used info
         $this->rootItems[] = array();
         $this->onlyOneChildForRoot[] = array();
+        $this->copiedItem = array();
     }
 
     function &instance($group_id) {
@@ -73,6 +76,9 @@ class Docman_ItemFactory {
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
             $item = new Docman_Wiki($row);
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+            $item = new Docman_Empty($row);
             break;
         default:
             return;
@@ -115,6 +121,9 @@ class Docman_ItemFactory {
             case 'docman_embeddedfile':
                 $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
                 break;
+            case 'docman_empty':
+                $type = PLUGIN_DOCMAN_ITEM_TYPE_EMPTY;
+                break;
             default:
                 break;
         }
@@ -137,6 +146,27 @@ class Docman_ItemFactory {
 
         return(Docman_ItemFactory::getItemFromRow($row));
     }
+
+    function &getChildrenFromParent($item) {
+        $dao =& $this->_getItemDao();
+        
+        $itemArray = array();
+
+        $dar = $dao->searchByParentsId(array($item->getId()));
+        if ($dar && !$dar->isError()) {
+            while($dar->valid()) {
+                $row = $dar->current();
+
+                $itemArray[] = Docman_ItemFactory::getItemFromRow($row);
+
+                $dar->next();
+            }
+        }
+
+        $iIter = new ArrayIterator($itemArray);
+        return $iIter;
+    }
+    
     var $dao;
     function &_getItemDao() {
         if (!$this->dao) {
@@ -218,19 +248,27 @@ class Docman_ItemFactory {
         return $dao->createFromRow($item->toRow());
     }
 
-    function cloneItems($srcGroupId, $dstGroupId, $user, $metadataMapping, $ugroupsMapping, $dataRoot) {
+    function cloneItems($srcGroupId, $dstGroupId, $user, $metadataMapping, $ugroupsMapping, $dataRoot, $srcItemId = 0, $dstItemId = 0, $ordering = null) {
         $itemBo = new Docman_ItemBo($srcGroupId);
         $params = array('ignore_collapse' => true,
                         'user'            => $user);
-        $itemTree = $itemBo->getItemTree(0, $params);
+        $itemTree = $itemBo->getItemTree($srcItemId, $params);
         
         if ($itemTree) {
+            $rank = null;
+            if($ordering !== null) {
+                $dao  =& $this->_getItemDao();
+                $rank = $dao->_changeSiblingRanking($dstItemId, $ordering);
+            }
+
             $cloneItemsVisitor = new Docman_CloneItemsVisitor($dstGroupId);
-            $visitorParams = array('parentId' => 0,
+            $visitorParams = array('parentId' => $dstItemId,
                                'user' => $user,
                                'metadataMapping' => $metadataMapping,
                                'ugroupsMapping'  => $ugroupsMapping,
-                               'data_root' => $dataRoot);
+                               'data_root' => $dataRoot,
+                               'newRank' => $rank,
+                               'srcRootId' => $srcItemId);
             $itemTree->accept($cloneItemsVisitor, $visitorParams);
         }
     }
@@ -239,6 +277,31 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         $dar =& $dao->searchExpandedUserPrefs($group_id, $user_id);
         return $dar->valid();
+    }
+
+    function setCopyPreference($item) {
+        user_set_preference(PLUGIN_DOCMAN_PREF.'_item_copy',
+                            $item->getId());
+    }
+
+    function getCopyPreference($user) {
+        if(!isset($this->copiedItem[$user->getId()])) {
+            $this->copiedItem[$user->getId()] = user_get_preference(PLUGIN_DOCMAN_PREF.'_item_copy');
+        }
+        return $this->copiedItem[$user->getId()];
+    }
+
+    function delCopyPreference() {
+        user_del_preference(PLUGIN_DOCMAN_PREF.'_item_copy');
+    }
+
+    function getCurrentWikiVersion($item) {
+        $version = null;
+        $dao =& $this->_getItemDao();
+        if($this->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+            $version = $dao->searchCurrentWikiVersion($item->getGroupId(), $item->getPagename());
+        }
+        return $version;
     }
 
 }

@@ -63,5 +63,9 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitItem($item, $params);
     }
+
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitItem($item, $params);
+    }
 }
 ?>

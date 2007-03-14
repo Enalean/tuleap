@@ -53,5 +53,10 @@ class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
+
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+
 }
 ?>

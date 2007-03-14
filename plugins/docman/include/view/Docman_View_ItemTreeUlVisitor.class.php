@@ -105,6 +105,10 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         return $this->visitDocument($item, $params);
     }
 
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+
     //{{{
     function _displayItem(&$item, $params) {
         $li_displayed = false;

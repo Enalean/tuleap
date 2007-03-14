@@ -106,6 +106,7 @@ class Docman_MetadataFactory {
         
             $md->setCanChangeName(true);
             $md->setCanChangeIsEmptyAllowed(true);
+            $md->setCanChangeIsMultipleValuesAllowed(true);
             $md->setCanChangeDescription(true);
             $md->setCanChangeDefaultValue(true);
         }
@@ -347,7 +348,13 @@ class Docman_MetadataFactory {
 
     function updateRealMetadata($md) {
         $dao =& $this->getDao();
-        return $dao->updateById($md->getId(), $md->getName(), $md->getDescription(), $md->getIsEmptyAllowed(), $md->getUseIt(), $md->getDefaultValue());
+        return $dao->updateById($md->getId(),
+                                $md->getName(),
+                                $md->getDescription(),
+                                $md->getIsEmptyAllowed(),
+                                $md->getIsMultipleValuesAllowed(),
+                                $md->getUseIt(),
+                                $md->getDefaultValue());
     }
 
     // Today only usage configuration supported
@@ -373,9 +380,12 @@ class Docman_MetadataFactory {
     function create(&$md) {
         $md->setGroupId($this->groupId);
 
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST 
-           && $md->getDefaultValue() != null) {
-            $md->setDefaultValue(100);
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $dfltValue = $md->getDefaultValue();
+            if(!is_numeric($dfltValue) || $dfltValue < 100) {
+                $md->setDefaultValue(100);
+            }
+            // @todo: check that default value is in the value list.
         }
 
         $dao =& $this->getDao();
@@ -637,6 +647,7 @@ class Docman_MetadataFactory {
             $md = $this->_createFromRow($dar->current());
             $md->setCanChangeName(true);
             $md->setCanChangeIsEmptyAllowed(true);
+            $md->setCanChangeIsMultipleValuesAllowed(true);
             $md->setCanChangeDescription(true);
             $md->setCanChangeDefaultValue(true);
 

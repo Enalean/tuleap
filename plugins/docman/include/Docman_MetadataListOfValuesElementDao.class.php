@@ -58,11 +58,20 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByName($name) {
-        $sql = sprintf('SELECT *'.
-                       ' FROM plugin_docman_metadata_love AS love'.
-                       ' WHERE love.name = %s',
-                       $this->da->quoteSmart($name));
+    function searchByName($metadataId, $name, $onlyActive) {
+        $where_clause = '';
+        if($onlyActive === true) {
+            $where_clause .= ' AND love.status IN ("A", "P")';
+        }
+        $sql = sprintf('SELECT love.*'.
+                       ' FROM plugin_docman_metadata_love AS love,'.
+                       '  plugin_docman_metadata_love_md AS lovemd'.
+                       ' WHERE love.name = %s'.
+                       $where_clause.
+                       '  AND lovemd.value_id = love.value_id'.
+                       '  AND lovemd.field_id = %d',
+                       $this->da->quoteSmart($name),
+                       $metadataId);
         return $this->retrieve($sql);
     }
 
@@ -183,17 +192,26 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
     function updateElement($metadataId, $valueId, $name, $description, $rank, $status) {
         $updated = false;
 
-        $r = $this->prepareRanking($metadataId, $rank);
-        if($r !== false) {
+        $rankStmt = false;
+        if($rank != '--') {
+            $r = $this->prepareRanking($metadataId, $rank);
+            if($r !== false) {
+                $rankStmt = '  , love.rank = '.$r;
+            }
+        }
+        else {
+            $rankStmt = '';
+        }
+
+        if($rankStmt !== false) {
             $sql = sprintf('UPDATE plugin_docman_metadata_love AS love'.
                            ' SET love.name = %s'.
                            '  , love.description = %s'.
-                           '  , love.rank = %d'.
+                           $rankStmt.
                            '  , love.status = %s'.
                            ' WHERE love.value_id = %d',
                            $this->da->quoteSmart($name),
                            $this->da->quoteSmart($description),
-                           $r,
                            $this->da->quoteSmart($status),
                            $valueId);
             $updated = $this->update($sql);

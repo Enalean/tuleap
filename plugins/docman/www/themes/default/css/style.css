@@ -236,6 +236,14 @@ fieldset.docman_filters legend {
     background-image:url('../images/ic/file-newversion.png');
 }
 
+.docman_item_option_copy {
+    background-image:url('../images/ic/copy.png');
+}
+
+.docman_item_option_paste {
+    background-image:url('../images/ic/paste.png');
+}
+
 /**********/
 .docman_item_actual_parent {
     font-weight: bold;
@@ -372,4 +380,49 @@ form.md_create_love textarea {
 
 form.md_create_love .text_field {
   width: 50%;
+}
+
+/*
+ * Approval Table
+ */
+
+/* Table */
+tr.docman_approval_readonly  {
+  font-style: italic;
+  color: grey;
+}
+
+tr.docman_approval_highlight {
+  font-weight: bold;
+}
+
+/* Admin */
+.docman_approval_form p { 
+  clear: both;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+.docman_approval_form label {
+ float: left;
+ width: 20%;
+ text-align: left;
+}
+
+.docman_approval_form textarea {
+  width: 50%; /* Warning: keep synchro with input.text_field */
+  height: 7em;
+}
+
+.docman_approval_form input.text_field {
+  width: 50%;
+}
+
+.docman_approval_email {
+  font-family: courier, monospace;
+  white-space: pre;
+  background-color: #CCCCCC;
 }

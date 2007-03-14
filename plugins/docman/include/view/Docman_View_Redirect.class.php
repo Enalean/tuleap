@@ -44,6 +44,9 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
     function visitEmbeddedFile(&$item, $params = array()) {
         trigger_error('Redirect view cannot be applied to Embedded Files');
     }
-}
 
+    function visitEmpty(&$item, $params = array()) {
+        trigger_error('Redirect view cannot be applied to Empty documents');
+    }
+}
 ?>

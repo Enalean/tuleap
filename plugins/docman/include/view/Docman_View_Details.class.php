@@ -17,6 +17,7 @@ require_once('Docman_View_ItemDetailsSectionPermissions.class.php');
 require_once('Docman_View_ItemDetailsSectionNotifications.class.php');
 require_once('Docman_View_ItemDetailsSectionHistory.class.php');
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
+require_once('Docman_View_ItemDetailsSectionApproval.class.php');
 
 class Docman_View_Details extends Docman_View_Display {
     
@@ -64,6 +65,16 @@ class Docman_View_Details extends Docman_View_Display {
             $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url'], $this->_controller->notificationsManager, $token));
         }
         
+        if ($user_can_read) {
+            if ($view && $section == 'approval') {
+                $approval =& $view;
+            } else {
+                $approval = new Docman_View_ItemDetailsSectionApproval($params['item'], $params['default_url'], $params['theme_path'], $this->_controller->notificationsManager);
+            }
+            $sections['approval'] = true;
+            $details->addSection($approval);
+        }
+
         if ($user_can_read) {
             $sections['history'] = true;
             $logger = $this->_controller->getLogger();

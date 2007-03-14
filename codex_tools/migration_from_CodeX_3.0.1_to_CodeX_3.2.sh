@@ -314,6 +314,32 @@ FROM artifact_group_list;
 ALTER TABLE artifact_group_list DROP email_address;
 ALTER TABLE artifact_group_list DROP email_all_updates;
 
+###############################################################################
+# Plugin Docman
+ALTER TABLE plugin_docman_metadata ADD COLUMN mul_val_ok TINYINT(4) NOT NULL DEFAULT '0' AFTER empty_ok;
+DROP TABLE IF EXISTS plugin_docman_approval;
+CREATE TABLE plugin_docman_approval (
+  item_id INT(11) UNSIGNED NOT NULL,
+  table_owner INT(11) UNSIGNED NOT NULL,
+  date INT(11) UNSIGNED NULL,
+  description TEXT NULL,
+  status TINYINT(4) DEFAULT 0 NOT NULL,
+  notification TINYINT(4) DEFAULT 0 NOT NULL,
+  INDEX item_id (item_id),
+  UNIQUE(item_id)
+);
+DROP TABLE IF EXISTS plugin_docman_approval_user;
+CREATE TABLE plugin_docman_approval_user (
+  item_id INT(11) UNSIGNED NOT NULL,
+  reviewer_id INT(11) UNSIGNED NOT NULL,
+  rank INT(11) DEFAULT 0 NOT NULL,
+  date INT(11) UNSIGNED NULL,
+  state TINYINT(4) DEFAULT 0 NOT NULL,
+  comment TEXT NULL,
+  version INT(11) UNSIGNED NULL,
+  PRIMARY KEY(item_id, reviewer_id),
+  INDEX rank (rank)
+);
 EOF
 
 echo "Optimizing database structure."

@@ -35,6 +35,12 @@ class Docman_View_NewDocument extends Docman_View_New {
         }
         $specifics = array(
             array(
+                'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+                'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_empty'),
+                'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY)? $params['force_item'] : new Docman_Empty(),
+                'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY)
+            ),
+            array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)? $params['force_item'] : new Docman_Link(),
@@ -91,7 +97,8 @@ class Docman_View_NewDocument extends Docman_View_New {
             $mdFactory->appendItemMetadataList($new_document);
         }
 
-        // append MD list
+        // Append, for list Metadata the list of values associated in the DB
+        // (content of select box)
         $mdFactory->appendAllListOfValuesToItem($new_document);
 
         $metadataToSkip = $mdFactory->getMetadataLabelToSkipCreation();

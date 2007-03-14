@@ -51,6 +51,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         $mdContent .= $metaMdHtml->getType($sthCanChange);
         $mdContent .= $metaMdHtml->getDefaultValue($sthCanChange);
         $mdContent .= $metaMdHtml->getEmptyAllowed($sthCanChange);
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $mdContent .= $metaMdHtml->getMultipleValuesAllowed($sthCanChange);
+        }
         $mdContent .= $metaMdHtml->getUseIt($sthCanChange);
         $mdContent .= $metaMdHtml->getKeepHistory($sthCanChange);
               

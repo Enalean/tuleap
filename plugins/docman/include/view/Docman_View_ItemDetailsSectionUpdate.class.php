@@ -37,13 +37,36 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $this->item->accept($this);
     }
     
+    function _updateHeader($enctype = '') {
+        $content = '';
+        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
+        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" '.$enctype.'>';
+        return $content;
+    }
+
+    function _updateFooter() {
+        $content = '';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
+        $content .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
+        $content .= '<input type="hidden" name="action" value="update_wl" />';
+        $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
+        
+        $content .= '</form>';
+        
+        $content .= '</dd></dl>';
+        return $content;
+    }
+
     function visitFolder(&$item, $params = array()) {
         return "";
     }
     function visitDocument(&$item, $params = array()) {
         $content = '';
-        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
-        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
+        
+        $content .= $this->_updateHeader();
         
         require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
@@ -52,17 +75,9 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
             $content .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
         }
         $content .= '</table>';
-        if ($this->token) {
-            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
-        }
-        $content .= '<input type="hidden" name="item[id]" value="'. $item->getId() .'" />';
-        $content .= '<input type="hidden" name="action" value="update_wl" />';
-        $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
         
-        $content .= '</form>';
+        $content .= $this->_updateFooter();
         
-        $content .= '</dd></dl>';
         return $content;
     }
     function visitWiki(&$item, $params = array()) {
@@ -77,6 +92,24 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
-    
+
+    function visitEmpty(&$item, $params = array()) {
+        $content = '';
+
+        $enctype = ' enctype="multipart/form-data"';
+        $content .= $this->_updateHeader($enctype);
+
+        require_once('Docman_View_NewDocument.class.php');
+ 
+        // Fetch type selector
+        $newView = new Docman_View_NewDocument($this->_controller);
+        $vparam = array();
+        $vparam['force_item'] = $item;
+        $content .= $newView->_getSpecificProperties($vparam);
+
+        $content .= $this->_updateFooter();
+
+        return $content;
+    }
 }
 ?>

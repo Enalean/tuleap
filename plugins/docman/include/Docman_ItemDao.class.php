@@ -441,15 +441,26 @@ class Docman_ItemDao extends DataAccessObject {
         $dar = $this->retrieve($sql);
         return !$dar->valid();
     }
-    function setNewParent($item_id, $new_parent_id, $ordering) {
-        $rank       = 0;
-        $can_update = true;
+
+    /**
+     * This function intend to reorganize items under $parentId
+     *
+     * This function only affect rank parameter of sibling bellow $parentId.
+     * -> It doesn't move item itself except for 'down' and 'up'. These 2
+     * special move (that require $item_id param) change ranking of the item
+     * to move up or down.
+     */
+    function _changeSiblingRanking($parentId, $ordering, $item_id = false) {
+        $rank = 0;
         switch ($ordering) {
             case 'beginning':
             case 'end':
-                $sql = sprintf('SELECT '.($ordering=='end'?'MAX(rank)+1':'MIN(rank)-1').' AS rank FROM plugin_docman_item WHERE parent_id = %s', 
-                    $this->da->quoteSmart($new_parent_id)
-                );
+                $_select = $ordering == 'end' ? 'MAX(rank)+1' : 'MIN(rank)-1';
+                $sql = sprintf('SELECT %s AS rank'.
+                               ' FROM plugin_docman_item'.
+                               ' WHERE parent_id = %d',
+                               $_select,
+                               $parentId);
                 $dar = $this->retrieve($sql);
                 if ($dar && $dar->valid()) {
                     $row = $dar->current();
@@ -458,49 +469,65 @@ class Docman_ItemDao extends DataAccessObject {
                 break;
             case 'down':
             case 'up':
-                if ($ordering == 'down') {
-                    $op    = '>';
-                    $order = 'ASC';
-                } else {
-                    $op    = '<';
-                    $order = 'DESC';
-                }
-                $sql = sprintf('SELECT i1.item_id as item_id, i1.rank as rank
-                       FROM plugin_docman_item i1 INNER JOIN plugin_docman_item i2 USING(parent_id)
-                       WHERE i2.item_id = %s AND i1.rank %s i2.rank
-                       ORDER BY i1.rank %s
-                       LIMIT 1', 
-                    $this->da->quoteSmart($item_id),
-                    $op,
-                    $order
-                );
-                $dar = $this->retrieve($sql);
-                if ($dar && $dar->valid()) {
-                    $row = $dar->current();
-                    
-                    ;
-                    
-                    $sql = sprintf('UPDATE plugin_docman_item i1, plugin_docman_item i2
-                                    SET i1.rank = i2.rank, i2.rank = %s
-                                    WHERE i1.item_id = %s AND i2.item_id = %s',
-                        $this->da->quoteSmart($row['rank']),
-                        $this->da->quoteSmart($row['item_id']),
-                        $this->da->quoteSmart($item_id)
-                    );
-                    $res = $this->update($sql);
-                    $can_update = false;
+                if($item_id !== false) {
+                    if ($ordering == 'down') {
+                        $op    = '>';
+                        $order = 'ASC';
+                    } else {
+                        $op    = '<';
+                        $order = 'DESC';
+                    }
+                    $sql = sprintf('SELECT i1.item_id as item_id, i1.rank as rank'.
+                                   ' FROM plugin_docman_item i1'.
+                                   '  INNER JOIN plugin_docman_item i2 USING(parent_id)'.
+                                   ' WHERE i2.item_id = %d'.
+                                   '  AND i1.rank %s i2.rank'.
+                                   ' ORDER BY i1.rank %s'.
+                                   ' LIMIT 1', 
+                                   $item_id,
+                                   $op,
+                                   $order);
+                    $dar = $this->retrieve($sql);
+                    if ($dar && $dar->valid()) {
+                        $row = $dar->current();
+                        
+                        $sql = sprintf('UPDATE plugin_docman_item i1, plugin_docman_item i2'.
+                                       ' SET i1.rank = i2.rank, i2.rank = %d'.
+                                       ' WHERE i1.item_id = %d '.
+                                       '  AND i2.item_id = %d',
+                                       $row['rank'],
+                                       $row['item_id'],
+                                       $item_id);
+                        $res = $this->update($sql);
+                        //$can_update = false;
+                        // Message for setNewParent function
+                        $rank = -1;
+                    }
                 }
                 break;
             default:
                 $rank = $ordering?$ordering:0;
-                $sql = sprintf('UPDATE plugin_docman_item SET rank = rank + 1 '.
-                    ' WHERE  parent_id = %s AND rank >= %s',
-                    $this->da->quoteSmart($new_parent_id),
-                    $this->da->quoteSmart($rank)
-                );
+                $sql = sprintf('UPDATE plugin_docman_item'.
+                               ' SET rank = rank + 1 '.
+                               ' WHERE  parent_id = %d '.
+                               '  AND rank >= %d',
+                               $parentId,
+                               $rank);
                 $this->update($sql);
                 break;
         }
+
+        return $rank;
+    }
+
+    function setNewParent($item_id, $new_parent_id, $ordering) {
+        $can_update = true;
+
+        $rank = $this->_changeSiblingRanking($new_parent_id, $ordering, $item_id);
+        if($ordering == 'down' || $ordering == 'up') {
+            $can_update = ($rank == -1) ? false : true;
+        }
+
         if ($can_update) {
             $sql = sprintf('UPDATE plugin_docman_item SET parent_id = %s, rank = %s '.
                 ' WHERE  item_id = %s ',
@@ -514,7 +541,7 @@ class Docman_ItemDao extends DataAccessObject {
     }
     
     function searchByParentsId($parents) {
-        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL ',
+        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL ORDER BY rank',
             implode(', ', $parents)
         );
         return $this->retrieve($sql);
@@ -549,6 +576,22 @@ class Docman_ItemDao extends DataAccessObject {
         else {
             return null;
         }
+    }
+
+    function searchCurrentWikiVersion($groupId, $pagename) {
+        $version = null;
+        $sql = sprintf('SELECT MAX(version) AS version'.
+                       ' FROM wiki_page '.
+                       '  INNER JOIN wiki_version USING(id)'.
+                       ' WHERE group_id = %d'.
+                       ' AND pagename = %s',
+                       $groupId, $this->da->quoteSmart($pagename));
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            $version = $row['version'];
+        }
+        return $version;
     }
 }
 

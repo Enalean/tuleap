@@ -83,11 +83,11 @@ class Docman_MetadataValue {
  * Docman_MetadataValueList may have serveral values.
  */
 class Docman_MetadataValueList extends Docman_MetadataValue {
-    var $valueInt;
+    var $listOfValues;
 
     function Docman_MetadataValueList() {
         parent::Docman_MetadataValue();        
-        $this->valueInt = null;
+        $this->listOfValues = null;
     }
 
     function setType($v) {
@@ -98,10 +98,10 @@ class Docman_MetadataValueList extends Docman_MetadataValue {
     }
 
     function setValue(&$v) {
-        $this->valueInt =& $v;
+        $this->listOfValues =& $v;
     }
     function &getValue() {
-        $i = new ArrayIterator($this->valueInt);
+        $i = new ArrayIterator($this->listOfValues);
         return $i;
     }
 

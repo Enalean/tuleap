@@ -23,7 +23,6 @@ require_once('Docman_View_Docman.class.php');
         $item =& $params['item'];
         $current_item       =& $item;
         $current_item_title = $item->getTitle();
-        $user_actions       = $item->accept(new Docman_View_GetMenuItemsVisitor());
         $id                 = $item->getId();
         $parents = array();
         $item_factory =& $this->_getItemFactory($params);

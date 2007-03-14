@@ -192,6 +192,16 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
             case 'details&section=permissions':
                 $allowed = $this->_controller->userCanManage($item->getId());
                 break;
+
+            case 'action_copy':
+                $allowed = true;
+                break;
+                
+            case 'action_paste':
+                $allowed = ($this->_controller->userCanWrite($item->getId()) &&
+                            $if->getCopyPreference($this->_controller->getUser()) != false);
+                break;
+
             default:
                 $allowed = false;
                 break;
@@ -210,7 +220,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         $html .= '<script type="text/javascript">
         //<!--
         ';
-        $user_actions = $item->accept(new Docman_View_GetMenuItemsVisitor());
+        $user_actions = $item->accept(new Docman_View_GetMenuItemsVisitor(), $params);
         foreach($user_actions as $key => $nop) {
             if ($this->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
                 $html .= $user_actions[$key]->fetchAsJavascript(array_merge($params, array('docman_icons' => &$docman_icons, 'bc' => $bc)));

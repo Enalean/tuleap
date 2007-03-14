@@ -88,6 +88,10 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
         return $this->visitFile($item, $params);
     }
 
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+
     function _deleteItem($item, $params) {
         if ($this->docman->userCanWrite($item->getId())) {
             $item->setDeleteDate(time());

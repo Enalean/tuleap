@@ -174,12 +174,12 @@ class Docman_PermissionsManager {
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
 
-    function setDefaultItemPermissions($itemId) {
+    function setDefaultItemPermissions($itemId, $force=false) {
         $dao =& $this->getDao();
 
-        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_READ');
-        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_WRITE');
-        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_MANAGE');
+        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_READ', $force);
+        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_WRITE', $force);
+        $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_MANAGE', $force);
     }
 
     function setDefaultDocmanPermissions($groupId) {

@@ -164,9 +164,19 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
             }
         }
 
-        $columnsOnReport = array('title', 'description', 'location', 'owner', 'update_date');
+        $settingsBo =  Docman_SettingsBo::instance($params['group_id']);
+        $useStatus = $settingsBo->getMetadataUsage('status');
+
+        if($useStatus) {
+            $columnsOnReport = array('status', 'title', 'description', 'location', 'owner', 'update_date');
+        }
+        else {
+            $columnsOnReport = array('title', 'description', 'location', 'owner', 'update_date');
+        }
 
         $notSortableColumns['location'] = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_location');
+        
+
         $columnsTitles = array();
         foreach($columnsOnReport as $column) {
             if(isset($sortableColumns[$column])) {
@@ -189,6 +199,17 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
                     $trclass = html_get_alt_row_color($altRowClass++);
                     $table .=  "<tr class=\"".$trclass."\">\n";
             
+                    // Status
+                    if($useStatus) {
+                        $table .= "<td>";
+                        $eIter = $item->getHardCodedMetadataValue('status');
+                        $love  = $eIter->current();
+                        if($love->getId() > 0) {
+                            $table .= $love->getName();
+                        }
+                        $table .= "</td>\n";
+                    }
+
                     // Title
                     $docmanIcons =& $this->_getDocmanIcons($params);
                     $icon_src = $docmanIcons->getIconForItem($item, $params);
@@ -229,8 +250,8 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
                         }
                     }
                     $table .= implode(' / ', $pathUrl);
-                    $table .=  "</td>\n";
-		 
+                    $table .=  "</td>\n";		 
+
                     // Owner
                     $table .=  "<td>";
                     $table .=  user_getname($item->getOwnerId());

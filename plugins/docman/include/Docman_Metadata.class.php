@@ -54,6 +54,7 @@ class Docman_Metadata {
     var $description;
     var $isRequired;
     var $isEmptyAllowed;
+    var $isMultipleValuesAllowed;
     var $keepHistory;
     var $special;
     var $defaultValue;
@@ -68,6 +69,7 @@ class Docman_Metadata {
         $this->description = null;
         $this->isRequired = null;
         $this->isEmptyAllowed = null;
+        $this->isMultipleValuesAllowed = null;
         $this->keepHistory = null;
         $this->special = null;
         $this->defaultValue = null;
@@ -133,6 +135,13 @@ class Docman_Metadata {
         return $this->isEmptyAllowed;
     }
 
+    function setIsMultipleValuesAllowed($v) {
+        $this->isMultipleValuesAllowed = $v;
+    }
+    function getIsMultipleValuesAllowed() {
+        return $this->isMultipleValuesAllowed;
+    }
+
     function setKeepHistory($v) {
         $this->keepHistory = $v;
     }
@@ -171,6 +180,16 @@ class Docman_Metadata {
             return false;
         }
     }
+
+    function isMultipleValuesAllowed() {
+        if($this->isMultipleValuesAllowed == PLUGIN_DOCMAN_DB_TRUE) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     function isRequired() {
         if($this->isRequired == PLUGIN_DOCMAN_DB_TRUE) {
             return true;
@@ -231,6 +250,14 @@ class Docman_Metadata {
         return $this->canChangeIsEmptyAllowed;
     }
 
+    var $canChangeIsMultipleValuesAllowed;
+    function setCanChangeIsMultipleValuesAllowed($v) {
+        $this->canChangeIsMultipleValuesAllowed = $v;
+    }
+    function canChangeIsMultipleValuesAllowed() {
+        return $this->canChangeIsMultipleValuesAllowed;
+    }
+
     var $canChangeDefaultValue;
     function setCanChangeDefaultValue($v) {
         $this->canChangeDefaultValue = $v;
@@ -266,6 +293,7 @@ class Docman_Metadata {
         if(isset($row['description'])) $this->description = $row['description'];
         if(isset($row['required'])) $this->isRequired = $row['required'];
         if(isset($row['empty_ok'])) $this->isEmptyAllowed = $row['empty_ok'];
+        if(isset($row['mul_val_ok'])) $this->isMultipleValuesAllowed = $row['mul_val_ok'];
         if(isset($row['special'])) $this->special = $row['special'];
         if(isset($row['default_value'])) $this->defaultValue = $row['default_value'];
         if(isset($row['use_it'])) $this->useIt = $row['use_it'];
@@ -274,12 +302,30 @@ class Docman_Metadata {
     }
 }
 
+/**
+ * For metadata that aims to provide a list of values to use we add two special
+ * methods that store and restore all the values provided by the metadata
+ * (ie. the select box).
+ *
+ * Actually, Docman_ListMetadata objects are quite complex because they provide
+ * - a list of values the user can select (this is the purpose of the two
+ *   function bellow)
+ * - a list of values the user selected, accessible by regular setValue() and
+ *   getValue().
+ */
 class Docman_ListMetadata extends Docman_Metadata {
     var $listOfValue;
-    
+
+    /**
+     * @param array of Docman_MetadataListOfValuesElements
+     */
     function setListOfValueElements(&$l) {
         $this->listOfValue =& $l;
     }
+
+    /**
+     * @return iterator of Docman_MetadataListOfValuesElements
+     */
     function &getListOfValueIterator() {
         $i = new ArrayIterator($this->listOfValue);
         return $i;

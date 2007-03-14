@@ -42,10 +42,10 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function setDefaultPermissions($objectId, $perm) {
+    function setDefaultPermissions($objectId, $perm, $force=false) {
         $res = permission_db_get_defaults($perm);
         while($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
-            permission_add_ugroup($this->groupId, $perm, $objectId, $row['ugroup_id']);
+            permission_add_ugroup($this->groupId, $perm, $objectId, $row['ugroup_id'], $force);
         }
     }
 

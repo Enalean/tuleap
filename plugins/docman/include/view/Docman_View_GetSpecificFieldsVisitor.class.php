@@ -101,6 +101,27 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
 
 }
 
+/**
+ */
+class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
+
+    function Docman_MetadataHtmlEmpty() {
+    }
+
+    function getLabel() {
+        return $GLOBALS['Language']->getText('plugin_docman', 'specificfield_empty');
+    }
+    
+    function getField() {
+        return '';
+    }
+
+    function &getValidator() {
+        $validator = null;
+        return $validator;
+    }
+}
+
 class Docman_View_GetSpecificFieldsVisitor {
     
     function visitFolder(&$item, $params = array()) {
@@ -143,6 +164,10 @@ class Docman_View_GetSpecificFieldsVisitor {
             $content = file_get_contents($version->getPath());
         }
         return array(new Docman_MetadataHtmlEmbeddedFile($content));    
+    }
+    
+    function visitEmpty(&$item, $params = array()) {
+        return array(new Docman_MetadataHtmlEmpty());
     }
 }
 ?>

@@ -33,13 +33,15 @@ class Docman_ItemAction {
     var $class;
     var $title;
     var $other_icons;
-    
+    var $extraUrlParams;
+
     function Docman_ItemAction(&$item) {
         $this->item             =& $item;
         $this->action           = '';
         $this->classes          = '';
         $this->title            = '';
         $this->other_icons      = array();
+        $this->extraUrlParams   = array();
     }
 
     function fetchAction($params) {
@@ -51,19 +53,27 @@ class Docman_ItemAction {
     }
 
     function fetch($params) {
-        $html  = '<a href="'. $params['default_url'] .'&amp;action='. $this->action .'&amp;id='. $this->item->getId() .'" class="'. $this->classes .'" title="'. $this->title .'">';
+        $dfltUrlParams = array('action' => $this->action,
+                               'id' => $this->item->getId());
+        $_urlParams = array_merge($dfltUrlParams, $this->extraUrlParams);
+        $url = Docman_View_View::buildActionUrl($params, 
+                                                $_urlParams,
+                                                true,
+                                                true);
+        $html  = '<a href="'.$url.'" class="'. $this->classes .'" title="'. $this->title .'">';
         $html .= '<img src="'. $params['docman_icons']->getActionIcon($this->action) .'" class="docman_item_icon" alt="['. $this->title .']" />';
         $html .= '</a>&nbsp;';
         return $html;
     }
     function fetchAsJavascript($params) {
-        $action_params = array('action' => $this->action,
+        $dfltUrlParams = array('action' => $this->action,
                               'id' => $this->item->getId());
         if (isset($params['bc']) && $params['bc']) {
-            $action_params['bc'] = '1';
+            $dfltUrlParams['bc'] = '1';
         }
+        $_urlParams = array_merge($dfltUrlParams, $this->extraUrlParams);
         $url = Docman_View_View::buildActionUrl($params, 
-                                                $action_params,
+                                                $_urlParams,
                                                 true,
                                                 true);
         $js = "
@@ -167,6 +177,29 @@ class Docman_ItemActionUpdate extends Docman_ItemAction {
         $this->action           = 'action_update';
         $this->classes          = 'docman_item_option_update';
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_update');
+    }
+}
+
+class Docman_ItemActionCopy extends Docman_ItemAction {
+    function Docman_ItemActionCopy(&$item, $params) {
+        parent::Docman_ItemAction($item);
+        $this->action           = 'action_copy';
+        $this->classes          = 'docman_item_option_copy';
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_copy');
+
+        $currentItem = $params['item'];
+        $origAction = isset($params['action']) ? $params['action'] : 'show';
+        $this->extraUrlParams   = array('orig_id'     => $currentItem->getId(),
+                                        'orig_action' => $origAction);
+    }
+}
+
+class Docman_ItemActionPaste extends Docman_ItemAction {
+    function Docman_ItemActionPaste(&$item, $params) {
+        parent::Docman_ItemAction($item);
+        $this->action           = 'action_paste';
+        $this->classes          = 'docman_item_option_paste';
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_paste');
     }
 }
 

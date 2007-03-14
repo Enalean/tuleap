@@ -41,6 +41,20 @@ class Docman_MetadataValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    // Special query to get values in rank order.
+    function searchListValuesById($fieldId, $itemId) {
+        $sql = sprintf('SELECT valueInt'.
+                       ' FROM plugin_docman_metadata_value as mdv,'.
+                       '      plugin_docman_metadata_love as love'.
+                       ' WHERE mdv.field_id = %d'.
+                       ' AND mdv.item_id = %d'.
+                       ' AND love.value_id = mdv.valueInt'.
+                       ' ORDER BY love.rank',
+                       $fieldId,
+                       $itemId);
+        return $this->retrieve($sql);
+    }
+
     function create($itemId, $fieldId, $type, $value) {
         $fields = array('field_id', 'item_id');
         $types  = array('%d', '%d');
@@ -176,6 +190,17 @@ class Docman_MetadataValueDao extends DataAccessObject {
                        $previousValue);
         return $this->update($sql);
     }
+
+    function delete($fieldId, $item_id) {
+        $sql = sprintf('DELETE FROM plugin_docman_metadata_value'.
+                       ' WHERE field_id = %d'.
+                       ' AND item_id = %d',
+                       $fieldId,
+                       $item_id
+                       );
+        return $this->update($sql);
+    }
+
 }
 
 ?>

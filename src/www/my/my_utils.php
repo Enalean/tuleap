@@ -35,8 +35,10 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     global $PHP_SELF, $Language;
 
     $pref_name = 'my_hide_'.$svc.$db_item_id;
-    $old_pref_value = user_get_preference($pref_name);
-    list($old_hide,$old_count) = explode('|', $old_pref_value);
+    $old_hide = $old_count = $old_pref_value = user_get_preference($pref_name);
+    if ($old_pref_value) {
+        list($old_hide,$old_count) = explode('|', $old_pref_value);
+    }
   
     // Make sure they are both 0 if never set before
     if ($old_count == false) { $old_count = 0; }
@@ -63,7 +65,7 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
 
     // Update pref value if needed
     if ($old_pref_value != $pref_value) {
-		user_set_preference($pref_name, $pref_value);
+        user_set_preference($pref_name, $pref_value);
     }
 
     if ($hide) {

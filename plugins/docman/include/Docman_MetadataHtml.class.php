@@ -318,10 +318,11 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             $e = $vIter->current();
 
             if(!$first) {
-                $html .= ', ';
+                $html .= '<br>';
             }
             $html .= $this->_getElementName($e);
 
+            $first = false;
             $vIter->next();
         }
 
@@ -338,9 +339,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             $eIter->rewind();
             while($eIter->valid()) {
                 $e = $eIter->current();
-                if($e->getId() >= 100) {
-                    $selectedElements[] = $e->getId();
-                }
+                $selectedElements[] = $e->getId();
                 $eIter->next();
             }
         }
@@ -350,8 +349,14 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             $selectedElements[] = $this->md->getDefaultValue();
         }
 
-        $name  = $this->_getFieldName();
-        $html .= '<select name="'.$name.'">'."\n";
+        $name     = $this->_getFieldName();
+        $multiple = '';
+        if($this->md->isMultipleValuesAllowed()) {
+            $name = $name.'[]';
+            $multiple = ' multiple = "multiple" size = "6"';
+        }
+        
+        $html .= '<select name="'.$name.'"'.$multiple.'>'."\n";
 
         $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();

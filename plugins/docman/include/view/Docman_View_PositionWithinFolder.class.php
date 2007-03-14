@@ -60,6 +60,10 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+    
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
 }
 
 ?>

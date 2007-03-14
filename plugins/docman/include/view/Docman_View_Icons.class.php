@@ -53,7 +53,8 @@ class Docman_View_Icons extends Docman_View_Browse {
                 'docman_icons'           => $this->_getDocmanIcons($params),
                 'default_url'            => $params['default_url'],
                 //'display_description'    => isset($params['display_description']) ? $params['display_description'] : true,
-                'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false)
+                'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false),
+                'item'                  => $params['item'],
             );
             foreach($rows as $row) {
                 $html .= '<tr style="vertical-align:top">';
@@ -83,6 +84,10 @@ class Docman_View_Icons extends Docman_View_Browse {
         return $this->visitDocument($item, $params);
     }
     function visitEmbeddedFile(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
+
+    function visitEmpty(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
     

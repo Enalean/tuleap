@@ -118,5 +118,9 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
+    }
 }
 ?>

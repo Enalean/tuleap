@@ -81,8 +81,18 @@ class Docman_MetadataValueFactory extends Error {
         $mdv->setType($type);
         if($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $ea = array();
-            $ea[0] =& new Docman_MetadataListOfValuesElement();
-            $ea[0]->setId($value);
+            if(is_array($value)) {
+                foreach($value as $val) {
+                    $e = new Docman_MetadataListOfValuesElement();
+                    $e->setId($val);
+                    $ea[] = $e;
+                }
+            }
+            else {
+                $e = new Docman_MetadataListOfValuesElement();
+                $e->setId($value);
+                $ea[] = $e;
+            }
             $mdv->setValue($ea);
         }
         else {
@@ -95,28 +105,45 @@ class Docman_MetadataValueFactory extends Error {
     /**
      * Create and set-up a MetadataValue object from database.
      */
-    function &getMetadataValue(&$item, &$md) {
+    function &getMetadataValue($item, $md) {
         $mdv = null;
         $dao =& $this->getDao();
-        $dar = $dao->searchById($md->getId(), $item->getId());
-        if($dar && !$dar->isError()) { 
-            if($dar->rowCount() == 1) {
-                $row =& $dar->current();
-                $mdv =& $this->createFromType($md->getType());
-                $mdv->initFromRow($row);
-                if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                    $loveBo = new Docman_MetadataListOfValuesElementFactory();
-                    $ea = array();
-                    $ea[] =& $loveBo->getByElementId($row['valueInt']);                    
-                    $mdv->setValue($ea);
+
+        $workOnLove = ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+
+        if($workOnLove) {
+            $dar = $dao->searchListValuesById($md->getId(), $item->getId());
+        }
+        else {
+            $dar = $dao->searchById($md->getId(), $item->getId());
+        }
+
+        if($dar && !$dar->isError()) {
+            $mdv =& $this->createFromType($md->getType());
+            
+            if($workOnLove) {
+                $mdv->setItemId($item->getId());
+                $mdv->setFieldId($md->getId());
+                $loveFactory = new Docman_MetadataListOfValuesElementFactory();
+                $ea = array();
+                while($dar->valid()) {
+                    $row =& $dar->current();
+
+                    $e = $loveFactory->getByElementId($row['valueInt']);
+                    $ea[] = $e;
+
+                    $dar->next();
                 }
+                $mdv->setValue($ea);
             }
             else {
-                // Should only exist for lists.
-                //@todo: write the code for multiple selection box
+                $row =& $dar->current();
+                $mdv->initFromRow($row);
             }
+
         }
-        return $mdv;
+
+        return $mdv;        
     }
 
     /**
@@ -201,22 +228,16 @@ class Docman_MetadataValueFactory extends Error {
         $dao =& $this->getDao(); 
         switch($mdv->getType()) {
         case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-            $eIter =& $mdv->getValue();
-            $eIter->rewind();
-            $ret = true;
-            while($eIter->valid()) {
-                $e =& $eIter->current();
-
-                $pret = $dao->updateValue($mdv->getItemId(),
-                                          $mdv->getFieldId(),
-                                          $mdv->getType(),
-                                          $e->getId());
-                if($pret === false) {
-                    //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
-                    $ret = false;
-                }
-
-                $eIter->next();
+            // First delete all previous values
+            $dao->delete($mdv->getFieldId(), $mdv->getItemId());
+            
+            // Now create new one
+            $pret = $this->create($mdv);
+            if($pret === false) {
+                //$this->setError('Unable to bind this item to the value "'.$val.'" for metadata "'.$mdv->getName().'"');
+                $ret = false;
+            } else {
+                $ret = true;
             }
             break;
             
@@ -256,9 +277,6 @@ class Docman_MetadataValueFactory extends Error {
                                                 ,$md_v);
 
                 if($this->exist($mdv->getItemId(), $mdv->getFieldId())) {
-                    // warning: with multi-value lists, this do not work
-                    // we will have to delete all previous values associated
-                    // to (item, field) and then create the new one.
                     $success = $this->update($mdv);
                 }
                 else {
@@ -306,10 +324,21 @@ class Docman_MetadataValueFactory extends Error {
 
     /**
      * Convert user input to internal storage form.
+     *
+     * Warning: Unfortunatly, due to a bad design I don't really now the parm
+     * type! Gosh! Well, the only real problem is with list of values because
+     * sometime we are dealing with array (input from user) and sometimes with
+     * iterators.
      */
     function validateInput(&$md, &$value) {
         switch($md->getType()) {
         case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+            if($md->isMultipleValuesAllowed()) {
+                if(!is_array($value) && !is_numeric($value)) {
+                    //$value = 100; // Set to default
+                    // Maybe a warning ?
+                }
+            }
             break;
         case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
             break;

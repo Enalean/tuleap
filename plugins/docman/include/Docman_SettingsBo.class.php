@@ -38,10 +38,10 @@ class Docman_SettingsBo {
 
     function &instance($groupId) {
         static $_plugin_docman_settings_bo_i;
-        if(!$_plugin_docman_settings_bo_i) {
-            $_plugin_docman_settings_bo_i = new Docman_SettingsBo($groupId);
+        if(!isset($_plugin_docman_settings_bo_i[$groupId])) {
+            $_plugin_docman_settings_bo_i[$groupId] = new Docman_SettingsBo($groupId);
         }
-        return $_plugin_docman_settings_bo_i;
+        return $_plugin_docman_settings_bo_i[$groupId];
     }
 
     function &getDao() {

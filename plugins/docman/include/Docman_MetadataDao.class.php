@@ -67,11 +67,12 @@ class Docman_MetadataDao extends DataAccessObject {
 
     // Very limited implementation of update
     // right now, only 'use_it' field is concerned by update
-    function updateById($id, $name, $description, $emptyAllowed, $useIt, $defaultValue) {
+    function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt, $defaultValue) {
         $row = array('field_id' => $id,
                      'name' => $name,
                      'description' => $description,
                      'empty_ok' => $emptyAllowed,
+                     'mul_val_ok' => $mulValuesAllowed,
                      'use_it' => $useIt,
                      'default_value' => $defaultValue);
         return $this->updateFromRow($row);

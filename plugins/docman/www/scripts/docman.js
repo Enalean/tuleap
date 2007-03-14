@@ -201,7 +201,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         };
     },
     initNewItem: function() {
-        var checkboxes = [3, 5, 2, 4,].inject([], function (checkboxes, type) {
+        var checkboxes = [6, 3, 5, 2, 4,].inject([], function (checkboxes, type) {
             el = $('item_item_type_'+type);
             if (el) {
                 checkboxes.push(el);

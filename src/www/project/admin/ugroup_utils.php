@@ -65,8 +65,12 @@ function ugroup_db_get_members($ugroup_id) {
 }
 
 // Return name and id (as DB result) of all ugroups belonging to a specific project.
-function ugroup_db_get_existing_ugroups($group_id) {
-    $sql="SELECT ugroup_id, name FROM ugroup WHERE group_id=$group_id ORDER BY name";
+function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
+    $_extra = '';
+    if($predefined !== null && is_array($predefined)) {
+        $_extra = ' OR ugroup_id IN ('.implode(',', $predefined).')';
+    }
+    $sql="SELECT ugroup_id, name FROM ugroup WHERE group_id=$group_id ".$_extra." ORDER BY name";
     return db_query($sql);
 }
 

@@ -58,6 +58,13 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content .= '</dd>';
         //}}}
         
+        //{{{ Copy
+        $content .= '<dt>'.Docman::txt('details_actions_copy').'</dt><dd>';
+        $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_copy', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()));
+        $content .= Docman::txt('details_actions_copy_cancopy_'.$folder_or_document, $copyurl);
+        $content .= '</dd>';
+        //}}}
+
         //{{{ Delete
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
         if (!$this->is_deleteable || !($this->_controller->userCanWrite($this->item->getid()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
@@ -89,6 +96,17 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 'details_actions_newfolder_cancreate', 
                 Docman_View_View::buildUrl($this->url, array('action' => 'newFolder', 'id' => $item->getId()))
             );
+            //{{{ Paste
+            $itemFactory =& Docman_ItemFactory::instance($item->getGroupId());
+            $copiedItemId = $itemFactory->getCopyPreference($this->_controller->getUser());
+            if($copiedItemId != false) {
+                $copiedItem = $itemFactory->getItemFromDb($copiedItemId);
+                $content .= '</dd>';
+                $content .= '<dt>'.Docman::txt('details_actions_paste').'</dt><dd>';
+                $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
+                $content .= Docman::txt('details_actions_paste_canpaste', array($copyurl, $copiedItem->getTitle()));
+            }
+            //}}}
         }
         $content .= '</dd>';
         return $content;
@@ -150,6 +168,10 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         }
         $content .= '</textarea>';
         return $this->visitFile($item, array_merge($params, array('input_content' => $content)));
+    }
+
+    function visitEmpty(&$item, $params = array()) {
+        return $this->visitDocument($item, $params);
     }
 }
 ?>
