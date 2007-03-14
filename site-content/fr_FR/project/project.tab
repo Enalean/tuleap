@@ -478,6 +478,7 @@ project_admin_userperms	cvs_write	Ecriture CVS
 project_admin_userperms	bug_track	Suivi de bugs
 project_admin_userperms	forums	Forums
 project_admin_userperms	wiki	Wiki
+project_admin_userperms	news	Annonces
 project_admin_userperms	svn	SVN
 project_admin_userperms	task_man	Suivi de tâches
 project_admin_userperms	patch_man	Suivi de corrections
@@ -493,6 +494,8 @@ project_admin_userperms	admin	Administrateur
 project_admin_userperms	tech&admin	Administrateur et Technicien
 project_admin_userperms	moderator	Modérateur
 project_admin_userperms	upd_user_perm	Mettre à jour les permissions
+project_admin_userperms	read_perms	Lecture
+project_admin_userperms	write_perms	Ecriture
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/userimport.php

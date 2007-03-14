@@ -45,7 +45,7 @@ news_admin_index	items_deleted_last_week	Annonces rejetées la semaine passée
 news_admin_index	no_approved_items_this_week	Aucune annonce approuvée cette semaine
 news_admin_index	items_approved_last_week	Annonces approuvées la semaine passée
 news_admin_index	permission_denied	Permission refusée
-news_admin_index	need_to_be_admin	Permission refusée. Vous devez être administrateur du projet ou un membre du projet Annonces $1.
+news_admin_index	need_to_be_admin	Permission refusée. Vous devez être administrateur du service Annonce.
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php
@@ -73,7 +73,7 @@ news_utils	submit_news	Soumettre une annonce
 #
 news_submit	insert_err	ERREUR lors de l'insertion
 news_submit	news_added	Annonce ajoutée
-news_submit	only_admin_submits	Permission refusée. Vous ne pouvez soumettre une annonce pour un projet si vous n'en êtes pas l'administrateur
+news_submit	only_writer_submits	Permission refusée. Vous ne pouvez soumettre une annonce pour un projet si vous n'êtes pas rédacteur ou administrateur du service Annonce
 news_submit	submit_news_for	Soumettre une annonce pour $1
 news_submit	post_explain	Vous pouvez publier une annonce concernant votre projet si vous en êtes l'administrateur.</p><p>Toutes les annonces <b>de votre projet</b> apparaîtront immédiatement sur la page de sommaire de votre projet. Les annonces d'intérêt général peuvent être sélectionnées par l'équipe de $1 pour apparaître sur la page d'accueil de $1.</p><p>Vous pouvez inclure des URLs dans vos annonces, mais pas de HTML. Les URLs seront automatiquement transformés en liens hypertextes lors de la visualisation.</p>
 news_submit	for_project	Pour le projet&nbsp;: $1
