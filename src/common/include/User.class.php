@@ -190,6 +190,21 @@ class User {
 	    return ($group_perm['wiki_flags'] == 2);
 	    break;
 	  }
+      case 'SVN_ADMIN': {
+        //svn admin
+        return ($group_perm['svn_flags'] == 2);
+        break;
+      }
+      case 'N1': {
+        //news write
+        return ($group_perm['news_flags'] == 1);
+        break;
+      }
+      case 'N2': {
+        //news admin
+        return ($group_perm['news_flags'] == 2);
+        break;
+      }
 	  default : {
 	    //fubar request
 	    return false;

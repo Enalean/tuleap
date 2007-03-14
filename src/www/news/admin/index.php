@@ -15,7 +15,7 @@ require_once('www/project/admin/ugroup_utils.php');
 $Language->loadLanguageMsg('news/news');
 
 
-if ($group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'N2')) {
+if (isset($group_id) && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'N2')) {
 	/*
 
 		Per-project admin pages.
