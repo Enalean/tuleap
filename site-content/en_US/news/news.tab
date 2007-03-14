@@ -35,6 +35,9 @@ news_admin_index	displayed	Displayed
 news_admin_index	delete	Deleted
 news_admin_index	no_queued_item_found	No Queued Items Found
 news_admin_index	need_approve	These items need to be approved
+news_admin_index	approve_all	[Approve All News Requested For Promotion]
+news_admin_index	approved	[Approved]
+news_admin_index	approve_legend	News that are indexed by an icon, are asked to be promoted on $1 front page.
 news_admin_index	no_deleted_items_this_week	No deleted items found for this week
 news_admin_index	items_deleted_last_week	These items were deleted this past week
 news_admin_index	no_approved_items_this_week	No approved items found for this week
@@ -77,3 +80,5 @@ news_submit	public_news	<b>public</b> (everyone can see it)
 news_submit	private_news	<b>private</b> (only project members)
 news_submit	news_perm_update_success	Permissions updated successfully.
 news_submit	news_perm_create_success	Permissions created successfully.
+news_submit	news_promote	Request promotion to $1 front page ?
+news_submit	promote_warn	<b>WARNING:</b> Private news are not promoted to $1 front page
