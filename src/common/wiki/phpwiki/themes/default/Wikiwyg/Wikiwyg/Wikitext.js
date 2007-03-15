@@ -786,12 +786,12 @@ proto.format_p = function(element) {
 proto.format_a = function(element) {
     var label = Wikiwyg.htmlUnescape(element.innerHTML);
     var href = element.getAttribute('href');
-    
+
     label = label.replace(/<[^>]*?>/g, ' ');
     label = label.replace(/\s+/g, ' ');
     label = label.replace(/^\s+/, '');
     label = label.replace(/\s+$/, '');
-    
+
     if (Wikiwyg.is_ie) {
         if (href.match(/http(.+)goto\?key\=(.+)/)){
 	    this.make_wikitext_link(label, '', element);
@@ -803,32 +803,24 @@ proto.format_a = function(element) {
 	else if (href.match(/http(.+)\/wiki\/(.+)/)){
 	    href = href.replace(/http(.+)\/wiki\/(.+)/, '$2');
 	    this.make_wikitext_link(label, href, element);
-	}
-	else if (href.match(/(http|https|ftp).*/)){
-            // Do not put urls into brackets. We display only the url instead
-	    this.appendOutput(label);
-	}
-	else{
+	}else{
 	    this.make_wikitext_link(label, href, element);
 	}
     }else{
         if (href.match(/\/goto\?key=(.+)/)){
 	    this.make_wikitext_link(label, '', element);
 	}
-	else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
+        else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
 	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
-	else if (href.match(/(http|https|ftp).*/) && (label == href) ){
-            // Do not put urls into brackets. We display only the url instead
-	    this.appendOutput(label);
-	}
 	else{
 	    this.make_wikitext_link(label, href, element);
 	}
     }        
 
 }
+
 proto.format_table = function(element) {
     this.assert_blank_line();
     this.walk(element);
@@ -909,11 +901,11 @@ proto.chomp = function() {
 }
 
 proto.collapse = function(string) {
-    return string.replace(/[ \r\n]+/g, ' ');
+    return string;//.replace(/[ \r\n]+/g, ' ');
 }
 
 proto.trim = function(string) {
-    return string.replace(/^\s+/, '');
+    return string;//.replace(/^\s+/, '');
 }
 
 proto.insert_new_line = function() {
