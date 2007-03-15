@@ -271,7 +271,7 @@ CREATE TABLE plugin_docman_tokens(
 
 ###############################################################################
 # Add a status for Files in FRS
-ALTER TABLE `frs_file` ADD `status` CHAR( 1 ) NOT NULL DEFAULT 'A';
+ALTER TABLE frs_file ADD status CHAR( 1 ) NOT NULL DEFAULT 'A';
 
 ###############################################################################
 # Processor types in FRS (possible to add custom processor types per project)
