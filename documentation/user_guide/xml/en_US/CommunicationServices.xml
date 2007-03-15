@@ -149,7 +149,10 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
       scene, each piece of news is actually managed exactly like a CodeX Web
       Forum.</para></footnote>. In addition the CodeX Team sees all the public news
       published by all CodeX projects and can decide that a project news is
-      worth publishing on the CodeX front page. A big splash indeed!!</para>
+      worth publishing on the CodeX front page. A big splash indeed!!
+      When submitting a news, you can request a promotion for the CodeX front
+      page to the administrator.
+      </para>
     </section>
 
     <section id="WebForums">
