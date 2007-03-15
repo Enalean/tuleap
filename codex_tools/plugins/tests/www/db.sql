@@ -3729,7 +3729,7 @@ CREATE TABLE IF NOT EXISTS frs_file (
   release_time int(11) NOT NULL default '0',
   file_size int(11) NOT NULL default '0',
   post_date int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
+  status char(1) NOT NULL default 'A',
   PRIMARY KEY  (file_id),
   KEY idx_frs_file_release_id (release_id),
   KEY idx_frs_file_type (type_id),
@@ -5238,6 +5238,7 @@ CREATE TABLE IF NOT EXISTS plugin (
   id int(11) NOT NULL auto_increment,
   name varchar(100) NOT NULL default '',
   available tinyint(4) NOT NULL default '0',
+  prj_restricted TINYINT(4) NOT NULL DEFAULT 0,
   PRIMARY KEY  (id),
   UNIQUE KEY name (name)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
@@ -6094,7 +6095,10 @@ INSERT INTO project_notification_role (role_id, role_label, short_description, d
 DROP TABLE IF EXISTS project_plugin;
 CREATE TABLE IF NOT EXISTS project_plugin (
   project_id int(11) NOT NULL default '0',
-  plugin_id int(11) NOT NULL default '0'
+  plugin_id int(11) NOT NULL default '0',
+  UNIQUE project_plugin (project_id, plugin_id),
+  INDEX project_id_idx (project_id),
+  INDEX plugin_id_idx (plugin_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
