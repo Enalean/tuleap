@@ -297,6 +297,10 @@ ALTER TABLE project_plugin ADD INDEX project_id_idx (project_id);
 ALTER TABLE project_plugin ADD INDEX plugin_id_idx (plugin_id);
 
 ###############################################################################
+# CVS administration (cvs watch mode)
+ALTER TABLE groups ADD COLUMN cvs_watch_mode INT(11) NOT NULL DEFAULT 0 AFTER cvs_tracker;
+
+###############################################################################
 # Tracker global notification
 CREATE TABLE artifact_global_notification (
   id                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
