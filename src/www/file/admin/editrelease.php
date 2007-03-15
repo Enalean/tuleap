@@ -638,10 +638,10 @@ if ($release == null) {
     		<?php
 
 
-    echo '<div id=\'files_help\'><span class="smaller"><i>';
+    echo '<div id=\'files_help\'><span class="smaller">';
     global $Language;
     include ($Language->getContent('file/qrs_attach_file'));
-    echo '</i></span></div>';
+    echo '</span></div>';
 ?>
 		</FIELDSET>
 		</TD></TR>
