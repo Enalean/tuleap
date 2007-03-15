@@ -94,6 +94,16 @@ class Layout extends Response {
         exit();
     }
     
+    function iframe($url, $html_options = array()) {
+        $html = '';
+        $html .= '<div class="iframe_showonly"><a href="'. $url .'" title="Show only this frame">Show only this frame '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
+        $args = ' src="'. $url .'" ';
+        foreach($html_options as $key => $value) {
+            $args .= ' '. $key .'="'. $value .'" ';
+        }
+        $html .= '<iframe '. $args .'></iframe>';
+        echo $html;
+    }
     
     function includeJavascriptFile($file) {
         $this->javascript_files[] = $file;
