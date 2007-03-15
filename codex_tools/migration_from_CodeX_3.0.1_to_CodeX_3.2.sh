@@ -307,7 +307,7 @@ CREATE TABLE artifact_global_notification (
   INDEX (tracker_id)
 );
 
-INSERT INTO artifact_global_notification(tracker_id, adresses, all_updates, check_permissions) 
+INSERT INTO artifact_global_notification(tracker_id, addresses, all_updates, check_permissions) 
 SELECT group_artifact_id, email_address, email_all_updates, 1 
 FROM artifact_group_list;
 
