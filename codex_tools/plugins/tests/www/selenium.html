@@ -1,0 +1,224 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>test_create_user</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">test_create_user</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/plugins/tests/reset_db.php</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>johndoe</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>johndoe</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw2</td>
+	<td>johndoe</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_realname</td>
+	<td>John Doe</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_email</td>
+	<td>nicolas.terray@xerox.com</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>timezone</td>
+	<td>label=Europe/Paris</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>form_mail_site</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>Register</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>siteadmin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Page principale</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=P (en attente)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Se déconnecter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>johndoe</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>johndoe</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register New Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>register_tos_i_agree</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_full_name</td>
+	<td>John Doe's Project</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_unix_name</td>
+	<td>jdp</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_short_description</td>
+	<td>This is the short description of the project</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_purpose</td>
+	<td>This is the full description of the project</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>project_register_service_is_used_13</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>form_short_description</td>
+	<td>This is the short description of the project</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>form_purpose</td>
+	<td>This is the full description of the project</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>form_full_name</td>
+	<td>John Doe's Project</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>jdp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
