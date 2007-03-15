@@ -470,7 +470,7 @@ todo "If you have custom themes, please :"
 ??? todo " - copy the rules for textfield_small/textfield_medium from CodeXTab/css/style.css in your stylesheets"
 todo " - copy and modify CodeX/images/ic/plain-arrow-down.png"
 todo " - copy the rules .iframe_service and .iframe_showonly"
-todo " - copy the rules for File Release System from CodeXTab/css/style.css (the 8 rules at the end of the file) in your stylesheets"
+todo " - copy the rules for File Release System from CodeXTab/css/style.css in your stylesheets"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
