@@ -4065,6 +4065,7 @@ CREATE TABLE IF NOT EXISTS groups (
   xrx_export_ettm int(11) NOT NULL default '0',
   bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11) NOT NULL default '1',
+  cvs_watch_mode INT(11) NOT NULL DEFAULT 0,
   cvs_events_mailing_list text NOT NULL,
   cvs_events_mailing_header varchar(64) character set latin1 collate latin1_bin default NULL,
   cvs_preamble text NOT NULL,
