@@ -278,3 +278,13 @@ table.release tr td img {
     margin-bottom: 20px;
 }
 /* }}} */
+
+.iframe_service {
+    width:100%;
+    height:650px;
+}
+.iframe_showonly {
+    text-align:right;
+    font-size:0.85em;
+}
+
