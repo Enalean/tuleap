@@ -298,6 +298,111 @@
 	<td>John Doe's Project [Admin]</td>
 	<td></td>
 </tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//tr[3]/td[1]/a/b</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Service Configuration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create a new service.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>label</td>
+	<td>Web Search</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>link</td>
+	<td>http://www.google.fr</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>Web Search</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.form_create.is_in_iframe[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>rank</td>
+	<td>2000</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>Create</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Web Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Web Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Show only this frame</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Service Configuration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/project/admin/editservice.php?group_id=111&service_id=165')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>is_in_iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/project/admin/editservice.php?group_id=111&service_id=165')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>is_in_iframe</td>
+	<td>off</td>
+</tr>
 
 </tbody></table>
 </body>

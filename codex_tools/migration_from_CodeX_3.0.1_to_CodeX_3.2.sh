@@ -340,6 +340,12 @@ CREATE TABLE plugin_docman_approval_user (
   PRIMARY KEY(item_id, reviewer_id),
   INDEX rank (rank)
 );
+
+
+###############################################################################
+# Service in iframe
+ALTER TABLE service ADD is_in_iframe TINYINT(1) NOT NULL DEFAULT '0';
+
 EOF
 
 echo "Optimizing database structure."

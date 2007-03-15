@@ -6422,6 +6422,7 @@ CREATE TABLE IF NOT EXISTS service (
   rank int(11) NOT NULL default '0',
   location enum('master','same','satellite') NOT NULL default 'same',
   server_id int(11) unsigned default NULL,
+  is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY  (service_id),
   KEY idx_group_id (group_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=152 ;

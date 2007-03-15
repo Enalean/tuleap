@@ -3035,6 +3035,7 @@ CREATE TABLE service (
         rank int(11) NOT NULL default '0',
         location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master',
         server_id INT( 11 ) UNSIGNED NULL,
+        is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
 	primary key (service_id),
         key idx_group_id(group_id)
 );

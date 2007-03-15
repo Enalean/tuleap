@@ -513,7 +513,12 @@ echo html_blankimage(5,100);
             if (!$service_data['is_used']) continue;
             if (!$service_data['is_active']) continue;
             // Get URL, and eval variables
-            $link = $service_data['link']; //$project->services[$short_name]->getUrl(); <- to use when service will be fully served by satellite
+            //$project->services[$short_name]->getUrl(); <- to use when service will be fully served by satellite
+            if ($service_data['is_in_iframe']) {
+                $link = '/service/?group_id='. $group_id .'&amp;id='. $service_data['service_id'];
+            } else {
+                $link = $service_data['link'];
+            }
             if ($group_id==100) {
                 if (strstr($link,'$projectname')) {
                     // NOTE: if you change link variables here, change them also in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/project/admin/servicebar.php
@@ -528,10 +533,11 @@ echo html_blankimage(5,100);
                 $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
                 $link=str_replace('$group_id',$group_id,$link);
             }
+            $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
                             'label'       => $service_data['label'],
-                            'enabled'     => ($short_name&&($toptab == $short_name)),
+                            'enabled'     => $enabled,
                             'description' => $service_data['description']);
         }
         return $tabs;

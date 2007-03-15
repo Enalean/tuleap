@@ -15,7 +15,8 @@ require_once('common/include/ReferenceManager.class.php');
 require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('project/project');
-
+$request = HTTPRequest::instance();
+    
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su) {
   global $Language,$PHP_SELF;
 
@@ -175,9 +176,9 @@ if ($func=='do_create') {
     if (($group_id!=100)&&($scope=="system")) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_system_wide_s'));
     }
-
+    $is_in_iframe = $request->get('is_in_iframe') ? 1 : 0;
     // Create
-    $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($group_id, '$label', '$description', '$short_name', '$link', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '$scope', $rank)";
+    $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe) VALUES ($group_id, '$label', '$description', '$short_name', '$link', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '$scope', $rank, $is_in_iframe)";
     $result=db_query($sql);
 
     if (!$result) {
@@ -226,8 +227,9 @@ if ($func=='do_update') {
     if (user_is_super_user() && $server_id) {
         $set_server_id = ", location = 'satellite', server_id = ". (int)$server_id .' ';
     }
+    $is_in_iframe = $request->get('is_in_iframe') ? 1 : 0;
     $sql = "UPDATE service SET label='$label', description='$description', link='$link', is_active=".($is_active?"1":"0").
-        ", is_used=".($is_used?"1":"0").", scope='$scope', rank='$rank' $set_server_id WHERE service_id=$service_id";
+        ", is_used=".($is_used?"1":"0").", scope='$scope', rank='$rank' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=$service_id";
     $result=db_query($sql);
 
     if (!$result) {

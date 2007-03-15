@@ -132,8 +132,15 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','display_in_s_bar').'">'.$Language->getText('project_admin_editservice','enabled').':</a> </td><td>';
   echo '<input type="CHECKBOX" NAME="is_used" VALUE="1"'.( $service['is_used'] ? ' CHECKED' : '' ).'>';
   
-echo '</td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').':&nbsp;</a><font color="red">*</font></td><td>';
+echo '</td></tr>';
+if ($service['scope'] == 'project') {
+    echo '<tr><td>';
+    echo '<a href="#" title="'. 'Display in iframe' .'">'. 'Display in iframe' .':</a> ';
+    echo '</td><td>';
+    echo '<input type="checkbox" name="is_in_iframe" value="1" '.( $service['is_in_iframe'] ? 'checked="checked"' : '' ).' />';
+    echo '</td></tr>';
+}
+echo '<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').':&nbsp;</a><font color="red">*</font></td><td>';
 echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';
 echo '</td></tr>';
 
@@ -213,8 +220,16 @@ if (($group_id==100)&&($su)) {
 }
 echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','display_in_s_bar').'">'.$Language->getText('project_admin_editservice','enabled').':</a> </td>
-<td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>
-<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').'</a>:&nbsp;<font color="red">*</font></td>
+<td><input type="CHECKBOX" NAME="is_used" VALUE="1" CHECKED></td></tr>';
+
+echo '<tr><td>';
+echo '<a href="#" title="'. 'Display in iframe' .'">'. 'Display in iframe' .':</a> ';
+echo '</td><td>';
+echo '<input type="hidden" name="is_in_iframe" value="0" />';
+echo '<input type="checkbox" name="is_in_iframe" value="1" />';
+echo '</td></tr>';
+
+echo '<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').'</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="rank" size="5" maxlength="5">
 </td></tr>
 </table>
