@@ -15,7 +15,7 @@ require_once('www/project/admin/ugroup_utils.php');
 $Language->loadLanguageMsg('news/news');
 
 
-if (isset($group_id) && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'N2')) {
+if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'N2')) {
 	/*
 
 		Per-project admin pages.
@@ -212,7 +212,8 @@ if (isset($group_id) && $group_id != $GLOBALS['sys_news_group'] && user_ismember
 			exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','not_found_err'));
 		}
 
-                $username=user_getname(db_result($result,0,'submitted_by'));
+        $username=user_getname(db_result($result,0,'submitted_by'));
+        $news_date = util_timestamp_to_userdateformat(db_result($result,0,'date'), true);
 
 		echo '
 		<H3>'.$Language->getText('news_admin_index','approve').'</H3>
@@ -222,11 +223,12 @@ if (isset($group_id) && $group_id != $GLOBALS['sys_news_group'] && user_ismember
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
 		<B>'.$Language->getText('news_admin_index','submitted_for_group').':</B> <a href="/projects/'.strtolower(db_result($result,0,'unix_group_name')).'/">'.group_getname(db_result($result,0,'group_id')).'</a><BR>
 		<B>'.$Language->getText('news_admin_index','submitted_by').':</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
+        <B>'.$Language->getText('news_admin_index','submitted_on').':</B> '.$news_date.'<BR>        
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
 		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 		<INPUT TYPE="RADIO" NAME="status" VALUE="1"> '.$Language->getText('news_admin_index','approve_for_front').'<BR>
 		<INPUT TYPE="RADIO" NAME="status" VALUE="0"> '.$Language->getText('news_admin_index','do_nothing').'<BR>
-		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> '.$Language->getText('news_admin_index','delete').'<BR>
+		<INPUT TYPE="RADIO" NAME="status" VALUE="2" CHECKED> '.$Language->getText('news_admin_index','reject').'<BR>
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="44" MAXLENGTH="60"><BR>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
@@ -239,7 +241,7 @@ if (isset($group_id) && $group_id != $GLOBALS['sys_news_group'] && user_ismember
 			Show list of waiting news items
 		*/
 
-		if ($approve_all) {
+		if (isset($approve_all) && $approve_all) {
 		    $sql="UPDATE news_bytes SET is_approved='1' WHERE is_approved='3'";
 		    $res=db_query($sql);
 		    if (!$res) {
@@ -263,19 +265,19 @@ if (isset($group_id) && $group_id != $GLOBALS['sys_news_group'] && user_ismember
 				
 			for ($i=0; $i<$rows; $i++) {
 			    //if the news is private, not display it in the list of news to be approved
-			    $forum_id=db_result($result,$i,'forum_id');  
-			    $res = news_read_permissions($forum_id);
+			    $forum_id=db_result($result,$i,'forum_id');
+                $res = news_read_permissions($forum_id);
 			    // check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
 			    // with ST DB state
 			    if ((db_numrows($res) < 1) || (db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS)) {
 			        $is_approved=db_result($result,$i,'is_approved');
-				if ($is_approved == '3'){				    
-				    //the submitter of this news asked to promote it ==>  display an icon
-				    echo '
-				        <IMG SRC="'.util_get_image_theme("ic/p_news.png").'" BORDER="0"> <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
-				} else {				    							        
-				    echo '
-				        <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+				    if ($is_approved == '3') {
+				        //the submitter of this news asked to promote it ==>  display an icon
+				        echo '
+				            <IMG SRC="'.util_get_image_theme("ic/p_news.png").'" alt="'.$Language->getText('news_admin_index','approve_alt',$GLOBALS['sys_name']).'" title="'.$Language->getText('news_admin_index','approve_alt',$GLOBALS['sys_name']).'" /> <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
+				    } else {
+				        echo '
+				            <A HREF="/news/admin/?approve=1&id='.db_result($result,$i,'id').'">'.db_result($result,$i,'summary').'</A><BR>';
 			        }
 			    }
 			}

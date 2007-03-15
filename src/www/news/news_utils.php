@@ -14,6 +14,7 @@
 require_once('www/project/admin/permissions.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/forum/forum_utils.php');
+require_once('common/mail/Mail.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('news/news');
 
@@ -269,15 +270,21 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news) {
     $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
              " VALUES ('$group_id','".user_getid()."','$promote_news','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
     $result=db_query($sql);
-               
+    
 	if (!$result) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','insert_err'));
     } else {
+        // retrieve the id of the news
+        $news_bytes_id = db_insertid($result);    
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
 	     // set permissions on this piece of news
-	    if ($private_news) {
+	    if ($private_news == 3) {
 	        news_insert_permissions($new_id,$group_id);
 	    }
+        if ($promote_news == 3) {
+            // if the news is requested to be promoted, we notify the site admin about it
+            news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details);
+        }
     }
 }
 
@@ -355,5 +362,38 @@ function news_read_permissions($forum_id) {
 
 	return permission_db_authorized_ugroups('NEWS_READ',$_forum_id);
 }
+
+function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details) {
+    global $Language;
+    
+    $summary = util_unconvert_htmlspecialchars($summary);
+    $details = util_unconvert_htmlspecialchars($details);
+
+    $group = new Group($group_id);
+    // retrieve the user that submit the news
+    $user = new User(user_getid());
+    
+    $mail = new Mail();
+    $mail->setFrom($GLOBALS['sys_noreply']);
+    $mail->setTo($GLOBALS['sys_email_admin']);
+    $mail->setSubject($Language->getText('news_utils','news_request', array($GLOBALS['sys_name'])));
+    $body = '';
+    $body .= $Language->getText('news_utils','news_request_mail_intro', array($GLOBALS['sys_name'])).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils','news_request_mail_project', array($group->getPublicName(), $group->getUnixName())).$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils','news_request_mail_submitted_by', array($user->getName())).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils','news_request_mail_summary', array($summary)).$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils','news_request_mail_details', array($details)).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils','news_request_mail_approve_link').$GLOBALS['sys_lf'];
+    $body .= get_server_url()."/news/admin/?approve=1&id=".$news_bytes_id.$GLOBALS['sys_lf'];
+    $mail->setBody($body);
+    
+    $is_sent = $mail->send();
+    if ($is_sent) {
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('news_utils','news_request_sent'));
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('news_utils','news_request_not_sent'));
+    }
+}
+
 
 ?>
