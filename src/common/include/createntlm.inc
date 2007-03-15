@@ -471,6 +471,7 @@ var $sbox = array(array(array(14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5
 		for ($i = 0; $i < sizeof($v); $i++) {
 			$v[$i] = array($this->unsigned_shift_r(($v[$i]&0xffff0000), 16), ($v[$i]&0xffff));
 		}
+        $sum = array(0, 0);
 		for ($i = 0; $i < sizeof($v); $i++) {
 			$sum[0] += $v[$i][0];
 			$sum[1] += $v[$i][1];
