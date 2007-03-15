@@ -266,6 +266,7 @@ CREATE TABLE plugin_docman_tokens(
   user_id INT( 11 ) NOT NULL ,
   token CHAR( 32 ) NOT NULL ,
   url text NOT NULL default '',
+  created_at DATETIME NOT NULL,
   PRIMARY KEY ( user_id, token )
 );
 
