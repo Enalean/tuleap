@@ -21,7 +21,7 @@ require_once('Docman_View_View.class.php');
             $url = $params['default_url'];
         }
         user_set_preference('plugin_docman_flash', addslashes(serialize($this->_controller->feedback)));
-        header('Location: '. $url);
+        $GLOBALS['Response']->redirect($url);
     }
 }
 
