@@ -123,7 +123,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function create($package_id=null, $name=null,
     				$notes=null, $changes=null, 
-                    $status_id=null, $preformatted=null, $release_date=null) {
+                    $status_id=null, $preformatted=0, $release_date=null) {
 
         $arg    = array();
         $values = array();
@@ -232,7 +232,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function updateById($release_id, $package_id=null, $name=null,
     				$notes=null, $changes=null, $status_id=null, 
-    				$preformatted=null, $release_date=null) {       
+    				$preformatted=0, $release_date=null) {       
        
         $argArray = array();
 

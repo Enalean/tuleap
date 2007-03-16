@@ -74,7 +74,6 @@ if ($submit) {
     $private_news = $request->get('private_news');
     $ugroups = $request->get('ugroups');
     $release_submit_news = (int) $request->get('release_submit_news');
-    $preformatted = (int) $request->get('preformatted');
     $notification = $request->get('notification');
 
     $validator = new frsValidator();
@@ -117,7 +116,6 @@ if ($submit) {
         $array = array (
             'release_date' => $unix_release_time,
             'name' => $release['name'],
-            'preformatted' => $preformatted,
             'status_id' => $release['status_id'],
             'package_id' => $release['package_id'],
             'notes' => $release['release_notes'],
@@ -378,9 +376,6 @@ if ($submit) {
     }
 }
 
-//if (isset ($release_id) && $release_id) {
-//	header('Location: frsMockup.php?group_id=' . $group_id . '&&release_id=' . $release_id);
-//} else {
 file_utils_admin_header(array (
     'title' => $Language->getText('file_admin_editreleases',
     'release_new_file_version'
@@ -566,16 +561,6 @@ echo '</span></div>';
 		<TR id="change_log_area">
 			<TD width="40%">
 				<TEXTAREA NAME="release[change_log]" ROWS="7" COLS="70"></TEXTAREA>
-			</TD>
-		</TR>
-		<TR>
-			<TD>
-				<?php
-
-
-echo '<INPUT TYPE="CHECKBOX" NAME="preformatted" VALUE="1"> ' .
-$Language->getText('file_admin_editreleases', 'preserve_preformatted');
-?>
 			</TD>
 		</TR>
 		</TABLE></FIELDSET>

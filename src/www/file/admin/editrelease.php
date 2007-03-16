@@ -74,7 +74,6 @@ if ($submit) {
     $private_news = $request->get('private_news');
     $ugroups = $request->get('ugroups');
     $release_submit_news = (int) $request->get('release_submit_news');
-    $preformatted = (int) $request->get('preformatted');
     $release_files_to_delete = $request->get('release_files_to_delete') ? $request->get('release_files_to_delete'):array();
     $release_files = $request->get('release_files') ? $request->get('release_files') : array();
     $release_file_processor = $request->get('release_file_processor');
@@ -138,7 +137,6 @@ if ($submit) {
             'release_id' => $release['release_id'],
             'release_date' => $unix_release_time,
             'name' => $release['name'],
-            'preformatted' => $preformatted,
             'status_id' => $release['status_id'],
             'package_id' => $release['package_id'],
             'notes' => $release['release_notes'],
@@ -457,9 +455,6 @@ if ($submit) {
     $release_id = $release['release_id'];
 }
 
-//if (isset ($release_id) && $release_id) {
-//	header('Location: frsMockup.php?group_id=' . $group_id . '&&release_id=' . $release_id);
-//} else {
 
 $package = & $frspf->getFRSPackageByReleaseIDFromDb($release_id, $group_id);
 $release = & $frsrf->getFRSReleaseFromDb($release_id, $group_id);
@@ -675,16 +670,6 @@ if ($release == null) {
 		<TR id="change_log_area">
 			<TD width="40%">
 				<TEXTAREA ID="text_area_change_log" NAME="release[change_log]" ROWS="7" COLS="70"><?php echo htmlspecialchars($release->getChanges());?></TEXTAREA>
-			</TD>
-		</TR>
-		<TR>
-			<TD>
-				<?php
-
-
-    echo '<INPUT TYPE="CHECKBOX" NAME="preformatted" VALUE="1" ' . (($release->getPreformatted()) ? 'CHECKED' : '') . '> ' .
-    $Language->getText('file_admin_editreleases', 'preserve_preformatted');
-?>
 			</TD>
 		</TR>
 		</TABLE></FIELDSET>
