@@ -78,7 +78,7 @@ class Layout extends Response {
 
     
     function redirect($url) {
-        if (session_hash()) {
+        if (session_hash() && !headers_sent()) {
             $this->_serializeFeedback();
             header('Location: '. $url);
         } else {
