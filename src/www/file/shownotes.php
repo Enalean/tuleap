@@ -43,11 +43,11 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
     }
     
     echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
-'.$release->getNotes().'
+'.htmlentities($release->getNotes()).'
 
 <HR NOSHADE>
 <B>'.$Language->getText('file_shownotes','changes').':</B>
-'.$release->getChanges();
+'.htmlentities($release->getChanges());
 
     if ($release->isPreformatted()) {
         echo '</PRE>';
