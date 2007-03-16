@@ -3307,6 +3307,14 @@ CREATE TABLE artifact_global_notification (
   INDEX (tracker_id)
 );
 
+DROP TABLE IF EXISTS notifications;
+CREATE TABLE notifications (
+  user_id int(11) NOT NULL default '0',
+  object_id int(11) NOT NULL default '0',
+  `type` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (user_id,object_id,`type`)
+);
+
 #
 # EOF
 #
