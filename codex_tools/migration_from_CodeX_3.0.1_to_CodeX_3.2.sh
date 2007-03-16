@@ -302,6 +302,11 @@ ALTER TABLE project_plugin ADD INDEX plugin_id_idx (plugin_id);
 ALTER TABLE groups ADD COLUMN cvs_watch_mode INT(11) NOT NULL DEFAULT 0 AFTER cvs_tracker;
 
 ###############################################################################
+# CVS tracker and svn tarcker on template project (group_id = 100)
+UPDATE groups SET cvs_tracker = '1', svn_tracker = '1' WHERE group_id='100';
+
+
+###############################################################################
 # Tracker global notification
 CREATE TABLE artifact_global_notification (
   id                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
