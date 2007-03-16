@@ -531,7 +531,6 @@ if ($release == null) {
 
     }
 ?>
-				&nbsp;&nbsp;(<a href="editpackages.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('file_admin_qrs','create_new_p'); ?>)</a>.
 			</TD><td></td>
 			<TD>
 				<B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>: <span class="highlight"><strong>*</strong></span></B>

@@ -429,8 +429,6 @@ echo '<P>'.$Language->getText('file_admin_editreleases','contain_multiple_files'
 				<?php
 
 $res = & $frspf->getFRSPackagesFromDb($group_id);
-//$sql = "SELECT * FROM frs_package WHERE group_id='$group_id'";
-//$res = db_query($sql);
 $rows = count($res);
 if (!$res || $rows < 1) {
     echo '<p class="highlight">' . $Language->getText('file_admin_qrs', 'no_p_available') . '</p>';
@@ -444,7 +442,6 @@ if (!$res || $rows < 1) {
     echo '</SELECT>';
 }
 ?>
-				&nbsp;&nbsp;(<a href="editpackages.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('file_admin_qrs','create_new_p'); ?>)</a>.
 			</TD><td></td>
 			<TD>
 				<B><?php echo $Language->getText('file_admin_editreleases','release_name'); ?>: <span class="highlight"><strong>*</strong></span></B>
