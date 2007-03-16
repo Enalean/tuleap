@@ -51,14 +51,15 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                 $p = null;
                 while(!$p && (list($k,) = each($last['events']))) {
                     if (isset($last['events'][$k]['parent'])) {
-                        $p = $last['events'][$k]['parent'];
-                        $t = $last['events'][$k]['type'];
+                        $p =  $last['events'][$k]['parent'];
+                        $t =  $last['events'][$k]['type'];
+                        $u =& $last['events'][$k]['user'];
                     }
                 }
                 $this->_addMessage(
                     $l['user'],
                     $t == $this->MESSAGE_REMOVED ? $last['item']->getTitle() : $p->getTitle(),
-                    $this->_getMessageForUser($l['user'], $t, array('path' => &$path, 'parent' => &$p, 'item' => &$last['item'])),
+                    $this->_getMessageForUser($u, $t, array('path' => &$path, 'parent' => &$p, 'item' => &$last['item'])),
                     $p
                 );
             } else {
@@ -97,7 +98,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                 $this->_addMessage(
                     $l['user'],
                     $title,
-                    $this->_getMessageForUser($l['user'], $e['type'], array_merge($e, $params)),
+                    $this->_getMessageForUser($e['user'], $e['type'], array_merge($e, $params)),
                     $e['parent']
                 );
             }
@@ -154,7 +155,8 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                     );
                 }
                 $event = array(
-                    'type' => $message_type
+                    'type' => $message_type,
+                    'user' => &$params['user']
                 );
                 if (isset($params['parent'])) {
                     $event['parent'] =& $params['parent'];
