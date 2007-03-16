@@ -159,11 +159,11 @@ INSERT INTO groups SET \
   xrx_export_ettm = '0', \
   built_from_template = '100', \
   bug_allow_anon = '1', \
-  cvs_tracker = '0', \
+  cvs_tracker = '1', \
   cvs_events_mailing_list = '', \
   cvs_events_mailing_header = '', \
   cvs_preamble = '', \
-  svn_tracker = '0', \
+  svn_tracker = '1', \
   svn_events_mailing_list = '', \
   svn_events_mailing_header = '', \
   svn_preamble = '' ;
