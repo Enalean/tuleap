@@ -23,7 +23,9 @@ class RegisterProjectStep_Intro extends RegisterProjectStep {
         <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
         <script type="text/javascript">
         Event.observe(window, 'load', function() {
-                $('project_register_next').disabled = true;
+                if (!\$F('register_tos_i_agree')) {
+                    $('project_register_next').disabled = true;
+                }
                 Event.observe($('register_tos_i_agree'), 'click', function() {
                         $('project_register_next').disabled = !$('project_register_next').disabled;
                 });
