@@ -272,7 +272,7 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
     require_once('Project.class.php');
     $redirect_to_master_if_needed = true;
     $sf      =& new ServerFactory();
-    $request =& new HTTPRequest();
+    $request =& HTTPRequest::instance();
     if ($_SERVER['SCRIPT_NAME'] == '/file/download.php') { //There is no group_id for /file/download.php
         $components = explode('/', $_SERVER['REQUEST_URI']);
         if (isset($components[3])) {
