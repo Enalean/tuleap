@@ -223,7 +223,7 @@ class FRSPackageDao extends DataAccessObject {
                 $current =& $dar->current();
                 $set_array = array();
                 foreach($data_array as $key => $value) {
-                    if ($key != 'id' && $value != $current[$key]) {
+                    if ($key != 'package_id' && $value != $current[$key]) {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }

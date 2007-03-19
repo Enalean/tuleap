@@ -71,18 +71,18 @@ class frsValidator {
             } else {
                 //see if this package belongs to this project
                 $res1 = & $frsrf->getFRSReleaseFromDb($release['release_id'], $group_id);
-                if ($release['package_id'] != $res1->getPackageID()) {
-                    //changing to a different package for this release
-                    $res2 = $frspf->getFRSPackageFromDb($release['package_id'], $group_id);
-                    if (!$res2 || count($res2) < 1) {
-                        //new package_id isn't theirs
-                        $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_not_yours'));
-                    }
-                }
                 if (!$res1 || count($res1) < 1) {
                     $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_rel_not_yours'));
 
                 } else {
+                    if ($release['package_id'] != $res1->getPackageID()) {
+                        //changing to a different package for this release
+                        $res2 = $frspf->getFRSPackageFromDb($release['package_id'], $group_id);
+                        if (!$res2 || count($res2) < 1) {
+                            //new package_id isn't theirs
+                            $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_not_yours'));
+                        }
+                    }
                     //check if release name exists already
                     if(($res1->getPackageID()!=$release['package_id']) || ($res1->getPackageID()==$release['package_id'] && $res1->getName() != $release['name'])){
                         $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);

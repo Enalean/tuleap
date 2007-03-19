@@ -213,8 +213,6 @@ class FRSFile extends Error {
      * @return string the location of this file on the server
      */
     function getFileLocation() {
-        global $GLOBALS;
-        
         $group = $this->getGroup();
         $group_unix_name = $group->getUnixName();
         $basename = $this->getFileName();

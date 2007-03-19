@@ -38,9 +38,10 @@ if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
+$packages = array();
 $num_packages = 0;
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
-$res = $frspf->getFRSPackagesFromDb($group_id, 1);
+$res = $frspf->getFRSPackagesFromDb($group_id);
 
 foreach ($res as $package) {
     if (isset ($release_id)) {
@@ -48,8 +49,7 @@ foreach ($res as $package) {
     }
 
     if (!isset ($release_id) || $row3->getPackageID() == $package->getPackageID()) {
-        $res_package[$package->getPackageID()] = $package->getName();
-        $license_package[$package->getPackageID()] = $package->getApproveLicense();
+        $packages[$package->getPackageID()] = $package;
         $num_packages++;
     }
 }
@@ -135,140 +135,190 @@ $fmmf =& new FileModuleMonitorFactory();
  
 $javascript_packages_array = array();
  
+if (user_ismember($group_id,'R2')) {
+    echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">[Add a package]</a></p>';
+}
 // Iterate and show the packages
-while (list ($package_id, $package_name) = each($res_package)) {
-
-    print '<fieldset class="package">';
-    print '<legend><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
-    print ' <strong>'.$package_name.'</strong>&nbsp;';
-    print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
-    if ($fmmf->isMonitoring($package_id)) {
-        print '<img src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+while (list ($package_id, $package) = each($packages)) {
+    $package_style   = '';
+    $can_see_package = false;
+    if ($package->isActive()) {
+        $can_see_package = true;
     } else {
-        print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
-    }
-    print '  </a>';
-    print '</legend>';
-    
-    // get the releases of the package
-    // Order by release_date and release_id in case two releases
-    // are published the same day
-    $res_release = $frsrf->getFRSReleasesFromDb($package_id, 1, $group_id);
-    $num_releases = count($res_release);
-
-    if (!isset ($proj_stats['releases']))
-        $proj_stats['releases'] = 0;
-    $proj_stats['releases'] += $num_releases;
-
-    $javascript_releases_array = array();
-    print '<div id="p_'.$package_id.'">';
-    if (!$res_release || $num_releases < 1) {
-        print '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
-    } else {
-        $cpt_release = 0;
-        // iterate and show the releases of the package
-        foreach ($res_release as $package_release) {
-            
-                $permission_exists = $pm->isPermissionExist($package_release->getReleaseID(), 'RELEASE_READ');
-            
-            // Highlight the release if one was chosen
-            if (isset ($release_id) && ($release_id == $package_release->getReleaseID())) {
-                $bgcolor = 'boxitemalt';
-            } else {
-                $bgcolor = 'boxitem';
-            }
-            print '<table width="100%" class="release">';
-            print ' <TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'">';
-            print '  <TD><a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
-            print '     <b>'. $package_release->getName() . '</b> &nbsp; ';
-            print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
-            print '  </td>';
-            print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '</TD>';
-            print ' </TR>' . "\n";
-            print '</table>';
-            
-            // get the files in this release....
-            $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
-            $num_files = count($res_file);
-
-            if (!isset ($proj_stats['files']))
-                $proj_stats['files'] = 0;
-            $proj_stats['files'] += $num_files;
-
-            $javascript_files_array = array();
-            if (!$res_file || $num_files < 1) {
-                print '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
-                $javascript_files_array[] = "'f_0'";
-            } else {
-                $javascript_files_array[] = "'f_0'";
-                //get the file_type and processor type
-                $q = "select * from frs_filetype";
-                $res_filetype = db_query($q);
-                while ($resrow = db_fetch_array($res_filetype)) {
-                    $file_type[$resrow['type_id']] = $resrow['name'];
-                }
-
-                $q = "select * from frs_processor";
-                $res_processor = db_query($q);
-                while ($resrow = db_fetch_array($res_processor)) {
-                    $processor[$resrow['processor_id']] = $resrow['name'];
-                }
-                
-                print '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0">';
-                
-                $title_arr = array ();
-                $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
-                $title_arr[] = $Language->getText('file_showfiles', 'size');
-                $title_arr[] = $Language->getText('file_showfiles', 'd_l');
-                $title_arr[] = $Language->getText('file_showfiles', 'arch');
-                $title_arr[] = $Language->getText('file_showfiles', 'type');
-                $title_arr[] = $Language->getText('file_showfiles', 'date');
-                echo html_build_list_table_top($title_arr, false, false, true, null, "files_table") . "\n";
-                
-                // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
-                echo '<colgroup>';
-                echo ' <col class="frs_filename_col">';
-                echo ' <col class="frs_size_col">';
-                echo ' <col class="frs_downloads_col">';
-                echo ' <col class="frs_architecture_col">';
-                echo ' <col class="frs_filetype_col">';
-                echo ' <col class="frs_date_col">';
-                echo '</colgroup>';
-
-                    // now iterate and show the files in this release....
-                foreach($res_file as $file_release) {
-                    $filename = $file_release['filename'];
-                    $list = split('/', $filename);
-                    $fname = $list[sizeof($list) - 1];
-                    print "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $bgcolor . '"><TD><B>';
-                    
-                    $javascript_files_array[] = "'f_".$file_release['file_id']."'";
-                    
-                    if (($license_package[$package_id] == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
-                        // Allow direct download
-                        print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $file_release['filename'] . '" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
-                    } else {
-                        // Display popup
-                        print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $file_release['filename'] . '\')" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
-                    }
-                    print '</B></TD>' . '<TD>' . file_utils_convert_bytes_to_kbytes($file_release['file_size']) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>' . '<TD>' . (isset ($processor[$file_release['processor']]) ? $processor[$file_release['processor']] : "") . '</TD>' . '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
-                    if (!isset ($proj_stats['size']))
-                        $proj_stats['size'] = 0;
-                    $proj_stats['size'] += $file_release['file_size'];
-                    if (!isset ($proj_stats['downloads']))
-                        $proj_stats['downloads'] = 0;
-                    $proj_stats['downloads'] += $file_release['downloads'];
-                }
-                print '</table>';
-                print '</span>';
-            }
-            $javascript_releases_array[] = "'r_".$package_release->getReleaseID()."': [" . implode(",", $javascript_files_array) . "]";
-            $cpt_release = $cpt_release + 1;
+        $package_style = 'style="background-image:url(/themes/CodeX/images/frs_inactive.png);"';
+        if (user_ismember($group_id,'R2')) {
+            $can_see_package = true;
         }
     }
-    print '</div>';
-    print '</fieldset>';
-    $javascript_packages_array[] = "'p_".$package_id."': {" . implode(",", $javascript_releases_array) . "}";
+    if ($can_see_package) {
+        print '<fieldset class="package" '. $package_style .'>';
+        print '<legend><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
+        print ' <strong>'.$package->getName().'</strong>';
+        if (user_ismember($group_id,'R2')) {
+            print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+            //print '     <a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+        }
+        print ' &nbsp; ';
+        print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
+        if ($fmmf->isMonitoring($package_id)) {
+            print '<img src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+        } else {
+            print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+        }
+        print '  </a>';
+        print '</legend>';
+        if (!$package->isActive()) {
+            //TODO i18n
+            print '<div style="text-align:center"><em>This package is inactive.</em></div>';
+        }
+        // get the releases of the package
+        // Order by release_date and release_id in case two releases
+        // are published the same day
+        $res_release = $frsrf->getFRSReleasesFromDb($package_id, null, $group_id);
+        $num_releases = count($res_release);
+    
+        if (!isset ($proj_stats['releases']))
+            $proj_stats['releases'] = 0;
+        $proj_stats['releases'] += $num_releases;
+    
+        $javascript_releases_array = array();
+        print '<div id="p_'.$package_id.'">';
+        if (user_ismember($group_id,'R2')) {
+            echo '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">[Add a release]</a></p>';
+        }
+        if (!$res_release || $num_releases < 1) {
+            print '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
+        } else {
+            $cpt_release = 0;
+            // iterate and show the releases of the package
+            foreach ($res_release as $package_release) {
+                $release_style   = '';
+                $can_see_release = false;
+                if ($package_release->isActive()) {
+                    $can_see_release = true;
+                } else {
+                    $release_style = 'style="background-image:url(/themes/CodeX/images/frs_inactive.png);"';
+                    if (user_ismember($group_id,'R2')) {
+                        $can_see_release = true;
+                    }
+                }
+                if ($can_see_release) {
+                    
+                    $permission_exists = $pm->isPermissionExist($package_release->getReleaseID(), 'RELEASE_READ');
+                    
+                    // Highlight the release if one was chosen
+                    if (isset ($release_id) && ($release_id == $package_release->getReleaseID())) {
+                        $bgcolor = 'boxitemalt';
+                    } else {
+                        $bgcolor = 'boxitem';
+                    }
+                    print '<table width="100%" class="release" '. $release_style .'>';
+                    print ' <TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'">';
+                    print '  <TD><a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
+                    print '     <b>'. $package_release->getName() . '</b>';
+                    if (user_ismember($group_id,'R2')) {
+                        print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+                        print '     <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+                    }
+                    print ' &nbsp; ';
+                    print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
+                    print '  </td>';
+                    print ' <td style="text-align:center">';
+                    if (!$package_release->isActive()) {
+                        print '<em>This release is inactive.</em>';
+                    } 
+                    print '</td> ';
+                    print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '</TD>';
+                    print ' </TR>' . "\n";
+                    print '</table>';
+                    
+                    // get the files in this release....
+                    $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
+                    $num_files = count($res_file);
+        
+                    if (!isset ($proj_stats['files']))
+                        $proj_stats['files'] = 0;
+                    $proj_stats['files'] += $num_files;
+        
+                    $javascript_files_array = array();
+                    if (!$res_file || $num_files < 1) {
+                        print '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
+                        $javascript_files_array[] = "'f_0'";
+                    } else {
+                        $javascript_files_array[] = "'f_0'";
+                        //get the file_type and processor type
+                        $q = "select * from frs_filetype";
+                        $res_filetype = db_query($q);
+                        while ($resrow = db_fetch_array($res_filetype)) {
+                            $file_type[$resrow['type_id']] = $resrow['name'];
+                        }
+        
+                        $q = "select * from frs_processor";
+                        $res_processor = db_query($q);
+                        while ($resrow = db_fetch_array($res_processor)) {
+                            $processor[$resrow['processor_id']] = $resrow['name'];
+                        }
+                        
+                        print '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0">';
+                        
+                        $title_arr = array ();
+                        $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
+                        $title_arr[] = $Language->getText('file_showfiles', 'size');
+                        $title_arr[] = $Language->getText('file_showfiles', 'd_l');
+                        $title_arr[] = $Language->getText('file_showfiles', 'arch');
+                        $title_arr[] = $Language->getText('file_showfiles', 'type');
+                        $title_arr[] = $Language->getText('file_showfiles', 'date');
+                        echo html_build_list_table_top($title_arr, false, false, true, null, "files_table") . "\n";
+                        
+                        // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
+                        echo '<colgroup>';
+                        echo ' <col class="frs_filename_col">';
+                        echo ' <col class="frs_size_col">';
+                        echo ' <col class="frs_downloads_col">';
+                        echo ' <col class="frs_architecture_col">';
+                        echo ' <col class="frs_filetype_col">';
+                        echo ' <col class="frs_date_col">';
+                        echo '</colgroup>';
+        
+                            // now iterate and show the files in this release....
+                        foreach($res_file as $file_release) {
+                            $filename = $file_release['filename'];
+                            $list = split('/', $filename);
+                            $fname = $list[sizeof($list) - 1];
+                            print "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $bgcolor . '"><TD><B>';
+                            
+                            $javascript_files_array[] = "'f_".$file_release['file_id']."'";
+                            
+                            if (($package->getApproveLicense() == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
+                                // Allow direct download
+                                print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $file_release['filename'] . '" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
+                            } else {
+                                // Display popup
+                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $file_release['filename'] . '\')" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
+                            }
+                            print '</B></TD>' . '<TD>' . file_utils_convert_bytes_to_kbytes($file_release['file_size']) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>' . '<TD>' . (isset ($processor[$file_release['processor']]) ? $processor[$file_release['processor']] : "") . '</TD>' . '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
+                            if (!isset ($proj_stats['size']))
+                                $proj_stats['size'] = 0;
+                            $proj_stats['size'] += $file_release['file_size'];
+                            if (!isset ($proj_stats['downloads']))
+                                $proj_stats['downloads'] = 0;
+                            $proj_stats['downloads'] += $file_release['downloads'];
+                        }
+                        print '</table>';
+                        print '</span>';
+                    }
+                    $javascript_releases_array[] = "'r_".$package_release->getReleaseID()."': [" . implode(",", $javascript_files_array) . "]";
+                    $cpt_release = $cpt_release + 1;
+                }
+            }
+            if (!$cpt_release) {
+                print '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
+            }
+        }
+        print '</div>';
+        print '</fieldset>';
+        $javascript_packages_array[] = "'p_".$package_id."': {" . implode(",", $javascript_releases_array) . "}";
+    }
 }
 
 $javascript_array = 'var packages = {';

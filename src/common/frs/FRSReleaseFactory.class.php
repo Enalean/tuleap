@@ -234,7 +234,7 @@ class FRSReleaseFactory {
 			$this->_delete($release_id);
 
 			//append the releasename and project name to a temp file for the root perl job to grab
-			if ($filename) {
+			if (isset($filename) && $filename) {
 				//find the last occurrence of / in the filename to get the parentdir name
 				$pos = strrpos($filename, "/");
 				if (!$pos) {

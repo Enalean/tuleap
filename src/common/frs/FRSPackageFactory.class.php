@@ -53,7 +53,6 @@ class FRSPackageFactory {
         }else{
         	$dar = $dao->searchById($_id);
         }
-
         if($dar->isError()){
             return;
         }
@@ -169,9 +168,12 @@ class FRSPackageFactory {
     }
     
     
-    function update($data_array) {
+    function update($data) {
+        if (is_a($data, 'FRSPackage')) {
+            $data = $data->toArray();
+        }
         $dao =& $this->_getFRSPackageDao();
-        return $dao->updateFromArray($data_array);
+        return $dao->updateFromArray($data);
     }
     
     
