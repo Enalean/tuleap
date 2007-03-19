@@ -78,8 +78,11 @@ class Layout extends Response {
 
     
     function redirect($url) {
-        if (session_hash() && !headers_sent()) {
+        if (session_hash()) {
             $this->_serializeFeedback();
+            if (headers_sent()) {
+                echo '<a href="'. $url .'">'. $url .'</a>';
+            }
             header('Location: '. $url);
         } else {
             $this->header(array('title' => 'Redirection'));
