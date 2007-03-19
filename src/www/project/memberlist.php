@@ -48,7 +48,7 @@ $res_memb = db_query($query);
 while ( $row_memb=db_fetch_array($res_memb) ) {
 	print "\t<tr>\n";
 	print "\t\t";
-	if ( $row_memb[admin_flags]=='A' ) {
+	if ( $row_memb['admin_flags']=='A' ) {
 		print "\t\t<td><b><A href=\"/users/$row_memb[user_name]/\">$row_memb[realname]</A></b></td>\n";
 	} else {
 		print "\t\t<td>$row_memb[realname]</td>\n";
