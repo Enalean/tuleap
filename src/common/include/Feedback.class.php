@@ -6,7 +6,12 @@ class Feedback {
         $this->logs = array();
     }
     function log($level, $msg) {
-        $this->logs[] = array('level' => $level, 'msg' => $msg);
+        if(!is_array($msg)) {
+            $msg = array($msg);
+        }
+        foreach($msg as $m) {
+            $this->logs[] = array('level' => $level, 'msg' => $m);
+        }
     }
     function fetch() {
         $html = '';
