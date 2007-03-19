@@ -123,7 +123,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function create($package_id=null, $name=null,
     				$notes=null, $changes=null, 
-                    $status_id=null, $preformatted=0, $release_date=null) {
+                    $status_id=null, $preformatted=1, $release_date=null) {
 
         $arg    = array();
         $values = array();
@@ -181,7 +181,7 @@ class FRSReleaseDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('package_id', 'name', 'notes', 'changes', 'status_id', 'preformatted', 'release_date');
+        $cols   = array('package_id', 'name', 'notes', 'changes', 'status_id',  'release_date');
         $is_date = false;
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
@@ -192,6 +192,9 @@ class FRSReleaseDao extends DataAccessObject {
                 $values[] = $this->da->quoteSmart($value);
             }
         }
+        
+        $arg[] = 'preformatted';
+        $values[] = 1;
         
         if(!$is_date){
         	$arg[] = 'release_date';
@@ -232,7 +235,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function updateById($release_id, $package_id=null, $name=null,
     				$notes=null, $changes=null, $status_id=null, 
-    				$preformatted=0, $release_date=null) {       
+    				$preformatted=1, $release_date=null) {       
        
         $argArray = array();
 
