@@ -154,12 +154,49 @@ function delete_file(row_id, id){
 		add_new_file();
 	}
 }
+
+function show_upload_change_log(){
+	Element.hide('cl_upload_link'); 
+	Element.hide('change_log_area');
+	Element.show('upload_change_log');
+	Element.show('cancel_change_log');
+}
+
+function cancel_update_change_log(){
+	Element.show('change_log_area');
+	Element.show('cl_upload_link');
+	//remove the file input and add it just after to set the file value to "" otherwise the file will be upload when saving the release
+	Element.remove('upload_change_log');
+	new Insertion.After('change_log_title', '<TR id="upload_change_log"><TD><input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30"></TD></TR>');
+	Element.hide('upload_change_log');
+	new Insertion.After('uploaded_change_log', '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">');
+	Element.hide('cancel_change_log');
+}
 		
 function add_change_log(){
 	Element.hide('add_change_log');
 	Element.show('change_log_title');
 	Element.show('change_log_area');
-	new Insertion.After('change_log', '<a id="cl_upload_link" href="#upload_change_log" onclick="Element.show( \'upload_change_log\'); Element.hide( \'cl_upload_link\'); return false;">'+upload_text+'</a>');
+	new Insertion.After('change_log', '<a id="cl_upload_link" href="#upload_change_log" onclick="show_upload_change_log(); return false;">'+upload_text+'</a>');
+	new Insertion.After('uploaded_change_log', '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">');
+}
+
+function show_upload_notes(){
+	Element.show('upload_notes'); 
+	Element.hide('rn_upload_link');
+	new Insertion.After('uploaded_notes', '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">');
+	Element.hide('release_notes_area');
+}
+
+function cancel_update_notes(){
+	Element.show('release_notes_area');
+	Element.show('rn_upload_link');
+	//remove the file input and add it just after to set the file value to "" otherwise the file will be upload when saving the release
+	Element.remove('upload_notes');
+	new Insertion.After('notes_title', '<TR id="upload_notes"><TD><input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30"></TD></TR>');
+	Element.hide('upload_notes');
+	new Insertion.After('uploaded_notes', '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">');
+	Element.hide('cancel_notes');
 }
 		
 function view_change_permissions(){
@@ -194,8 +231,8 @@ Event.observe(window, 'load', function() {
 	Element.hide('files_help');
 			
 	//Release Notes
-	Element.hide('upload_release_notes');
-	new Insertion.After('release_notes', '<a id="rn_upload_link" href="#upload_release_notes" onclick="Element.show( \'upload_release_notes\'); Element.hide( \'rn_upload_link\');return false;">'+upload_text+'</a>');
+	Element.hide('upload_notes');
+	new Insertion.After('release_notes', '<a id="rn_upload_link" href="#upload_release_notes" onclick="show_upload_notes();return false;">'+upload_text+'</a>');
 		
 	//Change Log
 	if((release_mode == 'edition' && $('text_area_change_log').value=='') || release_mode == 'creation'){
@@ -203,6 +240,11 @@ Event.observe(window, 'load', function() {
 		Element.hide('upload_change_log');
 		Element.hide('change_log_area');
 		new Insertion.Before('change_log_title', '<TR id="add_change_log"><TD><a href="#add_change_log" onclick="add_change_log(); return false;">'+add_change_log_text+'</a></TD></TR>');
+	}else if(release_mode == 'edition' && $('text_area_change_log').value!=''){alert('in');
+		new Insertion.After('uploaded_change_log', '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">');
+		Element.hide('cancel_change_log');
+		Element.hide('upload_change_log');
+		new Insertion.After('change_log', '<a id="cl_upload_link" href="#upload_change_log" onclick="show_upload_change_log(); return false;">'+upload_text+'</a>');
 	}		
 	//News
 	Element.hide('tr_subject');

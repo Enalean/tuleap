@@ -641,17 +641,17 @@ if ($release == null) {
 		</TD></TR>
 		<TR><TD><FIELDSET><LEGEND><?php echo $Language->getText('file_admin_editreleases','fieldset_notes'); ?></LEGEND>
 		<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="100%">
-		<TR>
+		<TR  id="notes_title">
 			<TD VALIGN="TOP" width="10%">
 				<span id="release_notes"><B><?php echo $Language->getText('file_admin_editreleases','release_notes'); ?>:  </B></span>
 			</TD>
 		</TR>
-		<TR id="upload_release_notes">
+		<TR id="upload_notes">
 			<TD>
-				<input type="file" name="uploaded_release_notes"  size="30">
+				<input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30">
 			</TD>
 		</TR>
-		<TR>
+		<TR id="release_notes_area">
 			<TD width="100%">
 				<TEXTAREA NAME="release[release_notes]" rows="7" cols="70"><?php echo htmlspecialchars($release->getNotes());?></TEXTAREA>
 			</TD>
@@ -663,7 +663,7 @@ if ($release == null) {
 		</TR>
 		<TR id="upload_change_log">
 			<TD>
-				<input type="file" name="uploaded_change_log"  size="30">
+				<input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30">
 			</TD>
 		</TR>
 		<TR id="change_log_area">
