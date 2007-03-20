@@ -332,7 +332,8 @@
             accéder à l'espace de chargement FTP directement depuis
             l'explorateur Windows et y glisser les fichiers (voir
             <xref linkend="MSWindowsSharedResources" />). Ensuite
-            rafraîchissez la page Web pour voir apparaître les
+            rafraîchissez la page Web ou cliquez sur le lien &#34;Rafraîchir la liste des fichiers&#34;
+            puis ajouter un nouveau fichier pour voir apparaître les
             fichiers chargés.</para>
 
             <para>Avant de charger les fichiers assurez-vous de leur
@@ -367,7 +368,8 @@
             <para><emphasis role="bold">&Eacute;tape 3 - Renseigner les notes concernant la version et les modifications</emphasis></para>
 				
 				<para>Vous pouvez copier-coller ou télécharger des notes concernant
-				la version et ses modifications. Pour télécharger cliquez sur le lien 
+				la version. Pour ajouter des modifications (change log) cliquez sur le lien &#34;Ajouter des modifications&#34;.
+				Pour télécharger cliquez sur le lien 
 				&#34;Télécharger&#34; correspondant puis séléctionnez le fichier.</para>
 				
             <para>Les notes concernant la version sont typiquement un
