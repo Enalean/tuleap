@@ -550,6 +550,7 @@ tracker_include_type	error_gn_not_added	Erreur lors de l'ajout de la notificatio
 tracker_include_type	error_gn_not_deleted	Erreur lors de la suppression de la notification globale
 tracker_include_type	error_missing_param	Paramètres manquants
 tracker_include_type	info_gn_default_added	Notification globale par défaut ajoutée
+tracker_include_type	info_gn_default_not_added	Notification globale par défaut pas ajoutée
 tracker_include_type	info_gn_deleted	Notification globale supprimée
 #
 #-----------------------------------------------

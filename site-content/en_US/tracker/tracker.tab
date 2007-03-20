@@ -545,6 +545,7 @@ tracker_include_type	error_gn_not_added	Unable to add global notification
 tracker_include_type	error_gn_not_deleted	Unable to delete global notification
 tracker_include_type	error_missing_param	Missing Parameters
 tracker_include_type	info_gn_default_added	Default global notification added
+tracker_include_type	info_gn_default_not_added	Default global notification not added
 tracker_include_type	info_gn_deleted	Global notification has been deleted
 #
 #-----------------------------------------------
