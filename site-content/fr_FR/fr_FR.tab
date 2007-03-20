@@ -69,4 +69,5 @@ global	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas
 global	at_the_beginning	Au début
 global	at_the_end	À la fin
 global	after	Après $1
+global	missing_parameters	Paramètres manquants
 

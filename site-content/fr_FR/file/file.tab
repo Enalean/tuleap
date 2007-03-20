@@ -157,7 +157,7 @@ file_admin_editreleases	file_news_subject	Nouvelle version : $1
 file_admin_editreleases	details	Détails
 file_admin_editreleases	file_news_details	Une nouvelle version $1 est maintenant disponible à l'URL : $2
 file_admin_editreleases	submit_news	Soumettre une annonce
-ftftfile_admin_editreleases	relname	<nom-de-version>
+file_admin_editreleases	relname	<nom-de-version>
 file_admin_editreleases	fieldset_properties	Propriétés
 file_admin_editreleases	fieldset_uploaded_files	Fichiers téléchargés
 file_admin_editreleases	fieldset_notes	Notes
