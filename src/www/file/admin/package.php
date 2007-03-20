@@ -53,29 +53,34 @@ if ($request->exist('func')) {
             frs_display_package_form($package, 'Add a package', '?group_id='. $group_id .'&amp;func=create');
             break;
         case 'create':
-            $package_data = $request->get('package');
-            $package_data['group_id'] = $group_id;
-            if (isset($package_data['name']) && isset($package_data['rank']) && isset($package_data['status_id'])) {
-                $package_data['name'] = htmlspecialchars($package_data['name']);
-                if ($frspf->isPackageNameExist($package_data['name'], $group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','p_name_exists'));
-                    $package =& new FRSPackage($package_data);
-                    frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id);
-                } else {
-                    //create a new package
-                    $res_id = $frspf->create($package_data);
-                    //add default permission on the new package (register users)
-                    //TODO permissions @ creation
-                    if($res_id){
-                        $pm = & PermissionsManager::instance();
-                        $pm->addPermission('PACKAGE_READ', $res_id, '2');
-                    }
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_added'));
-                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
-                }
+            if ($request->exist('cancel')) {
+                $GLOBALS['Response']->addFeedback('info', 'Package creation canceled');
+                $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             } else {
-                $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
-                frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id);
+                $package_data = $request->get('package');
+                $package_data['group_id'] = $group_id;
+                if (isset($package_data['name']) && isset($package_data['rank']) && isset($package_data['status_id'])) {
+                    $package_data['name'] = htmlspecialchars($package_data['name']);
+                    if ($frspf->isPackageNameExist($package_data['name'], $group_id)) {
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','p_name_exists'));
+                        $package =& new FRSPackage($package_data);
+                        frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id);
+                    } else {
+                        //create a new package
+                        $res_id = $frspf->create($package_data);
+                        //add default permission on the new package (register users)
+                        //TODO permissions @ creation
+                        if($res_id){
+                            $pm = & PermissionsManager::instance();
+                            $pm->addPermission('PACKAGE_READ', $res_id, '2');
+                        }
+                        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_added'));
+                        $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
+                    }
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
+                    frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id);
+                }
             }
             break;
         case 'edit':
@@ -88,45 +93,50 @@ if ($request->exist('func')) {
             }
             break;
         case 'update':
-            $package_id = $request->get('id');
-            if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
-                $package_data = $request->get('package');
-                if ($package_data['status_id'] != 1) {
-                    //if hiding a package, refuse if it has releases under it
-                    // LJ Wrong SQL statement. It should only check for the existence of
-                    // LJ active packages. If only hidden releases are in this package
-                    // LJ then we can safely hide it.
-                    // LJ $res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
-                    if ($frsrf->isActiveReleases($package_id)) {
-                        $GLOBALS['Response']->addFeedback('warning', $Language->getText('file_admin_editpackages','cannot_hide'));
-                        $package_data['status_id'] = 1;
-                    }
-                }
-                //update an existing package
-                $package->setName(htmlspecialchars($package_data['name']));
-                $package->setRank($package_data['rank']);
-                $package->setStatusId($package_data['status_id']);
-                $package->setApproveLicense($package_data['approve_license']);
-                $package_is_updated = $frspf->update($package);
-                
-                //Permissions
-                list ($return_code, $feedback) = permission_process_selection_form($group_id, 'PACKAGE_READ', $package->getPackageID(), $request->get('ugroups'));
-                if (!$return_code) {
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','perm_update_err'));
-                    $GLOBALS['Response']->addFeedback('error', $feedback);
-                } else {
-                    $package_is_updated = true;
-                }
-
-                if ($package_is_updated) {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated'));
-                } else {
-                    $GLOBALS['Response']->addFeedback('info', 'Package not updated');
-                }
+            if ($request->exist('cancel')) {
+                $GLOBALS['Response']->addFeedback('info', 'Package creation canceled');
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             } else {
-                $GLOBALS['Response']->addFeedback('error', 'Package does not exist');
-                $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
+                $package_id = $request->get('id');
+                if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
+                    $package_data = $request->get('package');
+                    if ($package_data['status_id'] != 1) {
+                        //if hiding a package, refuse if it has releases under it
+                        // LJ Wrong SQL statement. It should only check for the existence of
+                        // LJ active packages. If only hidden releases are in this package
+                        // LJ then we can safely hide it.
+                        // LJ $res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
+                        if ($frsrf->isActiveReleases($package_id)) {
+                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('file_admin_editpackages','cannot_hide'));
+                            $package_data['status_id'] = 1;
+                        }
+                    }
+                    //update an existing package
+                    $package->setName(htmlspecialchars($package_data['name']));
+                    $package->setRank($package_data['rank']);
+                    $package->setStatusId($package_data['status_id']);
+                    $package->setApproveLicense($package_data['approve_license']);
+                    $package_is_updated = $frspf->update($package);
+                    
+                    //Permissions
+                    list ($return_code, $feedback) = permission_process_selection_form($group_id, 'PACKAGE_READ', $package->getPackageID(), $request->get('ugroups'));
+                    if (!$return_code) {
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','perm_update_err'));
+                        $GLOBALS['Response']->addFeedback('error', $feedback);
+                    } else {
+                        $package_is_updated = true;
+                    }
+    
+                    if ($package_is_updated) {
+                        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated'));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('info', 'Package not updated');
+                    }
+                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', 'Package does not exist');
+                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
+                }
             }
             break;
         default:
