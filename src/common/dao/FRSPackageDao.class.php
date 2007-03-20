@@ -28,6 +28,7 @@ class FRSPackageDao extends DataAccessObject {
 
     function FRSPackageDao(&$da) {
         DataAccessObject::DataAccessObject($da);
+        $this->table_name = 'frs_package';
     }
 
     /**
@@ -127,7 +128,7 @@ class FRSPackageDao extends DataAccessObject {
 
         if($rank !== null) {
             $arg[] = 'rank';
-            $values[] = ((int) $rank);
+            $values[] = $this->prepareRanking(0, $group_id, $rank, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
         }
 
         if($approve_license !== null) {
@@ -146,6 +147,9 @@ class FRSPackageDao extends DataAccessObject {
         $values = array();
         $cols   = array('group_id', 'name', 'status_id', 'rank', 'approve_license');
         foreach ($data_array as $key => $value) {
+            if ($key == 'rank') {
+                $value = $this->prepareRanking(0, $data_array['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
+            }
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
                 $values[] = $this->da->quoteSmart($value);
@@ -178,7 +182,7 @@ class FRSPackageDao extends DataAccessObject {
      *
      * @return true if there is no error
      */
-    function updateById($package_id, $group_id=null, $name=null,
+    function updateById($package_id, $group_id, $name=null,
                     $status_id=null, $rank=null, $approve_license=null) {       
        
         $argArray = array();
@@ -196,7 +200,7 @@ class FRSPackageDao extends DataAccessObject {
         }
 
         if($rank !== null) {
-            $argArray[] = 'rank='.((int) $rank);
+            $argArray[] = 'rank='. $this->prepareRanking($package_id, $group_id, $rank, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
         }
 
         if($approve_license !== null) {
@@ -224,6 +228,9 @@ class FRSPackageDao extends DataAccessObject {
                 $set_array = array();
                 foreach($data_array as $key => $value) {
                     if ($key != 'package_id' && $value != $current[$key]) {
+                        if ($key == 'rank') {
+                            $value = $this->prepareRanking($package_id, $current['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
+                        }
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }

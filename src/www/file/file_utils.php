@@ -323,15 +323,25 @@ function file_utils_convert_bytes_to_kbytes($size_in_bytes, $decimals_precision 
     return number_format($size_in_kbytes, $decimals_precision, $decimal_separator, $thousand_separator); 
 }
 
-function frs_display_package_form(&$package, $title, $url) {
+function frs_display_package_form(&$package, $title, $url, $siblings) {
     file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','release_edit_f_rel'), 'help' => 'FileReleaseDelivery.html'));
     echo '<h3>'. $title .'</h3>
     <P>
     <form action="'. $url .'" method="post">
     <table>
-    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package[name]" CLASS="textfield_small" value="'. $package->getName() .'"></td></tr>
-    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','rank_on_screen').':</th>  <td><input type="text" name="package[rank]" size="4" maxlength="4" value="'. $package->getRank() .'"></td></tr>
-    <tr><th>'.$GLOBALS['Language']->getText('global','status').':</th>  <td>'. frs_show_status_popup('package[status_id]', $package->getStatusID()) .'</td></tr>';
+    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package[name]" CLASS="textfield_small" value="'. $package->getName() .'">';
+    //{{{ Rank
+    $nb_siblings = count($siblings);
+    if ($nb_siblings && ($nb_siblings > 1 || $siblings[0] != $package->getPackageId())) {
+        echo '</td></tr>';
+        echo '<tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','rank_on_screen').':</th><td>';
+        $GLOBALS['HTML']->selectRank($package->getPackageId(), $package->getRank(), $siblings, array('name' => 'package[rank]'));
+    } else {
+        echo '<input type="hidden" name="package[rank]" value="0" />';
+    }
+    echo '</td></tr>';
+    //}}}
+    echo '<tr><th>'.$GLOBALS['Language']->getText('global','status').':</th>  <td>'. frs_show_status_popup('package[status_id]', $package->getStatusID()) .'</td></tr>';
     if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
         $approve_license = $package->getApproveLicense();
         echo '<tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="package[approve_license]">

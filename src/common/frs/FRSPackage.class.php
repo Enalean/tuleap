@@ -85,7 +85,7 @@ class FRSPackage extends Error {
         return $this->rank;
     }
     function setRank($rank) {
-        $this->rank = (int) $rank;
+        $this->rank = $rank;
     }
     function getApproveLicense() {
         return $this->approve_license;

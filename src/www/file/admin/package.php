@@ -44,16 +44,26 @@ $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
 
+$existing_packages = array();
+$res = $frspf->getFRSPackagesFromDb($group_id);
+foreach($res as $p) {
+    $existing_packages[] = array(
+        'id'   => $p->getPackageId(),
+        'name' => $p->getName(),
+        'rank' => $p->getRank(),
+    );
+}
+
 if ($request->exist('func')) {
     switch ($request->get('func')) {
         case 'delete': //Not yet
             break;
         case 'add':
             $package =& new FRSPackage();
-            frs_display_package_form($package, 'Add a package', '?group_id='. $group_id .'&amp;func=create');
+            frs_display_package_form($package, 'Add a package', '?group_id='. $group_id .'&amp;func=create', $existing_packages);
             break;
         case 'create':
-            if ($request->exist('cancel')) {
+            if (!$request->exist('submit')) {
                 $GLOBALS['Response']->addFeedback('info', 'Package creation canceled');
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             } else {
@@ -64,7 +74,7 @@ if ($request->exist('func')) {
                     if ($frspf->isPackageNameExist($package_data['name'], $group_id)) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','p_name_exists'));
                         $package =& new FRSPackage($package_data);
-                        frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id);
+                        frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id, $existing_packages);
                     } else {
                         //create a new package
                         $res_id = $frspf->create($package_data);
@@ -79,21 +89,21 @@ if ($request->exist('func')) {
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'Missing parameters');
-                    frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id);
+                    frs_display_package_form($package, 'Add a package', '?func=create&amp;group_id='. $group_id, $existing_packages);
                 }
             }
             break;
         case 'edit':
             $package_id = $request->get('id');
             if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
-                frs_display_package_form($package, 'Edit a package', '?func=update&amp;group_id='. $group_id .'&amp;id='. $package_id);
+                frs_display_package_form($package, 'Edit a package', '?func=update&amp;group_id='. $group_id .'&amp;id='. $package_id, $existing_packages);
             } else {
                 $GLOBALS['Response']->addFeedback('error', 'Package does not exist');
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             }
             break;
         case 'update':
-            if ($request->exist('cancel')) {
+            if (!$request->exist('submit')) {
                 $GLOBALS['Response']->addFeedback('info', 'Package creation canceled');
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             } else {
