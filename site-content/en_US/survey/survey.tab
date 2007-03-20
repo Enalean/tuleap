@@ -42,6 +42,7 @@ survey_admin_add_survey	comment	List question numbers, in desired order, separat
 survey_admin_add_survey	add_this_s	Add This Survey
 survey_admin_add_survey	existing_s	Existing Surveys
 survey_admin_add_survey	active	Is Active?
+survey_admin_add_survey	anonymous_answers	Anonymous answers ok?
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/browse_question.php

@@ -65,7 +65,7 @@ function show_questions() {
 <td><INPUT TYPE="RADIO" NAME="is_active" VALUE="1" CHECKED> <?php echo $Language->getText('global','yes'); ?></td>
 <td><INPUT TYPE="RADIO" NAME="is_active" VALUE="0"> <?php echo $Language->getText('global','no'); ?></td>
 <tr>
-<tr><td><B>Anonymous answer ok?</B></td>
+<tr><td><B><?php echo $Language->getText('survey_admin_add_survey','anonymous_answers'); ?></B></td>
 <td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="1"> <?php echo $Language->getText('global','yes'); ?></td>
 <td><INPUT TYPE="RADIO" NAME="is_anonymous" VALUE="0" CHECKED> <?php echo $Language->getText('global','no'); ?></td>
 </tr>

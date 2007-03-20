@@ -47,6 +47,7 @@ survey_admin_add_survey	comment	Lister les identifiants des questions, par ordre
 survey_admin_add_survey	add_this_s	Créer ce sondage
 survey_admin_add_survey	existing_s	Sondages existants
 survey_admin_add_survey	active	Actif ?
+survey_admin_add_survey	anonymous_answers	Autoriser les réponses anonymes ?
 #
 #-----------------------------------------------
 # Script: SF/www/survey/admin/browse_question.php
