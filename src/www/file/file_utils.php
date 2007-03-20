@@ -47,7 +47,6 @@ function file_utils_admin_header($params) {
         echo '<strong>';
         echo '<a href="/file/?group_id='.$group_id.'">'. $p->services['file']->getLabel() .'</a>';
         echo ' | <a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
-        echo ' | <a href="/file/admin/editpackages.php?group_id='.$group_id.'">'. 'Packages' .'</a>';
 	echo ' | <a href="/file/admin/manageprocessors.php?group_id='.$group_id.'">'.$Language->getText('file_file_utils','manage_proc').'</a>';
 	if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
