@@ -8,9 +8,6 @@
 
 
 require_once('pre.php');
-var_dump($_REQUEST);
-var_dump($_FILES);
-var_dump($mon_super_fichier);
 require_once('www/file/file_utils.php');
 
 $Language->loadLanguageMsg('file/file');
