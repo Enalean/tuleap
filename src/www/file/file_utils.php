@@ -477,7 +477,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     <?php
     
     $titles = array ();
-    $titles[] = ''; //$GLOBALS['Language']->getText('file_admin_editreleases', 'delete_col');
+    $titles[] = $is_update ? $GLOBALS['Language']->getText('file_admin_editreleases', 'delete_col') : '';
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'filename');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'file_type');
