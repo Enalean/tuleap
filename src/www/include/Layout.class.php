@@ -115,9 +115,9 @@ class Layout extends Response {
         }
         echo '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
         echo '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
-        foreach($items as $item) {
+        foreach($items as $i => $item) {
             if ($item['id'] != $id) {
-                echo '<option value="'. ($item['rank']+1) .'" '. ($rank == $item['rank']+1 ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('global', 'after', $item['name']) .'</option>';
+                echo '<option value="'. ($item['rank']+1) .'" '. (isset($items[$i + 1]) && $items[$i + 1]['id'] == $id ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('global', 'after', $item['name']) .'</option>';
             }
         }
         echo '</select>';
