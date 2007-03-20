@@ -67,6 +67,9 @@ class DataAccessObject {
     
     /**
     * Prepare ranking of items.
+    * 
+    * @see  https://partners.xrce.xerox.com/plugins/docman/?group_id=120&action=show&id=95
+    * 
     * @param   $id  The id of the item to rank. 0 if the item doesn't exist.
     * @param   $parent_id   The id of the element used to group items
     * @param   $rank    The rank asked for the items. Possible values are :
