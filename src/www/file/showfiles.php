@@ -44,13 +44,15 @@ $num_packages = 0;
 $res = $frspf->getFRSPackagesFromDb($group_id);
 
 foreach ($res as $package) {
-    if (isset ($release_id)) {
-        $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
-    }
-
-    if (!isset ($release_id) || $row3->getPackageID() == $package->getPackageID()) {
-        $packages[$package->getPackageID()] = $package;
-        $num_packages++;
+    if ($frspf->userCanRead($group_id, $package->getPackageID(), user_getid())) {
+        if (isset ($release_id)) {
+            $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
+        }
+    
+        if (!isset ($release_id) || $row3->getPackageID() == $package->getPackageID()) {
+            $packages[$package->getPackageID()] = $package;
+            $num_packages++;
+        }
     }
 }
 
@@ -64,6 +66,9 @@ $params = array (
 file_utils_header($params);
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
+    if (user_ismember($group_id,'R2')) {
+        echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">[Add a package]</a></p>';
+    }
     file_utils_footer($params);
     exit;
 }
@@ -198,13 +203,15 @@ while (list ($package_id, $package) = each($packages)) {
             // iterate and show the releases of the package
             foreach ($res_release as $package_release) {
                 $can_see_release = false;
-                if ($package_release->isActive()) {
-                    $emphasis = 'strong';
-                    $can_see_release = true;
-                } else {
-                    $emphasis = 'em';
-                    if (user_ismember($group_id,'R2')) {
+                if ($frsrf->userCanRead($group_id, $package_id, $package_release->getReleaseID(), user_getid())) {
+                    if ($package_release->isActive()) {
+                        $emphasis = 'strong';
                         $can_see_release = true;
+                    } else {
+                        $emphasis = 'em';
+                        if (user_ismember($group_id,'R2')) {
+                            $can_see_release = true;
+                        }
                     }
                 }
                 if ($can_see_release) {
