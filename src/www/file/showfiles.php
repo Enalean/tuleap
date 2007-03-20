@@ -140,20 +140,20 @@ if (user_ismember($group_id,'R2')) {
 }
 // Iterate and show the packages
 while (list ($package_id, $package) = each($packages)) {
-    $package_style   = '';
     $can_see_package = false;
     if ($package->isActive()) {
+        $emphasis = 'strong';
         $can_see_package = true;
     } else {
-        $package_style = 'style="background-image:url(/themes/CodeX/images/frs_inactive.png);"';
+        $emphasis = 'em';
         if (user_ismember($group_id,'R2')) {
             $can_see_package = true;
         }
     }
     if ($can_see_package) {
-        print '<fieldset class="package" '. $package_style .'>';
+        print '<fieldset class="package">';
         print '<legend><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
-        print ' <strong>'.$package->getName().'</strong>';
+        print " <$emphasis>". $package->getName() ."</$emphasis>";
         if (user_ismember($group_id,'R2')) {
             print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
             //print '     <a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
@@ -192,12 +192,12 @@ while (list ($package_id, $package) = each($packages)) {
             $cpt_release = 0;
             // iterate and show the releases of the package
             foreach ($res_release as $package_release) {
-                $release_style   = '';
                 $can_see_release = false;
                 if ($package_release->isActive()) {
+                    $emphasis = 'strong';
                     $can_see_release = true;
                 } else {
-                    $release_style = 'style="background-image:url(/themes/CodeX/images/frs_inactive.png);"';
+                    $emphasis = 'em';
                     if (user_ismember($group_id,'R2')) {
                         $can_see_release = true;
                     }
@@ -212,13 +212,12 @@ while (list ($package_id, $package) = each($packages)) {
                     } else {
                         $bgcolor = 'boxitem';
                     }
-                    print '<table width="100%" class="release" '. $release_style .'>';
+                    print '<table width="100%" class="release">';
                     print ' <TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'">';
                     print '  <TD><a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
-                    print '     <b>'. $package_release->getName() . '</b>';
+                    print "     <$emphasis>". $package_release->getName() . "</$emphasis>";
                     if (user_ismember($group_id,'R2')) {
                         print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
-                        print '     <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
                     }
                     print ' &nbsp; ';
                     print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
@@ -228,8 +227,11 @@ while (list ($package_id, $package) = each($packages)) {
                         print '<em>This release is inactive.</em>';
                     } 
                     print '</td> ';
-                    print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '</TD>';
-                    print ' </TR>' . "\n";
+                    print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
+                    if (user_ismember($group_id,'R2')) {
+                        print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+                    }
+                    print '</TD></TR>' . "\n";
                     print '</table>';
                     
                     // get the files in this release....
