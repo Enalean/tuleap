@@ -78,7 +78,7 @@ if ($pv) {
     echo "</TR></TABLE>";
 
     echo '<p>' . $Language->getText('file_showfiles', 'select_release') . '</p>';
-}
+
 ?>
 <SCRIPT language="JavaScript">
 <!--
@@ -125,7 +125,7 @@ function toggle_image(image_id) {
 -->
 </SCRIPT>
 <?
-
+}
 // get unix group name for path
 $group_unix_name = group_getunixname($group_id);
 
@@ -135,7 +135,7 @@ $fmmf =& new FileModuleMonitorFactory();
  
 $javascript_packages_array = array();
  
-if (user_ismember($group_id,'R2')) {
+if (!$pv && user_ismember($group_id,'R2')) {
     echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">[Add a package]</a></p>';
 }
 // Iterate and show the packages
@@ -152,20 +152,25 @@ while (list ($package_id, $package) = each($packages)) {
     }
     if ($can_see_package) {
         print '<fieldset class="package">';
-        print '<legend><a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
+        print '<legend>';
+        if (!$pv) {
+            print '<a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
+        }
         print " <$emphasis>". $package->getName() ."</$emphasis>";
-        if (user_ismember($group_id,'R2')) {
-            print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
-            //print '     <a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+        if (!$pv) {
+            if (user_ismember($group_id,'R2')) {
+                print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+                //print '     <a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+            }
+            print ' &nbsp; ';
+            print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
+            if ($fmmf->isMonitoring($package_id)) {
+                print '<img src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+            } else {
+                print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+            }
+            print '  </a>';
         }
-        print ' &nbsp; ';
-        print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
-        if ($fmmf->isMonitoring($package_id)) {
-            print '<img src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
-        } else {
-            print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
-        }
-        print '  </a>';
         print '</legend>';
         if (!$package->isActive()) {
             //TODO i18n
@@ -183,7 +188,7 @@ while (list ($package_id, $package) = each($packages)) {
     
         $javascript_releases_array = array();
         print '<div id="p_'.$package_id.'">';
-        if (user_ismember($group_id,'R2')) {
+        if (!$pv && user_ismember($group_id,'R2')) {
             echo '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">[Add a release]</a></p>';
         }
         if (!$res_release || $num_releases < 1) {
@@ -214,13 +219,18 @@ while (list ($package_id, $package) = each($packages)) {
                     }
                     print '<table width="100%" class="release">';
                     print ' <TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'">';
-                    print '  <TD><a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
-                    print "     <$emphasis>". $package_release->getName() . "</$emphasis>";
-                    if (user_ismember($group_id,'R2')) {
-                        print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+                    print '  <TD>';
+                    if (!$pv) {
+                        print '<a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
                     }
-                    print ' &nbsp; ';
-                    print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
+                    print "     <$emphasis>". $package_release->getName() . "</$emphasis>";
+                    if (!$pv) {
+                        if (user_ismember($group_id,'R2')) {
+                            print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+                        }
+                        print ' &nbsp; ';
+                        print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
+                    }
                     print '  </td>';
                     print ' <td style="text-align:center">';
                     if (!$package_release->isActive()) {
@@ -228,7 +238,7 @@ while (list ($package_id, $package) = each($packages)) {
                     } 
                     print '</td> ';
                     print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
-                    if (user_ismember($group_id,'R2')) {
+                    if (!$pv && user_ismember($group_id,'R2')) {
                         print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
                     }
                     print '</TD></TR>' . "\n";
@@ -323,30 +333,31 @@ while (list ($package_id, $package) = each($packages)) {
     }
 }
 
-$javascript_array = 'var packages = {';
-$javascript_array .= implode(",", $javascript_packages_array);
-$javascript_array .= '}';
-echo '<script language="javascript">'.$javascript_array.'</script>';
-
-?>
-
-<script language="javascript">
-// at page loading, we only expand the first release of the package, and collapse the others
-var cpt_release;
-$H(packages).keys().each(function(package_id) {
-    cpt_release = 0;
-    $H(packages[package_id]).keys().each(function(release_id) {
-        if (cpt_release > 0) {
-            //Element.toggle(package_id + release_id);
-            toggle_release(package_id, release_id); 
-        }
-        cpt_release++;
+if (!$pv) {
+    $javascript_array = 'var packages = {';
+    $javascript_array .= implode(",", $javascript_packages_array);
+    $javascript_array .= '}';
+    echo '<script language="javascript">'.$javascript_array.'</script>';
+    
+    ?>
+    
+    <script language="javascript">
+    // at page loading, we only expand the first release of the package, and collapse the others
+    var cpt_release;
+    $H(packages).keys().each(function(package_id) {
+        cpt_release = 0;
+        $H(packages[package_id]).keys().each(function(release_id) {
+            if (cpt_release > 0) {
+                //Element.toggle(package_id + release_id);
+                toggle_release(package_id, release_id); 
+            }
+            cpt_release++;
+        });
     });
-});
-</script>
-
-<?php
-
+    </script>
+    
+    <?php
+}
 // project totals (statistics) 
 if (isset ($proj_stats['size'])) {
 	
