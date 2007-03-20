@@ -108,6 +108,21 @@ class Layout extends Response {
         echo $html;
     }
     
+    function selectRank($id, $rank, $items, $html_options) {
+        echo '<select ';
+        foreach($html_options as $key => $value) {
+            echo $key .'="'. $value .'"';
+        }
+        echo '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
+        echo '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
+        foreach($items as $item) {
+            if ($item['id'] != $id) {
+                echo '<option value="'. ($item['rank']+1) .'" '. ($rank == $item['rank']+1 ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('global', 'after', $item['name']) .'</option>';
+            }
+        }
+        echo '</select>';
+    }
+    
     function includeJavascriptFile($file) {
         $this->javascript_files[] = $file;
     }

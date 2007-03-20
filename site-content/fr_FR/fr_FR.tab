@@ -66,3 +66,7 @@ global	open	Ouvert
 global	closed	Fermé
 global	status	Statut
 global	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
+global	at_the_beginning	Au début
+global	at_the_end	À la fin
+global	after	Après $1
+

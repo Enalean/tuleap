@@ -61,3 +61,7 @@ global	open	Open
 global	closed	Closed
 global	status	Status
 global	return_to	<p>Requested page currently loading. If it does not, try <a href="$1">$1</a>.</p>
+global	at_the_beginning	At the beginning
+global	at_the_end	At the end
+global	after	After $1
+
