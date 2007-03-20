@@ -218,41 +218,6 @@ class FRSRelease extends Error {
 	var $data_array;
 	var $release_files;
 
-
-	/**
-	 *  sendNotice - the logic to send an email/jabber notice for a release.
-	 *
-	 *  @return	boolean	success.
-	 */
-	function sendNotice() {
-		global $Language;
-		$arr =& $this->FRSPackage->getMonitorIDs();
-
-		$date = date('Y-m-d H:i',time());
-		$proto = "http://";
-		if ($GLOBALS['sys_use_ssl']) {
-			$proto = "https://";
-		}
-
-		$subject = $Language->getText('frs_release','email_title',array(
-		$this->FRSPackage->Group->getUnixName(),
-		$this->FRSPackage->getName()));
-		$text = stripcslashes($Language->getText('frs_release','email_text',array(
-		$this->FRSPackage->Group->getPublicName(),
-		$this->FRSPackage->Group->getUnixName(),
-		$this->FRSPackage->getName(),
-		"<${proto}".getStringFromServer('HTTP_HOST')."/project/showfiles.php?group_id=". $this->FRSPackage->Group->getID() ."&release_id=". $this->getID().">",
-		$GLOBALS['sys_name'],
-		"<${proto}".getStringFromServer('HTTP_HOST')."/frs/monitor.php?filemodule_id=".$this->FRSPackage->getID()."&group_id=".$this->FRSPackage->Group->getID()."&stop=1>")));
-			
-
-		$text = util_line_wrap($text);
-		if (count($arr)) {
-			util_handle_message(array_unique($arr),$subject,$text);
-		}
-		
-	}
-
 	/**
 	 *	getFiles - gets all the file objects for files in this release.
 	 *
