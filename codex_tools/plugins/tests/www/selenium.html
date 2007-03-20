@@ -403,6 +403,406 @@
 	<td>is_in_iframe</td>
 	<td>off</td>
 </tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>No File Packages</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=[Add a package]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>package[name]</td>
+	<td>Core</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=[Add a package]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Rank On Screen:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>package[name]</td>
+	<td>Documentation</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//legend/strong</td>
+	<td>Documentation</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[2]/legend/strong</td>
+	<td>Core</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//fieldset[2]/legend/a[2]/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>package[rank]</td>
+	<td>label=At the beginning</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//legend/strong</td>
+	<td>Core</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//fieldset[2]/legend/strong</td>
+	<td>Documentation</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My Personal Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[5]/tbody/tr[2]/td/b</td>
+	<td>You are not monitoring any files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//tr[3]/td[1]/a/b</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Monitor this package']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Summary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My Personal Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Core</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Stop monitoring this package']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My Personal Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[5]/tbody/tr[2]/td/b</td>
+	<td>You are not monitoring any files</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//tr[3]/td[1]/a/b</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=[Add a release]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>release_name</td>
+	<td>Version 1.0</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>release[release_notes]</td>
+	<td>This is the first version</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>create_release</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Added Release</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Read release notes and changelog']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>This is the first version</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Version 1.0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=User Groups Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create a New User Group</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ugroup_name</td>
+	<td>publishers</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create User Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Successfully Created User Group</td>
+	<td></td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>SelectList</td>
+	<td>label=admin (Site Administrator)</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>SelectList</td>
+	<td>label=nicolas (Nicolas Terray)</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='&nbsp;&nbsp;->&nbsp;&nbsp;']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Successfully Updated User Group publishers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, 'admin/release.php?func=add&group_id=111&package_id=3')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>release_name</td>
+	<td>Public release</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>create_release</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Added Release</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, 'admin/release.php?func=add&group_id=111&package_id=3')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Release Name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>release_name</td>
+	<td>Private release</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=[view/change]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>ugroups</td>
+	<td>label=registered_users</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>ugroups</td>
+	<td>label=project_members</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>create_release</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='ic/edit.png']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>ugroups</td>
+	<td>label=registered_users</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>ugroups</td>
+	<td>label=project_members</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//td[1]/a[2]/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=[view/change]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>nicolas</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>nicolas</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Nicolas Terray</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>words</td>
+	<td>jdp</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=John Doe's Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Files</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Core</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Documentation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Private release</td>
+	<td></td>
+</tr>
 
 </tbody></table>
 </body>
