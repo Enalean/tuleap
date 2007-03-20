@@ -91,7 +91,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function searchByPackageId($id) {
         $_id = (int) $id;
-        return $this->_search(' package_id='.$_id,'', '');
+        return $this->_search(' package_id='.$_id, '', ' ORDER BY release_date DESC, release_id DESC ');
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
