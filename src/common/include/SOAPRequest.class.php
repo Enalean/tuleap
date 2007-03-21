@@ -7,8 +7,8 @@
  * SOAPRequest
  */
 
-require_once('common/include/Request.class.php');
-class SOAPRequest extends Request {
+require_once('common/include/CodeX_Request.class.php');
+class SOAPRequest extends CodeX_Request {
     
     var $params;
     function SOAPRequest($params) {

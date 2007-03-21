@@ -2,13 +2,13 @@
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: SOAPRequest.class.php 4791 2007-01-30 16:42:38Z mnazaria $
+ * $Id$
  *
- * Request
+ * CodeX_Request
  */
 
 
-/* abstract */ class Request {
+/* abstract */ class CodeX_Request {
     
     /* abstract */ function get($variable) {}
     
