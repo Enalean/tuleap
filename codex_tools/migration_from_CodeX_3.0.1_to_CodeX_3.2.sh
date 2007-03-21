@@ -465,6 +465,14 @@ echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
 mysqlcheck -Aao $pass_opt
 
 
+###############################################################################
+# Update ssl.conf
+#
+# Subversion roots are now in conf.d and available to both http and https vhosts.
+
+substitute '/etc/httpd/conf/ssl.conf' '^Include .*codex_svnhosts_ssl.conf' '#Include $1codex_svnhosts_ssl.conf'
+
+
 ##############################################
 # Fix SELinux
 #
