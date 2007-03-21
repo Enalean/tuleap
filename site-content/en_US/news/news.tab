@@ -47,6 +47,7 @@ news_admin_index	no_approved_items_this_week	No approved items found for this we
 news_admin_index	items_approved_last_week	These items were approved this past week
 news_admin_index	permission_denied	Permission Denied.
 news_admin_index	need_to_be_admin	Permission Denied. You have to be an admin on the News service of this project.
+news_admin_index	news_admin	News Administration
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

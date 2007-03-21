@@ -76,7 +76,9 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 
 	news_header(array('title'=>$Language->getText('news_admin_index','title'),
 			  'help'=>'NewsService.html'));
-
+    
+    echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
+    
 	if (isset($approve) && $approve) {
 		/*
 			Show the submit form
@@ -132,7 +134,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 			Show list of waiting news items
 		*/
 
-		$sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id='$group_id'";
+		$sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id='$group_id' ORDER BY date DESC";
 		$result=db_query($sql);
 		$rows=db_numrows($result);
 		if ($rows < 1) {

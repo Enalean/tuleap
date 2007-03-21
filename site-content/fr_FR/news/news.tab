@@ -52,6 +52,7 @@ news_admin_index	no_approved_items_this_week	Aucune annonce approuvée cette sema
 news_admin_index	items_approved_last_week	Annonces approuvées la semaine passée
 news_admin_index	permission_denied	Permission refusée
 news_admin_index	need_to_be_admin	Permission refusée. Vous devez être administrateur du service Annonce.
+news_admin_index	news_admin	Administration des annonces
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php
