@@ -62,7 +62,7 @@ PERL='/usr/bin/perl'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
-if [ ! -e $CHCON ] || [ ! -e "/etc/selinux" ]; then
+if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
    # SELinux not installed
    CHCON="echo ignored: chcon"
 fi
@@ -129,6 +129,7 @@ done
 #
 RH_RELEASE="4"
 yn="y"
+## XXXX CHECK RELEASE > 4.4: this is needed by SVN 1.4
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
     cat <<EOF
@@ -154,9 +155,12 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 # xorg-x11-deprecated-libs -> docbook/java
-# neon -> subversion
+# neon -> subversion XXX add swig ??
 # libart_lgpl perl-Time-HiRes -> munin
 # zip, unzip -> CLI client
+# dump -> backup_job
+#rpm -Uvh cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
+
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd httpd-suexec mod_ssl vsftpd \
@@ -169,6 +173,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
    xorg-x11-deprecated-libs neon \
    libart_lgpl perl-Time-HiRes \
+   dump \
    zip unzip
 do
     $RPM -q $rpm  2>/dev/null 1>&2
@@ -413,6 +418,8 @@ echo "Installing Subversion RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 #$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
+$RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
+$RPM -Uvh ${newest_rpm}/apr-util-0*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
 $RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
@@ -1219,7 +1226,7 @@ EOF
 ##############################################
 # Generate Documentation
 #
-echo "Generating the CodeX Manuals. This might take a few minutes."
+echo "Generating the CodeX Manuals. This will take a few minutes."
 /usr/share/codex/src/utils/generate_doc.sh -f
 /usr/share/codex/src/utils/generate_programmer_doc.sh -f
 /usr/share/codex/src/utils/generate_cli_package.sh -f
