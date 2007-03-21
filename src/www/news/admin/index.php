@@ -14,8 +14,8 @@ require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
-
-if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && user_ismember($group_id,'N2')) {
+// admin pages can be reached by news admin (N2) or project admin (A) 
+if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($group_id, 'A') || user_ismember($group_id,'N2'))) {
 	/*
 
 		Per-project admin pages.
