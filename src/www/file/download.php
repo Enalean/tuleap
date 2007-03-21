@@ -60,7 +60,7 @@ if (user_isloggedin()) {
       }
       $bn = basename($file->getFileName());
       header("Content-Type: application/octet-stream");
-	  header("Content-Disposition: attachment; filename=$bn");
+	  header('Content-Disposition: attachment; filename="'. $bn .'"');
       header("Content-Length:  $size");
       header("Content-Transfer-Encoding: binary\n");
       fpassthru($fp);
