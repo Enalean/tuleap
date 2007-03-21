@@ -78,20 +78,30 @@ class Layout extends Response {
 
     
     function redirect($url) {
+        $redirect = true;
+        $timer    = true;
         if (session_hash()) {
-            $this->_serializeFeedback();
             if (headers_sent()) {
-                echo '<a href="'. $url .'">'. $url .'</a>';
+                $redirect = false;
+                $timer    = false;
+            } else {
+                $this->_serializeFeedback();
             }
+        } else {
+            $redirect = false;
+        }
+        if ($redirect) {
             header('Location: '. $url);
         } else {
             $this->header(array('title' => 'Redirection'));
             echo '<p>'. $GLOBALS['Language']->getText('global', 'return_to', array($url)) .'</p>';
-            echo '<script type="text/javascript">';
-            echo 'setTimeout(function() {';
-            echo " location.href = '". $url ."';";
-            echo '}, 5000);';
-            echo '</script>';
+            if ($timer) {
+                echo '<script type="text/javascript">';
+                echo 'setTimeout(function() {';
+                echo " location.href = '". $url ."';";
+                echo '}, 5000);';
+                echo '</script>';
+            }
             $this->footer(array());
         }
         exit();
