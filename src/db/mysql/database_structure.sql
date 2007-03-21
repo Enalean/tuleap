@@ -1880,33 +1880,6 @@ CREATE TABLE surveys (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'theme_prefs'
-#
-
-CREATE TABLE theme_prefs (
-  user_id int(11) NOT NULL default '0',
-  user_theme int(8) NOT NULL default '0',
-  BODY_font char(80) default '',
-  BODY_size char(5) default '',
-  TITLEBAR_font char(80) default '',
-  TITLEBAR_size char(5) default '',
-  COLOR_TITLEBAR_BACK char(7) default '',
-  COLOR_LTBACK1 char(7) default '',
-  PRIMARY KEY  (user_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'themes'
-#
-
-CREATE TABLE themes (
-  theme_id int(11) NOT NULL auto_increment,
-  dirname varchar(80) default NULL,
-  fullname varchar(80) default NULL,
-  PRIMARY KEY  (theme_id)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'tmp_projs_releases_tmp'
 #
 
