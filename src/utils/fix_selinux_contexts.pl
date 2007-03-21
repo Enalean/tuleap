@@ -14,6 +14,11 @@ require("include.pl");  # Include all the predefined functions and variables
 $CHCON='/usr/bin/chcon';
 $context="root:object_r:httpd_sys_content_t";
 
+if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=disabled' /etc/selinux/config`)) {
+   # SELinux not installed or disabled
+   $CHCON="echo ignored: chcon";
+}
+
 # /usr/share/codex -> CodeX main Web tree, documentation, plugins, etc.
 `$CHCON -R -h $context $codex_dir`;
 
