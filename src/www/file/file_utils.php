@@ -1043,7 +1043,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
                                         }
                                     } else {
-                                        echo 'in feedback';
                                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_exists') . ": $filename");
                                     }
                                 }
