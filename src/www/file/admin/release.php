@@ -72,7 +72,7 @@ if ($request->exist('func')) {
                 break;
             case 'create':
                 if ($request->exist('cancel')) {
-                    $GLOBALS['Response']->addFeedback('info', 'Package creation canceled');
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'create_canceled'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 } else {
                     frs_process_release_form($is_update = false, $request, $group_id, $Language->getText('file_admin_editreleases', 'release_new_file_version'), '?func=create&amp;group_id='. $group_id .'&amp;package_id='. $package_id);
@@ -83,20 +83,20 @@ if ($request->exist('func')) {
                 if ($release =& $frsrf->getFRSReleaseFromDb($release_id, $group_id)) {
                     frs_display_release_form($is_update = true, $release, $group_id, $Language->getText('file_admin_editreleases', 'release_new_file_version'), '?func=update&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id='. $release_id);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', 'Release does not exist');
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_id_not_found'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 }
                 break;
             case 'update':
                 if ($request->exist('cancel')) {
-                    $GLOBALS['Response']->addFeedback('info', 'Package creation canceled');
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'Release update canceled'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 } else {
                     $release_id = $request->get('id');
                     if ($release =& $frsrf->getFRSReleaseFromDb($release_id, $group_id)) {
                         frs_process_release_form($is_update = true, $request, $group_id, $Language->getText('file_admin_editreleases', 'release_new_file_version'), '?func=update&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id='. $release_id);
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', 'Release does not exist');
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_id_not_found'));
                         $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                     }
                 }
@@ -105,7 +105,7 @@ if ($request->exist('func')) {
                 break;
         }
     } else {
-        $GLOBALS['Response']->addFeedback('error', 'Package does not exist');
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
         $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
     }
 }

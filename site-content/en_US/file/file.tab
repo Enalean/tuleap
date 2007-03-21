@@ -201,7 +201,7 @@ file_admin_qrs	adding_file	Adding File
 #-----------------------------------------------
 # Script: src/www/file/admin/manageprocessors.php
 #
-file_admin_manageprocessors	manage_proclist	Manage List of Processors
+file_admin_manageprocessors	manage_proclist	Manage Processors
 file_admin_manageprocessors	edit_proc	Click on the 'Processor ID' to edit a processor
 file_admin_manageprocessors	add_proc	Add a new processor
 file_admin_manageprocessors	update_proc	Update a processor
@@ -247,7 +247,7 @@ file_filemodule_monitor	choose_p	Error - Choose a package First
 file_file_utils	admin	Admin
 file_file_utils	must_choose_one	Choose...
 file_file_utils	g_id_err	Erreur - Project identifier (group_id) required
-file_file_utils	manage_proc	Processors List
+file_file_utils	manage_proc	Processors
 file_file_utils	proc_id	Processor ID
 file_file_utils	proc_name	Name
 file_file_utils	proc_rank	Rank
@@ -297,3 +297,10 @@ file_shownotes	release_notes	File Release Notes and Changelog
 file_shownotes	release_name	Release Name
 file_shownotes	changes	Changes
 file_shownotes	notes	Notes
+file_admin_editreleases	create_canceled	Release creation canceled
+
+file_admin_editreleases	update_canceled	Release update canceled
+
+file_admin_editpackages	create_canceled	Package creation canceled
+
+file_admin_editpackages	update_canceled	Package update canceled

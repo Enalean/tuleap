@@ -141,7 +141,7 @@ $fmmf =& new FileModuleMonitorFactory();
 $javascript_packages_array = array();
  
 if (!$pv && user_ismember($group_id,'R2')) {
-    echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">[Add a package]</a></p>';
+    echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
 }
 // Iterate and show the packages
 while (list ($package_id, $package) = each($packages)) {
@@ -164,7 +164,9 @@ while (list ($package_id, $package) = each($packages)) {
         print " <$emphasis>". $package->getName() ."</$emphasis>";
         if (!$pv) {
             if (user_ismember($group_id,'R2')) {
-                print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+                print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">';
+                print '       '. $GLOBALS['HTML']->getImage('ic/edit.png');
+                print '     </a>';
                 //print '     <a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
             }
             print ' &nbsp; ';
@@ -194,7 +196,7 @@ while (list ($package_id, $package) = each($packages)) {
         $javascript_releases_array = array();
         print '<div id="p_'.$package_id.'">';
         if (!$pv && user_ismember($group_id,'R2')) {
-            echo '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">[Add a release]</a></p>';
+            echo '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'add_releases') .']</a></p>';
         }
         if (!$res_release || $num_releases < 1) {
             print '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
@@ -233,7 +235,7 @@ while (list ($package_id, $package) = each($packages)) {
                     print "     <$emphasis>". $package_release->getName() . "</$emphasis>";
                     if (!$pv) {
                         if (user_ismember($group_id,'R2')) {
-                            print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
+                            print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
                         }
                         print ' &nbsp; ';
                         print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
@@ -246,7 +248,7 @@ while (list ($package_id, $package) = each($packages)) {
                     print '</td> ';
                     print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
                     if (!$pv && user_ismember($group_id,'R2')) {
-                        print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+                        print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES) .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), ENT_QUOTES) .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
                     }
                     print '</TD></TR>' . "\n";
                     print '</table>';
