@@ -77,7 +77,7 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	      "  SuexecUserGroup dummy $unix_group_name\n",
 	      "  DocumentRoot $grpdir_prefix/$unix_group_name/htdocs/\n",
               "  php_admin_value open_basedir \"$grpdir_prefix/$unix_group_name/htdocs\"\n",
-              "  php_admin_value include_path \"$grpdir_prefix/$unix_group_name/htdocs/\"\n",
+              "  php_admin_value include_path \".:$grpdir_prefix/$unix_group_name/htdocs/\"\n",
               "  php_admin_flag safe_mode on\n",
               "  php_admin_flag safe_mode_gid on\n",
 	      "  <Directory $grpdir_prefix/$unix_group_name/htdocs>\n",
