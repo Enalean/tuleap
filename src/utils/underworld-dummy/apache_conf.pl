@@ -103,9 +103,10 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
                 "  </Location>\n",
                 "</VirtualHost>\n\n");
         }
-        if ($sys_https_host ne "") {
+        #if ($sys_https_host ne "") {
           # For https, allow access without virtual host because they are not supported
-          push @subversion_ssl_zone,
+          # Actually, this should also be allowed for the HTTP vhost.
+          push @subversion_root_zone,
             ( "<Location /svnroot/$unix_group_name>\n",
                 "    DAV svn\n",
                 "    SVNPath $svn_prefix/$unix_group_name\n",
@@ -115,10 +116,10 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
                 "    AuthName \"Subversion Authorization ($group_name)\n",
                 "    AuthUserFile $apache_htpasswd\n",
                 "</Location>\n\n");
-        }
+        #}
 	
 }
 
 write_array_file("$dump_dir/apache_dump", @apache_zone);
 write_array_file("$dump_dir/subversion_dump", @subversion_zone);
-write_array_file("$dump_dir/subversion_ssl_dump", @subversion_ssl_zone);
+write_array_file("$dump_dir/subversion_root_dump", @subversion_root_zone);
