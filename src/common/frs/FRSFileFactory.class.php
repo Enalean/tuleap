@@ -326,12 +326,13 @@ return 0 if file not deleted, 1 otherwise
     function moveFileForge($group_id, $file_name, $upload_sub_dir) {
         $group = new Group($group_id);
         $group_unix_name = $group->getUnixName();
-        $file_name = preg_replace('` `', '\\ ', $file_name);
+		$file_name = preg_replace('` `', '\\ ', $file_name);
+        $ret_val = null;
         $exec_res = null;
-        exec("/bin/date > /tmp/" . $group_unix_name . "$group_id", $exec_res);
-		exec($GLOBALS['codex_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
-		exec($GLOBALS['codex_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir, $exec_res);
-        return $exec_res;
+        //exec("/bin/date > /tmp/" . $group_unix_name . "$group_id", $exec_res);
+		//exec($GLOBALS['codex_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
+		exec($GLOBALS['codex_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir, $exec_res, $ret_val);
+        return $ret_val;
     }
 
 }
