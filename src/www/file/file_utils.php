@@ -179,6 +179,32 @@ function frs_show_release_popup ($group_id, $name='release_id', $checked_val="xz
 		return html_build_select_box_from_arrays ($FRS_RELEASE_ID_RES, $FRS_RELEASE_NAME_RES,$name,$checked_val,false);
 	}
 }
+function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xzxz") {
+	/*
+		return a pop-up select box of releases for the project
+	*/
+	$frsrf = new FRSReleaseFactory();
+	if (!$group_id) {
+		return $GLOBALS['Language']->getText('file_file_utils','g_id_err');
+	} else {
+        $res = $frsrf->getFRSReleasesInfoListFromDb($group_id);
+        $p = array();
+        foreach($res as $release){
+            $p[$release['package_name']][$release['release_id']] = $release['release_name'];
+		}
+
+		$select = '<select name="'. $name .'">';
+        foreach($p as $package_name => $releases) {
+            $select .= '<optgroup label="'. $package_name .'">';
+            foreach($releases as $id => $name) {
+                $select .= '<option value="'. $id .'" '. ($id == $checked_val ? 'selected="selected"' : '') .'>'. $name .'</option>';
+            }
+            $select .= '</optgroup>';
+        }
+        $select .= '</select>';
+        return $select;
+	}
+}
 
 /*
 
@@ -499,7 +525,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             echo '<TD>' . $fname . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
-            echo '<TD>' . frs_show_release_popup($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
+            echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
         }
         echo '<INPUT TYPE="HIDDEN" id="nb_files" NAME="nb_files" VALUE="' . count($files) . '">';
