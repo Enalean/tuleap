@@ -351,6 +351,10 @@ CREATE TABLE plugin_docman_approval_user (
   INDEX rank (rank)
 );
 
+###############################################################################
+# Drop tables 'themes' and 'theme_prefs' that are no longer used
+DROP TABLE IF EXISTS themes;
+DROP TABLE IF EXISTS theme_prefs;
 
 ###############################################################################
 # Service in iframe
