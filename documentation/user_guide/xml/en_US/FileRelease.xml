@@ -146,8 +146,8 @@
       complete list of packages and release by clicking on the &#34;[View ALL
       project files]&#34; link.</para>
 
-      <figure id="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject">
-        <title>The File Release screen of the DataGlyph Toolkit project</title>
+      <figure id="FigureTheFileReleaseScreenOfTheCodeXProject">
+        <title>The File Release screen of the CodeX Administration project</title>
 
         <mediaobject>
           <imageobject>
@@ -158,34 +158,74 @@
       </figure>
 
       <para>The first example given on <xref
-      linkend="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject" />
-      shows the File Release screen of the DataGlyph Toolkit project. This
-      project only has one package called &#34;Xerox DataGlyph Toolkit&#34;
-      with 5 releases in it from 3.0.5 to 3.1.0beta2 listed in chronological
-      order. Each release contains an archive for the source code and another
-      one with pre-compiled binaries (Java byte code here). Starting at release
-      3.0.6 new files handling license key issues have been added.</para>
-
-      <para>The second example comes from the Global Solutions Architecture
-      project. The File Release structure is different from the previous one.
-      The project has 2 separate packages: one for the GSA Toolkit and a
-      second one for the DataBus. Clearly the release-numbering schemes for
-      these 2 packages are completely independent. It is very likely that
-      DataBus release 0.5 works with the 3 Toolkit releases names Awk, Booby
-      and Condor (releases doesn&#39;t need to be numbers). In the second
-      release of the Toolkit package the documentation was delivered as a
-      separate file.</para>
-
-      <figure id="FigureTheFileReleaseScreenOfTheGSAProject">
-        <title>The File Release screen of the GSA project</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_filereleasedownloads2.png" width="15.3cm" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+      linkend="FigureTheFileReleaseScreenOfTheCodeXProject" />
+      shows the File Release screen of the CodeX Administration project.
+      </para>
+      
+      <section id="FileReleaseBrowsingPackages">
+        <title>Browsing packages</title>
+        <para>
+        As explained in the <xref linkend="FileReleaseJargon" />, projects 
+        can contain several packages. In the example, 
+        the project has three packages called &#34;CodeX Installation ISO Image&#34;,
+        &#34;CodeX specifics themes&#34; and &#34;CodeX CLI&#34;.
+        </para>
+        <para>
+        The content of each package can be hidden by clicking the 
+        <emphasis>minus</emphasis> icon located just before the package name.
+        This can help for visibility reasons if your project has lots of packages 
+        and releases.
+        To expand a collapsed package, simply click the <emphasis>plus</emphasis>
+        icon before the package name.
+        By default, all the packages are expanded.
+        </para>
+        <para>
+        CodeX gives you the opportunity to monitor the packages. Like this, 
+        you will be notifyed when a new release is available, or if a release 
+        is updated, etc.
+        In order to monitor a package, click the <emphasis>bell</emphasis> icon 
+        located after the package name.
+        If you're already monitoring the package, there is a red sign on the bell.
+        If you don't monitor the package, the bell has a green <emphasis>plus</emphasis>
+        on it.
+        </para>
+      </section>
+      
+      <section id="FileReleaseBrowsingReleases">
+        <title>Browsing releases</title>
+        <para>
+        A package can contain several releases. In the example,
+        the package &#34;CodeX Installation ISO Image&#34; contains 8 releases 
+        from 2.4 to 3.0.1 listed in chronological order. Each release contains a 
+        certain number of files.
+        </para>
+        <para>
+        Like packages, the content of the releases can be hidden to enhance 
+        visibility. The mechanism is the same: click the <emphasis>plus</emphasis> 
+        and <emphasis>minus</emphasis> icons to expand/collapse the release content.
+        By default, only the first release of each package (which is the latest one) 
+        is expanded.
+        </para>
+        <para>After each release name, the icon reresenting a text file let you 
+        read the notes and the changelog of the current release.
+        </para>
+      </section>
+      
+      <section id="FileReleaseDonwloadingFiles">
+        <title>Downloading files</title>
+        <para>
+        Each release contains a certain number of files to be downloaded.
+        In the case of the release 3.0.1, two ISO image archives can be downloaded.
+        Files that belong to the other releases are hidden in this example.
+        To make them visible, just click the small <emphasis>plus</emphasis> 
+        that stands just before the name of the release.
+        Some file information is given, like the size, the type of file, the 
+        architecture (if it is relevant) the date and the number of downloads.
+        To download a file, you just have to click the name of the file and follow 
+        the instructions.
+        </para>
+      </section>
+      
     </section>
 
     <section id="FileReleaseDelivery">

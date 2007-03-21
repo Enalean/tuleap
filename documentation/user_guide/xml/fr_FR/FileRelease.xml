@@ -163,8 +163,8 @@
       paquets et versions en cliquant sur le lien &#34;Voir tous les
       fichiers du projet&#34;</para>
 
-      <figure id="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject">
-        <title>L'écran de publication des fichiers du projet DataGlyph Toolkit</title>
+      <figure id="FigureTheFileReleaseScreenOfTheCodeXProject">
+        <title>L'écran de publication des fichiers du projet CodeX Administration Project</title>
 
         <mediaobject>
           <imageobject>
@@ -175,37 +175,79 @@
       </figure>
 
       <para>Le premier exemple illustré sur la <xref
-      linkend="FigureTheFileReleaseScreenOfTheDataGlyphToolkitProject"
-      /> montre l'écran de publication des fichiers du projet
-      DataGlyph Toolkit. Ce projet ne comporte qu'un seul paquet
-      appelé &#34;Xerox DataGlyph Toolkit&#34; comprenant 7 versions
-      de 4.0.4 à 4.0.6, listées par ordre chronologique. Chaque
-      version contient une archive pour le code source et une autre
-      pour les binaires précompilés (byte code Java dans ce cas). A
-      partir de la version 4.0.6 un nouveau fichier a été ajouté pour
-      la gestion des clés de licence.</para>
-
-      <para>Le second exemple provient d'un projet appelé Global
-      Solutions Architecture. La structure est ici différente du cas
-      précédent. Le projet utilise deux paquets distincts : un pour le
-      GSA Toolkit et un second pour la DataBus. Les schémas de nommage
-      des versions de chaque paquet sont totalement différents. Il est
-      fort probable que la version 0.5 de DataBus fonctionne avec les 3
-      versions Awk, Booby et Condor (les noms de versions ne sont pas
-      nécessairement des nombres). Dans la deuxième version du paquet
-      Toolkit la documentation est livrée dans un fichier
-      séparé.</para>
-
-      <figure id="FigureTheFileReleaseScreenOfTheGSAProject">
-        <title>L'écran de publication des fichiers du projet GSA</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/fr_FR/sc_filereleasedownloads2.png" width="15.3cm" />
-          </imageobject>
-        </mediaobject>
-      </figure>
+      linkend="FigureTheFileReleaseScreenOfTheCodeXProject" /> 
+      montre l'écran de publication des fichiers du projet
+      CodeX Administration Project.
+      </para>
+      
+      <section id="FileReleaseBrowsingPackages">
+        <title>Navigation dans les paquets</title>
+        <para>
+        Comme expliqué dans la <xref linkend="FileReleaseJargon" />, les projets 
+        peuvent contenir plusieurs paquets. Dans l'exemple, 
+        le projet comporte trois paquets, nommés &#34;CodeX Installation ISO Image&#34;,
+        &#34;CodeX specifics themes&#34; et &#34;CodeX CLI&#34;.
+        </para>
+        <para>
+        Le contenu de chaque paquet peut être caché en cliquant sur l'icône 
+        <emphasis>moins</emphasis> située juste avant le nom du paquet.
+        Cela peut être utile pour améliorer la lisibilité si votre projet 
+        comprend beaucoup de paquets et de versions.
+        Pour rendre visible un paquet caché, il suffit de cliquer sur l'icône 
+        <emphasis>plus</emphasis> avant le nom du paquet.
+        Par défaut, tout les paquets sont visibles.
+        </para>
+        <para>
+        CodeX vous permet également de surveiller des paquets. De cette manière, 
+        vous serez averti lors de la parution d'une nouvelle version ou lors de 
+        la modification d'une version existante.
+        Pour surveiller un paquet, il suffit de cliquer sur l'icône représentant 
+        une cloche, située après le nom du paquet.
+        Si vous surveillez déjà le paquet, il y a un petit signe rouge sur la cloche.
+        Si vous ne surveillez pas le paquet, la cloche aura un petit 
+        <emphasis>plus</emphasis> vert.
+        </para>
+      </section>
+      
+      <section id="FileReleaseBrowsingReleases">
+        <title>Navigation dans les versions</title>
+        <para>
+        Un paquet peut contenir plusieurs versions. Dans l'exemple, 
+        le paquet &#34;CodeX Installation ISO Image&#34; contient 8 versions 
+        de 2.4 à 3.0.1, listées dans l'ordre chronologique. Chaque version 
+        contient un certain nombre de fichiers.
+        </para>
+        <para>
+        Tout comme les paquets, le contenu des versions peut être caché afin 
+        d'améliorer la lisibilité. Le mécanisme est identique : il suffit de 
+        cliquer sur les icônes <emphasis>plus</emphasis> et 
+        <emphasis>moins</emphasis> pour rendre visible/cacher le contenu des 
+        versions.
+        Par défaut, seule la première version de chaque paquet est visible.
+        Il s'agit de la dernière version disponible.
+        </para>
+        <para>Après chaque nom de version, l'icône représentant un fichier texte 
+        vous donne accès aux notes et aux changements de la version.
+        </para>
+      </section>
+      
+      <section id="FileReleaseDonwloadingFiles">
+        <title>Téléchargement de fichiers</title>
+        <para>
+        Chaque version contient un certain nombre de fichiers qui peuvent être 
+        téléchargés. Dans le cas de notre exemple, la version 3.0.1 contient 
+        deux archives d'images ISO pouvant être téléchargées.
+        Les fichiers appartenant aux autres versions ne sont pas visibles dans 
+        cet exemple. Pour les rendre visible, il suffit de cliquer sur l'icône 
+        <emphasis>plus</emphasis> qui se trouve avant le nom des versions.
+        Certaines informations sur les fichiers sont également affichées, comme 
+        la taille du fichier, son type, son architecture (le cas échéant) 
+        la date et le nombre de fois qu'il a été téléchargé.
+        Pour télécharger un fichier, il suffit de cliquer sur le nom du fichier 
+        et de suivre les instructions.
+        </para>
+      </section>
+      
     </section>
 
     <section id="FileReleaseDelivery">
