@@ -20,7 +20,7 @@ if (!isset($offset) || $offset < 0) {
 	$offset=0;
 }
 
-if (!isset($chunksz)) { $chunksz = 15; }
+if (!isset($chunksz) || ($chunksz <1)) { $chunksz = 15; }
 
 if (!isset($msort)) { $msort = 0; }
 if (($msort != 0) && ($msort != 1)) { $msort = 0; }
