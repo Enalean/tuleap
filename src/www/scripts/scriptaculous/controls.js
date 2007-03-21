@@ -503,6 +503,7 @@ Ajax.InPlaceEditor.prototype = {
       externalControl: null,
       submitOnBlur: false,
       ajaxOptions: {},
+      stripTags: true,
       evalScripts: false
     }, options || {});
 
@@ -652,7 +653,7 @@ Ajax.InPlaceEditor.prototype = {
   onLoadedExternalText: function(transport) {
     Element.removeClassName(this.form, this.options.loadingClassName);
     this.editField.disabled = false;
-    this.editField.value = transport.responseText.stripTags();
+    this.editField.value = this.options.stripTags ? transport.responseText.stripTags() : transport.responseText;
     Field.scrollFreeActivate(this.editField);
   },
   onclickCancel: function() {
