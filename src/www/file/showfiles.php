@@ -67,7 +67,7 @@ file_utils_header($params);
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if (user_ismember($group_id,'R2')) {
-        echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">[Add a package]</a></p>';
+        echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
     }
     file_utils_footer($params);
     exit;
