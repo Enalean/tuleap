@@ -170,6 +170,7 @@ file_admin_editreleases	view_change	[view/change]
 file_admin_editreleases	default_permissions	Will be created with the same permissions than its parent package.
 file_admin_editreleases	delete_col	Delete
 file_admin_editreleases	release_perm	The release permissions are :  
+file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, you will be able to upload it again in less than two hours.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php

@@ -174,6 +174,7 @@ file_admin_editreleases	view_change	[voir/modifier]
 file_admin_editreleases	default_permissions	Les même permissions que celles du package parent.
 file_admin_editreleases	delete_col	Supprimer
 file_admin_editreleases	release_perm	Les permissions associées à cette version sont :  
+file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fichier $1, vous pourrez à nouveau le télécharger dans moins de deux heures.
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
