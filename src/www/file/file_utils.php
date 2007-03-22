@@ -631,7 +631,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             <?php
     
     
-        if (user_ismember($group_id, 'A')) {
+        if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
             echo '
             <TR><TD><FIELDSET><LEGEND>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'fieldset_news') . '</LEGEND>
                 <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
