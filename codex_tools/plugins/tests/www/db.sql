@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Mar 15, 2007 at 01:24 PM
+-- Generation Time: Mar 22, 2007 at 01:35 PM
 -- Server version: 4.1.20
 -- PHP Version: 4.3.9
 -- 
@@ -36,7 +36,90 @@ CREATE TABLE IF NOT EXISTS activity_log (
 -- Dumping data for table 'activity_log'
 -- 
 
-INSERT INTO activity_log (day, hour, group_id, browser, ver, platform, time, page, type) VALUES (20070314, 18, 0, 'MOZILLA', 5.00, 'Linux', 1173891688, '/admin/servers/index.php', 0);
+INSERT INTO activity_log (day, hour, group_id, browser, ver, platform, time, page, type) VALUES (20070314, 18, 0, 'MOZILLA', 5.00, 'Linux', 1173891688, '/admin/servers/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566257, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566266, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566266, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566271, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566293, '/account/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566454, '/account/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566463, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566473, '/account/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566502, '/account/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566507, '/account/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566573, '/account/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566634, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566640, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566640, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566645, '/admin/userlist.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566654, '/admin/userlist.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566656, '/admin/userlist.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566660, '/admin/userlist.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566668, '/admin/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566673, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566673, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566675, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566690, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566690, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566696, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566696, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566698, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566714, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566725, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566729, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566736, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566736, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566738, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566761, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566761, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566768, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566768, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566771, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566784, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566784, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566790, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566796, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566821, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566829, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566835, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566868, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566900, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566912, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566917, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566921, '/project/register.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566928, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566928, '/index.php', 0),
+(20070322, 13, 0, 'OTHER', 0.00, 'Other', 1174566928, '/write_cache.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566932, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566938, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566938, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566945, '/admin/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566946, '/admin/grouplist.php', 0),
+(20070322, 13, 111, 'MOZILLA', 5.00, 'Linux', 1174566954, '/admin/groupedit.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566962, '/admin/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566967, '/admin/approve-pending.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566972, '/admin/approve-pending.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566981, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174566981, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567392, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567406, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567411, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567423, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567424, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567429, '/projects.php/testnews/', 0),
+(20070322, 13, 111, 'MOZILLA', 5.00, 'Linux', 1174567437, '/project/memberlist.php', 0),
+(20070322, 13, 111, 'MOZILLA', 5.00, 'Linux', 1174567438, '/project/admin/index.php', 0),
+(20070322, 13, 111, 'MOZILLA', 5.00, 'Linux', 1174567446, '/project/admin/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567455, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567455, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567457, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567468, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567468, '/my/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567473, '/account/logout.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567473, '/index.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567477, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567501, '/account/login.php', 0),
+(20070322, 13, 0, 'MOZILLA', 5.00, 'Linux', 1174567502, '/my/index.php', 0);
 
 -- --------------------------------------------------------
 
@@ -112,7 +195,7 @@ CREATE TABLE IF NOT EXISTS artifact (
   PRIMARY KEY  (artifact_id),
   KEY idx_fk_group_artifact_id (group_artifact_id),
   KEY idx_fk_status_id (status_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact'
@@ -133,7 +216,7 @@ CREATE TABLE IF NOT EXISTS artifact_canned_responses (
   body text,
   PRIMARY KEY  (artifact_canned_id),
   KEY idx_artifact_canned_response_group_artifact_id (group_artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_canned_responses'
@@ -156,7 +239,7 @@ CREATE TABLE IF NOT EXISTS artifact_cc (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (artifact_cc_id),
   KEY artifact_id_idx (artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_cc'
@@ -177,7 +260,7 @@ CREATE TABLE IF NOT EXISTS artifact_dependencies (
   PRIMARY KEY  (artifact_depend_id),
   KEY idx_artifact_dependencies_artifact_id (artifact_id),
   KEY idx_actifact_is_dependent_on_artifact_id (is_dependent_on_artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_dependencies'
@@ -211,7 +294,7 @@ CREATE TABLE IF NOT EXISTS artifact_field (
   PRIMARY KEY  (field_id,group_artifact_id),
   KEY idx_fk_field_name (field_name),
   KEY idx_fk_group_artifact_id (group_artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_field'
@@ -487,7 +570,72 @@ INSERT INTO artifact_field (field_id, group_artifact_id, field_set_id, field_nam
 (9, 112, 37, 'status_id', 2, 'SB', '', 'Status', 'Artifact Status', '', 0, 0, 1, 0, '', '1'),
 (10, 112, 35, 'severity', 2, 'SB', '', 'Severity', 'Impact of the artifact on the system (Critical, Major,...)', '', 0, 0, 1, 0, '', '5'),
 (11, 112, 35, 'release_id', 2, 'SB', '', 'Release', 'The release (global version number) impacted by the artifact', 'P', 0, 1, 1, 0, '', '100'),
-(12, 112, 37, 'stage', 2, 'SB', '', 'Stage', 'Stage in the life cycle of the artifact', 'P', 0, 1, 1, 0, '', '100');
+(12, 112, 37, 'stage', 2, 'SB', '', 'Stage', 'Stage in the life cycle of the artifact', 'P', 0, 1, 1, 0, '', '100'),
+(7, 113, 38, 'submitted_by', 5, 'SB', '', 'Submitted by', 'User who originally submitted the artifact', '', 0, 1, 1, 1, 'artifact_submitters', ''),
+(6, 113, 38, 'open_date', 4, 'DF', '', 'Submitted on', 'Date and time for the initial artifact submission', '', 0, 0, 0, 1, '', ''),
+(5, 113, 38, 'summary', 1, 'TF', '60/150', 'Summary', 'One line description of the artifact', '', 0, 0, 1, 0, '', ''),
+(1, 113, 38, 'artifact_id', 2, 'TF', '6/10', 'Artifact ID', 'Unique artifact identifier', '', 0, 0, 0, 1, '', ''),
+(4, 113, 39, 'assigned_to', 5, 'SB', '', 'Assigned to', 'Who is in charge of solving the artifact', '', 0, 1, 1, 0, 'group_members', '100'),
+(3, 113, 38, 'category_id', 2, 'SB', '', 'Category', 'Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)', '', 0, 1, 1, 0, '', '100'),
+(2, 113, 39, 'status_id', 2, 'SB', '', 'Status', 'Artifact Status', '', 0, 0, 1, 0, '', '1'),
+(30, 113, 39, 'stage', 2, 'SB', '', 'Stage', 'Stage in the life cycle of the artifact', '', 0, 0, 1, 0, '', '1'),
+(8, 113, 38, 'severity', 2, 'SB', '', 'Severity', 'Impact of the artifact on the system (Critical, Major,...)', '', 0, 0, 1, 0, '', '5'),
+(10, 113, 38, 'comment_type_id', 2, 'SB', '', 'Comment Type', 'Specify the nature of the  follow up comment attached to this artifact (Workaround, Test Case, Impacted Files,...)', '', 0, 1, 0, 1, '', '100'),
+(9, 113, 38, 'details', 1, 'TA', '60/7', 'Original Submission', 'A full description of the artifact', '', 0, 1, 1, 0, '', ''),
+(16, 113, 39, 'resolution_id', 2, 'SB', '', 'Resolution', 'How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)', '', 0, 1, 1, 0, '', '100'),
+(20, 113, 38, 'bug_group_id', 2, 'SB', '', 'Group', 'Characterizes the nature of the artifact (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...', '', 0, 1, 1, 0, '', '100'),
+(11, 113, 38, 'category_version_id', 2, 'SB', '', 'Component Version', 'The version of the System Component (aka Category) impacted by the artifact', 'P', 0, 1, 1, 0, '', '100'),
+(12, 113, 38, 'platform_version_id', 2, 'SB', '', 'Platform Version', 'The name and version of the platform your software was running on when the artifact occured (e.g. Solaris 2.8, Linux 2.4, Windows NT4 SP2,...)', 'P', 0, 1, 1, 0, '', '100'),
+(13, 113, 39, 'reproducibility_id', 2, 'SB', '', 'Reproducibility', 'How easy is it to reproduce the artifact', 'S', 0, 0, 1, 0, '', '100'),
+(14, 113, 39, 'size_id', 2, 'SB', '', 'Size (loc)', 'The size of the code you need to develop or rework in order to fix the artifact', 'S', 0, 1, 1, 0, '', '100'),
+(15, 113, 39, 'fix_release_id', 2, 'SB', '', 'Fixed Release', 'The release in which the artifact was actually fixed', 'P', 0, 1, 1, 0, '', '100'),
+(17, 113, 39, 'hours', 3, 'TF', '5/5', 'Effort', 'Number of hours of work needed to fix the artifact (including testing)', 'S', 0, 1, 1, 0, '', ''),
+(18, 113, 39, 'plan_release_id', 2, 'SB', '', 'Planned Release', 'The release in which you initially planned the artifact to be fixed', 'P', 0, 1, 1, 0, '', '100'),
+(19, 113, 38, 'component_version', 1, 'TF', '10/40', 'Component Version', 'Version of the system component (or work product) impacted by the artifact. Same as the other Component Version field <u>except</u> this one is free text.', 'S', 0, 1, 1, 0, '', ''),
+(22, 113, 38, 'priority', 2, 'SB', '', 'Priority', 'How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)', 'S', 0, 1, 1, 0, '', '100'),
+(23, 113, 38, 'keywords', 1, 'TF', '60/120', 'Keywords', 'A list of comma separated keywords associated with a artifact', 'S', 0, 1, 1, 0, '', ''),
+(24, 113, 38, 'release_id', 2, 'SB', '', 'Release', 'The release (global version number) impacted by the artifact', 'P', 0, 1, 1, 0, '', '100'),
+(26, 113, 38, 'originator_name', 1, 'TF', '20/40', 'Originator Name', 'The name of the person who reported the artifact (if different from the submitter field)', 'S', 0, 1, 1, 0, '', ''),
+(27, 113, 38, 'originator_email', 1, 'TF', '20/40', 'Originator Email', 'Email address of the person who reported the artifact. Automatically included in the artifact email notification process.', 'S', 0, 1, 1, 0, '', ''),
+(28, 113, 38, 'originator_phone', 1, 'TF', '10/40', 'Originator Phone', 'Phone number of the person who reported the artifact', 'S', 0, 1, 1, 0, '', ''),
+(29, 113, 39, 'close_date', 4, 'DF', '', 'End Date', 'End Date', '', 0, 1, 0, 0, '', ''),
+(2, 114, 41, 'percent_complete', 2, 'SB', '2', 'Percent complete', 'Percentage of completion', '', 0, 0, 1, 0, '', '1000'),
+(4, 114, 41, 'hours', 3, 'TF', '5/5', 'Effort', 'Number of hours of work needed to fix the artifact (including testing)', '', 0, 1, 1, 0, '', '0.00'),
+(5, 114, 41, 'start_date', 4, 'DF', '', 'Start Date', 'Start Date', '', 0, 0, 0, 0, '', ''),
+(6, 114, 41, 'close_date', 4, 'DF', '', 'End Date', 'End Date', '', 0, 1, 0, 0, '', ''),
+(7, 114, 40, 'summary', 1, 'TF', '60/150', 'Summary', 'One line description of the artifact', '', 0, 0, 1, 0, '', ''),
+(8, 114, 40, 'details', 1, 'TA', '60/7', 'Original Submission', 'A full description of the artifact', '', 0, 1, 1, 0, '', ''),
+(11, 114, 41, 'status_id', 2, 'SB', '', 'Status', 'Artifact Status', '', 0, 0, 1, 0, '', '1'),
+(15, 114, 41, 'stage', 2, 'SB', '', 'Stage', 'Stage in the life cycle of the artifact', '', 0, 0, 1, 0, '', '1'),
+(1, 114, 40, 'artifact_id', 2, 'TF', '6/10', 'Artifact ID', 'Unique artifact identifier', '', 0, 0, 0, 1, '', ''),
+(10, 114, 40, 'open_date', 4, 'DF', '', 'Submitted on', 'Date and time for the initial artifact submission', '', 0, 0, 0, 1, '', ''),
+(9, 114, 40, 'multi_assigned_to', 5, 'MB', '', 'Assigned to (multiple)', 'Who is in charge of this artifact', '', 0, 1, 1, 0, 'group_members', '100'),
+(12, 114, 40, 'subproject_id', 2, 'SB', '', 'Subproject', 'Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)', '', 0, 1, 1, 0, '', '100'),
+(13, 114, 40, 'submitted_by', 5, 'SB', '', 'Submitted by', 'User who originally submitted the artifact', '', 0, 1, 1, 1, 'artifact_submitters', ''),
+(14, 114, 40, 'severity', 2, 'SB', '', 'Priority', 'How quickly the artifact must be completed', '', 0, 0, 1, 0, '', '5'),
+(9, 115, 42, 'submitted_by', 5, 'SB', '', 'Submitted by', 'User who originally submitted the artifact', '', 0, 1, 1, 1, 'artifact_submitters', ''),
+(7, 115, 43, 'status_id', 2, 'SB', '', 'Status', 'Artifact Status', '', 0, 0, 1, 0, '', '1'),
+(12, 115, 43, 'stage', 2, 'SB', '', 'Stage', 'Stage in the life cycle of the artifact', '', 0, 0, 1, 0, '', '1'),
+(6, 115, 43, 'assigned_to', 5, 'SB', '', 'Assigned to', 'Who is in charge of solving the artifact', '', 0, 1, 1, 0, 'group_members', '100'),
+(5, 115, 42, 'category_id', 2, 'SB', '', 'Category', 'Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)', '', 0, 1, 1, 0, '', '100'),
+(4, 115, 42, 'open_date', 4, 'DF', '', 'Submitted on', 'Date and time for the initial artifact submission', '', 0, 0, 0, 1, '', ''),
+(3, 115, 42, 'details', 1, 'TA', '60/7', 'Original Submission', 'A full description of the artifact', '', 0, 1, 1, 0, '', ''),
+(2, 115, 42, 'summary', 1, 'TF', '60/150', 'Summary', 'One line description of the artifact', '', 0, 0, 1, 0, '', ''),
+(1, 115, 42, 'artifact_id', 2, 'TF', '6/10', 'Artifact ID', 'Unique artifact identifier', '', 0, 0, 0, 1, '', ''),
+(10, 115, 43, 'close_date', 4, 'DF', '', 'End Date', 'End Date', '', 0, 1, 0, 0, '', ''),
+(11, 115, 42, 'severity', 2, 'SB', '', 'Priority', 'How quickly the artifact must be completed', '', 0, 0, 1, 0, '', '5'),
+(1, 116, 44, 'submitted_by', 5, 'SB', '', 'Submitted by', 'User who originally submitted the artifact', '', 0, 1, 1, 1, 'artifact_submitters', ''),
+(2, 116, 44, 'open_date', 4, 'DF', '', 'Submitted on', 'Date and time for the initial artifact submission', '', 0, 0, 0, 1, '', ''),
+(3, 116, 44, 'summary', 1, 'TF', '60/150', 'Summary', 'One line description of the artifact', '', 0, 0, 1, 0, '', ''),
+(4, 116, 44, 'artifact_id', 2, 'TF', '6/10', 'Artifact ID', 'Unique artifact identifier', '', 0, 0, 0, 1, '', ''),
+(5, 116, 45, 'plain_text', 1, 'TA', '60/7', 'Patch text', 'Plain-text version of the patch', '', 0, 1, 0, 0, '', ''),
+(6, 116, 46, 'assigned_to', 5, 'SB', '', 'Assigned to', 'Who is in charge of solving the artifact', '', 0, 1, 1, 0, 'group_members', '100'),
+(7, 116, 44, 'category_id', 2, 'SB', '', 'Category', 'Patch categories (e.g. mail module,gant chart module,interface, etc)', '', 0, 1, 1, 0, '', '100'),
+(8, 116, 44, 'details', 1, 'TA', '60/7', 'Description', 'Description of functionality and application of the patch', '', 0, 1, 1, 0, '', ''),
+(9, 116, 46, 'status_id', 2, 'SB', '', 'Status', 'Artifact Status', '', 0, 0, 1, 0, '', '1'),
+(10, 116, 44, 'severity', 2, 'SB', '', 'Severity', 'Impact of the artifact on the system (Critical, Major,...)', '', 0, 0, 1, 0, '', '5'),
+(11, 116, 44, 'release_id', 2, 'SB', '', 'Release', 'The release (global version number) impacted by the artifact', 'P', 0, 1, 1, 0, '', '100'),
+(12, 116, 46, 'stage', 2, 'SB', '', 'Stage', 'Stage in the life cycle of the artifact', 'P', 0, 1, 1, 0, '', '100');
 
 -- --------------------------------------------------------
 
@@ -504,7 +652,7 @@ CREATE TABLE IF NOT EXISTS artifact_field_set (
   rank int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (field_set_id),
   KEY idx_fk_group_artifact_id (group_artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_field_set'
@@ -546,7 +694,16 @@ INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, descripti
 (34, 111, 'fieldset_status_SR_lbl_key', 'fieldset_status_SR_desc_key', 20),
 (35, 112, 'fieldset_default_patches_lbl_key', 'fieldset_default_patches_desc_key', 10),
 (36, 112, 'fieldset_patchtext_patches_lbl_key', 'fieldset_patchtext_patches_desc_key', 20),
-(37, 112, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
+(37, 112, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30),
+(38, 113, 'fieldset_default_bugs_lbl_key', 'fieldset_default_bugs_desc_key', 10),
+(39, 113, 'fieldset_status_bugs_lbl_key', 'fieldset_status_bugs_desc_key', 20),
+(40, 114, 'fieldset_default_tasks_lbl_key', 'fieldset_default_tasks_desc_key', 10),
+(41, 114, 'fieldset_status_tasks_lbl_key', 'fieldset_status_tasks_desc_key', 20),
+(42, 115, 'fieldset_default_SR_lbl_key', 'fieldset_default_SR_desc_key', 10),
+(43, 115, 'fieldset_status_SR_lbl_key', 'fieldset_status_SR_desc_key', 20),
+(44, 116, 'fieldset_default_patches_lbl_key', 'fieldset_default_patches_desc_key', 10),
+(45, 116, 'fieldset_patchtext_patches_lbl_key', 'fieldset_patchtext_patches_desc_key', 20),
+(46, 116, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
 
 -- --------------------------------------------------------
 
@@ -839,7 +996,72 @@ INSERT INTO artifact_field_usage (field_id, group_artifact_id, use_it, place) VA
 (9, 112, 1, 0),
 (10, 112, 1, 0),
 (11, 112, 0, 0),
-(12, 112, 1, 0);
+(12, 112, 1, 0),
+(7, 113, 1, 0),
+(6, 113, 1, 0),
+(5, 113, 1, 900),
+(1, 113, 1, 0),
+(4, 113, 1, 50),
+(3, 113, 1, 10),
+(2, 113, 1, 60),
+(30, 113, 0, 0),
+(8, 113, 1, 20),
+(10, 113, 1, NULL),
+(9, 113, 1, 1000),
+(16, 113, 1, 40),
+(20, 113, 1, 30),
+(11, 113, 0, 0),
+(12, 113, 0, 0),
+(13, 113, 0, 0),
+(14, 113, 0, 0),
+(15, 113, 0, 0),
+(17, 113, 0, 0),
+(18, 113, 0, 0),
+(19, 113, 0, 0),
+(22, 113, 0, 0),
+(23, 113, 0, 0),
+(24, 113, 0, 0),
+(26, 113, 0, 0),
+(27, 113, 0, 0),
+(28, 113, 0, 0),
+(29, 113, 0, 0),
+(2, 114, 1, 20),
+(4, 114, 1, 40),
+(5, 114, 1, 60),
+(6, 114, 1, 80),
+(7, 114, 1, 900),
+(8, 114, 1, 1000),
+(11, 114, 1, 50),
+(15, 114, 0, 0),
+(1, 114, 1, 1),
+(10, 114, 1, 0),
+(9, 114, 1, 70),
+(12, 114, 1, 10),
+(13, 114, 1, 0),
+(14, 114, 1, 30),
+(9, 115, 1, NULL),
+(7, 115, 1, 30),
+(12, 115, 0, 0),
+(6, 115, 1, 20),
+(5, 115, 1, 10),
+(4, 115, 1, 5),
+(3, 115, 1, 1000),
+(2, 115, 1, 900),
+(1, 115, 1, 1),
+(10, 115, 0, 0),
+(11, 115, 1, 40),
+(1, 116, 1, 0),
+(2, 116, 1, 0),
+(3, 116, 1, 30),
+(4, 116, 1, 0),
+(5, 116, 1, 70),
+(6, 116, 1, 0),
+(7, 116, 1, 10),
+(8, 116, 1, 50),
+(9, 116, 1, 0),
+(10, 116, 1, 0),
+(11, 116, 0, 0),
+(12, 116, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1462,7 +1684,145 @@ INSERT INTO artifact_field_value_list (field_id, group_artifact_id, value_id, va
 (10, 112, 8, '8', '', 80, 'P'),
 (10, 112, 9, '9 - Critical', '', 90, 'P'),
 (12, 112, 1, 'Accepted', 'The artifact will be worked on. If it won''t be worked on, indicate why and close it', 10, 'A'),
-(12, 112, 2, 'Declined', 'The artifact was not accepted.', 50, 'A');
+(12, 112, 2, 'Declined', 'The artifact was not accepted.', 50, 'A'),
+(2, 113, 1, 'Open', 'The artifact has been submitted', 20, 'P'),
+(2, 113, 3, 'Closed', 'The artifact is no longer active. See the Resolution field for details on how it was resolved.', 400, 'P'),
+(30, 113, 1, 'New', 'The artifact has just been submitted', 20, 'A'),
+(30, 113, 2, 'Analyzed', 'The cause of the artifact has been identified and documented', 30, 'A'),
+(30, 113, 3, 'Accepted', 'The artifact will be worked on.', 40, 'A'),
+(30, 113, 4, 'Under Implementation', 'The artifact is being worked on.', 50, 'A'),
+(30, 113, 5, 'Ready for Review', 'Updated/Created non-software work product (e.g. documentation) is ready for review and approval.', 60, 'A'),
+(30, 113, 6, 'Ready for Test', 'Updated/Created software is ready to be included in the next build', 70, 'A'),
+(30, 113, 7, 'In Test', 'Updated/Created software is in the build and is ready to enter the test phase', 80, 'A'),
+(30, 113, 8, 'Approved', 'The artifact fix has been succesfully tested. It is approved and awaiting release.', 90, 'A'),
+(30, 113, 9, 'Declined', 'The artifact was not accepted.', 100, 'A'),
+(30, 113, 10, 'Done', 'The artifact is closed.', 110, 'A'),
+(3, 113, 100, 'None', '', 10, 'P'),
+(8, 113, 1, '1 - Ordinary', '', 10, 'P'),
+(8, 113, 2, '2', '', 20, 'P'),
+(8, 113, 3, '3', '', 30, 'P'),
+(8, 113, 4, '4', '', 40, 'P'),
+(8, 113, 5, '5 - Major', '', 50, 'P'),
+(8, 113, 6, '6', '', 60, 'P'),
+(8, 113, 7, '7', '', 70, 'P'),
+(8, 113, 8, '8', '', 80, 'P'),
+(8, 113, 9, '9 - Critical', '', 90, 'P'),
+(10, 113, 100, 'None', '', 10, 'P'),
+(16, 113, 100, 'None', '', 10, 'P'),
+(16, 113, 1, 'Fixed', 'The bug was resolved', 20, 'A'),
+(16, 113, 2, 'Invalid', 'The submitted bug is not valid for some reason (wrong description, using incorrect software version,...)', 30, 'A'),
+(16, 113, 3, 'Wont Fix', 'The bug won''t be fixed (probably because it is very minor)', 40, 'A'),
+(16, 113, 4, 'Later', 'The bug will be fixed later (no date given)', 50, 'A'),
+(16, 113, 5, 'Remind', 'The bug will be fixed later but keep in the remind state for easy identification', 60, 'A'),
+(16, 113, 6, 'Works for me', 'The project team was unable to reproduce the bug', 70, 'A'),
+(16, 113, 7, 'Duplicate', 'This bug is already covered by another bug description (see related bugs list)', 80, 'A'),
+(11, 113, 100, 'None', '', 10, 'P'),
+(12, 113, 100, 'None', '', 10, 'P'),
+(13, 113, 100, 'None', '', 10, 'P'),
+(14, 113, 100, 'None', '', 10, 'P'),
+(15, 113, 100, 'None', '', 10, 'P'),
+(18, 113, 100, 'None', '', 10, 'P'),
+(20, 113, 100, 'None', '', 10, 'P'),
+(22, 113, 100, 'None', '', 10, 'P'),
+(24, 113, 100, 'None', '', 10, 'P'),
+(11, 114, 1, 'Open', 'The artifact has been submitted', 20, 'P'),
+(11, 114, 3, 'Closed', 'The artifact is no longer active. See the Resolution field for details on how it was resolved.', 400, 'P'),
+(15, 114, 1, 'New', 'The artifact has just been submitted', 20, 'A'),
+(15, 114, 2, 'Analyzed', 'The cause of the artifact has been identified and documented', 30, 'A'),
+(15, 114, 3, 'Accepted', 'The artifact will be worked on.', 40, 'A'),
+(15, 114, 4, 'Under Implementation', 'The artifact is being worked on.', 50, 'A'),
+(15, 114, 5, 'Ready for Review', 'Updated/Created non-software work product (e.g. documentation) is ready for review and approval.', 60, 'A'),
+(15, 114, 6, 'Ready for Test', 'Updated/Created software is ready to be included in the next build', 70, 'A'),
+(15, 114, 7, 'In Test', 'Updated/Created software is in the build and is ready to enter the test phase', 80, 'A'),
+(15, 114, 8, 'Approved', 'The artifact fix has been succesfully tested. It is approved and awaiting release.', 90, 'A'),
+(15, 114, 9, 'Declined', 'The artifact was not accepted.', 100, 'A'),
+(15, 114, 10, 'Done', 'The artifact is closed.', 110, 'A'),
+(12, 114, 100, 'None', '', 10, 'P'),
+(2, 114, 1095, '95%', '', 95, 'A'),
+(2, 114, 1090, '90%', '', 90, 'A'),
+(2, 114, 1085, '85%', '', 85, 'A'),
+(2, 114, 1080, '80%', '', 80, 'A'),
+(2, 114, 1075, '75%', '', 75, 'A'),
+(2, 114, 1070, '70%', '', 70, 'A'),
+(2, 114, 1065, '65%', '', 65, 'A'),
+(2, 114, 1060, '60%', '', 60, 'A'),
+(2, 114, 1055, '55%', '', 55, 'A'),
+(2, 114, 1050, '50%', '', 50, 'A'),
+(2, 114, 1045, '45%', '', 45, 'A'),
+(2, 114, 1040, '40%', '', 40, 'A'),
+(2, 114, 1035, '35%', '', 35, 'A'),
+(2, 114, 1030, '30%', '', 30, 'A'),
+(2, 114, 1025, '25%', '', 25, 'A'),
+(2, 114, 1020, '20%', '', 20, 'A'),
+(2, 114, 1015, '15%', '', 15, 'A'),
+(2, 114, 1010, '10%', '', 10, 'A'),
+(2, 114, 1000, 'Not started', '', 0, 'A'),
+(2, 114, 1100, '100%', '', 100, 'P'),
+(14, 114, 1, '1 - Lowest', '', 10, 'P'),
+(14, 114, 2, '2', '', 20, 'P'),
+(14, 114, 3, '3', '', 30, 'P'),
+(14, 114, 4, '4', '', 40, 'P'),
+(14, 114, 5, '5 - Medium', '', 50, 'P'),
+(14, 114, 6, '6', '', 60, 'P'),
+(14, 114, 7, '7', '', 70, 'P'),
+(14, 114, 8, '8', '', 80, 'P'),
+(14, 114, 9, '9 - Highest', '', 90, 'P'),
+(7, 115, 1, 'Open', 'The artifact has been submitted', 20, 'P'),
+(7, 115, 3, 'Closed', 'The artifact is no longer active. See the Resolution field for details on how it was resolved.', 400, 'P'),
+(12, 115, 1, 'New', 'The artifact has just been submitted', 20, 'A'),
+(12, 115, 2, 'Analyzed', 'The cause of the artifact has been identified and documented', 30, 'A'),
+(12, 115, 3, 'Accepted', 'The artifact will be worked on.', 40, 'A'),
+(12, 115, 4, 'Under Implementation', 'The artifact is being worked on.', 50, 'A'),
+(12, 115, 5, 'Ready for Review', 'Updated/Created non-software work product (e.g. documentation) is ready for review and approval.', 60, 'A'),
+(12, 115, 6, 'Ready for Test', 'Updated/Created software is ready to be included in the next build', 70, 'A'),
+(12, 115, 7, 'In Test', 'Updated/Created software is in the build and is ready to enter the test phase', 80, 'A'),
+(12, 115, 8, 'Approved', 'The artifact fix has been succesfully tested. It is approved and awaiting release.', 90, 'A'),
+(12, 115, 9, 'Declined', 'The artifact was not accepted.', 100, 'A'),
+(12, 115, 10, 'Done', 'The artifact is closed.', 110, 'A'),
+(5, 115, 100, 'None', '', 10, 'P'),
+(8, 115, 1095, '95%', '', 95, 'A'),
+(8, 115, 1090, '90%', '', 90, 'A'),
+(8, 115, 1085, '85%', '', 85, 'A'),
+(8, 115, 1080, '80%', '', 80, 'A'),
+(8, 115, 1075, '75%', '', 75, 'A'),
+(8, 115, 1070, '70%', '', 70, 'A'),
+(8, 115, 1065, '65%', '', 65, 'A'),
+(8, 115, 1060, '60%', '', 60, 'A'),
+(8, 115, 1055, '55%', '', 55, 'A'),
+(8, 115, 1050, '50%', '', 50, 'A'),
+(8, 115, 1045, '45%', '', 45, 'A'),
+(8, 115, 1040, '40%', '', 40, 'A'),
+(8, 115, 1035, '35%', '', 35, 'A'),
+(8, 115, 1030, '30%', '', 30, 'A'),
+(8, 115, 1025, '25%', '', 25, 'A'),
+(8, 115, 1020, '20%', '', 20, 'A'),
+(8, 115, 1015, '15%', '', 15, 'A'),
+(8, 115, 1010, '10%', '', 10, 'A'),
+(8, 115, 1000, 'Not started', '', 0, 'A'),
+(8, 115, 1100, '100%', '', 100, 'A'),
+(11, 115, 1, '1 - Lowest', '', 10, 'P'),
+(11, 115, 2, '2', '', 20, 'P'),
+(11, 115, 3, '3', '', 30, 'P'),
+(11, 115, 4, '4', '', 40, 'P'),
+(11, 115, 5, '5 - Medium', '', 50, 'P'),
+(11, 115, 6, '6', '', 60, 'P'),
+(11, 115, 7, '7', '', 70, 'P'),
+(11, 115, 8, '8', '', 80, 'P'),
+(11, 115, 9, '9 - Highest', '', 90, 'P'),
+(7, 116, 100, 'None', '', 10, 'P'),
+(9, 116, 1, 'Open', 'The artifact has been submitted', 20, 'P'),
+(9, 116, 3, 'Closed', 'The artifact is no longer active', 400, 'P'),
+(10, 116, 1, '1 - Ordinary', '', 10, 'P'),
+(10, 116, 2, '2', '', 20, 'P'),
+(10, 116, 3, '3', '', 30, 'P'),
+(10, 116, 4, '4', '', 40, 'P'),
+(10, 116, 5, '5 - Major', '', 50, 'P'),
+(10, 116, 6, '6', '', 60, 'P'),
+(10, 116, 7, '7', '', 70, 'P'),
+(10, 116, 8, '8', '', 80, 'P'),
+(10, 116, 9, '9 - Critical', '', 90, 'P'),
+(12, 116, 1, 'Accepted', 'The artifact will be worked on. If it won''t be worked on, indicate why and close it', 10, 'A'),
+(12, 116, 2, 'Declined', 'The artifact was not accepted.', 50, 'A');
 
 -- --------------------------------------------------------
 
@@ -1483,7 +1843,7 @@ CREATE TABLE IF NOT EXISTS artifact_file (
   submitted_by int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY artifact_id (artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_file'
@@ -1505,7 +1865,7 @@ CREATE TABLE IF NOT EXISTS artifact_global_notification (
   check_permissions tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY tracker_id (tracker_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_global_notification'
@@ -1528,7 +1888,11 @@ INSERT INTO artifact_global_notification (id, tracker_id, addresses, all_updates
 (15, 109, '', 0, 1),
 (16, 110, '', 0, 1),
 (17, 111, '', 0, 1),
-(18, 112, '', 0, 1);
+(18, 112, '', 0, 1),
+(19, 113, '', 0, 1),
+(20, 114, '', 0, 1),
+(21, 115, '', 0, 1),
+(22, 116, '', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1553,7 +1917,7 @@ CREATE TABLE IF NOT EXISTS artifact_group_list (
   instantiate_for_new_projects int(11) NOT NULL default '0',
   PRIMARY KEY  (group_artifact_id),
   KEY idx_fk_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=113 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_group_list'
@@ -1576,7 +1940,11 @@ INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description,
 (109, 110, 'Bugs', 'Bugs Tracker', 'bug', 0, 0, '', '', '', 'A', NULL, 1),
 (110, 110, 'Tasks', 'Tasks Tracker', 'task', 0, 0, '', '', '', 'A', NULL, 1),
 (111, 110, 'Support Requests', 'Support Requests Tracker', 'SR', 0, 0, '', '', '', 'A', NULL, 1),
-(112, 110, 'Patches', 'Patch Tracker', 'patch', 0, 0, '', '', '', 'A', NULL, 1);
+(112, 110, 'Patches', 'Patch Tracker', 'patch', 0, 0, '', '', '', 'A', NULL, 1),
+(113, 111, 'Bugs', 'Bugs Tracker', 'bug', 0, 0, '', '', '', 'A', NULL, 1),
+(114, 111, 'Tasks', 'Tasks Tracker', 'task', 0, 0, '', '', '', 'A', NULL, 1),
+(115, 111, 'Support Requests', 'Support Requests Tracker', 'SR', 0, 0, '', '', '', 'A', NULL, 1),
+(116, 111, 'Patches', 'Patch Tracker', 'patch', 0, 0, '', '', '', 'A', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1598,7 +1966,7 @@ CREATE TABLE IF NOT EXISTS artifact_history (
   PRIMARY KEY  (artifact_history_id),
   KEY idx_artifact_history_artifact_id (artifact_id),
   KEY field_name (field_name(10))
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_history'
@@ -1756,7 +2124,43 @@ INSERT INTO artifact_notification_event (event_id, group_artifact_id, event_labe
 (6, 112, 'PSS_CHANGE', 60, 'event_PSS_CHANGE_short_desc', 'event_PSS_CHANGE_desc'),
 (7, 112, 'ANY_OTHER_CHANGE', 70, 'event_ANY_OTHER_CHANGE_short_desc', 'event_ANY_OTHER_CHANGE_desc'),
 (8, 112, 'I_MADE_IT', 80, 'event_I_MADE_IT_short_desc', 'event_I_MADE_IT_desc'),
-(9, 112, 'NEW_ARTIFACT', 90, 'event_NEW_ARTIFACT_short_desc', 'event_NEW_ARTIFACT_desc');
+(9, 112, 'NEW_ARTIFACT', 90, 'event_NEW_ARTIFACT_short_desc', 'event_NEW_ARTIFACT_desc'),
+(1, 113, 'ROLE_CHANGE', 10, 'event_ROLE_CHANGE_shortdesc', 'event_ROLE_CHANGE_desc'),
+(2, 113, 'NEW_COMMENT', 20, 'event_NEW_COMMENT_short_desc', 'event_NEW_COMMENT_desc'),
+(3, 113, 'NEW_FILE', 30, 'event_NEW_FILE_short_desc', 'event_NEW_FILE_desc'),
+(4, 113, 'CC_CHANGE', 40, 'event_CC_CHANGE_short_desc', 'event_CC_CHANGE_desc'),
+(5, 113, 'CLOSED', 50, 'event_CLOSED_short_desc', 'event_CLOSED_desc'),
+(6, 113, 'PSS_CHANGE', 60, 'event_PSS_CHANGE_short_desc', 'event_PSS_CHANGE_desc'),
+(7, 113, 'ANY_OTHER_CHANGE', 70, 'event_ANY_OTHER_CHANGE_short_desc', 'event_ANY_OTHER_CHANGE_desc'),
+(8, 113, 'I_MADE_IT', 80, 'event_I_MADE_IT_short_desc', 'event_I_MADE_IT_desc'),
+(9, 113, 'NEW_ARTIFACT', 90, 'event_NEW_ARTIFACT_short_desc', 'event_NEW_ARTIFACT_desc'),
+(1, 114, 'ROLE_CHANGE', 10, 'event_ROLE_CHANGE_shortdesc', 'event_ROLE_CHANGE_desc'),
+(2, 114, 'NEW_COMMENT', 20, 'event_NEW_COMMENT_short_desc', 'event_NEW_COMMENT_desc'),
+(3, 114, 'NEW_FILE', 30, 'event_NEW_FILE_short_desc', 'event_NEW_FILE_desc'),
+(4, 114, 'CC_CHANGE', 40, 'event_CC_CHANGE_short_desc', 'event_CC_CHANGE_desc'),
+(5, 114, 'CLOSED', 50, 'event_CLOSED_short_desc', 'event_CLOSED_desc'),
+(6, 114, 'PSS_CHANGE', 60, 'event_PSS_CHANGE_short_desc', 'event_PSS_CHANGE_desc'),
+(7, 114, 'ANY_OTHER_CHANGE', 70, 'event_ANY_OTHER_CHANGE_short_desc', 'event_ANY_OTHER_CHANGE_desc'),
+(8, 114, 'I_MADE_IT', 80, 'event_I_MADE_IT_short_desc', 'event_I_MADE_IT_desc'),
+(9, 114, 'NEW_ARTIFACT', 90, 'event_NEW_ARTIFACT_short_desc', 'event_NEW_ARTIFACT_desc'),
+(1, 115, 'ROLE_CHANGE', 10, 'event_ROLE_CHANGE_shortdesc', 'event_ROLE_CHANGE_desc'),
+(2, 115, 'NEW_COMMENT', 20, 'event_NEW_COMMENT_short_desc', 'event_NEW_COMMENT_desc'),
+(3, 115, 'NEW_FILE', 30, 'event_NEW_FILE_short_desc', 'event_NEW_FILE_desc'),
+(4, 115, 'CC_CHANGE', 40, 'event_CC_CHANGE_short_desc', 'event_CC_CHANGE_desc'),
+(5, 115, 'CLOSED', 50, 'event_CLOSED_short_desc', 'event_CLOSED_desc'),
+(6, 115, 'PSS_CHANGE', 60, 'event_PSS_CHANGE_short_desc', 'event_PSS_CHANGE_desc'),
+(7, 115, 'ANY_OTHER_CHANGE', 70, 'event_ANY_OTHER_CHANGE_short_desc', 'event_ANY_OTHER_CHANGE_desc'),
+(8, 115, 'I_MADE_IT', 80, 'event_I_MADE_IT_short_desc', 'event_I_MADE_IT_desc'),
+(9, 115, 'NEW_ARTIFACT', 90, 'event_NEW_ARTIFACT_short_desc', 'event_NEW_ARTIFACT_desc'),
+(1, 116, 'ROLE_CHANGE', 10, 'event_ROLE_CHANGE_shortdesc', 'event_ROLE_CHANGE_desc'),
+(2, 116, 'NEW_COMMENT', 20, 'event_NEW_COMMENT_short_desc', 'event_NEW_COMMENT_desc'),
+(3, 116, 'NEW_FILE', 30, 'event_NEW_FILE_short_desc', 'event_NEW_FILE_desc'),
+(4, 116, 'CC_CHANGE', 40, 'event_CC_CHANGE_short_desc', 'event_CC_CHANGE_desc'),
+(5, 116, 'CLOSED', 50, 'event_CLOSED_short_desc', 'event_CLOSED_desc'),
+(6, 116, 'PSS_CHANGE', 60, 'event_PSS_CHANGE_short_desc', 'event_PSS_CHANGE_desc'),
+(7, 116, 'ANY_OTHER_CHANGE', 70, 'event_ANY_OTHER_CHANGE_short_desc', 'event_ANY_OTHER_CHANGE_desc'),
+(8, 116, 'I_MADE_IT', 80, 'event_I_MADE_IT_short_desc', 'event_I_MADE_IT_desc'),
+(9, 116, 'NEW_ARTIFACT', 90, 'event_NEW_ARTIFACT_short_desc', 'event_NEW_ARTIFACT_desc');
 
 -- --------------------------------------------------------
 
@@ -1857,7 +2261,23 @@ INSERT INTO artifact_notification_role (role_id, group_artifact_id, role_label, 
 (1, 112, 'SUBMITTER', 10, 'role_SUBMITTER_short_desc', 'role_SUBMITTER_desc'),
 (2, 112, 'ASSIGNEE', 20, 'role_ASSIGNEE_short_desc', 'role_ASSIGNEE_desc'),
 (3, 112, 'CC', 30, 'role_CC_short_desc', 'role_CC_desc'),
-(4, 112, 'COMMENTER', 40, 'role_COMMENTER_short_desc', 'role_COMMENTER_desc');
+(4, 112, 'COMMENTER', 40, 'role_COMMENTER_short_desc', 'role_COMMENTER_desc'),
+(1, 113, 'SUBMITTER', 10, 'role_SUBMITTER_short_desc', 'role_SUBMITTER_desc'),
+(2, 113, 'ASSIGNEE', 20, 'role_ASSIGNEE_short_desc', 'role_ASSIGNEE_desc'),
+(3, 113, 'CC', 30, 'role_CC_short_desc', 'role_CC_desc'),
+(4, 113, 'COMMENTER', 40, 'role_COMMENTER_short_desc', 'role_COMMENTER_desc'),
+(1, 114, 'SUBMITTER', 10, 'role_SUBMITTER_short_desc', 'role_SUBMITTER_desc'),
+(2, 114, 'ASSIGNEE', 20, 'role_ASSIGNEE_short_desc', 'role_ASSIGNEE_desc'),
+(3, 114, 'CC', 30, 'role_CC_short_desc', 'role_CC_desc'),
+(4, 114, 'COMMENTER', 40, 'role_COMMENTER_short_desc', 'role_COMMENTER_desc'),
+(1, 115, 'SUBMITTER', 10, 'role_SUBMITTER_short_desc', 'role_SUBMITTER_desc'),
+(2, 115, 'ASSIGNEE', 20, 'role_ASSIGNEE_short_desc', 'role_ASSIGNEE_desc'),
+(3, 115, 'CC', 30, 'role_CC_short_desc', 'role_CC_desc'),
+(4, 115, 'COMMENTER', 40, 'role_COMMENTER_short_desc', 'role_COMMENTER_desc'),
+(1, 116, 'SUBMITTER', 10, 'role_SUBMITTER_short_desc', 'role_SUBMITTER_desc'),
+(2, 116, 'ASSIGNEE', 20, 'role_ASSIGNEE_short_desc', 'role_ASSIGNEE_desc'),
+(3, 116, 'CC', 30, 'role_CC_short_desc', 'role_CC_desc'),
+(4, 116, 'COMMENTER', 40, 'role_COMMENTER_short_desc', 'role_COMMENTER_desc');
 
 -- --------------------------------------------------------
 
@@ -1898,7 +2318,7 @@ CREATE TABLE IF NOT EXISTS artifact_perm (
   perm_level int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   UNIQUE KEY unique_user (group_artifact_id,user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_perm'
@@ -1915,7 +2335,11 @@ INSERT INTO artifact_perm (id, group_artifact_id, user_id, perm_level) VALUES (1
 (9, 109, 101, 3),
 (10, 110, 101, 3),
 (11, 111, 101, 3),
-(12, 112, 101, 3);
+(12, 112, 101, 3),
+(13, 113, 103, 3),
+(14, 114, 103, 3),
+(15, 115, 103, 3),
+(16, 116, 103, 3);
 
 -- --------------------------------------------------------
 
@@ -1935,7 +2359,7 @@ CREATE TABLE IF NOT EXISTS artifact_report (
   KEY group_artifact_id_idx (group_artifact_id),
   KEY user_id_idx (user_id),
   KEY scope_idx (scope)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=110 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_report'
@@ -1953,7 +2377,10 @@ INSERT INTO artifact_report (report_id, group_artifact_id, user_id, name, descri
 (106, 107, 100, 'SR', 'Support Requests Report', 'P'),
 (107, 109, 100, 'Bugs', 'Bugs Report', 'P'),
 (108, 110, 100, 'Tasks', 'Tasks Report', 'P'),
-(109, 111, 100, 'SR', 'Support Requests Report', 'P');
+(109, 111, 100, 'SR', 'Support Requests Report', 'P'),
+(110, 113, 100, 'Bugs', 'Bugs Report', 'P'),
+(111, 114, 100, 'Tasks', 'Tasks Report', 'P'),
+(112, 115, 100, 'SR', 'Support Requests Report', 'P');
 
 -- --------------------------------------------------------
 
@@ -2085,7 +2512,32 @@ INSERT INTO artifact_report_field (report_id, field_name, show_on_query, show_on
 (109, 'submitted_by', 0, 1, NULL, 50, NULL),
 (109, 'severity', 0, 0, NULL, NULL, NULL),
 (109, 'artifact_id', 0, 1, NULL, 10, NULL),
-(109, 'assigned_to', 1, 1, 20, 40, NULL);
+(109, 'assigned_to', 1, 1, 20, 40, NULL),
+(110, 'category_id', 1, 0, 10, NULL, NULL),
+(110, 'assigned_to', 1, 1, 30, 40, NULL),
+(110, 'status_id', 1, 0, 40, NULL, NULL),
+(110, 'artifact_id', 0, 1, NULL, 10, NULL),
+(110, 'summary', 0, 1, NULL, 20, NULL),
+(110, 'open_date', 0, 1, NULL, 30, NULL),
+(110, 'submitted_by', 0, 1, NULL, 50, NULL),
+(110, 'bug_group_id', 1, 0, 20, NULL, NULL),
+(111, 'subproject_id', 1, 1, 10, 30, NULL),
+(111, 'multi_assigned_to', 1, 1, 20, 60, NULL),
+(111, 'status_id', 1, 1, 30, 100, NULL),
+(111, 'summary', 0, 1, NULL, 20, NULL),
+(111, 'start_date', 0, 1, NULL, 40, NULL),
+(111, 'close_date', 0, 1, NULL, 50, NULL),
+(111, 'hours', 0, 1, NULL, 70, NULL),
+(111, 'percent_complete', 0, 1, NULL, 80, NULL),
+(111, 'artifact_id', 0, 1, NULL, 1, NULL),
+(112, 'category_id', 1, 0, 10, NULL, NULL),
+(112, 'status_id', 1, 0, 30, NULL, NULL),
+(112, 'summary', 0, 1, NULL, 20, NULL),
+(112, 'open_date', 0, 1, NULL, 30, NULL),
+(112, 'submitted_by', 0, 1, NULL, 50, NULL),
+(112, 'severity', 0, 0, NULL, NULL, NULL),
+(112, 'artifact_id', 0, 1, NULL, 10, NULL),
+(112, 'assigned_to', 1, 1, 20, 40, NULL);
 
 -- --------------------------------------------------------
 
@@ -2104,7 +2556,7 @@ CREATE TABLE IF NOT EXISTS artifact_rule (
   target_value_id int(11) unsigned default NULL,
   PRIMARY KEY  (id),
   KEY group_artifact_id (group_artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_rule'
@@ -2206,7 +2658,7 @@ CREATE TABLE IF NOT EXISTS bug (
   custom_df5 int(11) NOT NULL default '0',
   PRIMARY KEY  (bug_id),
   KEY idx_bug_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug'
@@ -2228,7 +2680,7 @@ CREATE TABLE IF NOT EXISTS bug_bug_dependencies (
   PRIMARY KEY  (bug_depend_id),
   KEY idx_bug_bug_dependencies_bug_id (bug_id),
   KEY idx_bug_bug_is_dependent_on_task_id (is_dependent_on_bug_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_bug_dependencies'
@@ -2249,7 +2701,7 @@ CREATE TABLE IF NOT EXISTS bug_canned_responses (
   body text,
   PRIMARY KEY  (bug_canned_id),
   KEY idx_bug_canned_response_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_canned_responses'
@@ -2272,7 +2724,7 @@ CREATE TABLE IF NOT EXISTS bug_cc (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (bug_cc_id),
   KEY bug_id_idx (bug_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_cc'
@@ -2302,7 +2754,7 @@ CREATE TABLE IF NOT EXISTS bug_field (
   value_function varchar(255) default NULL,
   PRIMARY KEY  (bug_field_id),
   KEY idx_bug_field_name (field_name)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=605 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_field'
@@ -2491,7 +2943,7 @@ CREATE TABLE IF NOT EXISTS bug_field_value (
   KEY idx_bug_fv_group_id (group_id),
   KEY idx_bug_fv_value_id (value_id),
   KEY idx_bug_fv_status (`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=410 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_field_value'
@@ -2585,7 +3037,7 @@ CREATE TABLE IF NOT EXISTS bug_file (
   filetype text NOT NULL,
   PRIMARY KEY  (bug_file_id),
   KEY bug_id_idx (bug_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_file'
@@ -2606,7 +3058,7 @@ CREATE TABLE IF NOT EXISTS bug_filter (
   sql_clause text NOT NULL,
   is_active int(11) NOT NULL default '0',
   PRIMARY KEY  (filter_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_filter'
@@ -2630,7 +3082,7 @@ CREATE TABLE IF NOT EXISTS bug_history (
   `type` int(11) default NULL,
   PRIMARY KEY  (bug_history_id),
   KEY idx_bug_history_bug_id (bug_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_history'
@@ -2730,7 +3182,7 @@ CREATE TABLE IF NOT EXISTS bug_report (
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),
   KEY scope_idx (scope)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_report'
@@ -2783,7 +3235,7 @@ CREATE TABLE IF NOT EXISTS bug_task_dependencies (
   PRIMARY KEY  (bug_depend_id),
   KEY idx_bug_task_dependencies_bug_id (bug_id),
   KEY idx_bug_task_is_dependent_on_task_id (is_dependent_on_task_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'bug_task_dependencies'
@@ -2821,7 +3273,7 @@ CREATE TABLE IF NOT EXISTS cvs_branches (
   branch varchar(64) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY branch (branch)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'cvs_branches'
@@ -2875,7 +3327,7 @@ CREATE TABLE IF NOT EXISTS cvs_commits (
   whoid mediumint(9) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY whoid (whoid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'cvs_commits'
@@ -2895,7 +3347,7 @@ CREATE TABLE IF NOT EXISTS cvs_descs (
   `hash` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY `hash` (`hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'cvs_descs'
@@ -2914,7 +3366,7 @@ CREATE TABLE IF NOT EXISTS cvs_dirs (
   dir varchar(128) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY dir (dir)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'cvs_dirs'
@@ -2933,7 +3385,7 @@ CREATE TABLE IF NOT EXISTS cvs_files (
   `file` varchar(128) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY `file` (`file`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'cvs_files'
@@ -2952,7 +3404,7 @@ CREATE TABLE IF NOT EXISTS cvs_repositories (
   repository varchar(64) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY repository (repository)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'cvs_repositories'
@@ -3002,7 +3454,7 @@ CREATE TABLE IF NOT EXISTS db_images (
   height int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY idx_db_images_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'db_images'
@@ -3031,7 +3483,7 @@ CREATE TABLE IF NOT EXISTS doc_data (
   filetype text,
   PRIMARY KEY  (docid),
   KEY idx_doc_group_doc_group (doc_group)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'doc_data'
@@ -3052,7 +3504,7 @@ CREATE TABLE IF NOT EXISTS doc_groups (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (doc_group),
   KEY idx_doc_groups_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'doc_groups'
@@ -3060,7 +3512,8 @@ CREATE TABLE IF NOT EXISTS doc_groups (
 
 INSERT INTO doc_groups (doc_group, groupname, group_rank, group_id) VALUES (1, 'Documents', 10, 108),
 (2, 'Documents', 10, 109),
-(3, 'Documents', 10, 110);
+(3, 'Documents', 10, 110),
+(4, 'Documents', 10, 111);
 
 -- --------------------------------------------------------
 
@@ -3141,7 +3594,7 @@ CREATE TABLE IF NOT EXISTS filemodule (
   recent_filerelease varchar(20) NOT NULL default '',
   PRIMARY KEY  (filemodule_id),
   KEY idx_filemodule_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'filemodule'
@@ -3156,7 +3609,8 @@ INSERT INTO filemodule (filemodule_id, group_id, module_name, recent_filerelease
 (7, 107, 'tda6', ''),
 (8, 108, 'tda7', ''),
 (9, 109, 'tda8', ''),
-(10, 110, 'test', '');
+(10, 110, 'test', ''),
+(11, 111, 'testnews', '');
 
 -- --------------------------------------------------------
 
@@ -3209,7 +3663,7 @@ CREATE TABLE IF NOT EXISTS filerelease (
   KEY unix_box_idx (unix_box),
   KEY post_time_idx (post_time),
   KEY idx_release_time (release_time)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'filerelease'
@@ -3240,7 +3694,7 @@ CREATE TABLE IF NOT EXISTS forum (
   KEY idx_forum_id_date (group_forum_id,`date`),
   KEY idx_forum_id_date_followup (group_forum_id,`date`,is_followup_to),
   KEY idx_forum_thread_date_followup (thread_id,`date`,is_followup_to)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'forum'
@@ -3341,7 +3795,7 @@ CREATE TABLE IF NOT EXISTS forum_group_list (
   PRIMARY KEY  (group_forum_id),
   KEY idx_forum_group_list_group_id (group_id),
   FULLTEXT KEY description (description)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'forum_group_list'
@@ -3392,7 +3846,7 @@ CREATE TABLE IF NOT EXISTS forum_monitored_forums (
   PRIMARY KEY  (monitor_id),
   KEY idx_forum_monitor_thread_id (forum_id),
   KEY idx_forum_monitor_combo_id (forum_id,user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'forum_monitored_forums'
@@ -3442,7 +3896,7 @@ CREATE TABLE IF NOT EXISTS forum_saved_place (
   forum_id int(11) NOT NULL default '0',
   save_date int(11) NOT NULL default '0',
   PRIMARY KEY  (saved_place_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'forum_saved_place'
@@ -3459,7 +3913,7 @@ DROP TABLE IF EXISTS forum_thread_id;
 CREATE TABLE IF NOT EXISTS forum_thread_id (
   thread_id int(11) NOT NULL auto_increment,
   PRIMARY KEY  (thread_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'forum_thread_id'
@@ -3513,7 +3967,7 @@ CREATE TABLE IF NOT EXISTS foundry_data (
   logo_image_id int(11) NOT NULL default '0',
   trove_categories text,
   PRIMARY KEY  (foundry_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'foundry_data'
@@ -3537,7 +3991,7 @@ CREATE TABLE IF NOT EXISTS foundry_news (
   KEY idx_foundry_news_foundry (foundry_id),
   KEY idx_foundry_news_foundry_approved_date (foundry_id,is_approved,approve_date),
   KEY idx_foundry_news_foundry_approved (foundry_id,is_approved)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'foundry_news'
@@ -3559,7 +4013,7 @@ CREATE TABLE IF NOT EXISTS foundry_preferred_projects (
   PRIMARY KEY  (foundry_project_id),
   KEY idx_foundry_project_group (group_id),
   KEY idx_foundry_project_group_rank (group_id,rank)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'foundry_preferred_projects'
@@ -3579,7 +4033,7 @@ CREATE TABLE IF NOT EXISTS foundry_projects (
   project_id int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY idx_foundry_projects_foundry (foundry_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'foundry_projects'
@@ -3729,14 +4183,14 @@ CREATE TABLE IF NOT EXISTS frs_file (
   release_time int(11) NOT NULL default '0',
   file_size int(11) NOT NULL default '0',
   post_date int(11) NOT NULL default '0',
-  status char(1) NOT NULL default 'A',
+  `status` char(1) NOT NULL default 'A',
   PRIMARY KEY  (file_id),
   KEY idx_frs_file_release_id (release_id),
   KEY idx_frs_file_type (type_id),
   KEY idx_frs_file_date (post_date),
   KEY idx_frs_file_processor (processor_id),
   KEY idx_frs_file_name (filename(45))
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'frs_file'
@@ -3756,7 +4210,7 @@ CREATE TABLE IF NOT EXISTS frs_filetype (
   type_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (type_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=10000 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'frs_filetype'
@@ -3798,7 +4252,7 @@ CREATE TABLE IF NOT EXISTS frs_package (
   approve_license tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (package_id),
   KEY idx_package_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'frs_package'
@@ -3819,7 +4273,7 @@ CREATE TABLE IF NOT EXISTS frs_processor (
   rank int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (processor_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=10000 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'frs_processor'
@@ -3856,7 +4310,7 @@ CREATE TABLE IF NOT EXISTS frs_release (
   KEY idx_frs_release_by (released_by),
   KEY idx_frs_release_date (release_date),
   KEY idx_frs_release_package (package_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'frs_release'
@@ -3876,7 +4330,7 @@ CREATE TABLE IF NOT EXISTS frs_status (
   status_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (status_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'frs_status'
@@ -3949,7 +4403,7 @@ CREATE TABLE IF NOT EXISTS group_history (
   `date` int(11) default NULL,
   PRIMARY KEY  (group_history_id),
   KEY idx_group_history_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'group_history'
@@ -3969,7 +4423,9 @@ INSERT INTO group_history (group_history_id, group_id, field_name, old_value, mo
 (12, 109, 'perm_granted_for_release %% R1', 'ugroup_registered_users_name_key', 102, 1172581847),
 (13, 109, 'perm_granted_for_release %% R1', 'ugroup_registered_users_name_key', 102, 1172582052),
 (14, 109, 'perm_granted_for_release %% R11', 'ugroup_registered_users_name_key', 102, 1172584939),
-(15, 109, 'perm_granted_for_release %% R2', 'ugroup_registered_users_name_key', 101, 1172763991);
+(15, 109, 'perm_granted_for_release %% R2', 'ugroup_registered_users_name_key', 101, 1172763991),
+(16, 111, 'approved', 'x', 101, 1174566972),
+(17, 111, 'added_user %% news_member', 'news_member', 103, 1174567447);
 
 -- --------------------------------------------------------
 
@@ -4065,7 +4521,7 @@ CREATE TABLE IF NOT EXISTS groups (
   xrx_export_ettm int(11) NOT NULL default '0',
   bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11) NOT NULL default '1',
-  cvs_watch_mode INT(11) NOT NULL DEFAULT 0,
+  cvs_watch_mode int(11) NOT NULL default '0',
   cvs_events_mailing_list text NOT NULL,
   cvs_events_mailing_header varchar(64) character set latin1 collate latin1_bin default NULL,
   cvs_preamble text NOT NULL,
@@ -4078,25 +4534,26 @@ CREATE TABLE IF NOT EXISTS groups (
   KEY idx_groups_public (is_public),
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=111 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'groups'
 -- 
 
-INSERT INTO groups (group_id, group_name, is_public, status, unix_group_name, unix_box, http_domain, short_description, cvs_box, svn_box, license, register_purpose, required_software, patents_ips, other_comments, license_other, register_time, rand_hash, hide_members, new_bug_address, new_patch_address, new_support_address, new_task_address, type, built_from_template, send_all_bugs, send_all_patches, send_all_support, send_all_tasks, bug_preamble, support_preamble, patch_preamble, pm_preamble, xrx_export_ettm, bug_allow_anon, cvs_tracker, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, svn_tracker, svn_events_mailing_list, svn_events_mailing_header, svn_preamble) VALUES (1, 'CodeX Administration Project', 1, 'A', 'codex', 'shell1', 'codex.cxtst2.xrce.xerox.com', 'CodeX Administration Project', 'cvs1', 'svn1', 'xrx', '', '', '', '', '', 940000000, '', 0, 'codex-admin@cxtst2.xrce.xerox.com', 'codex-admin@cxtst2.xrce.xerox.com', 'codex-admin@cxtst2.xrce.xerox.com', '', 1, 100, 1, 1, 1, 0, '', '', '', '', 0, 1, 1, '', '', '', 1, '', '', ''),
-(46, 'Site News', 0, 'A', 'sitenews', 'shell1', 'sitenews.cxtst2.xrce.xerox.com', 'Site News Private Project. All Site News should be posted from this project', 'cvs1', 'svn1', 'xrx', 'Site News Private Project\r\n\r\n', '', '', '', '', 940000000, '', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 0, '', '', '', 0, '', '', ''),
-(100, 'Default Site Template', 0, 's', 'none', 'shell1', '', 'The default CodeX template', '', '', '', '', '', '', '', '', 940000000, '', 0, '', '', '', '', 2, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 0, '', '', '', 0, '', '', ''),
-(101, 'TDA - BUGGY, DO NOT USE', 1, 'D', 'tda', 'shell1', 'tda.brame-farine.grenoble.xrce.xerox.com:8017', 'Test distributed architecture - BUGGY, DO NOT USE', 'cvs1', 'svn1', 'xrx', 'Test distributed architecture - BUGGY, DO NOT USE', '', '', '', '', 1172501794, '923085d606543f36a35b043b1e46142e', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(102, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda1', 'shell1', 'tda1.brame-farine.grenoble.xrce.xerox.com:8017', 'tda1', 'cvs1', 'svn1', 'xrx', 'tda1', '', '', '', '', 1172503405, 'bfd6cb4626f680a04bd892e9503d4d84', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(103, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda2', 'shell1', 'tda2.brame-farine.grenoble.xrce.xerox.com:8017', 'tda2', 'cvs1', 'svn1', 'xrx', 'tda2', '', '', '', '', 1172503641, '089d1658bda492b1f086efed48adb300', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(104, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda3', 'shell1', 'tda3.brame-farine.grenoble.xrce.xerox.com:8017', 'tda3', 'cvs1', 'svn1', 'xrx', 'tda3', '', '', '', '', 1172503918, '1461fc250dfe259f577312140a30d36d', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(105, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda4', 'shell1', 'tda4.brame-farine.grenoble.xrce.xerox.com:8017', 'tda4', 'cvs1', 'svn1', 'xrx', 'tda4', '', '', '', '', 1172504310, '41716ed59ab32de5fba11da116f7c06d', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(106, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda5', 'shell1', 'tda5.brame-farine.grenoble.xrce.xerox.com:8017', 'tda5', 'cvs1', 'svn1', 'xrx', 'tda5', '', '', '', '', 1172504867, 'df4872f9c2ea4bacb5507ea50e6cfd59', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(107, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda6', 'shell1', 'tda6.brame-farine.grenoble.xrce.xerox.com:8017', 'TDA6', 'cvs1', 'svn1', 'xrx', 'TDA6', '', '', '', '', 1172506106, 'bcb72197d70434e208953c51c81779f6', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(108, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda7', 'shell1', 'tda7.brame-farine.grenoble.xrce.xerox.com:8017', 'tda7', 'cvs1', 'svn1', 'xrx', 'tda7', '', '', '', '', 1172507025, '180b4be975e99b480d408b6433961d8f', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(109, 'Test Distributed Architecture (Tarisson)', 1, 'A', 'tda8', 'shell1', 'tda8.brame-farine.grenoble.xrce.xerox.com:8017', 'tda8', 'cvs1', 'svn1', 'xrx', 'tda8', '', '', '', '', 1172507146, '8e91eb4010e766ccd7994a9876e51fc5', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, ''),
-(110, 'test', 1, 'P', 'test', 'shell1', 'test.brame-farine.grenoble.xrce.xerox.com:8017', 'roro', 'cvs1', 'svn1', 'xrx', 'roro', '', '', '', '', 1172761382, 'd81062596477ab94278483939b3e8782', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, '', NULL, '', 1, '', NULL, '');
+INSERT INTO groups (group_id, group_name, is_public, status, unix_group_name, unix_box, http_domain, short_description, cvs_box, svn_box, license, register_purpose, required_software, patents_ips, other_comments, license_other, register_time, rand_hash, hide_members, new_bug_address, new_patch_address, new_support_address, new_task_address, type, built_from_template, send_all_bugs, send_all_patches, send_all_support, send_all_tasks, bug_preamble, support_preamble, patch_preamble, pm_preamble, xrx_export_ettm, bug_allow_anon, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, svn_tracker, svn_events_mailing_list, svn_events_mailing_header, svn_preamble) VALUES (1, 'CodeX Administration Project', 1, 'A', 'codex', 'shell1', 'codex.cxtst2.xrce.xerox.com', 'CodeX Administration Project', 'cvs1', 'svn1', 'xrx', '', '', '', '', '', 940000000, '', 0, 'codex-admin@cxtst2.xrce.xerox.com', 'codex-admin@cxtst2.xrce.xerox.com', 'codex-admin@cxtst2.xrce.xerox.com', '', 1, 100, 1, 1, 1, 0, '', '', '', '', 0, 1, 1, 0, '', '', '', 1, '', '', ''),
+(46, 'Site News', 0, 'A', 'sitenews', 'shell1', 'sitenews.cxtst2.xrce.xerox.com', 'Site News Private Project. All Site News should be posted from this project', 'cvs1', 'svn1', 'xrx', 'Site News Private Project\r\n\r\n', '', '', '', '', 940000000, '', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 0, 0, '', '', '', 0, '', '', ''),
+(100, 'Default Site Template', 0, 's', 'none', 'shell1', '', 'The default CodeX template', '', '', '', '', '', '', '', '', 940000000, '', 0, '', '', '', '', 2, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 0, 0, '', '', '', 0, '', '', ''),
+(101, 'TDA - BUGGY, DO NOT USE', 1, 'D', 'tda', 'shell1', 'tda.brame-farine.grenoble.xrce.xerox.com:8017', 'Test distributed architecture - BUGGY, DO NOT USE', 'cvs1', 'svn1', 'xrx', 'Test distributed architecture - BUGGY, DO NOT USE', '', '', '', '', 1172501794, '923085d606543f36a35b043b1e46142e', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(102, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda1', 'shell1', 'tda1.brame-farine.grenoble.xrce.xerox.com:8017', 'tda1', 'cvs1', 'svn1', 'xrx', 'tda1', '', '', '', '', 1172503405, 'bfd6cb4626f680a04bd892e9503d4d84', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(103, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda2', 'shell1', 'tda2.brame-farine.grenoble.xrce.xerox.com:8017', 'tda2', 'cvs1', 'svn1', 'xrx', 'tda2', '', '', '', '', 1172503641, '089d1658bda492b1f086efed48adb300', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(104, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda3', 'shell1', 'tda3.brame-farine.grenoble.xrce.xerox.com:8017', 'tda3', 'cvs1', 'svn1', 'xrx', 'tda3', '', '', '', '', 1172503918, '1461fc250dfe259f577312140a30d36d', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(105, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda4', 'shell1', 'tda4.brame-farine.grenoble.xrce.xerox.com:8017', 'tda4', 'cvs1', 'svn1', 'xrx', 'tda4', '', '', '', '', 1172504310, '41716ed59ab32de5fba11da116f7c06d', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(106, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda5', 'shell1', 'tda5.brame-farine.grenoble.xrce.xerox.com:8017', 'tda5', 'cvs1', 'svn1', 'xrx', 'tda5', '', '', '', '', 1172504867, 'df4872f9c2ea4bacb5507ea50e6cfd59', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(107, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda6', 'shell1', 'tda6.brame-farine.grenoble.xrce.xerox.com:8017', 'TDA6', 'cvs1', 'svn1', 'xrx', 'TDA6', '', '', '', '', 1172506106, 'bcb72197d70434e208953c51c81779f6', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(108, 'Test Distributed Architecture (Tarisson)', 1, 'D', 'tda7', 'shell1', 'tda7.brame-farine.grenoble.xrce.xerox.com:8017', 'tda7', 'cvs1', 'svn1', 'xrx', 'tda7', '', '', '', '', 1172507025, '180b4be975e99b480d408b6433961d8f', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(109, 'Test Distributed Architecture (Tarisson)', 1, 'A', 'tda8', 'shell1', 'tda8.brame-farine.grenoble.xrce.xerox.com:8017', 'tda8', 'cvs1', 'svn1', 'xrx', 'tda8', '', '', '', '', 1172507146, '8e91eb4010e766ccd7994a9876e51fc5', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(110, 'test', 1, 'P', 'test', 'shell1', 'test.brame-farine.grenoble.xrce.xerox.com:8017', 'roro', 'cvs1', 'svn1', 'xrx', 'roro', '', '', '', '', 1172761382, 'd81062596477ab94278483939b3e8782', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 1, 0, '', NULL, '', 1, '', NULL, ''),
+(111, 'Test News', 1, 'A', 'testnews', 'shell1', 'testnews.brame-farine.grenoble.xrce.xerox.com:8017', 'This project is here to test the service ''News''', 'cvs1', 'svn1', 'xrx', ' ', '', '', '', '', 1174566921, 'aba8a2e8925233e0517dc0d7ac8ac9e1', 0, '', '', '', '', 1, 100, 0, 0, 0, 0, '', '', '', '', 0, 1, 0, 0, '', NULL, '', 0, '', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -4118,7 +4575,7 @@ CREATE TABLE IF NOT EXISTS image (
   KEY image_category_idx (image_category),
   KEY image_type_idx (image_type),
   KEY group_id_idx (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'image'
@@ -4162,7 +4619,7 @@ CREATE TABLE IF NOT EXISTS mail_group_list (
   description text,
   PRIMARY KEY  (group_list_id),
   KEY idx_mail_group_list_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'mail_group_list'
@@ -4189,7 +4646,7 @@ CREATE TABLE IF NOT EXISTS news_bytes (
   KEY idx_news_bytes_forum (forum_id),
   KEY idx_news_bytes_group (group_id),
   KEY idx_news_bytes_approved (is_approved)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'news_bytes'
@@ -4238,7 +4695,7 @@ CREATE TABLE IF NOT EXISTS patch (
   filetype varchar(50) NOT NULL default '',
   PRIMARY KEY  (patch_id),
   KEY idx_patch_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'patch'
@@ -4258,7 +4715,7 @@ CREATE TABLE IF NOT EXISTS patch_category (
   category_name text NOT NULL,
   PRIMARY KEY  (patch_category_id),
   KEY idx_patch_group_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'patch_category'
@@ -4282,7 +4739,7 @@ CREATE TABLE IF NOT EXISTS patch_history (
   `date` int(11) default NULL,
   PRIMARY KEY  (patch_history_id),
   KEY idx_patch_history_patch_id (patch_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'patch_history'
@@ -4300,7 +4757,7 @@ CREATE TABLE IF NOT EXISTS patch_status (
   patch_status_id int(11) NOT NULL auto_increment,
   status_name text,
   PRIMARY KEY  (patch_status_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'patch_status'
@@ -4323,7 +4780,7 @@ CREATE TABLE IF NOT EXISTS people_skill (
   skill_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (skill_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'people_skill'
@@ -4363,7 +4820,7 @@ CREATE TABLE IF NOT EXISTS people_skill_inventory (
   skill_level_id int(11) NOT NULL default '0',
   skill_year_id int(11) NOT NULL default '0',
   PRIMARY KEY  (skill_inventory_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'people_skill_inventory'
@@ -4381,7 +4838,7 @@ CREATE TABLE IF NOT EXISTS people_skill_level (
   skill_level_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (skill_level_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=61 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'people_skill_level'
@@ -4405,7 +4862,7 @@ CREATE TABLE IF NOT EXISTS people_skill_year (
   skill_year_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (skill_year_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'people_skill_year'
@@ -5125,7 +5582,168 @@ INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('TRACKER
 ('PLUGIN_DOCMAN_READ', '23', 2),
 ('PLUGIN_DOCMAN_WRITE', '23', 3),
 ('PLUGIN_DOCMAN_MANAGE', '23', 4),
-('RELEASE_READ', '2', 2);
+('RELEASE_READ', '2', 2),
+('TRACKER_ACCESS_FULL', '113', 1),
+('PLUGIN_DOCMAN_READ', '113', 1),
+('PLUGIN_DOCMAN_MANAGE', '113', 3),
+('PACKAGE_READ', '113', 2),
+('RELEASE_READ', '113', 2),
+('TRACKER_FIELD_SUBMIT', '113#3', 2),
+('TRACKER_FIELD_SUBMIT', '113#4', 2),
+('TRACKER_FIELD_SUBMIT', '113#5', 2),
+('TRACKER_FIELD_SUBMIT', '113#8', 2),
+('TRACKER_FIELD_SUBMIT', '113#9', 2),
+('TRACKER_FIELD_SUBMIT', '113#20', 2),
+('TRACKER_FIELD_READ', '113#1', 1),
+('TRACKER_FIELD_READ', '113#2', 1),
+('TRACKER_FIELD_READ', '113#3', 1),
+('TRACKER_FIELD_READ', '113#4', 1),
+('TRACKER_FIELD_READ', '113#5', 1),
+('TRACKER_FIELD_READ', '113#6', 1),
+('TRACKER_FIELD_READ', '113#7', 1),
+('TRACKER_FIELD_READ', '113#8', 1),
+('TRACKER_FIELD_READ', '113#9', 1),
+('TRACKER_FIELD_READ', '113#10', 1),
+('TRACKER_FIELD_READ', '113#11', 1),
+('TRACKER_FIELD_READ', '113#12', 1),
+('TRACKER_FIELD_READ', '113#13', 1),
+('TRACKER_FIELD_READ', '113#14', 1),
+('TRACKER_FIELD_READ', '113#15', 1),
+('TRACKER_FIELD_READ', '113#16', 1),
+('TRACKER_FIELD_READ', '113#17', 1),
+('TRACKER_FIELD_READ', '113#18', 1),
+('TRACKER_FIELD_READ', '113#19', 1),
+('TRACKER_FIELD_READ', '113#20', 1),
+('TRACKER_FIELD_READ', '113#22', 1),
+('TRACKER_FIELD_READ', '113#23', 1),
+('TRACKER_FIELD_READ', '113#24', 1),
+('TRACKER_FIELD_READ', '113#26', 1),
+('TRACKER_FIELD_READ', '113#27', 1),
+('TRACKER_FIELD_READ', '113#28', 1),
+('TRACKER_FIELD_READ', '113#29', 1),
+('TRACKER_FIELD_READ', '113#30', 1),
+('TRACKER_FIELD_UPDATE', '113#2', 3),
+('TRACKER_FIELD_UPDATE', '113#3', 3),
+('TRACKER_FIELD_UPDATE', '113#4', 3),
+('TRACKER_FIELD_UPDATE', '113#5', 3),
+('TRACKER_FIELD_UPDATE', '113#8', 3),
+('TRACKER_FIELD_UPDATE', '113#9', 3),
+('TRACKER_FIELD_UPDATE', '113#10', 3),
+('TRACKER_FIELD_UPDATE', '113#11', 3),
+('TRACKER_FIELD_UPDATE', '113#12', 3),
+('TRACKER_FIELD_UPDATE', '113#13', 3),
+('TRACKER_FIELD_UPDATE', '113#14', 3),
+('TRACKER_FIELD_UPDATE', '113#15', 3),
+('TRACKER_FIELD_UPDATE', '113#16', 3),
+('TRACKER_FIELD_UPDATE', '113#17', 3),
+('TRACKER_FIELD_UPDATE', '113#18', 3),
+('TRACKER_FIELD_UPDATE', '113#19', 3),
+('TRACKER_FIELD_UPDATE', '113#20', 3),
+('TRACKER_FIELD_UPDATE', '113#22', 3),
+('TRACKER_FIELD_UPDATE', '113#23', 3),
+('TRACKER_FIELD_UPDATE', '113#24', 3),
+('TRACKER_FIELD_UPDATE', '113#26', 3),
+('TRACKER_FIELD_UPDATE', '113#27', 3),
+('TRACKER_FIELD_UPDATE', '113#28', 3),
+('TRACKER_FIELD_UPDATE', '113#29', 3),
+('TRACKER_FIELD_UPDATE', '113#30', 3),
+('TRACKER_ACCESS_FULL', '114', 1),
+('PLUGIN_DOCMAN_READ', '114', 1),
+('PLUGIN_DOCMAN_MANAGE', '114', 3),
+('RELEASE_READ', '114', 2),
+('TRACKER_FIELD_SUBMIT', '114#2', 3),
+('TRACKER_FIELD_SUBMIT', '114#4', 3),
+('TRACKER_FIELD_SUBMIT', '114#5', 3),
+('TRACKER_FIELD_SUBMIT', '114#6', 3),
+('TRACKER_FIELD_SUBMIT', '114#7', 3),
+('TRACKER_FIELD_SUBMIT', '114#8', 3),
+('TRACKER_FIELD_SUBMIT', '114#9', 3),
+('TRACKER_FIELD_SUBMIT', '114#12', 3),
+('TRACKER_FIELD_SUBMIT', '114#14', 3),
+('TRACKER_FIELD_READ', '114#1', 1),
+('TRACKER_FIELD_READ', '114#2', 1),
+('TRACKER_FIELD_READ', '114#4', 1),
+('TRACKER_FIELD_READ', '114#5', 1),
+('TRACKER_FIELD_READ', '114#6', 1),
+('TRACKER_FIELD_READ', '114#7', 1),
+('TRACKER_FIELD_READ', '114#8', 1),
+('TRACKER_FIELD_READ', '114#9', 1),
+('TRACKER_FIELD_READ', '114#10', 1),
+('TRACKER_FIELD_READ', '114#11', 1),
+('TRACKER_FIELD_READ', '114#12', 1),
+('TRACKER_FIELD_READ', '114#13', 1),
+('TRACKER_FIELD_READ', '114#14', 1),
+('TRACKER_FIELD_READ', '114#15', 1),
+('TRACKER_FIELD_UPDATE', '114#2', 3),
+('TRACKER_FIELD_UPDATE', '114#4', 3),
+('TRACKER_FIELD_UPDATE', '114#5', 3),
+('TRACKER_FIELD_UPDATE', '114#6', 3),
+('TRACKER_FIELD_UPDATE', '114#7', 3),
+('TRACKER_FIELD_UPDATE', '114#8', 3),
+('TRACKER_FIELD_UPDATE', '114#9', 3),
+('TRACKER_FIELD_UPDATE', '114#11', 3),
+('TRACKER_FIELD_UPDATE', '114#12', 3),
+('TRACKER_FIELD_UPDATE', '114#14', 3),
+('TRACKER_FIELD_UPDATE', '114#15', 3),
+('TRACKER_ACCESS_FULL', '115', 1),
+('PLUGIN_DOCMAN_READ', '115', 1),
+('PLUGIN_DOCMAN_MANAGE', '115', 3),
+('TRACKER_FIELD_SUBMIT', '115#2', 1),
+('TRACKER_FIELD_SUBMIT', '115#3', 1),
+('TRACKER_FIELD_SUBMIT', '115#5', 1),
+('TRACKER_FIELD_SUBMIT', '115#11', 1),
+('TRACKER_FIELD_READ', '115#1', 1),
+('TRACKER_FIELD_READ', '115#2', 1),
+('TRACKER_FIELD_READ', '115#3', 1),
+('TRACKER_FIELD_READ', '115#4', 1),
+('TRACKER_FIELD_READ', '115#5', 1),
+('TRACKER_FIELD_READ', '115#6', 1),
+('TRACKER_FIELD_READ', '115#7', 1),
+('TRACKER_FIELD_READ', '115#9', 1),
+('TRACKER_FIELD_READ', '115#10', 1),
+('TRACKER_FIELD_READ', '115#11', 1),
+('TRACKER_FIELD_READ', '115#12', 1),
+('TRACKER_FIELD_UPDATE', '115#2', 3),
+('TRACKER_FIELD_UPDATE', '115#3', 3),
+('TRACKER_FIELD_UPDATE', '115#5', 3),
+('TRACKER_FIELD_UPDATE', '115#6', 3),
+('TRACKER_FIELD_UPDATE', '115#7', 3),
+('TRACKER_FIELD_UPDATE', '115#10', 3),
+('TRACKER_FIELD_UPDATE', '115#11', 3),
+('TRACKER_FIELD_UPDATE', '115#12', 3),
+('TRACKER_ACCESS_FULL', '116', 1),
+('PLUGIN_DOCMAN_READ', '116', 1),
+('PLUGIN_DOCMAN_MANAGE', '116', 3),
+('TRACKER_FIELD_SUBMIT', '116#3', 2),
+('TRACKER_FIELD_SUBMIT', '116#5', 2),
+('TRACKER_FIELD_SUBMIT', '116#7', 2),
+('TRACKER_FIELD_SUBMIT', '116#8', 2),
+('TRACKER_FIELD_SUBMIT', '116#10', 2),
+('TRACKER_FIELD_READ', '116#1', 1),
+('TRACKER_FIELD_READ', '116#2', 1),
+('TRACKER_FIELD_READ', '116#3', 1),
+('TRACKER_FIELD_READ', '116#4', 1),
+('TRACKER_FIELD_READ', '116#5', 1),
+('TRACKER_FIELD_READ', '116#6', 1),
+('TRACKER_FIELD_READ', '116#7', 1),
+('TRACKER_FIELD_READ', '116#8', 1),
+('TRACKER_FIELD_READ', '116#9', 1),
+('TRACKER_FIELD_READ', '116#10', 1),
+('TRACKER_FIELD_READ', '116#11', 1),
+('TRACKER_FIELD_READ', '116#12', 1),
+('TRACKER_FIELD_UPDATE', '116#3', 3),
+('TRACKER_FIELD_UPDATE', '116#5', 3),
+('TRACKER_FIELD_UPDATE', '116#6', 3),
+('TRACKER_FIELD_UPDATE', '116#7', 3),
+('TRACKER_FIELD_UPDATE', '116#8', 3),
+('TRACKER_FIELD_UPDATE', '116#9', 3),
+('TRACKER_FIELD_UPDATE', '116#10', 3),
+('TRACKER_FIELD_UPDATE', '116#11', 3),
+('TRACKER_FIELD_UPDATE', '116#12', 3),
+('PLUGIN_DOCMAN_ADMIN', '111', 4),
+('PLUGIN_DOCMAN_READ', '24', 2),
+('PLUGIN_DOCMAN_WRITE', '24', 3),
+('PLUGIN_DOCMAN_MANAGE', '24', 4);
 
 -- --------------------------------------------------------
 
@@ -5238,18 +5856,18 @@ CREATE TABLE IF NOT EXISTS plugin (
   id int(11) NOT NULL auto_increment,
   name varchar(100) NOT NULL default '',
   available tinyint(4) NOT NULL default '0',
-  prj_restricted TINYINT(4) NOT NULL DEFAULT 0,
+  prj_restricted tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (id),
   UNIQUE KEY name (name)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'plugin'
 -- 
 
-INSERT INTO plugin (id, name, available) VALUES (1, 'pluginsadministration', 1),
-(2, 'docman', 1),
-(3, 'serverupdate', 1);
+INSERT INTO plugin (id, name, available, prj_restricted) VALUES (1, 'pluginsadministration', 1, 0),
+(2, 'docman', 1, 0),
+(3, 'serverupdate', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -5326,7 +5944,7 @@ CREATE TABLE IF NOT EXISTS plugin_docman_item (
   KEY idx_group_id (group_id),
   KEY parent_id (parent_id),
   KEY rank (rank)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'plugin_docman_item'
@@ -5342,19 +5960,20 @@ INSERT INTO plugin_docman_item (item_id, parent_id, group_id, title, description
 (8, 7, 1, 'PDF Version', '', 1172236374, 1172236374, NULL, 101, 0, 0, -3, 3, '/documentation/cli/pdf/en_US/CodeX_CLI.pdf', '', NULL),
 (9, 7, 1, 'Multi-page HTML Version', '', 1172236374, 1172236374, NULL, 101, 0, 0, -2, 3, '/documentation/cli/html/en_US/index.html', '', NULL),
 (10, 7, 1, 'Single-page HTML Version', '', 1172236374, 1172236374, NULL, 101, 0, 0, 0, 3, '/documentation/cli/html/en_US/CodeX_CLI.html', '', NULL),
-(11, 1, 1, 'Documentation en fran�ais', '', 1172236374, 1172236374, NULL, 101, 0, 0, 1, 1, NULL, NULL, NULL),
-(12, 11, 1, 'Guide de l''Utilisateur CodeX', 'Un guide complet d�crivant tous les services de CodeX et comment les utiliser de mani�re optimale. Fournit �galement de nombreuses astuces et explications pour g�rer efficacement votre projet CodeX.', 1172236374, 1172236374, NULL, 101, 0, 0, -1, 1, NULL, NULL, NULL),
+(11, 1, 1, 'Documentation en franÃ¯Â¿Â½ais', '', 1172236374, 1172236374, NULL, 101, 0, 0, 1, 1, NULL, NULL, NULL),
+(12, 11, 1, 'Guide de l''Utilisateur CodeX', 'Un guide complet dÃ¯Â¿Â½crivant tous les services de CodeX et comment les utiliser de maniÃ¯Â¿Â½re optimale. Fournit Ã¯Â¿Â½galement de nombreuses astuces et explications pour gÃ¯Â¿Â½rer efficacement votre projet CodeX.', 1172236374, 1172236374, NULL, 101, 0, 0, -1, 1, NULL, NULL, NULL),
 (13, 12, 1, 'Version PDF', '', 1172236374, 1172236374, NULL, 101, 0, 0, -1, 3, '/documentation/user_guide/pdf/fr_FR/CodeX_User_Guide.pdf', '', NULL),
 (14, 12, 1, 'Version HTML multi-pages', '', 1172236374, 1172236374, NULL, 101, 0, 0, 1, 3, '/documentation/user_guide/html/fr_FR/index.html', '', NULL),
 (15, 12, 1, 'Version HTML une page (4,2 Mo)', '', 1172236374, 1172236374, NULL, 101, 0, 0, 2, 3, '/documentation/user_guide/html/fr_FR/CodeX_User_Guide.html', '', NULL),
-(16, 11, 1, 'Interface de Commande en Ligne', 'Un guide complet d�crivant toutes les fonctions de l''Interface de Commande en Ligne de CodeX.', 1172236374, 1172236374, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL),
+(16, 11, 1, 'Interface de Commande en Ligne', 'Un guide complet dÃ¯Â¿Â½crivant toutes les fonctions de l''Interface de Commande en Ligne de CodeX.', 1172236374, 1172236374, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL),
 (17, 16, 1, 'Version PDF', '', 1172236374, 1172236374, NULL, 101, 0, 0, 3, 3, '/documentation/cli/pdf/fr_FR/CodeX_CLI.pdf', '', NULL),
 (18, 16, 1, 'Version HTML multi-pages', '', 1172236374, 1172236374, NULL, 101, 0, 0, 4, 3, '/documentation/cli/html/fr_FR/index.html', '', NULL),
 (19, 16, 1, 'Version HTML une page', '', 1172236374, 1172236374, NULL, 101, 0, 0, 5, 3, '/documentation/cli/html/fr_FR/CodeX_CLI.html', '', NULL),
 (20, 0, 100, 'roottitle_lbl_key', '', 1172236374, 1172236374, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL),
 (21, 0, 108, 'roottitle_lbl_key', '', 1172507026, 1172507026, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL),
 (22, 0, 109, 'roottitle_lbl_key', '', 1172507146, 1172507146, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL),
-(23, 0, 110, 'roottitle_lbl_key', '', 1172761384, 1172761384, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
+(23, 0, 110, 'roottitle_lbl_key', '', 1172761384, 1172761384, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL),
+(24, 0, 111, 'roottitle_lbl_key', '', 1174566922, 1174566922, NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -5404,7 +6023,7 @@ CREATE TABLE IF NOT EXISTS plugin_docman_metadata (
   PRIMARY KEY  (field_id,group_id),
   KEY idx_group_id (group_id),
   KEY idx_name (name(10))
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'plugin_docman_metadata'
@@ -5428,7 +6047,7 @@ CREATE TABLE IF NOT EXISTS plugin_docman_metadata_love (
   KEY idx_fv_status (`status`),
   KEY rank (rank),
   KEY name (name(10))
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'plugin_docman_metadata_love'
@@ -5498,7 +6117,8 @@ CREATE TABLE IF NOT EXISTS plugin_docman_project_settings (
 INSERT INTO plugin_docman_project_settings (group_id, view, use_obsolescence_date, use_status) VALUES (100, 'Tree', 0, 0),
 (108, 'Tree', 0, 0),
 (109, 'Tree', 0, 0),
-(110, 'Tree', 0, 0);
+(110, 'Tree', 0, 0),
+(111, 'Tree', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -5539,7 +6159,7 @@ CREATE TABLE IF NOT EXISTS plugin_docman_version (
   filetype text,
   path text,
   PRIMARY KEY  (id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'plugin_docman_version'
@@ -5601,7 +6221,7 @@ CREATE TABLE IF NOT EXISTS project_assigned_to (
   PRIMARY KEY  (project_assigned_id),
   KEY idx_project_assigned_to_task_id (project_task_id),
   KEY idx_project_assigned_to_assigned_to (assigned_to_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_assigned_to'
@@ -5624,7 +6244,7 @@ CREATE TABLE IF NOT EXISTS project_cc (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (project_cc_id),
   KEY project_id_idx (project_task_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_cc'
@@ -5706,7 +6326,7 @@ CREATE TABLE IF NOT EXISTS project_dependencies (
   PRIMARY KEY  (project_depend_id),
   KEY idx_project_dependencies_task_id (project_task_id),
   KEY idx_project_is_dependent_on_task_id (is_dependent_on_task_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_dependencies'
@@ -5735,7 +6355,7 @@ CREATE TABLE IF NOT EXISTS project_field (
   custom int(11) NOT NULL default '0',
   PRIMARY KEY  (project_field_id),
   KEY idx_project_field_name (field_name)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=104 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_field'
@@ -5815,7 +6435,7 @@ CREATE TABLE IF NOT EXISTS project_field_value (
   KEY idx_project_fv_group_id (group_id),
   KEY idx_project_fv_value_id (value_id),
   KEY idx_project_fv_status (`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=135 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_field_value'
@@ -5875,7 +6495,7 @@ CREATE TABLE IF NOT EXISTS project_file (
   filetype text NOT NULL,
   PRIMARY KEY  (project_file_id),
   KEY project_task_id_idx (project_task_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_file'
@@ -5898,7 +6518,7 @@ CREATE TABLE IF NOT EXISTS project_group_list (
   order_id int(11) NOT NULL default '0',
   PRIMARY KEY  (group_project_id),
   KEY idx_project_group_list_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_group_list'
@@ -5922,7 +6542,7 @@ CREATE TABLE IF NOT EXISTS project_history (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (project_history_id),
   KEY idx_project_history_task_id (project_task_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_history'
@@ -5942,7 +6562,7 @@ CREATE TABLE IF NOT EXISTS project_metric (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (ranking),
   KEY idx_project_metric_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_metric'
@@ -5973,7 +6593,7 @@ CREATE TABLE IF NOT EXISTS project_metric_tmp1 (
   group_id int(11) NOT NULL default '0',
   `value` float(8,5) default NULL,
   PRIMARY KEY  (ranking)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_metric_tmp1'
@@ -6004,7 +6624,7 @@ CREATE TABLE IF NOT EXISTS project_metric_weekly_tmp1 (
   group_id int(11) NOT NULL default '0',
   `value` float(8,5) default NULL,
   PRIMARY KEY  (ranking)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_metric_weekly_tmp1'
@@ -6096,9 +6716,9 @@ DROP TABLE IF EXISTS project_plugin;
 CREATE TABLE IF NOT EXISTS project_plugin (
   project_id int(11) NOT NULL default '0',
   plugin_id int(11) NOT NULL default '0',
-  UNIQUE project_plugin (project_id, plugin_id),
-  INDEX project_id_idx (project_id),
-  INDEX plugin_id_idx (plugin_id)
+  UNIQUE KEY project_plugin (project_id,plugin_id),
+  KEY project_id_idx (project_id),
+  KEY plugin_id_idx (plugin_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
@@ -6117,7 +6737,7 @@ CREATE TABLE IF NOT EXISTS project_status (
   status_id int(11) NOT NULL auto_increment,
   status_name text NOT NULL,
   PRIMARY KEY  (status_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_status'
@@ -6150,7 +6770,7 @@ CREATE TABLE IF NOT EXISTS project_task (
   status_id int(11) NOT NULL default '0',
   PRIMARY KEY  (project_task_id),
   KEY idx_project_task_group_project_id (group_project_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_task'
@@ -6190,7 +6810,7 @@ CREATE TABLE IF NOT EXISTS project_weekly_metric (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (ranking),
   KEY idx_project_metric_weekly_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'project_weekly_metric'
@@ -6214,7 +6834,7 @@ CREATE TABLE IF NOT EXISTS reference (
   PRIMARY KEY  (id),
   KEY keyword_idx (keyword),
   KEY scope_idx (scope)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=113 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'reference'
@@ -6254,7 +6874,11 @@ INSERT INTO reference (id, keyword, description, link, scope, service_short_name
 (109, 'bug', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
 (110, 'task', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
 (111, 'sr', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
-(112, 'patch', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', '');
+(112, 'patch', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
+(113, 'bug', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
+(114, 'task', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
+(115, 'sr', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', ''),
+(116, 'patch', 'Tracker Artifact', '/tracker/?func=detail&aid=$1&group_id=$group_id', 'P', '');
 
 -- --------------------------------------------------------
 
@@ -6270,7 +6894,7 @@ CREATE TABLE IF NOT EXISTS reference_group (
   is_active tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY group_id_idx (group_id,is_active)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=106 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'reference_group'
@@ -6380,7 +7004,29 @@ INSERT INTO reference_group (id, reference_id, group_id, is_active) VALUES (1, 1
 (102, 109, 110, 1),
 (103, 110, 110, 1),
 (104, 111, 110, 1),
-(105, 112, 110, 1);
+(105, 112, 110, 1),
+(106, 13, 111, 1),
+(107, 14, 111, 1),
+(108, 12, 111, 1),
+(109, 3, 111, 1),
+(110, 4, 111, 1),
+(111, 15, 111, 1),
+(112, 16, 111, 1),
+(113, 1, 111, 1),
+(114, 2, 111, 1),
+(115, 5, 111, 1),
+(116, 6, 111, 1),
+(117, 7, 111, 1),
+(118, 8, 111, 1),
+(119, 9, 111, 1),
+(120, 10, 111, 1),
+(121, 11, 111, 1),
+(122, 17, 111, 1),
+(123, 18, 111, 1),
+(124, 113, 111, 1),
+(125, 114, 111, 1),
+(126, 115, 111, 1),
+(127, 116, 111, 1);
 
 -- --------------------------------------------------------
 
@@ -6427,104 +7073,117 @@ CREATE TABLE IF NOT EXISTS service (
   rank int(11) NOT NULL default '0',
   location enum('master','same','satellite') NOT NULL default 'same',
   server_id int(11) unsigned default NULL,
-  is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
+  is_in_iframe tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (service_id),
   KEY idx_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=152 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'service'
 -- 
 
-INSERT INTO service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id) VALUES (1, 100, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/$projectname/', 1, 1, 'system', 10, 'same', NULL),
-(2, 100, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20, 'same', NULL),
-(3, 100, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://$projectname.$sys_default_domain', 1, 1, 'system', 30, 'same', NULL),
-(4, 100, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=$group_id', 1, 1, 'system', 40, 'same', NULL),
-(5, 100, 'service_bugs_lbl_key', 'service_bugs_desc_key', 'bugs', '/bugs/?group_id=$group_id', 0, 0, 'system', 50, 'same', NULL),
-(6, 100, 'service_support_lbl_key', 'service_support_desc_key', 'support', '/support/?group_id=$group_id', 0, 0, 'system', 60, 'same', NULL),
-(7, 100, 'service_patch_lbl_key', 'service_patch_desc_key', 'patch', '/patch/?group_id=$group_id', 0, 0, 'system', 70, 'same', NULL),
-(8, 100, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=$group_id', 1, 1, 'system', 80, 'same', NULL),
-(9, 100, 'service_task_lbl_key', 'service_task_desc_key', 'task', '/pm/?group_id=$group_id', 0, 0, 'system', 90, 'same', NULL),
-(10, 100, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=$group_id', 0, 0, 'system', 100, 'same', NULL),
-(11, 100, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=$group_id', 1, 1, 'system', 110, 'same', NULL),
-(12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120, 'same', NULL),
-(13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130, 'same', NULL),
-(14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 1, 'system', 140, 'satellite', 1),
-(15, 100, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150, 'same', NULL),
-(16, 100, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135, 'same', NULL),
-(17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 1, 1, 'system', 105, 'same', NULL),
-(31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/codex/', 1, 1, 'system', 10, 'same', NULL),
-(32, 1, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20, 'same', NULL),
-(33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://codex.cxtst2.xrce.xerox.com', 1, 1, 'system', 30, 'same', NULL),
-(34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 1, 1, 'system', 40, 'same', NULL),
-(35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 1, 1, 'system', 80, 'same', NULL),
-(36, 1, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=1', 0, 0, 'system', 100, 'same', NULL),
-(37, 1, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=1', 1, 1, 'system', 110, 'same', NULL),
-(38, 1, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=1', 1, 1, 'system', 120, 'same', NULL),
-(39, 1, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=1', 1, 1, 'system', 130, 'same', NULL),
-(40, 1, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=1', 1, 1, 'system', 140, 'same', NULL),
-(41, 1, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150, 'same', NULL),
-(42, 1, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=1', 1, 1, 'system', 135, 'same', NULL),
-(43, 1, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=1', 1, 1, 'system', 105, 'same', NULL),
-(51, 46, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/sitenews/', 1, 1, 'system', 10, 'same', NULL),
-(52, 46, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20, 'same', NULL),
-(53, 46, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://sitenews.cxtst2.xrce.xerox.com', 1, 1, 'system', 30, 'same', NULL),
-(54, 46, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40, 'same', NULL),
-(55, 46, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=46', 1, 1, 'system', 120, 'same', NULL),
-(56, 46, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=46', 1, 1, 'system', 140, 'same', NULL),
-(57, 46, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=46', 1, 1, 'system', 150, 'same', NULL),
-(100, 0, 'None', 'None', '', '', 0, 0, 'project', 0, 'same', NULL),
-(101, 100, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=$group_id', 1, 1, 'system', 95, 'same', NULL),
-(102, 1, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=1', 1, 1, 'system', 95, 'same', NULL),
-(103, 0, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=0', 1, 0, 'system', 95, 'same', NULL),
-(104, 46, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=46', 1, 0, 'system', 95, 'same', NULL),
-(105, 104, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda3/', 1, 1, 'system', 10, 'same', NULL),
-(106, 104, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=104', 1, 1, 'system', 20, 'same', NULL),
-(107, 105, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda4/', 1, 1, 'system', 10, 'same', NULL),
-(108, 105, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=105', 1, 1, 'system', 20, 'same', NULL),
-(109, 106, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda5/', 1, 1, 'system', 10, 'same', NULL),
-(110, 106, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=106', 1, 1, 'system', 20, 'same', NULL),
-(111, 107, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda6/', 1, 1, 'system', 10, 'same', NULL),
-(112, 107, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=107', 1, 1, 'system', 20, 'same', NULL),
-(113, 108, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda7/', 1, 1, 'system', 10, 'same', NULL),
-(114, 108, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=108', 1, 1, 'system', 20, 'same', NULL),
-(115, 108, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://tda7.brame-farine.grenoble.xrce.xerox.com:8017', 1, 0, 'system', 30, 'same', NULL),
-(116, 108, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=108', 1, 0, 'system', 40, 'same', NULL),
-(117, 108, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=108', 1, 0, 'system', 80, 'same', NULL),
-(118, 108, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=108', 1, 1, 'system', 110, 'same', NULL),
-(119, 108, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=108', 1, 0, 'system', 120, 'same', NULL),
-(120, 108, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=108', 1, 0, 'system', 130, 'same', NULL),
-(121, 108, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=108', 1, 1, 'system', 140, 'same', NULL),
-(122, 108, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=108', 1, 0, 'system', 150, 'same', NULL),
-(123, 108, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=108', 1, 1, 'system', 135, 'same', NULL),
-(124, 108, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=108', 1, 0, 'system', 105, 'same', NULL),
-(125, 108, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=108', 1, 1, 'system', 95, 'same', NULL),
-(126, 109, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda8/', 1, 1, 'system', 10, 'same', NULL),
-(127, 109, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=109', 1, 1, 'system', 20, 'same', NULL),
-(128, 109, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://tda8.brame-farine.grenoble.xrce.xerox.com:8017', 1, 0, 'system', 30, 'same', NULL),
-(129, 109, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=109', 1, 0, 'system', 40, 'same', NULL),
-(130, 109, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=109', 1, 0, 'system', 80, 'same', NULL),
-(131, 109, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=109', 1, 1, 'system', 110, 'same', NULL),
-(132, 109, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=109', 1, 0, 'system', 120, 'same', NULL),
-(133, 109, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=109', 1, 0, 'system', 130, 'same', NULL),
-(134, 109, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=109', 1, 1, 'system', 140, 'satellite', 2),
-(135, 109, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=109', 1, 0, 'system', 150, 'same', NULL),
-(136, 109, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=109', 1, 1, 'system', 135, 'satellite', 2),
-(137, 109, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=109', 1, 0, 'system', 105, 'same', NULL),
-(138, 109, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=109', 1, 1, 'system', 95, 'same', NULL),
-(139, 110, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/test/', 1, 1, 'system', 10, 'same', NULL),
-(140, 110, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=110', 1, 1, 'system', 20, 'same', NULL),
-(141, 110, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://test.brame-farine.grenoble.xrce.xerox.com:8017', 1, 1, 'system', 30, 'same', NULL),
-(142, 110, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=110', 1, 1, 'system', 40, 'same', NULL),
-(143, 110, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=110', 1, 1, 'system', 80, 'same', NULL),
-(144, 110, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=110', 1, 1, 'system', 110, 'same', NULL),
-(145, 110, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=110', 1, 1, 'system', 120, 'same', NULL),
-(146, 110, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=110', 1, 1, 'system', 130, 'same', NULL),
-(147, 110, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=110', 1, 1, 'system', 140, 'satellite', 2),
-(148, 110, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=110', 1, 1, 'system', 150, 'same', NULL),
-(149, 110, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=110', 1, 1, 'system', 135, 'same', NULL),
-(150, 110, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=110', 1, 1, 'system', 105, 'same', NULL),
-(151, 110, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=110', 1, 1, 'system', 95, 'same', NULL);
+INSERT INTO service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id, is_in_iframe) VALUES (1, 100, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/$projectname/', 1, 1, 'system', 10, 'same', NULL, 0),
+(2, 100, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=$group_id', 1, 1, 'system', 20, 'same', NULL, 0),
+(3, 100, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://$projectname.$sys_default_domain', 1, 1, 'system', 30, 'same', NULL, 0),
+(4, 100, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=$group_id', 1, 1, 'system', 40, 'same', NULL, 0),
+(5, 100, 'service_bugs_lbl_key', 'service_bugs_desc_key', 'bugs', '/bugs/?group_id=$group_id', 0, 0, 'system', 50, 'same', NULL, 0),
+(6, 100, 'service_support_lbl_key', 'service_support_desc_key', 'support', '/support/?group_id=$group_id', 0, 0, 'system', 60, 'same', NULL, 0),
+(7, 100, 'service_patch_lbl_key', 'service_patch_desc_key', 'patch', '/patch/?group_id=$group_id', 0, 0, 'system', 70, 'same', NULL, 0),
+(8, 100, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=$group_id', 1, 1, 'system', 80, 'same', NULL, 0),
+(9, 100, 'service_task_lbl_key', 'service_task_desc_key', 'task', '/pm/?group_id=$group_id', 0, 0, 'system', 90, 'same', NULL, 0),
+(10, 100, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=$group_id', 0, 0, 'system', 100, 'same', NULL, 0),
+(11, 100, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=$group_id', 1, 1, 'system', 110, 'same', NULL, 0),
+(12, 100, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=$group_id', 1, 1, 'system', 120, 'same', NULL, 0),
+(13, 100, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=$group_id', 1, 1, 'system', 130, 'same', NULL, 0),
+(14, 100, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=$group_id', 1, 1, 'system', 140, 'satellite', 1, 0),
+(15, 100, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=$group_id', 1, 1, 'system', 150, 'same', NULL, 0),
+(16, 100, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=$group_id', 1, 1, 'system', 135, 'same', NULL, 0),
+(17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 1, 1, 'system', 105, 'same', NULL, 0),
+(31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/codex/', 1, 1, 'system', 10, 'same', NULL, 0),
+(32, 1, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20, 'same', NULL, 0),
+(33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://codex.cxtst2.xrce.xerox.com', 1, 1, 'system', 30, 'same', NULL, 0),
+(34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 1, 1, 'system', 40, 'same', NULL, 0),
+(35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 1, 1, 'system', 80, 'same', NULL, 0),
+(36, 1, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=1', 0, 0, 'system', 100, 'same', NULL, 0),
+(37, 1, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=1', 1, 1, 'system', 110, 'same', NULL, 0),
+(38, 1, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=1', 1, 1, 'system', 120, 'same', NULL, 0),
+(39, 1, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=1', 1, 1, 'system', 130, 'same', NULL, 0),
+(40, 1, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=1', 1, 1, 'system', 140, 'same', NULL, 0),
+(41, 1, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=1', 1, 1, 'system', 150, 'same', NULL, 0),
+(42, 1, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=1', 1, 1, 'system', 135, 'same', NULL, 0),
+(43, 1, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=1', 1, 1, 'system', 105, 'same', NULL, 0),
+(51, 46, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/sitenews/', 1, 1, 'system', 10, 'same', NULL, 0),
+(52, 46, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20, 'same', NULL, 0),
+(53, 46, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://sitenews.cxtst2.xrce.xerox.com', 1, 1, 'system', 30, 'same', NULL, 0),
+(54, 46, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40, 'same', NULL, 0),
+(55, 46, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=46', 1, 1, 'system', 120, 'same', NULL, 0),
+(56, 46, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=46', 1, 1, 'system', 140, 'same', NULL, 0),
+(57, 46, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=46', 1, 1, 'system', 150, 'same', NULL, 0),
+(100, 0, 'None', 'None', '', '', 0, 0, 'project', 0, 'same', NULL, 0),
+(101, 100, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=$group_id', 1, 1, 'system', 95, 'same', NULL, 0),
+(102, 1, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=1', 1, 1, 'system', 95, 'same', NULL, 0),
+(103, 0, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=0', 1, 0, 'system', 95, 'same', NULL, 0),
+(104, 46, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=46', 1, 0, 'system', 95, 'same', NULL, 0),
+(105, 104, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda3/', 1, 1, 'system', 10, 'same', NULL, 0),
+(106, 104, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=104', 1, 1, 'system', 20, 'same', NULL, 0),
+(107, 105, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda4/', 1, 1, 'system', 10, 'same', NULL, 0),
+(108, 105, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=105', 1, 1, 'system', 20, 'same', NULL, 0),
+(109, 106, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda5/', 1, 1, 'system', 10, 'same', NULL, 0),
+(110, 106, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=106', 1, 1, 'system', 20, 'same', NULL, 0),
+(111, 107, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda6/', 1, 1, 'system', 10, 'same', NULL, 0),
+(112, 107, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=107', 1, 1, 'system', 20, 'same', NULL, 0),
+(113, 108, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda7/', 1, 1, 'system', 10, 'same', NULL, 0),
+(114, 108, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=108', 1, 1, 'system', 20, 'same', NULL, 0),
+(115, 108, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://tda7.brame-farine.grenoble.xrce.xerox.com:8017', 1, 0, 'system', 30, 'same', NULL, 0),
+(116, 108, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=108', 1, 0, 'system', 40, 'same', NULL, 0),
+(117, 108, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=108', 1, 0, 'system', 80, 'same', NULL, 0),
+(118, 108, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=108', 1, 1, 'system', 110, 'same', NULL, 0),
+(119, 108, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=108', 1, 0, 'system', 120, 'same', NULL, 0),
+(120, 108, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=108', 1, 0, 'system', 130, 'same', NULL, 0),
+(121, 108, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=108', 1, 1, 'system', 140, 'same', NULL, 0),
+(122, 108, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=108', 1, 0, 'system', 150, 'same', NULL, 0),
+(123, 108, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=108', 1, 1, 'system', 135, 'same', NULL, 0),
+(124, 108, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=108', 1, 0, 'system', 105, 'same', NULL, 0),
+(125, 108, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=108', 1, 1, 'system', 95, 'same', NULL, 0),
+(126, 109, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/tda8/', 1, 1, 'system', 10, 'same', NULL, 0),
+(127, 109, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=109', 1, 1, 'system', 20, 'same', NULL, 0),
+(128, 109, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://tda8.brame-farine.grenoble.xrce.xerox.com:8017', 1, 0, 'system', 30, 'same', NULL, 0),
+(129, 109, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=109', 1, 0, 'system', 40, 'same', NULL, 0),
+(130, 109, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=109', 1, 0, 'system', 80, 'same', NULL, 0),
+(131, 109, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=109', 1, 1, 'system', 110, 'same', NULL, 0),
+(132, 109, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=109', 1, 0, 'system', 120, 'same', NULL, 0),
+(133, 109, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=109', 1, 0, 'system', 130, 'same', NULL, 0),
+(134, 109, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=109', 1, 1, 'system', 140, 'satellite', 2, 0),
+(135, 109, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=109', 1, 0, 'system', 150, 'same', NULL, 0),
+(136, 109, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=109', 1, 1, 'system', 135, 'satellite', 2, 0),
+(137, 109, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=109', 1, 0, 'system', 105, 'same', NULL, 0),
+(138, 109, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=109', 1, 1, 'system', 95, 'same', NULL, 0),
+(139, 110, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/test/', 1, 1, 'system', 10, 'same', NULL, 0),
+(140, 110, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=110', 1, 1, 'system', 20, 'same', NULL, 0),
+(141, 110, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://test.brame-farine.grenoble.xrce.xerox.com:8017', 1, 1, 'system', 30, 'same', NULL, 0),
+(142, 110, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=110', 1, 1, 'system', 40, 'same', NULL, 0),
+(143, 110, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=110', 1, 1, 'system', 80, 'same', NULL, 0),
+(144, 110, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=110', 1, 1, 'system', 110, 'same', NULL, 0),
+(145, 110, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=110', 1, 1, 'system', 120, 'same', NULL, 0),
+(146, 110, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=110', 1, 1, 'system', 130, 'same', NULL, 0),
+(147, 110, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=110', 1, 1, 'system', 140, 'satellite', 2, 0),
+(148, 110, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=110', 1, 1, 'system', 150, 'same', NULL, 0),
+(149, 110, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=110', 1, 1, 'system', 135, 'same', NULL, 0),
+(150, 110, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=110', 1, 1, 'system', 105, 'same', NULL, 0),
+(151, 110, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=110', 1, 1, 'system', 95, 'same', NULL, 0),
+(152, 111, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/testnews/', 1, 1, 'system', 10, 'same', NULL, 0),
+(153, 111, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=111', 1, 1, 'system', 20, 'same', NULL, 0),
+(154, 111, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://testnews.brame-farine.grenoble.xrce.xerox.com:8017', 1, 0, 'system', 30, 'same', NULL, 0),
+(155, 111, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=111', 1, 1, 'system', 40, 'same', NULL, 0),
+(156, 111, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=111', 1, 0, 'system', 80, 'same', NULL, 0),
+(157, 111, 'service_survey_lbl_key', 'service_survey_desc_key', 'survey', '/survey/?group_id=111', 1, 0, 'system', 110, 'same', NULL, 0),
+(158, 111, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=111', 1, 1, 'system', 120, 'same', NULL, 0),
+(159, 111, 'service_cvs_lbl_key', 'service_cvs_desc_key', 'cvs', '/cvs/?group_id=111', 1, 0, 'system', 130, 'same', NULL, 0),
+(160, 111, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=111', 1, 0, 'system', 140, 'satellite', 1, 0),
+(161, 111, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=111', 1, 0, 'system', 150, 'same', NULL, 0),
+(162, 111, 'service_svn_lbl_key', 'service_svn_desc_key', 'svn', '/svn/?group_id=111', 1, 0, 'system', 135, 'same', NULL, 0),
+(163, 111, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=111', 1, 0, 'system', 105, 'same', NULL, 0),
+(164, 111, 'plugin_docman:service_lbl_key', 'plugin_docman:service_desc_key', 'docman', '/plugins/docman/?group_id=111', 1, 0, 'system', 95, 'same', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -6554,7 +7213,8 @@ INSERT INTO session (user_id, session_hash, ip_addr, time) VALUES (102, 'd4a947b
 (101, '57e9eb2f18d74f5a8026780a1e8427e8', '13.202.220.133', 1172744363),
 (102, '201bb418cbed74b99f8cdd755d3a08cb', '13.202.220.42', 1172584652),
 (101, '677d453d7a32153c85454784cfb2251c', '13.202.220.42', 1172746605),
-(101, '6ae702fea12c0fc7459bf8ffa8a36f0f', '13.202.220.133', 1172830627);
+(101, '6ae702fea12c0fc7459bf8ffa8a36f0f', '13.202.220.133', 1172830627),
+(104, '0ecadbec46a1c4d4131fe085feaa4563', '13.202.220.133', 1174567502);
 
 -- --------------------------------------------------------
 
@@ -6575,7 +7235,7 @@ CREATE TABLE IF NOT EXISTS snippet (
   PRIMARY KEY  (snippet_id),
   KEY idx_snippet_language (language),
   KEY idx_snippet_category (category)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'snippet'
@@ -6689,7 +7349,7 @@ CREATE TABLE IF NOT EXISTS snippet_package (
   PRIMARY KEY  (snippet_package_id),
   KEY idx_snippet_package_language (language),
   KEY idx_snippet_package_category (category)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'snippet_package'
@@ -6709,7 +7369,7 @@ CREATE TABLE IF NOT EXISTS snippet_package_item (
   snippet_version_id int(11) NOT NULL default '0',
   PRIMARY KEY  (snippet_package_item_id),
   KEY idx_snippet_package_item_pkg_ver (snippet_package_version_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'snippet_package_item'
@@ -6732,7 +7392,7 @@ CREATE TABLE IF NOT EXISTS snippet_package_version (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (snippet_package_version_id),
   KEY idx_snippet_package_version_pkg_id (snippet_package_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'snippet_package_version'
@@ -6784,7 +7444,7 @@ CREATE TABLE IF NOT EXISTS snippet_version (
   filetype varchar(50) NOT NULL default '',
   PRIMARY KEY  (snippet_version_id),
   KEY idx_snippet_version_snippet_id (snippet_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'snippet_version'
@@ -7447,7 +8107,7 @@ CREATE TABLE IF NOT EXISTS support (
   close_date int(11) NOT NULL default '0',
   PRIMARY KEY  (support_id),
   KEY idx_support_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'support'
@@ -7469,7 +8129,7 @@ CREATE TABLE IF NOT EXISTS support_canned_responses (
   body text,
   PRIMARY KEY  (support_canned_id),
   KEY idx_support_canned_response_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'support_canned_responses'
@@ -7490,7 +8150,7 @@ CREATE TABLE IF NOT EXISTS support_category (
   category_name text NOT NULL,
   PRIMARY KEY  (support_category_id),
   KEY idx_support_group_group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'support_category'
@@ -7514,7 +8174,7 @@ CREATE TABLE IF NOT EXISTS support_history (
   `date` int(11) default NULL,
   PRIMARY KEY  (support_history_id),
   KEY idx_support_history_support_id (support_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'support_history'
@@ -7536,7 +8196,7 @@ CREATE TABLE IF NOT EXISTS support_messages (
   body text,
   PRIMARY KEY  (support_message_id),
   KEY idx_support_messages_support_id (support_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'support_messages'
@@ -7555,7 +8215,7 @@ CREATE TABLE IF NOT EXISTS support_status (
   support_status_id int(11) NOT NULL auto_increment,
   status_name text,
   PRIMARY KEY  (support_status_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'support_status'
@@ -7581,14 +8241,14 @@ CREATE TABLE IF NOT EXISTS supported_languages (
   active int(11) NOT NULL default '1',
   PRIMARY KEY  (language_id),
   KEY idx_supported_languages_language_code (language_code)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'supported_languages'
 -- 
 
 INSERT INTO supported_languages (language_id, name, filename, language_code, language_charset, active) VALUES (1, 'English', 'English_US.tab', 'en_US', 'ISO-8859-1', 1),
-(2, 'Fran�ais', 'French_FR.tab', 'fr_FR', 'ISO-8859-1', 1);
+(2, 'FranÃ§ais', 'French_FR.tab', 'fr_FR', 'ISO-8859-1', 1);
 
 -- --------------------------------------------------------
 
@@ -7602,7 +8262,7 @@ CREATE TABLE IF NOT EXISTS survey_question_types (
   `type` text NOT NULL,
   rank int(11) NOT NULL default '0',
   PRIMARY KEY  (id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'survey_question_types'
@@ -7631,7 +8291,7 @@ CREATE TABLE IF NOT EXISTS survey_questions (
   question_type int(11) NOT NULL default '0',
   PRIMARY KEY  (question_id),
   KEY idx_survey_questions_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'survey_questions'
@@ -7652,7 +8312,7 @@ CREATE TABLE IF NOT EXISTS survey_radio_choices (
   radio_choice text NOT NULL,
   PRIMARY KEY  (choice_id),
   KEY idx_survey_radio_choices_question_id (question_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'survey_radio_choices'
@@ -7742,7 +8402,7 @@ CREATE TABLE IF NOT EXISTS surveys (
   is_anonymous int(11) NOT NULL default '0',
   PRIMARY KEY  (survey_id),
   KEY idx_surveys_group (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'surveys'
@@ -7769,7 +8429,7 @@ CREATE TABLE IF NOT EXISTS svn_checkins (
   UNIQUE KEY uniq_checkins_idx (commitid,dirid,fileid),
   KEY dirid (dirid),
   KEY fileid (fileid)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'svn_checkins'
@@ -7797,7 +8457,7 @@ CREATE TABLE IF NOT EXISTS svn_commits (
   KEY whoid (whoid),
   KEY revision (revision),
   FULLTEXT KEY description (description)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'svn_commits'
@@ -7817,7 +8477,7 @@ CREATE TABLE IF NOT EXISTS svn_dirs (
   dir varchar(255) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY uniq_dir_idx (dir)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'svn_dirs'
@@ -7837,7 +8497,7 @@ CREATE TABLE IF NOT EXISTS svn_files (
   `file` varchar(255) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY uniq_file_idx (`file`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'svn_files'
@@ -7857,7 +8517,7 @@ CREATE TABLE IF NOT EXISTS svn_repositories (
   repository varchar(255) character set latin1 collate latin1_bin NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY uniq_repository_idx (repository)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'svn_repositories'
@@ -7878,7 +8538,7 @@ CREATE TABLE IF NOT EXISTS temp_trove_treesums (
   limit_1 int(11) NOT NULL default '0',
   subprojects int(11) NOT NULL default '0',
   PRIMARY KEY  (trove_treesums_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'temp_trove_treesums'
@@ -7921,7 +8581,7 @@ CREATE TABLE IF NOT EXISTS themes (
   dirname varchar(80) default NULL,
   fullname varchar(80) default NULL,
   PRIMARY KEY  (theme_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'themes'
@@ -8115,7 +8775,7 @@ CREATE TABLE IF NOT EXISTS trove_cat (
   KEY parent_idx (parent),
   KEY root_parent_idx (root_parent),
   KEY version_idx (version)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=280 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'trove_cat'
@@ -8247,7 +8907,7 @@ CREATE TABLE IF NOT EXISTS trove_group_link (
   PRIMARY KEY  (trove_group_id),
   KEY idx_trove_group_link_group_id (group_id),
   KEY idx_trove_group_link_cat_id (trove_cat_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'trove_group_link'
@@ -8267,7 +8927,7 @@ CREATE TABLE IF NOT EXISTS trove_treesums (
   limit_1 int(11) NOT NULL default '0',
   subprojects int(11) NOT NULL default '0',
   PRIMARY KEY  (trove_treesums_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'trove_treesums'
@@ -8287,7 +8947,7 @@ CREATE TABLE IF NOT EXISTS ugroup (
   description text NOT NULL,
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (ugroup_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=101 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'ugroup'
@@ -8377,7 +9037,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   language_id int(11) NOT NULL default '1',
   PRIMARY KEY  (user_id),
   KEY idx_user_user (`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=103 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user'
@@ -8385,7 +9045,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO user (user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id) VALUES (100, 'None', 'noreply@cxtst2.xrce.xerox.com', '*********34343', '0', NULL, 'S', '0', '0', '0', 0, '0', NULL, 940000000, NULL, 1, 0, 0, NULL, NULL, 0, '', 'GMT', '', 0, '', 1),
 (101, 'admin', 'codex-admin@cxtst2.xrce.xerox.com', '6f3cac6213ffceee27cc85414f458caa', 'Site Administrator', NULL, 'A', '/bin/bash', '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', 'A', 1, 'shell1', NULL, 940000000, NULL, 0, 0, 0, NULL, NULL, 0, '', 'GMT', 'AD3682DB98997A758E5D533411003C5C:2E17AE860AC9D678CD6B9C16DBBA6006', 0, 'CodeX', 2),
-(102, 'nicolas', 'nicolas.terray@xerox.com', 'deb97a759ee7b8ba42e02dddf2b412fe', 'Nicolas Terray', '', 'A', '/bin/bash', '$1$MC$0fqnMTanWxLH7qLuQDlzO0', 'A', 2, 'shell1', '', 1172244263, 'dfd6fa5193cd7a02', 0, 0, 0, NULL, NULL, 0, '', 'Zulu', '98B243DC240F6D21AAD3B435B51404EE:AEFADF1FFA93F264F38AA8D4BF9F7F51', 0, NULL, 1);
+(102, 'nicolas', 'nicolas.terray@xerox.com', 'deb97a759ee7b8ba42e02dddf2b412fe', 'Nicolas Terray', '', 'A', '/bin/bash', '$1$MC$0fqnMTanWxLH7qLuQDlzO0', 'A', 2, 'shell1', '', 1172244263, 'dfd6fa5193cd7a02', 0, 0, 0, NULL, NULL, 0, '', 'Zulu', '98B243DC240F6D21AAD3B435B51404EE:AEFADF1FFA93F264F38AA8D4BF9F7F51', 0, NULL, 1),
+(103, 'news_admin', 'nicolas.terray@xerox.com', '2dec015e396104d9476b6e893d92663c', 'News Admin', '', 'A', '/bin/bash', '$1$NJ$OnK1voHvQMThiAWXakmt70', 'A', 3, 'shell1', '', 1174566454, 'a7374f03cbb056c5', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', '97AD672EF896DEA148D7645CD4E30C86:9BFB94BD2A9E5E515847FB0D075C2719', 0, NULL, 1),
+(104, 'news_member', 'nicolas.terray@xerox.com', 'e9a152baeea021b57b334916846f4680', 'News Member', '', 'A', '/bin/bash', '$1$tD$zLaO89UOoFSJWnhXL/Rx81', 'A', 4, 'shell1', '', 1174566502, '6d4132c37f39461c', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', 'C78D70AFAD5956D8A1C640D31E01F52C:8A3DAA929935EBC116526379C140D815', 0, NULL, 1),
+(105, 'registered_user', 'nicolas.terray@xerox.com', 'efc80384db0ab913acf5b1a66dfa717f', 'Registered User', '', 'A', '/bin/bash', '$1$Td$I9lx3OKxBCIOPfHblBVTm0', 'A', 5, 'shell1', '', 1174566573, '8b2812f458925b43', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', 'BEE3ED9C338F90FB8C12603C15E9B509:859AA558F5B83E61E70BB38C56249325', 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -8401,7 +9064,7 @@ CREATE TABLE IF NOT EXISTS user_bookmarks (
   bookmark_title text,
   PRIMARY KEY  (bookmark_id),
   KEY idx_user_bookmark_user_id (user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_bookmarks'
@@ -8425,7 +9088,7 @@ CREATE TABLE IF NOT EXISTS user_diary (
   KEY idx_user_diary_user_date (user_id,date_posted),
   KEY idx_user_diary_date (date_posted),
   KEY idx_user_diary_user (user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_diary'
@@ -8445,7 +9108,7 @@ CREATE TABLE IF NOT EXISTS user_diary_monitor (
   user_id int(11) NOT NULL default '0',
   PRIMARY KEY  (monitor_id),
   KEY idx_user_diary_monitor_user (user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_diary_monitor'
@@ -8481,7 +9144,7 @@ CREATE TABLE IF NOT EXISTS user_group (
   KEY forum_flags_idx (forum_flags),
   KEY project_flags_idx (project_flags),
   KEY admin_flags_idx (admin_flags)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_group'
@@ -8497,7 +9160,9 @@ INSERT INTO user_group (user_group_id, user_id, group_id, admin_flags, bug_flags
 (8, 102, 107, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 0, 0),
 (9, 102, 108, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 0, 0),
 (10, 102, 109, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 0, 0),
-(11, 101, 110, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 0, 0);
+(11, 101, 110, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 0, 0),
+(12, 103, 111, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
+(13, 104, 111, '', 0, 0, 2, 1, 1, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -8517,7 +9182,7 @@ CREATE TABLE IF NOT EXISTS user_metric0 (
   importance_factor float(10,8) NOT NULL default '0.00000000',
   PRIMARY KEY  (ranking),
   KEY idx_user_metric0_user_id (user_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_metric0'
@@ -8541,7 +9206,7 @@ CREATE TABLE IF NOT EXISTS user_metric1 (
   percentile float(10,8) NOT NULL default '0.00000000',
   importance_factor float(10,8) NOT NULL default '0.00000000',
   PRIMARY KEY  (ranking)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_metric1'
@@ -8609,7 +9274,10 @@ INSERT INTO user_preferences (user_id, preference_name, preference_value) VALUES
 (102, 'my_hide_forum109', '0|3'),
 (102, 'svn_commits_browcust109', '|0|||15'),
 (101, 'svn_commits_browcust109', '|100|||15'),
-(101, 'user_csv_separator', 'comma');
+(101, 'user_csv_separator', 'comma'),
+(103, 'my_artifacts_show', 'AS'),
+(104, 'my_artifacts_show', 'AS'),
+(105, 'my_artifacts_show', 'AS');
 
 -- --------------------------------------------------------
 
@@ -8649,7 +9317,7 @@ CREATE TABLE IF NOT EXISTS user_trust_metric (
   percentile float(10,8) NOT NULL default '0.00000000',
   importance_factor float(10,8) NOT NULL default '0.00000000',
   PRIMARY KEY  (ranking)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'user_trust_metric'
@@ -8668,7 +9336,7 @@ CREATE TABLE IF NOT EXISTS wiki_attachment (
   group_id int(11) NOT NULL default '0',
   name varchar(255) NOT NULL default '',
   PRIMARY KEY  (id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'wiki_attachment'
@@ -8714,7 +9382,7 @@ CREATE TABLE IF NOT EXISTS wiki_attachment_revision (
   mimetype varchar(255) NOT NULL default '',
   size int(11) NOT NULL default '0',
   PRIMARY KEY  (id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'wiki_attachment_revision'
@@ -8737,7 +9405,7 @@ CREATE TABLE IF NOT EXISTS wiki_group_list (
   rank int(11) NOT NULL default '0',
   language_id int(11) NOT NULL default '1',
   PRIMARY KEY  (id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'wiki_group_list'
@@ -8818,7 +9486,7 @@ CREATE TABLE IF NOT EXISTS wiki_page (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY group_id (group_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'wiki_page'
@@ -8866,5 +9534,4 @@ CREATE TABLE IF NOT EXISTS wiki_version (
 -- 
 -- Dumping data for table 'wiki_version'
 -- 
-
 
