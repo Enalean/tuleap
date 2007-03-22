@@ -258,7 +258,7 @@ function file_utils_show_processors ($result) {
     if ($gr_id == "100") {
         echo '<td>'.$proc_name.'</td>';
     } else {
-	    echo '<td><A HREF="/file/admin/editproc.php?group_id=$group_id&proc_id=$proc_id" title="'.$proc_id.' - '.$proc_name.'">'.$proc_name.'</td>';
+	    echo '<td><A HREF="/file/admin/editproc.php?group_id='.$group_id.'&proc_id='.$proc_id.'" title="'.$proc_id.' - '.$proc_name.'">'.$proc_name.'</td>';
     }
     
     echo '<td>'.$proc_rank."</td>\n";     
