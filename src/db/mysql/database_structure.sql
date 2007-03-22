@@ -1024,6 +1024,7 @@ CREATE TABLE groups (
   xrx_export_ettm int(11) NOT NULL default '0',
   bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11)   NOT NULL default '1',
+  cvs_watch_mode int(11)   NOT NULL default '0',
   cvs_events_mailing_list text NOT NULL,
   cvs_events_mailing_header varchar(64) binary DEFAULT NULL,
   cvs_preamble text NOT NULL,
