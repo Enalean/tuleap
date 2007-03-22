@@ -229,96 +229,138 @@
     </section>
 
     <section id="FileReleaseDelivery">
-      <title>File Release Delivery</title>
+      <title>File Release Delivery and Administration</title>
 
-      <para>This section is for project members only. It goes through a
-      detailed explanation of the File Release delivery process. This is a
-      3-step process:</para>
+      <para>This section is for project admins and file admins only. 
+      It goes through a detailed explanation of the File Release delivery process. 
+      This is a 2-step process:</para>
 
       <procedure>
         <step>
           <para><emphasis role="bold">Package Creation</emphasis>: Create one
           or several packages. This must only be done once. When packages are
-          in place you can add a new release in them at any time.</para>
+          in place you can add a new release or update an existing one in them 
+          at any time.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Release Creation</emphasis>: Once a
-          package has been created, you can add releases to it</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Release Configuration and Validation</emphasis>:
-          When a release has been created you can use it to attach files to
-          it, give it a release date, list the changes made in this release,
-          etc.</para>
+          package has been created, you can add (and update) releases to it</para>
         </step>
       </procedure>
-      <para>Additionally, you may also set specific access permissions to a package or an individual release.
+      
+      <para>When you are project admin or file admin, you are able to perform 
+      the admin actions on the File Release System home page. (See 
+      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />
+          <figure id="FigureTheFileReleaseAdminScreenOfTheCodeXProject">
+            <title>The File Release screen of the CodeX Administration project, when you are admin</title>
+    
+            <mediaobject>
+              <imageobject>
+                <imagedata format="PNG"
+                           fileref="../../screenshots/en_US/sc_filereleasedownloadsadmin.png" width="15.3cm" />
+              </imageobject>
+            </mediaobject>
+          </figure>
       </para>
-
-      <section id="PackageCreation">
+      
+      <section id="PackageAdministration">
+        <title>Package Administration</title>
+        
+        <para>To administrate packages, you must be project admin or file 
+        admin. Package creation and modification are nearly the same.
+        </para>
+        
+        <section id="PackageCreation">
         <title>Package Creation</title>
-
-        <para>To create a package first go to the File Release
-        delivery screen. To this end , either visit your Project
-        Administration page and select the &#34;[Edit/Add File
-        Release...] &#34; link in the lower right corner of the
-        screen, or visit the &#34;Files&#34; service from the project
-        menu bar and select the &#34;Administration&#34; link in the
-        File Release menu.</para>
-
-        <para>The first time you enter this page no package is
-        available.  Adding new packages is as easy as typing the
-        package name in the blank field at the bottom of the screen as
-        wellas a rank number to define its position on the screen and
-        push on the &#34;Create This package&#34; button. Once a
-        package has been created you can modify its name and status. A
-        package is either active, which means that it is visible to
-        the CodeX users in the File Release service and in the Project
-        Summary Page, or Hidden, which means that it is only visible
-        to the File Release Administrators.  Switching the status from
-        Active to Hidden doesn&#39;t delete any attached releases and
-        files.</para>
-
-         <para>Please note that packages with a smaller rank number
-         are displayed first.</para>
-
-        <para>Whenever you update the name, the rank,  or the status don&#39;t forget to
-        push on the &#34;Update&#34; button!</para>
-
-        <figure id="FigureAPartOfThePackageAdministrationScreenGSAProject">
-          <title>A part of the Package Administration screen - GSA project (3
-          packages created, 2 active, 1 hidden)</title>
-
+        
+        <para>To create a package, you just have to click the [add a package] 
+        link located on the top of the File Release screen.
+        Then, fill the form, giving the package name, its relative rank on the 
+        File Release screen, and its status:
+        
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+                <para><emphasis role="bold">Package Name</emphasis>: this is the
+                name of the package. The name of the package must be unique in a 
+                project.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Rank on screen</emphasis>: the rank 
+                indicates the position the packages will be displayed in the screen.
+                You can choose the value: 'at the beginning', 'at the end', or after 
+                every other package.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Status</emphasis>: an active package 
+                will be displayed, whereas a package with a hidden status won't 
+                appear on the File Release screen. For project admins or file admins,
+                the hidden packages are displayed in italic, in order to update them.
+                </para>
+            </listitem>
+        </itemizedlist>
+        
+        </para>
+        
+        </section>
+        
+        <section id="PackageModification">
+        <title>Package Modification</title>
+        
+        <para>To update a package, just click the [edit] icon located after each 
+        package name. Then, the modification form is the same than the creation one, 
+        except that you can set read permissions on the package 
+        (see <xref linkend="FigureAPartOfThePackageAdministrationScreenCodeXProject" />).
+        </para>
+        <figure id="FigureAPartOfThePackageAdministrationScreenCodeXProject">
+          <title>Package Edition Screen of the CLI package, in the CodeX Administration project</title>
+    
           <mediaobject>
             <imageobject>
               <imagedata format="PNG"
-                         fileref="../../screenshots/en_US/sc_frspackages.png" width="15.3cm" />
+                         fileref="../../screenshots/en_US/sc_filereleasepackageadmin.png" width="10cm" />
             </imageobject>
           </mediaobject>
         </figure>
-      </section>
+          
+        <para>A project member with the 'File Manager Admin' right
+        (see <xref linkend="UserPermissions" />) can attach access
+        permissions to any existing package.
+        </para>
 
-      <section id="ReleaseCreation">
-        <title>Release Creation</title>
+        <para>By default, permissions attached to a package apply to
+        all releases and files that belong to this package.  But you
+        may also set different permissions to specific releases (see
+        below).</para>
 
+        </section>
+     </section>
+
+      <section id="ReleaseAdministration">
+        <title>Release Administration</title>
+        
+        <para>To administrate releases, you must be project admin or file 
+        admin. Release creation and modification are the same.
+        </para>
+        
+        <section id="ReleaseCreation">
+        <title>Release Creation and modification</title>
+        
         <para>Once a package has been created you can immediately start adding
-        releases to it. Click on the [Add/Edit Releases] link of the
-        appropriate package (see <xref
-        linkend="FigureAPartOfThePackageAdministrationScreenGSAProject" />).</para>
-
-        <para>The next screen is similar in spirit with Package Administration
-        screen but this one deals with releases. The Release Administration
-        screen allows you to create a new release by typing a name (with
-        letters, numbers, punctuation symbols...) in the blank field at the
-        bottom of the screen. You also have a last chance to assign this new
-        release to the appropriate package by selecting the package name in
-        the package menu box next to it. Then Click on the &#34;Create This
-        Release&#34; button.</para>
-
-        <figure id="FigureAPartOfTheGSAProjectReleaseScreen">
-          <title>A part of the GSA project release screen</title>
+        releases to it. Click on the [Add a Release] link of the appropriate 
+        package (see <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />).
+        </para>
+        
+        <para>The release creation and modification process is really easy to 
+        perform. It can be divided into 6 steps, but some are optional.
+        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodeXProject" />).
+        In every case, you can update the release at any time
+        </para>
+        
+        <figure id="FigureTheReleaseModificationScreenOfTheCodeXProject">
+          <title>The release update screen of the CodeX project</title>
 
           <mediaobject>
             <imageobject>
@@ -327,33 +369,80 @@
             </imageobject>
           </mediaobject>
         </figure>
-      </section>
-
-      <section id="ReleaseConfigurationandValidation">
-        <title>Release Configuration and Validation</title>
-
-        <para>The next step after you have named a new release
-        creation is to define its content. Please note that this step
-        is used both to define the content of a new release and also
-        to modify an existing one. To access the release configuration
-        screen click on the version number or name (see <xref
-        linkend="FigureAPartOfTheGSAProjectReleaseScreen" />).</para>
-
-        <para>The Release Configuration screen that is now in front of you is
-        divided in 4 steps. It is quite a long page but the steps are
-        documented on the screen and are easy to understand. Remember that
-        each step has its own validation button and before you go the next you
-        must validate the one you&#39;ve been working on.</para>
-
+        
         <itemizedlist mark="bullet">
           <listitem>
-            <para><emphasis role="bold">Step 1 - Give Release information</emphasis></para>
-
-            <para>The first step gives you a chance to modify some of the
-            information you gave before like the release name, the status and
-            the related package. You must also provide a Release Date and
-            either cut and paste or upload Release Notes and ChangeLog.</para>
-
+            <para><emphasis role="bold">Step 1 - Give Release properties</emphasis></para>
+            <para>The first step is the only one mandatory to create a release.
+            It gives you a chance to modify the package of the release, 
+            the release date, and the status of the release. You also have to provide the 
+            release name.
+            </para>
+          </listitem>
+        
+          <listitem>
+            <para><emphasis role="bold">Step 2 - Upload and attach files to the release (optional)</emphasis></para>
+            <para>This step is optional in the way that you can add the files 
+            after having create the release, but of course, a release should contain 
+            at least one file to be relevant.
+            As explained above multiple files can be attached to the
+            same release. To attach a file, click the [add file] link.
+            Then, a select box appear, in order to select the file to attach.
+            There is two solution to attach a file:
+            
+            <itemizedlist mark="bullet" spacing="compact">
+                <listitem>
+                <para><emphasis role="underline">Direct Upload</emphasis>: 
+                you can upload the file via the Web interface by using the 
+                &#34;Local file - Browse&#34; option in the pull down menu and
+                pointing to the appropriate file on your local disk.
+                </para>
+                </listitem>
+                <listitem>
+                <para><emphasis role="underline">FTP / SCP</emphasis>: upload
+                your file via ftp or scp and then select the
+                appropriate file name from the &#34;FTP/SCP Files list &#34;
+                in the pull down menu.</para>
+                <para>
+                    <tip><title>Tip: How to upload files using FTP or SCP</title>
+                    <para>CodeX server offers an upload mechanism via FTP (ou SCP). 
+                    To upload your files, follow the instructions given when you 
+                    click the <emphasis>?</emphasis> next to the [add file] link.
+                    Alternatively, if you are a MS Windows user, you can also
+                    see the FTP Incoming space directly from Windows Explorer and drag
+                    and drop your files in there (see <xref
+                    linkend="MSWindowsSharedResources" />). Then click the 
+                    [Refresh File list] link to see your files.</para></tip>
+                </para>
+                <para>Before you upload the files make sure you gave them names
+                that will speak to CodeX users. Ideally the file names should
+                include the release label in it and any other extension telling
+                whether it is a source file or a binary file.</para>
+                </listitem>
+                <para>After attaching a file to the release, you
+                can provide additional information for each of them. For each file
+                you can specify the hardware architecture the file is going to run
+                on and what is the file type (source, binary or documentation and
+                what type of archive it is). This step is not mandatory but
+                assigning the right type and hardware architecture to each file is
+                useful to your visitors.</para>
+            
+                <para><tip><title>Tip: Always compress your deliverables</title><para>
+                In order to save disk space on the CodeX server as well as on CodeX
+                users&#39; machine and minimize network bandwidth consumption
+                always compress your deliverables. Use Winzip on Windows and compress, 
+                gzip or even better bzip2 on Linux/Unix machines.</para></tip></para>
+            </itemizedlist>
+          </para> 
+         </listitem>
+         
+         <listitem>
+            <para><emphasis role="bold">Step 3 - Add Release Notes and/or Changelog (optional)</emphasis></para>
+            <para>With the release, you can also provide notes or changelog, and 
+            even both! You can either cut and paste or upload Release Notes and ChangeLog.
+            To upload a release note or a changleog, click the <emphasis>Upload</emphasis> link.
+            </para>
+            
             <para>The Release Notes is typically a short (10 to 20 lines) and
             high-level document that summarizes the new features delivered in
             this release with a focus on the user visible changes (new UI, new
@@ -378,79 +467,69 @@
             messages, aggregate them with modification dates and author name
             and format them in a nice way. This is a very good basis for a
             Changelog document.</para></tip></para>
+            
           </listitem>
-
+        
           <listitem>
-            <para><emphasis role="bold">Step 2 - Upload and attach files to
-            the Release</emphasis></para>
+            <para><emphasis role="bold">Step 4 - Set permissions to the Release (optional)</emphasis></para>
+            <para>By default, releases have no specific access permissions: 
+            access to all files is granted to any CodeX registered user 
+            (anonymous users are not allowed to download release files). 
+            However, in some cases, you might want to limit the users allowed 
+            to download your software. In these specific cases, you can restrict 
+            access permissions to your packages and releases to specific user groups. 
+            See <xref linkend="UserGroups" /> for more information on user groups.
+            To define or to change the permissions on a release, click the [view/change]
+            link in the permissions frame.
+            </para>
+            <para>Package and release permissions are enforced at two different levels:
+            <itemizedlist mark="bullet">
+            <listitem><para><emphasis role="bold">File List:</emphasis>
+            When a user is not granted access to a package or release,
+            then the package or release is not listed in the 'File' main
+            page, so s/he does not know that the file
+            exists.</para></listitem>
+            <listitem><para><emphasis role="bold">Download:</emphasis> If
+            a user finds or forges a download link for an unauthorized
+            file, the download will still fail. The system systematically
+            re-checks for permissions when files are requested for
+            download.</para></listitem>
+            </itemizedlist>
+            </para>
+            <para>If you do not specify any access permissions for a
+            release (or reset them to default), it inherits the access
+            permissions from the package it belongs to. However, when
+            you define a permission for a release, then it overrides the
+            permissions defined for the package.</para>
 
-            <para>As explained above multiple files can be attached to the
-            same release. Before the files can be attached one has to upload
-            them on the CodeX server. To this end, the CodeX server offers an
-            upload mechanism via FTP (ou SCP). To upload your files follow the
-            instruction on the screen and don&#39;t forget to refresh the Web
-            page to see the new uploaded files with the &#34;Refresh&#34;
-            button. Alternatively, if you are a MS Windows user, you can also
-            see the FTP Incoming space directly from Windows Explorer and drag
-            and drop your files in there (see <xref
-            linkend="MSWindowsSharedResources" />). Then refresh the CodeX Web
-            page to see your files.</para>
+            <para>The permissions set for the release can be either
+            stricter or less strict than the package permissions.
+            </para>
 
-            <para>Before you upload the files make sure you gave them names
-            that will speak to CodeX users. Ideally the file names should
-            include the release label in it and any other extension telling
-            whether it is a source file or a binary file.</para>
-
-            <para>Once your files have been uploaded check the box next to
-            each of them and push on the &#34;Attach Marked Files&#34; button.</para>
-
-            <para><tip><title>Tip: Always compress your deliverables</title><para>In
-            order to save disk space on the CodeX server as well as on CodeX
-            users&#39; machine and minimize network bandwidth consumption
-            always compress your deliverables. Use Winzip
-            on Windows and compress, gzip or even better bzip2 on Linux/Unix
-            machines.</para></tip></para>
           </listitem>
-
+        
           <listitem>
-            <para><emphasis role="bold">Step 3 - Give additional information
-            on each attached file</emphasis></para>
-
-            <para>After all your files have been attached to the release, you
-            can provide additional information for each of them. For each file
-            you can specify the hardware architecture the file is going to run
-            on and what is the file type (source, binary or documentation and
-            what type of archive it is). This step is not mandatory but
-            assigning the right type and hardware architecture to each file is
-            useful to your visitors.</para>
-          </listitem>
-
-          <listitem>
-            <para><emphasis role="bold">Step 4 - Create automatic news
-            (optional)</emphasis></para>
-
+            <para><emphasis role="bold">Step 5 - Submit a News (optional)</emphasis></para>
             <para>This step is optional in the sense that you can skip it 
             if you want. This step gives the opportunity to project admin to 
             submit a news about the release they've just created (if you're 
-            not project admin, you won't see this step). A default 
+            not project admin or news admin, you won't see this step). A default 
             subject and message are pre-filled. You are of course free to modify 
             it. The news will be displayed on your project summary page.
             It is a good way to advertise the users that a new release have been done.
             The news will also appear in the news administration page, like others.
             </para>
           </listitem>
-          
-          <listitem>
-            <para><emphasis role="bold">Step 5 - Send e-mail notification
-            (optional)</emphasis></para>
 
+          <listitem>
+            <para><emphasis role="bold">Step 6 - Send e-mail notification (optional)</emphasis></para>
             <para>This step is optional in the sense that it may not show up
-            on your screen. If some CodeX users monitor your package, Step 4
+            on your screen. If some CodeX users monitor your package, this step
             will tell you how many of them are doing so. CodeX gives you the
             freedom to send an e-mail notification or not to the users who
             expressed interest in your packages. Do not bypass this step,
             always inform your community of users and developers.</para>
-
+            
             <para></para>
             <para></para>
             <para></para>
@@ -463,171 +542,32 @@
             address of your CodeX site, the Mailing list you have put in place
             for your project, how to submit a bug or a support to the project
             team (via CodeX of course)</para></tip></para>
+            
           </listitem>
         </itemizedlist>
+
+      </section>
     </section>
-
-    <section id="FileAccessPermissions">
-      <title>Setting Access Permissions</title>
-      
-      <para>By default, packages and releases have no specific access
-      permissions: access to all files is granted to any CodeX
-      registered user (anonymous users are not allowed to download
-      release files).  However, in some cases, you might want to limit
-      the users allowed to download your software.  In these specific
-      cases, you can restrict access permissions to your packages and
-      releases to specific user groups. See <xref linkend="UserGroups"
-      /> for more information on user groups.
-      </para>
-
-      <para>Package and release permissions are enforced at two different levels:</para>
-      <itemizedlist mark="bullet">
-
-        <listitem><para><emphasis role="bold">File List:</emphasis>
-        When a user is not granted access to a package or release,
-        then the package or release is not listed in the 'File' main
-        page, so s/he does not know that the file
-        exists.</para></listitem>
-
-        <listitem><para><emphasis role="bold">Download:</emphasis> If
-        a user finds or forges a download link for an unauthorized
-        file, the download will still fail. The system systematically
-        re-checks for permissions when files are requested for
-        download.</para></listitem>
-      </itemizedlist>
-
-      <para>Access permissions can be defined at two different levels:
-      packages and releases:</para>
-      <figure id="FigurePackagePermissions">
-        <title>Edit Package Permissions</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/en_US/sc_packagepermissions.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <itemizedlist mark="bullet">
-
-        <listitem>
-          <para><emphasis role="bold">Package
-          permissions</emphasis></para>
-
-          <para>By clicking on 'Define Permissions' on the package
-          administration screen (see <xref
-          linkend="FigureAPartOfThePackageAdministrationScreenGSAProject"
-          />), a project member with the 'File Manager Admin' right
-          (see <xref linkend="UserPermissions" />) can attach access
-          permissions to any existing package.</para>
-
-          <para>The package permissions edition page (<xref
-          linkend="FigurePackagePermissions" />) lists all the project
-          user groups. Simply select the user groups that will be
-          allowed to download files from the package and press
-          submit. You may select several groups at the same time if
-          needed. If you press 'Reset To Defaults', the access
-          permissions to this package will be reset, so any registered
-          user will be able to download it.
-          </para>
-
-          <para>Note that each time you edit permissions associated to
-          a package, the previous values are reset. So, for instance,
-          if you grant permissions to 'project members', submit, then
-          want to grant permissions to another group, do not forget to
-          select also 'project members' the second time, or they will
-          not have access to your package.</para>
-
-          <para>By default, permissions attached to a package apply to
-          all releases and files that belong to this package.  But you
-          may also set different permissions to specific releases (see
-          below).</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Release permissions</emphasis></para>
-
-          <para>If you need finer grained access control to your
-          software, you can also define permissions at the release
-          level.</para>
-
-          <para>The procedure is similar to the package permissions
-          definition. Simply click on 'Define Permissions' on the
-          release administration page (see <xref
-          linkend="FigureAPartOfTheGSAProjectReleaseScreen" />) to
-          attach access permissions to a release. Then select allowed
-          user groups and submit.</para>
-
-          <para>If you do not specify any access permissions for a
-          release (or reset them to default), it inherits the access
-          permissions from the package it belongs to. However, when
-          you define a permission for a release, then it overrides the
-          permissions defined for the package.</para>
-
-          <para>The permissions set for the release can be either
-          stricter or less strict than the package permissions.
-          </para>
-        </listitem>
-
-      </itemizedlist>
-      <para><tip><title>Tip: Updating existing permissions</title>
-
-        <para>There is a shortcut to update package and release
-        permissions. For project administrators or file manager
-        administrators, the main 'Files' page displays small lock
-        icons next to protected packages and releases. Simply click on
-        the lock to update permissions for the corresponding object.
-      </para>
-      </tip></para>
-    </section>
-    
   </section>
-
-  <section id="QuickFileRelease">
-    <title>Quick File Release</title>
-
-      <para>CodeX also provides you with a quick File Release mechanism. To
-      access the short version of the Release Process click on the [Quick Add
-      File Release...] link in the lower right corner of your Project
-      Administration page, or in the Files Admin page. The Quick File Release page is a one step process
-      where you can specify all the necessary information at the same time.
-      The counterpart is that you can only attach one single file to a given
-      release and not several as in the full File Release process.</para>
-
-      <para>In addition the Quick File Release screen allows you to upload the
-      attached file in 2 different ways:
-         <itemizedlist mark="bullet" spacing="compact">
-
-           <listitem>
-             <para><emphasis role="underline">FTP</emphasis>: upload
-             your file via ftp as above and then select the
-             appropriate file name from the &#34;Select a File&#34;
-             pull down menu.</para>
-           </listitem>
-
-           <listitem>
-             <para><emphasis role="underline">Direct
-             Upload</emphasis>: you can upload the file via the Web
-             interface by using the &#34;Browse&#34; button and
-             pointing to the appropriate file on your local
-             disk.</para>
-           </listitem>
-
-          </itemizedlist>
-       </para>
-
-      <para>Don&#39;t forget to specify the hardware architecture and the file
-      type. Then push on the &#34;Release File&#34; button at the bottom of
-      the screen.</para>
-      <para>Like for usual release, project admin can submit automatic news 
-      relating the release just created. Just check the box and fill the form 
-      to submit a news.</para>
-      <para>If some CodeX users were monitoring the package, they will 
-      automatically receive an email notification, unless you set the release
-      status to 'Hidden'.</para>
-
-    </section>
-  </chapter>
+  
+  <section id="ManageProcessorsList">
+    <title>Processor List Administration</title>
+      <para>
+          Project admins and file admins can manage the processor list per project. 
+          The processor is an (optional) attribute of a released file. 
+          Depending the project or working domain, you could be 
+          interested in adding processors to the existing list.
+          To do it, follow the admin link of the File Release System.
+          Then, you have the list of the available processors. 
+          System processors are not editable. 
+          The other processors are specifics to the current project. 
+          You can edit them, delete them, as well as create new ones.
+          A processor has a name and a rank in the processor list.
+      </para>
+  </section>
+    
+    
+ </chapter>
 <!--
 Local Variables:
 sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")

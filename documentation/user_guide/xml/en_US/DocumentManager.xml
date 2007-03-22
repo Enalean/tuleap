@@ -242,7 +242,7 @@
       
       <para>Setting document access permissions is very similar to
       setting file access permissions (<xref
-      linkend="FileAccessPermissions" />): you need to create user
+      linkend="PackageModification" />): you need to create user
       groups (see <xref linkend="UserGroups" />), and assign those
       user groups to documents or document groups.</para>
 

@@ -128,7 +128,7 @@
       not be public. For those cases, CodeX offers a permission
       mechanism based on user groups, as for file releases and
       documents (see <xref linkend="UserGroups"/>, <xref
-      linkend="FileAccessPermissions"/> and <xref
+      linkend="PackageModification"/> and <xref
       linkend="DocAccessPermissions"/>). Permissions may be set at
       the wiki level, and apply to all pages, or at the page level, so
       that only selected pages are protected.</para>

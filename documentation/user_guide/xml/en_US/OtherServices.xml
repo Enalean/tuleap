@@ -141,7 +141,7 @@ newgrp projectname
         <listitem>
           <para>The FTP incoming space where you can directly drag and drop
           your file releases instead of using FTP upload (See <xref
-          linkend="ReleaseConfigurationandValidation" />)</para>
+          linkend="ReleaseAdministration" />)</para>
         </listitem>
       </itemizedlist>
 
