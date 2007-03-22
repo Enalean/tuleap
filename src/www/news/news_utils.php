@@ -266,7 +266,7 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news) {
 		Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
 	*/
     
-	$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0);
+	$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0, '', $need_feedback = false);
     $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
              " VALUES ('$group_id','".user_getid()."','$promote_news','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
     $result=db_query($sql);
