@@ -20,11 +20,12 @@ commits_header(array ('title'=>$Language->getText('cvs_admin_commit', 'title'),
 		      'help' => 'CVSWebInterface.html#CVSAdministration'));
 
 // get project name
-$sql = "SELECT unix_group_name, cvs_tracker, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble from groups where group_id=$group_id";
+$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble from groups where group_id=$group_id";
 
 $result = db_query($sql);
 $projectname = db_result($result, 0, 'unix_group_name');
 $cvs_tracked = db_result($result, 0, 'cvs_tracker');
+$cvs_watch_mode = db_result($result, 0, 'cvs_watch_mode');
 $cvs_mailing_list = db_result($result, 0, 'cvs_events_mailing_list');
 $cvs_mailing_header = db_result($result, 0, 'cvs_events_mailing_header');
 $cvs_preamble = db_result($result, 0, 'cvs_preamble');
@@ -51,6 +52,13 @@ echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
  	'<OPTION VALUE="1"'.(($cvs_tracked == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>'.
  	'<OPTION VALUE="0"'.(($cvs_tracked == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>'.
 	'</SELECT></p>'.
+	'<h3>'.$Language->getText('cvs_admin_commit', 'watches_hdr').
+	'</H3><p>'.$Language->getText('cvs_admin_commit', 'watches_msg').
+        '<p>'.$Language->getText('cvs_admin_commit', 'watches_lbl').
+        '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="watches"> '.
+        '<OPTION VALUE="1"'.(($cvs_watch_mode == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>'.
+        '<OPTION VALUE="0"'.(($cvs_watch_mode == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>'.
+        '</SELECT></p>'.
         '<H3>'.$Language->getText('cvs_admin_commit', 'notif_hdr').
         '</H3><p>'.$Language->getText('cvs_admin_commit', 'notif_msg').'</p>'.
         '<br>'.$Language->getText('cvs_admin_commit', 'mail_to').

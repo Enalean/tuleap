@@ -24,6 +24,7 @@ $hostname = hostname();
 umask 002;
 
 require("include.pl");  # Include all the predefined functions and variables
+require("./cvs1/cvs_watch.pl"); # Include predefined functions for watch mode
 
 
 # This section is used to get the list of active users so that we can customize 
@@ -179,7 +180,7 @@ print "User account problems   : $error_user\n";
 print ("\n\n	Processing Groups\n\n");
 while ($ln = pop(@groupdump_array)) {
 	chop($ln);
-	($gname, $gstatus, $gis_public, $cvs_tracker, $svn_tracker, $gid, $userlist, $ugrouplist) = split(":", $ln);
+	($gname, $gstatus, $gis_public, $cvs_tracker, $cvs_watch_mode, $svn_tracker, $gid, $userlist, $ugrouplist) = split(":", $ln);
 	
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
@@ -342,6 +343,211 @@ while ($ln = pop(@groupdump_array)) {
               system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
 	    }
 	}
+
+
+
+#
+#  CVS WATCH ON
+#
+	 # Add notify command if cvs_watch_mode is on
+        if (($cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt)){
+            $cvs_dir = "$cvs_prefix/$gname";
+            $filename = "$cvs_dir/CVSROOT/notify";
+
+	    open (FD, $filename) ;
+	    @file_array = <FD>;
+	    close(FD);
+	    $blockispresent = 0;
+	    foreach (@file_array) {
+	    	$blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+	    }
+	    if (! $blockispresent)
+	    {
+	      system("echo \"$MARKER_BEGIN\" >> $filename");
+              system("echo \"ALL mail %s -s \\\"CVS notification\\\"\" >> $filename");
+	      system("echo \"$MARKER_END\" >> $filename");
+	      system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: enable notifications\" notify; co -q notify");
+              system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
+	    }
+	}
+
+        # Add precommand script if cvs_watch_mode is on
+        if (($cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt)){
+            $cvs_dir = "$cvs_prefix/$gname";
+            $filename = "$cvs_dir/CVSROOT/precommand";
+
+            open (FD, $filename) ;
+            @file_array = <FD>;
+            close(FD);
+            $blockispresent = 0;
+            foreach (@file_array) {
+                $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+            }
+            if (! $blockispresent)
+            {
+              system("echo \"$MARKER_BEGIN\" >> $filename");
+              system("echo \"ALL /usr/share/codex/src/utils/cvs1/precommand.pl %r %c %a\" >> $filename");
+              system("echo \"$MARKER_END\" >> $filename");
+              system("cd $cvs_dir/CVSROOT; rcs -q -l precommand; ci -q -m\"CodeX modifications: enable precomands\" precommand; co -q precommand");
+              system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid precommand*");
+            }
+        }
+
+        # Add postcommand script if cvs_watch_mode is on
+        if (($cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt)){
+            $cvs_dir = "$cvs_prefix/$gname";
+            $filename = "$cvs_dir/CVSROOT/postcommand";
+
+            open (FD, $filename) ;
+            @file_array = <FD>;
+            close(FD);
+            $blockispresent = 0;
+            foreach (@file_array) {
+                $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+            }
+            if (! $blockispresent)
+            {
+              system("echo \"$MARKER_BEGIN\" >> $filename");
+              system("echo \"ALL /usr/share/codex/src/utils/cvs1/postcommand.pl %r %c\" >> $filename");
+              system("echo \"$MARKER_END\" >> $filename");
+              system("cd $cvs_dir/CVSROOT; rcs -q -l postcommand; ci -q -m\"CodeX modifications: enable postcomands\" postcommand; co -q postcommand");
+              system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid postcommand*");
+            }
+        }
+
+	# Apply cvs watch on only if cvs_watch_mode changed to on 
+	if (($cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt) && (! $blockispresent))
+	{    
+    	    $cvs_dir = "$cvs_prefix/$gname";
+	    $TMPDIR = "/var/run/log_accum";
+    	    $id = getpgrp();                # You *must* use a shell that does setpgrp()!
+	    $FILE_NAME     = sprintf ("$TMPDIR/#%s.modulesList", $gname);
+	    system("cd $TEMPDIR;cvs -d/$cvs_dir ls>>$FILE_NAME.$id;");
+            open(FILE, "<$FILE_NAME.$id") || die("Cannot open file <$FILE_NAME.$id $!.\n");
+	    $first_line = 1;
+	    while (<FILE>){
+		if($first_line!=1){
+		    chomp($_);
+		    &cvs_watch($cvs_dir,$gname,$_,$id,1);
+		}else{
+		    $first_line = 0;
+		}	        
+	    }
+	    close(FILE);
+	    unlink ($FILE_NAME.".".$id);
+	}
+
+
+#
+#  CVS WATCH OFF
+#
+
+	# Remove notify command if cvs_watch_mode is off.
+        if ((! $cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt)){
+            $cvs_dir = "$cvs_prefix/$gname";
+            $filename = "$cvs_dir/CVSROOT/notify";
+
+            open (FD, $filename) ;
+            @file_array = <FD>;
+            close(FD);
+            $blockispresent = 0;
+            $inblock=0;
+	    $counter=0;
+            foreach (@file_array) {
+                $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+                if ($_ eq "$MARKER_BEGIN\n") { $inblock=1; }
+                if ($inblock) {
+		    @file_array[$counter]='';
+		    if ($_ eq "$MARKER_END\n") { $inblock=0; }
+		} 
+ 		$counter++;
+            }
+            if ($blockispresent)
+            {
+	        write_array_file($filename, @file_array );
+                system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: disable notifications\" notify; co -q notify");
+                system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
+            }
+        }
+
+        # Remove precommand script if cvs_watch_mode is off.
+        if ((! $cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt)){
+            $cvs_dir = "$cvs_prefix/$gname";
+            $filename = "$cvs_dir/CVSROOT/precommand";
+
+            open (FD, $filename) ;
+            @file_array = <FD>;
+            close(FD);
+            $blockispresent = 0;
+            $inblock=0;
+            $counter=0;
+            foreach (@file_array) {
+                $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+                if ($_ eq "$MARKER_BEGIN\n") { $inblock=1; }
+                if ($inblock) {
+                    @file_array[$counter]='';
+                    if ($_ eq "$MARKER_END\n") { $inblock=0;}
+                }
+                $counter++;
+            }
+            if ($blockispresent)
+            {
+                write_array_file($filename, @file_array );
+                system("cd $cvs_dir/CVSROOT; rcs -q -l precommand; ci -q -m\"CodeX modifications: disable precommands\" precommand; co -q precommand");
+                system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid precommand*");
+            }
+        }
+
+        # Remove postcommand script if cvs_watch_mode is off.
+        if ((! $cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt)){
+            $cvs_dir = "$cvs_prefix/$gname";
+            $filename = "$cvs_dir/CVSROOT/postcommand";
+
+            open (FD, $filename) ;
+            @file_array = <FD>;
+            close(FD);
+            $blockispresent = 0;
+            $inblock=0;
+	    $counter=0;
+            foreach (@file_array) {
+                $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+                if ($_ eq "$MARKER_BEGIN\n") { $inblock=1; }
+                if ($inblock) {
+                    @file_array[$counter]='';
+                    if ($_ eq "$MARKER_END\n") { $inblock=0;}
+                }
+                $counter++;
+            }
+            if ($blockispresent)
+            {
+                write_array_file($filename, @file_array );
+                system("cd $cvs_dir/CVSROOT; rcs -q -l postcommand; ci -q -m\"CodeX modifications: disable postommands\" postcommand; co -q postcommand");
+                system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid postcommand*");
+            }
+        }
+
+        # Apply cvs watch off only if cvs_watch_mode changed to off
+        if ((!$cvs_watch_mode) && ($gstatus eq 'A') && ($use_cvsnt) && ($blockispresent))
+        {
+            $cvs_dir = "$cvs_prefix/$gname";
+            $TMPDIR = "/var/run/log_accum";
+            $id = getpgrp();                # You *must* use a shell that does setpgrp()!
+            $FILE_NAME     = sprintf ("$TMPDIR/#%s.modulesList", $gname);
+            system("cd $TEMPDIR;cvs -d/$cvs_dir ls>>$FILE_NAME.$id;");
+            open(FILE, "<$FILE_NAME.$id") || die("Cannot open file <$FILE_NAME.$id $!.\n");
+            $first_line = 1;
+            while (<FILE>){
+		chomp($_);
+                if($first_line!=1){
+                    &cvs_watch($cvs_dir,$gname,$_,$id,0);
+                }else{
+                    $first_line = 0;
+                }
+            }
+            close(FILE);
+	    unlink ($FILE_NAME.".".$id);
+        }
+
 
 	# Create Subversion repository if needed
 	$svn_dir = "$svn_prefix/$gname";
