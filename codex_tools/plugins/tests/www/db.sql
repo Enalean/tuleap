@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Mar 22, 2007 at 05:41 PM
+-- Generation Time: Mar 22, 2007 at 05:49 PM
 -- Server version: 4.1.20
 -- PHP Version: 4.3.9
 -- 
@@ -166,7 +166,18 @@ INSERT INTO activity_log (day, hour, group_id, browser, ver, platform, time, pag
 (20070322, 17, 112, 'MOZILLA', 5.00, 'Linux', 1174581524, '/project/admin/index.php', 0),
 (20070322, 17, 112, 'MOZILLA', 5.00, 'Linux', 1174581532, '/project/admin/index.php', 0),
 (20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174581540, '/account/logout.php', 0),
-(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174581540, '/index.php', 0);
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174581540, '/index.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582716, '/index.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582113, '/account/register.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582138, '/account/register.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582140, '/account/login.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582145, '/account/login.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582146, '/my/index.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582152, '/admin/userlist.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582160, '/admin/userlist.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582178, '/account/logout.php', 0),
+(20070322, 17, 0, 'MOZILLA', 5.00, 'Linux', 1174582178, '/index.php', 0),
+(20070322, 17, 0, 'OTHER', 0.00, 'Other', 1174582178, '/write_cache.php', 0);
 
 -- --------------------------------------------------------
 
@@ -9630,7 +9641,8 @@ INSERT INTO user (user_id, user_name, email, user_pw, realname, register_purpose
 (104, 'news_member', 'nicolas.terray@xerox.com', 'e9a152baeea021b57b334916846f4680', 'News Member', '', 'A', '/bin/bash', '$1$tD$zLaO89UOoFSJWnhXL/Rx81', 'A', 4, 'shell1', '', 1174566502, '6d4132c37f39461c', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', 'C78D70AFAD5956D8A1C640D31E01F52C:8A3DAA929935EBC116526379C140D815', 0, NULL, 1),
 (105, 'registered_user', 'nicolas.terray@xerox.com', 'efc80384db0ab913acf5b1a66dfa717f', 'Registered User', '', 'A', '/bin/bash', '$1$Td$I9lx3OKxBCIOPfHblBVTm0', 'A', 5, 'shell1', '', 1174566573, '8b2812f458925b43', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', 'BEE3ED9C338F90FB8C12603C15E9B509:859AA558F5B83E61E70BB38C56249325', 0, NULL, 1),
 (106, 'svn_admin', 'nicolas.terray@xerox.com', '0ebc6351e736aa6dd85b4cf48748f19c', 'SVN Admin', '', 'A', '/bin/bash', '$1$Kd$EDC72kBx/zlhvsiPMJJjc.', 'A', 6, 'shell1', '', 1174580028, 'aeeaa88d203d5b9b', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', '0045DBD750CF06D28E5D533411003C5C:9AB0B62650D2B5E6ABECEC6A093ADF10', 0, NULL, 1),
-(107, 'svn_member', 'nicolas.terray@xerox.com', '300b7127d682e9ece52b04d817f65ec2', 'SVN Member', '', 'A', '/bin/bash', '$1$mH$SFqa8q15o.U05BhL3nEeN.', 'A', 7, 'shell1', '', 1174580059, '70d3760a6906a783', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', '65E9842A97119E9A2A12811AE4879910:671D5378D32580BD8B2C74ECCA95F758', 0, NULL, 1);
+(107, 'svn_member', 'nicolas.terray@xerox.com', '300b7127d682e9ece52b04d817f65ec2', 'SVN Member', '', 'A', '/bin/bash', '$1$mH$SFqa8q15o.U05BhL3nEeN.', 'A', 7, 'shell1', '', 1174580059, '70d3760a6906a783', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', '65E9842A97119E9A2A12811AE4879910:671D5378D32580BD8B2C74ECCA95F758', 0, NULL, 1),
+(108, 'newproject_admin', 'nicolas.terray@xerox.com', 'd9dbc747d7c1d6a4af59c350b59bd4fd', 'Newproject Admin', '', 'A', '/bin/bash', '$1$tj$h0uNDwgwp8olijfkJ.MAu/', 'A', 8, 'shell1', '', 1174582138, 'a49ab30a54934350', 0, 0, 0, NULL, NULL, 0, '', 'Europe/Paris', 'CC4CA9C9C6E44EFB116720427083D29E:E807E071A2F1DF06A1ABA94879F5EC33', 0, NULL, 1);
 
 -- --------------------------------------------------------
 
