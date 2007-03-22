@@ -1049,24 +1049,31 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         clearstatcache();
                                         if (is_file($GLOBALS['ftp_incoming_dir'] . '/' . $filename) && file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
                                             //move the file to a its project page using a setuid program
-                                            $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
-                                            if (!$exec_res) {
-                                                //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
-                                            
-                                                //add the file to the database
-                                                $array = array (
-                                                    'filename' => $frsff->getUploadSubDirectory($release_id
-                                                ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] == 100 ? 0 : $file['processor'], 'type_id' => $file['type'] == 100 ? 0 : $file['type']);
-                                                $res = & $frsff->create($array);
-    
-                                                if (!$res) {
-                                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
-                                                    echo db_error();
-                                                } else {
-                                                    $addingFiles = true;
+                                            //test if the file aldready exists in the destination directory
+                                            $group = new Group($group_id);
+                                            $group_unix_name = $group->getUnixName();
+                                            if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$frsff->getUploadSubDirectory($release_id).'/'.$filename)){
+                                                $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
+                                                if (!$exec_res) {
+                                                    //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
+                                                
+                                                    //add the file to the database
+                                                    $array = array (
+                                                        'filename' => $frsff->getUploadSubDirectory($release_id
+                                                    ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] , 'type_id' => $file['type'] );
+                                                    $res = & $frsff->create($array);
+        
+                                                    if (!$res) {
+                                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
+                                                        echo db_error();
+                                                    } else {
+                                                        $addingFiles = true;
+                                                    }
+                                                }else{
+                                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
                                                 }
-                                            }else{
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
+                                            } else {
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_deleted', basename($filename)));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
@@ -1104,24 +1111,28 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                 clearstatcache();
                                 if (is_file($GLOBALS['ftp_incoming_dir'] . '/' . $filename) && file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
                                     //move the file to a its project page using a setuid program
-                                    $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
-                                    if (!$exec_res) {
-                                        //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
-                                        //add the file to the database
-                                        $array = array (
-                                            'filename' => $frsff->getUploadSubDirectory($release_id
-                                        ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] == 100 ? 0 : $file['processor'], 'type_id' => $file['type'] == 100 ? 0 : $file['type']);
-                                        $res = & $frsff->create($array);
-    
-                                        if (!$res) {
+                                    if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$frsff->getUploadSubDirectory($release_id).'/'.$filename)){
+                                        $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
+                                        if (!$exec_res) {
+                                            //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
+                                            //add the file to the database
+                                            $array = array (
+                                                'filename' => $frsff->getUploadSubDirectory($release_id
+                                            ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'], 'type_id' => $file['type']);
+                                            $res = & $frsff->create($array);
+        
+                                            if (!$res) {
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
+                                                echo db_error();
+                                            } else {
+                                                $addingFiles = true;
+                                            }
+                                        }else{
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
-                                            echo db_error();
-                                        } else {
-                                            $addingFiles = true;
-                                        }
-                                    }else{
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
-                                    }   
+                                        }   
+                                    }else {
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_deleted', basename($filename)));
+                                    }
                                 } else {
                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
                                 }
