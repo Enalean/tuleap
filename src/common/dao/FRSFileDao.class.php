@@ -124,7 +124,7 @@ class FRSFileDao extends DataAccessObject {
     function searchFileByName($file_name, $group_id){
     	$_group_id = (int) $group_id;
     	return $this->_search(' p.group_id='.$_group_id.' AND r.release_id = f.release_id' .
-    						  ' AND r.package_id = p.package_id AND filename='.$this->da->quoteSmart($file_name),'',
+    						  ' AND r.package_id = p.package_id AND filename='.$this->da->quoteSmart($file_name).' AND f.status=\'A\'','',
 							  '', array('frs_package AS p', 'frs_release AS r'));
     }
 
