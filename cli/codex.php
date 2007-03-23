@@ -34,7 +34,7 @@ define("CODEX_CLI_DIR", dirname(__FILE__)."/include/");
 if (array_key_exists("CODEX_WSDL", $_ENV)) {
 	define("WSDL_URL", $_ENV["CODEX_WSDL"]);
 } else {
-	define("WSDL_URL", "http://brame-farine:8017/soap/index.php?wsdl");
+	define("WSDL_URL", "http://codex.xerox.com/soap/index.php?wsdl");
 }
 
 /**** END OF CONFIGURATION SECTION ****/
