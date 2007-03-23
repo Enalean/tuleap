@@ -96,7 +96,7 @@ if ($request->exist('func')) {
         case 'edit':
             $package_id = $request->get('id');
             if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
-                frs_display_package_form($package, 'Edit a package', '?func=update&amp;group_id='. $group_id .'&amp;id='. $package_id, $existing_packages);
+                frs_display_package_form($package, $GLOBALS['Language']->getText('file_admin_editpackages', 'edit_package'), '?func=update&amp;group_id='. $group_id .'&amp;id='. $package_id, $existing_packages);
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);

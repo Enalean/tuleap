@@ -308,5 +308,5 @@ file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 
 file_admin_editpackages	create_canceled	Création du paquet annulée
-
+file_admin_editpackages	edit_package	Edition d'un paquet
 file_admin_editpackages	update_canceled	Mis à jour du paquet annulée

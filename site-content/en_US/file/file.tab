@@ -303,5 +303,5 @@ file_admin_editreleases	create_canceled	Release creation canceled
 file_admin_editreleases	update_canceled	Release update canceled
 
 file_admin_editpackages	create_canceled	Package creation canceled
-
+file_admin_editpackages	edit_package	Edit a Package
 file_admin_editpackages	update_canceled	Package update canceled
