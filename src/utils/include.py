@@ -98,9 +98,18 @@ def write_array_file(filename, lines):
                 f.write(line)
         f.close()
 
-#############################
+
+##############################
+# Access to local.inc variables from other modules:
+##############################
+
+# Get cookie Prefix
+def get_cookie_prefix():
+    """Get cookie prefix"""
+    return (sys_cookie_prefix)
+
+
 # Get CodeX Apache User
-#############################
 def get_codex_user():
     """Get CodeX Apache user name"""
     return sys_http_user

@@ -68,10 +68,11 @@ def session_set():
     #print "name =",c,"<BR>"
     
     # if hash value given by browser then check to see if it is OK.
-    if c.has_key(sys_cookie_prefix+'_session_hash'):
+    cookie_name=include.get_cookie_prefix()+'_session_hash'
+    if c.has_key(cookie_name):
 
         cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT user_id,session_hash,ip_addr,time FROM session WHERE session_hash='"+c['session_hash'].value+"'")
+        cursor.execute("SELECT user_id,session_hash,ip_addr,time FROM session WHERE session_hash='"+c[cookie_name].value+"'")
         row = cursor.fetchone()
         cursor.close()
         
