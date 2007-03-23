@@ -400,7 +400,7 @@
       <listitem>
         <para><emphasis role="bold">CVS Administration </emphasis>:
         this service allows you to activate the CVS tracking for your
-        project, to activate email notification for all CVS
+        project, to enable cvs watch mode, to activate email notification for all CVS
         events, and to customize the CVS welcome page (CVS Preamble).</para>
       </listitem>
     </itemizedlist>
@@ -588,6 +588,26 @@
           linkend="QueryingCVS" /></para>
 
         </listitem>
+
+	<listitem>
+          <para><emphasis role="bold">CVS Watch Mode</emphasis>: Watches in CVS works as 
+	  a communication device, CVS can be used to keep participants informed about 
+	  what's going on in a project by using cvs watch add, cvs watch remove, 
+	  cvs edit and cvs unedit commands. The watch features depend 
+	  on the cooperation of all the developers. If someone just starts editing a file 
+	  without first running cvs edit, no one else will know about it until the changes 
+	  get committed. Because cvs edit is an additional step, not part of the normal 
+	  development routine, people can easily forget to do it.
+	  Although CVS can't force someone to use cvs edit, it does have a mechanism 
+	  for reminding people to do so with the watch on command. 
+	  </para>	  
+	  <para>If you enable CVS Watch mode 
+	  on your project, futures checkout of this project will be read-only, so it will remind 
+	  developers to use CVS edit before editing a file and it allows other developers to be informed 
+	  of the file changes.</para>
+
+        </listitem>
+
         <listitem>
           <para><emphasis role="bold">CVS E-mail
         Notification</emphasis>: In addition to tracking the changes
