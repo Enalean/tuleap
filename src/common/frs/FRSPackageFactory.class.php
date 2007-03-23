@@ -118,7 +118,7 @@ class FRSPackageFactory {
         }
         
         if(!$dar->valid()) {
-            return;
+            return array();
         }
         $um =& UserManager::instance();
         $user =& $um->getCurrentUser();
