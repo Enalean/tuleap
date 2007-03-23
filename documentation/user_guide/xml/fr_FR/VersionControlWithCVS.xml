@@ -635,20 +635,21 @@
 	<listitem>
      <para><emphasis role="bold">Mode CVS Watch</emphasis>: 
      Dans CVS les "watches" fonctionnent comme un outil de 
-     communication, CVS peut être utiliser pour tenir informer les utilisateurs
-     sur les modifications du projet en utilisantles commandes cvs watch add, cvs watch remove, 
-	  cvs edit and cvs unedit. Les fonctionnalités des "watches" dépendent de la coopération 
+     communication. CVS peut être utilisé pour tenir informés les utilisateurs
+     sur les modifications du projet en utilisant les commandes &#34;<literal>cvs watch add</literal>&#34;, 
+     &#34;<literal>cvs watch remove</literal>&#34;, 
+	  &#34;<literal>cvs edit</literal>&#34; et &#34;<literal>cvs unedit</literal>&#34;.
+	   Les fonctionnalités des "watches" dépendent de la coopération 
 	  des développeurs. Si un utilisateur édite un fichier sans avoir au préalable 
-	  exécuté la commande cvs edit, personne n'en sera informé avant que les changements ne
-	  soient commités. Parce que cvs edit est une étape supplémentaire et ne
-	  fait pas partie du processus de développement normal, les utilisateurs
+	  exécuté la commande &#34;<literal>cvs edit</literal>&#34;, personne n'en sera informé avant que les changements ne
+	  soient commités. Parce que &#34;<literal>cvs edit</literal>&#34; est une étape supplémentaire, les utilisateurs
 	  peuvent facilement oublier de l'utiliser.
-	  CVS ne peut pas forcer les utilisateurs à utiliser cvs edit, en revanche un mecanisme 
-	  peut rappeler aux utilisateurs de la faire avec la commande cvs watch on. 
+	  CVS ne peut pas forcer les utilisateurs à utiliser &#34;<literal>cvs edit</literal>&#34;, en revanche un mécanisme 
+	  peut rappeler aux utilisateurs de le faire avec la commande &#34;<literal>cvs watch on</literal>&#34;. 
 	  </para>	  
 	  <para>Si vous activez le mode CVS Watch pour votre projet, les prochains 
 	  checkouts de ce dernier seront en mode lecture seule, ainsi cela rappelera aux développeurs
-	  d'utiliser cvs edit avant d'éditer un fichier, et les autres développeurs
+	  d'utiliser &#34;<literal>cvs edit</literal>&#34; avant d'éditer un fichier, et les autres développeurs
 	  pourront être informés que des changements sont en cours sur ce fichier.
 	  </para>
 

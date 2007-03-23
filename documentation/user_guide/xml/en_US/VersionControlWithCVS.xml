@@ -590,20 +590,23 @@
         </listitem>
 
 	<listitem>
-          <para><emphasis role="bold">CVS Watch Mode</emphasis>: Watches in CVS works as 
+          <para><emphasis role="bold">CVS Watch Mode</emphasis>: Watches in CVS work as 
 	  a communication device, CVS can be used to keep participants informed about 
-	  what's going on in a project by using cvs watch add, cvs watch remove, 
-	  cvs edit and cvs unedit commands. The watch features depend 
+	  what's going on in a project by using &#34;<literal>cvs watch add</literal>&#34;, 
+	  &#34;<literal>cvs watch remove</literal>&#34;, 
+	  &#34;<literal>cvs edit</literal>&#34; and &#34;<literal>cvs unedit</literal>&#34; commands. 
+	  The watch features depend 
 	  on the cooperation of all the developers. If someone just starts editing a file 
-	  without first running cvs edit, no one else will know about it until the changes 
-	  get committed. Because cvs edit is an additional step, not part of the normal 
-	  development routine, people can easily forget to do it.
-	  Although CVS can't force someone to use cvs edit, it does have a mechanism 
-	  for reminding people to do so with the watch on command. 
+	  without first running &#34;<literal>cvs edit</literal>&#34;, no one else will know about it until the changes 
+	  get committed. Because &#34;<literal>cvs edit</literal>&#34; is an additional step, 
+	  people can easily forget to do it.
+	  Although CVS can't force someone to use &#34;<literal>cvs edit</literal>&#34;, it does have a mechanism 
+	  for reminding people to do so with the &#34;<literal>watch on</literal>&#34; command. 
 	  </para>	  
 	  <para>If you enable CVS Watch mode 
-	  on your project, futures checkout of this project will be read-only, so it will remind 
-	  developers to use CVS edit before editing a file and it allows other developers to be informed 
+	  on your project, future checkouts of this project will be read-only, so it will remind 
+	  developers to use &#34;<literal>cvs edit</literal>&#34; before editing a file and 
+	  it will allow other developers to be informed 
 	  of the file changes.</para>
 
         </listitem>
