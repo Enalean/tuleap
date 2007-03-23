@@ -42,7 +42,7 @@ $packages = array();
 $num_packages = 0;
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
-if(count($res)==0) $res = array();
+
 foreach ($res as $package) {
     if ($frspf->userCanRead($group_id, $package->getPackageID(), user_getid())) {
         if (isset ($release_id)) {
