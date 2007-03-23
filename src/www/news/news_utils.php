@@ -90,78 +90,86 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	$return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
 	$return .= db_error();
     } else {
-	echo '
-			<DL COMPACT>';
-	for ($i=0; $i<$rows; $i++) {
-	    //check if the news is private (project members) or public (registered users)
-	    $forum_id=db_result($result,$i,'forum_id');
-	    if (news_check_permission($forum_id,$group_id)) {
-	
-	        if ($show_summaries && $limit) {
-		    //get the first paragraph of the story
-		    $arr=explode("\n",db_result($result,$i,'details'));
+        $dl_compact_displayed   = false;
+        $no_news_item_displayed = true;
+        for ($i=0; $i<$rows; $i++) {
+            //check if the news is private (project members) or public (registered users)
+            $forum_id=db_result($result,$i,'forum_id');
+            if (news_check_permission($forum_id,$group_id)) {
+                if (!$dl_compact_displayed) {
+                    echo '<dl compact>';
+                    $dl_compact_displayed = true;
+                    $no_news_item_displayed = false;
+                }
+                if ($show_summaries && $limit) {
+                //get the first paragraph of the story
+                $arr=explode("\n",db_result($result,$i,'details'));
+                    
+                        //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
+                if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
+                    $summ_txt='<BR>'. util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
+                } else {
+                    $summ_txt='<BR>'. util_make_links( $arr[0], $group_id );
+                }
+                //show the project name 
+                if (db_result($result,$i,'type')==2) {
+                    $group_type='/foundry/';
+                } else {
+                    $group_type='/projects/';
+                }
+                $proj_name=' &nbsp; - &nbsp; <A HREF="'.$group_type. strtolower(db_result($result,$i,'unix_group_name')) .'/">'. db_result($result,$i,'group_name') .'</A>';
+                } else {
+                $proj_name='';
+                $summ_txt='';
+                }
+        
                 
-                    //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
-		    if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
-		        $summ_txt='<BR>'. util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
-		    } else {
-		        $summ_txt='<BR>'. util_make_links( $arr[0], $group_id );
-		    }
-		    //show the project name 
-		    if (db_result($result,$i,'type')==2) {
-		        $group_type='/foundry/';
-		    } else {
-		        $group_type='/projects/';
-		    }
-		    $proj_name=' &nbsp; - &nbsp; <A HREF="'.$group_type. strtolower(db_result($result,$i,'unix_group_name')) .'/">'. db_result($result,$i,'group_name') .'</A>';
-	        } else {
-		    $proj_name='';
-		    $summ_txt='';
-	        }
-
-			
-	        if (!$limit) {
-
-		    $return .= '<li><A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
-		    $return .= ' &nbsp; <I>'. format_date($sys_datefmt,db_result($result,$i,'date')).'</I><br>';
-	        } else {
-		    $return .= '
-		    		<A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
-
-		    if (!$flat) {
-		        $return .= '
-                                               <BR>&nbsp;';
-		    }
-		    $return .= '&nbsp;&nbsp;&nbsp;<I>'.db_result($result,$i,'user_name') .' - '.
-		        format_date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
-		        $proj_name . $summ_txt;
-
-		    $sql='SELECT count(*) FROM forum WHERE group_forum_id='.db_result($result,$i,'forum_id');
-		    $res2 = db_query($sql);
-		    $num_comments = db_result($res2,0,0);
-
-		    if (!$num_comments) {
-		        $num_comments = '0';
-		    }
-
-		    if ($num_comments == 1) {
-		        $comments_txt = ' '.$Language->getText('news_utils','comment');
-		    } else {
-		        $comments_txt = ' '.$Language->getText('news_utils','comments');
-		    }
-
-		    $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">['.$Language->getText('news_utils','read_more_comments').']</a></div><HR width="100%" size="1" noshade>';
-                                      
-	        }
-
-	        if ($limit==1 && $tail_headlines) {
-		    $return .= "<ul>";
-	        }
-	        if ($limit) {
-		    $limit--;
-	        }
-	    }    
-	}
+                if (!$limit) {
+        
+                $return .= '<li><A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
+                $return .= ' &nbsp; <I>'. format_date($sys_datefmt,db_result($result,$i,'date')).'</I><br>';
+                } else {
+                $return .= '
+                        <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
+        
+                if (!$flat) {
+                    $return .= '
+                                                   <BR>&nbsp;';
+                }
+                $return .= '&nbsp;&nbsp;&nbsp;<I>'.db_result($result,$i,'user_name') .' - '.
+                    format_date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
+                    $proj_name . $summ_txt;
+        
+                $sql='SELECT count(*) FROM forum WHERE group_forum_id='.db_result($result,$i,'forum_id');
+                $res2 = db_query($sql);
+                $num_comments = db_result($res2,0,0);
+        
+                if (!$num_comments) {
+                    $num_comments = '0';
+                }
+        
+                if ($num_comments == 1) {
+                    $comments_txt = ' '.$Language->getText('news_utils','comment');
+                } else {
+                    $comments_txt = ' '.$Language->getText('news_utils','comments');
+                }
+        
+                $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">['.$Language->getText('news_utils','read_more_comments').']</a></div><HR width="100%" size="1" noshade>';
+                                          
+                }
+        
+                if ($limit==1 && $tail_headlines) {
+                $return .= "<ul>";
+                }
+                if ($limit) {
+                $limit--;
+                }
+            }    
+        }
+        if ($no_news_item_displayed) {
+            $return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
+            $return .= db_error();
+        }
     }
     if ($group_id != $sys_news_group) {
 	$archive_url='/news/?group_id='.$group_id;
@@ -297,6 +305,18 @@ function news_check_permission($forum_id,$group_id) {
 	$_forum_id = (int) $forum_id;
 	$_group_id = (int) $group_id;
 	
+    if ($_group_id == $GLOBALS['sys_news_group']) {
+        //search for the real group_id of the news
+        $sql = "SELECT g.is_public AS continue FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = ". $_forum_id;
+        $res = db_query($sql);
+        if ($res && db_numrows($res)) {
+            $row = db_fetch_array($res);
+            //see if it is public to continue permissions check
+            if (!$row['continue']) {
+                return false;
+            }
+        }
+    }
 	if (((permission_exist('NEWS_READ', $_forum_id)) && (permission_is_authorized('NEWS_READ',$_forum_id,user_getid(),$_group_id))) || (!permission_exist('NEWS_READ', $_forum_id))) {
 	    return true;
         } else {

@@ -3,11 +3,36 @@
 
 require_once('pre.php');
 require_once('www/news/news_utils.php');
+require_once('common/include/RSS.class.php');
 require('./rss_utils.inc');
 $Language->loadLanguageMsg('export/export');
 
+//First, check for valid group_id
+$request =& HTTPRequest::instance();
+if ($request->exist('group_id')) {
+    $project = group_get_object($request->get('group_id'));
+    if (!$project || !$project->isPublic()) {
+        $rss = new RSS(array(
+            'title'       => $Language->getText('export_rss_sfnews','news',$GLOBALS['sys_name']),
+            'description' => $Language->getText('export_rss_sfnews','highlights',$GLOBALS['sys_name']),
+            'link'        => get_server_url(),
+            'language'    => 'en-us',
+            'copyright'   => $Language->getText('export_rss_sfnewreleases','copyright',array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y',time()))),
+            'pubDate'     => gmdate('D, d M Y G:i:s',time()).' GMT',
+        ));
+        $rss->addItem(array(
+            'title'       => 'Error',
+            'description' => 'Project not found',
+            'link'        => get_server_url()
+        ));
+        $rss->display();
+        exit;
+    }
+}
+
 header("Content-Type: text/xml");
 print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
+<?xml-stylesheet type="text/xsl"  href="/export/rss.xsl" ?>
 <!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 <rss version="0.91">
 ';
@@ -57,7 +82,7 @@ print "  <language>en-us</language>\n";
 
 while ($row = db_fetch_array($res)) {
 	$forum_id=$row['forum_id'];
-    $group_id = isset($group_id)?$group_id:0;
+    $group_id = isset($group_id)?$group_id:$GLOBALS['sys_news_group'];
 	if (news_check_permission($forum_id,$group_id)) {
 	    print "  <item>\n";
 	    print "   <title>".htmlspecialchars($row['summary'])."</title>\n";
