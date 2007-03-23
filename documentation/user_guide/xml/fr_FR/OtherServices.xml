@@ -138,7 +138,7 @@ newgrp nom_projet
 				<para>L'espace FTP entrant où vous pouvez directement glisser-déposer
 					les fichiers à inclure dans vos publication de version au lieu
 					d'utiliser un client FTP pour le chargement. (Voir 
-                                        <xref linkend="ReleaseConfigurationandValidation"/>)</para>
+                                        <xref linkend="ReleaseAdministration"/>)</para>
 			</listitem>
 		</itemizedlist>
 		

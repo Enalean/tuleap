@@ -156,12 +156,12 @@
       <title>Navigation dans les fichiers publiés et téléchargement</title>
 
       <para>La version la plus récente de chaque paquet d'un projet
-      est toujours visible sur le page de sommaire (voir <xref
+      est toujours visible sur la page de sommaire (voir <xref
       linkend="FigureASampleProjectSummaryPage" />). Cette version
       peut être immédiatement téléchargée en cliquant sur le lien
       &#34;Téléchargement&#34; ou en visitant la liste complète des
       paquets et versions en cliquant sur le lien &#34;Voir tous les
-      fichiers du projet&#34;</para>
+      fichiers du projet&#34;.</para>
 
       <figure id="FigureTheFileReleaseScreenOfTheCodeXProject">
         <title>L'écran de publication des fichiers du projet CodeX Administration Project</title>
@@ -177,7 +177,7 @@
       <para>Le premier exemple illustré sur la <xref
       linkend="FigureTheFileReleaseScreenOfTheCodeXProject" /> 
       montre l'écran de publication des fichiers du projet
-      CodeX Administration Project.
+      &#34;CodeX Administration Project.&#34;
       </para>
       
       <section id="FileReleaseBrowsingPackages">
@@ -195,7 +195,7 @@
         comprend beaucoup de paquets et de versions.
         Pour rendre visible un paquet caché, il suffit de cliquer sur l'icône 
         <emphasis>plus</emphasis> avant le nom du paquet.
-        Par défaut, tout les paquets sont visibles.
+        Par défaut, tous les paquets sont visibles.
         </para>
         <para>
         CodeX vous permet également de surveiller des paquets. De cette manière, 
@@ -203,7 +203,8 @@
         la modification d'une version existante.
         Pour surveiller un paquet, il suffit de cliquer sur l'icône représentant 
         une cloche, située après le nom du paquet.
-        Si vous surveillez déjà le paquet, il y a un petit signe rouge sur la cloche.
+        Si vous surveillez déjà le paquet, il y a un petit signe rouge sur la cloche,
+        vous permettant d'arrêter de surveiller le paquet en question.
         Si vous ne surveillez pas le paquet, la cloche aura un petit 
         <emphasis>plus</emphasis> vert.
         </para>
@@ -251,11 +252,12 @@
     </section>
 
     <section id="FileReleaseDelivery">
-      <title>Livraison de fichiers</title>
+      <title>Administration et Livraison de fichiers</title>
 
-      <para>Cette section s'adresse uniquement aux membres d'un
-      projet. Elle explique par le menu le processus de livraison de
-      fichiers. Il se décompose en trois étapes :</para>
+      <para>Cette section s'adresse uniquement aux administrateur de 
+      projet ou aux administrateurs du service fichier. Elle explique par 
+      le menu le processus de livraison de fichiers. 
+      Il se décompose en deux étapes :</para>
 
       <procedure>
         <step>
@@ -267,153 +269,232 @@
         </step>
 
         <step>
-          <para><emphasis role="bold">Création, définition et validation de versions</emphasis> :
+          <para><emphasis role="bold">Création de versions</emphasis> :
           une fois le paquet créé on peut y ajouter une ou plusieurs
-          versions. Pour chaque version, on peut attacher des fichiers, définir la date de
-          publication, lister les changements contenus dans cette
-          version, etc....</para>
+          versions. Pour chaque version, on peut attacher des fichiers, 
+          définir la date de publication, lister les changements contenus 
+          dans cette version, etc....</para>
         </step>
       </procedure>
       <para>De plus, vous pouvez aussi définir des permissions d'accès
       au niveau de chaque paquet et de chaque version.
       </para>
 
-      <section id="PackageCreation">
+      <para>Si vous êtes administrateur de votre projet ou administrateur du 
+      service fichier de votre projet, vous remarquerez que l'interface des 
+      fichiers contient certains lien supplémentaires, vous permettant de 
+      réaliser les actions d'administration sur le service Fichier (Voir 
+      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />
+          <figure id="FigureTheFileReleaseAdminScreenOfTheCodeXProject">
+            <title>L'écran du service Fichier du projet &#34;CodeX Administration project&#34;, si vous êtes administrateur</title>
+    
+            <mediaobject>
+              <imageobject>
+                <imagedata format="PNG"
+                           fileref="../../screenshots/fr_FR/sc_filereleasedownloadsadmin.png" width="15.3cm" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+      </para>
+      
+      <section id="PackageAdministration">
+        <title>Administration des paquets</title>
+        
+        <para>Pour administrer les paquets, vous devez être administrateur du 
+        projet ou administrateur du service Fichier. La création et la modification 
+        de paquets sont quasiment identiques.
+        </para>
+        
+        <section id="PackageCreation">
         <title>Création d'un paquet</title>
 
-        <para>Pour créer un paquet vous devez tout d'abord vous
-        rendre sur la page de publication des fichiers. Pour se faire
-        vous pouvez soit vous diriger vers la page d'administration du
-        projet et sélectionner le lien &#34;[Modifier/Ajouter une
-        version...]&#34; situé dans la partie inférieure droite de
-        l'écran, soit cliquer sur l'entrée &#34;Fichiers&#34; du menu
-        du projet puis sur le lien &#34;Administration&#34; du menu de
-        publication de fichiers.</para>
-
-        <para>La première fois que vous utilisez ce service aucun
-        paquet n'est disponible. Pour en créer un il suffit de taper
-        le nom du paquet dans le champ vierge réservé à cet effet
-        ainsi qu'un chiffre indiquant son emplacement à l'écran par
-        rapport aux autres paquets puis de cliquer sur le bouton
-        &#34;Créer ce paquet&#34;. Une fois le paquet créé vous pouvez
-        à loisir modifier son nom et son statut. Un paquet est soit
-        &#34;Actif&#34;, c'est à dire visible sur la page de
-        publication de fichiers, soit &#34;Caché&#34; auquel cas il n'est
-        visible que pour l'administrateur du service de publication
-        des fichiers. Basculer le statut de &#34;Actif&#34; à
-        &#34;Caché&#34; et inversement ne détruit ni les versions ni
-        les fichiers contenus dans le paquet.</para>
-
-         <para>Il est à noter que les paquets sont affichés par ordre
-         croissant de rang à l'écran.</para>
-
-        <para>Lorsque vous modifiez le nom, le rang ou le statut d'un paquet n'oubliez pas de cliquer sur le bouton &#34;Valider&#34; !</para>
-
-        <figure id="FigureAPartOfThePackageAdministrationScreenGSAProject">
-          <title>Une partie de l'écran d'administration des paquets d'un projet</title>
-
+        <para>Pour créer un paquet, il suffit de cliquer sur le lien 
+        [ajouter un paquet] situé en haut de l'écran du service Fichier.
+        Vous devez ensuite remplir le formulaire, en renseignant le nom du paquet, 
+        son rang à l'écran et son statut :
+        
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+                <para><emphasis role="bold">Nom du paquet</emphasis> : Il s'agit du 
+                nom qui apparaîtra dans l'interface des Fichiers. Le nom des paquets 
+                doit être unique à l'intérieur d'un même projet.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Rang à l'écran</emphasis> : le rang 
+                indique la position à laquelle le paquet s'affichera à l'écran.
+                Vous pouvez choisir entre les valeurs : 'au début', 'à la fin', 
+                ou après chaque paquet déjà présent.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Statut</emphasis> : un paquet actif 
+                sera affiché, alors qu'un paquet caché n'apparaîtra pas à l'écran.
+                Les administrateurs veront toutefois les paquets caché, afin de 
+                pouvoir les modifier. Dans ce cas, ils sont affichés en italique 
+                pour les différencier des autres.
+                </para>
+            </listitem>
+        </itemizedlist>
+        
+        </para>
+        </section>
+        
+        
+        <section id="PackageModification">
+        <title>Modification d'un paquet</title>
+        
+        <para>Pour modifier un paquet, cliquer sur l'icône d'édition située après 
+        chaque nom de paquet. Ensuite, le formulaire de modification est identique 
+        à celui de création, à l'exception près que vous pouvez maintenant définir 
+        des permissions sur le paquet (see 
+        <xref linkend="FigureAPartOfThePackageAdministrationScreenCodeXProject" />).
+        </para>
+        <figure id="FigureAPartOfThePackageAdministrationScreenCodeXProject">
+          <title>Ecran de modification du paquet CLI du projet &#34;CodeX Administration&#34;</title>
+    
           <mediaobject>
             <imageobject>
               <imagedata format="PNG"
-                         fileref="../../screenshots/fr_FR/sc_frspackages.png" width="15.3cm" />
+                         fileref="../../screenshots/fr_FR/sc_filereleasepackageadmin.png" width="10cm" />
             </imageobject>
           </mediaobject>
         </figure>
+          
+        <para>Les membres projet ayant les droits 'Administrateur Fichier' 
+        (see <xref linkend="UserPermissions" />) peuvent définir et modifier 
+        les permissions des paquets.
+        </para>
+
+        <para>Par défaut, les permissions appliquées à un paquet s'appliquent à 
+        toutes les versions et les fichiers de ce paquet. Mais vous pouvez également 
+        affecter des permissions différentes pour chaque version (voir 
+        ci-dessous).</para>
+
+        </section>
       </section>
 
-      <section id="ReleaseCreation">
-        <title>Création, configuration et validation d'une version</title>
+      <section id="ReleaseAdministration">
+        <title>Administration des versions</title>
+        
+        <para>Pour administrer les versions, vous devez être administrateur du 
+        projet ou administrateur du service Fichier. La création et la modification 
+        de versions sont identiques.
+        </para>
+        
+        <section id="ReleaseCreation">
+        <title>Création et modification d'une version</title>
 
         <para>Une fois le paquet créé vous pouvez y insérer de
         nouvelles versions immédiatement. Pour ce faire, cliquez sur
         le lien [Créer une version] situé en regard du paquet
         approprié (voir <xref
-        linkend="FigureAPartOfThePackageAdministrationScreenGSAProject"
+        linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject"
         />).</para>
 
-        <para>L'écran suivant permet d'administrer entièrement une version. 
-        Veuillez notez que l'essentiel de cette étape de définition du contenu d'une version 
-        s'applique aussi bien lors de sa création que lors de sa mise à jour. 
-        L'écran de configuration des versions est composé de 6 courtes
-        parties .</para>
+        <para>Le processus de création et de modification de versions est vraiment 
+        très simple à utiliser. Il peut se décomposer en 6 étapes, mais certaines 
+        sont optionnelles.
+        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodeXProject" />).
+        Dans tous les cas, vous pouvez modifier les versions a posteriori.
+        </para>
+        
+        <figure id="FigureTheReleaseModificationScreenOfTheCodeXProject">
+          <title>Ecran de modification d'une version du projet CodeX</title>
 
-			
-		  <figure id="FigureReleaseCreation">
-        <title>Création d'une version</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/fr_FR/sc_frsreleasecreation.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-			
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/fr_FR/sc_frsreleases.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+		
         <itemizedlist mark="bullet">
           <listitem>
-            <para><emphasis role="bold">&Eacute;tape 1 - Donnez les informations concernant la version</emphasis></para>
-
-            <para>La première étape permet de renseigner les informations
-            comme le nom de la version, son
-            statut et le paquet auquel elle est liée. Vous devez aussi
-            fournir une date de publication, la date courrante est remplie par défaut.</para>
-			 </listitem>
-
-          <listitem>
-            <para><emphasis role="bold">&Eacute;tape 2 - Télécharger et attacher les fichiers à une version</emphasis></para>
-
-            <para>Comme expliqué précédemment plusieurs fichiers
-            peuvent être attachés à une version. Le téléchargement
-            de fichiers peut se faire de deux façons : soit en indiquant directement
-            via l'interface
-             Web (HTTP) le fichier approprié sur votre disque local, soit en les chargeant sur le
-            serveur CodeX. Pour ce faire, le serveur CodeX offre un
-            mécanisme de chargement via FTP (ou SCP). Pour télécharger
-            vos fichiers, cliquez sur le &#34;?&#34; situé à droite du lien &#34;Ajouter un fichier&#34;
-            puis suivez les instructions à l'écran. Par ailleurs,
-            si vous êtes un utilisateur Windows, vous pouvez aussi
-            accéder à l'espace de chargement FTP directement depuis
-            l'explorateur Windows et y glisser les fichiers (voir
-            <xref linkend="MSWindowsSharedResources" />). Ensuite
-            rafraîchissez la page Web ou cliquez sur le lien &#34;Rafraîchir la liste des fichiers&#34;
-            puis ajouter un nouveau fichier pour voir apparaître les
-            fichiers chargés.</para>
-
-            <para>Avant de charger les fichiers assurez-vous de leur
-            donner des noms parlants pour les utilisateurs. Idéalement
-            le nom des fichiers doit comprendre le numéro de version
-            et une extension indiquant s'il s'agit d'un fichier source
-            ou binaire.</para>
-            
-            <para>Une fois les fichiers chargés, vous allez pouvoir les
-            ajouter à votre version. Pour ce faire, cliquez sur le menu déroulant 
-            &#34;choisir...&#34; de la colonne &#34;Nom de fichier&#34;, puis sélectionnez
-            &#34;parcourir&#34; si vous souhaitez ajouter un fichier depuis son emplacement local ou
-            sélectionnez le nom du fichier chargé (en scp ou ftp) que vous souhaitez ajouter.
-            Pour chaque fichier il est possible de préciser l'architecture matérielle auquel il 
-            est destiné, son type (source, binaire, documentation ainsi que le type de compression). 
-            Ceci n'est pas absolument necessaire mais ces informations sont très utiles aux utilisateurs.
-            Vous pouvez également supprimer des fichiers en cliquant sur la poubelle à gauche de la ligne 
-            correpondant au fichier à supprimer.</para>
-
-
-            <para><tip><title>Coup de pouce : compressez toujours vos
-            délivrables</title><para>Pour économiser l'espace de
-            stockage sur le serveur CodeX ainsi que sur les machines
-            des utilisateurs et pour minimiser l'utilisation de la
-            bande passante du réseau, veillez à compresser les
-            fichiers livrés. utilisez Winzip sur Windows et compress,
-            gzip ou même mieux bzip2 sur
-            Linux/Unix.</para></tip></para>
+            <para><emphasis role="bold">Etape 1 - Propriétés de la version</emphasis></para>
+            <para>La première étape est la seule obligatoire pour créer la version dans 
+            un premier temps. Cette étape vous permet de modifier le paquet de la version,
+            la date et le statut de la version. Vous devez également renseigner le nom de
+            la version.
+            </para>
           </listitem>
-
-		    <listitem>
-            <para><emphasis role="bold">&Eacute;tape 3 - Renseigner les notes concernant la version et les modifications</emphasis></para>
-				
-				<para>Vous pouvez copier-coller ou télécharger des notes concernant
-				la version. Pour ajouter des modifications (change log) cliquez sur le lien &#34;Ajouter des modifications&#34;.
-				Pour télécharger cliquez sur le lien 
-				&#34;Télécharger&#34; correspondant puis séléctionnez le fichier.</para>
-				
+        
+          <listitem>
+            <para><emphasis role="bold">Etape 2 - Télécharger et attacher les fichiers à une version (facultatif)</emphasis></para>
+            <para>Cette étape est optionnelle dans le sens où vous pouvez ajouter 
+            les fichiers après avoir créé la version, mais il est évident qu'une 
+            version devrait toujours contenir au moins un fichier pour être pertinente. 
+            Comme expliqué auparavant, plusieurs fichiers peuvent être attachés 
+            à une même version. Pour ajouter un fichier, cliquer sur le lien 
+            [ajouter un fichier]. Une boîte de sélection apparaît alors, vous 
+            permettant de sélectionner le fichier à ajouter.
+            Il y a deux moyens d'attacher un fichier :
+            
+            <itemizedlist mark="bullet" spacing="compact">
+                <listitem>
+                <para><emphasis role="underline">Téléchargement direct</emphasis> : 
+                vous pouvez télécharger le fichier via l'interface web en utilisant 
+                l'option &#34;Fichier Local - Parcourir&#34; de la boîte de 
+                sélection, et en choisissant le fichier approprié sur votre 
+                disque local.
+                </para>
+                </listitem>
+                <listitem>
+                <para><emphasis role="underline">FTP / SCP</emphasis> : 
+                télécharger votre fichier via ftp ou scp avant et sélectionner 
+                son nom dans la boîte de sélection, dans la section 
+                &#34;Liste des fichiers FTP/SCP&#34;.</para>
+                <para>
+                    <tip><title>Astuce: Comment télécharger vos fichiers avec FTP ou SCP</title>
+                    <para>CodeX vous permet de télécharger vos fichiers par FTP (ou SCP).
+                    Pour ce faire, suivez les indications qui vous sont données 
+                    lorsque vous cliquez sur le <emphasis>?</emphasis> situé après 
+                    le lien [ajouter un fichier].
+                    Par ailleurs, si vous êtes un utilisateur Windows, vous pouvez 
+                    aussi accéder à l'espace de chargement FTP directement depuis
+                    l'explorateur Windows et y glisser les fichiers (voir
+                    <xref linkend="MSWindowsSharedResources" />). Ensuite
+                    rafraîchissez la page Web ou cliquez sur le lien 
+                    &#34;Rafraîchir la liste des fichiers&#34; puis ajouter un 
+                    nouveau fichier pour voir apparaître les fichiers chargés.
+                    </para>
+                    </tip>
+                </para>
+                <para>Avant de charger les fichiers assurez-vous de leur
+                donner des noms parlants pour les utilisateurs. Idéalement
+                le nom des fichiers doit comprendre le numéro de version
+                et une extension indiquant s'il s'agit d'un fichier source
+                ou binaire.
+                </para>
+                </listitem>
+                <para>Après avoir attaché un fichier à une version, vous pouvez 
+                fournir des informations complémentaires pour chacun d'eux.
+                Pour chaque fichier, vous pouvez spécifier l'architecture 
+                matérielle auquel il est destiné, son type (source, binaire, 
+                documentation ainsi que le type de compression). Ceci n'est pas 
+                absolument necessaire mais ces informations sont très utiles aux 
+                utilisateurs.</para>
+            
+                <para><tip><title>Coup de pouce : compressez toujours vos
+                délivrables</title><para>Pour économiser l'espace de
+                stockage sur le serveur CodeX ainsi que sur les machines
+                des utilisateurs et pour minimiser l'utilisation de la
+                bande passante du réseau, veillez à compresser les
+                fichiers livrés. utilisez Winzip sur Windows et compress,
+                gzip ou même mieux bzip2 sur
+                Linux/Unix.</para></tip></para> 
+             </itemizedlist>
+           </para>
+         </listitem>
+         
+         <listitem>
+            <para><emphasis role="bold">Etape 3 - Renseigner les notes concernant la version et les modifications (facultatif)</emphasis></para>
+            <para>Avec la version, vous pouvez également fournir des notes et/ou 
+            des modification (change log). Vous pouvez au choix copier/coller du 
+            texte ou télécharger les notes en cliquant sur le lien [télécharger].
+            </para>
+            
             <para>Les notes concernant la version sont typiquement un
             texte court (10 à 20 lignes) et de haut niveau résumant
             les modifications visibles pour l'utilisateur (nouvelle
@@ -445,54 +526,46 @@
             avec la liste des fichiers impactés, les dates de
             modifications et le nom de l'auteur. C'est une excellente 
             base pour un document de type ChangeLog.</para></tip></para>
+            
           </listitem>
-          
+        
           <listitem>
-            <para><emphasis role="bold">&Eacute;tape 4 - Modification des permissions d'une version</emphasis></para>
-            	
+            <para><emphasis role="bold">Etape 4 - Modification des permissions d'une version (facultatif)</emphasis></para>
             <para>Si vous ne spécifiez aucune permission d'accès pour
-          une version, la version hérite des permissions définies pour le
-          paquet dans lequel elle se trouve. (Par défaut un paquet a la permission
+            une version, la version hérite des permissions définies pour le
+            paquet dans lequel elle se trouve. (Par défaut un paquet a la permission
             &#34;utilisateurs-enregistrés&#34;.)Si vous avez besoin d'un contrôle d'accès plus fin sur
-          vos délivrables logiciels, vous pouvez aussi définir des
-          permissions au niveau de chaque version.</para>
+            vos délivrables logiciels, vous pouvez aussi définir des
+            permissions au niveau de chaque version.
+            </para>
 
-          <para>Pour cela, séléctionnez le lien &#34;[Voir/Modifier]&#34; de la 
-          partie permissions, puis procédez à la sélection des groupes d'utilisateurs
-          autorisés pour définir des permissions sur une
-          version.</para>
+            <para>Pour cela, séléctionnez le lien &#34;[Voir/Modifier]&#34; de la 
+            partie permissions, puis procédez à la sélection des groupes d'utilisateurs
+            autorisés pour définir des permissions sur une
+            version.</para>
 
-          <para>Si vous ne spécifiez aucune permission d'accès pour
-          une version, la version hérite des permissions définies pour le
-          paquet dans lequel elle se trouve. Si vous définissez des
-          permissions pour une version, elles prennent le pas sur les
-          permissions du paquet dans lequel elle se trouve.</para>
           </listitem>
-          
+        
           <listitem>
-            <para><emphasis role="bold">&Eacute;tape 5 - Créer automatiquement une annonce
-            (optionnel)</emphasis></para>
-
+            <para><emphasis role="bold">Step 5 - Créer automatiquement une annonce (facultatif)</emphasis></para>
             <para>Cette étape est optionnelle, vous pouvez choisir de ne pas en 
             tenir compte. Cette étape donne la possibilité aux administrateurs du 
             projet de soumettre automatiquement une annonce concernant la nouvelle 
-            version tout juste créée (si vous n'êtes pas administrateur du projet, 
-            vous ne verrez tout simplement pas cette étape). Pour créer une annonce,
-            il suffit de cocher la case située en regard de &#34;Soumettre une annonce&#34;,
-            puis de compléter voter annonce.
-            Le sujet et 
-            le message de l'annonce sont préremplis avec un texte par défaut. Vous pouvez 
-            bien entendu les modifier avant de valider. L'annonce apparaîtra sur la page 
-            de sommaire de votre projet. Il s'agit là d'un bon moyen d'avertir vos 
-            utilisateurs de la disponibilité d'une nouvelle version. 
-            L'annonce apparaîtra ensuite dans la page d'administration des annonces, comme 
-            toute autre annonce.
+            version tout juste créée (si vous n'êtes pas administrateur du projet ou 
+            pas administrateur des annonces, vous ne verrez tout simplement pas 
+            cette étape). Pour créer une annonce, il suffit de cocher la case 
+            située en regard de &#34;Soumettre une annonce&#34;, puis de compléter 
+            votre annonce. Le sujet et le message de l'annonce sont préremplis avec 
+            un texte par défaut. Vous pouvez bien entendu les modifier avant de 
+            valider. L'annonce apparaîtra sur la page de sommaire de votre projet. 
+            Il s'agit là d'un bon moyen d'avertir vos utilisateurs de la 
+            disponibilité d'une nouvelle version. L'annonce apparaîtra ensuite 
+            dans la page d'administration des annonces, comme toute autre annonce.
             </para>
           </listitem>
-          
-          <listitem>
-            <para><emphasis role="bold">&Eacute;tape 6 - Envoyer une notification par email (optionnel)</emphasis></para>
 
+          <listitem>
+            <para><emphasis role="bold">Step 6 - Envoyer une notification par email (facultatif)</emphasis></para>
             <para>Cette étape est optionnelle, c'est à dire qu'elle peut
             ne pas apparaître à l'écran. Si certains utilisateurs
             CodeX ont activé la surveillance de l'un de vos paquets,
@@ -502,7 +575,11 @@
             nouvelle version conformément à leur demande. Nous vous
             conseillons vivement de ne pas négliger cette étape et de
             tenir vous utilisateurs informés.</para>
-
+            
+            <para></para>
+            <para></para>
+            <para></para>
+            <para></para>
             
             <para><tip><title>Coup de pouce : fournissez toujours un
             fichier LISEZMOI (ou README en
@@ -515,177 +592,31 @@
             listes de distributions destinées aux utilisateurs, comment
             soumettre un bug ou une demande d'assistance à l'équipe de
             projet (via CodeX bien sûr)</para></tip></para>
+            
           </listitem>
         </itemizedlist>
+
+        </section>
     </section>
-
-	<section id="ReleaseModification">
-        <title>Modification d'une version</title>
-
-        <para>Une fois votre version créée vous pouvez la modifier. Pour ce faire, cliquez sur
-        le lien [Modifier une version] situé en regard du paquet
-        approprié sur l'écran d'administration des paquets.</para>
-        
-        <figure id="FigureAPartOfTheReleasesAdministrationScreenGSAProject">
-          <title>Une partie de l'écran d'administration des versions d'un projet </title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata format="PNG"
-                         fileref="../../screenshots/fr_FR/sc_frsreleases.png" width="15.3cm" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>L'écran suivant permet de gérer les versions, il est dans l'esprit similaire à celui d'administration des paquets. 
-        Veuillez notez que l'essentiel des étapes de modification d'une version
-        est similaire à la création d'une version. (voir  <xref linkend="ReleaseCreation" />)
-        L'écran de configuration des versions est composé de 6 courtes
-        parties .</para>
-
-        <itemizedlist mark="bullet">
-          <listitem>
-            <para><emphasis role="bold">&Eacute;tape 1 - Modifier les informations concernant la version</emphasis></para>
-
-            <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseCreation" />, étape 1.)</para>
-			 </listitem>
-
-          <listitem>
-            <para><emphasis role="bold">&Eacute;tape 2 - Télécharger et attacher les fichiers à une version</emphasis></para>
-
-            <para>L'ajout de fichier est identique à celui lors de la création d'une version.
-            (voir <xref linkend="ReleaseCreation" />, étape 2.) En revanche, pour les fichiers
-            déjà ajoutés à une version, vous avez la possibilité de les supprimer
-            en séléctionnant la case de la colonne supprimer correpondant au fichier à supprimer.
-            Vous avez également la possibilité de changer le fichier de version et de modifier la date
-            du fichier.</para>
-          </listitem>
-
-		    <listitem>
-            <para><emphasis role="bold">&Eacute;tape 3 - Renseigner les notes concernant la version et les modifications</emphasis></para>
-				
-				<para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseCreation" />, étape 3.)</para>
-          </listitem>
-          
-          <listitem>
-            <para><emphasis role="bold">&Eacute;tape 4 - Modification des permissions d'une version</emphasis></para>
-            	
-            <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseCreation" />, étape 4.)</para>
-
-          </listitem>
-          
-          <listitem>
-          	<para><emphasis role="bold">&Eacute;tape 5 - Créer automatiquement une annonce
-            (optionnel)</emphasis></para>
-
-            <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseCreation" />, étape 5.)</para>
-          </listitem>
-          
-          <listitem>
-            <para><emphasis role="bold">&Eacute;tape 5 - Envoyer une notification par email (optionnel)</emphasis></para>
-
-            <para>Cette étape est identique à celle de la création d'une release. 
-            (voir <xref linkend="ReleaseCreation" />, étape 6.)</para>
-          </listitem>
-        </itemizedlist>
-    </section>
-
-    <section id="FileAccessPermissions">
-      <title>Configurer les droits d'accès</title>
-      
-      <para>Par défaut, pour un paquet ou une version, l'accès en lecture est permis à tous les
-      utilisateurs à la seule condition qu'ils soient enregistrés (les
-      utilisateurs anonymes n'y ont pas accès). Cependant certains
-      projets peuvent souhaiter limiter l'accès aux fichiers
-      publiés. Dans ce cas vous pouvez restreindre les permissions
-      d'accès de vos versions ou de vos paquets à certains groupes
-      d'utilisateurs. Voir <xref linkend="UserGroups" /> pour plus
-      d'information sur les groupes d'utilisateurs.</para>
-
-
-      <para>Les permissions d'accès sur les paquets et les versions sont vérifiés à deux niveaux :</para>
-      <itemizedlist mark="bullet">
-        <listitem><para><emphasis role="bold">Liste de
-        fichiers :</emphasis> Lorsqu'un utilisateur n'a pas accès à un
-        paquet ou à une version alors ce paquet ou cette version
-        n'apparaît pas dans la page principale du service
-        'Fichiers'. Ainsi l'utilisateur ne connaît pas l'existence de
-        la version ou du paquet en question.</para></listitem>
-
-        <listitem><para><emphasis
-        role="bold">Téléchargement :</emphasis> Si un utilisateur
-        récupère ou construit manuellement un lien de téléchargement
-        d'un fichier non autorisé, le téléchargement échouera. Le
-        système contrôle en effet de façon systématique les
-        permissions d'accès lors d'une demande de
-        téléchargement.</para></listitem>
-      </itemizedlist>
-
-      <para>Les permissions d'accès peuvent donc être définies au
-      niveau d'un paquet ou d'une version :</para>
-
-      <figure id="FigurePackagePermissions">
-        <title>Modification des permissions d'accès sur un paquet</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata format="PNG"
-                       fileref="../../screenshots/fr_FR/sc_packagepermissions.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <itemizedlist mark="bullet">
-
-        <listitem>
-          <para><emphasis role="bold">Permissions d'un paquet</emphasis></para>
-
-          <para>En cliquant sur le lien 'Définir permissions' sur
-          l'écran d'administration des paquets (voir <xref
-          linkend="FigureAPartOfThePackageAdministrationScreenGSAProject"
-          />), un membre du projet ayant le niveau de permission
-          'Administration' sur le service 'Fichiers' peut définir des
-          permissions spécifiques pour n'importe quel paquet.</para>
-
-          <para>La page de définition des permissions sur un paquet
-          (<xref linkend="FigurePackagePermissions" />) présente la
-          liste de tous les groupes utilisateurs définis dans le
-          projet. Il suffit alors de sélectionner les groupes
-          d'utilisateurs auxquels on souhaite donner les droits
-          d'accès. Si vous appuyer sur 'Retour aux valeurs d'origine',
-          les permissions d'accès sur ce paquet seront réinitialisées
-          et tout utilisateur enregistré pourra à nouveau télécharger
-          les versions contenues dans ce paquet.
-          </para>
-
-          <!-- LJ TODO:c'est vrai ça?
-          <para>Note that each time you edit permissions associated to
-          a package, the previous values are reset. So, for instance,
-          if you grant permissions to 'project members', submit, then
-          want to grant permissions to another group, do not forget to
-          select also 'project members' the second time, or they will
-          not have access to your package.</para>
-          -->
-
-          <para>Par défaut, les permissions attachées à un paquet
-          s'appliquent à toutes les versions et les fichiers qui se
-          trouvent dans ce paquet. Mais vous pouvez aussi spécifier
-          des permissions différentes pour une version spécifique
-          (voir l'étape 4 de la <xref linkend="ReleaseCreation" />).</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Permissions d'une version</emphasis></para>
-
-         <para>Voir l'étape 4 de la <xref linkend="ReleaseCreation" /></para>
-        </listitem>
-
-      </itemizedlist>
-    </section>
-    
+  </section>
+  
+  <section id="ManageProcessorsList">
+    <title>Administration de la liste des processeurs</title>
+      <para>
+          Les administrateurs projet et les administrateur du service fichier 
+          peuvent gérer la liste des processeurs pour un projet donné. 
+          Le processeur est une propriété (optionnelle) d'un délivrable. 
+          Selon le projet ou selon votre domaine d'activité, vous pouvez 
+          souhaiter ajouter certains processeurs à la liste existante. 
+          Pour ce faire, suivez le lien &#34;administration - Gérer les processeurs&#34;
+          du service Fichier. Vous obtenez alors la liste des processeurs pour le projet 
+          courant. Les processeurs <emphasis>systèmes</emphasis> ne sont pas 
+          modifiables (et ne peuvent être supprimés).
+          Les autres processeurs sont spécifiques au projet courant. 
+          Vous pouvez les modifier, les supprimer et en créer de nouveaux.
+          Un processeur a pour attribut un nom et un rang d'affichage dans la 
+          liste des processeurs..
+      </para>
   </section>
 
   </chapter>

@@ -767,7 +767,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
     d'utilisateurs sont utilisés dans le but de définir des
     permissions spécifiques sur certaines données du projet (certains
     paquets ou versions de fichiers par exemple - voir <xref
-    linkend="FileAccessPermissions" />). Un groupe d'utilisateurs est
+    linkend="PackageModification" />). Un groupe d'utilisateurs est
     toujours attaché à un projet en particulier, mais les utilisateurs
     d'un groupe ne doivent pas nécessairement être membres de ce
     projet.</para>

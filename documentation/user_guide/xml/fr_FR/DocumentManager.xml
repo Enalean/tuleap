@@ -277,7 +277,7 @@
       
       <para>La définition des droits d'accès aux documents est très
       similaires à celle des fichiers (<xref
-      linkend="FileAccessPermissions" />) : vous devez tout d'abord
+      linkend="PackageModification" />) : vous devez tout d'abord
       créer des groupes d'utilisateurs et assigner ces groupes
       d'utilisateurs à des documents individuels ou à des groupes de
       documents.</para>

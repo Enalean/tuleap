@@ -146,7 +146,7 @@
       répondre à ce besoin, CodeX offre un mécanisme de gestion des
       permissions basés sur les groupes d'utilisateurs comme pour le
       gestionnaire de fichiers et de documents (voir <xref
-      linkend="UserGroups"/>, <xref linkend="FileAccessPermissions"/>
+      linkend="UserGroups"/>, <xref linkend="PackageModification"/>
       et <xref linkend="DocAccessPermissions"/>). Les droits d'accès
       peuvent être définis au niveau du Wiki et s'appliquer à toutes
       les pages, ou bien au niveau de la page permettant ainsi de
