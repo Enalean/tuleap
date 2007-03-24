@@ -16,17 +16,18 @@ require_once("lib/WysiwygEdit.php");
 
 class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 
-    function WysiwygEdit_Wikiwyg() {
+    function WysiwygEdit_Wikiwyg($request) {
         global $LANG;
 	
         $this->_transformer_tags = false;
 	$this->BasePath = DATA_PATH.'/themes/default/Wikiwyg';
 	$this->_htmltextid = "edit:content";
         $this->_wikitextid = "editareawiki";
+	$this->_pagename = $request->getArg('pagename');
     }
 
     function Head($name='edit[content]') {
-        global $WikiTheme, $wysiwyg_editor_params;
+        global $wysiwyg_editor_params, $group_id;
 	
 	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
 				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
@@ -35,6 +36,8 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 var base_url = '/wiki';
 var data_url = '/wiki/themes/default/Wikiwyg';
 var script_url = '/wiki/index.php';
+var groupid = $group_id;
+var pagename = '$this->_pagename';
 
 window.onload = function() {
    var wikiwyg = new Wikiwyg.Phpwiki();
