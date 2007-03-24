@@ -27,7 +27,7 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
     }
 
     function Head($name='edit[content]') {
-        global $wysiwyg_editor_params, $group_id;
+        global $WikiTheme, $wysiwyg_editor_params, $group_id;
 	
 	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
 				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
@@ -96,6 +96,25 @@ window.onload = function() {
         $wysiwyg_editor_params['doubleClickToEdit'] = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT) 
             ? 'true' : 'false';
 	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = '';
+	
+	// Support for CodeX-lite theme
+        if ($WikiTheme->_name == "CodeX-lite"){
+	    foreach($wysiwyg_editor_params['WIKIWYG_SCRIPTS'] as $js){
+	        
+	    $WikiTheme->addMoreHeaders
+                (Javascript('', array('src' => $this->BasePath . '/' . $js,
+                                      'language' => 'JavaScript')));
+	    }
+	    
+	    //print "\n<!--\nHere is the main WYSIWYG script\n-->\n";
+	    //print '<script type="text/javascript" langage="JavaScript">';
+	    $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_SCRIPT'], array('language' => 'JavaScript')));
+	    //print "</script> \n";
+	    
+	    if (isset($wysiwyg_editor_params['WYSIWYG_TEXTAREA'])){
+	        $WikiTheme->addMoreHeaders($wysiwyg_editor_params['WYSIWYG_TEXTAREA']);
+	    }
+	}
     }
 
     function Textarea ($textarea, $wikitext, $name='edit[content]') {

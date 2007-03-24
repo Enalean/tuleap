@@ -888,6 +888,59 @@ img.tex {
   font-weight: normal;
 }
 
+/*  Wysiwyg mandatory section  -- Can be removed if you don't use/plan to use wysiwyg editor  */
+.wikiwyg_toolbar {
+    background: #D3D3D3;
+    border: 1px outset;
+    letter-spacing: 0;
+    padding: 2px;
+}
+
+span.wikiwyg_control_link a {
+    padding-right: 8px;
+}
+
+.wikiwyg_button {
+    background: #D3D3D3;
+    border: 1px solid #D3D3D3;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    vertical-align: bottom;
+}
+
+.wikiwyg_button:hover {
+    border: 1px outset;
+}
+
+.wikiwyg_button:active {
+    border: 1px inset;
+}
+
+.wikiwyg_separator {
+    background: #D3D3D3;
+    border: 1px solid #D3D3D3;
+    width: 9px;
+    height: 20px;
+    vertical-align: bottom;
+}
+
+.wikiwyg_selector {
+    width: 70px;
+}
+
+.wikiwyg_wysiwyg table {
+    border-collapse: collapse;
+    margin-bottom: .2em;
+}
+
+.wikiwyg_wysiwyg table td {
+    border: 1px;
+    border-style: solid;
+    padding: .2em;
+    vertical-align: top;
+}
+
 /* For emacs users
  *
  * Local Variables:
