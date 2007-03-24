@@ -175,7 +175,7 @@ Hack to clean not supported conversion to html yet
 proto.clean_wikitext = function(text_to_clean) {
     var text_cleaned = text_to_clean.replace(/\~*\<\?plugin/g,'~<?plugin');
 
-    if( text_to_clean.match(/^\#{3,}/gm) ) {
+    /*if( text_to_clean.match(/^\#{3,}/gm) ) {
       alert("Warning : Only two levels of indentation is allowed for ordered lists.\n More won't be converted");
       text_cleaned = text_to_clean.replace(/^\#{3,}/gm,'## ');
       
@@ -185,7 +185,7 @@ proto.clean_wikitext = function(text_to_clean) {
       alert("Warning : Only two levels of indentation is allowed for unordered lists. \n More won't be converted");
       text_cleaned = text_to_clean.replace(/^\*{3,}/gm,'## ');
       
-    }
+    }*/
 
     return(text_cleaned);
 }
@@ -565,12 +565,12 @@ proto.format_li = function(element) {
     var type = this.list_type[level - 1];
     var markup = this.config.markupRules[type];
 
-    if(level<=2) 
+    //if(level<=2) 
       this.appendOutput(markup[1].times(level) + ' ');
-    else {
+    /*else {
       this.appendOutput(markup[1].times(2) + ' ');
       alert("Only two levels of indentation is possible");
-    }
+    }*/
 
     this.walk(element);
 
