@@ -785,13 +785,50 @@ proto.format_p = function(element) {
 
 proto.format_a = function(element) {
     var label = Wikiwyg.htmlUnescape(element.innerHTML);
+    var href = element.getAttribute('href');
+    
     label = label.replace(/<[^>]*?>/g, ' ');
     label = label.replace(/\s+/g, ' ');
     label = label.replace(/^\s+/, '');
     label = label.replace(/\s+$/, '');
-    this.make_wikitext_link(label, element.getAttribute('href'), element);
-}
+    
+    if (Wikiwyg.is_ie) {
+        if (href.match(/http(.+)goto\?key\=(.+)/)){
+	    this.appendOutput(label);
+	}
+        else if (href.match(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/)){
+	    href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/, '$2');
+	    this.make_wikitext_link(label, href, element);
+	}
+	else if (href.match(/http(.+)\/wiki\/(.+)/)){
+	    href = href.replace(/http(.+)\/wiki\/(.+)/, '$2');
+	    this.make_wikitext_link(label, href, element);
+	}
+	else if (href.match(/(http|https|ftp).*/)){
+            // Do not put urls into brackets. We display only the url instead
+	    this.appendOutput(label);
+	}
+	else{
+	    this.make_wikitext_link(label, href, element);
+	}
+    }else{
+        if (href.match(/\/goto\?key=(.+)/)){
+	    this.appendOutput(label);
+	}
+	else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
+	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
+            this.make_wikitext_link(label, href, element);
+        }
+	else if (href.match(/(http|https|ftp).*/) && (label == href) ){
+            // Do not put urls into brackets. We display only the url instead
+	    this.appendOutput(label);
+	}
+	else{
+	    this.make_wikitext_link(label, href, element);
+	}
+    }        
 
+}
 proto.format_table = function(element) {
     this.assert_blank_line();
     this.walk(element);
