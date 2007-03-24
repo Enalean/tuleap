@@ -145,7 +145,6 @@ class WikiViews extends Views {
     //Get wysiwyg editor scripts and parameters  
     $this->html_params['WIKIWYG_SCRIPTS'] = $wysiwyg_editor_params['WIKIWYG_SCRIPTS'];
     $this->html_params['WYSIWYG_SCRIPT'] = $wysiwyg_editor_params['WYSIWYG_SCRIPT'];
-    //$this->html_params['doubleClickToEdit'] = $wysiwyg_editor_params['doubleClickToEdit'];
     $this->html_params['WYSIWYG_TEXTAREA'] = $wysiwyg_editor_params['WYSIWYG_TEXTAREA'];
     
     parent::header();
