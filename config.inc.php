@@ -132,6 +132,7 @@ $gitphp_conf['geshiroot'] = "geshi/";
  * Comment out $git_projects (leave null) to attempt to read all
  * projects in the projectroot.
  */
+$git_projects['Core']['FBX'] = "core/fbx.git";
 $git_projects['Core']['Mvm'] = "core/mvm.git";
 $git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
 $git_projects['Core']['Scripts'] = "core/scripts.git";
@@ -157,5 +158,6 @@ $git_projects['School']['CS189'] = "school/cs189.git";
 $git_projects['School']['CS183'] = "school/cs183.git";
 $git_projects['School']['CS193'] = "school/cs193.git";
 $git_projects['School']['CS195'] = "school/cs195.git";
+$git_projects['School']['CS196'] = "school/cs196.git";
 
 ?>
