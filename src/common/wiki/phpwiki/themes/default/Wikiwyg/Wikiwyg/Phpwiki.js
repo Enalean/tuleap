@@ -147,7 +147,7 @@ proto.saveChanges_button = function() {
 	   }
 	   );    
 }
-
+/*
 proto.modeClasses = [
 		     'Wikiwyg.Wikitext.Phpwiki',
 		     'Wikiwyg.Wysiwyg'
@@ -167,7 +167,12 @@ else if( mode=="Wikiwyg.Wikitext.Phpwiki" ){
 			 'Wikiwyg.Wysiwyg'
 			  ];
  }
-}
+}*/
+
+proto.modeClasses = [
+		     'Wikiwyg.Wysiwyg',
+		     'Wikiwyg.Wikitext.Phpwiki'
+		     ];
 
 /*==============================================================================
 Hack to clean not supported conversion to html yet

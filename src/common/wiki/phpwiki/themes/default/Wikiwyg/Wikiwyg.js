@@ -232,7 +232,7 @@ proto.switchMode = function(new_mode_key) {
       return;
 
     //Set cookie to keep last editing mode
-    document.cookie = "Mode="+new_mode_key;
+    //document.cookie = "Mode="+new_mode_key;
 
     var self = this;
     new_mode.enableStarted();
