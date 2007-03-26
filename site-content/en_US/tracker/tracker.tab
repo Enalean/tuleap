@@ -463,7 +463,7 @@ tracker_include_type	display_info	Display informations
 tracker_include_type	display_size	Display Size
 tracker_include_type	allow_empty	Allow Empty Value
 tracker_include_type	keep_change_history	Keep Change History
-tracker_include_type	enable_notifications	Enable Notifications
+tracker_include_type	enable_notifications	Enable Reminder
 tracker_include_type	misc	Miscellaneous:
 tracker_include_type	use_field	Use this field
 tracker_include_type	fields_requ	fields required

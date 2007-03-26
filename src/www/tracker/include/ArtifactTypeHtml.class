@@ -1463,9 +1463,13 @@ EOS;
 		}
 		//in field creation form, SB is the default selected value, so the 'enable_notification' checkbox should be disabled by default
 		if ( $func == "field_create" ) {
-		    $disabled = "disabled";		    
+		    $disabled = "disabled";
 		} else {
-		    $disabled = "";
+		    if ( $field && $field->isDateField() && !$field->isSpecial()) {
+		        $disabled = "";
+		    } else {
+		        $disabled = "disabled";
+		    }
 		}
 		echo '<input type="checkbox" id="enable_notification" name="enable_notification" value="1" '.$checked.' '.$disabled.'> </td>';		
 
