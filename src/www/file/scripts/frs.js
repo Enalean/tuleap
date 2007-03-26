@@ -285,35 +285,35 @@ Event.observe(window, 'load', function() {
 												'<a href="#change_permissions" onclick="view_change_permissions(); return false;">'+view_change_text+'</a></TD></TR>');
 
 		
-		Event.observe($('frs_form'), 'submit', (function(evt){
-			$('feedback').innerHTML = '';
-			var valide = false;
-			if(release_mode == 'creation'){
-				if( $('package_id')){
-					var package_id = $('package_id').value;
-				}else { var package_id = null; }
-				var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
-								'&name=' + $('release_name').value;
-			}else{
-				var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('new_package_id').value+'&date=' + $('release_date').value+
-								'&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
-			}
-			new Ajax.Request(url,
-			  {
+	
+});
+
+function check_parameters(){
+	$('feedback').innerHTML = '';
+	var valide = false;
+	if(release_mode == 'creation'){
+		if( $('package_id')){
+			var package_id = $('package_id').value;
+		}else { var package_id = null; }
+			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
+					'&name=' + $('release_name').value;
+		}else{
+			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('new_package_id').value+'&date=' + $('release_date').value+
+					'&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
+		}
+		new Ajax.Request(url,
+			{
 			    method:'get',
 			    onSuccess: (function(transport, json) {
             	if (json.valid) {
             		this.submit();
-
-            	} else {
+				} else {
             		$('feedback').innerHTML = json.msg;
             		Element.scrollTo('feedback');
             	}
-        	   }).bind(this) 
-			  });
-			  Event.stop(evt);
-              return false;
-		}).bind($('frs_form')));	
-	
-});
+        	 }).bind(this) 
+		});
+		Event.stop(evt);
+        return false;
+}
 		
