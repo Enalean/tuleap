@@ -840,10 +840,10 @@ class Artifact extends Error {
 				if ($field->isDateField()) {
 				    if (($old_value == 0 || $old_value == NULL) && $value <> 0 && $value <> NULL) {
 				        //field date value is set
-					$this->ArtifactType->addArtifactToDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());					
+					$this->ArtifactType->addArtifactToDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID());
 				    } else if ($old_value <> 0 && $old_value <> NULL && $value == 0) {
 				        //field date value is unset
-					$this->ArtifactType->deleteArtifactFromDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
+					$this->ArtifactType->deleteArtifactFromDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID());
 				    }
 				}
                             } else {
@@ -893,7 +893,7 @@ class Artifact extends Error {
                     $this->addHistory ($field,$result['close_date'],'');
                 }
 		//Delete corresponding entry in artifact_date_reminder_processing table
-		$this->ArtifactType->deleteArtifactFromDateReminderProcessing(0,$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
+		$this->ArtifactType->deleteArtifactFromDateReminderProcessing(0,$this->getID(),$this->ArtifactType->getID());
             }
         
             //
@@ -936,7 +936,7 @@ class Artifact extends Error {
 
 	    if (($old_close_date == 0 || $old_close_date == NULL) && ($new_close_date <> 0 || $new_close_date <> NULL) && $old_close_date <> $new_close_date) {
 	        $end_date_field = $art_field_fact->getFieldFromName('close_date');  
-	        $this->ArtifactType->addArtifactToDateReminderProcessing($end_date_field->getID(),$this->getID(),$this->ArtifactType->getID(),$this->ArtifactType->getGroupID());
+	        $this->ArtifactType->addArtifactToDateReminderProcessing($end_date_field->getID(),$this->getID(),$this->ArtifactType->getID());
 	    }
         
             if (!$res_upd) {

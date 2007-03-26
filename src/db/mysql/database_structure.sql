@@ -2961,7 +2961,6 @@ CREATE TABLE artifact_date_reminder_processing (
   artifact_id int(11) NOT NULL default '0',
   field_id int(11) NOT NULL default '0',
   group_artifact_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
   notification_sent int(11) NOT NULL default '0'
   ) TYPE=MyISAM;
 

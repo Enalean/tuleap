@@ -976,7 +976,7 @@ function getUsedFields() {
       exit_error($Language->getText('global','error'),$ah->getErrorMessage());
     } else {
       //add the artifact to date reminder processing table, if relevant
-      $this->ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$this->ath->getID(),$this->group->group_id);
+      $this->ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$this->ath->getID());
     }
     
     //handle dependencies and such stuff ...
