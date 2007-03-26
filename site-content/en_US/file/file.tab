@@ -273,7 +273,7 @@ file_showfiles	file_p_for	File packages for project '$1'
 file_showfiles	no_file_p	No File Packages
 file_showfiles	no_p_available	There are no file packages available
 file_showfiles	p_releases	Package Releases
-file_showfiles	select_release	Select Release to see Release Notes and Change Log.&nbsp;Select File to request file download.
+file_showfiles	select_release	Select the text icon (next to release name) to see Release Notes and Change Log.&nbsp;Select File to request file download.
 file_showfiles	release_notes	Release &amp; Notes
 file_showfiles	size	Size (Kb)
 file_showfiles	d_l	D/L

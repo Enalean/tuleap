@@ -277,7 +277,7 @@ file_showfiles	file_p_for	Paquets du projet '$1'
 file_showfiles	no_file_p	Aucun paquet
 file_showfiles	no_p_available	Il n'y a aucun paquet disponible
 file_showfiles	p_releases	Versions
-file_showfiles	select_release	Sélectionner le nom/numéro de version pour voir les notes et les modifications correspondantes.&nbsp;Sélectionner un fichier pour démarrer le téléchargement.
+file_showfiles	select_release	Sélectionner l'icône à côté du nom de la version pour voir les notes et les modifications correspondantes.&nbsp;Sélectionner un fichier pour démarrer le téléchargement.
 file_showfiles	release_notes	Versions et Notes
 file_showfiles	size	Taille (Ko)
 file_showfiles	d_l	D/L
