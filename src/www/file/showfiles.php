@@ -317,7 +317,11 @@ while (list ($package_id, $package) = each($packages)) {
                                 // Display popup
                                 print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $file_release['filename'] . '\')" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
                             }
-                            print '</B></TD>' . '<TD>' . file_utils_convert_bytes_to_kbytes($file_release['file_size']) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>' . '<TD>' . (isset ($processor[$file_release['processor']]) ? $processor[$file_release['processor']] : "") . '</TD>' . '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
+                            $size_precision = 0;
+                            if ($file_release['file_size'] < 1024) {
+                                $size_precision = 2;
+                            }
+                            print '</B></TD>' . '<TD>' . file_utils_convert_bytes_to_kbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>' . '<TD>' . (isset ($processor[$file_release['processor']]) ? $processor[$file_release['processor']] : "") . '</TD>' . '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
                             if (!isset ($proj_stats['size']))
                                 $proj_stats['size'] = 0;
                             $proj_stats['size'] += $file_release['file_size'];
