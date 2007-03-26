@@ -648,6 +648,11 @@ class ArtifactFieldFactory extends Error {
 			return false;
 		}
 		
+		//Insert default reminder settings, in case the field is a date-field and reminder is enabled
+		if ($data_type == $af->DATATYPE_DATE && $enable_notification == 1) {
+		    $af->setDefaultReminderSettings($field_id,$this->ArtifactType->getID());
+		}
+		
 		// We need to insert with the default value, records in artifact_field_value table
 		// for the new field
 		$sql_artifacts='SELECT artifact_id '.
