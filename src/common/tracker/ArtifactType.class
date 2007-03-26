@@ -918,7 +918,6 @@ class ArtifactType extends Error {
 	/**
 	 *  updateDateFieldReminderSettings - use this to update the date-fields reminder settings in the database.
 	 *
-	 *  @param	$group_id	The project id
 	 *  @param	$field_id	The date field concerned by the notification.
 	 *  @param	$group_artifact_id	The tracker id
 	 *  @param	$start	When will the notification start taking effect, with regards to date occurence (in days)
@@ -929,6 +928,7 @@ class ArtifactType extends Error {
 	 *  @param	$assignee	Is assignee notified ?
 	 *  @param	$cc	Is cc notified ?
 	 *  @param	$commenter	Is commetner notified ?
+	 * 
 	 *  @return true on success, false on failure.
 	 */	
 	function updateDateFieldReminderSettings($field_id,$group_artifact_id,$start,$notif_type,$frequency,$recurse,$people_notified) {
@@ -978,6 +978,15 @@ class ArtifactType extends Error {
 	    
 	}
 	
+	/**
+	* Add artifact to artifact_date_reminder_processing table
+	* 
+	*  @param field_id: the field id
+	*  @param artifact_id: the artifact id
+	*  @param group_artifact_id: the tracker id
+	* 
+	* @return nothing
+	*/
 	function addArtifactToDateReminderProcessing($field_id,$artifact_id,$group_artifact_id) {
 	
 	    $art_field_fact = new ArtifactFieldFactory($this);
@@ -1042,6 +1051,15 @@ class ArtifactType extends Error {
 
 	}
 	
+	/**
+	* Delete artifact from artifact_date_reminder_processing table
+	* 
+	*  @param field_id: the field id
+	*  @param artifact_id: the artifact id
+	*  @param group_artifact_id: the tracker id
+	* 
+	* @return nothing
+	*/	
 	function deleteArtifactFromDateReminderProcessing($field_id,$artifact_id,$group_artifact_id) {
 	    
 	    if ($field_id == 0) {  

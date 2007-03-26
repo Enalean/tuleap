@@ -1672,7 +1672,7 @@ class ArtifactField extends Error {
 	
 	    $ins = sprintf('INSERT INTO artifact_date_reminder_settings'
 			    .' (field_id,group_artifact_id,notification_start,notification_type,frequency,recurse,notified_people)'
-			    .' VALUES (%d,%d,%d,%d,%d,"%s")',
+			    .' VALUES (%d,%d,%d,%d,%d,%d,"%s")',
 			    $field_id,$group_artifact_id,0,0,1,1,"1,2,3,4");
 	    $res = db_query($ins);
 	

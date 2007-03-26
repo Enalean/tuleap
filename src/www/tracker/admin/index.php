@@ -415,10 +415,16 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notified_users');
 		    } else if ($_REQUEST['start'] == NULL) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_start');
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
+   		        $feedback .= $Language->getText('tracker_admin_index','positive_value');
 		    } else if ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_frequency');
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
+		        $feedback .= $Language->getText('tracker_admin_index','positive_value');
 		    } else if ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0) {
 		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_recurse');
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
+		        $feedback .= $Language->getText('tracker_admin_index','positive_value');
 		    } else {
 		        $res = $ath->updateDateFieldReminderSettings($field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);			
 		        if ($res) {
