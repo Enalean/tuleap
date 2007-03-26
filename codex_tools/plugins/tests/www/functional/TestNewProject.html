@@ -1,7 +1,43 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>TestNewProject</title>
+</head>
+<body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">New project "John Doe's Project"</td></tr>
+<tr><td rowspan="1" colspan="3">TestNewProject</td></tr>
 </thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>newproject_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>newproject_admin</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Newproject Admin</td>
+	<td></td>
+</tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Register New Project</td>
@@ -20,12 +56,12 @@
 <tr>
 	<td>type</td>
 	<td>form_full_name</td>
-	<td>John Doe's Project</td>
+	<td>New Project</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>form_unix_name</td>
-	<td>jdp</td>
+	<td>newp</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -85,11 +121,11 @@
 <tr>
 	<td>verifyValue</td>
 	<td>form_full_name</td>
-	<td>John Doe's Project</td>
+	<td>New Project</td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>jdp</td>
+	<td>newp</td>
 	<td></td>
 </tr>
 <tr>
@@ -123,8 +159,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Page personnelle de Site Administrator (admin)</td>
+	<td>waitForTextPresent</td>
+	<td>Page personnelle de Site Administrator</td>
 	<td></td>
 </tr>
 <tr>
@@ -155,12 +191,12 @@
 <tr>
 	<td>type</td>
 	<td>form_loginname</td>
-	<td>johndoe</td>
+	<td>newproject_admin</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>form_pw</td>
-	<td>johndoe</td>
+	<td>newproject_admin</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -168,8 +204,21 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>John Doe's Project [Admin]</td>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Newproject Admin</td>
 	<td></td>
 </tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>New Project [Admin]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
 </tbody></table>
+</body>
+</html>
