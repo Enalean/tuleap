@@ -39,9 +39,6 @@ class ArtifactDateReminder extends Error {
 	// The reminder id
 	var $reminder_id;
 	
-	// The group id
-	var $group_id;
-	
 	// The tracker id
 	var $group_artifact_id;
 	
@@ -78,8 +75,7 @@ class ArtifactDateReminder extends Error {
 	 */
 	function setFromArray($notif_array) {
 	    
-	    $this->reminder_id = $notif_array['reminder_id'];
-	    $this->group_id = $notif_array['group_id'];
+	    $this->reminder_id = $notif_array['reminder_id'];	    
 	    $this->group_artifact_id = $notif_array['group_artifact_id'];
 	    $this->artifact_id = $notif_array['artifact_id'];
 	    $this->field_id = $notif_array['field_id'];
@@ -116,12 +112,18 @@ class ArtifactDateReminder extends Error {
 	}
 	
 	/**
-	* Get the group_id attribute value
+	* Get the group id
 	* 
 	* @return int
 	*/
 	function getGroupId() {
-	    return $this->group_id;
+	    
+	    $sql = sprintf('SELECT * FROM artifact_group_list'
+			    .' WHERE group_artifact_id=%d',
+			    $this->getGroupArtifactId());
+	    $res = db_query($sql);
+	    return db_result($res,0,'group_id');
+	    
 	}
 	
 	/**
