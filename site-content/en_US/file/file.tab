@@ -171,6 +171,8 @@ file_admin_editreleases	default_permissions	Will be created with the same permis
 file_admin_editreleases	delete_col	Delete
 file_admin_editreleases	release_perm	The release permissions are :  
 file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, you will be able to upload it again in less than two hours.
+file_admin_editreleases	create_new_release	Create a new release
+file_admin_editreleases	edit_release	Edit a release
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
