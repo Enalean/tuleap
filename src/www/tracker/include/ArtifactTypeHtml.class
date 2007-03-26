@@ -2112,21 +2112,18 @@ EOS;
 		    $fields = $art_field_fact->getUsedDateFields();
 		    $row_color = 0;
 		
-		    while (list($field_name,$field) = each($fields)	) {
+		    while (list($field_name,$field) = each($fields)) {
  		    
 		        // no notification status/settings for special Date field (Submitted on)
-		        if ($field->isSpecial()) {
-		            $notif_settings = "-";
-			    $notif_status = "-";
-		        } else {		        
+		        if (!$field->isSpecial()) {
+		            
 			    if ($field->getNotificationStatus()) {			        
 				$notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$group_id.'&atid='.$this->getID().'&field_id='.$field->getID().'">'.$Language->getText('tracker_include_type','edit_notif_settings').'</A>';		
 			        $notif_status = $Language->getText('tracker_include_type','active');
 			    } else {
 			        $notif_settings = $Language->getText('tracker_include_type','edit_notif_settings');
 		                $notif_status = $Language->getText('tracker_include_type','disabled');
-		            }
-		        }
+		            }		        
 		    
 		        $out .= sprintf($fmt,
 				    util_get_alt_row_color($row_color),
@@ -2134,6 +2131,7 @@ EOS;
 				    $notif_status,
                        		    $notif_settings);
 		        $row_color++;
+			}
 		    }
 		
 		    $out .= "</table>";
