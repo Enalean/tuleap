@@ -128,7 +128,6 @@ proto.config = {
     toolbarClass: 'Wikiwyg.Toolbar',
     modeClasses: [ 
         'Wikiwyg.Wysiwyg',
-        'Wikiwyg.Wikitext',
         'Wikiwyg.Preview'
     ]
 };

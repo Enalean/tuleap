@@ -51,7 +51,6 @@ window.onload = function() {
 	        imagesLocation: base_url+'/themes/default/Wikiwyg/images/',
 		controlLayout: [
 		       'save','preview','|','save_button','|',
-                       'mode_selector', '/',
 		       'p','|',
 		       'h2', 'h3', 'h4','|',
 		       'bold', 'italic', '|',
