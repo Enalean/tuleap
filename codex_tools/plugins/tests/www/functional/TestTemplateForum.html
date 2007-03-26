@@ -1,0 +1,479 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>TestTemplateForum</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestTemplateForum</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Template Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Test Template Forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forums</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/forum/admin/?group_id=117')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add Forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>forum_name</td>
+	<td>This is a first public, monitored forum</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>The desc of the first forum</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Added</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>forum_name</td>
+	<td>This a private, monitored forum</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].is_public[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>The desc of the second forum</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>forum_name</td>
+	<td>This is a public, not monitored forum</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].is_monitored[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>The desc of the third forum</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>forum_name</td>
+	<td>This is a private, not monitored forum</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>The desc of the fourth forum</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].is_public[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].is_monitored[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>forum_name</td>
+	<td>This is a forum with a message inside</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>The desc of the fifth forum</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forums</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=This is a forum with a message inside</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>subject</td>
+	<td>A message</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>body</td>
+	<td>should not be copied during project registration</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.forms[2].SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Message Posted</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forums</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=This is a forum with a message inside</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=A message [ reply ]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>body</td>
+	<td>And this is the answer</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register New Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>register_tos_i_agree</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_full_name</td>
+	<td>Test Template Forum Instance</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_unix_name</td>
+	<td>test-t-forum-i</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].built_from_template[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_short_description</td>
+	<td>Test Template Forum Instance</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_purpose</td>
+	<td> </td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>siteadmin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Page principale</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=approbation requise</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.forms[3].submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Se déconnecter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Template Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Test Template Forum Instance</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forums</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This is a first public, monitored forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This a private, monitored forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This is a public, not monitored forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This is a private, not monitored forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This is a forum with a message inside</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=This is a forum with a message inside</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>should not be copied during project registration</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forums</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=This is a public, not monitored forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Stop Monitoring Forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forums</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=This is a private, not monitored forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Stop Monitoring Forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/forum/admin/?group_id=118')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Update Forum Info/Status</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>is_public</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>document.forms[2].is_public[1]</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>document.forms[3].is_public[0]</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>document.forms[4].is_public[1]</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>document.forms[5].is_public[0]</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
