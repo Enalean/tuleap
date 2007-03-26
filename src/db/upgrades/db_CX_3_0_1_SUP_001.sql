@@ -49,8 +49,7 @@
 CREATE TABLE artifact_date_reminder_settings (
   reminder_id int(11) NOT NULL auto_increment,
   field_id int(11) NOT NULL default '0',
-  group_artifact_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
+  group_artifact_id int(11) NOT NULL default '0',  
   notification_start int(11) NOT NULL default '0',
   notification_type int(11) NOT NULL default '0',
   frequency int(11) NOT NULL default '0',

@@ -935,18 +935,17 @@ class ArtifactType extends Error {
 	       
 	    $notified_users = implode(",",$people_notified);
 	    
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
-			    .' WHERE group_id=%d'
-			    .' AND group_artifact_id=%d'
+	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'			    
+			    .' WHERE group_artifact_id=%d'
 			    .' AND field_id=%d',
-			    $group_id,$group_artifact_id,$field_id);  
+			    $group_artifact_id,$field_id);  
 	    $res = db_query($sql);
 	    if (db_numrows($res) < 1) {
 	        //create reminder settings
 		$insert = sprintf('INSERT INTO artifact_date_reminder_settings'
-				.' (field_id,group_artifact_id,group_id,notification_start,notification_type,frequency,recurse,notified_people)'
-				.' VALUES(%d,%d,%d,%d,%d,%d,%d,"%s")',
-				$field_id,$group_artifact_id,$group_id,$start,$notif_type,$frequency,$recurse,$notified_users);		
+				.' (field_id,group_artifact_id,notification_start,notification_type,frequency,recurse,notified_people)'
+				.' VALUES(%d,%d,%d,%d,%d,%d,"%s")',
+				$field_id,$group_artifact_id,$start,$notif_type,$frequency,$recurse,$notified_users);		
 		$result = db_query($insert);
 		
 		//populate 'artifact_date_reminder_processing' table with concerned artifacts
@@ -969,10 +968,9 @@ class ArtifactType extends Error {
 				.' , frequency=%d'
 				.' , recurse=%d'
 				.' , notified_people="%s"'
-				.' WHERE group_id=%d'
-				.' AND group_artifact_id=%d'
+				.' WHERE group_artifact_id=%d'
 				.' AND field_id=%d',
-				$start,$notif_type,$frequency,$recurse,$notified_users,$group_id,$group_artifact_id,$field_id);		
+				$start,$notif_type,$frequency,$recurse,$notified_users,$group_artifact_id,$field_id);		
 		$result = db_query($update);
 	    }
 	    
@@ -985,16 +983,14 @@ class ArtifactType extends Error {
 	    $art_field_fact = new ArtifactFieldFactory($this);
 	    
 	    if ($field_id <> 0) {
-		$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
-			       .' WHERE group_id=%d'
-			       .' AND group_artifact_id=%d'
+		$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'			       
+			       .' WHERE group_artifact_id=%d'
 			       .' AND field_id=%d',
-			       $group_id,$group_artifact_id,$field_id);
+			       $group_artifact_id,$field_id);
 	    } else {
 	  	$sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
-			       .' WHERE group_id=%d'
-			       .' AND group_artifact_id=%d',
-			       $group_id,$group_artifact_id);
+			       .' WHERE group_artifact_id=%d',
+			       $group_artifact_id);
 	    }
 	    $res = db_query($sql);
 	    if (db_numrows($res) > 0) {
@@ -2074,10 +2070,9 @@ class ArtifactType extends Error {
 	function getDateFieldReminderSettings($group_id,$group_artifact_id,$field_id) {
 	    
 	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
-			    .' WHERE group_id=%d'
-			    .' AND group_artifact_id=%d'
+			    .' WHERE group_artifact_id=%d'
 			    .' AND field_id=%d',
-			    $group_id,$group_artifact_id,$field_id);	    
+			    $group_artifact_id,$field_id);	    
 	    $result = db_query($sql);
 	    return $result;
 	    

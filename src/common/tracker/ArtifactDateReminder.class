@@ -183,9 +183,8 @@ class ArtifactDateReminder extends Error {
 	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND field_id=%d'
-			    .' AND group_artifact_id=%d'
-			    .' AND group_id=%d',
-			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId(),$this->getGroupId());
+			    .' AND group_artifact_id=%d',
+			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId());
 	    $res  =db_query($sql);
 	    $start = db_result($res,0,'notification_start');    
 	    $type = db_result($res,0,'notification_type');
@@ -213,9 +212,8 @@ class ArtifactDateReminder extends Error {
 	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND field_id=%d'
-			    .' AND group_artifact_id=%d'
-			    .' AND group_id=%d',
-			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId(),$this->getGroupId());
+			    .' AND group_artifact_id=%d',
+			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId());
 	    $res = db_query($sql);
 	    
 	    return db_result($res,0,'recurse');
@@ -232,9 +230,8 @@ class ArtifactDateReminder extends Error {
 	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND field_id=%d'
-			    .' AND group_artifact_id=%d'
-			    .' AND group_id=%d',
-			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId(),$this->getGroupId());
+			    .' AND group_artifact_id=%d',
+			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId());
 	    $res = db_query($sql);
 	    
 	    return db_result($res,0,'frequency');
@@ -306,10 +303,9 @@ class ArtifactDateReminder extends Error {
 	    $notified_people = array();
 	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
-			    .' AND group_id=%d'
 			    .' AND group_artifact_id=%d'
 			    .' AND field_id=%d',
-			    $this->getReminderId(),$this->getGroupId(),$this->getGroupArtifactId(),$this->getFieldId());
+			    $this->getReminderId(),$this->getGroupArtifactId(),$this->getFieldId());
 	    $res = db_query($sql);
 	    $notif = db_result($res,0,'notified_people');
 	    $notif_array = explode(",",$notif);
