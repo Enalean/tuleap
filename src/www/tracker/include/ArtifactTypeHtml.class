@@ -2173,7 +2173,7 @@ EOS;
 	    
 	    $out = '<P><h3>'.$Language->getText('tracker_include_type','notif_settings_field',array($field->getLabel())).'</h3><P>';
 	    
-	    $out .= '
+	    /*$out .= '
 	         <FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="date_field_notification_settings_form">
 		 <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
@@ -2197,7 +2197,20 @@ EOS;
 		 </TR>
 		 <TR>
 		   <TD valign="top">'.$Language->getText('tracker_include_type','notified_users').' <font color="red">*</font> </TD>
-		   <TD><SELECT MULTIPLE NAME="notified_users[]">';
+		   <TD><SELECT MULTIPLE NAME="notified_users[]">';*/
+		   
+	    $out .= '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="date_field_notification_settings_form">
+		    <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
+	            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
+		    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
+		    <TABLE BORDER=0><TR><TD>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part1',array($field->getLabel())).
+		    '</TD><TD> <INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="'.$start.'"> '.$Language->getText('tracker_include_type','days').'</TD><TD>
+		    <SELECT NAME="notif_type">
+		        <OPTION VALUE="0" '.$before.'>'.$Language->getText('tracker_include_type','notify_before').'
+			<OPTION VALUE="1" '.$after.'>'.$Language->getText('tracker_include_type','notify_after').'
+		    </SELECT> '.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part2').
+		    '</TD></TR><TR><TD valign="top">'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part3').' <INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"> '.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part4').
+		    '</TD><TD> <SELECT MULTIPLE NAME="notified_users[]">';
 	
 	    $selected = "";
 	    if (in_array("1",$notified_users)) {
@@ -2221,10 +2234,11 @@ EOS;
 	    if (in_array("4",$notified_users)) {
 	        $selected = "selected";
 	    }
-	    $out .= '<OPTION VALUE="4" '.$selected.'>'.$Language->getText('tracker_common_types','role_COMMENTER_short_desc').'
-		 </SELECT></TD></TR></TABLE>';
 	    
-	    $out .= '<P><INPUT TYPE="SUBMIT" NAME="submit_notif_settings"></FORM>';	 
+	    $out .= '<OPTION VALUE="4" '.$selected.'>'.$Language->getText('tracker_common_types','role_COMMENTER_short_desc').'</SELECT></TD><TD valign="top"> '. 	    
+		    $GLOBALS['Language']->getText('tracker_include_type','reminder_form_part5').
+		    ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('tracker_include_type','days').
+		    '.</TD></TR></TABLE><P><INPUT TYPE="SUBMIT" NAME="submit_notif_settings"></FORM>';	 
 	    echo $out;
 	    
 	}
