@@ -181,7 +181,7 @@ while (list ($package_id, $package) = each($packages)) {
         print '</legend>';
         if (!$package->isActive()) {
             //TODO i18n
-            print '<div style="text-align:center"><em>This package is inactive.</em></div>';
+            print '<div style="text-align:center"><em>'.$Language->getText('file_showfiles', 'hidden_package').'</em></div>';
         }
         // get the releases of the package
         // Order by release_date and release_id in case two releases
@@ -243,7 +243,7 @@ while (list ($package_id, $package) = each($packages)) {
                     print '  </td>';
                     print ' <td style="text-align:center">';
                     if (!$package_release->isActive()) {
-                        print '<em>This release is inactive.</em>';
+                        print '<em>'.$Language->getText('file_showfiles', 'hidden_release').'</em>';
                     } 
                     print '</td> ';
                     print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';

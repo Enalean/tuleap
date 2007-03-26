@@ -294,6 +294,8 @@ file_showfiles	stat_total_nb_releases	versions
 file_showfiles	stat_total_nb_files	fichiers
 file_showfiles	stat_total_size	Ko
 file_showfiles	stat_total_nb_downloads	téléchargements
+file_showfiles	hidden_package	Ce paquet est caché.
+file_showfiles	hidden_release	Cette version est cachée.
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php
