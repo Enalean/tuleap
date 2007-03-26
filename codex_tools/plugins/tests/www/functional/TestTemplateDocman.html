@@ -1,0 +1,494 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>TestTemplateDocman</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestTemplateDocman</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Template Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Test Template Docman</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Documents</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/plugins/docman/?group_id=116&action=admin')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage Properties</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Status</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>use_it</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/plugins/docman/?group_id=116&action=admin')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage Display Preferences</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>selected_view</td>
+	<td>label=Icons</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New document</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[title]</td>
+	<td>Empty</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>item_item_type_6</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create document']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Document successfully created</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeAttribute</td>
+	<td>//a[text()='Project Documentation']/@href</td>
+	<td>link</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['link'].match(/\bid=(\d*)/)[1]}</td>
+	<td>item_id</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>dom=document.getElementById('docman_item_show_menu_'+storedVars['item_id']);</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New folder</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[title]</td>
+	<td>Folder</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create folder']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Folder</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeAttribute</td>
+	<td>//a[text()='Folder']/@href</td>
+	<td>link</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['link'].match(/\bid=(\d*)/)[1]}</td>
+	<td>item_id</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>dom=document.getElementById('docman_item_show_menu_'+storedVars['item_id']);</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New folder</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[title]</td>
+	<td>Subfolder</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create folder']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=New document</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>item[title]</td>
+	<td>2° empty document</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>item_item_type_6</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>item_parent_id_33</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=[view/change]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>permissions[2]</td>
+	<td>label=-</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>permissions[3]</td>
+	<td>label=-</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create document']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register New Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>register_tos_i_agree</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_full_name</td>
+	<td>Test Template Docman Instance</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_unix_name</td>
+	<td>test-t-docman-i</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].built_from_template[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_short_description</td>
+	<td>Test Template Docman Instance</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_purpose</td>
+	<td> </td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>siteadmin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Page personnelle de Site Administrator</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Page principale</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=approbation requise</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.forms[3].submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Se déconnecter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Template Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Test Template Docman Instance</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Documents</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/plugins/docman/?group_id=118&action=admin')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage Display Preferences</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>selected_view</td>
+	<td>Icons</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(@href, '/plugins/docman/?group_id=118&action=admin')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage Properties</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Status</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>use_it</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Project Documentation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>selected_view</td>
+	<td>label=regexp:\s+Tree</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Folder</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Subfolder</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>2° empty document</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Empty</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeAttribute</td>
+	<td>//a[text()='2° empty document']/@href</td>
+	<td>link</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['link'].match(/\bid=(\d*)/)[1]}</td>
+	<td>item_id</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>dom=document.getElementById('docman_item_show_menu_'+storedVars['item_id']);</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Permissions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>permissions[1]</td>
+	<td>-</td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>permissions[2]</td>
+	<td>-</td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>permissions[3]</td>
+	<td>-</td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>permissions[4]</td>
+	<td>Document Manager</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
