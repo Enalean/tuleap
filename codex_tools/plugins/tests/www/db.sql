@@ -9538,6 +9538,7 @@ CREATE TABLE IF NOT EXISTS plugin_docman_tokens (
   user_id int(11) NOT NULL default '0',
   token varchar(32) NOT NULL default '',
   url text NOT NULL,
+  created_at DATETIME NOT NULL,
   PRIMARY KEY  (user_id,token)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
