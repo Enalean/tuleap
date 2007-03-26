@@ -819,7 +819,7 @@ proto.format_a = function(element) {
 	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
-	else if (href.match(/(http|https|ftp).*/) && (label == href) ){
+	else if (href.match(/(http|https|ftp).*/)){
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
 	}
