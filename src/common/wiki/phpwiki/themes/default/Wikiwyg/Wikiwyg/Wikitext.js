@@ -909,11 +909,11 @@ proto.chomp = function() {
 }
 
 proto.collapse = function(string) {
-    return string.replace(/[ \r\n]+/g, ' ');
+    return string;//.replace(/[ \r\n]+/g, ' ');
 }
 
 proto.trim = function(string) {
-    return string.replace(/^\s+/, '');
+    return string;//.replace(/^\s+/, '');
 }
 
 proto.insert_new_line = function() {
