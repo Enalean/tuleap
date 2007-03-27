@@ -191,20 +191,31 @@ john.smith@xerox.com</programlisting>
 	        </listitem>
 	        <listitem>
 	          <para>les mêmes services sont activés (voir 
-		  <xref linkend="ServiceConfiguration" />).</para>
+		  <xref linkend="ServiceConfiguration" />). Les services non 
+          disponibles ne seront pas présents. Les services désactivés seront 
+          également désactivés par défaut.
+            </para>
 	        </listitem>
 	        <listitem>
 	          <para>les mêmes references sont définies (voir 
 		  <xref linkend="ReferenceConfiguration" />).</para>
 	        </listitem>
 		<listitem>
-	          <para>les mêmes groupes d'utilisateurs éxistent
+	          <para>les mêmes groupes d'utilisateurs existent
 		  (voir <xref linkend="UserGroups" />).</para>
 		</listitem>
 		<listitem>
 	          <para>tous les outils de suivi ayant l'option "instantier dans les nouveaux projets"
 		  sont copiés avec les champs associés, leurs valeurs, leurs dépendances ainsi 
 		  que les rapports de recherche et les permissions (voir <xref linkend="TrackerAdministration" />).</para>
+		</listitem>
+        <listitem>
+	          <para>les mêmes forums seront créés. Par contre, les messages 
+              ne sont pas copiés.</para>
+		</listitem>
+        <listitem>
+	          <para>les documents, ainsi que l'architecture du gestionnaire de document 
+               seront présents.</para>
 		</listitem>
 	     
 	      </itemizedlist>

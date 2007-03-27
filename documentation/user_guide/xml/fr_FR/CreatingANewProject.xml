@@ -87,10 +87,10 @@
 	  <para><emphasis role="bold">&Eacute;tape 3 - Projet de patron</emphasis></para>
 
 	  <para>Vous avez déjà soumis un projet CodeX et voudriez réutiliser la 
-	  même configuration des services ? Vous pouvez convertir votre ancien projet
-	  en patron de projet (voir <xref linkend="ProjectType" />) et vous le 
-	  retrouverez sur cette page dans la liste des patrons de projet disponible. 
-	  Choisissez votre ancien
+	  même configuration (services, outils de suivi, documents, références, ...) ? 
+      Vous pouvez convertir votre ancien projet en patron de projet 
+      (voir <xref linkend="ProjectType" />) et vous le retrouverez sur cette page 
+      dans la liste des patrons de projet disponible. Choisissez votre ancien
 	  projet comme patron et votre nouveau projet aura les mêmes services configurés
 	  de la même manière que votre ancien projet. Si vous ne voulez pas réutiliser
 	  un patron spécifique gardez simplement le Patron CodeX par défault coché

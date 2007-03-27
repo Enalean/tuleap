@@ -174,7 +174,8 @@ john.smith@xerox.com</programlisting>
 	        </listitem>
 	        <listitem>
 	          <para>the same services are enabled (see 
-		  <xref linkend="ServiceConfiguration" />).</para>
+		  <xref linkend="ServiceConfiguration" />). Unavailable services won't 
+          be present. Disabled services will be disabled by default.</para>
 	        </listitem>
 	        <listitem>
 	          <para>the same reference patterns are defined (see 
@@ -189,7 +190,14 @@ john.smith@xerox.com</programlisting>
 		  are copied with their associated fields, field values, field dependencies, reports, 
 		  and permissions (see <xref linkend="TrackerAdministration" />).</para>
 		</listitem>
-	    
+	    <lisitem>
+            <para>the same forums are created (but the messages are not copied).
+            </para>
+        </lisitem>
+        <lisitem>
+            <para>the documents, as well as the document tree will be present.
+            </para>
+        </lisitem>
 	      </itemizedlist>
 	    
 	      Just notice that the project members of the template projects will 

@@ -79,9 +79,9 @@
 	  <para><emphasis role="bold">Step 3 - Project Template</emphasis></para>
 
 	  <para>You already registered a CodeX project and would now like to reuse
-	  the same configuration of services or trackers ? Make your old project a
-	  template project (see <xref linkend="ProjectType" />) and you will find 
-	  it here in the list of available 
+	  the same configuration (services, trackers, documents, references, ...) ? 
+      Make your old project a template project (see <xref linkend="ProjectType" />) 
+      and you will find it here in the list of available 
 	  project templates. Check your old project as template and your new registered
 	  project will be staffed as you are used to. If you don't want to reuse
 	  a specific template just keep the Default CodeX Template checked and go on.</para>
