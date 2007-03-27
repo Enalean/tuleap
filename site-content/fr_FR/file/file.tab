@@ -29,7 +29,7 @@ file_admin_editpackagepermissions	select_u_group	Sélectionner les groupes d'util
 #
 file_admin_editpackages	p_name_exists	Ce nom de paquet existe déjà. Veuillez choisir un autre nom.
 file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un paquet qui contient des versions actives. Veuillez d'abord cacher ces versions.
-file_admin_editpackages	p_updated	Paquet mis à jour avec succés
+file_admin_editpackages	p_updated	Paquet mis à jour avec succès
 file_admin_editpackages	perm_update_err	Erreur&nbsp;: la mise à jour des permissions a échoué
 file_admin_editpackages	perm_reset_err	Erreur&nbsp;: la ré-initialisation des permissions a échoué
 file_admin_editpackages	perm_reset	Permissions ré-initialisées à leur valeurs par défaut
@@ -52,6 +52,9 @@ file_admin_editpackages	create_new_p	Créer un nouveau paquet
 file_admin_editpackages	create_this_p	Créer ce paquet
 file_admin_editpackages	status_active	Actif
 file_admin_editpackages	status_hidden	Caché
+file_admin_editpackages	create_canceled	Création du paquet annulée
+file_admin_editpackages	edit_package	Edition d'un paquet
+file_admin_editpackages	update_canceled	Mise à jour du paquet annulée
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php
@@ -177,6 +180,8 @@ file_admin_editreleases	release_perm	Les permissions associées à cette version s
 file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fichier $1, vous pourrez à nouveau le télécharger dans moins de deux heures.
 file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	edit_release	Editer une version
+file_admin_editreleases	create_canceled	Création de la version annulée
+file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
@@ -306,11 +311,3 @@ file_shownotes	release_notes	Notes et Modifications de la version
 file_shownotes	release_name	Nom de version
 file_shownotes	changes	Modifications
 file_shownotes	notes	Notes
-
-file_admin_editreleases	create_canceled	Création de la version annulée
-
-file_admin_editreleases	update_canceled	Mise à jour de la version annulée
-
-file_admin_editpackages	create_canceled	Création du paquet annulée
-file_admin_editpackages	edit_package	Edition d'un paquet
-file_admin_editpackages	update_canceled	Mis à jour du paquet annulée
