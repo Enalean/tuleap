@@ -50,7 +50,15 @@ class WikiToHtml {
         $this->replace_unknown_plugins();
 	//	$this->replace_tags();
 	$this->clean_plugin();
-
+	if ($charset != 'utf-8'){
+	    if($charset == 'iso-8959-1'){
+	        $this->_html = utf8_decode($this->_html);
+	    }else{
+	        // Check for iconv support
+		LoadPhpExtension("iconv");
+		$this->_html = iconv("utf-8", $charset, $this->_html);
+	    }
+	}
 	$this->html_content = $this->_html;
     }
 
