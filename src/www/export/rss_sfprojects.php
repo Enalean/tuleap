@@ -28,7 +28,6 @@ if ($type == "rss") {
 
 header("Content-Type: text/xml");
 print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
-<!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 <rss version="0.91">
 ';
 
