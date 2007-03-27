@@ -568,7 +568,6 @@ class PageEditor
 	
 	if (!isset($_REQUEST['mode']) or $_REQUEST['mode'] != 'wysiwyg'){
 	$el['WYSIWYG_B'] = Button(array("action" => "edit", "mode" => "wysiwyg"), "Wysiwyg Editor");
-	unset($_REQUEST['mode']);
 	}
 
         $el['PREVIEW_B'] = Button('submit:edit[preview]', _("Preview"),
