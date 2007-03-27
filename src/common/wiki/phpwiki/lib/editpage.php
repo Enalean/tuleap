@@ -565,6 +565,10 @@ class PageEditor
                                 'id'   => 'edit[locked]',
                                 'disabled' => (bool) !$this->user->isadmin(),
                                 'checked'  => (bool) $this->locked));
+	
+	if (!isset($_REQUEST['mode']) or $_REQUEST['mode'] != 'wysiwyg'){
+	$el['WYSIWYG_B'] = Button(array("action" => "edit", "mode" => "wysiwyg"), "Wysiwyg");
+	}
 
         $el['PREVIEW_B'] = Button('submit:edit[preview]', _("Preview"),
                                   'wikiaction');

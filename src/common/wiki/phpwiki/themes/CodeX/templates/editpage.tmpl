@@ -56,6 +56,10 @@
     <?=$OLD_MARKUP_CB?>  <label for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?>
   </td>
   <td align="center">
+    <?php if ($WYSIWYG_B){ ?>
+    <?=$WYSIWYG_B?>
+    <?=$SEP?>
+    <?php } ?>
     <?= $PREVIEW_B ?>
     <?php if ($SAVE_B)  { ?> 
       <?=$SEP?><?= $SAVE_B ?>
