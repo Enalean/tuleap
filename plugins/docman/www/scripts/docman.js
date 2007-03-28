@@ -513,9 +513,10 @@ Object.extend(com.xerox.codex.Menu.prototype, {
                         a.appendChild(sep);
                         var ims = [];
                         action.action.other_icons.each(function (ic) {
-                                var im = Builder.node('img');
-                                im.src = ic.src;
-                                im.title = ic.classe;
+                                var im = Builder.node('img', {
+                                        src:   ic.src,
+                                        title: ic.classe
+                                });
                                 var sep = Builder.node('span');
                                 sep.innerHTML = '&nbsp;&nbsp;';
                                 a.appendChild(sep);
