@@ -46,8 +46,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '     <input type="hidden" name="section" value="actions" />';
         $content .= '     <input type="hidden" name="action" value="delete" />';
         $content .= '     <input type="hidden" name="id" value="'. $this->item->getId() .'" />';
-        $content .= '     <input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel') .'" />';
-        $content .= '     <input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm') .'" />';
+        $content .= '     <input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm') .'" />';
+        $content .= '     <input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel') .'" />';
         $content .= '</div>';
         $content .= '</div>';
         $content .= '</form>';

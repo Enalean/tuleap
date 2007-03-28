@@ -57,8 +57,8 @@ class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionA
         }
         $content .= '<input type="hidden" name="action" value="move_here" />';
         $content .= '<input type="hidden" name="item_to_move" value="'. $this->item->getId() .'" />';
-        $content .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
-        $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $content .= '<input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $content .= '<input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
         $content .= '</div></form>';
         $content .= '</dd></dl>';
         return $content;
