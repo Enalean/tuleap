@@ -502,6 +502,12 @@
             will be searched in the CodeX user database and matched against
             the user&#39;s login name, real name and e-mail address.</para>
           </listitem>
+          
+          <listitem>
+            <para role=""><emphasis role="bold">Wiki</emphasis>: Wiki 
+            is a collaborative authoring tool (see <xref linkend="WikiService" />). 
+            You can perform a full text search by keywords in wikis.</para>
+          </listitem>
 
           <listitem>
             <para><emphasis role="bold">This tracker</emphasis>: If

@@ -352,6 +352,13 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             CodeX users. Similarly accessing the survey directly via its Web
             location will not work either.</para>
           </listitem>
+          
+          <listitem>
+            <para>If you allow anonymous answer or not. Allowing anonymous answers 
+            give the opportunity to unregistered people (or not-logged ones) to 
+            answer the survey. If you don't allow anonymous answers, 
+            only registered (and logged in) users will be able to answer the survey.</para>
+          </listitem>
         </itemizedlist>
 
         <para>At the bottom of the screen is a list of all the surveys defined

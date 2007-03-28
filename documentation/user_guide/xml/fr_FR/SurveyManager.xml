@@ -391,6 +391,14 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             accessibles aux utilisateurs.
             </para>
           </listitem>
+          
+          <listitem>
+            <para>Si vous autorisez les réponses anonymes ou non. Autoriser les 
+            réponses anonymes permettra à des personnes non enregistrées (ou à des 
+            utilisateurs non authentifiés) de pouvoir répondre au sondage. Si 
+            les réponses anonymes ne sont pas autorisées, seuls les utilisateurs 
+            enregistrés et authentifiés pourront répondre au sondage.</para>
+          </listitem>
         </itemizedlist>
 
         <para>Au bas de la page se trouve la liste de l'ensemble des

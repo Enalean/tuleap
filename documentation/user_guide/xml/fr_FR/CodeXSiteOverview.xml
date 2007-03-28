@@ -563,6 +563,12 @@
             site sur la base de leur nom d'utilisateur, leur nom
             complet ou leur adresse email.</para>
           </listitem>
+          
+          <listitem>
+            <para role=""><emphasis role="bold">Wiki</emphasis>: Le Wiki 
+            est un outil collaboratif de rédaction (voir <xref linkend="WikiService" />). 
+            Vous pouvez effectuer une recherche en texte intégral dans les wikis.</para>
+          </listitem>
 
           <listitem>
             <para><emphasis role="bold">Cet outil de suivi</emphasis> :
