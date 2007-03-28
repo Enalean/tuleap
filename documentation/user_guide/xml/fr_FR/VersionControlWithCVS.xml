@@ -652,6 +652,10 @@
 	  d'utiliser &#34;<literal>cvs edit</literal>&#34; avant d'éditer un fichier, et les autres développeurs
 	  pourront être informés que des changements sont en cours sur ce fichier.
 	  </para>
+	  <para>Le mode watch (actif ou inactif) prendra effet dans un délais maximum de deux heures après sa modification.
+	 Attention : si vous activez ou désactivez le mode watch en ligne de commande (et non via l'interface), ce dernier ne sera pas 
+	 mis à jour dans l'interface d'administration CVS.
+	 </para>
 
    </listitem>
 

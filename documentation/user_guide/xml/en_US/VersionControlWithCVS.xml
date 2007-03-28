@@ -609,6 +609,10 @@
 	  it will allow other developers to be informed 
 	  of the file changes.</para>
 
+	 <para>Watch mode will be effective in maximum two hours after you change its value.
+	 Be carreful : if you enable or disable watches by command line (not by the interface) the watch mode in the CVS 		 administration won't be updated.
+	 </para>
+
         </listitem>
 
         <listitem>
