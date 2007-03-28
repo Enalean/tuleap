@@ -268,7 +268,7 @@ function get_news_name_from_forum_id($id) {
 	}
 }
 
-function news_submit($group_id,$summary,$details,$private_news, $promote_news) {
+function news_submit($group_id,$summary,$details,$private_news, $promote_news = 0) {
         
     /*
 		Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
