@@ -237,7 +237,15 @@ class PageEditor
             // force browse of current version:
             $request->setArg('version', false);
             displayPage($request, 'nochanges');
-            return true;
+	    // Remove action=edit and eventually mode=wysiwyg
+	    if ($request->getArg('action') == 'edit'){
+	        $request->setArg('action', false);  
+	    }
+	    if ($request->getArg('mode') == 'wysiwyg'){
+                $request->setArg('mode', false);
+	    }
+	    return true;
+	    
         }
 
         if (!$this->user->isAdmin() and $this->isSpam()) {
@@ -280,8 +288,8 @@ class PageEditor
         
         // New contents successfully saved...
         $this->updateLock();
-
-        // Clean out archived versions of this page.
+        
+	// Clean out archived versions of this page.
         include_once('lib/ArchiveCleaner.php');
         $cleaner = new ArchiveCleaner($GLOBALS['ExpireParams']);
         $cleaner->cleanPageRevisions($page);
@@ -308,13 +316,15 @@ class PageEditor
 
         // Force browse of current page version.
         $request->setArg('version', false);
-        //$request->setArg('action', false);
+        $request->setArg('action', false);
+	if ($request->getArg('mode') == 'wysiwyg'){
+            $request->setArg('mode', false);
+	}
 
         $template = Template('savepage', $this->tokens);
         $template->replace('CONTENT', $newrevision->getTransformedContent());
         if (!empty($warnings->_content))
             $template->replace('WARNINGS', $warnings);
-
         $pagelink = WikiLink($page);
 
         GeneratePage($template, fmt("Saved: %s", $pagelink), $newrevision);
