@@ -203,8 +203,8 @@ function WikiURL($pagename, $args = '', $get_abs_url = false) {
             $url .= "&$args";
     }
     global $mode;  
-    if ($mode)
-        $url .= '&mode=' . $mode;
+    if ($mode and $GLOBALS['request']->getArg('action') == 'edit')
+            $url .= '&mode=' . $mode;
     global $group_id;
     $url .= '&group_id='.$group_id;
     global $pv;
