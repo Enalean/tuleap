@@ -566,7 +566,7 @@ class PageEditor
                                 'disabled' => (bool) !$this->user->isadmin(),
                                 'checked'  => (bool) $this->locked));
 
-	if ($this->version == 0){
+	if (($this->version == 0) and ($request->getArg('mode') != 'wysiwyg')){
 	$el['WYSIWYG_B'] = Button(array("action" => "edit", "mode" => "wysiwyg"), "Wysiwyg Editor");
 	}
 
