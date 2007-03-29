@@ -31,7 +31,7 @@ require_once('common/tracker/Artifact.class');
 //
 // The artifact date reminder object
 //
-class ArtifactDateReminder extends Error {
+class ArtifactDateReminderFactory extends Error {
 	
 	// The notification id
 	var $notification_id;
@@ -55,7 +55,7 @@ class ArtifactDateReminder extends Error {
 	 *  Constructor.
 	 *
 	 */
-	function ArtifactDateReminder($notification_id) {
+	function ArtifactDateReminderFactory($notification_id) {
 	    // Error constructor
 	    $this->Error();
 	    
