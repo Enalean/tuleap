@@ -19,6 +19,9 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
         var week_days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
         var n_weekstart = 1; // day week starts from (normally 0 or 1)
 
+        // escape fieldname
+    str_target = escapeFormElements(str_target);
+
 	// If no date/time given then default to today at 00:00
 	if (str_datetime == null || str_datetime =="") {
 	//	var dt_datetime = str2dt(dt2dtstr(new Date()) + "00:00");
@@ -210,3 +213,13 @@ function dt2tmstr(dt_datetime) {
 			dt_datetime.getHours()+":"+dt_datetime.getMinutes()));
 }
 
+// This function escape the field name in the form elements array if needed.
+// document.plugin_docman_filters.elements['update_date_value'] escaped
+// document.plugin_docman_filters.elements[create_date] not escaped
+function escapeFormElements(str_target) {
+    var re_array = /^document\.(.+)\.elements\['(.+)'\]$/;
+    if (!re_array.exec(str_target)) {
+	return str_target;
+    }
+    return new String('document.'+RegExp.$1+'.elements[\\\''+RegExp.$2+'\\\']');
+}
