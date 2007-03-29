@@ -149,11 +149,13 @@ require_once('Docman_View_PermissionsForItem.class.php');
             $html .= '<input type="hidden" name="token" value="'. $params['token'] .'" />';
         }
         $html .= '<input type="submit" value="'. $this->_getActionText() .'" />';
+        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
         $html .= '</div>'."\n";
 
         $html .= '</div>'."\n"; // "docman_new_item"
 
         $html .= '</form>';
+        $html .= '<br />';
         echo $html;
     }
 }

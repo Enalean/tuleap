@@ -959,54 +959,58 @@ class DocmanController extends Controler {
                                         break;
                                     case 'createFolder':
                                     case 'createDocument':
-                                        $i = $this->request->get('item');
-                                        if (!$i || !isset($i['parent_id'])) {
-                                            $this->feedback->log('error', 'Missing parameter.');
-                                            $this->view = 'DocmanError';
+                                        if ($this->request->exist('cancel')) {
+                                            $this->_set_redirectView();
                                         } else {
-                                            $parent =& $item_factory->getItemFromDb($i['parent_id']);
-                                            if (!$parent || !$this->userCanWrite($parent->getId())) {
-                                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
-                                                $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
+                                            $i = $this->request->get('item');
+                                            if (!$i || !isset($i['parent_id'])) {
+                                                $this->feedback->log('error', 'Missing parameter.');
+                                                $this->view = 'DocmanError';
                                             } else {
-                                                //Validations
-                                                $new_item = $this->createItemFromUserInput();
-    
-                                                $valid = $this->_validateRequest(array_merge(
-                                                    $new_item->accept(new Docman_View_GetFieldsVisitor()), 
-                                                    $new_item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request))
-                                                ));
-                                                
-                                                if ($user->isMember($this->getGroupId(), 'A')) {
-                                                    $news = $this->request->get('news');
-                                                    if ($news) {
-                                                        $is_news_details = isset($news['details']) && trim($news['details']);
-                                                        $is_news_summary = isset($news['summary']) && trim($news['summary']);
-                                                        if ($is_news_details && !$is_news_summary) {
-                                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_summary'));
-                                                            $valid = false;
-                                                        }
-                                                        if (!$is_news_details && $is_news_summary) {
-                                                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_details'));
-                                                            $valid = false;
+                                                $parent =& $item_factory->getItemFromDb($i['parent_id']);
+                                                if (!$parent || !$this->userCanWrite($parent->getId())) {
+                                                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                                                    $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
+                                                } else {
+                                                    //Validations
+                                                    $new_item = $this->createItemFromUserInput();
+        
+                                                    $valid = $this->_validateRequest(array_merge(
+                                                        $new_item->accept(new Docman_View_GetFieldsVisitor()), 
+                                                        $new_item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request))
+                                                    ));
+                                                    
+                                                    if ($user->isMember($this->getGroupId(), 'A')) {
+                                                        $news = $this->request->get('news');
+                                                        if ($news) {
+                                                            $is_news_details = isset($news['details']) && trim($news['details']);
+                                                            $is_news_summary = isset($news['summary']) && trim($news['summary']);
+                                                            if ($is_news_details && !$is_news_summary) {
+                                                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_summary'));
+                                                                $valid = false;
+                                                            }
+                                                            if (!$is_news_details && $is_news_summary) {
+                                                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_details'));
+                                                                $valid = false;
+                                                            }
                                                         }
                                                     }
-                                                }
-                                                //Actions
-                                                if ($valid) {
-                                                    $this->action = $view;
-                                                }
-                                                //Views
-                                                if ($valid) {
-                                                    $this->_set_redirectView();
-                                                } else {
-                                                    $this->_viewParams['force_item']          = $new_item;
-                                                    $this->_viewParams['force_news']          = $this->request->get('news');
-                                                    $this->_viewParams['force_permissions']   = $this->request->get('permissions');
-                                                    $this->_viewParams['force_ordering']      = $this->request->get('ordering');
-                                                    $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
-                                                    $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
-                                                    $this->_set_createItemView_afterCreate($view);
+                                                    //Actions
+                                                    if ($valid) {
+                                                        $this->action = $view;
+                                                    }
+                                                    //Views
+                                                    if ($valid) {
+                                                        $this->_set_redirectView();
+                                                    } else {
+                                                        $this->_viewParams['force_item']          = $new_item;
+                                                        $this->_viewParams['force_news']          = $this->request->get('news');
+                                                        $this->_viewParams['force_permissions']   = $this->request->get('permissions');
+                                                        $this->_viewParams['force_ordering']      = $this->request->get('ordering');
+                                                        $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
+                                                        $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
+                                                        $this->_set_createItemView_afterCreate($view);
+                                                    }
                                                 }
                                             }
                                         }
