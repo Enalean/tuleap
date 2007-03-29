@@ -286,7 +286,7 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news = 
         $news_bytes_id = db_insertid($result);    
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
 	     // set permissions on this piece of news
-	    if ($private_news == 3) {
+	    if ($private_news) {
 	        news_insert_permissions($new_id,$group_id);
 	    }
         if ($promote_news == 3) {

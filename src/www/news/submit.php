@@ -25,7 +25,7 @@ if (user_isloggedin()) {
             */
 
             //if news is declared as private, force the $promote_news to '0' value (not to be promoted)
-            if ($promote_news == '3' && $private_news == '3') {
+            if ($promote_news == '3' && $private_news) {
                 $promote_news="0";
             }        
         
@@ -65,8 +65,8 @@ if (user_isloggedin()) {
         <TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>
         <P><TABLE BORDER=0>
         <TR><TD><B>'.$Language->getText('news_submit','news_privacy').':</B></TD>
-        <TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
-        <TR><TD></TD><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="3">'. $Language->getText('news_submit','private_news').'</TD></TR> 
+        <TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="0" CHECKED>'. $Language->getText('news_submit','public_news').'</TD></TR> 
+        <TR><TD></TD><TD><INPUT TYPE="RADIO" NAME="private_news" VALUE="1">'. $Language->getText('news_submit','private_news').'</TD></TR> 
         </TABLE><P>
         <TABLE BORDER=0>
         <TR><TD><B>'.$Language->getText('news_submit','news_promote',$GLOBALS['sys_name']).' : </B></TD>

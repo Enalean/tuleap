@@ -59,7 +59,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 				    news_update_permissions($forum_id,$is_private,$group_id);
 				} else {
 				    //permission of this news not yet defined
-				    if ($is_private == 3) {
+				    if ($is_private) {
 				      news_insert_permissions($forum_id,$group_id);
 				    }
 				}
@@ -118,8 +118,8 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
                 <INPUT TYPE="RADIO" NAME="status" VALUE="4"> '.$Language->getText('news_admin_index','delete').'<BR>
 	        
 		<B>'.$Language->getText('news_submit','news_privacy').':</B><BR> 
-		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_public.'> '.$Language->getText('news_submit','public_news').'<BR>
-		<INPUT TYPE="RADIO" NAME="is_private" VALUE="3" '.$check_private.'> '.$Language->getText('news_submit','private_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="0" '.$check_public.'> '.$Language->getText('news_submit','public_news').'<BR>
+		<INPUT TYPE="RADIO" NAME="is_private" VALUE="1" '.$check_private.'> '.$Language->getText('news_submit','private_news').'<BR>
 		
 		<B>'.$Language->getText('news_admin_index','subject').':</B><BR>
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'" SIZE="44" MAXLENGTH="60"><BR>
