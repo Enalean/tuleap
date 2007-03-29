@@ -143,7 +143,7 @@ class WikiViews extends Views {
     $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki-codex.css';
   
     //Get wysiwyg editor scripts and parameters
-    if (isset($_REQUEST['mode']) && ($_REQUEST['mode'] == 'wysiwyg')){    
+    if ($_REQUEST['action'] = 'edit' and isset($_REQUEST['mode']) and ($_REQUEST['mode'] == 'wysiwyg')){    
     $this->html_params['WIKIWYG_SCRIPTS'] = $wysiwyg_editor_params['WIKIWYG_SCRIPTS'];
     $this->html_params['WYSIWYG_SCRIPT'] = $wysiwyg_editor_params['WYSIWYG_SCRIPT'];
     $this->html_params['WYSIWYG_TEXTAREA'] = $wysiwyg_editor_params['WYSIWYG_TEXTAREA'];
