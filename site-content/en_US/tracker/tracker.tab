@@ -738,14 +738,14 @@ tracker_admin_permissions	fields_no_ugroups	<div><em>No user group has access to
 tracker_admin_permissions	fields_tracker_intro	<div></div>
 tracker_admin_permissions	fields_tracker_toggle_field	<div>You may <a href='$1'>switch to the 'field' view</a> by clicking on a field label in the table below.</div>
 tracker_admin_permissions	fields_tracker_toggle_group	<div>You may <a href='$1'>switch to the 'user group' view</a> by clicking on a group name in the table below.</div>
-tracker_admin_permissions	ignore_g_anon_read	<p>Ignoring group '$1' because '$2' are allowed to read</p>
-tracker_admin_permissions	ignore_g_anon_submit	<p>Ignoring group '$1' because '$2' are allowed to submit</p>
-tracker_admin_permissions	ignore_g_anon_update	<p>Ignoring group '$1' because '$2' are allowed to update</p>
-tracker_admin_permissions	ignore_g_regis_read	<p>Ignoring group '$1' because '$2' are allowed to read</p>
-tracker_admin_permissions	ignore_g_regis_submit	<p>Ignoring group '$1' because '$2' are allowed to submit</p>
-tracker_admin_permissions	ignore_g_regis_update	<p>Ignoring group '$1' because '$2' are allowed to update</p>
-tracker_admin_permissions	ignore_g_tech_update	<p>Ignoring group '$1' because '$2' are allowed to update</p>
-tracker_admin_permissions	ignore_ug_during_copy	<p>Please note that some original tracker permissions have not been copied</p>
+tracker_admin_permissions	ignore_g_anon_read	Ignoring group '$1' because '$2' are allowed to read
+tracker_admin_permissions	ignore_g_anon_submit	Ignoring group '$1' because '$2' are allowed to submit
+tracker_admin_permissions	ignore_g_anon_update	Ignoring group '$1' because '$2' are allowed to update
+tracker_admin_permissions	ignore_g_regis_read	Ignoring group '$1' because '$2' are allowed to read
+tracker_admin_permissions	ignore_g_regis_submit	Ignoring group '$1' because '$2' are allowed to submit
+tracker_admin_permissions	ignore_g_regis_update	Ignoring group '$1' because '$2' are allowed to update
+tracker_admin_permissions	ignore_g_tech_update	Ignoring group '$1' because '$2' are allowed to update
+tracker_admin_permissions	ignore_ug_during_copy	Please note that some original tracker permissions have not been copied
 tracker_admin_permissions	permissions	Access Permissions
 tracker_admin_permissions	TRACKER_ACCESS_FULL	have access to all artifacts
 tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	have access to artifacts assigned to group
@@ -755,11 +755,11 @@ tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Can Submit
 tracker_admin_permissions	TRACKER_FIELD_READ	Read Only
 tracker_admin_permissions	TRACKER_FIELD_UPDATE	Update
 tracker_admin_permissions	TRACKER_NONE	-
-tracker_admin_permissions	tracker_ignore_g_anon_full	<p>Ignoring group '$1' because '$2' have access to all artifacts</p>
-tracker_admin_permissions	tracker_ignore_g_regis_full	<p>Ignoring group '$1' because '$2' have access to all artifacts</p>
-tracker_admin_permissions	tracker_ignore_g_regis_assignee	<p>Ignoring group '$1' because '$2' have access to artifacts assigned to group</p>
-tracker_admin_permissions	tracker_ignore_g_regis_submitter	<p>Ignoring group '$1' because '$2' have access to artifacts submitted by group</p>
-tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	<p>Ignoring group '$1' because '$2' have access to artifacts assigned to or submitted by group</p>
+tracker_admin_permissions	tracker_ignore_g_anon_full	Ignoring group '$1' because '$2' have access to all artifacts
+tracker_admin_permissions	tracker_ignore_g_regis_full	Ignoring group '$1' because '$2' have access to all artifacts
+tracker_admin_permissions	tracker_ignore_g_regis_assignee	Ignoring group '$1' because '$2' have access to artifacts assigned to group
+tracker_admin_permissions	tracker_ignore_g_regis_submitter	Ignoring group '$1' because '$2' have access to artifacts submitted by group
+tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	Ignoring group '$1' because '$2' have access to artifacts assigned to or submitted by group
 tracker_admin_permissions	tracker_intro	<div></div>
 tracker_admin_permissions	ugroup	User Group
 tracker_admin_permissions	ug_may_have_no_access	<div>* denotes user groups that may not have access to the tracker (no <a href="$1">tracker permission</a> set).</div>
