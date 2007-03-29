@@ -244,12 +244,13 @@ class ArtifactReportHtml extends ArtifactReport {
             
                     $load_cal = true; // We need to load the Javascript Calendar
                     if ($advsrch) {
-                        $boxes .= $field_html->multipleFieldDate($prefs[$field->getName()][0],
-                                                          $prefs[$field->getName().'_end'][0],0,0,$pv);
+                        $date_begin = isset($prefs[$field->getName()][0])        ? $prefs[$field->getName()][0]        : '';
+                        $date_end   = isset($prefs[$field->getName().'_end'][0]) ? $prefs[$field->getName().'_end'][0] : '';
+                        $boxes .= $field_html->multipleFieldDate($date_begin, $date_end, 0, 0, $pv);
                     } else {
-                        $val=isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : "";
-                        $boxes .= $field_html->fieldDateOperator($prefs[$field->getName().'_op'][0],$pv).
-                            $field_html->fieldDate($val,$pv);
+                        $val_op = isset($prefs[$field->getName().'_op'][0]) ? $prefs[$field->getName().'_op'][0] : '';
+                        $val    = isset($prefs[$field->getName()][0])       ? $prefs[$field->getName()][0]       : '';
+                        $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldDate($val, $pv);
                     }
                             
                 } else if ( $field->isTextField() || 
