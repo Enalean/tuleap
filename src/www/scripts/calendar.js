@@ -20,7 +20,7 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
         var n_weekstart = 1; // day week starts from (normally 0 or 1)
 
         // escape fieldname
-    str_target = escapeFormElements(str_target);
+    str_target_escaped = escapeFormElements(str_target);
 
 	// If no date/time given then default to today at 00:00
 	if (str_datetime == null || str_datetime =="") {
@@ -108,13 +108,13 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
                 "<table cellspacing=\"1\" cellpadding=\"3\" border=\"0\" width=\"100%\">\n"+
                 "<tr>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
-                //str_target+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
-                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                //str_target_escaped+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
+                str_target_escaped+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
 		"<img src=\""+img_theme_path+"/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous year\"></a></td>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar('"+
-                //str_target+"', '"+ dt2dtstr(dt_prev_month)+"'+document.cal.time.value);\">"+
-		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                //str_target_escaped+"', '"+ dt2dtstr(dt_prev_month)+"'+document.cal.time.value);\">"+
+		str_target_escaped+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
                 "<img src=\""+img_theme_path+"/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous month\"></a></td>\n"+
 
@@ -123,13 +123,13 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
                 +arr_months[dt_datetime.getMonth()]+" "+dt_datetime.getFullYear()+"</span></td>\n"+
 
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
-                //+str_target+"', '"+dt2dtstr(dt_next_month)+"'+document.cal.time.value);\">"+
-                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                //+str_target_escaped+"', '"+dt2dtstr(dt_next_month)+"'+document.cal.time.value);\">"+
+                +str_target_escaped+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
                 "<img src=\""+img_theme_path+"/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next month\"></a></td>\n"+
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar('"
-                //+str_target+"', '"+dt2dtstr(dt_next_year)+"'+document.cal.time.value);\">"+
-		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
+                //+str_target_escaped+"', '"+dt2dtstr(dt_next_year)+"'+document.cal.time.value);\">"+
+		+str_target_escaped+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme_file+"','"+img_theme_path+"');\">"+
                 "<img src=\""+img_theme_path+"/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next year\"></a></td>\n"+
                 "</tr>\n");
