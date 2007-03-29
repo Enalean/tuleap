@@ -12,7 +12,9 @@
   <?= $PREVIEW_CONTENT ?>
   <hr class="printer" noshade="noshade" />
 <?php } ?>
-
+<?php if ($WYSIWYG_B){ ?>
+  <p><strong>Warning:</strong> Switching to wysiwyg edition mode will not keep your changes.</p>
+<?php } ?>
 <?= $PAGE_LOCKED_MESSAGE ?>
 <?= $CONCURRENT_UPDATE_MESSAGE ?>
 
