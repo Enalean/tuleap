@@ -11,3 +11,7 @@ ForceType application/x-httpd-php
 <Files goto>
 ForceType application/x-httpd-php
 </Files>
+<Files api/reference/insert>
+ForceType application/x-httpd-php
+</Files>
+

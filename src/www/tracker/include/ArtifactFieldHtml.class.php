@@ -330,7 +330,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			list($cols, $rows) = $this->getGlobalDisplaySize();
 	
 	    $html = '<TEXTAREA NAME="'.$this->field_name.
-		'" ROWS="'.$rows.'" COLS="'.$cols.'" WRAP="SOFT">'.$value.'</TEXTAREA>';
+		'" id="tracker_'. $this->field_name .'" ROWS="'.$rows.'" COLS="'.$cols.'" WRAP="SOFT">'.$value.'</TEXTAREA>';
 	
 	    return($html);
 	

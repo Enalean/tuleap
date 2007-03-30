@@ -34,6 +34,11 @@ tracker_download	file_is_null	Rien ici - Le fichier a une taille nulle
 tracker_download	file_not_found	Impossible de trouver le fichier attaché  (id $1)
 #
 #-----------------------------------------------
+tracker_fieldeditor	edit	éditer
+tracker_fieldeditor	preview	prévisualiser
+tracker_fieldeditor	warning	Vos modifications n'ont pas été sauvées. N'oubliez pas de valider le formulaire !
+#
+#-----------------------------------------------
 # Script: SF/www/tracker/gotoid.php
 #
 tracker_gotoid	art_belongs_to	Note&nbsp;: Cet artefact appartient au projet '$1'

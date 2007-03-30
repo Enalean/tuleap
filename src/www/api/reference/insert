@@ -41,9 +41,7 @@ if ($request->get('help')) {
     exit;
 }
 $text=$request->get('text');
-$reference_manager =& ReferenceManager::instance();
-$reference_manager->insertReferences($text,$group_id);
-echo "$text\n";
+echo nl2br(util_make_links($request->get('text'), $group_id)."\n");
 exit;
 
 ?>

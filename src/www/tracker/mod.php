@@ -52,6 +52,16 @@ echo "<script type=\"text/javascript\">\n";
 $armh =& new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "Event.observe(window, 'load', initFieldDependencies, true);\n";
+echo "Event.observe(window, 'load', function() {
+        if ($('tracker_details')) {
+            new com.xerox.codex.FieldEditor('tracker_details', {
+                edit:    '". addslashes($Language->getText('tracker_fieldeditor','edit')) ."',
+                preview: '". addslashes($Language->getText('tracker_fieldeditor','preview')) ."',
+                warning: '". addslashes($Language->getText('tracker_fieldeditor','warning')) ."',
+                group_id:". $ath->getGroupId(). "
+            });
+        }
+});";
 echo "</script>";
 
 // Display footer page
