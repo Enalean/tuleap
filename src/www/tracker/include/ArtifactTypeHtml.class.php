@@ -1865,7 +1865,7 @@ EOS;
 			"\n<td align =\"center\">".$status.'</td>';
 			
 			if (( $row['status'] == "P" || $field->getName() == "severity" )
-                            &&($this->Group->getID() != 100)){
+                            &&(!user_is_super_user())){
 				// Unable to delete Permanent values, except for values in the tracker templates (for CodeX admins)
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
