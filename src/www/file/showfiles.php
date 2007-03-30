@@ -94,12 +94,7 @@ function showConfirmDownload(group_id,file_id,filename) {
 }
 
 function download(group_id,file_id,filename) {
-    url = "<?php 
-        $p =& project_get_object($group_id);
-        if ($p->usesService('file')) {
-            echo $p->services['file']->getUrl("");
-        }
-    ?>/file/download.php/" + group_id + "/" + file_id +"/"+filename;
+    url = "/file/download.php/" + group_id + "/" + file_id +"/"+filename;
     wConfirm.close();
     self.location = url;
     
