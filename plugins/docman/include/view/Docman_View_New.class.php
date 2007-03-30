@@ -61,7 +61,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
         $html .= '<div class="properties">'."\n";
         $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') . help_button('DocumentManager') .'</legend>';
         $html .= $this->_getGeneralProperties($params);
-        $html .= '<p><span class="highlight"><em>'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</em></span></p>';
+        $html .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
         $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';        
         $html .= '</fieldset>';
         $html .= '</div>';
