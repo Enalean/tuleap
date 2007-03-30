@@ -8,6 +8,7 @@
 
 //require_once('pre.php');
 require_once('common/mail/Mail.class.php');
+require_once('common/include/URL.class.php');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -36,6 +37,20 @@ function send_new_project_email($group_id) {
 	while ($row_admins = db_fetch_array($res_admins)) {
 
         $server = get_server_url();
+        $p =& project_get_object($group_id);
+        $host = $GLOBALS['sys_default_domain'];
+        if ($p && $p->usesService('svn')) {
+           $sf =& new ServerFactory();
+           if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
+               $host = URL::getHost($server->getUrl(session_issecure()));
+           }
+        }
+        if ($GLOBALS['sys_force_ssl']) {
+           $svn_url = 'https://'. $host;
+        } else {
+           $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
+        }
+        $svn_url .= '/svnroot/'. $row_grp['unix_group_name'];
         // $message is defined in the content file
         include($Language->getContent('include/new_project_email'));
     

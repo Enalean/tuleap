@@ -22,7 +22,7 @@ Nom court du projet :  '.$row_grp['unix_group_name'].'
 Page de sommaire :     '.$server.'/projects/'.$row_grp['unix_group_name'].'
 Site Web du projet :   '.$web_server.'
 Serveur CVS :          cvs.'.$row_grp['unix_group_name'].'.'.$host.'
-Serveur Subversion :   svn.'.$row_grp['unix_group_name'].'.'.$host.'
+Serveur Subversion :   '.$svn_url.'
 Serveur Shell :        '.$row_grp['unix_group_name'].'.'.$host.
 
 // Directions for project administrators on what to do next
