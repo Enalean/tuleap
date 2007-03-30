@@ -79,9 +79,9 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                     echo '<td style="text-align:center">';
                     if ($p->services[$key]->getLocation() == SERVICE_SATELLITE) {
                         echo '<select name="services['. $id .'][server_id]">';
-                        foreach($servers as $server_id => $nop) {
-                            $selected = $server_id == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
-                            echo '<option value="'. $servers[$server_id]->getId() .'" '. $selected .'>'. $servers[$server_id]->getName() .'</option>';
+                        foreach($servers as $server_key => $nop) {
+                            $selected = $servers[$server_key]->getId() == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
+                            echo '<option value="'. $servers[$server_key]->getId() .'" '. $selected .'>'. $servers[$server_key]->getName() .'</option>';
                         }
                         echo '</select>';
                     } else {
