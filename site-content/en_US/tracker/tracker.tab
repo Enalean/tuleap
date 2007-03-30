@@ -477,12 +477,12 @@ tracker_include_type	active_val	---- ACTIVE VALUES ----
 tracker_include_type	no_hidden_val	---- NO HIDDEN VALUES ----
 tracker_include_type	hidden_val	---- HIDDEN VALUES ----
 tracker_include_type	global_mail_notif	Global Email Notification
-tracker_include_type	admin_note	<B>As a project administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.
+tracker_include_type	admin_note	<B>As a tracker administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.
 tracker_include_type	send_all	send on all updates
 tracker_include_type	check_perms	check permissions
-tracker_include_type	admin_conf	<P>The project administrators have configured the following email addresses to receive notification of new artifact submission (and possibly updates).<P><u>Recipients</u>:
+tracker_include_type	admin_conf	<P>The tracker administrators have configured the following email addresses to receive notification of new artifact submission (and possibly updates).<P><u>Recipients</u>:
 tracker_include_type	send_all_or_not	(Send on all updates: $1)
-tracker_include_type	admin_not_conf	<P>The project administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.
+tracker_include_type	admin_not_conf	<P>The tracker administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.
 tracker_include_type	perso_mail_notif	Personal Email Notification
 tracker_include_type	users_to_watch	Users To Watch
 tracker_include_type	backup_person	You can receive a carbon copy of email notifications sent to certain users of this project. List the login name of any user you wish to watch, separated by commas.</b>
