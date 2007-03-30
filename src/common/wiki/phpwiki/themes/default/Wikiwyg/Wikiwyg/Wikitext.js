@@ -786,7 +786,7 @@ proto.format_p = function(element) {
 proto.format_a = function(element) {
     var label = Wikiwyg.htmlUnescape(element.innerHTML);
     var href = element.getAttribute('href');
-    
+
     label = label.replace(/<[^>]*?>/g, ' ');
     label = label.replace(/\s+/g, ' ');
     label = label.replace(/^\s+/, '');
@@ -819,7 +819,7 @@ proto.format_a = function(element) {
 	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
-	else if (href.match(/(http|https|ftp).*/)){
+	else if ((href.match(/(http|https|ftp).*/)) && (label == href)){
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
 	}
