@@ -414,7 +414,7 @@ class ArtifactReportHtml extends ArtifactReport {
 						if ($value)
 						    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
 						else
-						    $html_result .= "<TD align=\"center\">-</TD>\n";
+						    $html_result .= '<TD align="center">-</TD>';
 	
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
@@ -435,7 +435,10 @@ class ArtifactReportHtml extends ArtifactReport {
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
 					} else if( $field->isTextArea()){
-						$html_result .= "<TD $width><pre>". util_make_links($value,$group_id) .'&nbsp;</pre></TD>'."\n";
+                        $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", nl2br(util_make_links($value,$group_id)));
+                        $text = str_replace('  ', '&nbsp; ', $text);
+                        $text = str_replace('  ', '&nbsp; ', $text);
+                        $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'. $text .'&nbsp;</TD>';
 				    } else{
 				    	$html_result .= "<TD $width>". util_make_links($value,$group_id) .'&nbsp;</TD>'."\n";
 				    }                             
