@@ -32,18 +32,19 @@ $p =& project_get_object($group_id);
 if ($row_grp['svn_preamble'] != '') {
     echo util_unconvert_htmlspecialchars($row_grp['svn_preamble']);
 } else {
-    if ($GLOBALS['sys_force_ssl']) {
-       $svn_url = 'https://'.$GLOBALS['sys_default_domain'] .'/svnroot/'. $row_grp['unix_group_name'];
-    } else {
-       $host = $GLOBALS['sys_default_domain'];
-       if ($p && $p->usesService('svn')) {
-           $sf =& new ServerFactory();
-           if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
-               $host = URL::getHost($server->getUrl(session_issecure()));
-           }
+    $host = $GLOBALS['sys_default_domain'];
+    if ($p && $p->usesService('svn')) {
+       $sf =& new ServerFactory();
+       if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
+           $host = URL::getHost($server->getUrl(session_issecure()));
        }
-       $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host .'/svnroot/'. $row_grp['unix_group_name'];
     }
+    if ($GLOBALS['sys_force_ssl']) {
+       $svn_url = 'https://'. $host;
+    } else {
+       $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
+    }
+    $svn_url .= '/svnroot/'. $row_grp['unix_group_name'];
     include($Language->getContent('svn/intro'));
 }
 
