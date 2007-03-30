@@ -464,6 +464,11 @@ EOF
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
 mysqlcheck -Aao $pass_opt
 
+##############################################################################
+# Upgrade phpwiki pages
+todo "If you want to upgrade the phpwiki pages of all your projects, please follow the link : yourmachine/wiki/admin/index.php?group_id=1&view=upgrade "
+todo " then follow the link of 'next project' "
+todo "Before doing this, make sure that the wiki of project 1 (codex) is instantiated."
 
 ###############################################################################
 # Update ssl.conf

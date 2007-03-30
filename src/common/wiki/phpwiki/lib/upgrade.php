@@ -52,7 +52,7 @@ require_once("lib/loadsave.php");
 /**
  * TODO: check for the pgsrc_version number, not the revision mtime only
  */
-function doPgsrcUpdate(&$request,$pagename,$path,$filename) {
+function doPgsrcUpdate(&$request,$pagename,$path,$filename,$checkonly=false) {
     $dbi = $request->getDbh(); 
     $page = $dbi->getPage($pagename);
     if ($page->exists()) {
@@ -75,11 +75,13 @@ function doPgsrcUpdate(&$request,$pagename,$path,$filename) {
             if ($new_mtime > $page_mtime) {
                 echo "$path/$pagename: ",_("newer than the existing page."),
                     _(" replace "),"($new_mtime &gt; $page_mtime)","<br />\n";
-                LoadAny($request,$path."/".$filename);
+                if(!$checkonly) {
+                    LoadAny($request,$path."/".$filename);
+                }
                 echo "<br />\n";
             } else {
-                echo "$path/$pagename: ",_("older than the existing page."),
-                    _(" skipped"),".<br />\n";
+                /*echo "$path/$pagename: ",_("older than the existing page."),
+                    _(" skipped"),".<br />\n";*/
             }
         } else {
             echo "$path/$pagename: ",("unknown format."),
@@ -87,7 +89,9 @@ function doPgsrcUpdate(&$request,$pagename,$path,$filename) {
         }
     } else {
         echo sprintf(_("%s does not exist"),$pagename),"<br />\n";
-        LoadAny($request,$path."/".$filename);
+        if(!$checkonly) {
+            LoadAny($request,$path."/".$filename);
+        }
         echo "<br />\n";
     }
 }
@@ -108,10 +112,10 @@ function isActionPage($filename) {
     else return false;
 }
 
-function CheckActionPageUpdate(&$request) {
+function CheckActionPageUpdate(&$request, $checkonly=false)  {
     echo "<h3>",_("check for necessary ActionPage updates"),"</h3>\n";
     $dbi = $request->getDbh(); 
-    $path = FindFile('pgsrc');
+    $path = FindFile('codexpgsrc');
     $pgsrc = new fileSet($path);
     // most actionpages have the same name as the plugin
     $loc_path = FindLocalizedFile('pgsrc');
@@ -121,18 +125,20 @@ function CheckActionPageUpdate(&$request) {
         if (isActionPage($filename)) {
             $translation = gettext($pagename);
             if ($translation == $pagename)
-                doPgsrcUpdate($request, $pagename, $path, $filename);
+                doPgsrcUpdate($request, $pagename, $path, $filename, 
+                        $checkonly);
             elseif (FindLocalizedFile('pgsrc/'.urlencode($translation),1))
                 doPgsrcUpdate($request, $translation, $loc_path, 
-                              urlencode($translation));
+                              urlencode($translation), $checkonly);
             else
-                doPgsrcUpdate($request, $pagename, $path, $filename);
+                doPgsrcUpdate($request, $pagename, $path, $filename, 
+                        $checkonly);
         }
     }
 }
 
 // see loadsave.php for saving new pages.
-function CheckPgsrcUpdate(&$request) {
+function CheckPgsrcUpdate(&$request, $checkonly=false) {
     echo "<h3>",_("check for necessary pgsrc updates"),"</h3>\n";
     $dbi = $request->getDbh(); 
     $path = FindLocalizedFile(WIKI_PGSRC);
@@ -155,7 +161,7 @@ function CheckPgsrcUpdate(&$request) {
             continue;
         }
         if (!isActionPage($filename)) {
-            doPgsrcUpdate($request,$pagename,$path,$filename);
+            doPgsrcUpdate($request,$pagename,$path,$filename,$checkonly);
         }
     }
     return;

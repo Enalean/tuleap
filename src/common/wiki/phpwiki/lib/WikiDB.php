@@ -913,7 +913,7 @@ class WikiDB_Page
         }
 
         /* Generate notification emails? */
-        if (isa($newrevision, 'WikiDB_PageRevision')) {
+        if (ENABLE_EMAIL_NOTIFIFICATION && isa($newrevision, 'WikiDB_PageRevision')) {
             // Save didn't fail because of concurrent updates.
             $notify = $this->_wikidb->get('notify');
             if (!empty($notify) and is_array($notify) and !isa($GLOBALS['request'],'MockRequest')) {

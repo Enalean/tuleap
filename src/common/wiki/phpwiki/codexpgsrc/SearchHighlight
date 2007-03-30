@@ -8,3 +8,5 @@ Content-Type: application/x-phpwiki;
   markup=2;
   charset=iso-8859-1
 Content-Transfer-Encoding: binary
+
+<?plugin SearchHighlight ?>

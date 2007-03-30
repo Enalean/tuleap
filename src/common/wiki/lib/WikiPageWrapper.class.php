@@ -57,6 +57,7 @@ class WikiPageWrapper {
     define('DATABASE_PERSISTENT', false);
     define('GROUP_ID', $this->gid);    
     define('PLUGIN_CACHED_CACHE_DIR', $GLOBALS['codex_cache_dir']);
+    define('DATABASE_AUTO_OPTIMIZE', false);
   }
 
   function &getRequest() {
@@ -214,12 +215,56 @@ Upload:num_rev/filename
 			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
 			$we->setName($name_en);
 		        $we->setPage($page_en);
-			$we->setDesc($desc_en);
-
-			
+			$we->setDesc($desc_en);			
       }
       $we->add();
       $this->render();
   }
+  
+  function getNextGroupWithWiki($currentGroupId, &$nbMatchFound) {
+        $nextId = null;
+          
+        $sql = sprintf('SELECT SQL_CALC_FOUND_ROWS DISTINCT group_id'.
+                       ' FROM wiki_page'.
+                       ' WHERE group_id > %d'.
+                       ' ORDER BY group_id ASC'.
+                       ' LIMIT 1',
+                       $currentGroupId);
+        $res = db_query($sql);
+        if($res) {
+            if($row = db_fetch_array($res)) {
+                $nextId = $row['group_id'];
+          
+                $sql          = 'SELECT FOUND_ROWS() AS nb';
+                $res          = db_query($sql);
+                $row          = db_fetch_array($res);
+                $nbMatchFound = $row['nb'];
+            }
+        }
+          
+        return $nextId;
+    }
+          
+    function upgrade() {
+        global $request;
+        global $WikiTheme;
+          
+        define('WIKI_PGSRC', 'codexpgsrc');
+        define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+        define('ENABLE_EMAIL_NOTIFIFICATION', false);
+          
+        $request = $this->getRequest();
+        $request->setArg('overwrite', 'true');
+          
+        require_once(PHPWIKI_DIR."/lib/upgrade.php");
+        // WikiTheme and those files are required because of the WikiLink
+        // function used during upgrade process.
+        require_once(PHPWIKI_DIR."/lib/Theme.php");
+        require_once(PHPWIKI_DIR."/themes/CodeX/themeinfo.php");
+          
+        $check = false;
+        CheckActionPageUpdate($request, $check);
+        CheckPgsrcUpdate($request, $check);
+    }
 }
 ?>

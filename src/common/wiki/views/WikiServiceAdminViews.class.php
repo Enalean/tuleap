@@ -528,5 +528,23 @@ class WikiServiceAdminViews extends WikiViews {
         $wpw = new WikiPageWrapper($this->gid);
         $wpw->install();
     }
+    
+    function upgrade() {
+        $wpw = new WikiPageWrapper($this->gid);
+          
+        $nbGroupPending = null;
+        $nextId = $wpw->getNextGroupWithWiki($this->gid, $nbGroupPending);
+       
+        $html .= 'Nb project to go: '.$nbGroupPending.'<br>';
+         
+        $url  = '/wiki/admin/index.php?group_id='.$nextId.'&view=upgrade';
+        $href = '<a href="'.$url.'">'.$nextId.'</a>';
+        $html .= 'Next project: '.$href.'<br>';
+          
+        print $html;
+
+        $wpw->upgrade();
+    }  
+         
 }
 ?>

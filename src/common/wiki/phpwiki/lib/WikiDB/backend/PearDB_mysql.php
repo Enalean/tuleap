@@ -164,12 +164,16 @@ extends WikiDB_backend_PearDB
      * Pack tables.
      */
     function optimize() {
-        $dbh = &$this->_dbh;
-	$this->_timeout();
-        foreach ($this->_table_names as $table) {
-            $dbh->query("OPTIMIZE TABLE $table");
+        if(DATABASE_AUTO_OPTIMIZE) {        
+            $dbh = &$this->_dbh;
+	       $this->_timeout();
+            foreach ($this->_table_names as $table) {
+                $dbh->query("OPTIMIZE TABLE $table");
+            }
+            return 1;
+        }else {
+            return 0;
         }
-        return 1;
     }
 
     /**
