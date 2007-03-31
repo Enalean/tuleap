@@ -12,6 +12,9 @@ use POSIX qw(strftime);
 
 require("../include.pl");  # Include all the predefined functions
 
+if ($sys_disable_subdomains) {
+  exit(0);
+}
 &db_connect;
 
 @dns_zone = open_array_file($dns_master_file);

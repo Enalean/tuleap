@@ -221,6 +221,7 @@ read -p "LDAP server name: " sys_ldap_server
 read -p "Windows domain (Samba): " sys_win_domain
 read -p "Activate user shell accounts? [y|n]:" active_shell
 read -p "Generate a self-signed SSL certificate to enable HTTPS support? [y|n]:" create_ssl_certificate
+read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
 
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
@@ -652,7 +653,15 @@ substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name"
 substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
 substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain" 
-
+if [ "$disable_subdomains" = "y" ]; then
+  substitute '/etc/codex/conf/local.inc' 'sys_cvs_host = "cvs.' 'sys_cvs_host = "'
+  substitute '/etc/codex/conf/local.inc' 'sys_svn_host = "svn.' 'sys_svn_host = "'
+  substitute '/etc/codex/conf/local.inc' 'sys_download_host = "download.' 'sys_download_host = "'
+  substitute '/etc/codex/conf/local.inc' 'sys_shell_host = "shell.' 'sys_shell_host = "'
+  substitute '/etc/codex/conf/local.inc' 'sys_users_host = "users.' 'sys_users_host = "'
+  substitute '/etc/codex/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
+  substitute '/etc/codex/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
+fi
 # replace string patterns in database.inc
 substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd" 
 
@@ -664,14 +673,16 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 substitute '/etc/httpd/conf/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
-# replace string patterns in codex.zone
-sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
-dns_serial=`date +%Y%m%d`01
-substitute '/var/named/codex.zone' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/var/named/codex.zone' '%sys_fullname%' "$sys_fullname"
-substitute '/var/named/codex.zone' '%sys_ip_address%' "$sys_ip_address"
-substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
-substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
+if [ "$disable_subdomains" != "y" ]; then
+  # replace string patterns in codex.zone
+  sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
+  dns_serial=`date +%Y%m%d`01
+  substitute '/var/named/codex.zone' '%sys_default_domain%' "$sys_default_domain" 
+  substitute '/var/named/codex.zone' '%sys_fullname%' "$sys_fullname"
+  substitute '/var/named/codex.zone' '%sys_ip_address%' "$sys_ip_address"
+  substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
+  substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
+fi
 
 # Make sure SELinux contexts are valid
 $CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
@@ -805,6 +816,7 @@ EOF
 `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
 
 # Create site wide ML
+# Note that if sys_default_domain is not a domain, the script might complain
 /usr/lib/mailman/bin/newlist -q mailman codex-admin@$sys_default_domain $mm_passwd > /dev/null
 
 # Comment existing mailman aliases in /etc/aliases
@@ -955,7 +967,9 @@ if [ "$yn" = "y" ]; then
     $CHOWN codexadm.codexadm /etc/codex/site-content/en_US/others
     $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
-todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
+if [ "$disable_subdomains" != "y" ]; then
+  todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
+fi
 todo "Customize site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
@@ -971,20 +985,22 @@ fi
 ##############################################
 # DNS Configuration
 #
-todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
-todo "    update /var/named/codex.zone - replace all words starting with %%, and copy it:"
-todo "      > cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
-todo "    make sure the file is readable by 'other':"
-todo "      > chmod o+r /var/named/chroot/var/named/codex_full.zone"
-todo "    edit /etc/named.conf :"
-todo "      add DNS forwarders"
-todo "      make sure the dns cache file exists (or 'touch' it)"
-todo "      add at the end of the file (before the include):"
-todo "zone \"$sys_default_domain\" {"
-todo "          type master;"
-todo "          file \"codex_full.zone\";"
-todo "};"
-todo "    start 'named' service (or reboot)"
+if [ "$disable_subdomains" != "y" ]; then
+  todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
+  todo "    update /var/named/codex.zone - replace all words starting with %%, and copy it:"
+  todo "      > cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
+  todo "    make sure the file is readable by 'other':"
+  todo "      > chmod o+r /var/named/chroot/var/named/codex_full.zone"
+  todo "    edit /etc/named.conf :"
+  todo "      add DNS forwarders"
+  todo "      make sure the dns cache file exists (or 'touch' it)"
+  todo "      add at the end of the file (before the include):"
+  todo "zone \"$sys_default_domain\" {"
+  todo "          type master;"
+  todo "          file \"codex_full.zone\";"
+  todo "};"
+  todo "    start 'named' service (or reboot)"
+fi
 
 ##############################################
 # Crontab configuration
@@ -1235,7 +1251,9 @@ $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 ##############################################
 # Make sure all major services are on
 #
-$CHKCONFIG named on
+if [ "$disable_subdomains" != "y" ]; then
+  $CHKCONFIG named on
+fi
 $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysqld on

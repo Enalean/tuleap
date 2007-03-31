@@ -19,14 +19,18 @@ if (!user_isloggedin()){
    print 'and <I>username</I> with the proper values.';
 } else print ' with the proper value.'; 
 print ' Enter your site password when prompted.';
-
+if ($GLOBALS['sys_disable_subdomains']){
+  $cvs_domain=$row_grp['http_domain'];
+} else {
+  $cvs_domain='cvs.'.$row_grp['http_domain'];
+}
 if (strpos($shell,'/cvssh') !== false) { // Users with restricted shell
 print '<P><span class="command">export CVS_RSH=ssh
-<BR>&nbsp;<BR>cvs -d:ext:'.$username.'@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
+<BR>&nbsp;<BR>cvs -d:ext:'.$username.'@'.$cvs_domain.':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
 </span>';
 } else {
-print '<P><span class="command">cvs -d:pserver:'.$username.'@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' login
-<BR>&nbsp;<BR>cvs -d:pserver:'.$username.'@cvs.'.$row_grp['http_domain'].':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
+print '<P><span class="command">cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cvsroot/'.$row_grp['unix_group_name'].' login
+<BR>&nbsp;<BR>cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cvsroot/'.$row_grp['unix_group_name'].' co <I>modulename</I>
 </span>';
 }
 

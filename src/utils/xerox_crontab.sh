@@ -21,8 +21,7 @@ if [ -z "$CODEX_LOCAL_INC" ]; then
 fi
 CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
-
-DNS_DIR=/var/named/chroot/var/named
+SYS_DISABLE_SUBDOMAINS=`/bin/grep '^\$sys_disable_subdomains' $CODEX_LOCAL_INC | /bin/sed -e 's/\$sys_disable_subdomains\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 
 # First run the dump utility for users and groups
 cd $CODEX_UTILS_PREFIX/underworld-dummy
@@ -65,10 +64,14 @@ cp $dump_dir/aliases /etc/aliases.codex
 
 # generate the DNS zone file and restart the DNS daemon
 #
-./dns_conf.pl
-cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
-cp -f $dump_dir/dns_dump $DNS_DIR/codex_full.zone
-killall -HUP named
+if [ $SYS_DISABLE_SUBDOMAINS != 1 ]; then
+  DNS_DIR=/var/named/chroot/var/named
+  ./dns_conf.pl
+  cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
+  cp -f $dump_dir/dns_dump $DNS_DIR/codex_full.zone
+  killall -HUP named
+fi
+
 
 # generate the list of CodeX virtual hosts
 ./apache_conf.pl
@@ -89,12 +92,17 @@ cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 
 # Apache must be restarted after user/group update because
 # Unix Groups are used in Apache Virtual Hosts declaration
-cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
-cp -f $dump_dir/apache_dump /etc/httpd/conf/codex_vhosts.conf
-cp -f /etc/httpd/conf/codex_svnhosts.conf /etc/httpd/conf/codex_svnhosts.conf.backup
-cp -f $dump_dir/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
+if [ $SYS_DISABLE_SUBDOMAINS != 1 ]; then
+  cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
+  cp -f $dump_dir/apache_dump /etc/httpd/conf/codex_vhosts.conf
+  cp -f /etc/httpd/conf/codex_svnhosts.conf /etc/httpd/conf/codex_svnhosts.conf.backup
+  cp -f $dump_dir/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
+fi
+touch /etc/httpd/conf/codex_vhosts.conf
+touch /etc/httpd/conf/codex_svnhosts.conf
+
 cp -f /etc/httpd/conf.d/codex_svnroot.conf /etc/httpd/conf.d/codex_svnroot.conf.backup
-cp -f $dump_dir/subversion_root_dump /etc/httpd/conf.d/codex_svnroot.conf
+cp -f $dump_dir/subversion_dir_dump /etc/httpd/conf.d/codex_svnroot.conf
 /usr/sbin/apachectl graceful
 
 # update authorized SSH keys in home dir

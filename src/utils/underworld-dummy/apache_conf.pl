@@ -15,14 +15,14 @@ require("../include.pl");  # Include all the predefined functions
 #
 # grab Table information
 #
-my $query = "SELECT http_domain,unix_group_name,group_name,unix_box FROM groups WHERE http_domain LIKE '%.%' AND status = 'A'";
+my $query = "SELECT http_domain,unix_group_name,group_name,unix_box FROM groups WHERE status = 'A'";
 my $c = $dbh->prepare($query);
 $c->execute();
 
 my $warn_noip=0;
 
 while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
-
+    if (! $sys_disable_subdomains) {
 	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.$sys_default_domain");
 	@blah = unpack('C4', $addrs[0]);
 	$ip = join(".", @blah);
@@ -103,10 +103,11 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
                 "  </Location>\n",
                 "</VirtualHost>\n\n");
         }
-        #if ($sys_https_host ne "") {
-          # For https, allow access without virtual host because they are not supported
-          # Actually, this should also be allowed for the HTTP vhost.
-          push @subversion_root_zone,
+    }
+    #if ($sys_https_host ne "") {
+    # For https, allow access without virtual host because they are not supported
+    # Actually, this should also be allowed for the HTTP vhost.
+    push @subversion_dir_zone,
             ( "<Location /svnroot/$unix_group_name>\n",
                 "    DAV svn\n",
                 "    SVNPath $svn_prefix/$unix_group_name\n",
@@ -116,10 +117,10 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
                 "    AuthName \"Subversion Authorization ($group_name)\n",
                 "    AuthUserFile $apache_htpasswd\n",
                 "</Location>\n\n");
-        #}
-	
 }
 
-write_array_file("$dump_dir/apache_dump", @apache_zone);
-write_array_file("$dump_dir/subversion_dump", @subversion_zone);
-write_array_file("$dump_dir/subversion_root_dump", @subversion_root_zone);
+if (! $sys_disable_subdomains) {
+    write_array_file("$dump_dir/apache_dump", @apache_zone);
+    write_array_file("$dump_dir/subversion_dump", @subversion_zone);
+}
+write_array_file("$dump_dir/subversion_dir_dump", @subversion_dir_zone);

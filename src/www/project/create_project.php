@@ -31,13 +31,17 @@ function create_project($data) {
     if (!isset($GLOBALS['sys_is_project_public'])) {
         $GLOBALS['sys_is_project_public'] = 1;
     }
-    
+    if ($GLOBALS['sys_disable_subdomains']) {
+      $http_domain=$GLOBALS['sys_default_domain'];
+    } else {
+      $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
+    }
     // make group entry
     $insert_data = array(
         'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_full_name'])) ."'",
         'is_public'           => $GLOBALS['sys_is_project_public'],
         'unix_group_name'     => "'". $data['project']['form_unix_name'] ."'",
-        'http_domain'         => "'". $data['project']['form_unix_name'] .'.'. $GLOBALS['sys_default_domain'] ."'",
+        'http_domain'         => "'". $http_domain ."'",
         'status'              => "'P'",
         'unix_box'            => "'shell1'",
         'cvs_box'             => "'cvs1'",

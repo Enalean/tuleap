@@ -18,7 +18,11 @@ class CookieManager {
         } else {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
         }
-        if (browser_is_netscape4()) {
+	// If local machine, don't use a specific cookie host
+	$pos=strpos($host,".");
+	if ($pos === false) {
+	  $cookie_host="";
+	} else if (browser_is_netscape4()) {
             $cookie_host=$host;
         } else {
             $cookie_host=".".$host;

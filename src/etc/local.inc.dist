@@ -238,6 +238,9 @@ $sys_my_page_survey = 1;
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 
+// Disable sub-domains (like cvs.proj.codex.xerox.com)
+// Should be disabled if no DNS delegation
+$sys_disable_subdomains = 0;
 
 //
 // Authentication scheme
