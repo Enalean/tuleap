@@ -281,6 +281,13 @@ while ($ln = pop(@groupdump_array)) {
                 # DEPRECATED: no longer create the login automatically: create it on demand only...
 		#push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_prefix/$gname:/bin/false\n";
 	}
+ 	if ( $gstatus eq 'A' && (! $use_cvsnt) && !(-e "$cvslock_prefix/$gname")) {
+	  # Lockdir was deleted? Recreate it.
+	  $lockdir="$cvslock_prefix/$gname";
+	  mkdir "$lockdir", 0777;
+	  chmod 0777, "$lockdir"; # overwrite umask value
+	}
+
 
 	# LJ if the CVS repo has just been created or the user list
 	# in the group has been modified then update the CVS
