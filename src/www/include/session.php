@@ -63,7 +63,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
 }
 
 // Standard CodeX authentication, based on password stored in DB
-function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
+function session_login_valid_db($form_loginname, $form_pw, $allowpending = 0, &$user_id, &$user_status)  {
   global $Language;
     $usr=null;
 
