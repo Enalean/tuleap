@@ -99,18 +99,37 @@ function survey_data_question_create($group_id,$question,$question_type)
 function survey_data_question_delete($group_id,$question_id) {
 
     global $Language;
-
-    // Delete first the responses associated with to the question  if any
-    $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
-    // Delete the radio choices if it is a radio button question
-    $res = db_query("DELETE FROM survey_radio_choices WHERE question_id=$question_id");
-    // Then delete the question itself
-    $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
-    if (db_affected_rows($res) <= 0) {
-	    $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','q_del_fail',db_error($res)));
-    } else {
-	    $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','q_del_succ',$question_id));
-    }    
+    $query = "SELECT survey_questions from surveys";
+    $result = db_query($query);
+    $nb_rows = db_numrows($result);
+    $is_quest_in_survey = false;
+    $i = 0;
+    while ($i<$nb_rows && !$is_quest_in_survey){
+        $questions=db_result($result, $i, 'survey_questions');
+        $quest_array=explode(',', $questions);
+        foreach($quest_array as $quest){
+            if($quest == $question_id){
+                $is_quest_in_survey = true;
+            }
+        }
+        $i++;
+    }
+    if(!$is_quest_in_survey){
+        // Delete first the responses associated with to the question  if any
+        $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
+        // Delete the radio choices if it is a radio button question
+        $res = db_query("DELETE FROM survey_radio_choices WHERE question_id=$question_id");
+        // Then delete the question itself
+        $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
+        if (db_affected_rows($res) <= 0) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','q_del_fail',db_error($res)));
+        } else {
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','q_del_succ',$question_id));
+        }    
+    }else{
+        $GLOBALS['Response']->addFeedback('warning', $Language->getText('survey_s_data','q_del_used', $question_id));
+    }
+    
 }
 
 function survey_data_question_update($group_id,$question_id,$question,$question_type) {

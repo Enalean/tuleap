@@ -185,6 +185,7 @@ survey_s_data	q_create_succ	Question no. $1 créé avec succès
 survey_s_data	q_create_fail	La création de la question a échoué $1
 survey_s_data	q_del_fail	Erreur lors de la destruction de la question no. $1 : $2
 survey_s_data	q_del_succ	Question no. $1 détruite avec succès
+survey_s_data	q_del_used	La question no $1 ne peut pas être supprimée, elle est déjà utilisée dans un sondage.	
 survey_s_data	r_create_succ	Item #$1 créé avec succès
 survey_s_data	r_create_fail	La création de l'item a échoué $1
 survey_s_data	r_del_fail	Erreur lors de la suppression de l'item #$1: $2
@@ -233,7 +234,7 @@ survey_s_utils	add_sb_item	Créer une nouvelle entrée
 survey_s_utils	button_id	ID Bouton
 survey_s_utils	item_id	ID Entrée
 survey_s_utils	rank	Rang
-survey_s_utils	warning_loose_data	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUS les choix de réponse définis et TOUTES les réponses associées, Continuer?
-survey_s_utils	warning_loose_answers	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUTES les réponses associées, Continuer?
+survey_s_utils	warning_loose_data	** AVERTISSEMENT!! ** Si vous détruisez cette question, vous perdrez TOUS les choix de réponse définis, Continuer?
+survey_s_utils	warning_loose_answers	** AVERTISSEMENT!! ** Etes vous sûre de vouloir détruire cette question?
 survey_s_utils	warn_loose_button	** AVERTISSEMENT!! ** Si vous mettez à jour ce type de question, vous perdrez TOUS les choix de réponse associés, Continuer?
 survey_s_utils	required_fields	Champs imposés	

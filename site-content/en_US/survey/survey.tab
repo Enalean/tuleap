@@ -180,6 +180,7 @@ survey_s_data	q_create_succ	Question #$1 successfully created
 survey_s_data	q_create_fail	Question Creation Failed $1
 survey_s_data	q_del_fail	Error deleting question #$1: $2
 survey_s_data	q_del_succ	Question #$1 successfully deleted
+survey_s_data	q_del_used	Question no #$1 can not be deleted, it is aldready used in a survey.
 survey_s_data	r_create_succ	Choice #$1 successfully created
 survey_s_data	r_create_fail	Choice creation failed $1
 survey_s_data	r_del_fail	Error deleting choice #$1: $2
@@ -228,7 +229,7 @@ survey_s_utils	add_sb_item	Create a New Select Box Choice
 survey_s_utils	button_id	Button ID
 survey_s_utils	item_id	Item ID
 survey_s_utils	rank	Rank
-survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will lose ALL the associated choices and responses in all surveys using this question.Continue?
-survey_s_utils	warning_loose_answers	** WARNING!! ** If you delete this question, you will lose responses in all surveys using this question.Continue?
+survey_s_utils	warning_loose_data	** WARNING!! ** If you delete this question, you will lose ALL the associated choices.Continue?
+survey_s_utils	warning_loose_answers	** WARNING!! ** Do you really want to delete this question?
 survey_s_utils	warn_loose_button	** WARNING!! ** If you update this question type, you lose all choices associated to this question. Continue?
 survey_s_utils	required_fields	fields required
