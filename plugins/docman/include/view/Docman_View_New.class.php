@@ -59,7 +59,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
 
         //{{{ General Properties
         $html .= '<div class="properties">'."\n";
-        $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') . help_button('DocumentManager') .'</legend>';
+        $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</legend>';
         $html .= $this->_getGeneralProperties($params);
         $html .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
         $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';        
@@ -70,14 +70,14 @@ require_once('Docman_View_PermissionsForItem.class.php');
         //{{{ Specific Properties
         $specific = $this->_getSpecificProperties($params);
         if (trim($specific)) {
-            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') . help_button('DocumentManager') .'</legend>';
+            $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</legend>';
             $html .= $specific;
             $html .= '</fieldset>';
         }
         //}}}
         
         //{{{ Location
-        $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') . help_button('DocumentManager') .'</legend>';
+        $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</legend>';
         
         $potential_parent_id = isset($params['force_item']) ? $params['force_item']->getParentId() : $params['item']->getId();
         $potential_parent_id = $this->_controller->userCanWrite($potential_parent_id) ? $potential_parent_id : $params['hierarchy']->getId();
