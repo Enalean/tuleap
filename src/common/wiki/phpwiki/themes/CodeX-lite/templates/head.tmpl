@@ -46,8 +46,8 @@ _("FindPage"))?>" />
        * Translated pages could go here too.
        */
       if (!empty($revision)) {
-          $args = $request->getargs();
-          $action = $args['action'];
+          $action = $request->getArg('action');
+          //$action = $args['action'];
           if (!($action == "viewsource")) {
             $alternatelinkTitle = fmt("%s: %s", _("View Source"), $page->getName());
             $alternatelinkUrl = WikiURL($revision, array('action' => 'viewsource'));

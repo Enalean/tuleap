@@ -97,20 +97,22 @@ window.onload = function() {
 	
 	// Support for CodeX-lite theme
         if ($WikiTheme->_name == "CodeX-lite"){
-	    foreach($wysiwyg_editor_params['WIKIWYG_SCRIPTS'] as $js){
+	    if ($_REQUEST['action'] = 'edit' and isset($_REQUEST['mode']) and ($_REQUEST['mode'] == 'wysiwyg')){ 
+	        foreach($wysiwyg_editor_params['WIKIWYG_SCRIPTS'] as $js){
 	        
-	    $WikiTheme->addMoreHeaders
-                (Javascript('', array('src' => $this->BasePath . '/' . $js,
-                                      'language' => 'JavaScript')));
-	    }
+	        $WikiTheme->addMoreHeaders
+                    (Javascript('', array('src' => $this->BasePath . '/' . $js,
+                                          'language' => 'JavaScript')));
+	        }
 	    
-	    //print "\n<!--\nHere is the main WYSIWYG script\n-->\n";
-	    //print '<script type="text/javascript" langage="JavaScript">';
-	    $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_SCRIPT'], array('language' => 'JavaScript')));
-	    //print "</script> \n";
+	        //print "\n<!--\nHere is the main WYSIWYG script\n-->\n";
+	        //print '<script type="text/javascript" langage="JavaScript">';
+	        $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_SCRIPT'], array('language' => 'JavaScript')));
+	        //print "</script> \n";
 	    
-	    if (isset($wysiwyg_editor_params['WYSIWYG_TEXTAREA'])){
-	        $WikiTheme->addMoreHeaders($wysiwyg_editor_params['WYSIWYG_TEXTAREA']);
+	        if (isset($wysiwyg_editor_params['WYSIWYG_TEXTAREA'])){
+	            $WikiTheme->addMoreHeaders($wysiwyg_editor_params['WYSIWYG_TEXTAREA']);
+	        }
 	    }
 	}
     }
