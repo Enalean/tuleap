@@ -76,14 +76,14 @@ Object.extend(com.xerox.codex.FieldEditor.prototype, {
         return false;
     },
     updatePreview: function(display_warning) {
-        new Ajax.Updater(this.preview, '/api/reference/insert?group_id='+this.options.group_id+'&text='+encodeURIComponent($F(this.element).replace('<', '&lt;')), {
+        new Ajax.Updater(this.preview, '/make_links.php?group_id='+this.options.group_id+'&text='+encodeURIComponent($F(this.element).replace('<', '&lt;')), {
                 onComplete: (function() {
                     Element.show(this.preview);
                     Element.hide(this.element);
                     this.edit_cancel.innerHTML = '['+this.options.edit+']';
                     this.is_in_edit_mode = false;
                     if (display_warning && !this.warning_displayed) {
-                        new Insertion.After(this.edit_cancel, ' '+this.options.warning);
+                        new Insertion.After(this.edit_cancel, ' <em>'+this.options.warning+'</em>');
                         this.warning_displayed = true;
                     }
                 }).bind(this)
