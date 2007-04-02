@@ -289,6 +289,17 @@ function user_get_result_set_from_unix($user_name) {
 	$USER_RES["_".$user_id."_"] = $res;
 	return $USER_RES["_".$user_id."_"];
 }       
+function user_get_result_set_from_email($email) {
+	//create a common set of user result sets,
+	//so it doesn't have to be fetched each time
+		
+	global $USER_RES;
+    $sql = "SELECT * FROM user WHERE (user_name='$email' or email='$email')";
+	$res = db_query($sql);
+	$user_id = db_result($res,0,'user_id');
+	$USER_RES["_".$user_id."_"] = $res;
+	return $USER_RES["_".$user_id."_"];
+}       
 
 function user_get_timezone() {
 	if (user_isloggedin()) {

@@ -1304,7 +1304,7 @@ class ArtifactHtml extends Artifact {
         if ($more_addresses) {
             foreach ($more_addresses as $address) {
                 if ($address['address'] && $address['address'] != '') {
-                    $res_username = user_get_result_set_from_unix($address['address']);
+                    $res_username = user_get_result_set_from_email($address['address'], false);
                     if ($res_username && (db_numrows($res_username) == 1)) {
                         $u_id = db_result($res_username,0,'user_id');
                         if (!$address['check_permissions']) {
