@@ -396,6 +396,9 @@ ALTER TABLE user_group ADD news_flags INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE wiki_page DROP INDEX group_id;
 ALTER TABLE wiki_page ADD INDEX idx_page_group (group_id, pagename(10));
 
+# SR #675
+ALTER TABLE artifact ADD INDEX idx_fk_submitted_by (submitted_by);
+
 EOF
 
 ################################################################################

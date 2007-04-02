@@ -628,6 +628,7 @@ function display_artifacts($list_trackers, $print_box_begin) {
   $html = "";
   $html_hdr = "";
 
+  $aid_old  = 0;
   $atid_old = 0;
   $group_id_old = 0;
   $count_aids = 0;
@@ -704,15 +705,20 @@ function display_artifacts($list_trackers, $print_box_begin) {
               $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
             }
             
-            $count_aids++;
             $group_name   = $trackers_array['group_name'];
             $tracker_name = $trackers_array['name'];
             $aid          = $trackers_array['artifact_id'];
             $summary      = $trackers_array['summary'];
             $atid_old     = $atid;
             $group_id_old = $group_id;
-            
-            if (!$hide_now) {
+
+            // If user is assignee and submitter of an artifact, it will
+            // appears 2 times in the result set.
+            if($aid != $aid_old) {
+                $count_aids++;
+            }
+
+            if (!$hide_now && $aid != $aid_old) {
               
                 // Form the 'Submitted by/Assigned to flag' for marking
                 $AS_flag = my_format_as_flag2($trackers_array['assignee'],$trackers_array['submitter']);
@@ -745,6 +751,7 @@ function display_artifacts($list_trackers, $print_box_begin) {
                 $html .= '&nbsp;'.$AS_flag.'</TD>'.$percent_complete.'</TR>';
               
             }
+            $aid_old = $aid;
         }
     }
   }	

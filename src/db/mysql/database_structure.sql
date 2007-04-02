@@ -2581,7 +2581,8 @@ CREATE TABLE artifact (
 	severity int(11) DEFAULT '0' NOT NULL,
 	primary key (artifact_id),
 	key idx_fk_group_artifact_id (group_artifact_id),
-	key idx_fk_status_id (status_id)
+	key idx_fk_status_id (status_id),
+	key idx_fk_submitted_by (submitted_by)
 );
 
 #

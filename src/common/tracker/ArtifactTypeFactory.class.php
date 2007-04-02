@@ -330,38 +330,54 @@ class ArtifactTypeFactory extends Error {
 
         if(!$assignee && !$submitter)
             return false;
+
+        $finalSql = '';
         
         // Only artifacts from active projects are returned.
-        
-		$sql = 
-            "SELECT agl.group_artifact_id,agl.name,".
-            "agl.group_id,g.group_name, ".
-            "a.summary, a.artifact_id, a.severity, (a.submitted_by=".$user_id.") as submitter , MAX(afv.valueInt=".$user_id.") as assignee ".
-            "FROM artifact a, artifact_group_list agl, artifact_field af, artifact_field_value afv, groups g ".
-            "WHERE agl.group_id = g.group_id AND af.group_artifact_id = agl.group_artifact_id ".
-            "AND agl.status = 'A' ".
-            "AND g.status = 'A' ".
-            "AND (af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') ".
-            "AND af.field_id = afv.field_id ".
-            "AND (";
-        
+        $sql = sprintf('SELECT agl.group_artifact_id,agl.name,agl.group_id,g.group_name,a.summary, a.artifact_id, a.severity,'.
+                       '(a.submitted_by=%d) as submitter,'.
+                       'MAX(afv.valueInt=%d) as assignee'.
+                       ' FROM artifact a,artifact_group_list agl,artifact_field af,artifact_field_value afv,groups g'.
+                       ' WHERE agl.group_id = g.group_id'.
+                       ' AND af.group_artifact_id = agl.group_artifact_id'.
+                       ' AND agl.status = "A"'.
+                       ' AND g.status = "A"'.
+                       ' AND (af.field_name = "assigned_to"'.
+                       '  OR af.field_name = "multi_assigned_to")'.
+                       ' AND af.field_id = afv.field_id'.
+                       ' AND a.group_artifact_id = agl.group_artifact_id'.
+                       ' AND a.artifact_id = afv.artifact_id'.
+                       ' AND a.status_id <> 3',
+                       $user_id,
+                       $user_id);
+
+        $assigneeSql  = '';
+        $submitterSql = '';
         if($assignee) {
-            $sql .= "afv.valueInt=".$user_id;
+            $assigneeSql = sprintf($sql.
+                                   ' AND afv.valueInt=%d'.
+                                   ' GROUP BY a.artifact_id',
+                                   $user_id);
+            $finalSql = $assigneeSql;
+            if(!$submitter) {
+                $finalSql .= ' ORDER BY group_name, name, artifact_id';
+            }
         }
         
         if($submitter) {
+            $submitterSql = sprintf($sql.
+                                    ' AND a.submitted_by=%d'.
+                                    ' GROUP BY a.artifact_id',
+                                    $user_id);
             if($assignee) {
-                $sql .= " OR ";
+                $finalSql = '('.$assigneeSql.') UNION ALL ('.$submitterSql.') ORDER BY group_name, name, artifact_id';
             }
-            $sql .= "a.submitted_by=".$user_id;
+            else {
+                $finalSql = $submitterSql.' ORDER BY group_name, name, artifact_id';
+            }
         }
-
-        $sql .= ") ".
-            "AND a.group_artifact_id = agl.group_artifact_id AND a.artifact_id = afv.artifact_id AND a.status_id <> 3 ".
-            "GROUP BY a.artifact_id ".
-            "ORDER BY g.group_name, agl.name";
-        
-		$res = db_query($sql);
+       
+        $res = db_query($finalSql);
         
 	    return $res;
 	}
