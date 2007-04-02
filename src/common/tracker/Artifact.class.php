@@ -1524,9 +1524,12 @@ class Artifact extends Error {
 				if ( $val_func[0] != "") {
                 			while (list (,$user_id)=each ($field_value)) {
                     				if ( ($user_id) && ($user_id != 100) ) {
-						  if (!$user_ids[$user_id] && 
-						      $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) && 
-						      $this->userCanView($user_id)) {
+                    				    $curr_assignee = new User($user_id);	
+						            if (!$user_ids[$user_id] && 
+						                 $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) && 
+						                 $this->userCanView($user_id) && 
+                                         $curr_assignee->isActive() || $curr_assignee->isRestricted()
+                                         ) {
 						      //echo "DBG - ASSIGNEE - user=$user_id<br>";
 						      $user_ids[$user_id] = true;
                         				}
@@ -1540,9 +1543,12 @@ class Artifact extends Error {
 						$res_u = user_get_result_set_from_unix($user_name);
 						$user_id = db_result($res_u,0,'user_id');
                     				if ( ($user_id) && ($user_id != 100) ) {
+                    				    $curr_assignee = new User($user_id);	
                         				if (!$user_ids[$user_id] && 
 							    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
-							    $this->userCanView($user_id)) {
+							    $this->userCanView($user_id) &&
+                                $curr_assignee->isActive() || $curr_assignee->isRestricted()
+                                ) {
 							    //echo "DBG - ASSIGNEE - user=$user_id<br>";
 							    $user_ids[$user_id] = true;
                         				}
@@ -1563,9 +1569,11 @@ class Artifact extends Error {
 				$user_id = db_result($res,0,'user_id');
 			}
         		if ( ($user_id) && ($user_id != 100) ) {
+        		        $curr_assignee = new User($user_id);
             			if (!$user_ids[$user_id] && 
 				    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
-				    $this->userCanView($user_id)) {
+				    $this->userCanView($user_id) && 
+                    $curr_assignee->isActive() || $curr_assignee->isRestricted()) {
 				    //echo "DBG - ASSIGNEE - user=$user_id<br>";
 				    $user_ids[$user_id] = true;
             			}
@@ -1585,10 +1593,12 @@ class Artifact extends Error {
 		//echo " uname=$uname ";
             	$res_oa = user_get_result_set_from_unix($uname);
             	$user_id = db_result($res_oa,0,'user_id');
+            $curr_assignee = new User($user_id);
             	if ($user_id != 100 && 
 		    !$user_ids[$user_id] && 
 		    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
-		    $this->userCanView($user_id)) {
+		    $this->userCanView($user_id) &&
+            $curr_assignee->isActive() || $curr_assignee->isRestricted()) {
                 	//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
                 	$user_ids[$user_id] = true;
             	}
@@ -1728,7 +1738,8 @@ class Artifact extends Error {
         
         // check submitter notification preferences
         $user_id = $this->getSubmittedBy();
-        if ($user_id != 100) {
+        $submitter = new User($user_id);
+        if ($user_id != 100 && ($submitter->isActive() || $submitter->isRestricted())) {
 	  if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes) && $this->userCanView($user_id)) {
 	        //echo "DBG - SUBMITTER - user=$user_id<br>";
                 $concerned_ids[$user_id] = true;
@@ -1801,7 +1812,7 @@ class Artifact extends Error {
 	  $db_res = $this->ArtifactType->getWatchers($watchee);
 	  while ($row_watcher = db_fetch_array($db_res)) {
 	    $watcher = $row_watcher['user_id'];
-	    $concerned_watchers[$watcher] = true;
+        $concerned_watchers[$watcher] = true;
 	  }
 	}
 

@@ -263,6 +263,8 @@ if ($svnmailheader eq 'NULL') {
 }
 
 $svnmailto = &svnGroup_mailto();
+# we put off unvalid email and login
+$svnmailto = &filter_valid_logins_and_emails($svnmailto);
 if ($svnmailto ne 'NULL' && $svnmailto ne '') {
   push(@{$current_project->{email_addresses}}, $svnmailto);
 }

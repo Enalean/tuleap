@@ -73,9 +73,11 @@ class Docman_NotificationsManager extends NotificationsManager {
             while($users->valid()) {
                 $u = $users->current();
                 $user =& $um->getUserById($u['user_id']);
-                $dpm =& $this->_getPermissionsManager();
-                if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['object_id'])) {
-                    $this->_buildMessage($event, $params, $user);
+                if ($user->isActive() || $user->isRestricted()) {
+                    $dpm =& $this->_getPermissionsManager();
+                    if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['object_id'])) {
+                        $this->_buildMessage($event, $params, $user);
+                    }
                 }
                 $users->next();
             }

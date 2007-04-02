@@ -1308,7 +1308,10 @@ class ArtifactHtml extends Artifact {
                     if ($res_username && (db_numrows($res_username) == 1)) {
                         $u_id = db_result($res_username,0,'user_id');
                         if (!$address['check_permissions']) {
-                            $withoutpermissions_concerned_addresses[user_getemail($u_id)] = true;
+                            $curr_user = new User($u_id);	
+                            if ($curr_user->isActive() || $curr_user->isRestricted()) {
+                                $withoutpermissions_concerned_addresses[user_getemail($u_id)] = true;
+                            }
                             unset($concerned_ids[$u_id]);
                         } else {
                             $concerned_ids[$u_id] = true;
