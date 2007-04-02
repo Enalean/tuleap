@@ -100,14 +100,18 @@ if ($display_change_email) {
 </TR>
 
 <?php
-$GLOBALS['account_pi_entry_label']  = array();
-$GLOBALS['account_pi_entry_value']  = array();
-$GLOBALS['account_pi_entry_change'] = array();
+$entry_label  = array();
+$entry_value  = array();
+$entry_change = array();
 
-$em->processEvent('account_pi_entry', array('user_id' => db_result($res_user,0,'user_id')));
-foreach($GLOBALS['account_pi_entry_label'] as $key => $label) {
-    $value  = $GLOBALS['account_pi_entry_value'][$key];
-    $change = $GLOBALS['account_pi_entry_change'][$key];
+$eParams = array('user_id'      => db_result($res_user,0,'user_id'),
+                 'entry_label'  => &$entry_label,
+                 'entry_value'  => &$entry_value,
+                 'entry_change' => &$entry_change);
+$em->processEvent('account_pi_entry', $eParams);
+foreach($entry_label as $key => $label) {
+    $value  = $entry_value[$key];
+    $change = $entry_change[$key];
     print '
 <TR valign=top>
 <TD>'.$label.'</TD>

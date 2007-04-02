@@ -108,9 +108,9 @@ class UserLdap {
                                         ,account_nextuid()
                                         ,'A')) {
 
-            $GLOBALS['auth_user_id']      = $new_userid;
-            $GLOBALS['auth_user_status']  = 'A';
-            $GLOBALS['auth_success']      = true;                	  
+            $user_id     = $new_userid;
+            $user_status = 'A';
+            $success     = true;                	  
         }
         else {
             $feedback .= $GLOBALS['Language']->getText('plugin_ldap', 'err_account_creation');

@@ -861,10 +861,11 @@ function util_user_finder($ident, $strict=true) {
     }
     else {
         $em =& EventManager::instance();
-        $em->processEvent("user_finder", array('ident' => $ident));
-        if (isset($GLOBALS['best_codex_identifier']) && $GLOBALS['best_codex_identifier']!="")
-            $bestCodexIdentifier = $GLOBALS['best_codex_identifier'];
-        else if (!$strict) {
+        $eParams = array();
+        $eParams['ident']                 = $ident;
+        $eParams['best_codex_identifier'] =& $bestCodexIdentifier;
+        $em->processEvent('user_finder', $eParams);
+        if ($bestCodexIdentifier == '' && !$strict) {
             // Test email address
             if (validate_email($ident)) $bestCodexIdentifier=$ident;
         }

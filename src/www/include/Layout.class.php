@@ -604,11 +604,12 @@ echo html_blankimage(5,100);
         $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
 
+        $search_type_entry_output = '';
         $em =& EventManager::instance();
-        $GLOBALS['search_type_entry_output'] = '';
-        $em->processEvent('search_type_entry', 
-                          array('type_of_search' => $type_of_search));        
-        $output .= $GLOBALS['search_type_entry_output'];
+        $eParams = array('type_of_search' => $type_of_search,
+                         'output'         => &$search_type_entry_output);
+        $em->processEvent('search_type_entry', $eParams);      
+        $output .= $search_type_entry_output;
 
         $output .= "\t</SELECT>\n";
         

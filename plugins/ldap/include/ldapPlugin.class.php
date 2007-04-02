@@ -28,8 +28,8 @@ class LdapPlugin extends Plugin {
         $this->_addHook('user_finder', 'userFinder', false);
 
         // User Home
-        $this->_addHook('user_home_pi_entry', 'personnalInformationEntry', false);  
-        $this->_addHook('user_home_pi_tail', 'personnalInformationTail', false);
+        $this->_addHook('user_home_pi_entry', 'personalInformationEntry', false);  
+        $this->_addHook('user_home_pi_tail', 'personalInformationTail', false);
 
         // User account
         $this->_addHook('account_pi_entry', 'accountPiEntry', false);
@@ -68,22 +68,26 @@ class LdapPlugin extends Plugin {
 	}
     
     function ldapSearchEntry($params) {        
-        //$params['type_of_search']
+        // IN  $params['type_of_search']
+        // OUT $params['output']
 
         $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
-        $GLOBALS['search_type_entry_output'] .= "\t<OPTION value=\"people_ldap\"".( $params['type_of_search'] == "people_ldap" ? " SELECTED" : "" ).">".$GLOBALS['Language']->getText('plugin_ldap', 'people_ldap')."</OPTION>\n";
+        $params['output'] .= "\t<OPTION value=\"people_ldap\"".( $params['type_of_search'] == "people_ldap" ? " SELECTED" : "" ).">".$GLOBALS['Language']->getText('plugin_ldap', 'people_ldap')."</OPTION>\n";
     }
 
     function ldapSearch($params) {
         // params
-        //$params['words'];
-        //$params['offset'];
-        //$params['nbRows'];
-        //$params['type_of_search']
+        // IN  $params['words']
+        // IN  $params['offset'];
+        // IN  $params['nbRows'];
+        // IN  $params['type_of_search']
+        // OUT $params['search_type']
+        // OUT $params['rows_returned']
+        // OUT $params['rows']
         global $Language;
 
         if($params['type_of_search'] === "people_ldap") {
-            $GLOBALS['search_type'] = true;
+            $params['search_type'] = true;
             
             $ldap =& LDAP::instance();
             $lri  =& $ldap->searchUser($params['words']);
@@ -135,21 +139,24 @@ class LdapPlugin extends Plugin {
                 }
                 echo "</TABLE>\n";
             }
-            $GLOBALS['rows'] = $rows;
-            $GLOBALS['rows_returned'] = $rows_returned;
+            $params['rows'] = $rows;
+            $params['rows_returned'] = $rows_returned;
         }
     }
        
     /**
      * @params $params $params['login']
      *                 $params['password']
+     *                 $params['auth_success']
+     *                 $params['auth_user_id']
+     *                 $params['auth_user_status']
      */
     function authenticate($params) {       
         global $Language;
 
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             
-            $GLOBALS['auth_success'] = false;
+            $params['auth_success'] = false;
             
             $ldap =& LDAP::instance();
             
@@ -167,7 +174,11 @@ class LdapPlugin extends Plugin {
                         // Authenticated user
                         // without codex account
                         // create account!                        
-                        UserLdap::register($lr, $params['passwd']);
+                        UserLdap::register($lr, 
+                                           $params['passwd'], 
+                                           $params['auth_user_id'], 
+                                           $params['auth_user_status'],
+                                           $params['auth_success']);
                         
                         // WARNING HACK: Here we are modifing a query argument
                         // (that should be read only I guess) but this is very
@@ -179,12 +190,12 @@ class LdapPlugin extends Plugin {
                         }
                         $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
                     }
-                    else {                        
+                    else {
                         UserLdap::synchronizeUserWithLdap(db_result($res,0,'user_id'), $lr, $params['passwd']);
 
-                        $GLOBALS['auth_user_id']      = db_result($res,0,'user_id');
-                        $GLOBALS['auth_user_status']  = db_result($res,0,'status');
-                        $GLOBALS['auth_success']      = true;
+                        $params['auth_user_id']      = db_result($res,0,'user_id');
+                        $params['auth_user_status']  = db_result($res,0,'status');
+                        $params['auth_success']      = true;
                     }
                 }	  
                 else {
@@ -233,17 +244,20 @@ class LdapPlugin extends Plugin {
 
     /**
      * Hook
+     * Params:
+     *  IN  $params['ident']
+     *  OUT $params['best_codex_identifier']
      */
     function userFinder($params) {
         $ldap =& LDAP::instance();
         $lri  =& $ldap->searchUser($params['ident']);
         
-        $bestCodexIdentifier = "";
+        $bestCodexIdentifier = '';
         if(!$ldap->isError() && ($lri->count() == 1)) {	      
             $lr =& $lri->get(0);
 
             $res1 = UserLdap::getUserResultSet($lr->getEdUid());
-                  
+            
             if(db_numrows($res1) === 1) {
                 $bestCodexIdentifier = db_result($res1, 0, 'user_name');
             }
@@ -251,29 +265,40 @@ class LdapPlugin extends Plugin {
                 $bestCodexIdentifier = $lr->getEmail();
             }
         }
-        $GLOBALS['best_codex_identifier'] = $bestCodexIdentifier;
+        if($bestCodexIdentifier != '') {
+            $params['best_codex_identifier'] = $bestCodexIdentifier;
+        }
     }
 
     /**
      * Hook
+     * Params:
+     *  IN  $params['user_id']
+     *  OUT $params['entry_label']
+     *  OUT $params['entry_value']
      */
-    function personnalInformationEntry($params) {
+    function personalInformationEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            $GLOBALS['user_home_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+            $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
 
             $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
             if($lr) {
                 $link = $this->buildLinkToDirectory($lr, $lr->getLogin());
-                $GLOBALS['user_home_pi_entry_value'][$this->getId()] = $link;
+                $params['entry_value'][$this->getId()] = $link;
             }
             else {
-                $GLOBALS['user_home_pi_entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+                $params['entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
             }
         }            
     }     
 
     /**
      * Hook
+     * Params:
+     *  IN  $params['user_id']
+     *  OUT $params['entry_label']
+     *  OUT $params['entry_value']
+     *  OUT $params['entry_change']
      */
     function accountPiEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
@@ -281,14 +306,14 @@ class LdapPlugin extends Plugin {
             if(UserLdap::isLdapUser($params['user_id'])) {
                 $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
 
-                $GLOBALS['account_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
-                $GLOBALS['account_pi_entry_value'][$this->getId()] = $lr->getLogin();
-                $GLOBALS['account_pi_entry_change'][$this->getId()] = '';
+                $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+                $params['entry_value'][$this->getId()] = $lr->getLogin();
+                $params['entry_change'][$this->getId()] = '';
             }
             else {
-                $GLOBALS['account_pi_entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
-                $GLOBALS['account_pi_entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
-                $GLOBALS['account_pi_entry_change'][$this->getId()] = '';
+                $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
+                $params['entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
+                $params['entry_change'][$this->getId()] = '';
             }
         }      
     }
@@ -296,7 +321,7 @@ class LdapPlugin extends Plugin {
     /**
      * Hook
      */
-    function personnalInformationTail($params) {
+    function personalInformationTail($params) {
         global $Language;
 
         print '<TR>';        
@@ -314,7 +339,7 @@ class LdapPlugin extends Plugin {
             $value = $lr->getLogin();
         }
 
-        include($Language->getContent('ldap/directory_redirect'));
+        include_once($Language->getContent('ldap/directory_redirect'));
         if(function_exists('custom_build_link_to_directory')) {
             $link = custom_build_link_to_directory($lr, $value);
         }

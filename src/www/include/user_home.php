@@ -104,12 +104,18 @@ echo '</B></TD>
 
 </TR>';
 
+$entry_label = array();
+$entry_value = array();
+
 $em =& EventManager::instance();
-$GLOBALS['user_home_pi_entry_label'] = array();
-$GLOBALS['user_home_pi_entry_value'] = array();
-$em->processEvent('user_home_pi_entry', array('user_id' => db_result($res_user,0,'user_id')));
-foreach($GLOBALS['user_home_pi_entry_label'] as $key => $label) {
-    $value = $GLOBALS['user_home_pi_entry_value'][$key];
+$eParams = array();
+$eParams['user_id']     =  db_result($res_user,0,'user_id');
+$eParams['entry_label'] =& $entry_label;
+$eParams['entry_value'] =& $entry_value;
+$em->processEvent('user_home_pi_entry', $eParams);
+
+foreach($entry_label as $key => $label) {
+    $value = $entry_value[$key];
     print '
 <TR valign=top>
 	<TD>'.$label.'</TD>
@@ -119,11 +125,14 @@ foreach($GLOBALS['user_home_pi_entry_label'] as $key => $label) {
 }
 
 $hooks_output = "";
+
 $em =& EventManager::instance();
-$showdir=isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
-$em->processEvent('user_home_pi_tail', array('showdir' => $showdir
-                                             ,'user_name' => db_result($res_user,0,'user_name')));
-$hooks_output = isset($GLOBALS['user_home_pi_tail'])?$GLOBALS['user_home_pi_tail']:"";
+$eParams = array();
+$eParams['showdir']   =  isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
+$eParams['user_name'] =  db_result($res_user,0,'user_name');
+$eParams['ouput']     =& $hooks_output;
+$em->processEvent('user_home_pi_tail', $eParams);
+
 echo $hooks_output;
 ?>
 

@@ -592,11 +592,12 @@ if (isset($params['group']) && $params['group']) {
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
         $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','wiki')."</OPTION>\n";
 
+        $search_type_entry_output = '';
         $em =& EventManager::instance();
-        $GLOBALS['search_type_entry_output'] = '';
-        $em->processEvent('search_type_entry', 
-                          array('type_of_search' => $type_of_search));        
-        $output .= $GLOBALS['search_type_entry_output'];
+        $eParams = array('type_of_search' => $type_of_search,
+                         'output'         => &$search_type_entry_output);
+        $em->processEvent('search_type_entry', $eParams);      
+        $output .= $search_type_entry_output;
 
         $output .= "\t</select></td><td>";
 

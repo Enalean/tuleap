@@ -18,20 +18,26 @@ $ALL_USERS_GROUPS = array();
 $ALL_USERS_TRACKERS = array();
 
 function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
-    $GLOBALS['auth_success'] = false;
+    $auth_success     = false;
+    $auth_user_id     = null;
+    $auth_user_status = null;
+
+    $params = array();
+    $params['loginname']        = $form_loginname;
+    $params['passwd']           = $form_pw;
+    $params['auth_success']     =& $auth_success;
+    $params['auth_user_id']     =& $auth_user_id;
+    $params['auth_user_status'] =& $auth_user_status;
     $em =& EventManager::instance();
-    $em->processEvent('session_before_login', array('loginname' => $form_loginname
-                                                   ,'passwd'=>$form_pw));
+    $em->processEvent('session_before_login', $params);
     
-    $success = false;
-    if(array_key_exists('auth_success', $GLOBALS)) {
-        $success =  $GLOBALS['auth_success'];
-    }
-    
-    if(!$success) {
-        if ($success = session_login_valid_db($form_loginname,$form_pw,$allowpending)) {
+    $success = $auth_success;
+
+    if(!$auth_success) {
+        if ($success = session_login_valid_db($form_loginname,$form_pw,$allowpending,
+                                              $auth_user_id,$auth_user_status)) {
             $allow_codex_login = true;
-            $params = array('user_id'           => $GLOBALS['auth_user_id'],
+            $params = array('user_id'           => $auth_user_id,
                             'allow_codex_login' => &$allow_codex_login);
             $em->processEvent('session_after_login', $params);
             $success = $allow_codex_login;
@@ -40,15 +46,15 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     
     if($success) {
         // check status of this user
-        if(session_login_valid_status($GLOBALS['auth_user_status'], $allowpending)) {
+        if(session_login_valid_status($auth_user_status, $allowpending)) {
         
             //create a new session
-            session_set_new($GLOBALS['auth_user_id']);
+            session_set_new($auth_user_id);
             
             return array(true, '');
         }
         else {
-            return array(false, $GLOBALS['auth_user_status']);
+            return array(false, $auth_user_status);
         }
     }
     else {
@@ -76,8 +82,8 @@ function session_login_valid_db($form_loginname,$form_pw,$allowpending=0)  {
 		return false;
 	} 
     else {
-        $GLOBALS['auth_user_id']      = db_result($res,0,'user_id');
-        $GLOBALS['auth_user_status']  = db_result($res,0,'status');
+        $user_id     = db_result($res,0,'user_id');
+        $user_status = db_result($res,0,'status');
         return true;
     }
 }

@@ -543,18 +543,23 @@ if ($type_of_search == "soft") {
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));
 } else {
-    $GLOBALS['search_type'] = false;
+    $matchingSearchTypeFound = false;
+    $rows_returned = 0;
+    $rows = 0;
+
+    $eParams = array();
+    $eParams['words']          = $_REQUEST['words'];
+    $eParams['offset']         = $offset;
+    $eParams['nbRows']         = 25;
+    $eParams['type_of_search'] = $type_of_search;
+    $eParams['search_type']    =& $matchingSearchTypeFound; 
+    $eParams['rows_returned']  =& $rows_returned;
+    $eParams['rows']           =& $rows;
     $em =& EventManager::instance();
-    $em->processEvent('search_type', array('words' => $_REQUEST['words']
-                                           ,'offset' => $offset
-                                           ,'nbRows' => 25
-                                           ,'type_of_search' => $type_of_search));
-    if($GLOBALS['search_type'] === false) {
+    $em->processEvent('search_type', $eParams);
+
+    if(!$matchingSearchTypeFound) {
     	echo '<H1>'.$Language->getText('search_index','invalid_search').'</H1>';
-    }
-    else {
-        $rows_returned = $GLOBALS['rows_returned'];
-        $rows = $GLOBALS['rows'];
     }
 }
 
