@@ -22,6 +22,9 @@ fi
 CODEX_UTILS_PREFIX=`/bin/grep '^\$codex_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 SYS_DISABLE_SUBDOMAINS=`/bin/grep '^\$sys_disable_subdomains' $CODEX_LOCAL_INC | /bin/sed -e 's/\$sys_disable_subdomains\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+if [ -z $SYS_DISABLE_SUBDOMAINS ]; then
+	SYS_DISABLE_SUBDOMAINS=0
+fi
 
 # First run the dump utility for users and groups
 cd $CODEX_UTILS_PREFIX/underworld-dummy
