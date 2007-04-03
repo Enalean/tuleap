@@ -67,6 +67,7 @@ License
 <dt><a href="#HowTo_cvs2svn">Convert a CVS repository to Subversion</a></dt>
 <dt><a href="#HowTo_restoresvn">Restore a Subversion repository</a></dt>
 <dt><a href="#HowTo_recoversvn">Recover a Subversion repository</a></dt>
+<dt><a href="#HowTo_distributed">Set up a distibuted Architecture</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -2979,6 +2980,54 @@ db_recover -c -v
 chown -R codexadm.projectname /svnroot/projectname
 </pre>
 
+
+<hr>
+<h2><a name="HowTo_distributed">Set up a distributed architecture</a></h2>
+<h3>Requirements</h3>
+<dl>
+    <dt>In local.inc:</dt>
+    <dd>
+        Choose a sys_server_id for the master and the satellite (any int is OK)
+    </dd>
+    <dt>In database.inc:</dt>
+    <dd>
+        both servers should point to the master MySQL server.
+    </dd>
+    <dt>In CodeX:</dt>
+    <dd>
+        Create servers (in site administration panel) accordingly to your architecture. In the service selection page of the creation process, select the appropriate server for the Subversion and File services. You may need to edit template services to be able to select servers.
+    </dd>
+</dl>
+<h3>Optional</h3>
+If you want Single Sign-on (SSO), you must set the same cookie domain and the same cookie prefix.
+<pre>
+
+
+                         +------------------------------------+
+                         |               MASTER               |
+                         +------------------------------------+
+                         | sys_server_id     = 1              |
+                         | sys_cookie_prefix = 'CX1234'       |
+                         | sys_cookie_domain = '.domain.com'  |
+                         | sys_dbhost        = 'master'       |
+                         |                                    |
+                         +-------------.----.=----------------+
+                                   _.-'       `-._
+                                .-'               `-.._
+                            _.-'                       `-._
+                         .-'                               `-.__
+                     _.-'                                       `-._
+    +-------------.-'--------------------+    +---------------------`-.------------+
+    |           SATELLITE A              |    |             SATELLITE B            |
+    +------------------------------------+    +------------------------------------+
+    | sys_server_id     = 2              |    | sys_server_id     = 3              |
+    | sys_cookie_prefix = 'CX1234'       |    | sys_cookie_prefix = 'CX1234'       |
+    | sys_cookie_domain = '.domain.com'  |    | sys_cookie_domain = '.domain.com'  |
+    | sys_dbhost        = 'master'       |    | sys_dbhost        = 'master'       |
+    |                                    |    |                                    |
+    +------------------------------------+    +------------------------------------+
+
+</pre>
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
 </body>
