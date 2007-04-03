@@ -274,6 +274,8 @@ Wikiwyg.liveUpdate = function(method, url, query, callback) {
         data = query;
     req.open(method, url);
     req.onreadystatechange = function() {
+        if (req.readyState == 1)
+	    callback("Pleaze wait ...");
         if (req.readyState == 4 && req.status == 200)
             callback(req.responseText);
     }
