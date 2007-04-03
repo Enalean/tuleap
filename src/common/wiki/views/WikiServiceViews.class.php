@@ -247,24 +247,19 @@ class WikiServiceViews extends WikiViews {
       <tr>
         <td>';
     switch(DEFAULT_LANGUAGE){
-	    case 'en_US': $attatch_page = 'UpLoad';
-			 $attatch_menu = 'Attach a file';   
-			 $preferences_page = 'UserPreferences';
-			 $preferences_menu = 'Preferences';
-			 $help_menu = 'Help';
-			 break;
-	    case 'fr_FR': $attatch_page = "Dï¿½poserUnFichier";
-			 $attatch_menu = "Joindre un fichier";
-			 $preferences_page = "Prï¿½fï¿½rencesUtilisateurs";   
-			 $preferences_menu = "Prï¿½fï¿½rences";
-			 $help_menu = 'Aide';
-			 break;   
-	    default :     $attatch_page = 'UpLoad';
-			 $attatch_menu = 'Attach a file';   
-			 $preferences_page = 'UserPreferences';
-			 $preferences_menu = 'Preferences';
- 			 $help_menu = 'Help';
+	    case 'fr_FR':
+            $attatch_page     = "DéposerUnFichier";
+			$preferences_page = "PréférencesUtilisateurs";   
+			break;   
+        case 'en_US':
+        default :     
+            $attatch_page     = 'UpLoad';
+		    $preferences_page = 'UserPreferences';
+            break;
     }	
+    $attatch_menu     = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuattch');
+    $preferences_menu = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuprefs');
+    $help_menu        = $GLOBALS['Language']->getText('global', 'help');
     print '
     <ul class="ServiceMenu">
       <li><a href="'.$this->wikiLink.'">' . $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menudocuments') . '</a>&nbsp;|&nbsp;</li>
