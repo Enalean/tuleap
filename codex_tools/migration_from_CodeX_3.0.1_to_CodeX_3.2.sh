@@ -362,6 +362,53 @@ ALTER TABLE service ADD is_in_iframe TINYINT(1) NOT NULL DEFAULT '0';
 
 EOF
 
+
+###############################################################################
+echo "Adding snippet reference"
+$CAT <<EOF | $MYSQL $pass_opt codex
+INSERT INTO reference SET \
+    id='70',        \
+    keyword='snippet', \
+    description='reference_snippet_desc_key', \
+    link='/snippet/detail.php?type=snippet&id=$1', \
+    scope='S';
+
+INSERT INTO reference_group SET reference_id='70', group_id='100', is_active='1';
+
+EOF
+
+#
+# create snippet reference for existing projects
+#
+
+$PERL <<'EOF'
+
+use DBI;
+require "/usr/share/codex/src/utils/include.pl";  # Include all the predefined functions
+&db_connect;
+
+sub insert_references {
+    my ($query, $query3, $c, $c3);
+    $query = "SELECT group_id FROM groups WHERE group_id!=100";
+    $c = $dbh->prepare($query);
+    $c->execute();
+    while (my ($group_id) = $c->fetchrow()) {
+          # Add reference in project
+            $query3 = "INSERT INTO reference_group (reference_id,group_id,is_active) VALUES ('70','$group_id','1')";
+            $c3 = $dbh->prepare($query3);
+            $c3->execute();
+    }
+}
+
+
+
+&insert_references();
+print "** All snippet references created\n";
+1;
+EOF
+
+
+###############################################################################
 echo "Optimizing database structure."
 $CAT <<EOF | $MYSQL $pass_opt codex
 
