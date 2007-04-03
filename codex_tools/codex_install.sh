@@ -783,7 +783,7 @@ EOF
 # SSL Certificate creation
 
 if [ "$create_ssl_certificate" = "y" ]; then
-    /usr/share/codex/src/utils/generate_ssl_certificate.sh
+    $INSTALL_DIR/src/utils/generate_ssl_certificate.sh
 fi
 
 
@@ -1243,9 +1243,9 @@ EOF
 # Generate Documentation
 #
 echo "Generating the CodeX Manuals. This will take a few minutes."
-/usr/share/codex/src/utils/generate_doc.sh -f
-/usr/share/codex/src/utils/generate_programmer_doc.sh -f
-/usr/share/codex/src/utils/generate_cli_package.sh -f
+$INSTALL_DIR/src/utils/generate_doc.sh -f
+$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
+$INSTALL_DIR/src/utils/generate_cli_package.sh -f
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 
 ##############################################
