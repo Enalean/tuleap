@@ -26,7 +26,7 @@ cvs_admin_commit	tracking_hdr	CVS Tracking
 cvs_admin_commit	tracking_msg	When CVS tracking is on, the commits (file change, addition and removal) are registered in the $1 database so that they can be browsed and searched. Else commits are not logged in the database; only the CVS history is available
 cvs_admin_commit	tracking_lbl	CVS Tracking
 cvs_admin_commit	watches_hdr	CVS Watch Mode
-cvs_admin_commit	watches_msg	When CVS watch mode is on, cvs provides developers with a way to notify each other about who is working on what files at a given time. CVS creates working copies of project files read-only, to remind developers to run the cvs edit command before working on them.
+cvs_admin_commit	watches_msg	CVS creates working copies of project files read-only, to remind developers to run the cvs edit command before working on them.
 cvs_admin_commit	watches_lbl	CVS Watch Mode
 cvs_admin_commit	notif_hdr	E-mail notification on commits
 cvs_admin_commit	notif_msg	Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.
