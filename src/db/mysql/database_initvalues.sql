@@ -2200,7 +2200,7 @@ INSERT INTO reference SET \
     id='16',        \
     keyword='release', \
     description='reference_release_desc_key', \
-    link='/file/showfiles.php?group_id=$group_id6&release_id=$1', \
+    link='/file/showfiles.php?group_id=$group_id&release_id=$1', \
     scope='S', \
     service_short_name='file';
 
@@ -2212,6 +2212,15 @@ INSERT INTO reference SET \
 --   11 document
 --   17 folder
 --   18 dossier
+
+-- Site-wide references
+
+INSERT INTO reference SET \
+    id='70',        \
+    keyword='snippet', \
+    description='reference_snippet_desc_key', \
+    link='/snippet/detail.php?type=snippet&id=$1', \
+    scope='S';
 
 -- Legacy references
 
@@ -2277,6 +2286,7 @@ INSERT INTO reference_group SET reference_id='13', group_id='100', is_active='1'
 INSERT INTO reference_group SET reference_id='14', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='15', group_id='100', is_active='1';
 INSERT INTO reference_group SET reference_id='16', group_id='100', is_active='1';
+INSERT INTO reference_group SET reference_id='70', group_id='100', is_active='1';
 
 -- Admin project (group 1)
 INSERT INTO reference_group SET reference_id='1', group_id='1', is_active='1';
@@ -2295,6 +2305,7 @@ INSERT INTO reference_group SET reference_id='13', group_id='1', is_active='1';
 INSERT INTO reference_group SET reference_id='14', group_id='1', is_active='1';
 INSERT INTO reference_group SET reference_id='15', group_id='1', is_active='1';
 INSERT INTO reference_group SET reference_id='16', group_id='1', is_active='1';
+INSERT INTO reference_group SET reference_id='70', group_id='1', is_active='1';
 
 -- Sitenews project (group 46)
 INSERT INTO reference_group SET reference_id='12', group_id='46', is_active='1';
