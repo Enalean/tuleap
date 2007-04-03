@@ -217,6 +217,16 @@ john.smith@xerox.com</programlisting>
 	          <para>les documents, ainsi que l'architecture du gestionnaire de document 
                seront présents.</para>
 		</listitem>
+        <lisitem>
+            <para>les paramètres d'administration CVS seront copiés (préambule, suivi CVS, Mode CVS Watch),
+            mais les adresse emails et les permissions CVS ne sont pas copiés.
+            </para>
+        </lisitem>
+        <lisitem>
+            <para>les paramètres d'administration SVN seront copiés (préambule, suivi SVN),
+            mais les adresse emails et les permissions SVN ne sont pas copiés.
+            </para>
+        </lisitem>
 	     
 	      </itemizedlist>
 	    

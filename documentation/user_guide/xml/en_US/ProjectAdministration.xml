@@ -198,6 +198,16 @@ john.smith@xerox.com</programlisting>
             <para>the documents, as well as the document tree will be present.
             </para>
         </lisitem>
+        <lisitem>
+            <para>the CVS admin settings are copied (preamble, tracking mode, CVS Watch Mode),
+            but the emails and the CVS permissions are not copied.
+            </para>
+        </lisitem>
+        <lisitem>
+            <para>the SVN admin settings are copied (preamble, tracking mode),
+            but the emails and the SVN access permissions are not copied.
+            </para>
+        </lisitem>
 	      </itemizedlist>
 	    
 	      Just notice that the project members of the template projects will 

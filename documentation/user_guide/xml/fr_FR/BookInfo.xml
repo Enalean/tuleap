@@ -131,7 +131,10 @@
 
         <authorinitials>Equipe CodeX</authorinitials>
 
-        <revremark>Mise à jour pour la version 3.2 de CodeX. 
+        <revremark>Mise à jour pour la version 3.2 de CodeX :
+        Documentation du nouveau service Fichiers, documentation 
+        des templates, documentation du mode CVS Watch, nombreuses 
+        corrections (voir SR #337).
         </revremark>
       </revision>
     </revhistory>

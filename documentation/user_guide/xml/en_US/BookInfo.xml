@@ -635,7 +635,9 @@
 
         <authorinitials>CodeX team</authorinitials>
 
-        <revremark>Update for the 3.2 CodeX release. 
+        <revremark>Update for the 3.2 CodeX release:
+        Documentation of the new File service, documentation of templates,
+        documentation of CVS Watch, and many fixes (see SR #337).
         </revremark>
       </revision>
     </revhistory>
