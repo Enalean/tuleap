@@ -2845,7 +2845,7 @@ CREATE TABLE artifact_file (
 	adddate int(11) DEFAULT '0' NOT NULL,
 	submitted_by int(11) NOT NULL,
 	PRIMARY KEY  (id),
-	KEY `artifact_id` (`artifact_id`)
+	KEY artifact_id (artifact_id)
 );
 
 #
@@ -2940,8 +2940,8 @@ CREATE TABLE artifact_watcher (
   user_id int(11) NOT NULL default '0',
   watchee_id int(11) NOT NULL default '0',
   artifact_group_id int(11) NOT NULL default '0',
-  INDEX `watchee_id_idx` (`watchee_id`,`artifact_group_id`),
-  INDEX `user_id_idx` (`user_id`,`artifact_group_id`)  
+  INDEX watchee_id_idx (watchee_id,artifact_group_id),
+  INDEX user_id_idx (user_id,artifact_group_id)  
 );
 
 ---
@@ -3282,12 +3282,11 @@ CREATE TABLE artifact_global_notification (
   INDEX (tracker_id)
 );
 
-DROP TABLE IF EXISTS notifications;
 CREATE TABLE notifications (
   user_id int(11) NOT NULL default '0',
   object_id int(11) NOT NULL default '0',
-  `type` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (user_id,object_id,`type`)
+  type varchar(100) NOT NULL default '',
+  PRIMARY KEY  (user_id,object_id,type)
 );
 
 #
