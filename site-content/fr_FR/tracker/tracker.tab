@@ -280,7 +280,7 @@ tracker_include_artifact	upload_file_desc	<P><B>Description du fichier&nbsp;:</B
 tracker_include_artifact	dependencies	Dépendances	
 tracker_include_artifact	aids	IDs Artefact&nbsp;:
 tracker_include_artifact	fill	(Remplissez la liste en utilisant la virgule comme séparateur)
-tracker_include_artifact	dependent_on	Dépend de&nbsp;:
+tracker_include_artifact	dependent_on	Dépendant de&nbsp;:
 tracker_include_artifact	change_history	Historique des changements&nbsp;:
 tracker_include_artifact	field	Champ
 tracker_include_artifact	old_val	Ancienne valeur
