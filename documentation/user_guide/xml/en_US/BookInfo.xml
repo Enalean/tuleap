@@ -31,6 +31,7 @@
       <year>2004</year>
       <year>2005</year>
       <year>2006</year>
+      <year>2007</year>
 
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
@@ -625,6 +626,16 @@
         <revremark>In the paragraph type of project : correct 
 	link to references and add details about the creation of
 	new projects from a template project. 
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.0</revnumber>
+
+        <date>3-Apr-2007</date>
+
+        <authorinitials>CodeX team</authorinitials>
+
+        <revremark>Update for the 3.2 CodeX release. 
         </revremark>
       </revision>
     </revhistory>

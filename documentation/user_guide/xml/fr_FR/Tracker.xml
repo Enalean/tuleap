@@ -2665,7 +2665,7 @@ width="14.5cm" />
         gestion des valeurs de champ (voir <xref
         linkend="TrackerFieldValuesManagement" />) vous mène à la
         liste des valeurs pour ce champ (voir <xref
-        linkend="FigureListOfValuesForTrackerFieldStatus" />).</para>
+        linkend="FigureListOfValuesForTrackerFieldResolution" />).</para>
 
         <para>La table des valeurs fournit les informations suivantes :</para>
 
@@ -2744,30 +2744,22 @@ width="14.5cm" />
         </itemizedlist>
         
         <para>La <xref
-        linkend="FigureListOfValuesForTrackerFieldStatus" /> montre la
-        liste des valeurs pour le champ Statut d'un outil de suivi de
-        &#34;Bugs&#34;. Le champ Statut a été délibérément choisi pour cet
-        exemple. Non seulement il s'agit d'un champ obligatoire (il ne
-        peut être détruit) mais il est aussi proposé avec un certain
+        linkend="FigureListOfValuesForTrackerFieldResolution" /> montre la
+        liste des valeurs pour le champ Resolution d'un outil de suivi de
+        &#34;Bugs&#34;. Le champ Resolution est proposé avec un certain
         nombre de valeurs prédéfinies qui sont communes à tous les
-        projets CodeX. Par défaut seules les valeurs &#34;Open&#34; et
-        &#34;Closed&#34; sont disponibles (et permanentes dans ce cas)
-        et il existe sept autres valeurs (Accepted, Analyzed, etc.) 
-        que vous pouvez utiliser si vous voulez un champ Statut plus
-        fin.</para>
+        projets CodeX. Par défaut 8 valeurs sont disponibles (Accepted, Analyzed, etc.). 
+        </para>
 
         <para>Vous avez bien sûr la possibilité d'ajouter vos propres
-        valeurs au champ Statut. C'est d'ailleurs ce qu'a fait le
-        projet montré en exemple : la valeur de statut
-        &#34;Assigned&#34; a été ajouté à la liste de valeurs
-        actives. Cependant dans le but de conserver une certaine
+        valeurs au champ Resolution. Cependant dans le but de conserver une certaine
         harmonie entre les différents outils de suivi de CodeX, nous
         vous recommandons vivement d'utiliser la liste des valeurs
         prédéfinies autant que vous le pouvez avant d'en créer de
         nouvelles.</para>
 
-        <figure id="FigureListOfValuesForTrackerFieldStatus">
-          <title>Liste des valeurs du champ &#34;Statut&#34;</title>
+        <figure id="FigureListOfValuesForTrackerFieldResolution">
+          <title>Liste des valeurs du champ &#34;Resolution&#34;</title>
           
           <mediaobject>
             <imageobject>

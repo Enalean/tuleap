@@ -2537,7 +2537,7 @@ width="14.5cm" />
 	  Management screen (see <xref
 	    linkend="TrackerFieldValuesManagement" />) brings you to the
 	  list of existing values for this field (see <xref
-	    linkend="FigureListOfValuesForTrackerFieldStatus"
+	    linkend="FigureListOfValuesForTrackerFieldResolution"
 	    />).</para>
 
 	<para>The table of values shows the following information:</para>
@@ -2611,28 +2611,20 @@ width="14.5cm" />
 	  
 	</itemizedlist>
 	
-	<para><xref linkend="FigureListOfValuesForTrackerFieldStatus"
-	/> shows the list of available values for the Status field of
-	tracker managing &#34;Bugs&#34; artifacts. The Status field
-	was chosen on purpose. Not only is the Status field a required
-	field of the &#34;Bugs&#34; template (that is it cannot be
-	deleted), but it also comes with set of predefined values that
-	are available to all CodeX projects. By default only
-	&#34;Open&#34; and &#34;Closed&#34; values are active (and
-	permanent in this case) but there is a series of 7 other
-	values (Accepted, Analyzed, etc.)  that you can choose from if
-	you want to have a finer grain Status field.</para>
+	<para>The <xref linkend="FigureListOfValuesForTrackerFieldResolution"
+	/> shows the list of available values for the Resolution field of
+	tracker managing &#34;Bugs&#34; artifacts. The Resolution field
+	comes with set of predefined values that are available to all CodeX 
+    projects. By default 8 values are active (Accepted, Analyzed, etc.).</para>
 
 	<para>Of course you are free to add your own values to the
-	Status field. This is actually what has been done for this
-	particular project: the Status value &#34;Assigned&#34; as
-	been added to the list of active values. However, in order to
+	Resolution field. However, in order to
 	keep a certain harmony from one CodeX tracker to another, we
-	highly recommend that you use the list of predefined status
+	highly recommend that you use the list of predefined resolution
 	values as much as you can before creating new ones.</para>
 
-	<figure id="FigureListOfValuesForTrackerFieldStatus">
-	  <title>List of values for the &#34;Status&#34; field</title>
+	<figure id="FigureListOfValuesForTrackerFieldResolution">
+	  <title>List of values for the &#34;Resolution&#34; field</title>
 	  
 	  <mediaobject>
 	    <imageobject>
