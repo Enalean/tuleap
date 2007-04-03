@@ -241,12 +241,6 @@
 
       <itemizedlist mark="bullet" spacing="compact">
         <listitem>
-          <para>A CVS Tutorial (Powerpoint): see <ulink
-          url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt">http://codex.&SYS_DEFAULT_DOMAIN;/slides/CVS_Tutorial.ppt</ulink>). An
-          HTML version (compressed) is also available at <ulink
-          url="http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip">http://codex.&SYS_DEFAULT_DOMAIN;/slides/slideCVS_HTML.zip</ulink></para>
-        </listitem>
-        <listitem>
           <para>Open Source Development with CVS : excellent book also
           known as "The CVS Black Book". Also available
           in printed form from Coriolis Press. See <ulink url="http://cvsbook.red-bean.com/">http://cvsbook.red-bean.com/</ulink>.
