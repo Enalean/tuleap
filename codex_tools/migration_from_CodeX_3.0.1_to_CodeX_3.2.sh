@@ -305,6 +305,11 @@ ALTER TABLE groups ADD COLUMN cvs_watch_mode INT(11) NOT NULL DEFAULT 0 AFTER cv
 # CVS tracker and svn tarcker on template project (group_id = 100)
 UPDATE groups SET cvs_tracker = '1', svn_tracker = '1' WHERE group_id='100';
 
+###############################################################################
+#Add forums on template project (group_id = 100)
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Open Discussion','1' ,'General Discussion');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help','1' ,'Get Help');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers','0' ,'Project Developer Discussion');
 
 ###############################################################################
 # Tracker global notification
