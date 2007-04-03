@@ -293,10 +293,6 @@ UPDATE frs_processor SET rank = '90', group_id = '100' WHERE processor_id=9999;
 # Plugin / Project
 ALTER TABLE plugin ADD COLUMN prj_restricted TINYINT(4) NOT NULL DEFAULT 0 AFTER available;
 
-ALTER TABLE project_plugin ADD UNIQUE project_plugin (project_id, plugin_id);
-ALTER TABLE project_plugin ADD INDEX project_id_idx (project_id);
-ALTER TABLE project_plugin ADD INDEX plugin_id_idx (plugin_id);
-
 ###############################################################################
 # CVS administration (cvs watch mode)
 ALTER TABLE groups ADD COLUMN cvs_watch_mode INT(11) NOT NULL DEFAULT 0 AFTER cvs_tracker;
@@ -419,37 +415,98 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 
 # SR #636
 ALTER TABLE artifact_history CHANGE field_name field_name VARCHAR(255) NOT NULL default '';
-ALTER TABLE artifact_history ADD INDEX field_name (field_name (10));
-
-# SR #637 - fixes issue with large tracker reports
-ALTER TABLE artifact_field_value ADD INDEX idx_art_field_id (artifact_id, field_id);
 
 # SR #635 - Permission table
 ALTER TABLE permissions CHANGE permission_type permission_type VARCHAR(255) NOT NULL;
 ALTER TABLE permissions CHANGE object_id object_id VARCHAR(255) NOT NULL;
-ALTER TABLE permissions ADD INDEX object_id (object_id (10));
-
-# SR #634
-ALTER TABLE svn_commits ADD INDEX revision (revision);
-
-# SR #633
-ALTER TABLE artifact_field_value ADD INDEX valueInt (valueInt);
-
-# SR #683
-ALTER TABLE cvs_checkins ADD INDEX commitid (commitid);
-
-# SR #636
-ALTER TABLE artifact_field ADD INDEX idx_grp_name (group_artifact_id, field_name (20));
 
 # SR #625
 ALTER TABLE user_group ADD news_flags INT(11) NOT NULL DEFAULT '0';
 
+
+EOF
+################################################################################
+# Add/remove indexes if needed
+$PERL <<'EOF'
+use DBI;
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
+&db_connect;
+
+sub add_index {
+    my ($query, $c, $type);
+    my ($tablename) = $_[0];
+    my ($indexname) = $_[1];
+    my ($columns)   = $_[2];
+    $type = ('', $_[3])[defined($_[3])];
+    drop_index($tablename, $indexname);
+
+    $query = "CREATE INDEX ". $indexname ." ON ". $tablename ."(". $columns .")";
+    print $query ."\n";
+    $c = $dbh->prepare($query);
+    $c->execute();
+}
+sub drop_index {
+    my ($query, $c);
+    my ($tablename) = $_[0];
+    my ($indexname) = $_[1];
+
+    if (index_exists($tablename, $indexname) eq 1) {
+        $query = "DROP INDEX ". $indexname ." ON ". $tablename;
+        print $query ."\n";
+        $c = $dbh->prepare($query);
+        $c->execute();
+    }
+}
+sub index_exists {
+    my ($query, $c);
+    my ($found)     = 0;
+    my ($tablename) = $_[0];
+    my ($indexname) = $_[1];
+
+    $query = "SHOW INDEX FROM ".$tablename;
+    $c = $dbh->prepare($query);
+    $c->execute();
+    my($table, $non_unique, $key_name, $seq_in_index, $column_name, $collation, $cardinality, $sub_part, $packed, $null, $index_type, $comment);
+    $c->bind_columns( undef, \$table, \$non_unique, \$key_name, \$seq_in_index, \$column_name, \$collation, \$cardinality, \$sub_part, \$packed, \$null, \$index_type, \$comment);
+    while($found eq 0 and $c->fetch()) {
+        if ($key_name eq $indexname) {
+            $found = 1;
+        }
+    }
+    return $found;
+}
+
 # SR #676
-ALTER TABLE wiki_page DROP INDEX group_id;
-ALTER TABLE wiki_page ADD INDEX idx_page_group (group_id, pagename(10));
+drop_index('wiki_page', 'group_id');
+add_index('wiki_page', 'idx_page_group', 'group_id, pagename(10)');
 
 # SR #675
-ALTER TABLE artifact ADD INDEX idx_fk_submitted_by (submitted_by);
+add_index('artifact', 'idx_fk_submitted_by', 'submitted_by');
+
+# SR #634
+add_index('svn_commits', 'revision', 'revision');
+
+# SR #633
+add_index('artifact_field_value', 'valueInt', 'valueInt');
+
+# SR #683
+add_index('cvs_checkins', 'commitid', 'commitid');
+
+# SR #636
+add_index('artifact_field', 'idx_grp_name', 'group_artifact_id, field_name (20)');
+add_index('artifact_history', 'field_name', 'field_name (10)');
+
+# SR #637 - fixes issue with large tracker reports
+add_index('artifact_field_value', 'idx_art_field_id', 'artifact_id, field_id');
+
+# SR #635 - Permission table
+add_index('permissions', 'object_id', 'object_id (10)');
+
+# Plugin / Project
+add_index('project_plugin', 'project_plugin', 'project_id, plugin_id', 'UNIQUE');
+add_index('project_plugin', 'project_id_idx', 'project_id');
+add_index('project_plugin', 'plugin_id_idx', 'plugin_id');
+
 
 EOF
 
