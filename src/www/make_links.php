@@ -40,8 +40,11 @@ if ($request->get('help')) {
     echo $GLOBALS['Language']->getText('project_reference', 'insert_syntax');
     exit;
 }
-$text=$request->get('text');
-echo nl2br(util_make_links($request->get('text'), $group_id)."\n");
+$text = $request->get('text');
+if (isset($_SERVER['CONTENT_TYPE']) && (strpos(strtolower($_SERVER['CONTENT_TYPE']), 'utf-8') !== FALSE)) {
+    $text = utf8_decode($text);
+}
+echo nl2br(util_make_links($text, $group_id)."\n");
 exit;
 
 ?>
