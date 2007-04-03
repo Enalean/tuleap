@@ -110,7 +110,8 @@ if ($request->exist('func')) {
                 $package_id = $request->get('id');
                 if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
                     $package_data = $request->get('package');
-                    if (!$frspf->isPackageNameExist($package_data['name'], $group_id)) {
+                    // we check if the name already exist only if the name has changed
+                    if ($package_data['name'] == $package->getName() || !$frspf->isPackageNameExist($package_data['name'], $group_id)) { 
                         if ($package_data['status_id'] != 1) {
                             //if hiding a package, refuse if it has releases under it
                             // LJ Wrong SQL statement. It should only check for the existence of
