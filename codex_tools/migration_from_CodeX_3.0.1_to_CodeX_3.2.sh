@@ -440,7 +440,7 @@ sub add_index {
     $type = ('', $_[3])[defined($_[3])];
     drop_index($tablename, $indexname);
 
-    $query = "CREATE INDEX ". $indexname ." ON ". $tablename ."(". $columns .")";
+    $query = "CREATE ". $type ." INDEX ". $indexname ." ON ". $tablename ."(". $columns .")";
     print $query ."\n";
     $c = $dbh->prepare($query);
     $c->execute();
