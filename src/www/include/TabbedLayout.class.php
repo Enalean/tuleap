@@ -384,6 +384,7 @@ if (isset($params['group']) && $params['group']) {
 			$TABS_TITLES[]=$Language->getText('menu','reporting');
 		}
         */
+        $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : '';
 		if(isset($params['group']) && $params['group']) {
 			// get group info using the common result set
 			$project = group_get_object($params['group']);
@@ -413,7 +414,7 @@ if (isset($params['group']) && $params['group']) {
 			$selected=array_search("/site/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/reporting/')) {
 			$selected=array_search('/reporting/',$TABS_DIRS);
-		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/admin/') && user_ismember(1,'A')) {
+		} elseif ((strstr(getStringFromServer('REQUEST_URI'),'/admin/') || $selected_top_tab == 'admin') && user_ismember(1,'A')) {
 			$selected=array_search('/admin/',$TABS_DIRS);;
 		} else {
 			$selected=0;

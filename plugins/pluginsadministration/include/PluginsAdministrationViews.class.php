@@ -22,7 +22,7 @@ class PluginsAdministrationViews extends Views {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
         $GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
         $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-        $GLOBALS['HTML']->header(array('title'=>$title));
+        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
         echo '<h2>'.$title.'&nbsp;'.$this->_getHelp().'</h2>';
     }
     function footer() {
