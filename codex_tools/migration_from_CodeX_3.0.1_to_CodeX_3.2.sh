@@ -533,11 +533,24 @@ todo "Before doing this, make sure that the wiki of project 1 (codex) is instant
 substitute '/etc/httpd/conf/ssl.conf' '^Include .*codex_svnhosts_ssl.conf' '#Include $1codex_svnhosts_ssl.conf'
 
 
+###############################################################################
+# Move /etc/codex/site-content/LANG/register to site-content/project
+
+if [ -e /etc/codex/site-content/en_US/register/* ]; then
+   $MKDIR -p /etc/codex/site-content/en_US/project
+   $MV /etc/codex/site-content/en_US/register/* /etc/codex/site-content/en_US/project
+fi
+
+if [ -e /etc/codex/site-content/fr_FR/register/* ]; then
+   $MKDIR -p /etc/codex/site-content/fr_FR/project
+   $MV /etc/codex/site-content/fr_FR/register/* /etc/codex/site-content/fr_FR/project
+fi
+
+
 ##############################################
-# Fix SELinux
+# Fix SELinux contexts if needed
 #
-cd $INSTALL_DIR
-cd src/utils
+cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
 ##############################################
@@ -550,12 +563,13 @@ $SERVICE sendmail start
 $SERVICE mailman start
 $SERVICE smb start
 
-!!! Déplacer le site-content/register des clients vers site-content/project
-!!! cookie domain in local.inc
+#!!! cookie domain in local.inc
+#!!! subdomain param in local.inc
+
 todo "register has been moved !!!"
 todo "If you have custom themes, please :"
-??? todo " - update usage of feedback (maybe need to display it at the end of header(). See rev #4756 for details"
-??? todo " - copy the rules for textfield_small/textfield_medium from CodeXTab/css/style.css in your stylesheets"
+#??? todo " - update usage of feedback (maybe need to display it at the end of header(). See rev #4756 for details"
+#??? todo " - copy the rules for textfield_small/textfield_medium from CodeXTab/css/style.css in your stylesheets"
 todo " - copy and modify CodeX/images/ic/plain-arrow-down.png"
 todo " - copy the rules .iframe_service and .iframe_showonly"
 todo " - copy the rules for File Release System from CodeXTab/css/style.css in your stylesheets"
