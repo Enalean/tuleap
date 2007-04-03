@@ -50,6 +50,7 @@ file_admin_editpackages	status_hidden	Hidden
 file_admin_editpackages	create_canceled	Package creation canceled
 file_admin_editpackages	edit_package	Edit a Package
 file_admin_editpackages	update_canceled	Package update canceled
+file_admin_editpackages	p_not_exists	Package does not exist
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php
@@ -174,7 +175,6 @@ file_admin_editreleases	delete_col	Delete
 file_admin_editreleases	release_perm	The release permissions are :  
 file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, you will be able to upload it again in less than two hours.
 file_admin_editreleases	create_new_release	Create a new release
-file_admin_editreleases	edit_release	Edit a release
 file_admin_editreleases	create_canceled	Release creation canceled
 file_admin_editreleases	update_canceled	Release update canceled
 #
