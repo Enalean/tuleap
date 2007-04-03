@@ -74,7 +74,8 @@ wiki_lib_attachment	err_multi_id	Il existe plusieurs identifiants pour un fichie
 wiki_lib_wikientry	insert_err	Impossible d'insérer une nouvelle entrée wiki&nbsp;: $1
 wiki_lib_wikientry	delete_err	Impossible de supprimer l'entrée wiki&nbsp;: $1
 wiki_lib_wikientry	update_err	Impossible de modifier l'entrée wiki&nbsp;: $1
-wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été modifiée<li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
+wiki_lib_wikientry	no_update	L'entrée wiki "$1" n'a pas été modifiée
+
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiPage.class.php
@@ -98,7 +99,6 @@ wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Docum
 wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions&nbsp;: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette page Wiki&nbsp;: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à jour les permissions de ce fichier joint Wiki&nbsp;: <p>$1</p>
-#      <li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
 
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class.php
@@ -113,7 +113,7 @@ wiki_views_wkserviews	title	Administration Wiki pour $1
 wiki_views_wkserviews	entry_em	<em>Affichée dans la page par défaut du service wiki</em>
 wiki_views_wkserviews	entry_name	Nom du document&nbsp;:
 wiki_views_wkserviews	wikipage	PageWiki&nbsp;:
-wiki_views_wkserviews	givename	Ou donnez un nom de page&nbsp;      <li>'.help_button('WikiService.html',false,$GLOBALS['Language']->getText('global','help')).'</li>
+wiki_views_wkserviews	givename	Ou donnez un nom de page&nbsp;
 wiki_views_wkserviews	wikipage_em	<em>Sélectionnez une <a href="$1&view=wikiPages">Page de Projet Wiki</a> ou entrez un autre nom de PageWiki (Si la page n'existe pas, elle sera créée).</em>
 wiki_views_wkserviews	description	Description&nbsp;:	
 wiki_views_wkserviews	description_em	<em>Description du document Wiki</em>
