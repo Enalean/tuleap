@@ -89,7 +89,7 @@ if ($request->exist('func')) {
                 break;
             case 'update':
                 if ($request->exist('cancel')) {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'create_canceled'));
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'update_canceled'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 } else {
                     $release_id = $request->get('id');
