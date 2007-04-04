@@ -46,11 +46,11 @@ $frsff = new FRSFileFactory();
 
 $existing_packages = array();
 $res = $frspf->getFRSPackagesFromDb($group_id);
-foreach($res as $p) {
+foreach($res as $p => $nop) {
     $existing_packages[] = array(
-        'id'   => $p->getPackageId(),
-        'name' => $p->getName(),
-        'rank' => $p->getRank(),
+        'id'   => $res[$p]->getPackageId(),
+        'name' => $res[$p]->getName(),
+        'rank' => $res[$p]->getRank(),
     );
 }
 
@@ -59,7 +59,7 @@ if ($request->exist('func')) {
         case 'delete': //Not yet
             break;
         case 'add':
-            $package =& new FRSPackage();
+            $package =& new FRSPackage(array('group_id' => $group_id));
             frs_display_package_form($package, $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p'), '?group_id='. $group_id .'&amp;func=create', $existing_packages);
             break;
         case 'create':

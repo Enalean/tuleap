@@ -349,6 +349,7 @@ function file_utils_convert_bytes_to_kbytes($size_in_bytes, $decimals_precision 
 }
 
 function frs_display_package_form(&$package, $title, $url, $siblings) {
+    $group_id = $package->getGroupId();
     file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','edit_package'), 'help' => 'FileReleaseDelivery.html'));
     echo '<h3>'. $title .'</h3>
     <P>
