@@ -31,7 +31,7 @@ function create_project($data) {
     if (!isset($GLOBALS['sys_is_project_public'])) {
         $GLOBALS['sys_is_project_public'] = 1;
     }
-    if ($GLOBALS['sys_disable_subdomains']) {
+    if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
       $http_domain=$GLOBALS['sys_default_domain'];
     } else {
       $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
