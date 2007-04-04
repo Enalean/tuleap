@@ -335,7 +335,10 @@ function news_insert_permissions($forum_id,$group_id) {
 	// cast  inputs
 	$_forum_id = (int) $forum_id;
 	
-	if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
+    //We force permission if user is project admin... beurk
+    $force = user_ismember($group_id, 'A');
+    
+	if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS, $force)) {
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_create_success'));
 	} else {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_submit','insert_err'));
