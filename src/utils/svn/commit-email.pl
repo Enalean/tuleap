@@ -248,8 +248,8 @@ if ($sys_force_ssl) {
 }
 $codex_http_srv="http://$sys_default_domain";
 
-my $mod_url = $codex_srv."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h";
-my $add_url  = $codex_srv."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname";
+my $mod_url = $codex_srv."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h&pathrev=$rev";
+my $add_url  = $codex_srv."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname&pathrev=$rev";
 
 my $no_diff = 1; # no inline diff for CodeX
 
