@@ -240,7 +240,7 @@ Event.observe(window, 'load', function() {
 		Element.hide('upload_change_log');
 		Element.hide('change_log_area');
 		new Insertion.Before('change_log_title', '<TR id="add_change_log"><TD><a href="#add_change_log" onclick="add_change_log(); return false;">'+add_change_log_text+'</a></TD></TR>');
-	}else if(release_mode == 'edition' && $('text_area_change_log').value!=''){alert('in');
+	}else if(release_mode == 'edition' && $('text_area_change_log').value!=''){
 		new Insertion.After('uploaded_change_log', '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">');
 		Element.hide('cancel_change_log');
 		Element.hide('upload_change_log');
