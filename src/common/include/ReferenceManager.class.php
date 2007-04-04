@@ -287,7 +287,7 @@ class ReferenceManager {
      */
     function insertReferences(&$html,$group_id) {
 
-        $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/]+)+/',
+        $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/&]+)+/',
                                       array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
                                       $html);
     }
@@ -301,7 +301,7 @@ class ReferenceManager {
     function extractReferences($html,$group_id) {
 
         $referencesInstances=array();
-        $count=preg_match_all('/(\w+) #(\w+:)?([\w\/]+)+/', $html, $matches,PREG_SET_ORDER);
+        $count=preg_match_all('/(\w+) #(\w+:)?([\w\/&]+)+/', $html, $matches,PREG_SET_ORDER);
         foreach ($matches as $match) {
             $ref_instance=$this->_getReferenceInstanceFromMatch($match);
             if (!$ref_instance) continue;

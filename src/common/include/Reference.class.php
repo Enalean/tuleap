@@ -156,7 +156,7 @@ class Reference {
             $count=count($args);
             if ($count>9) $count=9;
             for ($i=1; $i<=$count; $i++) {
-                $this->link = str_replace('$'.$i, $args[$i-1], $this->link);
+                $this->link = str_replace('$'.$i, urlencode($args[$i-1]), $this->link);
             }
         }
     }
