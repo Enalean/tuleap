@@ -166,7 +166,7 @@ function create_project($data) {
         $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
-        $query = "UPDATE groups SET cvs_tracker='".$arr['cvs_tracker']."',  cvs_watch_mode='".$arr['cvs_watch_mode']."' , cvs_preamble='".$arr['cvs_preamble']."' " .
+        $query = "UPDATE groups SET cvs_tracker='".$arr['cvs_tracker']."',  cvs_watch_mode='".$arr['cvs_watch_mode']."' , cvs_preamble='".db_escape_string($arr['cvs_preamble'])."' " .
                  "WHERE group_id = '$group_id'";
         
         $result=db_query($query);
@@ -178,7 +178,7 @@ function create_project($data) {
         $sql = "SELECT svn_tracker, svn_preamble FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
-        $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."',  svn_preamble='".$arr['svn_preamble']."' " .
+        $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."',  svn_preamble='".db_escape_string($arr['svn_preamble'])."' " .
                  "WHERE group_id = $group_id";
         
         $result=db_query($query);
