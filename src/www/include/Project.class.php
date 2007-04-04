@@ -48,7 +48,7 @@ function project_get_object($group_id,$force_update=false) {
 	//saves a little wear on the database
 	global $PROJECT_OBJ;
 	if (!isset($PROJECT_OBJ["_".$group_id."_"]) || !$PROJECT_OBJ["_".$group_id."_"] || $force_update) {
-		$PROJECT_OBJ["_".$group_id."_"]= new Project($group_id);
+		$PROJECT_OBJ["_".$group_id."_"] =& new Project($group_id);
 		return $PROJECT_OBJ["_".$group_id."_"];
 	} else {
 		return $PROJECT_OBJ["_".$group_id."_"];
