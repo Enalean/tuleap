@@ -145,17 +145,23 @@ echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['r
 echo '</td></tr>';
 
 //{{{ Distributed architecture
-if ($su) {
-    if (in_array($service['short_name'], array('file', 'svn'))) {
-        $sf =& new ServerFactory();
-        $servers = $sf->getAllServers();
-        if ($servers && count($servers) > 1) {
-            echo '<tr><td colspan="2"><b>Server</b></tr>';
-            echo '<tr><td><label><a href="#" title="Location">Location:</a></label></td><td>';
+if (in_array($service['short_name'], array('file', 'svn'))) {
+    $sf =& new ServerFactory();
+    $servers = $sf->getAllServers();
+    if ($servers && count($servers) > 1) {
+        echo '<tr><td colspan="2"><b>Server</b></tr>';
+        echo '<tr><td><label><a href="#" title="Location">Location:</a></label></td><td>';
+        if ($su) {
             echo '<select name="server_id">';
             foreach($servers as $key => $nop) {
                 $selected = $servers[$key]->getId() == $service['server_id'] ? 'selected="selected"' : '';
                 echo '<option value="'. $servers[$key]->getId() .'" '. $selected .'>'. $servers[$key]->getName() .'</option>';
+            }
+        } else {
+            foreach($servers as $key => $nop) {
+                if ($servers[$key]->getId() == $service['server_id']) {
+                    echo $servers[$key]->getName();
+                }
             }
         }
         echo '</td></tr>';
