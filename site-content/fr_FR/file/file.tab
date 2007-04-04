@@ -248,7 +248,7 @@ file_filemodule_monitor	monitor_package	Suivre un paquet
 file_filemodule_monitor	insert_err	Erreur lors de l'insertion dans filemodule_monitor
 file_filemodule_monitor	p_monitored	Le suivi de ce paquet est maintenant activé
 file_filemodule_monitor	now_emails	Vous recevrez un message électronique concernant les nouvelles versions de ce paquet.
-file_filemodule_monitor	turn_monitor_off	Pour arrêté le suivi, cliquer sur l'icône <B>Arrêter de surveiller ce paquet</B>.
+file_filemodule_monitor	turn_monitor_off	Pour arrêter le suivi, cliquer sur l'icône <B>Arrêter de surveiller ce paquet</B>.
 file_filemodule_monitor	monitor_turned_off	Le suivi de ce paquet est désactivé
 file_filemodule_monitor	no_emails	Vous ne recevrez plus de courrier électronique concernant les nouvelles versions de ce paquet.
 file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
