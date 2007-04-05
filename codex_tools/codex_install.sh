@@ -62,9 +62,10 @@ PERL='/usr/bin/perl'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
+SELINUX_ENABLED=1
 if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
    # SELinux not installed
-   CHCON="echo ignored: chcon"
+   SELINUX_ENABLED=0
 fi
 
 
@@ -226,9 +227,9 @@ read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subd
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
 while [ "$rt_passwd" != "$rt_passwd2" ]; do
-    read -s -p "Password for user root: " rt_passwd
+    read -s -p "Password for MySQL root: " rt_passwd
     echo
-    read -s -p "Retype root password: " rt_passwd2
+    read -s -p "Retype MySQL root password: " rt_passwd2
     echo
 done
 
@@ -248,15 +249,17 @@ while [ "$mm_passwd" != "$mm_passwd2" ]; do
     echo
 done
 
-py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
-rt_encpasswd=`python -c "$py_cmd"`
+#py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
+#rt_encpasswd=`python -c "$py_cmd"`
 py_cmd="import crypt; print crypt.crypt(\"$codexadm_passwd\",\"\$1\$h67e4niB\$\")"
 codex_encpasswd=`python -c "$py_cmd"`
 py_cmd="import crypt; print crypt.crypt(\"$mm_passwd\",\"\$1\$eniB4h67\$\")"
 mm_encpasswd=`python -c "$py_cmd"`
 
 # Create Users
-$USERMOD -p "$rt_encpasswd" root
+
+# No longer modify root password. It is not safe to do this in a script.
+#$USERMOD -p "$rt_encpasswd" root
 
 $USERDEL codexadm 2>/dev/null 1>&2
 $USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin,mailman codexadm
@@ -344,14 +347,15 @@ build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
 
 
 # SELinux specific
-$CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
-$CHCON -R -h $SELINUX_CONTEXT /etc/codex
-$CHCON -R -h $SELINUX_CONTEXT /var/lib/codex
-$CHCON -R -h $SELINUX_CONTEXT /home/groups
-$CHCON -R -h $SELINUX_CONTEXT /home/codexadm
-$CHCON -h $SELINUX_CONTEXT /svnroot
-$CHCON -h $SELINUX_CONTEXT /cvsroot
-
+if [ $SELINUX_ENABLED ]; then
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
+    $CHCON -R -h $SELINUX_CONTEXT /etc/codex
+    $CHCON -R -h $SELINUX_CONTEXT /var/lib/codex
+    $CHCON -R -h $SELINUX_CONTEXT /home/groups
+    $CHCON -R -h $SELINUX_CONTEXT /home/codexadm
+    $CHCON -h $SELINUX_CONTEXT /svnroot
+    $CHCON -h $SELINUX_CONTEXT /cvsroot
+fi
 
 
 ##############################################
@@ -383,14 +387,15 @@ cd - > /dev/null
 
 
 # SELinux CodeX-specific policy
-echo "Removing existing SELinux policy .."
-$RPM -e selinux-policy-targeted-sources 2>/dev/null
-$RPM -e selinux-policy-targeted 2>/dev/null
-echo "Installing SELinux targeted policy for CodeX...."
-cd ${RPMS_DIR}/selinux-policy-targeted
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
-
+if [ $SELINUX_ENABLED ]; then
+    echo "Removing existing SELinux policy .."
+    $RPM -e selinux-policy-targeted-sources 2>/dev/null
+    $RPM -e selinux-policy-targeted 2>/dev/null
+    echo "Installing SELinux targeted policy for CodeX...."
+    cd ${RPMS_DIR}/selinux-policy-targeted
+    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
+fi
 
 # -> jre
 echo "Removing existing Java JRE..."
@@ -421,7 +426,7 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 #$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
 $RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
 $RPM -Uvh ${newest_rpm}/apr-util-0*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm # conflict with needed db42 (SVN 1.2.3)
+$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
@@ -685,7 +690,9 @@ if [ "$disable_subdomains" != "y" ]; then
 fi
 
 # Make sure SELinux contexts are valid
-$CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
+if [ $SELINUX_ENABLED ]; then
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
+fi
 
 # Create .subversion directory in codexadm home dir.
 su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
@@ -816,8 +823,12 @@ EOF
 `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
 
 # Create site wide ML
-# Note that if sys_default_domain is not a domain, the script might complain
-/usr/lib/mailman/bin/newlist -q mailman codex-admin@$sys_default_domain $mm_passwd > /dev/null
+# Note that if sys_default_domain is not a domain, the script will complain
+LIST_OWNER=codex-admin@$sys_default_domain
+if [ "$disable_subdomains" = "y" ]; then
+    LIST_OWNER=codex-admin@$sys_fullname
+fi
+/usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
 
 # Comment existing mailman aliases in /etc/aliases
 $PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
@@ -916,7 +927,6 @@ $CP commit-email.pl /usr/lib/codex/bin
 cd /usr/lib/codex/bin
 $CHOWN codexadm.codexadm commit-email.pl
 $CHMOD 755 commit-email.pl
-#$CHMOD u+s commit-email.pl   # sets the uid bit (-rwsr-xr-x) NG: useless? and issue with SELinux
 
 
 ##############################################
@@ -967,7 +977,10 @@ if [ "$yn" = "y" ]; then
     $CHOWN codexadm.codexadm /etc/codex/site-content/en_US/others
     $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
-if [ "$disable_subdomains" != "y" ]; then
+if [ "$disable_subdomains" = "y" ]; then
+  echo "HomePage service disabled in project configuration..."
+  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET is_used = '0' WHERE short_name = 'homepage'"
+else
   todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
 fi
 todo "Customize site-content information for your site."
@@ -1292,8 +1305,9 @@ todo "   (e.g. 'rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm')."
 todo "To customize the network gallery, copy /usr/share/codex/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
 todo "Create the shell login files for CodeX users in /etc/skel_codex"
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codex/bin/cvssh, etc.)"
-todo "Last, run the main crontab script manually: /usr/share/codex/src/utils/xerox_crontab.sh"
-
+todo "Then, run the main crontab script manually: /usr/share/codex/src/utils/xerox_crontab.sh"
+todo "Last, log in as 'admin' on web server, read/accept the license, and click on 'server update'. Then update the server to the latest available version."
+todo ""
 todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."
 todo "If you plan to use CVSNT, please refer to the installation guide"
 todo "-----------------------------------------"
