@@ -636,7 +636,7 @@ $CP $INSTALL_DIR/src/etc/codex_aliases.conf.dist /etc/httpd/conf.d/codex_aliases
 echo "Updating local.inc"
 
 # Remove end PHP marker
-substitute '/etc/codex/conf/local.inc' '?>' ''
+substitute '/etc/codex/conf/local.inc' '\?\>' ''
 
 $CAT <<EOF >> /etc/codex/conf/local.inc
 
@@ -647,20 +647,20 @@ $CAT <<EOF >> /etc/codex/conf/local.inc
 //   => cookie domain is "s1.codex.com"
 //- you have 2 servers (s1.codex.com & s2.codex.com) 
 //   => cookie domain should be "codex.com" for SSO
-$sys_cookie_domain = "$sys_default_domain";
+\$sys_cookie_domain = "$sys_default_domain";
 
 //This is used for cookie authentication. If you have distributed servers, 
 //please use same cookie prefix for a "cluster"
-$sys_cookie_prefix = "CODEX";
+\$sys_cookie_prefix = "CODEX";
 
 // The id of the server.
 // If the server belong to a distributed architecture, make sure that all servers have a different server_id.
 // Otherwise, use '0'.
-$sys_server_id = 0;
+\$sys_server_id = 0;
 
 // Disable sub-domains (like cvs.proj.codex.xerox.com)
 // Should be disabled if no DNS delegation
-$sys_disable_subdomains = 0;
+\$sys_disable_subdomains = 0;
 ?>
 EOF
 
