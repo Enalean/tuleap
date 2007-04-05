@@ -41,7 +41,7 @@ if ($row_grp['svn_preamble'] != '') {
     }
     if ($GLOBALS['sys_force_ssl']) {
        $svn_url = 'https://'. $host;
-    } else if ($GLOBALS['sys_disable_subdomains']) {
+    } else if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
       $svn_url = 'http://'.$host;
     } else {
        $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
