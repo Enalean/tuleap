@@ -30,7 +30,7 @@ cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
-TODO_FILE=/root/todo_codex_upgrade.txt
+TODO_FILE=/root/todo_codex_upgrade_3.2.txt
 export INSTALL_DIR="/usr/share/codex"
 
 # path to command line tools
@@ -166,6 +166,17 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
+
+##############################################
+# Ask for domain name and other installation parameters
+#
+sys_default_domain=`grep ServerName /etc/httpd/conf/httpd.conf | grep -v '#' | head -1 | cut -d " " -f 2 ;`
+if [ -z $sys_default_domain ]; then
+  read -p "CodeX Domain name: " sys_default_domain
+fi
+
+
+
 $RM -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 
@@ -182,6 +193,30 @@ $SERVICE sendmail stop
 $SERVICE postfix stop
 $SERVICE mailman stop
 $SERVICE smb stop
+
+
+##############################################
+# Now install/update CodeX specific RPMS 
+#
+
+
+# -> subversion
+# backup config file for apache
+$MV /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.3.0.1.codex
+echo "Installing Subversion 1.4 RPMs for CodeX...."
+echo "Installing Subversion RPMs for CodeX...."
+cd ${RPMS_DIR}/subversion
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
+$RPM -Uvh ${newest_rpm}/apr-util-0*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm 
+$RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
+
+$CP -a /etc/httpd/conf.d/subversion.conf.3.0.1.codex /etc/httpd/conf.d/subversion.conf
+
 
 
 ##############################################
@@ -583,15 +618,65 @@ todo " then follow the link of 'next project' "
 todo "Before doing this, make sure that the wiki of project 1 (codex) is instantiated."
 
 ###############################################################################
-# Update ssl.conf
+echo "Updating ssl.conf"
 #
 # Subversion roots are now in conf.d and available to both http and https vhosts.
 
 substitute '/etc/httpd/conf/ssl.conf' '^Include .*codex_svnhosts_ssl.conf' '#Include $1codex_svnhosts_ssl.conf'
 
+###############################################################################
+echo "Updating codex_aliases.conf"
+
+# backup
+$CP /etc/httpd/conf.d/codex_aliases.conf /etc/httpd/conf.d/codex_aliases.conf.CX3
+# copy newer
+$CP $INSTALL_DIR/src/etc/codex_aliases.conf.dist /etc/httpd/conf.d/codex_aliases.conf
 
 ###############################################################################
-# Move /etc/codex/site-content/LANG/register to site-content/project
+echo "Updating local.inc"
+
+# Remove end PHP marker
+substitute '/etc/codex/conf/local.inc' '?>' ''
+
+$CAT <<EOF >> /etc/codex/conf/local.inc
+
+//This is used for cookie authentication. If you have distributed servers, 
+//please use a generic domain to allow single sign on.
+//Examples:
+//- you have 1 server (s1.codex.com) 
+//   => cookie domain is "s1.codex.com"
+//- you have 2 servers (s1.codex.com & s2.codex.com) 
+//   => cookie domain should be "codex.com" for SSO
+$sys_cookie_domain = "$sys_default_domain";
+
+//This is used for cookie authentication. If you have distributed servers, 
+//please use same cookie prefix for a "cluster"
+$sys_cookie_prefix = "CODEX";
+
+// The id of the server.
+// If the server belong to a distributed architecture, make sure that all servers have a different server_id.
+// Otherwise, use '0'.
+$sys_server_id = 0;
+
+// Disable sub-domains (like cvs.proj.codex.xerox.com)
+// Should be disabled if no DNS delegation
+$sys_disable_subdomains = 0;
+?>
+EOF
+
+
+###############################################################################
+echo "Copy updated commit-email.pl"
+
+cd $INSTALL_DIR/src/utils/svn
+$CP commit-email.pl /usr/lib/codex/bin
+cd /usr/lib/codex/bin
+$CHOWN codexadm.codexadm commit-email.pl
+$CHMOD 755 commit-email.pl
+
+
+###############################################################################
+echo "Move /etc/codex/site-content/LANG/register to site-content/project"
 
 if [ -e /etc/codex/site-content/en_US/register/* ]; then
    $MKDIR -p /etc/codex/site-content/en_US/project
@@ -607,29 +692,29 @@ fi
 ##############################################
 # Fix SELinux contexts if needed
 #
+echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
 ##############################################
 # Restarting some services
 #
-echo "Starting crond and apache..."
+echo "Starting services..."
 $SERVICE crond start
 $SERVICE httpd start
 $SERVICE sendmail start
 $SERVICE mailman start
 $SERVICE smb start
 
-#!!! cookie domain in local.inc
-#!!! subdomain param in local.inc
-
-todo "register has been moved !!!"
+todo "The project registering process has been updated. If you customized the messages for project creation, please verify that the new process messages are still correct"
+todo "The configuration file /etc/codex/conf/local.inc has been updated. If you use several configuration files or non-standard files, please make sure to update them correctly."
 todo "If you have custom themes, please :"
 #??? todo " - update usage of feedback (maybe need to display it at the end of header(). See rev #4756 for details"
 #??? todo " - copy the rules for textfield_small/textfield_medium from CodeXTab/css/style.css in your stylesheets"
 todo " - copy and modify CodeX/images/ic/plain-arrow-down.png"
 todo " - copy the rules .iframe_service and .iframe_showonly"
 todo " - copy the rules for File Release System from CodeXTab/css/style.css in your stylesheets"
+todo "Last, log in as 'admin' on web server, and update the server to the latest available version (with Server Update plugin)"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
