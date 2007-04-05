@@ -94,6 +94,9 @@
         <para>4 types de documents sont disponibles :</para>
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
+            <para><emphasis>Vide:</emphasis> le document ne sera pas typé. L'utilisateur pourra choisir le type définitif après la création.</para>
+          </listitem>
+          <listitem>
             <para><emphasis>Lien:</emphasis> autorise l'utilisateur de pointer un document avec une URL. Le document ne sera pas stocker localement dans le manager.</para>
           </listitem>
           <listitem>
@@ -128,7 +131,7 @@
       <para>Le nouveau dossier hérite des permissions du dossier parent.</para>
       <section>
         <title>Propriétés</title>
-        <para>Comme pour les documents, le titre des dossier est obligatoire. L'utilisateur peut fournir une description. Le champ propriétaire désigne le propriétaire officiel du dossier. Selon les projets, il peut y avoir des propriétés supplémentaires requises pour définir les dossiers.</para>
+        <para>Comme pour les documents, le titre des dossier est obligatoire. L'utilisateur peut fournir une description. Selon les projets, il peut y avoir des propriétés supplémentaires requises pour définir les dossiers.</para>
       </section>
       <section>
         <title>Chemin</title>

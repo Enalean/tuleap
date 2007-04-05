@@ -97,14 +97,16 @@
       <section>
         <title>Metadata</title>
         <para>The title of the document is mandatory. The user can provide a description 
-        wich will be displayed on the browse view. Owner corresponds to official
-        owner of the document. Depending on the project, there 
+        wich will be displayed on the browse view. Depending on the project, there 
         may be additionnal metadata required to classify the document.</para>
       </section>
       <section>
         <title>Document Type</title>
         <para>4 types of documents are available :</para>
         <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis>Empty:</emphasis> the document will have no type. The user will be able to change the type after creation.</para>
+          </listitem>
           <listitem>
             <para><emphasis>Link:</emphasis> allow the user to target a document 
             with a URL. The document will not be stored locally in the docman.</para>
@@ -152,8 +154,7 @@
         <title>Properties</title>
         <para>Like for documents, the title of the folder is mandatory. The user can 
         provide a description wich will be displayed on the browse view. 
-        Owner corresponds to official owner of the folder. Depending 
-        on the project, there may be additionnal properties required to classify 
+        Depending on the project, there may be additionnal properties required to classify 
         the document.</para>
       </section>
       <section>
@@ -279,7 +280,7 @@
             </imageobject>
           </mediaobject>
       </figure>
-      <para>If you just want to reorder a folder and move some its items 
+      <para>If you just want to reorder a folder and move some of its items 
       relatively to each other, you can click on shortcuts next to "move" item 
       in the popup menu : up, down, at the beginning or at the end.</para>
       <figure id="docman2_move_shortcuts">
