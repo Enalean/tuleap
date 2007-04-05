@@ -267,6 +267,7 @@ if (user_isrestricted()) {
     }
 }
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/URL.class.php');
 //Do nothing if we are not in a distributed architecture
 if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
     require_once('Project.class.php');
@@ -305,14 +306,22 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
                     //...and we are not on the master...
                     if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
                         //...then go to the master.
-                        $GLOBALS['Response']->redirect($master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
+                        $goto = $master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI'];
+                        if ($_SERVER['HTTP_HOST'] == URL::getHost($goto)) {
+                            $GLOBALS['Response']->addFeedback('error', 'Error with configuration of distributed architecture. Wrong sys_server_id? Please contact your administrator.');
+                        }
+                        $GLOBALS['Response']->redirect($goto);
                     }
                 } else { //If we request a page wich is distributed...
                     //...and we are not on the good server...
                     if ($p->services[$service_name]->getServerId() != $GLOBALS['sys_server_id']) {
                         if ($s =& $sf->getServerById($p->services[$service_name]->getServerId())) {
                             //...then go to the server
-                            $GLOBALS['Response']->redirect($s->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
+                            $goto = $s->getUrl(session_issecure()) . $_SERVER['REQUEST_URI'];
+                            if ($_SERVER['HTTP_HOST'] == URL::getHost($goto)) {
+                                $GLOBALS['Response']->addFeedback('error', 'Error with configuration of distributed architecture. Wrong sys_server_id? Please contact your administrator.');
+                            }
+                            $GLOBALS['Response']->redirect($goto);
                         }
                     }
                 }
@@ -327,7 +336,11 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
             )
         )) {
             if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
-                $GLOBALS['Response']->redirect($master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI']);
+                $goto = $master->getUrl(session_issecure()) . $_SERVER['REQUEST_URI'];
+                if ($_SERVER['HTTP_HOST'] == URL::getHost($goto)) {
+                    $GLOBALS['Response']->addFeedback('error', 'Error with configuration of distributed architecture. Wrong sys_server_id? Please contact your administrator.');
+                }
+                $GLOBALS['Response']->redirect($goto);
             }
         }
     }
