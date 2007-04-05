@@ -135,7 +135,7 @@ class ArtifactReportHtml extends ArtifactReport {
         function criteriaListToText($criteria_list, $url) {
                 
 	  global $art_field_fact;
-	  
+	  $arr_text = array();
 	  if ($criteria_list) {
 	    
 	    $arr = explode(',',$criteria_list);
