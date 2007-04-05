@@ -47,7 +47,7 @@ function commits_header($params) {
 	echo '<P><B><A HREF="/cvs/?func=info&group_id='.$group_id.'">'.$Language->getText('cvs_commit_utils', 'menu_info').'</A>';
 
 	if ($project->isPublic() || user_isloggedin()) {
-	    $uri = session_make_url('/cvs/viewvc.php/?root='.$project->getUnixName().'&roottype=cvs');
+	    $uri = session_make_url('/cvs/viewvc.php/?root='.$project->getUnixName(false).'&roottype=cvs');
 	    echo ' | <A HREF="'.$uri.'">'.$Language->getText('cvs_commit_utils', 'menu_browse').'</A>';
 	}
 	if (user_isloggedin()) {

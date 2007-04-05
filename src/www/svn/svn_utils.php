@@ -31,7 +31,7 @@ function svn_header($params) {
 	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_info').'</A>';
 
 	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="/svn/viewvc.php/?roottype=svn&root='.$project->getUnixName().'">'.$Language->getText('svn_utils','browse_tree').'</A>';
+	  echo ' | <A HREF="/svn/viewvc.php/?roottype=svn&root='.$project->getUnixName(false).'">'.$Language->getText('svn_utils','browse_tree').'</A>';
 	}
 	
     if (user_isloggedin()) {

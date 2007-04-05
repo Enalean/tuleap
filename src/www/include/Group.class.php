@@ -196,8 +196,8 @@ class Group extends Error {
 		}
 	}
 
-	function getUnixName() {
-		return strtolower($this->data_array['unix_group_name']);
+	function getUnixName($tolower = true) {
+		return $tolower ? strtolower($this->data_array['unix_group_name']) : $this->data_array['unix_group_name'];
 	}
 
 	function getPublicName() {
