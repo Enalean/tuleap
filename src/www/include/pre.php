@@ -321,6 +321,7 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
     }
     if ($redirect_to_master_if_needed) {
         if (!in_array($_SERVER['SCRIPT_NAME'], array(
+            '/api/reference/extract',
             '/current_css.php',
             '/account/login.php',
             )
