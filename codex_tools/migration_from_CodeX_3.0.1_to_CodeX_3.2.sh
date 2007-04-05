@@ -217,7 +217,7 @@ $RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
 
 $CP -a /etc/httpd/conf.d/subversion.conf.3.0.1.codex /etc/httpd/conf.d/subversion.conf
 
-
+todo "Subversion has been upgraded to version 1.4. There is some benefit (repository size reduction) in dumping/reloading your repositories, but it is absolutely not needed. See http://subversion.tigris.org/svn_1.4_releasenotes.html for more details."
 
 ##############################################
 # Install the CodeX software 
