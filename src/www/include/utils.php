@@ -758,7 +758,14 @@ function util_split_emails($addresses) {
 
 // One Email Verification
 function validate_email ($address) {
-	return (ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'. '@'. '[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' . '[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $address));
+
+    $valid_chars='-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
+    if ($GLOBALS['sys_disable_subdomains'])
+        $valid_domain='['.$valid_chars.']+$';
+    else
+        $valid_domain='['.$valid_chars.']+\.['.$valid_chars.']+$';
+ 
+	return (ereg('^['.$valid_chars.']+'. '@'.$valid_domain , $address));
 }
 
 // Verification of comma separated list of email addresses
