@@ -150,11 +150,11 @@ sub is_valid_email {
         } else {
             # if the email address is known in the CodeX system, we check if it is not associated with a wrong account (suspended or deleted)
             while ($user_hash_ref = $c->fetchrow_hashref) {
-                if ($user_hash_ref->{status} ne 'A' && $user_hash_ref->{status} ne 'R') {
-                    return 0;
+                if ($user_hash_ref->{status} eq 'A' || $user_hash_ref->{status} eq 'R') {
+                    return 1;
                 }
             }
-            return 1;
+            return 0;
         }
     } else {
         return 0;
