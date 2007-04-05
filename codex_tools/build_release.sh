@@ -102,9 +102,9 @@ $CHOWN root.root ../codex.tgz
 # create a README file at the top
 cd $BUILD_DIR
 cat <<'EOF' >README
-CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
-http://codex.xerox.com
+CodeX: The Xerox Solution to Maximize the Value of Your Corporate Software Assets
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2007. All Rights Reserved
+http://codex.xrce.xerox.com
 
 The CodeX software From Xerox aims at providing large companies with a
 easy to use, cost effective and scalable platform to make global software
@@ -151,9 +151,9 @@ EOF
 
 # create a INSTALL file at the top
 cat <<'EOF' >INSTALL
-CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+CodeX: The Xerox Solution to Maximize the Value of Your Corporate Software Assets
 Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2007. All Rights Reserved
-http://codex.xerox.com
+http://codex.xrce.xerox.com
 
 - login as root user
 - cd into the directory where the codex_install.sh script is located
@@ -168,62 +168,55 @@ EOF
 
 # create a RELEASE_NOTES file at the top
 cat <<'EOF' >RELEASE_NOTES
-CodeX: Breaking Down the Barriers to Source Code Sharing
-Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2006. All Rights Reserved
+CodeX: The Xerox Solution to Maximize the Value of Your Corporate Software Assets
+Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2007. All Rights Reserved
 http://codex.xrce.xerox.com
 
-This is CodeX 3.2
+This is CodeX 3.2.
 
-After downloading the file, read the README and INSTALL files
-carefully. And get in touch with us at codex-contact@codex.xerox.com
-if you have questions.
+Please read the README and INSTALL files carefully, and get in touch with us
+at codex-contact@codex.xerox.com if you have questions.
 
 
 What's new in CodeX 3.2?
 
-TODOTODOTODO
+- Distributed services: 
+  CodeX now supports a distributed architecture that allows some services (files, Subversion)
+  to be located on satellite servers. 
+  Please read the administration guide for more details on how to setup a 
+  distributed architecture.
+  Also note that this feature is still experimental.
 
-- New Document Manager
-  The CodeX document manager has been completely rewritten. Now, it:
-  - can host an "unlimited" hierarchy of documents
-  - accepts files, wiki pages, URLs and embedded documents
-  - allows deletion, move
-  - enforces read/write/manage permissions, 
-  - allows document versioning and history access
-  - is more scalable
-  - has a nice javascript-based UI with multiple views
-  While new CodeX projects will immediately benefit from the new document
-  manager, existing projects will need to activate the tool in the project 
-  service administration page. Existing projects that had not used the 
-  legacy document manager now automatically have access to the new one.
+- Improved Services:
+  - The interface to the File Release Manager has been rewritten to offer a
+    simpler, faster and more convenient experience.
+  - The Document Manager has been upgraded with new features, like the
+    ability to clone folders (within a project and across projects), the 'empty'
+    document type, etc.
 
-- SOAP API foundation in CodeX.
-  CodeX now offers SOAP API for programmatical access to your project data.
-  For the moment, only tracker access is available through this API.
+- Web service API and Command Line Client improved.
+  You may now use the CLI or the SOAP interface to access the tracker service, 
+  the document manager and the file manager.
 
-- Command-line client for CodeX
-  CodeX provides a command line script that allows project members to
-  consult or update tracker data. The tool and its documentation is available
-  from the CodeX welcome page.
-
-- An experimental server update mechanism is now provided to CodeX administrators
-  to help manage CodeX updates.
-
-- Tracker improvement: you may now group tracker fields in 'field sets', that
-  simplify tracker management and improve readability for complex trackers.
+- The server update mechanism has been improved. 
+  This tool is intended for CodeX administrators to help them manage CodeX updates.
   
-- Project templates: you may now create project templates with a specific configuration
-  (trackers, user groups, services, etc.). 
-  A project created with a specific template will inherit its configuration.
-
-- Platform update: CodeX now runs on Red Hat Enterprise Linux 4 and benefits
-  from many updated packages and improved security.
+- Project templates have been improved.
+  The template mechanism now supports the document manager, forums, CVS/SVN, in 
+  addition to trackers and services.
 
 Other changes:
-- survey manager has been improved
-- project news may now be private, i.e. only visible to project members
-- tracker fields may now be bound to multiple user groups
-- and many bugs fixed!
+- the project creation interface has been improved
+- new roles: Subversion admin and News admin
+- support for CVS watch mode through the CodeX interface.
+- embed external services in CodeX pages (service configuration)
+- permissions on news.
+- news promotion mechanism updated
+- Subversion upgraded to version 1.4.3
+
+and many more smaller additions and fixes.
+
+Enjoy CodeX!
 
 -- The CodeX Team
    <info@codex.xerox.com>
