@@ -118,7 +118,8 @@ function account_make_login_from_email($email) {
     $replacement = "$1";
     $name=preg_replace($pattern, $replacement, $email);
     $name = substr($name, 0, 32);
-    $name = strtr($name, ".:;,?%^*(){}[]<>+=$ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", "___________________aaeeeuuc");
+    $name = strtr($name, ".:;,?%^*(){}[]<>+=$", "___________________");
+    $name = strtr($name, "àaéèeùuç", "aaeeeuuc");
     return strtolower($name);
 }
 

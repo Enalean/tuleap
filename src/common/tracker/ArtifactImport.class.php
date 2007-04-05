@@ -120,13 +120,13 @@ class ArtifactImport extends Error {
     } else {
       // Assume French
       $this->lbl_list['follow_ups'] = 'Commentaires';
-      $this->lbl_list['is_dependent_on'] = 'D�pend de';
+      $this->lbl_list['is_dependent_on'] = 'Depend de';
       $this->lbl_list['add_cc'] = 'Liste CC';
       $this->lbl_list['cc_comment'] = 'Commentaire CC';
 
       $this->dsc_list['follow_ups'] = 'Tout le fil de commentaires en un seul bloc de texte';
-      $this->dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci d�pend';
-      $this->dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone of persons to receive a carbon-copy (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, � qui on l\'a confi� ou qui a post� un commentaire)';
+      $this->dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci depend';
+      $this->dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, a qui on l\'a confie ou qui a poste un commentaire)';
       $this->dsc_list['cc_comment'] = 'Explique pourquoi ces personnes sont en CC ou qui elles sont';
     }
   }

@@ -138,7 +138,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
 	    if ($question_type == $survey->RADIO_BUTTON_1_5) {
 		/*
-		  This is a r�dio-button question. Values 1-5.
+		  This is a radio-button question. Values 1-5.
 		*/
 		$return .= "<b>1</b>";
 		for ($j=1; $j<=5; $j++) {

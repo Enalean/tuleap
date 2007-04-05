@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright� STMicroelectronics, 2006
+ * Copyright STMicroelectronics, 2006
  * Originally written by Manuel VACELET, STMicroelectronics, 2006 
  *
  * This file is a part of CodeX.

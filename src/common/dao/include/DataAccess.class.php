@@ -37,7 +37,7 @@ class DataAccess {
         /*$nb = isset($this->store[md5($sql)]) ? ($this->store[md5($sql)]['nb']+1) : 1;
         $this->store[md5($sql)] = array('sql' => $sql, 'nb' => $nb);
         if ($this->store[md5($sql)]['nb'] > 1) {
-            echo '<code>'. $this->store[md5($sql)]['sql'] .'</code> have been fetched for the '. $this->store[md5($sql)]['nb'] .'° times. <br>';
+            echo '<code>'. $this->store[md5($sql)]['sql'] .'</code> have been fetched for the '. $this->store[md5($sql)]['nb'] .' times. <br>';
             $traces = debug_backtrace();
             foreach($traces as $trace) {
                 echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";

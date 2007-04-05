@@ -72,10 +72,10 @@ if ( $atid ) {
         } else {
             // Assume French
             $lbl_list['follow_ups'] = "Fil de commentaires";
-            $lbl_list['is_dependent_on'] = "D�pend de";
+            $lbl_list['is_dependent_on'] = "Depend de";
             
             $dsc_list['follow_ups'] = "Tout le fil de commentaires en un seul bloc de texte";
-            $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci d�pend";
+            $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci depend";
         }
 
 }

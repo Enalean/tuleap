@@ -5,7 +5,7 @@
 // $Id$
 //
 //
-//  Written for CodeX by Nicolas Gu�rin
+//  Written for CodeX by Nicolas Guerin
 //
 
 require_once('pre.php');
