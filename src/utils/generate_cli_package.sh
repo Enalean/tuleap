@@ -193,14 +193,22 @@ if [ -f "$DESTDIR/CodeX_CLI.zip" ]; then
 fi
 mv CodeX_CLI_new.zip $DESTDIR/CodeX_CLI.zip
 
-# Fix SELinux context (it is set to 'user_u:object_r:tmp_t'
-chcon -h -t httpd_sys_content_t $DESTDIR/CodeX_CLI.zip
 
 if [ $? != 0 ]
 then
     cd "$CURRENTDIR"
     echo "CodeX CLI package generation failed!";
     exit 1
+fi
+
+# Fix SELinux context (it is set to 'user_u:object_r:tmp_t'
+SELINUX_ENABLED=1
+if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
+   # SELinux not installed
+   SELINUX_ENABLED=0
+fi
+if [ $SELINUX_ENABLED ]; then
+  chcon -h  root:object_r:httpd_sys_content_t $DESTDIR/CodeX_CLI.zip
 fi
 
 # Then delete the copied files needed to create the archive
