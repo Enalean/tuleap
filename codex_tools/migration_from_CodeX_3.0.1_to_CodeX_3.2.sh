@@ -706,6 +706,15 @@ $SERVICE sendmail start
 $SERVICE mailman start
 $SERVICE smb start
 
+##############################################
+# Generate Documentation
+#
+echo "Generating the CodeX Manuals. This will take a few minutes."
+$INSTALL_DIR/src/utils/generate_doc.sh -f
+$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
+$INSTALL_DIR/src/utils/generate_cli_package.sh -f
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
+
 todo "The project registering process has been updated. If you customized the messages for project creation, please verify that the new process messages are still correct"
 todo "The configuration file /etc/codex/conf/local.inc has been updated. If you use several configuration files or non-standard files, please make sure to update them correctly."
 todo "If you have custom themes, please :"
