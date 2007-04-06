@@ -316,6 +316,7 @@ project_reference	reference_task_desc_key	Tache
 project_reference	reference_sr_desc_key	Demande de support
 project_reference	reference_patch_desc_key	Patch
 project_reference	reference_release_desc_key	Version
+project_reference	reference_snippet_desc_key	Echantillon de code
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php

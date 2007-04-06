@@ -406,7 +406,7 @@ INSERT INTO reference SET \
     id='70',        \
     keyword='snippet', \
     description='reference_snippet_desc_key', \
-    link='/snippet/detail.php?type=snippet&id=$1', \
+    link='/snippet/detail.php?type=snippet&id=\$1', \
     scope='S';
 
 INSERT INTO reference_group SET reference_id='70', group_id='100', is_active='1';
