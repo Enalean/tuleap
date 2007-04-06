@@ -721,6 +721,11 @@
 	  projet via l'outil de suivi des correctifs (patch) (Voir
 	  <xref linkend="PatchTemplate" /> ).</para>
 
+      <note><para><emphasis role="bold">Note</emphasis> : si le mode 
+      &#34;utilisateurs restreints&#34; (voir <xref linkend="ClassesOfCitizens" />) 
+      est activé, les utilisateurs non membres du projet n'auront pas 
+      d'accès par défaut.</para></note>
+      
 	  <note><para><emphasis role="bold">Note</emphasis> : tous les
 	  accès au code source sur CodeX sont enregistrés. Les
 	  administrateurs des projets peuvent à tout moment consulter

@@ -684,7 +684,11 @@
 	    to the project team via the Patch Tracker (see <xref
 	    linkend="PatchTemplate" /> ).</para>
 
-	    <note><para><emphasis role="bold">Note</emphasis>: all
+	    <note><para><emphasis role="bold">Note</emphasis>: if
+	    the &#34;restricted users&#34; mode is on (See <xref
+	    linkend="ClassesOfCitizens" />), then there is no 
+        access for non project members by default.</para></note>
+        <note><para><emphasis role="bold">Note</emphasis>: all
 	    source code accesses are recorded by CodeX. Project
 	    administrators always have access to the list of people
 	    who accessed the source code (see <xref
