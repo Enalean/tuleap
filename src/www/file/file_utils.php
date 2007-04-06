@@ -405,6 +405,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $result1 = db_query($sql);
     $type_id = util_result_column_to_array($result1, 0);
     $type_name = util_result_column_to_array($result1, 1);
+    $url_news = get_server_url() . "/file/showfiles.php?group_id=" . $group_id;
     echo '<script type="text/javascript">';
     echo "var processor_id = ['" . implode("', '", $processor_id) . "'];";
     echo "var processor_name = ['" . implode("', '", $processor_name) . "'];";
@@ -660,7 +661,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                         <TD>
                             <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_details', array (
             $relname,
-            $url
+            $url_news
             )) . ' </TEXTAREA>
                         </TD>
                     </TR>
