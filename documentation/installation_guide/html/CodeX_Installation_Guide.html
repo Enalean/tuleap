@@ -1585,9 +1585,6 @@ read-only access.<br>
 <li>You also need to verify that the sserver protocol is installed. Type 'cvs info'. this command should return a line like this one:
 <pre>
 sserver             sserver 2.5.02 (Servalan) Build 2064
-
-GRANT ALL on cvsnt.* to cvsnt@localhost identified by 'dimensions';
-
 </pre>
 <li>Configure xinetd to start the cvs server when needed. The
 /etc/xinetd.d/cvs file must look like this: <br>
@@ -1607,6 +1604,7 @@ service cvspserver
        mdns            = no # Lockserver handles mdns broadcast
 } 
 </pre>
+<li>Make sure that there is no /etc/xinetd.d/cvsnt file that might interfere with this one. Don't rename the file, but move it somewhere else, or delete it.
 <li>add the cvslockd service:
 <pre>
 chkconfig --add cvslockd
