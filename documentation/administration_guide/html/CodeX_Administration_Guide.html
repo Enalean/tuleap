@@ -2983,30 +2983,54 @@ chown -R codexadm.projectname /svnroot/projectname
 
 <hr>
 <h2><a name="HowTo_distributed">Set up a distributed architecture</a></h2>
-<h3>Requirements</h3>
+<h3>Introduction</h3>
+CodeX now supports a distributed architecture that allows some services (currently: Files and Subversion)
+to be located on satellite servers. 
+<p>Please note that this feature is still <b>experimental</b>.
+
+
+<h3>Setup</h3>
 <dl>
-    <dt>In local.inc:</dt>
+    <dt>In /etc/codex/conf/local.inc:</dt>
     <dd>
-        Choose a sys_server_id for the master and the satellite (any int is OK)
+        Choose a sys_server_id for the master and the satellite (any integer is OK)
     </dd>
-    <dt>In database.inc:</dt>
+    <dt>In /etc/codex/conf/database.inc:</dt>
     <dd>
-        both servers should point to the master MySQL server. Do not forget to enable remote access from the satellites in mysql :
+        both servers should point to the master MySQL server. 
+    </dd>
+    <dt>In MySQL on the master server:</dt>
+    <dd>Do not forget to enable remote access from the satellites in mysql :
         <pre>GRANT ALL ON codex.* TO codexadm@<em>satellite.domain.com</em> IDENTIFIED BY '<em>xxxx</em>'</pre>
-        See <a href="http://dev.mysql.com/doc/refman/5.0/en/grant.html">mysql documentation</a> for details.
+        Where 'xxxx' is the database password for codexadm. See <a href="http://dev.mysql.com/doc/refman/5.0/en/grant.html">mysql documentation</a> for details.
     </dd>
-    <dt>In CodeX:</dt>
+    <dt>In CodeX web interface:</dt>
     <dd>
-        Create servers (in site administration panel) accordingly to your architecture. In the service selection page of the creation process, select the appropriate server for the Subversion and File services. You may need to edit template services to be able to select servers.
+        Create servers (in site administration panel / Servers Administration) according to your architecture. There should be one entry for each server (master or satellites). You must also select which server is the master on this page ('Choose the master').
+</dd><dd>
+ In the service selection page of the creation process, select the appropriate server for the Subversion and File services. Currently, you need to be a site administrator to change the location of a service.
     </dd>
 </dl>
-<h3>Optional</h3>
-If you want Single Sign-on (SSO), you must set the same cookie domain and the same cookie prefix.
+<h3>Project configuration</h3>
+<p>There are two ways to enable distributed services for a project:
+<ul>
+<li>At creation time: select a template that has already set satellite services. In the service selection page, you will be able to choose the satellite for SVN and File services.
+Please note that the default template does not allow selection of satellite services.
+<li>Once the project is created, it is still possible to set a satellite for one of the distributed services. However, only site administrators are able to set this parameter in the service administration page.
+</ul>
+<h3>Migration</h3>
+<p>It is possible to relocate a service that already has some historical data.
+<h4>Files</h4>
+<p>Make a tarball of the /var/lib/codex/ftp/codex/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
+<h4>Subversion</h4>
+<p>Similarly, make a tarball of the /svnroot/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
+<h3>Single Sign-on</h3>
+<p>If you want Single Sign-on (SSO), all servers must be in a similar domain. Then, you must set the same cookie domain and the same cookie prefix for all servers (master and satellites).
 <pre>
 
 
                          +------------------------------------+
-                         |               MASTER               |
+                         |        master.domain.com           |
                          +------------------------------------+
                          | sys_server_id     = 1              |
                          | sys_cookie_prefix = 'CX1234'       |
@@ -3020,7 +3044,7 @@ If you want Single Sign-on (SSO), you must set the same cookie domain and the sa
                          .-'                               `-.__
                      _.-'                                       `-._
     +-------------.-'--------------------+    +---------------------`-.------------+
-    |           SATELLITE A              |    |             SATELLITE B            |
+    |      sata.domain.com               |    |       satb.domain.com              |
     +------------------------------------+    +------------------------------------+
     | sys_server_id     = 2              |    | sys_server_id     = 3              |
     | sys_cookie_prefix = 'CX1234'       |    | sys_cookie_prefix = 'CX1234'       |
@@ -3030,6 +3054,7 @@ If you want Single Sign-on (SSO), you must set the same cookie domain and the sa
     +------------------------------------+    +------------------------------------+
 
 </pre>
+<p><b>Note:</b> If you use other CodeX servers in the same domain that are not part of the distributed architecture, they should use a different cookie prefix to avoid session collisions.
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
 </body>
