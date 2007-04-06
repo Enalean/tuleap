@@ -11,8 +11,8 @@ $username=strtolower(user_getname());
 echo '
 You can upload files either by
 <ul><li>using Anonymous FTP access (login "ftp") to <B>'. $GLOBALS['sys_download_host'] .'</B> 
-			in the <B>/incoming</B> directory, then hit "<b>'. $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') .'</b>" or reload the page.
-<li>or by using scp: "scp your_file '.$username.'@'. $GLOBALS['sys_download_host'] .':'.$GLOBALS['ftp_incoming_dir'].'/", then hit "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list').'</b>" or reload the page
+			in the <B>/incoming</B> directory, then hit "<b>'. $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') .'</b>" and "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases', 'add_file').'</b>" or reload the page.
+<li>or by using scp: "scp your_file '.$username.'@'. $GLOBALS['sys_download_host'] .':'.$GLOBALS['ftp_incoming_dir'].'/", then hit "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list').'</b>" and "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases', 'add_file').'</b>" or reload the page
 </ul>
 ';
 ?>
