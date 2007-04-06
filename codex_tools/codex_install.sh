@@ -852,7 +852,7 @@ mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
 EOF
 
 # Subscribe codex-admin to this ML
-echo \"codex-admin@$sys_default_domain\" | /usr/lib/mailman/bin/add_members -r - mailman
+echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
 $SERVICE mailman start
 
