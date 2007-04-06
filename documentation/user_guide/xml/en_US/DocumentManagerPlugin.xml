@@ -102,7 +102,7 @@
       </section>
       <section>
         <title>Document Type</title>
-        <para>4 types of documents are available :</para>
+        <para>5 types of documents are available :</para>
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
             <para><emphasis>Empty:</emphasis> the document will have no type. The user will be able to change the type after creation.</para>

@@ -91,16 +91,16 @@
       </section>
       <section>
         <title>Type de document</title>
-        <para>4 types de documents sont disponibles :</para>
+        <para>5 types de documents sont disponibles :</para>
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
             <para><emphasis>Vide:</emphasis> le document ne sera pas typé. L'utilisateur pourra choisir le type définitif après la création.</para>
           </listitem>
           <listitem>
-            <para><emphasis>Lien:</emphasis> autorise l'utilisateur de pointer un document avec une URL. Le document ne sera pas stocker localement dans le manager.</para>
+            <para><emphasis>Lien:</emphasis> autorise l'utilisateur à pointer un document avec une URL. Le document ne sera pas stocké localement dans le manager.</para>
           </listitem>
           <listitem>
-            <para><emphasis>Wiki:</emphasis> le document peut être créer avec le service wiki.Entrez juste le nom correspondant la nouvelle page wiki. Vous pouvez également utiliser une page wiki existante.
+            <para><emphasis>Wiki:</emphasis> le document peut être créé avec le service wiki.Entrez juste le nom correspondant à la nouvelle page wiki. Vous pouvez également utiliser une page wiki existante.
             </para>
           </listitem>
           <listitem>
@@ -165,7 +165,7 @@
     </section>
     
     <section><title>Historique</title>
-      <para>Cette action permet à l'utilisateur de voir les journeaux et les anciennes versions (si disponibles).</para>
+      <para>Cette action permet à l'utilisateur de voir les journaux et les anciennes versions (si disponibles).</para>
       <figure id="docman2_history">
           <title>Historique</title>
           <mediaobject>
@@ -201,7 +201,7 @@
     </section>
     
     <section><title>Permissions</title>
-      <para>Cette action permet à l'utilisateur de gérer les permissions d'un document ou d'un dossier. les permissions d'un dossier peuvent être appliquées recursivement à sa sous-hiérarchie.</para>
+      <para>Cette action permet à l'utilisateur de gérer les permissions d'un document ou d'un dossier. Les permissions d'un dossier peuvent être appliquées recursivement à sa sous-hiérarchie.</para>
       <figure id="docman2_permissions">
           <title>Definir les permissions</title>
           <mediaobject>
@@ -232,10 +232,10 @@
     </section>
     
     <section><title>Déplacer</title>
-      <para>Les documents ou les dossiers peuvent être déplacé au sein des documents du projets.</para>
-      <para>L'utilisateur ne peut déplacé un élément que si les dossiers source et destination sont modifiables.</para>
+      <para>Les documents ou les dossiers peuvent être déplacés au sein des documents du projet.</para>
+      <para>L'utilisateur ne peut déplacer un élément que si les dossiers source et destination sont modifiables.</para>
       <para>Vous pouvez déplacer un item de différentes façons.</para>
-      <para>La façon usuelle est de selectionnez déplacer dans le menu popup d'un élément. 
+      <para>La façon usuelle est de selectionner "déplacer" dans le menu popup d'un élément. 
       Vous aurez alors à choisir un dossier de destination (ou éventuellement le laisser
       au même endroit) et la nouvelle position (au début, à la fin ou à une position spécifique). 
       Les permissions de l'élément ne seront pas changées.</para>
@@ -247,8 +247,8 @@
             </imageobject>
           </mediaobject>
       </figure>
-      <para>Si vous ne voulez que réordonnez le contenu d'un dossier, vous pouvez cliquez sur 
-      les raccourcis à coté de "déplacer" dans le menu popup : décaler une place vers le haut, une place vers le bas, placer au début du dossier ou à la fin.</para>
+      <para>Si vous ne voulez que réordonner le contenu d'un dossier, vous pouvez cliquer sur 
+      les raccourcis à coté de "déplacer" dans le menu popup : décaler d'une place vers le haut, d'une place vers le bas, placer au début du dossier ou à la fin.</para>
       <figure id="docman2_move_shortcuts">
           <title>Raccourcis pour déplacer un élément au sein d'un dossier</title>
           <mediaobject>
@@ -269,12 +269,12 @@
   <section><title>Administration</title>
     <section>
       <title>Permissions</title>
-      <para>This section defines who can administrate the document manager.</para>
-      <para>Document manager administrators have all access to all items of the manager.</para>
+      <para>Cette section définie qui peut administrer le gestionnaire de documents.</para>
+      <para>Les administrateurs du gestionnaire de documents ont tous les droits sur tous les éléments du gestionnaires.</para>
     </section>
     <section>
       <title>Afficher les permissions</title>
-      <para>Cette section permet de définir la vue par défaut du gestionnaire de documents. Ce paramètres peut être surchargé par les préférences de l'utilisateur.</para>
+      <para>Cette section permet de définir la vue par défaut du gestionnaire de documents. Ce paramètre peut être surchargé par les préférences de l'utilisateur.</para>
     </section>
     <section>
       <title>Propriétés</title>
