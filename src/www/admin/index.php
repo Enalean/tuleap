@@ -133,9 +133,9 @@ echo ")</b>";?>
 <h3><?php echo $Language->getText('admin_main', 'header_utils'); ?></h3>
 <UL>
 <LI><A href="massmail.php"><?php echo $Language->getText('admin_main', 'mail_engine'); ?></A>
-<LI><A href="/phpMyAdmin/">phpMyAdmin</A>
-<LI><A href="/munin/">munin</A>
-<LI><A href="/info.php">PHP info</A>
+<LI><A href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</A>
+<LI><A href="externaltools.php?tool=munin">munin</A>
+<LI><A href="externaltools.php?tool=info">PHP info</A>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_plugins'); ?></h3>
