@@ -22,6 +22,7 @@ switch($request->get('tool')) {
     case 'munin':
         $title = 'munin';
         $src   = 'munin/';
+        break;
     case 'phpMyAdmin':
         $title = 'phpMyAdmin';
         $src   = 'phpMyAdmin/';
