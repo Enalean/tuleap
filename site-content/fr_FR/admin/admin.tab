@@ -27,7 +27,9 @@ admin_main	display_user	Afficher les utilisateurs commençant par&nbsp;:
 admin_main	search_user	ou chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur)&nbsp;:
 admin_main	search	Chercher
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
+admin_main	validated_user	Utilisateurs en statut <a href="$1"><B>V</B> (validé)</a>
 admin_main	need_approval	approbation requise
+admin_main	need_validation	validation requise
 admin_main	header_group	Administration de groupes
 admin_main	display_group	Afficher les groupes commençant par&nbsp;:
 admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet)&nbsp;:
@@ -96,6 +98,8 @@ admin_approve_pending	creator_and_creation_date	Créé le $3 par <a href="/admin/u
 #
 admin_approve_pending_users	title	Approbation des comptes utilisateur en attente
 admin_approve_pending_users	no_pending	Aucun compte utilisateur en attente d'approbation
+admin_approve_pending_users	no_pending_validated	Aucun compte utilisateur en attente de validation
+admin_approve_pending_users	no_validated	Aucun compte utilisateur en attente d'approbation
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
 admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
 admin_approve_pending_users	approve	Approuver le compte
@@ -109,6 +113,8 @@ admin_approve_pending_users	email	E-mail utilisateur
 admin_approve_pending_users	reg_date	Date d'enregistrement
 admin_approve_pending_users	approve_all	Tout approuver
 admin_approve_pending_users	approve_all_pending	Tout approuver en comptes restreints
+admin_approve_pending_users	validate	Valider le compte
+admin_approve_pending_users	validate_all	Tout valider
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php
@@ -272,6 +278,7 @@ admin_userlist	title	Administration - Liste des utilisateurs
 admin_userlist	legend	Légende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
 admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
 admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
+admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE
 admin_userlist	user_suspended	Utilisateur mis à jour avec le statut SUSPENDU
 admin_userlist	user_restricted	Utilisateur mis à jour avec le statut RESTREINT
 admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
@@ -281,10 +288,12 @@ admin_userlist	all_groups	Tous les groupes
 admin_userlist	group	Groupe $1
 admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
+admin_userlist	validated	Validé
 admin_userlist	restricted	Restreint
 admin_userlist	deleted	Détruit
 admin_userlist	suspended	Suspendu
 admin_userlist	activate	Activer
+admin_userlist	validate	Valider
 admin_userlist	restrict	Restreindre
 admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre

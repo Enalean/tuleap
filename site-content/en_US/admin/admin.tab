@@ -22,7 +22,9 @@ admin_main	display_user	Display Users Beginning with :
 admin_main	search_user	or Search (email,user name,real name,userid):
 admin_main	search	Search
 admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) Status</a>
+admin_main	validated_user	Users in <a href="$1"><B>V</B> (validated) Status</a>
 admin_main	need_approval	approval needed
+admin_main	need_validation	validation needed
 admin_main	header_group	Group Administration
 admin_main	display_group	Display Groups Beginning with :
 admin_main	search_group	or Search (groupid,groupunixname,groupname):
@@ -91,6 +93,8 @@ admin_approve_pending	creator_and_creation_date	Created: $3 by <a href="/admin/u
 #
 admin_approve_pending_users	title	Approving Pending User Registration
 admin_approve_pending_users	no_pending	No Pending User Registration to Approve
+admin_approve_pending_users	no_pending_validated	No Pending User Registration to Validate
+admin_approve_pending_users	no_validated	No Validated User Registration to Approve
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	Edit User/Group Settings
 admin_approve_pending_users	approve	Approve User
@@ -104,6 +108,8 @@ admin_approve_pending_users	email	User Email
 admin_approve_pending_users	reg_date	Registration Date
 admin_approve_pending_users	approve_all	Approve All
 admin_approve_pending_users	approve_all_pending	Approve All as Restricted
+admin_approve_pending_users	validate	Validate
+admin_approve_pending_users	validate_all	Validate All
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php
@@ -267,6 +273,7 @@ admin_userlist	title	Administration - User List
 admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
 admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
 admin_userlist	user_active	User Updated to ACTIVE status
+admin_userlist	user_validated	User Updated to VALIDATED status
 admin_userlist	user_suspended	User Updated to SUSPEND Status
 admin_userlist	user_restricted	User Updated to RESTRICTED Status
 admin_userlist	error_uid	Error - Can't find user with ID $1
@@ -276,10 +283,12 @@ admin_userlist	all_groups	All Groups
 admin_userlist	group	Group $1
 admin_userlist	uid_toadd	User ID to add
 admin_userlist	active	Active
+admin_userlist	validated	Validated
 admin_userlist	restricted	Restricted
 admin_userlist	deleted	Deleted
 admin_userlist	suspended	Suspended
 admin_userlist	activate	Activate
+admin_userlist	validate	Validate
 admin_userlist	restrict	Restrict
 admin_userlist	delete	Delete
 admin_userlist	suspend	Suspend

@@ -21,7 +21,7 @@ function menu_site_admin() {
     $HTML->menu_entry('/admin/userlist.php',$Language->getText('include_menu','user_admin'));
     $HTML->menu_entry('/admin/approve-pending.php',$Language->getText('include_menu','pending_projects'));
     if ($GLOBALS['sys_user_approval']) {
-	$HTML->menu_entry('/admin/approve_pending_users.php',$Language->getText('include_menu','pending_users'));
+	$HTML->menu_entry('/admin/approve_pending_users.php?page=pending',$Language->getText('include_menu','pending_users'));
     }
     $HTML->menu_entry('/news/admin',$Language->getText('include_menu','site_news_approve'));
     $HTML->menu_entry('/admin/massmail.php',$Language->getText('include_menu','mass_mail'));

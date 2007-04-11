@@ -158,6 +158,11 @@ $em->processEvent('usergroup_update_form', array());
 <INPUT type="submit" name="Update_Unix" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
+<?php if($GLOBALS['sys_user_approval'] == 1){ ?>
+<HR>
+<H3><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</H3>
+<?php echo $row_user['register_purpose']; 
+}?>
 <HR>
 
 <p>

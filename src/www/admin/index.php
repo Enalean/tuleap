@@ -26,6 +26,10 @@ db_query("SELECT count(*) AS count FROM user WHERE status='P'");
 $row = db_fetch_array();
 $pending_users = $row['count'];
 
+db_query("SELECT count(*) AS count FROM user WHERE status='V'");
+$row = db_fetch_array();
+$validated_users = $row['count'];
+
 ?>
  
 <h2><?php echo $Language->getText('admin_main', 'header'); ?></h2>
@@ -49,13 +53,23 @@ $pending_users = $row['count'];
 </form>
 <ul>
 <li><?php echo $Language->getText('admin_main', 'all_users',array("userlist.php")); ?></a></li>
-<LI><?php echo $Language->getText('admin_main', 'pending_user',array("approve_pending_users.php")); ?>
+<LI><?php echo $Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")); ?>
 <?php echo " <b>($pending_users";
 if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
-    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php\">".$Language->getText('admin_main', 'need_approval')."</a>";
+    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php?page=pending\">".$Language->getText('admin_main', 'need_validation')."</a>";
 }
 echo ")</b>";
+?></li>
+<?php if ($GLOBALS['sys_user_approval'] == 1) { ?>
+<LI><?php echo $Language->getText('admin_main', 'validated_user',array("approve_pending_users.php?page=validated")); ?>
+<?php echo " <b>($validated_users";
+if ($validated_users != 0) {
+    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php?page=validated\">".$Language->getText('admin_main', 'need_approval')."</a>";
+}
+echo ")</b>";
+}
 ?>
+</li>
 </ul>
 <li><a href="/people/admin"><?php echo $Language->getText('admin_main', 'skills'); ?></a></li>
 </ul>

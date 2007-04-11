@@ -126,7 +126,8 @@ account_login	secure	Secure
 account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account
 account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
-account_login	need_approval	Your account is currently pending an approval from an administrator. You will be notified by email when your account is approved and active.
+account_login	validation_msg	Your account has been validated by an administrator, is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_login	need_approval	Your account is currently pending an approval from an administrator. You will be notified by email when your account is validated.
 account_login	resend_btn	Resend Confirmation Email
 account_login	cookies	Cookies must be enabled past this point
 account_login	name	Login Name
