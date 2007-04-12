@@ -14,15 +14,15 @@ class CookieManager {
         // Make sure there isn't a port number in the default domain name
         // or the setcookie for the entire domain won't work
         if (isset($GLOBALS['sys_cookie_domain'])) {
-            $host = $GLOBALS['sys_cookie_domain'];
+            list($host,$port) = explode(':',$GLOBALS['sys_cookie_domain']);
         } else {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
         }
-	// If local machine, don't use a specific cookie host
-	$pos=strpos($host,".");
-	if ($pos === false) {
-	  $cookie_host="";
-	} else if (browser_is_netscape4()) {
+        // If local machine, don't use a specific cookie host
+        $pos=strpos($host,".");
+        if ($pos === false) {
+            $cookie_host="";
+        } else if (browser_is_netscape4()) {
             $cookie_host=$host;
         } else {
             $cookie_host=".".$host;
