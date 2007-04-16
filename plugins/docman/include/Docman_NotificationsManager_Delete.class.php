@@ -134,7 +134,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
     }
     function _storeEvents($id, $message_type, $params) {
         $dpm =& Docman_PermissionsManager::instance($this->_group_id);
-        $users =& $this->dao->searchUserIdByObjectIdAndType($id, $this->_getType());
+        $users =& $this->_getListeningUsers($id);
         while($users->valid()) {
             $row  = $users->current();
             if (!isset($this->_listeners[$row['user_id']])) {

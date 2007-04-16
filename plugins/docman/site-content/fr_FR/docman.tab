@@ -230,6 +230,7 @@ plugin_docman	details_history_versions_version	Version
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
+plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiérarchie.
 plugin_docman	details_paste_paste_button	Coller
 plugin_docman	details_paste_rank_after	Après
 plugin_docman	details_paste_rank_beg	Au début
@@ -415,6 +416,7 @@ plugin_docman	new_view_change	voir/changer
 
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
+plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 
 plugin_docman	permission_admin	Administrateur de document
 plugin_docman	permission_admin_short	Administrateur

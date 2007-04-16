@@ -29,14 +29,23 @@ require_once('common/dao/NotificationsDao.class.php');
         $this->dao =& $this->_getDao();
     }
     
-    function add($user_id, $object_id) {
-        return $this->dao->create($user_id, $object_id, $this->_getType());
+    function add($user_id, $object_id, $type = null) {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        return $this->dao->create($user_id, $object_id, $type);
     }
-    function remove($user_id, $object_id) {
-        return $this->dao->delete($user_id, $object_id, $this->_getType());
+    function remove($user_id, $object_id, $type = null) {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        return $this->dao->delete($user_id, $object_id, $type);
     }
-    function exist($user_id, $object_id) {
-        $dar =& $this->dao->search($user_id, $object_id, $this->_getType());
+    function exist($user_id, $object_id, $type = null) {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        $dar =& $this->dao->search($user_id, $object_id, $type);
         return $dar->valid();
     }
     

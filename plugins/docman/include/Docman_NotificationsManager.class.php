@@ -26,6 +26,8 @@ require_once('common/event/NotificationsManager.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('Docman_ItemFactory.class.php');
 require_once('Docman_Path.class.php');
+require_once('DocmanConstants.class.php');
+
 class Docman_NotificationsManager extends NotificationsManager { 
 
     var $MESSAGE_MODIFIED   = 'modified';
@@ -68,7 +70,7 @@ class Docman_NotificationsManager extends NotificationsManager {
     function somethingHappen($event, $params) {
         $um =& $this->_getUserManager();
         $params['path'] =& $this->_getDocmanPath();
-        $users = $this->_getListeningUsers($event, $params);
+        $users = $this->_getListeningUsers($this->_getListeningUsersItemId($params));
         if ($users) {
             while($users->valid()) {
                 $u = $users->current();
@@ -82,6 +84,9 @@ class Docman_NotificationsManager extends NotificationsManager {
                 $users->next();
             }
         }
+    }
+    function _getListeningUsersItemId($params) {
+        return $params['item']->getId();
     }
     function sendNotifications($event, $params) {
         $success = true;
@@ -106,11 +111,25 @@ class Docman_NotificationsManager extends NotificationsManager {
     }
 
     /* protected */ function _getType() {
-        return 'plugin_docman';
+        return PLUGIN_DOCMAN_NOTIFICATION;
     }
-    function _getListeningUsers($event, $params) {
-        //search for users who monitor the item
-        return $this->dao->searchUserIdByObjectIdAndType($params['item']->getId(), $this->_getType());
+    function _getListeningUsers($id) {
+        //search for users who monitor the item or its parent
+        $users = array();
+        $this->_getListeningUsersForAscendantHierarchy($id, $users, $this->_getType());
+        return new ArrayIterator($users);
+    }
+    function _getListeningUsersForAscendantHierarchy($id, &$users, $type = null) {
+        if ($id) {
+            $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            while ($u->valid()) {
+                $users[] = $u->current();
+                $u->next();
+            }
+            if ($item =& $this->_item_factory->getItemFromDb($id)) {
+                $this->_getListeningUsersForAscendantHierarchy($item->getParentId(), $users);
+            }
+        }
     }
     function _buildMessage($event, $params, $user) {
         $type = '';

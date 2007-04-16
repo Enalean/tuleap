@@ -49,4 +49,7 @@ define('PLUGIN_DOCMAN_ITEM_STATUS_REJECTED', 3);
 
 define('PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT', 0);
 
+define('PLUGIN_DOCMAN_NOTIFICATION', 'plugin_docman');
+define('PLUGIN_DOCMAN_NOTIFICATION_CASCADE', 'plugin_docman_cascade');
+
 ?>
