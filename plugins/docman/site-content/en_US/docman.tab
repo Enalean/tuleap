@@ -230,6 +230,7 @@ plugin_docman	details_history_versions_version	Version
 plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
+plugin_docman	details_notifications_cascade_sendemail	...and for the whole sub-hierarchy.
 plugin_docman	details_paste_paste_button	Paste
 plugin_docman	details_paste_rank_after	After
 plugin_docman	details_paste_rank_beg	At the beginning
@@ -415,6 +416,7 @@ plugin_docman	new_view_change	view/change
 
 plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.
+plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 
 plugin_docman	permission_admin	Document Administrator
 plugin_docman	permission_admin_short	Administrator

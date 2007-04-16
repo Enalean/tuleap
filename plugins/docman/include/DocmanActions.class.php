@@ -51,8 +51,8 @@ class DocmanActions extends Actions {
     function DocmanActions(&$controler, $view=null) {
         parent::Actions($controler);
         $this->event_manager =& $this->_getEventManager();
-	}
-	
+    }
+    
     function &_getEventManager() {
         return EventManager::instance();
     }
@@ -185,7 +185,7 @@ class DocmanActions extends Actions {
         switch ($iFactory->getItemTypeForItem($item)) {
         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             if ($request->exist('upload_content')) {
-                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $id, 0);
+                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
                 if ($path) {
                     $filename = basename($path);
                     $filesize = filesize($path);
@@ -1050,21 +1050,45 @@ class DocmanActions extends Actions {
     function monitor($params) {
         $user = $this->_controler->getUser();
         if (!$user->isAnonymous()) {
-            if ($params['monitor']) {
-                if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
-                    if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_on', array($params['item']->getTitle())));
-                    } else {
-                        $this->_controler->feedback->log('error', "Unable to add monitoring on '". $params['item']->getTitle() ."'.");
-                    }
+            $something_happen  = false;
+            $already_monitored = $this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId());
+            $already_cascaded  = $this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            if ($params['monitor'] && !$already_monitored) {
+                //monitor
+                if (!$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
+                    $this->_controler->feedback->log('error', "Unable to add monitoring on '". $params['item']->getTitle() ."'.");
                 }
-            } else {
+                $something_happen = true;
+            } else if(!$params['monitor'] && $already_monitored) {
+                //unmonitor
+                if (!$this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId())) {
+                    $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
+                }
+                $something_happen = true;
+            }
+            if (isset($params['cascade']) && $params['cascade'] && $params['monitor'] && !$already_cascaded) {
+                //cascade
+                if (!$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                    $this->_controler->feedback->log('error', "Unable to add cascade on '". $params['item']->getTitle() ."'.");
+                }
+                $something_happen = true;
+            } else if(!(isset($params['cascade']) && $params['cascade'] && $params['monitor']) && $already_cascaded) {
+                //uncascade
+                if (!$this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                    $this->_controler->feedback->log('error', "Unable to remove cascade on '". $params['item']->getTitle() ."'.");
+                }
+                $something_happen = true;
+            }
+            //Feedback
+            if ($something_happen) {
                 if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
-                    if ($this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId())) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_off', array($params['item']->getTitle())));
+                    if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_on', array($params['item']->getTitle())));
                     } else {
-                        $this->_controler->feedback->log('error', 'Unable to remove monitoring.');
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_on', array($params['item']->getTitle())));
                     }
+                } else {
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_off', array($params['item']->getTitle())));
                 }
             }
         }

@@ -37,9 +37,9 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         if ($event == PLUGIN_DOCMAN_EVENT_MOVE) {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
                 $params['path'] =& $this->_getDocmanPath();
-                $this->_buildMessagesForUsers($this->dao->searchUserIdByObjectIdAndType($params['item']->getId(), $this->_getType()), $this->MESSAGE_MOVED, $params);
-                $this->_buildMessagesForUsers($this->dao->searchUserIdByObjectIdAndType($params['parent']->getId(), $this->_getType()), $this->MESSAGE_MOVED_TO, $params);
-                $this->_buildMessagesForUsers($this->dao->searchUserIdByObjectIdAndType($params['item']->getParentId(), $this->_getType()), $this->MESSAGE_MOVED_FROM, $params);
+                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getId()), $this->MESSAGE_MOVED, $params);
+                $this->_buildMessagesForUsers($this->_getListeningUsers($params['parent']->getId()), $this->MESSAGE_MOVED_TO, $params);
+                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getParentId()), $this->MESSAGE_MOVED_FROM, $params);
             }
         }
     }
@@ -51,17 +51,6 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                 $u = $users->current();
                 $user =& $um->getUserById($u['user_id']);
                 $dpm =& $this->_getPermissionsManager();
-                /**//*
-                if (isset($GLOBALS['DEBUG'])) {
-                    var_dump($params['item']->getId());
-                    var_dump($dpm->userCanRead($user, $params['item']->getId()));
-                    var_dump($params['parent']->getId());
-                    var_dump($dpm->userCanAccess($user, $params['parent']->getId()));
-                    var_dump($u['object_id']);
-                    var_dump($dpm->userCanAccess($user, $u['object_id']));
-                    var_dump('<hr>');
-                }
-                /**/
                 if ($dpm->userCanRead($user, $params['item']->getId()) && ($dpm->userCanAccess($user, $params['parent']->getId()) || $dpm->userCanAccess($user, $params['item']->getParentId())) && ($u['object_id'] == $params['item']->getId() || $dpm->userCanAccess($user, $u['object_id']))) {
                     if (!isset($this->do_not_send_notifications_to[$user->getId()])) {
                         $this->_buildMessage(array_merge($params, array('user_monitor' => &$user)), $user, $type);

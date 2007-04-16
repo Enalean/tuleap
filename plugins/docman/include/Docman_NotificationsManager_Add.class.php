@@ -31,9 +31,8 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     function Docman_NotificationsManager_Add($group_id, $url, &$feedback) {
         parent::Docman_NotificationsManager($group_id, $url, $feedback);
     }
-    function _getListeningUsers($event, $params) {
-        //search for users who monitor the parent item
-        return $this->dao->searchUserIdByObjectIdAndType($params['parent']->getId(), $this->_getType());
+    function _getListeningUsersItemId($params) {
+        return $params['parent']->getId();
     }
     function _buildMessage($event, $params, $user) {
         switch($event) {

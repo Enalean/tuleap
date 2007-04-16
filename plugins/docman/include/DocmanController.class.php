@@ -667,6 +667,9 @@ class DocmanController extends Controler {
                                     case 'monitor':
                                         if ($this->request->exist('monitor')) {
                                             $this->_actionParams['monitor'] =  $this->request->get('monitor');
+                                            if ($this->request->exist('cascade')) {
+                                                $this->_actionParams['cascade'] = $this->request->get('cascade');
+                                            }
                                             $this->_actionParams['item']    =& $item;
                                             $this->action = 'monitor';
                                         }

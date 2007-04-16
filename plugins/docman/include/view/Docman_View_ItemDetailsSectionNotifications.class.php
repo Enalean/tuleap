@@ -50,9 +50,39 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" '. $checked .' '. $disabled .' />';
         $content .= '<label for="plugin_docman_monitor_item">'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_sendemail') .'</label>';
         $content .= '</p>';
+        $content .= $this->item->accept($this, array('user' => &$user));
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
         $content .= '</form>';
         $content .= '</dd></dl>';
+        return $content;
+    }
+    
+    function visitEmpty(&$item, $params) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitWiki(&$item, $params) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitLink(&$item, $params) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitEmbeddedFile(&$item, $params) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitFile(&$item, $params) {
+        return $this->visitDocument($item, $params);
+    }
+    function visitDocument(&$item, $params) {
+        return '';
+    }
+    function visitFolder(&$item, $params) {
+        $content = '<blockquote>';
+        $checked  = !$params['user']->isAnonymous() && $this->notificationsManager->exist($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';
+        $disabled = $params['user']->isAnonymous() ? 'disabled="disabled"' : '';
+        $content .= '<input type="hidden" name="cascade" value="0" />';
+        $content .= '<input type="checkbox" name="cascade" value="1" id="plugin_docman_monitor_cascade_item" '. $checked .' '. $disabled .' />';
+        $content .= '<label for="plugin_docman_monitor_cascade_item">'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_cascade_sendemail') .'</label>';
+        $content .= '</blockquote>';
         return $content;
     }
 }
