@@ -14,7 +14,8 @@ class CookieManager {
         // Make sure there isn't a port number in the default domain name
         // or the setcookie for the entire domain won't work
         if (isset($GLOBALS['sys_cookie_domain'])) {
-            list($host,$port) = explode(':',$GLOBALS['sys_cookie_domain']);
+            $expl = explode(':',$GLOBALS['sys_cookie_domain']);
+            $host = $expl[0];
         } else {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
         }
