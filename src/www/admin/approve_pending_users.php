@@ -77,7 +77,10 @@ if (($action=='activate') || ($action=='activate_restricted')) {
 if($page=='pending'){
     $res = db_query("SELECT * FROM user WHERE status='P'");
     $msg = $Language->getText('admin_approve_pending_users','no_pending_validated');
-    if($GLOBALS['sys_user_approval'] == 0) $msg = $Language->getText('admin_approve_pending_users','no_pending');
+    if($GLOBALS['sys_user_approval'] == 0) {
+        $res = db_query("SELECT * FROM user WHERE status='P' OR status='V'");
+        $msg = $Language->getText('admin_approve_pending_users','no_pending');
+    }
 }else if($page=='validated'){
     $res = db_query("SELECT * FROM user WHERE status='V'");
     $msg = $Language->getText('admin_approve_pending_users','no_validated');

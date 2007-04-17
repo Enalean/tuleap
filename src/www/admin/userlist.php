@@ -33,6 +33,9 @@ function show_users_list ($result,$user_name_search="") {
     if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users']) {
         echo "<th>".$Language->getText('admin_userlist','restricted')."</th>";
     }
+    if ($GLOBALS['sys_user_approval']) {
+        echo "<th>".$Language->getText('admin_userlist','validated')."</th>";
+    }
     echo "<th>".$Language->getText('admin_userlist','deleted')."</th>";
     echo "<th>".$Language->getText('admin_userlist','suspended')."</th>\n";
 

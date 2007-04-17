@@ -270,7 +270,7 @@ admin_usergroup	change_passwd	Change User Password
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - User List
-admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
+admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>&nbsp;&nbsp;(v)Validated&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
 admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
 admin_userlist	user_active	User Updated to ACTIVE status
 admin_userlist	user_validated	User Updated to VALIDATED status

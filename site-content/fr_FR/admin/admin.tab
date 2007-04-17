@@ -275,7 +275,7 @@ admin_usergroup	change_passwd	Changer le mot de passe de l'utilisateur
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	legend	Légende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
+admin_userlist	legend	Légende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;(v)Validé&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
 admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
 admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
 admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE

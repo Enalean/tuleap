@@ -22,9 +22,16 @@ db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
 $row = db_fetch_array();
 $pending_projects = $row['count'];
 
-db_query("SELECT count(*) AS count FROM user WHERE status='P'");
-$row = db_fetch_array();
-$pending_users = $row['count'];
+if($GLOBALS['sys_user_approval'] == 1){
+    db_query("SELECT count(*) AS count FROM user WHERE status='P'");
+    $row = db_fetch_array();
+    $pending_users = $row['count'];
+}else{
+    db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V'");
+    $row = db_fetch_array();
+    $pending_users = $row['count'];
+}
+
 
 db_query("SELECT count(*) AS count FROM user WHERE status='V'");
 $row = db_fetch_array();
