@@ -205,6 +205,7 @@ if (user_isloggedin()) {
 	     "FROM groups,forum_group_list,forum_monitored_forums ".
 	     "WHERE groups.group_id=forum_group_list.group_id ".
 	     "AND groups.status = 'A' ".
+         "AND forum_group_list.is_public <> 9 ".
 	     "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
 	     "AND forum_monitored_forums.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
 
@@ -223,6 +224,7 @@ if (user_isloggedin()) {
 		    "FROM groups,forum_group_list,forum_monitored_forums ".
 		    "WHERE groups.group_id=forum_group_list.group_id ".
 		    "AND groups.group_id=$group_id ".
+            "AND forum_group_list.is_public <> 9 ".
 		    "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
 		    "AND forum_monitored_forums.user_id='".user_getid()."' LIMIT 100";
 
