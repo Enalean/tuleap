@@ -59,6 +59,7 @@ GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
+WC='/usr/bin/wc'
 
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
@@ -209,8 +210,7 @@ cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
 $RPM -Uvh ${newest_rpm}/apr-util-0*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm 
-$RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
+$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm ${newest_rpm}/mod_dav_svn*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
@@ -589,8 +589,8 @@ sub add_releases_permissions {
 	$c = $dbh->prepare($query);
     	$c->execute();
     	while (my ($release_id, $r_ugroup_id, $p_ugroup_id) = $c->fetchrow()) {
-		
 			if($r_ugroup_id=='NULL'){
+              			if($p_ugroup_id=='NULL'){   $p_ugroup_id=2; }             
 				$q="INSERT INTO permissions (object_id, permission_type, ugroup_id) VALUES ('".$release_id."', 'RELEASE_READ',".$p_ugroup_id.")";
 				#print $q."\n";
 				$d = $dbh->prepare($q);
@@ -678,14 +678,23 @@ $CHMOD 755 commit-email.pl
 ###############################################################################
 echo "Move /etc/codex/site-content/LANG/register to site-content/project"
 
-if [ -e /etc/codex/site-content/en_US/register/* ]; then
-   $MKDIR -p /etc/codex/site-content/en_US/project
-   $MV /etc/codex/site-content/en_US/register/* /etc/codex/site-content/en_US/project
+scdir=/etc/codex/site-content/en_US/register
+if [ -d $scdir ]; then
+  filenum=`$LS $scdir | $WC -l`
+  if [ $filenum != "0" ]; then
+    $MKDIR -p /etc/codex/site-content/en_US/project
+    $MV $scdir/* /etc/codex/site-content/en_US/project
+  fi
 fi
 
-if [ -e /etc/codex/site-content/fr_FR/register/* ]; then
-   $MKDIR -p /etc/codex/site-content/fr_FR/project
-   $MV /etc/codex/site-content/fr_FR/register/* /etc/codex/site-content/fr_FR/project
+
+scdir=/etc/codex/site-content/fr_FR/register
+if [ -d $scdir ]; then
+  filenum=`$LS $scdir | $WC -l`
+  if [ $filenum != "0" ]; then
+    $MKDIR -p /etc/codex/site-content/fr_FR/project
+    $MV $scdir/* /etc/codex/site-content/fr_FR/project
+  fi
 fi
 
 
@@ -718,16 +727,19 @@ $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 todo "The project registering process has been updated. If you customized the messages for project creation, please verify that the new process messages are still correct"
 todo "The configuration file /etc/codex/conf/local.inc has been updated. If you use several configuration files or non-standard files, please make sure to update them correctly."
 todo "If you have custom themes, please :"
+todo " - rename files ending in '.class' to '.class.php' (new convention)"
 todo " - copy the rules from CodeX/css/normal.css in your stylesheets :"
 todo "   - .textfield_small and .textfield_medium "
 todo "   - .iframe_service and .iframe_showonly "
-todo "   - related to the File Release System "
 todo " - copy and modify "
 todo "   - CodeX/images/ic/plain-arrow-down.png"
 todo "   - CodeX/images/ic/p_news.png"
 todo "   - CodeX/images/ic/edit.png"
 todo "   - CodeX/images/ic/notification_start.png"
 todo "   - CodeX/images/ic/notification_stop.png"
+todo "   - CodeX/images/ic/text.png"
+todo "   - CodeX/images/ic/toggle_minus.png"
+todo "   - CodeX/images/ic/toggle_plus.png"
 todo "Last, log in as 'admin' on web server, and update the server to the latest available version (with Server Update plugin)"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
