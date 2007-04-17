@@ -107,7 +107,7 @@ a:hover {
 .boxtop_left {background:url('../images/box-topleft.png') top right no-repeat;}
 .boxtop_center {background:#e0ddd2 url('../images/box-grad.png') top left repeat-x;}
 .boxtop_right {background:url('../images/box-topright.png') top left no-repeat;}
-.boxtop_inner {background:transparent url('../images/vert-grad.png') top left repeat-x;}
+.boxtop_inner {background:#eaecef url('../images/vert-grad.png') top left repeat-x;}
 .boxmiddle {background:#e0ddd2 url('../images/box-grad.png') top left repeat-x;}
 .boxmiddle_inner {background:transparent url('../images/vert-grad.png') top left repeat-x;}
 
