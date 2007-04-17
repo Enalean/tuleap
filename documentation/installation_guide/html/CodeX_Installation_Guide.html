@@ -1669,88 +1669,16 @@ The ViewVC configuration file is at <span
 <hr>
 <h1><a name="FTP_Configuration"></a>FTP Configuration</h1>
 <ul>
-  <li>Make sure the ftp access is enabled in xinetd. The
-/etc/xinetd.d/wu-ftpd should look like this:<br>
-    <tt>service ftp<br>
-{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; disable = no<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-socket_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= stream<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-wait&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= no<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= root<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= /usr/sbin/in.ftpd<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-server_args&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= -l -a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-log_on_success&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +=
-DURATION<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-nice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-= 10<br>
-}</tt><br>
-    <br>
+  <li>CodeX FTP service is based on vsftpd, the FTP server distributed with Red Hat Enterprise Linux.</li>
+  <li>Make sure the ftp service is enabled:<br>
+    <tt>chkconfig vsftpd on</tt><br>
   </li>
-  <li>The /etc/ftpaccess on the CodeX site looks like this:<br>
-    <br>
-    <tt>class&nbsp;&nbsp; all&nbsp;&nbsp; real,guest,anonymous&nbsp; *<br>
-class anonftp anonymous *<br>
-    <br>
-upload /var/lib/codex/ftp * no<br>
-upload /var/lib/codex/ftp /bin no<br>
-upload /var/lib/codex/ftp /etc no<br>
-upload /var/lib/codex/ftp /lib no<br>
-noretrieve .notar<br>
-upload /var/lib/codex/ftp /incoming yes ftpadmin ftpadmin 0644 nodirs<br>
-noretrieve /var/lib/codex/ftp/incoming<br>
-noretrieve /var/lib/codex/ftp/codex<br>
-    <br>
-email root@localhost<br>
-    <br>
-loginfails 5<br>
-    <br>
-readme&nbsp; README*&nbsp;&nbsp;&nbsp; login<br>
-readme&nbsp; README*&nbsp;&nbsp;&nbsp; cwd=*<br>
-    <br>
-message
-/welcome.msg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-login<br>
-message
-.message&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-cwd=*<br>
-    <br>
-compress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-all<br>
-tar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-all<br>
-chmod&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; guest,anonymous<br>
-delete&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; guest,anonymous<br>
-overwrite&nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-guest,anonymous<br>
-rename&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; no&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; guest,anonymous<br>
-    <br>
-log transfers anonymous,real inbound,outbound<br>
-    <br>
-shutdown /etc/shutmsg<br>
-    <br>
-passwd-check rfc822 warn<br>
-    <br>
+  <li>The /etc/vsftpd/vsftpd.conf on the CodeX site must be edited to allow anonymous upload:<br>
+    <tt>anon_upload_enable=YES</tt></li>
+  <li>You may also customize the welcome banner.<tt><br>
+ftpd_banner=Welcome to CodeX FTP service.
     </tt></li>
-  <li>Under /var/lib/codex/ftp, create the exact same hierarchy and files as on
-the CodeX production server.<tt><br>
-    </tt></li>
+  <li>Last, you may also set welcome messages in various directories: /var/lib/codex/ftp/.message for the main welcome message, and /var/lib/codex/ftp/incoming/.message for the incoming directory. Make sure both files are owned by ftpadmin.</li>
 </ul>
 <hr>
 <h1><a name="Shell_Account"></a>Shell Account</h1>
