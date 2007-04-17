@@ -136,7 +136,8 @@ if (isset($func)) {
        require('../../tracker/import.php');
     } */
 }
-
+$GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
+$GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',group_getname($group_id)),'group'=>$group_id,
 			   'help' => 'ProjectAdministration.html'));
 
@@ -214,6 +215,46 @@ print '
 <HR NoShade SIZE="1">
 <P>
 '.$Language->getText('project_admin_index','built_from_template','<A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_name.' </B></A>');
+
+if ($group->isTemplate()) {
+    echo '<hr NoShade SIZE="1" /><p><b>'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects') .':</b> <a id="show_projects_link" href="projects.php?group_id='. $group_id .'">'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects_show') .'</a></p><div id="show_projects_div"></div>';
+    $show_projects_show = htmlentities($GLOBALS['Language']->getText('project_admin_index', 'show_projects_show'), ENT_QUOTES);
+    $show_projects_hide = htmlentities($GLOBALS['Language']->getText('project_admin_index', 'show_projects_hide'), ENT_QUOTES);
+    echo <<<EOS
+    <script type="text/javascript">
+    var show_projects_done = false;
+    var show_projects_link_txt;
+    Event.observe(window, 'load', function() {
+        if ($('show_projects_link')) {
+            Event.observe($('show_projects_link'), 'click', function (evt) {
+                    if (!show_projects_done) {
+                        new Ajax.Updater('show_projects_div', $('show_projects_link').href, {
+                            onSuccess: function() {
+                                show_projects_link_txt = '$show_projects_hide';
+                                $('show_projects_link').update(show_projects_link_txt);
+                                show_projects_done = true;
+                            }
+                        });
+                    } else {
+                        if (show_projects_link_txt == '$show_projects_hide') {
+                            show_projects_link_txt = '$show_projects_show';
+                        } else {
+                            show_projects_link_txt = '$show_projects_hide';
+                        }
+                        $('show_projects_link').update(show_projects_link_txt);
+                        $('show_projects_div').toggle();
+                        Event.stop(evt);
+                        return false;
+                    }
+                Event.stop(evt);
+                return false;
+            });
+        }
+    });
+    </script>
+EOS;
+}
+
 $HTML->box1_bottom(); 
 
 echo '

@@ -304,7 +304,16 @@ class Project extends Group {
         return $this->project_data_array['svn_preamble'];
     }
 
-    
+    function getProjectsCreatedFrom() {
+        $sql = 'SELECT * FROM groups WHERE built_from_template = '. $this->getGroupId() ." AND status <> 'D'";
+        $subprojects = array();
+        if ($res = db_query($sql)) {
+            while($data = db_fetch_array($res)) {
+                $subprojects[] = $data;
+            }
+        }
+        return $subprojects;
+    }
 }
 
 /*

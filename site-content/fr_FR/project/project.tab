@@ -200,6 +200,9 @@ project_admin_index	changed_group_type	Type de projet modifié
 project_admin_index	group_type	Type de projet
 project_admin_index	built_from_template	Patron utilisé pour ce projet: $1
 project_admin_index	import_user	[Importer une liste d'utilisateurs]
+project_admin_index	show_projects	Projets créés à partir de ce patron 
+project_admin_index	show_projects_hide	cacher
+project_admin_index	show_projects_show	afficher
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php

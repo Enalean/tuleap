@@ -195,6 +195,9 @@ project_admin_index	changed_group_type	Changed Project Type
 project_admin_index	group_type	Project Type
 project_admin_index	built_from_template	Template used for this Project: $1
 project_admin_index	import_user	[Import List Of Users]
+project_admin_index	show_projects	Projects created from this template
+project_admin_index	show_projects_hide	hide
+project_admin_index	show_projects_show	show
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
