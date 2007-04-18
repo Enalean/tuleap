@@ -857,8 +857,8 @@ function db_project_create($dbname) {
     // make sure the database name is not the same as the 
     // system database name !!!!
     if ($dbname != $GLOBALS['sys_dbname']) {
-	db_query('CREATE DATABASE IF NOT EXISTS '.$dbname);
-	db_project_query($dbname,'GRANT SELECT ON '.$dbname.'.* TO cxuser@\'%\'');
+	db_query('CREATE DATABASE IF NOT EXISTS `'.$dbname.'`');
+	db_project_query($dbname,'GRANT SELECT ON `'.$dbname.'`.* TO cxuser@\'%\'');
 	return true;
     } else {
 	return false;
