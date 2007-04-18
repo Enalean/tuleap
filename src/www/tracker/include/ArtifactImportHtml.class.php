@@ -44,7 +44,7 @@ class ArtifactImportHtml extends ArtifactImport {
     $is_tmp = false;
     //}
     
-    if($_REQUEST['notify']) {
+    if(array_key_exists('notify', $_REQUEST) && $_REQUEST['notify']) {
         user_set_preference('tracker_import_notify_'.$this->ath->getID(), 1);
     }
     else {
@@ -98,7 +98,7 @@ function showErrors() {
       $parsed_labels[] = $submitted_by_field->getLabel();
     }
     
-    if ($this->aid_column == -1 && $submitted_on_column == -1) {
+    if ($this->aid_column == -1 && (isset($submitted_on_column) && $submitted_on_column == -1)) {
       $new_sub_on_col = count($parsed_labels);
       $open_date_field = $this->art_field_fact->getFieldFromName('open_date');
       $parsed_labels[] = $open_date_field->getLabel();
@@ -322,7 +322,7 @@ function showErrors() {
    *     
    */
   function displayCSVInput($atid,$user_id) {
-    global $Language,$sys_max_size_upload;
+    global $PHP_SELF,$Language,$sys_max_size_upload;
     
     $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),

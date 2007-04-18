@@ -413,15 +413,6 @@ class Artifact extends Error {
         while (list($field_name,$value) = each($vfl)) {
                 
 	    //echo "<br>field_name=$field_name, value=$value";
-	    if ($import && $field_name == "details") continue;
-	    if ($import && $field_name == "original_submission") {
-		//special treatment for "Original Submission" alias "details"
-		//in the import. The follow-up comments are also named "details"
-		//and in an import (in contrast to a normal create) we can
-		//have both information "original submission" AND "follow-up comments"
-		$vfl_cols .= ',details';
-		$vfl_values .= ',\''.htmlspecialchars($value).'\'';
-	    }
  
             $field = $art_field_fact->getFieldFromName($field_name);
             if ( $field && $field->isStandardField() ) {
@@ -460,7 +451,6 @@ class Artifact extends Error {
         //
         //  Finally, build the full SQL query and insert the artifact itself 
         //
-        
         $sql="INSERT INTO artifact ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
         //echo "<br>DBG - SQL insert artifact: $sql";
         $result=db_query($sql);
