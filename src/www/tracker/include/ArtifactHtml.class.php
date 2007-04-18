@@ -151,7 +151,9 @@ class ArtifactHtml extends Artifact {
 
             }
             
-            echo '</TABLE>';
+	    echo '<tr><td><p><font color="red">*</font>: '.
+	    $Language->getText('tracker_include_type','fields_requ').
+	    '</p></td></tr></TABLE>';
             
             echo '<table cellspacing="0">';
 
