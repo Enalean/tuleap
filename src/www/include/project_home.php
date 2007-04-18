@@ -14,6 +14,7 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
 require_once('common/wiki/lib/Wiki.class.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -58,6 +59,11 @@ if ($project->getDescription()) {
 
 print '<a href="/project/showdetails.php?group_id='.$group_id.'"> '. $details_prompt .'</a>';
 
+$em =& EventManager::instance();
+$params = array();
+$params['group_id'] = $group_id;
+$em->processEvent('project_summary_title', $params);
+
 // trove info
 print '<BR>&nbsp;<BR>';
 trove_getcatlisting($group_id,0,1);
@@ -100,6 +106,14 @@ if (! $project->hideMembers()) {
  } else {
     print "&nbsp;";
  }
+
+print '
+</TD><TD NoWrap VALIGN="top">
+';
+
+$params = array();
+$params['group_id'] = $group_id;
+$em->processEvent('project_summary_box_display', $params);
 
 print '
 </TD></TR>

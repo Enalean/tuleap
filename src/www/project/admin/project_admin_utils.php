@@ -12,6 +12,7 @@
 
 */
 require_once('common/include/TemplateSingleton.class.php');
+require_once('common/event/EventManager.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('project/project');
 
@@ -28,6 +29,12 @@ function project_admin_header($params) {
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
 	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
+        
+        $em =& EventManager::instance();
+        $params = array();
+        $params['group_id'] = $group_id;
+        $em->processEvent('admin_toolbar_configuration', $params);
+
         echo '</td><td>';
 	if (isset($params['help'])) {
 	    echo help_button($params['help'],false,$Language->getText('global','help'));
