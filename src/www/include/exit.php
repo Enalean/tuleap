@@ -19,6 +19,10 @@ function exit_error($title,$text) {
 	    $HTML->footer(array('showfeedback' => false));
     } else {
         header('Content-type: text/xml');
+        // Sometimes, there is nothing in $text, so we take the feedback in the $GLOBALS['Response']
+        if (array_key_exists('Response', $GLOBALS)) {
+            $text .= $GLOBALS['Response']->getRawFeedback();
+        }
         $fault_code = "1000";
         $fault_factor = 'exit_error';
         $fault_string = strip_tags($text);
