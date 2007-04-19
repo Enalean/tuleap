@@ -53,39 +53,6 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:Docman_Item'
 );
 
-$GLOBALS['server']->wsdl->addComplexType(
-    'Docman_Metadata',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-        'id' => array('name'=>'item_id', 'type' => 'xsd:int'),
-        'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
-        'name' => array('name'=>'name', 'type' => 'xsd:string'),
-        'type' => array('name'=>'type', 'type' => 'xsd:int'),
-        'label' => array('name'=>'label', 'type' => 'xsd:string'),
-        'description' => array('name'=>'description', 'type'=>'string'),
-        'isRequired' => array('name'=>'is_required', 'type'=>'boolean'),
-        'isEmptyAllowed' => array('name'=>'isEmptyAllowed', 'type'=>'boolean'),
-        'keepHistory' => array('name'=>'keepHistory', 'type'=>'boolean'),
-        'special' => array('name'=>'special', 'type'=>'int'),
-        'defaultValue' => array('name'=>'defaultValue', 'type'=>'string'),
-        'useIt' => array('name'=>'useIt', 'type'=>'boolean')
-    )
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfDocman_Metadata',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Docman_Metadata[]')),
-    'tns:Docman_Metadata'
-);
-
 //
 // Function definition
 //
@@ -180,21 +147,6 @@ $GLOBALS['server']->register(
     'encoded',
     'Move an item in a new folder'
 );
-
-$GLOBALS['server']->register(
-    'getDocmanItemProperties',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'item_id'=>'xsd:int'),
-    array('getDocmanItemPropertiesResponse'=>'tns:ArrayOfDocman_Metadata'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getDocmanItemProperties',
-    'rpc',
-    'encoded',
-    'Returns the properties of the document item_id'
-);
-
 
 //
 // Function implementation
@@ -477,71 +429,6 @@ function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
         return new soap_fault(invalid_session_fault,'moveDocmanItem','Invalid Session','');
     }
 }
-/**
- * getProperties - returns an array of Docman_Metadata of the document $item_id
- *
- * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
- * @param int $group_id the ID of the group the document belongs to
- * @param int $item_id the ID of the document we want to retrieve the properties
- * @return array the array of SOAPDocmanMetadata of the document identified by $item_id, or a soap fault if group_id does not match with a valid project.
- */
-function getDocmanItemProperties($sessionKey,$group_id,$item_id) {
-    global $Language;
-    if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
-        if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getProperties','Could Not Get Group','Could Not Get Group');
-        } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getProperties', $group->getErrorMessage(),$group->getErrorMessage());
-        }
-        if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getProperties', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
-        }
-        
-        // TO DO : get the meta datas of a document
-        $docman_metadatas = null;
-        return docman_metadatas_to_soap($docman_metadatas);
-    } else {
-        return new soap_fault(invalid_session_fault,'getDocuments','Invalid Session','');
-    }
-}
 
-/**
- * docman_metadata_to_soap : return the soap Docman_Metadata structure giving a PHP Docman_Metadata Object.
- * @access private
- *
- * @param Object{Docman_Metadata} $docman_metadata the docman_metadata to convert.
- * @return array the SOAPDocman_Metadata corresponding to the Docman_Metadata Object
- */
-function docman_metadata_to_soap($docman_metadata) {
-    $return = null;
-    if ($docman_metadata) {
-        //skip if error
-    } else {
-        $return = array(
-            'id' => $docman_metadata->getID(),
-            'group_id' => $docman_metadata->getGroupId(),
-            'name' => $docman_metadata->getName(),
-            'type' => $docman_metadata->getType(),
-            'label' => $docman_metadata->getLabel(),
-            'description' => $docman_metadata->getDescription(),
-            'isRequired' => $docman_metadata->isRequired(),
-            'isEmptyAllowed' => $docman_metadata->isEmptyAllowed(),
-            'keepHistory' => $docman_metadata->keepHistory(),
-            'special' => $docman_metadata->getSpecial(),
-            'defaultValue' => $docman_metadata->getDefaultValue(),
-            'useIt' => $docman_metadata->getUseIt()
-       );
-    }
-    return $return;
-}
-
-function docman_metadatas_to_soap(&$docman_metadata_arr) {
-    $return = array();
-    foreach ($docman_metadata_arr as $docman_metadata) {
-        $return[] = docman_metadata_to_soap($docman_metadata);
-    }
-    return $return;
-}
 
 ?>
