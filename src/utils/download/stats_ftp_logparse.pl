@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id$
+# $Id: stats_ftp_logparse.pl 3641 2006-09-11 09:12:04Z guerin $
 #
 use DBI;
 use Time::Local;

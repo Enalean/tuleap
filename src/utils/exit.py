@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: exit.py 995 2004-05-05 08:48:17Z ljulliar $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

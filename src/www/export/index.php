@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: index.php 1431 2005-04-14 15:36:50Z schneide $
 
 require_once('pre.php');    
 $Language->loadLanguageMsg('export/export');

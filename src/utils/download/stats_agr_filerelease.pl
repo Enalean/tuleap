@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-# $Id$
+# $Id: stats_agr_filerelease.pl 988 2004-04-28 14:59:33Z guerin $
 #
 # Accumulate file downloads for all time :
 #   - by project (group_id) in frs_dlstats_grouptotal_agg

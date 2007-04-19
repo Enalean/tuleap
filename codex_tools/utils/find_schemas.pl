@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: find_schemas.pl 3636 2006-09-08 14:06:04Z guerin $
 #
 # This program scans a CodeX CVS repository for XML Schema files
 # and generates two reports:

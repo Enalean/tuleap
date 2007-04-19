@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: groupedit-add.php 1658 2005-06-09 14:06:45Z guerin $
 
 require_once('pre.php');
 require_once('account.php');

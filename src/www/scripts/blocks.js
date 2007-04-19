@@ -1,5 +1,5 @@
 /*==================================================*
- $Id$
+ $Id: blocks.js 2580 2006-02-17 14:26:26Z nterray $
 
  CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
  Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved

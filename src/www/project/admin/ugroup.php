@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: ugroup.php 4367 2006-11-30 17:14:29 +0000 (Thu, 30 Nov 2006) nterray $
 //
 // Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
 //

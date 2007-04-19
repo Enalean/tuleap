@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: detail_revision.php 2130 2005-09-30 16:31:05Z schneide $
 
 $Language->loadLanguageMsg('svn/svn');
 

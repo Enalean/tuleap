@@ -6,7 +6,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
 //
-// $Id$
+// $Id: bug_utils.php 3567 2006-08-25 14:11:17Z schneide $
 
 /*
 

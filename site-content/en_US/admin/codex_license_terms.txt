@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: codex_license_terms.txt 912 2004-03-15 14:28:54Z ljulliar $
 //
 -->
 

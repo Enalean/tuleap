@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: viewprofile.php 1414 2005-04-06 09:08:48Z schneide $
 
 require_once('pre.php');
 require('../people/people_utils.php');

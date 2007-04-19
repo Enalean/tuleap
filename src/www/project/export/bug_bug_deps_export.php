@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: bug_bug_deps_export.php 1387 2005-03-08 16:41:17Z guerin $
 
 
 $Language->loadLanguageMsg('project/project');

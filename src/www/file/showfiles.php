@@ -5,7 +5,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: showfiles.php 5612 2007-03-30 10:11:59 +0000 (Fri, 30 Mar 2007) nterray $
 
 require_once ('pre.php');
 require_once ('www/file/file_utils.php');

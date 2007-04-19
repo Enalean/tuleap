@@ -2,7 +2,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: db0023.sql 1270 2004-11-25 11:59:48Z schneide $
 #
 # Database upgrade script (see dbXXXX_template for instructions)
 #

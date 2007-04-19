@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: html.php 5273 2007-03-13 10:48:00 +0000 (Tue, 13 Mar 2007) mnazaria $
 
 function html_feedback_top($feedback) {
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);

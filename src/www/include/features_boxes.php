@@ -4,7 +4,7 @@
   // Copyright 1999-2000 (c) The SourceForge Crew
   // http://sourceforge.net
   //
-  // $Id$
+  // $Id: features_boxes.php 3567 2006-08-25 14:11:17Z schneide $
 
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');

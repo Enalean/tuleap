@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: massmail.php 2974 2006-04-21 16:32:20Z guerin $
 
 require_once('pre.php');    
 

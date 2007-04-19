@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: detail_commit.php 2951 2006-04-18 16:41:53Z guerin $
 
 if (!$group_id) {
     exit_no_group(); // need a group_id !!!

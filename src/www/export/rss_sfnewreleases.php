@@ -4,7 +4,7 @@
   // Copyright 1999-2000 (c) The SourceForge Crew
   // http://sourceforge.net
   //
-  // $Id$
+  // $Id: rss_sfnewreleases.php 5559 2007-03-27 14:31:55 +0000 (Tue, 27 Mar 2007) nterray $
   // ## export sf front page news in RSS
 
 require_once('pre.php');

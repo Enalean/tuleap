@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: verify.php 3890 2006-10-06 13:32:59Z guerin $
 
 require_once('pre.php');
 require_once('account.php');  // LJ needed to create unix account

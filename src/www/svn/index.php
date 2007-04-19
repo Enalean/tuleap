@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: index.php 5096 2007-02-28 16:39:01 +0000 (Wed, 28 Feb 2007) nterray $
 
 require_once('pre.php');    
 require_once('../svn/svn_data.php');    

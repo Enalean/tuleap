@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: browse_bug_query_field.php 1418 2005-04-08 13:17:03Z schneide $
 //
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //

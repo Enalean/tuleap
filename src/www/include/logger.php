@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: logger.php 1782 2005-06-24 09:26:21Z nterray $
 
 /*
 	Determine group

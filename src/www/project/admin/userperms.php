@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: userperms.php 5296 2007-03-14 09:33:30 +0000 (Wed, 14 Mar 2007) mnazaria $
 
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');

@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: exit.pl 449 2003-02-06 16:27:49Z jmayer $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

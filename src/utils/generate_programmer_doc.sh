@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: generate_programmer_doc.sh 3684 2006-09-15 09:56:50Z guerin $
 #
 # Purpose:
 #    Automatically re-generate online programmer guide

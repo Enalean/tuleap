@@ -9,7 +9,7 @@
 # COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
 # PUBLIC LICENSE.
 #
-#  $Id$
+#  $Id: codex_install.sh 5755 2007-04-06 14:02:09 +0000 (Fri, 06 Apr 2007) guerin $
 #
 #      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #

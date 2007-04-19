@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: permissions.php 5605 2007-03-29 14:33:23 +0000 (Thu, 29 Mar 2007) nterray $
 //
 // Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
 //

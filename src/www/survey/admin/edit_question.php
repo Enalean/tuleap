@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: edit_question.php 4242 2006-11-15 15:32:03 +0000 (Wed, 15 Nov 2006) mnazaria $
 
 require_once('pre.php');
 require('../survey_data.php');

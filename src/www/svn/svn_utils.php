@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: svn_utils.php 5732 2007-04-05 15:47:30 +0000 (Thu, 05 Apr 2007) nterray $
 //
 //      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
 //

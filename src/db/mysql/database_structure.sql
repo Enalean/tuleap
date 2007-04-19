@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2002. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: database_structure.sql 5670 2007-04-03 13:50:45 +0000 (Tue, 03 Apr 2007) guerin $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

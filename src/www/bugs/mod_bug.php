@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: mod_bug.php 3671 2006-09-14 11:22:10Z mnazaria $
 
 
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";

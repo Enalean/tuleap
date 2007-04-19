@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: editrelease_attach_file.txt 3680 2006-09-15 08:28:49Z guerin $
 //
 
 $username=strtolower(user_getname());

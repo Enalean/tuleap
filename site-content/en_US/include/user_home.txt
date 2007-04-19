@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: user_home.txt 956 2004-04-07 14:27:22Z ljulliar $
 //
 
 

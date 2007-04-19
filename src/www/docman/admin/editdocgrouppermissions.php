@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2005. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: editdocgrouppermissions.php 1494 2005-05-10 11:42:55Z ljulliar $
 //
 // Originally written by Nicolas Guerin 2005, CodeX Team, Xerox
 //

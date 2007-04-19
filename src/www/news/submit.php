@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: submit.php 5594 2007-03-29 10:37:37 +0000 (Thu, 29 Mar 2007) nterray $
 
 require_once('pre.php');
 require('../news/news_utils.php');

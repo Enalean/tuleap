@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: browse_patch.php 332 2002-09-19 14:27:54Z ljulliar $
 
 if (!$offset || $offset < 0) {
 	$offset=0;

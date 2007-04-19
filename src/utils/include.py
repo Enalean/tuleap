@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: include.py 5742 2007-04-05 17:33:52 +0000 (Thu, 05 Apr 2007) guerin $
 #
 # include.py - Include file for all the python scripts that contains reusable functions
 #

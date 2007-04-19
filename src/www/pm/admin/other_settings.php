@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 20012 All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: other_settings.php 1447 2005-04-20 14:50:28Z ljulliar $
 
 require_once('pre.php');
 require_once('www/bugs/bug_data.php'); // needed by pm_data

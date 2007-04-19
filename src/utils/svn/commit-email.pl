@@ -8,12 +8,12 @@
 # command line arguments.
 #
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
-# $LastChangedDate$
-# $LastChangedBy$
-# $LastChangedRevision$
+# $LastChangedDate: 2007-04-04 14:56:25 +0000 (Wed, 04 Apr 2007) $
+# $LastChangedBy: nterray $
+# $LastChangedRevision: 5701 $
 #
 #
-# $Id$
+# $Id: commit-email.pl 5701 2007-04-04 14:56:25 +0000 (Wed, 04 Apr 2007) nterray $
 #
 # Heavily modified by Laurent Julliard for the CodeX project at Xerox
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: add_user_to_group_email.txt 2887 2006-04-03 14:47:13Z mnazaria $
 //
 
 

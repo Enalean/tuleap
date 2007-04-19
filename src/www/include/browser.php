@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: browser.php 5222 2007-03-09 10:13:16 +0000 (Fri, 09 Mar 2007) nterray $
 
 
 unset ($GLOBALS['BROWSER_AGENT']);

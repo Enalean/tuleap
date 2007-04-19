@@ -4,7 +4,7 @@
 #
 # Modified by L. Julliard for the CodeX project, dec 2002
 #
-# $Id$
+# $Id: cvssh 429 2002-11-25 17:21:30Z ljulliar $
 #
 
 PATH=/usr/local/bin:/bin:/usr/bin

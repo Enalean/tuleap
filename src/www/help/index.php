@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: index.php 1418 2005-04-08 13:17:03Z schneide $
 
 require_once('pre.php');
 $Language->loadLanguageMsg('help/help');

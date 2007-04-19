@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: index.php 3530 2006-08-22 12:02:05Z schneide $
 
 require_once('pre.php');
 require_once('www/survey/survey_utils.php');

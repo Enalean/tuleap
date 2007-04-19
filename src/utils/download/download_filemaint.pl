@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# $Id$
+# $Id: download_filemaint.pl 3591 2006-09-01 09:52:16Z guerin $
 #
 #use strict;
 require("../include.pl");  # Include all the predefined functions

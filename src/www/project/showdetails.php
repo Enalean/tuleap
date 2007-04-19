@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: showdetails.php 1447 2005-04-20 14:50:28Z ljulliar $
 require_once('pre.php');
 
 $Language->loadLanguageMsg('project/project');

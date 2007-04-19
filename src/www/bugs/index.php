@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: index.php 3679 2006-09-14 16:25:47Z mnazaria $
 
 require_once('pre.php');
 require('../bugs/bug_utils.php');

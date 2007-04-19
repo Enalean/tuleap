@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$ 
+// $Id: source_code_access.php 3601 2006-09-05 10:08:54Z nterray $ 
 require_once('pre.php');
 require('../admin/project_admin_utils.php');
 require('./source_code_access_utils.php');

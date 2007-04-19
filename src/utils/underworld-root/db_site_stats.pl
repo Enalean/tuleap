@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id$
+# $Id: db_site_stats.pl 3325 2006-07-10 14:58:40Z guerin $
 #
 use DBI;
 use Time::Local;

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: forum_utils.php 4860 2007-02-08 09:01:07 +0000 (Thu, 08 Feb 2007) nterray $
 
 /*
 

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: approve-pending.php 4608 2007-01-09 14:24:09 +0000 (Tue, 09 Jan 2007) mnazaria $
 
 require_once('pre.php');    
 require_once('vars.php');

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: add_support.php 378 2002-11-05 13:46:57Z sbouhet $
 
 support_header(array ('title'=>'Submit a Support Request',
 		     'help' => 'SupportRequestSubmission.html'));

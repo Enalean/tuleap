@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: user.php 5637 2007-04-02 12:13:35 +0000 (Mon, 02 Apr 2007) nterray $
 
   //$Language->loadLanguageMsg('include/include');
 

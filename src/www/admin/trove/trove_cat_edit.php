@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: trove_cat_edit.php 1405 2005-03-21 14:41:41Z guerin $
 
 require_once('pre.php');
 require_once('trove.php');

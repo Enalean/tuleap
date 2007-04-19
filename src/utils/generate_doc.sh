@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: generate_doc.sh 4607 2007-01-09 13:09:51 +0000 (Tue, 09 Jan 2007) ahardyau $
 #
 # Purpose:
 #    Automatically re-generate online documentation

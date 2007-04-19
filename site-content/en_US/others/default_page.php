@@ -5,7 +5,7 @@
 // This file is licensed under the CodeX Component Software License
 // http://codex.xerox.com
 //
-// $Id$
+// $Id: default_page.php 2755 2006-03-13 12:46:15Z guerin $
 //
 // Purpose:
 //    Default Web Page for groups that haven't setup their page yet

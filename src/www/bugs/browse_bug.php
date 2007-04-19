@@ -6,7 +6,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
 //
-// $Id$
+// $Id: browse_bug.php 2580 2006-02-17 14:26:26Z nterray $
 //
 //
 //	Bug Tracker originally by Tim Perdue 11/99

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// $Id: trove_list.php 4847 2007-02-06 11:30:05 +0000 (Tue, 06 Feb 2007) guerin $
 
 require_once('pre.php');    
 require_once('vars.php');

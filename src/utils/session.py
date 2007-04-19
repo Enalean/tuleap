@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# $Id: session.py 5506 2007-03-23 15:48:53 +0000 (Fri, 23 Mar 2007) guerin $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public
