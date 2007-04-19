@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: simpletest_test.php,v 1.8 2006/06/03 16:32:06 lastcraft Exp $
     require_once(dirname(__FILE__) . '/../simpletest.php');
 
     SimpleTest::ignore('ShouldNeverBeRunEither');

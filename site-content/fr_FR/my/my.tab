@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: my.tab 2720 2006-03-07 17:30:32Z guerin $
 #  *
 #  */
 #
@@ -20,50 +20,50 @@
 # Script: SF/www/my/index.php
 #
 my_index	title	Page personnelle de $1
-my_index	err_badbrowser	Alerte&nbsp;: votre navigateur (Netscape 4.x) n'est pas supportï¿½. Certaines fonctionnalitï¿½s ne seront pas disponibles.
-my_index	message	Votre page personnelle contient la liste des artefacts que vous avez [<b>S</b>]oumis ou qui vous ont ï¿½tï¿½ [<b>A</b>]ssignï¿½s avec leur niveau de complï¿½tion, les forums et les fichiers que vous surveillez et les projets dont vous ï¿½tes membre.<P>
-my_index	err_artf	Impossible de crï¿½er un ArtifactTypeFactory
+my_index	err_badbrowser	Alerte&nbsp;: votre navigateur (Netscape 4.x) n'est pas supporté. Certaines fonctionnalités ne seront pas disponibles.
+my_index	message	Votre page personnelle contient la liste des artefacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssignés avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
+my_index	err_artf	Impossible de créer un ArtifactTypeFactory
 my_index	my_bugs	Mes bugs
 my_index	my_srs	Mes demandes de support
 my_index	my_forums	Forums sous surveillance
-my_index	my_forums_msg	<b>Vous ne surveillez aucun forum.</b><P>En surveillant un forum, vous recevrez tous les messages postï¿½s sous forme de e-mail avec un lien vers le nouveau message.<P>Vous pouvez surveiller un forum en cliquant sur le lien appropriï¿½ dans ce mï¿½me forum de discussion.<BR>&nbsp;
-my_index	stop_forum	Arrï¿½ter la surveillance du forum ?
+my_index	my_forums_msg	<b>Vous ne surveillez aucun forum.</b><P>En surveillant un forum, vous recevrez tous les messages postés sous forme de e-mail avec un lien vers le nouveau message.<P>Vous pouvez surveiller un forum en cliquant sur le lien approprié dans ce même forum de discussion.<BR>&nbsp;
+my_index	stop_forum	Arrêter la surveillance du forum ?
 my_index	my_files	Fichiers sous surveillance
-my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant un fichier, vous recevrez par e-mail une note signalant la publication d'une nouvelle version et un lien vers l'espace de tï¿½lï¿½chargement.<P>Vous pouvez surveiller un fichier en visitant la page de &quot;Sommaire&quot; et en cliquant sur l'icï¿½ne appropriï¿½e dans la section fichiers.<BR>&nbsp;
-my_index	stop_file	Arrï¿½ter la surveillance du paquet ?	
-my_index	stop_monitor	Arrï¿½ter la surveillance
-my_index	my_tasks	Mes Tï¿½ches
+my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant un fichier, vous recevrez par e-mail une note signalant la publication d'une nouvelle version et un lien vers l'espace de téléchargement.<P>Vous pouvez surveiller un fichier en visitant la page de &quot;Sommaire&quot; et en cliquant sur l'icône appropriée dans la section fichiers.<BR>&nbsp;
+my_index	stop_file	Arrêter la surveillance du paquet ?	
+my_index	stop_monitor	Arrêter la surveillance
+my_index	my_tasks	Mes Tâches
 my_index	my_arts	Mes artefacts
 my_index	my_survey	Sondages
-my_index	survey_done	Vous avez dï¿½jï¿½ rï¿½pondu aux sondages
+my_index	survey_done	Vous avez déjà répondu aux sondages
 my_index	my_bookmarks	Mes favoris
-my_index	no_bookmark	<H3>Vous n'avez pas encore de favori enregistrï¿½</H3>
+my_index	no_bookmark	<H3>Vous n'avez pas encore de favori enregistré</H3>
 my_index	edit_link	Editer
-my_index	del_bookmark	Dï¿½truire ce favori ?
+my_index	del_bookmark	Détruire ce favori ?
 my_index	my_projects	Mes projets
-my_index	not_member	Vous n'ï¿½tes membre d'aucun projet.
+my_index	not_member	Vous n'êtes membre d'aucun projet.
 my_index	admin_link	Admin
 my_index	quit_proj	Quitter ce projet ?
-my_index	priv_proj	<em>Projet privï¿½</em>
+my_index	priv_proj	<em>Projet privé</em>
 #my_index	a	A
 #my_index	s	S
 #my_index	as	AS
 my_index	no_info	N'afficher aucun artefact
-my_index	a_info	assignï¿½s ï¿½ moi [A]
+my_index	a_info	assignés à moi [A]
 my_index	s_info	soumis par moi [S]
-my_index	as_info	assignï¿½s ï¿½ moi ou soumis par moi [AS]
+my_index	as_info	assignés à moi ou soumis par moi [AS]
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
 #
 my_utils	collapse	Replier
-my_utils	expand	Dï¿½plier
+my_utils	expand	Déplier
 my_utils	new_items	$1 nouveau(x)
 #
 #-----------------------------------------------
 # Script: SF/www/my/bookmark_add.php
 #
 bookmark_add	title	Ajouter un nouveau favori
-bookmark_add	message	Favori ajoutï¿½ pour <b>'$1'</b> avec le titre <b>'$2'</b>.
+bookmark_add	message	Favori ajouté pour <b>'$1'</b> avec le titre <b>'$2'</b>.
 bookmark_add	visit	Visiter le favori
 bookmark_add	edit	Modifier ce favori
 bookmark_add	bkm_url	Adresse du favori
@@ -73,8 +73,8 @@ bookmark_add	favorite	Ma page favorite...
 #-----------------------------------------------
 # Script: SF/www/my/bookmark_delete.php
 #
-bookmark_delete	title	Dï¿½truire un favori
-bookmark_delete	deleted	Favori dï¿½truit !
+bookmark_delete	title	Détruire un favori
+bookmark_delete	deleted	Favori détruit !
 #
 #-----------------------------------------------
 # Script: SF/www/my/bookmark_edit.php
@@ -84,14 +84,14 @@ bookmark_edit	title	Modifier un favori
 #-----------------------------------------------
 # Script: SF/www/my/rmproject.php
 #
-bookmark_rmproject	err_notmember	Vous n'ï¿½tes pas membre de ce projet.
-bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever ï¿½ nouveau du projet. 
-bookmark_rmproject	mail_subject	$1 : utilisateur $2 enlevï¿½ du projet '$3'
-bookmark_rmproject	mail_body	Ce message est envoyï¿½ pour prï¿½venir le(s) administrateurs du\nprojet '$1' que l'utilisateur '$2' a quittï¿½ le projet.\n\nSuivez le lien ci-dessous pour voir la liste des membres actuels du projet :\n$3\n\n
+bookmark_rmproject	err_notmember	Vous n'êtes pas membre de ce projet.
+bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever à nouveau du projet. 
+bookmark_rmproject	mail_subject	$1 : utilisateur $2 enlevé du projet '$3'
+bookmark_rmproject	mail_body	Ce message est envoyé pour prévenir le(s) administrateurs du\nprojet '$1' que l'utilisateur '$2' a quitté le projet.\n\nSuivez le lien ci-dessous pour voir la liste des membres actuels du projet :\n$3\n\n
 #
 #-----------------------------------------------
 # Script: SF/www/my/redirect.php
 #
 my_redirect	page_title	Redirection vers
-my_redirect	return_to	<p>La page demandï¿½e est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
-my_redirect	default_txt	Vous ï¿½tes sur la page de redirection de CodeX. Vous trouverez des liens utiles sur votre <a href="/my">page personnelle</a>.
+my_redirect	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
+my_redirect	default_txt	Vous êtes sur la page de redirection de CodeX. Vous trouverez des liens utiles sur votre <a href="/my">page personnelle</a>.

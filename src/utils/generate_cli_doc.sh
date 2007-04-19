@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# 
+# $Id: generate_doc.sh 2481 2006-01-30 12:57:27Z guerin $
 #
 # Purpose:
 #    Automatically re-generate online documentation

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: pm_utils.php 3572 2006-08-28 10:00:06Z schneide $
 
 /*
 

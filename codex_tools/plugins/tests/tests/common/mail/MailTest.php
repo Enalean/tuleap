@@ -9,7 +9,7 @@ Mock::generatePartial('Mail', 'MailTestVersion', array('_getUserDao'));
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id: MailTest.php 4433 2006-12-07 09:43:33 +0000 (Thu, 07 Dec 2006) ahardyau $
  *
  * Test the class Mail
  */

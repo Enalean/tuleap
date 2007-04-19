@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: postadd_patch.php 793 2004-01-27 17:30:44Z guerin $
 
 if (!$patch_category_id) {
 	$patch_category_id=100;

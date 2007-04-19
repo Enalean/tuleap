@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2006. All rights reserved
 //
-// 
+// $Id: SurveySingleton.class.php 1882 2005-08-16 10:48:39Z schneide $
 //
 
 

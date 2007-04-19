@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: postadd_comment.php 251 2002-06-05 12:34:56Z ljulliar $
 
 $changes = array();
 $changed = false;

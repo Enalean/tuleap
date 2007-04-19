@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: user_home.txt 2659 2006-02-27 14:44:44Z mnazaria $
 //
 
 
@@ -24,8 +24,8 @@ $my_html_ldap_format = '<td colspan="2" align="center"><hr><td>'.
 	   '<tr valign="top"><td>Organisation : </td><td><b>%department%</b></td></tr>'.
 	   '<tr valign="top"><td>Adresse : </td><td><b>%postaladdress%</b></td></tr>'.
 	   '<tr valign="top"><td> </td><td><b>%postalcode% - %co%</b></td></tr>'.
-	   '<tr valign="top"><td>Tï¿½lï¿½phone #1 :</td><td><b>%telephonenumber%</b></td></tr>'.
-	   '<tr valign="top"><td>Tï¿½lï¿½phone #2 :</td><td><b>%telephone-office2%</b></td></tr>'.
+	   '<tr valign="top"><td>Téléphone #1 :</td><td><b>%telephonenumber%</b></td></tr>'.
+	   '<tr valign="top"><td>Téléphone #2 :</td><td><b>%telephone-office2%</b></td></tr>'.
 	   '<tr valign="top"><td>Fax :</td><td><b>%facsimiletelephonenumber%</b></td></tr>';
 
 ?>

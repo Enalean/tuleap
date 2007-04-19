@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: ArtifactReportHtml.class.php 5724 2007-04-05 14:19:32 +0000 (Thu, 05 Apr 2007) nterray $
 //
 //  Parts of code come from bug_util.php (written by Laurent Julliard)
 //

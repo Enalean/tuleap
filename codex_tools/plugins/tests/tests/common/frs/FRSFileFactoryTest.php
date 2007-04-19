@@ -18,7 +18,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_get
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id:$
  *
  * Tests the FRSFileFactory class
  */

@@ -10,7 +10,7 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * @version   
+ * @version   $Id:Error.class.php 4446 2006-12-08 16:18:48 +0000 (Fri, 08 Dec 2006) ahardyau $
  * @author Tim Perdue <tperdue@valnux.com>
  * @date 2000-08-28
  *

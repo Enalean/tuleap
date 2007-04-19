@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: ArtifactReportFactory.class.php 4973 2007-02-20 15:34:14 +0000 (Tue, 20 Feb 2007) nterray $
 //
 //  Written for CodeX by Stephane Bouhet
 //

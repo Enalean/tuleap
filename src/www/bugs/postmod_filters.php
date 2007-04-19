@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: postmod_filters.php 2 2001-03-06 10:03:47Z root $
 
 if (user_isloggedin()) {
 

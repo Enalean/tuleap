@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: field_values_details.php 3672 2006-09-14 13:59:53Z schneide $
 //
 //
 //  Written for CodeX by Stephane Bouhet

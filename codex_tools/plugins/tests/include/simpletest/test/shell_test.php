@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: shell_test.php,v 1.9 2005/07/27 15:54:19 lastcraft Exp $
     
     require_once(dirname(__FILE__) . '/../shell_tester.php');
     

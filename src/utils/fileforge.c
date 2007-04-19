@@ -2,7 +2,7 @@
  * Small Tool to move files from the FTP incoming dir
  * to the project ftp space.  Runs +suid.
  *
- * 
+ * $Id: fileforge.c 3682 2006-09-15 08:38:25Z guerin $
  */
 #include <stdlib.h>
 #include <stdio.h>

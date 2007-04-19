@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: rss_utils.inc 3660 2006-09-13 08:46:45Z mnazaria $
 
 $Language->loadLanguageMsg('export/export');
 

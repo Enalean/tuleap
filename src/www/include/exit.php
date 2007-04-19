@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: exit.php 5910 2007-04-18 15:08:14 +0000 (Wed, 18 Apr 2007) mnazaria $
 
   //$Language->loadLanguageMsg('include/include');
 

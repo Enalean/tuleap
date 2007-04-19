@@ -4,17 +4,17 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: confirmation.txt 4850 2007-02-06 17:25:28 +0000 (Tue, 06 Feb 2007) nterray $
 //
 
         echo '
 	<B>Description courte du projet<font color="red">*</font>&nbsp;:</B><BR>
 	<TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="12">'.$data['project']['form_short_description'].'</TEXTAREA>
 	<P>
-	<B>Description complï¿½te du projet<font color="red">*</font>&nbsp;:</B><BR>
+	<B>Description complète du projet<font color="red">*</font>&nbsp;:</B><BR>
 	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.$data['project']['form_purpose'].'</TEXTAREA>
 	<P>
-	<B>Propriï¿½tï¿½ intellectuelle&nbsp;:</B><BR>
+	<B>Propriété intellectuelle&nbsp;:</B><BR>
 	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.$data['project']['form_patents'].'</TEXTAREA>
 	<P>
 	<B>Autres logiciels requis&nbsp;:</B><BR>

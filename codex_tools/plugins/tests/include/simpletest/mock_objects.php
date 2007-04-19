@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	MockObjects
-     *	@version	
+     *	@version	$Id: mock_objects.php,v 1.98 2006/11/20 19:17:06 lastcraft Exp $
      */
 
     /**#@+

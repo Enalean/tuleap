@@ -2,7 +2,7 @@
 /**
 * Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
 *
-* 
+* $Id$
 */
 
 require_once('cli_constants.php');
@@ -59,12 +59,12 @@ class CLI_ModuleTest extends UnitTestCase {
     function testHelp() {
         $action =& new MockCLI_Action();
         $action->setReturnValue('getName', 'action_1');
-        $action->setReturnValue('getDescription', 'Description of the 1ï¿½ action');
+        $action->setReturnValue('getDescription', 'Description of the 1° action');
         $action->expectNever('execute');
         
         $other_action =& new MockCLI_Action();
         $other_action->setReturnValue('getName', 'action_2');
-        $other_action->setReturnValue('getDescription', 'Description of the 2ï¿½ action');
+        $other_action->setReturnValue('getDescription', 'Description of the 2° action');
         $other_action->expectNever('execute');
         
         
@@ -78,9 +78,9 @@ description
 
 Available actions:
   * action_1
-    Description of the 1ï¿½ action
+    Description of the 1° action
   * action_2
-    Description of the 2ï¿½ action
+    Description of the 2° action
 
 
 EOS;

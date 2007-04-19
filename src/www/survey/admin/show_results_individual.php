@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: show_results_individual.php 4780 2007-01-29 16:43:33 +0000 (Mon, 29 Jan 2007) guerin $
 
 require_once('pre.php');
 require_once('www/survey/survey_utils.php');

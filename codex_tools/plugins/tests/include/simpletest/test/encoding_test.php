@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: encoding_test.php,v 1.16 2006/11/06 09:55:21 lastcraft Exp $
     
     require_once(dirname(__FILE__) . '/../url.php');
     require_once(dirname(__FILE__) . '/../socket.php');

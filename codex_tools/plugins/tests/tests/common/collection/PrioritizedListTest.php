@@ -5,7 +5,7 @@ require_once('common/collection/PrioritizedList.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id: PrioritizedListTest.php,v 1.2 2005/08/01 14:29:51 nterray Exp $
  *
  * Tests the class PrioritizedList
  */

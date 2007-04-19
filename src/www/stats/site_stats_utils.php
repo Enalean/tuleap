@@ -1,6 +1,6 @@
 <?php
 //
-// 
+// $Id: site_stats_utils.php 3567 2006-08-25 14:11:17Z schneide $
 //
 
 $Language->loadLanguageMsg('stats/stats');

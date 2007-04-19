@@ -22,7 +22,7 @@ $start  = $GLOBALS['Language']->getText('calendar', 'week_start');
 //    for feature requests and/or donations
 //
 // Modified by Laurent Julliard for CodeX project
-// 
+// $Id: calendar.js 2580 2006-02-17 14:26:26Z nterray $
 
 //alert('hello world!');
 

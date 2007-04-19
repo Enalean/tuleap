@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# 
+# $Id: configure_test_server.sh 911 2004-03-15 14:18:29Z ljulliar $
 #
 #
 # BEGINNING OF CONFIGURATION INFORMATION

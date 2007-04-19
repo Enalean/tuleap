@@ -7,7 +7,7 @@
  * Copyright 2006 (c) Xerox
  * http://codex.xerox.com
  *
- * @version   
+ * @version   $Id$
  * @author Marc Nazarian (marc.nazarian@xrce.xerox.com)
  *
  */

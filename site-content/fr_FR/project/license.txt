@@ -4,35 +4,35 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: license.txt 4850 2007-02-06 17:25:28 +0000 (Tue, 06 Feb 2007) nterray $
 //
 ?>
-<P>Le site <?php print $GLOBALS['sys_name']; ?> a ï¿½tï¿½ crï¿½ï¿½ pour
-promouvoir le dï¿½veloppement et la gestion de projet en mode
+<P>Le site <?php print $GLOBALS['sys_name']; ?> a été créé pour
+promouvoir le développement et la gestion de projet en mode
 collaboratif au sein de <?php print $GLOBALS['sys_org_name'];
-?>. C'est aussi l'unique site que vous aurez ï¿½ consulter pour aller ï¿½
-la recherche de composants logiciels rï¿½utilisables.
+?>. C'est aussi l'unique site que vous aurez à consulter pour aller à
+la recherche de composants logiciels réutilisables.
 
 <p>Pour rendre les choses plus faciles, <?php print
 $GLOBALS['sys_org_name']; ?> a mis en place la <a
 href="/docman/display_doc.php?docid=16&group_id=1"
-target="side_window"> Politique d'ï¿½change gï¿½nï¿½rale</a> des logiciels
-qui dï¿½finit les conditions gï¿½nï¿½rales sous lesquels vous pouvez
-rï¿½utiliser des composants logiciels au sein de <?php print
+target="side_window"> Politique d'échange générale</a> des logiciels
+qui définit les conditions générales sous lesquels vous pouvez
+réutiliser des composants logiciels au sein de <?php print
 $GLOBALS['sys_org_name']; ?>.
 
-<P>Nous pensons que cette politique d'ï¿½change sert la cause du
-dï¿½veloppement collaboratif tout en offrant un bon niveau de
-protection. Cependant si ce qui vous est proposï¿½ par dï¿½faut ne vous
+<P>Nous pensons que cette politique d'échange sert la cause du
+développement collaboratif tout en offrant un bon niveau de
+protection. Cependant si ce qui vous est proposé par défaut ne vous
 convient pas, vous pouvez choisir l'option "Autre" dans le menu
 ci-dessous et nous faire savoir pourquoi vous souhaitez en utiliser
 une autre.
 
-<P>Choisir votre propre politique d'ï¿½change est une dï¿½cision
+<P>Choisir votre propre politique d'échange est une décision
 importante. Veuillez donc vous assurer d'avoir bien lu la <a
 href="/docman/display_doc.php?docid=16&group_id=1"
-target="side_window">Politique d'ï¿½change gï¿½nï¿½rale de <?php echo
-$GLOBALS['sys_name']; ?> </a> avant de prendre une dï¿½cision pour votre
+target="side_window">Politique d'échange générale de <?php echo
+$GLOBALS['sys_name']; ?> </a> avant de prendre une décision pour votre
 projet.
 
 <P>Remarque&nbsp;: si votre projet consiste simplement en un site Web ou que
@@ -40,7 +40,7 @@ vous ne publiez aucun code source sur <?php print
 $GLOBALS['sys_name']; ?>, veuillez choisir l'option "Site Web
 uniquement" dans le menu ci-dessous.</p>
 
-<P><B>Politique d'ï¿½change pour ce projet</B></p>
+<P><B>Politique d'échange pour ce projet</B></p>
 <?php
 	echo '<SELECT NAME="form_license">';
 	while (list($k,$v) = each($LICENSE)) {
@@ -51,5 +51,5 @@ uniquement" dans le menu ci-dessous.</p>
 
 ?>
 <P>
-Si vous avez choisi l'option "Autre", merci d'en prï¿½ciser la raison et de fournir une description de votre propre politique d'ï¿½change.
+Si vous avez choisi l'option "Autre", merci d'en préciser la raison et de fournir une description de votre propre politique d'échange.
 <BR><TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10></TEXTAREA>

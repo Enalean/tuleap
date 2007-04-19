@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: viewvc.php 3755 2006-09-26 15:51:31Z guerin $
 
 require_once('pre.php');
 require_once('viewvc_utils.php');

@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: ArtifactTypeFactory.class.php 5630 2007-04-02 09:15:58 +0000 (Mon, 02 Apr 2007) mnazaria $
 //
 //
 //	Originally by to the SourceForge Team,1999-2000

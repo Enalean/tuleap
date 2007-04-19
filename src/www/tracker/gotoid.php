@@ -2,10 +2,10 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: gotoid.php 3680 2006-09-15 08:28:49Z guerin $
 //
 //
-//  Written for CodeX by Nicolas Guï¿½rin
+//  Written for CodeX by Nicolas Guérin
 //
 // This script performs a redirection to the proper artifact page, given 
 // only the artifact id, and possibly the artifact name detected in text and a group_id.

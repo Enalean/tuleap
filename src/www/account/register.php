@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: register.php 5771 2007-04-11 14:43:05 +0000 (Wed, 11 Apr 2007) ahardyau $
 
 require_once('pre.php');
 require_once('proj_email.php');

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: index.php 5322 2007-03-15 09:14:24 +0000 (Thu, 15 Mar 2007) nterray $
 
 require_once('pre.php');
 require('../mail/mail_utils.php');

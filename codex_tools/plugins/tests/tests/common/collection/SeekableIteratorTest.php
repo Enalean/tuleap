@@ -35,7 +35,7 @@ class SeekableIteratorTestVersion extends SeekableIterator {
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id$
  *
  * Test the class SeekableIterator
  */

@@ -2,7 +2,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 # http://codex.xerox.com
 #
-# 
+# $Id: db0025.sql 1305 2005-01-11 13:12:56Z guerin $
 #
 # Database upgrade script (see dbXXXX_template for instructions)
 #

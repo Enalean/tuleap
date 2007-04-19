@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: xml_test.php,v 1.22 2006/11/08 00:32:22 lastcraft Exp $
     require_once(dirname(__FILE__) . '/../xml.php');
     Mock::generate('SimpleScorer');
 

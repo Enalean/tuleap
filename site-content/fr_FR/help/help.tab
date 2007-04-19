@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: help.tab 2689 2006-03-02 15:08:36Z mnazaria $
 #  *
 #  */
 #
@@ -19,7 +19,7 @@
 # Script: SF/www/help/browse_bug_query_field.php
 #
 help_browse_bug_query_field	no_field	Champ inconnu&nbsp;: $1
-help_browse_bug_query_field	bug_search_criteria	Recherche de bugs - Critï¿½re de sï¿½lection
+help_browse_bug_query_field	bug_search_criteria	Recherche de bugs - Critère de sélection
 help_browse_bug_query_field	field_name	Nom du champ
 help_browse_bug_query_field	field_type	Type du champ
 help_browse_bug_query_field	description	Description
@@ -27,10 +27,10 @@ help_browse_bug_query_field	description	Description
 #-----------------------------------------------
 # Script: SF/www/help/browse_tracker_query_field.php
 #
-help_browse_tracker_query_field	at_not_created	ArtifactType n'a pas pu ï¿½tre crï¿½ï¿½
-help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory n'a pas pu ï¿½tre crï¿½ï¿½
-help_browse_tracker_query_field	af_not_created	ArtifactField n'a pas pu ï¿½tre crï¿½ï¿½
-help_browse_tracker_query_field	art_search_criteria	Recherche d'ï¿½lï¿½ments -  Critï¿½re de sï¿½lection
+help_browse_tracker_query_field	at_not_created	ArtifactType n'a pas pu être créé
+help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory n'a pas pu être créé
+help_browse_tracker_query_field	af_not_created	ArtifactField n'a pas pu être créé
+help_browse_tracker_query_field	art_search_criteria	Recherche d'éléments -  Critère de sélection
 #
 #-----------------------------------------------
 # Script: SF/www/help/index.php
@@ -41,14 +41,14 @@ help_index	page_info	Page d'information
 #-----------------------------------------------
 # Script: SF/www/help/show_help.php
 #
-help_show_help	page_not_found	Systï¿½me d'aide $1 - Erreur&nbsp;: page introuvable
-help_show_help	page_not_available	<h4>Dï¿½solï¿½, la page d'aide que vous avez demandï¿½e (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
+help_show_help	page_not_found	Système d'aide $1 - Erreur&nbsp;: page introuvable
+help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avez demandée (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
 #
 #-----------------------------------------------
 # Script: SF/www/help/trove_cat.php
 #
-help_trove_cat	no_such_trove_cat	Catï¿½gorie introuvable
-help_trove_cat	trove_cat	Catï¿½gorie - $1
-help_trove_cat	full_cat_name	Nom complet de la catï¿½gorie
+help_trove_cat	no_such_trove_cat	Catégorie introuvable
+help_trove_cat	trove_cat	Catégorie - $1
+help_trove_cat	full_cat_name	Nom complet de la catégorie
 help_trove_cat	short_name	Nom court
 help_trove_cat	desc	Description

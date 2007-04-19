@@ -4,7 +4,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
 # http://codex.xerox.com
 #
-# 
+# $Id: xerox_all_daily_stats.sh 3684 2006-09-15 09:56:50Z guerin $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

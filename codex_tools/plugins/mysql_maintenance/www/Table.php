@@ -32,7 +32,7 @@
 // | Author: Richard Heyes <richard@phpguru.org>                           |
 // +-----------------------------------------------------------------------+
 //
-// 
+// $Id: Table.php,v 1.8 2005/07/16 16:54:44 richard Exp $
 //
 // Utility for printing tables from cmdline scripts
 //

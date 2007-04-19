@@ -2,7 +2,7 @@
 
 set -e
 
-# 
+# $Id$
 #
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 # Copyright (c) Xerox Corporation, CodeX, 2001-2005. All Rights Reserved

@@ -5,7 +5,7 @@
 // This file is licensed under the CodeX Component Software License
 // http://codex.xerox.com
 //
-// 
+// $Id: DevEnvironmentSetup.xml 1056 2004-07-01 09:23:49 +0000 (Thu, 01 Jul 2004) guerin $
 //
 // Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
 //
@@ -81,7 +81,7 @@
         <programlisting width="40" format="linespecific" linenumbering="unnumbered">
 
 php3_include_path  ".:/home/users/your_login/test_server/httpd/SF/www/include"
-SetEnv SF_LOCAL_INC_PREFIX /home/users/your_login/test_server
+SetEnv CODEX_LOCAL_INC /home/users/your_login/test_server/etc/codex/conf/local.inc
         </programlisting>
       </section>
       <section id="EditConfLocalInc">

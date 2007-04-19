@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: expand.php 1421 2005-04-12 09:01:37Z schneide $
 
 require_once('pre.php');
 require('../forum/forum_utils.php');

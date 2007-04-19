@@ -20,7 +20,7 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ * $Id: SOAPDocman.class.php 4994 2007-02-22 17:16:10Z mnazaria $
  */
 require_once('DocmanController.class.php');
 require_once('SOAPDocmanActions.class.php');

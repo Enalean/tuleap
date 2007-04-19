@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: test_groups.php,v 1.14 2006/11/20 23:44:37 lastcraft Exp $
     require_once(dirname(__FILE__) . '/../unit_tester.php');
     require_once(dirname(__FILE__) . '/../shell_tester.php');
     require_once(dirname(__FILE__) . '/../mock_objects.php');

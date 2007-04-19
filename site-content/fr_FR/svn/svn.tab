@@ -11,115 +11,115 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: svn.tab 3725 2006-09-22 15:01:40Z guerin $
 #  *
 #  */
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/access_control.php
 #
-svn_admin_access_control	upd_success	Contrï¿½le d'accï¿½s mis ï¿½ jour avec succï¿½s
-svn_admin_access_control	upd_fail	La mise ï¿½ jour du contrï¿½le d'accï¿½s a ï¿½chouï¿½
-svn_admin_access_control	access_ctrl	Administration de Subversion - Contrï¿½le d'accï¿½s
-svn_admin_access_control	def_policy	La politique par dï¿½faut de $1 est d'autoriser l'accï¿½s en lecture et en ï¿½criture ï¿½ tous les membres du projet sur l'ensemble du dï¿½pï¿½t et l'accï¿½s en lecture seule aux autres utilisateurs de $1. Vous pouvez ajuster ou mï¿½me redï¿½finir les permissions d'accï¿½s pour vos besoins.
-svn_admin_access_control	access_ctrl_file	Fichier de contrï¿½le d'accï¿½s
-svn_admin_access_control	not_created	Votre dï¿½pï¿½t Subversion n'a pas ï¿½tï¿½ crï¿½ï¿½. Les permissions d'accï¿½s ne peuvent pas encore ï¿½tre dï¿½finies.
+svn_admin_access_control	upd_success	Contrôle d'accès mis à jour avec succès
+svn_admin_access_control	upd_fail	La mise à jour du contrôle d'accès a échoué
+svn_admin_access_control	access_ctrl	Administration de Subversion - Contrôle d'accès
+svn_admin_access_control	def_policy	La politique par défaut de $1 est d'autoriser l'accès en lecture et en écriture à tous les membres du projet sur l'ensemble du dépôt et l'accès en lecture seule aux autres utilisateurs de $1. Vous pouvez ajuster ou même redéfinir les permissions d'accès pour vos besoins.
+svn_admin_access_control	access_ctrl_file	Fichier de contrôle d'accès
+svn_admin_access_control	not_created	Votre dépôt Subversion n'a pas été créé. Les permissions d'accès ne peuvent pas encore être définies.
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/general_settings.php
 #
-svn_admin_general_settings	upd_success	Options gï¿½nï¿½rales mises ï¿½ jour avec succï¿½s
-svn_admin_general_settings	upd_fail	La mise ï¿½ jour des options gï¿½nï¿½rales a ï¿½chouï¿½&nbsp;: $1
-svn_admin_general_settings	gen_settings	Administration de Subversion  - Options gï¿½nï¿½rales
+svn_admin_general_settings	upd_success	Options générales mises à jour avec succès
+svn_admin_general_settings	upd_fail	La mise à jour des options générales a échoué&nbsp;: $1
+svn_admin_general_settings	gen_settings	Administration de Subversion  - Options générales
 svn_admin_general_settings	tracking	Suivi de Subversion
-svn_admin_general_settings	tracking_comment	Lorsque le suivi de Subversion est activï¿½, les commits (modification, ajout ou suppression de fichiers ou rï¿½pertoires) sont enregistrï¿½s dans la base de donnï¿½es $1 de faï¿½on ï¿½ pouvoir les visualiser et  effectuer des recherches avancï¿½es. Dans le cas contraire aucune information n'est conservï¿½ dans la base de donnï¿½es ; vous disposez uniquement de l'historique Subversion.
-svn_admin_general_settings	preamble	<h3>Prï¿½ambule Subversion</h3><P>Message d'introduction sur l'utilisation de CVS en remplacement du message par dï¿½faut figurant sur la <a href="$1">page d'accueil de Subversion</a>. (balises HTML autorisï¿½es)
+svn_admin_general_settings	tracking_comment	Lorsque le suivi de Subversion est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et  effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservé dans la base de données ; vous disposez uniquement de l'historique Subversion.
+svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de Subversion</a>. (balises HTML autorisées)
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php
 #
 svn_admin_index	admin	Administration Subversion 
-svn_admin_index	gen_sett	Options gï¿½nï¿½rales
-svn_admin_index	welcome	Dï¿½finition du message de bienvenue, suivi dans la base de donnï¿½es...
-svn_admin_index	access	Contrï¿½le d'accï¿½s
-svn_admin_index	access_comment	Dï¿½finition des permissions d'accï¿½s des utilisateurs sur le dï¿½pï¿½t Subversion.
+svn_admin_index	gen_sett	Options générales
+svn_admin_index	welcome	Définition du message de bienvenue, suivi dans la base de données...
+svn_admin_index	access	Contrôle d'accès
+svn_admin_index	access_comment	Définition des permissions d'accès des utilisateurs sur le dépôt Subversion.
 svn_admin_index	email_sett	Options de notification e-mail
-svn_admin_index	email_comment	Dï¿½finition des destinataires des notification e-mail des changements remontï¿½s dans le dï¿½pï¿½t Subversion.
+svn_admin_index	email_comment	Définition des destinataires des notification e-mail des changements remontés dans le dépôt Subversion.
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/notification.php
 #
-svn_admin_notification	upd_success	Notification e-mail mise ï¿½ jour avec succï¿½s
-svn_admin_notification	upd_fail	La mise ï¿½ jour de la notification e-mail a ï¿½chouï¿½&nbsp;: $1
+svn_admin_notification	upd_success	Notification e-mail mise à jour avec succès
+svn_admin_notification	upd_fail	La mise à jour de la notification e-mail a échoué&nbsp;: $1
 svn_admin_notification	email	Administration de Subversion  - Notification e-mail 
-svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque ï¿½vï¿½nement de commit peut ï¿½tre notifiï¿½ par e-mail ï¿½ certains destinataires ou listes de diffusion (sï¿½parï¿½s par des virgules). Une entï¿½te apparaissant dans le sujet du message peut aussi ï¿½tre spï¿½cifiï¿½e.</I></p>
-svn_admin_notification	mail_to	Envoyer ï¿½
-svn_admin_notification	header	Entï¿½te du sujet
+svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée.</I></p>
+svn_admin_notification	mail_to	Envoyer à
+svn_admin_notification	header	Entête du sujet
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php
 #
-svn_browse_revision	browsing	Affichage des rï¿½visions Subversion
+svn_browse_revision	browsing	Affichage des révisions Subversion
 svn_browse_revision	view_commit	Afficher les commits
 svn_browse_revision	browse_commit	Afficher les commits par&nbsp;:
-svn_browse_revision	rev	Rï¿½vision
+svn_browse_revision	rev	Révision
 svn_browse_revision	commiter	Soumis par
 svn_browse_revision	path	Chemin
-svn_browse_revision	search	Recherche par mots-clï¿½s dans les messages de log
-svn_browse_revision	commit_at_once	commits ï¿½ la fois
-svn_browse_revision	no_match	Aucun commit ne correspond ï¿½ vos critï¿½res
-svn_browse_revision	specific_perms	<p>Il y a des permissions sur ce dï¿½pï¿½t Subversion, donc les requï¿½tes SVN sont dï¿½sactivï¿½es.<br/>Veuillez contactez un administrateur projet pour toute information supplï¿½mentaire.</p>
+svn_browse_revision	search	Recherche par mots-clés dans les messages de log
+svn_browse_revision	commit_at_once	commits à la fois
+svn_browse_revision	no_match	Aucun commit ne correspond à vos critères
+svn_browse_revision	specific_perms	<p>Il y a des permissions sur ce dépôt Subversion, donc les requêtes SVN sont désactivées.<br/>Veuillez contactez un administrateur projet pour toute information supplémentaire.</p>
 #
 #-----------------------------------------------
 # Script: SF/www/svn/detail_revision.php
 #
-svn_detail_revision	svn_rev	Rï¿½vision SVN  $1 - Dï¿½tails
+svn_detail_revision	svn_rev	Révision SVN  $1 - Détails
 svn_detail_revision	id_not_found	Commit ID interne no. $1 introuvable dans ce projet
 #
 #-----------------------------------------------
 # Script: SF/www/svn/svn_intro.php
 #
 svn_intro	info	Information Subversion
-svn_intro	history	Historique du dï¿½pï¿½t
+svn_intro	history	Historique du dépôt
 svn_intro	browse_tree	Afficher l'arbre Subversion
-svn_intro	browse_comment	La navigation dans l'arbre Subversion donne un bon aperï¿½u de l'ï¿½tat courant du code source de ce projet. Vous pouvez aussi voir l'historique complet des fichiers du dï¿½pï¿½t.
+svn_intro	browse_comment	La navigation dans l'arbre Subversion donne un bon aperçu de l'état courant du code source de ce projet. Vous pouvez aussi voir l'historique complet des fichiers du dépôt.
 #
 #-----------------------------------------------
 # Script: SF/www/svn/svn_utils.php
 #
 svn_utils	proj_err	Seuls les projets peuvent utiliser le service Web Subversion	
-svn_utils	svn_off	Ce projet a dï¿½sactivï¿½ Subversion
+svn_utils	svn_off	Ce projet a désactivé Subversion
 svn_utils	svn_info	Information Subversion
 svn_utils	browse_tree	Afficher l'arbre SVN
 svn_utils	my_ci	Mes commits SVN
 svn_utils	svn_query	Recherche SVN
 svn_utils	svn_admin	Administration SVN
-svn_utils	browse_off	Ce projet a dï¿½sactivï¿½ le navigateur Web du dï¿½pï¿½t Subversion
+svn_utils	browse_off	Ce projet a désactivé le navigateur Web du dépôt Subversion
 svn_utils	admin	Administration
 svn_utils	notif	Notification e-mail
 svn_utils	g_id_err	ERREUR - aucun group_id
-svn_utils	sorted_by	triï¿½ par
+svn_utils	sorted_by	trié par
 svn_utils	match_ci	$1 commits correspondants
-svn_utils	sort	Cliquer sur un entï¿½te de colonne pour trier les rï¿½sultats (ascendant ou descendant), ou <A HREF="$1"><b>Rï¿½initialiser le tri</b></a>.
+svn_utils	sort	Cliquer sur un entête de colonne pour trier les résultats (ascendant ou descendant), ou <A HREF="$1"><b>Réinitialiser le tri</b></a>.
 svn_utils	acti	Activez
-svn_utils	deacti	Dï¿½sactivez
+svn_utils	deacti	Désactivez
 svn_utils	multi_sort	Vous pouvez aussi utiliser le <a href="$1"><b>$2 tri multi-colonnes</b></a>
 svn_utils	items	Items $1 - $2
 svn_utils	desc	Description
 svn_utils	date	Date
 svn_utils	file	Fichier
 svn_utils	type	Type
-svn_utils	add	Ajoutï¿½
-svn_utils	change	Modifiï¿½
-svn_utils	del	Supprimï¿½
-svn_utils	impacted_files	Liste des fichiers concernï¿½s
+svn_utils	add	Ajouté
+svn_utils	change	Modifié
+svn_utils	del	Supprimé
+svn_utils	impacted_files	Liste des fichiers concernés
 svn_utils	no_hist	Ce projet n'a pas d'historique Subversion.
 svn_utils	ci_week	Commits (Derniers 7 jours/Total)
 svn_utils	file_err	Erreur&nbsp;: Ouverture fichier $1 impossible
-svn_utils	write_err	Erreur&nbsp;: Impossible d'ï¿½crire dans le fichier $1
+svn_utils	write_err	Erreur&nbsp;: Impossible d'écrire dans le fichier $1
 #
 #-----------------------------------------------
 # Script: SF/www/svn/svn_utils.php
 #
-svn_viewvc	access_denied	Accï¿½s refusï¿½
-svn_viewvc	acc_den_comment	Vous n'avez pas l'autorisation d'accï¿½s pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
+svn_viewvc	access_denied	Accès refusé
+svn_viewvc	acc_den_comment	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.

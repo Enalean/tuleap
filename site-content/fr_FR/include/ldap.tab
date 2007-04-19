@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: ldap.tab 4433 2006-12-07 09:43:33 +0000 (Thu, 07 Dec 2006) ahardyau $
 #  *
 #  */
 #
@@ -22,9 +22,9 @@ ldap_class	err_bind_nopasswd	Impossible d'initier la liaison sur $1&nbsp;: mot d
 ldap_class	err_bind_invpasswd	Impossible d'initier la liaison sur $1&nbsp;: mot de passe invalide ?
 ldap_class	err_nopasswd	Mot de passe absent
 ldap_class	err_cant_connect	Impossible de se connecter au serveur LDAP
-ldap_class	err_auth_search	La recherche pour l'authentification a ï¿½chouï¿½
+ldap_class	err_auth_search	La recherche pour l'authentification a échoué
 ldap_class	err_nouser	Utilisateur inconnu
 ldap_class	err_badpasswd	Mot de passe invalide
-ldap_class	err_cant_bind	Impossibilitï¿½ d'initier la liaison sur le serveur LDAP
-ldap_class	err_search	La recherche LDAP a ï¿½chouï¿½
-ldap_class	err_nores	Aucun rï¿½sultat trouvï¿½ (pas d'utilisateur correspondant)
+ldap_class	err_cant_bind	Impossibilité d'initier la liaison sur le serveur LDAP
+ldap_class	err_search	La recherche LDAP a échoué
+ldap_class	err_nores	Aucun résultat trouvé (pas d'utilisateur correspondant)

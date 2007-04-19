@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: database.php 3706 2006-09-20 14:40:30Z mnazaria $
 //
 //
 

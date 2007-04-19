@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: session.php 5633 2007-04-02 10:24:32 +0000 (Mon, 02 Apr 2007) nterray $
 //
 require_once('common/include/CookieManager.class.php');
 

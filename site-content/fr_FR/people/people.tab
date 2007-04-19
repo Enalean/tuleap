@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: people.tab 1561 2005-05-23 11:39:57Z guerin $
 #  *
 #  */
 #
@@ -19,68 +19,68 @@
 # Script: SF/www/people/admin/index.php
 #
 people_admin_index	insert_error	Erreur lors de l'insertion de la valeur
-people_admin_index	category_inserted	Catï¿½gorie ajoutï¿½e
-people_admin_index	skill_inserted	Compï¿½tence ajoutï¿½e
-people_admin_index	bug_cat_modif_error	Erreur lors de la modification de la catï¿½gorie du bug
-people_admin_index	bug_cat_modified	Catï¿½gorie du bug modifiï¿½e
-people_admin_index	add_people_skills	Ajouter/Modifier des compï¿½tences
-people_admin_index	existing_skills	Compï¿½tences existantes
-people_admin_index	no_skills_found	Aucune compï¿½tence spï¿½cifiï¿½e
-people_admin_index	new_skill_name	Nom de la nouvelle compï¿½tence
-people_admin_index	once_added_no_delete	Une fois la compï¿½tence ajoutï¿½e, elle ne peut ï¿½tre dï¿½truite
-people_admin_index	people_skills_admin	Administration des compï¿½tences utilisateurs
-people_admin_index	add_skills	Ajouter des compï¿½tences
-people_admin_index	add_new_skill_to_list	Ajouter une nouvelle compï¿½tence ï¿½ la liste.
-people_admin_people_skills	title	Ajouter des compï¿½tences mï¿½tier
+people_admin_index	category_inserted	Catégorie ajoutée
+people_admin_index	skill_inserted	Compétence ajoutée
+people_admin_index	bug_cat_modif_error	Erreur lors de la modification de la catégorie du bug
+people_admin_index	bug_cat_modified	Catégorie du bug modifiée
+people_admin_index	add_people_skills	Ajouter/Modifier des compétences
+people_admin_index	existing_skills	Compétences existantes
+people_admin_index	no_skills_found	Aucune compétence spécifiée
+people_admin_index	new_skill_name	Nom de la nouvelle compétence
+people_admin_index	once_added_no_delete	Une fois la compétence ajoutée, elle ne peut être détruite
+people_admin_index	people_skills_admin	Administration des compétences utilisateurs
+people_admin_index	add_skills	Ajouter des compétences
+people_admin_index	add_new_skill_to_list	Ajouter une nouvelle compétence à la liste.
+people_admin_people_skills	title	Ajouter des compétences métier
 #
 #-----------------------------------------------
 # Script: SF/www/people/editprofile.php
 #
-people_editprofile	update_failed	La mise ï¿½ jour de l'utilisateur a ï¿½chouï¿½
-people_editprofile	update_ok	Utilisateur mis ï¿½ jour avec succï¿½s
+people_editprofile	update_failed	La mise à jour de l'utilisateur a échoué
+people_editprofile	update_ok	Utilisateur mis à jour avec succès
 people_editjob	error_missing	erreur - information manquante
 people_editjob	fill_in	Veuillez remplir tous les champs requis
-people_editprofile	skill_update_failed	La mise ï¿½ jour des compï¿½tences utilisateur a ï¿½chouï¿½
-people_editprofile	skill_update_ok	Compï¿½tences utilisateur mises ï¿½ jour avec succï¿½s
-people_editprofile	skill_delete_failed	La destruction des compï¿½tences utilisateur a ï¿½chouï¿½
-people_editprofile	skill_delete_ok	Compï¿½tences utilisateur dï¿½truite avec succï¿½s
+people_editprofile	skill_update_failed	La mise à jour des compétences utilisateur a échoué
+people_editprofile	skill_update_ok	Compétences utilisateur mises à jour avec succès
+people_editprofile	skill_delete_failed	La destruction des compétences utilisateur a échoué
+people_editprofile	skill_delete_ok	Compétences utilisateur détruite avec succès
 people_editprofile	edit_your_profile	Modifier votre profil
-people_editprofile	user_fetch_failed	La rï¿½cupï¿½ration de l'utilisateur a ï¿½chouï¿½
+people_editprofile	user_fetch_failed	La récupération de l'utilisateur a échoué
 people_editprofile	no_such_user	Utilisateur introuvable
-people_editprofile	skill_explain	Vous pouvez modifier la liste de vos compï¿½tences et votre CV.
-people_editprofile	public_view_explain	L'option suivante dï¿½termine si d'autres utilisateurs peuvent consulter votre CV.
+people_editprofile	skill_explain	Vous pouvez modifier la liste de vos compétences et votre CV.
+people_editprofile	public_view_explain	L'option suivante détermine si d'autres utilisateurs peuvent consulter votre CV.
 people_editprofile	publicly_viewable	Visible publiquement
-people_editprofile	give_us_info	Donnez-nous soit votre CV soit quelques dï¿½tails sur votre expï¿½rience.
-people_editprofile	resume	CV / Description de votre expï¿½rience
-people_editjob	finished	Terminï¿½
+people_editprofile	give_us_info	Donnez-nous soit votre CV soit quelques détails sur votre expérience.
+people_editprofile	resume	CV / Description de votre expérience
+people_editjob	finished	Terminé
 people_editprofile	update_profile	Valider le profil
 #
 #-----------------------------------------------
 # Script: SF/www/people/people_utils.php
 #
-people_utils	people_skills	Compï¿½tences utilisateurs
+people_utils	people_skills	Compétences utilisateurs
 people_utils	admin	Administration
-people_utils	added_skill	Ajoutï¿½ ï¿½ la liste des compï¿½tences avec succï¿½s
-people_utils	error_inserting	ERREUR lors de l'ajout dans la liste des compï¿½tences
-people_utils	error_skill_already	ERREUR - Cette compï¿½tence est dï¿½jï¿½ dans la liste
+people_utils	added_skill	Ajouté à la liste des compétences avec succès
+people_utils	error_inserting	ERREUR lors de l'ajout dans la liste des compétences
+people_utils	error_skill_already	ERREUR - Cette compétence est déjà dans la liste
 people_utils	must_be_loggin	Vous devez d'abord vous connecter
 people_utils	level	Niveau
-people_utils	skill	Compï¿½tence
-people_utils	experience	Expï¿½rience
-people_utils	no_skill_inventory_setup_up	Aucune liste de compï¿½tences disponible
+people_utils	skill	Compétence
+people_utils	experience	Expérience
+people_utils	no_skill_inventory_setup_up	Aucune liste de compétences disponible
 people_utils	action	Action
 people_utils	update	Valider
-people_utils	delete	Dï¿½truire
-people_utils	add_new_skill	Ajouter une nouvelle compï¿½tence
-people_utils	add_skill	Ajouter une compï¿½tence
+people_utils	delete	Détruire
+people_utils	add_new_skill	Ajouter une nouvelle compétence
+people_utils	add_skill	Ajouter une compétence
 people_utils	invalid_id	ID invalide
 #
 #-----------------------------------------------
 # Script: SF/www/people/viewprofile.php
 #
 people_viewprofile	title	Visualiser un profil utilisateur
-people_viewprofile	set_private	Cet utilisateur a un profil privï¿½
+people_viewprofile	set_private	Cet utilisateur a un profil privé
 people_viewprofile	user_name	Nom de l'utilisateur
 people_viewprofile	resume	CV
-people_viewprofile	skill_inventory	Liste des compï¿½tences
+people_viewprofile	skill_inventory	Liste des compétences
 people_viewprofile	user_id_not_found	user_id introuvable.

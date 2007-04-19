@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 # http://codex.xerox.com
 #
-# 
+# $Id: user.py 1415 2005-04-07 10:00:59Z guerin $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

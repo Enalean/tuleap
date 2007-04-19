@@ -4,19 +4,19 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: intro.txt 5085 2007-02-28 15:43:36 +0000 (Wed, 28 Feb 2007) nterray $
 //
 
 if (user_isloggedin()) {
    $username=user_getname();
 } else $username='<I>nom_utilisateur</I>';
-print '<h2>Accï¿½s Subversion '.help_button('VersionControlWithSubversion.html').'</h2>
-<P>Par dï¿½faut, l\'accï¿½s en lecture seule au dï¿½pï¿½t Subversion est ouvert ï¿½ tous les utilisateurs enregistrï¿½s de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n\'ont pas accï¿½s au dï¿½pï¿½t Subversion. 
-<P>Les membres du projet ont l\'accï¿½s en lecture (checkout) et en ï¿½criture (commit) au dï¿½pï¿½t Subversion. Vous trouverez ci-dessous la commande type pour crï¿½er une copie de travail (checkout) du code source de ce projet.';
+print '<h2>Accès Subversion '.help_button('VersionControlWithSubversion.html').'</h2>
+<P>Par défaut, l\'accès en lecture seule au dépôt Subversion est ouvert à tous les utilisateurs enregistrés de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n\'ont pas accès au dépôt Subversion. 
+<P>Les membres du projet ont l\'accès en lecture (checkout) et en écriture (commit) au dépôt Subversion. Vous trouverez ci-dessous la commande type pour créer une copie de travail (checkout) du code source de ce projet.';
 if (!user_isloggedin()) {
-  print ' Dans la commande ci-dessous, veuillez substituer  <I>nom_utilisateur</I> avec la valeur appropriï¿½e.';
+  print ' Dans la commande ci-dessous, veuillez substituer  <I>nom_utilisateur</I> avec la valeur appropriée.';
 }
-print ' Donnez votre mot passe quand il vous est demandï¿½.';
+print ' Donnez votre mot passe quand il vous est demandé.';
 
 echo '<P><span class="command">svn checkout --username '.$username.' '.
 $svn_url .'</span>';

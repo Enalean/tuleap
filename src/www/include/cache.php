@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: cache.php 3641 2006-09-11 09:12:04Z guerin $
 
 
 // #################################### function cache_display

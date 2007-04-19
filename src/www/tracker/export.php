@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: masschange.php 1387 2005-03-08 16:41:17Z guerin $
 //
 //
 //
@@ -40,10 +40,10 @@ if (strstr($submitted_field->getLabel(),"ubmit")) {
  } else {
   // Assume French
   $lbl_list['follow_ups'] = "Fil de commentaires";
-  $lbl_list['is_dependent_on'] = "Dï¿½pend de";
+  $lbl_list['is_dependent_on'] = "Dépend de";
   
   $dsc_list['follow_ups'] = "Tout le fil de commentaires en un seul bloc de texte";
-  $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci dï¿½pend";
+  $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci dépend";
  }
 
 // Add the 2 fields that we build ourselves for user convenience

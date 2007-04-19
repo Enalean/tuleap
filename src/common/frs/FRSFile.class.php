@@ -5,7 +5,7 @@
  * Copyright 2002 GForge, LLC
  * http://gforge.org/
  *
- * @version   
+ * @version   $Id: FRSFile.class,v 1.23.2.1 2005/11/03 19:21:27 danper Exp $
  *
  * This file is part of GForge.
  *

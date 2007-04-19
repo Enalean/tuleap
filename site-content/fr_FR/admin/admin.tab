@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: admin.tab 5859 2007-04-17 12:46:44 +0000 (Tue, 17 Apr 2007) ahardyau $
 #  *
 #  */
 #
@@ -21,33 +21,33 @@
 #
 admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
-admin_main	message		<b>Attention !</b> L'utilisation du bouton <b>Retour</b> de votre navigateur est fortement dï¿½conseillï¿½e dans les fonctions d'administration.
+admin_main	message		<b>Attention !</b> L'utilisation du bouton <b>Retour</b> de votre navigateur est fortement déconseillée dans les fonctions d'administration.
 admin_main	header_user	Administration des utilisateurs
-admin_main	display_user	Afficher les utilisateurs commenï¿½ant par&nbsp;:
+admin_main	display_user	Afficher les utilisateurs commençant par&nbsp;:
 admin_main	search_user	ou chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur)&nbsp;:
 admin_main	search	Chercher
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
-admin_main	validated_user	Utilisateurs en statut <a href="$1"><B>V</B> (validï¿½)</a>
+admin_main	validated_user	Utilisateurs en statut <a href="$1"><B>V</B> (validé)</a>
 admin_main	need_approval	approbation requise
 admin_main	need_validation	validation requise
 admin_main	header_group	Administration de groupes
-admin_main	display_group	Afficher les groupes commenï¿½ant par&nbsp;:
+admin_main	display_group	Afficher les groupes commençant par&nbsp;:
 admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet)&nbsp;:
 admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
 admin_main	all_groups	Tous les <a href="$1">groupes</a>
 admin_main	incomplete_group	Groupes en statut <a href="$1"><B>I</B> (incomplet)</A>
 admin_main	pending_group	Groupes en statut <a href="$1"><B>P</B> (en attente)</A>
-admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (dï¿½truit)</A>
+admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (détruit)</A>
 admin_main	header_svc	Administration des Services
-admin_main	configure_svc	Configuration des services prï¿½dï¿½finis
-admin_main	header_ref	Administration des Rï¿½fï¿½rences
-admin_main	configure_ref	Configuration des rï¿½fï¿½rences systï¿½mes
+admin_main	configure_svc	Configuration des services prédéfinis
+admin_main	header_ref	Administration des Références
+admin_main	configure_ref	Configuration des références systèmes
 admin_main	header_tracker	Administration des outils de suivi
 admin_main	tracker_remove	Nettoyage des outils de suivi en attente
-admin_main	tracker_template	Configuration des modï¿½les d'outils de suivi
+admin_main	tracker_template	Configuration des modèles d'outils de suivi
 admin_main	header_stat	Statistiques
-admin_main	stat_login	Afficher les connections les plus rï¿½centes
-admin_main	stat_spu	Gï¿½nï¿½rer les statistiques site/projets/utilisateurs
+admin_main	stat_login	Afficher les connections les plus récentes
+admin_main	stat_spu	Générer les statistiques site/projets/utilisateurs
 admin_main	header_utils	Utilitaires site
 admin_main	mail_engine	Envoi d'e-mails en masse
 admin_main	header_sstat	Statistiques site
@@ -55,16 +55,16 @@ admin_main	header_plugins	Plugins
 admin_main	servers	Serveurs
 admin_main	servers_admin	Administration des serveurs 
 admin_main	sstat_reg_u	Utilisateurs actifs ou restreints
-admin_main	sstat_reg_g	Projets enregistrï¿½s
-admin_main	sstat_reg_act_g	Projets enregistrï¿½s actifs
+admin_main	sstat_reg_g	Projets enregistrés
+admin_main	sstat_reg_act_g	Projets enregistrés actifs
 admin_main	sstat_pend_g	Projets en attente
 admin_main	sstat_pend_u	Utilisateurs en attente
 admin_main	site_news	Annonces site
 admin_main	site_news_approval	Approbation annonces site
-admin_main	trove_cat	Catï¿½gories
-admin_main	trove_cat_list	Liste des catï¿½gories
-admin_main	trove_cat_add	Ajout des catï¿½gories
-admin_main	skills	Compï¿½tences utilisateurs
+admin_main	trove_cat	Catégories
+admin_main	trove_cat_list	Liste des catégories
+admin_main	trove_cat_add	Ajout des catégories
+admin_main	skills	Compétences utilisateurs
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
@@ -76,22 +76,22 @@ admin_utils	menu	Accueil admin. site
 # Script: SF/www/admin/approve_license.php
 #
 admin_approve_license	title	Termes de la licence $1 - Approbation
-admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'option "Dï¿½cliner" et en cliquant sur le bouton "Continuer" en bas de page.
+admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'option "Décliner" et en cliquant sur le bouton "Continuer" en bas de page.
 admin_approve_license	accept	Accepter
-admin_approve_license	decline	Dï¿½cliner
+admin_approve_license	decline	Décliner
 admin_approve_license	continue	Continuer
-admin_approve_license	error	Seuls les administrateurs du site ont accï¿½s ï¿½ cette page
+admin_approve_license	error	Seuls les administrateurs du site ont accès à cette page
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve_pending.php
 #
 admin_approve_pending	title	Approbation des projets en attente	
-admin_approve_pending	no_pending	Aucun projet en attente ï¿½ approuver
+admin_approve_pending	no_pending	Aucun projet en attente à approuver
 admin_approve_pending	approve	Approuver le projet
-admin_approve_pending	delete	Dï¿½truire le projet
-admin_approve_pending	remove_category	Enlever de la catï¿½gorie
+admin_approve_pending	delete	Détruire le projet
+admin_approve_pending	remove_category	Enlever de la catégorie
 admin_approve_pending	approve_all	Tout approuver sur cette page
-admin_approve_pending	creator_and_creation_date	Crï¿½ï¿½ le $3 par <a href="/admin/usergroup.php?user_id=$1">$2</a>
+admin_approve_pending	creator_and_creation_date	Créé le $3 par <a href="/admin/usergroup.php?user_id=$1">$2</a>
 #
 #-----------------------------------------------
 # Script: SF/www/admin/approve-pending_users.php
@@ -104,7 +104,7 @@ admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un
 admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
 admin_approve_pending_users	approve	Approuver le compte
 admin_approve_pending_users	approve_pending	Approuver en compte restreint
-admin_approve_pending_users	delete	Dï¿½truire le compte
+admin_approve_pending_users	delete	Détruire le compte
 admin_approve_pending_users	purpose	Motif
 admin_approve_pending_users	other_info	Autre information
 admin_approve_pending_users	name	Nom de l'utilisateur
@@ -127,12 +127,12 @@ admin_groupedit_add	unix_name	Nom unix du nouveau groupe
 # Script: SF/www/admin/groupedit.php
 #
 admin_groupedit	title	Editer un groupe
-admin_groupedit	feedback_info	Mettre ï¿½ jour les infos du projet
-admin_groupedit	feedback_history	enregistrement foundry_data ajoutï¿½
-admin_groupedit	feedback_foundry	enregistrement foundry_data crï¿½ï¿½ 
-admin_groupedit	feedback_insert	enregistrement foundry_data ajoutï¿½ n'a pu ï¿½tre insï¿½rï¿½ 
-admin_groupedit	error_group	Groupe invalide passï¿½ en paramï¿½tre.
-admin_groupedit	proj_edit	Editer les dï¿½tails d'un projet
+admin_groupedit	feedback_info	Mettre à jour les infos du projet
+admin_groupedit	feedback_history	enregistrement foundry_data ajouté
+admin_groupedit	feedback_foundry	enregistrement foundry_data créé 
+admin_groupedit	feedback_insert	enregistrement foundry_data ajouté n'a pu être inséré 
+admin_groupedit	error_group	Groupe invalide passé en paramètre.
+admin_groupedit	proj_edit	Editer les détails d'un projet
 admin_groupedit	proj_admin	Admin Projet
 admin_groupedit	proj_member	Voir/Editer les membres d'un projet
 admin_groupedit	group_type	Type de projet
@@ -140,7 +140,7 @@ admin_groupedit	incomplete	Incomplet
 admin_groupedit	active	Actif
 admin_groupedit	pending	En attente
 admin_groupedit	holding	En suspend
-admin_groupedit	deleted	Dï¿½truit
+admin_groupedit	deleted	Détruit
 admin_groupedit	public	Public ?
 admin_groupedit	license	Licence
 admin_groupedit	home_box	Serveur maison
@@ -153,65 +153,65 @@ admin_groupedit	grp_name	Nom du groupe
 admin_groupedit	unix_grp	Nom unix du groupe
 admin_groupedit	description	Description
 admin_groupedit	license_other	Autre licence
-admin_groupedit	built_from_template	Crï¿½ï¿½ ï¿½ partir du patron
+admin_groupedit	built_from_template	Créé à partir du patron
 #
 #-----------------------------------------------
 # Script: SF/www/admin/grouplist.php
 #
 admin_grouplist	title	Liste des groupes
 admin_grouplist	add_group	Ajouter un groupe
-admin_grouplist	for_categ	Liste de groupes pour la catï¿½gorie
-admin_grouplist	begins_with	Groupe commenï¿½ant par $1
-admin_grouplist	all_categ	Toutes les catï¿½gories
-admin_grouplist	click	(cliquer pour ï¿½diter)
-admin_grouplist	categ	Catï¿½gories
+admin_grouplist	for_categ	Liste de groupes pour la catégorie
+admin_grouplist	begins_with	Groupe commençant par $1
+admin_grouplist	all_categ	Toutes les catégories
+admin_grouplist	click	(cliquer pour éditer)
+admin_grouplist	categ	Catégories
 admin_grouplist	members	Membres
 #
 #-----------------------------------------------
 # Script: SF/www/admin/lastlogins.php
 #
-admin_lastlogins	title	Derniï¿½res connections
-admin_lastlogins	recent	Connections les plus rï¿½centes
+admin_lastlogins	title	Dernières connections
+admin_lastlogins	recent	Connections les plus récentes
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail_execute.php
 #
-admin_massmail_execute	post_recvd	Requï¿½te Post reï¿½ue. Interrogation en cours	
-admin_massmail_execute	mailing	Interrogation terminï¿½e. Dï¿½marrage du mailing ver $1 adresses e-mail distinctes
-admin_massmail_execute	sending	envoi ï¿½
-admin_massmail_execute	done	Terminï¿½ !
+admin_massmail_execute	post_recvd	Requête Post reçue. Interrogation en cours	
+admin_massmail_execute	mailing	Interrogation terminée. Démarrage du mailing ver $1 adresses e-mail distinctes
+admin_massmail_execute	sending	envoi à
+admin_massmail_execute	done	Terminé !
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php
 #
-admin_massmail	title	Envoi de courrier ï¿½lectronique en masse
-admin_massmail	header	Envoi de courrier ï¿½lectronique en masse aux utilisateurs de $1
-admin_massmail	warning	Soyez <span class="highlight"><B>TRï¿½S</B></span> vigilant avec ce formulaire car son utilisation dï¿½clenche l'envoie de e-mails ï¿½ de trï¿½s nombreux utilisateurs.
-admin_massmail	to_additional	Envoyer uniquement aux abonnï¿½s de l'option "Courrier ï¿½lectronique supplï¿½mentaire au sujet de la communautï¿½"
-admin_massmail	to_update	Envoyer uniquement aux abonnï¿½s de l'option "Courrier ï¿½lectronique ï¿½ propos des mises ï¿½ jour du site"
-admin_massmail	to_devel	Envoyer uniquement aux dï¿½veloppeurs des projets 
+admin_massmail	title	Envoi de courrier électronique en masse
+admin_massmail	header	Envoi de courrier électronique en masse aux utilisateurs de $1
+admin_massmail	warning	Soyez <span class="highlight"><B>TRÈS</B></span> vigilant avec ce formulaire car son utilisation déclenche l'envoie de e-mails à de très nombreux utilisateurs.
+admin_massmail	to_additional	Envoyer uniquement aux abonnés de l'option "Courrier électronique supplémentaire au sujet de la communauté"
+admin_massmail	to_update	Envoyer uniquement aux abonnés de l'option "Courrier électronique à propos des mises à jour du site"
+admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets 
 admin_massmail	to_proj_admin	Envoyer uniquement aux administrateurs des projets 
 admin_massmail	to_site_admin	Envoyer uniquement aux administrateurs du site
-admin_massmail	to_all	Envoyer ï¿½ tous les utilisateurs quelles que soient leurs prï¿½fï¿½rences
+admin_massmail	to_all	Envoyer à tous les utilisateurs quelles que soient leurs préférences
 admin_massmail	subject	Objet
 admin_massmail	text	Texte du message
-admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet e-mail est envoyï¿½ depuis '$1'. Pour changer vos prï¿½fï¿½rences en matiï¿½re d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions ï¿½ $2 ou rï¿½pondez ï¿½ ce message.
+admin_massmail	footer	Taper votre message ici...\n\n---------------------\nCet e-mail est envoyé depuis '$1'. Pour changer vos préférences en matière d'envoi de courrier, veuillez visiter votre page "Gestion de compte".\n\nEnvoyez toutes vos questions à $2 ou répondez à ce message.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/newprojectmail.php
 #
-admin_newprojectmail	title	Notification par courrier ï¿½lectronique d'un nouveau projet
-admin_newprojectmail	success	Courrier ï¿½lectronique envoyï¿½ avec succï¿½s.
+admin_newprojectmail	title	Notification par courrier électronique d'un nouveau projet
+admin_newprojectmail	success	Courrier électronique envoyé avec succès.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/search.php
 #
 admin_search	title	Administration - Recherche dans les utilisateurs et groupes
 admin_search	header	Fonctions de recherche de l'administrateur
-admin_search	maintenance	Maintenance des utilisateurs/groupes/catï¿½gories 
-admin_search	criteria	Critï¿½re de recherche
-admin_search	error_nowholedb	Un critï¿½re de recherche vide aura pour effet d'afficher toute la base de donnï¿½es.
-admin_search	nomatch	Aucun rï¿½sultat
+admin_search	maintenance	Maintenance des utilisateurs/groupes/catégories 
+admin_search	criteria	Critère de recherche
+admin_search	error_nowholedb	Un critère de recherche vide aura pour effet d'afficher toute la base de données.
+admin_search	nomatch	Aucun résultat
 admin_search	login	Nom de login
 admin_search	user_name	Nom d'utilisateur
 admin_search	unix_grp_name	Nom du groupe unix
@@ -228,10 +228,10 @@ admin_show_license	title	Termes et conditions de la licence
 admin_user_changepw	error_userid	Erreur interne&nbsp;: pas d'ID utilisateur
 admin_user_changepw	error_nopasswd	Vous devez fournir un mot de passe.
 admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
-admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu ï¿½tre mis ï¿½ jour.
-admin_user_changepw	title_changed	Mot de passe modifiï¿½ avec succï¿½s
+admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu être mis à jour.
+admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe CodeX
-admin_user_changepw	msg_changed	le mot de passe utilisateur a ï¿½tï¿½ modifiï¿½. Ce changement est effectif immï¿½diatement sur le site web, mais ne prendra effet sur le compte shell ou CVS qu'ï¿½ la prochaine mise ï¿½ jour du backend dans  <span class=\"highlight\"><b>$1</b> heure(s) <b>$2</b> minute(s)</b></span>.
+admin_user_changepw	msg_changed	le mot de passe utilisateur a été modifié. Ce changement est effectif immédiatement sur le site web, mais ne prendra effet sur le compte shell ou CVS qu'à la prochaine mise à jour du backend dans  <span class=\"highlight\"><b>$1</b> heure(s) <b>$2</b> minute(s)</b></span>.
 admin_user_changepw	title	Changement de mot de passe
 admin_user_changepw	ldap_warning	ATTENTION&nbsp;: Changer le mot de passe ici ne changera pas le mot de passe LDAP !
 admin_user_changepw	header	Changement du mot de passe CodeX
@@ -243,18 +243,18 @@ admin_user_changepw	new_passwd2	Nouveau mot de passe (confirmez)
 #
 admin_usergroup	title	Administration - Information utilisateur
 admin_usergroup	error_del_u	Erreur lors de la destruction de l'utilisateur
-admin_usergroup	success_del_u	Utilisateur dï¿½truit avec succï¿½s
-admin_usergroup	error_upd_ug	Erreur lors de la mise ï¿½ jour utilisateur/groupe
-admin_usergroup	success_upd_ug	Utilisateur/groupe mis ï¿½ jour avec succï¿½s
-admin_usergroup	error_upd_u	Erreur lors de la mise ï¿½ jour de l'utilisateur
-admin_usergroup	success_upd_u	Utilisateur mis ï¿½ jour avec succï¿½s
-admin_usergroup	error_upd_ux	Erreur lors de la mise ï¿½ jour du statut unix
-admin_usergroup	success_upd_ux	Statut unix mis ï¿½ jour avec succï¿½s
+admin_usergroup	success_del_u	Utilisateur détruit avec succès
+admin_usergroup	error_upd_ug	Erreur lors de la mise à jour utilisateur/groupe
+admin_usergroup	success_upd_ug	Utilisateur/groupe mis à jour avec succès
+admin_usergroup	error_upd_u	Erreur lors de la mise à jour de l'utilisateur
+admin_usergroup	success_upd_u	Utilisateur mis à jour avec succès
+admin_usergroup	error_upd_ux	Erreur lors de la mise à jour du statut unix
+admin_usergroup	success_upd_ux	Statut unix mis à jour avec succès
 admin_usergroup	error_nouid	ID utilisateur manquant !
 admin_usergroup	error_nogid	ID groupe manquant !
 admin_usergroup	error_add_ug	Erreur lors de l'ajout d'un utilisateur au groupe
-admin_usergroup	success_add_ug	Utilisateur ajoutï¿½ au groupe avec succï¿½s
-admin_usergroup	error_member	L'utilisateur est dï¿½jï¿½ membre du groupe $1
+admin_usergroup	success_add_ug	Utilisateur ajouté au groupe avec succès
+admin_usergroup	error_member	L'utilisateur est déjà membre du groupe $1
 admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisateur 
 admin_usergroup	account_info	Information sur le compte Unix
 admin_usergroup	shell	Shell
@@ -264,7 +264,7 @@ admin_usergroup	unix_status	Statut du compte Unix
 admin_usergroup	no_account	Pas de compte Unix
 admin_usergroup	active	Actif
 admin_usergroup	suspended	Suspendu
-admin_usergroup	deleted	Dï¿½truit
+admin_usergroup	deleted	Détruit
 admin_usergroup	current_groups	Groupes actuels
 admin_usergroup	remove_ug	Enlever l'utilisateur de ce groupe
 admin_usergroup	admin_flags	Drapeaux d'administration
@@ -275,66 +275,66 @@ admin_usergroup	change_passwd	Changer le mot de passe de l'utilisateur
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	legend	Lï¿½gende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;(v)Validï¿½&nbsp;&nbsp;<I>Dï¿½truit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
-admin_userlist	user_deleted	Utilisateur mis ï¿½ jour avec le statut DETRUIT - Le compte Unix est planifiï¿½ pour la destruction
-admin_userlist	user_active	Utilisateur mis ï¿½ jour avec le statut ACTIF
-admin_userlist	user_validated	Utilisateur mis ï¿½ jour avec le statut VALIDE
-admin_userlist	user_suspended	Utilisateur mis ï¿½ jour avec le statut SUSPENDU
-admin_userlist	user_restricted	Utilisateur mis ï¿½ jour avec le statut RESTREINT
+admin_userlist	legend	Légende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;(v)Validé&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
+admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
+admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
+admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE
+admin_userlist	user_suspended	Utilisateur mis à jour avec le statut SUSPENDU
+admin_userlist	user_restricted	Utilisateur mis à jour avec le statut RESTREINT
 admin_userlist	error_uid	Erreur - L'utilisateur avec l'ID $1 est introuvable
-admin_userlist	error_noadd	Erreur - Impossibilitï¿½ d'ajouter l'utilisateur au groupe
+admin_userlist	error_noadd	Erreur - Impossibilité d'ajouter l'utilisateur au groupe
 admin_userlist	user_list	Liste des utilisateurs pour
 admin_userlist	all_groups	Tous les groupes
 admin_userlist	group	Groupe $1
-admin_userlist	uid_toadd	ID utilisateur ï¿½ ajouter
+admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
-admin_userlist	validated	Validï¿½
+admin_userlist	validated	Validé
 admin_userlist	restricted	Restreint
-admin_userlist	deleted	Dï¿½truit
+admin_userlist	deleted	Détruit
 admin_userlist	suspended	Suspendu
 admin_userlist	activate	Activer
 admin_userlist	validate	Valider
 admin_userlist	restrict	Restreindre
-admin_userlist	delete	Dï¿½truire
+admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
 #
-admin_trove_cat_add	title	Arbre des projets - Ajouter une catï¿½gorie
-admin_trove_cat_add	header	Ajouter une catï¿½gorie ï¿½ l'arbre des projets
-admin_trove_cat_add	short_name	Nom court de la catï¿½gorie
+admin_trove_cat_add	title	Arbre des projets - Ajouter une catégorie
+admin_trove_cat_add	header	Ajouter une catégorie à l'arbre des projets
+admin_trove_cat_add	short_name	Nom court de la catégorie
 admin_trove_cat_add	short_name_note	(pas d'espaces)
-admin_trove_cat_add	full_name	Nom complet de la catï¿½gorie
-admin_trove_cat_add	full_name_note	(80 caractï¿½res maximum)
-admin_trove_cat_add	description	Description de la catï¿½gorie
-admin_trove_cat_add	description_note	(255 caractï¿½res maximum)
-admin_trove_cat_add	parent	Catï¿½gorie parent
+admin_trove_cat_add	full_name	Nom complet de la catégorie
+admin_trove_cat_add	full_name_note	(80 caractères maximum)
+admin_trove_cat_add	description	Description de la catégorie
+admin_trove_cat_add	description_note	(255 caractères maximum)
+admin_trove_cat_add	parent	Catégorie parent
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_delete.php
 #
-admin_trove_cat_delete	title	Arbre des projets - Dï¿½truire une catï¿½gorie
-admin_trove_cat_delete	header	Dï¿½truire une catï¿½gorie de l'arbre des projets
-admin_trove_cat_delete	warning	<span class="feedback">**ATTENTION**</span> Vous ï¿½tes sur le point de dï¿½truire une catï¿½gorie de l'arbre des projets.
-admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catï¿½gorie possï¿½de <b>$1</b> sous-catï¿½gorie(s). Sa destruction va aussi entraï¿½ner la destruction des sous-catï¿½gories de faï¿½on rï¿½cursive !!
-admin_trove_cat_delete	no_child	Cette catï¿½gorie n'a pas de sous-catï¿½gorie
-admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catï¿½gorie et ses sous-catï¿½gories (si elle en a) sont utilisï¿½es par <b>$1 projet(s)</b>. La destruction de cette catï¿½gorie entraï¿½nera la rï¿½affectation de tous les projets ï¿½ la catï¿½gorie parent (ou ï¿½ 'Aucune' si la catï¿½gorie parent est la racine de l'arbre)
-admin_trove_cat_delete	no_proj	Cette catï¿½gorie n'est utilisï¿½e par aucun projet
-admin_trove_cat_delete	error_nocat	Cette catï¿½gorie n'existe pas
+admin_trove_cat_delete	title	Arbre des projets - Détruire une catégorie
+admin_trove_cat_delete	header	Détruire une catégorie de l'arbre des projets
+admin_trove_cat_delete	warning	<span class="feedback">**ATTENTION**</span> Vous êtes sur le point de détruire une catégorie de l'arbre des projets.
+admin_trove_cat_delete	caution_child	<span class="feedback">**ATTENTION**</span> Cette catégorie possède <b>$1</b> sous-catégorie(s). Sa destruction va aussi entraîner la destruction des sous-catégories de façon récursive !!
+admin_trove_cat_delete	no_child	Cette catégorie n'a pas de sous-catégorie
+admin_trove_cat_delete	caution_proj	<span class="feedback">**ATTENTION**</span> Cette catégorie et ses sous-catégories (si elle en a) sont utilisées par <b>$1 projet(s)</b>. La destruction de cette catégorie entraînera la réaffectation de tous les projets à la catégorie parent (ou à 'Aucune' si la catégorie parent est la racine de l'arbre)
+admin_trove_cat_delete	no_proj	Cette catégorie n'est utilisée par aucun projet
+admin_trove_cat_delete	error_nocat	Cette catégorie n'existe pas
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_edit.php
 #
-admin_trove_cat_edit	title	Arbre des projets - Modification d'une catï¿½gorie
-admin_trove_cat_edit	header	Modifier une catï¿½gorie
+admin_trove_cat_edit	title	Arbre des projets - Modification d'une catégorie
+admin_trove_cat_edit	header	Modifier une catégorie
 admin_trove_cat_edit	root	Racine
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_list.php
 #
-admin_trove_cat_list	title	Arbre des projets - Liste des catï¿½gories
-admin_trove_cat_list	header	Lister les catï¿½gories
+admin_trove_cat_list	title	Arbre des projets - Liste des catégories
+admin_trove_cat_list	header	Lister les catégories
 admin_trove_cat_list	edit	Modifier
-admin_trove_cat_list	delete	Dï¿½truire
+admin_trove_cat_list	delete	Détruire
 #-----------------------------------------------
 # Script: src/www/admin/index.php
 #
@@ -348,18 +348,18 @@ admin_servers	all_master	Principal
 admin_servers	all_name	Nom
 admin_servers	delete	Oui, je veux supprimer ce serveur !
 admin_servers	delete_using	Les services suivants utilisent ce serveur :
-admin_servers	delete_R_U_sure	ï¿½tes-vous sï¿½r de vouloir supprimer ce serveur ?
+admin_servers	delete_R_U_sure	Êtes-vous sûr de vouloir supprimer ce serveur ?
 admin_servers	error_notfound	Serveur introuvable
 admin_servers	form_descr	Description :
 admin_servers	form_http	HTTP :
 admin_servers	form_https	HTTPS :
 admin_servers	form_id	Id :
 admin_servers	form_name	Nom :
-admin_servers	info_created	Le serveur <em>$1</em> a ï¿½tï¿½ crï¿½ï¿½
-admin_servers	info_deleted	Le serveur <em>$1</em> a ï¿½tï¿½ supprimï¿½
-admin_servers	info_mastered	Le serveur <em>$1</em> est dï¿½sormais le serveur principal
-admin_servers	info_updated	Le serveur <em>$1</em> a ï¿½tï¿½ modifiï¿½
-admin_servers	info_notcreated	Le serveur n'a pas ï¿½tï¿½ crï¿½ï¿½
-admin_servers	info_notdeleted	Le serveur <em>$1</em> n'a pas ï¿½tï¿½ supprimï¿½
-admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas ï¿½tï¿½ modifiï¿½
+admin_servers	info_created	Le serveur <em>$1</em> a été créé
+admin_servers	info_deleted	Le serveur <em>$1</em> a été supprimé
+admin_servers	info_mastered	Le serveur <em>$1</em> est désormais le serveur principal
+admin_servers	info_updated	Le serveur <em>$1</em> a été modifié
+admin_servers	info_notcreated	Le serveur n'a pas été créé
+admin_servers	info_notdeleted	Le serveur <em>$1</em> n'a pas été supprimé
+admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
 

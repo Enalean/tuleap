@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: shownotes.php 5403 2007-03-16 16:26:46 +0000 (Fri, 16 Mar 2007) ahardyau $
 
 require_once('pre.php');
 require_once('www/file/file_utils.php');

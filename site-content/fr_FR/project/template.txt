@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: basinfo.txt 994 2004-05-04 13:44:12Z guerin $
 //
 -->
-<p>Avant de fournir des informations spï¿½cifiques par rapport ï¿½ votre nouveau projet choississez un patron parmi les projets de patron disponible. Votre nouveau projet sera configurï¿½ exactement de la mï¿½me maniï¿½re que le patron choisi.</p>
+<p>Avant de fournir des informations spécifiques par rapport à votre nouveau projet choississez un patron parmi les projets de patron disponible. Votre nouveau projet sera configuré exactement de la même manière que le patron choisi.</p>

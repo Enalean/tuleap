@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: osdn_sites.txt 2763 2006-03-14 13:25:09Z mnazaria $
 //
 
 // Define here the Web sites that will appear in the Network Gallery

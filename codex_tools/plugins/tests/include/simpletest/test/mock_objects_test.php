@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: mock_objects_test.php,v 1.24 2006/11/20 23:10:18 lastcraft Exp $
     require_once(dirname(__FILE__) . '/../expectation.php');
 
     class TestOfAnythingExpectation extends UnitTestCase {

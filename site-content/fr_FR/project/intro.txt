@@ -4,21 +4,21 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: intro.txt 5170 2007-03-05 10:37:33 +0000 (Mon, 05 Mar 2007) nterray $
 //
 -->
 <p>
-L'ï¿½quipe <?php print $GLOBALS['sys_name']; ?> invite les ï¿½quipes de projet de <?php print $GLOBALS['sys_org_name']; ?> ï¿½ hï¿½berger leur projet sur le site <?php print $GLOBALS['sys_name']; ?>. 
+L'équipe <?php print $GLOBALS['sys_name']; ?> invite les équipes de projet de <?php print $GLOBALS['sys_org_name']; ?> à héberger leur projet sur le site <?php print $GLOBALS['sys_name']; ?>. 
 </p>
 
 <p><B>Le processus</B>
 
-<P>Enregistrer un projet sur <?php print $GLOBALS['sys_name']; ?> est un processus simple qui ne demande que quelques informations de votre part. La totalitï¿½ du processus d'enregistrement prend de 5 ï¿½ 10 minutes maximum.
+<P>Enregistrer un projet sur <?php print $GLOBALS['sys_name']; ?> est un processus simple qui ne demande que quelques informations de votre part. La totalité du processus d'enregistrement prend de 5 à 10 minutes maximum.
 
-<P>Dans les pages qui suivent, nous vous prï¿½senterons des documents importants concernant l'utilisation de votre compte et de votre environnement de projet. Veuillez les lire attentivement.</p>
+<P>Dans les pages qui suivent, nous vous présenterons des documents importants concernant l'utilisation de votre compte et de votre environnement de projet. Veuillez les lire attentivement.</p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> offre une suite complï¿½te de services. Si vous ne l'avez dï¿½jï¿½ fait nous vous invitons ï¿½ parcourir la documentation concernant les <a href="/docs/site" target="side_window">Services <?php print $GLOBALS['sys_name']; ?></a>.
+<?php print $GLOBALS['sys_name']; ?> offre une suite complète de services. Si vous ne l'avez déjà fait nous vous invitons à parcourir la documentation concernant les <a href="/docs/site" target="side_window">Services <?php print $GLOBALS['sys_name']; ?></a>.
 </p>
 
 <p>
@@ -26,37 +26,37 @@ L'ï¿½quipe <?php print $GLOBALS['sys_name']; ?> invite les ï¿½quipes de projet d
 </p>
 
 <p> L'espace et les services qui vous sont offerts sur ce site doivent
-ï¿½tre utilisï¿½s en conformitï¿½ avec les rï¿½gles de <?php print
+être utilisés en conformité avec les règles de <?php print
 $GLOBALS['sys_org_name']; ?>. Pour plus d'information, veuillez lire
-les <a href="/tos/tos.php">Conditions Gï¿½nï¿½rales d'Utilisation (CGU) de <?php print
+les <a href="/tos/tos.php">Conditions Générales d'Utilisation (CGU) de <?php print
 $GLOBALS['sys_name']; ?></a>.  </p>
 
 
 <p>
-<b>Rï¿½fï¿½rencement de <?php print $GLOBALS['sys_name']; ?></b>
+<b>Référencement de <?php print $GLOBALS['sys_name']; ?></b>
 </p>
 
-<p> Si vous hï¿½bergez un site Web dans le cadre de votre projet, nous
+<p> Si vous hébergez un site Web dans le cadre de votre projet, nous
 vous demandons de placer l'un de nos logos officiels sur votre site
 avec un lien vers la page d'accueil de <?php print $GLOBALS['sys_name']; ?>
 ou vers la page de sommaire de votre projet. Pour plus d'information
-sur la faï¿½on d'insï¿½rer ce logo et pouvoir ainsi suivre le niveau de
-frï¿½quentation de votre site Web veuillez consulter le <a
+sur la façon d'insérer ce logo et pouvoir ainsi suivre le niveau de
+fréquentation de votre site Web veuillez consulter le <a
 href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html"
 target="side_window">Guide utilisateur</a>.  </p>
 
 
 <p>
-<b>Politique d'ï¿½change de logiciels</b>
+<b>Politique d'échange de logiciels</b>
 </p>
 
 <p> Au cours de l'enregistrement de votre projet, nous vous
-prï¿½senterons la Politique d'ï¿½change gï¿½nï¿½rale de <?php print
-$GLOBALS['sys_org_name']; ?>. Cette politique d'ï¿½change dï¿½taille la
-nature de vos droits et devoirs en matiï¿½re de rï¿½utilisation de
+présenterons la Politique d'échange générale de <?php print
+$GLOBALS['sys_org_name']; ?>. Cette politique d'échange détaille la
+nature de vos droits et devoirs en matière de réutilisation de
 code. Nous vous conseillons de la lire attentivement. D'autre part ne
-confondez pas cette politique d'ï¿½change avec le Copyright qui doit
-ï¿½tre prï¿½sent dans tous les fichiers de votre code source.  </p>
+confondez pas cette politique d'échange avec le Copyright qui doit
+être présent dans tous les fichiers de votre code source.  </p>
 
 <BR><HR><BR>
-<P align=center><input type="checkbox" autocomplete="off" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">J'accepte</label> les <a href="/tos/tos.php">Conditions Gï¿½nï¿½rales d'Utilisation de <?=$GLOBALS['sys_name']?></a>.</p>
+<P align=center><input type="checkbox" autocomplete="off" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">J'accepte</label> les <a href="/tos/tos.php">Conditions Générales d'Utilisation de <?=$GLOBALS['sys_name']?></a>.</p>

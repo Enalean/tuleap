@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: sflogo.php 1597 2005-05-27 13:24:15Z guerin $
 
 require_once('squal_pre.php');
 

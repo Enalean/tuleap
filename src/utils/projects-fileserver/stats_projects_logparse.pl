@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+# $Id: stats_projects_logparse.pl 3591 2006-09-01 09:52:16Z guerin $
 #
 use DBI;
 use Time::Local;

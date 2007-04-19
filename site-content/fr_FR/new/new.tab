@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: new.tab 1561 2005-05-23 11:39:57Z guerin $
 #  *
 #  */
 #
@@ -22,22 +22,22 @@ new_index	new_file_release	Nouvelles versions de fichiers
 new_index	new_releases	Nouvelles versions
 new_index	no_release_found	Aucune nouvelle version.
 new_index	no_projects_found	Aucun nouveau projet.
-new_index	db_err	Erreur base de donnï¿½es.	
-new_index	released_by	Publiï¿½e par
+new_index	db_err	Erreur base de données.	
+new_index	released_by	Publiée par
 new_index	module	Module
 new_index	version	Version
 new_index	no_desc	Ce projet n'a pas soumis de description.
-new_index	download	Tï¿½lï¿½charger
+new_index	download	Télécharger
 new_index	total	Total projet
 new_index	notes	Notes & Modifications
-new_index	newer_releases	Versions plus rï¿½centes
-new_index	newer_projects	Projets plus rï¿½centes
+new_index	newer_releases	Versions plus récentes
+new_index	newer_projects	Projets plus récentes
 new_index	older_releases	Versions plus anciennes
 new_index	older_projects	Projets plus anciens
 new_index	new_projects	Nouveaux projets
 new_index	prog_lang	Langage de programmation
-new_index	os	Systï¿½me d'exploitation
-new_index	devel_status	Statut de dï¿½veloppement
+new_index	os	Système d'exploitation
+new_index	devel_status	Statut de développement
 new_index	contact	Contact
 new_index	languages	Langages
-new_index	os_runtime_support	Systï¿½me(s) d'exploitation supportï¿½s
+new_index	os_runtime_support	Système(s) d'exploitation supportés

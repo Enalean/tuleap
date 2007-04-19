@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: ArtifactField.class.php 5656 2007-04-03 09:49:05 +0000 (Tue, 03 Apr 2007) mnazaria $
 //
 //  Written for CodeX by Stephane Bouhet
 //

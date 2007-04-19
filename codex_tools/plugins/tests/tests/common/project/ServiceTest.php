@@ -2,7 +2,7 @@
 /**
 * Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
 *
-* 
+* $Id$
 */
 require_once('common/project/Service.class.php');
 Mock::generatePartial('Service', 'ServiceTestVersion', array('_getServerFactory', '_sessionIsSecure'));

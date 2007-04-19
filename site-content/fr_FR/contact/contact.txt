@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: contact.txt 2689 2006-03-02 15:08:36Z mnazaria $
 //
 -->
 
@@ -19,13 +19,13 @@ Bug link: <A HREF="/tracker/?func=add&group_id=1&atid=YYY"> where YYY is the id 
 <h2>Points de contact</h2>
 
 <ul>
-<li><b>Assistance et demande de support</b>&nbsp;: toutes les demandes d'assistance, les questions techniques ou les demandes d'amï¿½liorations relatives ï¿½ l'utilisation de <?php print $GLOBALS['sys_name']; ?> doivent ï¿½tre soumises via le   
+<li><b>Assistance et demande de support</b>&nbsp;: toutes les demandes d'assistance, les questions techniques ou les demandes d'améliorations relatives à l'utilisation de <?php print $GLOBALS['sys_name']; ?> doivent être soumises via le   
 <A HREF="/support/?func=addsupport&group_id=1">[ Gestionnaire de demandes de support ]</A> de <?php print $GLOBALS['sys_name']; ?>.<br><br>
 
-<li><b>Dï¿½fauts (aussi connu sous le nom de Bugs)</b>&nbsp;:
-Si vous pensez avoir identifier un dï¿½faut ou une erreur inhabituelle, merci d'utiliser <A HREF="/bugs/?func=addbug&group_id=1">[ Gestionnaire de dï¿½fauts ]</A> de <?php print $GLOBALS['sys_name']; ?>.<br><br>
+<li><b>Défauts (aussi connu sous le nom de Bugs)</b>&nbsp;:
+Si vous pensez avoir identifier un défaut ou une erreur inhabituelle, merci d'utiliser <A HREF="/bugs/?func=addbug&group_id=1">[ Gestionnaire de défauts ]</A> de <?php print $GLOBALS['sys_name']; ?>.<br><br>
 
-<li><b>Autres demandes</b>&nbsp;: toutes les autres demandes doivent ï¿½tre envoyï¿½es par courrier ï¿½lectronique au  
+<li><b>Autres demandes</b>&nbsp;: toutes les autres demandes doivent être envoyées par courrier électronique au  
 <A href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>">[ Contact <?php print $GLOBALS['sys_name']; ?> ]</A><br><br>
 </ul>
 

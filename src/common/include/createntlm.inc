@@ -1,6 +1,6 @@
 <?php
 /*
-
+$Id: createntlm.inc,v 1.4 2006/03/08 19:36:01 gruberroland Exp $
 
   This code is part of LDAP Account Manager (http://www.sourceforge.net/projects/lam)
   Copyright (C) 2004 - 2006 Roland Gruber

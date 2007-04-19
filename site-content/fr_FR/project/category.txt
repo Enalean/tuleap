@@ -4,12 +4,12 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: category.txt 4850 2007-02-06 17:25:28 +0000 (Tue, 06 Feb 2007) nterray $
 //
 ?>
-<P>Pour que les utilisateurs puissent trouver votre projet dans l'arbre des projets, vous devez sï¿½lectionner les diffï¿½rentes catï¿½gories auquel il appartient.
+<P>Pour que les utilisateurs puissent trouver votre projet dans l'arbre des projets, vous devez sélectionner les différentes catégories auquel il appartient.
 
-<P>Votre projet ne sera visible dans l'arbre des projets qu'aprï¿½s (1) son approbation et (2) sa catï¿½gorisation dans l'arbre des projets que vous pouvez renseigner ci-dessous.
+<P>Votre projet ne sera visible dans l'arbre des projets qu'après (1) son approbation et (2) sa catégorisation dans l'arbre des projets que vous pouvez renseigner ci-dessous.
 
 <?php
 print '<P>'.$GLOBALS['Language']->getText('register_category','select_3_classifs',$GLOBALS['sys_name']) .'</p>';

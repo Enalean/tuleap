@@ -6,7 +6,7 @@
 // This file is licensed under the CodeX Component Software License
 // http://codex.xerox.com
 //
-// 
+// $Id: Tracker.xml 5673 2007-04-03 14:03:03 +0000 (Tue, 03 Apr 2007) mnazaria $
 //
 //	Originally written by Laurent Julliard 2003, CodeX Team, Xerox
 //
@@ -1751,7 +1751,7 @@ width="14.5cm" />
     
     <listitem id="TrackerGeneralSettingsInstantiateForNewProjects">
 	  <para><emphasis role="bold">Instantiate for new projects</emphasis>: 
-          This parameter is only displayed when working on a &#34;template&#34; type of project (see <xref linkend="ProjectType" />) .
+          This parameter is only displayed when working on a &#34;template&#34; type of project (see <xref linkend="ProjectType" />).
           If the parameter is selected, then projects created from this template project will have this tracker created.
           If not selected, the tracker will not be available in the new project.</para>
 	</listitem>

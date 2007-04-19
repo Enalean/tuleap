@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: change_email-confirm.php 4978 2007-02-21 13:22:16 +0000 (Wed, 21 Feb 2007) nterray $
 
 require_once('pre.php');   
 require_once('common/mail/Mail.class.php');

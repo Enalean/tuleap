@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
 //
-// 
+// $Id: PluginDao.class.php 5199 2007-03-06 12:18:47 +0000 (Tue, 06 Mar 2007) nterray $
 //
 
 require_once('include/DataAccessObject.class.php');

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+# $Id$
 #
 # Add default permissions to fields that have no permissions in at least 10 trackers.
 # 10 trackers? This is to make sure that we don't add permissions to a field that was

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+# $Id: mailing_lists_dump.pl 3591 2006-09-01 09:52:16Z guerin $
 #
 # mailing_list_dump.pl - Script to suck data outta the database to be processed on the mail
 #                        mail server to create mailing lists

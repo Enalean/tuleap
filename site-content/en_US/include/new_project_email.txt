@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: new_project_email.txt 5623 2007-03-30 16:31:38 +0000 (Fri, 30 Mar 2007) nterray $
 //
 
 $web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];

@@ -4,20 +4,20 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: intro.txt 5626 2007-03-31 10:57:59 +0000 (Sat, 31 Mar 2007) guerin $
 //
 
 if (user_isloggedin()) {
    $username=strtolower(user_getname());
 } else $username='nom_utilisateur';
-print '<h2>Accï¿½s CVS '.help_button('VersionControlWithCVS.html').'</h2>
-<P>En configuration par dï¿½faut, l\'accï¿½s en lecture seule ï¿½ CVS est autorisï¿½ pour tous les utilisateurs enregistrï¿½s de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n\'ont pas accï¿½s au dï¿½pï¿½t CVS. Les utilisateurs souhaitant avoir accï¿½s au dï¿½pï¿½t CVS doivent donc crï¿½er leur compte utilisateur sur '.$GLOBALS['sys_name'].'. 
-<P>Les membres d\'un projet ont un accï¿½s en lecture (checkout) et en ï¿½criture (commit) au dï¿½pï¿½t CVS.
-<P> Vous trouverez ci-dessous les commandes typiques ï¿½ utiliser pour s\'authentifier auprï¿½s d\'un serveur CVS et pour obtenir une copie de travail (checkout) du code source de ce projet. Dans les commandes ci-dessous veuillez remplacer <I>nom_module</I> ';
+print '<h2>Accès CVS '.help_button('VersionControlWithCVS.html').'</h2>
+<P>En configuration par défaut, l\'accès en lecture seule à CVS est autorisé pour tous les utilisateurs enregistrés de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n\'ont pas accès au dépôt CVS. Les utilisateurs souhaitant avoir accès au dépôt CVS doivent donc créer leur compte utilisateur sur '.$GLOBALS['sys_name'].'. 
+<P>Les membres d\'un projet ont un accès en lecture (checkout) et en écriture (commit) au dépôt CVS.
+<P> Vous trouverez ci-dessous les commandes typiques à utiliser pour s\'authentifier auprès d\'un serveur CVS et pour obtenir une copie de travail (checkout) du code source de ce projet. Dans les commandes ci-dessous veuillez remplacer <I>nom_module</I> ';
 if (!user_isloggedin()){
    print 'et <I>nom_utilisateur</I> .';
-} else print ' par les valeurs appropriï¿½es.'; 
-print ' Entrer votre mot de passe utilisateur ï¿½ l\'invite de CVS.';
+} else print ' par les valeurs appropriées.'; 
+print ' Entrer votre mot de passe utilisateur à l\'invite de CVS.';
 if ($GLOBALS['sys_disable_subdomains']){
   $cvs_domain=$row_grp['http_domain'];
 } else {

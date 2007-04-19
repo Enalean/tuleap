@@ -11,7 +11,7 @@
 //    for feature requests and/or donations
 //
 // Modified by Laurent Julliard for CodeX project
-// 
+// $Id: calendar.js 5596 2007-03-29 11:05:49 +0000 (Thu, 29 Mar 2007) nterray $
 
 function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path) {
         var arr_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",

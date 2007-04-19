@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+# $Id: apache_conf.pl 5626 2007-03-31 10:57:59 +0000 (Sat, 31 Mar 2007) guerin $
 #
 use DBI;
 use POSIX qw(strftime);

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: save.php 3580 2006-08-29 13:47:28Z schneide $
 
 require_once('pre.php');
 require('../forum/forum_utils.php');

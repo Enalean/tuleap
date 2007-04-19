@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: confirm_download.php 4558 2006-12-21 11:12:42 +0000 (Thu, 21 Dec 2006) ahardyau $
 require_once('pre.php');
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');

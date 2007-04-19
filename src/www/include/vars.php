@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: vars.php 1483 2005-05-03 14:07:41Z ljulliar $
 
 require_once('pre.php');
 

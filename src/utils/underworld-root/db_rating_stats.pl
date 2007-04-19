@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+# $Id: db_rating_stats.pl 9 2001-03-06 11:09:48Z ljulliar $
 #
 use DBI;
 

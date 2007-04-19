@@ -1,5 +1,5 @@
 <?php
-    // 
+    // $Id: reflection_php4_test.php,v 1.5 2005/11/22 02:07:33 lastcraft Exp $
 
     class AnyOldThing {
         function aMethod() {

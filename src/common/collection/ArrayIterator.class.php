@@ -5,7 +5,7 @@ require_once("SeekableIterator.class.php");
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id$
  *
  * ArrayIterator
  * @see http://www.php.net/~helly/php/ext/spl/interfaceIterator.html

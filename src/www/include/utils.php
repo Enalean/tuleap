@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: utils.php 5712 2007-04-05 09:57:20 +0000 (Thu, 05 Apr 2007) guerin $
 
   //$Language->loadLanguageMsg('include/include');
 

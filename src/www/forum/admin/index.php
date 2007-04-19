@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: index.php 2658 2006-02-27 14:36:30Z guerin $
 
 require_once('pre.php');
 require('../forum_utils.php');

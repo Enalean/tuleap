@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: newprojectmail.php 1778 2005-06-24 08:10:38Z nterray $
 
 require_once('pre.php');
 require_once('proj_email.php');

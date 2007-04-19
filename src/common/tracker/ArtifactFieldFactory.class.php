@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
+// $Id: ArtifactFieldFactory.class.php 4973 2007-02-20 15:34:14 +0000 (Tue, 20 Feb 2007) nterray $
 //
 //  Parts of code come from bug_util.php (written by Laurent Julliard)
 //

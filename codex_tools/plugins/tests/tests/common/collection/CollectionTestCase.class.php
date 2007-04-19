@@ -7,7 +7,7 @@ if (!class_exists("FakeValue")) {
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id: CollectionTest.php,v 1.1 2005/05/10 09:48:10 nterray Exp $
  *
  */
 class CollectionTestCase extends UnitTestCase {

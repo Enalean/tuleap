@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-//  
+// $Id: source_code_access_utils.php 3601 2006-09-05 10:08:54Z nterray $ 
 //
 
 $Language->loadLanguageMsg('project/project');

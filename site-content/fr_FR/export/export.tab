@@ -11,15 +11,15 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: export.tab 2689 2006-03-02 15:08:36Z mnazaria $
 #  *
 #  */
 #
 #-----------------------------------------------
 # Script: SF/www/export/index.php
 #
-export_index	exports_available	Donnï¿½es disponibles ï¿½ l'exportation
-export_index	format_explain	Les donnï¿½es de $1 sont exportï¿½es sous divers formats standards. La plupart des URLs accepte un paramï¿½tre permettant de personnaliser la sortie. Les donnï¿½es exportï¿½es sur cette page sont gï¿½nï¿½rï¿½es en temps rï¿½el.
+export_index	exports_available	Données disponibles à l'exportation
+export_index	format_explain	Les données de $1 sont exportées sous divers formats standards. La plupart des URLs accepte un paramètre permettant de personnaliser la sortie. Les données exportées sur cette page sont générées en temps réel.
 export_index	news_data	Annonces
 export_index	front_p_news	Annonces de la Page d'accueil
 export_index	new_releases	Nouvelles versions
@@ -27,20 +27,20 @@ export_index	newest_projects	Derniers projets
 export_index	rss_format	Format RSS
 export_index	csv_format	Format CSV
 export_index	listings	Listes
-export_index	full_proj_listing	Liste complï¿½te des projets
+export_index	full_proj_listing	Liste complète des projets
 export_index	proj_info	Informations Projet
 export_index	proj_forum	Forums des projets
-export_index	g_id_required	argument ?group_id nï¿½cessaire dans l'URL
+export_index	g_id_required	argument ?group_id nécessaire dans l'URL
 #
 #-----------------------------------------------
 # Script: SF/www/export/nitf_sfforums.php
 #
-export_nitf_sfforums	g_id_err	ERREUR&nbsp;: Cette URL doit ï¿½tre appelï¿½e avec un paramï¿½tre group_id valide
+export_nitf_sfforums	g_id_err	ERREUR&nbsp;: Cette URL doit être appelée avec un paramètre group_id valide
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnewreleases.php
 #
-export_rss_sfnewreleases	copyright	Copyright (c) $1, Equipe $2, 2001-$3. Tous droits rï¿½servï¿½s.
+export_rss_sfnewreleases	copyright	Copyright (c) $1, Equipe $2, 2001-$3. Tous droits réservés.
 export_rss_sfnewreleases	new_releases	Nouvelles versions de $1
 #
 #-----------------------------------------------
@@ -53,10 +53,10 @@ export_rss_sfnews	news	Annonces $1
 # Script: SF/www/export/rss_sfprojects.php
 #
 export_rss_sfprojects	new_proj	Derniers projets
-export_rss_sfprojects	params	ID projet, Nom court, Nom complet, Description, Langage, Systï¿½mes d'exploitation supportï¿½s, Etat de dï¿½veloppement, Emplacement des versions, Informations additionnelles, Point de contact, Inventaire eTTM
+export_rss_sfprojects	params	ID projet, Nom court, Nom complet, Description, Langage, Systèmes d'exploitation supportés, Etat de développement, Emplacement des versions, Informations additionnelles, Point de contact, Inventaire eTTM
 export_rss_sfprojects	prog_lang	Langage de Programmation
-export_rss_sfprojects	os	Systï¿½me d'exploitation
-export_rss_sfprojects	devel_status	Etat de dï¿½veloppement
+export_rss_sfprojects	os	Système d'exploitation
+export_rss_sfprojects	devel_status	Etat de développement
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_utils.php

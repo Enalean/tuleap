@@ -4,7 +4,7 @@
 # Copyright 1999-2000 (c) The SourceForge Crew
 # http:#sourceforge.net
 #
-# 
+# $Id: db_project_cleanup.pl 1853 2005-07-18 14:01:46Z guerin $
 
 use DBI;
 

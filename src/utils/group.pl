@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 # http://codex.xerox.com
 #
-# 
+# $Id: group.pl 5722 2007-04-05 14:10:33 +0000 (Thu, 05 Apr 2007) guerin $
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

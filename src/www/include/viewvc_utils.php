@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: viewvc_utils.php 4300 2006-11-23 13:05:54 +0000 (Thu, 23 Nov 2006) guerin $
 
 
 /**

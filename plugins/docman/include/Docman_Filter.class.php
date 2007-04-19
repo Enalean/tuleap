@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright ï¿½ STMicroelectronics, 2006
+ * Copyright © STMicroelectronics, 2006
  * Originally written by Manuel VACELET, STMicroelectronics, 2006
  *
  * This file is a part of CodeX.
@@ -19,7 +19,7 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ * $Id$
  *
  */
 

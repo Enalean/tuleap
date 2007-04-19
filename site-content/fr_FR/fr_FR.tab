@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: fr_FR.tab 5433 2007-03-20 17:00:43 +0000 (Tue, 20 Mar 2007) nterray $
 #  *
 #  */
 system	locale	fr_FR
@@ -24,50 +24,50 @@ conf	content_encoding	iso-8859-1
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	fr
 conf	language_id	2
-global	perm_denied	Permission Refusï¿½e
-global	error_perm_denied	Erreur - Permission Refusï¿½e
-global	back_home	Retour ï¿½ la page d'accueil
+global	perm_denied	Permission Refusée
+global	error_perm_denied	Erreur - Permission Refusée
+global	back_home	Retour à la page d'accueil
 global	back	Retour
-global	btn_delete	Dï¿½truire
+global	btn_delete	Détruire
 global	btn_cancel	Annuler
-global	btn_update	Mettre ï¿½ jour
+global	btn_update	Mettre à jour
 global	btn_submit	Valider
 global	btn_browse	Afficher
-global	btn_create	Crï¿½er
+global	btn_create	Créer
 global	btn_close	Fermer
-global	btn_reset	Rï¿½initialiser
-global	reset	rï¿½initialiser
+global	btn_reset	Réinitialiser
+global	reset	réinitialiser
 global	yes	Oui
 global	no	Non
-global	on	Activï¿½
-global	off	Dï¿½sactivï¿½
+global	on	Activé
+global	off	Désactivé
 global	any	Tous
 global	none	Aucun
-global	begin	Dï¿½but
+global	begin	Début
 global	end	Fin
 global	next	Suivant
-global	prev	Prï¿½cï¿½dent
+global	prev	Précédent
 global	printer_version	Version imprimable
 global	error	Erreur
 global	help	Aide
 global	by	par
-global	select	Sï¿½lectionner
-global	unchanged	Inchangï¿½
+global	select	Sélectionner
+global	unchanged	Inchangé
 global	or	ou
 global	and	et
 global	activate	activer
-global	deactivate	dï¿½sactiver
+global	deactivate	désactiver
 global	Project	Projet
-global	System	Systï¿½me
+global	System	Système
 global	Personal	Personnel
-global	default	Dï¿½faut
-global	mail_failed	L'e-mail n'a pas ï¿½tï¿½ envoyï¿½. Veuillez contactez <a href='mailto:$1'>$1</a>.
+global	default	Défaut
+global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez <a href='mailto:$1'>$1</a>.
 global	open	Ouvert
-global	closed	Fermï¿½
+global	closed	Fermé
 global	status	Statut
-global	return_to	<p>La page demandï¿½e est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
-global	at_the_beginning	Au dï¿½but
-global	at_the_end	ï¿½ la fin
-global	after	Aprï¿½s $1
-global	missing_parameters	Paramï¿½tres manquants
+global	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
+global	at_the_beginning	Au début
+global	at_the_end	À la fin
+global	after	Après $1
+global	missing_parameters	Paramètres manquants
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# 
+# $Id: db_top_groups_calc.pl 4717 2007-01-22 10:48:04 +0000 (Mon, 22 Jan 2007) guerin $
 #
 use DBI;
 

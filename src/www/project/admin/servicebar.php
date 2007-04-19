@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2004. All rights reserved
 //
-// 
+// $Id: servicebar.php 5727 2007-04-05 14:54:09 +0000 (Thu, 05 Apr 2007) guerin $
 //
 //
 //  Written for CodeX by Nicolas Guerin

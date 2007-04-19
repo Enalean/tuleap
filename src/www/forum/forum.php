@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: forum.php 4251 2006-11-16 13:00:28 +0000 (Thu, 16 Nov 2006) mnazaria $
 
 /*
 

@@ -4,21 +4,21 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: addlist_intro.txt 2689 2006-03-02 15:08:36Z mnazaria $
 //
 
 
 echo '
 
-<P>Les listes de diffusion sont nommï¿½es selon le modï¿½le suivant&nbsp;: <em>nom_projet-nom_liste@'. $GLOBALS['sys_lists_host'] .'</em>
-<P> Dans le but d\'harmoniser les pratiques en matiï¿½re de crï¿½ation de liste de distribution sur '.$GLOBALS['sys_name'].' nous vous recommandons de crï¿½er les listes de distribution suivantes pour votre projet&nbsp;:<BR>
+<P>Les listes de diffusion sont nommées selon le modèle suivant&nbsp;: <em>nom_projet-nom_liste@'. $GLOBALS['sys_lists_host'] .'</em>
+<P> Dans le but d\'harmoniser les pratiques en matière de création de liste de distribution sur '.$GLOBALS['sys_name'].' nous vous recommandons de créer les listes de distribution suivantes pour votre projet&nbsp;:<BR>
 <ul>
-<li><b>'.group_getunixname($group_id).'-interet</b>&nbsp;: pour les discussions gï¿½nï¿½rales entre utilisateurs.
-<li><b>'.group_getunixname($group_id).'-devel</b>&nbsp;: pour les discussions entre dï¿½veloppeurs.
-<li><b>'.group_getunixname($group_id).'-annonce</b>&nbsp;: pour les annonces de nouvelles versions ou d\'ï¿½vï¿½nements relatifs au projet.
+<li><b>'.group_getunixname($group_id).'-interet</b>&nbsp;: pour les discussions générales entre utilisateurs.
+<li><b>'.group_getunixname($group_id).'-devel</b>&nbsp;: pour les discussions entre développeurs.
+<li><b>'.group_getunixname($group_id).'-annonce</b>&nbsp;: pour les annonces de nouvelles versions ou d\'évènements relatifs au projet.
 </ul>
 
-<P>Cela prendra au maximum <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' heures</span></B> pour que la liste soit effectivement crï¿½ï¿½e.
+<P>Cela prendra au maximum <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' heures</span></B> pour que la liste soit effectivement créée.
 <P>';
 
 ?>

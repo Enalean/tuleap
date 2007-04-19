@@ -5,7 +5,7 @@ require_once("Iterator.class.php");
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
+ * $Id: Iterator.class 1884 2005-08-16 10:54:48Z nterray $
  *
  * SeekableIterator
  * @see http://www.php.net/~helly/php/ext/spl/interfaceIterator.html

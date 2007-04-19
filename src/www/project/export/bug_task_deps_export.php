@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: bug_task_deps_export.php 236 2002-05-24 09:06:27Z ljulliar $
 
 
 // This is the SQL query to retrieve all the bugs which depends on another bug

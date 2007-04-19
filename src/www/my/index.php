@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: index.php 5857 2007-04-17 09:20:24 +0000 (Tue, 17 Apr 2007) nterray $
 
 require_once('pre.php');
 require('./my_utils.php');

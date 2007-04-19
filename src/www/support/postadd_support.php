@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: postadd_support.php 245 2002-06-03 15:35:44Z ljulliar $
 
 if (!$support_category_id) {
 	$support_category_id=100;

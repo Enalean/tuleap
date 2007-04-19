@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: new_project_email.txt 5623 2007-03-30 16:31:38 +0000 (Fri, 30 Mar 2007) nterray $
 //
 
 if (session_issecure()) {
@@ -16,7 +16,7 @@ if (session_issecure()) {
 // Message preamble with Web pointers and server names
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 $message = '
-L\'enregistrement de votre projet a ï¿½tï¿½ approuvï¿½. 
+L\'enregistrement de votre projet a été approuvé. 
 Nom complet du projet :'.$row_grp['group_name'].'
 Nom court du projet :  '.$row_grp['unix_group_name'].'
 Page de sommaire :     '.$server.'/projects/'.$row_grp['unix_group_name'].'
@@ -30,44 +30,44 @@ $message = $message .'
 
 Veuillez prendre un peu de temps pour parcourir la documentation du
 site concernant les outils et services offerts par '.$GLOBALS['sys_name'].' 
-aux ï¿½quipes de projet. La plupart de la documentation (y compris le
+aux équipes de projet. La plupart de la documentation (y compris le
 Guide Utilisateur) est disponible sous le lien "Documentation site" que vous trouverez sur le page de bienvenue de '.$GLOBALS['sys_name'].'.
 
-Nous vous invitons maintenant ï¿½ visiter la page de sommaire de votre
+Nous vous invitons maintenant à visiter la page de sommaire de votre
 projet sur '.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
- ï¿½ crï¿½er une description courte de votre projet et ï¿½ le classer dans
+ à créer une description courte de votre projet et à le classer dans
 l\'arbre des projets si vous ne l\'avez pas encore fait.
-Tout cela s\'avï¿½rera trï¿½s utiles aux utilisateurs
+Tout cela s\'avèrera très utiles aux utilisateurs
 du site '.$GLOBALS['sys_name'].'.
 
 Une fois sur la page de sommaire de votre projet vous trouverez un lien
-"Administration projet". Ce lien vous donne accï¿½s ï¿½ toutes les fonctions
-d\'administration de votre projet comme crï¿½er des outils de suivi de
-tï¿½ches ou de dï¿½fauts, crï¿½er des listes de distribution, des forums et
-pourquoi publier votre premiï¿½re annonce informant l\'ï¿½quipe de la 
-crï¿½ation du projet (nous la publierons aussi sur la page de bienvenue
+"Administration projet". Ce lien vous donne accès à toutes les fonctions
+d\'administration de votre projet comme créer des outils de suivi de
+tâches ou de défauts, créer des listes de distribution, des forums et
+pourquoi publier votre première annonce informant l\'équipe de la 
+création du projet (nous la publierons aussi sur la page de bienvenue
 du site).
 
 Points divers :
 
-- Vos comptes CVS et Subversion deviendront opï¿½rationnels ï¿½ la 
-prochaine mise ï¿½ jour du systï¿½me qui a lieu toutes les '.$GLOBALS['sys_crondelay'].' heures.
+- Vos comptes CVS et Subversion deviendront opérationnels à la 
+prochaine mise à jour du système qui a lieu toutes les '.$GLOBALS['sys_crondelay'].' heures.
 Si ce n\'est pas le cas veuillez nous contacter pour que nous 
-rï¿½solvions ce problï¿½me.
+résolvions ce problème.
 
 - Veuillez aussi noter que la propagation des noms de serveurs
-listï¿½s ci-dessus aux serveurs de nom de domaine de '. $GLOBALS['sys_org_name']. '
-peut prendre jusqu\'ï¿½ une journï¿½e. Si vous ï¿½tes pressï¿½ d\'utiliser
+listés ci-dessus aux serveurs de nom de domaine de '. $GLOBALS['sys_org_name']. '
+peut prendre jusqu\'à une journée. Si vous êtes pressé d\'utiliser
 vos comptes shell, CVS ou subversion vous pouvez utiliser les
-serveurs gï¿½nï¿½riques '. $GLOBALS['sys_shell_host']. ' et '. $GLOBALS['sys_cvs_host'].'.
+serveurs génériques '. $GLOBALS['sys_shell_host']. ' et '. $GLOBALS['sys_cvs_host'].'.
 
-- Remarque : si vous possï¿½dez dï¿½jï¿½ un dï¿½pï¿½t CVS ou subversion
-l\'ï¿½quipe '.$GLOBALS['sys_name'].' est en mesure de le transfï¿½rer
-tel quel sur le site. N\'hï¿½sitez pas ï¿½ la contacter pour connaï¿½tre
-la marche ï¿½ suivre.
+- Remarque : si vous possédez déjà un dépôt CVS ou subversion
+l\'équipe '.$GLOBALS['sys_name'].' est en mesure de le transférer
+tel quel sur le site. N\'hésitez pas à la contacter pour connaître
+la marche à suivre.
 
-N\'hï¿½sitez pas ï¿½ nous contacter si vous avez besoin d\'aide.
+N\'hésitez pas à nous contacter si vous avez besoin d\'aide.
 
- -- L\'ï¿½quipe '.$GLOBALS['sys_name'];
+ -- L\'équipe '.$GLOBALS['sys_name'];
 
 ?>

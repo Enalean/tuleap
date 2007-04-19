@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: artifact_history_export.php 2326 2005-11-29 14:06:07Z schneide $
 
 $Language->loadLanguageMsg('project/project');
 

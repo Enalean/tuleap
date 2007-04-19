@@ -11,47 +11,47 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: fr_FR.tab 1778 2005-06-24 08:10:38Z nterray $
 #  *
 #  */
 advanced_search	all	tous
 advanced_search	and_search	tous les mots
-advanced_search	error_search_minlength	Le mot recherchï¿½ doit contenir au moins trois charactï¿½res
-advanced_search	headline	Rï¿½sultats de la recherche dans&nbsp;: $1
-advanced_search	no_matches_found	Aucun rï¿½sultat trouvï¿½
-advanced_search	no_matches_found_no_under_section	Aucun rï¿½sultat trouvï¿½ - Aucune section disponible (vï¿½rifiez vos permissions)
+advanced_search	error_search_minlength	Le mot recherché doit contenir au moins trois charactères
+advanced_search	headline	Résultats de la recherche dans&nbsp;: $1
+advanced_search	no_matches_found	Aucun résultat trouvé
+advanced_search	no_matches_found_no_under_section	Aucun résultat trouvé - Aucune section disponible (vérifiez vos permissions)
 advanced_search	none	aucun
 advanced_search	or_search	au moins un mot
 advanced_search	search_button	Chercher
 advanced_search	search_in	Chercher dans
 advanced_search	select	Selectionner
 common	login	S'identifier
-common	logout	Se dï¿½connecter
+common	logout	Se déconnecter
 common	myaccount	Mon compte
 common	newaccount	Nouveau compte
-group	activity	Taux d'activitï¿½&nbsp;:&nbsp;
-group	activitystat	Voir les <a href="/project/stats/?group_id=$1">statistiques d'activitï¿½ du projet</a>.
+group	activity	Taux d'activité&nbsp;:&nbsp;
+group	activitystat	Voir les <a href="/project/stats/?group_id=$1">statistiques d'activité du projet</a>.
 group	developer_info	Equipe-Projet
-group	developers	Dï¿½veloppeurs&nbsp;
+group	developers	Développeurs&nbsp;
 group	long_bugs	Gestion des bugs
 group	long_docman	Gestion de documents&nbsp;: Documentation du projet
 group	long_forum	Forums de discussion
 group	long_ftp	Espace FTP anonyme
 group	long_homepage	Page d'accueil du projet
 group	long_mail	Listes de diffusion
-group	long_news	Derniï¿½res annonces
+group	long_news	Dernières annonces
 group	long_patch	Gestionnaire de corrections
-group	long_pm	Gestion des tï¿½ches
+group	long_pm	Gestion des tâches
 group	long_scm	Gestion de sources
 group	long_support	Support technique
 group	long_survey	Sondages
 group	long_tracker	Outils de suivi
 group	nodescription	Ce projet n'a pas encore soumis de description.
-group	norelease	Ce projet n'a pas encore publiï¿½ de fichier
+group	norelease	Ce projet n'a pas encore publié de fichier
 group	project_admins	Administrateurs&nbsp;
-group	project_developers	Dï¿½veloppeurs&nbsp;
+group	project_developers	Développeurs&nbsp;
 group	public_area	Zones publiques
-group	registered	Enregistrï¿½ le&nbsp;:&nbsp;
+group	registered	Enregistré le&nbsp;:&nbsp;
 group	short_admin	Administration
 group	short_bugs	Bugs
 group	short_docman	Documents
@@ -59,50 +59,50 @@ group	short_files	Fichiers
 group	short_forum	Forums
 group	short_homepage	Accueil
 group	short_mail	Listes
-group	short_main	ï¿½cran principal
-group	short_memberlist	Dï¿½veloppeurs
+group	short_main	Écran principal
+group	short_memberlist	Développeurs
 group	short_news	Annonces
 group	short_patch	Patchs
-group	short_pm	Tï¿½ches
+group	short_pm	Tâches
 group	short_scm	Sources
 group	short_summary	En bref
 group	short_support	Support
 group	short_survey	Sondages
 group	short_tracker	Suivi
-menu	about_gforge	ï¿½ propos de $1
+menu	about_gforge	À propos de $1
 menu	account_maintenance	Gestion du compte
 menu	admin	Administration
 menu	bookmark_page	Ajouter aux signets
-menu	change_my_theme	Changer de thï¿½me
-menu	code_snippet	Boite ï¿½ outils
-menu	code_snippet_library	Bibliothï¿½que de code
+menu	change_my_theme	Changer de thème
+menu	code_snippet	Boite à outils
+menu	code_snippet_library	Bibliothèque de code
 menu	compile_farm	Ferme de compilation
 menu	diary_notes	Journal et notes
 menu	discussion_forums	Forums de discussion
 menu	documentation	Documentations sur le site
 menu	home	Accueil
 menu	login	Identification
-menu	login_ssl	Identification sï¿½curisï¿½e (SSL)
+menu	login_ssl	Identification sécurisée (SSL)
 menu	logout	Sortir
 menu	my_account	Mon compte
 menu	my_personal_page	Ma page personnelle
 menu	mypage	Ma page
 menu	new_project	Nouveau projet
-menu	new_releases	Sorties rï¿½centes
+menu	new_releases	Sorties récentes
 menu	new_user	Nouvel utilisateur via SSL
 menu	other_site_mirrors	Miroirs d'autres sites
 menu	project_admin	Admin. du projet
 menu	project_help_wanted	Demande d'aide
-menu	project_summary	Rï¿½sumï¿½ du projet
+menu	project_summary	Résumé du projet
 menu	projectree	Arbre des projets
 menu	register_project	Enregistrer un projet
 menu	reporting	Statistiques
 menu	search	Recherche
-menu	site_status	ï¿½tat du site
-menu	software_map	Recherche thï¿½matique
+menu	site_status	État du site
+menu	software_map	Recherche thématique
 menu	submit	Proposer
 menu	top_projects	Meilleurs projets
-searchbox	advanced_search	Recherche avancï¿½e
+searchbox	advanced_search	Recherche avancée
 searchbox	docs	Les documents de ce projet
 searchbox	forum	Ce forum
 searchbox	forums	Les forums de ce projet
@@ -113,7 +113,7 @@ searchbox	people	Personne
 searchbox	search	Rechercher
 searchbox	skill	Savoir-faire
 searchbox	softwaregroup	Logiciel/Groupe
-searchbox	task	Tï¿½ches
-searchbox	tasks	Les tï¿½ches de ce projet
+searchbox	task	Tâches
+searchbox	tasks	Les tâches de ce projet
 searchbox	trackers	Le suivi de ce projet
 

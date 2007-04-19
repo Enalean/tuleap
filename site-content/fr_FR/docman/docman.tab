@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   
+#  * @version   $Id: docman.tab 2689 2006-03-02 15:08:36Z mnazaria $
 #  *
 #  */
 #
@@ -21,14 +21,14 @@
 #
 docman_index	title		Documentation pour $1
 docman_index	header		Documentation du projet
-docman_index	nodoc		Aucun document n'a encore ï¿½tï¿½ publiï¿½.
+docman_index	nodoc		Aucun document n'a encore été publié.
 docman_index	description	Description
 #
 #-----------------------------------------------
 # Script: SF/www/docman/display_doc.php
 #
-docman_display_doc	error_nodoc	Document #$1 introuvable&nbsp;: ce document n'existe pas ou a ï¿½tï¿½ dï¿½truit.
-docman_display_doc	error_wrongid	Aucun document disponible - numï¿½ro de document invalide.
+docman_display_doc	error_nodoc	Document #$1 introuvable&nbsp;: ce document n'existe pas ou a été détruit.
+docman_display_doc	error_wrongid	Aucun document disponible - numéro de document invalide.
 docman_display_doc	warning_different_group	Veuillez noter que ce document appartient au projet "$1".
 #
 #-----------------------------------------------
@@ -38,77 +38,77 @@ docman_doc_utils	error_nogroup	Il n'existe actuellement aucun groupe de document
 docman_doc_utils	error_nodocyet	Aucun document disponible.
 docman_doc_utils	group_id	ID du groupe
 docman_doc_utils	group_name	Nom du groupe
-docman_doc_utils	delete_ask	A dï¿½truire ?
-docman_doc_utils	delete_confirm	Dï¿½truire ce groupe de documents ?
-docman_doc_utils	delete_doc_confirm	Dï¿½truire ce document de faï¿½on permanente ?
+docman_doc_utils	delete_ask	A détruire ?
+docman_doc_utils	delete_confirm	Détruire ce groupe de documents ?
+docman_doc_utils	delete_doc_confirm	Détruire ce document de façon permanente ?
 docman_doc_utils	doc_id	ID du document
 docman_doc_utils	doc_name	Titre
-docman_doc_utils	create_date	Date de crï¿½ation
+docman_doc_utils	create_date	Date de création
 docman_doc_utils	error_proj	Seuls les projets peuvent utiliser le gestionnaire de documents
-docman_doc_utils	error_off	Ce projet a dï¿½sactivï¿½ le gestionnaire de document
+docman_doc_utils	error_off	Ce projet a désactivé le gestionnaire de document
 docman_doc_utils	submit_doc	Soumettre un nouveau document
 docman_doc_utils	admin	Administration
 docman_doc_utils	edit_groups	Modifier les groupes de documents
 docman_doc_utils	rank_in_group	Rang dans le groupe
-docman_doc_utils	rank	Rang ï¿½ l'ï¿½cran
+docman_doc_utils	rank	Rang à l'écran
 docman_doc_utils	permissions	Permissions
-docman_doc_utils	define_perms	[Dï¿½finir les permissions]
+docman_doc_utils	define_perms	[Définir les permissions]
 docman_doc_utils	edit_perms	[Modifier les permissions]
 docman_doc_utils	doc_group	Groupe de Document
 #
 #-----------------------------------------------
 # Script: SF/www/docman/download.php
 #
-docman_download	error_nofile	Rien ï¿½ voir... - Le fichier a une taille nulle
-docman_download	error_nodoc	Fichier associï¿½ au document #$1 introuvable
+docman_download	error_nofile	Rien à voir... - Le fichier a une taille nulle
+docman_download	error_nodoc	Fichier associé au document #$1 introuvable
 #
 #-----------------------------------------------
 # Script: SF/www/docman/new.php
 #
-docman_new	error_noproj	Aucun projet valide (group_id) n'a ï¿½tï¿½ sï¿½lectionnï¿½
-docman_new	error_size	Le document ne doit pas ï¿½tre de taille nulle ni excï¿½dï¿½ une taille de $1 caractï¿½res	
-docman_new	title_new	Nouveau document ajoutï¿½
+docman_new	error_noproj	Aucun projet valide (group_id) n'a été sélectionné
+docman_new	error_size	Le document ne doit pas être de taille nulle ni excédé une taille de $1 caractères	
+docman_new	title_new	Nouveau document ajouté
 docman_new	error_dbinsert	Une erreur est survenue	
-docman_new	insert_ok	Votre document a ï¿½tï¿½ ajoutï¿½ avec succï¿½s
+docman_new	insert_ok	Votre document a été ajouté avec succès
 docman_new	title_add	Soumettre un nouveau document	
 docman_new	header_add	Soumettre un nouveau document	
-docman_new	not_logged	Vous n'ï¿½tes pas connectï¿½ et votre nom ne sera donc pas associï¿½ ï¿½ cet ajout.
-docman_new	no_docgroup	Vous devez spï¿½cifier un groupe de documents avant de pouvoir ajouter ce nouveau document. Cliquer sur <a href="$1">Administration</a></b> et crï¿½er un groupe de documents.
+docman_new	not_logged	Vous n'êtes pas connecté et votre nom ne sera donc pas associé à cet ajout.
+docman_new	no_docgroup	Vous devez spécifier un groupe de documents avant de pouvoir ajouter ce nouveau document. Cliquer sur <a href="$1">Administration</a></b> et créer un groupe de documents.
 docman_new	doc_title	Titre du document
-docman_new	doc_desc	Description&nbsp;: <br> (Balises HTML autorisï¿½es)
+docman_new	doc_desc	Description&nbsp;: <br> (Balises HTML autorisées)
 docman_new	doc_upload	Chargement du fichier
 docman_new	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 docman_new	doc_paste	ou copier/coller le document (format HTML)
 docman_new	doc_group	Groupe auquel appartient ce document 
-docman_new	mandatory	Les champs marquï¿½s $1 sont obligatoires.
+docman_new	mandatory	Les champs marqués $1 sont obligatoires.
 docman_new	error_dbupdate	ERREUR - Erreur SQL = $1
 #
 #-----------------------------------------------
 # Script: SF/www/docman/admin/index.php
 #
-docman_admin_index	error_perm	Vous devez avoir les droits sur le gestionnaire de documents pour accï¿½der ï¿½ cette page.	
+docman_admin_index	error_perm	Vous devez avoir les droits sur le gestionnaire de documents pour accéder à cette page.	
 docman_admin_index	title	Administration du gestionnaire de documents
 docman_admin_index	title_edit	Modifier un document
-docman_admin_index	doc_edit	ou ï¿½diter le document en place
-docman_admin_index	msg_group_del	Groupe de documents dï¿½truits (doc_group&nbsp;: $1)
-docman_admin_index	msg_group_del_fail	Le groupe de documents n'a pas ï¿½tï¿½ dï¿½truit. Les groupes qui comportent des documents ne peuvent ï¿½tre dï¿½truits.
+docman_admin_index	doc_edit	ou éditer le document en place
+docman_admin_index	msg_group_del	Groupe de documents détruits (doc_group&nbsp;: $1)
+docman_admin_index	msg_group_del_fail	Le groupe de documents n'a pas été détruit. Les groupes qui comportent des documents ne peuvent être détruits.
 docman_admin_index	title_group_edit	Modifier un groupe de documents
 docman_admin_index	header_group_edit	Modifier un groupe de documents
-docman_admin_index	feedback_group_updated	Groupe de documents mis ï¿½ jour avec succï¿½s
-docman_admin_index	error_nodocgroup	Aucun groupe de documents valide n'a ï¿½tï¿½ sï¿½lectionnï¿½
-docman_admin_index	feedback_doc_uploaded	Document chargï¿½
-docman_admin_index	feedback_doc_updated	Document mis ï¿½ jour avec succï¿½s
-docman_admin_index	error_nodoc	Mise ï¿½ jour impossible - le document n'existe pas ou il n'appartient pas ï¿½ ce groupe de documents.
-docman_admin_index	feedback_group_added	Groupe de documents ajoutï¿½s avec succï¿½s 
+docman_admin_index	feedback_group_updated	Groupe de documents mis à jour avec succès
+docman_admin_index	error_nodocgroup	Aucun groupe de documents valide n'a été sélectionné
+docman_admin_index	feedback_doc_uploaded	Document chargé
+docman_admin_index	feedback_doc_updated	Document mis à jour avec succès
+docman_admin_index	error_nodoc	Mise à jour impossible - le document n'existe pas ou il n'appartient pas à ce groupe de documents.
+docman_admin_index	feedback_group_added	Groupe de documents ajoutés avec succès 
 docman_admin_index	title_group_mgt	Administration des groupes de documents
 docman_admin_index	header_group_mgt	Administration des groupes de documents
-docman_admin_index	create_doc_group	Crï¿½er un groupe de documents
+docman_admin_index	create_doc_group	Créer un groupe de documents
 docman_admin_index	doc_group_list	Groupe de documents existants
 docman_admin_index	header_doc_mgt	Modifier les documents
-docman_admin_index	doc_deleted	Document dï¿½truit
+docman_admin_index	doc_deleted	Document détruit
 docman_admin_index	error_deleting_doc	Erreur lors de la destruction d'un document
-docman_admin_index	error_updating_perm	Erreur&nbsp;: la mise ï¿½ jour des permissions a ï¿½chouï¿½
-docman_admin_index	perm_reset	Permissions rï¿½initialiser ï¿½ leur valeurs par dï¿½faut
+docman_admin_index	error_updating_perm	Erreur&nbsp;: la mise à jour des permissions a échoué
+docman_admin_index	perm_reset	Permissions réinitialiser à leur valeurs par défaut
 #
 #-----------------------------------------------
 # Script: SF/www/docs/site/index.php
@@ -124,12 +124,12 @@ docs_site_about	title	A propos du site $1
 # Script: SF/www/docman/admin/editdocgrouppermissions.php
 #
 docman_admin_editdocgrouppermissions	title	Modifier les permissions d'un groupe de documents
-docman_admin_editdocgrouppermissions	introduction	Vous pouvez dï¿½finir des permissions spï¿½cifiques ï¿½ un groupe de documents. Ces permissions s'appliquent ï¿½ tous les documents qui s'y trouvent mais des permissions spï¿½cifiques peuvent aussi s'appliquer ï¿½ chaque document. Par dï¿½faut, les groupes de documents sont accessibles ï¿½ tous les visiteurs.
-docman_admin_editdocgrouppermissions	instructions	Sï¿½lectionner les groupes d'utilisateurs qui ont accï¿½s ï¿½ ce groupe de document&nbsp;:
+docman_admin_editdocgrouppermissions	introduction	Vous pouvez définir des permissions spécifiques à un groupe de documents. Ces permissions s'appliquent à tous les documents qui s'y trouvent mais des permissions spécifiques peuvent aussi s'appliquer à chaque document. Par défaut, les groupes de documents sont accessibles à tous les visiteurs.
+docman_admin_editdocgrouppermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce groupe de document&nbsp;:
 #
 #-----------------------------------------------
 # Script: SF/www/docman/admin/editdocpermissions.php
 #
 docman_admin_editdocpermissions	title	Modifier les permissions d'un document
 docman_admin_editdocpermissions	doc_title	Modifier les permissions d'un document
-docman_admin_editdocpermissions	instructions	Sï¿½lectionner les groupes d'utilisateurs qui ont accï¿½s ï¿½ ce document&nbsp;:<br><b>Note</b>&nbsp;: Quand aucune permission n'est dï¿½finie pour un document, il hï¿½rite des permissions du <a href="$1">groupe de document auquel il appartient</a>. <br>Quand des permissions sont dï¿½finies pour un document, elles prennent le pas sur les permissions du groupe de documents.
+docman_admin_editdocpermissions	instructions	Sélectionner les groupes d'utilisateurs qui ont accès à ce document&nbsp;:<br><b>Note</b>&nbsp;: Quand aucune permission n'est définie pour un document, il hérite des permissions du <a href="$1">groupe de document auquel il appartient</a>. <br>Quand des permissions sont définies pour un document, elles prennent le pas sur les permissions du groupe de documents.

@@ -4,16 +4,16 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: privacy.txt 1503 2005-05-12 10:32:04Z nterray $
 //
 -->
 
 <p>
-<h2><?php print $GLOBALS['sys_name']; ?>Rï¿½gles de confidentialitï¿½</h2>
+<h2><?php print $GLOBALS['sys_name']; ?>Règles de confidentialité</h2>
 </p>
 
 <p>
-Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner autant de contrï¿½le que possible sur vos informations personnelles, y compris les donnï¿½es saisies lors de l'enregistrement. Nous ferons avoir ï¿½ chaque utilisateur comment nous utilisons les informations dï¿½rivï¿½es des accï¿½s utilisateurs et de l'utilisation de <?php print $GLOBALS['sys_name']; ? et de ses services.
+Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner autant de contrôle que possible sur vos informations personnelles, y compris les données saisies lors de l'enregistrement. Nous ferons avoir à chaque utilisateur comment nous utilisons les informations dérivées des accès utilisateurs et de l'utilisation de <?php print $GLOBALS['sys_name']; ? et de ses services.
 </p>
 
 <p>
@@ -21,7 +21,7 @@ Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner aut
 </p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines ï¿½ partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces donnï¿½es pour dï¿½gager des statistiques et des tendances. En accord avec ces rï¿½gles de confidentialitï¿½, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les donnï¿½es accumulï¿½es ï¿½ d'autres fins, y compris (mais non limitï¿½ ï¿½) l'ï¿½valuation des services et la planification des resources.
+<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines à partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces données pour dégager des statistiques et des tendances. En accord avec ces règles de confidentialité, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les données accumulées à d'autres fins, y compris (mais non limité à) l'évaluation des services et la planification des resources.
 </p>
 
 <p>

@@ -7,7 +7,7 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
-* @version   
+* @version   $Id: Artifact.class.php 5909 2007-04-18 13:51:11 +0000 (Wed, 18 Apr 2007) mnazaria $
  *
  * Written for CodeX by Stephane Bouhet
  *

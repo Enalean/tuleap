@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: index.php 1447 2005-04-20 14:50:28Z ljulliar $
 
 require_once('pre.php');
 require('../patch_utils.php');

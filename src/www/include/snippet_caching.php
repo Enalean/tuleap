@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id: snippet_caching.php 2056 2005-09-23 10:26:07Z nterray $
 require_once('www/snippet/snippet_utils.php');
 
 function snippet_mainpage() {

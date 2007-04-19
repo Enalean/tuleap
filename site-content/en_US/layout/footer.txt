@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// 
+// $Id: footer.txt 1494 2005-05-10 11:42:55Z ljulliar $
 //
 -->
 <center>
