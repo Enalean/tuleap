@@ -551,10 +551,16 @@ Array
                     <listitem>
                         <para>--name*: nom du nouveau paquet à ajouter.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--status_id: status_id du paquet. Par défaut, le statut est actif.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--rank: ordre d'affichage du paquet. Par défaut (si non spécifié), le rang est 0.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -579,6 +585,8 @@ Array
                     <listitem>
                         <para>--package_id*: l'identifiant du paquet
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -627,16 +635,28 @@ Array
                     <listitem>
                         <para>--package_id*: l'identifiant du paquet qui contiendra la nouvelle version
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--name*: nom de la nouvelle version à créer.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--notes: notes à propos de la nouvelle version
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--changes: changements de cette nouvelle version
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--status_id: status_id de la nouvelle version. Par défaut (si non spécifié), le statut est actif.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_date: date de la nouvelle version, au format YYYY-MM-DD. Par défaut, la date de la version est la date courante.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -661,8 +681,12 @@ Array
                     <listitem>
                         <para>--package_id*: l'identifiant du paquet
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_id*: l'identifiant de la version
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -700,16 +724,28 @@ Array
                     <listitem>
                         <para>--package_id*: identifiant du paquet qui contiendra le fichier
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_id*: identifiant de la version qui contiendra le fichier
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--local_file(*): emplacement (local) du fichier à ajouter. Utilisez cet argument si votre fichier est local. Votre fichier sera téléchargé sur le serveur. Pour ajouter des fichiers de grosse taille, merci d'utiliser la méthode d'upload décrite ci-dessous, car des problèmes mémoires peuvent survenir. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la méthode utilisée pour ajouter votre fichier.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--uploaded_file(*): nom du fichier à ajouter. Le fichier doit déjà se trouver dans le répertoire "incoming" du serveur. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la méthode utilisée pour ajouter votre fichier.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--type_id: type_id du fichier
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--processor_id: processor_id du fichier
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -745,15 +781,23 @@ Array
             <para>getfile: Retourne le contenu du fichier
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--package_id*: identifiant du paquet dans lequel se trouve le fichier
+                        <para>--package_id* : identifiant du paquet dans lequel se trouve le fichier
                         </para>
-                        <para>--release_id*: identifiant de la version dans laquelle se trouve le fichier
+                    </listitem>
+                    <listitem>
+                        <para>--release_id* : identifiant de la version dans laquelle se trouve le fichier
                         </para>
-                        <para>--file_id*: identifiant du fichier à retourner
+                    </listitem>
+                    <listitem>
+                        <para>--file_id* : identifiant du fichier à retourner
                         </para>
-                        <para>--output: emplacement où télécharger le fichier. Si non spécifié, le contenu du fichier sera affiché sur la sortie standard.
+                    </listitem>
+                    <listitem>
+                        <para>--output : emplacement où télécharger le fichier. Si non spécifié, le contenu du fichier sera affiché sur la sortie standard.
                         </para>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -763,6 +807,240 @@ Array
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [mnazaria@linux codex cli ]$ ./codex.php frs getfile --package_id=6 --release_id=49 --file_id=644 --output=/home/mnazaria/downloaded_file.pdf
 File retrieved successfully.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+    
+    <section id="DocmanFunctions">
+        <title>Fonction du Gestionnaire de Documents</title>
+        
+        <para>Ce module fonctionne avec le plugin docman et nécessite que le plugin soit installé.</para>
+        
+        <section id="DocmanFunctionList">
+            <title>list</title>
+            <para>list : Affiche la liste des items contenus dans un dossier
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id* : l'identifiant du dossier.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande list</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman list --id=59 --project=myproject
+Array
+(
+    [0] => Array 
+            (
+                [item_id] => 241
+                [parent_id] => 59
+                [group_id] => 112
+                [title] => CLI User Guide
+                [description] => The PDF version of the CLI User Guide
+                [create_date] => 1170168829
+                [update_date] => 1170168829
+                [delete_date] => 
+                [user_id] => 102
+                [status] => 0
+                [obsolescence_date] => 0
+                [rank] => -2
+                [item_type] => 1
+             )
+    [1] => Array 
+            (
+                [item_id] => 296
+                [parent_id] => 59
+                [group_id] => 112
+                [title] => CLI User Guide
+                [description] => The HTML version of the CLI User Guide
+                [create_date] => 1172759281
+                [update_date] => 1172759281
+                [delete_date] => 
+                [user_id] => 102
+                [status] => 0
+                [obsolescence_date] => 0
+                [rank] => -2
+                [item_type] => 3
+             )
+    
+)
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+    
+        <section id="DocmanFunctionCreateDocument">
+            <title>createDocument</title>
+            <para>createDocument : Ajoute un document au gestionnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id* : identifiant du parent dans lequel le document sera créé
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title* : Titre de nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description : Description du nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--type* : nature du document. Les types disponibles sont "file", "link", "wiki", and "embedded_file"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content* : contenu du document, selon le type du document :
+                            <itemizedlist mark="bullet">
+                                <listitem><para>l'emplacement du fichier pour le type "file"</para></listitem>
+                                <listitem><para>l'URL pour le type "link"</para></listitem>
+                                <listitem><para>le nom de la page wiki pour le type "wiki"</para></listitem>
+                                <listitem><para>le contenu brut pour le type "embedded_file".</para></listitem>
+                            </itemizedlist>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--ordering : place du document dans le dossier parent. Les valeur possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande createDocument</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionCreateFolder">
+            <title>createFolder</title>
+            <para>createFolder : Ajoute un dossier au gestionnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id* : identifiant du parent danslequel le dossier sera créé
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title* : Titre du nouveau dossier
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description : Description du nouveau dossier
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--ordering : place du dossier dans le dossier parent. Les valeurs possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createFolder command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionDelete">
+            <title>delete</title>
+            <para>delete : Supprime un item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id* : identifiant de l'item à supprimer
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande delete</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman delete --project=myproject --id=361
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionMonitor">
+            <title>monitor</title>
+            <para>monitor : Surveiller un item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id* : identifiant de l'item à surveiller
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande monitor</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman monitor --project=myproject --id=249
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionMove">
+            <title>move</title>
+            <para>move : Déplace un item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id* : identifiant de l'item à déplacer
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--parent* : identifiant du dossier dans lequel l'item sera déplacé
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>move command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman move --project=myproject --id=241 --parent=59
+1
                         </programlisting>
                     </example>
                </para>
