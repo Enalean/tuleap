@@ -533,10 +533,16 @@ Array
                     <listitem>
                         <para>--name*: name of the new package that will be created.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--status_id: status_id of the new package. By default, the status is active.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--rank: rank of the new package that will be created. By default, set to 0.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -561,6 +567,8 @@ Array
                     <listitem>
                         <para>--package_id*: the id of the package the releases belong to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to retrieve the releases in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -609,16 +617,28 @@ Array
                     <listitem>
                         <para>--package_id*: id of the package this release will belong to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--name*: name of the new release that will be created.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--notes: notes about this new release
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--changes: changes of this new release
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--status_id: status_id of the new release. By default, the status is active.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_date: date of the new release, with YYYY-MM-DD format. By default, the release_date is the current date/time.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to add the release in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -643,8 +663,12 @@ Array
                     <listitem>
                         <para>--package_id*: the id of the package the files belong to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_id*: the id of the release the files belong to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to retrieve the files in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -682,16 +706,28 @@ Array
                     <listitem>
                         <para>--package_id*: id of the package this file will belong to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_id*: id of the release this file will belong to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--local_file(*): location (local) of the new file that will be created. Use this argument if your file is local. Your file will be uploaded on the server. Please note that for adding big files, it is better to use the uploaded way, because memory error could happen. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--uploaded_file(*): location of the new file that will be created. The file must already be located in the incoming directory on the server. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--type_id: type_id of the new file
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--processor_id: processor_id of the new file
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to add the file in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -729,12 +765,20 @@ Array
                     <listitem>
                         <para>--package_id*: id of the package the file belongs to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--release_id*: id of the release the file belongs to
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--file_id*: id of the file we want to get the content
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--output: output location to download the file. If not specified, the content of the file is displayed on the standard output
                         </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to get the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -753,6 +797,240 @@ File retrieved successfully.
         
     </section>
 
+    <section id="DocmanFunctions">
+        <title>Document Manager functions</title>
+        
+        <para>This module works with the docman plugin and will be available only if the plugin is installed.</para>
+        
+        <section id="DocmanFunctionList">
+            <title>list</title>
+            <para>list: Display a list of items contained in a folder
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: the ID of the folder.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to retrieve the packages in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>list command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman list --id=59 --project=myproject
+Array
+(
+    [0] => Array 
+            (
+                [item_id] => 241
+                [parent_id] => 59
+                [group_id] => 112
+                [title] => CLI User Guide
+                [description] => The PDF version of the CLI User Guide
+                [create_date] => 1170168829
+                [update_date] => 1170168829
+                [delete_date] => 
+                [user_id] => 102
+                [status] => 0
+                [obsolescence_date] => 0
+                [rank] => -2
+                [item_type] => 1
+             )
+    [1] => Array 
+            (
+                [item_id] => 296
+                [parent_id] => 59
+                [group_id] => 112
+                [title] => CLI User Guide
+                [description] => The HTML version of the CLI User Guide
+                [create_date] => 1172759281
+                [update_date] => 1172759281
+                [delete_date] => 
+                [user_id] => 102
+                [status] => 0
+                [obsolescence_date] => 0
+                [rank] => -2
+                [item_type] => 3
+             )
+    
+)
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionCreateDocument">
+            <title>createDocument</title>
+            <para>createDocument: Add a document to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the document will be created in
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--type*: nature of the document. Available types are "file", "link", "wiki", and "embedded_file"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: content of the document, according to the type of the document:
+                            <itemizedlist mark="bullet">
+                                <listitem><para>the file location for "file" type</para></listitem>
+                                <listitem><para>the url for "link" type</para></listitem>
+                                <listitem><para>the name of the Wiki Page for "wiki" type</para></listitem>
+                                <listitem><para>the raw content for "embedded_file" type.</para></listitem>
+                            </itemizedlist>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createDocument command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionCreateFolder">
+            <title>createFolder</title>
+            <para>createFolder: Add a folder to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the folder will be created in
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new folder
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new folder
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--ordering: place where the new folder will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createFolder command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionDelete">
+            <title>delete</title>
+            <para>delete: Delete an item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to delete
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>delete command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman delete --project=myproject --id=361
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionMonitor">
+            <title>monitor</title>
+            <para>monitor: Monitor an item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to monitor
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>monitor command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman monitor --project=myproject --id=249
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionMove">
+            <title>move</title>
+            <para>move: Move an item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to move
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--parent*: ID of the folder the item will be moved in
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>move command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman move --project=myproject --id=241 --parent=59
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+    
 </chapter>
 <!--
 Local Variables:
