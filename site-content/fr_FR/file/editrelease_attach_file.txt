@@ -4,25 +4,25 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: editrelease_attach_file.txt 3680 2006-09-15 08:28:49Z guerin $
+// 
 //
 
 $username=strtolower(user_getname());
 echo '
 <P>
-Pour attacher vos fichiers à cette version vous devez tout d\'abord les télécharger sur le serveur '.$GLOBALS['sys_name'].'. Pour ce faire utilisez soit "ftp" soit "scp"&nbsp;:
+Pour attacher vos fichiers ï¿½ cette version vous devez tout d\'abord les tï¿½lï¿½charger sur le serveur '.$GLOBALS['sys_name'].'. Pour ce faire utilisez soit "ftp" soit "scp"&nbsp;:
 <ul>
-<li><b>ftp</b>&nbsp;: avec un client ftp, connectez-vous à <b>'.$sys_download_host.'</b> (login "ftp" / le mot de passe est votre adresse e-mail) et placez vos fichiers dans le répertoire <B>/incoming</B>.</li>
+<li><b>ftp</b>&nbsp;: avec un client ftp, connectez-vous ï¿½ <b>'.$sys_download_host.'</b> (login "ftp" / le mot de passe est votre adresse e-mail) et placez vos fichiers dans le rï¿½pertoire <B>/incoming</B>.</li>
 <li><b>scp</b>&nbsp;: tapez simplement
 <pre>
 scp votre_fichier '.$username.'@'.$sys_download_host.':'.$GLOBALS['ftp_incoming_dir'].'
 </pre>
 </ul>
-Quant le téléchargement est terminé, appuyer sur le bouton "<b>'.$Language->getText('file_admin_editreleases','refresh_file_list').'</b>" ci-dessous pour voir les fichiers téléchargés.
+Quant le tï¿½lï¿½chargement est terminï¿½, appuyer sur le bouton "<b>'.$Language->getText('file_admin_editreleases','refresh_file_list').'</b>" ci-dessous pour voir les fichiers tï¿½lï¿½chargï¿½s.
 <P>
-Ensuite cocher les cases correspondantes aux fichiers appartenant à votre nouvelle version et cliquez sur le bouton "<b>'.$Language->getText('file_admin_editreleases','attach_marked_files').'</b>" ci-dessous. 
+Ensuite cocher les cases correspondantes aux fichiers appartenant ï¿½ votre nouvelle version et cliquez sur le bouton "<b>'.$Language->getText('file_admin_editreleases','attach_marked_files').'</b>" ci-dessous. 
 <P>
-<b>**ATTENTION**</b> Cette zone de téléchargement est commune à tous les projets donc assurez-vous de ne sélectionner que vos fichiers !
+<b>**ATTENTION**</b> Cette zone de tï¿½lï¿½chargement est commune ï¿½ tous les projets donc assurez-vous de ne sï¿½lectionner que vos fichiers !
 <p>
 ';
 ?>

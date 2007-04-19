@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: index.php 5631 2007-04-02 09:33:11 +0000 (Mon, 02 Apr 2007) nterray $
+// 
 
 require_once('pre.php');
 require_once('www/tracker/include/ArtifactTypeHtml.class.php');
@@ -538,7 +538,7 @@ if ($type_of_search == "soft") {
         $language_id = db_fetch_array($result);
         //Build the search pagename in the wiki language
         if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
-        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntï¿½gral';}
     }
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));

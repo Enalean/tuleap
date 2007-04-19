@@ -11,20 +11,20 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: forum.tab 2689 2006-03-02 15:08:36Z mnazaria $
+#  * @version   
 #  *
 #  */
 #
 #-----------------------------------------------
 # Script: SF/www/forum/admin/index.php
 #
-forum_admin_index	msgs_del	$1 message(s) détruit(s)
+forum_admin_index	msgs_del	$1 message(s) dï¿½truit(s)
 forum_admin_index	msg_not_in_group	Ce message n'est pas de votre projet
 forum_admin_index	msg_not_found	Message introuvable
-forum_admin_index	upd_err	Erreur lors de la mise à jour des informations du forum
-forum_admin_index	upd_success	Informations du forum mises à jour avec succès
-forum_admin_index	del_a_msg	Détruire un message
-forum_admin_index	delete_warn	ATTENTION ! Vous êtes sur le point de détruire un message et tout son fil de discussion !!
+forum_admin_index	upd_err	Erreur lors de la mise ï¿½ jour des informations du forum
+forum_admin_index	upd_success	Informations du forum mises ï¿½ jour avec succï¿½s
+forum_admin_index	del_a_msg	Dï¿½truire un message
+forum_admin_index	delete_warn	ATTENTION ! Vous ï¿½tes sur le point de dï¿½truire un message et tout son fil de discussion !!
 forum_admin_index	enter_msg_id	Entrer l'identifiant (ID) du message
 forum_admin_index	add_a_forum	Ajouter un forum
 forum_admin_index	existing_forums	Forums existants
@@ -32,39 +32,39 @@ forum_admin_index	forum_name	Nom du forum
 forum_admin_index	description	Description
 forum_admin_index	is_public	Public ?
 forum_admin_index	monitor	Surveiller ce forum ?
-forum_admin_index	monitor_recommendation	En tant que créateur de ce forum, il vous est <u>fortement recommandé</u> de le surveiller pour recevoir immédiatement par e-mail tout nouveau message posté sur ce forum.
-forum_admin_index	once_added_no_delete	Une fois ajouté, un forum ne peut être ni modifié ni détruit !
+forum_admin_index	monitor_recommendation	En tant que crï¿½ateur de ce forum, il vous est <u>fortement recommandï¿½</u> de le surveiller pour recevoir immï¿½diatement par e-mail tout nouveau message postï¿½ sur ce forum.
+forum_admin_index	once_added_no_delete	Une fois ajoutï¿½, un forum ne peut ï¿½tre ni modifiï¿½ ni dï¿½truit !
 forum_admin_index	add_this_forum	Ajouter ce forum
 forum_admin_index	change_status	Changer le statut du forum
 forum_admin_index	forum_not_found	Forum introuvable
 forum_admin_index	none_found_for_group	Aucun forum pour ce projet
-forum_admin_index	update_f_status	Mettre à jour le statut du forum
-forum_admin_index	private_explain	Vous pouvez rendre un forum privé. veuillez noter que les forums privés ne sont visibles que pour les membres du projet.
+forum_admin_index	update_f_status	Mettre ï¿½ jour le statut du forum
+forum_admin_index	private_explain	Vous pouvez rendre un forum privï¿½. veuillez noter que les forums privï¿½s ne sont visibles que pour les membres du projet.
 forum_admin_index	forum	Forum
 forum_admin_index	update	Valider
-forum_admin_index	deleted	Détruit
+forum_admin_index	deleted	Dï¿½truit
 forum_admin_index	forum_admin	Administration des forums
 forum_admin_index	add_forum	Ajouter un forum
-forum_admin_index	del_msg	Détruire un message
-forum_admin_index	update_forum_status	Mettre à jour les infos et le statut du forum
-forum_admin_index	params_missing	Nom ou description du forum manquant, veuillez appuyez sur le bouton "Retour" de votre navigateur et compléter ces informations
+forum_admin_index	del_msg	Dï¿½truire un message
+forum_admin_index	update_forum_status	Mettre ï¿½ jour les infos et le statut du forum
+forum_admin_index	params_missing	Nom ou description du forum manquant, veuillez appuyez sur le bouton "Retour" de votre navigateur et complï¿½ter ces informations
 #
 #-----------------------------------------------
 # Script: SF/www/forum/expand.php
 #
-forum_expand	expand_threads	Déplier/Replier les fils de discussions
-forum_expand	prefs	Préférence mise à jour
-forum_expand	now_expand	Les fils de discussions seront désormais dépliés
-forum_expand	now_collaps	Les fils de discussions seront désormais repliés
+forum_expand	expand_threads	Dï¿½plier/Replier les fils de discussions
+forum_expand	prefs	Prï¿½fï¿½rence mise ï¿½ jour
+forum_expand	now_expand	Les fils de discussions seront dï¿½sormais dï¿½pliï¿½s
+forum_expand	now_collaps	Les fils de discussions seront dï¿½sormais repliï¿½s
 #
 #-----------------------------------------------
 # Script: SF/www/forum/forum.php
 #
 forum_forum	by	De
-forum_forum	reply	répondre
+forum_forum	reply	rï¿½pondre
 forum_forum	forum_restricted	Forum restreint
 forum_forum	no_msg	Aucun message dans $1
-forum_forum	nested	Hiérarchisé
+forum_forum	nested	Hiï¿½rarchisï¿½
 forum_forum	flat	A plat
 forum_forum	threaded	En fils de discussions
 forum_forum	no_comments	Sans message
@@ -73,7 +73,7 @@ forum_forum	change_view	Changer de format
 forum_forum	thread	Fil de discussion
 forum_forum	author	Auteur
 forum_forum	date	Date
-forum_forum	prev_msg	Messages précédents
+forum_forum	prev_msg	Messages prï¿½cï¿½dents
 forum_forum	next_msg	Messages suivants
 forum_forum	start_new_thread	Commencer une nouvelle discussion
 forum_forum	choose_forum_first	Erreur - Veuillez d'abord choisir un forum
@@ -83,42 +83,42 @@ forum_forum	choose_forum_first	Erreur - Veuillez d'abord choisir un forum
 #
 forum_forum_utils	news	Annonces
 forum_forum_utils	news_not_found	Erreur - cette annonce est introuvable
-forum_forum_utils	posted_by	Posté par
-forum_forum_utils	summary	Résumé
-forum_forum_utils	proj_latest_news	Dernières annonces du projet
+forum_forum_utils	posted_by	Postï¿½ par
+forum_forum_utils	summary	Rï¿½sumï¿½
+forum_forum_utils	proj_latest_news	Derniï¿½res annonces du projet
 forum_forum_utils	discuss_forum	Forums de discussions
-forum_forum_utils	stop_monitor	Arrêter la surveillance
+forum_forum_utils	stop_monitor	Arrï¿½ter la surveillance
 forum_forum_utils	monitor	Surveiller Forum
 forum_forum_utils	save_place	Sauvegarder cette position
 forum_forum_utils	start_thread	Commencer une nouvelle discussion
 forum_forum_utils	admin	Administration
-forum_forum_utils	forum_monitored	Forum déjà sous surveillance
+forum_forum_utils	forum_monitored	Forum dï¿½jï¿½ sous surveillance
 forum_forum_utils	insert_err	Erreur lors de l'insertion dans forum_monitoring
 forum_forum_utils	add_err	Erreur lors de l'ajout du forum '$1'.
-forum_forum_utils	forum_added	Forum '$1' Ajouté.
+forum_forum_utils	forum_added	Forum '$1' Ajoutï¿½.
 forum_forum_utils	welcome_to	Bienvenue sur $1
 forum_forum_utils	not_found	Introuvable
-forum_forum_utils	broken_thread	Fil de discussion brisée
+forum_forum_utils	broken_thread	Fil de discussion brisï¿½e
 forum_forum_utils	post_without_id	Tentative de poster un message sans identifiant (ID) de forum
 forum_forum_utils	include_body_and_subject	Veuillez remplir le sujet et le corps du message
-forum_forum_utils	do_not_double_post	Il semble que vous tentiez de poster ce message deux fois, car il a le même sujet et les mêmes information d fil de discussion qu'un précédent message.
-forum_forum_utils	msg_not_exist	Tentative de poster une réponse sur un fil de discussion inexistant.
-forum_forum_utils	no_folowup_id	Identifiant de fil de discussion manquant pour une réponse.
-forum_forum_utils	insert_fail	L'insertion a échoué
-forum_forum_utils	post_failed	L'envoi du message a échoué
-forum_forum_utils	msg_posted	Message posté
-forum_forum_utils	could_post_if_logged	Vous pourriez poster un message si vous étiez connecté
+forum_forum_utils	do_not_double_post	Il semble que vous tentiez de poster ce message deux fois, car il a le mï¿½me sujet et les mï¿½mes information d fil de discussion qu'un prï¿½cï¿½dent message.
+forum_forum_utils	msg_not_exist	Tentative de poster une rï¿½ponse sur un fil de discussion inexistant.
+forum_forum_utils	no_folowup_id	Identifiant de fil de discussion manquant pour une rï¿½ponse.
+forum_forum_utils	insert_fail	L'insertion a ï¿½chouï¿½
+forum_forum_utils	post_failed	L'envoi du message a ï¿½chouï¿½
+forum_forum_utils	msg_posted	Message postï¿½
+forum_forum_utils	could_post_if_logged	Vous pourriez poster un message si vous ï¿½tiez connectï¿½
 forum_forum_utils	msg	Message
 forum_forum_utils	subj	Sujet
-forum_forum_utils	html_displays_as_text	Les balises HTML seront affichées sous forme de texte dans vos messages
+forum_forum_utils	html_displays_as_text	Les balises HTML seront affichï¿½es sous forme de texte dans vos messages
 forum_forum_utils	post_comment	Poster un commentaire
 forum_forum_utils	log_to_post	<A HREF="$1"><u>Connectez-vous en premier</u></A><span class="highlight"> pour poster un message</span>
-forum_forum_utils	read_and_respond	Pour lire et répondre à ce message aller sur
-forum_forum_utils	stop_monitor_explain	Vous recevez ce courrier électronique car vous avez choisi de surveiller ce forum. \nPour arrêter la surveillance, connectez-vous et aller sur 
-forum_forum_utils	mail_sent	e-mail envoyé
-forum_forum_utils	mail_not_sent	e-mail pas envoyé
+forum_forum_utils	read_and_respond	Pour lire et rï¿½pondre ï¿½ ce message aller sur
+forum_forum_utils	stop_monitor_explain	Vous recevez ce courrier ï¿½lectronique car vous avez choisi de surveiller ce forum. \nPour arrï¿½ter la surveillance, connectez-vous et aller sur 
+forum_forum_utils	mail_sent	e-mail envoyï¿½
+forum_forum_utils	mail_not_sent	e-mail pas envoyï¿½
 forum_forum_utils	people_monitoring	Forum sous surveillance
-forum_forum_utils	no_one_monitoring	Forum non surveillé
+forum_forum_utils	no_one_monitoring	Forum non surveillï¿½
 forum_forum_utils	on_post_monitoring	Vous surveillez ce forum.
 forum_forum_utils	on_post_not_monitoring	$1<strong>Surveiller ce forum</strong>
 #
@@ -136,18 +136,18 @@ forum_message	by	De
 forum_message	date	Date
 forum_message	subject	Sujet
 forum_message	thread_view	Vue des fils de discussion
-forum_message	post_followup	Poster une réponse dans cette discussion
+forum_message	post_followup	Poster une rï¿½ponse dans cette discussion
 forum_message	choose_msg_first	Veuillez d'abord choisir un message
 #
 #-----------------------------------------------
 # Script: SF/www/forum/monitor.php
 #
 forum_monitor	monitor	Surveiller un forum
-forum_monitor	monitor_off	La surveillance du forum est arrêté
-forum_monitor	no_mails_anymore	Vous ne recevrez plus de courrier électronique en provenance de ce forum.
-forum_monitor	now_monitoring	La surveillance du forum est maintenant activée
-forum_monitor	get_followups	Vous recevrez désormais un courrier électronique pour chaque message posté sur ce forum.
-forum_monitor	to_turn_monitor_off	Pour arrêter la surveillance, cliquer sur le lien <b>Arrêter la surveillance</B>.
+forum_monitor	monitor_off	La surveillance du forum est arrï¿½tï¿½
+forum_monitor	no_mails_anymore	Vous ne recevrez plus de courrier ï¿½lectronique en provenance de ce forum.
+forum_monitor	now_monitoring	La surveillance du forum est maintenant activï¿½e
+forum_monitor	get_followups	Vous recevrez dï¿½sormais un courrier ï¿½lectronique pour chaque message postï¿½ sur ce forum.
+forum_monitor	to_turn_monitor_off	Pour arrï¿½ter la surveillance, cliquer sur le lien <b>Arrï¿½ter la surveillance</B>.
 forum_monitor	choose_forum_first	Veuillez d'abord choisir un forum
 #
 #-----------------------------------------------
@@ -158,7 +158,7 @@ forum_save	save_your_place	Sauvegarder cette position
 forum_save	insert_err	Erreur lors de l'insertion dans forum_saved_place
 forum_save	msg_highlighted	Les nouveaux messages seront mis en valeur lorsque vous reviendrez.
 forum_save	update_err	Erreur lors de la mise de la date et de l'heure dans forum_saved_place
-forum_save	place_saved	Position dans le forum sauvegardée.
+forum_save	place_saved	Position dans le forum sauvegardï¿½e.
 #
 #-----------------------------------------------
 # Script: SF/www/forum/thread.php

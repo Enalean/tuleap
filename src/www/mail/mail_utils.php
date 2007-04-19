@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: mail_utils.php 2643 2006-02-24 14:24:38Z mnazaria $
+// 
 
 $Language->loadLanguageMsg('mail/mail');
 

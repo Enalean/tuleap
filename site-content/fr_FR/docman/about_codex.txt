@@ -4,30 +4,30 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: about_codex.txt 2689 2006-03-02 15:08:36Z mnazaria $
+// 
 //
 -->
 
 <h2>A propos du site <?php print $GLOBALS['sys_name']; ?> </h2>
 
 <P><?php print $GLOBALS['sys_name']; ?> est un service accessible aux
-<b>équipes de développement logiciel de <?php print
+<b>ï¿½quipes de dï¿½veloppement logiciel de <?php print
 $GLOBALS['sys_org_name']; ?></B>. Son objectif est de promouvoir et de
-faciliter le développement collaboratif ainsi que la réutilisation
-de composants logiciels dans un environnement contrôlé.<p>
+faciliter le dï¿½veloppement collaboratif ainsi que la rï¿½utilisation
+de composants logiciels dans un environnement contrï¿½lï¿½.<p>
 
-<p>L'équipe <?php print $GLOBALS['sys_name']; ?> veut rendre la
-réutilisation de briques logicielles plus aisée et fournir un endroit
-unique où les développeurs, les chefs de projets et les managers
+<p>L'ï¿½quipe <?php print $GLOBALS['sys_name']; ?> veut rendre la
+rï¿½utilisation de briques logicielles plus aisï¿½e et fournir un endroit
+unique oï¿½ les dï¿½veloppeurs, les chefs de projets et les managers
 peuvent consulter la liste des composants et technologies afin de les
-réutiliser, de les adapter et d'améliorer leur productivité en
+rï¿½utiliser, de les adapter et d'amï¿½liorer leur productivitï¿½ en
 capitalisant sur les connaissances de <?php print
 $GLOBALS['sys_org_name']; ?>.</p>
 
-<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="/docman/display_doc.php?docid=16&group_id=1">Politique d'échange de code de <?php print
-$GLOBALS['sys_org_name']; ?></a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
+<p>Pour une approche cohï¿½rente et bï¿½nï¿½fique de la rï¿½utilisation de composants logiciels, l'ï¿½quipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="/docman/display_doc.php?docid=16&group_id=1">Politique d'ï¿½change de code de <?php print
+$GLOBALS['sys_org_name']; ?></a></b>. Elle dï¿½finit les rï¿½gles internes de partage et de rï¿½utilisation et constitue la pierre angulaire de l'ï¿½difice. Prenez le temps de <A
 href="/docman/display_doc.php?docid=16&group_id=1">la lire</a>. <P>
 
 <p>Nous vous remercions pour votre soutien !</P>
 
-<p>L'équipe <?php print $GLOBALS['sys_name']; ?>.</p>
+<p>L'ï¿½quipe <?php print $GLOBALS['sys_name']; ?>.</p>

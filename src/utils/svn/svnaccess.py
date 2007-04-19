@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004-2006. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id: svnaccess.py 4601 2007-01-08 16:03:36 +0000 (Mon, 08 Jan 2007) mnazaria $
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

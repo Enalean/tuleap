@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2006. All rights reserved
  * 
- * $Id$
+ * 
  *
  * Reference Instance class
  * Stores a reference as extracted from some user text.

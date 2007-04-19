@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	UnitTester
-     *	@version	$Id: errors.php,v 1.20 2006/11/15 21:45:26 maugrim_t_r Exp $
+     *	@version	
      */
 
     /** @ignore - PHP5 compatibility fix. */

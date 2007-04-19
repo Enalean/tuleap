@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	UnitTester
-     *	@version	$Id: reflection_php5.php,v 1.24 2006/11/08 19:07:59 lastcraft Exp $
+     *	@version	
      */
 
     /**

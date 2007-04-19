@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: postadd_comment.php 793 2004-01-27 17:30:44Z guerin $
+// 
 
 if ($details != '') { 
 	patch_history_create('details',htmlspecialchars($details),$patch_id);  

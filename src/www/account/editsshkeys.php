@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: editsshkeys.php 2749 2006-03-10 14:10:08Z nterray $
+// 
 
 require_once('pre.php');    
 require_once('account.php');

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: editugroup.php 4159 2006-11-06 15:36:02 +0000 (Mon, 06 Nov 2006) nterray $
+// 
 //
 // Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
 //

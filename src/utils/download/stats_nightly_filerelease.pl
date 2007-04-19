@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-# $Id: stats_nightly_filerelease.pl 3567 2006-08-25 14:11:17Z schneide $
+# 
 #
 # Accumulate file download counts by project (group_id) for the day
 # specified on the command line. If not specified it is for the day before.

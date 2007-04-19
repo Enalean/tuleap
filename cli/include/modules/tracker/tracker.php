@@ -7,7 +7,7 @@
  * Copyright 2005 GForge, LLC
  * http://gforge.org/
  *
- * @version   $Id$
+ * @version   
  */
 require_once(CODEX_CLI_DIR.'/CLI_Module.class.php');
 

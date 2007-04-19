@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: pre.php 5737 2007-04-05 16:20:43 +0000 (Thu, 05 Apr 2007) nterray $
+// 
 
 /*
 	redirect to proper hostname to get around certificate problem on IE 5

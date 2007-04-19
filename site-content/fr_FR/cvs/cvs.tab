@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: cvs.tab 5653 2007-04-03 08:34:42 +0000 (Tue, 03 Apr 2007) ahardyau $
+#  * @version   
 #  *
 #  */
 #
@@ -19,26 +19,26 @@
 #-----------------------------------------------
 # Script: SF/www/cvs/index.php
 #
-cvs_index	config_updated	Configuration mise à jour
-cvs_index	full_success	avec succès
-cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la notification e-mail est désactivée.
+cvs_index	config_updated	Configuration mise ï¿½ jour
+cvs_index	full_success	avec succï¿½s
+cvs_index	partial_success	en partie<br>L'adresse e-mail semble invalide. la notification e-mail est dï¿½sactivï¿½e.
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/admin_commit.php
 #
 cvs_admin_commit	title	Administration CVS
 cvs_admin_commit	tracking_hdr	Suivi CVS
-cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activé, les commits (modification, ajout ou suppression de fichiers ou répertoires) sont enregistrés dans la base de données $1 de façon à pouvoir les visualiser et effectuer des recherches avancées. Dans le cas contraire aucune information n'est conservée dans la base de données ; vous disposez uniquement de l'historique CVS.
+cvs_admin_commit	tracking_msg	Lorsque le suivi de CVS est activï¿½, les commits (modification, ajout ou suppression de fichiers ou rï¿½pertoires) sont enregistrï¿½s dans la base de donnï¿½es $1 de faï¿½on ï¿½ pouvoir les visualiser et effectuer des recherches avancï¿½es. Dans le cas contraire aucune information n'est conservï¿½e dans la base de donnï¿½es ; vous disposez uniquement de l'historique CVS.
 cvs_admin_commit	tracking_lbl	Suivi CVS
 cvs_admin_commit	watches_hdr	Mode CVS Watch
-cvs_admin_commit	watches_msg	CVS crée une copie des fichiers du projet en mode lecture seule, cela pour rappeler aux développeurs d'utiliser la commande cvs edit avant de travailler sur un fichier.
+cvs_admin_commit	watches_msg	CVS crï¿½e une copie des fichiers du projet en mode lecture seule, cela pour rappeler aux dï¿½veloppeurs d'utiliser la commande cvs edit avant de travailler sur un fichier.
 cvs_admin_commit	watches_lbl	Mode Watch CVS
 cvs_admin_commit	notif_hdr	Notification e-mail sur les commits
-cvs_admin_commit	notif_msg	Chaque commit peut faire l'objet d'une notification par courrier électronique vers certains destinataires ou vers une liste de distribution (séparer les adresses avec une virgule). Une entête spécifique apparaissant au début du sujet du message peut aussi être spécifiée.
-cvs_admin_commit	mail_to	Envoyer à
-cvs_admin_commit	subject	Entête du sujet
-cvs_admin_commit	preamble_hdr	Préambule CVS
-cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de CVS</a>. (balises HTML autorisées)
+cvs_admin_commit	notif_msg	Chaque commit peut faire l'objet d'une notification par courrier ï¿½lectronique vers certains destinataires ou vers une liste de distribution (sï¿½parer les adresses avec une virgule). Une entï¿½te spï¿½cifique apparaissant au dï¿½but du sujet du message peut aussi ï¿½tre spï¿½cifiï¿½e.
+cvs_admin_commit	mail_to	Envoyer ï¿½
+cvs_admin_commit	subject	Entï¿½te du sujet
+cvs_admin_commit	preamble_hdr	Prï¿½ambule CVS
+cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en remplacement du message par dï¿½faut figurant sur la <a href="$1">page d'accueil de CVS</a>. (balises HTML autorisï¿½es)
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/cvs_intro.php
@@ -46,11 +46,11 @@ cvs_admin_commit	preamble_msg	Message d'introduction sur l'utilisation de CVS en
 # Rk: for the introduction text see the intro.txt file
 #
 cvs_intro	title	Information CVS
-cvs_intro	repo_history	Historique du dépôt
+cvs_intro	repo_history	Historique du dï¿½pï¿½t
 cvs_intro	no_history	Ce projet n'a pas d'historique CVS.
 cvs_intro	nb_commits	Commits (Derniers 7 jours/Total)
 cvs_intro	browse_title	Naviguer dans l'arbre CVS
-cvs_intro	browse_msg	La navigation dans l'arbre CVS donne un bon aperçu de l'état courant du code source de ce projet. Vous pouvez aussi voir l'historique complet des fichiers du dépôt.
+cvs_intro	browse_msg	La navigation dans l'arbre CVS donne un bon aperï¿½u de l'ï¿½tat courant du code source de ce projet. Vous pouvez aussi voir l'historique complet des fichiers du dï¿½pï¿½t.
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/browse_commit.php
@@ -60,34 +60,34 @@ cvs_browse_commit	browse_by	Afficher les commits par
 cvs_browse_commit	id	ID
 cvs_browse_commit	branch	Branche
 cvs_browse_commit	who	Soumis par
-cvs_browse_commit	keyword	Mots-clés dans les messages de log
+cvs_browse_commit	keyword	Mots-clï¿½s dans les messages de log
 cvs_browse_commit	date	Date de commit
 cvs_browse_commit	pick_date	Cliquer ici pour choisir une date
-cvs_browse_commit	nb_at_once	commits à la fois
-cvs_browse_commit	no_commit	Aucun commit ne correspond à vos critères
+cvs_browse_commit	nb_at_once	commits ï¿½ la fois
+cvs_browse_commit	no_commit	Aucun commit ne correspond ï¿½ vos critï¿½res
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/detail_commit.php
 #
-cvs_detail_commit	title	Commit CVS #$1 - Détails
+cvs_detail_commit	title	Commit CVS #$1 - Dï¿½tails
 cvs_detail_commit	error_notfound	Commit #$1 introuvable dans ce projet
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/commit_utils.php
 #
 cvs_commit_utils	error_project	Seuls les projets peuvent utiliser le service Web CVS
-cvs_commit_utils	error_off	Ce projet a désactivé CVS
+cvs_commit_utils	error_off	Ce projet a dï¿½sactivï¿½ CVS
 cvs_commit_utils	menu_info	Information CVS
 cvs_commit_utils	menu_browse	Afficher l'arbre CVS
 cvs_commit_utils	menu_my	Mes commits CVS
 cvs_commit_utils	menu_query	Recherche CVS
 cvs_commit_utils	menu_admin	Administration CVS
 cvs_commit_utils	error_nogid	ERREUR - pas de group_id
-cvs_commit_utils	sorted_by	trié par
+cvs_commit_utils	sorted_by	triï¿½ par
 cvs_commit_utils	matching	commit(s) correspondant(s)
-cvs_commit_utils	sort_msg	Cliquer sur une entête de colonne pour trier les résultats (ascendant ou descendant), ou <A HREF="$1"><b>réinitialiser le tri</b></a>. Vous pouvez aussi utiliser le <a href="$2"><b>$3 tri multi-colonnes</b></a>.
+cvs_commit_utils	sort_msg	Cliquer sur une entï¿½te de colonne pour trier les rï¿½sultats (ascendant ou descendant), ou <A HREF="$1"><b>rï¿½initialiser le tri</b></a>. Vous pouvez aussi utiliser le <a href="$2"><b>$3 tri multi-colonnes</b></a>.
 cvs_commit_utils	activate	activer	
-cvs_commit_utils	deactivate	désactiver	
+cvs_commit_utils	deactivate	dï¿½sactiver	
 cvs_commit_utils	description	Description
 cvs_commit_utils	id	ID
 cvs_commit_utils	who	Soumis par
@@ -96,23 +96,23 @@ cvs_commit_utils	no_date	pas de date pour ce log
 cvs_commit_utils	on_log	pour ce log
 cvs_commit_utils	commit	Commit #
 cvs_commit_utils	checkin	Checkin -
-cvs_commit_utils	impacted_file	Liste des fichiers concernés
+cvs_commit_utils	impacted_file	Liste des fichiers concernï¿½s
 cvs_commit_utils	file	Fichier
-cvs_commit_utils	rev	Révision
+cvs_commit_utils	rev	Rï¿½vision
 cvs_commit_utils	branch	Branche
 cvs_commit_utils	type	Type
 cvs_commit_utils	add	Ajouter
 cvs_commit_utils	change	Changer
-cvs_commit_utils	remove	Détruire
-cvs_commit_utils	added_line	Lignes ajoutées
-cvs_commit_utils	removed_line	Lignes supprimées
+cvs_commit_utils	remove	Dï¿½truire
+cvs_commit_utils	added_line	Lignes ajoutï¿½es
+cvs_commit_utils	removed_line	Lignes supprimï¿½es
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/viewvc.php
 #
 cvs_viewvc	title	Affichage de l'arbre CVS	
-cvs_viewvc	error_noaccess	Accès refusé
-cvs_viewvc	error_noaccess_msg	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
+cvs_viewvc	error_noaccess	Accï¿½s refusï¿½
+cvs_viewvc	error_noaccess_msg	Vous n'avez pas l'autorisation d'accï¿½s pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
 
 
 

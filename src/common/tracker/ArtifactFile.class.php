@@ -6,7 +6,7 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * @version   $Id:ArtifactFile.class.php 4446 2006-12-08 16:18:48 +0000 (Fri, 08 Dec 2006) ahardyau $
+ * @version   
  *
  */
 //require_once('common/include/Error.class.php');

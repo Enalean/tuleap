@@ -1,5 +1,5 @@
 <?php
-    // $Id: compatibility_test.php,v 1.3 2006/10/08 18:06:12 pp11 Exp $
+    // 
     require_once(dirname(__FILE__) . '/../compatibility.php');
     
     class ComparisonClass {

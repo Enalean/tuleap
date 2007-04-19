@@ -1,7 +1,7 @@
 # CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
 #
-# $Id: db0018.sql 974 2004-04-26 07:15:21Z guerin $
+# 
 #
 # Database upgrade script (see dbXXXX_template for instructions)
 #

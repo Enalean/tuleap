@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id: admin_trackers.php 1387 2005-03-08 16:41:17Z guerin $
+// 
 //
 //
 //  Written for CodeX by Stephane Bouhet

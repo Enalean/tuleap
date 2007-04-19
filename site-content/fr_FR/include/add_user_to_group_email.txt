@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: add_user_to_group_email.txt 2887 2006-04-03 14:47:13Z mnazaria $
+// 
 //
 
 
@@ -14,9 +14,9 @@
 //. "Enjoy.\n\n"
 //. " -- The ".$GLOBALS['sys_name']." Team\n";
 
-$message = "Vous êtes maintenant un membre du projet $group_name sur le site web ".$GLOBALS['sys_name'].".\n"
+$message = "Vous ï¿½tes maintenant un membre du projet $group_name sur le site web ".$GLOBALS['sys_name'].".\n"
 . "Vous pouvez visiter la page principale du projet ici : \n\n"
 . "<". $base_url ."/projects/$unix_group_name/>\n\n"
-. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+. " -- L'ï¿½quipe ".$GLOBALS['sys_name']."\n";
 
 ?>

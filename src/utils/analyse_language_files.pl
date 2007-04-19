@@ -4,7 +4,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2005. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id: analyse_language_files.pl 3591 2006-09-01 09:52:16Z guerin $
+# 
 #
 #  License:
 #      This file is licensed under the GNU General Public License

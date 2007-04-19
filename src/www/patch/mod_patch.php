@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: mod_patch.php 793 2004-01-27 17:30:44Z guerin $
+// 
 
 patch_header(array ('title'=>'Modify a Patch',
 		    'help'=>'PatchProcessing.html'));

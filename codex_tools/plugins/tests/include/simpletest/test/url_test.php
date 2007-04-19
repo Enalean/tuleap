@@ -1,5 +1,5 @@
 <?php
-    // $Id: url_test.php,v 1.25 2006/09/26 20:07:28 maugrim_t_r Exp $
+    // 
     
     require_once(dirname(__FILE__) . '/../url.php');
     
@@ -85,7 +85,7 @@
         
         function testEncodingParameters() {
             $url = new SimpleUrl('');
-            $url->addRequestParameter('a', '?!"\'#~@[]{}:;<>,./|£$%^&*()_+-=');
+            $url->addRequestParameter('a', '?!"\'#~@[]{}:;<>,./|ï¿½$%^&*()_+-=');
             $this->assertIdentical(
                     $request = $url->getEncodedRequest(),
                     '?a=%3F%21%22%27%23%7E%40%5B%5D%7B%7D%3A%3B%3C%3E%2C.%2F%7C%A3%24%25%5E%26%2A%28%29_%2B-%3D');
@@ -95,7 +95,7 @@
             $url = new SimpleUrl('?a=%3F%21%22%27%23%7E%40%5B%5D%7B%7D%3A%3B%3C%3E%2C.%2F%7C%A3%24%25%5E%26%2A%28%29_%2B-%3D');
             $this->assertEqual(
                     $url->getEncodedRequest(),
-                    '?a=' . urlencode('?!"\'#~@[]{}:;<>,./|£$%^&*()_+-='));
+                    '?a=' . urlencode('?!"\'#~@[]{}:;<>,./|ï¿½$%^&*()_+-='));
         }
         
         function testSettingCordinates() {
@@ -169,9 +169,9 @@
         
         function testUsernameAndPasswordAreUrlDecoded() {
             $url = new SimpleUrl('http://' . urlencode('test@test') .
-                    ':' . urlencode('$!£@*&%') . '@www.lastcraft.com');
+                    ':' . urlencode('$!ï¿½@*&%') . '@www.lastcraft.com');
             $this->assertEqual($url->getUsername(), 'test@test');
-            $this->assertEqual($url->getPassword(), '$!£@*&%');
+            $this->assertEqual($url->getPassword(), '$!ï¿½@*&%');
         }
         
         function testBlitz() {

@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	MockObjects
-     *	@version	$Id: parser.php,v 1.73 2006/11/21 00:26:55 lastcraft Exp $
+     *	@version	
      */
 
     /**#@+

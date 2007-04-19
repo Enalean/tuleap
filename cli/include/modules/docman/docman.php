@@ -7,7 +7,7 @@
  * Copyright 2005 GForge, LLC
  * http://gforge.org/
  *
- * @version   $Id: docman.php 5166 2007-03-02 16:58:37Z nterray $
+ * @version   
  */
 
 require_once(CODEX_CLI_DIR.'/CLI_Module.class.php');

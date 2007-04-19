@@ -3,7 +3,7 @@
      *	base include file for SimpleTest
      *	@package	SimpleTest
      *	@subpackage	WebTester
-     *	@version	$Id: url.php,v 1.30 2006/09/26 20:07:28 maugrim_t_r Exp $
+     *	@version	
      */
 
     /**#@+

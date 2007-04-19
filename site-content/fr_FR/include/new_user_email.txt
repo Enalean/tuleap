@@ -4,14 +4,14 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: new_user_email.txt 2659 2006-02-27 14:44:44Z mnazaria $
+// 
 //
 
 
-$message = "Merci d'avoir créé votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
-. "confirmer votre création de compte veuillez suivre le lien ci-dessous : \n\n"
+$message = "Merci d'avoir crï¿½ï¿½ votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
+. "confirmer votre crï¿½ation de compte veuillez suivre le lien ci-dessous : \n\n"
 . "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 . "Vous pouvez maintenant profiter du site.\n\n"
-. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+. " -- L'ï¿½quipe ".$GLOBALS['sys_name']."\n";
 
 ?>

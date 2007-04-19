@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id: cvsaccess.py 3835 2006-09-29 16:02:33Z guerin $
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

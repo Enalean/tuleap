@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: search.tab 2860 2006-03-28 13:52:21Z mnazaria $
+#  * @version   
 #  *
 #  */
 #
@@ -19,10 +19,10 @@
 # Script: SF/www/search/index.php
 #
 search_index	search	Recherche
-search_index	at_least_3_ch	Le mot-clé recherché doit au moins avoir 3 caractères
-search_index	enter_s_words	Saisissez les mots à rechercher dans le champs ci-dessus
+search_index	at_least_3_ch	Le mot-clï¿½ recherchï¿½ doit au moins avoir 3 caractï¿½res
+search_index	enter_s_words	Saisissez les mots ï¿½ rechercher dans le champs ci-dessus
 search_index	no_match_found	Aucune correspondance pour $1
-search_index	search_res	Résultats de la recherche pour $1 ($2 résultats)
+search_index	search_res	Rï¿½sultats de la recherche pour $1 ($2 rï¿½sultats)
 search_index	project_name	Nom du projet
 search_index	description	Description
 search_index	user_n	Nom d'utilisateur
@@ -30,15 +30,15 @@ search_index	real_n	Nom complet
 search_index	thread	Fil
 search_index	author	Auteur
 search_index	date	Date
-search_index	bug_summary	Résumé du bug
+search_index	bug_summary	Rï¿½sumï¿½ du bug
 search_index	submitted_by	Soumis par
-search_index	sr_summary	Résumé de la demande de support
-search_index	task_summary	Résumé de la tâche
-search_index	created_by	Créée par
-search_index	start_date	Date de début
+search_index	sr_summary	Rï¿½sumï¿½ de la demande de support
+search_index	task_summary	Rï¿½sumï¿½ de la tï¿½che
+search_index	created_by	Crï¿½ï¿½e par
+search_index	start_date	Date de dï¿½but
 search_index	end_date	Date de fin
-search_index	snippet_name	Nom de l'échantillon
-search_index	artifact_summary	Résumé de l'artefact
+search_index	snippet_name	Nom de l'ï¿½chantillon
+search_index	artifact_summary	Rï¿½sumï¿½ de l'artefact
 search_index	invalid_search	ERREUR - Recherche invalide
-search_index	prev_res	Résultats précédents
-search_index	next_res	Résultats suivants
+search_index	prev_res	Rï¿½sultats prï¿½cï¿½dents
+search_index	next_res	Rï¿½sultats suivants

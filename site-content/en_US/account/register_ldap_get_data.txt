@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: register_ldap_get_data.txt 1413 2005-03-30 10:04:18Z guerin $
+// 
 //
 
 // The following script is used to automatically set several variables from the LDAP directory 

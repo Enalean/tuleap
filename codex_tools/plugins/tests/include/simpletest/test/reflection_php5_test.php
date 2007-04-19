@@ -1,5 +1,5 @@
 <?php
-    // $Id: reflection_php5_test.php,v 1.13 2006/10/31 16:24:36 tswicegood Exp $
+    // 
 
     abstract class AnyOldClass {
         function aMethod() { }

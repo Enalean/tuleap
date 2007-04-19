@@ -4,9 +4,9 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: download.php 1405 2005-03-21 14:41:41Z guerin $
+// 
 //
-//	Originally written by Stéphane Bouhet, 2002, CodeX Team, Xerox
+//	Originally written by Stï¿½phane Bouhet, 2002, CodeX Team, Xerox
 //
 
 require_once('pre.php');

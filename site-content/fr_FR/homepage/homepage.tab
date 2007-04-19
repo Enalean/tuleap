@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: homepage.tab 4850 2007-02-06 17:25:28 +0000 (Tue, 06 Feb 2007) nterray $
+#  * @version   
 #  *
 #  */
 #
@@ -24,33 +24,33 @@ contact	title	Contactez-nous
 # Script: SF/www/404.php
 #
 404	title	Page introuvable (Erreur 404)
-404	no_archive	Aucun message archivé
+404	no_archive	Aucun message archivï¿½
 404	no_page	PAGE INTROUVABLE
 #
 #-----------------------------------------------
 # Script: SF/www/about_foundries.php
 #
 about_foundries	title	A propos des fonderies
-about_foundries	message	Les fonderies permet aux développeurs ayant les mêmes sujets d'intérêt de se regrouper, de partager leur expertise et des nouveautés, de prendre et donner des conseils, et plus généralement de s'entraider afin de produire rapidement du code de meilleur qualité.<p>Si vous souhaitez contribuer à une fonderie ou la créer, <a href="mailto:$1">contactez-nous</a>.<p>Voici les liste des fonderies actuellement disponibles sur le site&nbsp;: $1</p>
+about_foundries	message	Les fonderies permet aux dï¿½veloppeurs ayant les mï¿½mes sujets d'intï¿½rï¿½t de se regrouper, de partager leur expertise et des nouveautï¿½s, de prendre et donner des conseils, et plus gï¿½nï¿½ralement de s'entraider afin de produire rapidement du code de meilleur qualitï¿½.<p>Si vous souhaitez contribuer ï¿½ une fonderie ou la crï¿½er, <a href="mailto:$1">contactez-nous</a>.<p>Voici les liste des fonderies actuellement disponibles sur le site&nbsp;: $1</p>
 about_foundries	no_foundries	Aucune fonderie disponible
 #
 #-----------------------------------------------
 # Script: SF/www/index.php
 #
 homepage	title	Bienvenue
-homepage	introduction	\n<hr width="100%" size="1" noshade><span class="slogan"><div align="center">\n"Développement Logiciel Collaboratif chez $1."<br>\n</div></span>\n<hr width="100%" size="1" noshade>\n&nbsp;<br>$2 est une <b>plate-forme accessible aux équipes de développement logiciel de $1</B>. <A href="/docs/site/about_codex.php">[&nbsp;En savoir plus sur $2&nbsp;]</A><P>\n$2 offre un accès aisé à un environnement de gestion de projet totalement basé sur une interface Web. En utilisant $2 les équipes de projet peuvent se concentrer sur leurs activités de développement logiciel tout en privilégiant la relation avec leur communauté d'utilisateurs ou de développeurs. <A href="/docs/site/">[&nbsp;En savoir plus sur les services $2&nbsp;]</a>\n<P>\n<u><B>Participation au site</B></u>\n<BR>\nPour profiter pleinement de $2, nous vous recommandons de <A href="/account/register.php">créer un compte utilisateur</a>. C'est facile, rapide et cela vous permettra de participer au mieux. Assurez-vous aussi d'avoir lu la  <b><A href="/docman/display_doc.php?docid=1&group_id=1">Politique d'échange de code de $1</a></b> avant d'utiliser les services du site.\n<P>\n<u><B>Créer votre propre projet</B></u><BR>Après avoir <A href="/account/register.php">créé votre compte utilisateur</A>,\n <A HREF="/account/login.php">connectez-vous</A> et \n<A HREF="/project/register.php">créez votre projet</A>. Cela ne prend que quelques minutes de mettre en place un environnement de projet totalement opérationnel.\n<P>\n<B><U>CLI CodeX</U></B><BR />CodeX vous fournit un Client en LIgne de commande (CLI) basé sur l'<a href="/soap/index.php">API SOAP de CodeX</a> pour accéder à CodeX par l'intermédiaire d'un client en ligne de commande. Vous pouvez télécharger le <a href="/downloads/CodeX_CLI.zip">Client en Ligne de Commande CodeX</a> ainsi que sa <a href="documentation/cli/pdf/fr_FR/CodeX_CLI.pdf">documentation</a>.\n<P>\nMerci... et profitez au mieux du site.\n
-homepage	news_title	Dernières annonces
-homepage	news_title2	Dernières annonces - Format RSS
+homepage	introduction	\n<hr width="100%" size="1" noshade><span class="slogan"><div align="center">\n"Dï¿½veloppement Logiciel Collaboratif chez $1."<br>\n</div></span>\n<hr width="100%" size="1" noshade>\n&nbsp;<br>$2 est une <b>plate-forme accessible aux ï¿½quipes de dï¿½veloppement logiciel de $1</B>. <A href="/docs/site/about_codex.php">[&nbsp;En savoir plus sur $2&nbsp;]</A><P>\n$2 offre un accï¿½s aisï¿½ ï¿½ un environnement de gestion de projet totalement basï¿½ sur une interface Web. En utilisant $2 les ï¿½quipes de projet peuvent se concentrer sur leurs activitï¿½s de dï¿½veloppement logiciel tout en privilï¿½giant la relation avec leur communautï¿½ d'utilisateurs ou de dï¿½veloppeurs. <A href="/docs/site/">[&nbsp;En savoir plus sur les services $2&nbsp;]</a>\n<P>\n<u><B>Participation au site</B></u>\n<BR>\nPour profiter pleinement de $2, nous vous recommandons de <A href="/account/register.php">crï¿½er un compte utilisateur</a>. C'est facile, rapide et cela vous permettra de participer au mieux. Assurez-vous aussi d'avoir lu la  <b><A href="/docman/display_doc.php?docid=1&group_id=1">Politique d'ï¿½change de code de $1</a></b> avant d'utiliser les services du site.\n<P>\n<u><B>Crï¿½er votre propre projet</B></u><BR>Aprï¿½s avoir <A href="/account/register.php">crï¿½ï¿½ votre compte utilisateur</A>,\n <A HREF="/account/login.php">connectez-vous</A> et \n<A HREF="/project/register.php">crï¿½ez votre projet</A>. Cela ne prend que quelques minutes de mettre en place un environnement de projet totalement opï¿½rationnel.\n<P>\n<B><U>CLI CodeX</U></B><BR />CodeX vous fournit un Client en LIgne de commande (CLI) basï¿½ sur l'<a href="/soap/index.php">API SOAP de CodeX</a> pour accï¿½der ï¿½ CodeX par l'intermï¿½diaire d'un client en ligne de commande. Vous pouvez tï¿½lï¿½charger le <a href="/downloads/CodeX_CLI.zip">Client en Ligne de Commande CodeX</a> ainsi que sa <a href="documentation/cli/pdf/fr_FR/CodeX_CLI.pdf">documentation</a>.\n<P>\nMerci... et profitez au mieux du site.\n
+homepage	news_title	Derniï¿½res annonces
+homepage	news_title2	Derniï¿½res annonces - Format RSS
 #
 #-----------------------------------------------
 # Script: SF/www/sendmessage.php
 #
-sendmessage	title	Envoyez un message à $1
-sendmessage	message	Veuillez remplir la totalité de ce formulaire avec précision faute de quoi le destinataire pourrait ne pas être en mesure de vous répondre.<P><span class="highlight"><B>SI VOUS ECRIVEZ POUR DEMANDER DE L'AIDE&nbsp;:</B> Etes-vous sur d'avoir lu la documentation du site ? Avez-vous précisé votre <B>nom d'utilisateur</B> Si vous écrivez à propos d'un projet n'oubliez pas de préciser son nom.</span>
+sendmessage	title	Envoyez un message ï¿½ $1
+sendmessage	message	Veuillez remplir la totalitï¿½ de ce formulaire avec prï¿½cision faute de quoi le destinataire pourrait ne pas ï¿½tre en mesure de vous rï¿½pondre.<P><span class="highlight"><B>SI VOUS ECRIVEZ POUR DEMANDER DE L'AIDE&nbsp;:</B> Etes-vous sur d'avoir lu la documentation du site ? Avez-vous prï¿½cisï¿½ votre <B>nom d'utilisateur</B> Si vous ï¿½crivez ï¿½ propos d'un projet n'oubliez pas de prï¿½ciser son nom.</span>
 sendmessage	err_nouser	Cet utilisateur n'existe pas.
 sendmessage	err_host	Vous pouvez uniquement envoyer un message aux adresses du type @$1.
-sendmessage	err_noparam	Certaines variables n'ont pas été fournies (ID utilisateur ou adresse e-mail)
-sendmessage	title_sent	Message à $1 envoyé
+sendmessage	err_noparam	Certaines variables n'ont pas ï¿½tï¿½ fournies (ID utilisateur ou adresse e-mail)
+sendmessage	title_sent	Message ï¿½ $1 envoyï¿½
 sendmessage	email	Votre adresse e-mail
 sendmessage	name	Votre nom
 sendmessage	subject	Sujet
@@ -61,5 +61,5 @@ sendmessage	send_btn	Envoyer le message
 # Script: SF/www/sflogo.php
 #
 sflogo	err_logger	Un erreur est survenue dans le logger.	
-sflogo	err_nogroup	xxxxx ID DE GROUPE NON SPECIFIÉ xxxxxxx	
+sflogo	err_nogroup	xxxxx ID DE GROUPE NON SPECIFIï¿½ xxxxxxx	
 

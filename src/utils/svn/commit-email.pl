@@ -13,7 +13,7 @@
 # $LastChangedRevision: 5701 $
 #
 #
-# $Id: commit-email.pl 5701 2007-04-04 14:56:25 +0000 (Wed, 04 Apr 2007) nterray $
+# 
 #
 # Heavily modified by Laurent Julliard for the CodeX project at Xerox
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved

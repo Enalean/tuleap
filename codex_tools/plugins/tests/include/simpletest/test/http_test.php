@@ -1,5 +1,5 @@
 <?php
-    // $Id: http_test.php,v 1.90 2005/12/07 18:04:58 lastcraft Exp $
+    // 
     
     require_once(dirname(__FILE__) . '/../encoding.php');
     require_once(dirname(__FILE__) . '/../http.php');

@@ -11,83 +11,83 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: include.tab 5273 2007-03-13 10:48:00 +0000 (Tue, 13 Mar 2007) mnazaria $
+#  * @version   
 #  *
 #  */
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php
 #
-include_account	pwd_length_err	Le mot de passe doit comporter au moins 6 caractères.
-include_account	account_pending	Compte '$1' en attente. Il doit d'abord être confirmé. L'utilisateur n'a pas été ajouté.
-include_account	user_added	Utilisateur ajouté
-include_account	user_already_member	L'utilisateur est déjà membre
+include_account	pwd_length_err	Le mot de passe doit comporter au moins 6 caractï¿½res.
+include_account	account_pending	Compte '$1' en attente. Il doit d'abord ï¿½tre confirmï¿½. L'utilisateur n'a pas ï¿½tï¿½ ajoutï¿½.
+include_account	user_added	Utilisateur ajoutï¿½
+include_account	user_already_member	L'utilisateur est dï¿½jï¿½ membre
 include_account	user_not_exist	L'utilisateur n'existe pas
 include_account	welcome	$1 - Bienvenue sur le projet $2
 include_account	login_err	Les espaces sont interdits dans le nom de login.
-include_account	char_err	Il doit y avoir au moins un caractère.
-include_account	illegal_char	Caractère non autorisé dans le nom.
-include_account	name_too_short	Le nom est trop court. Il doit comporter au moins caractères.
-include_account	name_too_long	Le nom est trop long. Il doit comporter au plus 32 caractères.
-include_account	reserved	Le nom est réservé.
-include_account	reserved_cvs	Le nom est réservé pour CVS.
-include_account	reserved_dns	Le nom est réservé pour le DNS.
-include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés en raison du DNS.
+include_account	char_err	Il doit y avoir au moins un caractï¿½re.
+include_account	illegal_char	Caractï¿½re non autorisï¿½ dans le nom.
+include_account	name_too_short	Le nom est trop court. Il doit comporter au moins caractï¿½res.
+include_account	name_too_long	Le nom est trop long. Il doit comporter au plus 32 caractï¿½res.
+include_account	reserved	Le nom est rï¿½servï¿½.
+include_account	reserved_cvs	Le nom est rï¿½servï¿½ pour CVS.
+include_account	reserved_dns	Le nom est rï¿½servï¿½ pour le DNS.
+include_account	dns_error	Les noms de projet ne peuvent comporter de caractï¿½res soulignï¿½s en raison du DNS.
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php
 #
-include_cache	unable_open_cache	Impossible d'ouvrir le fichier cache en écriture après avoir obtenu le verrou.
+include_cache	unable_open_cache	Impossible d'ouvrir le fichier cache en ï¿½criture aprï¿½s avoir obtenu le verrou.
 #
 #-----------------------------------------------
 # Script: SF/www/include/exit.php
 #   
 include_exit	error	Erreur
 include_exit	info	Information
-include_exit	perm_denied	Permission refusée
+include_exit	perm_denied	Permission refusï¿½e
 include_exit	exit_error	Sortie avec erreur
-include_exit	no_perm	Vous droits sont insuffisants pour effectuer cette opération.
-include_exit	restricted_user_no_perm	Vous possédez un compte restreint.<br> Celui-ci ne vous permet d'accéder qu'aux pages des projets dont vous êtes membre.<p><a href="/my/">Retourner à votre page personnelle.</a>
-include_exit	not_logged_in	Déconnecté
-include_exit	need_to_login	Désolé, vous devez <A HREF="/account/login.php">être connecté</A> pour visualiser cette page.
+include_exit	no_perm	Vous droits sont insuffisants pour effectuer cette opï¿½ration.
+include_exit	restricted_user_no_perm	Vous possï¿½dez un compte restreint.<br> Celui-ci ne vous permet d'accï¿½der qu'aux pages des projets dont vous ï¿½tes membre.<p><a href="/my/">Retourner ï¿½ votre page personnelle.</a>
+include_exit	not_logged_in	Dï¿½connectï¿½
+include_exit	need_to_login	Dï¿½solï¿½, vous devez <A HREF="/account/login.php">ï¿½tre connectï¿½</A> pour visualiser cette page.
 include_exit	choose_proj_err	Erreur - Veuillez choisir un projet
-include_exit	no_gid_err	Erreur - Aucun group_id spécifié.
-include_exit	missing_param_err	Erreur - Paramètres manquants
+include_exit	no_gid_err	Erreur - Aucun group_id spï¿½cifiï¿½.
+include_exit	missing_param_err	Erreur - Paramï¿½tres manquants
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php
 #   
 include_features_boxes	stats	Statistiques
-include_features_boxes	top_download_yesterday	Top téléchargements hier
-include_features_boxes	newest_releases	Versions récentes
+include_features_boxes	top_download_yesterday	Top tï¿½lï¿½chargements hier
+include_features_boxes	newest_releases	Versions rï¿½centes
 include_features_boxes	rss_format	- Format RSS
 include_features_boxes	xml	XML
-include_features_boxes	newest_projects	Projets récents
+include_features_boxes	newest_projects	Projets rï¿½cents
 include_features_boxes	most_active_week	Les plus actifs cette semaine
 include_features_boxes	most_active	Les plus actifs
-include_features_boxes	top_downloads	Top des téléchargements
-include_features_boxes	featured_projects	Projets à l'affiche
+include_features_boxes	top_downloads	Top des tï¿½lï¿½chargements
+include_features_boxes	featured_projects	Projets ï¿½ l'affiche
 include_features_boxes	more	Plus
 include_features_boxes	no_projects	Aucun projet
-include_features_boxes	downloads_yesterday	Téléchargements hier
-include_features_boxes	hosted_projects	Projets hébergés
+include_features_boxes	downloads_yesterday	Tï¿½lï¿½chargements hier
+include_features_boxes	hosted_projects	Projets hï¿½bergï¿½s
 include_features_boxes	registered_users	Comptes utilisateurs
-include_features_boxes	files_download	Fichiers téléchargés
-include_features_boxes	pages_viewed	Pages visitées
+include_features_boxes	files_download	Fichiers tï¿½lï¿½chargï¿½s
+include_features_boxes	pages_viewed	Pages visitï¿½es
 #
 #-----------------------------------------------
 # Script: SF/www/include/foundry_admin.php
 #
 include_foundry_admin	removed_proj	Enlever un projet
-include_foundry_admin	user_not_removed	Impossible d'enlever l'utilisateur - Vous ne pouvez pas enlever un administrateur d'un projet.\nVous devez d'abord leur enlever leur droit d'administrateur et/ou désigner un autre administrateur pour ce projet
-include_foundry_admin	user_removed	Utilisateur enlevé
-include_foundry_admin	proj_added	Le projet a été ajouté
-include_foundry_admin	proj_already_member	Le projet est déjà membre
+include_foundry_admin	user_not_removed	Impossible d'enlever l'utilisateur - Vous ne pouvez pas enlever un administrateur d'un projet.\nVous devez d'abord leur enlever leur droit d'administrateur et/ou dï¿½signer un autre administrateur pour ce projet
+include_foundry_admin	user_removed	Utilisateur enlevï¿½
+include_foundry_admin	proj_added	Le projet a ï¿½tï¿½ ajoutï¿½
+include_foundry_admin	proj_already_member	Le projet est dï¿½jï¿½ membre
 include_foundry_admin	proj_not_exist	Ce projet n'existe pas
-include_foundry_admin	upd_fail	La mise à jour a échoué
-include_foundry_admin	data_updated	Données mises à jour
+include_foundry_admin	upd_fail	La mise ï¿½ jour a ï¿½chouï¿½
+include_foundry_admin	data_updated	Donnï¿½es mises ï¿½ jour
 include_foundry_admin	proj_admin	Administration du projet&nbsp;: $1
-include_foundry_admin	featured_proj	Projets à l'affiche
+include_foundry_admin	featured_proj	Projets ï¿½ l'affiche
 include_foundry_admin	no_proj	Aucun projet
 include_foundry_admin	g_members	Membres du projet
 include_foundry_admin	edit_perm	Modifier les permissions des membres
@@ -98,8 +98,8 @@ include_foundry_admin	edit_freeform	Edition HTML libre
 include_foundry_admin	tool_admin	Administration des outils
 include_foundry_admin	guide_img	Image guide
 include_foundry_admin	logo_img	Image logo
-include_foundry_admin	trove_cat	Catégories
-include_foundry_admin	must_separate	séparer avec des virgules
+include_foundry_admin	trove_cat	Catï¿½gories
+include_foundry_admin	must_separate	sï¿½parer avec des virgules
 include_foundry_admin	add_proj_users	Ajouter des projets/utilisateurs
 include_foundry_admin	add_proj	Ajouter un projet
 include_foundry_admin	add_user	Ajouter un utilisateur
@@ -118,18 +118,18 @@ include_foundry_home	no_forums_found	Pas de forum pour $1
 #-----------------------------------------------
 # Script: SF/www/include/foundry_html_admin.php
 #
-include_foundry_html_admin	choose_field	Choisir un champ à éditer
+include_foundry_html_admin	choose_field	Choisir un champ ï¿½ ï¿½diter
 include_foundry_html_admin	top_freeform	HTML libre haut
 include_foundry_html_admin	bottom_freeform	HTML libre bas
 include_foundry_html_admin	sponsor	HTML Sponsors
-include_foundry_html_admin	preview	Prévisualisation
+include_foundry_html_admin	preview	Prï¿½visualisation
 include_foundry_html_admin	save_changes	Sauver les changements
 #
 #-----------------------------------------------
 # Script: SF/www/include/foundry_news.php
 #
-include_foundry_news	upd_err	ERREUR lors de la mise à jour
-include_foundry_news	newsbyte_upd	Annonce mise à jour.
+include_foundry_news	upd_err	ERREUR lors de la mise ï¿½ jour
+include_foundry_news	newsbyte_upd	Annonce mise ï¿½ jour.
 include_foundry_news	newsbyte	Annonces
 include_foundry_news	not_found_err	Erreur&nbsp;: introuvable
 include_foundry_news	approve_newsbyte	Approuve une annonce
@@ -137,16 +137,16 @@ include_foundry_news	submitted_for_proj	Soumise par le projet
 include_foundry_news	submitted_by	Soumise par
 include_foundry_news	approve_for_foundry	Approuver pour la page d'accueil de la fonderie
 include_foundry_news	unapprove	Rejeter
-include_foundry_news	delete	Détruire
+include_foundry_news	delete	Dï¿½truire
 include_foundry_news	subject	Sujet
-include_foundry_news	details	Détails
+include_foundry_news	details	Dï¿½tails
 include_foundry_news	no_queued_items_found	Aucune annonce dans la file d'attente
-include_foundry_news	items_need_approve	Ces annonces doivent être approuvées
-include_foundry_news	no_deleted_items_this_week	Aucune annonce détruite cette semaine	
-include_foundry_news	items_deleted_past_week	Ces annonces ont été détruites la semaine passée
-include_foundry_news	no_approved_items_this_week	Aucune annonce approuvée cette semaine
-include_foundry_news	items_approved_past_week	Ces annonces ont été approuvée la semaine passée
-include_foundry_news	need_to_be_proj_admin	Permission refusée. Vous devez administrateur du projet ou du site.
+include_foundry_news	items_need_approve	Ces annonces doivent ï¿½tre approuvï¿½es
+include_foundry_news	no_deleted_items_this_week	Aucune annonce dï¿½truite cette semaine	
+include_foundry_news	items_deleted_past_week	Ces annonces ont ï¿½tï¿½ dï¿½truites la semaine passï¿½e
+include_foundry_news	no_approved_items_this_week	Aucune annonce approuvï¿½e cette semaine
+include_foundry_news	items_approved_past_week	Ces annonces ont ï¿½tï¿½ approuvï¿½e la semaine passï¿½e
+include_foundry_news	need_to_be_proj_admin	Permission refusï¿½e. Vous devez administrateur du projet ou du site.
 #
 #-----------------------------------------------
 # Script: SF/www/include/group.php
@@ -156,7 +156,7 @@ include_group	g_not_found	Groupe introuvable
 #-----------------------------------------------
 # Script: SF/www/include/help.php
 #
-include_help	site_help_sys	Système d'aide du site
+include_help	site_help_sys	Systï¿½me d'aide du site
 #
 #-----------------------------------------------
 # Script: SF/www/include/html.php
@@ -171,15 +171,15 @@ include_html	unknown_value	*** valeur inconnue ***
 #-----------------------------------------------
 # Script: SF/www/include/layout.php
 #
-include_layout	latest_news_rss	Dernières annonces RSS
-include_layout	newest_releases_rss	Dernières versions RSS
+include_layout	latest_news_rss	Derniï¿½res annonces RSS
+include_layout	newest_releases_rss	Derniï¿½res versions RSS
 include_layout	newest_projects_rss	Derniers projets RSS
 include_layout	query_count	Nombre de requetes
-include_layout	banner	Bannière
+include_layout	banner	Banniï¿½re
 include_layout	logo	Logo
 include_layout	counter	Compteur
 include_layout	Help	Aide
-include_layout	network_gallery	Galerie réseau
+include_layout	network_gallery	Galerie rï¿½seau
 include_layout	template_warning	Attention ce projet est un patron de projet
 #
 #-----------------------------------------------
@@ -187,12 +187,12 @@ include_layout	template_warning	Attention ce projet est un patron de projet
 #
 include_license	cannot_open_acc	Impossible d'ouvrir le fichier d'acceptation de la licence&nbsp;: $1 
 include_license	license_accepted	CodeX Core Software License accepted on 
-include_license	cannot_write_acc	Impossible d'écrire dans le fichier d'acceptation de la license&nbsp;: $1
+include_license	cannot_write_acc	Impossible d'ï¿½crire dans le fichier d'acceptation de la license&nbsp;: $1
 include_license	cannot_open_decl	Impossible d'ouvrir le fichier de refus de la licence&nbsp;: $1
 include_license	license_declined	CodeX Core Software License declined on 
-include_license	cannot_write_decl	Impossible d'écrire dans le fichier de refus de la licence&nbsp;: $1
+include_license	cannot_write_decl	Impossible d'ï¿½crire dans le fichier de refus de la licence&nbsp;: $1
 include_license	msg_accept	Merci d'avoir accepter les termes de la licence \nCodeX. Vous pouvez maintenant utiliser le site
-include_license	msg_declined	Vous avez choisi de refuser les termes de la licence du logiciel CodeX. Vous devez donc retourner à Xerox la totalité du logiciel et de la documentation distribuée sous cette licence et procéder à la désinstallation sur l'ensemble de vos machines
+include_license	msg_declined	Vous avez choisi de refuser les termes de la licence du logiciel CodeX. Vous devez donc retourner ï¿½ Xerox la totalitï¿½ du logiciel et de la documentation distribuï¿½e sous cette licence et procï¿½der ï¿½ la dï¿½sinstallation sur l'ensemble de vos machines
 #
 #-----------------------------------------------
 # Script: SF/www/include/logger.php
@@ -210,17 +210,17 @@ include_menu	pending_projects	Projets en attente
 include_menu	pending_users	Utilisateur en attente
 include_menu	site_news_approve	Approbation annonces site
 include_menu	mass_mail	Courrier en masse
-include_menu	trove_cat_list	Liste des catégories
-include_menu	trove_cat_add	Ajout des catégories
-include_menu	people_skill	Compétences utilisateurs
+include_menu	trove_cat_list	Liste des catï¿½gories
+include_menu	trove_cat_add	Ajout des catï¿½gories
+include_menu	people_skill	Compï¿½tences utilisateurs
 include_menu	bugs	Bugs
-include_menu	tasks	Tâches
+include_menu	tasks	Tï¿½ches
 include_menu	supp_requ	Demande de support
 include_menu	this_forum	Ce forum
 include_menu	wiki	Wiki
 include_menu	this_tracker	Cet outil de suivi
 include_menu	software_proj	Projets logiciel
-include_menu	code_snippets	Boîte à outils 
+include_menu	code_snippets	Boï¿½te ï¿½ outils 
 include_menu	people	Utilisateurs
 include_menu	this_wiki	Ce wiki
 include_menu	require_all_words	Tous les mots
@@ -229,14 +229,14 @@ include_menu	software_map	Arbre des projets
 include_menu	software	Logiciels
 include_menu	new_releases	Nouvelles versions
 include_menu	other_site_mirrors	Autres sites miroirs
-include_menu	code_snippet_lib	Boîte à outils
+include_menu	code_snippet_lib	Boï¿½te ï¿½ outils
 include_menu	help_index	Index de l'aide
 include_menu	site_doc	Documentation site
-include_menu	dev_channel	Canaux développeurs
+include_menu	dev_channel	Canaux dï¿½veloppeurs
 include_menu	discussion_forum	Forums de discussions
 include_menu	contact_us	Contactez-nous
 include_menu	sf_foundries	Fonderies CodeX
-include_menu	about_foudries	À propos des fonderies
+include_menu	about_foudries	ï¿½ propos des fonderies
 include_menu	games	Jeux
 include_menu	printing	Impression
 include_menu	proj	Projet
@@ -246,20 +246,20 @@ include_menu	summary_page	Sommaire
 include_menu	foundry_admin	Administration fonderie
 include_menu	foundry_guides	Guides fonderies
 include_menu	foundry	Fonderie
-include_menu	logged_in	Connecté
-include_menu	logout	Se déconnecter
+include_menu	logged_in	Connectï¿½
+include_menu	logout	Se dï¿½connecter
 include_menu	register_new_proj	Enregistrer un projet
 include_menu	account_maintenance	Mon compte
 include_menu	my_perso_page	Ma page personnelle
 include_menu	bookmark_this_page	Cette page en signet
-include_menu	not_logged_in	Déconnecté
+include_menu	not_logged_in	Dï¿½connectï¿½
 include_menu	login	Se connecter
 include_menu	new_user	Nouveau compte
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php
 #
-include_pre	site_admin_declines_license	Votre administrateur site a décliné la licence logicielle CodeX. \nLe site CodeX a été arrêté. Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
+include_pre	site_admin_declines_license	Votre administrateur site a dï¿½clinï¿½ la licence logicielle CodeX. \nLe site CodeX a ï¿½tï¿½ arrï¿½tï¿½. Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/include/project.php
@@ -274,16 +274,16 @@ include_project_home	not_official_site	<P>NOTE: This project entry is maintained
 include_project_home	more_info	Plus d'information
 include_project_home	no_short_desc	Ce projet n'a pas encore soumis une description courte. Vous pouvez <a href="$1">la soumettre</a> maintenant.
 include_project_home	other_info	Autre information
-include_project_home	view_proj_activity	Afficher les <a href="$1">statistiques</a> d'activité du projet
-include_project_home	devel_info	Équipe de projet
+include_project_home	view_proj_activity	Afficher les <a href="$1">statistiques</a> d'activitï¿½ du projet
+include_project_home	devel_info	ï¿½quipe de projet
 include_project_home	proj_admins	Administrateurs du projet
 include_project_home	devels	Membres
 include_project_home	view_members	Voir les membres
-include_project_home	latest_file_releases	Derniers fichiers publiés
+include_project_home	latest_file_releases	Derniers fichiers publiï¿½s
 include_project_home	package	Paquet
 include_project_home	version	Version
-include_project_home	download	Téléchargement
-include_project_home	no_files_released	Ce projet n'a publié aucun fichier
+include_project_home	download	Tï¿½lï¿½chargement
+include_project_home	no_files_released	Ce projet n'a publiï¿½ aucun fichier
 include_project_home	release_notes	Lire les notes et les modifications de cette version
 include_project_home	monitor_pack	Surveiller ce paquet
 include_project_home	view_all_files	Voir tous les fichiers du projet
@@ -305,31 +305,31 @@ include_project_home	open_patches	<B>$1</B> corrections ouvertes
 include_project_home	mail_lists	Listes de distribution
 include_project_home	public_mail_lists	<B>$1</B> listes publiques
 include_project_home	total	<B>$1</B> au total
-include_project_home	task_manager	Gestionnaire de tâches
-include_project_home	proj_task_man	Gestionnaire de projet/tâches
+include_project_home	task_manager	Gestionnaire de tï¿½ches
+include_project_home	proj_task_man	Gestionnaire de projet/tï¿½ches
 include_project_home	no_public_proj	Aucun projet public disponible
 include_project_home	wiki	Wiki
 include_project_home	nb_wiki_pages	<B>$1</B> pages
 include_project_home	surveys	Sondages
 include_project_home	nb_surveys	<B>$1</B> sondage(s)
-include_project_home	cvs_repo	Dépôt CVS
+include_project_home	cvs_repo	Dï¿½pï¿½t CVS
 include_project_home	commits	<B>$1</B> commits
 include_project_home	adds	<B>$1</B> adds
 include_project_home	co	<B>$1</B> checkouts
 include_project_home	browse_cvs	Parcourir l'arbre CVS
-include_project_home	svn_repo	Dépôt Subversion
+include_project_home	svn_repo	Dï¿½pï¿½t Subversion
 include_project_home	browse_svn	Parcourir l'arbre Subversion
-include_project_home	accesses	<B>$1</B> accès
+include_project_home	accesses	<B>$1</B> accï¿½s
 include_project_home	files	Fichiers
-include_project_home	file_releases	Fichiers publiés
+include_project_home	file_releases	Fichiers publiï¿½s
 include_project_home	packages	<B>$1</B> paquet(s)
 include_project_home	trackers	Outils de suivi
 include_project_home	no_arttypefact	Impossible d'obtenir un ArtifactTypeFactory
 include_project_home	no_trackers_accessible	Aucun outil de suivi accessible
 include_project_home	anon_ftp_space	Espace FTP anonyme
-include_project_home	latest_news	Dernières annonces
+include_project_home	latest_news	Derniï¿½res annonces
 include_project_home	start_monitoring	Surveiller ce paquet
-include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
+include_project_home	stop_monitoring	Arrï¿½ter de surveiller ce paquet
 
 #
 #-----------------------------------------------
@@ -338,8 +338,8 @@ include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
 include_proj_email	g_not_exist	Le groupe [ $1 ] n'existe pas.
 include_proj_email	no_admin	Le groupe [ $1 ] n'a apparemment pas d'administrateur.
 include_proj_email	proj_type	Type de projet
-include_proj_email	proj_approve	Projet $1 approuvé
-include_proj_email	account_register	Création du compte utilisateur $1
+include_proj_email	proj_approve	Projet $1 approuvï¿½
+include_proj_email	account_register	Crï¿½ation du compte utilisateur $1
 #
 #-----------------------------------------------
 # Script: SF/www/include/session.php
@@ -351,47 +351,47 @@ include_session	dir_authent	Authentification annuaire
 include_session	use_ldap_login	Veuillez utiliser votre login LDAP
 include_session	account_suspended	Compte suspendu
 include_session	account_pending	Compte en attente
-include_session	account_deleted	Compte détruit
+include_session	account_deleted	Compte dï¿½truit
 include_session	account_not_active	Compte inactif
-include_session	insufficient_g_access	Permissions d'accès au projet insuffisantes
-include_session	no_perm_to_view	Vous n'avez pas la permission d'accéder à cette page
+include_session	insufficient_g_access	Permissions d'accï¿½s au projet insuffisantes
+include_session	no_perm_to_view	Vous n'avez pas la permission d'accï¿½der ï¿½ cette page
 include_session	insufficient_u_access	Permissions utilisateurs insuffisantes
 include_session	required_login	Connexion requise
-include_session	login	Pour voir cette page, vous devez être connecté.
-include_session	insufficient_access	Permissions d'accès insuffisantes
-include_session	no_access	Vous essayez d'accéder à une zone du site pour laquelle vous n'avez pas les permissions requises. Vous pouvez probablement résoudre ce problème en naviguant de façon adéquate sur le site.
-include_session	hash_err	ERREUR&nbsp;: deux personnes ont la même clé - faîtes un retour en arrière et cela ne devrait plus se produire
+include_session	login	Pour voir cette page, vous devez ï¿½tre connectï¿½.
+include_session	insufficient_access	Permissions d'accï¿½s insuffisantes
+include_session	no_access	Vous essayez d'accï¿½der ï¿½ une zone du site pour laquelle vous n'avez pas les permissions requises. Vous pouvez probablement rï¿½soudre ce problï¿½me en naviguant de faï¿½on adï¿½quate sur le site.
+include_session	hash_err	ERREUR&nbsp;: deux personnes ont la mï¿½me clï¿½ - faï¿½tes un retour en arriï¿½re et cela ne devrait plus se produire
 #
 #-----------------------------------------------
 # Script: SF/www/include/snippet_caching.php
 #
-include_snippet_caching	browse_snippet	Parcourir les échantillons 
-include_snippet_caching	browse_explain	Vous pouvez parcourir la bibliothèque d'échantillons par langage ou catégorie. Vous pouvez aussi effectuer une recherche par mots-clés en utilisant la boite de recherche.
-include_snippet_caching	count_update	Dernière mise à jour&nbsp;: $1
+include_snippet_caching	browse_snippet	Parcourir les ï¿½chantillons 
+include_snippet_caching	browse_explain	Vous pouvez parcourir la bibliothï¿½que d'ï¿½chantillons par langage ou catï¿½gorie. Vous pouvez aussi effectuer une recherche par mots-clï¿½s en utilisant la boite de recherche.
+include_snippet_caching	count_update	Derniï¿½re mise ï¿½ jour&nbsp;: $1
 include_snippet_caching	browse_lang	Parcourir par langage
-include_snippet_caching	browse_cat	Parcourir par catégorie
+include_snippet_caching	browse_cat	Parcourir par catï¿½gorie
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_exit.php
 #
 include_squal_exit	err	ERREUR
-include_squal_exit	perm_denied	PERMISSION REFUSÉE
+include_squal_exit	perm_denied	PERMISSION REFUSï¿½E
 include_squal_exit	choose_proj	CHOISIR UN PROJET/GROUPE
-include_squal_exit	missing_param	PARAMÈTRES REQUIS ABSENTS
+include_squal_exit	missing_param	PARAMï¿½TRES REQUIS ABSENTS
 #
 #-----------------------------------------------
 # Script: SF/www/include/squal_pre.php
 #
-include_squal_pre	not_connect_db	Connexion à la base de données impossible
+include_squal_pre	not_connect_db	Connexion ï¿½ la base de donnï¿½es impossible
 #
 #-----------------------------------------------
 # Script: SF/www/include/stats_function.php
 #
-include_stats_function	stats_problem	Problème de statistiques
+include_stats_function	stats_problem	Problï¿½me de statistiques
 include_stats_function	view_by_week	Pages vues par semaine
 include_stats_function	view_by_hour	Pages vues par heure
-include_stats_function	new_proj_added	Nouveaux projets créés chaque semaine
-include_stats_function	new_user_added	Nouveaux utilisateurs créés chaque semaine
+include_stats_function	new_proj_added	Nouveaux projets crï¿½ï¿½s chaque semaine
+include_stats_function	new_user_added	Nouveaux utilisateurs crï¿½ï¿½s chaque semaine
 include_stats_function	logo_by_day	Affichage du logo par jour
 include_stats_function	logo_by_proj	Affichage du logo par projet
 include_stats_function	view_by_browser	Pages vues par navigateur
@@ -401,15 +401,15 @@ include_stats_function	view_by_platform_browser	Pages vues par plate-forme/versi
 #-----------------------------------------------
 # Script: SF/www/include/trove.php
 #
-include_trove	none_selected	Aucune sélection
-include_trove	not_categorized_yet	Ce projet n'est pas encore catégorisé dans <A href="$1">l'arbre des projets</A>. Vous pouvez <a href=$2>le catégoriser</a> maintenant.
+include_trove	none_selected	Aucune sï¿½lection
+include_trove	not_categorized_yet	Ce projet n'est pas encore catï¿½gorisï¿½ dans <A href="$1">l'arbre des projets</A>. Vous pouvez <a href=$2>le catï¿½goriser</a> maintenant.
 include_trove	now_filter	Filtrage en cours
 include_trove	filter	Filtrer
 #
 #-----------------------------------------------
 # Script: SF/www/include/user_home.php
 #
-include_user_home	devel_profile	Profil développeur
+include_user_home	devel_profile	Profil dï¿½veloppeur
 include_user_home	no_such_user	Utilisateur introuvable
 include_user_home	perso_info	Information personnelle
 include_user_home	user_id	ID utilisateur
@@ -417,28 +417,28 @@ include_user_home	login_name	Nom de login
 include_user_home	real_name	Nom complet
 include_user_home	email_addr	Adresse e-mail
 include_user_home	user_prof	Profil utilisateur
-include_user_home	see_skills	Voir le profil de compétences
+include_user_home	see_skills	Voir le profil de compï¿½tences
 include_user_home	member_since	Membre depuis
 include_user_home	user_status	Statut utilisateur
 include_user_home	active	Actif
 include_user_home	restricted	Restreint
 include_user_home	pending	En attente
-include_user_home	deleted	 Détruit
+include_user_home	deleted	 Dï¿½truit
 include_user_home	suspended	Suspendu
 include_user_home	unkown	Inconnu
 include_user_home	proj_info	Info projet
 include_user_home	is_member	Cet utilisateur est membre des projets suivants
 include_user_home	not_member	Cet utilisateur n'est membre d'aucun des projet.
-include_user_home	send_message_to	Envoyer un message à 
+include_user_home	send_message_to	Envoyer un message ï¿½ 
 include_user_home	your_address	Votre adresse e-mail
 include_user_home	your_name	Votre nom
 include_user_home	send_message	Envoyer le message
-include_user_home	send_message_if_logged	Vous pourriez envoyer un message si vous étiez connecté
+include_user_home	send_message_if_logged	Vous pourriez envoyer un message si vous ï¿½tiez connectï¿½
 include_user_home	subject	Sujet
 include_user_home	message	Message
 include_user_home	cc	CC
 include_user_home	add_cc	Ajouter un CC
-include_user_home	fill_cc_list_msg	<b><u>Note&nbsp;:</b></u> pour les utilisateurs CodeX utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
+include_user_home	fill_cc_list_msg	<b><u>Note&nbsp;:</b></u> pour les utilisateurs CodeX utilisez plutï¿½t leur nom de login plutï¿½t que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme sï¿½parateur.
 #
 #-----------------------------------------------
 # Script: SF/www/include/user.php
@@ -450,19 +450,19 @@ include_user	invalid_u_id	ID utilisateur invalide
 #-----------------------------------------------
 # Script: SF/www/include/utils.php
 #
-include_utils	prio_colors	Échelle de couleurs des priorités
-include_utils	address_problem	Les adresses suivantes présentent une anomalie
-include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complète (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
+include_utils	prio_colors	ï¿½chelle de couleurs des prioritï¿½s
+include_utils	address_problem	Les adresses suivantes prï¿½sentent une anomalie
+include_utils	email_explain	Les adresses e-mail doivent ï¿½tre soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complï¿½te (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent ï¿½tre saisies si elles sont sï¿½parï¿½es par une virgule ou un point-virgule.
 #
 #-----------------------------------------------
 # Script: SF/www/include/vars.php
 #
-include_vars	policy	Politique d'échange $1
+include_vars	policy	Politique d'ï¿½change $1
 include_vars	website_only	Site Web seul
 include_vars	other	Autre
-include_vars	comip	Licence Open Source approuvée par $1
-include_vars	gpl	Licence Licence Publique Générale (GPL)
-include_vars	lgpl	Licence Licence Publique Générale Amoindrie (LGPL)
+include_vars	comip	Licence Open Source approuvï¿½e par $1
+include_vars	gpl	Licence Licence Publique Gï¿½nï¿½rale (GPL)
+include_vars	lgpl	Licence Licence Publique Gï¿½nï¿½rale Amoindrie (LGPL)
 include_vars	bsdl	Licence BSD
 include_vars	mitxl	Licence MIT/X Consortium
 include_vars	artistic_l	Licence Artistic
@@ -483,7 +483,7 @@ include_common_error	no_err	Aucune erreur
 #-----------------------------------------------
 # Script: SF/www/common/include/GroupFactory.class.php
 #
-include_common_groupfactory	none_found	Rien n'a été trouvé
+include_common_groupfactory	none_found	Rien n'a ï¿½tï¿½ trouvï¿½
 #
 #-----------------------------------------------
 # Script: SF/common/include/Template.class.php

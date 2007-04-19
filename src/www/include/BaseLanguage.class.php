@@ -6,7 +6,7 @@
 //
 // Copyright 2004-2005 (c) The CodeX Team, Xerox. All rights reserved
 //
-// $Id:BaseLanguage.class.php 4446 2006-12-08 16:18:48 +0000 (Fri, 08 Dec 2006) ahardyau $
+// 
 
 
 /*

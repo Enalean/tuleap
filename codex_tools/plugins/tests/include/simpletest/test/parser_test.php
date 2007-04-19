@@ -1,5 +1,5 @@
 <?php
-    // $Id: parser_test.php,v 1.58 2006/01/04 04:35:36 lastcraft Exp $
+    // 
     
     require_once(dirname(__FILE__) . '/../parser.php');
     Mock::generate('SimpleHtmlSaxParser');
@@ -323,7 +323,7 @@
             $parser->expectNever('acceptTextToken');
             $parser->expectAtLeastOnce('ignore');
             $lexer = &new SimpleHtmlLexer($parser);
-            $this->assertTrue($lexer->parse("<SCRIPT>Javascript code {';:^%^%£$'@\"*(}</SCRIPT>"));
+            $this->assertTrue($lexer->parse("<SCRIPT>Javascript code {';:^%^%ï¿½$'@\"*(}</SCRIPT>"));
         }
         
         function testSkipHtmlComments() {

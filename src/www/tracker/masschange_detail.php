@@ -7,7 +7,7 @@
   * Copyright 1999-2001 (c) VA Linux Systems
   * http://sourceforge.net
   *
-  * @version   $Id: masschange_detail.php 4433 2006-12-07 09:43:33 +0000 (Thu, 07 Dec 2006) ahardyau $
+  * @version   
   *
   */
 

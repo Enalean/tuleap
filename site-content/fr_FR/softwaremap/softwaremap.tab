@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: softwaremap.tab 2689 2006-03-02 15:08:36Z mnazaria $
+#  * @version   
 #  *
 #  */
 #
@@ -19,17 +19,17 @@
 # Script: SF/www/softwaremap/trove_list.php
 #
 softwaremap_trove_list	map	Arbre des projets
-softwaremap_trove_list	invalid_cat	Catégorie invalide
-softwaremap_trove_list	cat_not_exist	Cette catégorie n'existe pas.
-softwaremap_trove_list	limit_view	Vue restreinte aux projets des catégories suivantes&nbsp;:
+softwaremap_trove_list	invalid_cat	Catï¿½gorie invalide
+softwaremap_trove_list	cat_not_exist	Cette catï¿½gorie n'existe pas.
+softwaremap_trove_list	limit_view	Vue restreinte aux projets des catï¿½gories suivantes&nbsp;:
 softwaremap_trove_list	remove_view	Supprimer ce filtre
 softwaremap_trove_list	projs	projets
 softwaremap_trove_list	browse_by	Afficher par&nbsp;:
-softwaremap_trove_list	more_projs_in_res	Plus de <B>$1</B> projets dans la liste des résultats.
-softwaremap_trove_list	projs_in_res	<B>$1</B> projets dans la liste des résultats. 
+softwaremap_trove_list	more_projs_in_res	Plus de <B>$1</B> projets dans la liste des rï¿½sultats.
+softwaremap_trove_list	projs_in_res	<B>$1</B> projets dans la liste des rï¿½sultats. 
 softwaremap_trove_list	display_per_page	Affichage de $1 par page.<BR>
-softwaremap_trove_list	activity_percentile	Taux d'activité&nbsp;: 
-softwaremap_trove_list	activity_ranking	Classement de l'activité&nbsp;:
+softwaremap_trove_list	activity_percentile	Taux d'activitï¿½&nbsp;: 
+softwaremap_trove_list	activity_ranking	Classement de l'activitï¿½&nbsp;:
 softwaremap_trove_list	register_date	Date d'enregistrement&nbsp;:
-softwaremap_trove_list	not_categorized	Non précisé
-softwaremap_trove_list	no_project_in_cat	Aucun projet dans cette catégorie.
+softwaremap_trove_list	not_categorized	Non prï¿½cisï¿½
+softwaremap_trove_list	no_project_in_cat	Aucun projet dans cette catï¿½gorie.

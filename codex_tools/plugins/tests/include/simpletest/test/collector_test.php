@@ -1,5 +1,5 @@
 <?php
-// $Id: collector_test.php,v 1.11 2006/11/20 23:44:37 lastcraft Exp $
+// 
 
 require_once(dirname(__FILE__) . '/../collector.php');
 Mock::generate('TestSuite');

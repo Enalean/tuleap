@@ -1,5 +1,5 @@
 <?php
-    // $Id: user_agent_test.php,v 1.32 2005/12/07 18:04:58 lastcraft Exp $
+    // 
     
     require_once(dirname(__FILE__) . '/../user_agent.php');
     require_once(dirname(__FILE__) . '/../authentication.php');

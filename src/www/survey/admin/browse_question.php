@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 20012 All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: browse_question.php 3530 2006-08-22 12:02:05Z schneide $
+// 
 
 $Language->loadLanguageMsg('survey/survey');
 

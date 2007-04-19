@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: foundry_admin.php 1447 2005-04-20 14:50:28Z ljulliar $
+// 
 
 
 require_once('www/project/admin/project_admin_utils.php');

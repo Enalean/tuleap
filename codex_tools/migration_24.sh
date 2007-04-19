@@ -9,7 +9,7 @@
 # COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
 # PUBLIC LICENSE.
 #
-#  $Id: migration_24.sh 1776 2005-06-23 14:29:05Z guerin $
+#  
 #
 #      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #
@@ -335,7 +335,7 @@ ALTER TABLE user ADD language_id int(11) NOT NULL DEFAULT 1 ;
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Franï¿½ais','French_FR.tab','fr_FR','ISO-8859-1',1);
 
 
 ---

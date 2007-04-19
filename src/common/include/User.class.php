@@ -5,7 +5,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: User.class.php 5304 2007-03-14 10:43:16 +0000 (Wed, 14 Mar 2007) mnazaria $
+// 
 //
 // Originally written by Marie-Luise Schneider 2005, CodeX Team, Xerox
 

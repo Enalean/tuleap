@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id: session.pl 5240 2007-03-12 15:14:31 +0000 (Mon, 12 Mar 2007) nterray $
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

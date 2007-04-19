@@ -1,5 +1,5 @@
 <?php
-    // $Id: cookies_test.php,v 1.3 2005/12/05 04:47:03 lastcraft Exp $
+    // 
 
     class TestOfCookie extends UnitTestCase {
         

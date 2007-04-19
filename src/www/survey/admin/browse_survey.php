@@ -6,7 +6,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
 //
-// $Id: browse_survey.php 1483 2005-05-03 14:07:41Z ljulliar $
+// 
 
 $Language->loadLanguageMsg('survey/survey');
 

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: download.php 5442 2007-03-21 10:15:59 +0000 (Wed, 21 Mar 2007) nterray $
+// 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/frs/FRSFileFactory.class.php');

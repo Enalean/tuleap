@@ -46,7 +46,7 @@ Mock::generate('ArtifactType');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: ArtifactImportTest.php 1901 2005-08-18 14:54:55Z schneide $
+ * 
  *
  * Tests the class ArtifactImport
  */

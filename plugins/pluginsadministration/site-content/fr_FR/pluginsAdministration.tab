@@ -11,7 +11,7 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: fr_FR.tab,v 1.10 2005/06/24 08:10:38 nterray Exp $
+#  * @version   
 #  *
 #  */
 plugin_pluginsadministration	descriptor_description	Interface web d'administration des plugins.
@@ -20,8 +20,8 @@ plugin_pluginsadministration	descriptor_name	Administration des Plugins
 #
 #
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	change_to_unavailable	Changer à Non
-plugin_pluginsadministration	change_to_available	Changer à Oui
+plugin_pluginsadministration	change_to_unavailable	Changer ï¿½ Non
+plugin_pluginsadministration	change_to_available	Changer ï¿½ Oui
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Annuler les modifications ?
 plugin_pluginsadministration	unavailable	Non
@@ -29,49 +29,49 @@ plugin_pluginsadministration	available	Oui
 plugin_pluginsadministration	feedback_available	$1 est maintenant disponible.
 plugin_pluginsadministration	feedback_unavailable	$1 est maintenant indisponible. L'espace web et les scripts cgi sont toujours accessibles !
 plugin_pluginsadministration	Hook:	Hook :
-plugin_pluginsadministration	hook_asterisk	* : Les hooks écoutés par plusieurs plugins sont suivis d'une astérisque.
+plugin_pluginsadministration	hook_asterisk	* : Les hooks ï¿½coutï¿½s par plusieurs plugins sont suivis d'une astï¿½risque.
 plugin_pluginsadministration	install_plugin	Installer ce plugin
 plugin_pluginsadministration	install	Installer un plugin
 plugin_pluginsadministration	menu	Plugins
-plugin_pluginsadministration	not_yet_installed	Plugins pas encore installés
+plugin_pluginsadministration	not_yet_installed	Plugins pas encore installï¿½s
 plugin_pluginsadministration	Plugin	Plugin
 plugin_pluginsadministration	Plugins	Plugins
-plugin_pluginsadministration	plugins	Plugins installés
-plugin_pluginsadministration	plugin_uninstalled	Le plugin "$1" a été désinstallé.
-plugin_pluginsadministration	plugin_not_uninstalled	Le plugin "$1" n'a pas été désinstallé.
-plugin_pluginsadministration	priorities	Priorités entre plugins
-plugin_pluginsadministration	Priority	Priorité
-plugin_pluginsadministration	properties	Afficher les propriétés du plugin
-plugin_pluginsadministration	select_hook	Sélectionnez un hook :
-plugin_pluginsadministration	select_install	Sélectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associé au plugin avant de continuer.
+plugin_pluginsadministration	plugins	Plugins installï¿½s
+plugin_pluginsadministration	plugin_uninstalled	Le plugin "$1" a ï¿½tï¿½ dï¿½sinstallï¿½.
+plugin_pluginsadministration	plugin_not_uninstalled	Le plugin "$1" n'a pas ï¿½tï¿½ dï¿½sinstallï¿½.
+plugin_pluginsadministration	priorities	Prioritï¿½s entre plugins
+plugin_pluginsadministration	Priority	Prioritï¿½
+plugin_pluginsadministration	properties	Afficher les propriï¿½tï¿½s du plugin
+plugin_pluginsadministration	select_hook	Sï¿½lectionnez un hook :
+plugin_pluginsadministration	select_install	Sï¿½lectionnez le plugin que vous voulez installer. Assurez-vous d'avoir lu le fichier <em>readme</em> associï¿½ au plugin avant de continuer.
 plugin_pluginsadministration	Available?	Disponible ?
 plugin_pluginsadministration	title	Administration des plugins
-plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugin installé.</em>
-plugin_pluginsadministration	uninstall	Désinstaller
-plugin_pluginsadministration	uninstall_plugin	Désinstaller ce plugin
+plugin_pluginsadministration	there_is_no_plugin	<em>Il n'y a pas encore de plugin installï¿½.</em>
+plugin_pluginsadministration	uninstall	Dï¿½sinstaller
+plugin_pluginsadministration	uninstall_plugin	Dï¿½sinstaller ce plugin
 plugin_pluginsadministration	upload	Charger l'archive
-plugin_pluginsadministration	update_priorities	Mettre à jour les priorités
+plugin_pluginsadministration	update_priorities	Mettre ï¿½ jour les prioritï¿½s
 plugin_pluginsadministration	Version	Version
-plugin_pluginsadministration	Scope	Portée
-plugin_pluginsadministration	scope_0	Système
+plugin_pluginsadministration	Scope	Portï¿½e
+plugin_pluginsadministration	scope_0	Systï¿½me
 plugin_pluginsadministration	scope_1	Projets
 plugin_pluginsadministration	scope_2	Utilisateurs
 #
 #
 #
-plugin_pluginsadministration_properties	display_priorities	Afficher les priorités du hook $1
+plugin_pluginsadministration_properties	display_priorities	Afficher les prioritï¿½s du hook $1
 plugin_pluginsadministration_properties	properties_addproject	Ajouter un projet :
 plugin_pluginsadministration_properties	properties_av_for_prj	Disponible pour tous les projets
 plugin_pluginsadministration_properties	properties_delproject	Enlever un projet :
 plugin_pluginsadministration_properties	properties_description:	Description :
 plugin_pluginsadministration_properties	properties_is_av_for_prj	Ce plugin est disponible pour tous les projets :
-plugin_pluginsadministration_properties	properties_hooks:	Hooks écoutés :
+plugin_pluginsadministration_properties	properties_hooks:	Hooks ï¿½coutï¿½s :
 plugin_pluginsadministration_properties	properties_name:	Nom :
 plugin_pluginsadministration_properties	properties_no	Non
 plugin_pluginsadministration_properties	properties_no_prj_for_plugin	Aucun projet ne peut utiliser ce plugin
-plugin_pluginsadministration_properties	properties_plugin	Propriétés du plugin "$1"
+plugin_pluginsadministration_properties	properties_plugin	Propriï¿½tï¿½s du plugin "$1"
 plugin_pluginsadministration_properties	properties_projects:	Projets:
-plugin_pluginsadministration_properties	properties_scope:	Portée :
+plugin_pluginsadministration_properties	properties_scope:	Portï¿½e :
 plugin_pluginsadministration_properties	properties_version:	Version :
 plugin_pluginsadministration_properties	properties_yes	Oui
 plugin_pluginsadministration_properties	return	<< Retourner aux plugins

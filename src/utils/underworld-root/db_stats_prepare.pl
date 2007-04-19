@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id: db_stats_prepare.pl 1019 2004-05-18 09:58:21Z guerin $
+# 
 #
 use DBI;
 

@@ -6,7 +6,7 @@
      * @author Travis Swicegood <development@domain51.com>
      * @package SimpleTest
      * @subpackage UnitTester
-     * @version $Id: collector.php,v 1.11 2006/11/21 00:26:55 lastcraft Exp $
+     * @version 
      */
     
     /**

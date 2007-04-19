@@ -5,7 +5,7 @@
  * Copyright 2002 GForge, LLC
  * http://gforge.org/
  *
- * @version   $Id: FRSRelease.class,v 1.23.2.1 2005/10/31 18:17:56 lcorso Exp $
+ * @version   
  *
  * This file is part of GForge.
  *

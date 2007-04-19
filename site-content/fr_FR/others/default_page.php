@@ -5,7 +5,7 @@
 // This file is licensed under the CodeX Component Software License
 // http://codex.xerox.com
 //
-// $Id: default_page.php 2755 2006-03-13 12:46:15Z guerin $
+// 
 //
 // Purpose:
 //    Default Web Page for groups that haven't setup their page yet
@@ -31,7 +31,7 @@ $default_domain = join('.',$pieces);
       <A class=maintitlebar href="http://<? echo $default_domain; ?>/"><B>Accueil</B></A> | 
       <A class=maintitlebar href="http://<? echo $default_domain; ?>/docs/site/about_codex.php"><B>A propos de</B></A> | 
       <A class=maintitlebar href="http://<? echo $default_domain; ?>/contact.php"><B>Contactez-nous</B></A> |
-      <A class=maintitlebar href="http://<? echo $default_domain; ?>/account/logout.php"><B>Se déconecter</B></A></SPAN>
+      <A class=maintitlebar href="http://<? echo $default_domain; ?>/account/logout.php"><B>Se dï¿½conecter</B></A></SPAN>
     </TD>
   </TR>
 </TABLE>
@@ -57,7 +57,7 @@ $default_domain = join('.',$pieces);
     <TD>
       <CENTER><BR>
       <H2>Bienvenue sur http://<?php print $headers[Host]; ?>/</H2>
-      <h3>Ce projet n'a pas encore créer son site Web.<BR>
+      <h3>Ce projet n'a pas encore crï¿½er son site Web.<BR>
       Rendez-nous visite prochainement ou aller sur la page de <A href="http://<? echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Sommaire du projet</a> sur CodeX<BR></h3>
       </CENTER>
     </TD>
@@ -69,7 +69,7 @@ $default_domain = join('.',$pieces);
 <TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#BCBCAD">
   <TR>
     <TD align="center"><FONT color="#ffffff"><B><SPAN class="maintitlebar">
-     Ce site web est hébergé par CodeX.
+     Ce site web est hï¿½bergï¿½ par CodeX.
      </SPAN></B></FONT>
     </TD>
   </TR>

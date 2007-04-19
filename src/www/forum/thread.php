@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: thread.php 1437 2005-04-15 15:19:19Z schneide $
+// 
 
 require_once('pre.php');
 require('../forum/forum_utils.php');

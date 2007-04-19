@@ -5,7 +5,7 @@ require_once('PluginsAdministrationPluginDescriptor.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: Sanitizer.class.php,v 1.1 2005/05/10 09:48:11 nterray Exp $
+ * 
  *
  * PluginsAdministrationPluginInfo
  */

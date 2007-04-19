@@ -4,7 +4,7 @@
 # Copyright 1999-2000 (c) The SourceForge Crew
 # http:#sourceforge.net
 #
-# $Id: db_project_metric.pl 1065 2004-07-07 14:40:24Z ljulliar $
+# 
 
 use DBI;
 #use qw(strftime);

@@ -4,7 +4,7 @@ require_once('common/tracker/ArtifactRuleValue.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: ArtifactRuleValueTest.php 1901 2005-08-18 14:54:55Z nterray $
+ * 
  *
  * Tests the class ArtifactRuleValue
  */

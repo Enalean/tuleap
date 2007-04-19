@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: browse_commit.php 5450 2007-03-21 13:15:56 +0000 (Wed, 21 Mar 2007) guerin $
+// 
 
 
 if (!$group_id) {

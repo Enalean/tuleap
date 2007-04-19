@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id: group_selection.php 4433 2006-12-07 09:43:33 +0000 (Thu, 07 Dec 2006) ahardyau $
+// 
 //
 //
 //

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: user_home.php 5631 2007-04-02 09:33:11 +0000 (Mon, 02 Apr 2007) nterray $
+// 
 
 /*
 	Developer Info Page

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: memberlist.php 5407 2007-03-19 15:38:54 +0000 (Mon, 19 Mar 2007) mnazaria $
+// 
 
 require_once('pre.php');    
 

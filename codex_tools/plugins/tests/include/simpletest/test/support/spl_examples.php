@@ -1,5 +1,5 @@
 <?php
-    // $Id: spl_examples.php,v 1.1 2006/02/05 19:35:31 lastcraft Exp $
+    // 
 
     class IteratorImplementation implements Iterator {
         function current() { }

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: cvs_intro.php 3727 2006-09-24 14:09:23Z guerin $
+// 
 //
 //	Originally written by Laurent Julliard 2001- 2003 CodeX Team, Xerox
 //

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: intro.txt 5170 2007-03-05 10:37:33 +0000 (Mon, 05 Mar 2007) nterray $
+// 
 //
 -->
 <p>

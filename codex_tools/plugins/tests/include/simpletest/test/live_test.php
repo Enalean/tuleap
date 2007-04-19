@@ -1,5 +1,5 @@
 <?php
-    // $Id: live_test.php,v 1.100 2005/08/29 00:57:48 lastcraft Exp $
+    // 
     require_once(dirname(__FILE__) . '/../unit_tester.php');
     require_once(dirname(__FILE__) . '/../socket.php');
     require_once(dirname(__FILE__) . '/../http.php');

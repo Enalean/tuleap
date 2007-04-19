@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# $Id: restart_ts 911 2004-03-15 14:18:29Z ljulliar $
+# 
 #
 
 prefix=$(dirname $0)

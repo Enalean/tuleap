@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
 //
-// $Id: bug_data.php 3679 2006-09-14 16:25:47Z mnazaria $
+// 
 //
 //
 //	Originally by to the SourceForge Team,1999-2000

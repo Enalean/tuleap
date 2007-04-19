@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: detail.php 3376 2006-07-26 14:18:10Z mnazaria $
+// 
 
 require_once('pre.php');
 require('../snippet/snippet_utils.php');

@@ -3,7 +3,7 @@
  * @copyright Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  * 
- * @version $Id: SVNCommit.class.php 2658 2006-04-11 14:36:30Z mnazaria $
+ * @version 
  *
  * SVNUpdate
  */

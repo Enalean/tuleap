@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: detail_task.php 450 2003-02-07 08:24:27Z sbouhet $
+// 
 
 pm_header(array('title'=>'View A Task',
 		'help'=>'TaskUpdate.html'));

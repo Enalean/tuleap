@@ -5,7 +5,7 @@
 # This file is licensed under the GPL License
 # http://codex.xerox.com
 #
-# $Id: dns_conf.pl 5626 2007-03-31 10:57:59 +0000 (Sat, 31 Mar 2007) guerin $
+# 
 #
 use DBI;
 use POSIX qw(strftime);

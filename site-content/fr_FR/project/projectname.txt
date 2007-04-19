@@ -4,25 +4,25 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: projectname.txt 4850 2007-02-06 17:25:28 +0000 (Tue, 06 Feb 2007) nterray $
+// 
 //
 ?>
 <P><B>Nom du projet</B>
 
-<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet&nbsp;:
+<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associï¿½s ï¿½ votre projet&nbsp;:
 
-<P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitée à 40 caractères) et il peut être modifié à tout moment.</P>
+<P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitï¿½e ï¿½ 40 caractï¿½res) et il peut ï¿½tre modifiï¿½ ï¿½ tout moment.</P>
 
-<p>Le "nom court" (aussi appelé "nom du groupe") présentent certaines restrictions&nbsp;:
+<p>Le "nom court" (aussi appelï¿½ "nom du groupe") prï¿½sentent certaines restrictions&nbsp;:
 
 <UL>
-<LI>Il ne doit correspondre à aucun nom court existant
-<LI>Sa longueur est comprise entre 3 et 15 caractères
-<LI>Il ne doit comporter que des caractères alphanumériques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
-<LI>Contrairement au nom long, le nom court ne peut être modifié par la suite.
+<LI>Il ne doit correspondre ï¿½ aucun nom court existant
+<LI>Sa longueur est comprise entre 3 et 15 caractï¿½res
+<LI>Il ne doit comporter que des caractï¿½res alphanumï¿½riques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
+<LI>Contrairement au nom long, le nom court ne peut ï¿½tre modifiï¿½ par la suite.
 </UL>
 
-<P>En dépit de ces restrictions, veillez à choisir un nom évocateur car il sera utilisé à plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dépôt CVS ou Subversion.
+<P>En dï¿½pit de ces restrictions, veillez ï¿½ choisir un nom ï¿½vocateur car il sera utilisï¿½ ï¿½ plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dï¿½pï¿½t CVS ou Subversion.
 </UL>
 
 <P>Veuillez remplir les champs suivants&nbsp;:

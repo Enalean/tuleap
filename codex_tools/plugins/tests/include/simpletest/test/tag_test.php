@@ -1,5 +1,5 @@
 <?php
-    // $Id: tag_test.php,v 1.68 2006/02/05 00:34:29 lastcraft Exp $
+    // 
     
     require_once(dirname(__FILE__) . '/../tag.php');
     require_once(dirname(__FILE__) . '/../encoding.php');

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: 404.php 1911 2005-08-22 13:36:18Z nterray $
+// 
 
 require_once('pre.php');
 

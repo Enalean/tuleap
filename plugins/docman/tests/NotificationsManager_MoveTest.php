@@ -20,7 +20,7 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
- * $Id$
+ * 
  */
 
 require_once(dirname(__FILE__).'/../include/Docman_NotificationsManager_Move.class.php');
@@ -187,7 +187,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
     *        | | `-- D |
     *        | +-------+ \
     *        `-- C        |
-    *             <-------²
+    *             <-------ï¿½
     *        
     *        D is moved from B to C
     *

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: pm_data.php 750 2004-01-08 16:57:21Z sbouhet $
+// 
 
 function pm_data_get_tasks ($group_id,$group_project_id) {
     if ($group_project_id) {

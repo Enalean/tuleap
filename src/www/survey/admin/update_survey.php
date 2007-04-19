@@ -6,7 +6,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2002. All rights reserved
 //
-// $Id: update_survey.php 4953 2007-02-19 19:03:46 +0000 (Mon, 19 Feb 2007) nterray $
+// 
 
 $Language->loadLanguageMsg('survey/survey');
 
