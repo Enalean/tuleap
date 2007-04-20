@@ -526,7 +526,7 @@ class ArtifactReportHtml extends ArtifactReport {
 	  $html_result = '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
 
                 // Display browse informations if any
-                if ( $ath->getBrowseInstructions() ) {
+                if ( $ath->getBrowseInstructions() && $pv == 0) {
                         $html_result .= $ath->getBrowseInstructions();
                 }
                 
