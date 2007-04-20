@@ -151,7 +151,9 @@ class ArtifactHtml extends Artifact {
 
             }
             
-            echo '</TABLE>';
+            echo '<tr><td><p><font color="red">*</font>: '.
+                 $Language->getText('tracker_include_type','fields_requ').
+                 '</p></td></tr></TABLE>';
             
             echo '<table cellspacing="0">';
 
@@ -496,7 +498,7 @@ class ArtifactHtml extends Artifact {
         }
         echo '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA><p>';
         } else {
-        if ($pv = 0) {
+        if ($pv == 0) {
           echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
                             <TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
         }
