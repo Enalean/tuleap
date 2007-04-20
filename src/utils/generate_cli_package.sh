@@ -207,7 +207,7 @@ if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=di
    # SELinux not installed
    SELINUX_ENABLED=0
 fi
-if [ $SELINUX_ENABLED ]; then
+if [ $SELINUX_ENABLED != 0 ]; then
   chcon -h  root:object_r:httpd_sys_content_t $DESTDIR/CodeX_CLI.zip
 fi
 
