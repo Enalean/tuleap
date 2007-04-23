@@ -142,7 +142,7 @@ function my_item_count($total, $new) {
 
 function my_header($params) {
     site_header($params);
-    echo '<h3>'. $GLOBALS['Language']->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')')) .'</h3>';
+    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')')) .'</h2>';
     echo '<a href="/my/"><b>'. $GLOBALS['Language']->getText('include_menu','my_perso_page') .'</b></a>';
     echo ' | ';
     echo '<a href="/account/"><b>'. $GLOBALS['Language']->getText('include_menu','account_maintenance') .'</b></a>';

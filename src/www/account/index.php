@@ -22,20 +22,20 @@ my_header(array('title'=>$Language->getText('account_options', 'title')));
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);
 
-$HTML->box1_top($Language->getText('account_options', 'title').": ".user_getrealname(user_getid()));
 ?>
-
 <p><?php echo $Language->getText('account_options', 'welcome'); ?>,
     <b><?php echo user_getrealname(user_getid()); ?></b>
 
 <p><?php echo $Language->getText('account_options', 'welcome_intro'); ?>
+<?php
+echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</legend>';
+?>
 
 <UL>
 <LI><A href="/users/<?php print $row_user['user_name']; ?>/">
 <B><?php echo $Language->getText('account_options', 'view_developer_profile'); ?></B></A>
 <LI><A HREF="/people/editprofile.php"><B><?php echo $Language->getText('account_options', 'edit_skills_profile'); ?></B></A>
 </UL>
-<?php $HTML->box1_bottom(); ?>
 
 &nbsp;<BR>
 <TABLE width=100% border=0>
@@ -128,12 +128,14 @@ foreach($entry_label as $key => $label) {
 </tr>
 
 <TR>
-<TD COLSPAN=3>
+</TABLE>
+</fieldset>
+
 <?php
 // ############################### Shell Account
 
 if ($row_user['unix_status'] == 'A') {
-	$HTML->box1_top($Language->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount')); 
+	echo '<fieldset><legend>'. $Language->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount') .'</legend>'; 
 	print '&nbsp;
 <BR>'.$Language->getText('account_options', 'shell_box').': <b>'.$row_user['unix_box'].'</b>
 <BR>'.$Language->getText('account_options', 'shell_shared_keys').': <B>';
@@ -145,15 +147,8 @@ if ($row_user['unix_status'] == 'A') {
 		print '0';
 	}
 	print '</B> <A href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</A>';
-	$HTML->box1_bottom(); 
+	echo '</fieldset>';
 } 
-?>
 
-</TD>
-</TR>
-
-</TABLE>
-
-<?php
 $HTML->footer(array());
 ?>
