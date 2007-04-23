@@ -3289,6 +3289,82 @@ CREATE TABLE notifications (
   PRIMARY KEY  (user_id,object_id,type)
 );
 
+-- 
+-- Table structure for table 'layouts'
+-- 
+
+DROP TABLE IF EXISTS layouts;
+CREATE TABLE IF NOT EXISTS layouts (
+  id int(11) unsigned NOT NULL auto_increment,
+  name varchar(255) NOT NULL default '',
+  description text NOT NULL,
+  scope varchar(1) NOT NULL default 'S',
+  PRIMARY KEY  (id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'layouts_rows'
+-- 
+
+DROP TABLE IF EXISTS layouts_rows;
+CREATE TABLE IF NOT EXISTS layouts_rows (
+  id int(11) unsigned NOT NULL auto_increment,
+  layout_id int(11) unsigned NOT NULL default '0',
+  rank int(11) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY layout_id (layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'layouts_rows_columns'
+-- 
+
+DROP TABLE IF EXISTS layouts_rows_columns;
+CREATE TABLE IF NOT EXISTS layouts_rows_columns (
+  id int(11) unsigned NOT NULL auto_increment,
+  layout_row_id int(11) unsigned NOT NULL default '0',
+  width int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY layout_row_id (layout_row_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'user_layouts'
+-- 
+
+DROP TABLE IF EXISTS user_layouts;
+CREATE TABLE IF NOT EXISTS user_layouts (
+  user_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  is_default tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (user_id, layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'user_layouts_contents'
+-- 
+
+DROP TABLE IF EXISTS user_layouts_contents;
+CREATE TABLE IF NOT EXISTS user_layouts_contents (
+  user_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  column_id int(11) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL,
+  rank int(11) NOT NULL default '0',
+  is_minimzed tinyint(1) NOT NULL default '0',
+  display_preferences tinyint(1) NOT NULL default '0',
+  KEY (user_id, layout_id, column_id),
+  KEY (name)
+);
+
 #
 # EOF
 #

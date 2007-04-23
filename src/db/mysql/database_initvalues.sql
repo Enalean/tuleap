@@ -2320,6 +2320,43 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help','1' ,'Get Help');
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers','0' ,'Project Developer Discussion');
 
+-- 
+-- Layouts
+-- 
+INSERT INTO layouts (id, name, description, scope) VALUES (1, '2 columns', 'Standard layout', 'S');
+INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
+INSERT INTO layouts_rows_columns (id, layout_rows_id, width) VALUES (1, 1, 50), (2, 1, 50);
+
+INSERT INTO user_layouts (user_id, layout_id, is_default) 
+SELECT user_id, 1, 1 
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mysurveys', 4
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mymonitoredforums', 2
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mybookmarks', 1
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 2, 'myartifacts', 0
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 2, 'mymonitoredfp', 1
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'myprojects', 0
+FROM user;
+
+
+TODO plugins
 
 #
 # EOF

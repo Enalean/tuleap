@@ -355,9 +355,6 @@ if (isset($params['group']) && $params['group']) {
 		if (user_isloggedin()) {
             $TABS_DIRS[]='/my/';
             $TABS_TITLES[]=$Language->getText('menu','my_personal_page');
-
-            $TABS_DIRS[]='/account/';
-            $TABS_TITLES[]=$Language->getText('include_menu','account_maintenance');
         }
         
         $TABS_DIRS[]='/softwaremap/';
@@ -399,12 +396,11 @@ if (isset($params['group']) && $params['group']) {
 					$selected=count($TABS_DIRS)-1;
 				}
 			}
-		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
-				strstr(getStringFromServer('REQUEST_URI'),'/themes/') ) {
+		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/my/')   ||
+				strstr(getStringFromServer('REQUEST_URI'),'/themes/') ||
+                strstr(getStringFromServer('REQUEST_URI'),'/account/') ) {
 			$selected=array_search("/my/", $TABS_DIRS);
-        } elseif (strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
-            $selected=array_search("/account/", $TABS_DIRS);
-		} elseif (strstr(getStringFromServer('REQUEST_URI'),'softwaremap')) {
+        } elseif (strstr(getStringFromServer('REQUEST_URI'),'softwaremap')) {
 			$selected=array_search("/softwaremap/", $TABS_DIRS);
 		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/snippet/')) {
 			$selected=array_search("/snippet/", $TABS_DIRS);

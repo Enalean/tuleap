@@ -145,6 +145,37 @@ class Layout extends Response {
         return $feedback;
     }
     
+    function widget($id, $title, $content, $layout_id, $column_id, $is_minimized, $has_preferences, $preferences, $has_rss) {
+        $split = explode('_', $id);
+        $widget_name = $split[count($split)-1];
+        
+        echo '<div class="widget" id="'. $id .'">';
+        echo '<div class="widget_titlebar">';
+        echo '<div class="widget_titlebar_title">'. $title .'</div>';
+        if ($is_minimized) {
+            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name='. $widget_name .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_plus.png', array('alt' => '+')) .'</a></div>';
+        } else {
+            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name='. $widget_name .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_minus.png', array('alt' => '-')) .'</a></div>';
+        }
+        if ($has_preferences) {
+            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name='. $widget_name .'">Preferences</a></div>';
+        }
+        if ($has_rss) {
+            echo '<div class="widget_titlebar_rss"><a href="widget.php?action=rss&amp;name='. $widget_name .'">rss</a></div>';
+        }
+        echo '</div>';
+        $style = '';
+        if ($is_minimized) {
+            $style = 'display:none;';
+        }
+        echo '<div class="widget_content" style="'. $style .'">';
+        if ($preferences) {
+            echo '<div class="widget_preferences">'. $preferences .'</div>';
+        }
+        echo $content .'</div>';
+        echo '</div>';
+    }
+    
 	// Box Top, equivalent to html_box1_top()
 	function box1_top($title,$echoout=1,$bgcolor='',$cols=2){
         	$return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">

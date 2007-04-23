@@ -23,6 +23,9 @@
         $cookie_manager =& new CookieManager();
         return $cookie_manager->isCookie($name);
     }
+    function isAjax() {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']) == 'XMLHTTPREQUEST';
+    }
 
 }
 ?>

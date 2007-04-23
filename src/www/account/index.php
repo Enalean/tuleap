@@ -16,7 +16,7 @@ $Language->loadLanguageMsg('account/account');
 $em =& EventManager::instance();
 
 $HTML->header(array('title'=>$Language->getText('account_options', 'title')));
-
+echo '<a href="/my/"><b>'. $Language->getText('menu','my_personal_page') .'</b></a> | <a href="/account/"><b>'. $Language->getText('include_menu','account_maintenance') .'</b></a>';
 // get global user vars
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);

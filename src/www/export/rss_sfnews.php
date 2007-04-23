@@ -3,7 +3,7 @@
 
 require_once('pre.php');
 require_once('www/news/news_utils.php');
-require_once('common/include/RSS.class.php');
+require_once('common/rss/RSS.class.php');
 require('./rss_utils.inc');
 $Language->loadLanguageMsg('export/export');
 

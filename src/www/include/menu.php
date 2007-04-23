@@ -165,7 +165,6 @@ function menu_loggedin($page_title) {
     $HTML->menuhtml_top($Language->getText('include_menu','logged_in').': '.user_getname());
     $HTML->menu_entry('/account/logout.php',$Language->getText('include_menu','logout'));
     $HTML->menu_entry('/project/register.php',$Language->getText('include_menu','register_new_proj'));
-    $HTML->menu_entry('/account/',$Language->getText('include_menu','account_maintenance'));
     print '<P>';
     //LJ No theme		$HTML->menu_entry('/themes/','Change My Theme');
     $HTML->menu_entry('/my/',$Language->getText('include_menu','my_perso_page'));
