@@ -33,6 +33,6 @@ if (in_array($user_csv_separator, $csv_separators)) {
     user_set_preference("user_csv_separator", DEFAULT_CSV_SEPARATOR);
 }
 
-session_redirect("/account/");
+session_redirect("/account/preferences.php");
 
 ?>

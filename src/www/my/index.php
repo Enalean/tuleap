@@ -57,11 +57,9 @@ if (user_isloggedin()) {
     $title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-    site_header(array('title'=>$title));
-    echo '<a href="/my/"><b>'. $Language->getText('menu','my_personal_page') .'</b></a> | <a href="/account/"><b>'. $Language->getText('include_menu','account_maintenance') .'</b></a>';
+    my_header(array('title'=>$title));
     ?>
     
-    <h3><?php echo $title.'&nbsp;'.help_button('LoginAndPersonalPage.html'); ?></h3>
     <p>
     <?php
          echo $Language->getText('my_index', 'message');
