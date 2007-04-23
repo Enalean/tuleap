@@ -254,3 +254,60 @@ table.release tr td img {
     font-size:0.85em;
 }
 
+/* {{{ Widgets */
+
+.emptyPlaceMarker
+{
+    border-right: #bcbcad 1px dashed;
+    border-top: #bcbcad 1px dashed;
+    border-left: #bcbcad 1px dashed;
+    border-bottom: #bcbcad 1px dashed;
+    background-color: Transparent;
+}
+
+.widget {
+    margin-bottom:20px;
+    border:1px solid #bcbcad;
+}
+.widget_content {
+    clear:both;
+}
+.widget_preferences {
+    background: #E0DDD2;
+    border-bottom:1px solid #bcbcad;
+}
+.widget_preferences form {
+    margin:0;
+}
+.widget_titlebar {
+    background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
+    font-weight: bold; 
+    text-align: center; 
+    text-transform: capitalize; 
+    color: #555;
+    cursor:move;
+    height:1.2em;
+    padding-left:40px;
+    padding-right:4px;
+}
+.widget_titlebar_title {
+    float:left;
+}
+.widget_titlebar_rss,
+.widget_titlebar_prefs,
+.widget_titlebar_minimize,
+.widget_titlebar_maximize {
+    float:right;
+}
+.widget_titlebar_rss,
+.widget_titlebar_prefs {
+    padding:2px 4px;
+}
+.widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
+.widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
+    color:#555;
+    font-weight:normal;
+    font-size:0.8em;
+    text-decoration:none;
+}
+/* }}} */
