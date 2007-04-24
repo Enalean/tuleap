@@ -7,18 +7,7 @@
 // $Id: index.php 5857 2007-04-17 09:20:24 +0000 (Tue, 17 Apr 2007) nterray $
 
 require_once('pre.php');
-require('./my_utils.php');
-require_once('common/survey/SurveySingleton.class.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('common/tracker/ArtifactFile.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactCanned.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/ArtifactReportFactory.class.php');
-require_once('common/tracker/ArtifactReport.class.php');
-require_once('common/tracker/ArtifactReportField.class.php');
-require_once('common/tracker/ArtifactFactory.class.php');
+require_once('my_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayout.class.php');
 require_once('common/widget/Widget.class.php');
@@ -58,16 +47,13 @@ if (user_isloggedin()) {
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
     my_header(array('title'=>$title));
-    ?>
-    
-    <p>
-    <?php
-         echo $Language->getText('my_index', 'message');
-         echo '</p>';
-         
+
+    echo '<p>'. $Language->getText('my_index', 'message') .'</p>';
+
     $sql = 'SELECT l.* FROM layouts AS l INNER JOIN user_layouts AS u ON(l.id = u.layout_id) WHERE u.user_id = '. user_getid() .' AND u.is_default = 1';
     $req = db_query($sql);
     if ($data = db_fetch_array($req)) {
+        echo '<a href="/my/widgets.php?layout_id='. $data['id'] .'">[Add widget]</a>';
         $layout =& new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
         $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout->id .' ORDER BY rank';
         $req_rows = db_query($sql);

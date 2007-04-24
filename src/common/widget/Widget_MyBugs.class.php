@@ -78,10 +78,10 @@ class Widget_MyBugs extends Widget {
             $this->content .= '</table>';
         }
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_bugs');
     }
-    function _getContent() {
+    function getContent() {
         return $this->content;
     }
     function canBeDisplayed() {

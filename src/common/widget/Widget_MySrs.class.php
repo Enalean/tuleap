@@ -74,10 +74,10 @@ class Widget_MySrs extends Widget {
             $this->content .= '</table>';
         }
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_srs');
     }
-    function _getContent() {
+    function getContent() {
         return $this->content;
     }
     function canBeDisplayed() {

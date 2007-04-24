@@ -15,10 +15,10 @@ class Widget_MyMonitoredFp extends Widget {
     function Widget_MyMonitoredFp() {
         $this->Widget('mymonitoredfp');
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
-    function _getContent() {
+    function getContent() {
         $html_my_monitored_fp = '';
         $sql="SELECT groups.group_name,groups.group_id ".
             "FROM groups,filemodule_monitor,frs_package ".

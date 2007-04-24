@@ -1,6 +1,7 @@
 <?php
 
 require_once('Widget.class.php');
+require_once('common/survey/SurveySingleton.class.php');
 
 /**
 * Widget_MySurveys
@@ -49,10 +50,10 @@ class Widget_MySurveys extends Widget {
             }             
         }
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_survey');
     }
-    function _getContent() {
+    function getContent() {
         return $this->content;
     }
     function canBeDisplayed() {

@@ -3362,8 +3362,17 @@ CREATE TABLE IF NOT EXISTS user_layouts_contents (
   rank int(11) NOT NULL default '0',
   is_minimzed tinyint(1) NOT NULL default '0',
   display_preferences tinyint(1) NOT NULL default '0',
-  KEY (user_id, layout_id, column_id),
+  KEY (user_id, layout_id, name),
   KEY (name)
+);
+
+DROP TABLE IF EXISTS user_rss;
+CREATE TABLE IF NOT EXISTS user_rss (
+  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+  user_id int(11) unsigned NOT NULL default '0',
+  title varchar(255) NOT NULL,
+  url TEXT NOT NULL,
+  KEY (user_id)
 );
 
 #

@@ -2,6 +2,16 @@
 
 require_once('Widget.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/Artifact.class.php');
+require_once('common/tracker/ArtifactFile.class.php');
+require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactCanned.class.php');
+require_once('common/tracker/ArtifactField.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/tracker/ArtifactReportFactory.class.php');
+require_once('common/tracker/ArtifactReport.class.php');
+require_once('common/tracker/ArtifactReportField.class.php');
+require_once('common/tracker/ArtifactFactory.class.php');
 
 /**
 * Widget_MyArtifacts
@@ -22,7 +32,7 @@ class Widget_MyArtifacts extends Widget {
             user_set_preference('my_artifacts_show', $this->_artifact_show);
         }
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
     function updatePreferences(&$request) {
@@ -49,23 +59,15 @@ class Widget_MyArtifacts extends Widget {
     }
     function getPreferences() {
         $prefs  = '';
-        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name='. $this->id .'">';
-        $prefs .= '<fieldset><legend>Preferences</legend>';
         $prefs .= 'Display artifacts: <select name="show">';
-        $prefs .= '<option value="N"  '.($this->_artifact_show === 'N'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 'no_info');
         $prefs .= '<option value="A"  '.($this->_artifact_show === 'A'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 'a_info');
         $prefs .= '<option value="S"  '.($this->_artifact_show === 'S'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 's_info');
         $prefs .= '<option value="AS" '.($this->_artifact_show === 'AS'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 'as_info');
         $prefs .= '</select>';
-        $prefs .= '<br />';
-        $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
-        $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $prefs .= '</fieldset>';
-        $prefs .= '</form>';
         return $prefs;
         
     }
-    function _getContent() {
+    function getContent() {
         $html_my_artifacts = '<table style="width:100%">';
         if ($atf = new ArtifactTypeFactory(false)) {
             $my_artifacts = $atf->getMyArtifacts(user_getid(), $this->_artifact_show);

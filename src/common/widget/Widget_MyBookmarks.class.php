@@ -15,10 +15,10 @@ class Widget_MyBookmarks extends Widget {
     function Widget_MyBookmarks() {
         $this->Widget('mybookmarks');
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_bookmarks');
     }
-    function _getContent() {
+    function getContent() {
         $html_my_bookmarks = '';
         $result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".
             "user_id='". user_getid() ."' ORDER BY bookmark_title");

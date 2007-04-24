@@ -15,10 +15,10 @@ class Widget_MyMonitoredForums extends Widget {
     function Widget_MyMonitoredForums() {
         $this->Widget('mymonitoredforums');
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_forums');
     }
-    function _getContent() {
+    function getContent() {
         $html_my_monitored_forums = '';
         $sql="SELECT groups.group_id, groups.group_name ".
              "FROM groups,forum_group_list,forum_monitored_forums ".

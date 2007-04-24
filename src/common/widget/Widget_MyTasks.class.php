@@ -17,7 +17,7 @@ class Widget_MyTasks extends Widget {
     
     function Widget_MyTasks() {
         $this->Widget('mytasks');
-        $this->can_be_displayed = false;
+        $this->can_be_displayed = true;
         $this->content = '';
         
         $last_group=0;
@@ -90,10 +90,10 @@ class Widget_MyTasks extends Widget {
             $this->content .= '</table>';
         }
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_tasks');
     }
-    function _getContent() {
+    function getContent() {
         return $this->content;
     }
     function canBeDisplayed() {

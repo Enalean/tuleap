@@ -15,10 +15,10 @@ class Widget_MyRss extends Widget {
     function Widget_MyRss() {
         $this->Widget('myrss');
     }
-    function _getTitle() {
-        return 'ZDNet News';
+    function getTitle() {
+        return 'RSS Reader';
     }
-    function _getContent() {
+    function getContent() {
         $content = '';
         require_once('common/rss/libs/magpierss/rss_fetch.inc');
         $rss = fetch_rss('http://www.zdnet.fr/feeds/rss/actualites/informatique/?l=5');
@@ -36,16 +36,31 @@ class Widget_MyRss extends Widget {
     }
     function getPreferences() {
         $prefs  = '';
-        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name='. $this->id .'">';
-        $prefs .= '<fieldset><legend>Preferences</legend>';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" value="ZDNet News" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" value="http://www.zdnet.fr/feeds/rss/actualites/informatique/?l=5" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="myrss[title]" value="ZDNet News" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="myrss[url]" value="http://www.zdnet.fr/feeds/rss/actualites/informatique/?l=5" /></td></tr>';
         $prefs .= '</table>';
-        $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
-        $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $prefs .= '</fieldset>';
-        $prefs .= '</form>';
         return $prefs;
+    }
+    function getInstallPreferences() {
+        return $this->getPreferences();
+    }
+    function create(&$request) {
+        $content_id = false;
+        $myrss = $request->get('myrss');
+        if (!isset($myrss['title'])) {
+            $myrss['title'] = '';
+        }
+        if (!isset($myrss['url'])) {
+            $GLOBALS['Response']->addFeedback('error', "Can't add empty rss url");
+        } else {
+            $sql = 'INSERT INTO user_rss (user_id, title, url) VALUES ('. user_getid() .", '". $myrss['title'] ."', '". $myrss['url'] ."')";
+            $res = db_query($sql);
+            $content_id = db_insertid($res);
+        }
+        return $content_id;
+    }
+    function isUnique() {
+        return false;
     }
 }
 ?>

@@ -16,10 +16,10 @@ class Widget_MyProjects extends Widget {
     function Widget_MyProjects() {
         $this->Widget('myprojects');
     }
-    function _getTitle() {
+    function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
-    function _getContent() {
+    function getContent() {
         $html_my_projects = '';
         $result = db_query("SELECT groups.group_name,"
             . "groups.group_id,"

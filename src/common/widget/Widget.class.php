@@ -31,17 +31,32 @@ require_once('common/widget/Widget_MyRss.class.php');
     
     function display($layout_id, $column_id, $is_minimized, $display_preferences) {
         if ($this->canBeDisplayed()) {
-            $GLOBALS['HTML']->widget('widget_'.$this->id, $this->_getTitle(), $this->_getContent(), $layout_id, $column_id, $is_minimized, strlen($this->getPreferences()), ($display_preferences ? $this->getPreferences() : ''), $this->hasRss());
+            $GLOBALS['HTML']->widget('widget_'.$this->id, $this->getTitle(), $this->getContent(), $layout_id, $column_id, $is_minimized, strlen($this->getPreferences()), ($display_preferences ? $this->getPreferencesForm() : ''), $this->hasRss());
         }
     }
-    function _getTitle() {
+    function getTitle() {
         return '';
     }
-    function _getContent() {
+    function getContent() {
         return '';
     }
     function canBeDisplayed() {
         return true;
+    }
+    function getPreferencesForm() {
+        $prefs  = '';
+        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name='. $this->id .'">';
+        $prefs .= '<fieldset><legend>Preferences</legend>';
+        $prefs .= $this->getPreferences();
+        $prefs .= '<br />';
+        $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
+        $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $prefs .= '</fieldset>';
+        $prefs .= '</form>';
+        return $prefs;
+    }
+    function getInstallPreferences() {
+        return '';
     }
     function getPreferences() {
         return '';
@@ -49,7 +64,13 @@ require_once('common/widget/Widget_MyRss.class.php');
     function updatePreferences(&$request) {
         return true;
     }
-    function getInstance($widget_name) {
+    function hasRss() {
+        return false;
+    }
+    function isUnique() {
+        return true;
+    }
+    /* static */ function getInstance($widget_name) {
         $o = null;
         switch($widget_name) {
             case 'mysurveys':
@@ -85,13 +106,37 @@ require_once('common/widget/Widget_MyRss.class.php');
             default:
                 //TODO: handle portlets in plugins
                 $em =& EventManager::instance();
-                $em->processEvent('portlet_instance', array('widget' => $widget_name, 'instance' => &$o));
+                $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
                 break;
         }
         return $o;
     }
-    function hasRss() {
-        return false;
+    /* static */ function getCodeXWidgets() {
+        $widgets = array('mysurveys', 'myprojects', 'mybookmarks', 
+            'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
+            'mytasks', 'mysrs'
+        );
+        $plugins_widgets = array();
+        $em =& EventManager::instance();
+        $em->processEvent('widgets', array('codex_widgets' => &$plugins_widgets));
+        
+        if (is_array($plugins_widgets)) {
+            $widgets = array_merge($widgets, $plugins_widgets);
+        }
+        return $widgets;
+    }
+    /* static */ function getExternalWidgets() {
+        $widgets = array('myrss'
+        );
+        
+        $plugins_widgets = array();
+        $em =& EventManager::instance();
+        $em->processEvent('widgets', array('external_widgets' => &$plugins_widgets));
+        
+        if (is_array($plugins_widgets)) {
+            $widgets = array_merge($widgets, $plugins_widgets);
+        }
+        return $widgets;
     }
 }
 ?>
