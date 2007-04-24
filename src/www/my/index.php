@@ -55,7 +55,12 @@ if (user_isloggedin()) {
         }
 	$title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
     
-    site_header(array('title'=>$title));
+    if (isset($pv) && $pv == 2) {
+        $HTML->pv_header(array());
+    } else {	
+        site_header(array('title'=>$title));	
+    }	
+    
 	?>
 
     <span class="small">
@@ -614,7 +619,11 @@ if (user_isloggedin()) {
 	</span>
 	
 <?php
-	site_footer(array());
+	if (isset($pv) && $pv == 2) {
+	    $HTML->pv_footer(array());
+	} else {
+	    site_footer(array());
+	}    
 
 } else {
 
