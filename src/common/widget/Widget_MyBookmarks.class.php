@@ -36,8 +36,8 @@ class Widget_MyBookmarks extends Widget {
                 $html_my_bookmarks .= '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'del_bookmark').'\')">';
                 $html_my_bookmarks .= '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></td></tr>';
             }
+            $html_my_bookmarks .= '</table>';
         }
-        $html_my_bookmarks .= '</table>';
         $html_my_bookmarks .= '<div style="text-align:center; font-size:0.8em;"><a href="/my/bookmark_add.php">['. $GLOBALS['Language']->getText('my_index', 'add_bookmark') .']</a></div>';
         return $html_my_bookmarks;
     }
