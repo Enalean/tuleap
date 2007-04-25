@@ -29,6 +29,7 @@ require_once ('common/tracker/ArtifactFieldFactory.class.php');
 require_once ('common/tracker/ArtifactFieldSet.class.php');
 require_once ('common/tracker/ArtifactFieldSetFactory.class.php');
 require_once ('common/tracker/ArtifactReportFactory.class.php');
+require_once ('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
 
 
@@ -503,7 +504,7 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -527,7 +528,7 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -554,7 +555,7 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, or if the update failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -581,7 +582,7 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, or if the update failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -849,7 +850,7 @@ $server->register(
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the add failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -1308,7 +1309,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
 /**
  * addArtifact - add an artifact in tracker $group_artifact_id of the project $group_id with given valuess
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
+ * NOTE : the mail notification system is implemented.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
@@ -1434,6 +1435,12 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         if (!$a->create($data)) {
             return new soap_fault(create_artifact_fault,'addArtifact',$a->getErrorMessage(),$a->getErrorMessage());
         } else {
+            
+            // Send the notification
+            $agnf =& new ArtifactGlobalNotificationFactory();
+            $addresses = $agnf->getAllAddresses($a->getID());
+            $a->mailFollowupWithPermissions($addresses);
+            
             return $a->getID();
         }
     } else {
@@ -1444,7 +1451,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
 /**
  * addArtifactWithFieldNames - add an artifact in tracker $tracjer_name of the project $group_id with given valuess
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
+ * NOTE : the mail notification system is implemented.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
@@ -1516,7 +1523,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
 /**
  * updateArtifact - update the artifact $artifact_id in tracker $group_artifact_id of the project $group_id with given values
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
+ * NOTE : the mail notification system is implemented.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
@@ -1586,12 +1593,19 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
             return new soap_fault(invalid_field_dependency_fault, 'updateArtifact', 'Invalid Field Dependency', 'Invalid Field Dependency');
         }
         
-        if (!$a->handleUpdate($artifact_id_dependent, $canned_response, $changes, false, $data, true)) {
+        if (! $a->handleUpdate($artifact_id_dependent, $canned_response, $changes, false, $data, true)) {
             return new soap_fault(update_artifact_fault, 'updateArtifact', $a->getErrorMessage(), $a->getErrorMessage());
         } else {
             
             if ($a->isError()) {
                 return new soap_fault(get_artifact_type_fault, 'updateArtifact', $a->getErrorMessage(),$a->getErrorMessage());
+            }
+            
+            // Send the notification
+            if ($changes) {
+                $agnf =& new ArtifactGlobalNotificationFactory();
+                $addresses = $agnf->getAllAddresses($ath->getID(), true);
+                $a->mailFollowupWithPermissions($addresses, $changes);
             }
             
             return $a->getID();
@@ -1605,7 +1619,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
 /**
  * updateArtifactWithFieldNames - update the artifact $artifact_id in tracker $tracker_name of the project $group_id with given values
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
+ * NOTE : the mail notification system is implemented.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
@@ -2102,6 +2116,13 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
 
         if (!$id) {
             return new soap_fault(get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
+        } else {
+            // Send the notification
+            if ($changes) {
+                $agnf =& new ArtifactGlobalNotificationFactory();
+                $addresses = $agnf->getAllAddresses($ath->getID(), true);
+                $a->mailFollowupWithPermissions($addresses, $changes);
+            }
         }
 
         return $id;
@@ -2319,7 +2340,7 @@ function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_
 /**
  * addArtifactFollowup - add a followup to the artifact $artifact_id
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
+ * NOTE : the mail notification system is implemented.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the follow-up
@@ -2367,6 +2388,11 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
         }
         if (!$a->addComment($body,false,&$changes)) {
             return new soap_fault(create_followup_fault, 'addArtifactFollowup', 'Comment could not be saved', 'Comment could not be saved');
+        } else {
+            // Send notification
+            $agnf =& new ArtifactGlobalNotificationFactory();
+            $addresses = $agnf->getAllAddresses($at->getID(), true);
+            $a->mailFollowupWithPermissions($addresses, $changes);
         }
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', 'Invalid Session');
