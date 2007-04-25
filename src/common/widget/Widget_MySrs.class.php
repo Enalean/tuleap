@@ -17,7 +17,7 @@ class Widget_MySrs extends Widget {
     
     function Widget_MySrs() {
         $this->Widget('mysrs');
-        $this->can_be_displayed = false;
+        $this->can_be_displayed = true;
         $this->content = '';
         
         $sql='SELECT group_id FROM support '.

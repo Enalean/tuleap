@@ -17,7 +17,7 @@ class Widget_MyBugs extends Widget {
     
     function Widget_MyBugs() {
         $this->Widget('mybugs');
-        $this->can_be_displayed = false;
+        $this->can_be_displayed = true;
         $this->content = '';
         
         $sql='SELECT group_id,COUNT(bug_id) '.

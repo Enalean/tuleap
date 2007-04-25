@@ -14,8 +14,9 @@ function display_widgets($title, $tab, $used_widgets) {
             echo '<td align="right">';
             if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
                 echo '<em>Already used</em>';
+                //echo '<input type="image" src="'. util_get_dir_image_theme() .'ic/trash.png" name="name['. $widget_name .'][remove]" value="Remove" />';
             } else {
-                echo '<input type="submit" name="name['. $widget_name .']" value="Add" />';
+                echo '<input type="submit" name="name['. $widget_name .'][add]" value="Add" />';
             }
             echo '</td>';
             echo '</tr>';
@@ -37,7 +38,7 @@ if (user_isloggedin() && $layout_id) {
     $title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
     my_header(array('title'=>$title));
     echo '<h3>Widgets</h3>';
-    echo '<form action="updatelayout?action=add&amp;layout_id='. $layout_id .'" method="POST">';
+    echo '<form action="updatelayout?action=widget&amp;layout_id='. $layout_id .'" method="POST">';
     echo '<table cellpadding="0" cellspacing="0">';
     display_widgets('CodeX Widgets', Widget::getCodeXWidgets(), $used_widgets);
     echo '<tr><td>&nbsp;</td><td></td></tr>';

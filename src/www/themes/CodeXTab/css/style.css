@@ -365,6 +365,7 @@ table.release tr td img {
 .widget_titlebar_title {
     float:left;
 }
+.widget_titlebar_close,
 .widget_titlebar_rss,
 .widget_titlebar_prefs,
 .widget_titlebar_minimize,

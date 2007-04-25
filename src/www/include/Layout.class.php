@@ -152,6 +152,7 @@ class Layout extends Response {
         echo '<div class="widget" id="'. $id .'">';
         echo '<div class="widget_titlebar">';
         echo '<div class="widget_titlebar_title">'. $title .'</div>';
+        echo '<div class="widget_titlebar_close"><a href="updatelayout.php?action=widget&amp;name['. $widget_name .'][remove]=1&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'X')) .'</a></div>';
         if ($is_minimized) {
             echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name='. $widget_name .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_plus.png', array('alt' => '+')) .'</a></div>';
         } else {
