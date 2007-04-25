@@ -4,7 +4,7 @@
 // Copyright 1999-2006 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: utils.php 3350 2006-07-13 14:00:57Z guerin $
+// 
 
 
 function new_utils_get_new_projects ($start_time,$offset,$limit) {

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: grouplist.php 3567 2006-08-25 14:11:17Z schneide $
+// 
 
 require_once('pre.php');    
 require_once('www/admin/admin_utils.php');

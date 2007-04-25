@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: account.php 5727 2007-04-05 14:54:09 +0000 (Thu, 05 Apr 2007) guerin $
+// 
 //
 // adduser.php - All the forms and functions to manage unix users
 //

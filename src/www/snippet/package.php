@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: package.php 1550 2005-05-20 09:28:11Z schneide $
+// 
 
 require_once('pre.php');
 require('../snippet/snippet_utils.php');

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: qrs_attach_file.txt 5746 2007-04-06 09:30:03 +0000 (Fri, 06 Apr 2007) ahardyau $
+// 
 //
 
 $username=strtolower(user_getname());

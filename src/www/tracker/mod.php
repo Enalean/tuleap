@@ -7,7 +7,6 @@
   * Copyright 1999-2001 (c) VA Linux Systems
   * http://sourceforge.net
   *
-  * @version   $Id: mod.php 5624 2007-03-30 17:15:56 +0000 (Fri, 30 Mar 2007) nterray $
   *
   */
 

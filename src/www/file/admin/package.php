@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: package.php 5700 2007-04-04 14:20:16 +0000 (Wed, 04 Apr 2007) nterray $
+// 
 
 require_once('pre.php');    
 require_once('www/project/admin/permissions.php');    

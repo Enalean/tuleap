@@ -4,7 +4,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id: xerox_crontab.sh 5641 2007-04-02 13:40:20 +0000 (Mon, 02 Apr 2007) guerin $
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

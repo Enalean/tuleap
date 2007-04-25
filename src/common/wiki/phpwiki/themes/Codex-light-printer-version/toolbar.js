@@ -1,5 +1,5 @@
 // Toolbar JavaScript support functions. Taken from mediawiki 
-// $Id: toolbar.js,v 1.10 2005/08/06 13:33:05 rurban Exp $ 
+//  
 
 // Un-trap us from framesets
 if( window.top != window ) window.top.location = window.location;

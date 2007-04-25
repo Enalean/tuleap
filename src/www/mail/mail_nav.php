@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: mail_nav.php 1409 2005-03-22 14:50:30Z schneide $
+// 
 
 echo "\n\n<TABLE BORDER=0 WIDTH=\"100%\">".
 	"\n<TR><TD NOWRAP>";

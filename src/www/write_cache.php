@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: write_cache.php 1490 2005-05-04 17:28:28Z ljulliar $
+// 
 
 // Try to avoid 'sploits by requiring the request to come from localhost
 if (($GLOBALS['SERVER_NAME'] != 'localhost') &&

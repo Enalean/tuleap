@@ -7,7 +7,6 @@
   * Copyright 1999-2001 (c) VA Linux Systems
   * http://sourceforge.net
   *
-  * @version   $Id: ArtifactFileHtml.class.php 4874 2007-02-09 13:51:34 +0000 (Fri, 09 Feb 2007) nterray $
   *
   */
 

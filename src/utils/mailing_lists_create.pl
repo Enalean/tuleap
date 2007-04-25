@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Modified 9 Nov. 2000 by John Stidd to eliminate www.geocrawler.com interaction
-# $Id: mailing_lists_create.pl 3857 2006-10-03 14:07:12Z guerin $
+# 
 #
 # mailing_lists_create.pl - Creates mailing lists based off of the file dump
 require("include.pl");  # Include all the predefined functions and variables

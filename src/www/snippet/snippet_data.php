@@ -3,7 +3,7 @@
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2004. All rights reserved
 //
-// $Id: snippet_data.php 936 2004-03-30 08:05:27Z guerin $
+// 
 //
 //
 //

@@ -4,7 +4,7 @@ require_once('common/dao/include/DataAccess.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id$
+ * 
  *
  * Tests the class DataAccess
  */

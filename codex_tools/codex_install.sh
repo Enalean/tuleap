@@ -9,7 +9,7 @@
 # COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
 # PUBLIC LICENSE.
 #
-#  $Id: codex_install.sh 5755 2007-04-06 14:02:09 +0000 (Fri, 06 Apr 2007) guerin $
+#  
 #
 #      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #
@@ -1260,6 +1260,7 @@ $INSTALL_DIR/src/utils/generate_doc.sh -f
 $INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
 $INSTALL_DIR/src/utils/generate_cli_package.sh -f
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/downloads
 
 ##############################################
 # Make sure all major services are on

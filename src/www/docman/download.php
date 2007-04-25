@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: download.php 1872 2005-08-03 14:24:53Z schneide $
+// 
 //
 //	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
 //

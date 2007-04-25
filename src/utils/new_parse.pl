@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id: new_parse.pl 5627 2007-04-01 14:48:34 +0000 (Sun, 01 Apr 2007) guerin $
+# 
 #
 # new_parse.pl - new script to parse out the database dumps and
 # create/update/delete user accounts on the client machines

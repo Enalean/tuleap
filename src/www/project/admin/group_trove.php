@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: group_trove.php 4953 2007-02-19 19:03:46 +0000 (Mon, 19 Feb 2007) nterray $
+// 
 
 require_once('pre.php');    
 require_once('trove.php');

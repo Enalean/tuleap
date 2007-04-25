@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-# $Id: db_stats_site_nightly.pl 1317 2005-01-14 10:51:24Z guerin $
+# 
 #
 
 use DBI;

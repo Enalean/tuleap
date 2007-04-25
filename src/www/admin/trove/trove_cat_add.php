@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: trove_cat_add.php 1489 2005-05-04 17:10:37Z ljulliar $
+// 
 
 require_once('pre.php');
 require_once('trove.php');

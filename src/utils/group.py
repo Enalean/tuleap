@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id: group.py 4433 2006-12-07 09:43:33 +0000 (Thu, 07 Dec 2006) ahardyau $
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id: db_trove_treesums.pl 3567 2006-08-25 14:11:17Z schneide $
+# 
 #
 use DBI;
 

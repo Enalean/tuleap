@@ -6,7 +6,6 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id: wiki.tab 4433 2006-12-07 09:43:33 +0000 (Thu, 07 Dec 2006) ahardyau $
 #  *
 #  */ $Language->loadLanguageMsg('wiki/wiki');
 #

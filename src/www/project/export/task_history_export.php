@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: task_history_export.php 1414 2005-04-06 09:08:48Z schneide $
+// 
 
 $Language->loadLanguageMsg('project/project');
 

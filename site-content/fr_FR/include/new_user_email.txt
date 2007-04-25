@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: new_user_email.txt 2659 2006-02-27 14:44:44Z mnazaria $
+// 
 //
 
 

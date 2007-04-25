@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2006. All rights reserved
  * 
- * $Id$
+ * 
  *
  * Reference Manager
  */

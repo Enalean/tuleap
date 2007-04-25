@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id: notification.php 2658 2006-02-27 14:36:30Z guerin $
+// 
 //
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //

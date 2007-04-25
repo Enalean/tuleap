@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: news_utils.php 5688 2007-04-04 09:35:06 +0000 (Wed, 04 Apr 2007) nterray $
+// 
 
 /*
 	News System

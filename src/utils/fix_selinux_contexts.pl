@@ -4,7 +4,7 @@
 # Copyright (c) Xerox Corporation, CodeX, 2001-2006. All Rights Reserved
 # This file is licensed under the GNU General Public License
 #
-# $Id$
+# 
 #
 # Purpose:
 #    Automatically fix SELinux contexts to allow proper access to Apache and MySAL

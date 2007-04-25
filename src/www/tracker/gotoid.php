@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id: gotoid.php 3680 2006-09-15 08:28:49Z guerin $
+// 
 //
 //
 //  Written for CodeX by Nicolas Guérin

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id: mail_aliases.pl 4331 2006-11-29 10:11:18 +0000 (Wed, 29 Nov 2006) guerin $
+# 
 #
 use DBI;
 

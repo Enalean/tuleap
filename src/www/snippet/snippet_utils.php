@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: snippet_utils.php 3376 2006-07-26 14:18:10Z mnazaria $
+// 
 
 /*
 	Code Snippet System

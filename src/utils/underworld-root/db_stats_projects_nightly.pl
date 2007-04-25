@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id: db_stats_projects_nightly.pl 1065 2004-07-07 14:40:24Z ljulliar $
+# 
 #
 # use strict;
 use DBI;
