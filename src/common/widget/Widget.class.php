@@ -31,7 +31,7 @@ require_once('common/widget/Widget_MyRss.class.php');
     
     function display($layout_id, $column_id, $is_minimized, $display_preferences) {
         if ($this->canBeDisplayed()) {
-            $GLOBALS['HTML']->widget('widget_'.$this->id, $this->getTitle(), $this->getContent(), $layout_id, $column_id, $is_minimized, strlen($this->getPreferences()), ($display_preferences ? $this->getPreferencesForm() : ''), $this->hasRss());
+            $GLOBALS['HTML']->widget($this, $layout_id, $column_id, $is_minimized, $display_preferences);
         }
     }
     function getTitle() {
@@ -69,6 +69,9 @@ require_once('common/widget/Widget_MyRss.class.php');
     }
     function isUnique() {
         return true;
+    }
+    function getInstanceId() {
+        return 0;
     }
     /* static */ function getInstance($widget_name) {
         $o = null;
