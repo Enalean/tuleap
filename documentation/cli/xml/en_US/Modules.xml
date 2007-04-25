@@ -228,7 +228,6 @@ Is this information correct? (y/n): y
                       142 is a valid value ID for this extra field.
                       The value returned (7374) is the ID of the new artifact.
                 </note>
-                <note>Note: The mail notification system is not implemented for the moment.</note>
                 </para>
             </para>
         </section>
@@ -277,7 +276,6 @@ Is this information correct? (y/n): y
 7374
                     </programlisting>
                 </example>
-                <note>Note: The mail notification system is not implemented for the moment.</note>
                 </para>
             </para>
         </section>
@@ -360,7 +358,6 @@ Array
 [mnazaria@linux codex cli ]$ ./codex.php tracker addcomment --tracker_id=371 --id=7374 --message="I agree with you"
                     </programlisting>
                 </example>
-                <note>Note: The mail notification system is not implemented for the moment.</note>
                 </para>
             </para>
         </section>

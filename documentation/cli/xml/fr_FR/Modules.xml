@@ -237,7 +237,6 @@ Is this information correct? (y/n): y
                       142 est une valeur valide pour ce champ.
                       La valeur retournée (7374) est l'identifiant du nouvel artefact.
                 </note>
-                <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
                 </para>
             </para>
         </section>
@@ -289,7 +288,6 @@ Is this information correct? (y/n): y
 7374
                     </programlisting>
                 </example>
-                <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
                 </para>
             </para>
         </section>
@@ -378,7 +376,6 @@ Array
 [mnazaria@linux codex cli ]$ ./codex.php tracker addcomment --tracker_id=371 --id=7374 --message="I agree with you"
                     </programlisting>
                 </example>
-                <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
                 </para>
             </para>
         </section>
