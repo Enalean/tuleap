@@ -6239,7 +6239,11 @@ class soap_parser extends nusoap_base {
 	function decodeSimple($value, $type, $typens) {
 		// TODO: use the namespace!
 		if ((!isset($type)) || $type == 'string' || $type == 'long' || $type == 'unsignedLong') {
-			return (string) $value;
+			//CodeX hack: Fix SR #780 & SR #777
+			// As php does not understand text/xml, soap data are put in HTTP_RAW_POST_DATA
+			// and magic quotes does not work.
+			// We simulate here the magic_quotes effect
+			return addslashes((string) $value);
 		}
 		if ($type == 'int' || $type == 'integer' || $type == 'short' || $type == 'byte') {
 			return (int) $value;
