@@ -151,15 +151,15 @@ class Layout extends Response {
         echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
         echo '<div class="widget_titlebar_close"><a href="updatelayout.php?action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'X')) .'</a></div>';
         if ($is_minimized) {
-            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name='. $widget->id .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_plus.png', array('alt' => '+')) .'</a></div>';
+            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_plus.png', array('alt' => '+')) .'</a></div>';
         } else {
-            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name='. $widget->id .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_minus.png', array('alt' => '-')) .'</a></div>';
+            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_minus.png', array('alt' => '-')) .'</a></div>';
         }
         if (strlen($widget->getPreferences())) {
-            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name='. $widget->id .'">Preferences</a></div>';
+            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">Preferences</a></div>';
         }
         if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss"><a href="widget.php?action=rss&amp;name='. $widget->id .'">rss</a></div>';
+            echo '<div class="widget_titlebar_rss"><a href="widget.php?action=rss&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">rss</a></div>';
         }
         echo '</div>';
         $style = '';

@@ -3362,7 +3362,7 @@ CREATE TABLE IF NOT EXISTS user_layouts_contents (
   rank int(11) NOT NULL default '0',
   is_minimzed tinyint(1) NOT NULL default '0',
   display_preferences tinyint(1) NOT NULL default '0',
-  KEY (user_id, layout_id, name),
+  KEY (user_id, layout_id, name, content_id),
   KEY (name)
 );
 
