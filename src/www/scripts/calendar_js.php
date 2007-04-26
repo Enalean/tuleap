@@ -207,8 +207,13 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
 function str2dt(str_datetime) {
    //var re_date = /^(\d+)\-(\d+)\-(\d+)\s+(\d+)\:(\d+)$/;
    var re_date = /^(\d+)\-(\d+)\-(\d+)\s*$/;
+   var dte_field = /^(\d+)*$/;
 	if (!re_date.exec(str_datetime))
+	    if (dte_field.exec(str_datetime)) {
 		return alert("Invalid Datetime format: "+ str_datetime);
+	    } else {
+	        return (new Date ());
+            }	    
 	return (new Date (RegExp.$1, RegExp.$2-1, RegExp.$3, RegExp.$4, RegExp.$5,0));
 }
 
