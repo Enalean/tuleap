@@ -131,6 +131,8 @@ while (list($field,$value_id) = each($prefs)) {
 				$prefs[$field_op] = '>';
 		    //echo 'DBG Setting $prefs['.$field.'_op]= '.$prefs[$field.'_op'].'<br>';
 		}
+		$f_name  = "DTE_".$field."_name";
+		$prefs[$f_name] = $$f_name;
     }
 }
 
