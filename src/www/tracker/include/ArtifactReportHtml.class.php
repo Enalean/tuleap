@@ -252,7 +252,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         $val    = isset($prefs[$field->getName()][0])       ? $prefs[$field->getName()][0]       : '';
                         $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldDate($val, $pv);
                     }
-                            
+                    $boxes .= $field_html->fieldRelation($prefs["DTE_".$field->getName()."_name"][0],$this->group_artifact_id,"artifact_form",$field->getName(),$pv,$advsrch);
                 } else if ( $field->isTextField() || 
                            $field->isTextArea() ) {
                     $val=isset($prefs[$field->getName()][0])?$prefs[$field->getName()][0]:"";
@@ -524,6 +524,7 @@ class ArtifactReportHtml extends ArtifactReport {
 	  global $ath,$art_field_fact,$Language;
                 
 	  $html_result = '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
+	  $html_result.= '<script type="text/javascript" src="/scripts/dateField_js.php"></script>';
 
                 // Display browse informations if any
                 if ( $ath->getBrowseInstructions() && $pv == 0) {
