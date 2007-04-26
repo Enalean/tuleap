@@ -1575,7 +1575,7 @@ class Artifact extends Error {
 
         // check old assignee  notification preferences if assignee was just changed
         // Never notify user 'none' (id #100)
-        if (array_key_exists($field_name, $changes)) {
+        if (isset($changes[$field_name]) && isset($changes[$field_name]['del'])) {
             $user_name = $changes[$field_name]['del'];
         } else {
             unset($user_name);
@@ -1759,7 +1759,7 @@ class Artifact extends Error {
                 $arr_cc[] = $row['email'];
             }
         }
-        if (array_key_exists('CC', $changes) && $changes['CC']['del'] ) {
+        if (isset($changes['CC']) && isset($changes['CC']['del']) && $changes['CC']['del'] ) {
             // Only one CC can be deleted at once so just append it to the list....
             $arr_cc[] = $changes['CC']['del'];
         }
