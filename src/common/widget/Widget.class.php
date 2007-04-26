@@ -20,6 +20,7 @@ require_once('common/widget/Widget_MyRss.class.php');
 */
 /* abstract */ class Widget {
     
+    var $content_id;
     var $id;
     var $hasPreferences;
     /**
@@ -27,6 +28,7 @@ require_once('common/widget/Widget_MyRss.class.php');
     */
     function Widget($id) {
         $this->id = $id;
+        $this->content_id = 0;
     }
     
     function display($layout_id, $column_id, $is_minimized, $display_preferences) {
@@ -45,7 +47,7 @@ require_once('common/widget/Widget_MyRss.class.php');
     }
     function getPreferencesForm() {
         $prefs  = '';
-        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name='. $this->id .'">';
+        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name='. $this->id .'&amp;content_id='. $this->getInstanceId() .'">';
         $prefs .= '<fieldset><legend>Preferences</legend>';
         $prefs .= $this->getPreferences();
         $prefs .= '<br />';
@@ -71,7 +73,13 @@ require_once('common/widget/Widget_MyRss.class.php');
         return true;
     }
     function getInstanceId() {
-        return 0;
+        return $this->content_id;
+    }
+    function loadContent($id) {
+    }
+    function create(&$request) {
+    }
+    function destroy($id) {
     }
     /* static */ function getInstance($widget_name) {
         $o = null;

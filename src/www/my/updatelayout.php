@@ -21,7 +21,9 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                         case 'remove':
                             $sql = "DELETE FROM user_layouts_contents WHERE user_id = ". user_getid() ." AND layout_id = $layout_id AND name = '$name' AND content_id = $instance_id";
                             db_query($sql);
-                            echo db_error();
+                            if (!db_error()) {
+                                $widget->destroy($instance_id);
+                            }
                             break;
                         case 'add':
                         default:
@@ -56,23 +58,21 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                               AND name = '$name'";
                             $res = db_query($sql);
                             echo db_error();
-                            if (db_numrows($res)) {
-                                if (!$widget->isUnique() || db_result($res, 0, 'column_id') == 0) {
-                                    //search for rank
-                                    $sql = "SELECT min(rank) - 1 AS rank FROM user_layouts_contents WHERE user_id = ". user_getid() ." AND layout_id = $layout_id AND column_id = $column_id ";
-                                    $res = db_query($sql);
-                                    echo db_error();
-                                    $rank = db_result($res, 0, 'rank');
-                                    
-                                    //Update
-                                    $sql = "UPDATE user_layouts_contents
-                                        SET column_id = ". $column_id .", rank = $rank
-                                        WHERE user_id = ". user_getid() ."
-                                          AND name = '$name'
-                                          AND layout_id = ". $layout_id;
-                                    $res = db_query($sql);
-                                    echo db_error();
-                                }
+                            if (db_numrows($res) && !$widget->isUnique() && db_result($res, 0, 'column_id') == 0) {
+                                //search for rank
+                                $sql = "SELECT min(rank) - 1 AS rank FROM user_layouts_contents WHERE user_id = ". user_getid() ." AND layout_id = $layout_id AND column_id = $column_id ";
+                                $res = db_query($sql);
+                                echo db_error();
+                                $rank = db_result($res, 0, 'rank');
+                                
+                                //Update
+                                $sql = "UPDATE user_layouts_contents
+                                    SET column_id = ". $column_id .", rank = $rank
+                                    WHERE user_id = ". user_getid() ."
+                                      AND name = '$name'
+                                      AND layout_id = ". $layout_id;
+                                $res = db_query($sql);
+                                echo db_error();
                             } else {
                                 //Insert
                                 $sql = "INSERT INTO user_layouts_contents(user_id, layout_id, column_id, name, content_id, rank) 
@@ -105,7 +105,7 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
             break;
         case 'preferences':
             if ($name) {
-                $sql = 'UPDATE user_layouts_contents SET display_preferences = 1 WHERE user_id = '. user_getid() ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+                $sql = 'UPDATE user_layouts_contents SET display_preferences = 1, is_minimized = 0 WHERE user_id = '. user_getid() ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
                 db_query($sql);
                 echo db_error();
             }

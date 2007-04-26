@@ -68,6 +68,7 @@ if (user_isloggedin()) {
                 while ($data = db_fetch_array($req_content)) {
                     $c =& Widget::getInstance($data['name']);
                     if ($c !== null) {
+                        $c->loadContent($data['content_id']);
                         $col->add($c, $data['is_minimized'], $data['display_preferences']);
                     }
                     unset($c);

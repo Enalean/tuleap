@@ -168,7 +168,7 @@ class Layout extends Response {
         }
         echo '<div class="widget_content" style="'. $style .'">';
         if ($display_preferences) {
-            echo '<div class="widget_preferences">'. $widget->getPreferences() .'</div>';
+            echo '<div class="widget_preferences">'. $widget->getPreferencesForm() .'</div>';
         }
         echo $widget->getContent() .'</div>';
         echo '</div>';
