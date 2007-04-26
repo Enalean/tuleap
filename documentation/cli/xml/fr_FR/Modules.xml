@@ -380,6 +380,39 @@ Array
             </para>
         </section>
 
+        <section id="TrackerFunctionAddCC">
+            <title>addCC</title>
+            <para>
+                addCC: Ajoute une liste d'adresses email ou de logins à la liste des CC d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker auquel appartient l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--cc_list*: Liste d'adresses email et/ou de logins à ajouter à la liste des CC.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--cc_comment: Commentaire optionnel associé à la liste des CC ajoutés.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande addCC</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addCC --tracker_id=371 --id=7374 --cc_list="marc.nazarian@xrce.xerox.com, mnazaria, bsmith, james.brown@server.net"
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
 <!--
 
         <section id="TrackerFunctionFiles">

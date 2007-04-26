@@ -286,10 +286,10 @@ Is this information correct? (y/n): y
                 comments: Retrieve all the messages posted in an artifact.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--tracker_id* : Tracker ID.</para>
+                        <para>--tracker_id*: Tracker ID.</para>
                     </listitem>
                     <listitem>
-                        <para>--id* : Artifact ID.</para>
+                        <para>--id*: Artifact ID.</para>
                     </listitem>
                     <listitem>
                         <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
@@ -339,13 +339,13 @@ Array
                 addcomment: Post a new follow-up comment in an artifact.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--tracker_id* : Tracker ID the artifact belongs to.</para>
+                        <para>--tracker_id*: Tracker ID the artifact belongs to.</para>
                     </listitem>
                     <listitem>
-                        <para>--id* : Artifact ID.</para>
+                        <para>--id*: Artifact ID.</para>
                     </listitem>
                     <listitem>
-                        <para>--message* : Message to post.</para>
+                        <para>--message*: Message to post.</para>
                     </listitem>
                     <listitem>
                         <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
@@ -356,6 +356,38 @@ Array
                     <title>addcomment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [mnazaria@linux codex cli ]$ ./codex.php tracker addcomment --tracker_id=371 --id=7374 --message="I agree with you"
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAddCC">
+            <title>addCC</title>
+            <para>
+                addCC: Add a list of emails or logins in CC of a given artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id*: Tracker ID the artifact belongs to.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id*: Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--cc_list*: List of emails and/or logins to add in the CC list.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--cc_comment: Optionnal comment associated with the added CC list.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>addCC command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addCC --tracker_id=371 --id=7374 --cc_list="marc.nazarian@xrce.xerox.com, mnazaria, bsmith, james.brown@server.net"
                     </programlisting>
                 </example>
                 </para>
