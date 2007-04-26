@@ -22,3 +22,8 @@
 calendar	months	["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 calendar	days	["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 calendar	week_start	1
+#-----------------------------------------------
+# Script: SF/www/script/dateField_js.php
+#
+date_field	description	<B>Select a date field:</B>
+date_field	first_value	----Select a field----
