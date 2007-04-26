@@ -59,4 +59,4 @@ confondez pas cette politique d'échange avec le Copyright qui doit
 être présent dans tous les fichiers de votre code source.  </p>
 
 <BR><HR><BR>
-<P align=center><input type="checkbox" autocomplete="off" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">J'accepte</label> les <a href="/tos/tos.php">Conditions Générales d'Utilisation de <?=$GLOBALS['sys_name']?></a>.</p>
+<P align=center><input type="checkbox" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">J'accepte</label> les <a href="/tos/tos.php">Conditions Générales d'Utilisation de <?=$GLOBALS['sys_name']?></a>.</p>
