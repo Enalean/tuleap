@@ -17,6 +17,7 @@ require_once('CLI_Action_Tracker_Add.class.php');
 require_once('CLI_Action_Tracker_Update.class.php');
 require_once('CLI_Action_Tracker_Comments.class.php');
 require_once('CLI_Action_Tracker_AddComment.class.php');
+require_once('CLI_Action_Tracker_AddCC.class.php');
 
 class CLI_Module_Tracker extends CLI_Module {
     // These fields are the standard fields
@@ -33,6 +34,7 @@ class CLI_Module_Tracker extends CLI_Module {
         $this->addAction(new CLI_Action_Tracker_Update());
         $this->addAction(new CLI_Action_Tracker_Comments());
         $this->addAction(new CLI_Action_Tracker_AddComment());
+        $this->addAction(new CLI_Action_Tracker_AddCC());
         
         /* TODO: other actions =>
         files
