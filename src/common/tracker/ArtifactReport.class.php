@@ -764,17 +764,65 @@ class ArtifactReport extends Error {
 	    //echo $field->getName()."-".$field->getID()."<br>";
 	    
 	    if ($field->isShowOnQuery()) {
+	      if (!$advsrch) {
+	          $new_field = new ArtifactField();
+	          $new_field->fetchData($this->group_artifact_id,$prefs["DTE_".$field->getName()."_name"][0]);
+	      }
 	      // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 	      if ( $field->isStandardField()) {
-		$where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
-		
+	      	if (($field->isDateField()) && (!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", $prefs[$field->getName()][0])) &&  
+		    ($prefs[$field->getName()][0] != null)) {
+		    if (!$advsrch) {
+		        $operator  = $prefs[$field->getName().'_op'][0];
+		        if ($operator == null) {
+  		            $operator = '>';
+		        }
+		        $from .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$field->getName()."),'%Y-%m-%d') dte from artifact at) T1_".$count." on (T1_".$count.".artifact_id = a.artifact_id)";
+		        if ($new_field->isStandardField()){
+		            $from  .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$new_field->getName()."),'%Y-%m-%d') dte from artifact at) T2_".$count." on (T2_".$count.".artifact_id = a.artifact_id)";
+  		            $where .= " AND T1_".$count.".dte ".$operator." T2_".$count.".dte";
+			    $notany = true;
+		        } else {
+   			    $from  .= " JOIN (SELECT atf.artifact_id,atf.field_id,DATE_FORMAT(FROM_UNIXTIME(atf.".$new_field->getValueFieldName()."),'%Y-%m-%d') dte from artifact_field_value atf) TV".$count." ON (TV".$count.".artifact_id=a.artifact_id".
+    	                          " AND TV".$count.".field_id=".$new_field->getID().")";
+			    $where .= " AND T1_".$count.".dte ".$operator." TV".$count.".dte";
+			    $notany = true;
+		        }
+		        if ($notany) {
+		            $count++;
+		        }
+		    }
+		} else {
+		    $where .= $this->getValuesWhereClause($field,$prefs,"a.".$field->getName(),$advsrch,$notany);
+		}
 		if ($field->getName() == "status_id") $status_id_ok = 1;
 	      } else {
 		
 		// The field value is stored into the artifact_field_value table
 		// So we need to add a new join
-		$where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
-		
+		if (($field->isDateField())&&(!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", $prefs[$field->getName()][0]))&&($prefs[$field->getName()][0] != null)) {
+		    if (!$advsrch) {
+		        $from  .= " JOIN (SELECT atf.artifact_id,atf.field_id,DATE_FORMAT(FROM_UNIXTIME(atf.".$field->getValueFieldName()."),'%Y-%m-%d') dte from artifact_field_value atf) TV".$count." ON (TV".$count.".artifact_id=a.artifact_id".
+			    " AND TV".$count.".field_id=".$field->getID().")";
+			
+		        $operator  = $prefs[$field->getName().'_op'][0];
+		        if ($operator == null) {
+  		            $operator = '>';
+		        }
+		        if ($new_field->isStandardField()) {
+		            $from  .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$new_field->getName()."),'%Y-%m-%d') dte from artifact at) T1_".$count." on (T1_".$count.".artifact_id = a.artifact_id)";
+			    $where .= " AND TV".$count.".dte ".$operator." T1_".$count.".dte";
+			    $notany = true;
+		        } else {
+                            $from  .= " JOIN (SELECT atf.artifact_id,atf.field_id,DATE_FORMAT(FROM_UNIXTIME(atf.".$new_field->getValueFieldName()."),'%Y-%m-%d') dte from artifact_field_value atf) TVS".$count." ON (TVS".$count.".artifact_id=a.artifact_id".
+			         " AND TVS".$count.".field_id=".$new_field->getID().")";
+			    $where .= " AND TV".$count.".dte ".$operator." TVS".$count.".dte";			
+			    $notany = true;
+		        }
+		    }
+		} else {
+		    $where .= $this->getValuesWhereClause($field,$prefs,"v".$count.".".$field->getValueFieldName(),$advsrch,$notany);
+		}
 		if ($notany) {
 		  $from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
 		    " and v".$count.".field_id=".$field->getID().")";
