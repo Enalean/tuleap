@@ -185,6 +185,48 @@ class ArtifactFieldHtml extends ArtifactField {
 	}
 	
 	/**
+        * 
+	 *  Returns a select box populated with field date for current tracker
+	 */
+	function fieldRelation($value_name,$atid,$form_name,$date_field_name,$pv=false,$advsrch){
+	    if (!$pv) {
+		$sql = sprintf('SELECT DISTINCT af.field_name,af.label '.
+			       'FROM artifact_field af,artifact_field_usage afu '.
+		               'WHERE af.group_artifact_id = %d '.
+			       'AND af.group_artifact_id= afu.group_artifact_id '.
+			       'AND af.field_id= afu.field_id '.
+			       'AND afu.use_it= 1 '.
+		               'AND af.display_type= %s',
+         	               $atid,DataAccess::quoteSmart("DF"));
+                $res=db_query($sql);
+		for($i=0;$i<db_numrows($res);$i++){
+		    $field_value[$i] = db_fetch_array($res);
+		    if ($field_value[$i][0] != $date_field_name){
+                        $field = new ArtifactField();
+	                $field->fetchData($atid,$field_value[$i][0]);
+			if (!$field->isStandardField()) {
+	                        $str_name.= $field_value[$i][0].'-';
+			        $str_label.= $field_value[$i][1].'-';
+			}
+	            }
+	        }
+		$html  = '<INPUT TYPE="hidden" NAME="DTE_'.$date_field_name.'_name" VALUE="'.$value_name.'">';
+		if (!$advsrch) {
+		    if ($str_name != null){
+		        $html .= ' <a href="javascript:show_cmb(\''.$str_name.'\',\''.$str_label.'\','.'\'document.'.$form_name.'\',\''.$date_field_name.'\',\''.util_get_css_theme().'\');">'.
+		            '<img src="'.util_get_image_theme('datecal.png').'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date_field').'"></a>';
+		    } else {
+		        $html .= ' <img src="'.util_get_image_theme('datecal.png').'"  width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date_field').'">';
+		    }
+		}
+	    }
+	    return $html;
+	}
+		
+	
+	/**
+	
+	/**
      * 
 	 *  Returns a multi date field
      * 
@@ -198,6 +240,10 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function multipleFieldDate($date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false) {
 	  global $Language;
+	    
+	    if (!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", $date_begin)) {
+	        $date_begin = '';
+	    }
 
 	    // CAUTION!!!! The Javascript below assumes that the date always appear
 	    // in a field called 'artifact_form'
