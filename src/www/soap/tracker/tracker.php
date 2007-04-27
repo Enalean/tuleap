@@ -38,6 +38,34 @@ require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
 // Type definition
 //
 $server->wsdl->addComplexType(
+    'TrackerDesc',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
+        'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
+        'name' => array('name'=>'name', 'type' => 'xsd:string'),
+        'description' => array('name'=>'description', 'type' => 'xsd:string'),
+        'item_name' => array('name'=>'item_name', 'type' => 'xsd:string'),
+        'open_count' => array('name'=>'open_count', 'type' => 'xsd:int'),
+        'total_count' => array('name'=>'total_count', 'type' => 'xsd:int')
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfTrackerDesc',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerDesc[]')),
+    'tns:TrackerDesc'
+);
+
+$server->wsdl->addComplexType(
     'ArtifactType',
     'complexType',
     'struct',
@@ -450,6 +478,35 @@ $server->wsdl->addComplexType(
 //
 // Function definition
 //
+$server->register(
+    'getTrackerList', // method name
+    array('sessionKey'=>'xsd:string', // input parameters
+          'group_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfTrackerDesc'), // output parameters
+    $uri, // namespace
+    $uri.'#getTrackerList', // soapaction
+    'rpc', // style
+    'encoded', // use
+    'Returns the array of TrackerDesc (light description of trackers) that belongs to the group identified by group ID.
+     Returns a soap fault if the group ID does not match with a valid project.' // documentation
+);
+
+$server->register(
+    'getArtifactType', // method name
+    array('sessionKey'=>'xsd:string', // input parameters
+          'group_id'=>'xsd:int',
+          'group_artifact_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArtifactType'), // output parameters
+    $uri, // namespace
+    $uri.'#getArtifactType', // soapaction
+    'rpc', // style
+    'encoded', // use
+    'Returns the ArtifactType (tracker) with the ID group_artifact_id that belongs to the group identified by group ID.
+     Returns a soap fault if the group ID does not match with a valid project, or if the group_artifact_id is invalid or is not a tracker of the project.' // documentation
+);
+
 $server->register(
     'getArtifactTypes', // method name
     array('sessionKey'=>'xsd:string', // input parameters
@@ -921,6 +978,123 @@ $server->register(
 //
 
 /**
+ * getTrackerList - returns an array of TrackerDesc (short description of trackers) that belongs to the project identified by group_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the list of trackers
+ * @return array the array of SOAPTrackerDesc that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
+ */
+function &getTrackerList($sessionKey, $group_id) {
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'getTrackerList','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'getTrackerList', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getTrackerList', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        $atf = new ArtifactTypeFactory($group);
+        if (!$atf || !is_object($atf)) {
+            return new soap_fault(get_artifact_type_factory_fault, 'getTrackerList', 'Could Not Get ArtifactTypeFactory','Could Not Get ArtifactTypeFactory');
+        } elseif ($atf->isError()) {
+            return new soap_fault(get_artifact_type_factory_fault, 'getTrackerList', $atf->getErrorMessage(), $atf->getErrorMessage());
+        }
+        // The function getArtifactTypes returns only the trackers the user is allowed to view
+        return trackerlist_to_soap($atf->getArtifactTypes());
+    } else {
+        return new soap_fault(invalid_session_fault,'getTrackerList','Invalid Session','');
+    }
+}
+
+/**
+ * trackerlist_to_soap : return the soap ArrayOfTrackerDesc structure giving an array of PHP ArtifactType Object.
+ * @access private
+ * 
+ * WARNING : We check the permissions here : only the readable trackers are returned.
+ *
+ * @param array of Object{ArtifactType} $at_arr the array of artifactTypes to convert.
+ * @return array the SOAPArrayOfTrackerDesc corresponding to the array of ArtifactTypes Object (light)
+ */
+function trackerlist_to_soap($at_arr) {
+    global $ath;
+    $user_id = session_get_userid();
+    $return = array();
+    for ($i=0; $i<count($at_arr); $i++) {
+        if ($at_arr[$i]->isError()) {
+            //skip if error
+        } else {
+            $ath = new ArtifactType($at_arr[$i]->getGroup(), $at_arr[$i]->getID());
+            if (!$ath || !is_object($ath)) {
+                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','ArtifactType could not be created');
+            }
+            if ($ath->isError()) {
+                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),$ath->getErrorMessage());
+            }
+            // Check if this tracker is valid (not deleted)
+            if ( !$ath->isValid() ) {
+                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','This tracker is no longer valid.');
+            }
+            // Check if the user can view this tracker
+            if ($ath->userCanView($user_id)) {
+                $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
+                        ." FROM artifact_file af, artifact a, artifact_group_list agl"
+                        ." WHERE (af.artifact_id = a.artifact_id)" 
+                        ." AND (a.group_artifact_id = agl.group_artifact_id)" 
+                        ." AND (agl.group_artifact_id =".$at_arr[$i]->getID().")";
+                $result=db_query($sql);
+                $return[]=array(
+                    'group_artifact_id'=>$at_arr[$i]->data_array['group_artifact_id'],
+                    'group_id'=>$at_arr[$i]->data_array['group_id'],
+                    'name'=>$at_arr[$i]->data_array['name'],
+                    'description'=>$at_arr[$i]->data_array['description'],
+                    'item_name'=>$at_arr[$i]->data_array['item_name'],
+                    'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():NULL),
+                    'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():NULL),
+                    'total_file_size' => db_result($result, 0, 0)
+                );
+            }
+        }
+    }
+    return $return;
+}
+
+/**
+ * getArtifactType - returns the ArtifactType (tracker) with the ID $group_artifact_id that belongs to the project identified by group_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the tracker structure
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the structure
+ * @return the SOAPArtifactType of the tracker $group_artifact_id that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project or if $group_artifact_id doesn't exist is not a tracker of the project.
+ */
+function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'getArtifactType','Could Not Get Group','Could Not Get Group');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'getArtifactType', $group->getErrorMessage(),$group->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getArtifactType', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        $at = new ArtifactType($group, $group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', 'Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', $at->getErrorMessage(), $at->getErrorMessage());
+        }
+        // The function getArtifactTypes returns only the trackers the user is allowed to view
+        return artifacttype_to_soap($at);
+    } else {
+        return new soap_fault(invalid_session_fault,'getArtifactType','Invalid Session','');
+    }
+}
+
+/**
  * getArtifactTypes - returns an array of ArtifactTypes (trackers) that belongs to the project identified by group_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
@@ -953,137 +1127,155 @@ function &getArtifactTypes($sessionKey, $group_id) {
 }
 
 /**
- * artifacttypes_to_soap : return the soap ArrayOfArtifactType structure giving an array of PHP ArtifactType Object.
+ * artifacttype_to_soap : return the soap ArtifactType structure giving an PHP ArtifactType Object.
  * @access private
  * 
  * WARNING : We check the permissions here : only the readable trackers and the readable fields are returned.
  *
- * @param array of Object{ArtifactType} $at_arr the array of artifactTypes to convert.
- * @return array the SOAPArrayOfArtifactType corresponding to the array of ArtifactTypes Object
+ * @param Object{ArtifactType} $at the artifactType to convert.
+ * @return the SOAPArtifactType corresponding to the ArtifactType Object
  */
-function artifacttypes_to_soap($at_arr) {
+function artifacttype_to_soap($at) {
     global $ath;
     $user_id = session_get_userid();
+    $return = array();
+
+    // number of opend artifact are not part of ArtifactType, so we have to get it with ArtifactTypeFactory (could need some refactoring maybe)
+    $atf = new ArtifactTypeFactory($at->getGroup());
+    $arr_count = $atf->getStatusIdCount($at->getID());
+    if ( $arr_count ) {
+    	    $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:0;
+        $count = array_key_exists('count', $arr_count)?$arr_count['count']:0;;
+    } else {
+    	    $open_count = 0;
+        $count = 0;
+    }
+                
+    $field_sets = array();
+    $ath = new ArtifactType($at->getGroup(), $at->getID());
+    if (!$ath || !is_object($ath)) {
+        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','ArtifactType could not be created');
+    }
+    if ($ath->isError()) {
+        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),$ath->getErrorMessage());
+    }
+    // Check if this tracker is valid (not deleted)
+    if ( !$ath->isValid() ) {
+        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','This tracker is no longer valid.');
+    }
+    // Check if the user can view this tracker
+    if ($ath->userCanView($user_id)) {
+    
+        $art_fieldset_fact = new ArtifactFieldSetFactory($at);
+        if (!$art_fieldset_fact || !is_object($art_fieldset_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', 'Could Not Get ArtifactFieldSetFactory','Could Not Get ArtifactFieldSetFactory');
+        } elseif ($art_fieldset_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', $art_fieldset_fact->getErrorMessage(),$art_fieldset_fact->getErrorMessage());
+        }
+        $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+    
+        foreach($result_fieldsets as $fieldset_id => $result_fieldset) {
+            $fields = array();
+            $fields_in_fieldset = $result_fieldset->getAllUsedFields();     
+            $group_id = $at->Group->getID();
+            $group_artifact_id = $at->getID();
+            while ( list($key, $field) = each($fields_in_fieldset) ) {
+                    
+                if ($field->userCanRead($group_id,$group_artifact_id,$user_id)) {
+                    $availablevalues = array();
+                    $result = $field->getFieldPredefinedValues($at->getID());
+                    $rows=db_numrows($result);
+                    $cols=db_numfields($result);
+                    for ($j=0; $j<$rows; $j++) {     
+                        $availablevalues[] = array (
+                            'field_id' => $field->getID(),
+                            'group_artifact_id' => $at->getID(),
+                            'value_id' => db_result($result,$j,0),
+                            'value' => db_result($result,$j,1),
+                            'description' => ($cols > 2) ? db_result($result,$j,4) : '',
+                            'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
+                            'status' => ($cols > 2) ? db_result($result,$j,6) : ''
+                        );
+                    }
+                    // For bound-values select boxes, we add the none value.
+                    if (($field->isMultiSelectBox() || $field->isSelectBox()) && ($field->isBound())) {
+                        $availablevalues[] = array (
+                            'field_id' => $field->getID(),
+                            'group_artifact_id' => $at->getID(),
+                            'value_id' => 100,
+                            'value' => 'None',
+                            'description' => '',
+                            'order_id' => 10,
+                            'status' => 'P'
+                        );    
+                    }
+                    if ($field->isMultiSelectBox()) {
+                        $defaultvalue = implode(",", $field->getDefaultValue());
+                    } else {
+                        $defaultvalue = $field->getDefaultValue();
+                    }
+                    $fields[] = array(
+                        'field_id' => $field->getID(),
+                        'group_artifact_id' => $at->getID(),
+                        'field_set_id' => $field->getFieldSetID(), 
+                        'field_name' => $field->getName(),
+                        'data_type' => $field->getDataType(),
+                        'display_type' => $field->getDisplayType(),
+                        'display_size' => $field->getDisplaySize(),
+                        'label'    => $field->getLabel(),
+                        'description' => $field->getDescription(),
+                        'scope' => $field->getScope(),
+                        'required' => $field->getRequired(),
+                        'empty_ok' => $field->getEmptyOk(),
+                        'keep_history' => $field->getKeepHistory(),
+                        'special' => $field->getSpecial(),
+                        'value_function' => implode(",", $field->getValueFunction()),
+                        'available_values' => $availablevalues,
+                        'default_value' => $defaultvalue,
+                        'user_can_submit' => $field->userCanSubmit($group_id,$group_artifact_id,$user_id),
+                        'user_can_read' => $field->userCanRead($group_id,$group_artifact_id,$user_id),
+                        'user_can_update' => $field->userCanUpdate($group_id,$group_artifact_id,$user_id),
+                        'is_standard_field' => $field->isStandardField()
+                    );
+                }
+            }
+            $field_sets[] = array(
+                'field_set_id'=>$result_fieldset->getID(),
+                'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
+                'name'=>$result_fieldset->getName(),
+                'description'=>$result_fieldset->getDescription(),
+                'rank'=>$result_fieldset->getRank(),
+                'fields'=>$fields
+            );
+        }
+        $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
+                ." FROM artifact_file af, artifact a, artifact_group_list agl"
+                ." WHERE (af.artifact_id = a.artifact_id)" 
+                ." AND (a.group_artifact_id = agl.group_artifact_id)" 
+                ." AND (agl.group_artifact_id =".$at->getID().")";
+        $result=db_query($sql);
+        $return=array(
+            'group_artifact_id'=>$at->data_array['group_artifact_id'],
+            'group_id'=>$at->data_array['group_id'],
+            'name'=>$at->data_array['name'],
+            'description'=>$at->data_array['description'],
+            'item_name'=>$at->data_array['item_name'],
+            'open_count' => ($at->userHasFullAccess()?$open_count:NULL),
+            'total_count' => ($at->userHasFullAccess()?$count:NULL),
+            'total_file_size' => db_result($result, 0, 0),
+            'field_sets' => $field_sets
+        );
+    }
+    return $return;
+}
+
+function artifacttypes_to_soap($at_arr) {
     $return = array();
     for ($i=0; $i<count($at_arr); $i++) {
         if ($at_arr[$i]->isError()) {
             //skip if error
         } else {
-            $field_sets = array();
-            $ath = new ArtifactType($at_arr[$i]->getGroup(), $at_arr[$i]->getID());
-            if (!$ath || !is_object($ath)) {
-                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','ArtifactType could not be created');
-            }
-            if ($ath->isError()) {
-                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),$ath->getErrorMessage());
-            }
-            // Check if this tracker is valid (not deleted)
-            if ( !$ath->isValid() ) {
-                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','This tracker is no longer valid.');
-            }
-            // Check if the user can view this tracker
-            if ($ath->userCanView($user_id)) {
-            
-                $art_fieldset_fact = new ArtifactFieldSetFactory($at_arr[$i]);
-                if (!$art_fieldset_fact || !is_object($art_fieldset_fact)) {
-                    return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', 'Could Not Get ArtifactFieldSetFactory','Could Not Get ArtifactFieldSetFactory');
-                } elseif ($art_fieldset_fact->isError()) {
-                    return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', $art_fieldset_fact->getErrorMessage(),$art_fieldset_fact->getErrorMessage());
-                }
-                $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
-            
-                foreach($result_fieldsets as $fieldset_id => $result_fieldset) {
-                    $fields = array();
-                    $fields_in_fieldset = $result_fieldset->getAllUsedFields();     
-                    $group_id = $at_arr[$i]->Group->getID();
-                    $group_artifact_id = $at_arr[$i]->getID();
-                    while ( list($key, $field) = each($fields_in_fieldset) ) {
-                            
-                        if ($field->userCanRead($group_id,$group_artifact_id,$user_id)) {
-                            $availablevalues = array();
-                            $result = $field->getFieldPredefinedValues($at_arr[$i]->getID());
-                            $rows=db_numrows($result);
-                            $cols=db_numfields($result);
-                            for ($j=0; $j<$rows; $j++) {     
-                                $availablevalues[] = array (
-                                    'field_id' => $field->getID(),
-                                    'group_artifact_id' => $at_arr[$i]->getID(),
-                                    'value_id' => db_result($result,$j,0),
-                                    'value' => db_result($result,$j,1),
-                                    'description' => ($cols > 2) ? db_result($result,$j,4) : '',
-                                    'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
-                                    'status' => ($cols > 2) ? db_result($result,$j,6) : ''
-                                );
-                            }
-                            // For bound-values select boxes, we add the none value.
-                            if (($field->isMultiSelectBox() || $field->isSelectBox()) && ($field->isBound())) {
-                                $availablevalues[] = array (
-                                    'field_id' => $field->getID(),
-                                    'group_artifact_id' => $at_arr[$i]->getID(),
-                                    'value_id' => 100,
-                                    'value' => 'None',
-                                    'description' => '',
-                                    'order_id' => 10,
-                                    'status' => 'P'
-                                );    
-                            }
-                            if ($field->isMultiSelectBox()) {
-                                $defaultvalue = implode(",", $field->getDefaultValue());
-                            } else {
-                                $defaultvalue = $field->getDefaultValue();
-                            }
-                            $fields[] = array(
-                                'field_id' => $field->getID(),
-                                'group_artifact_id' => $at_arr[$i]->getID(),
-                                'field_set_id' => $field->getFieldSetID(), 
-                                'field_name' => $field->getName(),
-                                'data_type' => $field->getDataType(),
-                                'display_type' => $field->getDisplayType(),
-                                'display_size' => $field->getDisplaySize(),
-                                'label'    => $field->getLabel(),
-                                'description' => $field->getDescription(),
-                                'scope' => $field->getScope(),
-                                'required' => $field->getRequired(),
-                                'empty_ok' => $field->getEmptyOk(),
-                                'keep_history' => $field->getKeepHistory(),
-                                'special' => $field->getSpecial(),
-                                'value_function' => implode(",", $field->getValueFunction()),
-                                'available_values' => $availablevalues,
-                                'default_value' => $defaultvalue,
-                                'user_can_submit' => $field->userCanSubmit($group_id,$group_artifact_id,$user_id),
-                                'user_can_read' => $field->userCanRead($group_id,$group_artifact_id,$user_id),
-                                'user_can_update' => $field->userCanUpdate($group_id,$group_artifact_id,$user_id),
-                                'is_standard_field' => $field->isStandardField()
-                            );
-                        }
-                    }
-                    $field_sets[] = array(
-                        'field_set_id'=>$result_fieldset->getID(),
-                        'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
-                        'name'=>$result_fieldset->getName(),
-                        'description'=>$result_fieldset->getDescription(),
-                        'rank'=>$result_fieldset->getRank(),
-                        'fields'=>$fields
-                    );
-                }
-                $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
-                        ." FROM artifact_file af, artifact a, artifact_group_list agl"
-                        ." WHERE (af.artifact_id = a.artifact_id)" 
-                        ." AND (a.group_artifact_id = agl.group_artifact_id)" 
-                        ." AND (agl.group_artifact_id =".$at_arr[$i]->getID().")";
-                $result=db_query($sql);
-                $return[]=array(
-                    'group_artifact_id'=>$at_arr[$i]->data_array['group_artifact_id'],
-                    'group_id'=>$at_arr[$i]->data_array['group_id'],
-                    'name'=>$at_arr[$i]->data_array['name'],
-                    'description'=>$at_arr[$i]->data_array['description'],
-                    'item_name'=>$at_arr[$i]->data_array['item_name'],
-                    'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():NULL),
-                    'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():NULL),
-                    'total_file_size' => db_result($result, 0, 0),
-                    'field_sets' => $field_sets
-                );
-            }
+            $return[] = artifacttype_to_soap($at_arr[$i]);	
         }
     }
     return $return;

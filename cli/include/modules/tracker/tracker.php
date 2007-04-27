@@ -10,8 +10,9 @@
  */
 require_once(CODEX_CLI_DIR.'/CLI_Module.class.php');
 
-
 require_once('CLI_Action_Tracker_Trackerlist.class.php');
+require_once('CLI_Action_Tracker_Trackers.class.php');
+require_once('CLI_Action_Tracker_Tracker.class.php');
 require_once('CLI_Action_Tracker_List.class.php');
 require_once('CLI_Action_Tracker_Add.class.php');
 require_once('CLI_Action_Tracker_Update.class.php');
@@ -29,6 +30,8 @@ class CLI_Module_Tracker extends CLI_Module {
         $this->CLI_Module("tracker", "Manage trackers");
         
         $this->addAction(new CLI_Action_Tracker_Trackerlist());
+        $this->addAction(new CLI_Action_Tracker_Trackers());
+        $this->addAction(new CLI_Action_Tracker_Tracker());
         $this->addAction(new CLI_Action_Tracker_List());
         $this->addAction(new CLI_Action_Tracker_Add());
         $this->addAction(new CLI_Action_Tracker_Update());

@@ -74,10 +74,14 @@ Session terminated.
     <section id="TrackerFunctions">
         <title>Tracker functions</title>
         
-        <section id="TrackerFunctionTypeList">
+        <section id="TrackerFunctionTrackerList">
             <title>trackerlist</title>
             <para>
-                trackerlist: Display a list of the trackers for the project.
+                trackerlist: Display the list of the trackers for the project.
+                <note><para>The structure is no longer returned with this function. 
+                    If you need the structure of all the trackers of a project, 
+                    please use the "trackers" function (See <xref linkend="TrackerFunctionTrackers" />).</para>
+                </note>
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in
@@ -101,8 +105,95 @@ Array
             [item_name] => bug
             [open_count] => 3
             [total_count] => 15
+            )
+    [1] => Array
+           (
+            [group_artifact_id] => 114
+            [group_id] => 5
+            [name] => Support Requests
+            [description] => Support Requests Tracker
+            [item_name] => SR
+            [open_count] => 40
+            [total_count] => 50
+            )
+)
+                        </programlisting>
+                    </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionTrackers">
+            <title>trackers</title>
+            <para>
+                trackers: Display the list of the trackers (with their structure) for the project.
+                <note><para>As this function returns all the structures of all the trackers, 
+                    it could be quite slow. If your project contains lot's of trackers, it would be better 
+                    to use the "trackerlist" function (See <xref linkend="TrackerFunctionTrackerList" />), 
+                    and then the "tracker" function (See <xref linkend="TrackerFunctionTracker" />) to get the 
+                    structure of the tracker you are interested in.</para>
+                </note>
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in
+                        will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>trackers command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker trackers --project=guineapig
+Array
+(
+    [0] => Array
+           (
+            [group_artifact_id] => 113
+            [group_id] => 5
+            [name] => Bugs
+            [description] => Bugs Tracker
+            [item_name] => bug
+            [open_count] => 3
+            [total_count] => 15
             [field_sets] => Array
             (... list of trackers, field sets and fields ...)
+                        </programlisting>
+                    </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionTracker">
+            <title>tracker</title>
+            <para>
+                tracker: Display the structure of a tracker.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID of the tracker.</para>
+                    </listitem>    
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in
+                        will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>tracker command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker tracker --project=guineapig --tracker_id=159
+Array
+(
+    [group_artifact_id] => 159
+    [group_id] => 5
+    [name] => Bugs
+    [description] => Bugs Tracker
+    [item_name] => bug
+    [open_count] => 3
+    [total_count] => 15
+    [field_sets] => Array
+    (... list of field sets and fields ...)
                         </programlisting>
                     </example>
                 </para>

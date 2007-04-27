@@ -77,10 +77,15 @@ Session terminated.
     <section id="TrackerFunctions">
         <title>Fonctions des trackers</title>
         
-        <section id="TrackerFunctionTypeList">
+        <section id="TrackerFunctionTrackerList">
             <title>trackerlist</title>
             <para>
-                trackerlist: Affiche une liste des trackers d'un projet.
+                trackerlist : Affiche la liste des trackers d'un projet (sans la structure des trackers).
+                <note>
+                    <para>La structure des trackers n'est plus retournée par cette fonction. 
+                    Si vous souhaitez obtenir la structure de tous les trackers d'un projet, 
+                    veuillez désormais utiliser la fonction "trackers" (<xref linkend="TrackerFunctionTrackers" />).</para>
+                </note>
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
@@ -105,8 +110,101 @@ Array
             [item_name] => bug
             [open_count] => 3
             [total_count] => 15
+           )
+    [1] => Array
+           (
+            [group_artifact_id] => 114
+            [group_id] => 5
+            [name] => Support Requests
+            [description] => Support Requests Tracker
+            [item_name] => SR
+            [open_count] => 40
+            [total_count] => 50
+            )
+)
+                        </programlisting>
+                    </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionTrackers">
+            <title>trackers</title>
+            <para>
+                trackers : Affiche la liste des trackers d'un projet (avec leur structure).
+                <note>
+                    <para>Comme cette fonction retourne toute la structure de tous les trackers d'un projet,
+                    il se peut qu'elle devienne un peu lente avec des projets contenant beaucoup de trackers.
+                    Le cas échéant, vous pouvez utiliser la fonction "trackerlist", (voir <xref linkend="TrackerFunctionTrackerList" />)
+                    suivie de la fonction "tracker" (<xref linkend="TrackerFunctionTracker" />)
+                    pour obtenir la structure du tracker souhaité.
+                    </para>
+                </note>
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande trackers</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker trackers --project=guineapig
+Array
+(
+    [0] => Array
+           (
+            [group_artifact_id] => 113
+            [group_id] => 5
+            [name] => Bugs
+            [description] => Bugs Tracker
+            [item_name] => bug
+            [open_count] => 3
+            [total_count] => 15
             [field_sets] => Array
-            (... list of trackers, field sets and fields ...)
+            (... liste des trackers, des field sets et des fields ...)
+                        </programlisting>
+                    </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionTracker">
+            <title>tracker</title>
+            <para>
+                tracker : Affiche la structure d'un tracker.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande tracker</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker tracker --project=guineapig --tracker_id=159
+Array
+(
+    [0] => Array
+           (
+            [group_artifact_id] => 159
+            [group_id] => 5
+            [name] => Bugs
+            [description] => Bugs Tracker
+            [item_name] => bug
+            [open_count] => 3
+            [total_count] => 15
+            [field_sets] => Array
+            (... liste des des field sets et des fields ...)
                         </programlisting>
                     </example>
                 </para>
