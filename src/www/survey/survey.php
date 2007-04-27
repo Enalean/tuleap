@@ -19,7 +19,7 @@ if (!$survey_id || !$group_id) {
 } else {
 
     // select this survey from the database
-    $sql="select * from surveys where survey_id='$survey_id'";
+    $sql="select * from surveys where group_id = '$group_id' AND survey_id='$survey_id'";
     $result=db_query($sql);
 
     if (!user_isloggedin() && !db_result($result, 0, "is_anonymous")) {
