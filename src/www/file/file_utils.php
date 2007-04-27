@@ -451,7 +451,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         <input type="hidden" name="postReceived" value="" />
         <?php
         if ($release->getReleaseId()) {
-            echo '<input type="hidden" name="release[release_id]" value="'. $release->getReleaseId() .'" />';
+            echo '<input type="hidden" id="release_id" name="release[release_id]" value="'. $release->getReleaseId() .'" />';
         }
         ?>
         <TABLE BORDER="0" width="100%">
