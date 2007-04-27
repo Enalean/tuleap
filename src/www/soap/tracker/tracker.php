@@ -15,6 +15,7 @@ define ('add_dependency_fault', '3012');
 define ('delete_dependency_fault', '3013');
 define ('create_followup_fault', '3014');
 define ('get_artifact_field_fault', '3015');
+define ('invalid_field_fault', '3016');
 
 require_once ('nusoap.php');
 require_once ('pre.php');
@@ -1503,6 +1504,8 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
             if ($field) {
                 $extra_field_id = $field->getID();
                 $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
+            }  else {
+                return new soap_fault(invalid_field_fault,'addArtifact','Invalid Field:'.$extra_field_name['field_name'],'addArtifact','Invalid Field:'.$extra_field_name['field_name']);
             }
         }
         
