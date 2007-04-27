@@ -268,12 +268,12 @@ if (user_isrestricted()) {
 }
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/URL.class.php');
+$request =& HTTPRequest::instance();
 //Do nothing if we are not in a distributed architecture
 if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
     require_once('Project.class.php');
     $redirect_to_master_if_needed = true;
     $sf      =& new ServerFactory();
-    $request =& HTTPRequest::instance();
     if ($_SERVER['SCRIPT_NAME'] == '/file/download.php') { //There is no group_id for /file/download.php
         $components = explode('/', $_SERVER['REQUEST_URI']);
         if (isset($components[3])) {
@@ -344,5 +344,11 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
             }
         }
     }
+}
+
+//Check post max size
+if ($request->exist('postExpected') && !$request->exist('postReceived')) {
+    $e = 'You tried to upload a file that is larger than the CodeX post_max_size setting.';
+    exit_error('Error', $e);
 }
 ?>
