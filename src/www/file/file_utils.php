@@ -1177,6 +1177,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $GLOBALS['Response']->addFeedback('error', $validator->getErrors());
     }
+    $date_list = split("-", $release['date'], 3);
+    $release['release_date'] = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
     frs_display_release_form($is_update, new FRSRelease($release), $group_id, $title, $url);
 }
 ?>
