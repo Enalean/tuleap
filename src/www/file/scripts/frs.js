@@ -298,7 +298,7 @@ function check_parameters(){
 			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
 					'&name=' + $('release_name').value;
 		}else{
-			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('new_package_id').value+'&date=' + $('release_date').value+
+			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('package_id').value+'&date=' + $('release_date').value+
 					'&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
 		}
 		new Ajax.Request(url,
