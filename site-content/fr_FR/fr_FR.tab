@@ -70,4 +70,9 @@ global	at_the_beginning	Au début
 global	at_the_end	À la fin
 global	after	Après $1
 global	missing_parameters	Paramètres manquants
+global	error_upload	Erreur de chargement de fichier.
+global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
+global	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+global	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
+global	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
 
