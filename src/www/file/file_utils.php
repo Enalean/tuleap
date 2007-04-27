@@ -442,6 +442,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     
     <FORM id="frs_form" NAME="frsRelease" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $url; ?>">
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $GLOBALS['sys_max_size_upload']; ?>">
+        <input type="hidden" name="postReceived" value="" />
         <?php
         if ($release->getReleaseId()) {
             echo '<input type="hidden" name="release[release_id]" value="'. $release->getReleaseId() .'" />';
