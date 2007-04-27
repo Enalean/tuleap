@@ -392,6 +392,12 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
 function frs_display_release_form($is_update, &$release, $group_id, $title, $url) {
     global $frspf, $frsrf, $frsff;
     
+    if (is_array($release)) {
+        if (isset($release['date'])) {
+            $release_date = $release['date'];
+        }
+        $release =& new FRSRelease($release);
+    }
     file_utils_admin_header(array (
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'
@@ -485,7 +491,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     <B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_date'); ?>:</B>
                 </TD>
                 <TD>
-                    <INPUT TYPE="TEXT" id="release_date" NAME="release[date]" VALUE="<?php echo format_date('Y-m-d',$release->getReleaseDate());?>" SIZE="10" MAXLENGTH="10">
+                <INPUT TYPE="TEXT" id="release_date" NAME="release[date]" VALUE="<?php echo isset($release_date) ? $release_date : format_date('Y-m-d',$release->getReleaseDate());?>" SIZE="10" MAXLENGTH="10">
                     <a href="<?php echo 'javascript:show_calendar(\'document.frsRelease.release_date\', $(\'release_date\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
                     '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
                 </TD><td></td>
@@ -1177,8 +1183,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $GLOBALS['Response']->addFeedback('error', $validator->getErrors());
     }
-    $date_list = split("-", $release['date'], 3);
-    $release['release_date'] = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-    frs_display_release_form($is_update, new FRSRelease($release), $group_id, $title, $url);
+    frs_display_release_form($is_update, $release, $group_id, $title, $url);
 }
 ?>
