@@ -980,6 +980,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 } else
                     if (trim($_FILES['file']['name'][0]) != '') {
                         $http_files_processor_type_list[] = array (
+                            'error' => $_FILES['file']['error'][0],
                             'name' => $_FILES['file']['name'][0],
                             'tmp_name' => $_FILES['file']['tmp_name'][0],
                             'processor' => $file_processor,
@@ -992,6 +993,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 for ($i = 0; $i < $nb_files; $i++) {
                     if (trim($_FILES['file']['name'][$i]) != '') {
                         $http_files_processor_type_list[] = array (
+                            'error' => $_FILES['file']['error'][$i],
                             'name' => $_FILES['file']['name'][$i],
                             'tmp_name' => $_FILES['file']['tmp_name'][$i],
                             'processor' => $file_processor[$i],
@@ -1031,6 +1033,25 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         if (!util_is_valid_filename($filename)) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name') . ": $filename");
                         } else {
+                            if (isset($file['error'])) {
+                                switch($file['error']) {
+                                    case UPLOAD_ERR_OK:
+                                        // all is OK
+                                        break;
+                                    case UPLOAD_ERR_INI_SIZE:
+                                    case UPLOAD_ERR_FORM_SIZE:
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_size', $file['error']));
+                                        break;
+                                    case UPLOAD_ERR_PARTIAL:
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_partial', $file['error']));
+                                        break;
+                                    case UPLOAD_ERR_NO_FILE:
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_nofile', $file['error']));
+                                        break;
+                                    default:
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_unknown', $file['error']));
+                                }
+                            }
                             if (is_uploaded_file($file['tmp_name'])) {
                                 $uploaddir = $GLOBALS['ftp_incoming_dir'];
                                 $uploadfile = $uploaddir . "/" . basename($filename);

@@ -32,8 +32,8 @@ class frsValidator {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         $frsff = new FRSFileFactory();
-        if ($release['package_id'] != 'null') {
-            if (!$release['name'] || $release['name'] == '') {
+        if (isset($release['package_id']) && $release['package_id'] != 'null') {
+            if (!isset($release['name']) || !$release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
             } else {
                 //see if this package belongs to this project
@@ -65,8 +65,8 @@ class frsValidator {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         $frsff = new FRSFileFactory();
-        if ($release['package_id'] != 'null') {
-            if (!$release['name'] || $release['name'] == '') {
+        if (isset($release['package_id']) && $release['package_id'] != 'null') {
+            if (!isset($release['name']) || !$release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
             } else {
                 //see if this package belongs to this project

@@ -64,4 +64,9 @@ global	at_the_beginning	At the beginning
 global	at_the_end	At the end
 global	after	After $1
 global	missing_parameters	Missing parameters
+global	error_upload	File upload error. Please try again.
+global	error_upload_nofile	File upload error($1). No file was uploaded. 
+global	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
+global	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
+global	error_upload_unknown	File upload error($1). Unknown error code.
 
