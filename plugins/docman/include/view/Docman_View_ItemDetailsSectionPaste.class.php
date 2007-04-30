@@ -24,6 +24,8 @@
  */
 
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
+require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
+require_once('common/include/UserManager.class.php');
 
 class Docman_View_ItemDetailsSectionPaste 
 extends Docman_View_ItemDetailsSectionActions {
@@ -60,15 +62,19 @@ extends Docman_View_ItemDetailsSectionActions {
                        $GLOBALS['Language']->getText('plugin_docman', 'details_paste_rank_end'), 
                        '----');
         $i = 3;
-
+        
+        $pm =& Docman_PermissionsManager::instance($item->getGroupId());
+        $um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        
         $brotherIter->rewind();
         while($brotherIter->valid()) {
             $item = $brotherIter->current();
-            
-            $vals[$i]  = $item->getRank()+1;
-            $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_rank_after').' '.$item->getTitle();
-            $i++;
-
+            if ($pm->userCanWrite($user, $item->getId())) {
+                $vals[$i]  = $item->getRank()+1;
+                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_rank_after').' '.$item->getTitle();
+                $i++;
+            }
             $brotherIter->next();
         }
 
