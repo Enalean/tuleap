@@ -355,7 +355,7 @@ class DocmanActions extends Actions {
                     
                     //Submit News about this document
                     if ($request->exist('news')) {
-                        if ($user->isMember($request->get('group_id'), 'A')) { //only for admins
+                        if ($user->isMember($request->get('group_id'), 'A') || $user->isMember($request->get('group_id'), 'N1') || $user->isMember($request->get('group_id'), 'N2')) { //only for allowed people
                             $news = $request->get('news');
                             if (isset($news['summary']) && trim($news['summary']) && isset($news['details']) && trim($news['details']) && isset($news['is_private'])) {
                                 news_submit($request->get('group_id'), $news['summary'], $news['details'], $news['is_private']);

@@ -104,7 +104,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
 	
         //{{{ News
         $user =& $this->_controller->getUser();
-        if ($user->isMember($params['item']->getGroupId(), 'A')) {
+        if ($user->isMember($params['item']->getGroupId(), 'A') || $user->isMember($params['item']->getGroupId(), 'N1') || $user->isMember($params['item']->getGroupId(), 'N2')) {
             $default_news_summary = '';
             $default_news_details = '';
             $default_news_private_check = '';
