@@ -983,7 +983,7 @@ class DocmanController extends Controler {
                                                         $new_item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request))
                                                     ));
                                                     
-                                                    if ($user->isMember($this->getGroupId(), 'A')) {
+                                                    if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
                                                         $news = $this->request->get('news');
                                                         if ($news) {
                                                             $is_news_details = isset($news['details']) && trim($news['details']);
