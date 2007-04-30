@@ -42,8 +42,11 @@ while ($ln = pop(@listfile_array)) {
 
     system("$mailman_bin_dir/newlist -q $list_name $list_admin_email $list_password >/dev/null");
 
+     # Define encoding. See SR #764
+    system("echo \"# coding=ISO-8859-1\n\" > $tmp_dir/send_reminders.in");
+
      # Setup the description and deactivate monthly reminders by default
-    system("echo \"send_reminders = 0\n\" > $tmp_dir/send_reminders.in");
+    system("echo \"send_reminders = 0\n\" >> $tmp_dir/send_reminders.in");
     system("echo \"description = '$list_desc'\n\" >> $tmp_dir/send_reminders.in");
 
     system("$mailman_bin_dir/config_list -i $tmp_dir/send_reminders.in $list_name");
