@@ -901,7 +901,7 @@ $server->register(
         'artifact_id' => 'xsd:int',
         'body' => 'xsd:string'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addArtifactFollowup',
     'rpc',
@@ -2561,7 +2561,7 @@ function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_
  * @param int $group_artifact_id the ID of the tracker we want to add the follow-up
  * @param int $artifact_id the ID of the artifact we want to add the follow-up
  * @param string $body the body of the follow-up
- * @return void if the add is ok or a soap fault if :
+ * @return boolean true if the add is ok or a soap fault if :
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
@@ -2607,6 +2607,7 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
             $agnf =& new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($at->getID(), true);
             $a->mailFollowupWithPermissions($addresses, $changes);
+            return true;
         }
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', 'Invalid Session');
