@@ -21,9 +21,6 @@ db_query("UPDATE user SET "
 	. "language_id=" . $language_id . " WHERE "
 	. "user_id=" . user_getid());
 
-$cookie_manager->setCookie('THEME', sprintf("%06d%s",user_getid(),$user_theme), time() + 60*60*24*365);
-$cookie_manager->setCookie('FONTSIZE', sprintf("%06d%s",user_getid(),$user_fontsize), time() + 60*60*24*365);
-
 // we check if the given value is authorized
 // $csv_separators is defined in src/www/include/utils.php
 if (in_array($user_csv_separator, $csv_separators)) {

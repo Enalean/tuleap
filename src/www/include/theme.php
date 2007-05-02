@@ -8,15 +8,6 @@
 //
 //
 
-require_once('common/include/CookieManager.class.php');
-$cookie_manager =& new CookieManager();
-
-// define the theme
-if ($cookie_manager->isCookie('THEME') &&(user_getid() == (int)(substr($cookie_manager->getCookie('THEME'),0,6))) ) {
-    // define the global var $theme
-    $theme = substr($cookie_manager->getCookie('THEME'),6);
-} else {
-    // No cookie defined
     // Read the user preferences
     $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
     $row_user = db_fetch_array($res_user);
@@ -31,9 +22,6 @@ if ($cookie_manager->isCookie('THEME') &&(user_getid() == (int)(substr($cookie_m
     } else {
 	$theme = $row_user['theme'];
     }
-    // Define the cookie to improve the performance for the next access
-    $cookie_manager->setCookie('THEME', sprintf("%06d%s",user_getid(),$theme), time() + 60*60*24*365);
-}
 // Initialize the global sys_user_theme variable
 $GLOBALS['sys_user_theme'] = $theme;
 
@@ -41,19 +29,6 @@ $GLOBALS['sys_user_theme'] = $theme;
 $GLOBALS['sys_is_theme_custom'] = is_dir($GLOBALS['sys_custom_themeroot'].'/'.$theme);
 
 // define the font size cookie for performance
-if ( ($cookie_manager->isCookie('FONTSIZE'))&&(user_getid() == (int)(substr($cookie_manager->getCookie('FONTSIZE'),0,6))) ) {
-    // define the global var $font_size
-    $font_size = (int)(substr($cookie_manager->getCookie('FONTSIZE'),6));
-} else {
-    // No cookie defined
-    // Read the user preferences
-    
-    // Check if we have already read the record
-    if (!isset($res_user) || !$res_user ) {
-	$res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
-	$row_user = db_fetch_array($res_user);
-    }
-    
     if (isset($row_user['fontsize']) && $row_user['fontsize'] <> 0 ) {
 	$font_size = $row_user['fontsize'];
     } else {
@@ -71,9 +46,6 @@ if ( ($cookie_manager->isCookie('FONTSIZE'))&&(user_getid() == (int)(substr($coo
 	    $font_size = 2;
 	}
     }
-    // Define the cookie to improve the performance for the next access
-    $cookie_manager->setCookie('FONTSIZE', sprintf("%06d%s",user_getid(),$font_size), time() + 60*60*24*365);
-}
 // Initialize the global sys_user_font_size variable
 $GLOBALS['sys_user_font_size'] = $font_size;
 
