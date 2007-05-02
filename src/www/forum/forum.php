@@ -391,8 +391,13 @@ if ($forum_id) {
                 
                 $ret_val .= '</TD><TD>&nbsp;</TD><TD ALIGN="RIGHT" WIDTH="50%">';
                 if (db_numrows($result) > $i) {
+                    if (isset($pv)) {
+                        $pv_param = "&pv=".$pv;
+                    } else {
+                        $pv_param = "";
+                    }               
                     $ret_val .= '<B><span class="normal">
-				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.'">
+				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
 				<B>'.$Language->getText('forum_forum','next_msg').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
                 } else {
                     $ret_val .= '&nbsp;';
