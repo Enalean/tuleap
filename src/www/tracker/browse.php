@@ -60,8 +60,11 @@ if (user_isloggedin()) {
 	    	$report_id = 100;
 	    }
     } else {
-		if ($report_id != user_get_preference('artifact_browse_report'.$atid))
+		if ($report_id != user_get_preference('artifact_browse_report'.$atid)) {
 	    	user_set_preference('artifact_browse_report'.$atid, $report_id);
+            user_del_preference('artifact_browse_order'.$atid);
+            $GLOBALS['Response']->redirect('?atid='. $atid .'&group_id='. $group_id);
+        }
     }
 }
 
