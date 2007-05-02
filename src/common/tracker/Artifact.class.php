@@ -1589,7 +1589,7 @@ class Artifact extends Error {
             	$user_id = db_result($res_oa,0,'user_id');
             $curr_assignee = new User($user_id);
             	if ($user_id != 100 && 
-		    !$user_ids[$user_id] && 
+		    !isset($user_ids[$user_id]) && 
 		    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
 		    $this->userCanView($user_id) &&
             $curr_assignee->isActive() || $curr_assignee->isRestricted()) {
@@ -1772,7 +1772,7 @@ class Artifact extends Error {
             } else {
                 $res = user_get_result_set_from_unix($cc);
                 $user_id = db_result($res,0,'user_id');
-                if (!$concerned_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
+                if (!isset($concerned_ids[$user_id]) && $this->ArtifactType->checkNotification($user_id, 'CC', $changes)) {
 		    //echo "DBG - CC - user=$user_id<br>";
                     $concerned_ids[$user_id] = true;
                 }
@@ -1785,7 +1785,7 @@ class Artifact extends Error {
         if (db_numrows($res_com) > 0) {
             while ($row = db_fetch_array($res_com)) {
                 $user_id = $row['mod_by'];
-                if (!$concerned_ids[$user_id] && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
+                if (!isset($concerned_ids[$user_id]) && $this->ArtifactType->checkNotification($user_id, 'COMMENTER', $changes)) {
 		    //echo "DBG - COMMENTERS - user=$user_id<br>";
                     $concerned_ids[$user_id] = true;
                 }
