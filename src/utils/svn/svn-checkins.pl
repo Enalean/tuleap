@@ -92,7 +92,10 @@ sub db_get_commit {
   my ($group_id, $repo, $revision, $date, $who, @desc) = @_;
   my ($query, $uid, $c, $res, $fulldesc);
 
-  $fulldesc = join('\n', @desc);
+  @desc_escaped = @desc;
+  foreach(@desc_escaped) { s/\\/\\\\/g }
+
+  $fulldesc = join('\n', @desc_escaped);
   $fulldesc = join("&amp;",split("&", $fulldesc));
   $fulldesc = join("&quot;",split("\"", $fulldesc));
   $fulldesc = join("&#39;",split("'", $fulldesc));
