@@ -19,9 +19,6 @@ $server = new soap_server();
 $server->configureWSDL('CodeXTrackerAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
 
-//include the common TYPES API
-//require_once('../common/types.php');
-
 // include the TRACKER API
 require_once('./tracker.php');
 

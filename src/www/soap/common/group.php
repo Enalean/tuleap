@@ -1,6 +1,7 @@
 <?php
 
 require_once('user.php');
+require_once('common/include/GroupFactory.class.php');
 
 //
 // Type definition
@@ -15,9 +16,7 @@ $server->wsdl->addComplexType(
         'group_id' => array('name'=>'group_id', 'type'=>'xsd:int'), 
         'group_name' => array('name'=>'group_name', 'type'=>'xsd:string'),
         'unix_group_name' => array('name'=>'unix_group_name', 'type'=>'xsd:string'),
-        'description' => array('name'=>'description', 'type'=>'xsd:string'),
-        'admin_flags' => array('name'=>'admin_flags', 'type'=>'xsd:string'),
-        'group_admins' => array('name'=>'group_admins', 'type'=>'tns:ArrayOfUser')
+        'description' => array('name'=>'description', 'type'=>'xsd:string')
     )
 );
     
@@ -37,16 +36,16 @@ $server->wsdl->addComplexType(
 //
 // Function definition
 //
-$server->register('getListOfGroupsByUser',		       // method name
-    array('sessionKey' => 'xsd:string',		       // input parameters	      
-        'user_id' => 'xsd:int'
+
+$server->register('getMyProjects',		       // method name
+    array('sessionKey' => 'xsd:string'		       // input parameters	      
     ),                                   
     array('return'   => 'tns:ArrayOfGroup'),	       // output parameters
     $uri,			       // namespace
-    $uri.'#getListOfGroupsByUser',        // soapaction
+    $uri.'#getMyProjects',        // soapaction
     'rpc',					       // style
     'encoded',					       // use
-    'Returns the list of Groups that the user identified by user_id belong to'  	       // documentation
+    'Returns the list of Groups that the current user belong to'  	       // documentation
 );
 
 $server->register(
@@ -74,20 +73,6 @@ $server->register(
     'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
 );
 
-/*
-$server->register(
-    'getGroupAdmins',
-    array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int'),
-    array('return'=>'tns:ArrayOfUser'),
-    $uri,
-    $uri.'#getGroupAdmins',
-    'rpc',
-    'encoded',
-    'Returns an array of User that are admin of the Group of ID group_id'
-);
-*/
-
 //
 // Function implementation
 //
@@ -108,59 +93,33 @@ function group_to_soap($group) {
     return $soap_group;
 }
 
-
-function getListOfGroupsByUser($sessionKey, $user_id) {
-    if (session_continue($sessionKey)){
-        $LIST_GROUP = array();
-        $res_group = db_query("SELECT groups.group_name, "
-                            . "groups.short_description, "
-                            . "groups.unix_group_name, "
-                            . "groups.group_id, "
-                            . "groups.hide_members, "
-                            . "user_group.admin_flags, "
-                            . "user_group.bug_flags "
-                            . "FROM groups,user_group "
-                            . "WHERE user_group.user_id='$user_id' AND "
-                            . "groups.group_id=user_group.group_id AND "
-                            . "groups.is_public='1' AND "
-                            . "groups.status='A' AND "
-                            . "groups.type='1'");
-        if (!$res_group || db_numrows($res_group) < 1) {
-            return new soap_fault(get_groups_fault,'getListOfGroupsByUser', 'This developer is not a member of any projects.',db_error());
+function groups_to_soap($groups) {
+    $return = array();
+    foreach ($groups as $group_id => $group) {
+        if (!$group || $group->isError()) {
+            //skip if error
         } else {
-            while ($row_group = db_fetch_array($res_group)) {
-                $LIST_GROUP[] = row_group_to_soap($sessionKey, $row_group);
-            }
-            return new soapval('return', 'tns:ArrayOfGroup', $LIST_GROUP);	
+            $return[] = group_to_soap($group);	
         }
-    } else {
-        return new soap_fault(invalid_session_fault,'getListOfGroupsByUser','Invalid Session ','');
     }
+    return $return;
 }
 
-function row_group_to_soap($sessionKey, $row_group)
-  {
-     $return = array();
-     $group_admins = array();
-     $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name "
-	. "FROM user,user_group "
-	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$row_group['group_id']." AND "
-	. "user_group.admin_flags = 'A'");
-     $rows=db_numrows($res_admin);
-     for ($i=0; $i<$rows; $i++) {
-     	$group_admins[] = getUserById($sessionKey, db_result($res_admin,$i,0));
-     }
-     $return = array(
-     			'group_id'    => $row_group['group_id'], 
-     			'group_name'  => $row_group['group_name'], 
-                'unix_group_name'  => $row_group['unix_group_name'],
-     			'admin_flags' => $row_group['admin_flags'],
-     			'description' => $row_group['short_description'],
-     			'group_admins' => $group_admins
-     			
-     );
-     return $return; 	
-  }
+/**
+ * getMyProjects : returns the array of SOAPGroup the current user is member of
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @return array the array of SOAPGroup th ecurrent user ismember of
+ */
+function getMyProjects($sessionKey) {
+    if (session_continue($sessionKey)){
+        $gf = new GroupFactory();
+        $my_groups = $gf->getMyGroups();
+        return groups_to_soap($my_groups);
+    } else {
+        return new soap_fault(invalid_session_fault,'getMyProjects','Invalid Session ','');
+    }
+}
 
 /**
  * getGroupByName : returns the SOAPGroup associated with the given unix group name
@@ -202,27 +161,6 @@ function getGroupById($sessionKey, $group_id) {
     }
 }
 
-/*
-function getGroupAdmins($sessionKey, $group_id) {
-    if (session_continue($sessionKey)) {
-        $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
-        if (! $group) {
-            return new soap_fault('2002','getGroupAdmins','Could Not Get Groups by group_id','Could Not Get Groups by group_id');
-        }
-        if ($group->hideMembers()) {
-            return new soap_fault('2002','getGroupAdmins','Could Not Get Groups Members','Could Not Get Groups Members');
-        }
-        $admins = $group->getAdmins();  // TO DO: implement this function
-        $row_admins = array();
-        foreach ($admins as $admin) {
-            $row_admin = user_to_soap($admin);
-            $row_admins[] = $row_admin;
-        }
-        return new soapval('return', 'tns:arrayOfUser', $row_admins);
-    } else {
-        return new soap_fault(invalid_session_fault,'logout','Invalid Session','');
-    }
-}*/
 
 /**
  * Check if the user can access the project $group,

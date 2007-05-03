@@ -24,9 +24,6 @@ require_once('./types.php');
 //include the common SESSION API
 require_once('./session.php');
 
-// include the common USER API
-require_once('./user.php');
-
 // include the common GROUP API
 require_once('./group.php');
 
