@@ -41,8 +41,8 @@ function send_new_project_email($group_id) {
         $host = $GLOBALS['sys_default_domain'];
         if ($p && $p->usesService('svn')) {
            $sf =& new ServerFactory();
-           if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
-               $host = URL::getHost($server->getUrl(session_issecure()));
+           if ($s =& $sf->getServerById($p->services['svn']->getServerId())) {
+               $host = URL::getHost($s->getUrl(session_issecure()));
            }
         }
         if ($GLOBALS['sys_force_ssl']) {
