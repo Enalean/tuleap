@@ -959,7 +959,7 @@ $server->register(
 );
 
 $server->register(
-    'addCC',
+    'addArtifactCC',
     array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
@@ -969,7 +969,7 @@ $server->register(
     ),
     array(),
     $uri,
-    $uri.'#addCC',
+    $uri.'#addArtifactCC',
     'rpc',
     'encoded',
     'Add a list of emails or logins in the CC list of a specific artifact, with an optional comment'
@@ -2654,7 +2654,7 @@ function existSummary($sessionKey, $group_artifact_id, $summary) {
 }
 
 /**
- * addCC - add a list of emails or logins, with an optional CC comment
+ * addArtifactCC - add a list of emails or logins, with an optional CC comment
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the project we work with
@@ -2663,44 +2663,44 @@ function existSummary($sessionKey, $group_artifact_id, $summary) {
  * @param string $cc_list the list of emails or logins to add
  * @param string $cc_comment the optional comment
  */
-function addCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment) {
+function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addCC','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifactCC','Could Not Get Group','Could Not Get Group');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addCC',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifactCC',$grp->getErrorMessage(),$grp->getErrorMessage());
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'addCC', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'addArtifactCC', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'addCC','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'addArtifactCC','Could Not Get ArtifactType','Could Not Get ArtifactType');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'addCC',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'addArtifactCC',$at->getErrorMessage(),$at->getErrorMessage());
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addCC', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactCC', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addCC', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactCC', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'addCC','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'addArtifactCC','Could Not Get Artifact','Could Not Get Artifact');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'addCC',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'addArtifactCC',$a->getErrorMessage(),$a->getErrorMessage());
         }
         if (!$a->addCC($cc_list,$cc_comment,&$changes,false)) {
-            return new soap_fault(add_cc_fault, 'addCC', 'CC could not be added', 'CC could not be added');
+            return new soap_fault(add_cc_fault, 'addArtifactCC', 'CC could not be added', 'CC could not be added');
         }
     } else {
-        return new soap_fault(invalid_session_fault, 'addCC', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'addArtifactCC', 'Invalid Session', 'Invalid Session');
     }
 }
 

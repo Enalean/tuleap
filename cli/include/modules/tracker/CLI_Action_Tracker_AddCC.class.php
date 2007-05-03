@@ -10,7 +10,7 @@ require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 class CLI_Action_Tracker_AddCC extends CLI_Action {
     function CLI_Action_Tracker_AddCC() {
         $this->CLI_Action('addCC', 'Add a CC list to a specific artifact.');
-        $this->soapCommand = 'addCC';
+        $this->soapCommand = 'addArtifactCC';
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the artifact comments belong to.',
