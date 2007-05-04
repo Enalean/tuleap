@@ -32,6 +32,8 @@ nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
 TODO_FILE=/root/todo_codex_upgrade_3.4.txt
 export INSTALL_DIR="/usr/share/codex"
+BACKUP_INSTALL_DIR="/usr/share/codex_32"
+ETC_DIR="/etc/codex"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -59,10 +61,11 @@ GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
+DIFF='/usr/bin/diff'
 
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
-SERVICE PERL"
+SERVICE PERL DIFF"
 
 # Functions
 create_group() {
@@ -223,11 +226,9 @@ todo "Subversion has been upgraded to version 1.4. There is some benefit (reposi
 # Install the CodeX software 
 #
 echo "Installing the CodeX software..."
+$MV $INSTALL_DIR $BACKUP_INSTALL_DIR
+$MKDIR $INSTALL_DIR;
 cd $INSTALL_DIR
-cd ..
-$MV codex codex_32
-$MKDIR codex;
-cd codex
 $TAR xfz ${CodeX_DIR}/codex*.tgz
 $CHOWN -R codexadm.codexadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
@@ -249,6 +250,60 @@ for f in /etc/httpd/conf.d/codex_aliases.conf; do
     $CHOWN codexadm.codexadm $f
     $CHMOD 640 $f
 done
+
+##############################################
+# Analyze site-content 
+#
+echo "Analysing your site-content (in $ETC_DIR/site-content/)..."
+
+#Only in etc => removed
+removed=`$DIFF -q -r \
+ $ETC_DIR/site-content/ \
+ $INSTALL_DIR/site-content/        \
+ | grep -v '.svn'  \
+ | sed             \
+ -e "s|^Only in $ETC_DIR/site-content/\([^:]*\): \(.*\)|@\1/\2|g" \
+ -e "/^[^@]/ d"  \
+ -e "s/@//g"     \
+ -e '/^$/ d'`
+if [ "$removed" != "" ]; then
+  echo "The following files doesn't existing in the site-content of CodeX:"
+  echo "$removed"
+fi
+
+modified=`$DIFF -q -r \
+            $BACKUP_INSTALL_DIR/site-content/ \
+            $INSTALL_DIR/site-content/        \
+            | grep -v '.svn'  \
+            | sed             \
+            -e "s|^Files $BACKUP_INSTALL_DIR/site-content/\(.*\) and $INSTALL_DIR/site-content/\(.*\) differ|@\1|g" \
+            -e "/^[^@]/ d"  \
+            -e "s/@//g"     \
+            -e '/^$/ d'`
+            
+#Differ => modified
+one_has_been_found=0
+for i in `$DIFF -q -r \
+            $ETC_DIR/site-content/ \
+            $INSTALL_DIR/site-content/        \
+            | grep -v '.svn'  \
+            | sed             \
+            -e "s|^Files $ETC_DIR/site-content/\(.*\) and $INSTALL_DIR/site-content/\(.*\) differ|@\1|g" \
+            -e "/^[^@]/ d"  \
+            -e "s/@//g"     \
+            -e '/^$/ d'` 
+do
+    j=`echo "$modified" | grep $i`
+    if [ "$j" != "" ]; then
+       if [ $one_has_been_found -eq 0 ]; then
+          echo "The following files differs from the site-content of CodeX:"
+          one_has_been_found=1
+       fi
+       echo $j
+    fi
+done
+
+echo "Analysis done."
 
 ##############################################
 # Database Structure and initvalues upgrade
