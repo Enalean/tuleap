@@ -102,13 +102,17 @@ class Project extends Group {
 		  $res_row['description'] = $Language->getText('project_admin_editservice',$res_row['description']);
 		}
         elseif(preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
-            $res_row['description'] = $Language->getText($matches[1], $matches[2]);
+            if ($Language->hasText($matches[1], $matches[2])) {
+                $res_row['description'] = $Language->getText($matches[1], $matches[2]);
+            }
         }
 		if ($res_row['label'] == "service_".$short_name."_lbl_key") {
 		  $res_row['label'] = $Language->getText('project_admin_editservice',$res_row['label']);
 		}
         elseif(preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
-            $res_row['label'] = $Language->getText($matches[1], $matches[2]);
+            if ($Language->hasText($matches[1], $matches[2])) {
+                $res_row['label'] = $Language->getText($matches[1], $matches[2]);
+            }
         }
                 $this->service_data_array[$short_name] = $res_row;
                 if ($short_name) {

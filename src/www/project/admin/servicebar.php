@@ -34,14 +34,18 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
       $description = $Language->getText('project_admin_editservice',$description);
     }
     elseif(preg_match('/(.*):(.*)/', $description, $matches)) {
-        $description = $Language->getText($matches[1], $matches[2]);
+        if ($Language->hasText($matches[1], $matches[2])) {
+            $description = $Language->getText($matches[1], $matches[2]);
+        }
     }
 
     if ($label == "service_".$short_name."_lbl_key") {
       $label = $Language->getText('project_admin_editservice',$label);
     }
     elseif(preg_match('/(.*):(.*)/', $label, $matches)) {
-        $label = $Language->getText($matches[1], $matches[2]);
+        if ($Language->hasText($matches[1], $matches[2])) {
+            $label = $Language->getText($matches[1], $matches[2]);
+        }
     }
     
 

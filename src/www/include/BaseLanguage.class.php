@@ -163,6 +163,10 @@ class BaseLanguage {
 		}
 		return "$tstring";
 	}
+    
+    function hasText($pagename, $category) {
+        return isset($this->text_array[$pagename][$category]);
+    }
 
 	// This is a legacy piece of code that used to be utils_get_content
 	// and is used either to include long piece of text that are inconvenient
