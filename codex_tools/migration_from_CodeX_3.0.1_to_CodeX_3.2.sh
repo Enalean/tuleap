@@ -580,24 +580,33 @@ sub add_packages_permissions {
 }
 
 sub add_releases_permissions {
-	my ($query, $c, $q, $d);
+  my ($query_release_perm, $query_package_perm, $res_rel, $res_pack, $q, $d, $find);
 
-	$query = "SELECT release_id,rp.ugroup_id as r_ugroup_id, pp.ugroup_id as p_ugroup_id FROM frs_release".
-			 " LEFT OUTER JOIN  permissions rp ON release_id = rp.object_id and rp.permission_type = 'RELEASE_READ'".
-			 " LEFT OUTER JOIN  permissions pp ON package_id = pp.object_id and pp.permission_type = 'PACKAGE_READ'";
 
-	$c = $dbh->prepare($query);
-    	$c->execute();
-    	while (my ($release_id, $r_ugroup_id, $p_ugroup_id) = $c->fetchrow()) {
-			if($r_ugroup_id=='NULL'){
-              			if($p_ugroup_id=='NULL'){   $p_ugroup_id=2; }             
-				$q="INSERT INTO permissions (object_id, permission_type, ugroup_id) VALUES ('".$release_id."', 'RELEASE_READ',".$p_ugroup_id.")";
-				#print $q."\n";
-				$d = $dbh->prepare($q);
-  				$d->execute();
-			}
+  # Get releases with existing permissions
+  $query_release_perm = "SELECT release_id as rel1, rp.ugroup_id as r_ugroup_id FROM frs_release, permissions rp ".
+    "WHERE release_id = rp.object_id and rp.permission_type = 'RELEASE_READ'";
+  $res_rel = $dbh->prepare($query_release_perm);
+  $res_rel->execute();
+  while (my ($rel1, $r_ugroup_id) = $res_rel->fetchrow()) {
+    $release_has_perm{$rel1}=1;
+  }
 
-		}
+  # Get permissions of parent package for all releases
+  $query_package_perm = "SELECT release_id as rel2, pp.ugroup_id as p_ugroup_id FROM frs_release, permissions pp ".
+    "WHERE package_id = pp.object_id and pp.permission_type = 'PACKAGE_READ'";
+  $res_pack = $dbh->prepare($query_package_perm);
+  $res_pack->execute();
+
+
+  while (my ($rel2, $p_ugroup_id) = $res_pack->fetchrow()) {
+    # Add package permission if no release permission.
+    if(! $release_has_perm{$rel2}){
+      $q="INSERT INTO permissions (object_id, permission_type, ugroup_id) VALUES ('".$rel2."', 'RELEASE_READ',".$p_ugroup_id.")";
+      $d = $dbh->prepare($q);
+      $d->execute();
+    }
+  }
 }
 
 add_packages_permissions();
