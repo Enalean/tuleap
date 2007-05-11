@@ -42,7 +42,7 @@ class DBTablesDao extends DataAccessObject {
         foreach($file_content as $sql_line){
             if(trim($sql_line) != "" && strpos($sql_line, "--") === false){
                 $query .= $sql_line;
-                if(preg_match("/;[\040]*\$/", $sql_line)){
+                if(preg_match("/;\s*(\r\n|\n|$)/", $sql_line)){
                     if (!$this->update($query)) {
                         return false;
                     }
