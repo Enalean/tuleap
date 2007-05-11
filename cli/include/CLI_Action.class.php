@@ -18,6 +18,13 @@ class CLI_Action {
         $this->soapCommand       = $name;
         $this->description       = $description;
         $this->params            = array();
+        $this->addParam(array(
+            'name'           => 'quiet',
+            'description'    => '--quiet or -q      Quiet-mode. Suppress result output.',
+            'parameters'     => array('q', 'quiet'),
+            'value_required' => false,
+            'soap'           => false,
+        ));
         $this->addProjectParam();
     }
     function addProjectParam() {
@@ -58,7 +65,7 @@ class CLI_Action {
     }
     
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
-        $this->show_output($soap_result, $fieldnames);
+        if (!$loaded_params['others']['quiet']) $this->show_output($soap_result, $fieldnames);
     }
     function loadParams($params) {
         $all_params = array('soap' => array(), 'others' => array());
@@ -104,6 +111,7 @@ class CLI_Action {
     }
 
     function execute($params) {
+        $soap_result = null;
         if ($this->module->getParameter($params, array('h', 'help'))) {
             echo $this->help();
         } else {
@@ -116,6 +124,7 @@ class CLI_Action {
                 $this->soapResult($params, $soap_result, array(), $loaded_params);
             }
         }
+        return $soap_result;
     }
     
     function validate_group_id(&$group_id) {

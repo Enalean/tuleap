@@ -63,9 +63,9 @@ class CLI_Action_Tracker_List extends CLI_Action {
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!is_array($soap_result) || count($soap_result) == 0) {
-            echo "No artifacts were found for this tracker.";
+            if (!$loaded_params['others']['quiet']) echo "No artifacts were found for this tracker.";
         } else {
-            $this->show_output($soap_result, $fieldnames);
+            if (!$loaded_params['others']['quiet']) $this->show_output($soap_result, $fieldnames);
         }
     }
 }

@@ -30,12 +30,14 @@ class CLI_Module {
         return $this->actions;
     }
     function execute($params) {
+        $result = null;
         $action_name = array_shift($params);
         if (isset($this->actions[$action_name])) {
-            $this->actions[$action_name]->execute($params);
+            $result = $this->actions[$action_name]->execute($params);
         } else {
             echo $this->help();
         }
+        return $result;
     }
     
     function help() {
