@@ -72,21 +72,21 @@ class CLI_Action_Default_Login extends CLI_Action {
             $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/?wsdl");
         }
     }
-    function soapResult($params, $soap_result, $fieldnames = array(), $params = array()) {
-        $this->show_output($soap_result);
+    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
+        if (!$loaded_params['others']['quiet']) $this->show_output($soap_result);
         $session_string = $soap_result['session_hash'];
         $user_id = $soap_result['user_id'];
-        $GLOBALS['LOG']->add("Logged in as user ".$params['soap']['loginname']." (user_id=".$user_id."), using session string ".$session_string);
-        echo "Logged in.\n";
+        $GLOBALS['LOG']->add("Logged in as user ".$loaded_params['soap']['loginname']." (user_id=".$user_id."), using session string ".$session_string);
+        if (!$loaded_params['others']['quiet']) echo "Logged in.\n";
         $GLOBALS['soap']->setSessionString($session_string);
-        $GLOBALS['soap']->setSessionUser($params['soap']['loginname']);
+        $GLOBALS['soap']->setSessionUser($loaded_params['soap']['loginname']);
         $GLOBALS['soap']->setSessionUserID($user_id);
         
         // If project was specified, get project information and store for future use
         if (isset($params['others']['projectname'])) {
-            $group_id = $this->get_group_id($params['others']['projectname']);
+            $group_id = $this->get_group_id($loaded_params['others']['projectname']);
             if (!$group_id) {
-                exit_error("Project \"".$params['others']['projectname']."\" doesn't exist");
+                exit_error('Project "'.$loaded_params['others']['projectname'].'" doesn\'t exist');
             }
             
             $GLOBALS['soap']->setSessionGroupID($group_id);

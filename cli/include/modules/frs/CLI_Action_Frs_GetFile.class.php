@@ -73,9 +73,9 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
             fwrite($fh, $file, strlen($file));
             fclose($fh);
             
-            echo "File retrieved successfully.\n";
+            if (!$loaded_params['others']['quiet']) echo "File retrieved successfully.\n";
         } else {
-            echo $file;     // if not saving to a file, output to screen
+            if (!$loaded_params['others']['quiet']) echo $file;     // if not saving to a file, output to screen
         }
     }
 }
