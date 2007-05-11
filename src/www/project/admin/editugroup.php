@@ -193,7 +193,7 @@ if (($func=='edit')||($func=='do_create')) {
     while ($row = db_fetch_array($res)) {
         // Don't display restricted users that don't belong to the project
         if ($row['status']=='R') { 
-            if (!$current_group_restricted_users[$row['user_id']]) {
+            if (!isset($current_group_restricted_users[$row['user_id']]) || !$current_group_restricted_users[$row['user_id']]) {
                 continue;
             }
         }
