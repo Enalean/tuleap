@@ -77,7 +77,6 @@ function file_get_release_name_from_id($release_id) {
 function file_get_package_id_from_release_id($release_id) {
 	$frsrf = new FRSReleaseFactory();
 	$res = $frsrf->getFRSReleaseFromDb($release_id);
-    $res=db_query("SELECT package_id FROM frs_release WHERE release_id=$release_id");
     return $res->getPackageID();
 }
 
