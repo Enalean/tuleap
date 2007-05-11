@@ -81,7 +81,6 @@ class WikiCloner {
       $result = db_query(sprintf("SELECT pagename FROM wiki_page WHERE group_id=%d",$this->template_id));
       while($row = db_fetch_array($result)){
           $pagename =  $this->escapeString($row[0]);
-	  echo $pagename."<br>";
 	  $page_data = $this->getTemplatePageData($pagename);
 	  $new_data = $this->createNewPageData($page_data);
 	  $this->insertNewWikiPage($new_data, $pagename);
@@ -105,7 +104,8 @@ class WikiCloner {
  /**
    *  Create a new pagedata array.
    *  Up to now, only the creation date timestamp is changed.
-   *  Other data (lockinfo and prefs) are copied.
+   *  Monitoring data is not copied.
+   *  Other data (lockinfo and user prefs) are copied.
    *
    *  @params data : array of page data
    *  @return data : array of the new page data
@@ -114,6 +114,26 @@ class WikiCloner {
       if (empty($data)) return array();
       else{
           foreach ($data as $key => $value){
+	      if (is_array($value)){
+	          foreach($value as $k => $v){
+	              // Do not copy monitoring data of 'global_data' wiki page.  
+	              if ($k == 'notify') unset($data[$key][$k]);
+		      // Change '_timestamp' of global_data page to current time
+		      if ($k == '_timestamp') $data[$key][$k] = time();
+		  }   
+	      }
+	      // $value is serialized. Actually it is only  in user pages case. 
+	      else{
+	          $arr = $this->_deserialize($value);
+                  if(is_array($arr)){
+		      foreach($arr as $i => $j){
+		          // Do not copy monitoring data of user pages.
+		          if ($i == 'notifyPages') unset($arr[$i]);		                
+		      } 
+		  }
+                  $data[$key] = $this->_serialize($arr);  
+	      }
+	      // Change the timestamp to the current time.
               if ($key == 'date') $data[$key] = time();
           }
           return $data;
@@ -131,7 +151,7 @@ class WikiCloner {
   function insertNewWikiPage($data, $pagename){
       $result = db_query(sprintf("INSERT INTO wiki_page (pagename, hits, pagedata, group_id)"
 				 ."VALUES('%s', %d,  '%s', %d)"
-				 , $pagename, 0, $this->_serialize($data), $this->group_id), 1);
+				 , $pagename, 0, $this->_serialize($data), $this->group_id));
   }
   
  /**
