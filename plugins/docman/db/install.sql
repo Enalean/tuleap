@@ -162,6 +162,7 @@ CREATE TABLE plugin_docman_metadata_value (
 --                   box. The 'None' values are good examples of that)
 --
 --
+DROP TABLE IF EXISTS plugin_docman_metadata_love;
 CREATE TABLE plugin_docman_metadata_love (
   value_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
@@ -187,6 +188,7 @@ CREATE TABLE plugin_docman_metadata_love (
 -- value_id        : the id of the value (in plugin_docman_metadata_love.value_id)
 --
 --
+DROP TABLE IF EXISTS plugin_docman_metadata_love_md;
 CREATE TABLE plugin_docman_metadata_love_md (
   field_id int(11) NOT NULL default '0',
   value_id int(11) NOT NULL default '0',
@@ -265,36 +267,36 @@ DELETE FROM reference WHERE id='17';
 DELETE FROM reference WHERE id='18';
 
 -- Create new references
-INSERT INTO reference SET \
-    id='10',        \
-    keyword='doc', \
-    description='reference_doc_desc_key', \
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
-    scope='S', \
+INSERT INTO reference SET 
+    id='10',        
+    keyword='doc', 
+    description='reference_doc_desc_key', 
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
+    scope='S', 
     service_short_name='docman';
 
-INSERT INTO reference SET \
-    id='11',        \
-    keyword='document', \
-    description='reference_doc_desc_key', \
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
-    scope='S', \
+INSERT INTO reference SET 
+    id='11',        
+    keyword='document', 
+    description='reference_doc_desc_key', 
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
+    scope='S', 
     service_short_name='docman';
 
-INSERT INTO reference SET \
-    id='17',        \
-    keyword='folder', \
-    description='reference_doc_desc_key', \
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
-    scope='S', \
+INSERT INTO reference SET 
+    id='17',        
+    keyword='folder', 
+    description='reference_doc_desc_key', 
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
+    scope='S', 
     service_short_name='docman';
 
-INSERT INTO reference SET \
-    id='18',        \
-    keyword='dossier', \
-    description='reference_doc_desc_key', \
-    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', \
-    scope='S', \
+INSERT INTO reference SET 
+    id='18',        
+    keyword='dossier', 
+    description='reference_doc_desc_key', 
+    link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
+    scope='S', 
     service_short_name='docman';
 
 -- Enable document references for project 1 and 100
