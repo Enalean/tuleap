@@ -12,7 +12,7 @@ require('../forum/forum_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
-if (!isset($pv)) $pv=false;
+if (!isset($pv)) $pv=0;
 if (isset($group_id)) {
   $title = $Language->getText('news_index','news_for',group_getname($group_id));
  } else {
@@ -24,18 +24,21 @@ $params=array('title'=>$title,
 
 news_header($params);
 
-if ($pv) {
-    echo '<H3>'.$Language->getText('news_index','news').'</H3>';
-} else {
-    echo "<TABLE width='100%'><TR><TD>";
-    echo '<H3>'.$Language->getText('news_index','news').'</H3>';
-    echo "</TD>";
-    echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
-    echo "</TR></TABLE>";    
-}
-
+if ($pv != 2) {
+    if ($pv == 1) {
+        echo '<H3>'.$Language->getText('news_index','news').'</H3>';
+    } else {
+        echo "<TABLE width='100%'><TR><TD>";
+        echo '<H3>'.$Language->getText('news_index','news').'</H3>';
+        echo "</TD>";
+        echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
+        echo "</TR></TABLE>";    
+    }
 
     echo '<P>'.$Language->getText('news_index','choose_news').'<P>';
+} else {
+    echo '<P>';
+}
 
 /*
 	Put the result set (list of forums for this group) into a column with folders
