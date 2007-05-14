@@ -78,18 +78,73 @@ class WikiCloner {
    *push
    */
   function CloneWiki(){
+      $arr = $this->cloneWikiPageTable();
+      $this->cloneWikiVersionTable($arr);
+  }
+
+ /**
+   *
+   *  Clone Template Wiki version data 
+   *
+   *  @param array of initial (template) and cloned wiki pages ids
+   *
+   */
+  function cloneWikiVersionTable($array){
+      foreach($array as $key => $value){
+          $tmpl_version_data = $this->getTemplateWikiVersionData((int) $key);
+	  $new_version_data = $this->createNewVersionData($tmpl_version_data);
+          $result = db_query(sprintf("select version, minor_edit, content from wiki_version where id=%d", (int) $key));
+	  while($row = db_fetch_array($result)){
+	       $num_ver = (int) $row['version'];
+	       $res = db_query(sprintf("INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
+	                               ."VALUES(%d, %d, %d, %d, '%s', '%s')"
+				       , (int) $value, $num_ver, time(), $row['minor_edit'], $row['content'], $new_version_data[$num_ver]));
+	  }
+      }
+  }
+
+ /**
+   *
+   *  Clone template project's 'wiki_page' table .
+   *
+   *  
+   *  @return hash of template wiki pages ids as keys and new wiki
+   *  pages ids as their values.
+   */
+  function cloneWikiPageTable(){
+      $ids = array();
       $result = db_query(sprintf("SELECT pagename FROM wiki_page WHERE group_id=%d",$this->template_id));
       while($row = db_fetch_array($result)){
           $pagename =  $this->escapeString($row[0]);
+	  $tmpl_page_id = $this->getTemplateWikiPageId($pagename);
 	  $page_data = $this->getTemplatePageData($pagename);
 	  $new_data = $this->createNewPageData($page_data);
-	  $this->insertNewWikiPage($new_data, $pagename);
+	  $id = $this->insertNewWikiPage($new_data, $pagename);
+	  $ids[$tmpl_page_id] = $id;
       }
+      return $ids;
+      
   }
   
+  /**
+   *
+   *  Look for a given wiki page id.
+   *
+   *  @param string: pagename
+   *  @returrn int: wiki page id
+   *
+   *
+   */
+  function getTemplateWikiPageId($pagename){
+      $result = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->template_id));
+      while($row = db_fetch_array($result)){
+          return (int) $row[0];
+      }
+  }  
+
  /**
    *
-   *  Get page data information from database.
+   *  Get pagedata information from wiki_page table.
    *
    *  @params pagename : name of any wiki page stored in the db.
    *  @return deserialized page data hash.
@@ -101,6 +156,49 @@ class WikiCloner {
       }
   }
 
+ /**
+   *
+   *  Get versiondata information of a template wiki page from wiki_version table.
+   *
+   *  @params id : id of the template wiki page stored in the db.
+   *  @return hash like:
+   *  $key : version number
+   *  $value : derialised version data hash
+   */
+  function getTemplateWikiVersionData($id){
+      $version = array();
+      $result = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
+      while($row = db_fetch_array($result)){
+	  $version_number = $row['version'];
+          $version_data = $this->_deserialize($row['versiondata']);
+	  $version[$version_number] = $version_data;
+      }
+      return $version;
+  }
+  
+ /**
+   *
+   *  Create new version data  from template version data of a wiki page 
+   *  Up to now this only changes the creation time of the page version to 
+   *  the current time (time of the clone).   
+   *
+   *  @param array of versions numbers and their deserialised data hashes
+   *  @return array of versions numbers and their new serialised data hashes
+   *
+   */
+  function createNewVersionData($versions_array){
+      foreach($versions_array as $version_num => $version_data){
+          foreach($version_data as $key => $value){
+	      if($key == '_supplanted'){
+	          $version_data[$key] = time();
+		  $versions_array[$version_num] = $version_data;
+	      }
+	  }
+          $versions_array[$version_num] = $this->_serialize($version_data);
+      }
+      return $versions_array;
+  }
+  
  /**
    *  Create a new pagedata array.
    *  Up to now, only the creation date timestamp is changed.
@@ -152,6 +250,13 @@ class WikiCloner {
       $result = db_query(sprintf("INSERT INTO wiki_page (pagename, hits, pagedata, group_id)"
 				 ."VALUES('%s', %d,  '%s', %d)"
 				 , $pagename, 0, $this->_serialize($data), $this->group_id));
+      if(!empty ($result)){
+          $res = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->group_id)); 
+	  while ($row = db_fetch_array($res)){ 
+	      $id = $row[0];
+	  }
+	  return $id;
+      }
   }
   
  /**
