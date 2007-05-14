@@ -60,45 +60,45 @@
       connecter et sélectionner le lien &#34;Enregistrer un
       projet&#34; dans le menu de CodeX.</para>
 
-      <para>L'enregistrement d'un projet est un processus en sept
-      étapes et prend moins de 10 minutes :</para>
+      <para>L'enregistrement d'un projet est un processus qui prend moins de 10 minutes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 1 - Services et Conditions</emphasis></para>
-
+          <para><emphasis role="bold">Enregistrement d'un projet</emphasis></para>
+  
           <para>Il s'agit d'informations à propos des services
           CodeX. Lisez les attentivement.</para>
+          <para>N'oubliez pas de lire et d'accepter les Conditions générales d'utilisation.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 2 - Conditions générales d'utilisation</emphasis></para>
-
-          <para>Vous découvrirez sur cette page une liste des services
-          disponibles sur CodeX. Y figure aussi certaines obligations
-          que nous vous demandons de respecter. Pour passer à l'étape
-          suivantes cliquez sur [D'ACCORD]. Si vous sélectionnez [PAS
-          D'ACCORD], prenez la peine de nous contacter et de nous
-          expliquer les raisons de cette désaffection. Nous pourrons
-          peut-être y remédier.</para>
+          <para><emphasis role="bold">Nom du projet</emphasis></para>
+          
+          <para>Indiquez le nom court et le nom complet du
+          projet. Lisez attentivement les instructions fournies. Le
+          nom complet peut être modifié à tout moment dans la vie du
+          projet mais pas le nom court.<footnote><para>En fait il peut
+          l'être mais cela nécessite l'intervention des
+          administrateurs du site.</para></footnote>. Réfléchissez
+          donc bien avant de choisir !</para>
         </listitem>
 
-	<listitem> 
-	  <para><emphasis role="bold">&Eacute;tape 3 - Projet de patron</emphasis></para>
-
-	  <para>Vous avez déjà soumis un projet CodeX et voudriez réutiliser la 
-	  même configuration (services, outils de suivi, documents, références, ...) ? 
-      Vous pouvez convertir votre ancien projet en patron de projet 
-      (voir <xref linkend="ProjectType" />) et vous le retrouverez sur cette page 
-      dans la liste des patrons de projet disponible. Choisissez votre ancien
-	  projet comme patron et votre nouveau projet aura les mêmes services configurés
-	  de la même manière que votre ancien projet. Si vous ne voulez pas réutiliser
-	  un patron spécifique gardez simplement le Patron CodeX par défault coché
-	  et continuez l'enregistrement.</para>
-	</listitem>
+        <listitem> 
+          <para><emphasis role="bold">Patron de projet</emphasis></para>
+          
+          <para>Vous avez déjà soumis un projet CodeX et voudriez réutiliser la 
+          même configuration (services, outils de suivi, documents, références, ...) ? 
+          Vous pouvez convertir votre ancien projet en patron de projet 
+          (voir <xref linkend="ProjectType" />) et vous le retrouverez sur cette page 
+          dans la liste des patrons de projet disponible. Choisissez votre ancien
+          projet comme patron et votre nouveau projet aura les mêmes services configurés
+          de la même manière que votre ancien projet. Si vous ne voulez pas réutiliser
+          un patron spécifique gardez simplement le Patron CodeX par défault coché
+          et continuez l'enregistrement.</para>
+        </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 4 - Informations projet</emphasis></para>
+          <para><emphasis role="bold">Description du projet</emphasis></para>
 
           <para>C'est là que tout commence véritablement ! En
           commençant par une description de votre projet. Il est
@@ -114,33 +114,15 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 5 - Nom du projet</emphasis></para>
+          <para><emphasis role="bold">Services du projet</emphasis></para>
 
-          <para>Indiquez le nom court et le nom complet du
-          projet. Lisez attentivement les instructions fournies. Le
-          nom complet peut être modifié à tout moment dans la vie du
-          projet mais pas le nom court.<footnote><para>En fait il peut
-          l'être mais cela nécessite l'intervention des
-          administrateurs du site.</para></footnote>. Réfléchissez
-          donc bien avant de choisir !</para>
+          <para>Vous pouvez sélectionner les service que vous voulez activer. 
+          Notez que vous pourres changer ces préférences par la suite, une fois 
+          votre projet créé.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 6 - Politique d'échange</emphasis></para>
-
-          <para>NOTE : cette étape ne s'applique que si vous créez un
-          projet public. Si c'est le cas, le choix par défaut est
-          celui que vous devez conserver à savoir la &#34;Politique
-          d'Echange de &SYS_ORG_NAME;&#34;. Comme expliqué plus haut,
-          l'équipe CodeX assistée du département légal de
-          &SYS_ORG_NAME; ont créé et validé ces règles d'échange. Un
-          certain nombre de licences Open Source sont aussi
-          mentionnées. Enfin vous pouvez aussi spécifier vos propres
-          termes de licence.</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">&Eacute;tape 7 - Catégories</emphasis></para>
+          <para><emphasis role="bold">Catégorisation du projet</emphasis></para>
 
           <para>Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. 
           Cela permettra aux utilisateurs de trouver rapidement votre projet. 
@@ -154,16 +136,26 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">&Eacute;tape 8 - Confirmation finale</emphasis></para>
+          <para><emphasis role="bold">Politique d'échange</emphasis></para>
+
+          <para>NOTE : cette étape ne s'applique que si vous créez un
+          projet public. Si c'est le cas, le choix par défaut est
+          celui que vous devez conserver à savoir la &#34;Politique
+          d'Echange de &SYS_ORG_NAME;&#34;. Comme expliqué plus haut,
+          l'équipe CodeX assistée du département légal de
+          &SYS_ORG_NAME; ont créé et validé ces règles d'échange. Un
+          certain nombre de licences Open Source sont aussi
+          mentionnées. Enfin vous pouvez aussi spécifier vos propres
+          termes de licence.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Confirmation finale</emphasis></para>
 
           <para>Lors de cette dernière étape un récapitulatif des
           différentes informations saisies vous est présenté pour
           approbation. Mais ne vous inquiétez pas : vous pourrez encore
-          modifier ces informations une fois votre projet approuvé. Si
-          tout est conforme cliquez sur le lien [D'ACCORD]. Si vous
-          cliquez sur [PAS D'ACCORD] le projet pré-enregistré est
-          détruit de la base de données de CodeX et toutes les
-          informations saisies seront perdues.</para>
+          modifier ces informations une fois votre projet approuvé.</para>
         </listitem>
       </itemizedlist>
 
