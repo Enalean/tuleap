@@ -168,7 +168,7 @@ class DocmanPlugin extends Plugin {
             echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
-            echo '<script type="text/javascript" src="/scripts/calendar.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->_getPluginPath().'/scripts/docman.js"></script>'."\n";
         }
     }
