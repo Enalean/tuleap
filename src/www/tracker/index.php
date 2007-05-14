@@ -196,6 +196,10 @@ if ( $func == 'gotoid' ) {
                                 $agnf =& new ArtifactGlobalNotificationFactory();
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
+				
+				// add the artifact to date reminder processing table, if relevant
+				$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);				
+				
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
                         }
@@ -278,7 +282,11 @@ if ( $func == 'gotoid' ) {
                                     $agnf =& new ArtifactGlobalNotificationFactory();
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
+
+				// add the artifact to date reminder processing table, if relevant
+				$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
+
+				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
                         }
                 }

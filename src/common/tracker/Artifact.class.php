@@ -822,6 +822,17 @@ class Artifact extends Error {
                                 $field_html = new ArtifactFieldHtml($field);
                                 $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
                                 $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+
+				//update date reminder processing data, according to date field value update
+				if ($field->isDateField()) {
+				    if (($old_value == 0 || $old_value == NULL) && $value <> 0 && $value <> NULL) {
+				        //field date value is set
+					$this->ArtifactType->addArtifactToDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID());
+				    } else if ($old_value <> 0 && $old_value <> NULL && $value == 0) {
+				        //field date value is unset
+					$this->ArtifactType->deleteArtifactFromDateReminderProcessing($field->getID(),$this->getID(),$this->ArtifactType->getID());
+				    }
+				}
                             } else {
                                 // The user does not have the permissions to update the current field,
                                 // we exit the function with an error message
@@ -868,6 +879,8 @@ class Artifact extends Error {
                 if ( $field ) {
                     $this->addHistory ($field,$result['close_date'],'');
                 }
+		//Delete corresponding entry in artifact_date_reminder_processing table
+		$this->ArtifactType->deleteArtifactFromDateReminderProcessing(0,$this->getID(),$this->ArtifactType->getID());		
             }
         
             //
@@ -881,7 +894,10 @@ class Artifact extends Error {
             if (!$this->addDependencies($artifact_id_dependent,&$changes,$masschange)) {
                 return false;
             }
-                
+            
+   	    //get the End Date value before update
+	    $old_close_date = $this->getCloseDate();
+	    
             //
             //  Finally, build the full SQL query and update the artifact itself (if need be)
             //
@@ -896,7 +912,20 @@ class Artifact extends Error {
                 
                 $res_upd=db_query($sql);
             }
-        
+
+	    //get the End Date value after update, if it is set ==> add artifact to 'date reminder processing' table
+	    $after_up =  sprintf('SELECT * FROM artifact'
+	  		    .' WHERE artifact_id=%d'
+			    .' AND group_artifact_id=%d',
+			    $this->getID(),$this->ArtifactType->getID());
+	    $res_after = db_query($after_up);
+	    $new_close_date = db_result($res_after,0,'close_date');
+
+	    if (($old_close_date == 0 || $old_close_date == NULL) && ($new_close_date <> 0 || $new_close_date <> NULL) && $old_close_date <> $new_close_date) {
+	        $end_date_field = $art_field_fact->getFieldFromName('close_date');  
+	        $this->ArtifactType->addArtifactToDateReminderProcessing($end_date_field->getID(),$this->getID(),$this->ArtifactType->getID());
+	    }
+	    
             if (!$res_upd) {
                 exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
                 return false;

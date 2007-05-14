@@ -1173,49 +1173,57 @@ EOS;
 		echo '<script language="JavaScript">
 
 			  function onChangeFieldType(form) {
-			  		switch ( form.field_type.value ) {
+			  		var notif_chkbx = document.getElementById("enable_notification");
+					switch ( form.field_type.value ) {
 			  		// Select Box
 			  		case "1":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "SB";
 					  	form.display_size.value = "N/A";
+						notif_chkbx.disabled=true;
 					  	break;
 			  		// Multi Select Box
 			  		case "2":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "MB";
 					  	form.display_size.value = "N/A";
-					  	break;
+					  	notif_chkbx.disabled=true;
+						break;
 			  		// TextField
 			  		case "3":
 			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-					  	break;
+					  	notif_chkbx.disabled=true;
+						break;
 			  		// TextArea
 			  		case "4":
 			  			form.data_type.value = '.$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TA";
 					  	form.display_size.value = "60/7";
-					  	break;
+					  	notif_chkbx.disabled=true;
+						break;
 			  		// DateField
 			  		case "5":
 			  			form.data_type.value = '.$af->DATATYPE_DATE.';
 					  	form.display_type.value = "DF";
 					  	form.display_size.value = "N/A";
-					  	break;
+					  	notif_chkbx.disabled=false;
+						break;
 			  		// FloatField
 			  		case "6":
 			  			form.data_type.value = '.$af->DATATYPE_FLOAT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-					  	break;
+					  	notif_chkbx.disabled=true;
+						break;
 			  		// IntegerField
 			  		case "7":
 			  			form.data_type.value = '.$af->DATATYPE_INT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-					  	break;
+					  	notif_chkbx.disabled=true;
+						break;
 					default:
 						alert("Unknow field type!");
 						break;
@@ -1307,7 +1315,7 @@ EOS;
 	 */
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
 								   $display_size=false,$rank_on_screen=false,
-								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
+								   $empty_ok=false,$keep_history=false,$enable_notification=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
 		global $art_field_fact,$Language;
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
@@ -1447,8 +1455,27 @@ EOS;
 			}
 		}
 				
-		echo '
-		      </td></tr>';
+		echo '</td>';
+		
+		echo '<td><label>'.$Language->getText('tracker_include_type','enable_notifications').': </label>';  		
+		if ($enable_notification) {
+		    $checked = "checked";		    
+		} else {
+		    $checked = "";
+		}
+		//in field creation form, SB is the default selected value, so the 'enable_notification' checkbox should be disabled by default
+		if ( $func == "field_create" ) {
+		    $disabled = "disabled";
+		} else {
+		    if ( $field && $field->isDateField() && !$field->isSpecial()) {
+		        $disabled = "";
+		    } else {
+		        $disabled = "disabled";
+		    }
+		}
+		echo '<input type="checkbox" id="enable_notification" name="enable_notification" value="1" '.$checked.' '.$disabled.'> </td>';		
+
+		echo '</tr>';		
 		      
 		if ( $show_use ) {
 		    echo  '
@@ -2099,14 +2126,126 @@ EOS;
 		    echo "</tr>\n";
 		}
 		
-		echo'
-		</table>
+		echo'</table>';
 		
-		<HR>
+		if ($this->userIsAdmin()) {
+		    echo '<br><h3>'.$Language->getText('tracker_include_type','date_fields_mail_notif').' '.
+		    help_button('TrackerAdministration.html#DateFieldsNotification').'</h3>';
+				
+		    $title_arr=array();
+                    $title_arr[]=$Language->getText('tracker_include_type','df');
+                    $title_arr[]=$Language->getText('tracker_include_type','notification_status');
+                    $title_arr[]=$Language->getText('tracker_include_type','notification_settings');            	
+        
+                    $out .= html_build_list_table_top ($title_arr);
+                    $fmt = "\n".'<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
+		    $fields = $art_field_fact->getUsedDateFields();
+		    $row_color = 0;
+		
+		    while (list($field_name,$field) = each($fields)) {
+ 		    
+		        // no notification status/settings for special Date field (Submitted on)
+		        if (!$field->isSpecial()) {
+		            
+			    if ($field->getNotificationStatus()) {			        
+				$notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$group_id.'&atid='.$this->getID().'&field_id='.$field->getID().'">'.$Language->getText('tracker_include_type','edit_notif_settings').'</A>';		
+			        $notif_status = $Language->getText('tracker_include_type','active');
+			    } else {
+			        $notif_settings = $Language->getText('tracker_include_type','edit_notif_settings');
+		                $notif_status = $Language->getText('tracker_include_type','disabled');
+		            }		        
+		    
+		        $out .= sprintf($fmt,
+				    util_get_alt_row_color($row_color),
+				    $field->getLabel(),
+				    $notif_status,
+                       		    $notif_settings);
+		        $row_color++;
+			}
+		    }
+		
+		    $out .= "</table>";
+		    echo $out;
+		}    
+		
+		echo '<HR>
 		<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('tracker_include_artifact','submit').'">
 		</FORM>';
 			
 		
+	}
+
+	/**
+	*  Display Date Field Notification Settings form
+	* 
+	* @param
+	* @return void
+	*/
+	function displayDateFieldNotificationSettings($field_id) {
+	    global $Language,$art_field_fact;
+	    
+	    
+	    $field = $art_field_fact->getFieldFromId($field_id);  
+	    //get date field reminder settings from database
+	    $res = $this->getDateFieldReminderSettings($this->Group->getID(),$this->getID(),$field_id);
+	    $start = db_result($res,0,'notification_start');
+	    $frequency = db_result($res,0,'frequency');
+	    $recurse = db_result($res,0,'recurse');
+	    $notified_users = explode(",",db_result($res,0,'notified_people'));
+	    $notif_type = db_result($res,0,'notification_type');
+	    if ($notif_type == 1) {
+	        $after = "selected";
+		$before = "";
+	    } else {
+	        $after = "";
+		$before = "selected";
+	    }
+	    
+	    $out = '<P><h3>'.$Language->getText('tracker_include_type','notif_settings_field',array($field->getLabel())).'</h3><P>';
+	    		   
+	    $out .= '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="date_field_notification_settings_form">
+		    <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
+	            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
+		    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">
+		    <TABLE BORDER=0><TR><TD>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part1',array($field->getLabel())).
+		    '</TD><TD> <INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="'.$start.'"> '.$Language->getText('tracker_include_type','days').'</TD><TD>
+		    <SELECT NAME="notif_type">
+		        <OPTION VALUE="0" '.$before.'>'.$Language->getText('tracker_include_type','notify_before').'
+			<OPTION VALUE="1" '.$after.'>'.$Language->getText('tracker_include_type','notify_after').'
+		    </SELECT> '.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part2').
+		    '</TD></TR><TR><TD valign="top">'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part3').' <INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"> '.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part4').
+		    '</TD><TD> <SELECT MULTIPLE NAME="notified_users[]">';
+	
+	    $selected = "";
+	    if (in_array("1",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="1" '.$selected.'>'.$Language->getText('tracker_common_types','role_SUBMITTER_short_desc');
+
+	    $selected = "";
+	    if (in_array("2",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="2" '.$selected.'>'.$Language->getText('tracker_common_types','role_ASSIGNEE_short_desc');
+
+    	    $selected = "";
+	    if (in_array("3",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    $out .= '<OPTION VALUE="3" '.$selected.'>'.$Language->getText('tracker_common_types','role_CC_short_desc');
+	
+	    $selected = "";
+	    if (in_array("4",$notified_users)) {
+	        $selected = "selected";
+	    }
+	    
+	    $out .= '<OPTION VALUE="4" '.$selected.'>'.$Language->getText('tracker_common_types','role_COMMENTER_short_desc').'</SELECT></TD><TD valign="top"> '. 	    
+		    $GLOBALS['Language']->getText('tracker_include_type','reminder_form_part5').
+		    ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('tracker_include_type','days').
+		    '.</TD></TR></TABLE><P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part6',array($field->getLabel())).
+		    '<P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part7',array($field->getLabel())).'<P><INPUT TYPE="SUBMIT" NAME="submit_notif_settings"></FORM>';	 
+	    echo $out;
+	    
 	}
 
 	/**

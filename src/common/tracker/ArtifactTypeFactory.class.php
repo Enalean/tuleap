@@ -226,6 +226,17 @@ class ArtifactTypeFactory extends Error {
 			    WHERE group_artifact_id=". $atid;
 		db_query ($sql);
 		
+		// Delete artifact_date_reminder_settings
+		$sql = sprintf('DELETE FROM artifact_date_reminder_settings'
+				.' WHERE group_artifact_id=%d',
+				$atid);
+		db_query ($sql);
+		
+		// Delete artifact_date_reminder_processing
+		$sql = sprintf('DELETE FROM artifact_date_reminder_processing'
+				.' WHERE group_artifact_id=%d',
+				$atid);
+		db_query ($sql);		
         
         // We need to instanciate an artifactType to instanciate the factories
         $artifactType = new ArtifactType($this->getGroup(), $atid, false);
