@@ -13,7 +13,7 @@ require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('news/news');
 
 if (!isset($pv)) $pv=0;
-if (isset($pv) && $pv != 2) {
+if (isset($pv)) {
     if (isset($group_id)) {
         $title = $Language->getText('news_index','news_for',group_getname($group_id));
     } else {
