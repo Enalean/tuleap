@@ -11,8 +11,6 @@
 #    Automatically re-generate online documentation
 #
 
-archivename=codex_cli-1.1
-
 progname=$0
 if [ -z "$scriptdir" ]; then 
     scriptdir=`dirname $progname`
@@ -54,6 +52,12 @@ if [ -z "$TMPDIR" ]; then
     fi
     TMP_DIR=`/bin/grep '^\$tmp_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     TMPDIR=$TMP_DIR
+fi
+
+# honor archivename if defined
+if [ -z "$archivename" ]; then
+    cli_version=`grep '\$CLI_VERSION = ' $BASESRCDIR/codex.php | sed -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
+    archivename="codex_cli-${cli_version}"
 fi
 
 
