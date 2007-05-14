@@ -55,6 +55,9 @@ class ArtifactField extends Error {
 	
 	// Keep the history changes
 	var $keep_history;
+
+	// Is the notification about this field enabled ?
+	var $enable_notification;
 	
 	// Is the field special?
 	var $special;
@@ -103,7 +106,7 @@ class ArtifactField extends Error {
 	    global $display_debug;
 	    
 	    $sql="SELECT af.field_id, field_name, data_type, display_type, ".
-		"display_size,label, description,scope,required,empty_ok,keep_history,special, ".
+		"display_size,label, description,scope,required,empty_ok,keep_history,notification,special, ".
 		"value_function, ".
 		"af.group_artifact_id, use_it, place, default_value, af.field_set_id ".
 		"FROM artifact_field af, artifact_field_usage afu ".
@@ -142,6 +145,7 @@ class ArtifactField extends Error {
 		$this->required = $field_array['required'];    // don't use it : value always equal to 0
 		$this->empty_ok = $field_array['empty_ok'];
 		$this->keep_history = $field_array['keep_history'];
+		$this->enable_notification = $field_array['notification'];
 		$this->special = $field_array['special'];
 		// if value_function == "", the result of explode will be: array([0] => "") and that's not what we want.
 		if ($field_array['value_function'] != "") {
@@ -300,6 +304,15 @@ class ArtifactField extends Error {
 	}
 	
 	/**
+	* Get the notification status of the date field (enabled/disabled)
+	* 
+	* @return boolean
+	*/
+	function getNotificationStatus() {
+	    return $this->enable_notification;
+	}
+	
+	/**
 	 *  Get the special attribute value
 	 *
 	 * @return boolean
@@ -376,6 +389,7 @@ class ArtifactField extends Error {
 		 	   " - required=".$this->required.
 		 	   " - empty_ok=".$this->empty_ok.
 		 	   " - keep_history=".$this->keep_history.
+			   " - enable_notification=".$this->enable_notification.
 		 	   " - special=".$this->special.
 		 	   " - value_function=".$this->value_function.
 		 	   " - use_it=".$this->use_it.
@@ -1215,7 +1229,7 @@ class ArtifactField extends Error {
 	 */
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 $empty_ok,$keep_history,$special,$use_it, $fieldset_id) {
+						 $empty_ok,$keep_history,$enable_notification,$special,$use_it, $fieldset_id) {
 	  global $Language;
 	 	
 		// Check arguments
@@ -1227,6 +1241,7 @@ class ArtifactField extends Error {
 		// Default values
 		$empty_ok = ($empty_ok?$empty_ok:0);
 		$keep_history = ($keep_history?$keep_history:0);
+		$enable_notification = ($enable_notification?$enable_notification:0);
 		$use_it = ($use_it?$use_it:0);
 		$special = ($special?$special:0);
 		$rank_on_screen = ($rank_on_screen?$rank_on_screen:"''");
@@ -1241,6 +1256,7 @@ class ArtifactField extends Error {
 			   "description='".$description."',".
 			   "empty_ok=".$empty_ok.",".
 			   "keep_history=".$keep_history.",".
+			   "notification=".$enable_notification.",".
 			   "special=".$special.",".
                "field_set_id=".$fieldset_id." ".
 			   "WHERE group_artifact_id=".$group_artifact_id." AND field_id=".$this->field_id;
@@ -1263,6 +1279,16 @@ class ArtifactField extends Error {
 			return false;
 		}
 		
+		//If it is a date field, that was disabled or on which the notification is disabled, then remove the corresponding date reminder settings in db  
+		if (($this->isDateField() && $enable_notification == 0) || ($this->isDateField() && $use_it == 0)) {
+		    $this->deleteFieldReminderSettings($this->field_id,$group_artifact_id);	    
+		}
+		
+		//If it is a date field, on which notification reminder is enabled, then set the default reminder settings
+		if ($this->isDateField() && $enable_notification == 1) {
+		    $this->setDefaultReminderSettings($this->field_id,$group_artifact_id);
+		}
+				
 		if ( ($use_it == "1")&&($this->getUseIt() == "0") ) {
 			
 			// We need to insert with the default value, records in artifact_field_value table
@@ -1609,6 +1635,47 @@ class ArtifactField extends Error {
 		
 		return true;
 		
+	}
+	
+	/**
+	* Delete reminder settings of a specific field
+	*
+	* @param field_id: the field id
+	* @param group_artifact_id: the tracker id
+	* 
+	* @return result set
+	*/
+	function deleteFieldReminderSettings($field_id,$group_artifact_id) {
+	
+	    $del = sprintf('DELETE FROM artifact_date_reminder_settings'
+			    .' WHERE field_id=%d'
+			    .' AND group_artifact_id=%d',
+			    $field_id,$group_artifact_id);
+	    $result = db_query($del);
+	    $rem = sprintf('DELETE FROM artifact_date_reminder_processing'
+			    .' WHERE field_id=%d'
+			    .' AND group_artifact_id=%d',
+			    $field_id,$group_artifact_id);
+	    $result = db_query($rem);	
+	    
+	}
+	
+	/**
+	* Insert default reminder settings of a date field
+	* 
+	* @param field_id: the field id
+	* @param group_artifact_id: the tracker id
+	* 
+	* @return result set
+	*/
+	function setDefaultReminderSettings($field_id,$group_artifact_id) {
+	
+	    $ins = sprintf('INSERT INTO artifact_date_reminder_settings'
+			    .' (field_id,group_artifact_id,notification_start,notification_type,frequency,recurse,notified_people)'
+			    .' VALUES (%d,%d,%d,%d,%d,%d,"%s")',
+			    $field_id,$group_artifact_id,0,0,1,1,"1,2,3,4");
+	    $res = db_query($ins);
+	
 	}
 	
 	/**

@@ -213,6 +213,20 @@ tracker_admin_index	fieldset_updated	Field Set updated
 tracker_admin_index	fieldset_deleted	Field Set deleted
 tracker_admin_index	modify_fieldset	 - Modify Field Set
 tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
+tracker_admin_index	admin_date_field_notif	Tracker Administration - Date Fields Reminder Settings
+tracker_admin_index	wrong_field	Wrong field_id '$1'.
+tracker_admin_index	notif_update_success	'$1' Reminder Settings Update Successful.
+tracker_admin_index	notif_update_fail	'$1' Reminder Settings Update Failed.
+tracker_admin_index	specify_notified_users	Error. You must specify the users to be notified.
+tracker_admin_index	specify_notification_start	Error. You must specify the notification start date.
+tracker_admin_index	specify_notification_frequency	Error. You must specify the notification frequency.
+tracker_admin_index	specify_notification_recurse	Error. You must specify the notification recurse.
+tracker_admin_index	positive_value	Error. You must specify a positive value.
+tracker_admin_index	reminder_mail_subject	Reminder about '$1'
+tracker_admin_index	reminder_mail_header	This is a Codex tracker reminder:
+tracker_admin_index	reminder_mail_body	The '$1' value, in the artifact below, was set to $2 (Week $3).
+tracker_admin_index	reminder_mail_art_link	You can access the artifact here:
+tracker_admin_index	reminder_mail_footer	This is an automatic message sent by Codex. Please do not reply to this email.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -455,6 +469,7 @@ tracker_include_type	display_info	Display informations
 tracker_include_type	display_size	Display Size
 tracker_include_type	allow_empty	Allow Empty Value
 tracker_include_type	keep_change_history	Keep Change History
+tracker_include_type	enable_notifications	Enable Reminder
 tracker_include_type	misc	Miscellaneous:
 tracker_include_type	use_field	Use this field
 tracker_include_type	fields_requ	fields required
@@ -489,6 +504,9 @@ tracker_include_type	admin_conf	<P>The tracker administrators have configured th
 tracker_include_type	send_all_or_not	(Send on all updates: $1)
 tracker_include_type	admin_not_conf	<P>The tracker administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.
 tracker_include_type	perso_mail_notif	Personal Email Notification
+tracker_include_type	date_fields_mail_notif	Date Fields Email Notification
+tracker_include_type	notification_status	Notification Status
+tracker_include_type	notification_settings	Notification Settings
 tracker_include_type	users_to_watch	Users To Watch
 tracker_include_type	backup_person	You can receive a carbon copy of email notifications sent to certain users of this project. List the login name of any user you wish to watch, separated by commas.</b>
 tracker_include_type	watchers	For your information your own artifact notifications are currently watched by: <u>$1</u>	
