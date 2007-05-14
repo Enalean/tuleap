@@ -11,8 +11,14 @@
 //    for feature requests and/or donations
 //
 // Modified by Laurent Julliard for CodeX project
-// 
 
+
+//
+//
+//   This file is DEPRECATED.
+//   Please use calendar_js.php instead.
+//
+//
 function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path) {
         var arr_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
