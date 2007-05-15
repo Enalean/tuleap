@@ -1280,12 +1280,12 @@ class ArtifactField extends Error {
 		}
 		
 		//If it is a date field, that was disabled or on which the notification is disabled, then remove the corresponding date reminder settings in db  
-		if (($this->isDateField() && $enable_notification == 0) || ($this->isDateField() && $use_it == 0)) {
+		if (($this->isDateField() && $enable_notification == 0 && $this->getNotificationStatus() == 1) || ($this->isDateField() && $use_it == 0 && $this->getNotificationStatus() == 1)) {
 		    $this->deleteFieldReminderSettings($this->field_id,$group_artifact_id);	    
 		}
 		
 		//If it is a date field, on which notification reminder is enabled, then set the default reminder settings
-		if ($this->isDateField() && $enable_notification == 1) {
+		if ($this->isDateField() && $enable_notification == 1 && $this->getNotificationStatus() == 0) {
 		    $this->setDefaultReminderSettings($this->field_id,$group_artifact_id);
 		    //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
 		    $art = sprintf('SELECT * FROM artifact'
@@ -1298,7 +1298,7 @@ class ArtifactField extends Error {
 		            $artifact_id = $arr['artifact_id'];
 		            $ath->addArtifactToDateReminderProcessing($this->field_id,$artifact_id,$group_artifact_id);
 			}
-		    }	
+		    }
 		}
 				
 		if ( ($use_it == "1")&&($this->getUseIt() == "0") ) {

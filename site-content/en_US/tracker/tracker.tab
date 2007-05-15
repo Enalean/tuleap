@@ -220,7 +220,7 @@ tracker_admin_index	notif_update_fail	'$1' Reminder Settings Update Failed.
 tracker_admin_index	specify_notified_users	Error. You must specify the users to be notified.
 tracker_admin_index	specify_notification_start	Error. You must specify the notification start date.
 tracker_admin_index	specify_notification_frequency	Error. You must specify the notification frequency.
-tracker_admin_index	specify_notification_recurse	Error. You must specify the notification recurse.
+tracker_admin_index	specify_notification_recurse	Error. You must specify the number of mails to be sent.
 tracker_admin_index	positive_value	Error. You must specify a positive value.
 tracker_admin_index	reminder_mail_subject	Reminder about '$1'
 tracker_admin_index	reminder_mail_header	This is a Codex tracker reminder:
