@@ -186,9 +186,17 @@ class ArtifactFieldHtml extends ArtifactField {
 	
 	/**
         * 
-	 *  Returns a select box populated with field date for current tracker
+	 *  Returns a date field input which will generate a pop-up containing calendar + a combo box regrouping all other date field used in the current tracker
+	 * params value :the selected date value
+	 * value_name : the selected date field value for the combo box
+	 * atid : the artifact group id
+	 * form_name :the form name 
+	 * date_field_name: date field_name source 
+	 * pv : printer version
 	 */
-	function fieldRelation($value_name,$atid,$form_name,$date_field_name,$pv=false,$advsrch){
+	function fieldRelation($value,$value_name,$atid,$form_name,$date_field_name,$pv=false){
+	    global $Language;
+	    
 	    if (!$pv) {
 		$sql = sprintf('SELECT DISTINCT af.field_name,af.label '.
 			       'FROM artifact_field af,artifact_field_usage afu '.
@@ -210,15 +218,16 @@ class ArtifactFieldHtml extends ArtifactField {
 			}
 	            }
 	        }
-		$html  = '<INPUT TYPE="hidden" NAME="DTE_'.$date_field_name.'_name" VALUE="'.$value_name.'">';
-		if (!$advsrch) {
-		    if ($str_name != null){
-		        $html .= ' <a href="javascript:show_cmb(\''.$str_name.'\',\''.$str_label.'\','.'\'document.'.$form_name.'\',\''.$date_field_name.'\',\''.util_get_css_theme().'\');">'.
-		            '<img src="'.util_get_image_theme('datecal.png').'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date_field').'"></a>';
-		    } else {
-		        $html .= ' <img src="'.util_get_image_theme('datecal.png').'"  width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date_field').'">';
-		    }
-		}
+
+	    $timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
+	    $html = '<INPUT TYPE="text" name="'.$this->field_name.
+	        '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
+		'<a href="javascript:show_calendar_cmb(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',\''.$str_name.'\',\''.$str_label.'\',\''.$date_field_name.'\');">'.
+		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
+	    
+	    $html .= '<INPUT TYPE="hidden" NAME="DTE_'.$date_field_name.'_name" VALUE="'.$value_name.'">';
+	    } else {
+	        $html = $value;
 	    }
 	    return $html;
 	}
