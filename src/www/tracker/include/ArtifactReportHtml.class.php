@@ -250,9 +250,8 @@ class ArtifactReportHtml extends ArtifactReport {
                     } else {
                         $val_op = isset($prefs[$field->getName().'_op'][0]) ? $prefs[$field->getName().'_op'][0] : '';
                         $val    = isset($prefs[$field->getName()][0])       ? $prefs[$field->getName()][0]       : '';
-                        $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldDate($val, $pv);
+                        $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldRelation($val,$prefs["DTE_".$field->getName()."_name"][0],$this->group_artifact_id,"artifact_form",$field->getName(),$pv);
                     }
-                    $boxes .= $field_html->fieldRelation($prefs["DTE_".$field->getName()."_name"][0],$this->group_artifact_id,"artifact_form",$field->getName(),$pv,$advsrch);
                 } else if ( $field->isTextField() || 
                            $field->isTextArea() ) {
                     $val=isset($prefs[$field->getName()][0])?$prefs[$field->getName()][0]:"";
