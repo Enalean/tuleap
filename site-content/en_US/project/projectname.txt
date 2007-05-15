@@ -18,7 +18,7 @@ can be changed.</P>
 
 <UL>
 <LI>It cannot match the Short name of any other project
-<LI>It must be between 3 and 15 characters in length
+<LI>It must be between 3 and 30 characters in length
 <LI>It can only contain characters, numbers, and dashes. NO SPACE.
 <LI>As opposed to the Full Name the Short name will never change for this project
 </UL>
@@ -35,5 +35,5 @@ Full Name:
 <INPUT size="40" maxlength="40" type=text name="form_full_name" value="<?=$full_name?>" />
 <P>Short Name:
 <BR>
-<INPUT type=text maxlength="15" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />
+<INPUT type=text maxlength="30" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />
 </div>

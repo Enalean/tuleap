@@ -17,7 +17,7 @@
 
 <UL>
 <LI>Il ne doit correspondre à aucun nom court existant
-<LI>Sa longueur est comprise entre 3 et 15 caractères
+<LI>Sa longueur est comprise entre 3 et 30 caractères
 <LI>Il ne doit comporter que des caractères alphanumériques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
 <LI>Contrairement au nom long, le nom court ne peut être modifié par la suite.
 </UL>
@@ -34,5 +34,5 @@ Nom complet&nbsp;:
 <INPUT size="40" maxlength="40" type=text name="form_full_name" value="<?=$full_name?>" />
 <P>Nom court&nbsp;:
 <BR>
-<INPUT type=text maxlength="15" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />
+<INPUT type=text maxlength="30" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />
 </div>

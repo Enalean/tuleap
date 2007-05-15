@@ -40,7 +40,7 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
             $form_unix_name = strtolower($data['project']['form_unix_name']);
             if (!account_groupnamevalid($form_unix_name)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','nospace_in_short_name'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['register_error']);
             } else {
                 if (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name'")) > 0) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','g_name_exist'));
