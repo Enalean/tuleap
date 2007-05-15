@@ -36,7 +36,7 @@ if (!user_ismember($group_id, 'R2')) {
 }
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar.js");
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
 $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
 
 $frspf = new FRSPackageFactory();
