@@ -54,7 +54,8 @@ CREATE TABLE artifact_date_reminder_settings (
   notification_type int(11) NOT NULL default '0',
   frequency int(11) NOT NULL default '0',
   recurse int(11) NOT NULL default '0',
-  notified_people varchar(255) NOT NULL default ''
+  notified_people varchar(255) NOT NULL default '',
+  PRIMARY KEY (reminder_id)
   ) TYPE=MyISAM;
   
 #
@@ -66,7 +67,8 @@ CREATE TABLE artifact_date_reminder_processing (
   artifact_id int(11) NOT NULL default '0',
   field_id int(11) NOT NULL default '0',
   group_artifact_id int(11) NOT NULL default '0',
-  notification_sent int(11) NOT NULL default '0'
+  notification_sent int(11) NOT NULL default '0',
+  PRIMARY KEY (notification_id)
   ) TYPE=MyISAM;
 
 #

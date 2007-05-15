@@ -1972,7 +1972,7 @@ EOS;
 	 */
 	
 	function displayNotificationForm($user_id) {
-	  global $Language;
+	  global $Language,$art_field_fact;
 
 		// By default it's all 'yes'
 		for ($i=0; $i<$this->num_roles; $i++) {
@@ -2137,7 +2137,7 @@ EOS;
                     $title_arr[]=$Language->getText('tracker_include_type','notification_status');
                     $title_arr[]=$Language->getText('tracker_include_type','notification_settings');            	
         
-                    $out .= html_build_list_table_top ($title_arr);
+                    $out = html_build_list_table_top ($title_arr);
                     $fmt = "\n".'<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
 		    $fields = $art_field_fact->getUsedDateFields();
 		    $row_color = 0;
@@ -2203,7 +2203,7 @@ EOS;
 	    
 	    $out = '<P><h3>'.$Language->getText('tracker_include_type','notif_settings_field',array($field->getLabel())).'</h3><P>';
 	    		   
-	    $out .= '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="date_field_notification_settings_form">
+	    $out .= '<FORM ACTION="/tracker/admin/index.php?func=date_field_notification&group_id='.$this->Group->getID().'&atid='.$this->getID().'&field_id='.$field_id.'" METHOD="POST" name="date_field_notification_settings_form">
 		    <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field_id.'">
 	            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->Group->getID().'">
 		    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->getID().'">

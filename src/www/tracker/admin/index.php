@@ -458,26 +458,26 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$ath->getID().'">'.$ath->getName().'</a>\' - '.$Language->getText('tracker_include_type','mail_notif').'</h2>';		   
 				
 		if (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
-		    if ($_REQUEST['notified_users'] == NULL) {
-		        $feedback .= $Language->getText('tracker_admin_index','specify_notified_users');
-		    } else if ($_REQUEST['start'] == NULL) {
-		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_start');
-		    } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
-   		        $feedback .= $Language->getText('tracker_admin_index','positive_value');
-		    } else if ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0) {
-		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_frequency');
-		    } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
-		        $feedback .= $Language->getText('tracker_admin_index','positive_value');
-		    } else if ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0) {
-		        $feedback .= $Language->getText('tracker_admin_index','specify_notification_recurse');
-		    } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
-		        $feedback .= $Language->getText('tracker_admin_index','positive_value');
+		    if ($_REQUEST['notified_users'] == NULL) {		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notified_users'));
+		    } else if ($_REQUEST['start'] == NULL) {		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notification_start'));
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {   		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','positive_value'));
+		    } else if ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0) {		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notification_frequency'));
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','positive_value'));
+		    } else if ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0) {		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notification_recurse'));
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {		        
+			$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','positive_value'));
 		    } else {
 		        $res = $ath->updateDateFieldReminderSettings($field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified_users);			
-		        if ($res) {
-		            $feedback .= $Language->getText('tracker_admin_index','notif_update_success',array($field->getLabel()));		        
-		        } else {
-		            $feedback .= $Language->getText('tracker_admin_index','notif_update_fail',array($field->getLabel()));
+		        if ($res) {		            
+			    $GLOBALS['Response']->addFeedback('info',$Language->getText('tracker_admin_index','notif_update_success',array($field->getLabel())));
+		        } else {		            
+			    $GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','notif_update_fail',array($field->getLabel())));
 		        }
 		    }
 		}

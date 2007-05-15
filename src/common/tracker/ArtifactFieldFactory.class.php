@@ -563,7 +563,7 @@ class ArtifactFieldFactory extends Error {
 			 &&($display_type == "TF") ) 
 			return "";
 		
-		if ( ($this->data_type == $af->DATATYPE_TEXT)
+		if ( ($data_type == $af->DATATYPE_TEXT)
 			 &&($display_type == "TA") ) 
 			return "";
 
