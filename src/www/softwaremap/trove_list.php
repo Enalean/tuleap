@@ -168,11 +168,20 @@ while ($row_sub = db_fetch_array($res_sub)) {
 
 // MV: Add a None case
 if($folders_len == 1) {
-
-    $res_nb = db_query("SELECT count(*) as count FROM groups WHERE is_public=1 AND (status='A') AND type=1");
+    $sql = "SELECT count(DISTINCT g.group_id) AS count
+FROM groups AS g
+LEFT JOIN trove_group_link AS t
+USING ( group_id )
+WHERE is_public =1
+AND STATUS = 'A'
+AND TYPE =1
+AND trove_cat_root = ". $form_cat;
+    $res_nb = db_query($sql);
     $row_nb = db_fetch_array($res_nb);
 
-    $nb_not_cat=$row_nb['count']-$nb_listed_projects;
+    $res_total = db_query("SELECT count(*) as count FROM groups WHERE is_public=1 AND status='A' and type=1");
+    $row_total = db_fetch_array($res_total);
+    $nb_not_cat=$row_total['count']-$row_nb['count'];
     for ($sp=0;$sp<($folders_len*2);$sp++) {
         print " &nbsp; ";
     }
@@ -195,6 +204,7 @@ while ($row_rootcat = db_fetch_array($res_rootcat)) {
 	// print open folder if current, otherwise closed
 	// also make anchor if not current
 	print ('<BR>');
+    if (!isset($discrim_url)) $discrim_url="";
 	if (($row_rootcat['trove_cat_id'] == $row_trove_cat['root_parent'])
 		|| ($row_rootcat['trove_cat_id'] == $row_trove_cat['trove_cat_id'])) {
 		html_image('ic/ofolder15.png',array());
@@ -230,26 +240,24 @@ if((isset($_GET['special_cat'])) && ($_GET['special_cat'] == 'none')) {
     $sql_list_categorized='';
     if(count($prj_list_categorized) > 0) {
         $sql_list_categorized=' AND groups.group_id NOT IN ('.implode(',', $prj_list_categorized).') ';
-   
-        $query_projlist = "SELECT groups.group_id, "
-            . "groups.group_name, "
-            . "groups.unix_group_name, "
-            . "groups.status, "
-            . "groups.register_time, "
-            . "groups.short_description, "
-            . "project_metric.percentile, "
-            . "project_metric.ranking "
-            . "FROM groups "
-            . "LEFT JOIN project_metric USING (group_id) "
-            . "WHERE "
-            . "(groups.is_public=1) AND "
-            . "(groups.type=1) AND "
-	    . "(groups.type=1) AND "
-            . "(groups.status='A') "
-            . $sql_list_categorized
-            . "GROUP BY groups.group_id ORDER BY groups.group_name "
-            . "LIMIT ".$TROVE_HARDQUERYLIMIT;
     }
+    $query_projlist = "SELECT groups.group_id, "
+        . "groups.group_name, "
+        . "groups.unix_group_name, "
+        . "groups.status, "
+        . "groups.register_time, "
+        . "groups.short_description, "
+        . "project_metric.percentile, "
+        . "project_metric.ranking "
+        . "FROM groups "
+        . "LEFT JOIN project_metric USING (group_id) "
+        . "WHERE "
+        . "(groups.is_public=1) AND "
+    . "(groups.type=1) AND "
+        . "(groups.status='A') "
+        . $sql_list_categorized
+        . "GROUP BY groups.group_id ORDER BY groups.group_name "
+        . "LIMIT ".$TROVE_HARDQUERYLIMIT;
 }
 else {
 // now do limiting query
@@ -270,7 +278,6 @@ $query_projlist = "SELECT groups.group_id, "
 	. $discrim_queryalias
 	. "WHERE trove_group_link.group_id=groups.group_id AND "
 	. "(groups.is_public=1) AND "
-	. "(groups.type=1) AND "
         . "(groups.type=1) AND "
 	. "(groups.status='A') AND "
 	. "trove_group_link.trove_cat_id=$form_cat "
