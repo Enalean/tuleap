@@ -12,16 +12,16 @@ require_once('trove.php');
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
-
+$request =& HTTPRequest::instance();
 // #######################################################
 
-function listallchilds ($nodeid, $text, &$list) {
+function listallchilds($nodeid, &$list) {
     // list current node and then all subnodes
     $res_child = db_query("SELECT trove_cat_id, parent, shortname FROM trove_cat "
 		."WHERE parent='$nodeid'");
     while ($row_child = db_fetch_array($res_child)) {
 	$list[] = $row_child['trove_cat_id'];
-	listallchilds ($row_child['trove_cat_id'], $row_child['shortname'], &$list);
+	listallchilds($row_child['trove_cat_id'], &$list);
     }
     
 }
@@ -29,7 +29,7 @@ function listallchilds ($nodeid, $text, &$list) {
 // ########################################################
 // FORM SUBMISSION: Delete or Cancel
 //
-if ($GLOBALS["Delete"] && $GLOBALS['form_trove_cat_id']) {
+if ($request->get("Delete") && $GLOBALS['form_trove_cat_id']) {
     $res_cat = db_query("SELECT trove_cat_id, parent, root_parent, shortname "
 		       ."FROM trove_cat "
 		       ." WHERE trove_cat_id =".$GLOBALS['form_trove_cat_id']);
@@ -55,7 +55,7 @@ if ($GLOBALS["Delete"] && $GLOBALS['form_trove_cat_id']) {
 
     // Find all child categories
     $list_child = array();
-    listallchilds ($row_cat['trove_cat_id'], $row_cat['shortname'], &$list_child);
+    listallchilds($row_cat['trove_cat_id'], &$list_child);
     $list_child[] = $row_cat['trove_cat_id'];
 
     // Delete the category and all childs
@@ -69,7 +69,7 @@ if ($GLOBALS["Delete"] && $GLOBALS['form_trove_cat_id']) {
     session_redirect("/admin/trove/trove_cat_list.php");
 } 
 
-if ($GLOBALS["Cancel"]) {
+if ($request->get("Cancel")) {
     session_redirect("/admin/trove/trove_cat_list.php");
 }
 
@@ -82,7 +82,7 @@ if (db_numrows($res_cat)<1) {
 }
 $row_cat = db_fetch_array($res_cat);
 
-$HTML->header(array(title=>$Language->getText('admin_trove_cat_delete','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_delete','title')));
 ?>
 
 <H2><?php echo $Language->getText('admin_trove_cat_delete','header').': '.$row_cat["fullname"]; ?>'</H2>
@@ -103,7 +103,7 @@ $HTML->header(array(title=>$Language->getText('admin_trove_cat_delete','title'))
 <?php
 // See if there are childs
 $child_list = array();
-listallchilds($GLOBALS['trove_cat_id'],$GLOBALS['shortname'], $child_list);
+listallchilds($GLOBALS['trove_cat_id'], $child_list);
 
 if (($nb_child = count($child_list)) > 0) {
     echo "<p>".$Language->getText('admin_trove_cat_delete','caution_child',array($nb_child));

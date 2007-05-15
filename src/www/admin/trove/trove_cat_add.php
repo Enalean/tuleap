@@ -14,17 +14,17 @@ $Language->loadLanguageMsg('admin/admin');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // ########################################################
+$request =& HTTPRequest::instance();
+if ($request->exist('Submit')) {
+	$newroot = trove_getrootcat($request->get('form_parent'));
 
-if ($GLOBALS["Submit"]) {
-	$newroot = trove_getrootcat($GLOBALS['form_parent']);
-
-	if ($GLOBALS[form_shortname]) {
+	if ($request->get('form_shortname')) {
 		db_query('INSERT INTO trove_cat '
 			.'(shortname,fullname,description,parent,version,root_parent) values ('
-			.'\''.$GLOBALS[form_shortname] 
-			.'\',\''.$GLOBALS[form_fullname]
-			.'\',\''.$GLOBALS[form_description]
-			.'\',\''.$GLOBALS[form_parent]
+			.'\''.db_escape_string($request->get('form_shortname'))
+			.'\',\''.db_escape_string($request->get('form_fullname'))
+			.'\',\''.db_escape_string($request->get('form_description'))
+			.'\',\''.db_escape_string($request->get('form_parent'))
 			.'\','.date("Ymd",time()).'01'
 			.',\''.$newroot.'\')');
 	} 
@@ -35,7 +35,7 @@ if ($GLOBALS["Submit"]) {
 	session_redirect("/admin/trove/trove_cat_list.php");
 } 
 
-$HTML->header(array(title=>$Language->getText('admin_trove_cat_add','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_add','title')));
 ?>
 
 <H2><?php echo $Language->getText('admin_trove_cat_add','header'); ?></H2>
