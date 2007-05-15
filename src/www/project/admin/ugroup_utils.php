@@ -488,7 +488,7 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
 		     "SELECT $ugid,user_id ".
 		     "FROM ugroup_user ".
 		     "WHERE ugroup_id='$ugroup_id'");
-  if (!$result || db_affected_rows($result) <= 0) {
+  if (!$result) {
     return db_error();
   }
 
