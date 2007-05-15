@@ -14,16 +14,16 @@ $Language->loadLanguageMsg('admin/admin');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 // ########################################################
-
-if ($GLOBALS["Submit"]) {
-	$newroot = trove_getrootcat($GLOBALS['form_parent']);
-	if ($GLOBALS[form_shortname]) {
+$request =& HTTPRequest::instance();
+if ($request->exist('Submit')) {
+	$newroot = trove_getrootcat($request->get('form_parent'));
+	if (db_escape_string($request->get('form_shortname'))) {
 		db_query('UPDATE trove_cat '
 			.'SET '
-			.'shortname=\''.$GLOBALS[form_shortname] 
-			.'\',fullname=\''.$GLOBALS[form_fullname]
-			.'\',description=\''.$GLOBALS[form_description]
-			.'\',parent=\''.$GLOBALS[form_parent]
+			.'shortname=\''.db_escape_string($request->get('form_shortname'))
+			.'\',fullname=\''.db_escape_string($request->get('form_fullname'))
+			.'\',description=\''.db_escape_string($request->get('form_description'))
+			.'\',parent=\''.db_escape_string($request->get('form_parent'))
 			.'\',version='.date("Ymd",time()).'01'
 			.',root_parent=\''.$newroot
 			.'\' WHERE trove_cat_id='.$GLOBALS["form_trove_cat_id"]);
@@ -40,7 +40,7 @@ if (db_numrows($res_cat)<1) {
 }
 $row_cat = db_fetch_array($res_cat);
 
-$HTML->header(array(title=>$Language->getText('admin_trove_cat_edit','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title')));
 ?>
 
 <H2><?php echo $Language->getText('admin_trove_cat_edit','header'); ?></H2>

@@ -20,7 +20,7 @@ function printnode ($nodeid,$text,$delete_ok=false) {
 
 	// print current node, then all subnodes
 	print ('<BR>');
-	for ($i=0;$i<$GLOBALS[depth];$i++) { print "&nbsp; &nbsp; "; }
+	for ($i=0;$i<$GLOBALS['depth'];$i++) { print "&nbsp; &nbsp; "; }
 	html_image('ic/cfolder15.png',array());
 	print ('&nbsp; '.$text." ");
 	if ($nodeid != 0) {
@@ -44,10 +44,11 @@ function printnode ($nodeid,$text,$delete_ok=false) {
 
 // ########################################################
 
-$HTML->header(array(title=>$Language->getText('admin_trove_cat_list','title')));
+$HTML->header(array('title'=>$Language->getText('admin_trove_cat_list','title')));
 
 echo "<H2>".$Language->getText('admin_trove_cat_list','header')."</H2>";
 
+$depth = 0;
 printnode(0,$Language->getText('admin_trove_cat_edit','root'));
 
 echo "<p>";
