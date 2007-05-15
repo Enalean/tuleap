@@ -45,6 +45,7 @@ require("./cvs1/cvs_watch.pl"); # Include predefined functions for watch mode
 my $verbose=0;
 my $user_file = $dump_dir . "/user_dump";
 my $group_file = $dump_dir . "/group_dump";
+my $server_file = $dump_dir . "/server_dump";
 my ($uid, $unix_status, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
 my ($gname, $gstatus, $gid, $userlist, $ugrouplist);
 my $server_url;
@@ -77,6 +78,7 @@ my ($up_group, $new_group, $del_group) = ("0","0","0");
 # Open up all the files that we need.
 @userdump_array = open_array_file($user_file);
 @groupdump_array = open_array_file($group_file);
+@serverdump_array = open_array_file($server_file);
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
@@ -94,6 +96,18 @@ my $use_cvsnt=0;
 if ($cvsversion =~ /CVSNT/) {
   $use_cvsnt=1;
   @cvsnt_config_array = open_array_file($cvsnt_config_file);
+}
+
+# Check is the current server is master or satellite
+#
+my $server_is_master = 0;
+my ($server_id, $is_master);
+while ($ln = pop(@serverdump_array)) {
+    chop($ln);
+    ($server_id, $is_master) = split(":", $ln);
+    if($server_id == $sys_server_id && $is_master == 1) {
+	$server_is_master = 1;
+    }
 }
 
 #
@@ -180,7 +194,7 @@ print "User account problems   : $error_user\n";
 print ("\n\n	Processing Groups\n\n");
 while ($ln = pop(@groupdump_array)) {
 	chop($ln);
-	($gname, $gstatus, $gis_public, $cvs_tracker, $cvs_watch_mode, $svn_tracker, $gid, $userlist, $ugrouplist) = split(":", $ln);
+	($gname, $gstatus, $gis_public, $cvs_tracker, $cvs_watch_mode, $svn_tracker, $gid, $userlist, $ugrouplist, $file_service, $svn_service) = split(":", $ln);
 	
 	$cvs_id = $gid + 50000;
 	$gid += $gid_add;
@@ -218,9 +232,15 @@ while ($ln = pop(@groupdump_array)) {
 	  print("Deleted Group: $gname\n") if $verbose;
 	}
 
+        # SVN service location
+	my ($svn_location, $svn_server_id) = split(",", $svn_service);
+
+	# File service location
+	my ($file_location, $file_server_id) = split(",", $file_service);
+
 # LJ Do not test if we are on the CVS machine. It's all on atlas
 #	if ((substr($hostname,0,3) eq "cvs") && $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
-	if ( $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
+	if ( $gstatus eq 'A' && !(-e "$cvs_prefix/$gname") && ($server_is_master == 1)) {
 		print("Creating a CVS Repository for: $gname\n");
 		# Let's create a CVS repository for this group
 		$cvs_dir = "$cvs_prefix/$gname";
@@ -281,7 +301,7 @@ while ($ln = pop(@groupdump_array)) {
                 # DEPRECATED: no longer create the login automatically: create it on demand only...
 		#push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_prefix/$gname:/bin/false\n";
 	}
- 	if ( $gstatus eq 'A' && (! $use_cvsnt) && !(-e "$cvslock_prefix/$gname")) {
+ 	if ( $gstatus eq 'A' && (! $use_cvsnt) && !(-e "$cvslock_prefix/$gname") && ($server_is_master == 1)) {
 	  # Lockdir was deleted? Recreate it.
 	  $lockdir="$cvslock_prefix/$gname";
 	  mkdir "$lockdir", 0777;
@@ -293,7 +313,7 @@ while ($ln = pop(@groupdump_array)) {
 	# in the group has been modified then update the CVS
 	# writer file
 
-	if ($group_modified) {
+	if ($group_modified && ($server_is_master == 1)) {
 	  # On CodeX writers go through pserver as well so put
 	  # group members in writers file. Do not write anything
 	  # in the CVS passwd file. The pserver protocol will fallback
@@ -305,7 +325,7 @@ while ($ln = pop(@groupdump_array)) {
 	  close(WRITERS);
 	}
 	## cvs backend
-	if (($cvs_tracker) && ($gstatus eq 'A')){
+	if (($cvs_tracker) && ($gstatus eq 'A') && ($server_is_master == 1)){
 	  # hook for commit tracking in cvs loginfo file
 	  $cvs_dir = "$cvs_prefix/$gname";
 	  # if $cvs_dir/CVSROOT/loginfo contains block break;
@@ -356,7 +376,7 @@ while ($ln = pop(@groupdump_array)) {
 #  CVS WATCH ON
 #
 	 # Add notify command if cvs_watch_mode is on
-        if (($cvs_watch_mode) && ($gstatus eq 'A')){
+        if (($cvs_watch_mode) && ($gstatus eq 'A') && ($server_is_master == 1)){
             $cvs_dir = "$cvs_prefix/$gname";
             $filename = "$cvs_dir/CVSROOT/notify";
 
@@ -380,7 +400,7 @@ while ($ln = pop(@groupdump_array)) {
         
 
 	# Apply cvs watch on only if cvs_watch_mode changed to on 
-	if (($cvs_watch_mode) && ($gstatus eq 'A')&& (! $blockispresent))
+	if (($cvs_watch_mode) && ($gstatus eq 'A')&& (! $blockispresent) && ($server_is_master == 1))
 	{    
 		print("apply cvs watch on to the project : $gname\n");
     	$cvs_dir = "$cvs_prefix/$gname";
@@ -396,7 +416,7 @@ while ($ln = pop(@groupdump_array)) {
 #
 
 	# Remove notify command if cvs_watch_mode is off.
-        if ((! $cvs_watch_mode) && ($gstatus eq 'A')){
+        if ((! $cvs_watch_mode) && ($gstatus eq 'A') && ($server_is_master == 1)){
             $cvs_dir = "$cvs_prefix/$gname";
             $filename = "$cvs_dir/CVSROOT/notify";
 
@@ -425,7 +445,7 @@ while ($ln = pop(@groupdump_array)) {
 
 
         # Apply cvs watch off only if cvs_watch_mode changed to off
-        if ((!$cvs_watch_mode) && ($gstatus eq 'A') && ($blockispresent))
+        if ((!$cvs_watch_mode) && ($gstatus eq 'A') && ($blockispresent) && ($server_is_master == 1))
         {
         	print("apply cvs watch off to the project : $gname\n");
             $cvs_dir = "$cvs_prefix/$gname";
@@ -433,6 +453,8 @@ while ($ln = pop(@groupdump_array)) {
             &cvs_watch($cvs_dir,$gname,"", "", $id,0);
         }
 
+	if(($svn_location eq "master" && $server_is_master == 1) 
+	   || ($svn_location eq "satellite" &&  $svn_server_id == $sys_server_id)) {
 
 	# Create Subversion repository if needed
 	$svn_dir = "$svn_prefix/$gname";
@@ -545,7 +567,7 @@ while ($ln = pop(@groupdump_array)) {
 	    system("chmod 775 $postcommit_file");
 	  }
 	}
-
+    }
 
 	#
 	# Private directories are set to be unreadable, unwritable,
@@ -595,7 +617,8 @@ while ($ln = pop(@groupdump_array)) {
         $ht_dir = $group_dir."/htdocs";
         $ftp_frs_group_dir = $ftp_frs_dir_prefix."/".$gname;
         $ftp_anon_group_dir = $ftp_anon_dir_prefix."/".$gname;
-        
+
+	if($server_is_master) {
         # Now lets create the group's homedir.
         # (put the SGID sticky bit on all dir so that all files
         # in there are owned by the project group and not
@@ -635,6 +658,10 @@ while ($ln = pop(@groupdump_array)) {
           chown $dummy_uid, $gid, "$ht_dir/index.php";
           chmod 0664, "$ht_dir/index.php";
         }
+    }
+
+	if(($file_location eq "master" && $server_is_master == 1) 
+	   || ($file_location eq "satellite" &&  $file_server_id == $sys_server_id)) {
 
         if ( $gstatus eq 'A' && !(-e "$ftp_anon_group_dir")) {
           
@@ -654,7 +681,7 @@ while ($ln = pop(@groupdump_array)) {
           mkdir $ftp_frs_group_dir, 0771;
           chown $dummy_uid, $gid, "$ftp_frs_group_dir";
         }
-
+    }
 
       }
 

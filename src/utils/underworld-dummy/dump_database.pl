@@ -10,6 +10,7 @@ require("../include.pl");  # Include all the predefined functions
 
 my $user_array = ();
 my $group_array = ();
+my $server_array = ();
 
 &db_connect;
 
@@ -67,11 +68,36 @@ while(my ($group_id, $group_name, $status, $is_public, $cvs_tracker, $cvs_watch_
 	  $ugroup_list =~ s/,$//;
 	}
 
-	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$cvs_watch_mode:$svn_tracker:$group_id:$user_list:$ugroup_list\n";
+	#
+	# Location of the services
+	#
+	my $new3_query = "select short_name, location, server_id from service where group_id = $group_id and short_name IN ('file', 'svn')";
+	my $d3 = $dbh->prepare($new3_query);
+	$d3->execute();
+	my %service_config = ();
+	while (my ($short_name, $location, $server_id) = $d3->fetchrow()) {
+	    $service_config{$short_name} = "$location,$server_id";
+	}
+
+	#
+	# Build final list
+	#
+	$grouplist = "$group_name:$status:$is_public:$cvs_tracker:$cvs_watch_mode:$svn_tracker:$group_id:$user_list:$ugroup_list:$service_config{file}:$service_config{svn}\n";
 
 	push @group_array, $grouplist;
+}
+
+# Dump the Server Table information
+$query = "select id, is_master from server";
+$c = $dbh->prepare($query);
+$c->execute();
+
+while(my ($server_id, $is_master) = $c->fetchrow()) {
+    $serverlist = "$server_id:$is_master\n";
+    push @server_array, $serverlist;
 }
 
 # Now write out the files
 write_array_file($dump_dir."/user_dump", @user_array);
 write_array_file($dump_dir."/group_dump", @group_array);
+write_array_file($dump_dir."/server_dump", @server_array);

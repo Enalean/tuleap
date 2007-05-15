@@ -12,8 +12,20 @@ my $list_array = ();
 
 &db_connect;
 
+#
+# Is current server master ?
+#
+my $server_is_master = 0;
+my $masterquery = "SELECT NULL FROM server WHERE id = $sys_server_id AND is_master = 1";
+$masterc = $dbh->prepare($masterquery);
+$masterc->execute();
+if ($masterc->rows == 1) {
+    $server_is_master = 1;
+}
+
 # Dump the Table information
 # LJ email column extracted as well to get the e-mail address
+if($server_is_master) {
 $query = "SELECT user.user_name, user.email, mail_group_list.list_name, mail_group_list.password, mail_group_list.is_public, mail_group_list.status , mail_group_list.description FROM mail_group_list,user WHERE mail_group_list.list_admin=user.user_id";
 $c = $dbh->prepare($query);
 $c->execute();
@@ -28,3 +40,4 @@ while(my ($list_admin, $list_admin_email, $list_name, $list_password, $list_is_p
 
 # Now write out the files
 write_array_file($dump_dir."/list_dump", @list_array);
+}
