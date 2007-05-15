@@ -227,6 +227,10 @@ john.smith@xerox.com</programlisting>
             mais les adresses emails et les permissions SVN ne sont pas copiés.
             </para>
         </listitem>
+        <listitem>
+            <para>les paquets et leurs permissions seront copiés.
+            </para>
+        </listitem>
 	     
 	      </itemizedlist>
 	    
