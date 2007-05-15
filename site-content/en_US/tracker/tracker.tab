@@ -574,7 +574,7 @@ tracker_include_type	reminder_form_part3	Codex will send
 tracker_include_type	reminder_form_part4	e-mail(s) to
 tracker_include_type	reminder_form_part5	with a frequency of one e-mail every
 tracker_include_type	reminder_form_part6	<b>Example</b>:<br><br>The notification on '$1' date will start <b>2</b> days <b>before</b> the date set in this field.<br>Codex will send <b>3</b> e-mails to <b>Submitter</b> and <b>Assignee</b>, with a frequency of one e-mail every <b>2</b> days.
-tracker_include_type	reminder_form_part7	It means: Codex will send to artifact submitter and assignee(s): <br> * 1 e-mail 2 days before '$1' date<br> * 1 e-mail on '$1' date <br> * 1 e-mail 2 days after '$1' date
+tracker_include_type	reminder_form_part7	It means: Codex will send to artifact submitter and assignee(s): <br> * 1 e-mail 2 days before <i>'$1'</i> date<br> * 1 e-mail on <i>'$1'</i> date <br> * 1 e-mail 2 days after <i>'$1'</i> date
 tracker_include_type	add	Add
 tracker_include_type	error_gn_default_not_added	Unable to add default global notification
 tracker_include_type	error_gn_not_added	Unable to add global notification

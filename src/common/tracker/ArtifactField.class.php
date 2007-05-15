@@ -1230,7 +1230,7 @@ class ArtifactField extends Error {
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
 						 $empty_ok,$keep_history,$enable_notification,$special,$use_it, $fieldset_id) {
-	  global $Language;
+	  global $Language,$ath;
 	 	
 		// Check arguments
 		if ( $field_name=="" || $data_type=="" || $display_type=="" ) {
@@ -1287,6 +1287,18 @@ class ArtifactField extends Error {
 		//If it is a date field, on which notification reminder is enabled, then set the default reminder settings
 		if ($this->isDateField() && $enable_notification == 1) {
 		    $this->setDefaultReminderSettings($this->field_id,$group_artifact_id);
+		    //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
+		    $art = sprintf('SELECT * FROM artifact'
+				  .' WHERE group_artifact_id=%d'
+				  .' AND status_id <> 3',
+				  $group_artifact_id);
+		    $res_art = db_query($art);
+		    if (db_numrows($res_art) > 0) {
+		        while ($arr = db_fetch_array($res_art)) {
+		            $artifact_id = $arr['artifact_id'];
+		            $ath->addArtifactToDateReminderProcessing($this->field_id,$artifact_id,$group_artifact_id);
+			}
+		    }	
 		}
 				
 		if ( ($use_it == "1")&&($this->getUseIt() == "0") ) {

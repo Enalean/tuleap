@@ -878,45 +878,18 @@ class ArtifactType extends Error {
 	function updateDateFieldReminderSettings($field_id,$group_artifact_id,$start,$notif_type,$frequency,$recurse,$people_notified) {
 	       
 	    $notified_users = implode(",",$people_notified);
-	    
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'			    
-			    .' WHERE group_artifact_id=%d'
-			    .' AND field_id=%d',
-			    $group_artifact_id,$field_id);  
-	    $res = db_query($sql);
-	    if (db_numrows($res) < 1) {
-	        //create reminder settings
-		$insert = sprintf('INSERT INTO artifact_date_reminder_settings'
-				.' (field_id,group_artifact_id,notification_start,notification_type,frequency,recurse,notified_people)'
-				.' VALUES(%d,%d,%d,%d,%d,%d,"%s")',
-				$field_id,$group_artifact_id,$start,$notif_type,$frequency,$recurse,$notified_users);		
-		$result = db_query($insert);
-		
-		//populate 'artifact_date_reminder_processing' table with concerned artifacts
-		$sql = sprintf('SELECT * FROM artifact'
-				.' WHERE group_artifact_id=%d'
-				.' AND status_id <> 3',
-				$group_artifact_id);
-		$res = db_query($sql);
-		if (db_numrows($res) > 0) {
-		    while ($arr = db_fetch_array($res)) {
-		        $artifact_id = $arr['artifact_id'];
-			$this->addArtifactToDateReminderProcessing($field_id,$artifact_id,$group_artifact_id);
-		    }
-		}
-	    } else {
-	        //update reminder settings
-		$update = sprintf('UPDATE artifact_date_reminder_settings'
-				.' SET notification_start=%d'
-				.' , notification_type=%d'
-				.' , frequency=%d'
-				.' , recurse=%d'
-				.' , notified_people="%s"'
-				.' WHERE group_artifact_id=%d'
-				.' AND field_id=%d',
-				$start,$notif_type,$frequency,$recurse,$notified_users,$group_artifact_id,$field_id);		
-		$result = db_query($update);
-	    }
+	  
+	    //update reminder settings
+	    $update = sprintf('UPDATE artifact_date_reminder_settings'
+			     .' SET notification_start=%d'
+			     .' , notification_type=%d'
+			     .' , frequency=%d'
+			     .' , recurse=%d'
+			     .' , notified_people="%s"'
+			     .' WHERE group_artifact_id=%d'
+			     .' AND field_id=%d',
+			     $start,$notif_type,$frequency,$recurse,$notified_users,$group_artifact_id,$field_id);		
+	    $result = db_query($update);	    
 	    
 	    return $result;	  
 	    
