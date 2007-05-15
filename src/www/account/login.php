@@ -38,7 +38,7 @@ if ($cookie_manager->isCookie('session_hash') && $cookie_manager->getCookie('ses
 }
 
 if (isset($pv) && $pv == 2) {
-    $HTML->pv_header(array());
+    $HTML->pv_header(array('title'=>$Language->getText('account_login', 'title')));
 } else {
     $HTML->header(array('title'=>$Language->getText('account_login', 'title')));
 }
@@ -69,11 +69,11 @@ if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
 
 <p>
 <h2><?php 
-if(!isset($GLOBALS['sys_Name'])) {
-    $GLOBALS['sys_Name'] = "";
+if(!isset($GLOBALS['sys_name'])) {
+    $GLOBALS['sys_name'] = "";
  }
-print $Language->getText('account_login', 'light_title', array($GLOBALS['sys_Name']));
-//print $Language->getText('account_login', 'title', array($GLOBALS['sys_Name'])); ?>
+print $Language->getText('account_login', 'light_title', array($GLOBALS['sys_name']));
+//print $Language->getText('account_login', 'title', array($GLOBALS['sys_name'])); ?>
 <?php //print ((isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != "") ? ' ('.$Language->getText('account_login', 'secure').')':''); ?>
 </h2>
 <p>
