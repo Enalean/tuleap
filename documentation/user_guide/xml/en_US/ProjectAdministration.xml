@@ -208,6 +208,10 @@ john.smith@xerox.com</programlisting>
             but the emails and the SVN access permissions are not copied.
             </para>
         </listitem>
+        <listitem>
+            <para>the file packages and their permissions are copied
+            </para>
+        </listitem>
 	      </itemizedlist>
 	    
 	      Just notice that the project members of the template projects will 

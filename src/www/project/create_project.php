@@ -207,6 +207,39 @@ function create_project($data) {
         $ugroup_mapping = array();
         ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
         
+        $sql_ugroup_mapping = ' ugroup_id ';
+        if (is_array($ugroup_mapping) && count($ugroup_mapping)) {
+            $sql_ugroup_mapping = ' CASE ugroup_id ';
+            foreach($ugroup_mapping as $key => $val) {
+                $sql_ugroup_mapping .= ' WHEN '. $key .' THEN '. $val;
+            }
+            $sql_ugroup_mapping .= ' ELSE ugroup_id END ';
+        }
+        //Copy packages from template project
+        $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = $template_id";
+        if ($result = db_query($sql)) {
+            while($data = db_fetch_array($result)) {
+                $template_package_id = $data['package_id'];
+                $sql = sprintf("INSERT INTO frs_package(group_id, name, status_id, rank, approve_license) VALUES (%s, '%s', %s, %s, %s)",
+                    $group_id,
+                    db_escape_string($data['name']),
+                    $data['status_id'],
+                    $data['rank'],
+                    $data['approve_license']
+                );
+                $rid = db_query($sql);
+                if ($rid) {
+                    $package_id = db_insertid($rid);
+                    $sql = "INSERT INTO permissions(permission_type, object_id, ugroup_id) 
+                      SELECT permission_type, $package_id, $sql_ugroup_mapping
+                      FROM permissions
+                      WHERE permission_type = 'PACKAGE_READ'
+                        AND object_id = $template_package_id";
+                    db_query($sql);
+                }
+            }
+        }
+        
         //Set up some mailing lists
         //will be done at some point. needs to communicate with geocrawler
         // TBD
