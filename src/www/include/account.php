@@ -124,11 +124,16 @@ function account_make_login_from_email($email) {
 }
 
 
-function account_namevalid($name) {
+function account_namevalid($name, $key = '') {
   global $Language;
 	// no spaces
 	if (strrpos($name,' ') > 0) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','login_err');	
+        if ($key == '') {
+            $k = 'login_err';
+        } else {
+            $k = $key . '_spaces';
+        }
+		$GLOBALS['register_error'] = $Language->getText('include_account', $k);	
 		return 0;
 	}
 
@@ -151,7 +156,7 @@ function account_namevalid($name) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_short');
 		return 0;
 	}
-	if (strlen($name) > 32) {
+	if (strlen($name) > 30) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_long');
 		return 0;
 	}
@@ -173,16 +178,17 @@ function account_namevalid($name) {
 
 function account_groupnamevalid($name) {
   global $Language;
-	if (!account_namevalid($name)) return 0;
+	if (!account_namevalid($name, 'project')) return 0;
 	
 	// illegal names
 	if (eregi("^((www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)"
 		. "|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)"
 		. "|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(slayer)|(monitor)|(mirrors?))$",$name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','reserved_dns');
+		$GLOBALS['register_error'] = $Language->getText('include_account','reserved');
 		return 0;
 	}
 
+    //Group name cannot contain underscore for DNS reasons.
 	if (eregi("_",$name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','dns_error');
 		return 0;

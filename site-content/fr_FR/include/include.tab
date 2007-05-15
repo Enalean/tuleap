@@ -24,14 +24,15 @@ include_account	user_already_member	L'utilisateur est déjà membre
 include_account	user_not_exist	L'utilisateur n'existe pas
 include_account	welcome	$1 - Bienvenue sur le projet $2
 include_account	login_err	Les espaces sont interdits dans le nom de login.
+include_account	project_spaces	Les espaces sont interdits dans le nom court.
 include_account	char_err	Il doit y avoir au moins un caractère.
 include_account	illegal_char	Caractère non autorisé dans le nom.
-include_account	name_too_short	Le nom est trop court. Il doit comporter au moins caractères.
-include_account	name_too_long	Le nom est trop long. Il doit comporter au plus 32 caractères.
+include_account	name_too_short	Le nom est trop court. Il doit comporter au moins 3 caractères.
+include_account	name_too_long	Le nom est trop long. Il doit comporter au plus 30 caractères.
 include_account	reserved	Le nom est réservé.
 include_account	reserved_cvs	Le nom est réservé pour CVS.
 include_account	reserved_dns	Le nom est réservé pour le DNS.
-include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés en raison du DNS.
+include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés.
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php
