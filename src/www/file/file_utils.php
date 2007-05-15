@@ -1082,9 +1082,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             //test if the file aldready exists in the destination directory
                                             $group = new Group($group_id);
                                             $group_unix_name = $group->getUnixName();
-                                            if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$frsff->getUploadSubDirectory($release_id).'/'.$filename)){
-                                                $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
-                                                if (!$exec_res) {
+                                            $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
+                                            if (!$exec_res) {
                                                     //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
                                                 
                                                     //add the file to the database
@@ -1099,11 +1098,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     } else {
                                                         $addingFiles = true;
                                                     }
-                                                }else{
-                                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
-                                                }
                                             } else {
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_deleted', basename($filename)));
+                                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
@@ -1141,7 +1137,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                 clearstatcache();
                                 if (is_file($GLOBALS['ftp_incoming_dir'] . '/' . $filename) && file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
                                     //move the file to a its project page using a setuid program
-                                    if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$frsff->getUploadSubDirectory($release_id).'/'.$filename)){
                                         $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
                                         if (!$exec_res) {
                                             //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
@@ -1157,12 +1152,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             } else {
                                                 $addingFiles = true;
                                             }
-                                        }else{
+                                        } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
                                         }   
-                                    }else {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_deleted', basename($filename)));
-                                    }
                                 } else {
                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
                                 }
