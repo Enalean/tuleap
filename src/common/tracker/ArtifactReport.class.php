@@ -771,7 +771,7 @@ class ArtifactReport extends Error {
 	      }
 	      // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 	      if ( $field->isStandardField()) {
-	      	if (($field->isDateField()) && (!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", $prefs[$field->getName()][0])) &&  
+	      	if (($field->isDateField()) && (!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : null)) &&  
 		    ($prefs[$field->getName()][0] != null)) {
 		    if (!$advsrch) {
 		        $operator  = $prefs[$field->getName().'_op'][0];
@@ -779,8 +779,8 @@ class ArtifactReport extends Error {
   		            $operator = '>';
 		        }
 		        $from .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$field->getName()."),'%Y-%m-%d') dte from artifact at) T1_".$count." on (T1_".$count.".artifact_id = a.artifact_id)";
-		        if ($new_field->isStandardField()){
-		            $from  .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$new_field->getName()."),'%Y-%m-%d') dte from artifact at) T2_".$count." on (T2_".$count.".artifact_id = a.artifact_id)";
+		        if (($prefs[$new_field_name][0] == "open_date") || (($prefs[$new_field_name][0] == "close_date"))){
+		            $from  .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$prefs[$new_field_name][0]."),'%Y-%m-%d') dte from artifact at) T2_".$count." on (T2_".$count.".artifact_id = a.artifact_id)";
   		            $where .= " AND T1_".$count.".dte ".$operator." T2_".$count.".dte";
 			    $notany = true;
 		        } else {
@@ -801,7 +801,7 @@ class ArtifactReport extends Error {
 		
 		// The field value is stored into the artifact_field_value table
 		// So we need to add a new join
-		if (($field->isDateField())&&(!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", $prefs[$field->getName()][0]))&&($prefs[$field->getName()][0] != null)) {
+		if (($field->isDateField())&&(!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : null ))&&($prefs[$field->getName()][0] != null)) {
 		    if (!$advsrch) {
 		        $from  .= " JOIN (SELECT atf.artifact_id,atf.field_id,DATE_FORMAT(FROM_UNIXTIME(atf.".$field->getValueFieldName()."),'%Y-%m-%d') dte from artifact_field_value atf) TV".$count." ON (TV".$count.".artifact_id=a.artifact_id".
 			    " AND TV".$count.".field_id=".$field->getID().")";
@@ -810,8 +810,8 @@ class ArtifactReport extends Error {
 		        if ($operator == null) {
   		            $operator = '>';
 		        }
-		        if ($new_field->isStandardField()) {
-		            $from  .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$new_field->getName()."),'%Y-%m-%d') dte from artifact at) T1_".$count." on (T1_".$count.".artifact_id = a.artifact_id)";
+		        if (($prefs[$new_field_name][0] == "open_date") || (($prefs[$new_field_name][0] == "close_date"))){
+		            $from  .= " JOIN (select at.artifact_id, DATE_FORMAT(FROM_UNIXTIME(at.".$prefs[$new_field_name][0]."),'%Y-%m-%d') dte from artifact at) T1_".$count." on (T1_".$count.".artifact_id = a.artifact_id)";
 			    $where .= " AND TV".$count.".dte ".$operator." T1_".$count.".dte";
 			    $notany = true;
 		        } else {
