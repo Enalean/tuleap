@@ -196,7 +196,8 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldRelation($value,$value_name,$atid,$form_name,$date_field_name,$pv=false){
 	    global $Language;
-	    
+	    $str_name="";
+	    $str_label="";
 	    if (!$pv) {
 		$sql = sprintf('SELECT DISTINCT af.field_name,af.label '.
 			       'FROM artifact_field af,artifact_field_usage afu '.
@@ -218,7 +219,22 @@ class ArtifactFieldHtml extends ArtifactField {
 			}
 	            }
 	        }
-
+		//add the standard fields and exclude the source date field to be compared 
+		if ($date_field_name == "open_date") {
+		    $str_name  .= "close_date";
+		    $str_label .= "End Date";
+		} else if ($date_field_name == "close_date") {
+		    $str_name  .= "open_date";
+		    $str_label .= "Submitted On";		
+		} else {
+		    $str_name  .= "open_date-close_date";
+		    $str_label .= "Submitted On-End Date";
+		}
+		
+            $today = false;
+	    $size = 10;
+	    $maxlength = 10;
+	    
 	    $timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
 	    $html = '<INPUT TYPE="text" name="'.$this->field_name.
 	        '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
