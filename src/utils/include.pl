@@ -91,4 +91,28 @@ sub get_codex_user {
   #  return $1 if /^\s*User\s+(.*)\s*/;
   #}
 
-}      
+}
+
+#############################
+# Compute if the current server is master or not
+# Note: A server alone (w/o satellites) is a master.
+#############################
+sub is_current_server_master {
+	my $server_is_master = 0;
+
+	# If no servers == only master
+	my $serverquery = "SELECT NULL FROM server";
+	my $serverc = $dbh->prepare($serverquery);
+	$serverc->execute();
+	if ($serverc->rows > 0) {
+		my $masterquery = "SELECT NULL FROM server WHERE id = $sys_server_id AND is_master = 1";
+		my $masterc = $dbh->prepare($masterquery);
+		$masterc->execute();
+		if ($masterc->rows == 1) {
+		    $server_is_master = 1;
+		}
+	} else {
+		$server_is_master = 1;
+	}
+	return $server_is_master;
+}

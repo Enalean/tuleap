@@ -78,7 +78,6 @@ my ($up_group, $new_group, $del_group) = ("0","0","0");
 # Open up all the files that we need.
 @userdump_array = open_array_file($user_file);
 @groupdump_array = open_array_file($group_file);
-@serverdump_array = open_array_file($server_file);
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
@@ -101,13 +100,23 @@ if ($cvsversion =~ /CVSNT/) {
 # Check is the current server is master or satellite
 #
 my $server_is_master = 0;
-my ($server_id, $is_master);
-while ($ln = pop(@serverdump_array)) {
-    chop($ln);
-    ($server_id, $is_master) = split(":", $ln);
-    if($server_id == $sys_server_id && $is_master == 1) {
+if(! -f $server_file) {
 	$server_is_master = 1;
-    }
+} else {
+	@serverdump_array = open_array_file($server_file);
+	my $oneServerFound = 0;
+	my ($server_id, $is_master);
+	while ($ln = pop(@serverdump_array)) {
+	    chop($ln);
+	    $oneServerFound = 1;
+	    ($server_id, $is_master) = split(":", $ln);
+	    if($server_id == $sys_server_id && $is_master == 1) {
+		$server_is_master = 1;
+	    }
+	}
+	if($oneServerFound == 0) {
+	    $server_is_master = 1;
+	}
 }
 
 #
@@ -660,19 +669,19 @@ while ($ln = pop(@groupdump_array)) {
         }
     }
 
-	if(($file_location eq "master" && $server_is_master == 1) 
-	   || ($file_location eq "satellite" &&  $file_server_id == $sys_server_id)) {
-
+	if($server_is_master == 1) {
         if ( $gstatus eq 'A' && !(-e "$ftp_anon_group_dir")) {
-          
+
           # Now lets create the group's ftp homedir for anonymous ftp space
           # This one must be owned by the project gid so that all project
           # admins can work on it (upload, delete, etc...)
           mkdir $ftp_anon_group_dir, 0775;
           chown $dummy_uid, $gid, "$ftp_anon_group_dir";
         }
-        
-        
+	}
+
+	if(($file_location eq "master" && $server_is_master == 1) 
+	   || ($file_location eq "satellite" &&  $file_server_id == $sys_server_id)) {
         if ( $gstatus eq 'A' && !(-e "$ftp_frs_group_dir")) {
           # Now lets create the group's ftp homedir for file release space
           # (this one has limited write access to project members and read

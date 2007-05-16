@@ -12,13 +12,7 @@ require("../include.pl");  # Include all the predefined functions
 #
 # Is current server master ?
 #
-my $server_is_master = 0;
-my $masterquery = "SELECT NULL FROM server WHERE id = $sys_server_id AND is_master = 1";
-$masterc = $dbh->prepare($masterquery);
-$masterc->execute();
-if ($masterc->rows == 1) {
-    $server_is_master = 1;
-}
+my $server_is_master = is_current_server_master();
 
 #
 # grab Table information

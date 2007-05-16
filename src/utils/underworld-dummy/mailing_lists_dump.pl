@@ -15,13 +15,7 @@ my $list_array = ();
 #
 # Is current server master ?
 #
-my $server_is_master = 0;
-my $masterquery = "SELECT NULL FROM server WHERE id = $sys_server_id AND is_master = 1";
-$masterc = $dbh->prepare($masterquery);
-$masterc->execute();
-if ($masterc->rows == 1) {
-    $server_is_master = 1;
-}
+my $server_is_master = is_current_server_master();
 
 # Dump the Table information
 # LJ email column extracted as well to get the e-mail address
