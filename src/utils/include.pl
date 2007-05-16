@@ -101,10 +101,7 @@ sub is_current_server_master {
 	my $server_is_master = 0;
 
 	# If no servers == only master
-	my $serverquery = "SELECT NULL FROM server";
-	my $serverc = $dbh->prepare($serverquery);
-	$serverc->execute();
-	if ($serverc->rows > 0) {
+	if ($sys_server_id != 0) {
 		my $masterquery = "SELECT NULL FROM server WHERE id = $sys_server_id AND is_master = 1";
 		my $masterc = $dbh->prepare($masterquery);
 		$masterc->execute();

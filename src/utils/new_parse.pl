@@ -100,22 +100,26 @@ if ($cvsversion =~ /CVSNT/) {
 # Check is the current server is master or satellite
 #
 my $server_is_master = 0;
-if(! -f $server_file) {
+if($sys_server_id == 0) {
 	$server_is_master = 1;
 } else {
-	@serverdump_array = open_array_file($server_file);
-	my $oneServerFound = 0;
-	my ($server_id, $is_master);
-	while ($ln = pop(@serverdump_array)) {
-	    chop($ln);
-	    $oneServerFound = 1;
-	    ($server_id, $is_master) = split(":", $ln);
-	    if($server_id == $sys_server_id && $is_master == 1) {
+	if(! -f $server_file) {
 		$server_is_master = 1;
-	    }
-	}
-	if($oneServerFound == 0) {
-	    $server_is_master = 1;
+	} else {
+		@serverdump_array = open_array_file($server_file);
+		my $oneServerFound = 0;
+		my ($server_id, $is_master);
+		while ($ln = pop(@serverdump_array)) {
+		    chop($ln);
+		    $oneServerFound = 1;
+		    ($server_id, $is_master) = split(":", $ln);
+		    if($server_id == $sys_server_id && $is_master == 1) {
+			$server_is_master = 1;
+		    }
+		}
+		if($oneServerFound == 0) {
+		    $server_is_master = 1;
+		}
 	}
 }
 
