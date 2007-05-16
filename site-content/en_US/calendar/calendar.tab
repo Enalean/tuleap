@@ -25,5 +25,6 @@ calendar	week_start	1
 #-----------------------------------------------
 # Script: SF/www/script/dateField_js.php
 #
-date_field	description	<B>Select a date field:</B>
+date_field	description_calendar	<B>Pick up a date</B>
+date_field	description_date_field	<B>Or select a date field</B>
 date_field	first_value	----Select a field----
