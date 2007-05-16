@@ -213,7 +213,7 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
               str_buffer += '}\n';
               str_buffer += '</script>\n';
               str_buffer += '<FORM name="choice">\n';
-              str_buffer += '<p align="center"><?php echo $description_date_field;?><br><SELECT ID="CMB_'+date_field+'" NAME="CMB_'+date_field+'" onchange="javascript:cmb_change();">\n';
+              str_buffer += '<p align="center"><?php echo $description_date_field;?></p><p align="center"><SELECT ID="CMB_'+date_field+'" NAME="CMB_'+date_field+'" onchange="javascript:cmb_change();">\n';
               str_buffer += '    <OPTION VALUE="'+'0'+'">'+'<?php echo $first_value;?>'+'</OPTION>\n';
           
 	      for(i=0;i<array1.length;i++){
@@ -231,7 +231,7 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
 	  
 
         window.vWinCal = window.open("", "Calendar",
-                "width=270,height=300,status=no,resizable=yes,top=200,left=200");
+                "width=270,height=330,status=no,resizable=yes,top=200,left=200");
         window.vWinCal.opener = self;
         window.vWinCal.focus();
         var calc_doc = window.vWinCal.document;
