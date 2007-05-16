@@ -8,7 +8,8 @@ $months = $GLOBALS['Language']->getText('calendar', 'months');
 $days   = $GLOBALS['Language']->getText('calendar', 'days');
 $start  = $GLOBALS['Language']->getText('calendar', 'week_start');
 
-$description = $GLOBALS['Language']->getText('date_field', 'description');
+$description_date_field = $GLOBALS['Language']->getText('date_field', 'description_date_field');
+$description_calendar   = $GLOBALS['Language']->getText('date_field', 'description_calendar');
 $first_value = $GLOBALS['Language']->getText('date_field', 'first_value');
 ?>
 // Title: Timestamp picker
@@ -114,6 +115,8 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
                 style_inline+
                 "</head>\n"+
                 "<body>\n"+
+		"<br>"+
+		"<p align='center'><?php echo $description_calendar;?></p>"+
                 "<table class=\"clsOTable\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n"+
                 "<tr><td class=\"calendar_month\">\n"+
                 "<table cellspacing=\"1\" cellpadding=\"3\" border=\"0\" width=\"100%\">\n"+
@@ -210,7 +213,7 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
               str_buffer += '}\n';
               str_buffer += '</script>\n';
               str_buffer += '<FORM name="choice">\n';
-              str_buffer += '<?php echo $description;?><SELECT ID="CMB_'+date_field+'" NAME="CMB_'+date_field+'" onchange="javascript:cmb_change();">\n';
+              str_buffer += '<p align="center"><?php echo $description_date_field;?><br><SELECT ID="CMB_'+date_field+'" NAME="CMB_'+date_field+'" onchange="javascript:cmb_change();">\n';
               str_buffer += '    <OPTION VALUE="'+'0'+'">'+'<?php echo $first_value;?>'+'</OPTION>\n';
           
 	      for(i=0;i<array1.length;i++){
@@ -219,7 +222,7 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
 	          }
               }
     
-	      str_buffer += '</SELECT>\n';
+	      str_buffer += '</SELECT></p>\n';
               str_buffer += '</FORM>\n';
            }
 	   str_buffer +=
@@ -228,7 +231,7 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
 	  
 
         window.vWinCal = window.open("", "Calendar",
-                "width=270,height=187,status=no,resizable=yes,top=200,left=200");
+                "width=270,height=300,status=no,resizable=yes,top=200,left=200");
         window.vWinCal.opener = self;
         window.vWinCal.focus();
         var calc_doc = window.vWinCal.document;
