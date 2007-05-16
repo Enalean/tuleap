@@ -121,8 +121,7 @@ account_first	message	You are now a registered user on $1. As a registered user,
 #-----------------------------------------------
 # Script: SF/www/account/login.php
 #
-account_login	title	Site Login
-account_login	light_title	Please Login
+account_login	title	Please Login
 account_login	secure	Secure
 account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
 account_login	pending_title	Pending Account

@@ -56,7 +56,7 @@ if (user_isloggedin()) {
 	$title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
     
     if (isset($pv) && $pv == 2) {
-        $HTML->pv_header(array());
+        $HTML->pv_header(array('title'=>$title));
     } else {	
         site_header(array('title'=>$title));	
     }	

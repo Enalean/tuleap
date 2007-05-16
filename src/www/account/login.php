@@ -72,7 +72,7 @@ if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
 if(!isset($GLOBALS['sys_name'])) {
     $GLOBALS['sys_name'] = "";
  }
-print $Language->getText('account_login', 'light_title', array($GLOBALS['sys_name']));
+print $Language->getText('account_login', 'title', array($GLOBALS['sys_name']));
 //print $Language->getText('account_login', 'title', array($GLOBALS['sys_name'])); ?>
 <?php //print ((isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != "") ? ' ('.$Language->getText('account_login', 'secure').')':''); ?>
 </h2>
