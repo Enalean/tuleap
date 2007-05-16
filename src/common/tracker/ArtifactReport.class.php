@@ -766,7 +766,8 @@ class ArtifactReport extends Error {
 	    if ($field->isShowOnQuery()) {
 	      if (!$advsrch) {
 	          $new_field = new ArtifactField();
-	          $new_field->fetchData($this->group_artifact_id,$prefs["DTE_".$field->getName()."_name"][0]);
+		  $new_field_name = "DTE_".$field->getName()."_name";
+	          $new_field->fetchData($this->group_artifact_id,isset($prefs[$new_field_name][0]) ? $prefs[$new_field_name][0] : null);
 	      }
 	      // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 	      if ( $field->isStandardField()) {
