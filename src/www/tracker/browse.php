@@ -105,6 +105,15 @@ $prefs = $art_field_fact->extractFieldList(false);
 
 // Create the HTML report object
 $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
+// {{{ (SR #832) If it does not exist, use default report instead.
+if (!$art_report_html) {
+    $report_id = 100;
+    if (user_isloggedin()) {
+        user_set_preference('artifact_browse_report'.$atid, $report_id);
+    }
+    $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
+}
+// }}}
 
 /* ==================================================
    Make sure all URL arguments are captured as array. For simple

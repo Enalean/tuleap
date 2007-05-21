@@ -34,6 +34,13 @@ class ArtifactReportFactory extends Error {
 	 * @return void
 	 */
 	function getArtifactReportHtml($report_id,$atid) {
+        $sql = "SELECT * FROM artifact_report ".
+			   "WHERE report_id=".$report_id;
+		//echo $sql.'<br>';
+		$res=db_query($sql);
+		if (!$res || db_numrows($res) < 1) {
+			return false;
+		}
 		return new ArtifactReportHtml($report_id,$atid);
 	}
 
