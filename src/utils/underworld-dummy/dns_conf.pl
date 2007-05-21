@@ -74,17 +74,16 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box, $location, $serve
 
 # CodeX	push @dns_zone, sprintf("%-24s%-16s",$unix_group_name,"IN\tA\t" . "$ip\n");
 # CodeX	push @dns_zone, sprintf("%-24s%-28s","", "IN\tMX\t" . "mail1.codex.xerox.com.\n");
-	if($server_is_master == 1
+	if($server_is_master
 	   || ($location eq "satellite" &&  $server_id == $sys_server_id)) {
 	    push @dns_zone, sprintf("%-24s%-16s",$unix_group_name," IN\tCNAME\t" . "$sys_fullname."."\n");
 	    $addedEntry = 1;
 	}
-	if($server_is_master == 1) {
+	if($server_is_master) {
 	    push @dns_zone, sprintf("%-24s%-30s","cvs.".$unix_group_name," IN\tCNAME\t" . "cvs1.$sys_default_domain."."\n");
 	    $addedEntry = 1;
 	}
-	if(($location eq "master" && $server_is_master == 1) 
-	   || ($location eq "satellite" &&  $server_id == $sys_server_id)) {
+	if(service_available_on_server($server_is_master, $location, $server_id)) {
 	    push @dns_zone, sprintf("%-24s%-30s","svn.".$unix_group_name," IN\tCNAME\t" . "svn1.$sys_default_domain."."\n");
 	    $addedEntry = 1;
 	}

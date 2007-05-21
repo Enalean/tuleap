@@ -113,3 +113,25 @@ sub is_current_server_master {
 	}
 	return $server_is_master;
 }
+
+#############################
+# For master only: return true if there we are in a distributed architecture.
+#############################
+sub satellite_disabled {
+    return ($sys_server_id == 0);
+}
+
+#############################
+# Check if for a service configured to be hosted on $location - $server_id, the
+# current server is the good one.
+# Params:
+# $server_is_master: Is the current server the master or not.
+# $location:         The location for service (either 'master' or 'satellite').
+# $server_id:        If service on a satellite, server_id of this satellite.
+#############################
+sub service_available_on_server {
+    my ($server_is_master, $location, $server_id) = @_;
+    return (satellite_disabled()
+	    || ($location eq "master" && $server_is_master) 
+	    || ($location eq "satellite" &&  $server_id == $sys_server_id));
+}

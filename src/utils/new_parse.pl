@@ -253,7 +253,8 @@ while ($ln = pop(@groupdump_array)) {
 
 # LJ Do not test if we are on the CVS machine. It's all on atlas
 #	if ((substr($hostname,0,3) eq "cvs") && $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
-	if ( $gstatus eq 'A' && !(-e "$cvs_prefix/$gname") && ($server_is_master == 1)) {
+	if($server_is_master) {
+	    if ( $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
 		print("Creating a CVS Repository for: $gname\n");
 		# Let's create a CVS repository for this group
 		$cvs_dir = "$cvs_prefix/$gname";
@@ -261,7 +262,7 @@ while ($ln = pop(@groupdump_array)) {
 		# First create the repository
 		mkdir $cvs_dir, 0775;
 		system("$cvs_cmd -d$cvs_dir init");
-	
+		
 		# turn off pserver writers, on anonymous readers
 		# LJ - See CVS writers update below. Just create an
 		# empty writers file so that we can set up the appropriate
@@ -275,28 +276,28 @@ while ($ln = pop(@groupdump_array)) {
 		#system("echo \"anonymous:\\\$1\\\$0H\\\$2/LSjjwDfsSA0gaDYY5Df/:anoncvs_$gname\" > $cvs_dir/CVSROOT/passwd");
 
                 if (! $use_cvsnt) {
-                  # LJ But to allow checkout/update to registered users we
-                  # need to setup a world writable directory for CVS lock files
-                  $lockdir="$cvslock_prefix/$gname";
-                  mkdir "$lockdir", 0777;
-                  chmod 0777, "$lockdir"; # overwrite umask value
-                  system("echo  >> $cvs_dir/CVSROOT/config");
-                  system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
-                  system("echo '# Put all CVS lock files in a single directory world writable' >> $cvs_dir/CVSROOT/config");
-                  system("echo '# directory so that any CodeX registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
-                  system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
-                  system("echo 'LockDir=$lockdir' >> $cvs_dir/CVSROOT/config");
-                  # commit changes to config file (directly with RCS)
-                  system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
+		    # LJ But to allow checkout/update to registered users we
+		    # need to setup a world writable directory for CVS lock files
+		    $lockdir="$cvslock_prefix/$gname";
+		    mkdir "$lockdir", 0777;
+		    chmod 0777, "$lockdir"; # overwrite umask value
+		    system("echo  >> $cvs_dir/CVSROOT/config");
+		    system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
+		    system("echo '# Put all CVS lock files in a single directory world writable' >> $cvs_dir/CVSROOT/config");
+		    system("echo '# directory so that any CodeX registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
+		    system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
+		    system("echo 'LockDir=$lockdir' >> $cvs_dir/CVSROOT/config");
+		    # commit changes to config file (directly with RCS)
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
                 }
 
                 # setup loginfo to make group ownership every commit
                 # commit changes to config file (directly with RCS)
                 if ($use_cvsnt) {
-                  # use DEFAULT because there is an issue with multiple 'ALL' lines with cvsnt.
-                  system("echo \"DEFAULT chgrp -f -R  $gname $cvs_dir\" > $cvs_dir/CVSROOT/loginfo");
+		    # use DEFAULT because there is an issue with multiple 'ALL' lines with cvsnt.
+		    system("echo \"DEFAULT chgrp -f -R  $gname $cvs_dir\" > $cvs_dir/CVSROOT/loginfo");
                 } else {
-                  system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
+		    system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
                 }
                 system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
                 system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid loginfo*");
@@ -313,274 +314,278 @@ while ($ln = pop(@groupdump_array)) {
 		# And finally add a user for this repository
                 # DEPRECATED: no longer create the login automatically: create it on demand only...
 		#push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_prefix/$gname:/bin/false\n";
-	}
- 	if ( $gstatus eq 'A' && (! $use_cvsnt) && !(-e "$cvslock_prefix/$gname") && ($server_is_master == 1)) {
-	  # Lockdir was deleted? Recreate it.
-	  $lockdir="$cvslock_prefix/$gname";
-	  mkdir "$lockdir", 0777;
-	  chmod 0777, "$lockdir"; # overwrite umask value
-	}
-
-
-	# LJ if the CVS repo has just been created or the user list
-	# in the group has been modified then update the CVS
-	# writer file
-
-	if ($group_modified && ($server_is_master == 1)) {
-	  # On CodeX writers go through pserver as well so put
-	  # group members in writers file. Do not write anything
-	  # in the CVS passwd file. The pserver protocol will fallback
-	  # on /etc/passwd for user authentication
-	  my $cvswriters_file = "$cvs_prefix/$gname/CVSROOT/writers";
-	  open(WRITERS,"+>$cvswriters_file")
-	    or croak "Can't open CVS writers file $cvswriters_file: $!";  
-	  print WRITERS join("\n",split(",",$userlist)),"\n";
-	  close(WRITERS);
-	}
-	## cvs backend
-	if (($cvs_tracker) && ($gstatus eq 'A') && ($server_is_master == 1)){
-	  # hook for commit tracking in cvs loginfo file
-	  $cvs_dir = "$cvs_prefix/$gname";
-	  # if $cvs_dir/CVSROOT/loginfo contains block break;
-	  $filename = "$cvs_dir/CVSROOT/loginfo";
-	  open (FD, $filename) ;
-	  @file_array = <FD>;
-	  close(FD);
-	  $blockispresent = 0;
-	  foreach (@file_array) {
-	    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
-	  }
-	  if (! $blockispresent)
-	    {
-	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
-              if ($use_cvsnt) {
-                system("echo \"ALL $codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
-              } else {
-                system("echo \"ALL ($codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
-              }	 
-	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
-	      system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
-              system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid loginfo*");
+	    }
+	    if ( $gstatus eq 'A' && (! $use_cvsnt) && !(-e "$cvslock_prefix/$gname")) {
+		# Lockdir was deleted? Recreate it.
+		$lockdir="$cvslock_prefix/$gname";
+		mkdir "$lockdir", 0777;
+		chmod 0777, "$lockdir"; # overwrite umask value
 	    }
 
-	  # hook for commit tracking in cvs commitinfo file
-	  $cvs_dir = "$cvs_prefix/$gname";
-	  # if $cvs_dir/CVSROOT/commitinfo contains block break;
-	  $filename = "$cvs_dir/CVSROOT/commitinfo";
-	  open (FD, $filename) ;
-	  @file_array = <FD>;
-	  close(FD);
-	  $blockispresent = 0;
-	  foreach (@file_array) {
-	    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
-	  }
-	  if (! $blockispresent)
-	    {
-	      system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/commitinfo");
-	      system("echo \"ALL $codex_bin_prefix/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
-	      system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
-	      system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
-              system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
+
+	    # LJ if the CVS repo has just been created or the user list
+	    # in the group has been modified then update the CVS
+	    # writer file
+
+	    if ($group_modified) {
+		# On CodeX writers go through pserver as well so put
+		# group members in writers file. Do not write anything
+		# in the CVS passwd file. The pserver protocol will fallback
+		# on /etc/passwd for user authentication
+		my $cvswriters_file = "$cvs_prefix/$gname/CVSROOT/writers";
+		open(WRITERS,"+>$cvswriters_file")
+		    or croak "Can't open CVS writers file $cvswriters_file: $!";  
+		print WRITERS join("\n",split(",",$userlist)),"\n";
+		close(WRITERS);
 	    }
-	}
+	    ## cvs backend
+	    if (($cvs_tracker) && ($gstatus eq 'A')){
+		# hook for commit tracking in cvs loginfo file
+		$cvs_dir = "$cvs_prefix/$gname";
+		# if $cvs_dir/CVSROOT/loginfo contains block break;
+		$filename = "$cvs_dir/CVSROOT/loginfo";
+		open (FD, $filename) ;
+		@file_array = <FD>;
+		close(FD);
+		$blockispresent = 0;
+		foreach (@file_array) {
+		    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+		}
+		if (! $blockispresent)
+		{
+		    system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
+		    if ($use_cvsnt) {
+			system("echo \"ALL $codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
+		    } else {
+			system("echo \"ALL ($codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
+		    }	 
+		    system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
+		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid loginfo*");
+		}
+
+		# hook for commit tracking in cvs commitinfo file
+		$cvs_dir = "$cvs_prefix/$gname";
+		# if $cvs_dir/CVSROOT/commitinfo contains block break;
+		$filename = "$cvs_dir/CVSROOT/commitinfo";
+		open (FD, $filename) ;
+		@file_array = <FD>;
+		close(FD);
+		$blockispresent = 0;
+		foreach (@file_array) {
+		    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+		}
+		if (! $blockispresent)
+		{
+		    system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/commitinfo");
+		    system("echo \"ALL $codex_bin_prefix/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
+		    system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
+		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
+		}
+	    }
 
 
 #
 #  CVS WATCH ON
 #
-	 # Add notify command if cvs_watch_mode is on
-        if (($cvs_watch_mode) && ($gstatus eq 'A') && ($server_is_master == 1)){
-            $cvs_dir = "$cvs_prefix/$gname";
-            $filename = "$cvs_dir/CVSROOT/notify";
+	    # Add notify command if cvs_watch_mode is on
+	    if (($cvs_watch_mode) && ($gstatus eq 'A')){
+		$cvs_dir = "$cvs_prefix/$gname";
+		$filename = "$cvs_dir/CVSROOT/notify";
 
-	    open (FD, $filename) ;
-	    @file_array = <FD>;
-	    close(FD);
-	    $blockispresent = 0;
-	    foreach (@file_array) {
-	    	$blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+		open (FD, $filename) ;
+		@file_array = <FD>;
+		close(FD);
+		$blockispresent = 0;
+		foreach (@file_array) {
+		    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+		}
+		if (! $blockispresent)
+		{
+		    system("echo \"$MARKER_BEGIN\" >> $filename");
+		    system("echo \"ALL mail %s -s \\\"CVS notification\\\"\" >> $filename");
+		    system("echo \"$MARKER_END\" >> $filename");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: enable notifications\" notify; co -q notify");
+		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
+		}
 	    }
-	    if (! $blockispresent)
-	    {
-	      system("echo \"$MARKER_BEGIN\" >> $filename");
-          system("echo \"ALL mail %s -s \\\"CVS notification\\\"\" >> $filename");
-	      system("echo \"$MARKER_END\" >> $filename");
-	      system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: enable notifications\" notify; co -q notify");
-          system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
-	    }
-	}
 
-        
+	    
 
-	# Apply cvs watch on only if cvs_watch_mode changed to on 
-	if (($cvs_watch_mode) && ($gstatus eq 'A')&& (! $blockispresent) && ($server_is_master == 1))
-	{    
+	    # Apply cvs watch on only if cvs_watch_mode changed to on 
+	    if (($cvs_watch_mode) && ($gstatus eq 'A')&& (! $blockispresent))
+	    {    
 		print("apply cvs watch on to the project : $gname\n");
-    	$cvs_dir = "$cvs_prefix/$gname";
-    	$id = getpgrp();                # You *must* use a shell that does setpgrp()!
-	    &cvs_watch($cvs_dir,$gname,$id,1);
-	    system("chown -R $cxname:$gid $cvs_dir");
+		$cvs_dir = "$cvs_prefix/$gname";
+		$id = getpgrp();                # You *must* use a shell that does setpgrp()!
+		&cvs_watch($cvs_dir,$gname,$id,1);
+		system("chown -R $cxname:$gid $cvs_dir");
 		system("chmod g+rw $cvs_dir");
-	}
+	    }
 
 
 #
 #  CVS WATCH OFF
 #
 
-	# Remove notify command if cvs_watch_mode is off.
-        if ((! $cvs_watch_mode) && ($gstatus eq 'A') && ($server_is_master == 1)){
-            $cvs_dir = "$cvs_prefix/$gname";
-            $filename = "$cvs_dir/CVSROOT/notify";
+	    # Remove notify command if cvs_watch_mode is off.
+	    if ((! $cvs_watch_mode) && ($gstatus eq 'A')){
+		$cvs_dir = "$cvs_prefix/$gname";
+		$filename = "$cvs_dir/CVSROOT/notify";
 
-            open (FD, $filename) ;
-            @file_array = <FD>;
-            close(FD);
-            $blockispresent = 0;
-            $inblock=0;
-	    $counter=0;
-            foreach (@file_array) {
-                $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
-                if ($_ eq "$MARKER_BEGIN\n") { $inblock=1; }
-                if ($inblock) {
-		    @file_array[$counter]='';
-		    if ($_ eq "$MARKER_END\n") { $inblock=0; }
-		} 
- 		$counter++;
-            }
-            if ($blockispresent)
-            {
-	        write_array_file($filename, @file_array );
-                system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: disable notifications\" notify; co -q notify");
-                system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
-            }
-        }
-
-
-        # Apply cvs watch off only if cvs_watch_mode changed to off
-        if ((!$cvs_watch_mode) && ($gstatus eq 'A') && ($blockispresent) && ($server_is_master == 1))
-        {
-        	print("apply cvs watch off to the project : $gname\n");
-            $cvs_dir = "$cvs_prefix/$gname";
-            $id = getpgrp();                # You *must* use a shell that does setpgrp()!
-            &cvs_watch($cvs_dir,$gname,"", "", $id,0);
-        }
-
-	if(($svn_location eq "master" && $server_is_master == 1) 
-	   || ($svn_location eq "satellite" &&  $svn_server_id == $sys_server_id)) {
-
-	# Create Subversion repository if needed
-	$svn_dir = "$svn_prefix/$gname";
-	if ( $gstatus eq 'A' && !(-e "$svn_prefix/$gname")) {
-	  print("Creating a Subversion Repository for: $gname\n");
-
-	  # Let's create a subversion repository for this group
-	  mkdir $svn_dir, 0775;
-	  system("$svnadmin_cmd create $svn_dir --fs-type fsfs");
-	  $group_modified = 1;
-
-	  # set group ownership, codex user
-	  system("chown -R $cxname:$gid $svn_dir");
-	  system("chmod g+rw $svn_dir");
-
-	}
-
-
-	#test only
-	$group_modified = 1;
-
-	# update Subversion DAV access control file if needed
-	my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
-        
-        if ($group_modified ||
-            ($gstatus eq 'A' && !(-e "$svnaccess_file")) ||
-            ( -e "$svn_prefix/$gname/.CODEX_PRIVATE") || # file may be created any time
-            ((stat($0))[9] > (stat("$svnaccess_file"))[9]) ) { 
-          # i.e. this script has been modified since last update
-          # This test will be removed if we need to list active/restricted users in the SVN auth file
-          my $custom_perm=0;
-          my $custom_lines;
-          my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
-          
-          # Retrieve custom permissions, if any
-          if (-e "$svnaccess_file") {
-            open(SVNACCESS,"$svnaccess_file");
-            while (<SVNACCESS>) {
-              if ($custom_perm) {
-                $custom_lines.=$_;
-              } else {
-                if (m/END CODEX DEFAULT SETTINGS/) {$custom_perm=1;}
-              }
-            }
-            close(SVNACCESS);
-          }
-          
-          if (-d "$svn_prefix/$gname") {
-            open(SVNACCESS,">$svnaccess_file")
-              or croak "Can't open Subversion access file $svnaccess_file: $!";
-            # if you change these block markers also change them in
-            # src/www/svn/svn_utils.php
-            print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
-            print SVNACCESS "[groups]\n";
-            print SVNACCESS "members = ",join(", ", split(",", $userlist)),"\n";
-
-	    @ugroup_array = split(" ",$ugrouplist);
-	    while ($ln = pop(@ugroup_array)) {
-            # we want username to be in lowercase, but ugroupname keep the original case
-            # so we split the line UgroupName = MemBer1,MEMBER2,member3, ...
-            @ugroupdef_array = split("=", $ln);
-            my $ugroup_members = pop(@ugroupdef_array);
-            my $ugroup_name = pop(@ugroupdef_array);
-            # and then join the line with the correct case.
-            # UgroupName = member1,member2,member3, ...
-            print SVNACCESS $ugroup_name," = ",lc(join(", ", split(",", $ugroup_members))),"\n";
+		open (FD, $filename) ;
+		@file_array = <FD>;
+		close(FD);
+		$blockispresent = 0;
+		$inblock=0;
+		$counter=0;
+		foreach (@file_array) {
+		    $blockispresent = $blockispresent || ($_ eq "$MARKER_BEGIN\n");
+		    if ($_ eq "$MARKER_BEGIN\n") { $inblock=1; }
+		    if ($inblock) {
+			@file_array[$counter]='';
+			if ($_ eq "$MARKER_END\n") { $inblock=0; }
+		    } 
+		    $counter++;
+		}
+		if ($blockispresent)
+		{
+		    write_array_file($filename, @file_array );
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: disable notifications\" notify; co -q notify");
+		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
+		}
 	    }
-	    print SVNACCESS "\n";
 
-            print SVNACCESS "[/]\n";
-            if ($sys_allow_restricted_users) {
-              print SVNACCESS "* = \n"; # deny all access by default
-              # we don't know yet how to enable read access to all active users,
-              # and deny it to all restricted users...
-            } else {
-              if ($public_svn) { print SVNACCESS "* = r\n"; }
-              else { print SVNACCESS "* = \n";}
-            }
-            print SVNACCESS "\@members = rw\n";
-            print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
-            if ($custom_perm) { print SVNACCESS $custom_lines;}
-            close(SVNACCESS);
-            
-            # set group ownership, codex user as owner so that
-            # PHP scripts can write to it directly
-            system("chown -R $cxname:$gid $svnaccess_file");
-            system("chmod g+rw $svnaccess_file");
-          }
-        }
 
-	# Put in place the svn post-commit hook for email notification
-	# if not present (if the file does not exist it is created)
-	$postcommit_file = "$svn_dir/hooks/post-commit";
-	if (($svn_tracker) && ($gstatus eq 'A')) {
-	  open (FD, "$postcommit_file") ;
-	  $blockispresent = 0;
-	  while (<FD>) {
-	    if ($_ eq "$MARKER_BEGIN\n") { $blockispresent = 1; last; }
-	  }
-	  close(FD);
-	  if (! $blockispresent) {
-	    open (FD, ">>$postcommit_file") ;
-	    print FD "#!/bin/sh\n";
-	    print FD "$MARKER_BEGIN\n";
-	    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
-	    print FD "$codex_bin_prefix/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
-	    print FD "$MARKER_END\n";
-            close(FD);
-	    system("chown -R $cxname:$gid $postcommit_file");
-	    system("chmod 775 $postcommit_file");
-	  }
+	    # Apply cvs watch off only if cvs_watch_mode changed to off
+	    if ((!$cvs_watch_mode) && ($gstatus eq 'A') && ($blockispresent))
+	    {
+        	print("apply cvs watch off to the project : $gname\n");
+		$cvs_dir = "$cvs_prefix/$gname";
+		$id = getpgrp();                # You *must* use a shell that does setpgrp()!
+		&cvs_watch($cvs_dir,$gname,"", "", $id,0);
+	    }
 	}
-    }
+
+        #
+        # Subversion
+        #
+
+	if(service_available_on_server($server_is_master, $svn_location, $svn_server_id)) {
+
+	    # Create Subversion repository if needed
+	    $svn_dir = "$svn_prefix/$gname";
+	    if ( $gstatus eq 'A' && !(-e "$svn_prefix/$gname")) {
+		print("Creating a Subversion Repository for: $gname\n");
+
+		# Let's create a subversion repository for this group
+		mkdir $svn_dir, 0775;
+		system("$svnadmin_cmd create $svn_dir --fs-type fsfs");
+		$group_modified = 1;
+
+		# set group ownership, codex user
+		system("chown -R $cxname:$gid $svn_dir");
+		system("chmod g+rw $svn_dir");
+
+	    }
+
+
+	    #test only
+	    $group_modified = 1;
+
+	    # update Subversion DAV access control file if needed
+	    my $svnaccess_file = "$svn_prefix/$gname/.SVNAccessFile";
+	    
+	    if ($group_modified ||
+		($gstatus eq 'A' && !(-e "$svnaccess_file")) ||
+		( -e "$svn_prefix/$gname/.CODEX_PRIVATE") || # file may be created any time
+		((stat($0))[9] > (stat("$svnaccess_file"))[9]) ) { 
+		# i.e. this script has been modified since last update
+		# This test will be removed if we need to list active/restricted users in the SVN auth file
+		my $custom_perm=0;
+		my $custom_lines;
+		my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+		
+		# Retrieve custom permissions, if any
+		if (-e "$svnaccess_file") {
+		    open(SVNACCESS,"$svnaccess_file");
+		    while (<SVNACCESS>) {
+			if ($custom_perm) {
+			    $custom_lines.=$_;
+			} else {
+			    if (m/END CODEX DEFAULT SETTINGS/) {$custom_perm=1;}
+			}
+		    }
+		    close(SVNACCESS);
+		}
+		
+		if (-d "$svn_prefix/$gname") {
+		    open(SVNACCESS,">$svnaccess_file")
+			or croak "Can't open Subversion access file $svnaccess_file: $!";
+		    # if you change these block markers also change them in
+		    # src/www/svn/svn_utils.php
+		    print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
+		    print SVNACCESS "[groups]\n";
+		    print SVNACCESS "members = ",join(", ", split(",", $userlist)),"\n";
+
+		    @ugroup_array = split(" ",$ugrouplist);
+		    while ($ln = pop(@ugroup_array)) {
+			# we want username to be in lowercase, but ugroupname keep the original case
+			# so we split the line UgroupName = MemBer1,MEMBER2,member3, ...
+			@ugroupdef_array = split("=", $ln);
+			my $ugroup_members = pop(@ugroupdef_array);
+			my $ugroup_name = pop(@ugroupdef_array);
+			# and then join the line with the correct case.
+			# UgroupName = member1,member2,member3, ...
+			print SVNACCESS $ugroup_name," = ",lc(join(", ", split(",", $ugroup_members))),"\n";
+		    }
+		    print SVNACCESS "\n";
+
+		    print SVNACCESS "[/]\n";
+		    if ($sys_allow_restricted_users) {
+			print SVNACCESS "* = \n"; # deny all access by default
+			# we don't know yet how to enable read access to all active users,
+			# and deny it to all restricted users...
+		    } else {
+			if ($public_svn) { print SVNACCESS "* = r\n"; }
+			else { print SVNACCESS "* = \n";}
+		    }
+		    print SVNACCESS "\@members = rw\n";
+		    print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
+		    if ($custom_perm) { print SVNACCESS $custom_lines;}
+		    close(SVNACCESS);
+		    
+		    # set group ownership, codex user as owner so that
+		    # PHP scripts can write to it directly
+		    system("chown -R $cxname:$gid $svnaccess_file");
+		    system("chmod g+rw $svnaccess_file");
+		}
+	    }
+
+	    # Put in place the svn post-commit hook for email notification
+	    # if not present (if the file does not exist it is created)
+	    $postcommit_file = "$svn_dir/hooks/post-commit";
+	    if (($svn_tracker) && ($gstatus eq 'A')) {
+		open (FD, "$postcommit_file") ;
+		$blockispresent = 0;
+		while (<FD>) {
+		    if ($_ eq "$MARKER_BEGIN\n") { $blockispresent = 1; last; }
+		}
+		close(FD);
+		if (! $blockispresent) {
+		    open (FD, ">>$postcommit_file") ;
+		    print FD "#!/bin/sh\n";
+		    print FD "$MARKER_BEGIN\n";
+		    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
+		    print FD "$codex_bin_prefix/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
+		    print FD "$MARKER_END\n";
+		    close(FD);
+		    system("chown -R $cxname:$gid $postcommit_file");
+		    system("chmod 775 $postcommit_file");
+		}
+	    }
+	}
 
 	#
 	# Private directories are set to be unreadable, unwritable,
@@ -590,38 +595,40 @@ while ($ln = pop(@groupdump_array)) {
 	# (2) The directory contains a file named .CODEX_PRIVATE
 	#
 	if ($gstatus eq 'A') {
-	  my ($cvsmode, $svnmode, $grpmode, $new_cvsmode, $new_svnmode, $new_grpmode);
-	  my ($public_cvs, $public_svn, $public_grp);
+	    my ($cvsmode, $svnmode, $grpmode, $new_cvsmode, $new_svnmode, $new_grpmode);
+	    my ($public_cvs, $public_svn, $public_grp);
 
-	  ($d,$d,$cvsmode) = stat("$cvs_prefix/$gname");
-	  ($d,$d,$svnmode) = stat("$svn_prefix/$gname");
-	  ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
+	    ($d,$d,$cvsmode) = stat("$cvs_prefix/$gname");
+	    ($d,$d,$svnmode) = stat("$svn_prefix/$gname");
+	    ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
 
-	  $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODEX_PRIVATE";
-	  $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
-	  $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+	    $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODEX_PRIVATE";
+	    $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+	    $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
 
-	  if ($public_cvs) {
-	    $new_cvsmode = ($cvsmode | 0005);
-	  } else {
-	    $new_cvsmode = ($cvsmode & ~0007);
-	  }
+	    if ($public_cvs) {
+		$new_cvsmode = ($cvsmode | 0005);
+	    } else {
+		$new_cvsmode = ($cvsmode & ~0007);
+	    }
 
-	  if ($public_svn) {
-	    $new_svnmode = ($svnmode | 0005);
-	  } else {
-	    $new_svnmode = ($svnmode & ~0007);
-	  }
+	    if ($public_svn) {
+		$new_svnmode = ($svnmode | 0005);
+	    } else {
+		$new_svnmode = ($svnmode & ~0007);
+	    }
 
-	  if ($public_grp) {
-	    $new_grpmode = ($grpmode | 0005);
-	  } else {
-	    $new_grpmode = ($grpmode & ~0007);
-	  }
+	    if ($public_grp) {
+		$new_grpmode = ($grpmode | 0005);
+	    } else {
+		$new_grpmode = ($grpmode & ~0007);
+	    }
 
-	  chmod $new_cvsmode,"$cvs_prefix/$gname" if ($cvsmode != $new_cvsmode);
-	  chmod $new_svnmode,"$svn_prefix/$gname" if ($svnmode != $new_svnmode);
-	  chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
+	    if($server_is_master) {
+		chmod $new_cvsmode,"$cvs_prefix/$gname" if ($cvsmode != $new_cvsmode);
+		chmod $new_grpmode,"$grpdir_prefix/$gname" if ($grpmode != $new_grpmode);
+	    }
+	    chmod $new_svnmode,"$svn_prefix/$gname" if ($svnmode != $new_svnmode);
         }
 
         $group_dir = $grpdir_prefix."/".$gname;
@@ -632,71 +639,70 @@ while ($ln = pop(@groupdump_array)) {
         $ftp_anon_group_dir = $ftp_anon_dir_prefix."/".$gname;
 
 	if($server_is_master) {
-        # Now lets create the group's homedir.
-        # (put the SGID sticky bit on all dir so that all files
-        # in there are owned by the project group and not
-        # the user own group
-        # For some reason setting the SGID bit in mkdir doesn't work
-        # (perl bug ?) hence the chmod
-        if ( $gstatus eq 'A' && !(-e "$group_dir")) {
-          
-          mkdir $group_dir, 0775;
-          chown $dummy_uid, $gid, ($group_dir);
-          chmod 02775, ($group_dir);
-        }
-        if ( $gstatus eq 'A' && !(-e "$cgi_dir")) {
-          mkdir $cgi_dir, 0775;
-          chown $dummy_uid, $gid, ($cgi_dir);
-          chmod 02775, ($cgi_dir);
-        }
-        if ( $gstatus eq 'A' && !(-e "$ht_dir")) {
-          mkdir $ht_dir, 0775;
-          chown $dummy_uid, $gid, ($ht_dir);
-          chmod 02775, ($ht_dir);
-          
-          # Copy the default empty page for Web site
-          # Check if a custom page exists
-          $custom_homepage = $sys_custom_incdir."/en_US/others/default_page.php";
-          $homepage = $sys_incdir."/en_US/others/default_page.php";
-          
-          ($dev,$ino) = stat($custom_homepage);
-          if ( $ino ) {
-            # A custom file exists
-            system("cp $custom_homepage $ht_dir/index.php");
-          } else {
-            # Use the standard file
-            system("cp $homepage $ht_dir/index.php");
-          }
-  
-          chown $dummy_uid, $gid, "$ht_dir/index.php";
-          chmod 0664, "$ht_dir/index.php";
-        }
-    }
-
-	if($server_is_master == 1) {
-        if ( $gstatus eq 'A' && !(-e "$ftp_anon_group_dir")) {
-
-          # Now lets create the group's ftp homedir for anonymous ftp space
-          # This one must be owned by the project gid so that all project
-          # admins can work on it (upload, delete, etc...)
-          mkdir $ftp_anon_group_dir, 0775;
-          chown $dummy_uid, $gid, "$ftp_anon_group_dir";
-        }
+	    # Now lets create the group's homedir.
+	    # (put the SGID sticky bit on all dir so that all files
+	    # in there are owned by the project group and not
+	    # the user own group
+	    # For some reason setting the SGID bit in mkdir doesn't work
+	    # (perl bug ?) hence the chmod
+	    if ( $gstatus eq 'A' && !(-e "$group_dir")) {
+		
+		mkdir $group_dir, 0775;
+		chown $dummy_uid, $gid, ($group_dir);
+		chmod 02775, ($group_dir);
+	    }
+	    if ( $gstatus eq 'A' && !(-e "$cgi_dir")) {
+		mkdir $cgi_dir, 0775;
+		chown $dummy_uid, $gid, ($cgi_dir);
+		chmod 02775, ($cgi_dir);
+	    }
+	    if ( $gstatus eq 'A' && !(-e "$ht_dir")) {
+		mkdir $ht_dir, 0775;
+		chown $dummy_uid, $gid, ($ht_dir);
+		chmod 02775, ($ht_dir);
+		
+		# Copy the default empty page for Web site
+		# Check if a custom page exists
+		$custom_homepage = $sys_custom_incdir."/en_US/others/default_page.php";
+		$homepage = $sys_incdir."/en_US/others/default_page.php";
+		
+		($dev,$ino) = stat($custom_homepage);
+		if ( $ino ) {
+		    # A custom file exists
+		    system("cp $custom_homepage $ht_dir/index.php");
+		} else {
+		    # Use the standard file
+		    system("cp $homepage $ht_dir/index.php");
+		}
+		
+		chown $dummy_uid, $gid, "$ht_dir/index.php";
+		chmod 0664, "$ht_dir/index.php";
+	    }
 	}
 
-	if(($file_location eq "master" && $server_is_master == 1) 
-	   || ($file_location eq "satellite" &&  $file_server_id == $sys_server_id)) {
-        if ( $gstatus eq 'A' && !(-e "$ftp_frs_group_dir")) {
-          # Now lets create the group's ftp homedir for file release space
-          # (this one has limited write access to project members and read
-          # read is also for project members as well (download has to go
-          # through the Web for accounting and traceability purpose)
-          mkdir $ftp_frs_group_dir, 0771;
-          chown $dummy_uid, $gid, "$ftp_frs_group_dir";
-        }
-    }
+	if($server_is_master) {
+	    if ( $gstatus eq 'A' && !(-e "$ftp_anon_group_dir")) {
 
-      }
+		# Now lets create the group's ftp homedir for anonymous ftp space
+		# This one must be owned by the project gid so that all project
+		# admins can work on it (upload, delete, etc...)
+		mkdir $ftp_anon_group_dir, 0775;
+		chown $dummy_uid, $gid, "$ftp_anon_group_dir";
+	    }
+	}
+
+	if(service_available_on_server($server_is_master, $file_location, $file_server_id)) {
+	    if ( $gstatus eq 'A' && !(-e "$ftp_frs_group_dir")) {
+		# Now lets create the group's ftp homedir for file release space
+		# (this one has limited write access to project members and read
+		# read is also for project members as well (download has to go
+		# through the Web for accounting and traceability purpose)
+		mkdir $ftp_frs_group_dir, 0771;
+		chown $dummy_uid, $gid, "$ftp_frs_group_dir";
+	    }
+	}
+
+    }
 
 
 
@@ -715,7 +721,7 @@ write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
 write_array_file($apache_htpasswd, @htpasswd_array);
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
-if ($use_cvsnt) {
+if ($use_cvsnt && $server_is_master) {
   # Write cvsroot list in CVSNT config file
   open FILE,">$cvsnt_config_file";
   print FILE "# CodeX CVSROOT directory list: do not edit this list! modify $cvs_root_allow_file instead\n";
