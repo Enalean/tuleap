@@ -51,17 +51,7 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_add','title')))
 <br><input type="text" size="80"  maxlen="255" name="form_description">
 <?php echo $Language->getText('admin_trove_cat_add','description_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','parent'); ?>:
-<br><SELECT name="form_parent">
-<?php
-// generate list of possible parents
-// add root which is not in db
-print ('<OPTION value="0">Root'."\n");
-$res_cat = db_query("SELECT shortname,fullname,trove_cat_id FROM trove_cat");
-while ($row_cat = db_fetch_array($res_cat)) {
-	print ('<OPTION value="'.$row_cat["trove_cat_id"].'">'.$row_cat["fullname"]."\n");
-}
-?>
-</SELECT>
+<?php echo trove_get_html_cat_select_parent(); ?>
 <p><input type="submit" name="Submit" value="<?php echo $Language->getText('global','btn_submit'); ?>">
 </form>
 

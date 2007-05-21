@@ -34,7 +34,7 @@ function printnode ($nodeid,$text,$delete_ok=false) {
 	}
 	$GLOBALS["depth"]++;
 	$res_child = db_query("SELECT trove_cat_id,fullname,parent FROM trove_cat "
-		."WHERE parent='$nodeid'");
+		."WHERE parent='$nodeid' ORDER BY fullpath");
 	while ($row_child = db_fetch_array($res_child)) {
 	    $delete_ok = ($row_child["parent"] != 0);
 	    printnode($row_child["trove_cat_id"],$row_child["fullname"],$delete_ok);
