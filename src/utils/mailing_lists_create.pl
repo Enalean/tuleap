@@ -10,13 +10,17 @@ my ($list_name, $list_admin, $list_admin_email, $list_password, $list_is_public,
 
 my $list_dir;
 
+print ("\n\n    Processing Mailing Lists\n\n");
 # Open up all the files that we need.
+if(! -f $list_file) {
+    print "No mailing-lists available\n";
+    exit 1;
+}
 @listfile_array = open_array_file($list_file);
 
 #
 # Loop through @listfile_array and deal w/ users.
 #
-print ("\n\n    Processing Mailing Lists\n\n");
 while ($ln = pop(@listfile_array)) {
 
   chop $ln; #remove newline

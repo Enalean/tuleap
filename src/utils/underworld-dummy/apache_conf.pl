@@ -7,21 +7,23 @@ use POSIX qw(strftime);
 
 require("../include.pl");  # Include all the predefined functions
 
-
 &db_connect;
 
-
+#
+# Is current server master ?
+#
+my $server_is_master = is_current_server_master();
 
 #
 # grab Table information
 #
-my $query = "SELECT http_domain,unix_group_name,group_name,unix_box FROM groups WHERE status = 'A'";
+my $query = "SELECT http_domain,unix_group_name,group_name,unix_box,location,server_id FROM groups g, service s WHERE g.status = 'A' AND s.group_id = g.group_id AND s.short_name = 'svn'";
 my $c = $dbh->prepare($query);
 $c->execute();
 
 my $warn_noip=0;
 
-while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow()) {
+while(my ($http_domain,$unix_group_name,$group_name,$unix_box,$location,$server_id) = $c->fetchrow()) {
     if (! $sys_disable_subdomains) {
 	($name, $aliases, $addrtype, $length, @addrs) = gethostbyname("$unix_box.$sys_default_domain");
 	@blah = unpack('C4', $addrs[0]);
@@ -61,17 +63,18 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	    $server_alias = "";
 	  }
 
-        # Apache 2.x syntax
+	if($server_is_master) {
+	    # Apache 2.x syntax
 
-        # Determine whether the virtual host can be accessed through
-        # HTTP and/or HTTPS
-        # Name-based Virtual hosts are incompatible with HTTPS, so only use $ip:80 for now.
-        # (used to be $vhost = "$ip:80 $ip:443";)
-        # HTTPS and virtualhosts are compatible with IP-based vhosts.
+	    # Determine whether the virtual host can be accessed through
+	    # HTTP and/or HTTPS
+	    # Name-based Virtual hosts are incompatible with HTTPS, so only use $ip:80 for now.
+	    # (used to be $vhost = "$ip:80 $ip:443";)
+	    # HTTPS and virtualhosts are compatible with IP-based vhosts.
 
-        # Project Virtual Web site
-        push @apache_zone,
-          ( "<VirtualHost $ip:80>\n",
+	    # Project Virtual Web site
+	    push @apache_zone,
+	    ( "<VirtualHost $ip:80>\n",
 	      "$server_name",
 	      "$server_alias",
 	      "  SuexecUserGroup dummy $unix_group_name\n",
@@ -86,40 +89,48 @@ while(my ($http_domain,$unix_group_name,$group_name,$unix_box) = $c->fetchrow())
 	      "  CustomLog logs/vhosts-access_log combined\n",
 	      "  ScriptAlias /cgi-bin/ $grpdir_prefix/$unix_group_name/cgi-bin/\n",
 	      "</VirtualHost>\n\n");
+	}
 
         # Project Subversion repository
         if ($sys_force_ssl != 1) {
-          push @subversion_zone,
-            ( "<VirtualHost $ip:80>\n",
-                "  ServerName svn.$codex_domain\n",
-                "  <Location /svnroot/$unix_group_name>\n",
-                "    DAV svn\n",
-                "    SVNPath $svn_prefix/$unix_group_name\n",
-                "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
-                "    Require valid-user\n",
-                "    AuthType Basic\n",
-                "    AuthName \"Subversion Authorization ($group_name)\"\n",
-                "    AuthUserFile $apache_htpasswd\n",
-                "  </Location>\n",
-                "</VirtualHost>\n\n");
+	    # Test if svn service for current project is located on this server
+	    if(service_available_on_server($server_is_master, $location, $server_id)) {
+		push @subversion_zone,
+		( "<VirtualHost $ip:80>\n",
+		  "  ServerName svn.$codex_domain\n",
+		  "  <Location /svnroot/$unix_group_name>\n",
+		  "    DAV svn\n",
+		  "    SVNPath $svn_prefix/$unix_group_name\n",
+		  "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
+		  "    Require valid-user\n",
+		  "    AuthType Basic\n",
+		  "    AuthName \"Subversion Authorization ($group_name)\"\n",
+		  "    AuthUserFile $apache_htpasswd\n",
+		  "  </Location>\n",
+		  "</VirtualHost>\n\n");
+	    }
         }
     }
     #if ($sys_https_host ne "") {
     # For https, allow access without virtual host because they are not supported
     # Actually, this should also be allowed for the HTTP vhost.
-    push @subversion_dir_zone,
-            ( "<Location /svnroot/$unix_group_name>\n",
-                "    DAV svn\n",
-                "    SVNPath $svn_prefix/$unix_group_name\n",
-                "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
-                "    Require valid-user\n",
-                "    AuthType Basic\n",
-                "    AuthName \"Subversion Authorization ($group_name)\n",
-                "    AuthUserFile $apache_htpasswd\n",
-                "</Location>\n\n");
+
+    # Test if svn service for current project is located on this server
+    if(service_available_on_server($server_is_master, $location, $server_id)) {
+	push @subversion_dir_zone,
+	( "<Location /svnroot/$unix_group_name>\n",
+	  "    DAV svn\n",
+	  "    SVNPath $svn_prefix/$unix_group_name\n",
+	  "    AuthzSVNAccessFile $svn_prefix/$unix_group_name/.SVNAccessFile\n",
+	  "    Require valid-user\n",
+	  "    AuthType Basic\n",
+	  "    AuthName \"Subversion Authorization ($group_name)\"\n",
+	  "    AuthUserFile $apache_htpasswd\n",
+	  "</Location>\n\n");
+    }
 }
 
-if (! $sys_disable_subdomains) {
+if (! $sys_disable_subdomains && $server_is_master) {
     write_array_file("$dump_dir/apache_dump", @apache_zone);
     write_array_file("$dump_dir/subversion_dump", @subversion_zone);
 }
