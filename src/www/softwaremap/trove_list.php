@@ -143,13 +143,54 @@ for ($i=0;$i<$folders_len;$i++) {
 }
 
 // print subcategories
-$res_sub = db_query('SELECT trove_cat.trove_cat_id AS trove_cat_id,'
-	.'trove_cat.fullname AS fullname,'
-	.'trove_treesums.subprojects AS subprojects FROM trove_cat '
-	.'LEFT JOIN trove_treesums USING (trove_cat_id) '
-	.'WHERE (trove_treesums.limit_1=0 '
-	.'OR trove_treesums.limit_1 IS NULL) AND ' // need no discriminators
-	.'trove_cat.parent='.$form_cat.' ORDER BY fullname');
+/*
+t3 = SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
+FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
+WHERE g.is_public = 1
+  AND g.status = 'A'
+  AND g.type = 1
+GROUP BY trove_cat_id
+
+=> number of projects under each category (no sublevels)
+
+*************
+
+t = SELECT t.trove_cat_id FROM trove_cat AS t WHERE t.parent = 18
+
+=> All direct (one level) subcategories under 18
+
+*************
+
+t2 = SELECT ... 
+FROM trove_cat AS t, trove_cat AS t2
+WHERE t2.fullpath_ids LIKE CONCAT(t.trove_cat_id, ' ::%')
+   OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id, ' ::%')
+   OR t2.fullpath_ids LIKE t.trove_cat_id
+   OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id)
+
+=> All subcategories (deep) of a category
+
+*************
+
+=> Select direct (one level) subcategories under 18, then select their 
+   subcategories (deep), retrieve the number of projects for each. group and sum.
+*/$sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects 
+FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
+FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
+WHERE g.is_public = 1
+  AND g.status = 'A'
+  AND g.type = 1
+GROUP BY trove_cat_id) AS t3 USING(trove_cat_id)
+WHERE t.parent = $form_cat
+  AND (
+      t2.fullpath_ids LIKE CONCAT(t.trove_cat_id, ' ::%')
+   OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id, ' ::%')
+   OR t2.fullpath_ids LIKE t.trove_cat_id
+   OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id)
+      )
+GROUP BY t.trove_cat_id
+ORDER BY fullname";
+$res_sub = db_query($sql);
 echo db_error();
 $nb_listed_projects=0;
 while ($row_sub = db_fetch_array($res_sub)) {
