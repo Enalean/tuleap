@@ -1958,18 +1958,6 @@ CREATE TABLE trove_group_link (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'trove_treesums'
-#
-
-CREATE TABLE trove_treesums (
-  trove_treesums_id int(11) NOT NULL auto_increment,
-  trove_cat_id int(11) NOT NULL default '0',
-  limit_1 int(11) NOT NULL default '0',
-  subprojects int(11) NOT NULL default '0',
-  PRIMARY KEY  (trove_treesums_id)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'user'
 #
 

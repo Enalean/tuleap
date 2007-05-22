@@ -12168,25 +12168,6 @@ CREATE TABLE IF NOT EXISTS svn_repositories (
 
 INSERT INTO svn_repositories (id, repository) VALUES (1, 0x2f7661722f6c69622f636f6465782f73766e726f6f742f74646138);
 
--- --------------------------------------------------------
-
--- 
--- Table structure for table 'temp_trove_treesums'
--- 
-
-DROP TABLE IF EXISTS temp_trove_treesums;
-CREATE TABLE IF NOT EXISTS temp_trove_treesums (
-  trove_treesums_id int(11) NOT NULL auto_increment,
-  trove_cat_id int(11) NOT NULL default '0',
-  limit_1 int(11) NOT NULL default '0',
-  subprojects int(11) NOT NULL default '0',
-  PRIMARY KEY  (trove_treesums_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table 'temp_trove_treesums'
--- 
-
 
 -- --------------------------------------------------------
 
@@ -12511,26 +12492,6 @@ CREATE TABLE IF NOT EXISTS trove_group_link (
 
 -- 
 -- Dumping data for table 'trove_group_link'
--- 
-
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table 'trove_treesums'
--- 
-
-DROP TABLE IF EXISTS trove_treesums;
-CREATE TABLE IF NOT EXISTS trove_treesums (
-  trove_treesums_id int(11) NOT NULL auto_increment,
-  trove_cat_id int(11) NOT NULL default '0',
-  limit_1 int(11) NOT NULL default '0',
-  subprojects int(11) NOT NULL default '0',
-  PRIMARY KEY  (trove_treesums_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- 
--- Dumping data for table 'trove_treesums'
 -- 
 
 

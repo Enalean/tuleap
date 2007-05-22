@@ -329,6 +329,12 @@ echo "Starting DB update for CodeX 3.4 This might take a few minutes."
 $CAT <<EOF | $MYSQL $pass_opt codex
 
 ###############################################################################
+# SR #283 - Remove trove_treesums table 
+
+DROP TABLE IF EXISTS trove_treesums;
+
+
+###############################################################################
 # Personalizeable layout
 -- 
 -- Table structure for table 'layouts'

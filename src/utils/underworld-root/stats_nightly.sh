@@ -32,10 +32,6 @@ echo "--- Beginning of $script ---"
 # as well as total number of msg per forum
 ./db_rating_stats.pl $*
 
-# Compute the trove counters (number of projects
-# per trove. recursive counting for all subtrees)
-./db_trove_treesums.pl $*
-
 # Compute the top_group table whre all projects
 # are stored with all sorts of ranking. Redirect
 # text output to a file in the dumpt directory
