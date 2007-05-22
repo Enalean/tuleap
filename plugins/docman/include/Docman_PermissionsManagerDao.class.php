@@ -56,7 +56,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
                       ' AND i.item_type = '.PLUGIN_DOCMAN_ITEM_TYPE_FOLDER.
                       ' AND p.permission_type IN (\'PLUGIN_DOCMAN_WRITE\', \'PLUGIN_DOCMAN_MANAGE\')'.
                       ' AND p.ugroup_id IN ('.implode(',', $ugroupIds).')'.
-                      ' AND p.object_id = i.item_id',
+                      ' AND p.object_id = CAST(i.item_id as CHAR)',
                       $group_id);
         $res = $this->retrieve($sql);
         if(!$res->isError() && $res->rowCount() > 0) {
