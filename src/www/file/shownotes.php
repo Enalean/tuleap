@@ -40,18 +40,22 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 */
 	if ($release->isPreformatted()) {
 		echo '<PRE>';
+        echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
+            '.htmlentities($release->getNotes()).'
+
+            <HR NOSHADE>
+            <B>'.$Language->getText('file_shownotes','changes').':</B>
+            '.htmlentities($release->getChanges());
+        echo '</PRE>';
+    }else{
+        echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
+            '.$release->getNotes().'
+
+            <HR NOSHADE>
+            <B>'.$Language->getText('file_shownotes','changes').':</B>
+            '.$release->getChanges();
     }
     
-    echo '<B>'.$Language->getText('file_shownotes','notes').':</B>
-'.htmlentities($release->getNotes()).'
-
-<HR NOSHADE>
-<B>'.$Language->getText('file_shownotes','changes').':</B>
-'.htmlentities($release->getChanges());
-
-    if ($release->isPreformatted()) {
-        echo '</PRE>';
-    }
 
 	$HTML->box1_bottom();
 

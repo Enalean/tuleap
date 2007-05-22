@@ -235,7 +235,7 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function updateById($release_id, $package_id=null, $name=null,
     				$notes=null, $changes=null, $status_id=null, 
-    				$preformatted=1, $release_date=null) {       
+    				$preformatted=null, $release_date=null) {       
        
         $argArray = array();
 
