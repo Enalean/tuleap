@@ -338,7 +338,7 @@ class Artifact extends Error {
         if (!$import) {
             while ( list($key, $val) = each($vfl)) {
                 $field = $art_field_fact->getFieldFromName($key);
-                if ($field) {
+                if ($field && (!$field->getName() == 'comment_type_id')) {   // SR #684 we don't check the perms for the field comment type
                     if (! $field->userCanSubmit($group->getID(),$group_artifact_id,user_getid())) {
                         // The user does not have the permissions to update the current field,
                         // we exit the function with an error message
