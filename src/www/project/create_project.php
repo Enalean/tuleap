@@ -218,14 +218,14 @@ function create_project($data) {
         //Copy packages from template project
         $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = $template_id";
         if ($result = db_query($sql)) {
-            while($data = db_fetch_array($result)) {
-                $template_package_id = $data['package_id'];
+            while($p_data = db_fetch_array($result)) {
+                $template_package_id = $p_data['package_id'];
                 $sql = sprintf("INSERT INTO frs_package(group_id, name, status_id, rank, approve_license) VALUES (%s, '%s', %s, %s, %s)",
                     $group_id,
-                    db_escape_string($data['name']),
-                    $data['status_id'],
-                    $data['rank'],
-                    $data['approve_license']
+                    db_escape_string($p_data['name']),
+                    $p_data['status_id'],
+                    $p_data['rank'],
+                    $p_data['approve_license']
                 );
                 $rid = db_query($sql);
                 if ($rid) {
