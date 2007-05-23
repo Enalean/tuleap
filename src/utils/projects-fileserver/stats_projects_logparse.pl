@@ -58,7 +58,7 @@ foreach $server ( @webservers ) {
 # LJ stats script in the utils/downloads/ subdir
 # LJ	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) . "/" . sprintf("%02d",$day) . "/access_log"; 
 
-	$file = "$chronolog_basedir/$server/$year/" . sprintf("%02d",$month) ."/vhosts-access_$year". sprintf("%02d%02d", $month, $day) .".log"; 
+	$file = "$chronolog_basedir/$year/" . sprintf("%02d",$month) ."/vhosts-access_$year". sprintf("%02d%02d", $month, $day) .".log"; 
 
 	if ( -f $file ) {
 		open(LOGFILE, "< $file" ) || die "Cannot open $file";
