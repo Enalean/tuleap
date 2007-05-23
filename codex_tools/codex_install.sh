@@ -905,8 +905,7 @@ $CP cvssh-restricted /usr/lib/codex/bin
 $CAT <<'EOF' >> /etc/shells
 /usr/lib/codex/bin/cvssh
 /usr/lib/codex/bin/cvssh-restricted
-EOF
-  	 
+EOF  	 
 cd /usr/lib/codex/bin
 $CHOWN codexadm.codexadm log_accum commit_prep
 $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
@@ -1096,7 +1095,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codex/$server/$year/$month"
+     destdir="/var/log/codex/$year/$month"
      destfile="http_combined_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/access_log.1 $destdir/$destfile
@@ -1179,7 +1178,7 @@ $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codex/$server/$year/$month"
+     destdir="/var/log/codex/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/xferlog.1 $destdir/$destfile
