@@ -21,7 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 /**
  * Creates a clone of a Wiki.
  * 
@@ -61,10 +60,10 @@ class WikiCloner {
    *
    */
   function templateWikiExists(){
-       if($this->tmpl_wiki_exist === null) {
-          $res = db_query('SELECT count(*) AS nb FROM wiki_page'
-                          .' WHERE group_id='.$this->template_id);
-          $this->tmpl_wiki_exist = (db_result($res, 0, 'nb') > 0);
+      if($this->tmpl_wiki_exist === null) {
+         $res = db_query('SELECT count(*) AS nb FROM wiki_page'
+                         .' WHERE group_id='.$this->template_id);
+         $this->tmpl_wiki_exist = (db_result($res, 0, 'nb') > 0);
       }
       return $this->tmpl_wiki_exist;
   }  
@@ -78,34 +77,56 @@ class WikiCloner {
    *push
    */
   function CloneWiki(){
+      $this->addWikiEntries();
       $arr = $this->cloneWikiPageTable();
       $this->cloneWikiVersionTable($arr);
+      $this->addNonEmptyInfo($arr);
+      $this->addWikiLinkEntries($arr);
+      $this->cloneWikiRecentTable($arr);
+  }
+  
+ /**
+   *
+   *  Creates wiki entries for the new wiki in wiki_group_list
+   *  table. It is in the same language as the template wiki.
+   *
+   *
+   */
+  function addWikiEntries(){
+      $language = $this->getTemplateLanguageId();
+      $we_data = $this->getTemplateWikiEntries();
+      foreach($we_data as $id => $data){
+          $result = db_query(sprintf("INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)"
+                                    . "VALUES(%d, '%s', '%s', '%s', %d, %d)", $this->group_id, $this->escapeString($data['wiki_name'])
+				    , $this->escapeString($data['wiki_link']), $this->escapeString($data['description']), (int) $data['rank'], $language)); 
+      }
   }
 
  /**
    *
-   *  Clone Template Wiki version data 
+   *  Clone Template Wiki version data.
    *
-   *  @param array of initial (template) and cloned wiki pages ids
+   *  @param array of initial (template) and cloned wiki pages ids. 
+   *  Something like: template page id => new page id.
    *
    */
   function cloneWikiVersionTable($array){
       foreach($array as $key => $value){
-          $tmpl_version_data = $this->getTemplateWikiVersionData((int) $key);
-	  $new_version_data = $this->createNewVersionData($tmpl_version_data);
-          $result = db_query(sprintf("select version, minor_edit, content from wiki_version where id=%d", (int) $key));
+          $tmpl_version_data = $this->getTemplateWikiVersionData($key);
+	  $result = db_query(sprintf("select version, mtime, minor_edit, content from wiki_version where id=%d", $key));
 	  while($row = db_fetch_array($result)){
-	       $num_ver = (int) $row['version'];
-	       $res = db_query(sprintf("INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
+	      $num_ver = $row['version'];
+	      $res = db_query(sprintf("INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
 	                               ."VALUES(%d, %d, %d, %d, '%s', '%s')"
-				       , (int) $value, $num_ver, time(), $row['minor_edit'], $row['content'], $new_version_data[$num_ver]));
+		                       , $value, $num_ver, $row['mtime'], $row['minor_edit'], $this->escapeString($row['content'])
+				       , $this->_serialize($tmpl_version_data[$num_ver])));
 	  }
       }
   }
 
  /**
    *
-   *  Clone template project's 'wiki_page' table .
+   *  Clone template project's 'wiki_page' table.
    *
    *  
    *  @return hash of template wiki pages ids as keys and new wiki
@@ -120,19 +141,121 @@ class WikiCloner {
 	  $page_data = $this->getTemplatePageData($pagename);
 	  $new_data = $this->createNewPageData($page_data);
 	  $id = $this->insertNewWikiPage($new_data, $pagename);
+	  $cached_html = $this->getTemplatePageCachedHtml($pagename);
+	  $this->updateNewPageCachedHtml($cached_html, $pagename);
 	  $ids[$tmpl_page_id] = $id;
       }
       return $ids;
       
   }
   
-  /**
+ /**
+  *  Clone wiki_recent  table
+  *
+  *  @param array: tmplpage_id => newpage_id
+  *
+  */
+  function cloneWikiRecentTable($array){
+      $recent_infos = array();
+      foreach($array as $tmpl_id => $new_id){
+          $recent_infos = $this->getTemplatePageRecentInfos($tmpl_id);
+	  if (!empty($recent_infos)){
+	      if(!empty($recent_infos['latestminor'])){
+	          $result = db_query(sprintf("INSERT INTO wiki_recent (id, latestversion, latestmajor, latestminor)"
+	                                    ."VALUES(%d, %d, %d, %d)", $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor']
+                                            , $recent_infos['latestminor']));
+	      }else{ 
+	          $result = db_query(sprintf("INSERT INTO wiki_recent (id, latestversion, latestmajor)"
+	                                    ."VALUES(%d, %d, %d)", $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor'])); 
+	      }
+          }
+      }	
+  }
+
+ /**
+   *  Fills into wiki_link table the sources and targets ids of pages created 
+   *  by the clone
+   *
+   *  @param hash: template pages ids => new pages ids
+   *
+   *
+   */
+  function addWikiLinkEntries($array){
+      foreach($array as $tmpl_id => $new_id){
+          $result = db_query(sprintf("select linkto from wiki_link where linkfrom=%d", $tmpl_id));
+          while($row = db_fetch_array($result)){
+             // Find the new page target link
+	     $clone_id = $this->getWikiPageCloneId($array, $row['linkto']);
+	     // Insert a new link row in wiki_link table
+	     $res = db_query(sprintf("INSERT INTO wiki_link (linkfrom, linkto) VALUES (%d, %d)", $new_id, $clone_id));
+          }
+      }
+  }
+  
+ /**
+   *  fetches recent infos of template wiki page
+   *
+   *  @param int: id of the template wiki page
+   *
+   *  @return array: contains latestversion, latestmajor and
+   *  latestminor revision numbers.
+   *
+   */
+  function getTemplatePageRecentInfos($id){
+      $recent = array();
+      $result = db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id));
+      if (db_numrows($result) > 0){
+          $recent = array('latestversion' => (int) db_result($result, 0, 'latestversion'), 'latestmajor' => (int) db_result($result, 0, 'latestmajor')
+                         , 'latestminor' => (int) db_result($result, 0, 'latestminor'));
+      }else{
+          return array();
+      }
+      return $recent;
+  }
+
+ /**
+   *
+   *  fetches template wiki_name, description, language_id, etc.
+   *
+   *  @return array: 
+   *
+   *
+   */
+  function getTemplateWikiEntries(){
+      $we = array();
+      $result = db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
+      while ($row = db_fetch_array($result)){
+	  $id = $row['id'];
+	  $we[$id] = array('wiki_name' => $row['wiki_name'], 'wiki_link' => $row['wiki_link'], 'description' => $row['description'], 'rank' => $row['rank']);
+      }
+      return $we;
+  }
+  
+ /**
+   *
+   *  Look for the template wiki language id.
+   *
+   *  @param int : template project id.
+   *  @returrn int : template wiki language id.
+   *
+   *
+   */
+  function getTemplateLanguageId(){
+      $result = db_query(sprintf("SELECT language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
+      if($row = db_fetch_array($result)){
+          $lang = $row['language_id'];
+	  return (int) $lang;
+      }else{
+	  return 0;
+      }
+  }
+  
+ /**
    *
    *  Look for a given wiki page id.
    *
    *  @param string: pagename
    *  @returrn int: wiki page id
-   *
    *
    */
   function getTemplateWikiPageId($pagename){
@@ -145,6 +268,7 @@ class WikiCloner {
  /**
    *
    *  Get pagedata information from wiki_page table.
+   *  isTemplatePageNonEmpty
    *
    *  @params pagename : name of any wiki page stored in the db.
    *  @return deserialized page data hash.
@@ -155,6 +279,22 @@ class WikiCloner {
           return $this->_deserialize($page_data['pagedata']);
       }
   }
+
+ /**
+   *
+   *  Reads the 'cached_html' field content of a template  wiki page.
+   *
+   *  @param string : template pagename.
+   *  @return binary : cached html 
+   *
+   */
+  function getTemplatePageCachedHtml($pagename){
+      $result = db_query(sprintf("SELECT cached_html from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->template_id));
+      while ($row = db_fetch_array($result)){   
+          return $row[0];
+      }
+  }
+
 
  /**
    *
@@ -177,26 +317,19 @@ class WikiCloner {
   }
   
  /**
+   *  returns the id of a wiki page clone 
    *
-   *  Create new version data  from template version data of a wiki page 
-   *  Up to now this only changes the creation time of the page version to 
-   *  the current time (time of the clone).   
+   *  @param hash : template page id => new page id.
+   *  @param int : template page id.
    *
-   *  @param array of versions numbers and their deserialised data hashes
-   *  @return array of versions numbers and their new serialised data hashes
-   *
+   *  @return int: id of a wiki page clone
    */
-  function createNewVersionData($versions_array){
-      foreach($versions_array as $version_num => $version_data){
-          foreach($version_data as $key => $value){
-	      if($key == '_supplanted'){
-	          $version_data[$key] = time();
-		  $versions_array[$version_num] = $version_data;
-	      }
+  function getWikiPageCloneId($array, $tmpl_page_id){
+      foreach($array as $tmpl_id => $new_id){
+	  if ($tmpl_id == $tmpl_page_id) {
+	      return $new_id; 
 	  }
-          $versions_array[$version_num] = $this->_serialize($version_data);
       }
-      return $versions_array;
   }
   
  /**
@@ -237,12 +370,57 @@ class WikiCloner {
           return $data;
       }
   }
+
+ /**
+   *
+   *  Update the 'cached_html' field content of a  wiki page clone.
+   *
+   *  @param int : template page id.
+   *
+   */
+  function updateNewPageCachedHtml($data, $pagename){
+      $result = db_query(sprintf("UPDATE wiki_page SET cached_html='%s' WHERE pagename='%s' AND group_id=%d", $this->escapeString($data), $pagename, $this->group_id));
+  }
+
+  /**
+   *
+   *  Check if a template page is non empty
+   * 
+   *  @param int : id of template wiki page
+   *  @return boolean : true if the template page is considered as non empty in
+   *  the template project.
+   *   
+   */
+  function isTemplatePageNonEmpty($id){
+      $result = db_query(sprintf("SELECT * from wiki_nonempty where id=%d", $id));
+      if (db_numrows($result)){   
+          return true;
+      }else{ 
+          return false;
+      }
+  }
+  
+  /**
+   *
+   *  Adds an entry in 'wiki_nonempty' table for pages considered as non ampty
+   *  in the template project
+   *
+   *  @param array : new pages ids and template pages ids.
+   *
+   */
+  function addNonEmptyInfo($array){
+      foreach($array as $tmpl => $new){
+          if ($this->isTemplatePageNonEmpty($tmpl)){
+	       $result = db_query(sprintf("INSERT INTO wiki_nonempty (id) VALUES(%d)", $new));
+	  }
+      }
+  }
   
  /**
    *  Create a clone of a wiki page by inserting a new row in wiki_page table.
    *  
    *  @params array data : array of page data
-   *  @params string pagename : escaped wiki page name 
+   *  @params string pagename : escaped wiki page name
    *  @return int id : id of the created page
    *
    */ 
