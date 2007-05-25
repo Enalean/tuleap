@@ -214,7 +214,7 @@ class FRSFile extends Error {
      */
     function getFileLocation() {
         $group = $this->getGroup();
-        $group_unix_name = $group->getUnixName();
+        $group_unix_name = $group->getUnixName(false);
         $basename = $this->getFileName();
         $file_location = $GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$basename;
         return $file_location;
