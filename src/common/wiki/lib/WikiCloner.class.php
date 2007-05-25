@@ -83,6 +83,10 @@ class WikiCloner {
       $this->addNonEmptyInfo($arr);
       $this->addWikiLinkEntries($arr);
       $this->cloneWikiRecentTable($arr);
+      $attachments_array = $this->cloneWikiAttachementTable();
+      $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
+      $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
+      
   }
   
  /**
@@ -113,7 +117,7 @@ class WikiCloner {
   function cloneWikiVersionTable($array){
       foreach($array as $key => $value){
           $tmpl_version_data = $this->getTemplateWikiVersionData($key);
-	  $result = db_query(sprintf("select version, mtime, minor_edit, content from wiki_version where id=%d", $key));
+	  $result = db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key));
 	  while($row = db_fetch_array($result)){
 	      $num_ver = $row['version'];
 	      $res = db_query(sprintf("INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
@@ -182,12 +186,71 @@ class WikiCloner {
    */
   function addWikiLinkEntries($array){
       foreach($array as $tmpl_id => $new_id){
-          $result = db_query(sprintf("select linkto from wiki_link where linkfrom=%d", $tmpl_id));
+          $result = db_query(sprintf("select linkto FROM wiki_link WHERE linkfrom=%d", $tmpl_id));
           while($row = db_fetch_array($result)){
              // Find the new page target link
 	     $clone_id = $this->getWikiPageCloneId($array, $row['linkto']);
 	     // Insert a new link row in wiki_link table
 	     $res = db_query(sprintf("INSERT INTO wiki_link (linkfrom, linkto) VALUES (%d, %d)", $new_id, $clone_id));
+          }
+      }
+  }
+  
+ /**
+   *  Clone wiki_attachment table
+   *
+   *  @return hash : template attachment id => new attachment id
+   *
+   */
+  function cloneWikiAttachementTable(){
+      $ids = array();
+      $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this->template_id));
+      while($row = db_fetch_array($result)) {
+          $id = $row['id'];
+	  $name = $row['name'];
+	  $ids[$id] = $this->insertNewAttachment($name);
+      }
+      return $ids;
+  }
+ 
+ /**
+   *  Clone wiki_attachment_revision table
+   *
+   *  @param hash: template attachment revision id => new attachment revision id.
+   *
+   *
+   */
+  function cloneWikiAttachmentRevisionTable($array){
+      $array_rev = array();
+      foreach($array as $tmpl_id => $new_id){
+          $result = db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", $tmpl_id));
+          while($row = db_fetch_array($result)){
+	      $res = db_query(sprintf("INSERT INTO wiki_attachment_revision (attachment_id, user_id, date, revision, mimetype, size)"
+	                             ."VALUES (%d, %d, %d, %d, '%s', %d)", $new_id, $row['user_id'], $row['date'], $row['revision']
+				     , $this->escapeString($row['mimetype']), $row['size']));
+	      if (db_affected_rows($res) > 0){
+	          $sql = db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", $new_id, $row['revision']));
+		  if(db_numrows($sql) > 0){
+	              $array_rev[$tmpl_id] = db_result($sql, 0, 'id');
+		  }
+	      }
+	  }
+      }
+      return $array_rev;
+  }
+  
+ /**
+   *  Clone wiki_attachment_log table.
+   *
+   *  @param hash: template attachment id => new attachment id.
+   *
+   */
+  function cloneWikiAttachmentLogTable($array, $array_rev){
+      foreach($array as $tmpl_id => $new_id){
+          $result = db_query(sprintf("SELECT * FROM wiki_attachment_log WHERE group_id=%d AND wiki_attachment_id=%d", $this->template_id, $tmpl_id));
+          while($row = db_fetch_array($result)){
+              $res = db_query(sprintf("INSERT INTO wiki_attachment_log (user_id, group_id, wiki_attachment_id, wiki_attachment_revision_id, time)"
+				     ."VALUES (%d, %d, %d, %d, %d)", $row['user_id'], $this->group_id, $new_id, $array_rev[$tmpl_id], $row['time']));
           }
       }
   }
@@ -415,6 +478,24 @@ class WikiCloner {
 	  }
       }
   }
+ /**
+   *  Creates a clone of a template attachment 
+   *
+   *  @param string: name of the attachement
+   *
+   *  @return int: id of the new attachment
+   */
+  function insertNewAttachment($name){
+      $result = db_query(sprintf("INSERT INTO wiki_attachment (group_id, name)"
+				."VALUES(%d, '%s')", $this->group_id, $this->escapeString($name))); 
+      if (!empty($result)){
+          $res = db_query(sprintf("SELECT id FROM wiki_attachment WHERE group_id=%d AND name='%s'", $this->group_id, $this->escapeString($name)));
+          while($row = db_fetch_array($res)){
+	      $id = $row[0]; 
+	  }
+	  return $id;
+      }
+  }
   
  /**
    *  Create a clone of a wiki page by inserting a new row in wiki_page table.
@@ -448,7 +529,8 @@ class WikiCloner {
    */
   function escapeString($string){
       return db_escape_string($string); 
-  }
+  } 
+
   
  /**
    * Serialize data
