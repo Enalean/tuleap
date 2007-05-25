@@ -86,7 +86,6 @@ class WikiCloner {
       $attachments_array = $this->cloneWikiAttachementTable();
       $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
       $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
-      
   }
   
  /**
@@ -145,8 +144,6 @@ class WikiCloner {
 	  $page_data = $this->getTemplatePageData($pagename);
 	  $new_data = $this->createNewPageData($page_data);
 	  $id = $this->insertNewWikiPage($new_data, $pagename);
-	  $cached_html = $this->getTemplatePageCachedHtml($pagename);
-	  $this->updateNewPageCachedHtml($cached_html, $pagename);
 	  $ids[$tmpl_page_id] = $id;
       }
       return $ids;
@@ -345,22 +342,6 @@ class WikiCloner {
 
  /**
    *
-   *  Reads the 'cached_html' field content of a template  wiki page.
-   *
-   *  @param string : template pagename.
-   *  @return binary : cached html 
-   *
-   */
-  function getTemplatePageCachedHtml($pagename){
-      $result = db_query(sprintf("SELECT cached_html from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->template_id));
-      while ($row = db_fetch_array($result)){   
-          return $row[0];
-      }
-  }
-
-
- /**
-   *
    *  Get versiondata information of a template wiki page from wiki_version table.
    *
    *  @params id : id of the template wiki page stored in the db.
@@ -432,17 +413,6 @@ class WikiCloner {
           }
           return $data;
       }
-  }
-
- /**
-   *
-   *  Update the 'cached_html' field content of a  wiki page clone.
-   *
-   *  @param int : template page id.
-   *
-   */
-  function updateNewPageCachedHtml($data, $pagename){
-      $result = db_query(sprintf("UPDATE wiki_page SET cached_html='%s' WHERE pagename='%s' AND group_id=%d", $this->escapeString($data), $pagename, $this->group_id));
   }
 
   /**
