@@ -254,13 +254,29 @@ if ($export == 'artifact') {
 				// extract data from the bug table and insert them into
 				// the project database table
 				if ($res) {
-				    
-					$result=db_query($sql);
-				    while ($arr = db_fetch_array($result)) {
-						prepare_artifact_record($at,$fields,$atid,$arr);
-						insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
-				    }
-			
+				    if (isset($multiple_queries) && $multiple_queries) {
+                        $all_results = array();
+                        foreach($all_queries as $q) {
+                            $all_results[] = db_query($q);
+                        }
+                        if (count($all_results)) {
+                            $rows = db_numrows($all_results[0]);
+                            for($i = 0 ; $i < $rows ; ++$i) {
+                                $arr = array();
+                                foreach($all_results as $result) {
+                                    $arr = array_merge($arr, db_fetch_array($result));
+                                }
+                                prepare_artifact_record($at,$fields,$atid,$arr);
+                                insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
+                            }
+                        }
+                    } else {
+                        $result = db_query($sql);   
+                        while ($arr = db_fetch_array($result)) {
+                            prepare_artifact_record($at,$fields,$atid,$arr);
+                            insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
+                        }
+                    }
 				} else {
 				    $feedback .= $Language->getText('project_export_artifact_deps_export','create_proj_err',array($tbl_name,db_project_error()));
 				}
