@@ -47,7 +47,7 @@ $ath->header($params);
 // artifact object (and field values) initialized in script above (index.php)
 $ah->display($ro,$pv,user_getid());
 
-echo "<script type=\"text/javascript\">\n";
+echo '<script type="text/javascript">'. "\n";
 $armh =& new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "Event.observe(window, 'load', initFieldDependencies, true);\n";
