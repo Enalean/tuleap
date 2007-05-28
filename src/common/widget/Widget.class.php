@@ -9,6 +9,7 @@ require_once('common/widget/Widget_MyBugs.class.php');
 require_once('common/widget/Widget_MySrs.class.php');
 require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
+require_once('common/widget/Widget_MyAdmin.class.php');
 /**
 * Widget
 * 
@@ -114,6 +115,9 @@ require_once('common/widget/Widget_MyRss.class.php');
             case 'myrss':
                 $o =& new Widget_MyRss();
                 break;
+            case 'myadmin':
+                $o =& new Widget_MyAdmin();
+                break;
             default:
                 //TODO: handle portlets in plugins
                 $em =& EventManager::instance();
@@ -123,7 +127,7 @@ require_once('common/widget/Widget_MyRss.class.php');
         return $o;
     }
     /* static */ function getCodeXWidgets() {
-        $widgets = array('mysurveys', 'myprojects', 'mybookmarks', 
+        $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
             'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
             'mytasks', 'mysrs'
         );

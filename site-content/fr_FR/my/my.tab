@@ -52,6 +52,7 @@ my_index	no_info	N'afficher aucun artefact
 my_index	a_info	assignés à moi [A]
 my_index	s_info	soumis par moi [S]
 my_index	as_info	assignés à moi ou soumis par moi [AS]
+my_index	my_admin	Utilisateurs et projets en attente
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
 #
