@@ -76,7 +76,10 @@ Object.extend(com.xerox.codex.FieldEditor.prototype, {
         return false;
     },
     updatePreview: function(display_warning) {
-        new Ajax.Updater(this.preview, '/make_links.php?group_id='+this.options.group_id+'&text='+encodeURIComponent($F(this.element).replace('<', '&lt;')), {
+        new Ajax.Updater(this.preview, '/make_links.php?group_id='+this.options.group_id, {
+                parameters: {
+                    text: $F(this.element).replace('<', '&lt;')
+                },
                 onComplete: (function() {
                     Element.show(this.preview);
                     Element.hide(this.element);
