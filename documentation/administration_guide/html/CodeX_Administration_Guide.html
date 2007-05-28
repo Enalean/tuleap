@@ -53,6 +53,7 @@ License
 <dt><a href="#CodeX_HowTo">CodeX HowTo</a></dt>
 <dd><dl>
 <dt><a href="#HowTo_Import">Importing an existing CVS repository in CodeX</a></dt>
+<dt><a href="#HowTo_Import_SVN">Importing an existing Subversion repository in CodeX</a></dt>
 <dt><a href="#HowTo_Regenerate_VC">Regenerating a fresh CVS or SVN repository for a CodeX project</a></dt>
 <dt><a href="#HowTo_Change_User_Name">Changing a User Name on CodeX</a></dt>
 <dt><a href="#HowTo_Change_Project_Name">Changing a Project Short Name on CodeX</a></dt>
@@ -2278,6 +2279,39 @@ same on CodeX)
 </ol>
 
 That's all folks!
+
+<hr>
+<h2><a name="HowTo_Import_SVN"></a>Importing an existing Subversion repository in CodeX</h2>
+<p>
+How to properly install a project team's existing SVN repository into the CodeX project specific repository
+<h3>Preamble</h3>
+<P>As for CVS, it is important to understand that *each* project has its own SVN repository. This root dir is created and initialized by CodeX whenever a new
+project is registered. Its name is "/svnroot/projectname" 
+
+<h3>The real work</h3>
+
+<ol>
+<li>Register the project. CodeX Admin must approve it and wait for the 2 hours cron
+update to create a fresh /svnroot/projectname SVN repository. If you are in a hurry you can force the cron update by hand.
+
+<li>The project team should provide a dump of the existing Subversion repository. To create an SVN dump please use the following command (Unix/Linux):
+<pre>
+svnadmin dump /path_to_svn_root &gt; svn_dumpfile</pre>
+<li>Ask the team to copy the dump file on the codex server, e.g.:
+<pre>
+scp svn_dumpfile username@codex.xerox.com:/home/groups/projectname</pre>
+(it is also possible to use FTP instead).
+<li>then a CodeX site administrator needs to load the repository content into the existing repository on CodeX:
+<pre>
+svnadmin load /svnroot/projectname &lt; /home/groups/projectname/svn_dumpfile </pre> 
+<li>Then, don't forget to set proper Unix ownership on the repository:
+<pre>
+chown -R codexadm.projectname /svnroot/projectname</pre>
+<li>if the existing repository had specific permissions or hooks, it is now time to copy the corresponding files on the new repository. This can be done by the project team.
+<li>Once the team has tested the new repository, you can remove the dump file from /home/groups/projectname/svn_dumpfile.
+</ol>
+
+You're done!
 
 <hr>
 <h2><a name="HowTo_Regenerate_VC"></a>Regenerating a fresh CVS or SVN repository for a CodeX project</h2>
