@@ -8,18 +8,19 @@ function display_widgets($title, $tab, $used_widgets) {
         echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';
         $i = 0;
         foreach($tab as $widget_name) {
-            $widget = Widget::getInstance($widget_name);
-            echo '<tr class="'. util_get_alt_row_color($i++) .'">';
-            echo '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
-            echo '<td align="right">';
-            if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
-                echo '<em>Already used</em>';
-                //echo '<input type="image" src="'. util_get_dir_image_theme() .'ic/trash.png" name="name['. $widget_name .'][remove]" value="Remove" />';
-            } else {
-                echo '<input type="submit" name="name['. $widget_name .'][add]" value="Add" />';
+            if ($widget = Widget::getInstance($widget_name)) {
+                echo '<tr class="'. util_get_alt_row_color($i++) .'">';
+                echo '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
+                echo '<td align="right">';
+                if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
+                    echo '<em>Already used</em>';
+                    //echo '<input type="image" src="'. util_get_dir_image_theme() .'ic/trash.png" name="name['. $widget_name .'][remove]" value="Remove" />';
+                } else {
+                    echo '<input type="submit" name="name['. $widget_name .'][add]" value="Add" />';
+                }
+                echo '</td>';
+                echo '</tr>';
             }
-            echo '</td>';
-            echo '</tr>';
         }
     }
 }

@@ -116,7 +116,9 @@ require_once('common/widget/Widget_MyAdmin.class.php');
                 $o =& new Widget_MyRss();
                 break;
             case 'myadmin':
-                $o =& new Widget_MyAdmin();
+                if (user_is_super_user()) { //This widget is only for super admin
+                    $o =& new Widget_MyAdmin();
+                }
                 break;
             default:
                 //TODO: handle portlets in plugins
