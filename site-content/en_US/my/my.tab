@@ -47,7 +47,7 @@ my_index	no_info	Do not show any artifacts
 my_index	a_info	assigned to me [A]
 my_index	s_info	submitted by me [S]
 my_index	as_info	assigned to or submitted by me [AS]
-my_index	my_admin	Pending users and projects
+my_index	my_admin	Pending users, projects and news
 #
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
