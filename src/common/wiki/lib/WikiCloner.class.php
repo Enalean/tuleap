@@ -383,7 +383,6 @@ class WikiCloner {
   
  /**
    *  Create a new pagedata array.
-   *  Up to now, only the creation date timestamp is changed.
    *  Monitoring data is not copied.
    *  Other data (lockinfo and user prefs) are copied.
    *
@@ -398,8 +397,6 @@ class WikiCloner {
 	          foreach($value as $k => $v){
 	              // Do not copy monitoring data of 'global_data' wiki page.  
 	              if ($k == 'notify') unset($data[$key][$k]);
-		      // Change '_timestamp' of global_data page to current time
-		      if ($k == '_timestamp') $data[$key][$k] = time();
 		  }   
 	      }
 	      // $value is serialized. Actually it is only  in user pages case. 
@@ -408,13 +405,13 @@ class WikiCloner {
                   if(is_array($arr)){
 		      foreach($arr as $i => $j){
 		          // Do not copy monitoring data of user pages.
-		          if ($i == 'notifyPages') unset($arr[$i]);		                
+		          if ($i == 'notifyPages') unset($arr[$i]);                
 		      } 
 		  }
                   $data[$key] = $this->_serialize($arr);  
 	      }
-	      // Change the timestamp to the current time.
-              if ($key == 'date') $data[$key] = time();
+	      // Keep 'date' and 'locked' infos as in the template page.
+              if ($key == 'date' or $key == 'locked') $data[$key] = $value;
           }
           return $data;
       }
