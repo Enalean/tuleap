@@ -48,7 +48,9 @@ function add_new_file() {
 			
 	//for each non used ftp files, add a corresponding option ligne (used in the select files)			
 	non_used_ftp_files.each(function(num){
-		builder_node_files.push(Builder.node('option', {value:num}, num));
+		if (num != ''){
+			builder_node_files.push(Builder.node('option', {value:num}, num));
+		}
 	});
 			
 	//TR tag construction		 	
