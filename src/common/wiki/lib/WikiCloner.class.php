@@ -90,6 +90,8 @@ class WikiCloner {
       $new_attachments_path = $GLOBALS['wiki_data_dir'] . '/' . $this->group_id;
       $cmd = "cp -r " . $attachments_src_path . ' ' . $new_attachments_path;
       system($cmd);
+      $this->cloneWikiPermission();
+      $this->cloneWikiPagesPermissions($arr);
 
   }
   
@@ -488,6 +490,40 @@ class WikiCloner {
 	  }
 	  return $id;
       }
+  }
+  
+ /**
+   *
+   *  Sets the same permissions on the whole new wiki as those
+   *  set on the template wiki.
+   *
+   *
+   *
+   */
+  function cloneWikiPermission(){
+      $result = db_query(sprintf("SELECT * FROM permissions where permission_type='WIKI_READ' and object_id=%d", $this->template_id));
+      while($row = db_fetch_array($result)){
+          $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
+	                         ."VALUES ('WIKI_READ', %d, %d)", $this->group_id, $row['ugroup_id']));
+      }
+  }
+  
+ /**
+   *
+   *  Clone permissions set on wiki pages of the template project.
+   *
+   *  @param hash: templatepageid => new page id.
+   *
+   *
+   */
+  function cloneWikiPagesPermissions($array){
+      $result = db_query("SELECT * FROM permissions where permission_type='WIKIPAGE_READ'");
+      while($row = db_fetch_array($result)){
+          $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
+	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id']), $this->group_id));
+      
+      }
+
   }
   
  /**
