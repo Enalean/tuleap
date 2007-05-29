@@ -669,7 +669,8 @@ $CAT <<EOF >> /etc/codex/conf/local.inc
 
 // Disable sub-domains (like cvs.proj.codex.xerox.com)
 // Should be disabled if no DNS delegation
-\$sys_disable_subdomains = 0;
+// This parameter should have been added previously. Uncomment if needed
+//\$sys_disable_subdomains = 0;
 ?>
 EOF
 
