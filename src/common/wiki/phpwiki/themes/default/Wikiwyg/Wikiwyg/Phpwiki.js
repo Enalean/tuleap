@@ -705,9 +705,9 @@ proto.format_th = function(element) {
 
 proto.format_img = function(element) {
     var uri = element.getAttribute('src');
-    if( uri.match(/\/uploads\//) ){
+    if( uri.match(/uploads\//) ){
       uri = escape( uri.substring( uri.lastIndexOf('/')+1, uri.length ) );
-      uri = "[Upload:"+uri+" border=1]";
+      uri = "[Upload:"+uri+"]";
     }
 
     if (uri) {
