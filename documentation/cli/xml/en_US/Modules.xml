@@ -425,9 +425,9 @@ Array
         </section>
 
         <section id="TrackerFunctionAddComment">
-            <title>addcomment</title>
+            <title>addComment</title>
             <para>
-                addcomment: Post a new follow-up comment in an artifact.
+                addComment: Post a new follow-up comment in an artifact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id*: Tracker ID the artifact belongs to.</para>
@@ -444,9 +444,9 @@ Array
                 </itemizedlist>
                 <para>
                 <example>
-                    <title>addcomment command</title>
+                    <title>addComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addcomment --tracker_id=371 --id=7374 --message="I agree with you"
+[mnazaria@linux codex cli ]$ ./codex.php tracker addComment --tracker_id=371 --id=7374 --message="I agree with you"
                     </programlisting>
                 </example>
                 </para>
