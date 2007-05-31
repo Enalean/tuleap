@@ -878,7 +878,7 @@ class Artifact extends Error {
 		if (!$this->deleteAllDependencies()) return false;
 		if ($artifact_id_dependent == $Language->getText('global','none')) unset($artifact_id_dependent);
 	    }
-            if (!$this->addDependencies($artifact_id_dependent,&$changes,$masschange)) {
+            if (!$this->addDependencies($artifact_id_dependent,$changes,$masschange)) {
                 return false;
             }
                 

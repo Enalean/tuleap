@@ -746,7 +746,7 @@ class DocmanController extends Controler {
 
                                     case 'action_paste':
                                         $itemToPaste = null;
-                                        $allowed = $this->checkPasteIsAllowed($item, &$itemToPaste);
+                                        $allowed = $this->checkPasteIsAllowed($item, $itemToPaste);
                                         if(!$allowed) {
                                             $this->view = 'Details';
                                         }
@@ -758,7 +758,7 @@ class DocmanController extends Controler {
 
                                     case 'paste':
                                         $itemToPaste = null;
-                                        $allowed = $this->checkPasteIsAllowed($item, &$itemToPaste);
+                                        $allowed = $this->checkPasteIsAllowed($item, $itemToPaste);
                                         if(!$allowed) {
                                             $this->view = 'Details';
                                         }
