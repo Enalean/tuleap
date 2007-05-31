@@ -1504,7 +1504,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
             if ($field) {
                 $extra_field_id = $field->getID();
                 $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
-            }  else {
+            } else {
                 return new soap_fault(invalid_field_fault,'addArtifact','Invalid Field:'.$extra_field_name['field_name'],'addArtifact','Invalid Field:'.$extra_field_name['field_name']);
             }
         }
@@ -1670,6 +1670,8 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
             if ($field) {
                 $extra_field_id = $field->getID();
                 $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
+            } else {
+                return new soap_fault(invalid_field_fault,'updateArtifact','Invalid Field:'.$extra_field_name['field_name'],'updateArtifact','Invalid Field:'.$extra_field_name['field_name']);
             }
         }
         
