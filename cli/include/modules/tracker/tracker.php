@@ -71,7 +71,7 @@ class CLI_Module_Tracker extends CLI_Module {
      */
     function getArtifactParams($params) {
     
-        // Except the project name and the artifact id,
+        // Except the project name, the noask option and the artifact id,
         // the others parameters are fields
         $extra_fields = array();
         foreach($params as $idx => $key_equals_value) {
@@ -81,16 +81,18 @@ class CLI_Module_Tracker extends CLI_Module {
                 $passed_parameter = $res[1];
                 $passed_value = $res[2];
             }
-            if (in_array($passed_parameter, $this->standard_artifact_fields)) {
-                // this field is a standard field
-                $cmd_params[$passed_parameter] = $passed_value;
-            } else {
-                if ($passed_parameter != 'tracker_id' && $passed_parameter != 'group_id' && $passed_parameter != 'project' && $passed_parameter != 'id') {
-                    // this field is not a standard field, so we consider it as an extra_filed
-                    $extra_field = array();
-                    $extra_field["field_name"] = $passed_parameter;
-                    $extra_field["field_value"] = $passed_value;
-                    $extra_fields[] = $extra_field;
+            if ($passed_parameter) {
+                if (in_array($passed_parameter, $this->standard_artifact_fields)) {
+                    // this field is a standard field
+                    $cmd_params[$passed_parameter] = $passed_value;
+                } else {
+                    if (!in_array($passed_parameter, array('tracker_id', 'group_id', 'project', 'id'))) {
+                        // this field is not a standard field, so we consider it as an extra_filed
+                        $extra_field = array();
+                        $extra_field["field_name"] = $passed_parameter;
+                        $extra_field["field_value"] = $passed_value;
+                        $extra_fields[] = $extra_field;
+                    }
                 }
             }
         }
