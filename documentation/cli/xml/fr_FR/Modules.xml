@@ -351,9 +351,9 @@ Array
         </section>
 
         <section id="TrackerFunctionAddComment">
-            <title>addcomment</title>
+            <title>addComment</title>
             <para>
-                addcomment: Ajoute un commentaire à un artefact.
+                addComment: Ajoute un commentaire à un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker auquel appartient l'artefact.</para>
@@ -373,9 +373,9 @@ Array
                 </itemizedlist>
                 <para>
                 <example>
-                    <title>commande addcomment</title>
+                    <title>commande addComment</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addcomment --tracker_id=371 --id=7374 --message="I agree with you"
+[mnazaria@linux codex cli ]$ ./codex.php tracker addComment --tracker_id=371 --id=7374 --message="I agree with you"
                     </programlisting>
                 </example>
                 <note>Note: Le système de notification par mail n'est pas implémenté pour le moment.</note>
