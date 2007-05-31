@@ -638,7 +638,7 @@ class DocmanActions extends Actions {
                     'PLUGIN_DOCMAN_MANAGE' => false
                 );
                 foreach($permissions as $ugroup_id => $wanted_permission) {
-                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, &$history, $force);
+                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, $history, $force);
                 }
                 
                 $updated = false;

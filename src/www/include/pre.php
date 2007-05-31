@@ -302,7 +302,7 @@ if (isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
             if ($p->usesService($service_name)) {
                 $redirect_to_master_if_needed = false;
                 //If we request a page wich IS NOT distributed...
-                if (!$p->services[$service_name]->isRequestedPageDistributed(&$request)) {
+                if (!$p->services[$service_name]->isRequestedPageDistributed($request)) {
                     //...and we are not on the master...
                     if ($master =& $sf->getMasterServer() && $master->getId() != $GLOBALS['sys_server_id']) {
                         //...then go to the master.
