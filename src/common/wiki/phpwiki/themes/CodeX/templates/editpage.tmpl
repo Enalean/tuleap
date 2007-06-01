@@ -90,9 +90,6 @@
 </tr>
 <?php } ?>
 </table>
-
-<hr noshade="noshade" />
-
 <script language="JavaScript1.3" type="text/javascript">
 <!--
 function showOldMarkupRules(show) {
@@ -108,7 +105,10 @@ function showOldMarkupRules(show) {
 }
 // -->
 </script>
-
+<?php
+if($MARKUP_RULES){
+?>
+<hr noshade="noshade" />
 <div id="oldMarkup" class="wiki-edithelp">
 <!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
 <p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
@@ -119,9 +119,15 @@ function showOldMarkupRules(show) {
 <p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
 <?plugin IncludePage page=_("TextFormattingRules") section=_("Synopsis") quiet=1?>
 </div>
+<?php
+}
+?>
+
 <?=$HIDDEN_INPUTS?>
 </form>
-
+<?php
+if($MARKUP_RULES){
+?>
 <script language="JavaScript1.3" type="text/javascript">
 <!--
 if (document.getElementById) {
@@ -129,3 +135,7 @@ if (document.getElementById) {
 }
 // -->
 </script>
+
+<?php
+}
+?>

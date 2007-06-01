@@ -579,6 +579,11 @@ class PageEditor
 	if (($this->version == 0) and ($request->getArg('mode') != 'wysiwyg')){
 	$el['WYSIWYG_B'] = Button(array("action" => "edit", "mode" => "wysiwyg"), "Wysiwyg Editor");
 	}
+	if ($request->getArg('mode') == 'wysiwyg'){
+	    $el['MARKUP_RULES'] = false;
+	}else{
+	    $el['MARKUP_RULES'] = true;
+	}
 
         $el['PREVIEW_B'] = Button('submit:edit[preview]', _("Preview"),
                                   'wikiaction');
