@@ -187,27 +187,20 @@ class DocmanActions extends Actions {
             if ($request->exist('upload_content')) {
                 $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
                 if ($path) {
-                    $filename = basename($path);
-                    $filesize = filesize($path);
-                    $filetype = mime_content_type($path); //be careful with false detection
+                    $uploadSucceded = true;
+                    $_filename = basename($path);
+                    $_filesize = filesize($path);
+                    $_filetype = mime_content_type($path); //be careful with false detection
                 }
             } else {
                 $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
                 if ($path) {
-                    $filename = $_FILES['file']['name'];
-                    $filesize = $_FILES['file']['size'];
-                    $filetype = $_FILES['file']['type']; //TODO detect mime type server side
+                    $uploadSucceded = true;
+                    $_filename = $_FILES['file']['name'];
+                    $_filesize = $_FILES['file']['size'];
+                    $_filetype = $_FILES['file']['type']; //TODO detect mime type server side
                 }
             }
-            if ($path) {
-                $uploadSucceded = true;
-                
-                //TODO detect mime type server side
-                $_filename = $_FILES['file']['name'];
-                $_filesize = (int) $_FILES['file']['size'];
-                $_filetype = $_FILES['file']['type'];
-                
-            } 
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             if ($path = $fs->store($request->get('content'), $item->getGroupId(), $item->getId(), $number)) {
