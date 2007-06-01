@@ -106,7 +106,7 @@ function showOldMarkupRules(show) {
 // -->
 </script>
 <?php
-if($MARKUP_RULES){
+if($MARKUP_RULES and !isset($PREVIEW_CONTENT)){
 ?>
 <hr noshade="noshade" />
 <div id="oldMarkup" class="wiki-edithelp">
@@ -126,7 +126,7 @@ if($MARKUP_RULES){
 <?=$HIDDEN_INPUTS?>
 </form>
 <?php
-if($MARKUP_RULES){
+if($MARKUP_RULES and !isset($PREVIEW_CONTENT)){
 ?>
 <script language="JavaScript1.3" type="text/javascript">
 <!--
