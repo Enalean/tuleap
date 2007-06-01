@@ -88,9 +88,8 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
             } else if (!($fh = fopen($loaded_params['soap']['content'], "rb"))) {
                 exit_error("Could not open '". $loaded_params['soap']['content'] ."' for reading");
             } else {
-                $contents = fread($fh, filesize($loaded_params['soap']['content']));
+                $contents = file_get_contents($loaded_params['soap']['content']);
                 $loaded_params['soap']['content'] = base64_encode($contents);
-                fclose($fh);
             }
         }
     }
