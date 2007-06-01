@@ -94,10 +94,10 @@ class CLI_Module {
     function getParameter(&$parameter_array, $parameter, $require_value=false) {
         for ($i=0; $i < count($parameter_array); $i++) {
             $res = array();
-            if (preg_match("/^\\-\\-(.+)/",$parameter_array[$i],$res)) {    // several-character parameter? (IE, "--username=john")
+            if (preg_match("/^\\-\\-(.+)/s",$parameter_array[$i],$res)) {    // several-character parameter? (IE, "--username=john")
                 $passed_string = $res[1];
                 // is it --parameter=value or just --parameter?
-                if (preg_match("/(.+)=(.+)/", $passed_string, $res)) {
+                if (preg_match("/(.+)=(.+)/s", $passed_string, $res)) {
                     $passed_parameter = $res[1];
                     $passed_value = $res[2];
                     $has_value = true;
@@ -117,7 +117,7 @@ class CLI_Module {
                     }
                 }
                 
-            } else if (preg_match("/^\\-(.+)/",$parameter_array[$i],$res)) {    // Single character parameter? (IE "-z") or a group of flags (IE "-zxvf")
+            } else if (preg_match("/^\\-(.+)/s",$parameter_array[$i],$res)) {    // Single character parameter? (IE "-z") or a group of flags (IE "-zxvf")
                 $passed_parameter = $res[1];
                 if (strlen($passed_parameter) == 1) {        // Some flag like "-x" or parameter "-U username"
                     // Check to see if there is a value associated to this parameter, like in "-U username".
