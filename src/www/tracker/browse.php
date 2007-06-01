@@ -63,6 +63,7 @@ if (user_isloggedin()) {
 		if ($report_id != user_get_preference('artifact_browse_report'.$atid)) {
 	    	user_set_preference('artifact_browse_report'.$atid, $report_id);
             user_del_preference('artifact_browse_order'.$atid);
+            user_del_preference('artifact_brow_cust'.$atid);
             $GLOBALS['Response']->redirect('?atid='. $atid .'&group_id='. $group_id);
         }
     }
