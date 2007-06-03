@@ -56,7 +56,6 @@ window.onload = function() {
 		       'bold', 'italic', '|',
                        'sup', 'sub', '|',
                        'toc',
-                       'wikitext','|',
 		       'pre','|',
 		       'ordered', 'unordered','hr','|',
 		       'link','|',

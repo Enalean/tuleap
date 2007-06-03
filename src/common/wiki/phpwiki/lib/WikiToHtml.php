@@ -74,13 +74,15 @@ class WikiToHtml {
 					   $this->_html);
     }
     
-    // Replace unknown plugins by keyword Wikitext { tag }
+    // This function is intended to replace unknown plugins by keyword Wikitext { tag }
+    // For the moment we only use wysiwyg edition mode so wikitext tags are not useful.
+    // Plugins markup is returned as it is.
     function replace_unknown_plugins() {
         $pattern = '/(\&lt\;\?plugin[^?]*\?\&gt\;)/Usi';
-	$replace_string = 
+	/*$replace_string = 
 	  '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {
- <br> \1 <br>}</div><br></p>';
-       
+ <br> \1 <br>}</div><br></p>';*/
+        $replace_string = '<br> \1 <br>';
 	$this->_html = preg_replace($pattern,
 				    $replace_string,
 				    $this->_html);
