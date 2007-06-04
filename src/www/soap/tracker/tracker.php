@@ -33,6 +33,7 @@ require_once ('common/tracker/ArtifactFieldSet.class.php');
 require_once ('common/tracker/ArtifactFieldSetFactory.class.php');
 require_once ('common/tracker/ArtifactReportFactory.class.php');
 require_once ('common/tracker/ArtifactGlobalNotificationFactory.class.php');
+require_once ('common/tracker/ArtifactRulesManager.class.php');
 require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
 
 
@@ -82,7 +83,8 @@ $server->wsdl->addComplexType(
         'open_count' => array('name'=>'open_count', 'type' => 'xsd:int'),
         'total_count' => array('name'=>'total_count', 'type' => 'xsd:int'),
         'total_file_size' => array('name'=>'total_file_size', 'type' => 'xsd:float'),
-        'field_sets' => array('name' => 'field_sets', 'type' => 'tns:ArrayOfArtifactFieldSet')
+        'field_sets' => array('name' => 'field_sets', 'type' => 'tns:ArrayOfArtifactFieldSet'),
+        'field_dependencies' => array('name' => 'field_dependencies', 'type' => 'tns:ArrayOfArtifactRule')
     )
 );
 
@@ -248,6 +250,33 @@ $server->wsdl->addComplexType(
         array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldValueList[]')
     ),
     'tns:ArtifactFieldValueList'
+);
+
+$server->wsdl->addComplexType(
+    'ArtifactRule',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(                  
+        'rule_id' => array('name'=>'rule_id', 'type' => 'xsd:int'),
+        'group_artifact_id'  => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
+        'source_field_id' => array('name'=>'source_field_id', 'type' => 'xsd:int'),
+        'source_value_id' => array('name'=>'source_value_id', 'type' => 'xsd:int'),
+        'target_field_id' => array('name'=>'target_field_id', 'type' => 'xsd:int'),
+        'target_value_id' => array('name'=>'target_value_id', 'type' => 'xsd:int')
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfArtifactRule',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactRule[]')),
+    'tns:ArtifactRule'
 );
 
 $server->wsdl->addComplexType(
@@ -1250,6 +1279,10 @@ function artifacttype_to_soap($at) {
                 'fields'=>$fields
             );
         }
+        
+        // We add the field dependencies
+        $field_dependencies = artifactrules_to_soap($at);
+        
         $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
                 ." FROM artifact_file af, artifact a, artifact_group_list agl"
                 ." WHERE (af.artifact_id = a.artifact_id)" 
@@ -1265,7 +1298,8 @@ function artifacttype_to_soap($at) {
             'open_count' => ($at->userHasFullAccess()?$open_count:NULL),
             'total_count' => ($at->userHasFullAccess()?$count:NULL),
             'total_file_size' => db_result($result, 0, 0),
-            'field_sets' => $field_sets
+            'field_sets' => $field_sets,
+            'field_dependencies' => $field_dependencies
         );
     }
     return $return;
@@ -1278,6 +1312,29 @@ function artifacttypes_to_soap($at_arr) {
             //skip if error
         } else {
             $return[] = artifacttype_to_soap($at_arr[$i]);	
+        }
+    }
+    return $return;
+}
+
+function artifactrule_to_soap($rule) {
+	$return = array();
+    $return['rule_id'] = $rule->id;
+    $return['group_artifact_id'] = $rule->group_artifact_id;
+    $return['source_field_id'] = $rule->source_field;
+    $return['source_value_id'] = $rule->source_value;
+    $return['target_field_id'] = $rule->target_field;
+    $return['target_value_id'] = $rule->target_value;
+    return $return;
+}
+
+function artifactrules_to_soap($artifact_type) {
+	$return = array();
+    $arm =& new ArtifactRulesManager();
+    $rules = $arm->getAllRulesByArtifactTypeWithOrder($artifact_type->getID());
+    if ($rules && count($rules) > 0) {
+        foreach ($rules as $key => $rule) {
+            $return[] = artifactrule_to_soap($rule);
         }
     }
     return $return;
@@ -1429,44 +1486,44 @@ function artifact_to_soap($artifact) {
         // Check Permissions on standard fields (status_id, submitted_by, open_date, close_date, summary, details, severity)
         // artifact_id
         $field_artifact_id = $art_field_fact->getFieldFromName('artifact_id');
-        if ($field_artifact_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_artifact_id && $field_artifact_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['artifact_id'] = $artifact->getID();
         }
         // group_artifact_id
         $return['group_artifact_id'] = $artifact->ArtifactType->getID();
         // status_id
         $field_status_id = $art_field_fact->getFieldFromName('status_id');
-        if ($field_status_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_status_id && $field_status_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['status_id'] = $artifact->getStatusID();
         }
         // submitted_by
         $field_submitted_by = $art_field_fact->getFieldFromName('submitted_by');
-        if ($field_submitted_by->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_submitted_by && $field_submitted_by->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['submitted_by'] = $artifact->getSubmittedBy();
         }
         // open_date
         $field_open_date = $art_field_fact->getFieldFromName('open_date');
-        if ($field_open_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_open_date && $field_open_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['open_date'] = $artifact->getOpenDate();
         }
         // close_date
         $field_close_date = $art_field_fact->getFieldFromName('close_date');
-        if ($field_close_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_close_date && $field_close_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['close_date'] = $artifact->getCloseDate();
         }
         // summary
         $field_summary = $art_field_fact->getFieldFromName('summary');
-        if ($field_summary->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_summary && $field_summary->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['summary'] = $artifact->getSummary();
         }
         // details
         $field_details = $art_field_fact->getFieldFromName('details');
-        if ($field_details->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_details && $field_details->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['details'] = $artifact->getDetails();
         }
         // severity
         $field_severity = $art_field_fact->getFieldFromName('severity');
-        if ($field_severity->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+        if ($field_severity && $field_severity->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['severity'] = $artifact->getSeverity();
         }
         $return['extra_fields'] = $extrafieldvalues;
