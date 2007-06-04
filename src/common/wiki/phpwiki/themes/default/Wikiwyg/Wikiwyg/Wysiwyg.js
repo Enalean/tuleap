@@ -217,8 +217,13 @@ proto.do_h3 = proto.format_command;
 proto.do_h4 = proto.format_command;
 proto.do_h5 = proto.format_command;
 proto.do_h6 = proto.format_command;
-proto.do_pre = proto.format_command;
 proto.do_p = proto.format_command;
+
+proto.do_pre = function(){
+    var html = '<pre style="background-color:#FDFDF7"><br></pre>';
+    this.insert_html(html);
+    this.format_command;
+}
 
 proto.do_table = function() {
   var rows = prompt("Number of rows", '2');
