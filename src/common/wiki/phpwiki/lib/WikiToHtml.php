@@ -137,9 +137,8 @@ class WikiToHtml {
 	$this->_html = preg_replace($pattern,
 				    $replace_string,
 				    $this->_html) ; 
-
     }
-
+    
     function clean_plugin_name() {
 	// Remove plugin name converted in a link
 	$pattern = '/(\&lt\;\?plugin\s)\<span.*\>\<span\>\<a href=.*\>(\w+)\<\/a\><\/span\><\/span>([^?]*\?\&gt\;)/Umsi';
@@ -156,6 +155,11 @@ class WikiToHtml {
 function replace_rich_table($matched) {
   $plugin = $matched[1];
 
+  // External links
+  $pattern = '/\<a href\=\"(.*)\".*<img.*\/\>(.*)\<\/span\>(.*)\<\/a\>/Umsi';     
+  $replace_string = "[".'\2\3'."|".'\1'."]";
+  $plugin = preg_replace($pattern, $replace_string, $plugin) ;
+      
   $unknown_options = "/colspan|rowspan|width|height/";
   
   // if the plugin contains one of the options bellow
@@ -169,7 +173,7 @@ function replace_rich_table($matched) {
     
     $plugin = preg_replace($pattern,
 			   $replace_string,
-			   $plugin) ; 
+			   $plugin) ;
     
     //replace unused </p> by \n
     $pattern = '/\<\/p\>/Umsi';
@@ -177,7 +181,7 @@ function replace_rich_table($matched) {
     
     $plugin = preg_replace($pattern,
 			   $replace_string,
-			   $plugin) ; 
+			   $plugin) ;
     
     $plugin = "<?plugin RichTable ".$plugin." ?>";
     
