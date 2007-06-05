@@ -31,7 +31,7 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 	
 	$doubleClickToEdit = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT)
 	    ? 'true' : 'false';
-
+	    
 	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
 				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
 	
@@ -51,9 +51,9 @@ window.onload = function() {
 	        imagesLocation: base_url+'/themes/default/Wikiwyg/images/',
 		controlLayout: [
 		       'save', 'preview', 'save_button', '|',
-		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', '|',
-		       'link', 'wikitext', '|',
-		       'toc', 'pre', 'table'
+		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', 'pre', 'toc', '|',
+		       'link', 'wikitext', '|', '|',
+		       'table'
 		       ],
 		styleSelector: [
 		       'label', 'p', 'h2', 'h3', 'h4', 'pre'
@@ -68,17 +68,17 @@ window.onload = function() {
 		       bold:	 'Format bold text',
 		       italic:	 'Format italic text',
 		       verbatim: 'Verbatim',
-                       toc:	 'Experimental may break text: Insert table of content', 
-		       pre:	 'Experimental may break text: Insert preformatted text',
-		       table:	 'Experimental may break text: Insert table',
-                       wikitext:   'Insert ASCII wikitext', 
+                       toc:	 'Insert Table Of Content', 
+		       pre:	 'Insert preformatted text',
+		       table:	 'Create Rich Table (EXPERIMENTAL feature)',
+                       wikitext: 'Insert ASCII wikitext', 
                        sup:      'Format Superscript text', 
                        sub:      'Format Subscript text',
 		       ordered:	 'Format numbered list',
 		       unordered:'Format unordered list',
 		       hr:	 'Insert horizontal line',
                        preview:  'Preview wiki page',   
-                       save_button:'Save wiki page'   
+                       save_button:'Save wiki page'
 	              }
             },
             wysiwyg: {
