@@ -50,16 +50,10 @@ window.onload = function() {
             toolbar: {
 	        imagesLocation: base_url+'/themes/default/Wikiwyg/images/',
 		controlLayout: [
-		       'save','preview','|','save_button','|',
-		       'p','|',
-		       'h2', 'h3', 'h4','|',
-		       'bold', 'italic', '|',
-                       'sup', 'sub', '|',
-                       'toc',
-		       'pre','|',
-		       'ordered', 'unordered','hr','|',
-		       'link','|',
-                       'table'
+		       'save', 'preview', 'save_button', '|',
+		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', '|',
+		       'link', 'wikitext', '|',
+		       'toc', 'pre', 'table'
 		       ],
 		styleSelector: [
 		       'label', 'p', 'h2', 'h3', 'h4', 'pre'
@@ -67,16 +61,24 @@ window.onload = function() {
 		controlLabels: {
 	               save:     'Apply changes',
 		       cancel:   'Exit toolbar',
-		       h2:       'Title 1',
-		       h3:       'Title 2',
-		       h4:       'Title 3',
+		       p:	 'Format plain text',
+		       h2:       'Format Level 1 header',
+		       h3:       'Format Level 2 header',
+		       h4:       'Format Level 3 header',
+		       bold:	 'Format bold text',
+		       italic:	 'Format italic text',
 		       verbatim: 'Verbatim',
-                       toc:   'Table of content', 
-                       wikitext:   'Insert Wikitext section', 
-                       sup:      'Sup', 
-                       sub:      'Sub',
-                       preview:  'Preview',   
-                       save_button:'Save'   
+                       toc:	 'Experimental may break text: Insert table of content', 
+		       pre:	 'Experimental may break text: Insert preformatted text',
+		       table:	 'Experimental may break text: Insert table',
+                       wikitext:   'Insert ASCII wikitext', 
+                       sup:      'Format Superscript text', 
+                       sub:      'Format Subscript text',
+		       ordered:	 'Format numbered list',
+		       unordered:'Format unordered list',
+		       hr:	 'Insert horizontal line',
+                       preview:  'Preview wiki page',   
+                       save_button:'Save wiki page'   
 	              }
             },
             wysiwyg: {
