@@ -48,6 +48,7 @@ class WikiToHtml {
         $this->clean_plugin_name();
         $this->replace_known_plugins();
         $this->replace_unknown_plugins();
+	$this->color_pre_tags();
 	//	$this->replace_tags();
 	$this->clean_plugin();
 	if ($charset != 'utf-8'){
@@ -79,6 +80,14 @@ class WikiToHtml {
         $pattern = '/(\&lt\;\?plugin[^?]*\?\&gt\;)/Usi';
 	$replace_string = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {<br> \1 <br>}</div><br></p>';
 	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
+    }
+    
+    // Preview preformatted areas with a light yellow background.
+    function color_pre_tags(){
+        $pattern = '/\<pre class\=\".*\"\>/Usi';
+        $replace_string = '<pre style="background-color:#FDFDF7">';
+        $this->_html = preg_replace($pattern, $replace_string, $this->_html);
+    
     }
 
     // Clean links to keep only <a href="link">name</a>
