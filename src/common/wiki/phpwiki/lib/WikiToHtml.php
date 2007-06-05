@@ -74,44 +74,35 @@ class WikiToHtml {
 					   $this->_html);
     }
     
-    // This function is intended to replace unknown plugins by keyword Wikitext { tag }
-    // For the moment we only use wysiwyg edition mode so wikitext tags are not useful.
-    // Plugins markup is returned as it is.
+    // Replace unknown plugins by keyword Wikitext { tag }
     function replace_unknown_plugins() {
         $pattern = '/(\&lt\;\?plugin[^?]*\?\&gt\;)/Usi';
-	/*$replace_string = 
-	  '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {
- <br> \1 <br>}</div><br></p>';*/
-        $replace_string = '<br> \1 <br>';
-	$this->_html = preg_replace($pattern,
-				    $replace_string,
-				    $this->_html);
+	$replace_string = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {<br> \1 <br>}</div><br></p>';
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
     }
 
     // Clean links to keep only <a href="link">name</a>
     function clean_links() {
-      // Existing links
-      $pattern = '/\<a href\=\"index.php\?pagename\=(\w+)\"([^>])*\>/Umsi';      
-      $replace_string = '<a href="\1">';      
-      $this->_html = preg_replace($pattern,
-				  $replace_string,
-				  $this->_html) ;
-      // Non existing links
+        // Existing links
+        $pattern = '/\<a href\=\"index.php\?pagename\=(\w+)\"([^>])*\>/Umsi';      
+        $replace_string = '<a href="\1">';      
+        $this->_html = preg_replace($pattern, $replace_string, $this->_html);
+	
+        // Non existing links
 	$pattern = '/\<a href\=\"index.php\?pagename\=([^"]*)(&amp;action){1}([^>])*\>/Umsi';
 	$replace_string = '<a href="\1">';
-	
-	$this->_html = preg_replace($pattern,
-				    $replace_string,
-				    $this->_html) ;
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
 
 	// Clean underline 
         $pattern = '/\<u\>(.*)\<\/u\>(\<a href="(.*))[?"]{1}.*\>.*\<\/a\>/Umsi';
-	$replace_string = 
-	  '<span>\2" style="color:blue;">\1</a></span>';
+	$replace_string = '<span>\2" style="color:blue;">\1</a></span>';
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
 	
-	$this->_html = preg_replace($pattern,
-				    $replace_string,
-				    $this->_html) ;
+	// Clean Wiki unknown
+	$pattern = '/\<span class\=\"wikiunknown\"\>\<span\>\<a href\=\".*\"\>(.*)\<\/a\>\<\/span\>\<\/span\>/';
+	$replace_string = '\1';
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
+	
     }
     
     // Put unknown tags in Wikitext {}
