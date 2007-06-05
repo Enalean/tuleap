@@ -109,7 +109,9 @@ $server->wsdl->addComplexType(
         'field_set_id' => array('name'=>'field_set_id', 'type' => 'xsd:int'),
         'group_artifact_id'  => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
+        'label' => array('name' => 'label', 'type' => 'xsd:string'),
         'description' => array('name'=>'description', 'type' => 'xsd:string'),
+        'description_text' => array('name'=>'description_text', 'type' => 'xsd:string'),
         'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
         'fields'=> array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactField'),
     )
@@ -1274,7 +1276,9 @@ function artifacttype_to_soap($at) {
                 'field_set_id'=>$result_fieldset->getID(),
                 'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
                 'name'=>$result_fieldset->getName(),
+                'label'=>$result_fieldset->getLabel(),
                 'description'=>$result_fieldset->getDescription(),
+                'description_text'=>$result_fieldset->getDescriptionText(),
                 'rank'=>$result_fieldset->getRank(),
                 'fields'=>$fields
             );
