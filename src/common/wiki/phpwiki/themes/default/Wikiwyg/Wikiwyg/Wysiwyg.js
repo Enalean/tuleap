@@ -239,7 +239,7 @@ proto.do_table = function() {
       }
 
     var html = 
-    '<table border="5"><tbody>';
+    '<table border="1"><tbody>';
   
     for(i=0; i<rows;i++) {
       html = html + "<tr>";
@@ -249,7 +249,7 @@ proto.do_table = function() {
       html = html + "</tr>";
     }
 
-    html = html + "<tbody></table>";
+    html = html + "</tbody></table>";
    
     if (! Wikiwyg.is_ie)
         this.get_edit_window().focus();
