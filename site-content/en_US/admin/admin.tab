@@ -97,6 +97,7 @@ admin_approve_pending_users	no_validated	No Validated User Registration to Appro
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	Edit User/Group Settings
 admin_approve_pending_users	approve	Approve User
+admin_approve_pending_users	approve_without_email	Approve User Without Email Validation
 admin_approve_pending_users	approve_pending	Approve as Restricted
 admin_approve_pending_users	delete	Delete User
 admin_approve_pending_users	purpose	Purpose

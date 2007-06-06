@@ -102,6 +102,7 @@ admin_approve_pending_users	no_validated	Aucun compte utilisateur en attente d'a
 admin_approve_pending_users	user_info	Montrer les infos utilisateur / Envoyer un e-mail
 admin_approve_pending_users	user_edit	Changer la configuration Utilisateur/Groupe
 admin_approve_pending_users	approve	Approuver le compte
+admin_approve_pending_users	approve_without_email	Approuver le compte sans validation par email
 admin_approve_pending_users	approve_pending	Approuver en compte restreint
 admin_approve_pending_users	delete	Détruire le compte
 admin_approve_pending_users	purpose	Motif

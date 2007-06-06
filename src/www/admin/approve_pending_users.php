@@ -107,13 +107,17 @@ if (db_numrows($res) < 1) {
         <p>
             <TABLE WIDTH="70%">
             <TR>
-            <TD>
-        <FORM action="<?php echo $PHP_SELF.'?page='.$page; ?>" method="POST">
+        <?php 
+        if($GLOBALS['sys_user_approval'] != 1 || $page!='pending'){
+            echo '<TD>
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
-        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="<?php print $row['user_id']; ?>">
-        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending_users','approve'); ?>">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve').'">
         </FORM>
-        </TD>
+        </TD>';
+        }
+        ?>
         
     <?php
     if ($GLOBALS['sys_allow_restricted_users']) {
@@ -129,13 +133,14 @@ if (db_numrows($res) < 1) {
     ?>
     <?php 
         if($GLOBALS['sys_user_approval'] == 1 && $page=='pending'){
-            echo '<TD>
+            echo '<TD >
         <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="validate">
         <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
         <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','validate').'">
         </FORM>
         </TD>';
+
         }
         ?>
             <TD> 
@@ -145,6 +150,17 @@ if (db_numrows($res) < 1) {
         <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending_users','delete'); ?>">
         </FORM>
             </TD>
+            <?php 
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending'){
+        echo '<TD>
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+        <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve_without_email').'">
+        </FORM>
+        </TD>';
+        }
+        ?>
             </TR>
             </TABLE>
         <P>
