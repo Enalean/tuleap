@@ -143,6 +143,8 @@ function ugroup_get_name_from_id($ugroup_id) {
  * @return true if user is member of the ugroup, false otherwise.
  */
 function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
+    $um =& UserManager::instance();
+    $user =& $um->getUserById($user_id);
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
         // Empty group
@@ -152,30 +154,30 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
         return true;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
-        if (user_isloggedin()) { return true; }
+        return $user_id != 0;
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        if (user_ismember($group_id)) { return true; }
+        if ($user->isMember($group_id)) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
         // File manager admins
-        if (user_ismember($group_id,'R2')) { return true; }
+        if ($user->isMember($group_id,'R2')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
         // Document admin
-        if (user_ismember($group_id,'D2')) { return true; }
+        if ($user->isMember($group_id,'D2')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
         // Document tech
-        if (user_ismember($group_id,'D1')) { return true; }
+        if ($user->isMember($group_id,'D1')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        if (user_ismember($group_id,'W2')) { return true; }
+        if ($user->isMember($group_id,'W2')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        if (user_ismember($group_id,'A')) { return true; }
+        if ($user->isMember($group_id,'A')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         $group = group_get_object($group_id);	
         $at = new ArtifactType($group, $atid);
-        return $at->userIsAdmin();
+        return $at->userIsAdmin($user_id);
     } else { 
         // Normal ugroup
         $sql="SELECT * from ugroup_user where ugroup_id='$ugroup_id' and user_id='$user_id'";
