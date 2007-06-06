@@ -688,13 +688,17 @@ class ArtifactType extends Error {
         }
 
 	/**
-	 *	userIsAdmin - see if the logged-in user's perms are >= 2 or project admin.
+	 *	userIsAdmin - see if the user's perms are >= 2 or project admin.
 	 *
 	 *	@return boolean
 	 */
-	function userIsAdmin() { 
-
-		if ( ($this->getCurrentUserPerm() >= 2) || (user_ismember($this->Group->getID(),'A')) ) {
+	function userIsAdmin($user_id = 0) { 
+        if (!$user_id) {
+            $user_id = user_getid();
+        }
+        $um =& UserManager::instance();
+        $user =& $um->getUserById($user_id);
+		if ( ($this->getUserPerm($user_id) >= 2) || ($user->isMember($this->Group->getID(),'A')) ) {
 			return true;
 		} else {
 			return false;
