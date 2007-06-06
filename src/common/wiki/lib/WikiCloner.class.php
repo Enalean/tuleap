@@ -50,9 +50,27 @@ class WikiCloner {
     $this->template_id = (int) $template_id;
     $this->group_id = (int) $group_id;
     $this->tmpl_wiki_exist = null;
+    $this->new_wiki_is_used = null;
 
   }
   
+ /**
+   *
+   *  Check if new project's wiki service is used.
+   *
+   *  @return boolean.
+   *
+   *
+   */
+
+  function newWikiIsUsed(){
+      if($this->new_wiki_is_used === null) {
+         $res = db_query(sprintf("SELECT is_used FROM service WHERE group_id=%d AND short_name='%s'", $this->group_id, $this->escapeString("wiki")));
+         $this->new_wiki_is_used = (db_result($res, 0, 'is_used') ==  1);
+      }
+      return $this->new_wiki_is_used;
+  }
+ 
  /**
    *
    *  Check if template project has wiki service enabled
@@ -60,13 +78,13 @@ class WikiCloner {
    *
    */
   function templateWikiExists(){
-      if($this->tmpl_wiki_exist === null) {
+      if($this->new_wiki_is_used === null) {
          $res = db_query('SELECT count(*) AS nb FROM wiki_page'
                          .' WHERE group_id='.$this->template_id);
          $this->tmpl_wiki_exist = (db_result($res, 0, 'nb') > 0);
       }
       return $this->tmpl_wiki_exist;
-  }  
+  } 
   
  /**
    *

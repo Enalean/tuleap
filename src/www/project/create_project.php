@@ -248,8 +248,10 @@ function create_project($data) {
         
 	// Clone wiki from the template
 	$clone = new WikiCloner($template_id, $group_id);
-	// check if the template project has a wiki initialised
-        if ($clone->templateWikiExists()){
+
+        // check if the template project has a wiki initialised
+        if ($clone->templateWikiExists() and $clone->newWikiIsUsed()){
+	    //clone wiki.  
 	    $clone->CloneWiki();
 	}
 	
