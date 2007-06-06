@@ -239,3 +239,4 @@ account_verify	title	Account Verification
 account_verify	message	In order to complete your registration, login now. Your account will then be activated for normal logins.
 account_verify	err_user	Invalid username.
 account_verify	err_hash	Invalid confirmation hash.
+account_verify	err_status	Invalid status. Site Administrators didn't validate your account.

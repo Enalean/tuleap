@@ -243,3 +243,5 @@ account_verify	title	Vérification d'un compte utilisateur
 account_verify	message	Pour confirmer votre création de compte, connectez-vous dès maintenant. Votre compte sera alors définitivement activé.
 account_verify	err_user	Nom d'utilisateur invalide
 account_verify	err_hash	Clé de confirmation invalide.
+account_verify	err_status	Statut invalide. L'administrateur n'a pas encore validé le compte.
+

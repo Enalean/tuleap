@@ -28,11 +28,17 @@ function verify_login_valid()	{
 		return 0;
 	}
 	$usr = db_fetch_array($res);
+    //if sys_user_approval=1 then check if the admin aldready validates the account
 
-	if (strcmp($GLOBALS['confirm_hash'],$usr['confirm_hash'])) {
-		$GLOBALS['error_msg'] = $Language->getText('account_verify', 'err_hash');
-		return 0;
-	}
+    if($GLOBALS['sys_user_approval'] == 0 || $usr['status'] == 'V'){
+    	if (strcmp($GLOBALS['confirm_hash'],$usr['confirm_hash'])) {
+    		$GLOBALS['error_msg'] = $Language->getText('account_verify', 'err_hash');
+    		return 0;
+    	}
+    }else {
+        $GLOBALS['error_msg'] = $Language->getText('account_verify', 'err_status');
+        return 0;
+    }
 
 	// then check valid login	
 	return (session_login_valid($GLOBALS['form_loginname'],$GLOBALS['form_pw'],1));
