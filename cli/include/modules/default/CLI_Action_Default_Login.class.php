@@ -83,7 +83,7 @@ class CLI_Action_Default_Login extends CLI_Action {
         $GLOBALS['soap']->setSessionUserID($user_id);
         
         // If project was specified, get project information and store for future use
-        if (isset($params['others']['projectname'])) {
+        if (isset($loaded_params['others']['projectname'])) {
             $group_id = $this->get_group_id($loaded_params['others']['projectname']);
             if (!$group_id) {
                 exit_error('Project "'.$loaded_params['others']['projectname'].'" doesn\'t exist');
