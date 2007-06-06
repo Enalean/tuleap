@@ -48,7 +48,10 @@ if (isset($login) && $login && !$success) {
             echo "<P>".$Language->getText('account_login', 'pending_msg');
             echo "<P><A href=\"pending-resend.php?form_user=". htmlentities($form_loginname, ENT_QUOTES) ." \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
         }
-    } else if ($status == 'S') {
+    } else if ($status == 'V'){
+        echo "<P>".$Language->getText('account_login', 'validation_msg');
+        echo "<P><A href=\"pending-resend.php?form_user=". htmlentities($form_loginname, ENT_QUOTES) ." \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
+    }else if ($status == 'S') {
 	echo "<P><B>".$Language->getText('account_suspended', 'title')."</B>";
 	echo "<P>".$Language->getText('account_suspended', 'message', array($GLOBALS['sys_email_contact']));
 	echo "<br><hr><p>";

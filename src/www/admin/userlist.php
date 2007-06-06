@@ -33,6 +33,9 @@ function show_users_list ($result,$user_name_search="") {
     if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users']) {
         echo "<th>".$Language->getText('admin_userlist','restricted')."</th>";
     }
+    if ($GLOBALS['sys_user_approval']) {
+        echo "<th>".$Language->getText('admin_userlist','validated')."</th>";
+    }
     echo "<th>".$Language->getText('admin_userlist','deleted')."</th>";
     echo "<th>".$Language->getText('admin_userlist','suspended')."</th>\n";
 
@@ -42,12 +45,14 @@ function show_users_list ($result,$user_name_search="") {
 		if ($usr['status'] == 'R') print "<u>";
 		if ($usr['status'] == 'D') print "<I>";
 		if ($usr['status'] == 'P') print "*";
+        if ($usr['status'] == 'V') print "(v)";
 		print $usr['user_name']."</A>";
 		if ($usr['status'] == 'A') print "</B></TD>";
 		if ($usr['status'] == 'R') print "</u></TD>";
 		if ($usr['status'] == 'D') print "</I></TD>";
 		if ($usr['status'] == 'S') print "</TD>";
 		if ($usr['status'] == 'P') print "</TD>";
+        if ($usr['status'] == 'V') print "</TD>";
 		print "\n<TD><A HREF=\"usergroup.php?user_id=".$usr['user_id']."\">".$usr['realname']."</A></TD>";
 		print "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
                 if ($usr['status'] == 'A') {
@@ -57,6 +62,13 @@ function show_users_list ($result,$user_name_search="") {
                     if ($usr['status'] == 'R') {
                         print "\n<TD>".$Language->getText('admin_userlist','restricted')."</TD>";
                     } else { print "\n<TD><A HREF=\"userlist.php?action=restrict&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','restrict')."]</A></TD>"; }
+                }
+                if($GLOBALS['sys_user_approval'] == 1) {
+                    if($usr['status'] == 'V' || $usr['status'] == 'A'){
+                        print "\n<TD>".$Language->getText('admin_userlist','validated')."</TD>";
+                    } else {
+                        print "\n<TD><A HREF=\"userlist.php?action=validate&user_id=$usr[user_id]".$user_name_param."\">[".$Language->getText('admin_userlist','validate')."]</A></TD>"; 
+                    }
                 }
                 if ($usr['status'] == 'D') {
                     print "\n<TD>".$Language->getText('admin_userlist','deleted')."</TD>";
@@ -89,6 +101,15 @@ if ($action=='delete') {
 if ($action=='activate') {
 	db_query("UPDATE user SET status='A' WHERE user_id='$user_id'");
 	echo '<H2>'.$Language->getText('admin_userlist','user_active').'</H2>';
+}
+
+/*
+    Validate their account
+*/
+if ($action=='validate') {
+    db_query("UPDATE user SET status='V' WHERE user_id='$user_id'");
+    //TODO send an email when validate...
+    echo '<H2>'.$Language->getText('admin_userlist','user_validated').'</H2>';
 }
 
 /*

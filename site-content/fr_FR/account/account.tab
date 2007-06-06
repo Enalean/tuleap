@@ -130,7 +130,8 @@ account_login	secure	sécurisé
 account_login	error_can_t_update_passwd	Erreur interne&nbsp;: mise à jour des mots de passe impossible.
 account_login	pending_title	Compte en attente
 account_login	pending_msg	Votre compte est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la phase d'enregistrement, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
-account_login	need_approval	Votre compte est actuellement en attente d'aprobation par un administrateur. Vous serez notifié par email lorsque le compte sera actif.
+account_login	validation_msg	Votre compte a été validé par un administrateur, il est actuellement en attente de confirmation. En visitant le lien inclus dans le message que vous avez reçu après la validation de votre compte par un administrateur, vous activerez votre compte utilisateur. <P>Si vous souhaitez recevoir à nouveau cet e-mail, cliquez sur le bouton ci-dessous et un autre message de confirmation sera envoyé à l'adresse e-mail indiquée lors de votre enregistrement.
+account_login	need_approval	Votre compte est actuellement en attente d'aprobation par un administrateur. Vous serez notifié par email lorsque le compte sera validé.
 account_login	resend_btn	Renvoyer le message de confirmation
 account_login	cookies	Les "cookies" doivent être autorisés au delà de cette étape
 account_login	name	Nom de login
@@ -243,3 +244,5 @@ account_verify	title	Vérification d'un compte utilisateur
 account_verify	message	Pour confirmer votre création de compte, connectez-vous dès maintenant. Votre compte sera alors définitivement activé.
 account_verify	err_user	Nom d'utilisateur invalide
 account_verify	err_hash	Clé de confirmation invalide.
+account_verify	err_status	Statut invalide. L'administrateur n'a pas encore validé le compte.
+

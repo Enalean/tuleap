@@ -166,7 +166,7 @@ if (isset($Register)) {
         } else {
             // Registration requires approval - send a mail to site admin and
             // inform the user that approval is required
-            $href_approval = get_server_url().'/admin/approve_pending_users.php';
+            $href_approval = get_server_url().'/admin/approve_pending_users.php?page=pending';
     
             $content .= '<p><b>'.$Language->getText('account_register', 'title_approval').'</b>';
             $content .= '<p>'.$Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));

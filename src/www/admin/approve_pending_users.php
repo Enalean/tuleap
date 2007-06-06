@@ -19,6 +19,10 @@ $action = '';
 if (isset($_REQUEST['action'])) {
     $action = $_REQUEST['action'];
 }
+$page = '';
+if (isset($_REQUEST['page'])) {
+    $page = $_REQUEST['page'];
+}
 
 if (($action=='activate') || ($action=='activate_restricted')) {
 
@@ -32,7 +36,7 @@ if (($action=='activate') || ($action=='activate_restricted')) {
     db_query("UPDATE user SET status='".$newstatus."'".$shell.
 	     " WHERE user_id IN ($list_of_users)");
 
-    // Now send the user verification emails
+    /*// Now send the user verification emails
     $res_user = db_query("SELECT email, confirm_hash FROM user "
 			 . " WHERE user_id IN ($list_of_users)");
 	
@@ -41,8 +45,27 @@ if (($action=='activate') || ($action=='activate_restricted')) {
                 $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
         }
         usleep(250000);
-    }
+    }*/
 
+} else if($action=='validate'){
+
+    $newstatus='V';
+
+    // update the user status flag to active
+    db_query("UPDATE user SET status='V'".
+         " WHERE user_id IN ($list_of_users)");
+
+    // Now send the user verification emails
+    $res_user = db_query("SELECT email, confirm_hash FROM user "
+             . " WHERE user_id IN ($list_of_users)");
+    
+    while ($row_user = db_fetch_array($res_user)) {
+        if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'])) {
+                $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+        }
+        usleep(250000);
+    }
+    
 } else if ($action=='delete') {
     db_query("UPDATE user SET status='D' WHERE user_id='$user_id'");
 }
@@ -51,11 +74,21 @@ if (($action=='activate') || ($action=='activate_restricted')) {
 // No action - First time in this script 
 // Show the list of pending user waiting for approval
 //
-$res = db_query("SELECT * FROM user WHERE status='P'");
+if($page=='pending'){
+    $res = db_query("SELECT * FROM user WHERE status='P'");
+    $msg = $Language->getText('admin_approve_pending_users','no_pending_validated');
+    if($GLOBALS['sys_user_approval'] == 0) {
+        $res = db_query("SELECT * FROM user WHERE status='P' OR status='V'");
+        $msg = $Language->getText('admin_approve_pending_users','no_pending');
+    }
+}else if($page=='validated'){
+    $res = db_query("SELECT * FROM user WHERE status='V'");
+    $msg = $Language->getText('admin_approve_pending_users','no_validated');
+}
 
 if (db_numrows($res) < 1) {
-    site_admin_header(array('title'=>$Language->getText('admin_approve_pending_users','no_pending')));
-    echo $Language->getText('admin_approve_pending_users','no_pending');
+    site_admin_header(array('title'=>$msg));
+    echo $msg;
 } else {
 
     site_admin_header(array('title'=>$Language->getText('admin_approve_pending_users','title')));
@@ -74,18 +107,23 @@ if (db_numrows($res) < 1) {
         <p>
             <TABLE WIDTH="70%">
             <TR>
-            <TD>
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <?php 
+        if($GLOBALS['sys_user_approval'] != 1 || $page!='pending'){
+            echo '<TD>
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
-        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="<?php print $row['user_id']; ?>">
-        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending_users','approve'); ?>">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve').'">
         </FORM>
-        </TD>
+        </TD>';
+        }
+        ?>
+        
     <?php
     if ($GLOBALS['sys_allow_restricted_users']) {
         echo '
             <TD>
-        <FORM action="'.$PHP_SELF.'" method="POST">
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate_restricted">
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
         <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve_pending').'">
@@ -93,13 +131,36 @@ if (db_numrows($res) < 1) {
         </TD>';
     }
     ?>
+    <?php 
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending'){
+            echo '<TD >
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+        <INPUT TYPE="HIDDEN" NAME="action" VALUE="validate">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','validate').'">
+        </FORM>
+        </TD>';
+
+        }
+        ?>
             <TD> 
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <FORM action="<?php echo $PHP_SELF.'?page='.$page; ?>" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
         <INPUT TYPE="HIDDEN" NAME="user_id" VALUE="<?php print $row['user_id']; ?>">
         <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending_users','delete'); ?>">
         </FORM>
             </TD>
+            <?php 
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending'){
+        echo '<TD>
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+        <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve_without_email').'">
+        </FORM>
+        </TD>';
+        }
+        ?>
             </TR>
             </TABLE>
         <P>
@@ -131,23 +192,33 @@ if (db_numrows($res) < 1) {
             <TABLE WIDTH="70%">
             <TR>
             <TD>
-        <FORM action="'.$PHP_SELF.'" method="POST">
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
         <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
         <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve_all').'">
         </FORM>
             </TD>';
+    
     if ($GLOBALS['sys_allow_restricted_users']) {
         echo '
     
             <TD>
-        <FORM action="'.$PHP_SELF.'" method="POST">
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
         <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate_restricted">
         <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
         <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','approve_all_pending').'">
         </FORM>
             </TD>';
     }
+    if($GLOBALS['sys_user_approval'] == 1 && $page=='pending'){
+            echo '<TD>
+        <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
+        <INPUT TYPE="HIDDEN" NAME="action" VALUE="validate">
+        <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
+        <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','validate_all').'">
+        </FORM>
+        </TD>';
+        }
     echo '
             </TR>
             </TABLE>
