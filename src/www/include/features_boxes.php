@@ -9,6 +9,8 @@
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
 require_once('www/stats/site_stats_utils.php');
+require_once('common/frs/FRSPackageFactory.class.php');
+require_once('common/frs/FRSReleaseFactory.class.php');
 
 function show_features_boxes() {
     GLOBAL $HTML,$Language;
@@ -116,8 +118,8 @@ function foundry_top_downloads($comma_sep_groups) {
         // print each one
         while ($row_topdown = db_fetch_array($res_topdown)) {
             if ($row_topdown['downloads'] > 0) 
-                $return .= "<BR><A href=\"/projects/$row_topdown[unix_group_name]/\">"
-                    . "$row_topdown[group_name]</A> ($row_topdown[downloads])\n";
+                $return .= '<BR><A href="/projects/'. $row_topdown['unix_group_name'] .'/">'
+                    . $row_topdown['group_name'] .'</A> ('. $row_topdown[downloads] .")\n";
         }
     }
     //$return .= '<P align="center"><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A>';
@@ -151,8 +153,8 @@ function show_top_downloads() {
     // print each one
     while ($row_topdown = db_fetch_array($res_topdown)) {
         if ($row_topdown['downloads'] > 0) 
-            $return .= "($row_topdown[downloads]) <A href=\"/projects/$row_topdown[unix_group_name]/\">"
-                . "$row_topdown[group_name]</A><BR>\n";
+            $return .= '('. $row_topdown['downloads'] .') <A href="/projects/'. $row_topdown['unix_group_name'] .'/">'
+                . $row_topdown['group_name'] ."</A><BR>\n";
     }
     $return .= '<center><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
 	
@@ -163,23 +165,28 @@ function show_top_downloads() {
 function show_newest_releases() {
     global $Language;
     $return  = "";
+    
     // Fetch releases that are no more than 3 months old
     $start_time = strval(time() - 3*30*24*3600);
-    $query	= new_utils_get_new_releases_short($start_time);
+    $query = new_utils_get_new_releases_short($start_time);
 
     $res_newrel = db_query($query);
 
     // print each one but only show one release per project
     $count = 0;
     $DONE  = array();
+    $frspf =& new FRSPackageFactory();
+    $frsrf =& new FRSReleaseFactory();
     while ( ($row_newrel = db_fetch_array($res_newrel)) && ($count < 10)) {
-	
-	if ( !isset($DONE[$row_newrel['group_id']])) { 
-	    if ((!permission_exist("PACKAGE_READ",$row_newrel['package_id'] ))&&
-		(!permission_exist("RELEASE_READ",$row_newrel['release_id'] ))) {
-                $return .= "($row_newrel[release_version])&nbsp;".
-                    "<A href=\"/projects/$row_newrel[unix_group_name]/\">".
-                    "$row_newrel[group_name]</A><BR>\n";
+        
+        if ( !isset($DONE[$row_newrel['group_id']])) { 
+            //if ((!permission_exist("PACKAGE_READ",$row_newrel['package_id'] ))&&
+            //    (!permission_exist("RELEASE_READ",$row_newrel['release_id'] ))) {
+            if ($frspf->userCanRead($row_newrel['group_id'], $row_newrel['package_id'], 100) &&
+                $frsrf->userCanRead($row_newrel['group_id'], $row_newrel['package_id'], $row_newrel['release_id'], 100)) {
+                $return .= '('. $row_newrel['release_version'] .')&nbsp;'.
+                    '<A href="/projects/'. $row_newrel['unix_group_name'] .'/">'.
+                    $row_newrel['group_name'] ."</A><BR>\n";
                 
                 $count++;
                 $DONE[$row_newrel['group_id']] = true;
@@ -188,7 +195,7 @@ function show_newest_releases() {
     }
 
     $return .= '<center><A href="/new/?func=releases">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
-	
+    
     return $return;
 
 }
@@ -239,8 +246,8 @@ function show_newest_projects() {
         while ( $row_newproj = db_fetch_array($res_newproj) ) {
             if ( $row_newproj['register_time'] ) {
                 $return .= "(" . date("m/d",$row_newproj['register_time'])  . ") "
-                    . "<A href=\"/projects/$row_newproj[unix_group_name]/\">"
-                    . "$row_newproj[group_name]</A><BR>\n";
+                    . '<A href="/projects/'. $row_newproj['unix_group_name'] .'/">'
+                    . $row_newproj['group_name'] ."</A><BR>\n";
             }
         }
         $return .= '<CENTER><A href="/new/?func=projects">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
