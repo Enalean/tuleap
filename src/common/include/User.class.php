@@ -110,7 +110,7 @@ class User {
         /*
             CodeX admins always return true
         */
-        if (user_is_super_user()) {
+        if ($this->isSuperUser()) {
             return true;
         }
         
