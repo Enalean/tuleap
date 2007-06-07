@@ -82,7 +82,7 @@ $GLOBALS['server']->register(
         'content' => 'xsd:string',
         'ordering'=>'xsd:string',
         ),
-    array('createDocmanDocumentResponse'=>'xsd:boolean'),
+    array('createDocmanDocumentResponse'=>'xsd:int'),
     $GLOBALS['uri'],
     $GLOBALS['uri'].'#createDocmanDocument',
     'rpc',
@@ -99,7 +99,7 @@ $GLOBALS['server']->register(
         'description'=>'xsd:string',
         'ordering'=>'xsd:string',
         ),
-    array('createDocmanFolderResponse'=>'xsd:boolean'),
+    array('createDocmanFolderResponse'=>'xsd:int'),
     $GLOBALS['uri'],
     $GLOBALS['uri'].'#createDocmanFolder',
     'rpc',
@@ -112,7 +112,7 @@ $GLOBALS['server']->register(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int'),
-    array('deleteDocmanItemResponse'=>'xsd:boolean'),
+    array('deleteDocmanItemResponse'=>'xsd:int'),
     $GLOBALS['uri'],
     $GLOBALS['uri'].'#deleteDocmanItem',
     'rpc',
@@ -248,12 +248,12 @@ function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $descrip
         $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $p->processSOAP($request);
+            $result = $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
                    return new soap_fault('', 'createDocmanDocument', $msg, $msg);
             } else {
-                return true;
+                return $result;
             }
         } else {
             return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'createDocmanDocument','Unavailable plugin','Unavailable plugin');;
@@ -295,12 +295,12 @@ function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $descripti
         $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $p->processSOAP($request);
+            $result = $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
                    return new soap_fault('', 'createDocmanFolder', $msg, $msg);
             } else {
-                return true;
+                return $result;
             }
         } else {
             return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'createDocmanFolder','Unavailable plugin','Unavailable plugin');;
@@ -336,12 +336,12 @@ function deleteDocmanItem($sessionKey,$group_id,$item_id) {
         $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $p->processSOAP($request);
+            $result = $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
                    return new soap_fault('', 'deleteDocmanItem', $msg, $msg);
             } else {
-                return true;
+                return $result;
             }
         } else {
             return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'deleteDocmanItem','Unavailable plugin','Unavailable plugin');;
