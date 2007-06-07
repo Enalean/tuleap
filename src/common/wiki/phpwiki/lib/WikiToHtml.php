@@ -154,7 +154,7 @@ class WikiToHtml {
 // they are deleted before the conversion.
 function replace_rich_table($matched) {
   $plugin = $matched[1];
-
+  
   // External links
   $pattern = '/\<a href\=\"(.*)\".*<img.*\/\>(.*)\<\/span\>(.*)\<\/a\>/Umsi';     
   $replace_string = "[".'\2\3'."|".'\1'."]";
@@ -171,23 +171,26 @@ function replace_rich_table($matched) {
     $pattern = '/\<p.*\>/Umsi';
     $replace_string = "";
     
-    $plugin = preg_replace($pattern,
-			   $replace_string,
-			   $plugin) ;
+    $plugin = preg_replace($pattern, $replace_string, $plugin) ;
     
     //replace unused </p> by \n
     $pattern = '/\<\/p\>/Umsi';
     $replace_string = "\n";
     
-    $plugin = preg_replace($pattern,
-			   $replace_string,
-			   $plugin) ;
+    $plugin = preg_replace($pattern, $replace_string, $plugin) ;
     
     $plugin = "<?plugin RichTable ".$plugin." ?>";
     
-    require_once("lib/BlockParser.php");       
+    require_once("lib/BlockParser.php");
     $xmlcontent = TransformText($plugin, 2.0, $GLOBALS['request']->getArg('pagename')); 
-    return $xmlcontent->AsXML();
+    $html_table = $xmlcontent->AsXML();
+    //print($html_table);
+    
+    // Put tables inside a div tag instead of span and change css class for it.
+    $pattern = '/\<span class\=\"plugin.*\" id\=\"(RichTablePlugin.*)\"\>\<table.*\>(.*)\<\/span\>/Umsi';
+    $replace_string = '<table border="1">\2';
+    $html_table = preg_replace($pattern, $replace_string, $html_table);
+    return $html_table;
   }
 }
 

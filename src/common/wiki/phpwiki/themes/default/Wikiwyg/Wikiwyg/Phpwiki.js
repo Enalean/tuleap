@@ -230,7 +230,7 @@ proto.markupRules = {
     link: ['bound_phrase', '[ ', '| Link ]'],
     verbatim: ['bound_phrase', '<verbatim>\n','\n</verbatim>\n'],
     table:['line_alone', 
-	   '<?plugin RichTable *border=1, cellpadding=4, cellspacing=0,\n-\n|line1\n|line1\n|line1\n-\n|line2\n|line2\n|line2\n\n?>\n\n'],
+	   '<?plugin RichTable *border=1, cellpadding=0, cellspacing=0,\n-\n|line1\n|line1\n|line1\n-\n|line2\n|line2\n|line2\n\n?>\n\n'],
     sup:['bound_phrase', '<sup>','</sup>'],
     sub:['bound_phrase', '<sub>','</sub>'],
     big:['bound_phrase', '<big>','</big>'],
@@ -679,7 +679,7 @@ Support for plugin RichTable in phpwiki
 proto.format_table = function(element) {
     this._table="true";
     this.assert_blank_line();
-    this.appendOutput('<?plugin RichTable *border=1, cellpadding=4, cellspacing=0,\n');
+    this.appendOutput('<?plugin RichTable *border=1, cellpadding=0, cellspacing=0,\n');
     this.walk(element);
     this.appendOutput('\n?>\n\n');
     this.assert_blank_line();
