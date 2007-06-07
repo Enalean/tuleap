@@ -107,6 +107,13 @@ class User {
 	 * is this user member of group $group_id ??
 	 */
 	function isMember($group_id,$type=0) {
+        /*
+            CodeX admins always return true
+        */
+        if (user_is_super_user()) {
+            return true;
+        }
+        
 	  $is_member = array_key_exists($group_id,$this->group_data);
 	  if (!$is_member) return false;
 
