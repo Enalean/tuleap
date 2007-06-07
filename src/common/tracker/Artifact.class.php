@@ -62,7 +62,7 @@ class Artifact extends Error {
         //
         //      make sure this person has permission to view artifacts belonging to this tracker
         //
-        if (!$this->ArtifactType->userCanView()) {
+        if ($checkPerms && !$this->ArtifactType->userCanView()) {
             $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
             return false;
         }
