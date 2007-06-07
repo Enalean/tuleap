@@ -257,6 +257,7 @@ class DocmanActions extends Actions {
             $id = $item_factory->create($this->sanitizeItemData($item), $request->get('ordering'));
             
             if ($id) {
+                $this->_controler->_viewParams['action_result'] = $id;
                 $new_item =& $item_factory->getItemFromDb($id);
                 $parent   =& $item_factory->getItemFromDb($item['parent_id']);
                 if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
@@ -312,6 +313,7 @@ class DocmanActions extends Actions {
                 $item['group_id'] = $request->get('group_id');
                 $id = $item_factory->create($item, $request->get('ordering'));
                 if ($id) {
+                    $this->_controler->_viewParams['action_result'] = $id;
                     $new_item =& $item_factory->getItemFromDb($id);
                     $parent   =& $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {

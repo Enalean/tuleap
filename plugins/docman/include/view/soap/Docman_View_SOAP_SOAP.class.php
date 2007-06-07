@@ -7,8 +7,8 @@ class Docman_View_SOAP_SOAP {
     function Docman_View_SOAP_SOAP(&$controller) {
         $this->_controller = $controller;
     }
-    function display() {
-    	   return true;
+    function display($params = array()) {
+        return isset($params['action_result']) ? $params['action_result'] : true;
     }
 }
 
