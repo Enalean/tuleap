@@ -26,6 +26,67 @@ umask 002;
 require("include.pl");  # Include all the predefined functions and variables
 require("./cvs1/cvs_watch.pl"); # Include predefined functions for watch mode
 
+$smb_passwd_file="/etc/samba/smbpasswd";
+
+
+##############################
+# Index system files for faster access.
+# (use hash that points to line number)
+# hash key depends on file (passwd: id, shadow: username, etc.)
+##############################
+sub hash_passwd_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name,$junk,$id,$rest) = split(":", $_);
+          if (defined $tmp_hash{$id}) { print "/etc/passwd: ID $id already exists, please remove duplicates!\n";}
+          $tmp_hash{$id}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
+
+sub hash_shadow_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name,$rest) = split(":", $_);
+          if (defined $tmp_hash{$name}) { print "/etc/shadow: $name already exists, please remove duplicates!\n";}
+          $tmp_hash{$name}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
+sub hash_htpasswd_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name, $passwd) = split(":", $_);
+          if (defined $tmp_hash{$name}) { print "$apache_htpasswd: $name already exists, please remove duplicates!\n";}
+          $tmp_hash{$name}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
+sub hash_smbpasswd_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name, $uid, $rest) = split(":", $_);
+          if (defined $tmp_hash{$uid}) { print "$smb_passwd_file: ID $uid already exists, please remove duplicates!\n";}
+          $tmp_hash{$uid}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
 
 # This section is used to get the list of active users so that we can customize 
 # the SVN access rights... But it is not clear how!
@@ -55,8 +116,8 @@ if ($sys_force_ssl) {
   $server_url="http://$sys_default_domain";
 }
 
-# Win accounts are activated if /etc/smbpasswd exists.
-my $winaccount_on = -f "/etc/smbpasswd";
+# Win accounts are activated if /etc/samba/smbpasswd exists.
+my $winaccount_on = -f "$smb_passwd_file";
 my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 # file templates
@@ -75,14 +136,20 @@ my ($cxname) = get_codex_user();
 my ($up_user, $new_user, $del_user, $suspend_user, $error_user) = ("0","0","0","0","0");
 my ($up_group, $new_group, $del_group) = ("0","0","0");
 
+
 # Open up all the files that we need.
 @userdump_array = open_array_file($user_file);
 @groupdump_array = open_array_file($group_file);
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
-@smbpasswd_array = open_array_file("/etc/smbpasswd") if ($winaccount_on); # doesn't exist?? XXX
+@smbpasswd_array = open_array_file($smb_passwd_file) if ($winaccount_on); # doesn't exist?? XXX
 @htpasswd_array = open_array_file($apache_htpasswd);
+# Index files (use hash that points to line number)
+%passwd_hash = hash_passwd_array(@passwd_array);
+%shadow_hash = hash_shadow_array(@shadow_array);
+%htpasswd_hash = hash_htpasswd_array(@htpasswd_array);
+%smbpasswd_hash = hash_smbpasswd_array(@smbpasswd_array);
 
 #LJ The file containing all allowed root for CVS server
 #
@@ -151,7 +218,6 @@ while ($ln = pop(@userdump_array)) {
 	$user_exists = getpwnam($username);
 	$user_active=0;
         if ($status eq 'A' || $status eq 'R') {$user_active=1;}
-
 	if ($unix_status eq 'A' && $user_exists && $user_active) {
 		update_user($uid, $username, $realname, $shell, $passwd, $email);
                 update_user_group($uid, $username);
@@ -170,17 +236,18 @@ while ($ln = pop(@userdump_array)) {
                 # delete the user if it exists. Otherwise it means it has
 	        # already been deleted so do nothing
 	        if ($user_exists) {
-		  delete_user($username);
-		  delete_winuser($username);
+		  delete_user($uid,$username);
+		  delete_winuser($uid);
 		  delete_httpuser($username);
 		  ++$del_user;
 		}
 		
-	} elsif ($unix_status eq 'S' && $user_exists) {
-		suspend_user($username);
-		suspend_winuser($username);
-		suspend_httpuser($username);
-		++$suspend_user;
+	} elsif (($unix_status eq 'S' || $status eq 'S') && $user_exists) {
+          if (suspend_user($username)) {
+            suspend_winuser($uid);
+            suspend_httpuser($username);
+            ++$suspend_user;
+          }
 		
 	} elsif ($unix_status eq 'S' && !$user_exists) {
 		# This might happen e.g. after a server migration 
@@ -198,7 +265,7 @@ print ("\n	User Processing Results\n\n");
 print "New users accounts      : $new_user\n";
 print "Updated user accounts   : $up_user\n";
 print "Deleted user accounts   : $del_user\n";
-print "Suspended user accounts : $del_user\n";
+print "Suspended user accounts : $suspend_user\n";
 print "User account problems   : $error_user\n";
 
 #
@@ -251,8 +318,6 @@ while ($ln = pop(@groupdump_array)) {
 	# File service location
 	my ($file_location, $file_server_id) = split(",", $file_service);
 
-# LJ Do not test if we are on the CVS machine. It's all on atlas
-#	if ((substr($hostname,0,3) eq "cvs") && $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
 	if($server_is_master) {
 	    if ( $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
 		print("Creating a CVS Repository for: $gname\n");
@@ -717,8 +782,8 @@ print "Deleted groups   : $del_group\n";
 write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
-write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
 write_array_file($apache_htpasswd, @htpasswd_array);
+write_array_file($smb_passwd_file, @smbpasswd_array) if ($winaccount_on);
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
 if ($use_cvsnt && $server_is_master) {
@@ -814,28 +879,16 @@ sub update_user {
 	
 	$counter = 0;
 	my $found   = 0;
-	foreach (@passwd_array) {
-		($p_username, $p_junk, $p_uid, $p_gid, $p_realname_email, $p_homedir, $p_shell) = split(":", $_);
-		
-		if ($uid == $p_uid) {
-                  $found = 1;
-		  $passwd_array[$counter] = "$username:x:$uid:$uid:$realname <$email>:$p_homedir:$shell\n";
-			last;
-		}
-		$counter++;
-	}
-	
-	$counter = 0;
-	foreach (@shadow_array) {
-		($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
-		if ($username eq $s_username) {
-			if ($passwd ne $s_passwd) {
-				$shadow_array[$counter] = "$username:$passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
-			}
-			last;
-		}
-		$counter++;
-	}
+        if (defined $passwd_hash{$uid}) {
+          $found = 1;
+          # Need user home dir from existing file
+          ($p_username, $p_junk, $p_uid, $p_gid, $p_realname_email, $p_homedir, $p_shell) = split(":", $passwd_array[$passwd_hash{$uid}]);
+          $passwd_array[$passwd_hash{$uid}]="$username:x:$uid:$uid:$realname <$email>:$p_homedir:$shell\n";
+        }
+        if (defined $shadow_hash{$username}) {
+          ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $shadow_array[$shadow_hash{$username}]);
+          $shadow_array[$shadow_hash{$username}] = "$username:$passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
+        }
 
 	# if account is missing from any of the password file
 	# then add it again (it should already be in there but...)
@@ -855,30 +908,20 @@ sub update_user_group {
 
 sub update_winuser {
   ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
-
-  my ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
-      $p_last_set_time, $p_realname);
 	
   return if (!$winaccount_on);
 
-  my $counter = 0;
   my $found   = 0;
-  foreach (@smbpasswd_array) {
-    ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
-     $p_last_set_time, $p_realname) = split(":", $_);
-
-    if ($uid == $p_uid) {
+  if (defined $smbpasswd_hash{$uid}) {
       $found = 1;
+      my ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
+          $p_last_set_time, $p_realname) = split(":", $smbpasswd_array[$smbpasswd_hash{$uid}]);
       $win_date = sprintf("%08X", time());
-
       if ($win_passwd ne $p_win_passwd) {
-	$smbpasswd_array[$counter] = "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
+	$smbpasswd_array[$smbpasswd_hash{$uid}] = "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
       }
-      last;
-    }
-    $counter++;
-  }	
-
+    }	
+  
   # if account not found then create the entry again
   add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd) unless $found;
 }
@@ -890,17 +933,12 @@ sub update_httpuser {
 
   my $counter = 0;
   my $found   = 0;
-  foreach (@htpasswd_array) {
-    ($p_username, $p_passwd) = split(":", $_);
-
-    if ($username eq $p_username) {
-      $found = 1;
-      if ($passwd ne $p_passwd) {
-	$htpasswd_array[$counter] = "$username:$passwd\n";
+  if (defined $htpasswd_hash{$username}) {
+    $found = 1;
+    ($p_username, $p_passwd) = split(":", $htpasswd_array[$htpasswd_hash{$username}]);
+    if ($passwd ne $p_passwd) {
+	$htpasswd_array[$htpasswd_hash{$username}] = "$username:$passwd\n";
       }
-      last;
-    }
-    $counter++;
   }
 
   add_httpuser($username, $passwd) unless $found;
@@ -912,29 +950,21 @@ sub update_httpuser {
 # User Deletion Function
 #############################
 sub delete_user {
-	my ($username, $junk, $uid, $gid, $realname, $homedir, $shell, $counter);
+	my $this_uid = shift(@_);
 	my $this_user = shift(@_);
-        $counter = 0;	
-	foreach (@passwd_array) {
-		($username, $junk, $uid, $gid, $realname, $homedir, $shell) = split(":", $_);
-		if ($this_user eq $username) {
-			$passwd_array[$counter] = '';
-		}
-		$counter++;
-	}
 
-        $counter = 0;	
-	foreach (@shadow_array) {
-		($username) = split(":", $_);
-		if ($this_user eq $username) {
-			$shadow_array[$counter] = '';
-		}
-		$counter++;
-	}
+        if (defined $passwd_hash{$this_uid}) {
+          $passwd_array[$passwd_hash{$this_uid}] = '';
+        }
 
-        $counter = 0;	
+        if (defined $shadow_hash{$this_user}) {
+          $shadow_array[$shadow_hash{$this_user}] = '';
+        }
+
+
+        my $counter = 0;	
 	foreach (@group_array) {
-		($groupname) = split(":", $_);
+		my ($groupname) = split(":", $_);
 		if ($this_user eq $groupname) {
 			$group_array[$counter] = '';
 		}
@@ -942,43 +972,27 @@ sub delete_user {
         }
 	
 	print("Deleting User : $this_user\n");
-	system("cd $homedir_prefix ; /bin/tar -czf $tmp_dir/$username.tar.gz $username");
-        chmod 0600, "$tmp_dir/$username.tar.gz";
-	system("rm -fr $homedir_prefix/$username");
+	system("cd $homedir_prefix ; /bin/tar -czf $tmp_dir/$this_user.tar.gz $this_user");
+        chmod 0600, "$tmp_dir/$this_user.tar.gz";
+	system("rm -fr $homedir_prefix/$this_user");
 }
 
 sub delete_winuser {
-	my $this_user = shift(@_);
-	my ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
-	    $last_set_time, $realname);
-	my $counter = 0;
+  my $this_uid = shift(@_);
 	
-	return if (!$winaccount_on);
+  return if (!$winaccount_on);
+  
+  if (defined $smbpasswd_hash{$this_uid}) {
+    $smbpasswd_array[$smbpasswd_hash{$this_uid}] = '';
+  }
+}	
 
-	foreach (@smbpasswd_array) {
-	  ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
-	    $last_set_time, $realname) = split(":", $_);
-
-	  if ($this_user eq $username) {
-	    $smbpasswd_array[$counter] = '';
-	  }
-	  $counter++;
-	}
-	
-}
 
 sub delete_httpuser {
   my $this_user = shift(@_);
-  my ($username, $p_passwd);
-  my $counter = 0;
 
-  foreach (@htpasswd_array) {
-    ($username,$p_passwd) = split(":", $_);
-
-    if ($this_user eq $username) {
-      $htpasswd_array[$counter] = '';
-    }
-    $counter++;
+  if (defined $htpasswd_hash{$this_user}) {
+    $htpasswd_array[$htpasswd_hash{$this_user}] = '';
   }
 }
 
@@ -986,60 +1000,45 @@ sub delete_httpuser {
 # User Suspension Function
 #############################
 sub suspend_user {
-	my $this_user = shift(@_);
-	my ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv, $counter);
+  my $this_user = shift(@_);
 	
-        $counter =0;	
-	foreach (@shadow_array) {
-	  ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
-	  if ($this_user eq $s_username) {
-	    # if already suspended then give up
-	    if ($s_passwd =~ /^!!/) {
-		last;
-	    } else {
-	        my $new_passwd = "!!" . $s_passwd;
-	        $shadow_array[$counter] = "$s_username:$new_passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
-	    }
-	  }
-	  $counter++;
-	}
+  if (defined $shadow_hash{$this_user}) {
+    my ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $shadow_array[$shadow_hash{$this_user}]);
+    # if already suspended then give up
+    if ($s_passwd =~ /^!!/) {
+      return 0;
+    } else {
+      my $new_passwd = "!!" . $s_passwd;
+      $shadow_array[$shadow_hash{$this_user}]= "$s_username:$new_passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
+    }
+    return 1;
+  }
 }
 
 sub suspend_winuser {
-	my $this_user = shift(@_);
-	my ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
-	    $last_set_time, $realname);
+  my $this_uid = shift(@_);
 	
-	return if (!$winaccount_on);
-
-	my $counter = 0;
-	my $new_account_bits = "[DU         ]"; # D flag for suspended
-	foreach (@smbpasswd_array) {
-	  ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
-	    $last_set_time, $realname) = split(":", $_);
-
-	  if ($this_user eq $username) {
-	    # if already suspended then give up
-	    last if ($account_bits =~ /DU/);
-	    $smbpasswd_array[$counter] = "$username:$uid:$win_passwd:$winnt_passwd:$new_account_bits:$last_set_time:$realname";
-	  }
-	  $counter++;
-	}
-
+  return if (!$winaccount_on);
+  
+  my $new_account_bits = "[DU         ]"; # D flag for suspended
+  if (defined $smbpasswd_hash{$this_uid}) {
+    ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
+     $last_set_time, $realname) = split(":",$smbpasswd_array[$smbpasswd_hash{$this_uid}]);
+    # if already suspended then give up
+    return if ($account_bits =~ /DU/);
+    $smbpasswd_array[$smbpasswd_hash{$this_uid}] = "$username:$uid:$win_passwd:$winnt_passwd:$new_account_bits:$last_set_time:$realname";
+  }
 }
+
 
 sub suspend_httpuser {
   my $this_user = shift(@_);
   my ($username, $p_passwd);
   my $counter = 0;
 
-  foreach (@htpasswd_array) {
-    ($username,$p_passwd) = split(":", $_);
-
-    if ($this_user eq $username) {
-      $htpasswd_array[$counter] = "$username:!!\n";
-    }
-    $counter++;
+  if (defined $htpasswd_hash{$this_user}) {
+    ($username,$p_passwd) = split(":", $htpasswd_array[$htpasswd_hash{$this_user}]);
+    $htpasswd_array[$htpasswd_hash{$username}] ="$username:!!\n";
   }
 }
 
@@ -1109,24 +1108,19 @@ sub delete_group {
 	  $counter++;
 	}
 
-# LJ Comment. Useless on CodeX
-#	if (substr($hostname,0,3) ne "cvs") {
-		print("Deleting Group: $this_group\n");
-		system("cd $grpdir_prefix ; /bin/tar -czf $tmp_dir/$this_group.tar.gz $this_group");
-		chmod 0600, "$tmp_dir/$this_group.tar.gz";
-		system("rm -fr $grpdir_prefix/$this_group");
+        print("Deleting Group: $this_group\n");
+        system("cd $grpdir_prefix ; /bin/tar -czf $tmp_dir/$this_group.tar.gz $this_group");
+        chmod 0600, "$tmp_dir/$this_group.tar.gz";
+        system("rm -fr $grpdir_prefix/$this_group");
 
 
-# And do the same for the CVS and SVN directories
-		system("cd $cvs_prefix ; /bin/tar -czf $tmp_dir/$this_group-cvs.tar.gz $this_group");
-		system("rm -fr $cvs_prefix/$this_group");
-		chmod 0600, "$tmp_dir/$this_group-cvs.tar.gz";
+        # And do the same for the CVS, SVN, Files directories
+        system("cd $cvs_prefix ; /bin/tar -czf $tmp_dir/$this_group-cvs.tar.gz $this_group");
+        system("rm -fr $cvs_prefix/$this_group");
+        chmod 0600, "$tmp_dir/$this_group-cvs.tar.gz";
 
-		system("cd $svn_prefix ; /bin/tar -czf $tmp_dir/$this_group-svn.tar.gz $this_group");
-		system("rm -fr $svn_prefix/$this_group");
-		chmod 0600, "$tmp_dir/$this_group-svn.tar.gz";
-
-
-#	}
+        system("cd $svn_prefix ; /bin/tar -czf $tmp_dir/$this_group-svn.tar.gz $this_group");
+        system("rm -fr $svn_prefix/$this_group");
+        chmod 0600, "$tmp_dir/$this_group-svn.tar.gz";
 }
 

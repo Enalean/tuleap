@@ -116,7 +116,7 @@ if ($action=='validate') {
 	Suspend their account
 */
 if ($action=='suspend') {
-	db_query("UPDATE user SET status='S' WHERE user_id='$user_id'");
+	db_query("UPDATE user SET status='S',unix_status='S' WHERE user_id='$user_id'");
 	echo '<H2>'.$Language->getText('admin_userlist','user_suspended').'</H2>';
 }
 
