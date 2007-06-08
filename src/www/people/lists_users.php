@@ -39,7 +39,7 @@ while(($data = db_fetch_array($res)) && $i++ < $nb_max) {
     if (!$data['is_list']) {
         echo '<li><span style="font-weight:bold" class="'. $ml_informal .'">'. $data['name'] .'</span><span class="informal"> ('. $data['realname'] .')</span><div class="'. $us_informal .'"">'. $email .'</div></li>';
     } else {
-        echo '<li><div style="font-style:italic;font-weight:bold;" class="'. $us_informal .'"">'. $email .'</div></li>';
+        echo '<li><div style="font-style:italic;font-weight:bold; background:url('. util_get_dir_image_theme() .'ic/group.png) left top no-repeat; padding-left:18px" class="'. $us_informal .'"">'. $email .'</div></li>';
     }
 }
 echo '</ul>';
