@@ -311,3 +311,24 @@ table.release tr td img {
     text-decoration:none;
 }
 /* }}} */
+
+/* {{{ lists & users autocomplete */
+.lists_users_autocomplete {
+    max-height:200px;
+    overflow:auto;
+    background:white;
+    border:1px solid #CCC;
+}
+.lists_users_autocomplete ul {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+}
+.lists_users_autocomplete ul li {
+    padding:0px 4px 4px 4px;
+}
+.lists_users_autocomplete ul li.selected { 
+    background-color: #ffb; 
+}
+/* }}} */
+

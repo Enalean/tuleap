@@ -14,6 +14,7 @@
 require_once('common/tracker/Artifact.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/include/ReferenceManager.class.php');
+require_once('javascript_helpers.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -216,9 +217,10 @@ class ArtifactHtml extends Artifact {
             if ($pv == 0) {
                 echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
                 echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-                echo '<input type="text" name="add_cc" size="30">';
+                echo '<input type="text" name="add_cc" id="tracker_cc" size="30">';
                 echo '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
                 echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
+                autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
             }
                     
             echo $this->showCCList($group_id,$group_artifact_id);
@@ -518,9 +520,10 @@ class ArtifactHtml extends Artifact {
         if ( !$ro ) {
         echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
         echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-        echo '<input type="text" name="add_cc" size="30">';
+        echo '<input type="text" name="add_cc" id="tracker_cc" size="30">';
         echo '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
         echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
+        autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
         }
           
         echo '</TD></TR>';
@@ -848,8 +851,9 @@ class ArtifactHtml extends Artifact {
         <TR><TD colspan="'.(2*$fields_per_line).'">
         <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>
         '.$Language->getText('tracker_include_artifact','fill_cc_list_msg').'<p>
-        <B>'.$Language->getText('tracker_include_artifact','fill_cc_list_lbl').'&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
+        <B>'.$Language->getText('tracker_include_artifact','fill_cc_list_lbl').'&nbsp;</b><input type="text" name="add_cc" id="tracker_cc" size="30">&nbsp;&nbsp;&nbsp;
         <B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').':&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
+        autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
         
         echo '</TD></TR>';
                 
