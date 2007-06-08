@@ -225,6 +225,21 @@ proto.do_pre = function(){
     this.format_command;
 }
 
+proto.do_image = function() {
+    var img = prompt("Enter the image name", '');
+    var rev = prompt("Enter the revision number", '');
+    var html = '<img src="uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+    
+    if (! Wikiwyg.is_ie)
+        this.get_edit_window().focus();
+    this.insert_img(html);
+
+}
+
+proto.insert_img = function(html) { // See IE
+    this.exec_command('inserthtml', html);
+}
+
 proto.do_table = function() {
   var rows = prompt("Number of rows", '2');
   var cols = prompt("Number of columns", '2');
@@ -389,6 +404,17 @@ proto.insert_table = function(html) {
     range.pasteHTML(html);
     range.collapse(false);
     range.select();
+}
+
+proto.insert_img = function(html){
+    var doc = this.get_edit_document();
+    var range = this.get_edit_document().selection.createRange();
+    if (range.boundingTop == 2 && range.boundingLeft == 2)
+        return;
+    range.pasteHTML(html);
+    range.collapse(false);
+    range.select();
+
 }
 
 proto.insert_html = function(html) {

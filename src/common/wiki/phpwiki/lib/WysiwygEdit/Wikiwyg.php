@@ -52,7 +52,7 @@ window.onload = function() {
 		controlLayout: [
 		       'save', 'preview', 'save_button', '|',
 		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', 'pre', 'toc', '|',
-		       'link', 'wikitext', '|', '|',
+		       'link', 'image', 'wikitext', '|', '|',
 		       'table'
 		       ],
 		styleSelector: [
@@ -71,6 +71,7 @@ window.onload = function() {
                        toc:	 'Insert Table Of Content', 
 		       pre:	 'Insert preformatted text',
 		       table:	 'Create Rich Table (EXPERIMENTAL feature)',
+		       image:	 'Insert an already uploaded image',
                        wikitext: 'Insert ASCII wikitext', 
                        sup:      'Format Superscript text', 
                        sub:      'Format Subscript text',
