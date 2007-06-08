@@ -17,6 +17,7 @@ define ('create_followup_fault', '3014');
 define ('get_artifact_field_fault', '3015');
 define ('add_cc_fault', '3016');
 define ('invalid_field_fault', '3017');
+define ('delete_cc_fault', '3018');
 
 
 require_once ('nusoap.php');
@@ -474,6 +475,33 @@ $server->wsdl->addComplexType(
 );
 
 $server->wsdl->addComplexType(
+    'ArtifactCC',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(                  
+    'artifact_cc_id' => array('name'=>'artifact_cc_id', 'type' => 'xsd:int'),
+    'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
+    'email' => array('name'=>'email', 'type' => 'xsd:string'),
+    'added_by' => array('name'=>'added_by', 'type' => 'xsd:int'),
+    'comment' => array('name'=>'comment', 'type' => 'xsd:string'),
+    'date' => array('name'=>'date', 'type' => 'xsd:int')    
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfArtifactCC',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCC[]')),
+    'tns:ArtifactCC'
+);
+
+$server->wsdl->addComplexType(
     'ArtifactDependence',
     'complexType',
     'struct',
@@ -495,6 +523,34 @@ $server->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactDependence[]')),
     'tns:ArtifactDependence'
+);
+
+$server->wsdl->addComplexType(
+    'ArtifactHistory',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(                  
+        //'artifact_history_id' => array('name'=>'artifact_history_id', 'type' => 'xsd:int'),
+        //'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
+        'old_value' => array('name'=>'old_value', 'type' => 'xsd:string'),
+        'new_value' => array('name'=>'new_value', 'type' => 'xsd:string'),
+        'modification_by' => array('name'=>'modification_by', 'type' => 'xsd:string'),
+        'date' => array('name'=>'date', 'type' => 'xsd:int')
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfArtifactHistory',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
+    'tns:ArtifactHistory'
 );
 
 $server->wsdl->addComplexType(
@@ -990,6 +1046,21 @@ $server->register(
 );
 
 $server->register(
+    'getArtifactCCList',
+    array('sessionKey' => 'xsd:string',
+        'group_id' => 'xsd:int',
+        'group_artifact_id' => 'xsd:int',
+        'artifact_id' => 'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfArtifactCC'),
+    $uri,
+    $uri.'#getArtifactCCList',
+    'rpc',
+    'encoded',
+    'Get the list of emails or logins in the CC list of a specific artifact'
+);
+
+$server->register(
     'addArtifactCC',
     array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
@@ -1004,6 +1075,37 @@ $server->register(
     'rpc',
     'encoded',
     'Add a list of emails or logins in the CC list of a specific artifact, with an optional comment'
+);
+
+$server->register(
+    'deleteArtifactCC',
+    array('sessionKey' => 'xsd:string',
+        'group_id' => 'xsd:int',
+        'group_artifact_id' => 'xsd:int',
+        'artifact_id' => 'xsd:int',
+        'artifact_cc_id' => 'xsd:int'
+    ),
+    array(),
+    $uri,
+    $uri.'#deleteArtifactCC',
+    'rpc',
+    'encoded',
+    'Delete a CC to the CC list of the artifact'
+);
+
+$server->register(
+    'getArtifactHistory',
+    array('sessionKey' => 'xsd:string',
+        'group_id' => 'xsd:int',
+        'group_artifact_id' => 'xsd:int',
+        'artifact_id' => 'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfArtifactHistory'),
+    $uri,
+    $uri.'#getArtifactHistory',
+    'rpc',
+    'encoded',
+    'Get the history of the artifact (the history of the fields values)'
 );
 
 //
@@ -2717,6 +2819,77 @@ function existSummary($sessionKey, $group_artifact_id, $summary) {
 }
 
 /**
+ * getArtifactCCList - returns the array of ArtifactCC of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the CC list
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the CC list
+ * @param int $artifact_id the ID of the artifact we want to retrieve the CC list
+ * @return array{SOAPArtifactCC} the array of the CC list of the artifact,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ *              - artifact_id does not match with a valid artifact
+ */
+function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    global $art_field_fact; 
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'getArtifactCCList','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'getArtifactCCList',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactCCList', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactCCList','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactCCList',$at->getErrorMessage(),$at->getErrorMessage());
+        }
+        
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactCCList', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactCCList', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+        }
+
+        $a = new Artifact($at,$artifact_id);
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault,'getArtifactCCList','Could Not Get Artifact','Could Not Get Artifact');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault,'getArtifactCCList',$a->getErrorMessage(),$a->getErrorMessage());
+        } elseif (! $a->userCanView()) {
+            return new soap_fault(get_artifact_fault,'getArtifactCCList','Permissions denied','Permissions denied');
+        }
+    
+        return artifactCC_to_soap($group_id, $group_artifact_id, $a->getCCList());
+    } else {
+        return new soap_fault(invalid_session_fault, 'getArtifactCCList', 'Invalid Session', '');
+    }
+}
+ 
+function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
+    $return = array();
+    $rows=db_numrows($artifact_cc_list);
+    for ($i=0; $i<$rows; $i++) {
+        // retrieve the field, for permission checks
+        $return[]=array(
+            'artifact_cc_id' => db_result($artifact_cc_list, $i, 'artifact_cc_id'),
+            'email' => db_result($artifact_cc_list, $i, 'email'),
+            'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
+            'comment' => db_result($artifact_cc_list, $i, 'comment'),
+            'date' => db_result($artifact_cc_list, $i, 'date')
+        );
+    }
+    return $return;
+} 
+
+/**
  * addArtifactCC - add a list of emails or logins, with an optional CC comment
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
@@ -2766,5 +2939,149 @@ function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id,
         return new soap_fault(invalid_session_fault, 'addArtifactCC', 'Invalid Session', 'Invalid Session');
     }
 }
+
+/**
+ * deleteArtifactCC - delete a CC of an artifact
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the project we work with
+ * @param int $group_artifact_id the ID of the tracker we want to delete the CC
+ * @param int $artifact_id the artifact we want to delete the CC
+ * @param int $artifact_cc_id the id of the artifact_cc to delete
+ */
+function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_cc_id) {
+	global $art_field_fact; 
+
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'deleteArtifactCC','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'deleteArtifactCC',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'deleteArtifactCC', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactCC','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactCC',$at->getErrorMessage(),$at->getErrorMessage());
+        }
+
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactCC', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactCC', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+        }
+
+        $a = new Artifact($at,$artifact_id);
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault,'deleteArtifactCC','Could Not Get Artifact','Could Not Get Artifact');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault,'deleteArtifactCC',$a->getErrorMessage(),$a->getErrorMessage());
+        }
+        if (!$a->deleteCC($artifact_cc_id,&$changes,false)) {
+            return new soap_fault(delete_cc_fault, 'deleteArtifactCC', 'CC could not be deleted', 'CC could not be deleted');
+        }
+    } else {
+        return new soap_fault(invalid_session_fault, 'deleteArtifactCC', 'Invalid Session', 'Invalid Session');
+    }
+}
+
+/**
+ * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the history
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the history
+ * @param int $artifact_id the ID of the artifact we want to retrieve the history
+ * @return array{SOAPArtifactHistory} the array of the history of the artifact,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ *              - artifact_id does not match with a valid artifact
+ */
+function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    global $art_field_fact; 
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'getArtifactHistory','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'getArtifactHistory',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactHistory', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactHistory','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactHistory',$at->getErrorMessage(),$at->getErrorMessage());
+        }
+        
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactHistory', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactHistory', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+        }
+
+        $a = new Artifact($at,$artifact_id);
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault,'getArtifactHistory','Could Not Get Artifact','Could Not Get Artifact');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault,'getArtifactHistory',$a->getErrorMessage(),$a->getErrorMessage());
+        } elseif (! $a->userCanView()) {
+            return new soap_fault(get_artifact_fault,'getArtifactHistory','Permissions denied','Permissions denied');
+        }
+    
+        return history_to_soap($group_id, $group_artifact_id, $a->getHistory());
+    } else {
+        return new soap_fault(invalid_session_fault, 'getArtifactHistory', 'Invalid Session', '');
+    }
+}
+ 
+function history_to_soap($group_id,$group_artifact_id,$history) {
+	global $art_field_fact;
+
+    $return = array();
+    $rows=db_numrows($history);
+    for ($i=0; $i<$rows; $i++) {
+        // retrieve the field, for permission checks
+        $field_name = db_result($history, $i, 'field_name');	
+    	    $field = $art_field_fact->getFieldFromName($field_name);
+        if ($field) {
+            if ($field->userCanRead($group_id,$group_artifact_id)) {
+                $return[]=array(
+                    //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
+                    //'artifact_id' => db_result($history, $i, 'artifact_id'),
+                    'field_name' => db_result($history, $i, 'field_name'),
+                    'old_value' => db_result($history, $i, 'old_value'),
+                    'new_value' => db_result($history, $i, 'new_value'),
+                    'modification_by' => db_result($history, $i, 'user_name'),
+                    'date' => db_result($history, $i, 'date')
+                );
+            }
+        } else {
+            // used to put non-field changes (e.g: cc list, etc)
+        	    $return[]=array(
+                //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
+                //'artifact_id' => db_result($history, $i, 'artifact_id'),
+                'field_name' => db_result($history, $i, 'field_name'),
+                'old_value' => db_result($history, $i, 'old_value'),
+                'new_value' => db_result($history, $i, 'new_value'),
+                'modification_by' => db_result($history, $i, 'user_name'),
+                'date' => db_result($history, $i, 'date')
+            );
+        }
+    }
+    return $return;
+} 
+
 
 ?>
