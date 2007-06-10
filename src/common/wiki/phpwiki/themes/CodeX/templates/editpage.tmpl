@@ -55,7 +55,7 @@
 <tr valign="middle">
   <td> 
     <?=$MINOR_EDIT_CB ?> <label for="edit[minor_edit]"><?=_("This is a minor change.")?></label><br />
-    <?=$OLD_MARKUP_CB?>  <label for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?>
+    <?=$OLD_MARKUP_CB?> <label id="oldMarkupCBLabel" for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?>
   </td>
   <td align="center">
     <?php if ($WYSIWYG_B){ ?>
@@ -63,7 +63,7 @@
     <?=$SEP?>
     <?php } ?>
     <?= $PREVIEW_B ?>
-    <?php if ($SAVE_B)  { ?> 
+    <?php if ($SAVE_B){ ?> 
       <?=$SEP?><?= $SAVE_B ?>
     <?php } ?>
   </td>
@@ -94,20 +94,30 @@
 <!--
 function showOldMarkupRules(show) {
   if (document.getElementById) {
-    if (!show) {
-      document.getElementById('newMarkup').style.display="block";
+    document.getElementById('useOldMarkup').style.display="block"; // Display Old Markup checkbox
+    document.getElementById('oldMarkupCBLabel').style.display="block"; // Display Old Markup Checkbox label
+    document.getElementById('WysiwygMarkup').style.display="none"; // Hide wysiwyg edition rules div
+    if (!show) { // Display New Markup div
+      document.getElementById('newMarkup').style.display="block"; 
       document.getElementById('oldMarkup').style.display="none";
-    } else {
-      document.getElementById('newMarkup').style.display="none";
-      document.getElementById('oldMarkup').style.display="block";
+    } else { // Display Old Markup div
+      document.getElementById('newMarkup').style.display="none";  // Hide new Markup div
+      document.getElementById('oldMarkup').style.display="block"; // Display Old Markup div
     }
   }
 }
+
+function showWysiwygEditionRules(){
+    // wysiwyg edition mode is active
+      document.getElementById('useOldMarkup').style.display="none";  // Hide Old Markup checkbox
+      document.getElementById('oldMarkupCBLabel').style.display="none";  // Hide Old Markup Checkbox label
+      document.getElementById('newMarkup').style.display="none";  // Hide New Markup div
+      document.getElementById('oldMarkup').style.display="none";  // Hide Old Markup div
+      document.getElementById('WysiwygMarkup').style.display="block";  // Display Wysiwy edition rules div
+}
+
 // -->
 </script>
-<?php
-if($MARKUP_RULES and !isset($PREVIEW_CONTENT)){
-?>
 <hr noshade="noshade" />
 <div id="oldMarkup" class="wiki-edithelp">
 <!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
@@ -119,23 +129,21 @@ if($MARKUP_RULES and !isset($PREVIEW_CONTENT)){
 <p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
 <?plugin IncludePage page=_("TextFormattingRules") section=_("Synopsis") quiet=1?>
 </div>
-<?php
-}
-?>
+<div id="WysiwygMarkup" class="wiki-edithelp">
+<p><?= fmt("See %s tips for editing with wysiwyg.", WikiLink(_("GoodStyle"))) ?></p>
+</div>
 
 <?=$HIDDEN_INPUTS?>
 </form>
-<?php
-if($MARKUP_RULES and !isset($PREVIEW_CONTENT)){
-?>
 <script language="JavaScript1.3" type="text/javascript">
 <!--
 if (document.getElementById) {
-  showOldMarkupRules(document.getElementById('useOldMarkup').checked);
+  if(showWysiwygHelp()){
+    showWysiwygEditionRules();
+  }else{
+    showOldMarkupRules(document.getElementById('useOldMarkup').checked);
+  }
 }
+
 // -->
 </script>
-
-<?php
-}
-?>

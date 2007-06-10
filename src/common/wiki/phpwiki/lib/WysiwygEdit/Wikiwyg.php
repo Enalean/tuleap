@@ -97,6 +97,10 @@ window.onload = function() {
 	
 	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = '';
 	
+	// Small scripts for online wysiwyg edition rules documentation/help.
+	$wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'] = 'function showWysiwygHelp(){ return true;}';
+	$wysiwyg_editor_params['WYSIWYG_NOHELP_SCRIPT'] = 'function showWysiwygHelp(){ return false;}';
+	
 	// Support for CodeX-lite theme
         if ($WikiTheme->_name == "CodeX-lite"){
 	    if ($_REQUEST['action'] = 'edit' and isset($_REQUEST['mode']) and ($_REQUEST['mode'] == 'wysiwyg')){ 
@@ -106,15 +110,17 @@ window.onload = function() {
                     (Javascript('', array('src' => $this->BasePath . '/' . $js,
                                           'language' => 'JavaScript')));
 	        }
-	    
-	        //print "\n<!--\nHere is the main WYSIWYG script\n-->\n";
-	        //print '<script type="text/javascript" langage="JavaScript">';
+	        
 	        $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_SCRIPT'], array('language' => 'JavaScript')));
-	        //print "</script> \n";
 	    
 	        if (isset($wysiwyg_editor_params['WYSIWYG_TEXTAREA'])){
-	            $WikiTheme->addMoreHeaders($wysiwyg_editor_params['WYSIWYG_TEXTAREA']);
+	            $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_TEXTAREA'], array('language' => 'JavaScript')));
 	        }
+	        if (isset($wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'])){
+		    $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'], array('language' => 'JavaScript')));
+		}
+	    }else{
+		$WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_NOHELP_SCRIPT'], array('language' => 'JavaScript')));
 	    }
 	}
     }
@@ -124,9 +130,7 @@ window.onload = function() {
         $htmltextid = $this->_htmltextid;
         $textarea->SetAttr('id', $htmltextid);
         $iframe0 = new RawXml('<iframe id="iframe0" height="0" width="0" frameborder="0"></iframe>');
-        $out = HTML($textarea,
-                    $iframe0,
-		    "\n");
+        $out = HTML($textarea, $iframe0, "\n");
 	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = $out;
     }
 

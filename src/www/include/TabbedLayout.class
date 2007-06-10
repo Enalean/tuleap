@@ -183,6 +183,20 @@ class TabbedLayout extends Layout {
 		    echo $params['WYSIWYG_TEXTAREA'];
 		    print "\n";
 		}
+		if(isset($params['WYSIWYG_HELP_SCRIPT'])){
+		    print "\n";
+		    print "<!--\nThis is to show Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print $params['WYSIWYG_HELP_SCRIPT'];
+		    print "</script> \n";
+		}else{
+		    print "\n";
+		    print "<!--\nThis is to hide Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print('function showWysiwygHelp(){ return false;}');
+		    print "</script> \n";
+		}
+
 
 
 
