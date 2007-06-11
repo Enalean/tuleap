@@ -2787,7 +2787,7 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
             $agnf =& new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($at->getID(), true);
             $a->mailFollowupWithPermissions($addresses, $changes);
-            return true;
+            return new soapval('return', 'xsd:boolean', true);
         }
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', 'Invalid Session');

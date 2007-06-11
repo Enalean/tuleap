@@ -2455,7 +2455,7 @@ class Artifact extends Error {
         
             $result=$this->getDependencies();
             $rows=db_numrows($result);
-        
+            $out = '';
             // Nobody in the dependencies list -> return now
             if ($rows <= 0) {
                         if ($ascii)
