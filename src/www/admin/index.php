@@ -27,13 +27,13 @@ if($GLOBALS['sys_user_approval'] == 1){
     $row = db_fetch_array();
     $pending_users = $row['count'];
 }else{
-    db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V'");
+    db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V' OR status='W'");
     $row = db_fetch_array();
     $pending_users = $row['count'];
 }
 
 
-db_query("SELECT count(*) AS count FROM user WHERE status='V'");
+db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 

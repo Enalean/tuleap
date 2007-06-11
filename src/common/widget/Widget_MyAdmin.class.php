@@ -35,11 +35,11 @@ class Widget_MyAdmin extends Widget {
             $row = db_fetch_array();
             $pending_users = $row['count'];
         } else {
-            db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V'");
+            db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V' OR status='W'");
             $row = db_fetch_array();
             $pending_users = $row['count'];
         }
-        db_query("SELECT count(*) AS count FROM user WHERE status='V'");
+        db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
         $row = db_fetch_array();
         $validated_users = $row['count'];
         

@@ -21,7 +21,7 @@ admin_main	display_user	Display Users Beginning with :
 admin_main	search_user	or Search (email,user name,real name,userid):
 admin_main	search	Search
 admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) Status</a>
-admin_main	validated_user	Users in <a href="$1"><B>V</B> (validated) Status</a>
+admin_main	validated_user	Users in <a href="$1"><B>V or W</B> (validated or validated restricted) Status</a>
 admin_main	need_approval	approval needed
 admin_main	need_validation	validation needed
 admin_main	header_group	Group Administration
@@ -96,20 +96,23 @@ admin_approve_pending_users	no_pending_validated	No Pending User Registration to
 admin_approve_pending_users	no_validated	No Validated User Registration to Approve
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	Edit User/Group Settings
-admin_approve_pending_users	approve	Approve User
-admin_approve_pending_users	approve_without_email	Approve User Without Email Validation
-admin_approve_pending_users	approve_pending	Approve as Restricted
-admin_approve_pending_users	delete	Delete User
+admin_approve_pending_users	activate	Activate
+admin_approve_pending_users	validate_notice	Validate : An email is send to the user for confirmation. If he follows the link inside the email, the account is actived.
+admin_approve_pending_users	activate_notice	Activate : The account is instantly active.
+admin_approve_pending_users	delete	Delete
 admin_approve_pending_users	purpose	Purpose
 admin_approve_pending_users	other_info	Other Information
 admin_approve_pending_users	name	User Name
 admin_approve_pending_users	id	User ID
 admin_approve_pending_users	email	User Email
 admin_approve_pending_users	reg_date	Registration Date
-admin_approve_pending_users	approve_all	Approve All
-admin_approve_pending_users	approve_all_pending	Approve All as Restricted
 admin_approve_pending_users	validate	Validate
-admin_approve_pending_users	validate_all	Validate All
+admin_approve_pending_users	account	account
+admin_approve_pending_users	ok	Ok
+admin_approve_pending_users	all_accounts	all accounts 
+admin_approve_pending_users	status	with status
+admin_approve_pending_users	status_restricted	restricted
+admin_approve_pending_users	status_standard	standard
 #
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit-add.php
@@ -270,7 +273,7 @@ admin_usergroup	change_passwd	Change User Password
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - User List
-admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>&nbsp;&nbsp;(v)Validated&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
+admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>&nbsp;&nbsp;(v)Validated&nbsp;&nbsp; (vr)Validated Restricted&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
 admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
 admin_userlist	user_active	User Updated to ACTIVE status
 admin_userlist	user_validated	User Updated to VALIDATED status
