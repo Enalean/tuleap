@@ -2406,7 +2406,7 @@ function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artif
             return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Permissions denied','Permissions denied');
         }
     
-        return dependencies_to_soap($a->getDependencies());
+        return dependencies_to_soap($at, $a->getDependencies());
     } else {
         return new soap_fault(invalid_session_fault, 'getArtifactDependencies', 'Invalid Session', '');
     }
@@ -2419,20 +2419,24 @@ function getDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) 
     return getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id);
 }
  
-function dependencies_to_soap($dependencies) {
+function dependencies_to_soap($artifact_type, $dependencies) {
     $return = array();
     $rows=db_numrows($dependencies);
     for ($i=0; $i<$rows; $i++) {
-        $return[]=array(
-            'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
-            'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
-            'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
-            'summary' => db_result($dependencies, $i, 'summary'),
-            'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
-            'tracker_name' => db_result($dependencies, $i, 'name'),
-            'group_id' => db_result($dependencies, $i, 'group_id'),
-            'group_name' => db_result($dependencies, $i, 'group_name')
-        );
+        // check the permission : is the user allowed to see the artifact ?	
+        $artifact = new Artifact($artifact_type, db_result($dependencies, $i, 'is_dependent_on_artifact_id'));
+        if ($artifact && $artifact->userCanView()) {
+            $return[]=array(
+                'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
+                'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
+                'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
+                'summary' => db_result($dependencies, $i, 'summary'),
+                'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
+                'tracker_name' => db_result($dependencies, $i, 'name'),
+                'group_id' => db_result($dependencies, $i, 'group_id'),
+                'group_name' => db_result($dependencies, $i, 'group_name')
+            );
+        }
     }
     return $return;
 } 
