@@ -108,7 +108,7 @@ CREATE TABLE bug (
   priority int(11) NOT NULL default '100',
   keywords varchar(255) NOT NULL default '',
   release_id int(11) NOT NULL default '100',
-  release varchar(255) NOT NULL default '',
+  release_name varchar(255) NOT NULL default '',
   originator_name varchar(255) NOT NULL default '',
   originator_email varchar(255) NOT NULL default '',
   originator_phone varchar(255) NOT NULL default '',

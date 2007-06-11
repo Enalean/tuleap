@@ -522,7 +522,7 @@ INSERT INTO bug_field \
 INSERT INTO bug_field \
   VALUES (213,'release_id','SB','','Release','The release (global version number) impacted by the bug','P',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
-  VALUES (214,'release','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,1,1,0,0,NULL);
+  VALUES (214,'release_name','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
   VALUES (215,'originator_name','TF','20/40','Originator Name','The name of the person who reported the bug (if different from the submitter field)','S',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
@@ -860,7 +860,7 @@ INSERT INTO bug_field_usage VALUES (212,100,0,0,0,3000,NULL,NULL,NULL,NULL,NULL,
 #
 INSERT INTO bug_field_usage VALUES (213,100,0,0,0,800,NULL,NULL,NULL,NULL,NULL,NULL);
 
-# release (bug_field_id = 214)
+# release name (bug_field_id = 214)
 #
 INSERT INTO bug_field_usage VALUES (214,100,0,0,0,800,NULL,NULL,NULL,NULL,NULL,NULL);
 
