@@ -54,7 +54,7 @@ function legacy_redirect($location,$aid, $group_id, $atn) {
  */
 function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name) {
   global $Language;
-
+    $feed = '';
     if (($group_id)&&($group_id != $art_group_id)) {
         // The link is coming from another project, add a warning msg
         $group_name=util_get_group_name_from_id($art_group_id);
@@ -79,10 +79,14 @@ $location = "Location: ".get_server_url();
 
 // $atn is the "artifact type name" i.e. the tracker short name detected in the text
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'
-$atn=strtolower($atn);
+if (isset($atn)) {
+    $atn=strtolower($atn);
+} else {
+    $atn = '';
+}
 
 // If group_name given as argument then infer group_id first
-if ($group_name && !$group_id) {
+if (isset($group_name) && $group_name && !$group_id) {
     $grp = group_get_object_by_name($group_name);
     $group_id = $grp->getGroupId();
 }
