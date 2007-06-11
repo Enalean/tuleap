@@ -334,6 +334,12 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 DROP TABLE IF EXISTS trove_treesums;
 
 
+
+# SR #772 - Rename 'release' field from legacy tracker to 'release_name' to avoid conflict in MySQL 5
+ALTER TABLE bug CHANGE release release_name varchar(255) NOT NULL default '';
+UPDATE bug_field SET field_name='release_name' where field_name='release';
+
+
 ###############################################################################
 # Personalizeable layout
 -- 
