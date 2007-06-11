@@ -869,6 +869,23 @@ $server->register(
 );
 
 $server->register(
+    'getArtifactInverseDependencies',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'group_artifact_id'=>'xsd:int',
+          'artifact_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfArtifactDependency'),
+    $uri,
+    $uri.'#getArtifactInverseDependencies',
+    'rpc',
+    'encoded',
+    'Returns the list of the dependencies (ArtifactDependency) that other artifact can have with the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     or if the artifact_id is not a valid one.'
+);
+
+$server->register(
     'addArtifactFile',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
@@ -2403,7 +2420,7 @@ function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artif
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault,'getArtifactDependencies',$a->getErrorMessage(),$a->getErrorMessage());
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactDependencies','Permissions denied','Permissions denied');
         }
     
         return dependencies_to_soap($at, $a->getDependencies());
@@ -2440,6 +2457,63 @@ function dependencies_to_soap($artifact_type, $dependencies) {
     }
     return $return;
 } 
+
+/**
+ * getArtifactInverseDependencies - returns the array of the inverse ArtifactDependency of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
+ *
+ * warning: the same structure ArtifactDependency is used for "reverse" dependencies, but artifact_depend_id and is_dependent_on_artifact_id won't be filled  
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the inverse dependencies
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the inverse dependencies
+ * @param int $artifact_id the ID of the artifact we want to retrieve the inverse dependencies
+ * @return array{SOAPArtifactDependency} the array of the inverse dependencies of the artifact,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ *              - artifact_id does not match with a valid artifact
+ */
+function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+    global $art_field_fact; 
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'getArtifactInverseDependencies','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'getArtifactInverseDependencies',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactInverseDependencies','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactInverseDependencies',$at->getErrorMessage(),$at->getErrorMessage());
+        }
+        
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactInverseDependencies', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactInverseDependencies', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+        }
+
+        $a = new Artifact($at,$artifact_id);
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Could Not Get Artifact','Could Not Get Artifact');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies',$a->getErrorMessage(),$a->getErrorMessage());
+        } elseif (! $a->userCanView()) {
+            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Permissions denied','Permissions denied');
+        }
+    
+        return dependencies_to_soap($at, $a->getInverseDependencies());
+    } else {
+        return new soap_fault(invalid_session_fault, 'getArtifactInverseDependencies', 'Invalid Session', '');
+    }
+}
 
 /**
  * addArtifactFile - add an attached file to the artifact $artifact_id
