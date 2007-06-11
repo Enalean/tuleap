@@ -485,6 +485,7 @@ $server->wsdl->addComplexType(
     'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
     'email' => array('name'=>'email', 'type' => 'xsd:string'),
     'added_by' => array('name'=>'added_by', 'type' => 'xsd:int'),
+    'added_by_name' => array('name'=>'added_by_name', 'type' => 'xsd:string'),
     'comment' => array('name'=>'comment', 'type' => 'xsd:string'),
     'date' => array('name'=>'date', 'type' => 'xsd:int')    
     )
@@ -502,7 +503,7 @@ $server->wsdl->addComplexType(
 );
 
 $server->wsdl->addComplexType(
-    'ArtifactDependence',
+    'ArtifactDependency',
     'complexType',
     'struct',
     'sequence',
@@ -510,19 +511,24 @@ $server->wsdl->addComplexType(
     array(                  
     'artifact_depend_id'          => array('name'=>'artifact_depend_id', 'type' => 'xsd:int'),
     'artifact_id'                 => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-    'is_dependent_on_artifact_id' => array('name'=>'is_dependent_on_artifact_id', 'type' => 'xsd:int')    
+    'is_dependent_on_artifact_id' => array('name'=>'is_dependent_on_artifact_id', 'type' => 'xsd:int'),
+    'summary' => array('name'=>'summary', 'type' => 'xsd:string'),
+    'tracker_id' => array('name'=>'tracker_id', 'type' => 'xsd:int'),
+    'tracker_name' => array('name'=>'tracker_name', 'type' => 'xsd:string'),
+    'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
+    'group_name' => array('name'=>'group_name', 'type' => 'xsd:string')
     )
 );
 
 $server->wsdl->addComplexType(
-    'ArrayOfArtifactDependence',
+    'ArrayOfArtifactDependency',
     'complexType',
     'array',
     '',
     'SOAP-ENC:Array',
     array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactDependence[]')),
-    'tns:ArtifactDependence'
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactDependency[]')),
+    'tns:ArtifactDependency'
 );
 
 $server->wsdl->addComplexType(
@@ -837,12 +843,12 @@ $server->register(
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
     ),
-    array('return'=>'tns:ArrayOfArtifactDependence'),
+    array('return'=>'tns:ArrayOfArtifactDependency'),
     $uri,
     $uri.'#getArtifactDependencies',
     'rpc',
     'encoded',
-    'Returns the list of the dependencies (ArtifactDependence) for the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+    'Returns the list of the dependencies (ArtifactDependency) for the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one.'
 );
@@ -854,7 +860,7 @@ $server->register(
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
     ),
-    array('return'=>'tns:ArrayOfArtifactDependence'),
+    array('return'=>'tns:ArrayOfArtifactDependency'),
     $uri,
     $uri.'#getDependencies',
     'rpc',
@@ -954,10 +960,10 @@ $server->register(
     ),
     array('return'=>'xsd:int'),
     $uri,
-    $uri.'#deleteArtifactDependence',
+    $uri.'#deleteArtifactDependency',
     'rpc',
     'encoded',
-    'Delete the dependence between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+    'Delete the dependency between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
      Returns the ID of the deleted dependency if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.
@@ -974,7 +980,7 @@ $server->register(
     ),
     array('return'=>'xsd:int'),
     $uri,
-    $uri.'#deleteDependence',
+    $uri.'#deleteDependency',
     'rpc',
     'encoded',
     'Deprecated. Please use deleteArtifactDependency'
@@ -2352,13 +2358,13 @@ function artifactfiles_to_soap($attachedfiles_arr) {
 }
 
 /**
- * getArtifactDependencies - returns the array of ArtifactDependence of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
+ * getArtifactDependencies - returns the array of ArtifactDependency of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the dependencies
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the dependencies
  * @param int $artifact_id the ID of the artifact we want to retrieve the dependencies
- * @return array{SOAPArtifactDependence} the array of the dependencies of the artifact,
+ * @return array{SOAPArtifactDependency} the array of the dependencies of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
@@ -2413,14 +2419,19 @@ function getDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) 
     return getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id);
 }
  
-function dependencies_to_soap($dependancies) {
+function dependencies_to_soap($dependencies) {
     $return = array();
-    $rows=db_numrows($dependancies);
+    $rows=db_numrows($dependencies);
     for ($i=0; $i<$rows; $i++) {
         $return[]=array(
-            'artifact_depend_id' => db_result($dependancies, $i, 'artifact_depend_id'),
-            'artifact_id' => db_result($dependancies, $i, 'artifact_id'),
-            'is_dependent_on_artifact_id' => db_result($dependancies, $i, 'is_dependent_on_artifact_id')
+            'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
+            'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
+            'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
+            'summary' => db_result($dependencies, $i, 'summary'),
+            'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
+            'tracker_name' => db_result($dependencies, $i, 'name'),
+            'group_id' => db_result($dependencies, $i, 'group_id'),
+            'group_name' => db_result($dependencies, $i, 'group_name')
         );
     }
     return $return;
@@ -2882,6 +2893,7 @@ function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
             'artifact_cc_id' => db_result($artifact_cc_list, $i, 'artifact_cc_id'),
             'email' => db_result($artifact_cc_list, $i, 'email'),
             'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
+            'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
             'comment' => db_result($artifact_cc_list, $i, 'comment'),
             'date' => db_result($artifact_cc_list, $i, 'date')
         );

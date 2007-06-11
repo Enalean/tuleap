@@ -1418,7 +1418,7 @@ class Artifact extends Error {
      */
     function getDependencies() {
                 
-    	$sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, ag.name, g.group_name ".
+    	$sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
             "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
             "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
