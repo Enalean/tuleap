@@ -228,7 +228,11 @@ proto.do_pre = function(){
 proto.do_image = function() {
     var img = prompt("Enter the image name", '');
     var rev = prompt("Enter the revision number", '');
-    var html = '<img src="uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+    if(rev){
+        var html = '<img src="uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+    }else{
+        var html = '<img src="uploads/' + groupid + '/' + img + '"></img>';
+    }
     
     if (! Wikiwyg.is_ie)
         this.get_edit_window().focus();

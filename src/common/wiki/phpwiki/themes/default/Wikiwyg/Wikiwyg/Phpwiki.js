@@ -708,9 +708,15 @@ proto.format_img = function(element) {
     if( uri.match(/uploads\//) ){
       //uri = escape( uri.substring( uri.lastIndexOf('/')+1, uri.length ) );
       src = uri;
-      file = src.replace(/.*uploads\/([0-9])+\/([0-9])+\/(.*)/, '$3');
-      revision = src.replace(/.*uploads\/[0-9]+\/([0-9])+\/(.*)/, '$1');
-      uri = "[Upload:" + revision + "/" + file +"]";
+      if(src.match(/.*uploads\/([0-9])+\/([0-9])+\/(.*)/)){
+          file = src.replace(/.*uploads\/[0-9]+\/[0-9]+\/(.*)/, '$1');
+          revision = src.replace(/.*uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
+	  uri = "[Upload:" + revision + "/" + file +"]";
+      }else if(src.match(/.*uploads\/([0-9]+\/)(.*)/)){
+          file = src.replace(/.*uploads\/([0-9]+\/)(.*)/, '$2');
+          //revision = src.replace(/.*uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
+          uri = "[Upload:" + file +"]";
+      }
     }
 
     if (uri) {
