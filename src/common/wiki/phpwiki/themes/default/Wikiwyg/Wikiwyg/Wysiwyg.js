@@ -225,6 +225,10 @@ proto.do_pre = function(){
     this.format_command;
 }
 
+proto.do_wikihelp = function() {
+    help_window('/help/show_help.php?section=WikiService.html');
+}
+
 proto.do_image = function() {
     var img = prompt("Enter the image name", '');
     var rev = prompt("Enter the revision number", '');

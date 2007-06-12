@@ -53,7 +53,7 @@ window.onload = function() {
 		       'save', 'preview', 'save_button', '|',
 		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', 'pre', 'toc', '|',
 		       'link', 'image', 'wikitext', '|', '|',
-		       'table'
+		       'table', '|', 'wikihelp'
 		       ],
 		styleSelector: [
 		       'label', 'p', 'h2', 'h3', 'h4', 'pre'
@@ -79,7 +79,8 @@ window.onload = function() {
 		       unordered:'Format unordered list',
 		       hr:	 'Insert horizontal line',
                        preview:  'Preview wiki page',   
-                       save_button:'Save wiki page'
+                       save_button:'Save wiki page',
+		       wikihelp: 'Get Help'
 	              }
             },
             wysiwyg: {
