@@ -233,9 +233,9 @@ proto.do_image = function() {
     var img = prompt("Enter the image name", '');
     var rev = prompt("Enter the revision number", '');
     if(rev){
-        var html = '<img src="uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+        var html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
     }else{
-        var html = '<img src="uploads/' + groupid + '/' + img + '"></img>';
+        var html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
     }
     
     if (! Wikiwyg.is_ie)
