@@ -52,12 +52,12 @@ window.onload = function() {
 		controlLayout: [
 		       'save', 'preview', 'save_button', '|',
 		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', 'pre', 'toc', '|',
-		       'link', 'image', 'wikitext', '|', '|',
+		       'link', 'image', 'attach', 'wikitext', '|', '|',
 		       'table', '|', 'wikihelp'
 		       ],
 		styleSelector: [
 		       'label', 'p', 'h2', 'h3', 'h4', 'pre'
-				], 
+				],
 		controlLabels: {
 	               save:     'Apply changes',
 		       cancel:   'Exit toolbar',
@@ -68,17 +68,18 @@ window.onload = function() {
 		       bold:	 'Format bold text',
 		       italic:	 'Format italic text',
 		       verbatim: 'Verbatim',
-                       toc:	 'Insert Table Of Content', 
+                       toc:	 'Insert Table Of Content',
 		       pre:	 'Insert preformatted text',
 		       table:	 'Create Rich Table (EXPERIMENTAL feature)',
 		       image:	 'Insert an already uploaded image',
-                       wikitext: 'Insert ASCII wikitext', 
-                       sup:      'Format Superscript text', 
+		       attach:	 'Attach an already uploaded file',
+                       wikitext: 'Insert ASCII wikitext',
+                       sup:      'Format Superscript text',
                        sub:      'Format Subscript text',
 		       ordered:	 'Format numbered list',
 		       unordered:'Format unordered list',
 		       hr:	 'Insert horizontal line',
-                       preview:  'Preview wiki page',   
+                       preview:  'Preview wiki page',
                        save_button:'Save wiki page',
 		       wikihelp: 'Get Help'
 	              }

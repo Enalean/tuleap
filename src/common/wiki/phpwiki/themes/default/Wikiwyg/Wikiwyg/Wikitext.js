@@ -800,6 +800,17 @@ proto.format_a = function(element) {
 	    href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/, '$2');
 	    this.make_wikitext_link(label, href, element);
 	}
+	else if (href.match(/http(.+)\/wiki\/uploads\/[0-9]+\/[0-9]+\/(.*)/)){
+	    file = href.replace(/http(.+)\/wiki\/uploads\/[0-9]+\/[0-9]+\/(.*)/, '$2');
+	    rev = href.replace(/http(.+)\/wiki\/uploads\/[0-9]+\/([0-9]+)\/.*/, '$2');
+	    attach_string = '[Upload:' + rev + '/' + file + ']';
+            this.appendOutput(attach_string);
+	}
+	else if (href.match(/http(.+)\/wiki\/uploads\/([0-9]+\/)(.*)/)){
+	    file = href.replace(/http(.+)\/wiki\/uploads\/([0-9]+\/)(.*)/, '$3');
+	    attach_string = '[Upload:' + file + ']';
+            this.appendOutput(attach_string);
+	}
 	else if (href.match(/http(.+)\/wiki\/(.+)/)){
 	    href = href.replace(/http(.+)\/wiki\/(.+)/, '$2');
 	    this.make_wikitext_link(label, href, element);
@@ -819,6 +830,16 @@ proto.format_a = function(element) {
 	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
+	else if (href.match(/.+uploads\/[0-9]+\/[0-9]+\/.*/)){
+	    file = href.replace(/.+uploads\/[0-9]+\/[0-9]+\/(.*)/, '$1');
+	    rev = href.replace(/.+uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
+	    attach_string = '[Upload:' + rev + '/' + file + ']';
+            this.appendOutput(attach_string);
+	}else if (href.match(/.+uploads\/([0-9]+\/)(.*)/)){
+	    file = href.replace(/.+uploads\/([0-9]+\/)(.*)/, '$2');
+	    attach_string = '[Upload:' + file + ']';
+            this.appendOutput(attach_string);
+	}
 	else if ((href.match(/(http|https|ftp).*/)) && (label == href)){
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
@@ -829,6 +850,7 @@ proto.format_a = function(element) {
     }        
 
 }
+
 proto.format_table = function(element) {
     this.assert_blank_line();
     this.walk(element);

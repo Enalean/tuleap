@@ -233,18 +233,36 @@ proto.do_image = function() {
     var img = prompt("Enter the image name", '');
     var rev = prompt("Enter the revision number", '');
     if(rev){
-        var html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+	var html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
     }else{
-        var html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
+	var html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
     }
-    
     if (! Wikiwyg.is_ie)
         this.get_edit_window().focus();
-    this.insert_img(html);
+    this.insert_html(html);
 
 }
 
 proto.insert_img = function(html) { // See IE
+    this.exec_command('inserthtml', html);
+}
+
+proto.do_attach = function(){
+    var file = prompt("Enter file name", '');
+    var rev = prompt("Enter the revision number", '');
+    if(rev){
+        //var html = '<a href="/wiki/uploads/' + groupid + '/' + rev + '/' + file + '">Upload:' + rev + '/' + file +'</a>';
+	var html = 'Upload:' + rev + '/' + file;
+    }else {
+        //var html = '<a href="/wiki/uploads/' + groupid + '/' + file + '">Upload:' + file +'</a>';
+	var html = 'Upload:' + file;
+    }
+    if (! Wikiwyg.is_ie)
+        this.get_edit_window().focus();
+    this.insert_attach(html);
+}
+
+proto.insert_attach = function(html) { // See IE
     this.exec_command('inserthtml', html);
 }
 
@@ -415,6 +433,17 @@ proto.insert_table = function(html) {
 }
 
 proto.insert_img = function(html){
+    var doc = this.get_edit_document();
+    var range = this.get_edit_document().selection.createRange();
+    if (range.boundingTop == 2 && range.boundingLeft == 2)
+        return;
+    range.pasteHTML(html);
+    range.collapse(false);
+    range.select();
+
+}
+
+proto.insert_attach = function(html){
     var doc = this.get_edit_document();
     var range = this.get_edit_document().selection.createRange();
     if (range.boundingTop == 2 && range.boundingLeft == 2)
