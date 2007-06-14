@@ -17,7 +17,7 @@ require_once('common/event/EventManager.class.php');
 $Language->loadLanguageMsg('project/project');
 $request = HTTPRequest::instance();
     
-function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su) {
+function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su, $is_template) {
   global $Language,$PHP_SELF;
 
     // Normal projects should not see inactive services.
@@ -52,7 +52,25 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
     echo '<TR class="'. util_get_alt_row_color($row_num) .'">
             <TD>
               <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$label.'</TD>';
-    
+    if ($is_template) {
+        echo '<td align="center">';
+        switch($short_name) {
+        case 'docman':
+        case 'file':
+        case 'forum':
+        case 'cvs':
+        case 'tracker':
+            echo $Language->getText('project_admin_editservice','conf_inherited_yes');;
+            break;
+        case 'svn':
+        case 'admin':
+            echo $Language->getText('project_admin_editservice','conf_inherited_partially');;
+            break;
+        default:
+            echo $Language->getText('project_admin_editservice','conf_inherited_no');;
+        }
+        echo '</td>';
+    }
     if ($group_id==100) {
         echo '<TD align="center">'.( $is_active ? $Language->getText('project_admin_editservice','available') : $Language->getText('project_admin_servicebar','unavailable') ).'</TD>';
     }
@@ -286,6 +304,9 @@ echo '
 
 $title_arr=array();
 $title_arr[]=$Language->getText('project_admin_editservice','s_label');
+if ($project->isTemplate()) {
+    $title_arr[]=$Language->getText('project_admin_editservice','conf_inherited');
+}
 if ($group_id==100) {
     $title_arr[]=$Language->getText('project_admin_servicebar','availability');
 }
@@ -304,7 +325,7 @@ if (db_numrows($result) < 1) {
 }
 $row_num=0;
 while ($serv = db_fetch_array($result)) {
-    display_service_row($group_id,$serv['service_id'],$serv['label'],$serv['short_name'],$serv['description'],$serv['is_active'],$serv['is_used'],$serv['scope'],$serv['rank'],$row_num,$is_superuser);
+    display_service_row($group_id,$serv['service_id'],$serv['label'],$serv['short_name'],$serv['description'],$serv['is_active'],$serv['is_used'],$serv['scope'],$serv['rank'],$row_num,$is_superuser,$project->isTemplate());
 }
 
 
