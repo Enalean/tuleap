@@ -101,6 +101,10 @@ project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Accès Subversion
 project_admin_editservice	service_wiki_lbl_key	Wiki
 project_admin_editservice	service_wiki_desc_key	Wiki
+project_admin_editservice	conf_inherited	Configuration héritée
+project_admin_editservice	conf_inherited_no	-
+project_admin_editservice	conf_inherited_partially	Partiellement
+project_admin_editservice	conf_inherited_yes	Oui
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php
