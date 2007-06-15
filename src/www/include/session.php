@@ -92,7 +92,9 @@ function session_login_valid_status($status, $allowpending=0) {
     global $Language;
 
     // if allowpending (for verify.php) then allow
-    if (($status == 'A') || ($status == 'R') || ($allowpending && ($status == 'P'))) {
+    if (($status == 'A') || ($status == 'R') || 
+        ($allowpending && ($status == 'V' || $status == 'W' ||
+            ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
         return true;
     } else {
         if ($status == 'S') { 
@@ -100,7 +102,8 @@ function session_login_valid_status($status, $allowpending=0) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','account_suspended'));
             return false;
         }
-        if ($status == 'P') { 
+        if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
+            ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) { 
             //account pending
             $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','account_pending'));
             return false;

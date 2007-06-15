@@ -69,11 +69,7 @@ echo ")</b>";
 ?></li>
 <?php if ($GLOBALS['sys_user_approval'] == 1) { ?>
 <LI><?php echo $Language->getText('admin_main', 'validated_user',array("approve_pending_users.php?page=validated")); ?>
-<?php echo " <b>($validated_users";
-if ($validated_users != 0) {
-    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php?page=validated\">".$Language->getText('admin_main', 'need_approval')."</a>";
-}
-echo ")</b>";
+<?php echo " <b>($validated_users)</b>";
 }
 ?>
 </li>

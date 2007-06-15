@@ -48,7 +48,7 @@ if (isset($login) && $login && !$success) {
             echo "<P>".$Language->getText('account_login', 'pending_msg');
             echo "<P><A href=\"pending-resend.php?form_user=". htmlentities($form_loginname, ENT_QUOTES) ." \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
         }
-    } else if ($status == 'V'){
+    } else if ($status == 'V' || $status == 'W'){
         echo "<P>".$Language->getText('account_login', 'validation_msg');
         echo "<P><A href=\"pending-resend.php?form_user=". htmlentities($form_loginname, ENT_QUOTES) ." \">[".$Language->getText('account_login', 'resend_btn')."]</A><br><hr><p>";
     }else if ($status == 'S') {
