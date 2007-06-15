@@ -285,13 +285,33 @@ class Layout extends Response {
                 // If in a project page, add a project news feed
                 if ($GLOBALS['group_id']) {
                     $project=project_get_object($GLOBALS['group_id']);
+                    $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
                     $project_feed='        <link rel="alternate" title="'.$project->getPublicName().' '.$Language->getText('include_layout','latest_news_rss').'" href="'.$sys_url.'/export/rss_sfnews.php?group_id='.$GLOBALS['group_id'].'" type="application/rss+xml">';
                 }
                 if (isset($project_feed)) {
                     echo $project_feed;
                 }
 	}
-
+    
+    function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
+        $project=project_get_object($group_id);
+        if ($project->isTemplate()) {
+            switch($service_top_tab) {
+            case 'admin':
+            case 'forum':
+            case 'docman':
+            case 'cvs':
+            case 'svn':
+            case 'file':
+            case 'tracker':
+                break;
+            default:
+                $this->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
+                break;
+            }
+        }
+    }
+    
 	function generic_header_end($params) {
 	?>
    </HEAD>
