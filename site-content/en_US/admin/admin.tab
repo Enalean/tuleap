@@ -21,7 +21,7 @@ admin_main	display_user	Display Users Beginning with :
 admin_main	search_user	or Search (email,user name,real name,userid):
 admin_main	search	Search
 admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) Status</a>
-admin_main	validated_user	Users in <a href="$1"><B>V or W</B> (validated or validated restricted) Status</a>
+admin_main	validated_user	Validated users <a href="$1"><B>pending email activation</B></a>
 admin_main	need_approval	approval needed
 admin_main	need_validation	validation needed
 admin_main	header_group	Group Administration
