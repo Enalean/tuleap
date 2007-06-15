@@ -230,16 +230,25 @@ proto.do_wikihelp = function() {
 }
 
 proto.do_image = function() {
-    var img = prompt("Enter the image name", '');
-    var rev = prompt("Enter the revision number", '');
+    var html = '';
+    var img = '';
+    var rev = '';
+    
+    // Prompt for filename and revision number
+    img = prompt("Enter the image name", '');
+    rev = prompt("Enter the revision number", '');
+    
+    if (img == null || img == '')
+	return;
     if(rev){
-	var html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+        html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
     }else{
-	var html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
+        html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
     }
+    
     if (! Wikiwyg.is_ie)
         this.get_edit_window().focus();
-    this.insert_html(html);
+    this.insert_img(html);
 
 }
 
@@ -248,15 +257,22 @@ proto.insert_img = function(html) { // See IE
 }
 
 proto.do_attach = function(){
-    var file = prompt("Enter file name", '');
-    var rev = prompt("Enter the revision number", '');
+    var html = '';
+    var file = '';
+    var rev = '';
+    
+    // Prompt dor filename and revision number
+    file = prompt("Enter file name", '');
+    rev = prompt("Enter the revision number", '');
+    
+    if (file == null || file == '')
+       return;
     if(rev){
-        //var html = '<a href="/wiki/uploads/' + groupid + '/' + rev + '/' + file + '">Upload:' + rev + '/' + file +'</a>';
-	var html = 'Upload:' + rev + '/' + file;
+	html = 'Upload:' + rev + '/' + file;
     }else {
-        //var html = '<a href="/wiki/uploads/' + groupid + '/' + file + '">Upload:' + file +'</a>';
-	var html = 'Upload:' + file;
+	html = 'Upload:' + file;
     }
+    
     if (! Wikiwyg.is_ie)
         this.get_edit_window().focus();
     this.insert_attach(html);
