@@ -81,7 +81,7 @@ window.onload = function() {
 		       hr:	 'Insert horizontal line',
                        preview:  'Preview wiki page',
                        save_button:'Save wiki page',
-		       wikihelp: 'Get Help'
+		       wikihelp: 'Help'
 	              }
             },
             wysiwyg: {
