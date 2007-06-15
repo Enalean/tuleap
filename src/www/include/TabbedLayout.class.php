@@ -200,7 +200,7 @@ class TabbedLayout extends Layout {
 
 
 if (isset($params['group']) && $params['group']) {
-
+    $this->warning_for_services_which_configuration_is_not_inherited($params['group'], $params['toptab']);
 			?>
 			<tr>
 				<td>&nbsp;</td>

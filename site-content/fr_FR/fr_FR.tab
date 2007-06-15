@@ -75,4 +75,5 @@ global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier ch
 global	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
 global	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
 global	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
+global	service_conf_not_inherited	La configuration de ce service ne sera pas héritée dans les sous-projets
 

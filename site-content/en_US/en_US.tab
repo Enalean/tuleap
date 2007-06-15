@@ -70,4 +70,5 @@ global	error_upload_nofile	File upload error($1). No file was uploaded.
 global	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
 global	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
 global	error_upload_unknown	File upload error($1). Unknown error code.
+global	service_conf_not_inherited	The configuration of this service will not be inherited for sub-projects
 
