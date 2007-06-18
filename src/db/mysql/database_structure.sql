@@ -2655,7 +2655,7 @@ CREATE TABLE artifact_field (
   special int(11) NOT NULL default '0',
   value_function TEXT,
   default_value text NOT NULL,
-  notification int(11) default NULL;
+  notification int(11) default NULL,
   PRIMARY KEY  (field_id,group_artifact_id),
   KEY idx_fk_field_name (field_name),
   KEY idx_fk_group_artifact_id (group_artifact_id),
@@ -2946,7 +2946,7 @@ CREATE TABLE artifact_date_reminder_processing (
   field_id int(11) NOT NULL default '0',
   group_artifact_id int(11) NOT NULL default '0',
   notification_sent int(11) NOT NULL default '0',
-  PRIMARY KEY notification_id
+  PRIMARY KEY (notification_id)
   ) TYPE=MyISAM;
 
 #
