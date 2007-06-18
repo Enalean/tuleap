@@ -220,7 +220,14 @@ proto.do_h6 = proto.format_command;
 proto.do_p = proto.format_command;
 
 proto.do_pre = function(){
-    var html = '<pre style="background-color:#FDFDF7"><br></pre>';
+    var html = '';
+    var selection = this.get_pre_selection_text();
+    
+    if(!selection){
+        html = '<pre style="background-color:#FDFDF7"><br></pre>';
+    }else{
+        html = '<pre style="background-color:#FDFDF7">' + unescape(selection) + '</pre>';
+    }
     this.insert_html(html);
     this.format_command;
 }
@@ -386,6 +393,11 @@ proto.do_link = function() {
 
 proto.get_selection_text = function() { // See IE, below
     return this.get_edit_window().getSelection().toString();
+}
+
+proto.get_pre_selection_text = function(){
+    var selection = this.get_selection_text();
+    return selection;
 }
 
 proto.get_link_selection_text = function() {
