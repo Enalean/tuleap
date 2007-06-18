@@ -144,6 +144,60 @@ appropriate to join the existing team and contribute to the other
 project.<br>
   <br>
 </ol>
+
+<h2> Pending users</h2>
+
+Before a user account is made available, it has to be activated. According to your Codex 
+configuration there are several ways to activate an account:
+<ul>
+	<li><b>Standard case, no administration approval is needed.</b><br />
+	Once the user created his account, he will receive an e-mail, and then 
+	when clicking on the link inside he will activate his account. The admin 
+	can also activate the account (if the user e-mail is not valid...) in the pending user interface.
+	</li>
+	<li><b>Administration approval is needed (sys_user_approval = 1).</b><br />
+	Once the user created his account, the administrator is notified by e-mail.
+	He has to first validate the account in the pending
+	user interface. Then an email is sent to the user.
+	The account is activated once the user has followed the link sent in the email. 
+	The administrator can also directly activate the account :
+		<ul><li>after validation, in the validated user interface</li>
+		<li>or before validation directly in the pending user interface</li></ul>
+	</li>
+	<li><b>Restricted user and administration approval is needed (sys_allow_register_user=1 and 
+	sys_user_approval=1)</b><br />
+	Once the user created his account, the administrator is notified by e-mail.
+	He has to validate the account in the pending
+	user interface. He can choose between standard user or restricted user. Then an email is sent to the user.
+	The account is activated once the user has followed the link sent in the email.
+	The administrator can also directly activate the account :
+		<ul><li>after validation, in the validated user interface</li>
+		<li>or before validation directly in the pending user interface</li></ul>
+	See also <a href="#HowTo_Restricted_Users">Enabling 'Restricted Users' on a CodeX server</a>
+	</li>
+	
+	</li>
+</ul>
+<br />
+Here are the various possible status values for a CodeX user:
+<ul>
+	<li>Pending (internal: 'P'): the account was submitted, but not validated or activated.</li>
+	<li>Validated (internal: 'V'): (Only when administrator approval is needed): 
+	an administrator validated the account. It is not active yet: the user has to 
+	follow the link sent in the validation email to activate the account. The 
+	administrator may also activate the account in the administration interface.</li>
+	<li>Validated as Restricted (internal:W): This is the same as above: the 
+	account was validated by an admin, but as 'restricted'.</li>
+	<li>Active (internal: A): The account is active: the user can log in and use CodeX.</li>
+	<li>Restricted (internal: R): The account is active with a restricted status. 
+	The user can log in and use CodeX, but only on projects he belongs to.</li>
+	<li>Suspended (internal: S): The account was suspended by an administrator: the 
+	user can no longer log in.</li>
+	<li>Deleted (internal: D): the account was deleted and the user home directory on CodeX 
+	is removed, as well as all entries in system files.</li>
+</ul>
+
+
 <font color="#ff0000"></font>
 <h2> Site News Approval</h2>
 All news published by each project (using the News service) is normally

@@ -30,7 +30,7 @@ function verify_login_valid()	{
 	$usr = db_fetch_array($res);
     //if sys_user_approval=1 then check if the admin aldready validates the account
 
-    if($GLOBALS['sys_user_approval'] == 0 || $usr['status'] == 'V'){
+    if($GLOBALS['sys_user_approval'] == 0 || $usr['status'] == 'V' || $usr['status'] == 'W'){
     	if (strcmp($GLOBALS['confirm_hash'],$usr['confirm_hash'])) {
     		$GLOBALS['error_msg'] = $Language->getText('account_verify', 'err_hash');
     		return 0;
@@ -51,7 +51,7 @@ if (isset($Login)){
     if ($success) {
         // Get user status: if already set to 'R' (restricted) don't change it!
         $res_status=db_query("SELECT status FROM user WHERE user_name='$GLOBALS[form_loginname]'");
-        if (db_result($res_status,0,'status') == 'R') {
+        if (db_result($res_status,0,'status') == 'R' || db_result($res_status,0,'status') == 'W') {
             $newstatus='R';
         } else $newstatus='A';
 
