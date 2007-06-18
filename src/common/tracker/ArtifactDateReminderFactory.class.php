@@ -48,8 +48,6 @@ class ArtifactDateReminderFactory extends Error {
 	// The field id
 	var $field_id;
 	
-	// Number of notifications sent, for this event
-	var $notification_sent;
 
 	/**
 	 *  Constructor.
@@ -118,7 +116,7 @@ class ArtifactDateReminderFactory extends Error {
 	*/
 	function getGroupId() {
 	    
-	    $sql = sprintf('SELECT * FROM artifact_group_list'
+	    $sql = sprintf('SELECT group_id FROM artifact_group_list'
 			    .' WHERE group_artifact_id=%d',
 			    $this->getGroupArtifactId());
 	    $res = db_query($sql);
@@ -159,7 +157,13 @@ class ArtifactDateReminderFactory extends Error {
 	* @return int
 	*/
 	function getNotificationSent() {
-	    return $this->notification_sent;
+	    
+		$sql = sprintf('SELECT notification_sent FROM artifact_date_reminder_processing'
+						.' WHERE notification_id = %d',
+		$this->notification_id);
+		$res = db_query($sql);
+		return db_result($res,0,'notification_sent');
+		
 	}
 	
 	/**
@@ -182,7 +186,7 @@ class ArtifactDateReminderFactory extends Error {
 	*/
 	function getNotificationStartDate() {
 	
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+	    $sql = sprintf('SELECT notification_start, notification_type FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND field_id=%d'
 			    .' AND group_artifact_id=%d',
@@ -211,7 +215,7 @@ class ArtifactDateReminderFactory extends Error {
 	*/
 	function getRecurse() {
 	    
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+	    $sql = sprintf('SELECT recurse FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND field_id=%d'
 			    .' AND group_artifact_id=%d',
@@ -229,7 +233,7 @@ class ArtifactDateReminderFactory extends Error {
 	*/
 	function getFrequency() {
 	    
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+	    $sql = sprintf('SELECT frequency FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND field_id=%d'
 			    .' AND group_artifact_id=%d',
@@ -267,7 +271,7 @@ class ArtifactDateReminderFactory extends Error {
 	    $field = $art_field_fact->getFieldFromId($this->getFieldId());  	     
 
 	    if (! $field->isStandardField()) {
-	        $qry = sprintf('SELECT * FROM artifact_field_value'
+	        $qry = sprintf('SELECT valueDate FROM artifact_field_value'
 				.' WHERE artifact_id=%d'
 				.' AND field_id=%d',
 				$this->getArtifactId(),$this->getFieldId());
@@ -275,7 +279,7 @@ class ArtifactDateReminderFactory extends Error {
 	        $valueDate = db_result($result,0,'valueDate');	    
 	    } else {
 	        //End Date
-	        $qry = sprintf('SELECT * FROM artifact'
+	        $qry = sprintf('SELECT close_date FROM artifact'
 				.' WHERE artifact_id=%d'
 				.' AND group_artifact_id=%d',
 				$this->getArtifactId(),$this->getGroupArtifactId());
@@ -285,6 +289,24 @@ class ArtifactDateReminderFactory extends Error {
 	    
 	    return $valueDate;
 	    
+	}
+	
+	/**
+	 * Get the number of mails that should have been sent, but
+	 * weren't sent due to different possible issues
+	 *
+	 * @return int
+	 */
+	function getNotificationToBeSent() {
+
+		$current_time = time();
+		if ($current_time >= $this->getNotificationStartDate() + 24 * 3600) {
+			$delay = intval(($current_time -$this->getNotificationStartDate()) / (24 * 3600));
+			return floor($delay);
+		} else {
+			return 0;
+		}
+   
 	}
 	
 	/**
@@ -300,10 +322,10 @@ class ArtifactDateReminderFactory extends Error {
 	    $group = group_get_object($this->getGroupId());   
 	    $at = new ArtifactType($group,$this->getGroupArtifactId());
 	    $art_field_fact = new ArtifactFieldFactory($at);
-	    $art = new Artifact($at,$this->getArtifactId());
+	    $art = new Artifact($at,$this->getArtifactId(),false);
 	    
 	    $notified_people = array();
-	    $sql = sprintf('SELECT * FROM artifact_date_reminder_settings'
+	    $sql = sprintf('SELECT notified_people FROM artifact_date_reminder_settings'
 			    .' WHERE reminder_id=%d'
 			    .' AND group_artifact_id=%d'
 			    .' AND field_id=%d',
@@ -312,77 +334,77 @@ class ArtifactDateReminderFactory extends Error {
 	    $notif = db_result($res,0,'notified_people');
 	    $notif_array = explode(",",$notif);
 	    foreach ($notif_array as $item) {
-	        switch ($item) {
-		  case 1:
-		    //Submitter
-		    $submitter = $art->getSubmittedBy();
-		    //add submitter in the 'notified_people' array
-		    if (! in_array(user_getemail($submitter),$notified_people) && $submitter != 100 && $this->isUserAllowedToBeNotified($submitter)) {
-		        $count = count($notified_people);
-		        $notified_people[$count] = user_getemail($submitter);
-		    }
-		    break;
-		  case 2:
-		    //Assigned To
-		    $assignee_array = array();
-		    $multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
-		    if (is_object($multi_assigned_to)) {
-	                //Multi-Assigned To field
-	                if ($multi_assigned_to->isUsed()) {
-		             $assignee_array = $art->getMultiAssignedTo();
-		        }		
-	            } else {	                
-	                $assigned_to = $art_field_fact->getFieldFromName('assigned_to');
-			if (is_object($assigned_to)) {
-			    //Assigned To field
-			    if ($assigned_to->isUsed()) {
-				$assignee_array = array($art->getValue('assigned_to'));
-		            }
-		        }
-		    }	    		    
-		    $index = count($notified_people);
-		    if (count($assignee_array) > 0) {  
-		        foreach ($assignee_array as $assignee) {
-			    if (! in_array(user_getemail($assignee),$notified_people) && $assignee != 100 && $this->isUserAllowedToBeNotified($assignee)) {
+	    	switch ($item) {
+	    		case 1:
+	    			//Submitter
+	    			$submitter = $art->getSubmittedBy();
+	    			//add submitter in the 'notified_people' array
+	    			if (! in_array(user_getemail($submitter),$notified_people) && $submitter != 100 && $this->isUserAllowedToBeNotified($submitter)) {
+	    				$count = count($notified_people);
+	    				$notified_people[$count] = user_getemail($submitter);
+	    			}
+	    			break;
+	    		case 2:
+	    			//Assigned To
+	    			$assignee_array = array();
+	    			$multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
+	    			if (is_object($multi_assigned_to)) {
+	    				//Multi-Assigned To field
+	    				if ($multi_assigned_to->isUsed()) {
+	    					$assignee_array = $art->getMultiAssignedTo();
+	    				}
+	    			} else {
+	    				$assigned_to = $art_field_fact->getFieldFromName('assigned_to');
+	    				if (is_object($assigned_to)) {
+	    					//Assigned To field
+	    					if ($assigned_to->isUsed()) {
+	    						$assignee_array = array($art->getValue('assigned_to'));
+	    					}
+	    				}
+	    			}
+	    			$index = count($notified_people);
+	    			if (count($assignee_array) > 0) {
+	    				foreach ($assignee_array as $assignee) {
+	    					if (! in_array(user_getemail($assignee),$notified_people) && $assignee != 100 && $this->isUserAllowedToBeNotified($assignee)) {
 			        $notified_people[$index] = user_getemail($assignee);
 			        $index ++;
-			    }
-			}
-		    }
-		    break;
-		  case 3:
-		    //CC		      
-		    $cc_array = $art->getCCIdList();
-		    if (count($cc_array) > 0) {
-		        $index = count($notified_people);
-			foreach ($cc_array as $cc_id) {
-			    $cc = user_getemail($cc_id);
-			    if (! in_array($cc,$notified_people) && $this->isUserAllowedToBeNotified($cc_id)) {
+	    					}
+	    				}
+	    			}
+	    			break;
+	    		case 3:
+	    			//CC
+	    			$cc_array = $art->getCCIdList();
+	    			if (count($cc_array) > 0) {
+	    				$index = count($notified_people);
+	    				foreach ($cc_array as $cc_id) {
+	    					$cc = user_getemail($cc_id);
+	    					if (! in_array($cc,$notified_people) && $this->isUserAllowedToBeNotified($cc_id)) {
 			        //add CC list in the 'notified_people' array
 			        $notified_people[$index] = $cc;
-				$index++;
-			    }
-			}
-		    }
-		    break;
-		  case 4:
-		    //Commenter
-		    $res_com = $art->getCommenters();
-		    if (db_numrows($res_com) > 0) {
-		        $index = count($notified_people);
-		        while ($row = db_fetch_array($res_com)) {
-			    $commenter = $row['mod_by'];
-			    if (! in_array(user_getemail($commenter),$notified_people) && $commenter != 100 && $this->isUserAllowedToBeNotified($commenter)) {
+			        $index++;
+	    					}
+	    				}
+	    			}
+	    			break;
+	    		case 4:
+	    			//Commenter
+	    			$res_com = $art->getCommenters();
+	    			if (db_numrows($res_com) > 0) {
+	    				$index = count($notified_people);
+	    				while ($row = db_fetch_array($res_com)) {
+	    					$commenter = $row['mod_by'];
+	    					if (! in_array(user_getemail($commenter),$notified_people) && $commenter != 100 && $this->isUserAllowedToBeNotified($commenter)) {
 			        //add Commenters in the 'notified_people' array
-				$notified_people[$index] = user_getemail($commenter);
+			        $notified_people[$index] = user_getemail($commenter);
 			        $index ++;
-			    }			
-			}
-		    }
-		    break;
-		}
+	    					}
+	    				}
+	    			}
+	    			break;
+	    	}
 	    }
-	    
+	     
 	    return $notified_people;
 	
 	}
@@ -391,16 +413,20 @@ class ArtifactDateReminderFactory extends Error {
 	* Increment the number of notifications sent
 	* 
 	*/
-	function updateNotificationSent() {
+	function updateNotificationSent($adjust=0) {
 	    
-	    $upd = $this->getNotificationSent() + 1;
-	    $sql = sprintf('UPDATE artifact_date_reminder_processing'
-			    .' SET notification_sent=%d'
-			    .' WHERE notification_id=%d',
-			    $upd,$this->notification_id);
-	    $res = db_query($sql);		    
-	    
-	    return $res;
+		if (!$adjust) {
+			$upd = $this->getNotificationSent() + 1;
+		} else {
+			$upd = $adjust;
+		}
+		$sql = sprintf('UPDATE artifact_date_reminder_processing'
+                       .' SET notification_sent=%d'
+                       .' WHERE notification_id=%d',
+		$upd,$this->notification_id);
+		$res = db_query($sql);
+
+		return $res;
 	}
 		
 	/**
@@ -415,7 +441,7 @@ class ArtifactDateReminderFactory extends Error {
 	    $group = group_get_object($this->getGroupId());   
 	    $at = new ArtifactType($group,$this->getGroupArtifactId());
 	    $art_field_fact = new ArtifactFieldFactory($at);
-	    $art = new Artifact($at,$this->getArtifactId());
+	    $art = new Artifact($at,$this->getArtifactId(),false);
 	    $field = $art_field_fact->getFieldFromId($this->getFieldId());
 	    
 	    return ($art->userCanView($user_id) && $field->userCanRead($this->getGroupId(),$this->getGroupArtifactId(),$user_id));
@@ -429,35 +455,40 @@ class ArtifactDateReminderFactory extends Error {
 	*/
 	function handleNotification() {
 	    	    
-	    global $art_field_fact;
-	    
-  	    $group = group_get_object($this->getGroupId());   
-	    $at = new ArtifactType($group,$this->getGroupArtifactId());
-	    $art_field_fact = new ArtifactFieldFactory($at);
-	    $field =  $art_field_fact->getFieldFromId($this->getFieldId());
-	    $art = new Artifact($at,$this->getArtifactId());
-	    
-	    $date_value = date("l, F jS Y",$this->getDateValue());
-	    $week = date("W",$this->getDateValue());
-	    $prj_name = util_get_group_name_from_id($this->getGroupId());
-	    $tolist = implode($this->getNotifiedPeople(),',');
-            $mail =& new Mail();
-            $mail->setFrom($GLOBALS['sys_noreply']);	    
-            $mail->setSubject("[" . $prj_name. " - '" . $this->getTrackerName()."' Tracker] ".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_subject',array($art->getSummary())));
-	    $mail->setBcc($tolist);
-            $body = "\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_header').
-		    "\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body',array($field->getLabel(),$date_value,$week)).
-		    "\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_art_link').
-		    "\n".get_server_url()."/tracker/?func=detail&aid=".$this->getArtifactId()."&atid=".$this->getGroupArtifactId()."&group_id=".$this->getGroupId().
-		    "\n\n______________________________________________________________________".
-		    "\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_footer')."\n";
-	    $mail->setBody($body);
-            if ($mail->send()) {
-	        return true;
-	    } else {	        
-	        return false;
-	    }
-	    
+		global $art_field_fact;
+
+		$group = group_get_object($this->getGroupId());
+		$at = new ArtifactType($group,$this->getGroupArtifactId());
+		$art_field_fact = new ArtifactFieldFactory($at);
+		$field =  $art_field_fact->getFieldFromId($this->getFieldId());
+		$art = new Artifact($at,$this->getArtifactId(),false);
+
+		$sent = true;
+		$week = date("W",$this->getDateValue());
+		$prj_name = util_get_group_name_from_id($this->getGroupId());
+
+		$mail =& new Mail();
+		$mail->setFrom($GLOBALS['sys_noreply']);
+		$mail->setSubject("[" . $this->getTrackerName()."] ".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_subject',array($field->getLabel(),date("j F Y",$this->getDateValue()),$art->getSummary())));
+
+		$body = "\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_header',array($field->getLabel(),date("l j F Y",$this->getDateValue()),$week)).
+		"\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_project',array($prj_name)).
+		"\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_tracker',array($this->getTrackerName())).
+		"\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_art',array($art->getSummary())).
+		"\n".$field->getLabel().": ".date("D j F Y",$this->getDateValue()).
+		"\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_art_link').
+		"\n".get_server_url()."/tracker/?func=detail&aid=".$this->getArtifactId()."&atid=".$this->getGroupArtifactId()."&group_id=".$this->getGroupId().
+		"\n\n______________________________________________________________________".
+		"\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_footer')."\n";
+		$mail->setBody($body);
+		foreach ($this->getNotifiedPeople() as $notified) {
+			$mail->setTo($notified);
+			if (!$mail->send()) {
+				$sent = false;
+			}
+		}
+		return $sent;
+			    
 	}
 	
 	/**
@@ -470,17 +501,23 @@ class ArtifactDateReminderFactory extends Error {
 	*/
 	function checkReminderStatus() {
 	
-	    if ($this->getNotificationSent() < $this->getRecurse()) {		
-		$current_time = time();
-		$next_day = intval($this->getNextReminderDate() + 24 * 3600);
-		if ($current_time >= $this->getNextReminderDate() && $current_time < $next_day) {
-		    if ($this->handleNotification()) {
-		        //Increment 'notification_sent' field
-			$this->updateNotificationSent();	
-		    }
-		}
-	    }
+		if ($this->getNotificationSent() < $this->getRecurse()) {
 
+			if ($this->getNotificationToBeSent() > 0 && $this->getNotificationToBeSent() > $this->getNotificationSent()) {
+				//previous notification mails were not sent (for different possible reasons: push to prod of the feature, mail server crash, bug, etc)
+				//in this case, re-adjust 'notification_sent' field
+				$this->updateNotificationSent($this->getNotificationToBeSent());
+			}
+
+			$current_time = time();
+			$next_day = intval($this->getNextReminderDate() + 24 * 3600);
+			if ($current_time >= $this->getNextReminderDate() && $current_time < $next_day) {
+				if ($this->handleNotification()) {
+					//Increment 'notification_sent' field
+					$this->updateNotificationSent();
+				}
+			}
+		}		
 	}
 
 }

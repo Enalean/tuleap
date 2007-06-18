@@ -35,8 +35,8 @@ $em->processEvent("codex_daily_start", null);
 
 //Process daily events, start with notiication reminder in trackers
 $callArray = array('ArtifactDateReminder');
-while($callArray as $class) {
-  $obj = new $$class;
+foreach($callArray as $class) {
+  $obj = new $class;
   $obj->codexDaily();
 }
 
