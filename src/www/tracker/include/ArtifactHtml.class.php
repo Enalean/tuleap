@@ -201,7 +201,7 @@ class ArtifactHtml extends Artifact {
             echo '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
     
-            echo $this->showFollowUpComments($group_id);
+            echo $this->showFollowUpComments($group_id,$pv);
             echo '</td></tr>';
             
             //
@@ -609,8 +609,14 @@ class ArtifactHtml extends Artifact {
                 
                         for ($i=0; $i < $rows; $i++) {
                             $field_name = db_result($result, $i, 'field_name');
-                            $value_id_old =  db_result($result, $i, 'old_value');
                             $value_id_new =  db_result($result, $i, 'new_value');
+			    if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name) && $value_id_new == "") {
+			        //removed followup comment is not recorded
+				    $value_id_old = $Language->getText('tracker_include_artifact','flup_hidden');
+			    } else {
+			        $value_id_old =  db_result($result, $i, 'old_value');
+                }
+                            
 
                                 $field = $art_field_fact->getFieldFromName($field_name);
                                 if ( $field ) {
@@ -643,7 +649,7 @@ class ArtifactHtml extends Artifact {
 				  }
                                 } else {
 				    echo "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'.$field_name.'</TD><TD>';
+                                        '"><TD>'.((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment" : $field_name).'</TD><TD>';
 				    echo $value_id_old.'</TD><TD>';
 				    echo $value_id_new;
 				    echo '</TD>'.
@@ -1037,7 +1043,7 @@ class ArtifactHtml extends Artifact {
          *
          * @return void
          */
-        function showFollowUpComments($group_id, $ascii=false) {
+        function showFollowUpComments($group_id, $pv, $ascii=false) {
 
             //
             //  Format the comment rows from artifact_history
@@ -1076,8 +1082,12 @@ class ArtifactHtml extends Artifact {
             
             // Loop throuh the follow-up comments and format them
             for ($i=0; $i < $rows; $i++) {
-                        $comment_type = db_result($result, $i, 'comment_type');
-			$comment_type_id = db_result($result, $i, 'comment_type_id');
+                $comment_type = db_result($result, $i, 'comment_type');
+			    $comment_type_id = db_result($result, $i, 'comment_type_id');
+			    $comment_id = db_result($result, $i, 'artifact_history_id');
+			    $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
+			    $orig_date = $this->getOriginalCommentDate($comment_id);			    
+			
 		        if ( ($comment_type_id == 100) ||($comment_type == "") )
                             $comment_type = '';
                         else
@@ -1094,34 +1104,52 @@ class ArtifactHtml extends Artifact {
                         // I wish we had sprintf argument swapping in PHP3 but
                         // we don't so do it the ugly way...
                         if ($ascii) {
+							$comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
+							if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
+								$comment_edit = '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'"> ['.$GLOBALS['Language']->getText('tracker_fieldeditor','edit').']</a>';
+								$comment_del = '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.
+					   						'" onClick=\'return confirm("'.$GLOBALS['Language']->getText('tracker_include_artifact','delete_comment').'")\'><img src="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></a>';
+								$comment_txt = $comment_edit."  ".$comment_del."<br>".$comment_txt;					
+							}                        	
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
+                                                    format_date($sys_datefmt,db_result($orig_date,0,'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
                                                     $comment_type,
-                                                    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+                                                    $comment_txt
                                                     );
                                 } else {
                                     $out .= sprintf($fmt,
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
-                                                    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
+                                                    $comment_txt
                                                     );
                                 }
                         } else {
+			        		if (db_result($result,$i,'new_value') == '') {
+				    			$comment_txt = util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id);
+							} else {
+				    			$comment_txt = util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
+							}
+							if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
+								$comment_edit = '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'"> ['.$GLOBALS['Language']->getText('tracker_fieldeditor','edit').']</a>';
+								$comment_del = '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.
+					   						'" onClick=\'return confirm("'.$GLOBALS['Language']->getText('tracker_include_artifact','delete_comment').'")\'>['.$GLOBALS['Language']->getText('tracker_include_artifact','del').']</a>';
+								$comment_txt = $comment_edit."  ".$comment_del."<br>".$comment_txt; 			
+							}                        	
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
                                                     util_get_alt_row_color($i),
                                                     $comment_type,
-                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+                                                    $comment_txt,
+                                                    format_date($sys_datefmt,db_result($orig_date,0,'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))));
                                 } else {
                                     $out .= sprintf($fmt,
                                                     util_get_alt_row_color($i),
-                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+                                                    $comment_txt,
+                                                    format_date($sys_datefmt,db_result($orig_date,0,'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))));
                                 }
                         }
             }
@@ -1282,7 +1310,29 @@ class ArtifactHtml extends Artifact {
         </TABLE>';
     }
 
-        
+    /**
+         * Display the follow-up comment update form	 
+         *
+         * @param comment_id: id of the follow-up comment
+         * 
+         *
+         * @return void
+         */
+    function displayEditFollowupComment($comment_id) {
+    	 
+    	$group = $this->ArtifactType->getGroup();
+    	$group_artifact_id = $this->ArtifactType->getID();
+    	$group_id = $group->getGroupId();
+    	echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
+    	echo '<FORM ACTION="/tracker/?group_id='.$group_id.'&atid='.$group_artifact_id.'&func=browse" METHOD="post">
+		<INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.$comment_id.'">
+		<INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.$this->getID().'">
+		<P><TEXTAREA NAME="followup_update" ROWS="7" COLS="80" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
+		<P><INPUT TYPE="submit" VALUE="Submit">
+		</FORM>';
+
+    }
+
     /**
     * Send different messages to persons affected by this artifact with respect 
 	* to their different permissions 
@@ -1523,7 +1573,7 @@ class ArtifactHtml extends Artifact {
 	    // Now display other special fields
         
         // Then output the history of bug comments from newest to oldest
-	    $body .= $this->showFollowUpComments($group_id, true);
+	    $body .= $this->showFollowUpComments($group_id, true, true);
 	    
 	    // Then output the CC list
 	    $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
@@ -1588,7 +1638,8 @@ class ArtifactHtml extends Artifact {
 	      }
 	    }
             //Process special cases first: follow-up comment
-	    if ($changes['comment']) {
+			//Followup comment added 
+            if ($changes['comment'] && isset($changes['comment']['add']) && !isset($changes['comment']['del'])) {
 	      $visible_change = true;
 	      $out_com = "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------$sys_lf";
 	    
@@ -1596,9 +1647,20 @@ class ArtifactHtml extends Artifact {
 		$out_com .= "[".$changes['comment']['type']."]$sys_lf";
 	      }
 	      $out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
-	      unset($changes['comment']);
+	      unset($changes['comment']['add']);
 	    }
         
+	    //Followup comment updated
+	    if ($changes['comment'] && isset($changes['comment']['add']) && isset($changes['comment']['del'])) {
+	        $visible_change = true;
+		$out_com = "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','rem_followup')."   ----------------$sys_lf";
+		$out_com .= util_unconvert_htmlspecialchars($changes['comment']['del']);
+		$out_com .= "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','add_followup')."   ----------------$sys_lf";
+		$out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
+		unset($changes['comment']['del']);
+		unset($changes['comment']['add']);
+	    }
+	    
             //Process special cases first: file attachment
 	    if ($changes['attach']) {
 	      $visible_change = true;
