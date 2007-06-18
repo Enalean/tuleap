@@ -20,12 +20,12 @@ class CLI_Action_Tracker_List extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'max_rows',
-            'description'    => '--limit=<limit>              The maximum number of returned artifacts.',
+            'description'    => '--limit=<limit>        The maximum number of returned artifacts.',
             'parameters'     => array('limit'),
         ));
         $this->addParam(array(
             'name'           => 'offset',
-            'description'    => '--offset=<offset>            Number of artifacts that will be skipped (comes with the limit parameter).',
+            'description'    => '--offset=<offset>     Number of artifacts that will be skipped (comes with the limit parameter).',
         ));
         $this->addParam(array(
             'name'           => 'criteria',

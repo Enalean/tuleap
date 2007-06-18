@@ -7,18 +7,18 @@
 
 require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
-class CLI_Action_Tracker_Comments extends CLI_Action {
-    function CLI_Action_Tracker_Comments() {
-        $this->CLI_Action('comments', 'Returns the list of follow-up comments associated with a specific artifact.');
-        $this->soapCommand = 'getArtifactFollowups';
+class CLI_Action_Tracker_Dependencies extends CLI_Action {
+    function CLI_Action_Tracker_Dependencies() {
+        $this->CLI_Action('dependencies', 'Returns the list of dependencies associated with a specific artifact.');
+        $this->soapCommand = 'getArtifactDependencies';
         $this->addParam(array(
             'name'           => 'group_artifact_id',
-            'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the returned artifact comments belong to.',
+            'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the returned artifact dependencies belong to.',
             'parameters'     => array('tracker_id'),
         ));
         $this->addParam(array(
             'name'           => 'artifact_id',
-            'description'    => '--id=<artifact_id>    ID of the artifact.',
+            'description'    => '--id=<artifact_id>      ID of the artifact we want to retrieve the dependencies.',
             'parameters'     => array('id'),
         ));
     }

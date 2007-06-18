@@ -18,7 +18,15 @@ require_once('CLI_Action_Tracker_Add.class.php');
 require_once('CLI_Action_Tracker_Update.class.php');
 require_once('CLI_Action_Tracker_Comments.class.php');
 require_once('CLI_Action_Tracker_AddComment.class.php');
+require_once('CLI_Action_Tracker_CCList.class.php');
 require_once('CLI_Action_Tracker_AddCC.class.php');
+require_once('CLI_Action_Tracker_DeleteCC.class.php');
+require_once('CLI_Action_Tracker_Reports.class.php');
+require_once('CLI_Action_Tracker_Dependencies.class.php');
+require_once('CLI_Action_Tracker_InverseDependencies.class.php');
+require_once('CLI_Action_Tracker_AddDependencies.class.php');
+require_once('CLI_Action_Tracker_DeleteDependency.class.php');
+require_once('CLI_Action_Tracker_ArtifactHistory.class.php');
 
 class CLI_Module_Tracker extends CLI_Module {
     // These fields are the standard fields
@@ -37,7 +45,15 @@ class CLI_Module_Tracker extends CLI_Module {
         $this->addAction(new CLI_Action_Tracker_Update());
         $this->addAction(new CLI_Action_Tracker_Comments());
         $this->addAction(new CLI_Action_Tracker_AddComment());
+        $this->addAction(new CLI_Action_Tracker_CCList());
         $this->addAction(new CLI_Action_Tracker_AddCC());
+        $this->addAction(new CLI_Action_Tracker_DeleteCC());
+        $this->addAction(new CLI_Action_Tracker_Reports());
+        $this->addAction(new CLI_Action_Tracker_Dependencies());
+        $this->addAction(new CLI_Action_Tracker_InverseDependencies());
+        $this->addAction(new CLI_Action_Tracker_AddDependencies());
+        $this->addAction(new CLI_Action_Tracker_DeleteDependency());
+        $this->addAction(new CLI_Action_Tracker_ArtifactHistory());
         
         /* TODO: other actions =>
         files

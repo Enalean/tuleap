@@ -7,10 +7,10 @@
 
 require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
-class CLI_Action_Tracker_AddCC extends CLI_Action {
-    function CLI_Action_Tracker_AddCC() {
-        $this->CLI_Action('addCC', 'Add a CC list to a specific artifact.');
-        $this->soapCommand = 'addArtifactCC';
+class CLI_Action_Tracker_DeleteDependency extends CLI_Action {
+    function CLI_Action_Tracker_DeleteDependency() {
+        $this->CLI_Action('deleteDependency', 'Delete a dependency of a specific artifact.');
+        $this->soapCommand = 'deleteArtifactDependency';
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the artifact belongs to.',
@@ -18,18 +18,13 @@ class CLI_Action_Tracker_AddCC extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'artifact_id',
-            'description'    => '--id=<artifact_id>           ID of the artifact the CC list will be added to.',
+            'description'    => '--id=<artifact_id>     ID of the artifact the dependency will be deleted to.',
             'parameters'     => array('id'),
         ));
         $this->addParam(array(
-            'name'           => 'cc_list',
-            'description'    => '--cc_list=<cc_list>          The list of emails or logins to add in CC.',
-            'parameters'     => array('cc_list'),
-        ));
-        $this->addParam(array(
-            'name'           => 'cc_comment',
-            'description'    => '--cc_comment=<cc_comment>    The optional comment that goes with the CC.',
-            'parameters'     => array('cc_comment'),
+            'name'           => 'dependent_on_artifact_id',
+            'description'    => '--dependency=<id>    The ID of the artifact that is dependent on this artifact.',
+            'parameters'     => array('dependency'),
         ));
     }
     function validate_artifact_id(&$artifact_id) {
@@ -44,9 +39,9 @@ class CLI_Action_Tracker_AddCC extends CLI_Action {
         }
         return true;
     }
-    function validate_cc_list(&$cc_list) {
-        if (!$cc_list) {
-            exit_error("You must specify the CC list using the --cc_list parameter");
+    function validate_is_dependent_on_artifact_id(&$dependency) {
+        if (!$dependency) {
+            exit_error("You must specify the dependency to delete using the --dependency parameter.");
         }
         return true;
     }
