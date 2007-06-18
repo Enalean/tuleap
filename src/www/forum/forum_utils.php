@@ -108,7 +108,7 @@ function forum_header($params) {
     		 
     		echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
     		echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
-    		print ' <a href="#start_new_thread">';
+    		print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
     		echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
     		if (isset($msg_id) && $msg_id) {
     			echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
@@ -481,7 +481,9 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		
 		if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring']) {
 		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
-		}    		
+		} else {
+		    forum_thread_delete_monitor($group_forum_id, $msg_id);
+		}   		
 		handle_monitoring($group_forum_id,$thread_id,$msg_id);
 
 	} else {
@@ -539,19 +541,12 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 		  }
 	      }	  	      
 	      echo '
-	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" '.$disabled.' '.$checked.'></TD>
+	           <TR><TD align="right"><INPUT TYPE="checkbox" NAME="enable_monitoring" VALUE="1" '.$disabled.' '.$checked.'></TD>
 	           <TD> '.$GLOBALS['Language']->getText('forum_forum_utils','monitor_this_thread').'</TD>
 	           </TR>'; 
 	 ?>	  
-          <TR><td>&nbsp;</td><TD ALIGN="left">
-<?php
-if(forum_is_monitored($forum_id,user_getid())){
-    print '<EM>'.$Language->getText('forum_forum_utils','on_post_monitoring').'</EM>';
-}
-?>               
-
-	  </TR>
-	  <TR><TD COLSPAN="2" ALIGN="center">
+          <TR><td>&nbsp;</td><TD ALIGN="left"> </TR>
+	  	  <TR><TD COLSPAN="2" ALIGN="center">
 		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="<?php echo $Language->getText('forum_forum_utils','post_comment'); ?>">
              </TD>
              <TD VALIGN="top">              
@@ -621,15 +616,23 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . db_result($result,0,'forum_name')." - ". db_result($result,0, 'user_name') ."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
             $mail->setBcc($tolist);
-            
-		    
-		    $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
+
+            //customize mail footer
+            if (forum_thread_is_monitored($thread_id, user_getid())) {
+            	$item = array($GLOBALS['Language']->getText('forum_admin_index','forum'));
+            	$url = get_server_url()."/forum/monitor_thread.php?forum_id=".$forum_id;
+            } else if (forum_is_monitored($forum_id,user_getid())) {
+            	$item = array($GLOBALS['Language']->getText('forum_forum','thread'));
+            	$url = get_server_url()."/forum/monitor.php?forum_id=".$forum_id;
+            }
+
+            $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
 			"\n".get_server_url()."/forum/message.php?msg_id=".$msg_id.
 		      "\n".$Language->getText('global','by').' '. db_result($result,0, 'user_name') .' ('.db_result($result,0, 'realname').')' .
 			"\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			"\n\n______________________________________________________________________".
-			"\n".$Language->getText('forum_forum_utils','stop_monitor_explain').": ".
-			"\n".get_server_url()."/forum/monitor.php?forum_id=$forum_id";
+			"\n".$Language->getText('forum_forum_utils','stop_monitor_explain',$item).": ".
+			"\n".$url;
             $mail->setBody($body);
             
 			if ($mail->send()) {
@@ -637,10 +640,15 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
             } else {//ERROR
                 $feedback .= ' - '.$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])); 
             }
-			if (forum_thread_is_monitored($thread_id, user_getid()) || forum_is_monitored($forum_id,user_getid())) {	
-	            $feedback .= ' - '.$Language->getText('forum_forum_utils','user_monitoring').' ';
-	        }
-			
+
+            if(forum_is_monitored($forum_id,user_getid())) {
+            	$feedback .= ' - '.$Language->getText('forum_forum_utils','on_post_monitoring');
+            } else {
+            	if (forum_thread_is_monitored($thread_id, user_getid()) || forum_is_monitored($forum_id,user_getid())) {
+            		$feedback .= ' - '.$Language->getText('forum_forum_utils','user_monitoring').' ';
+            	}
+            }
+
 		} else {
 			$feedback .= ' '.$Language->getText('forum_forum_utils','mail_not_sent').' ';
 			echo db_error();
@@ -799,15 +807,12 @@ function forum_thread_delete_monitor($forum_id,$msg_id) {
 		    $forum_id,$msg_id);
     $res = db_query($sql);
     $is_followup_to = db_result($res,0,'is_followup_to');
-    //delete monitor settings only if the message (to be deleted) is the parent  
-    if ($is_followup_to == 0) {
-        $thread_id = db_result($res,0,'thread_id');
-        $qry = sprintf('DELETE FROM forum_monitored_threads'
+    $thread_id = db_result($res,0,'thread_id');
+    $qry = sprintf('DELETE FROM forum_monitored_threads'
 			.' WHERE forum_id=%d'
 			.' AND thread_id=%d',
 			$forum_id,$thread_id);
-        $result= db_query($qry);
-    }	
+    $result= db_query($qry);	
     
 }
 

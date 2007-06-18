@@ -117,20 +117,7 @@ if ($forum_id) {
 	    exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
 	}
 
-	if (isset($post_message)&&($post_message == 'y')) {
-        //
-        // MV: add management on "on post monitoring"
-        if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring'] == 1) {
-            if(user_isloggedin()) {
-                if(!forum_is_monitored($forum_id, user_getid())) {
-                    if (forum_add_monitor ($forum_id, user_getid()) ) {
-                        $feedback .= $Language->getText('forum_monitor','now_monitoring');              
-                    } else {
-                        $feedback .= $Language->getText('forum_forum_utils','insert_err');
-                    }
-                }
-            }
-        }
+	if (isset($post_message)&&($post_message == 'y')) {        
 		post_message($thread_id, $is_followup_to, $subject, $body, $forum_id);
 	}
 
