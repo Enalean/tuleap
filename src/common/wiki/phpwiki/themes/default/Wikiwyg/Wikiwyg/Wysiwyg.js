@@ -331,8 +331,17 @@ proto.do_toc = function() {
 }
 
 proto.do_wikitext = function() {
-    var html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">'+
+    var html = '';
+    var selection = this.get_wikitext_selection_text();
+    
+    if(!selection){
+        html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">'+
                'Wikitext { <br>  <br>}</div></p>';
+    }else{
+        html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext { <br>' + 
+	       unescape(selection) + '<br>}</div></p>';
+    }
+    
     this.insert_html(html);
 }
 
@@ -396,6 +405,11 @@ proto.get_selection_text = function() { // See IE, below
 }
 
 proto.get_pre_selection_text = function(){
+    var selection = this.get_selection_text();
+    return selection;
+}
+
+proto.get_wikitext_selection_text = function(){
     var selection = this.get_selection_text();
     return selection;
 }
