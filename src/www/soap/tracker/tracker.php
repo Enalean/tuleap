@@ -936,7 +936,7 @@ $server->register(
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
-        'is_dependent_on_artifact_id'=>'tns:ArrayOfInt'
+        'is_dependent_on_artifact_ids'=>'xsd:string'
     ),
     array(),
     $uri,
@@ -945,7 +945,7 @@ $server->register(
     'encoded',
     'Add the list of dependencies is_dependent_on_artifact_id to the list of dependencies of the artifact artifact_id 
      of the tracker group_artifact_id of the project group_id.
-     Returns nothing if the add succeed. 
+     Returns true if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the add failed.
      NOTE : the mail notification system is not implemented with the SOAP API.'
@@ -1302,11 +1302,11 @@ function artifacttype_to_soap($at) {
     $atf = new ArtifactTypeFactory($at->getGroup());
     $arr_count = $atf->getStatusIdCount($at->getID());
     if ( $arr_count ) {
-    	    $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:0;
-        $count = array_key_exists('count', $arr_count)?$arr_count['count']:0;;
+    	    $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:NULL;
+        $count = array_key_exists('count', $arr_count)?$arr_count['count']:NULL;
     } else {
-    	    $open_count = 0;
-        $count = 0;
+    	    $open_count = NULL;
+        $count = NULL;
     }
                 
     $field_sets = array();
@@ -2461,7 +2461,7 @@ function dependencies_to_soap($artifact_type, $dependencies) {
 /**
  * getArtifactInverseDependencies - returns the array of the inverse ArtifactDependency of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
  *
- * warning: the same structure ArtifactDependency is used for "reverse" dependencies, but artifact_depend_id and is_dependent_on_artifact_id won't be filled  
+ * warning: the same structure ArtifactDependency is used for "reverse" dependencies, but artifact_depend_id won't be filled  
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the inverse dependencies
@@ -2509,11 +2509,35 @@ function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id
             return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Permissions denied','Permissions denied');
         }
     
-        return dependencies_to_soap($at, $a->getInverseDependencies());
+        return inverse_dependencies_to_soap($at, $artifact_id, $a->getInverseDependencies());
     } else {
         return new soap_fault(invalid_session_fault, 'getArtifactInverseDependencies', 'Invalid Session', '');
     }
 }
+
+/**
+ * We keep the order of the relation in the database, even if we are getting the inverse. 
+ */
+function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dependencies) {
+    $return = array();
+    $rows=db_numrows($inverse_dependencies);
+    for ($i=0; $i<$rows; $i++) {
+        // check the permission : is the user allowed to see the artifact ? 
+        $artifact = new Artifact($artifact_type, db_result($inverse_dependencies, $i, 'artifact_id'));
+        if ($artifact && $artifact->userCanView()) {
+            $return[]=array(
+                'artifact_id' => db_result($inverse_dependencies, $i, 'artifact_id'),
+                'is_dependent_on_artifact_id' => $artifact_id,
+                'summary' => db_result($inverse_dependencies, $i, 'summary'),
+                'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
+                'tracker_name' => db_result($inverse_dependencies, $i, 'name'),
+                'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
+                'group_name' => db_result($inverse_dependencies, $i, 'group_name')
+            );
+        }
+    }
+    return $return;
+} 
 
 /**
  * addArtifactFile - add an attached file to the artifact $artifact_id
@@ -2677,14 +2701,14 @@ function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_i
  * @param int $group_id the ID of the group we want to add the dependencies
  * @param int $group_artifact_id the ID of the tracker we want to add the dependencies
  * @param int $artifact_id the ID of the artifact we want to add the dependencies
- * @param string $is_dependent_on_artifact_id the list of dependencies, in the form of a list of artifact_id, separated with a comma.
+ * @param string $is_dependent_on_artifact_ids the list of dependencies, in the form of a list of artifact_id, separated with a comma.
  * @return void if the add is ok or a soap fault if :
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  *              - the add failed
  */
-function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id){
+function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_ids){
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
@@ -2717,12 +2741,13 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault,'addArtifactDependencies',$a->getErrorMessage(),$a->getErrorMessage());
         }
-
-        $comma_separated = implode(",", $is_dependent_on_artifact_id);
-
-        $a->addDependencies($comma_separated,&$changes,true);
-        if (!isset($changes) || !is_array($changes) || count($changes) == 0) {
-            return new soap_fault(add_dependency_fault, 'addArtifactDependencies', 'Dependencies addition for artifact #'.$a->getID().' failed', 'Dependencies addition for artifact #'.$a->getID().' failed');
+        
+        if (!$a->addDependencies($is_dependent_on_artifact_ids,&$changes,false)) {
+            if (!isset($changes) || !is_array($changes) || count($changes) == 0) {
+                return new soap_fault(add_dependency_fault, 'addArtifactDependencies', 'Dependencies addition for artifact #'.$a->getID().' failed', 'Dependencies addition for artifact #'.$a->getID().' failed');
+            }
+        } else {
+        	   return new soapval('return', 'xsd:boolean', true);
         }
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactDependencies', 'Invalid Session', 'Invalid Session');
@@ -3172,6 +3197,5 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
     }
     return $return;
 } 
-
 
 ?>
