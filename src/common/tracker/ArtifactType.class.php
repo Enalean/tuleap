@@ -389,6 +389,29 @@ class ArtifactType extends Error {
 	}
 
 	/**
+	 * getToggleNotification - get notification status in this tracker (stopped or active)
+	 * 
+	 * @return boolean: true if notification stopped, false if notification is active
+	 */
+	function getToggleNotification() {
+		return $this->data_array['stop_notification'];
+	}
+	
+	/**
+	 *  setToggleNotification - set notification status in tis tracker (stooped or active) 
+	 */
+	function setToggleNotification($stop_notification) {
+    
+		$sql = sprintf('UPDATE artifact_group_list'
+            .' SET stop_notification = %d'
+            .' WHERE group_artifact_id = %d'
+            .' AND group_id = %d',
+		    $stop_notification,$this->getID(),$this->Group->getID());
+		return db_query($sql);
+		
+	}
+	
+	/**
 	 *	addUser - add a user to this ArtifactType - depends on UNIQUE INDEX preventing duplicates.
 	 *
 	 *	@param	int		user_id of the new user.
@@ -857,8 +880,9 @@ class ArtifactType extends Error {
 	 *  @param	string	the list of watching users
 	 *  @return true on success, false on failure.
 	 */
-	function updateNotificationSettings($user_id, $watchees, &$feedback) {
-	    $this->setWatchees($user_id, $watchees);
+	function updateNotificationSettings($user_id, $watchees, $stop_notification, &$feedback) {
+	    $this->setToggleNotification($stop_notification);
+		$this->setWatchees($user_id, $watchees);
         $this->fetchData($this->getID());
         return true;
 	}

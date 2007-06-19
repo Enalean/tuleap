@@ -1295,108 +1295,111 @@ class ArtifactHtml extends Artifact {
     function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
         global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
         
-        $group = $this->ArtifactType->getGroup();
-        $group_artifact_id = $this->ArtifactType->getID();
-        $group_id = $group->getGroupId();
-        
-        // See who is going to receive the notification. Plus append any other email 
-        // given at the end of the list.
-        $withoutpermissions_concerned_addresses = array();
-        $this->buildNotificationArrays($changes, $concerned_ids, $concerned_addresses);
-        if ($more_addresses) {
-            foreach ($more_addresses as $address) {
-                if ($address['address'] && $address['address'] != '') {
-                    $res_username = user_get_result_set_from_email($address['address'], false);
-                    if ($res_username && (db_numrows($res_username) == 1)) {
-                        $u_id = db_result($res_username,0,'user_id');
-                        if (!$address['check_permissions']) {
-                            $curr_user = new User($u_id);	
-                            if ($curr_user->isActive() || $curr_user->isRestricted()) {
-                                $withoutpermissions_concerned_addresses[user_getemail($u_id)] = true;
-                            }
-                            unset($concerned_ids[$u_id]);
-                        } else {
-                            $concerned_ids[$u_id] = true;
-                        }
-                    } else {
-                        if (!$address['check_permissions']) {
-                            $withoutpermissions_concerned_addresses[$address['address']] = true;
-                            unset($concerned_addresses[$address['address']]);
-                        } else {
-                            $concerned_addresses[$address['address']] = true;
-                        }
-                    }
-                }
-            }
+        //before to start, check if notification is temporarily stopped in this tracker
+        if (!$this->ArtifactType->getToggleNotification()) {
+        	$group = $this->ArtifactType->getGroup();
+        	$group_artifact_id = $this->ArtifactType->getID();
+        	$group_id = $group->getGroupId();
+
+        	// See who is going to receive the notification. Plus append any other email
+        	// given at the end of the list.
+        	$withoutpermissions_concerned_addresses = array();
+        	$this->buildNotificationArrays($changes, $concerned_ids, $concerned_addresses);
+        	if ($more_addresses) {
+        		foreach ($more_addresses as $address) {
+        			if ($address['address'] && $address['address'] != '') {
+        				$res_username = user_get_result_set_from_email($address['address'], false);
+        				if ($res_username && (db_numrows($res_username) == 1)) {
+        					$u_id = db_result($res_username,0,'user_id');
+        					if (!$address['check_permissions']) {
+        						$curr_user = new User($u_id);
+        						if ($curr_user->isActive() || $curr_user->isRestricted()) {
+        							$withoutpermissions_concerned_addresses[user_getemail($u_id)] = true;
+        						}
+        						unset($concerned_ids[$u_id]);
+        					} else {
+        						$concerned_ids[$u_id] = true;
+        					}
+        				} else {
+        					if (!$address['check_permissions']) {
+        						$withoutpermissions_concerned_addresses[$address['address']] = true;
+        						unset($concerned_addresses[$address['address']]);
+        					} else {
+        						$concerned_addresses[$address['address']] = true;
+        					}
+        				}
+        			}
+        		}
+        	}
+        	//concerned_ids contains users for wich we have to check permissions
+        	//concerned_addresses contains emails for which there is no existing user. Permissions will be checked (Anonymous users)
+        	//withoutpermissions_concerned_addresses contains emails for which there is no permissions check
+
+        	//Prepare e-mail
+        	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+        	$mail =& new Mail();
+        	$mail->setFrom($GLOBALS['sys_noreply']);
+        	$mail->addAdditionalHeader("X-CodeX-Project",     group_getunixname($group_id));
+        	$mail->addAdditionalHeader("X-CodeX-Artifact",    $this->ArtifactType->getItemName());
+        	$mail->addAdditionalHeader("X-CodeX-Artifact-ID", $this->getID());
+
+
+        	//treat anonymous users
+        	$body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+        	 
+        	if ($ok) { //don't send the mail if nothing permitted for this user group
+        		$to = join(',',array_keys($concerned_addresses));
+        		if ($to) {
+        			$mail->setTo($to);
+        			$mail->setSubject($subject);
+        			$mail->setBody($body);
+        			$mail->send();
+        		}
+        	}
+
+        	//treat 'without permissions' emails
+        	if (count($withoutpermissions_concerned_addresses)) {
+        		$body = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+        		if ($ok) {
+        			$mail->setTo(join(',', array_keys($withoutpermissions_concerned_addresses)));
+        			$mail->setSubject($subject);
+        			$mail->setBody($body);
+        			$mail->send();
+        		}
+        	}
+
+        	//now group other registered users
+
+        	//echo "<br>concerned_ids = ".implode(',',array_keys($concerned_ids));
+
+        	$this->groupNotificationList(array_keys($concerned_ids),$user_sets,$ugroup_sets);
+
+        	//echo "<br>user_sets = "; print_r($user_sets); echo ", ugroup_sets = "; print_r($ugroup_sets);
+
+        	reset($ugroup_sets);
+        	while (list($x,$ugroups) = each($ugroup_sets)) {
+        		unset($arr_addresses);
+
+        		$user_ids = $user_sets[$x];
+        		//echo "<br>--->  preparing mail $x for ";print_r($user_ids);
+        		$body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
+
+        		if (!$ok) continue; //don't send the mail if nothing permitted for this user group
+
+        		foreach ($user_ids as $user_id) {
+        			$arr_addresses[] = user_getemail($user_id);
+        		}
+
+        		$to = join(',',$arr_addresses);
+        		if ($to) {
+        			$mail->setTo($to);
+        			$mail->setSubject($subject);
+        			$mail->setBody($body);
+        			$mail->send();
+        		}
+        	}
+        	$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_include_artifact','update_sent')); //to '.$to;
         }
-        //concerned_ids contains users for wich we have to check permissions
-        //concerned_addresses contains emails for which there is no existing user. Permissions will be checked (Anonymous users)
-        //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
-        
-        //Prepare e-mail
-        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-        $mail =& new Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->addAdditionalHeader("X-CodeX-Project",     group_getunixname($group_id));
-        $mail->addAdditionalHeader("X-CodeX-Artifact",    $this->ArtifactType->getItemName());
-        $mail->addAdditionalHeader("X-CodeX-Artifact-ID", $this->getID());
-        
-        
-	    //treat anonymous users
-	    $body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
-	    
-	    if ($ok) { //don't send the mail if nothing permitted for this user group
-            $to = join(',',array_keys($concerned_addresses));
-            if ($to) { 
-                $mail->setTo($to);
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
-            }
-	    }
-        
-        //treat 'without permissions' emails
-        if (count($withoutpermissions_concerned_addresses)) {
-            $body = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
-            if ($ok) {
-                $mail->setTo(join(',', array_keys($withoutpermissions_concerned_addresses)));
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
-            }
-        }
-        
-        //now group other registered users
-
-	    //echo "<br>concerned_ids = ".implode(',',array_keys($concerned_ids));
-
-	    $this->groupNotificationList(array_keys($concerned_ids),$user_sets,$ugroup_sets);
-
-	    //echo "<br>user_sets = "; print_r($user_sets); echo ", ugroup_sets = "; print_r($ugroup_sets);
-
-	    reset($ugroup_sets);
-	    while (list($x,$ugroups) = each($ugroup_sets)) {
-            unset($arr_addresses);
-            
-            $user_ids = $user_sets[$x];
-            //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
-            $body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-            
-            if (!$ok) continue; //don't send the mail if nothing permitted for this user group
-
-            foreach ($user_ids as $user_id) {
-                $arr_addresses[] = user_getemail($user_id);
-            }
-
-            $to = join(',',$arr_addresses);
-            if ($to) { 
-                $mail->setTo($to);
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
-            }
-	    }
-	    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_include_artifact','update_sent')); //to '.$to;
     }
 
 

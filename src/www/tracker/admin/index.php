@@ -372,7 +372,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		if (isset($submit)) {
 		  $ok = true;
 		  if ($ath->userIsAdmin()) {
-              $ok = $ath->updateNotificationSettings(user_getid(), $watchees,$feedb);
+              $ok = $ath->updateNotificationSettings(user_getid(), $watchees, $stop_notification, $feedb);
               //{{{ Global Notifications
               if ($submitted_notifications = $request->get('global_notification')) {
                   $agnf =& new ArtifactGlobalNotificationFactory();

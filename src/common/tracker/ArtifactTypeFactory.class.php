@@ -473,7 +473,7 @@ class ArtifactTypeFactory extends Error {
 		$sql="INSERT INTO 
 			artifact_group_list 
 			(group_id, name, description, item_name, allow_copy,
-                         submit_instructions,browse_instructions,instantiate_for_new_projects
+                         submit_instructions,browse_instructions,instantiate_for_new_projects,stop_notification
                          ) 
 			VALUES 
 			('". $group_id ."',
@@ -482,7 +482,7 @@ class ArtifactTypeFactory extends Error {
 			'". $itemname."',
                         '". $at_template->allowsCopy()."',
                         '". db_escape_string($at_template->getSubmitInstructions())."',
-                        '". db_escape_string($at_template->getBrowseInstructions())."',1)";
+                        '". db_escape_string($at_template->getBrowseInstructions())."',1,0)";
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
