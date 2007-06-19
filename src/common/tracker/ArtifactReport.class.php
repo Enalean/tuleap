@@ -22,20 +22,42 @@ require_once('common/tracker/ArtifactReportField.class.php');
 
 // Sort by place query
 function cmp_place_query($field1, $field2) {
-    if ($field1->getPlaceQuery() < $field2->getPlaceQuery())
-		return -1;
-    else if ($field1->getPlaceQuery() > $field2->getPlaceQuery())
-		return 1;
-    return 0;
+
+	if ($field1->getPlaceQuery() <> NULL || $field2->getPlaceQuery() <> NULL) {
+        if ($field1->getPlaceQuery() < $field2->getPlaceQuery())
+	    return -1;
+        else if ($field1->getPlaceQuery() > $field2->getPlaceQuery())
+	    return 1;
+	return 0;    
+    } else {
+        //For fields which are not search-ranked, use the field rank-on-screen
+	if ($field1->getPlace() < $field2->getPlace())  
+            return -1;
+	else if ($field1->getPlace() > $field2->getPlace())
+            return 1;	
+	return 0;
+    }
+    	
 }
 
 // Sort by place result
 function cmp_place_result($field1, $field2) {
-    if ($field1->getPlaceResult() < $field2->getPlaceResult())
-		return -1;
-    else if ($field1->getPlaceResult() > $field2->getPlaceResult())
-		return 1;
-    return 0;
+    
+    if ($field1->getPlaceResult() <> NULL || $field2->getPlaceResult() <> NULL) {
+        if ($field1->getPlaceResult() < $field2->getPlaceResult())
+	    return -1;
+        else if ($field1->getPlaceResult() > $field2->getPlaceResult())
+	    return 1;
+	return 0;    
+    } else {
+        //For fields which are not report-ranked, use the field rank-on-screen
+	if ($field1->getPlace() < $field2->getPlace())  
+            return -1;
+	else if ($field1->getPlace() > $field2->getPlace())
+            return 1;	
+	return 0;    
+    }    
+	    
 }
 
 //
