@@ -481,6 +481,10 @@ tracker_include_type	no_active_val	---- NO ACTIVE VALUES ----
 tracker_include_type	active_val	---- ACTIVE VALUES ----
 tracker_include_type	no_hidden_val	---- NO HIDDEN VALUES ----
 tracker_include_type	hidden_val	---- HIDDEN VALUES ----
+tracker_include_type	toggle_notification	Toggle Email Notification
+tracker_include_type	toggle_notif_note	<B>As a tracker administrator</B>, you can temporarily stop all the e-mail notifications in this tracker, regardless of the notification settings below.
+tracker_include_type	toggle_notif_warn	The tracker administrator has temporarily stopped the email notification in this tracker. The notification settings below are now ignored.
+tracker_include_type	stop_notification	Stop Email Notification
 tracker_include_type	global_mail_notif	Global Email Notification
 tracker_include_type	admin_note	<B>As a tracker administrator</B> you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.
 tracker_include_type	send_all	send on all updates
