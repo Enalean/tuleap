@@ -8,6 +8,7 @@
 require_once('pre.php');
 require('../admin/project_admin_utils.php');
 require('./source_code_access_utils.php');
+require('www/project/export/access_logs_export.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -18,6 +19,35 @@ if ( !$group_id ) {
 	exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
 }
 $project=new Project($group_id);
+
+if (isset($_REQUEST['SUBMIT'])) {    
+        
+    switch ($view) {
+      case "monthly":
+        $period = $span * 30.5;
+	break;
+      case "weekly":
+        $period = $span * 7;
+	break;
+      case 'daily':
+        $period = $span;
+	break;
+    }
+        
+    // Send the result in CSV format	
+    header ('Content-Type: text/csv');
+    header ('Content-Disposition: filename=access_logs.csv');
+
+    export_file_logs($project, $period, $who);
+    export_cvs_logs($project, $period, $who);	
+    export_svn_logs($project, $period, $who);
+    export_doc_logs($project, $period, $who);
+    export_wiki_pg_logs($project, $period, $who,0);
+    export_wiki_att_logs($project, $period, $who);
+    export_document_logs($project, $period, $who);
+    exit;
+
+}
 
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',group_getname($group_id)),
 			   'group'=>$group_id,
@@ -43,42 +73,38 @@ if ( !isset($view) ) {
 
 echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
 
-?>
-<FORM action="<?php echo $PHP_SELF; ?>" method="get">
+print '
+<FORM action="'.$PHP_SELF.'" method="get">
 <TABLE BORDER="0" WIDTH="80%">
-<tr><td><b><?php echo $Language->getText('project_stats_source_code_access','access_log_from'); ?></b></td><td><b><?php echo $Language->getText('project_stats_source_code_access','for_last'); ?></b></td><td> </td></tr>
+<tr><td><b>'.$Language->getText('project_stats_source_code_access','access_log_from').'</b></td><td><b>'.$Language->getText('project_stats_source_code_access','for_last').'</b></td><td> </td></tr>
 <tr><td>
 <SELECT NAME="who">
-<OPTION VALUE="nonmembers" <?php if ($who == "nonmembers") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_source_code_access','non_proj_members'); ?></OPTION>
-<OPTION VALUE="members" <?php if ($who == "members") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_admin_editugroup','proj_members'); ?></OPTION>
-<OPTION VALUE="allusers" <?php if ($who == "allusers") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_source_code_access','all_users'); ?></OPTION>
+<OPTION VALUE="nonmembers" '. (($who == "nonmembers") ? "SELECTED" : "") .'>'.$Language->getText('project_stats_source_code_access','non_proj_members').'</OPTION>
+<OPTION VALUE="members" '. (($who == "members") ? "SELECTED" : "") .'>'.$Language->getText('project_admin_editugroup','proj_members').'</OPTION>
+<OPTION VALUE="allusers" '. (($who == "allusers") ? "SELECTED" : "") .'>'.$Language->getText('project_stats_source_code_access','all_users').'</OPTION>
 </SELECT></td>
 <td> 
 <SELECT NAME="span">
-<OPTION VALUE="4" <?php if ($span == 4) {echo 'SELECTED';} ?>>4</OPTION>
-<OPTION VALUE="7" <?php if ($span == 7 || !isset($span) ) {echo 'SELECTED';} ?>>7</OPTION>
-<OPTION VALUE="12" <?php if ($span == 12) {echo 'SELECTED';} ?>>12</OPTION>
-<OPTION VALUE="14" <?php if ($span == 14) {echo 'SELECTED';} ?>>14</OPTION>
-<OPTION VALUE="30" <?php if ($span == 30) {echo 'SELECTED';} ?>>30</OPTION>
-<OPTION VALUE="52" <?php if ($span == 52) {echo 'SELECTED';} ?>>52</OPTION>
+<OPTION VALUE="4" '. (($span == 4) ? "SELECTED" : "") .'>4</OPTION>
+<OPTION VALUE="7" '. (($span == 7 || !isset($span) ) ? "SELECTED" : "") .'>7</OPTION>
+<OPTION VALUE="12" '. (($span == 12) ? "SELECTED" : "") .'>12</OPTION>
+<OPTION VALUE="14" '. (($span == 14) ? "SELECTED" : "") .'>14</OPTION>
+<OPTION VALUE="30" '. (($span == 30) ? "SELECTED" : "") .'>30</OPTION>
+<OPTION VALUE="52" '. (($span == 52) ? "SELECTED" : "") .'>52</OPTION>
 </SELECT>
-&nbsp;
+
 <SELECT NAME="view">
-<OPTION VALUE="monthly" <?php if ($view == "monthly") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_index','months'); ?></OPTION>
-<OPTION VALUE="weekly" <?php if ($view == "weekly") {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_index','weeks'); ?></OPTION>
-<OPTION VALUE="daily" <?php if ($view == "daily" || !isset($view) ) {echo 'SELECTED';} ?>><?php echo $Language->getText('project_stats_index','days'); ?></OPTION>
+<OPTION VALUE="monthly" '. (($view == "monthly") ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index','months') .'</OPTION>
+<OPTION VALUE="weekly" '. (($view == "weekly") ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index','weeks') .'</OPTION>
+<OPTION VALUE="daily" '. (($view == "daily" || !isset($view)) ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index','days') .'</OPTION>
 </SELECT>
 </td>
 <td>
-&nbsp; 
-<INPUT type="submit" value="<?php echo $Language->getText('global','btn_browse'); ?>">
-<INPUT type="hidden" name="group_id" value="<?php echo $group_id; ?>">
-</td>
-</tr>
-</table>
-</FORM>
+ 
+<INPUT type="submit" value="'.$Language->getText('global','btn_browse').'">
+<INPUT type="hidden" name="group_id" value="'.$group_id.'">
+</td></tr></table></FORM>';
 
-<?php
 switch($view) {
     case "monthly":
     print '<P>';
@@ -114,8 +140,19 @@ switch($view) {
 }
 
 
-print '<BR><P>';
 //LJ stats_site_agregate( $group_id );
+//Display 'Export Matching Logs' button, only if logs exist
+if (access_logs_exist($project, $span, $who)) {
+    echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
+	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+	<INPUT TYPE="HIDDEN" NAME="who" VALUE="'.$who.'">
+	<INPUT TYPE="HIDDEN" NAME="span" VALUE="'.$span.'">
+	<INPUT TYPE="HIDDEN" NAME="view" VALUE="'.$view.'">
+	<TABLE align="left"><TR><TD>
+	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('project_stats_source_code_access','logs_export').'">
+	</TD></TR></TABLE></FORM>';
+}
+print '<BR><P>';
 
 //
 // END PAGE CONTENT CODE

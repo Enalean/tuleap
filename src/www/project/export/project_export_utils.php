@@ -614,6 +614,27 @@ function prepare_survey_responses_record($group_id, &$record, $salt) {
  
 }
 
+    /**
+         *  Prepare the column values in the access logs  record
+         *  @param: group_id: group id
+         *  @param: record: a row from the access logs table (passed by  reference).
+         * 	 
+         *  @return: the same row with values transformed for database export
+         */
+
+function prepare_access_logs_record($group_id, &$record) {
+
+    $time = $record['time'];    
+    $record['time'] = format_date('Y-m-d',$time);    
+    $record['local_time'] = strftime("%H:%M", $time);
+    $uid = user_getid_from_email($record['email']);
+    $record['user'] = user_getrealname($uid)."(".user_getname($uid).")";
+    //for cvs & svn access logs
+    $day = $record['day'];
+    $record['day'] = substr($day,0,4)."-".substr($day,4,2)."-".substr($day,6,2);
+
+}
+
 function pe_utils_format_task_assignees ($group_id,$task_id) {
     
     global $TASK_AT;

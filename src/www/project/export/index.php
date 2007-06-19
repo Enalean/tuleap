@@ -189,6 +189,16 @@ switch ($export) {
      site_project_footer( array() );
      break;
 
+ case 'access_logs':     
+     require('./access_logs_export.php');     
+     break;
+ 
+ case 'access_logs_format':
+     project_admin_header(array('title'=>$pg_title));
+     require('./access_logs_export.php');
+     site_project_footer( array() );
+     break;
+     
  case 'project_db':
      project_admin_header(array('title'=>$pg_title));
      if ($project->usesBugs()) {
@@ -254,6 +264,18 @@ echo '
     </td>
   </tr>';
   	$iu = 0;
+   	echo '
+  <tr class="'.util_get_alt_row_color($iu).'"> 
+    <td><b>'.$Language->getText('project_export_index','access_logs').'</b></td>
+    <td align="center"> 
+      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=access_logs">'.$Language->getText('project_export_index','export').'</a>
+      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=access_logs_format">'.$Language->getText('project_export_index','show_format').'</a>
+    </td>
+    <td align="center">-<br>-</td>
+    <td align="center">-<br>-</td>
+  </tr>';
+  
+  	$iu ++;	  	
 	$legacy = ( ($project->usesTracker()) ? $Language->getText('project_export_index','legacy'):"");
 
 	if ($project->usesBugs()) {
@@ -330,8 +352,7 @@ echo '
             $at_arr = $atf->getArtifactTypes();
 	
 	if ($at_arr && count($at_arr) >= 1) {
-		for ($j = 0; $j < count($at_arr); $j++) {
-		  	$iu ++;
+		for ($j = 0; $j < count($at_arr); $j++) {		  	
 		  	echo '
 		  <tr class="'.util_get_alt_row_color($iu).'"> 
 		    <td><b>'.$Language->getText('project_export_index','tracker').': '.$at_arr[$j]->getName().'</b></td>
@@ -347,6 +368,7 @@ echo '
 		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
 		    </td>
 		  </tr>';
+		  $iu ++;	
 		}
 	}
         }
