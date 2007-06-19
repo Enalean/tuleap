@@ -301,6 +301,40 @@ function user_get_result_set_from_email($email) {
 	return $USER_RES["_".$user_id."_"];
 }       
 
+// Get user name from user id, according to the user prefs: Codex login or Real name
+function user_get_name_display_from_id($user_id) {
+    
+    if ($user_id == 100) {
+        return user_getname($user_id);
+    }
+    
+    $u_display = user_get_preference("username_display");
+    if ($u_display == 0) {
+        $uname = user_getname($user_id);
+    } else {
+        $uname = user_getrealname($user_id);
+    }
+    return $uname;
+    
+}
+
+// Get user name from Codex login, according to the user prefs: Codex login or Real name
+function user_get_name_display_from_unix($user_name) {
+    
+    if ($user_name == $GLOBALS['Language']->getText('global','none')) {
+        return $user_name;
+    }
+    
+    $u_display = user_get_preference("username_display");
+    if ($u_display == 0) {
+        $uname = $user_name;
+    } else {
+        $uname = user_getrealname(user_getid_from_email(user_getemail_from_unix($user_name)));
+    }
+    return $uname;
+    
+}
+
 function user_get_timezone() {
 	if (user_isloggedin()) {
 		$result=user_get_result_set(user_getid());

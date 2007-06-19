@@ -6,9 +6,9 @@ $modifed = $WikiTheme->formatDateTime($revision->get('mtime'));
 
 $dbi = $request->getDbh();
 $author = $revision->get('author');
-$authorLink = $author;
-if ($dbi->isWikiPage($author))
-    $authorLink = WikiLink($author);
+$authorLink = user_get_name_display_from_unix($author);
+if ($dbi->isWikiPage($authorLink))
+    $authorLink = WikiLink($authorLink);
 
 $authorId = $revision->get('author_id');
 $version = $revision->getVersion();

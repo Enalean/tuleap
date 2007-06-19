@@ -648,7 +648,7 @@ class ArtifactHtml extends Artifact {
 				    echo $value_id_new;
 				    echo '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-                                        '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+                                        '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
 				}
 
                         }
@@ -1097,14 +1097,14 @@ class ArtifactHtml extends Artifact {
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
+                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):user_get_name_display_from_unix(db_result($result, $i, 'user_name'))),
                                                     $comment_type,
                                                     util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
                                                     );
                                 } else {
                                     $out .= sprintf($fmt,
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
+                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):user_get_name_display_from_unix(db_result($result, $i, 'user_name'))),
                                                     util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
                                                     );
                                 }
@@ -1115,13 +1115,13 @@ class ArtifactHtml extends Artifact {
                                                     $comment_type,
                                                     util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):user_get_name_display_from_unix(db_result($result, $i, 'user_name'))));
                                 } else {
                                     $out .= sprintf($fmt,
                                                     util_get_alt_row_color($i),
                                                     util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):user_get_name_display_from_unix(db_result($result, $i, 'user_name'))));
                                 }
                         }
             }

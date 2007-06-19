@@ -254,7 +254,7 @@ echo '<input name="submit" type="submit" value="'. $GLOBALS['Language']->getText
 
                     // Owner
                     $table .=  "<td>";
-                    $table .=  user_getname($item->getOwnerId());
+                    $table .=  user_get_name_display_from_id($item->getOwnerId());
                     $table .=  "</td>\n";          
             
                     // Last Update

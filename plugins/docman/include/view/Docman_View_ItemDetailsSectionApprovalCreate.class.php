@@ -172,7 +172,7 @@ extends Docman_View_ItemDetailsSectionApproval {
                     $reviewer = $rIter->current();
                     $html .= '<tr>';
 
-                    $html .= '<td>'.user_getrealname($reviewer->getId()).'</td>';
+                    $html .= '<td>'.user_get_name_display_from_id($reviewer->getId()).'</td>';
                     
                     $rank = $reviewer->getRank();
                     $baseUrl  = '?group_id='.$this->item->getGroupId().'&action=approval_upd_user&id='.$this->item->getId().'&user_id='.$reviewer->getId().'&rank=';

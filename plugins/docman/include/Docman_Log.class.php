@@ -91,7 +91,7 @@ class Docman_Log { /* implements EventListener */
                 while ($dar->valid()) {
                     $row = $dar->current();
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
-                        $user = $row['user_id'] ? user_getname($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
+                        $user = $row['user_id'] ? user_get_name_display_from_id($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                         $html .= '<td>'. format_date($GLOBALS['sys_datefmt'], $row['time']) .'</td>';
                         $html .= '<td>'. $user                             .'</td>';

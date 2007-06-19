@@ -17,7 +17,7 @@
 #
 # Host: localhost    Database: codex
 #-------------------------------------------------------
-# Server version	3.23.51-log
+# Server version    3.23.51-log
 
 #
 # Table structure for table 'activity_log'
@@ -2001,6 +2001,7 @@ CREATE TABLE user (
   fontsize INT UNSIGNED NOT NULL DEFAULT 0,
   theme varchar(50),
   language_id int(11) NOT NULL DEFAULT 1,
+  username_display int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   KEY idx_user_user (status)
 ) TYPE=MyISAM;
@@ -2536,19 +2537,19 @@ CREATE TABLE svn_repositories (
 # Table structure for table 'artifact_group_list'
 #
 CREATE TABLE artifact_group_list (
-	group_artifact_id int(11) NOT NULL auto_increment,
-	group_id int(11) NOT NULL,
-	name text,
-	description text,
-	item_name text,
-	allow_copy int(11) DEFAULT 0 NOT NULL,
-	submit_instructions text,
-	browse_instructions text,
-	status char(1) DEFAULT 'A' NOT NULL,
-	deletion_date int(11) NULL,
+    group_artifact_id int(11) NOT NULL auto_increment,
+    group_id int(11) NOT NULL,
+    name text,
+    description text,
+    item_name text,
+    allow_copy int(11) DEFAULT 0 NOT NULL,
+    submit_instructions text,
+    browse_instructions text,
+    status char(1) DEFAULT 'A' NOT NULL,
+    deletion_date int(11) NULL,
         instantiate_for_new_projects int(11) NOT NULL default '0',
-	primary key (group_artifact_id),
-	key idx_fk_group_id (group_id)
+    primary key (group_artifact_id),
+    key idx_fk_group_id (group_id)
 );
 
 #
@@ -2570,19 +2571,19 @@ CREATE TABLE artifact_field_set (
 # Table structure for table 'artifact'
 #
 CREATE TABLE artifact (
-	artifact_id int(11) NOT NULL auto_increment,
-	group_artifact_id int(11) NOT NULL,
-	status_id int(11) DEFAULT '1' NOT NULL,
-	submitted_by int(11) DEFAULT '100' NOT NULL,
-	open_date int(11) DEFAULT '0' NOT NULL,
-	close_date int(11) DEFAULT '0' NOT NULL,
-	summary text NOT NULL,
-	details text NOT NULL,
-	severity int(11) DEFAULT '0' NOT NULL,
-	primary key (artifact_id),
-	key idx_fk_group_artifact_id (group_artifact_id),
-	key idx_fk_status_id (status_id),
-	key idx_fk_submitted_by (submitted_by)
+    artifact_id int(11) NOT NULL auto_increment,
+    group_artifact_id int(11) NOT NULL,
+    status_id int(11) DEFAULT '1' NOT NULL,
+    submitted_by int(11) DEFAULT '100' NOT NULL,
+    open_date int(11) DEFAULT '0' NOT NULL,
+    close_date int(11) DEFAULT '0' NOT NULL,
+    summary text NOT NULL,
+    details text NOT NULL,
+    severity int(11) DEFAULT '0' NOT NULL,
+    primary key (artifact_id),
+    key idx_fk_group_artifact_id (group_artifact_id),
+    key idx_fk_status_id (status_id),
+    key idx_fk_submitted_by (submitted_by)
 );
 
 #
@@ -2775,12 +2776,12 @@ CREATE TABLE artifact_field_value_list (
 # Table structure for table 'artifact_perm'
 #
 CREATE TABLE artifact_perm (
-	id int(11) NOT NULL auto_increment,
-	group_artifact_id int(11) NOT NULL,
-	user_id int(11) NOT NULL,
-	perm_level int(11) NOT NULL default '0',
-	PRIMARY KEY  (id),
-	UNIQUE KEY unique_user (group_artifact_id,user_id)
+    id int(11) NOT NULL auto_increment,
+    group_artifact_id int(11) NOT NULL,
+    user_id int(11) NOT NULL,
+    perm_level int(11) NOT NULL default '0',
+    PRIMARY KEY  (id),
+    UNIQUE KEY unique_user (group_artifact_id,user_id)
 );
 
 #
@@ -2835,17 +2836,17 @@ CREATE TABLE artifact_cc (
 # Table structure for table 'artifact_file'
 #
 CREATE TABLE artifact_file (
-	id int(11) NOT NULL auto_increment,
-	artifact_id int(11) NOT NULL default '0',
-	description text NOT NULL,
-	bin_data longblob NOT NULL,
-	filename text NOT NULL,
-	filesize integer NOT NULL,
-	filetype text NOT NULL,
-	adddate int(11) DEFAULT '0' NOT NULL,
-	submitted_by int(11) NOT NULL,
-	PRIMARY KEY  (id),
-	KEY artifact_id (artifact_id)
+    id int(11) NOT NULL auto_increment,
+    artifact_id int(11) NOT NULL default '0',
+    description text NOT NULL,
+    bin_data longblob NOT NULL,
+    filename text NOT NULL,
+    filesize integer NOT NULL,
+    filetype text NOT NULL,
+    adddate int(11) DEFAULT '0' NOT NULL,
+    submitted_by int(11) NOT NULL,
+    PRIMARY KEY  (id),
+    KEY artifact_id (artifact_id)
 );
 
 #
@@ -2998,20 +2999,20 @@ CREATE TABLE snippet_language (
 -- Service table
 --
 CREATE TABLE service (
-	service_id int(11) NOT NULL auto_increment,
-	group_id int(11) NOT NULL,
-	label text,
-	description text,
-	short_name text,
-	link text,
-	is_active int(11) DEFAULT 0 NOT NULL,
-	is_used int(11) DEFAULT 0 NOT NULL,
+    service_id int(11) NOT NULL auto_increment,
+    group_id int(11) NOT NULL,
+    label text,
+    description text,
+    short_name text,
+    link text,
+    is_active int(11) DEFAULT 0 NOT NULL,
+    is_used int(11) DEFAULT 0 NOT NULL,
         scope text NOT NULL,
         rank int(11) NOT NULL default '0',
         location ENUM( 'master', 'same', 'satellite' ) NOT NULL DEFAULT 'master',
         server_id INT( 11 ) UNSIGNED NULL,
         is_in_iframe TINYINT(1) NOT NULL DEFAULT '0',
-	primary key (service_id),
+    primary key (service_id),
         key idx_group_id(group_id)
 );
 
@@ -3068,14 +3069,14 @@ CREATE TABLE permissions_values (
 ---
 
 CREATE TABLE wiki_group_list (
-	id int(11) NOT NULL auto_increment,
-	group_id int(11) NOT NULL default '0',
-	wiki_name varchar(255) NOT NULL default '',
-	wiki_link varchar(255) NOT NULL default '',
-	description varchar(255) NOT NULL default '',
-	rank int(11) NOT NULL default '0',
+    id int(11) NOT NULL auto_increment,
+    group_id int(11) NOT NULL default '0',
+    wiki_name varchar(255) NOT NULL default '',
+    wiki_link varchar(255) NOT NULL default '',
+    description varchar(255) NOT NULL default '',
+    rank int(11) NOT NULL default '0',
         language_id int(11) NOT NULL default '1',
-	PRIMARY KEY (id)	
+    PRIMARY KEY (id)    
 ) TYPE=MyISAM;
 
 -- Table for Wiki access logs
@@ -3124,47 +3125,47 @@ CREATE TABLE wiki_attachment_log (
 -- PHP Wiki tables
 --
 CREATE TABLE wiki_page (
-	id              INT NOT NULL AUTO_INCREMENT,
+    id              INT NOT NULL AUTO_INCREMENT,
     pagename        VARCHAR(100) BINARY NOT NULL,
-	hits            INT NOT NULL DEFAULT 0,
+    hits            INT NOT NULL DEFAULT 0,
     pagedata        MEDIUMTEXT NOT NULL DEFAULT '',
-	cached_html 	MEDIUMBLOB,
-	group_id        INT NOT NULL DEFAULT 0,
+    cached_html     MEDIUMBLOB,
+    group_id        INT NOT NULL DEFAULT 0,
     PRIMARY KEY (id),
     KEY idx_page_group (group_id,pagename(10))
 );
 
 CREATE TABLE wiki_version (
-	id              INT NOT NULL,
+    id              INT NOT NULL,
         version         INT NOT NULL,
-	mtime           INT NOT NULL,
-	minor_edit      TINYINT DEFAULT 0,
+    mtime           INT NOT NULL,
+    minor_edit      TINYINT DEFAULT 0,
         content         MEDIUMTEXT NOT NULL DEFAULT '',
         versiondata     MEDIUMTEXT NOT NULL DEFAULT '',
         PRIMARY KEY (id,version),
-	INDEX (mtime)
+    INDEX (mtime)
 );
 
 
 CREATE TABLE wiki_recent (
-	id              INT NOT NULL,
-	latestversion   INT,
-	latestmajor     INT,
-	latestminor     INT,
+    id              INT NOT NULL,
+    latestversion   INT,
+    latestmajor     INT,
+    latestminor     INT,
         PRIMARY KEY (id)
 );
 
 
 CREATE TABLE wiki_nonempty (
-	id              INT NOT NULL,
-	PRIMARY KEY (id)
+    id              INT NOT NULL,
+    PRIMARY KEY (id)
 );
 
 
 CREATE TABLE wiki_link (
-	linkfrom        INT NOT NULL,
+    linkfrom        INT NOT NULL,
         linkto          INT NOT NULL,
-	INDEX (linkfrom),
+    INDEX (linkfrom),
         INDEX (linkto)
 );
 

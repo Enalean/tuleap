@@ -149,11 +149,14 @@ echo '>'.$Language->getText('account_register', 'communitymail');
 <?php
 if ($row_user['sticky_login']) print " checked";
 echo '>'.$Language->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
+?>
+</TD></TR>
 
-echo '
-<P>'.$Language->getText('account_options', 'font_size').': <select name="user_fontsize">
-<option value="0"';
-
+<TR><TD width="25%">
+<?php
+echo $Language->getText('account_options', 'font_size').':';?>
+</TD><TD>
+<?php echo '<select name="user_fontsize"> <option value="0"';
 if ( $row_user['fontsize'] == 0 ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_browser');
 ?></option>
@@ -170,8 +173,11 @@ if ( $row_user['fontsize'] == 3 ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_large');
 ?></option>
 </select>
-    
-&nbsp;&nbsp;<?php echo $Language->getText('account_options', 'theme'); ?>: 
+ </TD></TR>
+ 
+ <TR><TD width="25%">
+<?php echo $Language->getText('account_options', 'theme').':'; ?>
+</TD><TD>
 <?php
 // see what current user them is
 if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
@@ -211,15 +217,20 @@ while (list(,$theme) = each($theme_list)) {
 print "</select>\n";
 
 ?>
+</TD></TR>
 
-&nbsp;&nbsp;<?php echo $Language->getText('account_options', 'language'); ?>: 
+<TR><TD width="25%">
+<?php echo $Language->getText('account_options', 'language').':'; ?> 
+</TD><TD>
 <?php
 // display supported languages
 echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
 ?>
+</TD></TR>
 
-
-&nbsp;&nbsp;<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('AccountMaintenance'); ?>:
+<TR><TD width="25%">
+<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('AccountMaintenance').':'; ?>
+</TD><TD>
 <?php
 if ($u_separator = user_get_preference("user_csv_separator")) {
 } else {
@@ -237,8 +248,30 @@ foreach ($csv_separators as $separator) {
 }
 print "</select>\n";
 ?>
+</TD></TR>
 
+<TR><TD width="25%">
+<?php echo $Language->getText('account_options', 'username_display').':'; ?>
+</TD><TD>
+<?php
+// build the username_display select-box
+print '<select name="username_display">'."\n";
+$u_display = user_get_preference("username_display");
+print '<option value="0"';
+if ($u_display == 0) {
+    print ' selected="selected"';
+}
+print '>'.$Language->getText('account_options','codex_login').'</option>
+	<option value="1"';
+if ($u_display == 1) {
+    print ' selected="selected"';
+}
+print '>'.$Language->getText('account_options','real_name').'</option>
+	</select>';
+?>
+</TD></TR>
 
+<TR><TD COLSPAN=3>
 <P align=center><CENTER><INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>"></CENTER>
 </FORM>
 <?php $HTML->box1_bottom(); 

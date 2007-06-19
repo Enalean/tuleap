@@ -94,7 +94,7 @@ extends Docman_View_ItemDetailsSection {
 
             $html .= '<div class="docman_approval_form">';
             $html .= '<p><label>'.Docman::txt('details_approval_requester').'</label>';
-            $html .= user_getrealname($this->table->getOwner()).'</p>';
+            $html .= user_get_name_display_from_id($this->table->getOwner()).'</p>';
             $html .= '<p><label>'.Docman::txt('details_approval_cycle_start_date').'</label>';
             $html .= util_timestamp_to_userdateformat($this->table->getDate(), true).'</p>';
             if($this->table->isClosed()) {
@@ -128,7 +128,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<tr'.$_trClass.'>';
 
                 // Name
-                $html .= '<td>'.user_getrealname($reviewer->getId()).'</td>';
+                $html .= '<td>'.user_get_name_display_from_id($reviewer->getId()).'</td>';
 
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
@@ -212,7 +212,7 @@ extends Docman_View_ItemDetailsSection {
         
         // Requester name
         $html .= '<p><label>'.Docman::txt('details_approval_requester').'</label>';
-        $html .= user_getrealname($this->table->getOwner()).'</p>';
+        $html .= user_get_name_display_from_id($this->table->getOwner()).'</p>';
 
         // Cycle start date
         $html .= '<p><label>'.Docman::txt('details_approval_cycle_start_date').'</label>';

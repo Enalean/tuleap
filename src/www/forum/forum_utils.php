@@ -65,7 +65,7 @@ function forum_header($params) {
 					<h3>'.$Language->getText('forum_forum_utils','news_not_found').'</h3>';
 			} else {
 				echo '
-				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.user_getname( db_result($result,0,'submitted_by')).'<BR>
+				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.user_get_name_display_from_id( db_result($result,0,'submitted_by')).'<BR>
 				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($sys_datefmt,db_result($result,0,'date')).'<BR>
 				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
 				<P>

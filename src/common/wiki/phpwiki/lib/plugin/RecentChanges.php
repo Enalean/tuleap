@@ -158,7 +158,7 @@ extends _RecentChanges_Formatter
     }
 
     function authorLink ($rev) {
-        $author = $rev->get('author');
+        $author = user_get_name_display_from_unix($rev->get('author'));
         if ( $this->authorHasPage($author) ) {
             return WikiLink($author);
         } else
@@ -214,12 +214,12 @@ extends _RecentChanges_Formatter
          * overlapping ideal word cutting points.
          *
          * en: day/days "The %d most recent %s [during (the past] day) are listed below."
-         * de: 1 Tag    "Die %d jüngste %s [innerhalb (von des letzten] Tages) sind unten aufgelistet."
-         * de: %s days  "Die %d jüngste %s [innerhalb (von] %s Tagen) sind unten aufgelistet."
+         * de: 1 Tag    "Die %d jï¿½ngste %s [innerhalb (von des letzten] Tages) sind unten aufgelistet."
+         * de: %s days  "Die %d jï¿½ngste %s [innerhalb (von] %s Tagen) sind unten aufgelistet."
          *
          * en: day/days "The %d most recent %s during [the past] (day) are listed below."
-         * fr: 1 jour   "Les %d %s les plus récentes pendant [le dernier (d'une] jour) sont énumérées ci-dessous."
-         * fr: %s jours "Les %d %s les plus récentes pendant [les derniers (%s] jours) sont énumérées ci-dessous."
+         * fr: 1 jour   "Les %d %s les plus rï¿½centes pendant [le dernier (d'une] jour) sont ï¿½numï¿½rï¿½es ci-dessous."
+         * fr: %s jours "Les %d %s les plus rï¿½centes pendant [les derniers (%s] jours) sont ï¿½numï¿½rï¿½es ci-dessous."
          */
         if ($limit > 0) {
             if ($timespan) {

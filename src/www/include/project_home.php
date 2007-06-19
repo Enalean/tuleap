@@ -77,7 +77,7 @@ if (! $project->hideMembers()) {
                   
                   echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','proj_admins').':</SPAN><BR>';
                   while ($row_admin = db_fetch_array($res_admin)) {
-                      print '<A href="/users/'. $row_admin['user_name'] .'">'. $row_admin['user_name'] .'</A><BR>';
+                      print '<A href="/users/'.$row_admin['user_name'].'/">'.user_get_name_display_from_id($row_admin['user_id']).'</A><BR>';
                   }
                   ?>
                       <HR WIDTH="100%" SIZE="1" NoShade>

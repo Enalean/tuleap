@@ -287,7 +287,7 @@ tracker_include_artifact	name	Name
 tracker_include_artifact	desc	Description
 tracker_include_artifact	size_kb	Size (KB)	
 tracker_include_artifact	size	Size	
-tracker_include_artifact	posted_on	posted_on	
+tracker_include_artifact	posted_on	Posted On	
 tracker_include_artifact	delete_attachment	Delete this attachment?	
 tracker_include_artifact	cc_empty	CC List is empty
 tracker_include_artifact	artifact	Artifact

@@ -55,7 +55,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                             'id'     => $this->item->getId(),
                             'version_number' => $versions[$key]->getNumber()
                         ));
-                        $user = $versions[$key]->getAuthorId() ? user_getname($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
+                        $user = $versions[$key]->getAuthorId() ? user_get_name_display_from_id($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                         $content .= '<td><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
                         $content .= '<td>'. format_date($GLOBALS['sys_datefmt'], $versions[$key]->getDate()) .'</td>';

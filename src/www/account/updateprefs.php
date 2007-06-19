@@ -30,6 +30,10 @@ if (in_array($user_csv_separator, $csv_separators)) {
     user_set_preference("user_csv_separator", DEFAULT_CSV_SEPARATOR);
 }
 
+if (isset($_REQUEST['username_display'])) {
+    user_set_preference("username_display",$username_display);
+}
+
 session_redirect("/account/");
 
 ?>
