@@ -351,7 +351,7 @@ if ($forum_id) {
 					show the subject and poster
 				*/
 				$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-					'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
+					'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
 					'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 
 				/*
