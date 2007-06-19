@@ -287,7 +287,7 @@ function show_thread($thread_id,$et=0) {
 			if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) { $ret_val .= '<B>'; }
 
 			$ret_val .= db_result($result, $i, 'subject') .'</A></TD>'.
-				'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
+				'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
 				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 			/*
 				Show the body/message if requested

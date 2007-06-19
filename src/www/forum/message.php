@@ -63,7 +63,7 @@ if ($msg_id) {
 	echo html_build_list_table_top ($title_arr);
 
 	echo "<TR><TD class=\"threadmsg\">\n";
-	echo $Language->getText('forum_message','by').": ".db_result($result,0, "user_name")."<BR>";
+	echo $Language->getText('forum_message','by').": ".user_get_name_display_from_unix(db_result($result,0, "user_name"))."<BR>";
 	echo $Language->getText('forum_message','date').": ".format_date($sys_datefmt,db_result($result,0, "date"))."<BR>";
 	echo $Language->getText('forum_message','subject').": ". db_result($result,0, "subject")."<P>";
 	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);

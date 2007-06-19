@@ -639,7 +639,7 @@ class ArtifactHtml extends Artifact {
                         
                                     echo '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-                                        '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+                                        '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
 				  }
                                 } else {
 				    echo "\n".'<TR class="'. util_get_alt_row_color($i) .
