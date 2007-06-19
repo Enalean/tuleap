@@ -123,6 +123,41 @@ sub db_get_commit {
   return $sth->{'mysql_insertid'};
 }
 
+sub db_get_cond_notification_paths {
+
+  my ($group_id) = @_;
+  my @paths = ();
+
+  $query = "SELECT svn_dir FROM svn_notification WHERE group_id='$group_id'";
+  $sth = $dbh->prepare($query);
+  $sth->execute();
+
+  while ( ($path) = $sth -> fetchrow_array ) {
+      push(@paths, $path);
+  }
+  
+  return @paths;
+
+}
+
+sub db_get_cond_notified_users {
+
+  my ($group_id, $path) = @_;  
+
+  $query = "SELECT svn_user FROM svn_notification WHERE group_id='$group_id' AND svn_dir='$path'";
+  $sth = $dbh->prepare($query);
+  $res = $sth->execute();
+  
+  if ($sth->rows >= 1) {
+      $hash_ref = $sth->fetchrow_hashref;
+      $result = $hash_ref->{'svn_user'}; 
+  } else {
+      $result = '0';
+  }
+  
+  return $result;
+
+}
 
 1;
 

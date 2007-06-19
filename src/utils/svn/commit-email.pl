@@ -414,6 +414,42 @@ foreach my $line (@svnlooklines)
 
   }
 
+# Get users monitoring svn commits (General Notification Settings section)
+$notif_users = @{$current_project->{email_addresses}}[0];
+my @users = split(',',$notif_users);
+# Get paths configured for conditional notification
+@subdirs = db_get_cond_notification_paths($group_id);
+# Sanity checks on subdir paths: remove directory from array, if doesn't exist
+for ($i=0;$i<(scalar @subdirs);$i++) {
+    if (! check_subdir_path_sanity($subdirs[$i])) {
+        splice(@subdirs,$i,1);
+    }
+}
+for $changed (@changed_files) {
+    $file = $changed->{'path'};
+    for $subdir (@subdirs) {
+	if (is_changed_file_to_be_notified($file,$subdir)) {
+	    # For each concerned path (svn sub-directory), get corresponding users
+	    $notified_users = db_get_cond_notified_users($group_id, $subdir);
+	    @user_arr = split(',',$notified_users);
+	    for $user (@user_arr) {
+		# if user already exist in General Notification, don't add it
+		$exist = 0;
+	        foreach (@users) {
+		    if ($_ eq $user) {
+		        $exist++;
+		    }
+		}
+		if ( $exist eq 0 ) {
+		    push(@users, $user);
+		}
+	    }
+	}
+    }
+}
+# Re-assign all users-to-be-notified in '$project->{email_addresses}' array
+@{$current_project->{email_addresses}} = @users;
+
 if ($debug) {
   print STDERR "Array of files changed: \n";
   print STDERR @changed_files;
@@ -859,3 +895,41 @@ sub date_to_gmtime() {
   $shift = -$shift if ($plusorminus eq '-');
   return (timegm($sec, $min, $hours, $mday, $mon-1, $year) - $shift);
 }
+
+# Check if the svn dir path exists in repository
+sub check_subdir_path_sanity {
+
+  my ($dir) = @_;
+  
+  #check if path exists in svn repo
+  $path = $codex_srv."/svnroot/".$gname.$subdir;
+  system("svn ls $path >/dev/null 2>&1");
+  $exit_value = $? >> 8;
+  if ($exit_value == 1) {
+      return 0;
+  } else {
+      return 1;
+  }
+}
+
+# Gets a changed file, and an svn_dir from 'svn_notification' table
+# Returns true if the changed file is concerned by conditional notification
+sub is_changed_file_to_be_notified {
+
+  my ($ch_file,$subdir) = @_;
+  
+  @file_path_arr = split('/',$ch_file);
+  $size = scalar @file_path_arr;
+  $subpath = '';
+  $idx = 0;
+  while ($subpath ne $subdir && $idx < $size) {
+       $subpath .= "/".$file_path_arr[$idx];
+       $idx++;
+  }
+  if ($subpath eq $subdir) {
+      return 1;
+  } else {
+      return 0;
+  }
+}
+

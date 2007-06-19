@@ -47,9 +47,17 @@ svn_admin_index	email_comment	Define who is going to receive email notification 
 svn_admin_notification	upd_success	Email Notification updated succesfully
 svn_admin_notification	upd_fail	Email Notification update failed: $1
 svn_admin_notification	email	Subversion Administration - Email Notification
-svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits</H3><p><I>Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>
+svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits, in the whole Repository</H3><p><I>Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>
+svn_admin_notification	mail_commit_subtree	<H3>E-Mail notification on Commits, in Repository Subtrees</H3><p><I>You can specify, for each sub-directory in your repository (path starting from <b>/svnroot/[project]</b>), the user(s) to be notified (comma separated e-mail addresses). In case of overlapping with settings defined in the General Email Notification (section above), the latter ones override the formers.<br><br><b>Note:</b><ul><li>You can define notification settings on files. In this case, type the file path in the [Path to sub-directory] text field.<li>If a directory is moved or removed into the repository, the corresponding path, defined in these settings, is not automatically updated.<li><b>Example:</b> /branches/john_doe - john.doe@st.com</ul></I></p>
 svn_admin_notification	mail_to	Mail to
 svn_admin_notification	header	Subject header
+svn_admin_notification	add_new_entry	[Add a new entry]
+svn_admin_notification	del	Del.
+svn_admin_notification	path_subdir	Path to sub-directory
+svn_admin_notification	users	User(s) monitoring
+svn_admin_notification	empty_field	Update failed. 'Path to sub-directory' and 'User(s) monitoring' fields must be filled in.
+svn_admin_notification	email_invalid	Update failed. Invalid e-mail address '$1'.<br>
+svn_admin_notification	path_invalid	Update failed. Invalid directory path '$1'.<br>
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php

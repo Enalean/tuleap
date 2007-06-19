@@ -44,7 +44,59 @@ function svn_data_update_notification($group_id,$svn_mailing_list,$svn_mailing_h
     $result = db_query($query);
     return ($result ? true : false);
 }
-   
+
+function svn_data_update_advanced_notif($group_id,$subdirs,$users) {
+
+    //uniformize paths: store them in the same format (start with slash, end without slash)
+    if (count($subdirs) > 0) {  
+        $pattern_start = "/^\//";
+	$pattern_end = "/\/$/";
+        while (list($key, $value) = each($subdirs)) {            
+            if (!preg_match($pattern_start, $value)) {
+	        $subdirs[$key] = "/".$value;		
+	    }
+	    if (preg_match($pattern_end, $subdirs[$key])) {
+	        $subdirs[$key] = substr($subdirs[$key],0,strlen($subdirs[$key])-1);
+	    }
+        }
+    }
+    //delete conditional notification settings, for this project, then insert new ones
+    $del = sprintf('DELETE FROM svn_notification'.
+		    ' WHERE group_id=%d',
+		    $group_id);
+    $res_del = db_query($del);
+    if (count($subdirs) > 0) {
+        $keys = array_keys($subdirs);
+        for ($i=0; $i<count($keys); $i++) {
+	    $sel = sprintf('SELECT NULL FROM svn_notification'.
+			    ' WHERE group_id=%d'.
+			    ' AND svn_dir="%s"'.
+			    ' AND svn_user="%s"',
+			    $group_id,$subdirs[$keys[$i]],util_normalize_emails($users[$keys[$i]]));
+	    $res_sel = db_query($sel);
+	    //not insert duplicate entries
+	    if (db_numrows($res_sel) < 1) {
+                $query = sprintf('INSERT INTO svn_notification'.
+				' (group_id,svn_dir,svn_user)'.
+				' VALUES (%d,"%s","%s")',
+				$group_id,$subdirs[$keys[$i]],util_normalize_emails($users[$keys[$i]]));
+                $result = db_query($query);
+	    }
+        }
+    }
+}
+
+function svn_data_get_advanced_notif($group_id) {
+
+    $sql = sprintf('SELECT svn_dir, svn_user FROM svn_notification'
+		    .' WHERE group_id=%d'
+		    .' ORDER BY svn_dir',
+		    $group_id);
+    $res = db_query($sql);
+    return $res;
+
+}
+
 // list the number of commits by user either since the beginning of
 // history if the period argument is not given or if it is given then
 // over the last "period" of time.
