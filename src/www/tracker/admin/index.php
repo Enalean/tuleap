@@ -774,7 +774,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 
-		$ath->adminHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),
+		$ath->adminTrackersHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),
 					'help' => 'TrackerAdministration.html'));
 		if (!$ath->preDelete()) {
 		  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','deletion_failed',$ath->getName()));
