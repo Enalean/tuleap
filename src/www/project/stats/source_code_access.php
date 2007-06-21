@@ -149,7 +149,7 @@ if (access_logs_exist($project, $span, $who)) {
 	<INPUT TYPE="HIDDEN" NAME="span" VALUE="'.$span.'">
 	<INPUT TYPE="HIDDEN" NAME="view" VALUE="'.$view.'">
 	<TABLE align="left"><TR><TD>
-	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('project_stats_source_code_access','logs_export').'">
+	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access','logs_export').'">
 	</TD></TR></TABLE></FORM>';
 }
 print '<BR><P>';
