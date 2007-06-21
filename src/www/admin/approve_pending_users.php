@@ -78,8 +78,8 @@ if (($action_select=='activate')) {
         usleep(250000);
     }
     
-} else if ($action=='delete') {
-    db_query("UPDATE user SET status='D' WHERE user_id='$user_id'");
+} else if ($action_select=='delete') {
+    db_query("UPDATE user SET status='D' WHERE user_id IN ($list_of_users)");
 }
 
 //
