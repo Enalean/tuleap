@@ -88,7 +88,7 @@ class UserLdap {
         }
     }
 
-    function register(&$lr, $password) {     	          
+    function register(&$lr, $password, &$user_id, &$user_status, &$success) {
         $form_loginname = $lr->getLogin();
         include($GLOBALS['Language']->getContent('ldap/register_ldap_get_data'));
 
