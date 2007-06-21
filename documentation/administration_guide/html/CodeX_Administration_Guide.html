@@ -69,6 +69,7 @@ License
 <dt><a href="#HowTo_restoresvn">Restore a Subversion repository</a></dt>
 <dt><a href="#HowTo_recoversvn">Recover a Subversion repository</a></dt>
 <dt><a href="#HowTo_distributed">Set up a distibuted Architecture</a></dt>
+<dt><a href="#HowTo_passwords">Set up a validator for users' password</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -3143,6 +3144,19 @@ Please note that the default template does not allow selection of satellite serv
 
 </pre>
 <p><b>Note:</b> If you use other CodeX servers in the same domain that are not part of the distributed architecture, they should use a different cookie prefix to avoid session collisions.
+
+
+<hr>
+<h2 id="HowTo_passwords">Validators for users' password</h2>
+<p>You can define rules to validate users' passwords. Here is an example of rules :</p>
+<ul>
+    <li>Password must contain at least 8 characters</li>
+    <li>Password must contain at least 2 capital letter</li>
+    <li>Password must contain at least 3 non-digit characters</li>
+    <li>...</li>
+</ul>
+<p>See site-content/*/account/password_strategy.txt for details.</p>
+
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
 </body>

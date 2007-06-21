@@ -389,8 +389,8 @@ function updateUserPassword($uid, $old_pwd, $new_pwd) {
         return new soap_fault(inactive_account_fault,'updateUserPassword','Account must be active to change password.', ''); 
     }
     
-    if (!account_pwvalid($new_pwd)) {
-        return new soap_fault(invalid_new_pwd_fault,'updateUserPassword','Password must be at least 6 characters.', ''); 
+    if (!account_pwvalid($new_pwd, $errors)) {
+        return new soap_fault(invalid_new_pwd_fault,'updateUserPassword',implode(', ', $errors), ''); 
     }
     
     // if we got this far, it must be good

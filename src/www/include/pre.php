@@ -243,6 +243,7 @@ if ($SERVER_NAME != 'localhost' &&
     $SCRIPT_NAME != '/current_css.php'  && 
     $SCRIPT_NAME != '/account/login.php'  && 
     $SCRIPT_NAME != '/account/register.php'&& 
+    $SCRIPT_NAME != '/include/check_pw.php'&& 
     $SCRIPT_NAME != '/account/lostpw.php' &&
     $SCRIPT_NAME != '/account/lostlogin.php' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&

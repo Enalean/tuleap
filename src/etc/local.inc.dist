@@ -357,6 +357,11 @@ $sys_frs_license_mandatory = 1;
 // Default value is about 6 months: 3600*24*183=15811200
 $sys_session_lifetime = 15811200;
 
+// Default password duration. User will be asked to change its password 
+// after 'sys_password_lifetime' days.
+// 0 = no duration
+$sys_password_lifetime = 0;
+
 // Max upload size for quick release, documentation, patch and code snippet.
 // in bytes. E.g. 67108864 for 64 MB
 // Make sure that php.ini and mysql configuration file (/etc/my.cnf)

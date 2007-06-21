@@ -1452,7 +1452,7 @@ function util_make_return_to_url($url) {
 
 function util_return_to($url) {
     $finaleUrl = util_make_return_to_url($url);
-    header('Location: '.$finaleUrl);
+    $GLOBALS['Response']->redirect($finaleUrl);
     exit;
 }
 
