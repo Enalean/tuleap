@@ -2269,10 +2269,11 @@ class Artifact extends Error {
             } else {
                         $title_arr=array();
                         $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
-                        $title_arr[]=$Language->getText('tracker_import_utils','date');
-                        $title_arr[]=$Language->getText('global','by');
+                        //$title_arr[]=$Language->getText('tracker_import_utils','date');
+                        //$title_arr[]=$Language->getText('global','by');
                         
-                        $out .= html_build_list_table_top ($title_arr);
+                        $out .= html_build_list_table_top ($title_arr,false,false,true,null,null,0,0);
+                        $out .= '<tr><td>';
             }
             
             // Loop throuh the follow-up comments and format them
@@ -2288,8 +2289,14 @@ class Artifact extends Error {
                                 $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s$sys_lf".
                                 ($comment_type != ""? "%s$sys_lf%s" : '%s');
                         } else {
-                            $fmt = "\n".'<tr class="%s"><td>'.($comment_type != ""? "<b>%s</b><BR>" : "").'%s</td>'.
-                                '<td valign="top">%s</td><td valign="top">%s</td></tr>';
+                            $fmt = "\n".'
+                            <div class="'. util_get_alt_row_color($i) .' followup_comment">
+                                <div class="followup_comment_title">
+                                    <span class="followup_comment_title_user">%s </span>
+                                    <span class="followup_comment_title_date">on %s</span>
+                                </div>
+                                <div class="followup_comment_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
+                            </div>';
                         }
                 
                         // I wish we had sprintf argument swapping in PHP3 but
@@ -2312,23 +2319,21 @@ class Artifact extends Error {
                         } else {
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
-                                                    util_get_alt_row_color($i),
-                                                    $comment_type,
-                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
+                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.db_result($result, $i, 'user_name').'">'.db_result($result, $i, 'user_name').'</a>'),
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+                                                    $comment_type,
+                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id));
                                 } else {
                                     $out .= sprintf($fmt,
-                                                    util_get_alt_row_color($i),
-                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id),
+                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.db_result($result, $i, 'user_name').'">'.db_result($result, $i, 'user_name').'</a>'),
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')));
+                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id));
                                 }
                         }
             }
         
             // final touch...
-            $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+            $out .= ($ascii ? "$sys_lf" : "</td></tr></TABLE>");
         
             return($out);
                 
