@@ -25,40 +25,42 @@ function register_valid($confirm_hash)	{
     $request =& HTTPRequest:: instance();
     
     if (!$HTTP_POST_VARS['form_loginname']) {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_nouser');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nouser'));
 	return 0;
     }
     if (!$HTTP_POST_VARS['form_pw']) {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_nopasswd');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
 	return 0;
     }
     if ($HTTP_POST_VARS['timezone'] == 'None') {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_notz');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
 	return 0;
     }
     if (!$HTTP_POST_VARS['form_register_purpose'] && $GLOBALS['sys_user_approval']) {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_nopurpose');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
 	return 0;
     }
     if (!validate_email($HTTP_POST_VARS['form_email'])) {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_email');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
 	return 0;
     }
     if (!account_namevalid($HTTP_POST_VARS['form_loginname'])) {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_name');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_name'));
 	return 0;
     }
     if (db_numrows(db_query("SELECT user_id FROM user WHERE "
 			    . "user_name LIKE '$HTTP_POST_VARS[form_loginname]'")) > 0) {
-	$GLOBALS['register_error'] = $Language->getText('account_register', 'err_exist');
+	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_exist'));
 	return 0;
     }
     if ($HTTP_POST_VARS['form_pw'] != $HTTP_POST_VARS['form_pw2']) {
-        $GLOBALS['register_error'] = $Language->getText('account_register', 'err_passwd');
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         return 0;
     }
-    if (!account_pwvalid($HTTP_POST_VARS['form_pw'])) {
-        $GLOBALS['register_error'] = $Language->getText('account_register', 'err_invpasswd');
+    if (!account_pwvalid($HTTP_POST_VARS['form_pw'], $errors)) {
+        foreach($errors as $e) {
+            $GLOBALS['Response']->addFeedback('error', $e);
+        }
         return 0;
     }
 
@@ -99,13 +101,23 @@ function display_account_form($register_error)	{
 <input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
 <?php print $Language->getText('account_register', 'login_directions'); ?>
 
-<p><?php print $Language->getText('account_register', 'passwd').'&nbsp;'.$star; ?>:<br>
-<input type="password" name="form_pw" value="">
-<?php print $Language->getText('account_register', 'passwd_directions'); ?>
+<table><tr valign='top'><td><?php print $Language->getText('account_register', 'passwd').'&nbsp;'.$star; ?>:<br>
+<input type="password" name="form_pw" id="form_pw" value="">
 
 <p><?php print $Language->getText('account_register', 'passwd2').'&nbsp;'.$star; ?>:<br>
 <input type="password" name="form_pw2" value="">
 <?php print $Language->getText('account_register', 'passwd2_directions'); ?>
+</td><td>
+<?php
+$password_strategy =& new PasswordStrategy();
+include($GLOBALS['Language']->getContent('account/password_strategy'));
+foreach($password_strategy->validators as $key => $v) {
+    echo '<div id="password_validator_msg_'. $key .'">'. $v->description() .'</div>';
+}
+?></td></tr></table>
+<script type="text/javascript">
+var password_validators = [<?= implode(', ', array_keys($password_strategy->validators)) ?>];
+</script>
 
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
 <INPUT size=40 type="text" name="form_realname" value="<?php print htmlentities($form_realname, ENT_QUOTES); ?>">
@@ -201,6 +213,8 @@ $em->processEvent('before_register', array());
 //
 // not valid registration, or first time to page
 //
+$HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
+$HTML->includeJavascriptFile('/scripts/check_pw.js');
 $HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
 
 ?>

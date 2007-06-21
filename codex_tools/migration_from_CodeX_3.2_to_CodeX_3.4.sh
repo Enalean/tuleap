@@ -514,6 +514,9 @@ $INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
 $INSTALL_DIR/src/utils/generate_cli_package.sh -f
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 
+
+TODO revision #6417 : themes, db, local.inc
+
 todo "If you have custom themes:"
 todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed"
 todo "-----------------------------------------"

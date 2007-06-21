@@ -333,3 +333,14 @@ table.release tr td img {
 }
 /* }}} */
 
+/* {{{ password validator */
+.password_validator_ok,
+.password_validator_ko {
+    background:transparent url(../images/ic/tick.png) left top no-repeat;
+    padding-left:20px;
+}
+.password_validator_ko {
+    background-image:url(../images/ic/cross.png);
+}
+/* }}} */
+

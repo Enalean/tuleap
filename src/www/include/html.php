@@ -79,7 +79,7 @@ function html_get_language_popup ($Language,$title='language_id',$selected='xzxz
 }
 
 
-function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false,$full_width=true, $id=null, $class=null) {
+function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=false,$full_width=true, $id=null, $class=null, $cellspacing=1, $cellpadding=2) {
 
 	/*
 		Takes an array of titles and builds
@@ -93,7 +93,7 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
         if ($full_width) $return.='WIDTH="100%" ';
         if($id) $return .='id="'.$id.'"';
         if($class) $return .=' class="'.$class.'" ';
-	$return .= 'BORDER="0" CELLSPACING="1" CELLPADDING="2">
+	$return .= 'BORDER="0" CELLSPACING="'. $cellspacing .'" CELLPADDING="'. $cellpadding .'">
 		<TR class="boxtable">';
 
 	if ($mass_change) $return .= '<TD class="boxtitle">Select?</TD>';

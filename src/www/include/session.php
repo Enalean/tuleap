@@ -47,11 +47,14 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     if($success) {
         // check status of this user
         if(session_login_valid_status($auth_user_status, $allowpending)) {
-        
-            //create a new session
-            session_set_new($auth_user_id);
-            
-            return array(true, '');
+            if (session_login_is_pwd_expired($auth_user_id, $form_pw)) {
+                $GLOBALS['Response']->redirect('/account/change_pw.php?user_id='.$auth_user_id);
+            } else {
+                //create a new session
+                session_set_new($auth_user_id);
+                
+                return array(true, '');
+            }
         }
         else {
             return array(false, $auth_user_status);
@@ -62,6 +65,30 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     }
 }
 
+function session_login_is_pwd_expired($user_id, $form_pw) {
+    $expired = false;
+    if (isset($GLOBALS['sys_password_lifetime']) && $GLOBALS['sys_password_lifetime']) {
+        $sql = "SELECT last_pwd_update FROM user WHERE user_id = ". $user_id;
+        $res = db_query($sql);
+        if ($res && db_numrows($res)) {
+            $now = time();
+            $expiration_date = $now - 3600*24*$GLOBALS['sys_password_lifetime'];
+            $warning_date = $expiration_date + 3600*24*10; //Warns 10 days before
+            
+            $data = db_fetch_array($res);
+            //var_dump($data['last_pwd_update'], $now, $expiration_date, $warning_date);
+            if ($data['last_pwd_update'] < $expiration_date) {
+                $expired = true;
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session', 'expired_password'));
+            } else {
+                if ($data['last_pwd_update'] < $warning_date) {
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_session', 'password_will_expire', ceil(($data['last_pwd_update'] - $expiration_date)/(3600*24))));
+                }
+            }
+        }
+    }
+    return $expired;
+}
 // Standard CodeX authentication, based on password stored in DB
 function session_login_valid_db($form_loginname, $form_pw, $allowpending = 0, &$user_id, &$user_status)  {
   global $Language;
@@ -142,7 +169,7 @@ function session_make_url($loc) {
 }
 
 function session_redirect($loc) {
-	header('Location: ' . $loc);
+	$GLOBALS['Response']->redirect($loc);
 	print("\n\n");
 	exit;
 }

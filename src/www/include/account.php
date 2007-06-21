@@ -11,26 +11,28 @@
 
 require_once('common/mail/Mail.class.php');
 require_once('common/include/createntlm.inc');
+require_once('common/password/PasswordStrategy.class.php');
+require_once('common/password/PasswordRegexpValidator.class.php');
 
 $Language->loadLanguageMsg('include/include');
 
 // ***** function account_pwvalid()
 // ***** check for valid password
-function account_pwvalid($pw) {
-  global $Language;
-	if (strlen($pw) < 6) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','pwd_length_err');
-		return 0;
-	}
-	return 1;
+function account_pwvalid($pw, &$errors) {
+    $password_strategy =& new PasswordStrategy();
+    include($GLOBALS['Language']->getContent('account/password_strategy'));
+    $valid = $password_strategy->validate($pw);
+    $errors = $password_strategy->errors;
+    return $valid;
 }
 
 // Set user password (Unix, Web and Windows)
 function account_set_password($user_id,$password) {
     $res = db_query("UPDATE user SET user_pw='" . md5($password) . "',"
                     . "unix_pw='" . account_genunixpw($password) . "',"
-                    . "windows_pw='" . account_genwinpw($password) . "' WHERE "
-                    . "user_id=" . $user_id );          
+                    . "windows_pw='" . account_genwinpw($password) . "',"
+                    . "last_pwd_update='".time()."'"
+                    ." WHERE user_id=" . $user_id );          
     if (! $res) {
         return false;
     }
@@ -282,6 +284,7 @@ function account_create($loginname=''
                      ." ,register_purpose='".$register_purpose."'"
                      ." ,email=".DataAccess::quoteSmart($email).""
                      ." ,add_date='". time()."'"
+                    . " ,last_pwd_update='".time()."'"
                      ." ,status='".$status."'"
                      ." ,confirm_hash='".$confirm_hash."'"
                      ." ,mail_siteupdates='".$mail_site."'"
