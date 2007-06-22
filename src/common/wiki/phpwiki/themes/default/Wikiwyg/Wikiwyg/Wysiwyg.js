@@ -248,7 +248,6 @@ proto.do_image = function() {
     
     if(! Wikiwyg.is_ie){ // Fix for broken images in Firefox design mode
         var base = location.href.replace(/(.*?:\/\/.*?\/).*/, '$1');
-	alert(base);
         if (img == null || img == '')
 	    return;
         if(rev){
