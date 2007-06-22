@@ -240,17 +240,30 @@ proto.do_image = function() {
     var html = '';
     var img = '';
     var rev = '';
+    var base = location.href.replace(/(.*?:\/\/.*?\/).*/, '$1');
     
     // Prompt for filename and revision number
     img = prompt("Enter the image name", '');
     rev = prompt("Enter the revision number", '');
     
-    if (img == null || img == '')
-	return;
-    if(rev){
-        html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+    if(! Wikiwyg.is_ie){ // Fix for broken images in Firefox design mode
+        var base = location.href.replace(/(.*?:\/\/.*?\/).*/, '$1');
+	alert(base);
+        if (img == null || img == '')
+	    return;
+        if(rev){
+            html = '<img src="' + base + 'wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+        }else{
+            html = '<img src="' + base + 'wiki/uploads/' + groupid + '/' + img + '"></img>';
+        }
     }else{
-        html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
+        if (img == null || img == '')
+	    return;
+        if(rev){
+            html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+        }else{
+            html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
+        }
     }
     
     if (! Wikiwyg.is_ie)
