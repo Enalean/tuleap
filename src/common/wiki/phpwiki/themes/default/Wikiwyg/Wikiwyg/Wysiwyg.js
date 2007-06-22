@@ -228,7 +228,7 @@ proto.do_pre = function(){
     }else{
         html = '<pre style="background-color:#FDFDF7">' + unescape(selection) + '</pre><br>';
     }
-    this.insert_html(html);
+    this.insert_html(html, 1);
     this.format_command;
 }
 
@@ -342,7 +342,7 @@ proto.do_wikitext = function() {
 	       unescape(selection) + '<br>}</div></p>';
     }
     
-    this.insert_html(html);
+    this.insert_html(html, 3);
 }
 
 proto.insert_html = function(html) { // See IE
@@ -496,13 +496,17 @@ proto.insert_attach = function(html){
 
 }
 
-proto.insert_html = function(html) {
+proto.insert_html = function(html, caretpos) {
     var doc = this.get_edit_document();
     var range = this.get_edit_document().selection.createRange();
     if (range.boundingTop == 2 && range.boundingLeft == 2)
         return;
     range.pasteHTML(html);
     range.collapse(false);
+    if (caretpos != null){
+        range.moveStart('character', - caretpos);
+        range.moveEnd('character', - caretpos);
+    }
     range.select();
 }
 
