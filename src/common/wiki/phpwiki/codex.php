@@ -43,6 +43,12 @@ function codex_main () {
     // Should this go into constructor?
     $request->initializeTheme();
 
+    // convert wiki to html
+    if ($action == 'wikitohtml') {
+      $request->handleAction();
+      return;
+    }
+
     $request->updateAuthAndPrefs();
     $request->initializeLang();
     

@@ -147,7 +147,7 @@ proto.saveChanges_button = function() {
 	   }
 	   );    
 }
-
+/*
 proto.modeClasses = [
 		     'Wikiwyg.Wikitext.Phpwiki',
 		     'Wikiwyg.Wysiwyg'
@@ -167,7 +167,12 @@ else if( mode=="Wikiwyg.Wikitext.Phpwiki" ){
 			 'Wikiwyg.Wysiwyg'
 			  ];
  }
-}
+}*/
+
+proto.modeClasses = [
+		     'Wikiwyg.Wysiwyg',
+		     'Wikiwyg.Wikitext.Phpwiki'
+		     ];
 
 /*==============================================================================
 Hack to clean not supported conversion to html yet
@@ -175,7 +180,7 @@ Hack to clean not supported conversion to html yet
 proto.clean_wikitext = function(text_to_clean) {
     var text_cleaned = text_to_clean.replace(/\~*\<\?plugin/g,'~<?plugin');
 
-    if( text_to_clean.match(/^\#{3,}/gm) ) {
+    /*if( text_to_clean.match(/^\#{3,}/gm) ) {
       alert("Warning : Only two levels of indentation is allowed for ordered lists.\n More won't be converted");
       text_cleaned = text_to_clean.replace(/^\#{3,}/gm,'## ');
       
@@ -185,7 +190,7 @@ proto.clean_wikitext = function(text_to_clean) {
       alert("Warning : Only two levels of indentation is allowed for unordered lists. \n More won't be converted");
       text_cleaned = text_to_clean.replace(/^\*{3,}/gm,'## ');
       
-    }
+    }*/
 
     return(text_cleaned);
 }
@@ -193,7 +198,7 @@ proto.clean_wikitext = function(text_to_clean) {
 proto.call_action = function(action, content, func) {
 
   content = this.clean_wikitext(content);
-  var postdata = 'action=wikitohtml' + 
+  var postdata = 'pagename=' + pagename + '&action=wikitohtml' + '&group_id=' + groupid +
                  '&content=' + encodeURIComponent(content);
   Wikiwyg.liveUpdate(
 		     'POST',
@@ -225,7 +230,7 @@ proto.markupRules = {
     link: ['bound_phrase', '[ ', '| Link ]'],
     verbatim: ['bound_phrase', '<verbatim>\n','\n</verbatim>\n'],
     table:['line_alone', 
-	   '<?plugin RichTable *border=1, cellpadding=4, cellspacing=0,\n-\n|line1\n|line1\n|line1\n-\n|line2\n|line2\n|line2\n\n?>\n\n'],
+	   '<?plugin RichTable *border=1, cellpadding=0, cellspacing=0,\n-\n|line1\n|line1\n|line1\n-\n|line2\n|line2\n|line2\n\n?>\n\n'],
     sup:['bound_phrase', '<sup>','</sup>'],
     sub:['bound_phrase', '<sub>','</sub>'],
     big:['bound_phrase', '<big>','</big>'],
@@ -352,18 +357,18 @@ Insert escape char in the string ( escape char is '~' for phpwiki )
 proto.insert_escape_char = function(string) {
     // Insert the escape charater before
     // interpreted markups      
-    var basic_markup = /(\*|\_|^\!|\[|^\>|\~|\%\%\%|^\-\-\-|^\-|\|)/g;
+    var basic_markup = /(\*|^\!|\[|^\>|\~|\%\%\%|^\-\-\-)/g;
     string = string.replace(basic_markup, "~$1");
     
     var tag_markup = 
     /(\<\/{0,1}(b|i|tt|em|strong|abbr|acronym|cite|code|dfn|kbd|samp|sup|sub|big|small|var)\>)/g;
     string = string.replace(tag_markup, "~$1");
 
-    var tag_plugin = /(\<\?)/g;
-    string = string.replace(tag_plugin, "~$1");
+    /*var tag_plugin = /(\<\?)/g;
+    string = string.replace(tag_plugin, "~$1");*/
 
-    var links =  /(http|https|ftp:\/\/)/g;
-    string = string.replace(links, "~$1");
+    /*var links =  /(http|https|ftp:\/\/)/g;
+    string = string.replace(links, "~$1");*/
 
 
     return string;
@@ -565,12 +570,12 @@ proto.format_li = function(element) {
     var type = this.list_type[level - 1];
     var markup = this.config.markupRules[type];
 
-    if(level<=2) 
+    //if(level<=2) 
       this.appendOutput(markup[1].times(level) + ' ');
-    else {
+    /*else {
       this.appendOutput(markup[1].times(2) + ' ');
       alert("Only two levels of indentation is possible");
-    }
+    }*/
 
     this.walk(element);
 
@@ -674,7 +679,7 @@ Support for plugin RichTable in phpwiki
 proto.format_table = function(element) {
     this._table="true";
     this.assert_blank_line();
-    this.appendOutput('<?plugin RichTable *border=1, cellpadding=4, cellspacing=0,\n');
+    this.appendOutput('<?plugin RichTable *border=1, cellpadding=0, cellspacing=0,\n');
     this.walk(element);
     this.appendOutput('\n?>\n\n');
     this.assert_blank_line();
@@ -700,9 +705,18 @@ proto.format_th = function(element) {
 
 proto.format_img = function(element) {
     var uri = element.getAttribute('src');
-    if( uri.match(/\/uploads\//) ){
-      uri = escape( uri.substring( uri.lastIndexOf('/')+1, uri.length ) );
-      uri = "[Upload:"+uri+" border=1]";
+    if( uri.match(/uploads\//) ){
+      //uri = escape( uri.substring( uri.lastIndexOf('/')+1, uri.length ) );
+      src = uri;
+      if(src.match(/.*uploads\/([0-9])+\/([0-9])+\/(.*)/)){
+          file = src.replace(/.*uploads\/[0-9]+\/[0-9]+\/(.*)/, '$1');
+          revision = src.replace(/.*uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
+	  uri = "[Upload:" + revision + "/" + file +"]";
+      }else if(src.match(/.*uploads\/([0-9]+\/)(.*)/)){
+          file = src.replace(/.*uploads\/([0-9]+\/)(.*)/, '$2');
+          //revision = src.replace(/.*uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
+          uri = "[Upload:" + file +"]";
+      }
     }
 
     if (uri) {

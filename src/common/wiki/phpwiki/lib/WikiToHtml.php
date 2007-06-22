@@ -48,9 +48,18 @@ class WikiToHtml {
         $this->clean_plugin_name();
         $this->replace_known_plugins();
         $this->replace_unknown_plugins();
+	$this->color_pre_tags();
 	//	$this->replace_tags();
 	$this->clean_plugin();
-
+	if ($charset != 'utf-8'){
+	    if($charset == 'iso-8959-1'){
+	        $this->_html = utf8_decode($this->_html);
+	    }else{
+	        // Check for iconv support
+		LoadPhpExtension("iconv");
+		$this->_html = iconv("utf-8", $charset, $this->_html);
+	    }
+	}
 	$this->html_content = $this->_html;
     }
 
@@ -69,39 +78,40 @@ class WikiToHtml {
     // Replace unknown plugins by keyword Wikitext { tag }
     function replace_unknown_plugins() {
         $pattern = '/(\&lt\;\?plugin[^?]*\?\&gt\;)/Usi';
-	$replace_string = 
-	  '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {
- <br> \1 <br>}</div><br></p>';
-       
-	$this->_html = preg_replace($pattern,
-				    $replace_string,
-				    $this->_html);
+	$replace_string = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {<br> \1 <br>}</div><br></p>';
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
+    }
+    
+    // Preview preformatted areas with a light yellow background.
+    function color_pre_tags(){
+        $pattern = '/\<pre class\=\".*\"\>/Usi';
+        $replace_string = '<pre style="background-color:#FDFDF7">';
+        $this->_html = preg_replace($pattern, $replace_string, $this->_html);
+    
     }
 
     // Clean links to keep only <a href="link">name</a>
     function clean_links() {
-      // Existing links
-      $pattern = '/\<a href\=\"index.php\?pagename\=(\w+)\"([^>])*\>/Umsi';      
-      $replace_string = '<a href="\1">';      
-      $this->_html = preg_replace($pattern,
-				  $replace_string,
-				  $this->_html) ;
-      // Non existing links
+        // Existing links
+        $pattern = '/\<a href\=\"index.php\?pagename\=(\w+)\"([^>])*\>/Umsi';      
+        $replace_string = '<a href="\1">';      
+        $this->_html = preg_replace($pattern, $replace_string, $this->_html);
+	
+        // Non existing links
 	$pattern = '/\<a href\=\"index.php\?pagename\=([^"]*)(&amp;action){1}([^>])*\>/Umsi';
 	$replace_string = '<a href="\1">';
-	
-	$this->_html = preg_replace($pattern,
-				    $replace_string,
-				    $this->_html) ;
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
 
 	// Clean underline 
         $pattern = '/\<u\>(.*)\<\/u\>(\<a href="(.*))[?"]{1}.*\>.*\<\/a\>/Umsi';
-	$replace_string = 
-	  '<span>\2" style="color:blue;">\1</a></span>';
+	$replace_string = '<span>\2" style="color:blue;">\1</a></span>';
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
 	
-	$this->_html = preg_replace($pattern,
-				    $replace_string,
-				    $this->_html) ;
+	// Clean Wiki unknown
+	$pattern = '/\<span class\=\"wikiunknown\"\>\<span\>\<a href\=\".*\"\>(.*)\<\/a\>\<\/span\>\<\/span\>/';
+	$replace_string = '\1';
+	$this->_html = preg_replace($pattern, $replace_string, $this->_html);
+	
     }
     
     // Put unknown tags in Wikitext {}
@@ -127,9 +137,8 @@ class WikiToHtml {
 	$this->_html = preg_replace($pattern,
 				    $replace_string,
 				    $this->_html) ; 
-
     }
-
+    
     function clean_plugin_name() {
 	// Remove plugin name converted in a link
 	$pattern = '/(\&lt\;\?plugin\s)\<span.*\>\<span\>\<a href=.*\>(\w+)\<\/a\><\/span\><\/span>([^?]*\?\&gt\;)/Umsi';
@@ -145,7 +154,12 @@ class WikiToHtml {
 // they are deleted before the conversion.
 function replace_rich_table($matched) {
   $plugin = $matched[1];
-
+  
+  // External links
+  $pattern = '/\<a href\=\"(.*)\".*<img.*\/\>(.*)\<\/span\>(.*)\<\/a\>/Umsi';     
+  $replace_string = "[".'\2\3'."|".'\1'."]";
+  $plugin = preg_replace($pattern, $replace_string, $plugin) ;
+      
   $unknown_options = "/colspan|rowspan|width|height/";
   
   // if the plugin contains one of the options bellow
@@ -157,23 +171,26 @@ function replace_rich_table($matched) {
     $pattern = '/\<p.*\>/Umsi';
     $replace_string = "";
     
-    $plugin = preg_replace($pattern,
-			   $replace_string,
-			   $plugin) ; 
+    $plugin = preg_replace($pattern, $replace_string, $plugin) ;
     
     //replace unused </p> by \n
     $pattern = '/\<\/p\>/Umsi';
     $replace_string = "\n";
     
-    $plugin = preg_replace($pattern,
-			   $replace_string,
-			   $plugin) ; 
+    $plugin = preg_replace($pattern, $replace_string, $plugin) ;
     
     $plugin = "<?plugin RichTable ".$plugin." ?>";
     
-    require_once("lib/BlockParser.php");       
+    require_once("lib/BlockParser.php");
     $xmlcontent = TransformText($plugin, 2.0, $GLOBALS['request']->getArg('pagename')); 
-    return $xmlcontent->AsXML();
+    $html_table = $xmlcontent->AsXML();
+    //print($html_table);
+    
+    // Put tables inside a div tag instead of span and change css class for it.
+    $pattern = '/\<span class\=\"plugin.*\" id\=\"(RichTablePlugin.*)\"\>\<table.*\>(.*)\<\/span\>/Umsi';
+    $replace_string = '<table border="1">\2';
+    $html_table = preg_replace($pattern, $replace_string, $html_table);
+    return $html_table;
   }
 }
 

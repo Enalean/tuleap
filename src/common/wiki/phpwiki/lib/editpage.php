@@ -182,7 +182,7 @@ class PageEditor
       
         require_once("lib/WysiwygEdit/Wikiwyg.php");
         $class = "WysiwygEdit_Wikiwyg";
-        $this->WysiwygEdit = new $class();
+        $this->WysiwygEdit = new $class($this->request);
         $WikiTheme->addMoreHeaders($this->WysiwygEdit->Head());
 
         if (USE_HTMLAREA and $template == 'editpage') {
@@ -237,7 +237,15 @@ class PageEditor
             // force browse of current version:
             $request->setArg('version', false);
             displayPage($request, 'nochanges');
-            return true;
+	    // Remove action=edit and eventually mode=wysiwyg
+	    if ($request->getArg('action') == 'edit'){
+	        $request->setArg('action', false);  
+	    }
+	    if ($request->getArg('mode') == 'wysiwyg'){
+                $request->setArg('mode', false);
+	    }
+	    return true;
+	    
         }
 
         if (!$this->user->isAdmin() and $this->isSpam()) {
@@ -280,8 +288,8 @@ class PageEditor
         
         // New contents successfully saved...
         $this->updateLock();
-
-        // Clean out archived versions of this page.
+        
+	// Clean out archived versions of this page.
         include_once('lib/ArchiveCleaner.php');
         $cleaner = new ArchiveCleaner($GLOBALS['ExpireParams']);
         $cleaner->cleanPageRevisions($page);
@@ -308,13 +316,15 @@ class PageEditor
 
         // Force browse of current page version.
         $request->setArg('version', false);
-        //$request->setArg('action', false);
+        $request->setArg('action', false);
+	if ($request->getArg('mode') == 'wysiwyg'){
+            $request->setArg('mode', false);
+	}
 
         $template = Template('savepage', $this->tokens);
         $template->replace('CONTENT', $newrevision->getTransformedContent());
         if (!empty($warnings->_content))
             $template->replace('WARNINGS', $warnings);
-
         $pagelink = WikiLink($page);
 
         GeneratePage($template, fmt("Saved: %s", $pagelink), $newrevision);
@@ -565,10 +575,13 @@ class PageEditor
                                 'id'   => 'edit[locked]',
                                 'disabled' => (bool) !$this->user->isadmin(),
                                 'checked'  => (bool) $this->locked));
+        
+	if (($this->version == 0) and ($request->getArg('mode') != 'wysiwyg')){
+	$el['WYSIWYG_B'] = Button(array("action" => "edit", "mode" => "wysiwyg"), "Wysiwyg Editor");
+	}
 
-        $el['PREVIEW_B'] = Button('submit:edit[preview]', _("Preview"),
-                                  'wikiaction');
-
+        $el['PREVIEW_B'] = Button('submit:edit[preview]', _("Preview"), 'wikiaction');
+		
         //if (!$this->isConcurrentUpdate() && $this->canEdit())
         $el['SAVE_B'] = Button('submit:edit[save]', _("Save"), 'wikiaction');
 

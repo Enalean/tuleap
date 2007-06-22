@@ -283,8 +283,19 @@ class Layout extends Response {
 		    echo $params['WYSIWYG_TEXTAREA'];
 		    print "\n";
 		}
-
-	
+		if(isset($params['WYSIWYG_HELP_SCRIPT'])){
+		    print "\n";
+		    print "<!--\nThis is to show Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print $params['WYSIWYG_HELP_SCRIPT'];
+		    print "</script> \n";
+		}else{
+		    print "\n";
+		    print "<!--\nThis is to hide Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print('function showWysiwygHelp(){ return false;}');
+		    print "</script> \n";
+		}
 	}
 
 	function generic_header_end($params) {
@@ -307,6 +318,13 @@ class Layout extends Response {
 
         function pv_header($params) {
             global $sys_datefmt;
+	        if (!isset($params['WYSIWYG_HELP_SCRIPT'])){
+		    print "\n";
+		    print "<!--\nThis is to hide Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print('function showWysiwygHelp(){ return false;}');
+		    print "</script> \n";
+		}
 	        $this->generic_header_start($params); 
                 $this->generic_header_end($params); 
                 echo '

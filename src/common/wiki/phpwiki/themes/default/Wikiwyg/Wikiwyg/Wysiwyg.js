@@ -217,8 +217,90 @@ proto.do_h3 = proto.format_command;
 proto.do_h4 = proto.format_command;
 proto.do_h5 = proto.format_command;
 proto.do_h6 = proto.format_command;
-proto.do_pre = proto.format_command;
 proto.do_p = proto.format_command;
+
+proto.do_pre = function(){
+    var html = '';
+    var selection = this.get_pre_selection_text();
+    
+    if(!selection){
+        html = '<pre style="background-color:#FDFDF7"><br></pre><br>';
+    }else{
+        html = '<pre style="background-color:#FDFDF7">' + unescape(selection) + '</pre><br>';
+    }
+    this.insert_html(html, 1);
+    this.format_command;
+}
+
+proto.do_wikihelp = function() {
+    help_window('/help/show_help.php?section=WikiService.html');
+}
+
+proto.do_image = function() {
+    var html = '';
+    var img = '';
+    var rev = '';
+    var base = location.href.replace(/(.*?:\/\/.*?\/).*/, '$1');
+    
+    // Prompt for filename and revision number
+    img = prompt("Enter the image name", '');
+    rev = prompt("Enter the revision number", '');
+    
+    if(! Wikiwyg.is_ie){ // Fix for broken images in Firefox design mode
+        var base = location.href.replace(/(.*?:\/\/.*?\/).*/, '$1');
+	alert(base);
+        if (img == null || img == '')
+	    return;
+        if(rev){
+            html = '<img src="' + base + 'wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+        }else{
+            html = '<img src="' + base + 'wiki/uploads/' + groupid + '/' + img + '"></img>';
+        }
+    }else{
+        if (img == null || img == '')
+	    return;
+        if(rev){
+            html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
+        }else{
+            html = '<img src="/wiki/uploads/' + groupid + '/' + img + '"></img>';
+        }
+    }
+    
+    if (! Wikiwyg.is_ie)
+        this.get_edit_window().focus();
+    this.insert_img(html);
+
+}
+
+proto.insert_img = function(html) { // See IE
+    this.exec_command('inserthtml', html);
+}
+
+proto.do_attach = function(){
+    var html = '';
+    var file = '';
+    var rev = '';
+    
+    // Prompt dor filename and revision number
+    file = prompt("Enter file name", '');
+    rev = prompt("Enter the revision number", '');
+    
+    if (file == null || file == '')
+       return;
+    if(rev){
+	html = 'Upload:' + rev + '/' + file;
+    }else {
+	html = 'Upload:' + file;
+    }
+    
+    if (! Wikiwyg.is_ie)
+        this.get_edit_window().focus();
+    this.insert_attach(html);
+}
+
+proto.insert_attach = function(html) { // See IE
+    this.exec_command('inserthtml', html);
+}
 
 proto.do_table = function() {
   var rows = prompt("Number of rows", '2');
@@ -234,7 +316,7 @@ proto.do_table = function() {
       }
 
     var html = 
-    '<table border="5"><tbody>';
+    '<table border="1"><tbody>';
   
     for(i=0; i<rows;i++) {
       html = html + "<tr>";
@@ -244,7 +326,7 @@ proto.do_table = function() {
       html = html + "</tr>";
     }
 
-    html = html + "<tbody></table>";
+    html = html + "</tbody></table>";
    
     if (! Wikiwyg.is_ie)
         this.get_edit_window().focus();
@@ -257,14 +339,23 @@ proto.insert_table = function(html) { // See IE
 
 proto.do_toc = function() {
     var html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">'+
-               'Wikitext { <br> &lt;?plugin  CreateToc  ?&gt; <br>}</div></p>';
+              'Wikitext { <br> &lt;?plugin  CreateToc  ?&gt; <br>}</div></p>';
     this.insert_html(html);
 }
 
 proto.do_wikitext = function() {
-    var html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">'+
+    var html = '';
+    var selection = this.get_wikitext_selection_text();
+    
+    if(!selection){
+        html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">'+
                'Wikitext { <br>  <br>}</div></p>';
-    this.insert_html(html);
+    }else{
+        html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext { <br>' + 
+	       unescape(selection) + '<br>}</div></p>';
+    }
+    
+    this.insert_html(html, 3);
 }
 
 proto.insert_html = function(html) { // See IE
@@ -324,6 +415,16 @@ proto.do_link = function() {
 
 proto.get_selection_text = function() { // See IE, below
     return this.get_edit_window().getSelection().toString();
+}
+
+proto.get_pre_selection_text = function(){
+    var selection = this.get_selection_text();
+    return selection;
+}
+
+proto.get_wikitext_selection_text = function(){
+    var selection = this.get_selection_text();
+    return selection;
 }
 
 proto.get_link_selection_text = function() {
@@ -386,13 +487,39 @@ proto.insert_table = function(html) {
     range.select();
 }
 
-proto.insert_html = function(html) {
+proto.insert_img = function(html){
     var doc = this.get_edit_document();
     var range = this.get_edit_document().selection.createRange();
     if (range.boundingTop == 2 && range.boundingLeft == 2)
         return;
     range.pasteHTML(html);
     range.collapse(false);
+    range.select();
+
+}
+
+proto.insert_attach = function(html){
+    var doc = this.get_edit_document();
+    var range = this.get_edit_document().selection.createRange();
+    if (range.boundingTop == 2 && range.boundingLeft == 2)
+        return;
+    range.pasteHTML(html);
+    range.collapse(false);
+    range.select();
+
+}
+
+proto.insert_html = function(html, caretpos) {
+    var doc = this.get_edit_document();
+    var range = this.get_edit_document().selection.createRange();
+    if (range.boundingTop == 2 && range.boundingLeft == 2)
+        return;
+    range.pasteHTML(html);
+    range.collapse(false);
+    if (caretpos != null){
+        range.moveStart('character', - caretpos);
+        range.moveEnd('character', - caretpos);
+    }
     range.select();
 }
 

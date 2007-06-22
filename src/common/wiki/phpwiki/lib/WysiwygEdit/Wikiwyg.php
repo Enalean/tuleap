@@ -16,18 +16,22 @@ require_once("lib/WysiwygEdit.php");
 
 class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 
-    function WysiwygEdit_Wikiwyg() {
+    function WysiwygEdit_Wikiwyg($request) {
         global $LANG;
 	
         $this->_transformer_tags = false;
 	$this->BasePath = DATA_PATH.'/themes/default/Wikiwyg';
 	$this->_htmltextid = "edit:content";
         $this->_wikitextid = "editareawiki";
+	$this->_pagename = $request->getArg('pagename');
     }
 
     function Head($name='edit[content]') {
-        global $WikiTheme, $wysiwyg_editor_params;
+        global $WikiTheme, $wysiwyg_editor_params, $group_id;
 	
+	$doubleClickToEdit = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT)
+	    ? 'true' : 'false';
+	    
 	$wysiwyg_editor_params['WIKIWYG_SCRIPTS'] = array("Wikiwyg.js", "Wikiwyg/Toolbar.js" , "Wikiwyg/Preview.js", "Wikiwyg/Wikitext.js",
 				"Wikiwyg/Wysiwyg.js", "Wikiwyg/Phpwiki.js", "Wikiwyg/HTML.js", "Wikiwyg/Toolbar.js");
 	
@@ -35,44 +39,49 @@ class WysiwygEdit_Wikiwyg extends WysiwygEdit {
 var base_url = '/wiki';
 var data_url = '/wiki/themes/default/Wikiwyg';
 var script_url = '/wiki/index.php';
+var groupid = $group_id;
+var pagename = '$this->_pagename';
 
 window.onload = function() {
    var wikiwyg = new Wikiwyg.Phpwiki();
    var config = {
-            doubleClickToEdit:  false,
+            doubleClickToEdit:  $doubleClickToEdit,
             javascriptLocation: base_url+'/themes/default/Wikiwyg/',
             toolbar: {
 	        imagesLocation: base_url+'/themes/default/Wikiwyg/images/',
 		controlLayout: [
-		       'save','preview','|','save_button','|',
-                       'mode_selector', '/',
-		       'p','|',
-		       'h2', 'h3', 'h4','|',
-		       'bold', 'italic', '|',
-                       'sup', 'sub', '|',
-                       'toc',
-                       'wikitext','|',
-		       'pre','|',
-		       'ordered', 'unordered','hr','|',
-		       'link','|',
-                       'table'
+		       'save', 'preview', 'save_button', '|',
+		       'p', 'h2', 'h3', 'h4', 'bold', 'italic','sup', 'sub', 'ordered', 'unordered', 'hr', 'pre', 'toc', '|',
+		       'link', 'image', 'attach', 'wikitext', '|', '|',
+		       'table', '|', 'wikihelp'
 		       ],
 		styleSelector: [
 		       'label', 'p', 'h2', 'h3', 'h4', 'pre'
-				], 
+				],
 		controlLabels: {
 	               save:     'Apply changes',
 		       cancel:   'Exit toolbar',
-		       h2:       'Title 1',
-		       h3:       'Title 2',
-		       h4:       'Title 3',
+		       p:	 'Format plain text',
+		       h2:       'Format Level 1 header',
+		       h3:       'Format Level 2 header',
+		       h4:       'Format Level 3 header',
+		       bold:	 'Format bold text',
+		       italic:	 'Format italic text',
 		       verbatim: 'Verbatim',
-                       toc:   'Table of content', 
-                       wikitext:   'Insert Wikitext section', 
-                       sup:      'Sup', 
-                       sub:      'Sub',
-                       preview:  'Preview',   
-                       save_button:'Save'   
+                       toc:	 'Insert Table Of Content',
+		       pre:	 'Insert preformatted text',
+		       table:	 'Create Rich Table (EXPERIMENTAL feature)',
+		       image:	 'Insert an already uploaded image',
+		       attach:	 'Attach an already uploaded file',
+                       wikitext: 'Insert ASCII wikitext',
+                       sup:      'Format Superscript text',
+                       sub:      'Format Subscript text',
+		       ordered:	 'Format numbered list',
+		       unordered:'Format unordered list',
+		       hr:	 'Insert horizontal line',
+                       preview:  'Preview wiki page',
+                       save_button:'Save wiki page',
+		       wikihelp: 'Help'
 	              }
             },
             wysiwyg: {
@@ -88,11 +97,34 @@ window.onload = function() {
    wikiwyg.editMode();
 }";
 	
-	//FIXME: Find a way to move this variable content to "/wiki/views/WikiViews.class " 
-	//where wysiwyg script is inserted into $params array.   
-        $wysiwyg_editor_params['doubleClickToEdit'] = ($GLOBALS['request']->getPref('doubleClickEdit') or ENABLE_DOUBLECLICKEDIT) 
-            ? 'true' : 'false';
 	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = '';
+	
+	// Small scripts for online wysiwyg edition rules documentation/help.
+	$wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'] = 'function showWysiwygHelp(){ return true;}';
+	$wysiwyg_editor_params['WYSIWYG_NOHELP_SCRIPT'] = 'function showWysiwygHelp(){ return false;}';
+	
+	// Support for CodeX-lite theme
+        if ($WikiTheme->_name == "CodeX-lite"){
+	    if ($_REQUEST['action'] = 'edit' and isset($_REQUEST['mode']) and ($_REQUEST['mode'] == 'wysiwyg')){ 
+	        foreach($wysiwyg_editor_params['WIKIWYG_SCRIPTS'] as $js){
+	        
+	        $WikiTheme->addMoreHeaders
+                    (Javascript('', array('src' => $this->BasePath . '/' . $js,
+                                          'language' => 'JavaScript')));
+	        }
+	        
+	        $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_SCRIPT'], array('language' => 'JavaScript')));
+	    
+	        if (isset($wysiwyg_editor_params['WYSIWYG_TEXTAREA'])){
+	            $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_TEXTAREA'], array('language' => 'JavaScript')));
+	        }
+	        if (isset($wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'])){
+		    $WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'], array('language' => 'JavaScript')));
+		}
+	    }else{
+		$WikiTheme->addMoreHeaders(Javascript($wysiwyg_editor_params['WYSIWYG_NOHELP_SCRIPT'], array('language' => 'JavaScript')));
+	    }
+	}
     }
 
     function Textarea ($textarea, $wikitext, $name='edit[content]') {
@@ -100,9 +132,7 @@ window.onload = function() {
         $htmltextid = $this->_htmltextid;
         $textarea->SetAttr('id', $htmltextid);
         $iframe0 = new RawXml('<iframe id="iframe0" height="0" width="0" frameborder="0"></iframe>');
-        $out = HTML($textarea,
-                    $iframe0,
-		    "\n");
+        $out = HTML($textarea, $iframe0, "\n");
 	$wysiwyg_editor_params['WYSIWYG_TEXTAREA'] = $out;
     }
 

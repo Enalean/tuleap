@@ -43,7 +43,7 @@ class WikiService extends Controler {
    * Constructor
    */
   function WikiService($id) {
-      global $LANG, $is_wiki_page;
+      global $LANG, $is_wiki_page, $group_id;
       
       //used so the search box will add the necessary element to the pop-up box
       $is_wiki_page = 1;
@@ -52,6 +52,7 @@ class WikiService extends Controler {
      * Check given id 
      */
     $this->gid = (int) $id;
+    $group_id = $this->gid;
 
     if(empty($this->gid))
       exit_no_group();

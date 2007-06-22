@@ -30,7 +30,8 @@ if (
     $user->isAdmin()
     )
 { ?>
-      <?= Button("edit", $revision->isCurrent() ? _("Edit") : _("Edit Old Revision")) ?>
+      <?= Button("edit", $revision->isCurrent() ? _("Text Editor") : _("Edit Old Revision")) ?>
+      <?=$SEP?><?= Button(array("action" => "edit", "mode"=> "wysiwyg"), "Wysiwyg Editor")?>
     <?php } else { ?>
       <?= Button("viewsource", _("View Source")) ?>
     <?php } ?>

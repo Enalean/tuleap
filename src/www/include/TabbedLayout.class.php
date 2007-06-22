@@ -160,7 +160,47 @@ class TabbedLayout extends Layout {
     ?>
 	-->
     </style>
-<?php $em->processEvent('cssfile',null); ?>
+<?php $em->processEvent('cssfile',null); 
+		
+		//Here we add  wysiwyg scripts output
+		// These were moved from TextArea() function in "phpwiki-root/WysiwygEdit/Wikiwyg.php"
+		if(isset($params['WIKIWYG_SCRIPTS']) && is_array($params['WIKIWYG_SCRIPTS'])) {
+		    print "\n";
+		    print "<!--\nHere we load WIKIWYG basic scripts\n-->";
+		    foreach($params['WIKIWYG_SCRIPTS'] as $js) {
+			print "\n";
+			print '<script type="text/javascript" langage="JavaScript" src="/wiki/themes/default/Wikiwyg/'.$js.'"></script>';
+		    }
+		    print "\n";
+		}
+		if(isset($params['WYSIWYG_SCRIPT'])) {
+		    print "\n<!--\nHere is the main WYSIWYG script\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print $params['WYSIWYG_SCRIPT'];
+		    print "</script> \n";
+		}
+		if(isset($params['WYSIWYG_TEXTAREA'])){
+		    echo $params['WYSIWYG_TEXTAREA'];
+		    print "\n";
+		}
+		if(isset($params['WYSIWYG_HELP_SCRIPT'])){
+		    print "\n";
+		    print "<!--\nThis is to show Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print $params['WYSIWYG_HELP_SCRIPT'];
+		    print "</script> \n";
+		}else{
+		    print "\n";
+		    print "<!--\nThis is to hide Wysiwyg Edition Rules documentation\n-->\n";
+		    print '<script type="text/javascript" langage="JavaScript">';
+		    print('function showWysiwygHelp(){ return false;}');
+		    print "</script> \n";
+		}
+
+
+
+
+?>
 </head>
 
 <body>

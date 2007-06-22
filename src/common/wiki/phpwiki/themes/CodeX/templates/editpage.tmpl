@@ -12,7 +12,9 @@
   <?= $PREVIEW_CONTENT ?>
   <hr class="printer" noshade="noshade" />
 <?php } ?>
-
+<?php if ($WYSIWYG_B){ ?>
+  <p><strong>Warning:</strong> Switching to wysiwyg edition mode will not keep your changes.</p>
+<?php } ?>
 <?= $PAGE_LOCKED_MESSAGE ?>
 <?= $CONCURRENT_UPDATE_MESSAGE ?>
 
@@ -37,7 +39,7 @@
     <tr><td><?= $EDIT_TOOLBAR ?></td>
     </tr></table>
   <a name="editarea"></a><?=$EDIT_TEXTAREA?>
-  <iframe id="iframe0" height="0" width="0" frameborder="0"></iframe>
+  <iframe id="iframe0" src="/blank.htm" height="0" width="0" frameborder="0"></iframe>
 <!-- FIXME: fix layout, move CSS to CSS -->
 <div class="toolbar" style="text-align: center;">
   <label for="edit[summary]"><?=_("Summary").':'?></label> <?=$SUMMARY_INPUT?>
@@ -53,11 +55,15 @@
 <tr valign="middle">
   <td> 
     <?=$MINOR_EDIT_CB ?> <label for="edit[minor_edit]"><?=_("This is a minor change.")?></label><br />
-    <?=$OLD_MARKUP_CB?>  <label for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?>
+    <div id="OM"><?=$OLD_MARKUP_CB?> <label for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?></div>
   </td>
   <td align="center">
+    <?php if ($WYSIWYG_B){ ?>
+    <?=$WYSIWYG_B?>
+    <?=$SEP?>
+    <?php } ?>
     <?= $PREVIEW_B ?>
-    <?php if ($SAVE_B)  { ?> 
+    <?php if ($SAVE_B){ ?> 
       <?=$SEP?><?= $SAVE_B ?>
     <?php } ?>
   </td>
@@ -84,25 +90,32 @@
 </tr>
 <?php } ?>
 </table>
-
-<hr noshade="noshade" />
-
 <script language="JavaScript1.3" type="text/javascript">
 <!--
 function showOldMarkupRules(show) {
   if (document.getElementById) {
-    if (!show) {
-      document.getElementById('newMarkup').style.display="block";
+    document.getElementById('OM').style.display="block"; // Display Old Markup checkbox
+    if (!show) { // Display New Markup div
+      document.getElementById('newMarkup').style.display="block"; 
       document.getElementById('oldMarkup').style.display="none";
-    } else {
-      document.getElementById('newMarkup').style.display="none";
-      document.getElementById('oldMarkup').style.display="block";
+    } else { // Display Old Markup div
+      document.getElementById('newMarkup').style.display="none";  // Hide new Markup div
+      document.getElementById('oldMarkup').style.display="block"; // Display Old Markup div
     }
   }
 }
+
+function showWysiwygEditionRules(){
+    // wysiwyg edition mode is active
+      document.getElementById('OM').style.display="none";  // Hide Old Markup checkbox
+      document.getElementById('newMarkup').style.display="none";  // Hide New Markup div
+      document.getElementById('oldMarkup').style.display="none";  // Hide Old Markup div
+      document.getElementById('hr').style.display="none";  // Hide horizontal rule
+}
+
 // -->
 </script>
-
+<hr id="hr" noshade="noshade" />
 <div id="oldMarkup" class="wiki-edithelp">
 <!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
 <p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
@@ -113,13 +126,18 @@ function showOldMarkupRules(show) {
 <p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
 <?plugin IncludePage page=_("TextFormattingRules") section=_("Synopsis") quiet=1?>
 </div>
+
 <?=$HIDDEN_INPUTS?>
 </form>
-
 <script language="JavaScript1.3" type="text/javascript">
 <!--
 if (document.getElementById) {
-  showOldMarkupRules(document.getElementById('useOldMarkup').checked);
+  if(showWysiwygHelp()){
+    showWysiwygEditionRules();
+  }else{
+    showOldMarkupRules(document.getElementById('useOldMarkup').checked);
+  }
 }
+
 // -->
 </script>

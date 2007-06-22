@@ -123,12 +123,11 @@ proto.createWikiwygArea = function(div, config) {
 };
 
 proto.config = {
-    javascriptLocation: 'lib/',
+    javascriptLocation: 'Wikiwyg/',
     doubleClickToEdit: false,
     toolbarClass: 'Wikiwyg.Toolbar',
     modeClasses: [ 
         'Wikiwyg.Wysiwyg',
-        'Wikiwyg.Wikitext',
         'Wikiwyg.Preview'
     ]
 };
@@ -233,7 +232,7 @@ proto.switchMode = function(new_mode_key) {
       return;
 
     //Set cookie to keep last editing mode
-    document.cookie = "Mode="+new_mode_key;
+    //document.cookie = "Mode="+new_mode_key;
 
     var self = this;
     new_mode.enableStarted();
@@ -274,6 +273,8 @@ Wikiwyg.liveUpdate = function(method, url, query, callback) {
         data = query;
     req.open(method, url);
     req.onreadystatechange = function() {
+        if (req.readyState ==1)
+	    callback("Loading ...");
         if (req.readyState == 4 && req.status == 200)
             callback(req.responseText);
     }

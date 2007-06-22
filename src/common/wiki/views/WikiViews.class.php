@@ -142,11 +142,14 @@ class WikiViews extends Views {
     global $wysiwyg_editor_params;
     $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki-codex.css';
   
-    //Get wysiwyg editor scripts and parameters  
+    //Get wysiwyg editor scripts and parameters
+    if ($_REQUEST['action'] = 'edit' and isset($_REQUEST['mode']) and ($_REQUEST['mode'] == 'wysiwyg')){    
     $this->html_params['WIKIWYG_SCRIPTS'] = $wysiwyg_editor_params['WIKIWYG_SCRIPTS'];
     $this->html_params['WYSIWYG_SCRIPT'] = $wysiwyg_editor_params['WYSIWYG_SCRIPT'];
-    //$this->html_params['doubleClickToEdit'] = $wysiwyg_editor_params['doubleClickToEdit'];
     $this->html_params['WYSIWYG_TEXTAREA'] = $wysiwyg_editor_params['WYSIWYG_TEXTAREA'];
+    $this->html_params['WYSIWYG_HELP_SCRIPT'] = $wysiwyg_editor_params['WYSIWYG_HELP_SCRIPT'];
+    $this->html_params['WYSIWYG_NOHELP_SCRIPT'] = $wysiwyg_editor_params['WYSIWYG_NOHELP_SCRIPT'];
+    }
     
     parent::header();
     $this->displayMenu();
