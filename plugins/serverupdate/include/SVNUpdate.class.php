@@ -82,7 +82,9 @@ class SVNUpdate {
         $this->repository = $repository;
         $url = parse_url($repository);
         // we remove /svnroot/codex from path to retrieve the branch
-        $this->branch = substr($url['path'], 14);
+        $els = explode('/', $url['path']);
+        array_shift($els); array_shift($els); array_shift($els);
+        $this->branch = '/'.implode('/', $els);
     }
     function getBranch() {
         return $this->branch;
