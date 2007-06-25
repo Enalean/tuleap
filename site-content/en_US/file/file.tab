@@ -208,7 +208,7 @@ file_admin_qrs	adding_file	Adding File
 # Script: src/www/file/admin/manageprocessors.php
 #
 file_admin_manageprocessors	manage_proclist	Manage Processors
-file_admin_manageprocessors	edit_proc	Click on the 'Processor ID' to edit a processor
+file_admin_manageprocessors	edit_proc	Click on the Processor Name to edit a processor
 file_admin_manageprocessors	add_proc	Add a new processor
 file_admin_manageprocessors	update_proc	Update a processor
 file_admin_manageprocessors	rank_error	Error. Processor rank should be an integer.

@@ -213,7 +213,7 @@ file_admin_qrs	adding_file	Ajout du fichier
 # Script: src/www/file/admin/manageprocessors.php
 #
 file_admin_manageprocessors	manage_proclist	Gérer les processeurs
-file_admin_manageprocessors	edit_proc	Cliquer sur l'Identifiant du processeur pour le modifier
+file_admin_manageprocessors	edit_proc	Cliquer sur le nom du processeur pour le modifier
 file_admin_manageprocessors	add_proc	Ajouter un nouveau processeur
 file_admin_manageprocessors	update_proc	Modifier un processeur
 file_admin_manageprocessors	rank_error	Erreur. Le rang du processeur doit être un entier.
