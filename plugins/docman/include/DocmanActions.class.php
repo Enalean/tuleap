@@ -483,6 +483,7 @@ class DocmanActions extends Actions {
             $item_type = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $this->_storeFile($item);
+                $item_factory->update(array('id' => $item->getId()));
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
