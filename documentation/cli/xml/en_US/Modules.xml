@@ -1030,6 +1030,12 @@ Array
                         </programlisting>
                     </example>
                </para>
+               <para>
+                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
+                the memory_limit directive in PHP file configuration (php.ini). The issue depends on many parameters and could 
+                still be there after this workaround. We are sorry about it, but it is due to some NuSoap technical limitation.
+                </note>
+               </para>
             </para>
         </section>
         

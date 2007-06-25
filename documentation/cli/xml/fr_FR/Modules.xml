@@ -1056,6 +1056,13 @@ Array
                         </programlisting>
                     </example>
                </para>
+               <para>
+                <note>Note: Si vous rencontrez des problèmes de mémoire en essayant de télécharger des fichiers volumineux, vous pouvez augmenter
+                la mémoire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
+                Ce problème dépend de nombreux paramètres et pourrait persister, même après cette manipulation. Il s'agit d'une 
+                limitation technique de NuSoap.
+                </note>
+               </para>
             </para>
         </section>
         
