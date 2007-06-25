@@ -339,7 +339,7 @@ proto.insert_table = function(html) { // See IE
 proto.do_toc = function() {
     var html = '<p><div style="background-color:#D3D3D3;font-size:smaller;">'+
               'Wikitext { <br> &lt;?plugin  CreateToc  ?&gt; <br>}</div></p>';
-    this.insert_html(html);
+    this.insert_html(html, 5);
 }
 
 proto.do_wikitext = function() {
