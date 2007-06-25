@@ -385,15 +385,13 @@ class Docman_ItemDao extends DataAccessObject {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }
-                if (count($set_array)) {
-                    $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
-                    $sql = 'UPDATE plugin_docman_item'
-                        .' SET '.implode(' , ', $set_array)
-                        .' WHERE item_id='. $this->da->quoteSmart($id);
-                    $updated = $this->update($sql);
-                    if ($updated) {
-                        $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
-                    }
+                $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
+                $sql = 'UPDATE plugin_docman_item'
+                    .' SET '.implode(' , ', $set_array)
+                    .' WHERE item_id='. $this->da->quoteSmart($id);
+                $updated = $this->update($sql);
+                if ($updated) {
+                    $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
                 }
             }
         }
