@@ -321,16 +321,6 @@ function user_get_name_display_from_id($user_id) {
 // Get user name from Codex login, according to the user prefs: Codex login or Real name
 function user_get_name_display_from_unix($user_name) {
     
-    $sql = sprintf('SELECT NULL FROM user'
-					.' WHERE user_name = "%s"',
-    				$user_name);
-    $res = db_query($sql);
-    if (db_numrows($res) < 1) {
-    	//user has changed his Codex login, the old one is still used by some services like Wiki
-		//no way to extract real name in this case, keep displaying codex login
- 		return $user_name;		
-    }
-	
     if ($user_name == $GLOBALS['Language']->getText('global','none')) {
         //return None
     	return $user_name;
@@ -339,12 +329,19 @@ function user_get_name_display_from_unix($user_name) {
     $u_display = user_get_preference("username_display");
     if ($u_display == 0) {
     	//Codex login
-        $uname = $user_name;
+        return $user_name;
     } else {
-    	//Real name
-        $uname = user_getrealname(user_getid_from_email(user_getemail_from_unix($user_name)));
-    }
-    return $uname;
+    	//Real name        
+		$sql = sprintf('SELECT realname FROM user'.
+						' WHERE user_name = "%s"',
+						db_escape_string($user_name));
+		$res = db_query($sql);
+		if (db_numrows($res) < 1) {
+			return $user_name;				
+		} else {
+			return db_result($res,0,'realname');
+		}
+    }    
     
 }
 
