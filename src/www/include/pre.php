@@ -15,7 +15,8 @@ require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/loc
 require($GLOBALS['db_config_file']);
 require_once('common/include/CookieManager.class.php');
 
-//{{{ Sanitize $_REQUEST : remove cookies
+//{{{ Sanitize $_REQUEST
+//remove cookies
 while(count($_REQUEST)) {
     array_pop($_REQUEST);
 }
@@ -38,6 +39,11 @@ if ($g_pos === FALSE) {
         }
         $_REQUEST = array_merge($$first, $$second);
     }
+}
+
+//Cast group_id as int.
+if (isset($_REQUEST['group_id'])) {
+   $group_id = $_REQUEST['group_id'] = $_GET['group_id'] = $_POST['group_id'] = (int)$_REQUEST['group_id'];
 }
 //}}}
 
