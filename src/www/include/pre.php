@@ -46,6 +46,7 @@ foreach(array(
         'group_id', 
         'atid', 
         'forum_id',
+        'pv',
     ) as $variable) {
     if (isset($_REQUEST[$variable])) {
         $$variable = $_REQUEST[$variable] = $_GET[$variable] = $_POST[$variable] = (int)$_REQUEST[$variable];
