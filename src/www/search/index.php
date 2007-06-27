@@ -79,7 +79,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES)).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -88,7 +88,7 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$Language->getText('search_index','search_res', array($words, $rows_returned))."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res', array(htmlentities(stripslashes($words), ENT_QUOTES), $rows_returned))."</H3><P>\n\n";
 
 		$title_arr = array();
 		$title_arr[] = $Language->getText('search_index','project_name');
@@ -126,7 +126,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES)).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -135,7 +135,7 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$Language->getText('search_index','search_res', array($words, $rows_returned))."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res', array(htmlentities(stripslashes($words), ENT_QUOTES), $rows_returned))."</H3><P>\n\n";
 
 		$title_arr = array();
 		$title_arr[] = $Language->getText('search_index','user_n');
@@ -169,7 +169,7 @@ if ($type_of_search == "soft") {
 
 	if (!$result || $rows < 1) {
 		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found',$words).'</H2>';
+		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES)).'</H2>';
 		echo db_error();
 //		echo $sql;
 	} else {
@@ -178,7 +178,7 @@ if ($type_of_search == "soft") {
 			$rows = 25;
 		}
 
-		echo '<H3>'.$Language->getText('search_index','search_res', array($words, $rows_returned))."</H3><P>\n\n";
+		echo '<H3>'.$Language->getText('search_index','search_res', array(htmlentities(stripslashes($words), ENT_QUOTES), $rows_returned))."</H3><P>\n\n";
 
 		$title_arr = array();
 		$title_arr[] = $Language->getText('search_index','thread');

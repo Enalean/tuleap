@@ -691,7 +691,7 @@ echo html_blankimage(5,100);
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
         }
         
-        $output .= "\t<INPUT TYPE=\"text\" SIZE=\"16\" NAME=\"words\" VALUE=\"$words\">\n";
+        $output .= '<INPUT TYPE="text" SIZE="16" NAME="words" VALUE="'. htmlentities(stripslashes($words), ENT_QUOTES) .'">';
         $output .= "\t<BR>\n";
         $output .= "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"".$Language->getText('include_menu','search')."\">\n";
         $output .= "\t</FORM>\n";
