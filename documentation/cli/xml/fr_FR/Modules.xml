@@ -284,6 +284,63 @@ Array
                 </para>
             </para>
         </section>
+        
+        <section id="TrackerFunctionReports">
+            <title>reports</title>
+            <para>
+                reports: Affiche tous les rapports d'un tracker donné.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande reports</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker reports --tracker_id=371
+Array
+(
+    [0] => Array(
+        [report_id] => 440
+        [group_artifact_id] => 371
+        [name] => My report
+        [descrition] => This is my favorite report that displays my favorite fields
+        [scope] => P
+        [fields] => Array(
+                [0] => Array(
+                        [report_id] => 440
+                        [field_name] => artifact_id
+                        [show_on_query] => 0
+                        [show_on_result] => 1 
+                        [place_query] => 
+                        [place_result] => 55
+                        [col_width] => 100
+                    )
+                [1] => Array(
+                        [report_id] => 440
+                        [field_name] => category_id
+                        [show_on_query] => 0
+                        [show_on_result] => 1 
+                        [place_query] => 
+                        [place_result] => 80
+                        [col_width] => 10
+                    )
+                [...]
+            )
+        )
+    [...]
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
 
         <section id="TrackerFunctionAdd">
             <title>add</title>
@@ -478,6 +535,47 @@ Array
             </para>
         </section>
 
+        <section id="TrackerFunctionCCList">
+            <title>CCList</title>
+            <para>
+                CCList: Affiche la liste des CC d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande CCList</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker CCList --tracker_id=371 --id=7374
+Array
+(
+    [0] => Array
+        (
+        [artifact_cc_id] => 48
+        [email] => john.smith@xerox.com
+        [added_by] => 142
+        [added_by_name] => mnazaria
+        [comment] => Pour info, j'ai ajouté ce bug, John.
+        [date] => 442128821
+        )
+    [...]
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
         <section id="TrackerFunctionAddCC">
             <title>addCC</title>
             <para>
@@ -511,6 +609,238 @@ Array
                 </para>
             </para>
         </section>
+        
+        <section id="TrackerFunctionDeleteCC">
+            <title>deleteCC</title>
+            <para>
+                deleteCC: Supprime un CC d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker auquel appartient l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--cc_id* : ID du CC à supprimer.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande deleteCC </title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker deleteCC --tracker_id=371 --id=7374 --cc_id=33
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionDependencies">
+            <title>dependencies</title>
+            <para>
+                dependencies: Affiche toutes les dépendances d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande dependencies</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker dependencies --tracker_id=371 -- id=4569
+Array
+(
+    [0] => Array(
+        [artifact_depend_id] => 14
+        [artifact_id] => 4569
+        [is_dependent_on_artifact_id] => 10
+        [summary] => Documentation is not up-to-date
+        [tracker_id] => 371
+        [tracker_name] => Bugs
+        [group_id] => 112
+        [group_name] => MoonProject
+    )
+    [1] => Array(
+        [artifact_depend_id] => 15
+        [artifact_id] => 4569
+        [is_dependent_on_artifact_id] => 4561
+        [summary] => Strange behaviour in the plugin option
+        [tracker_id] => 159
+        [tracker_name] => Support Requests
+        [group_id] => 115
+        [group_name] => CodeProject
+    [...]
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionInverseDependencies">
+            <title>inverseDependencies</title>
+            <para>
+                inverseDependencies: Affiche toutes les dépendances inverses d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande inverseDependencies</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker inverseDependencies --tracker_id=371 -- id=10
+Array
+(
+    [0] => Array(
+        [artifact_depend_id] => 14
+        [artifact_id] => 4569
+        [is_dependent_on_artifact_id] => 10
+        [summary] => Need to update the documentation
+        [tracker_id] => 371
+        [tracker_name] => Bugs
+        [group_id] => 112
+        [group_name] => MoonProject
+    )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionAddDependencies">
+            <title>addDependencies</title>
+            <para>
+                addDependencies: Ajoute une liste de dépendances à un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--dependencies* : liste des dépendances à ajouter, séparées par une virgule.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande addDependencies</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addDependencies --tracker_id=371 --id=7374 --dependencies="45,689,7865"
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionDeleteDependency">
+            <title>deleteDependency</title>
+            <para>
+                deleteDependency: Supprime une dépendance à un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--dependency* : ID de la dépendace à supprimer.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande deleteDependency</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker deleteDependency --tracker_id=371 --id=7374 --dependency=14
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
+        <section id="TrackerFunctionArtifactHistory">
+            <title>artifactHistory</title>
+            <para>
+                artifactHistory: Affiche l'historique des champs d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande artifactHistory</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker artifactHistory --tracker_id=371 -- id=4569
+Array
+(
+    [0] => Array(
+        [field_name] => cc
+        [old_value] => marc.nazarian@xerox.com
+        [new_value] => marc.nazarian@xerox.com, bob.smith@xerox.com
+        [modification_by] => mnazaria
+        [date] => 1245982254
+    )
+    [0] => Array(
+        [field_name] => severity
+        [old_value] => 3
+        [new_value] => 5
+        [modification_by] => customer32
+        [date] => 12459822145
+    )
+    [...]
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
 <!--
 
         <section id="TrackerFunctionFiles">
