@@ -124,15 +124,20 @@ function getMyProjects($sessionKey) {
 /**
  * getGroupByName : returns the SOAPGroup associated with the given unix group name
  *
+ * @global $Language
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param string $unix_group_name the unix name of the group we want to get
  * @return array the SOAPGroup associated with the given unix name
  */
 function getGroupByName($sessionKey, $unix_group_name) {
+    global $Language;
     if (session_continue($sessionKey)) {
         $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
-        if (! $group) {
-            return new soap_fault('2002','getGroupByName','Could Not Get Groups by Name','Could Not Get Groups by Name');
+        if (! $group || !is_object($group)) {
+            return new soap_fault('2002','getGroupByName', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'),$Language->getText('include_group', 'g_not_found'));
+        } elseif ($group->isError()) {
+            return new soap_fault('2002', 'getGroupByName', $group->getErrorMessage(),$group->getErrorMessage());
         }
         $soap_group = group_to_soap($group);
         return new soapval('return', 'tns:Group', $soap_group);
@@ -144,6 +149,8 @@ function getGroupByName($sessionKey, $unix_group_name) {
 /**
  * getGroupById : returns the SOAPGroup associated with the given ID
  *
+ * @global $Language
+ *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param string $group_id the ID of the group we want to get
  * @return array the SOAPGroup associated with the given ID
@@ -151,9 +158,12 @@ function getGroupByName($sessionKey, $unix_group_name) {
 function getGroupById($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $group = new Group($group_id);
-        if (! $group) {
-            return new soap_fault('2001','getGroupById','Could Not Get Group by Id');
+        if (!$group || !is_object($group)) {
+            return new soap_fault('2001','getGroupById', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),$Language->getText('include_group', 'g_not_found'));
+        } elseif ($group->isError()) {
+            return new soap_fault('2001', 'getGroupById', $group->getErrorMessage(),$group->getErrorMessage());
         }
+        
         $soap_group = group_to_soap($group);
         return new soapval('return', 'tns:Group', $soap_group);
     } else {
