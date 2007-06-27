@@ -42,6 +42,9 @@ if(array_key_exists('submit', $_POST) && isset($_POST['submit'])) {
 }
 
 if (isset($_REQUEST['forum_id'])) {
+	
+	//Cast forum_id in order to prevent from XSS attacks
+    $forum_id = (int) $_REQUEST['forum_id'];
     
     // Check permissions
     if (!forum_utils_access_allowed($forum_id)) {
