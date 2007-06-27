@@ -627,7 +627,7 @@ if (isset($params['group']) && $params['group']) {
         }
 		$output .= '';
         
-		$output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="'.$words.'" /><br />';
+		$output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="'. htmlentities(stripslashes($words), ENT_QUOTES) .'" /><br />';
         $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'><span style="font-size:0.8em">'.$Language->getText('include_menu','require_all_words').'</span>';
 
 		$output .= '</td><td>';
