@@ -42,8 +42,14 @@ if ($g_pos === FALSE) {
 }
 
 //Cast group_id as int.
-if (isset($_REQUEST['group_id'])) {
-   $group_id = $_REQUEST['group_id'] = $_GET['group_id'] = $_POST['group_id'] = (int)$_REQUEST['group_id'];
+foreach(array(
+        'group_id', 
+        'atid', 
+        'forum_id',
+    ) as $variable) {
+    if (isset($_REQUEST[$variable])) {
+        $$variable = $_REQUEST[$variable] = $_GET[$variable] = $_POST[$variable] = (int)$_REQUEST[$variable];
+    }
 }
 //}}}
 
