@@ -140,7 +140,7 @@ if ($forum_id) {
 	if ((!isset($offset)) || ($offset < 0)) {
 		$offset=0;
 	} 
-
+    $offset = (int)$offset;
 	if (!isset($style)) {
 		$style='nested';
 	}
