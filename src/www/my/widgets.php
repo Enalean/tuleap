@@ -3,6 +3,9 @@ require_once('pre.php');
 require_once('my_utils.php');
 require_once('common/widget/Widget.class.php');
 
+$em =& EventManager::instance();
+$em->processEvent('plugin_load_language_file', null);
+
 function display_widgets($title, $tab, $used_widgets) {
     if (count($tab)) {
         echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';

@@ -14,6 +14,7 @@ require_once('common/widget/Widget.class.php');
 
 $Language->loadLanguageMsg('my/my');
 $em =& EventManager::instance();
+$em->processEvent('plugin_load_language_file', null);
 
 // define undefined vars
 if (!isset($hide_item_id)) {
