@@ -1604,6 +1604,7 @@ INSERT INTO artifact_notification_event_default VALUES (6,'PSS_CHANGE',60,'event
 INSERT INTO artifact_notification_event_default VALUES (7,'ANY_OTHER_CHANGE',70,'event_ANY_OTHER_CHANGE_short_desc','event_ANY_OTHER_CHANGE_desc');
 INSERT INTO artifact_notification_event_default VALUES (8,'I_MADE_IT',80,'event_I_MADE_IT_short_desc','event_I_MADE_IT_desc');
 INSERT INTO artifact_notification_event_default VALUES (9,'NEW_ARTIFACT',90,'event_NEW_ARTIFACT_short_desc','event_NEW_ARTIFACT_desc');
+INSERT INTO artifact_notification_event_default VALUES (10,'COMMENT_CHANGE',100,'event_COMMENT_CHANGE_short_desc','event_COMMENT_CHANGE_desc');
 
 #
 # Snippet category table
@@ -2361,4 +2362,3 @@ TODO plugins
 #
 # EOF
 #
-

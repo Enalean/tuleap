@@ -238,7 +238,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 	$ah=new ArtifactHtml($at,$record['artifact_id']);
 	$sys_lf_sav = $sys_lf;
 	$sys_lf = "\n";
-    $record['follow_ups'] = $ah->showFollowUpComments($at->Group->getID(),true);
+    $record['follow_ups'] = $ah->showFollowUpComments($at->Group->getID(),true,true);
 	$sys_lf = $sys_lf_sav;
 
 	// Dependencies

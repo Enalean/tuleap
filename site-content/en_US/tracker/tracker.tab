@@ -49,6 +49,11 @@ tracker_group_selection	my_proj	my projects
 tracker_group_selection	all_proj	all projects
 #
 #-----------------------------------------------
+# Script: SF/www/tracker/edit_comment.php
+#
+tracker_edit_comment	upd_followup	Update follow-up comment
+#
+#-----------------------------------------------
 # Script: SF/www/tracker/import_admin.php
 #
 tracker_import_admin	not_get_atf	Could Not Get ArtifactTypeFactory
@@ -297,6 +302,7 @@ tracker_include_artifact	add_comment	Add A Comment:
 tracker_include_artifact	depend_on	Dependent on:
 tracker_include_artifact	cc_address	CC Address
 tracker_include_artifact	comment	Comment
+tracker_include_artifact	delete_comment	Delete this Follow-up Comment?
 tracker_include_artifact	added_by	Added by
 tracker_include_artifact	delete_cc	Delete this CC address?
 tracker_include_artifact	add_cc	Add CC:
@@ -308,6 +314,8 @@ tracker_include_artifact	update_sent	Artifact Update Sent
 tracker_include_artifact	changes_by	Changes by:
 tracker_include_artifact	anon_user	Anonymous user
 tracker_include_artifact	add_flup_comment	Additional Follow-up Comments
+tracker_include_artifact	rem_followup	Removed Follow-up Comment
+tracker_include_artifact	add_followup	Added Follow-up Comment
 tracker_include_artifact	add_attachment	Additional Artifact Attachment
 tracker_include_artifact	file_name	File name:
 tracker_include_artifact	what	What
@@ -322,6 +330,8 @@ tracker_include_artifact	is_copy	this $1 is a copy of $2
 tracker_include_artifact	copy_of	Copy of $1
 tracker_include_artifact	copy	Copy
 tracker_include_artifact	references	References:
+tracker_include_artifact	flup_hidden	[Not Recorded]
+tracker_include_artifact	del	del
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
@@ -573,6 +583,8 @@ tracker_common_artifact	field_err	 Artifact created, but failed to insert the fi
 tracker_common_artifact	def_err	 Artifact created, but failed to insert the default field value - $1 : $2
 tracker_common_artifact	enter_email	 You need to enter an email!
 tracker_common_artifact	add_comment	 Comment added to artifact 
+tracker_common_artifact	comment_removed	Follow-up Comment removed
+tracker_common_artifact	err_del_comment	Error deleting Follow-up Comment ID $1: $2 
 tracker_common_artifact	field_upd_fail	Failed to update the field value $1
 tracker_common_artifact	canned_used	 Canned Response Used 
 tracker_common_artifact	unable_canned	 Unable to use Canned Response 
@@ -591,6 +603,8 @@ tracker_common_artifact	depend_removed	Dependency Removed
 tracker_common_artifact	bad_field_permission_submission	You are not allowed to submit the field $1.
 tracker_common_artifact	bad_field_permission_update	You are not allowed to update the field $1.
 tracker_common_artifact	bad_field_value	The value $2 is not a valid value for the field $1.
+tracker_common_artifact	followup_upd_succ	Follow-up Comment Update Successful.
+tracker_common_artifact	followup_upd_fail	Follow-up Comment Update Failed.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class.php
@@ -734,6 +748,7 @@ tracker_common_types	event_PSS_CHANGE_desc	Priority,Status,Severity changes
 tracker_common_types	event_ANY_OTHER_CHANGE_desc	Any changes not mentioned above
 tracker_common_types	event_I_MADE_IT_desc	I am the author of the change
 tracker_common_types	event_NEW_ARTIFACT_desc	A new artifact has been submitted
+tracker_common_types	event_COMMENT_CHANGE_desc	A followup comment has been changed
 #
 # Tracker permissions
 #

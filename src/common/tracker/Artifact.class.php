@@ -268,17 +268,20 @@ class Artifact extends Error {
      *
      *  @return int : the artifact_history_id
      */
-    function addHistory ($field,$old_value,$new_value,$type=false,$email=false) {
-	//MLS: add case where we add CC and file_attachment into history for task #240
-	if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by' || $field == 'comment') {
-	   $name = $field;
-	} else {
-           // If field is not to be kept in bug change history then do nothing
-           if (!$field->getGlobalKeepHistory()) { return; }
-	   $name = $field->getName();
-	}
-        
-        /*
+    function addHistory ($field,$old_value,$new_value,$type=false,$email=false,$ahid=false) {
+    	//MLS: add case where we add CC and file_attachment into history for task #240
+    	if (is_string($field)) {
+    		if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by' || $field == 'comment' || ( preg_match("/^(lbl_)/",$field) && preg_match("/(_comment)$/",$field) )) {
+    			$name = $field;
+    		} 
+    	else {
+    		// If field is not to be kept in bug change history then do nothing
+    		if (!$field->getGlobalKeepHistory()) { return; }
+    			$name = $field->getName();
+    		}
+    	}
+
+    	/*
           handle the insertion of history for these parameters
         */
         if ($email) {
@@ -302,8 +305,9 @@ class Artifact extends Error {
         } else {
             // No comment type specified for a followup comment
             // so force it to None (100)
-            if ($name == 'comment') {
-                $fld_type = ',type'; $val_type = ",'100'";
+            if ($name == 'comment' || (preg_match("/^(lbl_)/",$name) && preg_match("/(_comment)$/",$name))) {
+                $fld_type = ',type'; 
+                $val_type = ",'100'";
             }
         }             
         
@@ -540,13 +544,13 @@ class Artifact extends Error {
             // For none project members force the comment type to None (100)
             if ( !user_isloggedin() ) {
                 if ( $email ) {
-                    $this->addHistory('comment',htmlspecialchars($comment), "", 100, $email);
+                    $this->addHistory('comment', "", htmlspecialchars($comment), 100, $email);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','enter_email'));
                     return false;
                 }
             } else {
-                $this->addHistory('comment',htmlspecialchars($comment), "", 100);
+                $this->addHistory('comment', "", htmlspecialchars($comment), 100);
             }
             $changes['comment']['add'] = stripslashes($comment);
             $changes['comment']['type'] = $Language->getText('global','none');
@@ -587,7 +591,7 @@ class Artifact extends Error {
       }
       
       if ($comment != '') {
-          $this->addHistory('comment',htmlspecialchars($comment), '', $comment_type_id);
+          $this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id);
           $changes['comment']['add'] = stripslashes($comment);
 
 	$field = $art_field_fact->getFieldFromName("comment_type_id");
@@ -605,7 +609,7 @@ class Artifact extends Error {
      *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
      *  @return boolean
      */
-    function addFollowUpComments($parsed_comments) {
+    function addFollowUpComments($parsed_comments,&$changes) {
       global $Language;
 
         while (list(,$arr) = each($parsed_comments)) {        
@@ -624,7 +628,7 @@ class Artifact extends Error {
 	    }	
 
 	    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-            		"VALUES (".$this->getID().",'comment','".$arr['comment']."','','$user_id','$email','".$arr['date']."','".$arr['type']."')";
+            		"VALUES (".$this->getID().",'comment','','".$arr['comment']."','$user_id','$email','".$arr['date']."','".$arr['type']."')";
 	    //echo $sql."<br>\n";
 
             db_query($sql);
@@ -634,7 +638,52 @@ class Artifact extends Error {
 	return true;
     }
         
-        
+    /**
+    * Update a follow-up comment
+    * 
+    * @param comment_id: follow-up comment id
+    * @param comment_txt: text of the follow-up comment
+    * 
+    * @return boolean
+    */
+    function updateFollowupComment($comment_id,$comment_txt,&$changes) {
+
+    	if ($comment_txt == '') {
+    		//don't  allow submit of empty comment
+    		return false;
+    	}
+
+    	$sql = sprintf('SELECT field_name, new_value FROM artifact_history'
+			.' WHERE artifact_id=%d'
+			.' AND artifact_history_id=%d'
+			.' AND (field_name="%s" OR field_name LIKE "%s")',
+    	$this->getID(),$comment_id,"comment","lbl_%_comment");
+    	$qry = db_query($sql);
+    	$new_value = db_result($qry,0,'new_value');
+
+    	if ($new_value == $comment_txt) {
+    		//comment doesn't change
+    		return false;
+    	}
+
+    	if ($qry) {
+			$fname = db_result($qry,0,'field_name');
+			if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+    		    $comment_lbl = $fname;
+			} else {
+				$comment_lbl = "lbl_".$comment_id."_comment";    
+			}
+    		//now add new comment entry
+    		$this->addHistory($comment_lbl,$new_value,$comment_txt,false,false,$comment_id);
+    		$changes['comment']['del'] = stripslashes($new_value);
+    		$changes['comment']['add'] = stripslashes($comment_txt);
+    		return true;
+    	} else {
+    		return false;
+    	}
+
+    }
+    
     /**
      *  Update an artifact. Rk: vfl is an variable list of fields, Vary from one project to another
      *  return true if artifact updated, false if nothing changed or DB update failed
@@ -1233,6 +1282,40 @@ class Artifact extends Error {
     }
 
     /**
+     * Delete a followup comment from the artifact
+     *
+     * @param aid: the artifact id
+     * @param comment_id: the followup comment id
+     *
+     * @return boolean
+     */    
+    function deleteFollowupComment($aid,$comment_id) {
+
+    	//Delete the followup comment
+    	$sel = sprintf('SELECT field_name, new_value FROM artifact_history'
+			.' WHERE (field_name = "%s" OR field_name LIKE "%s")'
+			.' AND artifact_history_id = %d'
+			.' AND artifact_id = %d',
+    		"comment","lbl_%_comment",$comment_id,$aid);
+    	$res = db_query($sel);
+    	$new_value = db_result($res,0,'new_value');
+    	if ($res) {
+			$fname = db_result($res,0,'field_name');
+			if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+    		    $comment_lbl = $fname;
+			} else {
+				$comment_lbl = "lbl_".$comment_id."_comment";    
+			}    		
+    		//now add a new history entry
+    		$this->addHistory($comment_lbl,$new_value,'',false,false,$comment_id);
+    		$GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','comment_removed'));
+    	} else {
+    		$GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment',array($comment_id,db_error($res))));
+    	}
+
+    }
+    
+    /**
      * Return if the status is closed status
      *
      * @param status: the status
@@ -1256,7 +1339,24 @@ class Artifact extends Error {
         return $this->data_array;
     }
 
-        
+    /**
+     * Return the user (user_id) that have posted follow up (comment_id) 
+     *
+     * @return int
+     */
+    function getCommenter($comment_id) {
+      
+        $sql = sprintf('SELECT mod_by FROM artifact_history'
+			.' WHERE artifact_id=%d'
+			.' AND field_name="%s"'
+			.' AND mod_by != 100'
+			.' AND artifact_history_id=%d',
+			$this->getID(),"comment",$comment_id);
+	$res = db_query($sql);
+	return db_result($res,0,'mod_by');
+      
+    }
+    
     /**
      * Return the users that have posted follow ups 
      *
@@ -1282,6 +1382,19 @@ class Artifact extends Error {
         return db_query($sql);
     }
 
+    function getFollowup($comment_id) {
+    
+        $sql = sprintf('SELECT new_value FROM artifact_history'
+			.' WHERE (field_name="%s" OR field_name LIKE "%s")'
+			.' AND artifact_history_id=%d'
+			.' AND new_value <> ""',
+			"comment","lbl_%_comment",$comment_id);
+        $res = db_query($sql); 
+	$new_value = db_result($res,0,'new_value');
+	return $new_value;
+	
+    }
+    
     /**
      * Return the follow ups 
      *
@@ -1290,40 +1403,81 @@ class Artifact extends Error {
     function getFollowups () {
         global $art_field_fact;
 
-        $field = $art_field_fact->getFieldFromName('comment_type_id');
-        if ( $field ) {
-            // Look for project specific values first
-	  $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
-	      "FROM artifact_history,artifact_field_value_list,artifact_field,user ".
-	      "WHERE artifact_history.artifact_id=".$this->getID()." ".
-	      "AND artifact_history.field_name = 'comment' ".
-	      "AND artifact_history.mod_by=user.user_id ".
-	      "AND artifact_history.type = artifact_field_value_list.value_id ".
-	      "AND artifact_field_value_list.field_id = artifact_field.field_id ".
-	      "AND artifact_field_value_list.group_artifact_id = artifact_field.group_artifact_id ".
-	      "AND artifact_field.group_artifact_id =".$this->ArtifactType->getID()." ".
-	      "AND artifact_field.field_name = 'comment_type_id' ".
-	      "ORDER BY artifact_history.date DESC";
-            //echo $sql;
-            $res_value = db_query($sql);
-            $rows=db_numrows($res_value);
-                        
-            //echo "sql=".$sql." - rows=".$rows."<br>";
-        } else {
-            // Look for project specific values first
-            $sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
-                "FROM artifact_history,user ".
-                "WHERE artifact_history.artifact_id=".$this->getID()." ".
-                "AND artifact_history.field_name = 'comment' ".
-                "AND artifact_history.mod_by=user.user_id ".
-                "ORDER BY artifact_history.date DESC";
-            //echo $sql;
-            $res_value = db_query($sql);
-            $rows=db_numrows($res_value);
-                        
-        }
-        return($res_value);
+    	$flup_array = array();
+    	$qry = sprintf('SELECT artifact_history_id, date FROM artifact_history'.
+    					' WHERE artifact_id = %d'.
+    					' AND field_name = "%s"'.
+    					' AND new_value <> ""',
+    	$this->getID(),"comment");
+    	$res = db_query($qry);
+    	while ($row = db_fetch_array($res)) {
+    		$ahid = $row['artifact_history_id'];
+    		$fname = "lbl_".$ahid."_comment";
+    		$sel = sprintf('SELECT NULL FROM artifact_history'.
+    						' WHERE field_name = "%s"'.
+    						' AND artifact_id = %d',
+    		$fname,$this->getID());
+    		$result = db_query($sel);
+    		if (db_numrows($result) < 1) {
+    			//the followup comment was not edited/removed ==> add it to the list of comments to be displayed    			
+    			$flup_array[$ahid] = $row['date'];
+    		} else {
+    			//pick the latest
+    			$latest = sprintf('SELECT artifact_history_id , new_value FROM artifact_history'.
+    								' WHERE field_name = "%s"'.
+    								' AND artifact_id = %d'.
+    								' AND date = (SELECT MAX(date) FROM artifact_history'.
+    								' WHERE field_name = "%s"'.
+    								' AND artifact_id = %d)',
+    			$fname,$this->getID(),$fname,$this->getID());
+    			$res_latest = db_query($latest);
+    			$new_value = db_result($res_latest,0,'new_value');
+    			if ($new_value <> '') {
+    				//if new_value eq '' ==> the followup comment was removed, don't display it
+    				$art_hist_id = db_result($res_latest,0,'artifact_history_id');    				
+    				$flup_array[$art_hist_id] = $row['date'];
+    			}
+    		}
+    	}
+    	arsort($flup_array);
+    	$comment_array = array_keys($flup_array);    	
+    	
+    	$field = $art_field_fact->getFieldFromName('comment_type_id');
+    	if ( $field ) {
+    		// Look for project specific values first
+    		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
+    		"FROM artifact_history,artifact_field_value_list,artifact_field,user ".
+    		"WHERE artifact_history.artifact_id=".$this->getID()." ".
+    		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
+    		"AND artifact_history.mod_by=user.user_id ".
+    		"AND artifact_history.new_value <> '' ".
+    		"AND artifact_history.type = artifact_field_value_list.value_id ".
+    		"AND artifact_history.artifact_history_id IN (".implode(',',$comment_array).") ".
+    		"AND artifact_field_value_list.field_id = artifact_field.field_id ".
+    		"AND artifact_field_value_list.group_artifact_id = artifact_field.group_artifact_id ".
+    		"AND artifact_field.group_artifact_id =".$this->ArtifactType->getID()." ".
+    		"AND artifact_field.field_name = 'comment_type_id' ".
+    		"ORDER BY FIELD(artifact_history_id, ".implode(',',$comment_array).")";    		    	
+    		$res_value = db_query($sql);
+    		$rows=db_numrows($res_value);
 
+    		//echo "sql=".$sql." - rows=".$rows."<br>";
+    	} else {
+    		// Look for project specific values first
+    		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
+    		"FROM artifact_history,user ".
+    		"WHERE artifact_history.artifact_id=".$this->getID()." ".
+    		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
+    		"AND artifact_history.mod_by=user.user_id ".
+    		"AND artifact_history.new_value <> '' ".
+    		"AND artifact_history.artifact_history_id IN (".implode(',',$comment_array).") ".
+    		"ORDER BY FIELD(artifact_history_id, ".implode(',',$comment_array).")";    		
+    		$res_value = db_query($sql);
+    		$rows=db_numrows($res_value);
+
+    	}
+    	return($res_value);
+    	
     }
         
     /**
@@ -1332,12 +1486,15 @@ class Artifact extends Error {
      * @return array
      */
     function getHistory () {
-        $sql="select artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,artifact_history.type,user.user_name ".
+
+    	//Addition of new followup comments is not recorded in history (update and removal of followups is recorded)
+		$sql="SELECT artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,artifact_history.type,user.user_name ".
             "FROM artifact_history,user ".
-            "WHERE artifact_history.mod_by=user.user_id ".
-            "AND artifact_history.field_name <> 'comment' ".
-            "AND artifact_id=".$this->getID()." ORDER BY artifact_history.date DESC";
-        return db_query($sql);
+            "WHERE artifact_history.mod_by=user.user_id ".            
+            "AND artifact_id=".$this->getID().
+            " AND artifact_history.field_name <> 'comment' ".
+	    	"ORDER BY artifact_history.date DESC";
+    	return db_query($sql);
     }
 
     /**
@@ -1870,6 +2027,160 @@ class Artifact extends Error {
       
     }
     
+    /**
+      * Checks if a user is allowed to delete and update a follow-up comment
+      *
+      * @param user_id 
+      * @param comment_id
+      *
+      * @return boolean
+      */    
+    function userCanEditFollowupComment($comment_id) {
+
+    	//if user is not logged in, he cannot update/delete comments
+    	if (! user_isloggedin()) {
+    		return false;
+    	}
+    	
+    	//tracker admin can delete and update followup comments
+    	if ($this->ArtifactType->userIsAdmin(user_getid())) {    		
+    		return true;
+    	} 
+    	
+    	$com_res = $this->getOriginalCommentSubmitter($comment_id);
+    	$commenter = db_result($com_res,0,'mod_by'); 
+    	if ($commenter <> user_getid()) {
+    		return false;
+    	} else {
+    		$sql = sprintf('SELECT field_name, artifact_id FROM artifact_history'
+							.' WHERE artifact_history_id = %d'
+							.' AND (field_name = "%s" OR field_name LIKE "%s")',
+    						$comment_id,"comment","lbl_%_comment");
+    		$res = db_query($sql);
+    		$field_name = db_result($res,0,'field_name');
+    		$aid = db_result($res,0,'artifact_id');
+    		if ($field_name == "comment") {
+    			$cid = $comment_id;				
+    		} else {
+    			$cid = (int) substr($field_name,4,-8);
+    		}
+    		$qry = sprintf('SELECT artifact_history_id FROM artifact_history'
+							.' WHERE artifact_id = %d'
+							.' AND artifact_history_id > %d'
+							.' AND field_name = "%s"',
+    						$aid,$cid,"comment");
+    		$result = db_query($qry);
+    		if (db_numrows($result) > 0) {
+    			//check if it is really the last comment displayed in the artifact
+    			$deleted = 0;
+    			while ($rows = db_fetch_array($result)) {
+    				$ahid = $rows['artifact_history_id'];
+					if ($this->isFollowupCommentDeleted($ahid)) {
+						$deleted ++; 								
+					}
+    			}
+    			if ($deleted == db_numrows($result)) {
+    				// all comments that have id > $cid, have been deleted
+ 					return true;	
+    			} else {
+    				// there are comments with id > $cid , and not deleted
+					return false;
+    			}
+    		} else {
+    			//it is the last comment in the artifact
+    			return true;
+    		}
+    	}
+    }
+    
+    /**
+     * Checks if the comment was removed
+     * 
+     * @params int comment_id
+     * 
+     * @return boolean
+     */
+    function isFollowupCommentDeleted($comment_id) {
+    	
+    	$sql = sprintf('SELECT artifact_id, new_value FROM artifact_history'
+						.' WHERE artifact_history_id = %d',
+    					$comment_id);
+    	$res = db_query($sql);
+    	if (db_result($res,0,'new_value') == "") {
+    		return true;				
+    	}
+    	$lbl = "lbl_".$comment_id."_comment";
+    	$aid = db_result($res,0,'artifact_id');
+    	$qry = sprintf('SELECT NULL FROM artifact_history'
+						.' WHERE artifact_id = %d'
+						.' AND field_name = "%s"'
+						.' AND new_value = ""',
+    					$aid,$lbl);
+    	$result = db_query($qry);
+    	if (db_numrows($result) > 0) {
+    		return true;				
+    	} else {
+    		return false; 
+    	}
+    	
+    }
+    
+    /**
+     * Gets the original submitter of a follow-up comment
+     * 
+     * @param int comment_id
+     * 
+     * @return result set 
+     */
+    function getOriginalCommentSubmitter($comment_id) {
+    	
+    	$sql = sprintf('SELECT field_name, mod_by, email FROM artifact_history'.
+    					' WHERE artifact_history_id = %d',
+    					$comment_id);
+    	$res = db_query($sql);
+    	$field_name = db_result($res,0,'field_name');
+    	if ($field_name == "comment") {
+    		return $res;				
+    	} else if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
+    		// extract id of the original comment
+    		$id = (int) substr($field_name,4,-8);
+    		$qry = sprintf('SELECT mod_by, email FROM artifact_history'.
+    						' WHERE artifact_history_id = %d'.
+    						' AND field_name = "%s"',
+    						$id,"comment");
+    		$result = db_query($qry);
+    		return $result;				
+    	}
+    	
+    }
+
+    /**
+     * Gets the original submission date of a follow-up comment
+     * 
+     * @param int comment_id
+     * 
+     * @return result set 
+     */
+    function getOriginalCommentDate($comment_id) {
+        
+    	$sql = sprintf('SELECT field_name, date FROM artifact_history'.
+    					' WHERE artifact_history_id = %d',
+    					$comment_id);
+    	$res = db_query($sql);
+    	$field_name = db_result($res,0,'field_name');
+    	if ($field_name == "comment") {
+    		return $res;				
+    	} else if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
+    		// extract id of the original comment 
+    		$id = (int) substr($field_name,4,-8);
+    		$qry = sprintf('SELECT date FROM artifact_history'.
+    						' WHERE artifact_history_id = %d'.
+    						' AND field_name = "%s"',
+    						$id,"comment");
+    		$result = db_query($qry);
+    		return $result;				    		
+    	}    	
+    }    
     
         /**
     * Send different messages to persons affected by this artifact with respect 
@@ -2278,8 +2589,12 @@ class Artifact extends Error {
             
             // Loop throuh the follow-up comments and format them
             for ($i=0; $i < $rows; $i++) {
-                        $comment_type = db_result($result, $i, 'comment_type');
-			$comment_type_id = db_result($result, $i, 'comment_type_id');
+                $comment_type = db_result($result, $i, 'comment_type');
+				$comment_type_id = db_result($result, $i, 'comment_type_id');
+				$comment_id = db_result($result, $i, 'artifact_history_id');
+			    $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
+			    $orig_date = $this->getOriginalCommentDate($comment_id);
+			    
 		        if ( ($comment_type_id == 100) ||($comment_type == "") )
                             $comment_type = '';
                         else
@@ -2302,32 +2617,50 @@ class Artifact extends Error {
                         // I wish we had sprintf argument swapping in PHP3 but
                         // we don't so do it the ugly way...
                         if ($ascii) {
+							$comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
+							if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
+								$comment_edit = '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'"> ['.$GLOBALS['Language']->getText('tracker_fieldeditor','edit').']</a>';
+								$comment_del = '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.
+					   						'" onClick=\'return confirm("'.$GLOBALS['Language']->getText('tracker_include_artifact','delete_comment').'")\'><img src="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></a>';
+								$comment_txt = $comment_edit."  ".$comment_del."<br>".$comment_txt;					
+							}                        	                        	
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
                                                     $comment_type,
-                                                    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+                                                    $comment_txt
                                                     );
                                 } else {
                                     $out .= sprintf($fmt,
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):db_result($result, $i, 'user_name')),
-                                                    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
+                                                    $comment_txt
                                                     );
                                 }
                         } else {
+			        		if (db_result($result,$i,'new_value') == '') {
+				    			$comment_txt = util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id);
+							} else {
+				    			$comment_txt = util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
+							}
+							if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
+								$comment_edit = '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'"> ['.$GLOBALS['Language']->getText('tracker_fieldeditor','edit').']</a>';
+								$comment_del = '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.
+					   						'" onClick=\'return confirm("'.$GLOBALS['Language']->getText('tracker_include_artifact','delete_comment').'")\'>['.$GLOBALS['Language']->getText('tracker_include_artifact','del').']</a>';
+								$comment_txt = $comment_edit."  ".$comment_del."<br>".$comment_txt; 			
+							}                        	                        	
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.db_result($result, $i, 'user_name').'">'.db_result($result, $i, 'user_name').'</a>'),
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.db_result($orig_subm, 0, 'user_name').'">'.db_result($orig_subm, 0, 'user_name').'</a>'),
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                                     $comment_type,
-                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id));
+                                                    $comment_txt);
                                 } else {
                                     $out .= sprintf($fmt,
-                                                    (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.db_result($result, $i, 'user_name').'">'.db_result($result, $i, 'user_name').'</a>'),
-                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id));
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.db_result($orig_subm, 0, 'user_name').'">'.db_result($orig_subm, 0, 'user_name').'</a>'),
+                                                    format_date($sys_datefmt,db_result($orig_date, $i, 'date')),
+                                                    $comment_txt);
                                 }
                         }
             }
