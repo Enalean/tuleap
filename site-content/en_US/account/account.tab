@@ -99,6 +99,13 @@ account_change_timezone	no_update	Nothing Updated
 account_change_timezone	choose_tz	Please choose a timezone other than none
 #
 #-----------------------------------------------
+# Script: SF/www/scripts/check_pw.js.php
+#
+account_check_pw	password_robustness	Password robustness:
+account_check_pw	good	Good
+account_check_pw	bad	Bad
+#
+#-----------------------------------------------
 # Script: SF/www/account/deleted.php
 #
 account_deleted	title	Deleted Account

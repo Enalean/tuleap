@@ -103,6 +103,13 @@ account_change_timezone	no_update	Aucune mise à jour effectuée
 account_change_timezone	choose_tz	Prière de choisir un autre fuseau horaire que 'Aucun'
 #
 #-----------------------------------------------
+# Script: SF/www/scripts/check_pw.js.php
+#
+account_check_pw	password_robustness	Robustesse du mot de passe :
+account_check_pw	good	Bonne
+account_check_pw	bad	Mauvaise
+#
+#-----------------------------------------------
 # Script: SF/www/account/deleted.php
 #
 account_deleted	title	Compte utilisateur détruit
