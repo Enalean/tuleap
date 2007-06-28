@@ -6,7 +6,7 @@
 //
 // Copyright 2004-2005 (c) The CodeX Team, Xerox. All rights reserved
 //
-// $Id$
+// 
 
 
 /*

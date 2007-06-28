@@ -2,7 +2,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# 
 #
 # Database upgrade script (see dbXXXX_template for instructions)
 #

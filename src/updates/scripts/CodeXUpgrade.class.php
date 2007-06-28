@@ -3,7 +3,7 @@
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id$
+ * 
  *
  * CodeXUpgrade
  * Generic class for upgrading CodeX Server.
@@ -18,7 +18,7 @@ Class must be Update_XXX where XXX is the same as the filename
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
 //
-// $Id$
+// 
 
 
 require_once('CodeXUpgrade.class.php');

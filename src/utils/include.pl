@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id$
+# 
 #
 # include.pl - Include file for all the perl scripts that contains reusable functions
 #
@@ -91,4 +91,47 @@ sub get_codex_user {
   #  return $1 if /^\s*User\s+(.*)\s*/;
   #}
 
-}      
+}
+
+#############################
+# Compute if the current server is master or not
+# Note: A server alone (w/o satellites) is a master.
+#############################
+sub is_current_server_master {
+	my $server_is_master = 0;
+
+	# If no servers == only master
+	if ($sys_server_id != 0) {
+		my $masterquery = "SELECT NULL FROM server WHERE id = $sys_server_id AND is_master = 1";
+		my $masterc = $dbh->prepare($masterquery);
+		$masterc->execute();
+		if ($masterc->rows == 1) {
+		    $server_is_master = 1;
+		}
+	} else {
+		$server_is_master = 1;
+	}
+	return $server_is_master;
+}
+
+#############################
+# For master only: return true if there we are in a distributed architecture.
+#############################
+sub satellite_disabled {
+    return ($sys_server_id == 0);
+}
+
+#############################
+# Check if for a service configured to be hosted on $location - $server_id, the
+# current server is the good one.
+# Params:
+# $server_is_master: Is the current server the master or not.
+# $location:         The location for service (either 'master' or 'satellite').
+# $server_id:        If service on a satellite, server_id of this satellite.
+#############################
+sub service_available_on_server {
+    my ($server_is_master, $location, $server_id) = @_;
+    return (satellite_disabled()
+	    || ($location eq "master" && $server_is_master) 
+	    || ($location eq "satellite" &&  $server_id == $sys_server_id));
+}

@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id$
+// 
 //
 //
 //	Originally by to the SourceForge Team,1999-2000
@@ -14,6 +14,7 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('HTML_Graphs.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
+require_once('javascript_helpers.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -2481,12 +2482,13 @@ EOS;
                 <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
                 
                 if ( !$ro ) {
-		  echo '
+                    echo '
                                 '.$Language->getText('tracker_include_artifact','fill_cc_list_msg');
-		  echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-		  echo '<input type="text" name="add_cc" size="30">';
-		  echo $Language->getText('tracker_include_artifact','fill_cc_list_cmt');
-		  echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
+                    echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
+                    echo '<input type="text" name="add_cc" id="tracker_cc" size="30">';
+                    echo $Language->getText('tracker_include_artifact','fill_cc_list_cmt');
+                    echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
+                    autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
                 }
                 
 	

@@ -29,7 +29,7 @@ $HTML->header(array('title'=>$Language->getText('admin_search','title')));
 if ($usersearch) {
 
 	$sql = "select distinctrow * from user where user_id like '%$search%' or user_name like '%$search%' or email like '%$search%' or realname like '%$search%'";
-	$result = db_query($sql) or exit_db(db_error());
+	$result = db_query($sql) or exit_error("ERROR",db_error());
 	if (db_numrows($result) < 1) {
 	    print $Language->getText('admin_search','nomatch').".<p><a href=\"/admin/\">".$Language->getText('global','back')."</a>";
 
@@ -51,7 +51,7 @@ if ($usersearch) {
 if ($groupsearch) {
 
 	$sql = "select distinctrow * from groups where group_id like '%$search%' or unix_group_name like '%$search%' or group_name like '%$search%'";
-	$result = db_query($sql) or exit_db(db_error());
+	$result = db_query($sql) or exit_error("ERROR",db_error());
 
 	if (db_numrows($result) < 1) {
 

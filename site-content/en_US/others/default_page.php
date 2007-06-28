@@ -5,7 +5,7 @@
 // This file is licensed under the CodeX Component Software License
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 // Purpose:
 //    Default Web Page for groups that haven't setup their page yet

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 /*
 
@@ -397,7 +397,7 @@ if ($forum_id) {
                         $pv_param = "";
                     }               
                     $ret_val .= '<B><span class="normal">
-                <A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
+				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
 				<B>'.$Language->getText('forum_forum','next_msg').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
                 } else {
                     $ret_val .= '&nbsp;';

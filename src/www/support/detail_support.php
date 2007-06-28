@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 support_header(array ('title'=>'Support Request Detail: '.$support_id,
 		      'help' => 'SupportRequestProcessing.html'));

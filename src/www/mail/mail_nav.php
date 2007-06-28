@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 echo "\n\n<TABLE BORDER=0 WIDTH=\"100%\">".
 	"\n<TR><TD NOWRAP>";

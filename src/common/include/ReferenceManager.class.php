@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2006. All rights reserved
  * 
- * $Id$
+ * 
  *
  * Reference Manager
  */
@@ -378,7 +378,11 @@ class ReferenceManager {
                 }
             }
         } else {
-            $ref_gid=$GLOBALS['group_id']; // might not be set
+            if (array_key_exists('group_id', $GLOBALS)) {
+                $ref_gid=$GLOBALS['group_id']; // might not be set
+            } else {
+                $ref_gid = '';
+            }
         }
 
         $value=$match[3];

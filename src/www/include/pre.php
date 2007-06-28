@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 /*
 	redirect to proper hostname to get around certificate problem on IE 5

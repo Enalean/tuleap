@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 //
 // adduser.php - All the forms and functions to manage unix users
 //

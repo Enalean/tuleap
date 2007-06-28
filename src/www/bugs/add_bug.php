@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 bug_header(array ('title'=>'Submit a Bug',
 		  'help' => 'BugSubmission.html'));

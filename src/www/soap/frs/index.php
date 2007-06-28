@@ -20,7 +20,7 @@ $server->configureWSDL('CodeXFRSAPI',$uri,false,'rpc','http://schemas.xmlsoap.or
 
 
 //include the common TYPES API
-//require_once('../common/types.php');
+require_once('../common/types.php');
 
 // include the TRACKER API
 require_once('./frs.php');

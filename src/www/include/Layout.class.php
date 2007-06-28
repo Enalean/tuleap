@@ -5,7 +5,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //              
-// $Id$
+// 
 
 
 require_once('common/include/Response.class.php');
@@ -143,6 +143,35 @@ class Layout extends Response {
             $feedback = '<H3><span class="feedback">'.$GLOBALS['feedback'].'</span></H3>';
         }
         return $feedback;
+    }
+    
+    function widget(&$widget, $layout_id, $column_id, $is_minimized, $display_preferences) {
+        echo '<div class="widget" id="widget_'. $widget->id .'-'. $widget->getInstanceId() .'">';
+        echo '<div class="widget_titlebar">';
+        echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
+        echo '<div class="widget_titlebar_close"><a href="updatelayout.php?action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'X')) .'</a></div>';
+        if ($is_minimized) {
+            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_plus.png', array('alt' => '+')) .'</a></div>';
+        } else {
+            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_minus.png', array('alt' => '-')) .'</a></div>';
+        }
+        if (strlen($widget->getPreferences())) {
+            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">Preferences</a></div>';
+        }
+        if ($widget->hasRss()) {
+            echo '<div class="widget_titlebar_rss"><a href="widget.php?action=rss&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">rss</a></div>';
+        }
+        echo '</div>';
+        $style = '';
+        if ($is_minimized) {
+            $style = 'display:none;';
+        }
+        echo '<div class="widget_content" style="'. $style .'">';
+        if ($display_preferences) {
+            echo '<div class="widget_preferences">'. $widget->getPreferencesForm() .'</div>';
+        }
+        echo $widget->getContent() .'</div>';
+        echo '</div>';
     }
     
 	// Box Top, equivalent to html_box1_top()

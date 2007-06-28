@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id$
+// 
 //
 //
 //      Originally by to the SourceForge Team,1999-2000
@@ -154,7 +154,7 @@ if ( $func == 'gotoid' ) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
 			// Files
-                        if ($add_file && !util_check_fileupload($input_file)) {
+                        if (isset($add_file) && $add_file && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
                         
@@ -172,7 +172,7 @@ if ( $func == 'gotoid' ) {
                                 //
                                 //      Attach file to this Artifact.
                                 //
-                                if ($add_file) {
+                                if (isset($add_file) && $add_file) {
                                         $afh=new ArtifactFileHtml($ah);
                                         if (!$afh || !is_object($afh)) {
                                                 $feedback .= $Language->getText('tracker_index','not_create_file');
@@ -445,7 +445,7 @@ if ( $func == 'gotoid' ) {
                         //
                         //  Attach file to this Artifact.
                         //
-                        if ($add_file) {
+                        if (isset($add_file) && $add_file) {
                                 $afh=new ArtifactFileHtml($ah);
                                 if (!$afh || !is_object($afh)) {
                                         $feedback .= $Language->getText('tracker_index','not_create_file');
@@ -475,7 +475,7 @@ if ( $func == 'gotoid' ) {
                         //
                         //      Show just one feedback entry if no errors
                         //
-                        if (!$was_error) {
+                        if (!isset($was_error) || !$was_error) {
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
                         }
                         require('./browse.php');

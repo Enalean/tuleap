@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 require_once('www/snippet/snippet_utils.php');
 
 function snippet_mainpage() {

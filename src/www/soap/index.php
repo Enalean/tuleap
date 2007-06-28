@@ -26,14 +26,8 @@ require_once('./common/types.php');
 //include the common SESSION API
 require_once('./common/session.php');
 
-// include the common USER API
-require_once('./common/user.php');
-
 // include the common GROUP API
 require_once('./common/group.php');
-
-// include the ACCOUNT API
-require_once('./account/account.php');
 
 // include the TRACKER API
 require_once('./tracker/tracker.php');

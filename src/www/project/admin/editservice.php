@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2004. All rights reserved
 //
-// $Id$
+// 
 //
 //
 //  Written for CodeX by Nicolas Guerin

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$ 
+//  
 require_once('pre.php');
 require('../admin/project_admin_utils.php');
 require('./source_code_access_utils.php');

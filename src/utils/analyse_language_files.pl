@@ -4,7 +4,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2005. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# 
 #
 #  License:
 #      This file is licensed under the GNU General Public License

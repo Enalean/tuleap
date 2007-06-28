@@ -2,7 +2,7 @@
 /**
 * Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
 *
-* $Id$
+* 
 */
 
 require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
@@ -18,7 +18,7 @@ class CLI_Action_Tracker_Comments extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'artifact_id',
-            'description'    => '--id=<artifact_id>           ID of the artifact.',
+            'description'    => '--id=<artifact_id>    ID of the artifact.',
             'parameters'     => array('id'),
         ));
     }

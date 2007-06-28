@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id$
+// 
 //
 //
 //	Originally by to the SourceForge Team,1999-2000

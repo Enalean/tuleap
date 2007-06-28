@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 
 
 // This is the SQL query to retrieve all the bugs which depends on another bug

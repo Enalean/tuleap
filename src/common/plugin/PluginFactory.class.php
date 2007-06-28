@@ -11,7 +11,7 @@ require_once('Plugin.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id$
+ * 
  *
  * PluginFactory
  */

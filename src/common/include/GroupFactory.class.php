@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id$
+// 
 //
 //
 //  Written for CodeX by Stephane Bouhet
@@ -93,6 +93,28 @@ class GroupFactory extends Error {
 			return false;
 		}
 		return $result;
+	}
+
+    /**
+	 *	return an array of Group for the current user (the groups the user is member of)
+	 *
+	 *	@return	array of {Group}
+	 */
+	function getMyGroups() {
+        global $Language;
+		$result_my_groups = $this->getMemberGroups();
+        if ($this->isError() || !$result_my_groups) {
+            return false;
+        } else {
+            $my_groups = array();
+            while ($res_group = db_fetch_array($result_my_groups)) {
+                $group = new Group($res_group['group_id']);
+                if ($group && !$group->isError()) {
+                    $my_groups[$group->getID()] = $group;
+                }
+            }
+            return $my_groups;
+        }
 	}
 
 }

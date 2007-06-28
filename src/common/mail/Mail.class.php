@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id$
+ * 
  */
 
 require_once('common/dao/UserDao.class.php');

@@ -4,12 +4,13 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
 $Language->loadLanguageMsg('my/my');
+$Language->loadLanguageMsg('account/account');
 
 /*
   Function that generates hide/show urls to expand/collapse
@@ -138,4 +139,16 @@ function my_item_count($total, $new) {
     return '['.$total.($new ? ", <b>".$Language->getText('my_utils', 'new_items', array($new))."</b>]" : ']');
 }
 
+
+function my_header($params) {
+    site_header($params);
+    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')')) .'</h2>';
+    echo '<a href="/my/"><b>'. $GLOBALS['Language']->getText('include_menu','my_perso_page') .'</b></a>';
+    echo ' | ';
+    echo '<a href="/account/"><b>'. $GLOBALS['Language']->getText('include_menu','account_maintenance') .'</b></a>';
+    echo ' | ';
+    echo '<a href="/account/preferences.php"><b>'. $GLOBALS['Language']->getText('account_options', 'preferences') .'</b></a>';
+    echo ' | ';
+    echo help_button('LoginAndPersonalPage.html', false, $GLOBALS['Language']->getText('global','help'));
+}
 ?>

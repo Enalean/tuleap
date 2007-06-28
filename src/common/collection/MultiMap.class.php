@@ -4,7 +4,7 @@ require_once('Collection.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id$
+ * 
  *
  * An object that maps key to values. 
  * A multi-map can contain duplicate keys; each key can map to more than one value.

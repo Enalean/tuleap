@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2002. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public
@@ -522,7 +522,7 @@ INSERT INTO bug_field \
 INSERT INTO bug_field \
   VALUES (213,'release_id','SB','','Release','The release (global version number) impacted by the bug','P',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
-  VALUES (214,'release','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,1,1,0,0,NULL);
+  VALUES (214,'release_name','TF','10/40','Release','The release (global version number) impacted by the bug. Same as the other Release field <u>except</u> this one is free text.','S',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
   VALUES (215,'originator_name','TF','20/40','Originator Name','The name of the person who reported the bug (if different from the submitter field)','S',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
@@ -860,7 +860,7 @@ INSERT INTO bug_field_usage VALUES (212,100,0,0,0,3000,NULL,NULL,NULL,NULL,NULL,
 #
 INSERT INTO bug_field_usage VALUES (213,100,0,0,0,800,NULL,NULL,NULL,NULL,NULL,NULL);
 
-# release (bug_field_id = 214)
+# release name (bug_field_id = 214)
 #
 INSERT INTO bug_field_usage VALUES (214,100,0,0,0,800,NULL,NULL,NULL,NULL,NULL,NULL);
 
@@ -2320,6 +2320,43 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help','1' ,'Get Help');
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers','0' ,'Project Developer Discussion');
 
+-- 
+-- Layouts
+-- 
+INSERT INTO layouts (id, name, description, scope) VALUES (1, '2 columns', 'Standard layout', 'S');
+INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
+INSERT INTO layouts_rows_columns (id, layout_rows_id, width) VALUES (1, 1, 50), (2, 1, 50);
+
+INSERT INTO user_layouts (user_id, layout_id, is_default) 
+SELECT user_id, 1, 1 
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mysurveys', 4
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mymonitoredforums', 2
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mybookmarks', 1
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 2, 'myartifacts', 0
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 2, 'mymonitoredfp', 1
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'myprojects', 0
+FROM user;
+
+
+TODO plugins
 
 #
 # EOF

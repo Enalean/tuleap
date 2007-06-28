@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/frs/FRSFileFactory.class.php');

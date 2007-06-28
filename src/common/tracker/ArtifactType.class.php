@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// $Id$
+// 
 //
 //
 //	Originally by to the SourceForge Team,1999-2000
@@ -1273,7 +1273,7 @@ class ArtifactType extends Error {
 	
 	    $send = false;
 	    $arr_notif = $this->buildNotificationMatrix($user_id);
-	    if (!$arr_notif) { return true; }
+	    if (!$arr_notif || (count($arr_notif == 0))) { return true; }
 	
 	    // echo "==== DBG Checking Notif. for $user_id (role=$role)<br>";
 	    $user_name = user_getname($user_id);
@@ -1416,7 +1416,7 @@ class ArtifactType extends Error {
 	 * @return array
 	 */
 	function buildNotificationMatrix($user_id) {
-	
+        $arr_notif = array();
 	    // Build the notif matrix indexed with roles and events labels (not id)
 	    $res_notif = $this->getNotificationWithLabels($user_id);
 	    while ($arr = db_fetch_array($res_notif)) {

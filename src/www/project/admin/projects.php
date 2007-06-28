@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id: index.php 5205 2007-03-07 10:50:00Z mnazaria $
+// 
 
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');

@@ -2,7 +2,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# 
 #
 # Description
 # Database upgrade script for project C2 (tracker/field permissions)

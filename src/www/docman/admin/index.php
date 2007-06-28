@@ -9,7 +9,7 @@
   // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
   // http://codex.xerox.com
   //
-  // $Id$
+  // 
   //
   //	Originally written by Quentin Cregan, SourceForge 06/2000
   //	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox

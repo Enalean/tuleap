@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 
 // The following script is used to automatically set several variables from the LDAP directory 

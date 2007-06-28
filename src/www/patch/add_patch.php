@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 patch_header(array ('title'=>'Submit a Patch',
 		    'help'=>'PatchSubmission.html'));

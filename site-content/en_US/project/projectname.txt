@@ -4,14 +4,14 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 ?>
 <P>We now need some basic technical information for your project.
 There are two types of names that will be associated with this project.
 
 <P>The "Full Name" is descriptive, has no real name restrictions (except
-a 40 character limit), and
+a 255 character limit), and
 can be changed.</P>
 
 <p>The project "Short Name" (also known as the "Group Name") has several restrictions. They are as follows:
@@ -32,7 +32,7 @@ can be changed.</P>
 <div style="font-size:0.85em">
 Full Name:
 <BR>
-<INPUT size="40" maxlength="40" type=text name="form_full_name" value="<?=$full_name?>" />
+<INPUT size="40" type=text name="form_full_name" value="<?=$full_name?>" />
 <P>Short Name:
 <BR>
 <INPUT type=text maxlength="30" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />

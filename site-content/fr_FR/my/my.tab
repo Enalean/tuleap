@@ -11,7 +11,6 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id$
 #  *
 #  */
 #
@@ -40,6 +39,7 @@ my_index	my_bookmarks	Mes favoris
 my_index	no_bookmark	<H3>Vous n'avez pas encore de favori enregistré</H3>
 my_index	edit_link	Editer
 my_index	del_bookmark	Détruire ce favori ?
+my_index	add_bookmark	Ajouter un favori
 my_index	my_projects	Mes projets
 my_index	not_member	Vous n'êtes membre d'aucun projet.
 my_index	admin_link	Admin
@@ -52,6 +52,7 @@ my_index	no_info	N'afficher aucun artefact
 my_index	a_info	assignés à moi [A]
 my_index	s_info	soumis par moi [S]
 my_index	as_info	assignés à moi ou soumis par moi [AS]
+my_index	my_admin	Utilisateurs, projets et annonces en attente
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
 #

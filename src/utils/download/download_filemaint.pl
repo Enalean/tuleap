@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-# $Id$
+# 
 #
 #use strict;
 require("../include.pl");  # Include all the predefined functions

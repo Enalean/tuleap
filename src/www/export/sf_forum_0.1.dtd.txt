@@ -216,10 +216,10 @@ available from http://www.xml.org/.  The root element  is
 <!ELEMENT nitf (head, body)>
 <!ATTLIST nitf
   baselang CDATA #IMPLIED
-  change.date CDATA #FIXED "$Date$"
+  change.date CDATA #FIXED "$Date: 2001-03-06 11:03:47 +0100 (Tue, 06 Mar 2001) $"
   change.time CDATA #FIXED "0000"
   unr CDATA #IMPLIED
-  version CDATA #FIXED "-//XMLNews//DTD XMLNEWS-STORY $Revision$//EN">
+  version CDATA #FIXED "-//XMLNews//DTD XMLNEWS-STORY $Revision: 2 $//EN">
 
 <!-- Numeric expression -->
 <!ELEMENT num (#PCDATA | frac | sub | sup)*>

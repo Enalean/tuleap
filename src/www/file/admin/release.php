@@ -6,7 +6,7 @@
 //Copyright 1999-2000 (c) The SourceForge Crew
 //http://sourceforge.net
 //
-//$Id: qrs.php 4555 2006-12-21 11:11:49 +0000 (Thu, 21 Dec 2006) ahardyau $
+//
 
 require_once ('pre.php');
 require_once ('www/file/file_utils.php');

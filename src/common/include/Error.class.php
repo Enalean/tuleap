@@ -10,7 +10,6 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * @version   $Id$
  * @author Tim Perdue <tperdue@valnux.com>
  * @date 2000-08-28
  *

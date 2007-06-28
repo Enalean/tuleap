@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
   //$Language->loadLanguageMsg('include/include');
 
@@ -760,7 +760,7 @@ function util_split_emails($addresses) {
 function validate_email ($address) {
 
     $valid_chars='-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
-    if ($GLOBALS['sys_disable_subdomains'])
+    if (array_key_exists('sys_disable_subdomains', $GLOBALS) && $GLOBALS['sys_disable_subdomains'])
         $valid_domain='['.$valid_chars.']+$';
     else
         $valid_domain='['.$valid_chars.']+\.['.$valid_chars.']+$';

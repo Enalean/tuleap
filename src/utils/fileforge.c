@@ -2,7 +2,7 @@
  * Small Tool to move files from the FTP incoming dir
  * to the project ftp space.  Runs +suid.
  *
- * $Id$
+ * 
  */
 #include <stdlib.h>
 #include <stdio.h>

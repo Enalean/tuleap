@@ -4,20 +4,20 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 /*
 #######################################################################
 #
-#       $Id$
+#       
 #
-#   $Author$
+#   $Author: root $
 #   $Locker$
 #
-#     $Date$
+#     $Date: 2001-03-06 11:03:47 +0100 (Tue, 06 Mar 2001) $
 #
 #   $Source$
-# $Revision$
+# $Revision: 2 $
 #    $State$
 #
 #      Revision 1.5  1998/11/05 06:15:52  pdavis

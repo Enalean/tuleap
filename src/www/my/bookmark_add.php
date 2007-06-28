@@ -14,13 +14,13 @@ $HTML->header(array("title"=>$Language->getText('bookmark_add', 'title')));
 
 print "<H3>".$Language->getText('bookmark_add', 'title')."</H3>";
 
-if ($bookmark_url) {
+if (isset($bookmark_url) && $bookmark_url) {
     print $Language->getText('bookmark_add', 'message', array($bookmark_url,stripslashes($bookmark_title)))."<p>\n";
 
 	$bookmark_id = bookmark_add ($bookmark_url, $bookmark_title);
-	print "<A HREF=\"$bookmark_url\">".$Language->getText('bookmark_add', 'visit')."</A> - ";
-	print "<A HREF=\"/my/bookmark_edit.php?bookmark_id=$bookmark_id\">".$Language->getText('bookmark_add', 'edit')."</A>";
-	print "<p><A HREF=\"/my/\">[".$Language->getText('global', 'back_home')."]</A>";
+	print '<A HREF="'. $bookmark_url .'">'.$Language->getText('bookmark_add', 'visit')."</A> - ";
+	print '<A HREF="/my/bookmark_edit.php?bookmark_id='. $bookmark_id .'">'.$Language->getText('bookmark_add', 'edit')."</A>";
+	print '<p><A HREF="/my/">['.$Language->getText('global', 'back_home')."]</A>";
 } else {
 	?>
 	<FORM METHOD=POST>

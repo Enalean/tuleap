@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2002 All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 
 /*
  This file contains handy functions that are available in PHP4  and not in

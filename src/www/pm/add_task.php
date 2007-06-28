@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 pm_header(array('title'=>'Add a New Task',
 		'help'=>'TaskSubmission.html'));

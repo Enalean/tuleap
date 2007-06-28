@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 require_once('pre.php');    
 require_once('common/include/CookieManager.class.php');
@@ -30,6 +30,6 @@ if (in_array($user_csv_separator, $csv_separators)) {
     user_set_preference("user_csv_separator", DEFAULT_CSV_SEPARATOR);
 }
 
-session_redirect("/account/");
+session_redirect("/account/preferences.php");
 
 ?>

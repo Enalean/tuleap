@@ -9,7 +9,7 @@
 # COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
 # PUBLIC LICENSE.
 #
-#  $Id$
+#  
 #
 #      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 #

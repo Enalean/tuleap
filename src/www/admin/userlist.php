@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 require_once('pre.php');    
 require_once('account.php');
@@ -99,7 +99,7 @@ if ($action=='activate') {
 	Suspend their account
 */
 if ($action=='suspend') {
-	db_query("UPDATE user SET status='S' WHERE user_id='$user_id'");
+	db_query("UPDATE user SET status='S',unix_status='S' WHERE user_id='$user_id'");
 	echo '<H2>'.$Language->getText('admin_userlist','user_suspended').'</H2>';
 }
 

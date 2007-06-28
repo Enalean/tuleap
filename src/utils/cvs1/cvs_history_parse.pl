@@ -9,7 +9,7 @@
 ## checkouts, commits, and adds to each project over the past 24 hours.
 ##
 ##
-## $Id$ 
+##  
 ##
 #use strict;
 use Time::Local;

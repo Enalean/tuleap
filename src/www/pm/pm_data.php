@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 function pm_data_get_tasks ($group_id,$group_project_id) {
     if ($group_project_id) {

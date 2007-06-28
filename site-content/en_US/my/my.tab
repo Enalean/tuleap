@@ -6,7 +6,6 @@
 #  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
-#  * @version   $Id$
 #  *
 #  */
 #
@@ -25,7 +24,7 @@ my_index	my_forums_msg	<b>You are not monitoring any forums</b><P>If you monitor
 my_index	stop_forum	Stop monitoring this Forum?
 my_index	my_files	Monitored File Packages
 my_index	my_files_msg	<b>You are not monitoring any files</b><P>If you monitor files, you will be sent new release notices via email, with a link to the new file on our download server.<P>You can monitor files by visiting a project's &quot;Summary Page&quot; and clicking on the appropriate icon in the files section.<BR>&nbsp;
-my_index	stop_file	Stop Monitoring this Package?	
+my_index	stop_file	Stop Monitoring this Package?
 my_index	stop_monitor	STOP MONITORING
 my_index	my_tasks	My Tasks
 my_index	my_arts	My Artifacts
@@ -35,6 +34,7 @@ my_index	my_bookmarks	My Bookmarks
 my_index	no_bookmark	<H3>You currently do not have any bookmarks saved</H3>
 my_index	edit_link	Edit
 my_index	del_bookmark	Delete this bookmark?
+my_index	add_bookmark	Add a bookmark
 my_index	my_projects	My Projects
 my_index	not_member	You're not a member of any project
 my_index	admin_link	Admin
@@ -47,6 +47,7 @@ my_index	no_info	Do not show any artifacts
 my_index	a_info	assigned to me [A]
 my_index	s_info	submitted by me [S]
 my_index	as_info	assigned to or submitted by me [AS]
+my_index	my_admin	Pending users, projects and news
 #
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php

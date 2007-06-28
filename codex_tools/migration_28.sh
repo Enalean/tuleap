@@ -9,7 +9,7 @@
 # COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
 # PUBLIC LICENSE.
 #
-#  $Id: migration_24.sh 1776 2005-06-23 14:29:05Z guerin $
+#  
 #
 #      Originally written by Laurent Julliard 2004-2006, CodeX Team, Xerox
 #

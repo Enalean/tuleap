@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2002. All Rights Reserved
 # http://codex.xerox.com
 #
-# $Id$
+# 
 #
 #  License:
 #    This file is subject to the terms and conditions of the GNU General Public
@@ -108,7 +108,7 @@ CREATE TABLE bug (
   priority int(11) NOT NULL default '100',
   keywords varchar(255) NOT NULL default '',
   release_id int(11) NOT NULL default '100',
-  release varchar(255) NOT NULL default '',
+  release_name varchar(255) NOT NULL default '',
   originator_name varchar(255) NOT NULL default '',
   originator_email varchar(255) NOT NULL default '',
   originator_phone varchar(255) NOT NULL default '',
@@ -989,7 +989,7 @@ CREATE TABLE group_type (
 
 CREATE TABLE groups (
   group_id int(11) NOT NULL auto_increment,
-  group_name varchar(40) default NULL,
+  group_name varchar(255) default NULL,
   is_public int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
   unix_group_name varchar(30) NOT NULL default '',
@@ -1955,18 +1955,6 @@ CREATE TABLE trove_group_link (
   PRIMARY KEY  (trove_group_id),
   KEY idx_trove_group_link_group_id (group_id),
   KEY idx_trove_group_link_cat_id (trove_cat_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'trove_treesums'
-#
-
-CREATE TABLE trove_treesums (
-  trove_treesums_id int(11) NOT NULL auto_increment,
-  trove_cat_id int(11) NOT NULL default '0',
-  limit_1 int(11) NOT NULL default '0',
-  subprojects int(11) NOT NULL default '0',
-  PRIMARY KEY  (trove_treesums_id)
 ) TYPE=MyISAM;
 
 #
@@ -3288,6 +3276,92 @@ CREATE TABLE notifications (
   object_id int(11) NOT NULL default '0',
   type varchar(100) NOT NULL default '',
   PRIMARY KEY  (user_id,object_id,type)
+);
+
+-- 
+-- Table structure for table 'layouts'
+-- 
+
+DROP TABLE IF EXISTS layouts;
+CREATE TABLE IF NOT EXISTS layouts (
+  id int(11) unsigned NOT NULL auto_increment,
+  name varchar(255) NOT NULL default '',
+  description text NOT NULL,
+  scope varchar(1) NOT NULL default 'S',
+  PRIMARY KEY  (id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'layouts_rows'
+-- 
+
+DROP TABLE IF EXISTS layouts_rows;
+CREATE TABLE IF NOT EXISTS layouts_rows (
+  id int(11) unsigned NOT NULL auto_increment,
+  layout_id int(11) unsigned NOT NULL default '0',
+  rank int(11) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY layout_id (layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'layouts_rows_columns'
+-- 
+
+DROP TABLE IF EXISTS layouts_rows_columns;
+CREATE TABLE IF NOT EXISTS layouts_rows_columns (
+  id int(11) unsigned NOT NULL auto_increment,
+  layout_row_id int(11) unsigned NOT NULL default '0',
+  width int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY layout_row_id (layout_row_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'user_layouts'
+-- 
+
+DROP TABLE IF EXISTS user_layouts;
+CREATE TABLE IF NOT EXISTS user_layouts (
+  user_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  is_default tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (user_id, layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table 'user_layouts_contents'
+-- 
+
+DROP TABLE IF EXISTS user_layouts_contents;
+CREATE TABLE IF NOT EXISTS user_layouts_contents (
+  user_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  column_id int(11) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL,
+  content_id int(11) unsigned NOT NULL default '0',
+  rank int(11) NOT NULL default '0',
+  is_minimzed tinyint(1) NOT NULL default '0',
+  display_preferences tinyint(1) NOT NULL default '0',
+  KEY (user_id, layout_id, name, content_id),
+  KEY (name)
+);
+
+DROP TABLE IF EXISTS user_rss;
+CREATE TABLE IF NOT EXISTS user_rss (
+  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+  user_id int(11) unsigned NOT NULL default '0',
+  title varchar(255) NOT NULL,
+  url TEXT NOT NULL,
+  KEY (user_id)
 );
 
 #

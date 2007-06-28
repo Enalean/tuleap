@@ -3,7 +3,6 @@
  * @copyright Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  * 
- * @version $Id:$
  *
  * SVNUpdateFilter
  */

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id$
+# 
 # new_aliases.pl - Updates virtusertable and /etc/sendmail.cw on mail1
 #
 # This script is currently NOT USED BY CODEX

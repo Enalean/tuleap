@@ -4,6 +4,7 @@ require_once('session.php');
 require_once('common/include/CookieManager.class.php');
 
 define('invalid_session_fault', '3001');
+define('login_fault', '3002');
 
 //
 // Type definition
@@ -53,12 +54,15 @@ $server->register('logout',
 
 /**
  * login : login the CodeX server
- * 
+ *
+ * @global $Language
+ *
  * @param string $loginname the user name (login)
  * @param string $passwd the password associated with the loginname $loginname
  * @return array the SOAPSession if the loginname and the password are matching, a soap fault otherwise
  */
 function login($loginname, $passwd) {
+    global $Language;
     list($success, $status) = session_login_valid($loginname,$passwd);
     if ($success) {
         $return = array(
@@ -67,7 +71,7 @@ function login($loginname, $passwd) {
         );
         return new soapval('return', 'tns:Session',$return);
     } else {
-        return new soap_fault(login_fault,'login','Unable to log with loginname '.$loginname.' and given password', '');
+        return new soap_fault(login_fault, 'login', $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), '');
     }
 }
 

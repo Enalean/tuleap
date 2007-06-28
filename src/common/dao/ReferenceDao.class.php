@@ -2,7 +2,7 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
 //
-// $Id: ReferenceDao.class.php 2246 2005-11-03 08:47:29Z nterray $
+// 
 //
 
 require_once('include/DataAccessObject.class.php');

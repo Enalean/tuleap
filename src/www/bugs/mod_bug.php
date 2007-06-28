@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 
 $sql="SELECT * FROM bug WHERE bug_id='$bug_id' AND group_id='$group_id'";

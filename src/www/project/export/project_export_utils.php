@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 
 $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
@@ -857,7 +857,7 @@ function db_project_create($dbname) {
     // make sure the database name is not the same as the 
     // system database name !!!!
     if ($dbname != $GLOBALS['sys_dbname']) {
-	   db_query('CREATE DATABASE IF NOT EXISTS `'.$dbname.'`');
+       db_query('CREATE DATABASE IF NOT EXISTS `'.$dbname.'`');
        db_project_query($dbname,'GRANT SELECT ON `'.$dbname.'`.* TO cxuser@\'%\'');
 	return true;
     } else {

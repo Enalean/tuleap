@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-# $Id$
+# 
 #
 # Accumulate file downloads for all time :
 #   - by project (group_id) in frs_dlstats_grouptotal_agg

@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 -->
 <p>We now need to know a little bit more about your project. All information typed here will be accessible to <?php print $GLOBALS['sys_name']; ?> users once your project is registered. So please be as accurate as possible.

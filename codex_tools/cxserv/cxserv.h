@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2003, Xerox Corporation, SSTC.  All rights reserved.
  *
- * $Id$
+ * 
  */
 
 #ifndef CODEX_SERVER_H

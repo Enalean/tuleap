@@ -16,8 +16,8 @@ $GLOBALS['config']['suffix']       = 'Test.php';
 
 $GLOBALS['tests']                  = array();
 
-function clean_plugins_root(&$entry) {
-    $entry = substr($entry, strlen($GLOBALS['config']['plugins_root']), -strlen($GLOBALS['config']['tests_root']));
+function clean_plugins_root($entry) {
+    return substr($entry, strlen($GLOBALS['config']['plugins_root']), -strlen($GLOBALS['config']['tests_root']));
 }
 function search_tests_rec($dir, &$tab, $entry) {
     if (is_dir($dir)) {
@@ -37,10 +37,11 @@ function search_tests_rec($dir, &$tab, $entry) {
 }
 function search_tests($entry) {
     search_tests_rec($GLOBALS['config']['plugins_root'] . $entry . $GLOBALS['config']['tests_root'], $GLOBALS['tests'], $entry);
+    return $GLOBALS['tests'];
 }
 $roots = glob($GLOBALS['config']['plugins_root'] .'*'. $GLOBALS['config']['tests_root']);
-array_map('clean_plugins_root', $roots);
-array_map('search_tests', $roots);
+$roots=array_map('clean_plugins_root', $roots);
+$roots=array_map('search_tests', $roots);
 
 //{{{ Tri
 function sort_by_key_and_by_value_depending_of_type($a, $b) {

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id$
+# 
 #
 # ssh_create.pl - Dumps SSH authorized_keys into users homedirs on the cvs server.
 #

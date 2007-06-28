@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-# $Id$
+# 
 #
 # Accumulate file download counts by project (group_id) for the day
 # specified on the command line. If not specified it is for the day before.

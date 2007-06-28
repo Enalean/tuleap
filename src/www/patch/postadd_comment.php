@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 if ($details != '') { 
 	patch_history_create('details',htmlspecialchars($details),$patch_id);  

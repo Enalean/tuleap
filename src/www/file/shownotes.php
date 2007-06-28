@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 require_once('pre.php');
 require_once('www/file/file_utils.php');
@@ -41,7 +41,7 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 	if ($release->isPreformatted()) {
 		echo '<PRE>';
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-            .htmlentities($release->getNotes()).
+             .htmlentities($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
@@ -52,7 +52,7 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
             .$release->getNotes().
 
             '<HR NOSHADE>'.
-           '<B>'.$Language->getText('file_shownotes','changes').':</B>'
+            '<B>'.$Language->getText('file_shownotes','changes').':</B>'
             .$release->getChanges();
     }
     

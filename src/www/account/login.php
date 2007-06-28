@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 Header( "Expires: Wed, 11 Nov 1998 11:11:11 GMT"); 
 Header( "Cache-Control: no-cache"); 

@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 // Try to avoid 'sploits by requiring the request to come from localhost
 if (($GLOBALS['SERVER_NAME'] != 'localhost') &&

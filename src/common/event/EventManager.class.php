@@ -5,7 +5,7 @@ require_once('common/include/String.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id$
+ * 
  *
  * EventManager
  */

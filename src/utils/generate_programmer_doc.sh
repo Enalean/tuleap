@@ -5,7 +5,7 @@
 # This file is licensed under the CodeX Component Software License
 # http://codex.xerox.com
 #
-# $Id$
+# 
 #
 # Purpose:
 #    Automatically re-generate online programmer guide

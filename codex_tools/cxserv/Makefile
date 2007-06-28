@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2003, Xerox Corporation, SSTC.  All rights reserved.
 #
-# $Id$
+# 
 #
 DEST=/usr/local/bin
 SOURCES=cxserv.c

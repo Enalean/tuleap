@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 function html_feedback_top($feedback) {
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);

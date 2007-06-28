@@ -5,7 +5,7 @@
 // Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 // Originally written by Marie-Luise Schneider 2005, CodeX Team, Xerox
 

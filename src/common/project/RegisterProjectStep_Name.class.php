@@ -12,7 +12,6 @@ require_once('RegisterProjectStep.class.php');
 * Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
 *
 * @author  N. Terray
-* @version $Id$
 */
 class RegisterProjectStep_Name extends RegisterProjectStep {
     function RegisterProjectStep_Name() {

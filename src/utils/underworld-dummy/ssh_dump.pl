@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# $Id$
+# 
 #
 # ssh_dump.pl - Script to suck data outta the database to be processed by ssh_create.pl
 #

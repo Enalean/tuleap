@@ -1,6 +1,6 @@
 <?php
 //
-// $Id$
+// 
 //
 
 $Language->loadLanguageMsg('stats/stats');

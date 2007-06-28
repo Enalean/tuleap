@@ -4,7 +4,7 @@
   // Copyright 1999-2000 (c) The SourceForge Crew
   // http://sourceforge.net
   //
-  // $Id$
+  // 
   // ## export sf front page news in RSS
 
 require_once('pre.php');

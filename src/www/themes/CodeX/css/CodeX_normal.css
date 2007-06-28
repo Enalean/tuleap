@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
 // http://codex.xerox.com
 //
-// $Id$
+// 
 //
 // Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
 //
@@ -254,6 +254,85 @@ table.release tr td img {
     font-size:0.85em;
 }
 
+/* {{{ Widgets */
+
+.emptyPlaceMarker
+{
+    border-right: #bcbcad 1px dashed;
+    border-top: #bcbcad 1px dashed;
+    border-left: #bcbcad 1px dashed;
+    border-bottom: #bcbcad 1px dashed;
+    background-color: Transparent;
+}
+
+.widget {
+    margin-bottom:20px;
+    border:1px solid #bcbcad;
+}
+.widget_content {
+    clear:both;
+}
+.widget_preferences {
+    background: #E0DDD2;
+    border-bottom:1px solid #bcbcad;
+}
+.widget_preferences form {
+    margin:0;
+}
+.widget_titlebar {
+    background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
+    font-weight: bold; 
+    text-align: center; 
+    text-transform: capitalize; 
+    color: #555;
+    cursor:move;
+    height:1.2em;
+    padding-left:40px;
+    padding-right:4px;
+}
+.widget_titlebar_title {
+    float:left;
+}
+.widget_titlebar_close,
+.widget_titlebar_rss,
+.widget_titlebar_prefs,
+.widget_titlebar_minimize,
+.widget_titlebar_maximize {
+    float:right;
+}
+.widget_titlebar_rss,
+.widget_titlebar_prefs {
+    padding:2px 4px;
+}
+.widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
+.widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
+    color:#555;
+    font-weight:normal;
+    font-size:0.8em;
+    text-decoration:none;
+}
+/* }}} */
+
+/* {{{ lists & users autocomplete */
+.lists_users_autocomplete {
+    max-height:200px;
+    overflow:auto;
+    background:white;
+    border:1px solid #CCC;
+}
+.lists_users_autocomplete ul {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+}
+.lists_users_autocomplete ul li {
+    padding:0px 4px 4px 4px;
+}
+.lists_users_autocomplete ul li.selected { 
+    background-color: #ffb; 
+}
+/* }}} */
+
 /* {{{ password validator */
 .password_validator_ok,
 .password_validator_ko {
@@ -270,6 +349,28 @@ table.release tr td img {
 .password_strategy_good {
     color:green;
     font-weight:bold;
+}
+/* }}} */
+
+/* {{{ follow-up comments */
+.followup_comment {
+    border-bottom:1px solid #ccc;
+    padding-bottom:20px;
+}
+.followup_comment_title {
+    margin-bottom:10px;
+}
+.followup_comment_title_user {
+    font-size:1.2em; 
+    font-weight:bold; 
+    color:#999;
+}
+.followup_comment_title_date {
+    font-size:0.95em; 
+    color:#666;
+}
+.followup_comment_content {
+    padding-left:40px;
 }
 /* }}} */
 

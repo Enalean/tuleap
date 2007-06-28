@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # -*-Perl-*-
 #
-# $Id$
+# 
 #
 # Perl filter to handle pre-commit checking of files.  This program
 # records the last directory where commits will be taking place for
