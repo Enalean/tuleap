@@ -11,7 +11,7 @@
 
 <P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet&nbsp;:
 
-<P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitée à 40 caractères) et il peut être modifié à tout moment.</P>
+<P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitée à 255 caractères) et il peut être modifié à tout moment.</P>
 
 <p>Le "nom court" (aussi appelé "nom du groupe") présentent certaines restrictions&nbsp;:
 
@@ -31,7 +31,7 @@
 <div style="font-size:0.85em">
 Nom complet&nbsp;:
 <BR>
-<INPUT size="40" maxlength="40" type=text name="form_full_name" value="<?=$full_name?>" />
+<INPUT size="40" type=text name="form_full_name" value="<?=$full_name?>" />
 <P>Nom court&nbsp;:
 <BR>
 <INPUT type=text maxlength="30" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />

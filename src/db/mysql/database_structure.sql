@@ -989,7 +989,7 @@ CREATE TABLE group_type (
 
 CREATE TABLE groups (
   group_id int(11) NOT NULL auto_increment,
-  group_name varchar(40) default NULL,
+  group_name varchar(255) default NULL,
   is_public int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
   unix_group_name varchar(30) NOT NULL default '',

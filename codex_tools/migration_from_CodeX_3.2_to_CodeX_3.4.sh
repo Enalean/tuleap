@@ -339,6 +339,8 @@ DROP TABLE IF EXISTS trove_treesums;
 ALTER TABLE bug CHANGE release release_name varchar(255) NOT NULL default '';
 UPDATE bug_field SET field_name='release_name' where field_name='release';
 
+# SR #894 - Project long name way too short
+ALTER TABLE groups CHANGE group_name group_name VARCHAR( 255 ) DEFAULT NULL;
 
 ###############################################################################
 # Personalizeable layout
