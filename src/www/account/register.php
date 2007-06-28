@@ -100,25 +100,7 @@ function display_account_form($register_error)	{
 <p><?php print $Language->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
 <input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
 <?php print $Language->getText('account_register', 'login_directions'); ?>
-
-<table><tr valign='top'><td><?php print $Language->getText('account_register', 'passwd').'&nbsp;'.$star; ?>:<br>
-<input type="password" name="form_pw" id="form_pw" value="">
-
-<p><?php print $Language->getText('account_register', 'passwd2').'&nbsp;'.$star; ?>:<br>
-<input type="password" name="form_pw2" value="">
-<?php print $Language->getText('account_register', 'passwd2_directions'); ?>
-</td><td>
-<?php
-$password_strategy =& new PasswordStrategy();
-include($GLOBALS['Language']->getContent('account/password_strategy'));
-foreach($password_strategy->validators as $key => $v) {
-    echo '<div id="password_validator_msg_'. $key .'">'. $v->description() .'</div>';
-}
-?></td></tr></table>
-<script type="text/javascript">
-var password_validators = [<?= implode(', ', array_keys($password_strategy->validators)) ?>];
-</script>
-
+<?php user_display_choose_password(); ?>
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
 <INPUT size=40 type="text" name="form_realname" value="<?php print htmlentities($form_realname, ENT_QUOTES); ?>">
 <?php print $Language->getText('account_register', 'realname_directions'); ?>
@@ -214,7 +196,7 @@ $em->processEvent('before_register', array());
 // not valid registration, or first time to page
 //
 $HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
-$HTML->includeJavascriptFile('/scripts/check_pw.js');
+$HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 $HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
 
 ?>

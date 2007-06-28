@@ -411,5 +411,33 @@ function user_del_preference($preference_name) {
     }
 }
 
+function user_display_choose_password($user_id = false) {
+    $GLOBALS['Language']->loadLanguageMsg('account/account');
+    $request =& HTTPRequest::instance();
+    ?>
+    <table><tr valign='top'><td><? echo $GLOBALS['Language']->getText('account_change_pw', 'new_password'); ?>:
+    <br><input type="password" value="" id="form_pw" name="form_pw">
+    <p><? echo $GLOBALS['Language']->getText('account_change_pw', 'new_password2'); ?>:
+    <br><input type="password" value="" name="form_pw2">
+    </td><td>
+    <fieldset>
+        <legend><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?> <span id="password_strategy_good_or_bad"></span></legend>
+        <?php
+        $password_strategy =& new PasswordStrategy();
+        include($GLOBALS['Language']->getContent('account/password_strategy'));
+        foreach($password_strategy->validators as $key => $v) {
+            echo '<div id="password_validator_msg_'. $key .'">'. $v->description() .'</div>';
+        }
+        ?>
+    </fieldset>
+    </td></tr></table>
+    <script type="text/javascript">
+    var password_validators = [<?= implode(', ', array_keys($password_strategy->validators)) ?>];
+    </script>
+    <?php
+    if ($user_id) {
+        echo '<input type="hidden" name="user_id" value="'. $user_id .'" />';
+    }
+}
 
 ?>

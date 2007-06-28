@@ -83,7 +83,7 @@ if (register_valid($user_id)) {
 <?php
 } else { // not valid registration, or first time to page
     $HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
-	$HTML->includeJavascriptFile('/scripts/check_pw.js');
+	$HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 	$HTML->header(array('title'=>$Language->getText('account_options', 'change_password')));
 
 ?>
@@ -92,26 +92,7 @@ if (register_valid($user_id)) {
 <form action="change_pw.php" method="post" autocomplete="off" >
 <p><? echo $Language->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" value="" name="form_oldpw">
-<table><tr valign='top'><td><? echo $Language->getText('account_change_pw', 'new_password'); ?>:
-<br><input type="password" value="" id="form_pw" name="form_pw">
-<p><? echo $Language->getText('account_change_pw', 'new_password2'); ?>:
-<br><input type="password" value="" name="form_pw2">
-</td><td>
-<?php
-$password_strategy =& new PasswordStrategy();
-include($GLOBALS['Language']->getContent('account/password_strategy'));
-foreach($password_strategy->validators as $key => $v) {
-    echo '<div id="password_validator_msg_'. $key .'">'. $v->description() .'</div>';
-}
-?></td></tr></table>
-<script type="text/javascript">
-var password_validators = [<?= implode(', ', array_keys($password_strategy->validators)) ?>];
-</script>
-<?php
-if (is_numeric($request->get('user_id'))) {
-    echo '<input type="hidden" name="user_id" value="'. $request->get('user_id') .'" />';
-}
-?>
+<?php user_display_choose_password(is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
 <p><input type="submit" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
