@@ -517,7 +517,7 @@ $INSTALL_DIR/src/utils/generate_cli_package.sh -f
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 
 
-TODO revision #6417 : themes, db, local.inc
+TODO revision #6417 #6479 : themes, db, local.inc
 TODO revision #6419 (follow-up comments) : themes
 
 todo "If you have custom themes:"
