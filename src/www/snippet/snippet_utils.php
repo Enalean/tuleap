@@ -28,12 +28,12 @@ function snippet_header($params) {
 	/*
 		Show horizontal links
 	*/
-	echo '<H2>' . $params['header'] . '</H2>';
+	echo '<H2>' . $params['title'] . '</H2>';
 	echo '<P><B>';
 	echo '<A HREF="/snippet/">'.$Language->getText('snippet_utils','browse').'</A>
 		 | <A HREF="/snippet/submit.php">'.$Language->getText('snippet_utils','create_s').'</A>
 		 | <A HREF="/snippet/package.php">'.$Language->getText('snippet_utils','create_p').'</A></B>';
-	if ($params['help']) {
+	if (isset($params['help']) && $params['help']) {
 	    echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 	}
 	echo '<P>';

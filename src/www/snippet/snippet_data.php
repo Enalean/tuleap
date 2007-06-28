@@ -31,7 +31,7 @@ function snippet_data_can_modify_snippet($snippet_id) {
 
 // Return true if the current user has rights to modify an existing snippet package
 // Only the snippet package author(s) or site admin may edit snippet package details
-function snippet_data_can_modify_snippet_package($snippet_id) {
+function snippet_data_can_modify_snippet_package($snippet_package_id) {
     if (user_is_super_user()) {
         return true;
     } else {
