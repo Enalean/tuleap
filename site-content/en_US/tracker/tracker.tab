@@ -332,6 +332,7 @@ tracker_include_artifact	copy	Copy
 tracker_include_artifact	references	References:
 tracker_include_artifact	flup_hidden	[Not Recorded]
 tracker_include_artifact	del	del
+tracker_include_artifact	last_edited	last edited by:
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php

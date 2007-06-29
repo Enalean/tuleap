@@ -2049,47 +2049,10 @@ class Artifact extends Error {
     	
     	$com_res = $this->getOriginalCommentSubmitter($comment_id);
     	$commenter = db_result($com_res,0,'mod_by'); 
-    	if ($commenter <> user_getid()) {
-    		return false;
+    	if ($commenter == user_getid()) {
+    		return true;
     	} else {
-    		$sql = sprintf('SELECT field_name, artifact_id FROM artifact_history'
-							.' WHERE artifact_history_id = %d'
-							.' AND (field_name = "%s" OR field_name LIKE "%s")',
-    						$comment_id,"comment","lbl_%_comment");
-    		$res = db_query($sql);
-    		$field_name = db_result($res,0,'field_name');
-    		$aid = db_result($res,0,'artifact_id');
-    		if ($field_name == "comment") {
-    			$cid = $comment_id;				
-    		} else {
-    			$cid = (int) substr($field_name,4,-8);
-    		}
-    		$qry = sprintf('SELECT artifact_history_id FROM artifact_history'
-							.' WHERE artifact_id = %d'
-							.' AND artifact_history_id > %d'
-							.' AND field_name = "%s"',
-    						$aid,$cid,"comment");
-    		$result = db_query($qry);
-    		if (db_numrows($result) > 0) {
-    			//check if it is really the last comment displayed in the artifact
-    			$deleted = 0;
-    			while ($rows = db_fetch_array($result)) {
-    				$ahid = $rows['artifact_history_id'];
-					if ($this->isFollowupCommentDeleted($ahid)) {
-						$deleted ++; 								
-					}
-    			}
-    			if ($deleted == db_numrows($result)) {
-    				// all comments that have id > $cid, have been deleted
- 					return true;	
-    			} else {
-    				// there are comments with id > $cid , and not deleted
-					return false;
-    			}
-    		} else {
-    			//it is the last comment in the artifact
-    			return true;
-    		}
+    		return false;
     	}
     }
     
@@ -2592,6 +2555,7 @@ class Artifact extends Error {
                 $comment_type = db_result($result, $i, 'comment_type');
 				$comment_type_id = db_result($result, $i, 'comment_type_id');
 				$comment_id = db_result($result, $i, 'artifact_history_id');
+				$field_name = db_result($result, $i, 'field_name');
 			    $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
 			    $orig_date = $this->getOriginalCommentDate($comment_id);
 			    
@@ -2604,7 +2568,8 @@ class Artifact extends Error {
                                 $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s$sys_lf".
                                 ($comment_type != ""? "%s$sys_lf%s" : '%s');
                         } else {
-                            $fmt = "\n".'
+                        	if ($field_name == "comment") {
+                        		$fmt = "\n".'
                             <div class="'. util_get_alt_row_color($i) .' followup_comment">
                                 <div class="followup_comment_title">
                                     <span class="followup_comment_title_user">%s </span>
@@ -2612,6 +2577,18 @@ class Artifact extends Error {
                                 </div>
                                 <div class="followup_comment_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
                             </div>';
+                        	} else {
+                        		$fmt = "\n".'
+                            <div class="'. util_get_alt_row_color($i) .' followup_comment">
+                                <div class="followup_comment_title">
+                                    <span class="followup_comment_title_user">%s </span>
+                                    <span class="followup_comment_title_date">on %s</span>'."  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ".'
+									<span class="followup_comment_title_edited_user">%s</span>
+									<span class="followup_comment_title_date">on %s</span>'.")".'
+                                </div>
+                                <div class="followup_comment_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
+                            </div>';                        		
+                        	}
                         }
                 
                         // I wish we had sprintf argument swapping in PHP3 but
@@ -2639,11 +2616,7 @@ class Artifact extends Error {
                                                     );
                                 }
                         } else {
-			        		if (db_result($result,$i,'new_value') == '') {
-				    			$comment_txt = util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id,$group_artifact_id);
-							} else {
-				    			$comment_txt = util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
-							}
+				    		$comment_txt = util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
 							if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
 								$comment_edit = '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'"> ['.$GLOBALS['Language']->getText('tracker_fieldeditor','edit').']</a>';
 								$comment_del = '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.
@@ -2652,14 +2625,18 @@ class Artifact extends Error {
 							}                        	                        	
                                 if ( $comment_type != "" ) {
                                     $out .= sprintf($fmt,
-                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.db_result($orig_subm, 0, 'user_name').'">'.db_result($orig_subm, 0, 'user_name').'</a>'),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                                     format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    user_getname(db_result($result, $i, 'mod_by')),
+                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
                                                     $comment_type,
                                                     $comment_txt);
                                 } else {
                                     $out .= sprintf($fmt,
-                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.db_result($orig_subm, 0, 'user_name').'">'.db_result($orig_subm, 0, 'user_name').'</a>'),
-                                                    format_date($sys_datefmt,db_result($orig_date, $i, 'date')),
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    user_getname(db_result($result, $i, 'mod_by')),
+                                                    format_date($sys_datefmt,db_result($result, $i, 'date')),
                                                     $comment_txt);
                                 }
                         }
