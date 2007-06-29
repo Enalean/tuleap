@@ -2512,7 +2512,7 @@ class Artifact extends Error {
          *
          * @return void
          */
-        function showFollowUpComments($group_id, $ascii=false) {
+        function showFollowUpComments($group_id, $pv, $ascii=false) {
 
             //
             //  Format the comment rows from artifact_history
@@ -2539,15 +2539,13 @@ class Artifact extends Error {
             
             // Header first
             if ($ascii) {
-		$out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
+				$out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
             } else {
-                        $title_arr=array();
-                        $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
-                        //$title_arr[]=$Language->getText('tracker_import_utils','date');
-                        //$title_arr[]=$Language->getText('global','by');
+                $title_arr=array();
+                $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
                         
-                        $out .= html_build_list_table_top ($title_arr,false,false,true,null,null,0,0);
-                        $out .= '<tr><td>';
+                $out .= html_build_list_table_top ($title_arr,false,false,true,null,null,0,0);
+                $out .= '<tr><td>';
             }
             
             // Loop throuh the follow-up comments and format them
@@ -2578,6 +2576,7 @@ class Artifact extends Error {
                                 <div class="followup_comment_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
                             </div>';
                         	} else {
+                        		//the comment was previously edited, add 'last edited by:' section
                         		$fmt = "\n".'
                             <div class="'. util_get_alt_row_color($i) .' followup_comment">
                                 <div class="followup_comment_title">
@@ -2624,20 +2623,35 @@ class Artifact extends Error {
 								$comment_txt = $comment_edit."  ".$comment_del."<br>".$comment_txt; 			
 							}                        	                        	
                                 if ( $comment_type != "" ) {
-                                    $out .= sprintf($fmt,
+                                    if ($field_name == "comment") {
+                                		$out .= sprintf($fmt,
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    $comment_type,
+                                                    $comment_txt);
+                                    } else {
+                                		$out .= sprintf($fmt,
                                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                                     format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                                     user_getname(db_result($result, $i, 'mod_by')),
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
                                                     $comment_type,
-                                                    $comment_txt);
+                                                    $comment_txt);                                    	
+                                    }
                                 } else {
-                                    $out .= sprintf($fmt,
+                                	if ($field_name == "comment") {
+                                    	$out .= sprintf($fmt,
+                                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                                    $comment_txt);
+                                	} else {
+                                    	$out .= sprintf($fmt,
                                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                                     format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                                     user_getname(db_result($result, $i, 'mod_by')),
                                                     format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                    $comment_txt);
+                                                    $comment_txt);                                		
+                                	}
                                 }
                         }
             }
