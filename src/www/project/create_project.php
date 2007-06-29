@@ -55,6 +55,7 @@ function create_project($data) {
         'register_time'       => time(),
         'rand_hash'           => "'". md5($random_num) ."'",
         'built_from_template' => $data['project']['built_from_template'],
+        'type'                => ($data['project']['is_test'] ? 3 : 1),
     );
     $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
     $result=db_query($sql);

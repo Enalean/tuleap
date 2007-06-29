@@ -25,10 +25,15 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     }
     
     function display($data) {
+        $GLOBALS['Language']->loadLanguageMsg('project/project');
+        echo '<fieldset><legend style="font-size:1.2em;">Choose the template of the project</legend>';
         include($GLOBALS['Language']->getContent('project/template'));
+        
         $rows=db_numrows($this->db_templates);
         if ($rows > 0) {
             $GLOBALS['Language']->loadLanguageMsg('new/new');
+            //echo '<h3>From templates</h3><blockquote>';
+            
           $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose'));
           print '
           <TABLE width="100%">';
@@ -81,11 +86,24 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
           print '
           </TABLE>';
           $GLOBALS['HTML']->box1_bottom();
+          //echo '</blockquote>';
+          
+        }
+        //echo '<h3>Or from other projects</h3><blockquote>';
+        //echo 'Project: <input type="text" size="40" />';
+        //echo '</blockquote>';
+        //echo '<br />';
+        echo '</fieldset>';
         
-         }
+        echo '<fieldset><legend style="font-size:1.2em;">Choose the project type</legend>';
+        echo '<p>'. 'Please note that the project type cannot be changed after creation' .'</p>';
+        echo '<B>'.$GLOBALS['Language']->getText('project_admin_index','group_type').' '.help_button('ProjectAdministration.html#ProjectType').' : </B> ';
+        echo html_build_select_box_from_arrays(array('0', '1'),array($GLOBALS['Language']->getText('include_common_template','project'),$GLOBALS['Language']->getText('include_common_template','test_project')),'is_test','0',false);
+        echo '</fieldset>';
     }
     function onLeave($request, &$data) {
         $data['project']['built_from_template'] = $request->get('built_from_template');
+        $data['project']['is_test'] = $request->get('is_test') ? '1' : '0';
         return $this->validate($data);
     }
     function validate($data) {
