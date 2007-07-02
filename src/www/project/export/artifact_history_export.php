@@ -44,14 +44,22 @@ if ( $atid ) {
 // SQL statement because this field can be NULL and the NULL value is
 // not a valid comment type in the bug_field_value table. So the join
 // doesn't work.
-$sql = "SELECT ah.artifact_id,ah.field_name,".
-'ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, af.label'.
-' FROM artifact_history ah, user, artifact a, artifact_field af '.
-"WHERE ah.artifact_id = a.artifact_id AND a.group_artifact_id = ".$atid." AND ".
-'user.user_id=ah.mod_by '.
-'AND af.group_artifact_id=a.group_artifact_id '.
-'AND af.field_name=ah.field_name '.
-'ORDER BY ah.artifact_id,ah.date DESC';
+$sql = sprintf('(SELECT ah.artifact_id, ah.field_name, ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, af.label'.
+				' FROM artifact_history ah, user, artifact a, artifact_field af'.
+				' WHERE ah.artifact_id = a.artifact_id'.
+				' AND a.group_artifact_id = %d'.
+				' AND af.group_artifact_id = a.group_artifact_id'. 
+				' AND user.user_id = ah.mod_by'.
+				' AND ah.field_name = af.field_name)'.
+				' UNION'.
+				' (SELECT ah.artifact_id, ah.field_name, ah.old_value, ah.new_value, user.user_name AS mod_by, user.email, ah.date, ah.type, ah.field_name'.
+				' FROM artifact_history ah, user, artifact a'.
+				' WHERE ah.artifact_id = a.artifact_id'.
+				' AND a.group_artifact_id = %d'.
+				' AND user.user_id = ah.mod_by'.
+				' AND (ah.field_name = "%s" OR ah.field_name = "%s" OR ah.field_name LIKE "%s"))'.
+				' ORDER BY artifact_id, date DESC',
+				$atid,$atid,"cc","attachment","lbl_%_comment");
 
 $col_list = array('artifact_id','field_name','old_value','new_value','mod_by','email','date','type','label');
 $lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export','art_id'),

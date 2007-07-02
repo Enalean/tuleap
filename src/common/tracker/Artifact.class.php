@@ -270,15 +270,13 @@ class Artifact extends Error {
      */
     function addHistory ($field,$old_value,$new_value,$type=false,$email=false,$ahid=false) {
     	//MLS: add case where we add CC and file_attachment into history for task #240
-    	if (is_string($field)) {
-    		if ($field == 'cc' || $field == 'attachment' || $field == 'submitted_by' || $field == 'comment' || ( preg_match("/^(lbl_)/",$field) && preg_match("/(_comment)$/",$field) )) {
-    			$name = $field;
-    		} 
-    	else {
+    	if (!is_object($field)) {
+    		// "cc", "attachment", "comment", etc 
+    		$name = $field;
+    	} else {
     		// If field is not to be kept in bug change history then do nothing
     		if (!$field->getGlobalKeepHistory()) { return; }
-    			$name = $field->getName();
-    		}
+    		$name = $field->getName();
     	}
 
     	/*

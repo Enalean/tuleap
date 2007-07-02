@@ -449,7 +449,12 @@ function prepare_artifact_history_record($at, $art_field_fact, &$record) {
   if ( $field ) {
     prepare_historic_value(&$record, $field, $at->getID(), 'old_value');
     prepare_historic_value(&$record, $field, $at->getID(), 'new_value');
-  }	
+  }	else {
+  	if (preg_match("/^(lbl_)/",$record['field_name']) && preg_match("/(_comment)$/",$record['field_name'])) {
+  		$record['field_name'] = "comment";
+  		$record['label'] = "comment";
+  	}
+  }
   
   
   // Decode the comment type value. If null make sure there is
