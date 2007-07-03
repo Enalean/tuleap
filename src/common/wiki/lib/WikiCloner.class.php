@@ -104,8 +104,8 @@ class WikiCloner {
       $attachments_array = $this->cloneWikiAttachementTable();
       $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
       $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
-      $attachments_src_path = $GLOBALS['wiki_data_dir'] . '/' . $this->template_id;
-      $new_attachments_path = $GLOBALS['wiki_data_dir'] . '/' . $this->group_id;
+      $attachments_src_path = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id;
+      $new_attachments_path = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id;
       $cmd = "cp -r " . $attachments_src_path . ' ' . $new_attachments_path;
       system($cmd);
       $this->cloneWikiPermission();

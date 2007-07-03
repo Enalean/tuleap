@@ -189,9 +189,6 @@ $ftp_anon_dir_prefix = "/var/lib/codex/ftp/pub";     // prefix to add to the ano
 // Path for DB sumps. Do *not* use variables in this parameter
 $dump_dir         = "/var/lib/codex/dumps";// Where should we stick files we're working with
 
-// Path for wiki upload dir.
-$wiki_data_dir         = "/var/lib/codex/wiki";// Where wiki uploaded files are located. 
-
 // Paths for backend scripts
 $codex_log        = "/var/log/codex";   // CodeX log dir (cvslogs,)
 $codex_shell_skel = "/etc/skel_codex";  // CodeX Shell skeleton files directory
