@@ -92,7 +92,7 @@ tracker_index	invalid_filename	Invalid filename
 tracker_index	not_create_file	Could Not Create File Object
 tracker_index	not_create_file_obj	Could Not Create File Object: $1
 tracker_index	not_attach_file	Could Not Attach File to Artifact: $1
-tracker_index	create_success	- Artifact Successfully Created (#$1)
+tracker_index	create_success	Artifact Successfully Created (#$1)
 tracker_index	invalid_filename_attach	Invalid filename for attachment
 tracker_index	trackers_for	Trackers for $1
 tracker_index	admin_all_trackers	Admin All Trackers

@@ -97,7 +97,7 @@ tracker_index	invalid_filename	Nom de fichier invalide
 tracker_index	not_create_file	L'objet fichier n'a pas pu être créé
 tracker_index	not_create_file_obj	L'objet fichier n'a pas pu être créé&nbsp;: $1
 tracker_index	not_attach_file	Impossible d'attacher le fichier à l'artefact&nbsp;: $1
-tracker_index	create_success	- Artefact créé avec succès (no. $1)
+tracker_index	create_success	Artefact créé avec succès (no. $1)
 tracker_index	invalid_filename_attach	Nom de fichier invalide pour un attachement
 tracker_index	trackers_for	Outil de suivi pour $1
 tracker_index	admin_all_trackers	Administration des outils de suivi
