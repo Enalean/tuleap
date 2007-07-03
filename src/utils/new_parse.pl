@@ -54,8 +54,8 @@ if ($sys_force_ssl) {
   $server_url="http://$sys_default_domain";
 }
 
-# Win accounts are activated if /etc/smbpasswd exists.
-my $winaccount_on = -f "/etc/smbpasswd";
+# Win accounts are activated if /etc/samba/smbpasswd exists.
+my $winaccount_on = -f "/etc/samba/smbpasswd";
 my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 # file templates
@@ -80,7 +80,7 @@ my ($up_group, $new_group, $del_group) = ("0","0","0");
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
-@smbpasswd_array = open_array_file("/etc/smbpasswd") if ($winaccount_on); # doesn't exist?? XXX
+@smbpasswd_array = open_array_file("/etc/samba/smbpasswd") if ($winaccount_on); # doesn't exist?? XXX
 @htpasswd_array = open_array_file($apache_htpasswd);
 
 #LJ The file containing all allowed root for CVS server
@@ -149,11 +149,12 @@ while ($ln = pop(@userdump_array)) {
 		  ++$del_user;
 		}
 		
-	} elsif ($unix_status eq 'S' && $user_exists) {
-		suspend_user($username);
-		suspend_winuser($username);
-		suspend_httpuser($username);
-		++$suspend_user;
+        } elsif (($unix_status eq 'S' || $status eq 'S') && $user_exists) {
+           if (suspend_user($username)) {
+             suspend_winuser($username);
+             suspend_httpuser($username);
+             ++$suspend_user;
+           }
 		
 	} elsif ($unix_status eq 'S' && !$user_exists) {
 		# This might happen e.g. after a server migration 
@@ -171,7 +172,7 @@ print ("\n	User Processing Results\n\n");
 print "New users accounts      : $new_user\n";
 print "Updated user accounts   : $up_user\n";
 print "Deleted user accounts   : $del_user\n";
-print "Suspended user accounts : $del_user\n";
+print "Suspended user accounts : $suspend_user\n";
 print "User account problems   : $error_user\n";
 
 #
@@ -671,7 +672,7 @@ print "Deleted groups   : $del_group\n";
 write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
-write_array_file("/etc/smbpasswd", @smbpasswd_array) if ($winaccount_on);
+write_array_file("/etc/samba/smbpasswd", @smbpasswd_array) if ($winaccount_on);
 write_array_file($apache_htpasswd, @htpasswd_array);
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
@@ -896,9 +897,9 @@ sub delete_user {
         }
 	
 	print("Deleting User : $this_user\n");
-	system("cd $homedir_prefix ; /bin/tar -czf $tmp_dir/$username.tar.gz $username");
-        chmod 0600, "$tmp_dir/$username.tar.gz";
-	system("rm -fr $homedir_prefix/$username");
+	system("cd $homedir_prefix ; /bin/tar -czf $tmp_dir/$this_user.tar.gz $this_user");
+        chmod 0600, "$tmp_dir/$this_user.tar.gz";
+	system("rm -fr $homedir_prefix/$this_user");
 }
 
 sub delete_winuser {
@@ -943,20 +944,23 @@ sub suspend_user {
 	my $this_user = shift(@_);
 	my ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv, $counter);
 	
-        $counter =0;	
+        $counter =0;
+	$found=0;
 	foreach (@shadow_array) {
 	  ($s_username, $s_passwd, $s_date, $s_min, $s_max, $s_inact, $s_expire, $s_flag, $s_resv) = split(":", $_);
 	  if ($this_user eq $s_username) {
 	    # if already suspended then give up
 	    if ($s_passwd =~ /^!!/) {
-		last;
+              return 0;
 	    } else {
+                $found=1;
 	        my $new_passwd = "!!" . $s_passwd;
 	        $shadow_array[$counter] = "$s_username:$new_passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
 	    }
 	  }
 	  $counter++;
 	}
+        if ($found) { return 1; }
 }
 
 sub suspend_winuser {
