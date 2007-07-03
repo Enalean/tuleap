@@ -262,6 +262,7 @@ if ($SERVER_NAME != 'localhost' &&
     $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
     $SCRIPT_NAME != '/account/pending-resend.php' &&
     $SCRIPT_NAME != '/account/verify.php' &&
+    $SCRIPT_NAME != '/scripts/check_pw.js.php' &&
     strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0 &&
     strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0 ) {
     
