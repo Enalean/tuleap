@@ -2823,6 +2823,7 @@ CREATE TABLE artifact_cc (
 #
 # Table structure for table 'artifact_file'
 #
+# Limit is 1 TB of data (default was 4GB)
 CREATE TABLE artifact_file (
 	id int(11) NOT NULL auto_increment,
 	artifact_id int(11) NOT NULL default '0',
@@ -2835,7 +2836,7 @@ CREATE TABLE artifact_file (
 	submitted_by int(11) NOT NULL,
 	PRIMARY KEY  (id),
 	KEY artifact_id (artifact_id)
-);
+) MAX_ROWS=1000000 AVG_ROW_LENGTH=1000000;
 
 #
 # Table structure for table 'artifact_notification'
