@@ -342,6 +342,16 @@ UPDATE bug_field SET field_name='release_name' where field_name='release';
 # SR #894 - Project long name way too short
 ALTER TABLE groups CHANGE group_name group_name VARCHAR( 255 ) DEFAULT NULL;
 
+# Support for more than 4GB table in MySQL -> 1TB
+ALTER TABLE artifact_file MAX_ROWS = 1000000 AVG_ROW_LENGTH = 1000000;
+
+
+###############################################################################
+# This should have been done earlier. Nevertheless, fix remaining shells if any
+
+UPDATE user SET shell='/usr/lib/codex/bin/cvssh-restricted' WHERE shell='/usr/local/bin/cvssh-restricted';
+UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvssh';
+
 ###############################################################################
 # Personalizeable layout
 -- 
