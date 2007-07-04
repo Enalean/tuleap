@@ -27,7 +27,7 @@ admin_main	display_user	Afficher les utilisateurs commençant par&nbsp;:
 admin_main	search_user	ou chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur)&nbsp;:
 admin_main	search	Chercher
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
-admin_main	validated_user	Utilisateurs validés en<a href="$1"><B> attente d'activation par e-mail</a>
+admin_main	validated_user	Utilisateurs validés en <a href="$1"> attente d'activation par e-mail</a>
 admin_main	need_approval	approbation requise
 admin_main	need_validation	validation requise
 admin_main	header_group	Administration de groupes
