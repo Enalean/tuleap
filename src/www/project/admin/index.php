@@ -195,10 +195,11 @@ $template =& TemplateSingleton::instance();
 
 print '
 <HR NoShade SIZE="1">
-<P>
-<TABLE WIDTH="100%" BORDER="0">
+<P>';
+if (user_is_super_user()) {
+    print '<TABLE WIDTH="100%" BORDER="0">
  <TR>
-  <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectAdministration.html#ProjectType').' : </B>
+  <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : </B>
       <FORM action="'. $PHP_SELF .'" method="post">
       <INPUT TYPE="HIDDEN" NAME="func" VALUE="change_group_type">
       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
@@ -208,7 +209,9 @@ print '
  </TR>
 </TABLE>
 ';
-
+} else {
+    print '<B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : '.$template->getLabel($group->getType()).'</B>';
+}
 $template_group = group_get_object($group->getTemplate());
 $template_name = $template_group->getPublicName();
 print '

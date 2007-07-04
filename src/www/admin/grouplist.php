@@ -58,23 +58,28 @@ if ($form_catroot == 1) {
 <TD><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','unix_grp'); ?></b></TD>
 <TD><b><?php echo $Language->getText('global','status'); ?></b></TD>
+<TD><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_grouplist','categ'); ?></b></TD>
 <TD><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TD>
-<TD><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TD>
 </TR>
 
 <?php
 $odd_even = array('boxitem', 'boxitemalt');
 $i = 0;
+// Get project type label
+$template =& TemplateSingleton::instance();
 while ($grp = db_fetch_array($res)) {
 	print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
-	print "<td><a href=\"groupedit.php?group_id=$grp[group_id]\">$grp[group_name]</a></td>";
-	print "<td>$grp[unix_group_name]</td>";
-	print "<td>$grp[status]</td>";
-	print "<td>$grp[is_public]</td>";
-	print "<td>$grp[license]</td>";
+	print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
+	print '<td>'.$grp['unix_group_name'].'</td>';
+	print '<td>'.$grp['status'].'</td>';
+	// group type
+	print "<td>".$template->getLabel($grp['type'])."</td>";
+
+	print '<td>'.$grp['is_public'].'</td>';
+	print '<td>'.$grp['license'].'</td>';
 	
 	// categories
 	$count = db_query("SELECT group_id FROM group_category WHERE "
@@ -84,9 +89,6 @@ while ($grp = db_fetch_array($res)) {
 	// members
 	$res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$grp[group_id]");
 	print "<TD>" . db_numrows($res_count) . "</TD>";
-
-	// group type
-	print "<td>$grp[type]</td>";
 
 	print "</tr>\n";
 }
