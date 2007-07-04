@@ -104,10 +104,6 @@ class WikiCloner {
       $attachments_array = $this->cloneWikiAttachementTable();
       $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
       $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
-      $attachments_src_path = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id;
-      $new_attachments_path = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id;
-      $cmd = "cp -r " . $attachments_src_path . ' ' . $new_attachments_path;
-      system($cmd);
       $this->cloneWikiPermission();
       $this->cloneWikiPagesPermissions($arr);
 
@@ -219,24 +215,40 @@ class WikiCloner {
   }
   
  /**
-   *  Clone wiki_attachment table
+   *  Clone wiki_attachment table and create attachment directories.
    *
    *  @return hash : template attachment id => new attachment id
    *
    */
   function cloneWikiAttachementTable(){
+      //Create attachement directory 
+      mkdir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id, 0766);
+      
       $ids = array();
       $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this->template_id));
       while($row = db_fetch_array($result)) {
           $id = $row['id'];
 	  $name = $row['name'];
 	  $ids[$id] = $this->insertNewAttachment($name);
+	  // Create a directory for attachment file revisions.
+	  $this->createAttachmentDir($name);
       }
       return $ids;
   }
+  
+ /**
+   *
+   *  Create attachment directory in new project attachment space..
+   *
+   *  @param string : name of the attachment
+   *
+   */
+  function createAttachmentDir($name){
+      mkdir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id . '/' . $name, 0766);
+  }
  
  /**
-   *  Clone wiki_attachment_revision table
+   *  Clone wiki_attachment_revision table and attachment file revisions.
    *
    *  @param hash: template attachment revision id => new attachment revision id.
    *
@@ -254,11 +266,33 @@ class WikiCloner {
 	          $sql = db_query(sprintf("SELECT id from wiki_attachment_revision WHERE attachment_id=%d AND revision=%d", $new_id, $row['revision']));
 		  if(db_numrows($sql) > 0){
 	              $array_rev[$tmpl_id] = db_result($sql, 0, 'id');
+		      // Clone attachment file revision.
+		      $this->cloneAttachmentFileRevision($new_id, $row['revision']);
 		  }
 	      }
 	  }
       }
       return $array_rev;
+  }
+  
+ /**
+   *
+   *  Clone an attachment file revision.
+   *
+   *  @param int : attachment id.
+   *
+   *  @param string : attachment name.
+   *
+   *
+   */
+  function cloneAttachmentFileRevision($id, $revision_num){
+       $result = db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id));
+       if(db_numrows($result) > 0){
+           $attacment_name = db_result($result, 0, 'name');
+	   $src = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id . '/' . $attacment_name . '/' . $revision_num;
+	   $dst = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id . '/' . $attacment_name . '/' . $revision_num;
+	   copy($src, $dst);
+       }
   }
   
  /**
