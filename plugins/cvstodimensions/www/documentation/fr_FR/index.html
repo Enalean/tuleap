@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<meta http-equiv="Content-Style-Type" content="text/css" />
+		<meta http-equiv="Content-Language" content="fr" />
+		<title>Documentation de la passerelle CVS vers Dimensions</title>
+		<link rel="stylesheet" href="../style.css" type="text/css" media="screen, print" />
+		<link rel="stylesheet" href="screenshots.css" type="text/css" media="screen" />
+	</head>
+	<body>
+		<div id="documentation">
+		    <h1>Documentation de de la passerelle CVS vers Dimensions</h1>
+			<div class="section">
+				<h2><a name="introduction">Introduction</a></h2>
+				<div class="section">Si vous gérez actuellement vos sources avec CVS, 
+     	il demeure important d'archiver régulièrement les versions 
+     	stables de votre projet dans 26C. A cet effet, vous pouvez 
+     	utiliser cette passerelle afin de transférer les éléments gérés 
+     	dans CVS vers Dimensions/26C. Cette passerelle se décompose en
+     	trois étapes :
+					<dl>
+						<dt><a href="#parameters">Enregistrer les paramètres</a></dt>
+						<dd>Il faut tout d'abord enregistrer les paramètres necessaires au bon 
+	  		fonctionnement du transfert vers Dimensions. Ceci est à faire lors
+	  		du premier transfert et après la création d'un nouveau module CVS.</dd>
+						<dt><a href="#transfer">Transférer un tag</a></dt>
+						<dd>Une fois les paramètres enregistrés, on peut choisir le tag à transférer,
+	  		renseigner le mot de passe et lancer le transfert.</dd>
+                        <dt><a href="#historic">Visualiser l'historique des transferts</a></dt>
+						<dd>Une fois le tag transféré, il apparrait dans le tableau des transferts. Vous pouvez 
+	  		ainsi consulter tous vos anciens transferts, qu'ils aient échoués ou non.</dd>
+					</dl>
+				</div>
+				<!-- ################################################################# -->
+				<h2 id="parameters">Enregistrer les paramètres</h2>
+				<div class="section">
+					<div class="screenshot">
+						<img alt="Capture d'écran de l'interface 'Paramètres'" src="cvsToDim_parameters.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Paramètres'</div>
+					</div>
+					<p>Avant d'effectuer un transfert, vous devez avoir préalablement
+						enregistré les paramètres décrit ci dessous :
+                        <ul>
+                            <li><strong>Product :</strong> il est prérempli avec le nom court de votre projet. Si le nom 
+								court ne correspond pas au product Dimensions (cas non conforme au modèle),
+								ce paramètre peut être modifié.</li>
+                            <li><strong>Database :</strong> ce champs libre vous permet de renseigner la database contenant 
+								le product Dimensions.</li>
+                            <li><strong>Correspondance Module - Design Parts :</strong> l'ensemble des modules CVS du projet est listé. A chacun de ces modules correspond
+								un champ libre vous permettant de renseigner le design part correspondant dans Dimensions.</li>
+                        </ul>
+                    </p>
+                    <p>Vous devez ensuite enregistrer ces paramètres en cliquant sur le 
+						bouton "Enregistrer" Ainsi lors de chaque transfert concernant 
+						votre projet, vous n'aurez pas à renseigner de nouveau ces paramètres. 
+						Si vous avez nouveaux modules dans votre projet, une nouvelle ligne
+						correspondant à chacun des nouveaux modules apparetra avec un champs 
+						libre que vous devrez obligatoirement remplir avant d'effectuer un transfert.
+                    </p>
+				</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+				<!-- ################################################################# -->
+				<h2 id="transfer">Transférer un tag</h2>
+				<div class="section">
+					<div class="screenshot">
+						<img alt="Capture d'écran de l'interface 'Transfert de tags'" src="cvsToDim_transfer.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Transfert de tags'</div>
+					</div>
+					<p>Après avoir enregistrer les paramètres, vous allez pouvoir
+						effectuer votre transfert vers Dimensions. Pour cela il vous faut 
+						encore renseigner deux informations:
+                       <ul>
+                        <li><strong>Tag :</strong> vous permet de choisir entre les différents tags transférables existants celui qui 
+							servira au transfert.
+                        </li>
+                        <li><strong>Mot de passe :</strong> un champ libre vous permet de saisir votre mot de passe 26C 
+							correspondant à votre login 26C identique à votre login CodeX.
+                        </li> 
+                       </ul>
+                    </p>
+                    <p>Vous pouvez maintenant lancer le transfert en cliquant sur
+      					le bouton "Transférer"</p>
+      					
+      				<h3>Coup de pouce : tags transférables</h3>
+      				<p>Un tag est transférable s'il vérifie certains critères :
+      					<ul>
+      						<li><em>GoRoCo :</em> 
+								pour qu'un tag soit transférable il doit être dde la forme 'GxxRyyCzz'.
+				        			Les tags dont le nom contient des caractères avant ou après la chaîne 
+								"GxxRyyCzz" ne sont pas pris en compte.Les xx, yy et zz peuvent être 
+								sur un ou deux caratères numériques.</li>
+							<li><em>Tag antérieur :</em> 
+								à partir d'un GxxRyyCzz donné, on peut importer seulement les Czz supérieurs.
+								A partir du moment ou un workset GxxRyy est créé, on interdit la création d'un 
+								workset antérieur (Gxx inférieur ou Ryy inférieur sur un Gxx égal).<br/>
+								Exemple :
+								<ul>
+									<li>G02R03 créé lors de l'import du tag G02R03C01</li>
+									<li>Si il n'existe pas de workset G02R02, on ne remonte aucun tags de 
+	    								type G02R02CX</li>
+	    							<li>par contre, si le workset G02R02 existe déjà (c'est-à-dire 
+	  									qu'on a déjà remonté un tag G02R02CX avant d'avoir remonter un tag G02R03CX), 
+	  									on peut importer des tags G02R02CX+n => c'est le cas d'un correction pour la maintenance.</li>
+								</ul>	
+								<li><em>Tag sur tout le projet :</em> 
+									un tag doit être appliqué à tout le projet. Si ce n'est pas le cas, le tag apparaitra 
+									tout de même dans la liste des tags transférable. En revanche lors du transfert de CVS vers
+									Dimensions, un dossier vide sera créé et donc transféré pour chaque module n'appartenant pas au tag.</li>
+							</li>
+      					</ul>
+      				</p>	
+                </div>
+                
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+                <!-- ################################################################# -->
+				<h2 id="historic">Visualiser l'historique des transferts</h2>
+				<div class="section">
+					<div class="screenshot">
+						<img alt="Capture d'écran de l'interface 'Historique des transferts'" src="cvsToDim_historic.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Historique des transferts'</div>
+					</div>
+					<p>Une fois le transfert lancé, vous pouvez le retrouver dans l'écran "Historique".
+					Cet écran contient la liste de tous les transferts effectués avec leur état :
+                    <ul>
+                        <li><strong>En cours :</strong> le transfert a bien été lancé, mais il n'est pas terminé. Le tag sera 
+							provisoirement retiré de la liste des tags transférables. Il sera remi si le transfert échoue.</li>
+                        <li><strong>Succés :</strong> le t,</li>
+                        <li><strong>Transfert annulé :</strong> une tantative de transfert a été faite, mais elle a échouée. Vous trouverez à côté de cet état les 
+								raisons pour lesquelles le transfert a éhoué. Un tag dont le transfert a échoué ne sera pas supprimé
+								de la liste des tags transférables.</li>
+                    </ul>
+                    </p>
+				</div>
+			</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+			</div>
+            <div class="copyright">Copyright &copy; Xerox Corporation, CodeX Team, 2001-2005. All Rights Reserved</div>
+		</div>
+	</body>
+</html>
