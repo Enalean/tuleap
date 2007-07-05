@@ -215,7 +215,8 @@ class WikiCloner {
   }
   
  /**
-   *  Clone wiki_attachment table and create attachment directories.
+   *  Clone wiki_attachment table and create attachment directories. It
+   *  also clones the permissions set on the template attachments.
    *
    *  @return hash : template attachment id => new attachment id
    *
@@ -233,10 +234,62 @@ class WikiCloner {
 	  // Create a directory for attachment file revisions.
 	  $dir_mode = $this->getFileMode($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id . '/' .$name);
 	  $this->createAttachmentDir($name, $dir_mode);
+	  if ($this->attachmentHasAPermission($id)){
+	      $permission = $this->getAttachmentPermission($id);
+	      $this->insertNewAttachmentPermission($ids[$id], $permission); 
+	  }
       }
       return $ids;
   }
   
+ /**
+   *
+   *  Checks if an attachment has a specific permission setted.
+   *
+   *  @param int : template attachment id.
+   *
+   *  @return boolean.
+   *
+   */
+  function attachmentHasAPermission($attachment_id){
+      $result = db_query(sprintf("SELECT count(*) AS nb FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=%d", $attachment_id));
+      if (db_result($result, 0, 'nb') > 0){
+          return true;   
+      }else{
+          return false;   
+      }
+  }
+  
+  /**
+  *
+  *  Fetches the permission data set on a template attachment.
+  *
+  *  @param int : template attachment id.
+  *
+  *  @return int : authorized ugroup_id.
+  *
+  */
+  function getAttachmentPermission($attachment_id){
+      $result = db_query(sprintf("SELECT ugroup_id FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=%d", $attachment_id));
+      if(db_result($result, 0, 'ugroup_id')){
+          return db_result($result, 0, 'ugroup_id');
+      }
+  } 
+
+ /**
+   *
+   *  Clone the permission set on the template attachment.
+   *
+   *  @param int : template attachment id
+   *
+   *  @param int : cloned attachment id.
+   *
+   */
+  function insertNewAttachmentPermission($new_attachment_id, $permission){
+      $result = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
+                                ."VALUES ('WIKIATTACHMENT_READ', %d, %d)", $new_attachment_id, $permission));   
+  }
+ 
  /**
    *
    *  Create attachment directory in new project attachment space..
@@ -588,7 +641,7 @@ class WikiCloner {
       $result = db_query("SELECT * FROM permissions where permission_type='WIKIPAGE_READ'");
       while($row = db_fetch_array($result)){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id']), $this->group_id));
+	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id']), $row['ugroup_id']));
       
       }
 
