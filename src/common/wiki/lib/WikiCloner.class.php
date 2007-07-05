@@ -271,11 +271,16 @@ class WikiCloner {
   */
   function getAttachmentPermission($attachment_id){
       $result = db_query(sprintf("SELECT ugroup_id FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=%d", $attachment_id));
-      if(db_result($result, 0, 'ugroup_id')){
-          return db_result($result, 0, 'ugroup_id');
+      $ugroup = db_result($result, 0, 'ugroup_id');
+      if( $ugroup > 100){
+          //return db_result($result, 0, 'ugroup_id');
+	  $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", $this->group_id, $ugroup));
+	  return db_result($res, 0, 'dst_ugroup_id');
+      }else{
+          return $ugroup;
       }
-  } 
-
+  }
+  
  /**
    *
    *  Clone the permission set on the template attachment.
