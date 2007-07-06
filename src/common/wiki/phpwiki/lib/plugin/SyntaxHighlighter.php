@@ -162,7 +162,7 @@ extends WikiPlugin
                 $html->pushContent($this->error(fmt("invalid %s ignored",'color')));
                 $color = false;
             }
-            if (!empty($color)) $args .= " --style $color -c ".FindFile('themes')."/default/highlight-$color.css";
+            if (!empty($color)) $args .= " --style $color -c ".FindFile("uploads")."/highlight-$color.css";
             if (!empty($style)) $args .= " -F $style";
             $commandLine = HIGHLIGHT_EXE . "$args -q -X -f -S $syntax";
             if (check_php_version(4,3,0))
@@ -174,7 +174,7 @@ extends WikiPlugin
             $pre = HTML::pre(HTML::raw($code));
             $pre->setAttr('class','tightenable top bottom');
             $html->pushContent($pre);
-            $css = $GLOBALS['WikiTheme']->_CSSlink('',empty($color) ? 'highlight.css' : "highlight-$color.css",'');
+            $css = $GLOBALS['WikiTheme']->_CSSlink('',empty($color) ? 'highlight.css' : "uploads/highlight-$color.css",'');
             return HTML($css,$html);
         } else {
             return $this->error(fmt("empty source"));
