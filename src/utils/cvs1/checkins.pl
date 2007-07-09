@@ -14,6 +14,9 @@
 #    This Perl include file mimics some of the fucntion in www/include/Group.class.php
 #    to allow Perl scripts to handle checkins tables in codex codex db
 
+
+require $utils_path."/session.pl";
+
 sub cvs_db_connect {
 	my ($foo, $bar);
 	
@@ -131,6 +134,8 @@ sub db_get_commit {
     }
     return 0;
   } else {
+    # Update last_access_date
+    session_store_access($uid);
     if ($debug) {
       print STDERR "\t size: ", $rows, "\n";
       print STDERR "\t created commit_id: ",  $sth->{'mysql_insertid'};

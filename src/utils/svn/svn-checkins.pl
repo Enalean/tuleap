@@ -15,6 +15,9 @@
 #   CodeX Database
 #
 
+
+require $utils_path."/session.pl";
+
 sub db_get_field {
   my ($table, $fieldname, $value, $retfieldname) = @_;
   my ($query, $res);
@@ -118,6 +121,8 @@ sub db_get_commit {
     }
     return 0;
   } else {
+    # Update last_access_date
+    session_store_access($uid);
     if ($debug) {
       print STDERR "\t size: ", $rows, "\n";
       print STDERR "\t created commit_id: ",  $sth->{'mysql_insertid'};
