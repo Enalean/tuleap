@@ -194,7 +194,6 @@ project_admin_index	tracker_admin	Administrations des outils de suivi
 project_admin_index	no_tracker_found	Aucun outil de suivi n'est accessible
 project_admin_index	admin	Administration
 project_admin_index	file_rel	Publication de fichiers
-project_admin_index	edit_add_rel	[Modifier/Ajouter une version]
 project_admin_index	quick_file_add	[Ajout rapide d'une version]
 project_admin_index	if_1_file_in_rel	Si vous avez juste un fichier à publier.
 project_admin_index	packages_available	Paquet(s) actuellement disponible(s)&nbsp;:

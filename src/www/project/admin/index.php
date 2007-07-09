@@ -431,11 +431,6 @@ if ($project->usesFile()) {
 
     echo '
 	&nbsp;<BR>
-	<CENTER>
-	<A href="/file/admin/editpackages.php?group_id='.$group_id.'"><B>'.$Language->getText('project_admin_index','edit_add_rel').'</B></A><BR>
-	</CENTER>
-
-	<HR>
 	<B>'.$Language->getText('project_admin_index','packages_available').'</B>
 
      <P>';
