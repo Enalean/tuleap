@@ -530,6 +530,8 @@ $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 TODO revision #6417 #6479 : themes, db, local.inc
 TODO revision #6419 (follow-up comments) : themes
 
+TODO "Add the SOAP API change in release notes (about function getArtifacts)"
+
 todo "If you have custom themes:"
 todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed"
 todo "-----------------------------------------"

@@ -338,6 +338,18 @@ $server->wsdl->addComplexType(
 );
 
 $server->wsdl->addComplexType(
+    'ArtifactQueryResult',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'total_artifacts_number' => array('name'=>'status_id', 'type' => 'xsd:int'),
+        'artifacts' => array('name'=>'artifacts', 'type' => 'tns:ArrayOfArtifact')
+    )
+);
+
+$server->wsdl->addComplexType(
     'ArtifactCanned',
     'complexType',
     'struct',
@@ -395,13 +407,13 @@ $server->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'report_id'           => array('name'=>'report_id', 'type' => 'xsd:int'),
-        'group_artifact_id'   => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
+        'report_id'         => array('name'=>'report_id', 'type' => 'xsd:int'),
+        'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'user_id'           => array('name'=>'user_id', 'type' => 'xsd:int'),
-        'name'                     => array('name'=>'name', 'type' => 'xsd:string'),
-        'description'           => array('name'=>'description', 'type' => 'xsd:string'),
-        'scope'           => array('name'=>'scope', 'type' => 'xsd:string'),
-        'fields'          => array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactReportField')    
+        'name'              => array('name'=>'name', 'type' => 'xsd:string'),
+        'description'       => array('name'=>'description', 'type' => 'xsd:string'),
+        'scope'             => array('name'=>'scope', 'type' => 'xsd:string'),
+        'fields'            => array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactReportField')    
     )
 );
 
@@ -625,12 +637,12 @@ $server->register(
           'offset' => 'xsd:int',
           'max_rows' => 'xsd:int'
     ),
-    array('return'=>'tns:ArrayOfArtifact'),
+    array('return'=>'tns:ArtifactQueryResult'),
     $uri,
     $uri.'#getArtifacts',
     'rpc',
     'encoded',
-    'Returns the array of Artifacts of the tracker group_artifact_id in the project group_id 
+    'Returns the ArtifactQueryResult of the tracker group_artifact_id in the project group_id 
      that are matching the given criteria. If offset AND max_rows are filled, it returns only 
      max_rows artifacts, skipping the first offset ones. 
      Returns a soap fault if the group_id is not a valid one or if the group_artifact_id is not a valid one.'
@@ -1470,7 +1482,7 @@ function artifactrules_to_soap($artifact_type) {
 }
 
 /**
- * getArtifacts - returns an array of Artifacts that belongs to the project $group_id, to the tracker $group_artifact_id,
+ * getArtifacts - returns an ArtifactQueryResult that belongs to the project $group_id, to the tracker $group_artifact_id,
  *                and that match the criteria $criteria. If $offset and $max_rows are filled, the number of returned artifacts
  *                will not exceed $max_rows, beginning at $offset.
  *
@@ -1484,7 +1496,7 @@ function artifactrules_to_soap($artifact_type) {
  * @param array{SOAPCriteria} $criteria the criteria that the set of artifact must match
  * @param int $offset number of artifact skipped. Used in association with $max_rows to limit the number of returned artifact.
  * @param int $max_rows the maximum number of artifacts returned
- * @return array the array of SOAPArtifact that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
+ * @return the SOAPArtifactQueryResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
 function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows) {
@@ -1519,9 +1531,10 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
         } elseif ($af->isError()) {
             return new soap_fault(get_artifact_factory_fault,'getArtifacts',$atf->getErrorMessage(),$atf->getErrorMessage());
         }
+        $total_artifacts = 0;
         // the function getArtifacts returns only the artifacts the user is allowed to view
-        $artifacts = $af->getArtifacts($criteria, $offset, $max_rows);
-        return artifacts_to_soap($artifacts); 
+        $artifacts = $af->getArtifacts($criteria, $offset, $max_rows, $total_artifacts);
+        return artifact_query_result_to_soap($artifacts, $total_artifacts); 
     } else {
         return new soap_fault(invalid_session_fault,'getArtifactTypes','Invalid Session ','');
     }
@@ -1667,6 +1680,14 @@ function artifacts_to_soap($at_arr) {
     }
     return $return;
 }
+
+function artifact_query_result_to_soap($artifacts, $total_artifacts_number) {
+    $return = array();
+    $return['total_artifacts_number'] = $total_artifacts_number;
+    $return['artifacts'] = artifacts_to_soap($artifacts);
+    return $return;
+}
+
 
 function setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact; 

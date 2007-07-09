@@ -108,16 +108,18 @@ class ArtifactFactory extends Error {
 	 *	@param $offset   : the index of artifact to begin
 	 *	@param $max_rows : number of artifacts to return
 	 *
+     *  @param OUT $total_artifacts : total number of artifacts (if offset and max_rows were not here) 
+     *
 	 *	@return	array	The array of Artifact objects.
 	 */
-	function getArtifacts($criteria, $offset, $max_rows) {
+	function getArtifacts($criteria, $offset, $max_rows, &$total_artifacts) {
 		global $Language, $art_field_fact;
         
         $ACCEPTED_OPERATORS = array('=', '<', '>', '<>', '<=', '>=');
         
 		$artifacts = array();
 		if (is_array($criteria) && count($criteria) > 0) {
-            $sql = "SELECT a.*,afv.valueInt as assigned_to 
+		    $sql = "SELECT a.*,afv.valueInt as assigned_to 
                     FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv 
                     WHERE a.group_artifact_id = ".$this->ArtifactType->getID()." AND 
                           a.group_artifact_id = agl.group_artifact_id AND 
@@ -156,6 +158,12 @@ class ArtifactFactory extends Error {
 			$sql = "SELECT a.artifact_id FROM artifact_group_list agl, artifact a WHERE ".
 			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id";
         }
+        
+        // we count the total number of artifact (without offset neither limit) to be able to perform the pagination 
+        $result_count = db_query($sql);
+        $rows_count = db_numrows($result_count); 
+        $total_artifacts = $rows_count;
+        
         $offset = intval($offset);
         $max_rows = intval($max_rows);
         if ($max_rows > 0) {
@@ -166,9 +174,9 @@ class ArtifactFactory extends Error {
 		}
         
         $result=db_query($sql);
-		$rows = db_numrows($result);
+        $rows = db_numrows($result);
 		$this->fetched_rows=$rows;
-		if (db_error()) {
+        if (db_error()) {
 			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
 			return false;
 		} else {
