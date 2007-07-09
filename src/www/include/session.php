@@ -290,6 +290,7 @@ function session_set() {
 
 	if ($id_is_good) {
 		session_setglobals($G_SESSION['user_id']);
+                session_store_access();
 	} else {
 		unset($G_SESSION);
 		unset($G_USER);
@@ -337,4 +338,20 @@ function session_delete($sessionKey) {
 function session_hash() {
     return isset($GLOBALS['session_hash']) ? $GLOBALS['session_hash'] : false;
 }
+
+function session_store_access() {
+    $current_date=time();
+    $res=db_query("SELECT last_access_date FROM user WHERE user_id='".user_getid()."'");
+    if (db_numrows($res)) {
+        $last_access_date=db_result($res,0,'last_access_date');
+        // Don't log access if already accessed in the past 6 hours (scalability+privacy)
+        if (abs($current_date - $last_access_date) > 21600) {
+            // make new date entries into db
+            $upd_res=db_query("UPDATE user SET last_access_date='".$current_date."' WHERE user_id='".user_getid()."'");
+        }
+    }
+}
+
+
+
 ?>
