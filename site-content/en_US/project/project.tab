@@ -189,7 +189,6 @@ project_admin_index	tracker_admin	Tracker Admin
 project_admin_index	no_tracker_found	No Accessible Trackers Found
 project_admin_index	admin	Admin
 project_admin_index	file_rel	File Releases
-project_admin_index	edit_add_rel	[Edit/Add File Releases]
 project_admin_index	quick_file_add	[Quick Add File Release]
 project_admin_index	if_1_file_in_rel	if you have only one file to release.
 project_admin_index	packages_available	Package(s) currently available:
