@@ -141,7 +141,7 @@ class Mail {
             if(!empty($email)) {
                 $dar = $user_dao->searchStatusByEmail($email);
                 if ($dar->rowCount() > 0) {
-                    $allowed_status = array('A', 'R', 'P');
+                    $allowed_status = array('A', 'R', 'P', 'V', 'W');
                     $one_with_status_allowed_found = false;
                     while (($row = $dar->getRow()) && !$one_with_status_allowed_found) {
                         if (in_array($row['status'], $allowed_status)) {
