@@ -1669,12 +1669,19 @@ class Artifact extends Error {
     /**
      *	getExtraFieldData - get an array of data for the extra fields associated with this artifact
      *
+     *      the array returned looks like 
+     *          array(
+     *             [field_id] => fieldvalues
+     *             [field_id] => fieldvalues
+     *          )
+     *      for multi select boxes, the values are separated by a comma
+     *
      *	@return	array	array of data
      */
     function &getExtraFieldData() {
     	global $art_field_fact;
     	$extrafielddata = array();
-    	
+
     	// now get the values for generic fields if any
         $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='".$this->getID()."'";
         $res=db_query($sql);
@@ -1682,26 +1689,26 @@ class Artifact extends Error {
             // if no result then it is possible that there isn't any generic fields
             return;
         }
+        // Walk the database result (possible to get several values with a same field_id (multi select box))
         while ($row = db_fetch_array($res)) {
-            $data_fields[$row['field_id']] = $row;
-        }
-
-        // Get the list of all fields used by this tracker and append
-        // the values for these generic fields to data_array
-        $fields = $art_field_fact->getAllUsedFields();
-
-        while (list($key,$field) = each($fields) ) {
-            //echo $field->getName()."-".$field->getID()."<br>";
-            // Skip! Standard field values fectched in previous query
-            // and comment_type_id is not stored in artifact_field_value table
-            if ( $field->isStandardField() ||
-                 $field->getName() == "comment_type_id") {
-                continue;
-            }
-            $extrafielddata[$field->getID()] = $data_fields[$field->getID()][$field->getValueFieldName()];
-
+            $data_fields[$row['field_id']][] = $row;
         }
         
+        // compute the extrafielddata array by walking the data_fields array
+        $extrafielddata = array();
+        foreach ($data_fields as $field_id => $data_field) {
+            $current_field = $art_field_fact->getFieldFromId($field_id);
+            if (isset($current_field) && $current_field && !$current_field->isError()) {
+                // $values contains the values of the field
+                $values = array();
+                foreach ($data_field as $data_value) {
+                    $values[] = $data_value[$current_field->getValueFieldName()];
+                }
+                // if there is more than one value, we separate them with a comma.
+                // if not, implode will return the single value.
+                $extrafielddata[$field_id] = implode(",", $values);
+            }
+        }
         return $extrafielddata;
     }
 
