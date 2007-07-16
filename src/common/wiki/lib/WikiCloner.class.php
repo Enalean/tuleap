@@ -259,6 +259,23 @@ class WikiCloner {
           return false;   
       }
   }
+ 
+ /**
+  *
+  * Returns mapped ugroup_id in the new project
+  *
+  *  @param int : ugroup_id at original project.
+  *
+  *  @returns int : mapped ugroup_id. 
+  */
+  function getMappedUGroupId($ugid){
+      if ($ugid > 100){
+          $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", $this->group_id, $ugid));
+          return db_result($res, 0, 'dst_ugroup_id');
+      }else{
+          return $ugid;
+      }
+  }
   
   /**
   *
@@ -272,13 +289,7 @@ class WikiCloner {
   function getAttachmentPermission($attachment_id){
       $result = db_query(sprintf("SELECT ugroup_id FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=%d", $attachment_id));
       $ugroup = db_result($result, 0, 'ugroup_id');
-      if( $ugroup > 100){
-          //return db_result($result, 0, 'ugroup_id');
-	  $res = db_query(sprintf("SELECT dst_ugroup_id FROM ugroup_mapping WHERE to_group_id=%d AND src_ugroup_id=%d", $this->group_id, $ugroup));
-	  return db_result($res, 0, 'dst_ugroup_id');
-      }else{
-          return $ugroup;
-      }
+      return $this->getMappedUGroupId($ugroup);
   }
   
  /**
@@ -630,7 +641,9 @@ class WikiCloner {
       $result = db_query(sprintf("SELECT * FROM permissions where permission_type='WIKI_READ' and object_id=%d", $this->template_id));
       while($row = db_fetch_array($result)){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-	                         ."VALUES ('WIKI_READ', %d, %d)", $this->group_id, $row['ugroup_id']));
+	                         ."VALUES ('WIKI_READ', %d, %d)", $this->group_id
+				 , $this->getMappedUGroupId($row['ugroup_id'])
+				 ));
       }
   }
   
@@ -646,7 +659,9 @@ class WikiCloner {
       $result = db_query("SELECT * FROM permissions where permission_type='WIKIPAGE_READ'");
       while($row = db_fetch_array($result)){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id']), $row['ugroup_id']));
+	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id'])
+				 , $this->getMappedUGroupId($row['ugroup_id'])
+				 ));
       
       }
 
