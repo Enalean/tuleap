@@ -429,6 +429,33 @@ $server->wsdl->addComplexType(
 );
 
 $server->wsdl->addComplexType(
+    'ArtifactReportDesc',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'report_id'         => array('name'=>'report_id', 'type' => 'xsd:int'),
+        'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
+        'user_id'           => array('name'=>'user_id', 'type' => 'xsd:int'),
+        'name'              => array('name'=>'name', 'type' => 'xsd:string'),
+        'description'       => array('name'=>'description', 'type' => 'xsd:string'),
+        'scope'             => array('name'=>'scope', 'type' => 'xsd:string')    
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfArtifactReportDesc',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReportDesc[]')),
+    'tns:ArtifactReportDesc'
+);
+
+$server->wsdl->addComplexType(
     'ArtifactFile',
     'complexType',
     'struct',
@@ -800,6 +827,22 @@ $server->register(
 );
 
 $server->register(
+    'getArtifactReportsDesc',
+    array('sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'group_artifact_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfArtifactReportDesc'),
+    $uri,
+    $uri.'#getArtifactReportsDesc',
+    'rpc',
+    'encoded',
+    'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the user user_id. 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     or if the user_id is not a valid one.'
+);
+
+$server->register(
     'getArtifactAttachedFiles',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -813,7 +856,7 @@ $server->register(
     'encoded',
     'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     or if the artifact_id is not a valid one.'
+     or if the artifact_id is not a valid one. NOTE : for performance reasons, the result does not contain the content of the file. Please use getArtifactAttachedFile to get the content of a single file'
 );
 
 $server->register(
@@ -830,6 +873,25 @@ $server->register(
     'encoded',
     'Deprecated. Please use getArtifactAttachedFiles'
 );
+
+$server->register(
+    'getArtifactAttachedFile',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'group_artifact_id'=>'xsd:int',
+          'artifact_id'=>'xsd:int',
+          'file_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArtifactFile'),
+    $uri,
+    $uri.'#getArtifactAttachedFile',
+    'rpc',
+    'encoded',
+    'Returns the attached file (ArtifactFile) with the id file_id attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     if the artifact_id is not a valid one, or if the file_id doesnt match with the given artifact_id.'
+);
+
 
 $server->register(
     'getArtifactById',
@@ -1314,10 +1376,10 @@ function artifacttype_to_soap($at) {
     $atf = new ArtifactTypeFactory($at->getGroup());
     $arr_count = $atf->getStatusIdCount($at->getID());
     if ( $arr_count ) {
-    	    $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:NULL;
+            $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:NULL;
         $count = array_key_exists('count', $arr_count)?$arr_count['count']:NULL;
     } else {
-    	    $open_count = NULL;
+            $open_count = NULL;
         $count = NULL;
     }
                 
@@ -1452,14 +1514,14 @@ function artifacttypes_to_soap($at_arr) {
         if ($at_arr[$i]->isError()) {
             //skip if error
         } else {
-            $return[] = artifacttype_to_soap($at_arr[$i]);	
+            $return[] = artifacttype_to_soap($at_arr[$i]);  
         }
     }
     return $return;
 }
 
 function artifactrule_to_soap($rule) {
-	$return = array();
+    $return = array();
     $return['rule_id'] = $rule->id;
     $return['group_artifact_id'] = $rule->group_artifact_id;
     $return['source_field_id'] = $rule->source_field;
@@ -1470,7 +1532,7 @@ function artifactrule_to_soap($rule) {
 }
 
 function artifactrules_to_soap($artifact_type) {
-	$return = array();
+    $return = array();
     $arm =& new ArtifactRulesManager();
     $rules = $arm->getAllRulesByArtifactTypeWithOrder($artifact_type->getID());
     if ($rules && count($rules) > 0) {
@@ -2313,7 +2375,72 @@ function &artifactreports_to_soap($artifactreports) {
 }
 
 /**
+ * getArtifactReportsDesc - returns the array of reports (only the description, not the whole structure) of the tracker $group_artifact_id of the project $group_id for the current user
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the reports
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the reports
+ * @return array{SOAPArtifactReportDesc} the array of the reports description of the current user for this tracker,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ */
+function &getArtifactReportsDesc($sessionKey, $group_id, $group_artifact_id) {
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'getArtifactReportsDesc','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'getArtifactReportsDesc',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+        
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactReportsDesc','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactReportsDesc',$at->getErrorMessage(),$at->getErrorMessage());
+        }
+        
+        $report_fact = new ArtifactReportFactory();
+        if (!$report_fact || !is_object($report_fact)) {
+            return new soap_fault(get_report_factory_fault,'getArtifactReportsDesc', 'Could Not Get ArtifactReportFactory', 'Could Not Get ArtifactReportFactory');
+        }
+        
+        return artifactreportsdesc_to_soap($report_fact->getReports($group_artifact_id, user_getid()));
+    
+    } else {
+        return new soap_fault(invalid_session_fault, 'getArtifactReportsDesc', 'Invalid Session ', '');
+    }
+}
+
+function &artifactreportsdesc_to_soap($artifactreportsdesc) {
+    $return = array();
+    if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
+        foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
+            if ($artifactreportdesc->isError()) {
+                //skip if error
+            } else {
+                $return[]=array(
+                    'report_id'          => $artifactreportdesc->getID(),
+                    'group_artifact_id'  => $artifactreportdesc->getArtifactTypeID(),
+                    'name'               => $artifactreportdesc->getName(),
+                    'description'        => $artifactreportdesc->getDescription(),
+                    'scope'              => $artifactreportdesc->getScope()
+                );
+            }
+        }
+    }
+    return $return;
+}
+
+
+/**
  * getArtifactAttachedFiles - returns the array of ArtifactFile of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
+ *
+ * NOTE : by default, this function does not return the content of the files (for performance reasons). To get the binary content of files, give $set_bin_data the true value. 
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the attached files
@@ -2325,8 +2452,9 @@ function &artifactreports_to_soap($artifactreports) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
-    global $art_field_fact; 
+function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false) {
+    global $art_field_fact;
+    
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
@@ -2361,7 +2489,7 @@ function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$art
             return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Permissions denied','Permissions denied');
         }
         
-        return artifactfiles_to_soap($a->getAttachedFiles());
+        return artifactfiles_to_soap($a->getAttachedFiles(), $set_bin_data);
     } else {
         return new soap_fault(invalid_session_fault, 'getArtifactAttachedFiles', 'Invalid Session', '');
     }
@@ -2374,23 +2502,109 @@ function &getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id
     return getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id);
 }
 
-function artifactfiles_to_soap($attachedfiles_arr) {
+/**
+ * getArtifactAttachedFile - returns the ArtifactFile with the id $file_id of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the attached file
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the attached file
+ * @param int $artifact_id the ID of the artifact we want to retrieve the attached file
+ * @param int $file_id the ID of the attached file
+ * @return {SOAPArtifactFile} the attached file of the artifact,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ *              - artifact_id does not match with a valid artifact
+ *              - file_id does not match with the given artifact_id
+ */
+function &getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
+    global $art_field_fact; 
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'getArtifactAttachedFile','Could Not Get Group','Could Not Get Group');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'getArtifactAttachedFile',$grp->getErrorMessage(),$grp->getErrorMessage());
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFile','Could Not Get ArtifactType','Could Not Get ArtifactType');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFile',$at->getErrorMessage(),$at->getErrorMessage());
+        }
+        
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFile', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFile', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+        }
+        
+        $a = new Artifact($at,$artifact_id);
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile','Could Not Get Artifact','Could Not Get Artifact');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile',$a->getErrorMessage(),$a->getErrorMessage());
+        } elseif (! $a->userCanView()) {
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile','Permissions denied','Permissions denied');
+        }
+        $file = artifactfile_to_soap($file_id, $a->getAttachedFiles(), true);
+        if ($file != null) {
+        	   return $file;
+        } else {
+        	   return new soap_fault(invalid_session_fault, 'getArtifactAttachedFile', 'Attached file '.$file_id.' not found', 'Attached file '.$file_id.' not found');
+        }
+    } else {
+        return new soap_fault(invalid_session_fault, 'getArtifactAttachedFile', 'Invalid Session', '');
+    }
+}
+
+function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false) {
     $return = array();
     $rows=db_numrows($attachedfiles_arr);
     for ($i=0; $i<$rows; $i++) {
         $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
         $encoded_data = base64_encode($bin_data);
-        $return[]=array(
+        $return[] = array(
             'id' => db_result($attachedfiles_arr, $i, 'id'),
             'artifact_id' => db_result($attachedfiles_arr, $i, 'artifact_id'),
             'filename' => db_result($attachedfiles_arr, $i, 'filename'),
             'description' => db_result($attachedfiles_arr, $i, 'description'),
-            'bin_data' => $encoded_data,
+            'bin_data' => ($set_bin_data?$encoded_data:null),
             'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
             'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
-            'adddate'  => db_result($attachedfiles_arr, $i, 'adddate'),
+            'adddate' => db_result($attachedfiles_arr, $i, 'adddate'),
             'submitted_by' => db_result($attachedfiles_arr, $i, 'user_name')
         );
+    }
+    return $return;
+}
+
+function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
+    $return = null;
+    $rows = db_numrows($attachedfiles_arr);
+    for ($i=0; $i<$rows; $i++) {
+        $file = array();
+        $file['id'] = db_result($attachedfiles_arr, $i, 'id');
+        $file['artifact_id'] = db_result($attachedfiles_arr, $i, 'artifact_id');
+        $file['filename'] = db_result($attachedfiles_arr, $i, 'filename');
+        $file['description'] = db_result($attachedfiles_arr, $i, 'description');
+        if ($set_bin_data) {
+            $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
+            $encoded_data = base64_encode($bin_data);
+            $file['bin_data'] = $encoded_data;
+        }
+        $file['filesize'] = db_result($attachedfiles_arr, $i, 'filesize');
+        $file['filetype'] = db_result($attachedfiles_arr, $i, 'filetype');
+        $file['adddate']  = db_result($attachedfiles_arr, $i, 'adddate');
+        $file['submitted_by'] = db_result($attachedfiles_arr, $i, 'user_name');
+        if ($file['id'] == $file_id) {
+            $return = $file;
+        }
     }
     return $return;
 }
@@ -2461,7 +2675,7 @@ function dependencies_to_soap($artifact_type, $dependencies) {
     $return = array();
     $rows=db_numrows($dependencies);
     for ($i=0; $i<$rows; $i++) {
-        // check the permission : is the user allowed to see the artifact ?	
+        // check the permission : is the user allowed to see the artifact ? 
         $artifact = new Artifact($artifact_type, db_result($dependencies, $i, 'is_dependent_on_artifact_id'));
         if ($artifact && $artifact->userCanView()) {
             $return[]=array(
@@ -2768,7 +2982,7 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
                 return new soap_fault(add_dependency_fault, 'addArtifactDependencies', 'Dependencies addition for artifact #'.$a->getID().' failed', 'Dependencies addition for artifact #'.$a->getID().' failed');
             }
         } else {
-        	   return new soapval('return', 'xsd:boolean', true);
+               return new soapval('return', 'xsd:boolean', true);
         }
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactDependencies', 'Invalid Session', 'Invalid Session');
@@ -3086,7 +3300,7 @@ function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id,
  * @param int $artifact_cc_id the id of the artifact_cc to delete
  */
 function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_cc_id) {
-	global $art_field_fact; 
+    global $art_field_fact; 
 
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
@@ -3183,14 +3397,14 @@ function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_i
 }
  
 function history_to_soap($group_id,$group_artifact_id,$history) {
-	global $art_field_fact;
+    global $art_field_fact;
 
     $return = array();
     $rows=db_numrows($history);
     for ($i=0; $i<$rows; $i++) {
         // retrieve the field, for permission checks
-        $field_name = db_result($history, $i, 'field_name');	
-    	    $field = $art_field_fact->getFieldFromName($field_name);
+        $field_name = db_result($history, $i, 'field_name');    
+            $field = $art_field_fact->getFieldFromName($field_name);
         if ($field) {
             if ($field->userCanRead($group_id,$group_artifact_id)) {
                 $return[]=array(
@@ -3205,7 +3419,7 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
             }
         } else {
             // used to put non-field changes (e.g: cc list, etc)
-        	    $return[]=array(
+                $return[]=array(
                 //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                 //'artifact_id' => db_result($history, $i, 'artifact_id'),
                 'field_name' => db_result($history, $i, 'field_name'),
