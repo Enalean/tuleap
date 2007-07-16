@@ -11,7 +11,7 @@
 
 $Language->loadLanguageMsg('svn/svn');
 $project=project_get_object($group_id);
-$gname = $project->getUnixName();
+$gname = $project->getUnixName(false);  // don't return a lower case group name
 
 
 if (isset($post_changes)) {
