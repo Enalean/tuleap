@@ -1474,7 +1474,7 @@ class Artifact extends Error {
      * @return array
      */
     function getAttachedFiles () {
-        $sql="SELECT id,artifact_id,filename,filesize,description,bin_data,adddate,user.user_name ".
+        $sql="SELECT id,artifact_id,filename,filesize,filetype,description,bin_data,adddate,user.user_name ".
             "FROM artifact_file,user ".
             "WHERE submitted_by=user.user_id ".
             "AND artifact_id=".$this->getID()." ORDER BY adddate DESC";
