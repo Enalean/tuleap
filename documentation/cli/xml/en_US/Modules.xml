@@ -798,28 +798,26 @@ Array
             </para>
         </section>
 
-<!--
-
-        <section id="TrackerFunctionFiles">
-            <title>files</title>
+        <section id="TrackerFunctionAttachedFiles">
+            <title>attachedFiles</title>
             <para>
-                files: Show a list of files attached to the artifact.
+                attachedFiles: Show a list of files attached to the artifact (content of files is not present).
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>__tracker_id* : Tracker ID.</para>
+                        <para>--tracker_id*: Tracker ID.</para>
                     </listitem>
                     <listitem>
-                        <para>__id* : Artifact ID.</para>
+                        <para>--artifact_id*: Artifact ID.</para>
                     </listitem>
                     <listitem>
-                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
                 <example>
-                    <title>files command</title>
+                    <title>attachedFiles command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker files __tracker_id=116 __id=3
+[mnazaria@linux codex cli ]$ ./codex.php tracker attachedFiles --tracker_id=116 --artifact_id=3
 Array
 (
     [0] => Array
@@ -827,11 +825,22 @@ Array
             [id] => 11
             [artifact_id] => 3
             [name] => screenshot.jpg
-            [description] => 11
+            [description] => a screenshot of the issue
             [filesize] => 364983
             [filetype] => image/jpeg
             [adddate] => 1124372802
             [submitted_by] => 102
+        )
+    [1] => Array
+        (
+            [id] => 15
+            [artifact_id] => 3
+            [name] => my_document.pdf
+            [description] => 11
+            [filesize] => 457812
+            [filetype] => application/pdf
+            [adddate] => 1124372802
+            [submitted_by] => 104
         )
 )
                     </programlisting>
@@ -840,32 +849,32 @@ Array
             </para>
         </section>
 
-        <section id="TrackerFunctionGetFile">
-            <title>getfile</title>
+        <section id="TrackerFunctionAttachedFile">
+            <title>attachedFile</title>
             <para>
-                getfile: Download a file from an artifact.
+                attachedFile: Download an attached file from an artifact.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>__tracker_id* : Tracker ID.</para>
+                        <para>--tracker_id*: Tracker ID.</para>
                     </listitem>
                     <listitem>
-                        <para>__id* : Artifact ID.</para>
+                        <para>--artifact_id*: Artifact ID.</para>
                     </listitem>
                     <listitem>
-                        <para>__file id* : ID of the file to download.</para>
+                        <para>--file_id*: ID of the file to download.</para>
                     </listitem>
                     <listitem>
-                        <para>__output: File name to save the file as. If not specified, the contents of the file are outputted to the screen.</para>
+                        <para>--output: File name to save the file as. If not specified, the contents of the file are outputted to the screen.</para>
                     </listitem>
                     <listitem>
-                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
                 <example>
-                    <title>getfile command</title>
+                    <title>attachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker getfile __type=116 __id=3 __file_id=11 __output=/home/mnazaria/screenshot.jpg
+[mnazaria@linux codex cli ]$ ./codex.php tracker attachedFile --tracker_id=116 --artifact_id=3 --file_id=11 --output=/home/mnazaria/screenshot.jpg
 File retrieved successfully.
                     </programlisting>
                  </example>
@@ -873,40 +882,40 @@ File retrieved successfully.
             </para>
         </section>
 
-        <section id="TrackerFunctionAddFile">
-            <title>addfile</title>
+        <section id="TrackerFunctionAddAttachedFile">
+            <title>addAttachedFile</title>
             <para>
-                addfile: Attach a file to an artifact.
+                addAttachedFile: Attach a file to an artifact.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>__tracker_id* : Tracker ID.</para>
+                        <para>--tracker_id*: Tracker ID.</para>
                     </listitem>
                     <listitem>
-                        <para>__id* : Artifact ID.</para>
+                        <para>--artifact_id*: Artifact ID.</para>
                     </listitem>
                     <listitem>
-                        <para>__file* : Local file to attach.</para>
+                        <para>--file*: Local file to attach.</para>
                     </listitem>
                     <listitem>
-                        <para>__description: Description of the file.</para>
+                        <para>--description: Description of the file.</para>
                     </listitem>
                     <listitem>
-                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
                 <example>
-                    <title>addfile command</title>
+                    <title>addAttachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addfile __type=116 __id=3 __file=/home/mnazaria/image_patch.diff __description="This is the patch to apply"
+[mnazaria@linux codex cli ]$ ./codex.php tracker addAttachedFile --tracker_id=116 --id=3 --file=/home/mnazaria/image_patch.diff --description="This is the patch to apply"
+12
                     </programlisting>
                 </example>
                 <note>Note: The value returned (12) is the ID of the new file.</note>
-                <note>Note: The mail notification system is not implemented for the moment.</note>
                 </para>
             </para>
         </section>
-
+<!--
         <section id="TrackerFunctionTechnicians">
             <para>
                 
