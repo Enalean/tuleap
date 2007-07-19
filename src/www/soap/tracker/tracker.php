@@ -1316,8 +1316,8 @@ function trackerlist_to_soap($at_arr) {
                     'name'=>$at_arr[$i]->data_array['name'],
                     'description'=>$at_arr[$i]->data_array['description'],
                     'item_name'=>$at_arr[$i]->data_array['item_name'],
-                    'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():NULL),
-                    'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():NULL),
+                    'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():-1),
+                    'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():-1),
                     'total_file_size' => db_result($result, 0, 0)
                 );
             }
@@ -1409,11 +1409,11 @@ function artifacttype_to_soap($at) {
     $atf = new ArtifactTypeFactory($at->getGroup());
     $arr_count = $atf->getStatusIdCount($at->getID());
     if ( $arr_count ) {
-            $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:NULL;
-        $count = array_key_exists('count', $arr_count)?$arr_count['count']:NULL;
+        $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:-1;
+        $count = array_key_exists('count', $arr_count)?$arr_count['count']:-1;
     } else {
-            $open_count = NULL;
-        $count = NULL;
+        $open_count = -1;
+        $count = -1;
     }
                 
     $field_sets = array();
@@ -1531,8 +1531,8 @@ function artifacttype_to_soap($at) {
             'name'=>$at->data_array['name'],
             'description'=>$at->data_array['description'],
             'item_name'=>$at->data_array['item_name'],
-            'open_count' => ($at->userHasFullAccess()?$open_count:NULL),
-            'total_count' => ($at->userHasFullAccess()?$count:NULL),
+            'open_count' => ($at->userHasFullAccess()?$open_count:-1),
+            'total_count' => ($at->userHasFullAccess()?$count:-1),
             'total_file_size' => db_result($result, 0, 0),
             'field_sets' => $field_sets,
             'field_dependencies' => $field_dependencies
