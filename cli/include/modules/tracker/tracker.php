@@ -27,6 +27,10 @@ require_once('CLI_Action_Tracker_InverseDependencies.class.php');
 require_once('CLI_Action_Tracker_AddDependencies.class.php');
 require_once('CLI_Action_Tracker_DeleteDependency.class.php');
 require_once('CLI_Action_Tracker_ArtifactHistory.class.php');
+require_once('CLI_Action_Tracker_AttachedFiles.class.php');
+require_once('CLI_Action_Tracker_AttachedFile.class.php');
+require_once('CLI_Action_Tracker_AddAttachedFile.class.php');
+require_once('CLI_Action_Tracker_DeleteAttachedFile.class.php');
 
 class CLI_Module_Tracker extends CLI_Module {
     // These fields are the standard fields
@@ -54,6 +58,10 @@ class CLI_Module_Tracker extends CLI_Module {
         $this->addAction(new CLI_Action_Tracker_AddDependencies());
         $this->addAction(new CLI_Action_Tracker_DeleteDependency());
         $this->addAction(new CLI_Action_Tracker_ArtifactHistory());
+        $this->addAction(new CLI_Action_Tracker_AttachedFiles());
+        $this->addAction(new CLI_Action_Tracker_AttachedFile());
+        $this->addAction(new CLI_Action_Tracker_AddAttachedFile());
+        $this->addAction(new CLI_Action_Tracker_DeleteAttachedFile());
         
         /* TODO: other actions =>
         files
