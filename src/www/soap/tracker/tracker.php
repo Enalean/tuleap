@@ -960,6 +960,30 @@ $server->register(
 );
 
 $server->register(
+    'addArtifactAttachedFile',
+    array('sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'group_artifact_id'=>'xsd:int',
+        'artifact_id'=>'xsd:int',
+        'encoded_data'=>'xsd:string',
+        'description'=>'xsd:string',
+        'filename'=>'xsd:string',
+        'filetype'=>'xsd:string'
+    ),
+    array('return'=>'xsd:int'),
+    $uri,
+    $uri.'#addArtifactAttachedFile',
+    'rpc',
+    'encoded',
+    'Add an attached file to the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+     The attached file is described by the raw encoded_data (encoded in base64), the description of the file, 
+     the name of the file and it type (the mimi-type -- plain/text, image/jpeg, etc ...). 
+     Returns the ID of the attached file if the attachment succeed.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     or if the artifact_id is not a valid one, or if the attachment failed.'
+);
+
+$server->register(
     'addArtifactFile',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
@@ -975,13 +999,7 @@ $server->register(
     $uri.'#addArtifactFile',
     'rpc',
     'encoded',
-    'Add an attached file to the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
-     The attached file is described by the raw encoded_data (encoded in base64), the description of the file, 
-     the name of the file and it type (the mimi-type -- plain/text, image/jpeg, etc ...). 
-     Returns the ID of the attached file if the attachment succeed.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     or if the artifact_id is not a valid one, or if the attachment failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+    'Deprecated. Use addArtifactAttachedFile.'
 );
 
 $server->register(
@@ -997,11 +1015,26 @@ $server->register(
     $uri.'#deleteArtifactFile',
     'rpc',
     'encoded',
+    'Deprecated. Use deleteArtifactAttachedFile.'
+);
+
+$server->register(
+    'deleteArtifactAttachedFile',
+    array('sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'group_artifact_id'=>'xsd:int',
+        'artifact_id'=>'xsd:int',
+        'file_id'=>'xsd:int'
+    ),
+    array('return'=>'xsd:int'),
+    $uri,
+    $uri.'#deleteArtifactAttachedFile',
+    'rpc',
+    'encoded',
     'Delete the attached file file_id from the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      Returns the ID of the deleted file if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
+     if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.'
 );
 
 $server->register(
@@ -2777,7 +2810,7 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
 /**
  * addArtifactFile - add an attached file to the artifact $artifact_id
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
+ * @deprecated use addArtifactAttachedFile
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to attach the file
@@ -2795,6 +2828,28 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
  *              - the file attachment to the artifact failed
  */
 function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
+    return addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype);
+}
+
+/**
+ * addArtifactAttachedFile - add an attached file to the artifact $artifact_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to attach the file
+ * @param int $group_artifact_id the ID of the tracker we want to attach the file
+ * @param int $artifact_id the ID of the artifact we want to attach the file
+ * @param string $encoded_data the raw data of the file, encoded in base64
+ * @param string $description description of the file
+ * @param string $filename name of the file
+ * @param string $filetype mime-type of the file (text/plain, image/jpeg, etc...)
+ * @return int the ID of the new attached file created,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ *              - artifact_id does not match with a valid artifact
+ *              - the file attachment to the artifact failed
+ */
+function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
@@ -2847,7 +2902,7 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
             // Send the notification
             if ($changes) {
                 $agnf =& new ArtifactGlobalNotificationFactory();
-                $addresses = $agnf->getAllAddresses($ath->getID(), true);
+                $addresses = $agnf->getAllAddresses($at->getID(), true);
                 $a->mailFollowupWithPermissions($addresses, $changes);
             }
         }
@@ -2877,6 +2932,26 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
  *              - the file deletion failed
  */
 function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
+    return deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id);
+}
+
+/**
+ * deleteArtifactAttachedFile - delete an attached file to the artifact $artifact_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to delete the file
+ * @param int $group_artifact_id the ID of the tracker we want to delete the file
+ * @param int $artifact_id the ID of the artifact we want to delete the file
+ * @param string $file_id the ID of the file we want to delete
+ * @return int the ID of the deleted file,
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker
+ *              - artifact_id does not match with a valid artifact
+ *              - file_id does not match with a valid attached file
+ *              - the file deletion failed
+ */
+function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
