@@ -54,7 +54,8 @@ $server->wsdl->addComplexType(
         'description' => array('name'=>'description', 'type' => 'xsd:string'),
         'item_name' => array('name'=>'item_name', 'type' => 'xsd:string'),
         'open_count' => array('name'=>'open_count', 'type' => 'xsd:int'),
-        'total_count' => array('name'=>'total_count', 'type' => 'xsd:int')
+        'total_count' => array('name'=>'total_count', 'type' => 'xsd:int'),
+        'reports_desc' => array('name'=>'reports', 'type' => 'tns:ArrayOfArtifactReportDesc'),
     )
 );
 
@@ -827,22 +828,6 @@ $server->register(
 );
 
 $server->register(
-    'getArtifactReportsDesc',
-    array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'group_artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactReportDesc'),
-    $uri,
-    $uri.'#getArtifactReportsDesc',
-    'rpc',
-    'encoded',
-    'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the user user_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     or if the user_id is not a valid one.'
-);
-
-$server->register(
     'getArtifactAttachedFiles',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -1302,8 +1287,17 @@ function trackerlist_to_soap($at_arr) {
             if ( !$ath->isValid() ) {
                 return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','This tracker is no longer valid.');
             }
+            
             // Check if the user can view this tracker
             if ($ath->userCanView($user_id)) {
+                
+                // get the reports description (light desc of reports)
+                $report_fact = new ArtifactReportFactory();
+                if (!$report_fact || !is_object($report_fact)) {
+                    return new soap_fault(get_artifact_type_fault,'getArtifactTypes', 'Could Not Get ArtifactReportFactory', 'Could Not Get ArtifactReportFactory');
+                }
+                $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], user_getid()));
+                
                 $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
                         ." FROM artifact_file af, artifact a, artifact_group_list agl"
                         ." WHERE (af.artifact_id = a.artifact_id)" 
@@ -1318,7 +1312,28 @@ function trackerlist_to_soap($at_arr) {
                     'item_name'=>$at_arr[$i]->data_array['item_name'],
                     'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():-1),
                     'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():-1),
-                    'total_file_size' => db_result($result, 0, 0)
+                    'total_file_size' => db_result($result, 0, 0),
+                    'reports_desc' => $reports_desc
+                );
+            }
+        }
+    }
+    return $return;
+}
+
+function &artifactreportsdesc_to_soap($artifactreportsdesc) {
+    $return = array();
+    if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
+        foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
+            if ($artifactreportdesc->isError()) {
+                //skip if error
+            } else {
+                $return[]=array(
+                    'report_id'          => $artifactreportdesc->getID(),
+                    'group_artifact_id'  => $artifactreportdesc->getArtifactTypeID(),
+                    'name'               => $artifactreportdesc->getName(),
+                    'description'        => $artifactreportdesc->getDescription(),
+                    'scope'              => $artifactreportdesc->getScope()
                 );
             }
         }
@@ -2406,69 +2421,6 @@ function &artifactreports_to_soap($artifactreports) {
     }
     return $return;
 }
-
-/**
- * getArtifactReportsDesc - returns the array of reports (only the description, not the whole structure) of the tracker $group_artifact_id of the project $group_id for the current user
- *
- * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
- * @param int $group_id the ID of the group we want to retrieve the reports
- * @param int $group_artifact_id the ID of the tracker we want to retrieve the reports
- * @return array{SOAPArtifactReportDesc} the array of the reports description of the current user for this tracker,
- *              or a soap fault if :
- *              - group_id does not match with a valid project, 
- *              - group_artifact_id does not match with a valid tracker
- */
-function &getArtifactReportsDesc($sessionKey, $group_id, $group_artifact_id) {
-    if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
-        if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactReportsDesc','Could Not Get Group','Could Not Get Group');
-        } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactReportsDesc',$grp->getErrorMessage(),$grp->getErrorMessage());
-        }
-        if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
-        }
-        
-        $at = new ArtifactType($grp,$group_artifact_id);
-        if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactReportsDesc','Could Not Get ArtifactType','Could Not Get ArtifactType');
-        } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactReportsDesc',$at->getErrorMessage(),$at->getErrorMessage());
-        }
-        
-        $report_fact = new ArtifactReportFactory();
-        if (!$report_fact || !is_object($report_fact)) {
-            return new soap_fault(get_report_factory_fault,'getArtifactReportsDesc', 'Could Not Get ArtifactReportFactory', 'Could Not Get ArtifactReportFactory');
-        }
-        
-        return artifactreportsdesc_to_soap($report_fact->getReports($group_artifact_id, user_getid()));
-    
-    } else {
-        return new soap_fault(invalid_session_fault, 'getArtifactReportsDesc', 'Invalid Session ', '');
-    }
-}
-
-function &artifactreportsdesc_to_soap($artifactreportsdesc) {
-    $return = array();
-    if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
-        foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
-            if ($artifactreportdesc->isError()) {
-                //skip if error
-            } else {
-                $return[]=array(
-                    'report_id'          => $artifactreportdesc->getID(),
-                    'group_artifact_id'  => $artifactreportdesc->getArtifactTypeID(),
-                    'name'               => $artifactreportdesc->getName(),
-                    'description'        => $artifactreportdesc->getDescription(),
-                    'scope'              => $artifactreportdesc->getScope()
-                );
-            }
-        }
-    }
-    return $return;
-}
-
 
 /**
  * getArtifactAttachedFiles - returns the array of ArtifactFile of the artifact $artifact_id in the tracker $group_artifact_id of the project $group_id
