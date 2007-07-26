@@ -1548,7 +1548,7 @@ class Artifact extends Error {
             		}
 		} else {
 			// display type is SB
-        		$user_id = $result[$field_name];
+        	$user_id = isset($result[$field_name])?$result[$field_name]:null;
 			$val_func = $field->getValueFunction();
 			if ($val_func[0] == "") {
 				// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
@@ -2175,9 +2175,9 @@ class Artifact extends Error {
         
 
 	    if (!$field_perm || ( 
-		(($field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
-		 ($field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
-         (!$field_perm['assigned_to'] && !$field_perm['multi_assigned_to'])))) {
+		((isset($field_perm['assigned_to']) && $field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
+		 (isset($field_perm['multi_assigned_to']) && $field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
+         (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))))) {
 	      if (user_isloggedin()) {
 		$user_id = user_getid();
 		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
@@ -2224,7 +2224,7 @@ class Artifact extends Error {
 	      if ( $field ) {
 		$label = $field->getLabel();
 	      }
-	      $out .= sprintf($fmt, $label, $h['del'],$h['add']);
+	      $out .= sprintf($fmt, $label, isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
 	    } // while
 	    
 	    if ($out) {
