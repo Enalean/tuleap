@@ -1,8 +1,37 @@
 <?php // -*-php-*-
-rcs_id('$Id: CalendarList.php,v 1.6 2005/04/02 03:05:44 uckelman Exp $');
+rcs_id('$Id: CalendarList.php,v 1.9 2006/05/14 17:40:31 rurban Exp $');
 
-if (!defined('SECONDS_PER_DAY'))
-define('SECONDS_PER_DAY', 24 * 3600);
+/**
+ Copyright 1999,2000,2001,2002,2005 $ThePhpWikiProgrammingTeam
+
+ This file is part of PhpWiki.
+
+ PhpWiki is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ PhpWiki is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with PhpWiki; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+// if not defined in config.ini
+if (!defined('PLUGIN_CALENDARLIST_ORDER'))	
+  define('PLUGIN_CALENDARLIST_ORDER',	'normal');
+if (!defined('PLUGIN_CALENDARLIST_NEXT_N_DAYS'))
+  define('PLUGIN_CALENDARLIST_NEXT_N_DAYS','');
+if (!defined('PLUGIN_CALENDARLIST_NEXT_N'))	
+  define('PLUGIN_CALENDARLIST_NEXT_N',	 '');
+if (!defined('PLUGIN_CALENDARLIST_LAST_N_DAYS'))
+  define('PLUGIN_CALENDARLIST_LAST_N_DAYS','');
+if (!defined('PLUGIN_CALENDARLIST_LAST_N'))	
+  define('PLUGIN_CALENDARLIST_LAST_N',	 '');
 
 /**
  * This is a list of calendar appointments. 
@@ -29,16 +58,16 @@ extends WikiPlugin
     function getDefaultArguments() {
         return array('prefix'       => '[pagename]',
                      'date_format'  => '%Y-%m-%d',
-                     'order' 	    => 'normal', // or reverse (counting backwards)
+                     'order' 	    => PLUGIN_CALENDARLIST_ORDER, // normal or reverse (report sequence)
                      'year'         => '',
                      'month'        => '',
                      'month_offset' => 0,
-                     //support ranges, based on a simple patch by JoshWand
-                     'next_n_days'  => '',
-                     'last_n_days'  => '',
-                     // next or last n entries:
-                     'next_n'  => '',
-                     //'last_n'  => '', // not yet
+                     //support ranges: next n days/events
+                     'next_n_days'  => PLUGIN_CALENDARLIST_NEXT_N_DAYS,	// one or the other, not both
+                     'next_n'	    => PLUGIN_CALENDARLIST_NEXT_N,
+                     // last n days/entries:
+                     'last_n_days'  => PLUGIN_CALENDARLIST_LAST_N_DAYS,	// one or the other, not both
+                     'last_n'	    => PLUGIN_CALENDARLIST_LAST_N,
 
                      'month_format' => '%B, %Y',
                      'wday_format'  => '%a',
@@ -62,7 +91,29 @@ extends WikiPlugin
         }
     }
 
-    function __date($dbi, $time) {
+    function _count_events($dbi, $n = 7, $direction = 1) {
+        //	This is used by the last_n/next_n options to determine the date that
+        //	accounts for the number of N events in the past/future.
+        //	RETURNS: date of N-th event or the last item found
+        $args = &$this->args;				// gather the args array
+        $timeTMP = time();				// start with today's date
+        $t = $timeTMP;					// init the control date variable to now
+        
+        for ($i=0; $i<=180; $i++) {			// loop thru 180 days, past or future
+            $date_string = strftime($args['date_format'], $t);
+            $page_for_date = $args['prefix'] . SUBPAGE_SEPARATOR . $date_string;
+            if ($dbi->isWikiPage($page_for_date)) { // if this date has any comments/events
+                $timeTMP = $t;			    //  capture the date of this event for return
+                if ($n-- <= 0) break;		    //  if we reached the limit, return the date
+            }
+            $t += 24 * 3600 * $direction;	    // advance one day back or forward
+        }
+        
+        // return the date of the N-th or last, most past/future event in the range
+        return $timeTMP;
+    }
+
+    function _date($dbi, $time) {
         $args = &$this->args;
         $date_string = strftime($args['date_format'], $time);
 
@@ -96,6 +147,7 @@ extends WikiPlugin
         $args       = &$this->args;
         $this->_links = array();
 
+        // default to this month
         $now = localtime(time() + 3600 * $request->getPref('timeOffset'), 1);
         foreach ( array('month' => $now['tm_mon'] + 1,
                         'year'  => $now['tm_year'] + 1900)
@@ -104,69 +156,92 @@ extends WikiPlugin
             if (!($args[$param] = intval($args[$param])))
                 $args[$param]   = $dflt;
         }
+
+        // ***************************************************
+        // start of Plugin CalendarList display logic
+        // determine start date
         if ($args['last_n_days']) {
-            $time = mktime(0, 0, 0,                            // hh, mm, ss,
-                           $args['month'] + $args['month_offset'], // month (1-12)
-                           $now['tm_mday'] - $args['last_n_days'],
-                           $args['year']);
-        } elseif ($args['next_n_days'] or $args['next_n'] 
-                  or ($args['order'] == 'reverse')
-                 /* or $args['last_n']*/) {
-            $time = mktime(0, 0, 0,                            // hh, mm, ss,
-                           $args['month'] + $args['month_offset'], // month (1-12)
-                           $now['tm_mday'] ,                   // starting today
-                           $args['year']);
-        } else {
-            $time = mktime(12, 0, 0,                           // hh, mm, ss,
-                           $args['month'] + $args['month_offset'], // month (1-12)
-                           1,                                   // starting at monday
-                           $args['year']);
-        } 
-        $t = localtime($time, 1);
+            // n days ago (should not be affected by month or month_offset)
+            $start = mktime(0, 0, 0, // h, m, s
+                            $now['tm_mon'] + 1, // month (1-12)
+                            $now['tm_mday'] - $args['last_n_days'], // days prior
+                            $now['tm_year'] + 1900);
+        }
+        elseif ($args['last_n']) {
+            // get date for last nth event
+            $start = $this->_count_events($dbi, $args['last_n'], -1);
+        }
+        else {
+            // start of requested month
+            $start = mktime(0, 0, 0, // h, m, s
+                            $args['month'] + $args['month_offset'], // month (1-12)
+                            1, // days prior
+                            $args['year']);
+        }
 
-        if ($now['tm_year'] == $t['tm_year'] && $now['tm_mon'] == $t['tm_mon'])
-            $this->_today = $now['tm_mday'];
-        else
-            $this->_today = false;
+        // determine end date
+        if ($args['next_n_days']) {
+            // n days from now (should not be affected by month or month_offset)
+            $end = mktime(23, 59, 59, // h, m, s
+                            $now['tm_mon'] + 1, // month (1-12)
+                            $now['tm_mday'] + $args['next_n_days'], // days prior
+                            $now['tm_year'] + 1900);
+        }
+        elseif ($args['last_n']) {
+            // get date for next nth event
+            $end = $this->_count_events($dbi, $args['next_n'], 1);
+        }
+        else {
+            // trick to get last day of requested month
+            $end = mktime(0, 0, -1, // h, m, s
+                            $args['month'] + 1 + $args['month_offset'], // month (1-12)
+                            1, // days prior
+                            $args['year']);
+        }
 
+        // switch values for reverse order
+        $step = 24 * 3600;
+        if ($args['order'] == 'reverse') {
+            $time_tmp = $start;
+            $start = $end;
+            $end = $time_tmp;
+            $step *= -1;
+        }
+
+        // style tag on wiki description but not in here
         $cal = HTML::dl();
 
-        $done = false;
-        $n = 0; 
-        if ($args['order'] == "reverse")
-            $max = $time - (180 * SECONDS_PER_DAY);
-        else
-            $max = $time + (180 * SECONDS_PER_DAY);
-        while (!$done) {
-            $success = $cal->pushContent($this->__date($dbi, $time));
-            if ($args['order'] == "reverse") {
-                $time -= SECONDS_PER_DAY;
-                if ($time <= $max) return $cal;
-            } else {
-                $time += SECONDS_PER_DAY;
-                if ($time >= $max) return $cal;
-            }
-
-            $t     = localtime($time, 1);
-            if ($args['next_n_days']) {
-                if ($n == $args['next_n_days']) return $cal;
-                $n++;
-            } elseif ($args['next_n']) {
-                if ($n == $args['next_n']) return $cal;
-                if (!empty($success))
-                    $n++;
-            } elseif ($args['last_n_days']) {
-                $done = ($t['tm_mday'] == $now['tm_mday']);
-            } else { // stop at next/prev month
-                $done = ($t['tm_mon'] != $now['tm_mon']);
-            }
+        // loop through dates and create list
+        for ($i = $start; ($step > 0) ? $i < $end : $i > $end; $i += $step) {
+            $cal->pushContent($this->_date($dbi, $i));
         }
+        //	end of Plugin CalendarList display logic
+        // ***************************************************
+
         return $cal;
     }
 };
 
 
 // $Log: CalendarList.php,v $
+// Revision 1.9  2006/05/14 17:40:31  rurban
+// Patch #1232730 by banjo
+//
+// Revision 1.8  2005/10/12 06:18:31  rurban
+// dont overdo constants
+//
+// Revision 1.7  2005/07/21 18:55:55  rurban
+// applied mpullen patch (Revised to work on all date range combinations...),
+// but still does not work as documented.
+//
+// Revision 1.6.2  2005/06/24 12:00:00  mpullen
+//   Corrected bug in the main WHILE loop to detect proper termination point in time
+//   {it was stopping one day too soon in either direction}.
+//
+// Revision 1.6.1  2005/06/23 12:00:00  mpullen
+//   Revised to work on all date range combinations (past and future, by days or count of events)
+//   Externalized five control parameter constants to the config.ini file (new section 8 for PLUGINs)
+//
 // Revision 1.6  2005/04/02 03:05:44  uckelman
 // Removed & from vars passed by reference (not needed, causes PHP to complain).
 //
@@ -182,7 +257,9 @@ extends WikiPlugin
 //   last_n not yet
 //
 // Revision 1.2  2004/02/17 12:11:36  rurban
-// added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
+// added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far,
+//	because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed.
+//	(InterWikiSearch, IncludeSiteMap, ...)
 //
 // Revision 1.1  2003/11/18 19:06:03  carstenklapp
 // New plugin to be used in conjunction with the Calendar plugin.
