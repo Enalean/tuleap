@@ -135,9 +135,9 @@ function getGroupByName($sessionKey, $unix_group_name) {
     if (session_continue($sessionKey)) {
         $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
         if (! $group || !is_object($group)) {
-            return new soap_fault('2002','getGroupByName', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'),$Language->getText('include_group', 'g_not_found'));
+            return new soap_fault('2002','getGroupByName', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'), '');
         } elseif ($group->isError()) {
-            return new soap_fault('2002', 'getGroupByName', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault('2002', 'getGroupByName', $group->getErrorMessage(),'');
         }
         $soap_group = group_to_soap($group);
         return new soapval('return', 'tns:Group', $soap_group);
@@ -159,9 +159,9 @@ function getGroupById($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $group = new Group($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault('2001','getGroupById', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),$Language->getText('include_group', 'g_not_found'));
+            return new soap_fault('2001','getGroupById', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),'');
         } elseif ($group->isError()) {
-            return new soap_fault('2001', 'getGroupById', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault('2001', 'getGroupById', $group->getErrorMessage(),'');
         }
         
         $soap_group = group_to_soap($group);

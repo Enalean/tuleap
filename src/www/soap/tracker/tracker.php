@@ -1238,19 +1238,19 @@ function &getTrackerList($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getTrackerList','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getTrackerList','Could Not Get Group','');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getTrackerList', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'getTrackerList', $group->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getTrackerList', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getTrackerList', 'Restricted user: permission denied.', '');
         }
         
         $atf = new ArtifactTypeFactory($group);
         if (!$atf || !is_object($atf)) {
-            return new soap_fault(get_artifact_type_factory_fault, 'getTrackerList', 'Could Not Get ArtifactTypeFactory','Could Not Get ArtifactTypeFactory');
+            return new soap_fault(get_artifact_type_factory_fault, 'getTrackerList', 'Could Not Get ArtifactTypeFactory','');
         } elseif ($atf->isError()) {
-            return new soap_fault(get_artifact_type_factory_fault, 'getTrackerList', $atf->getErrorMessage(), $atf->getErrorMessage());
+            return new soap_fault(get_artifact_type_factory_fault, 'getTrackerList', $atf->getErrorMessage(), '');
         }
         // The function getArtifactTypes returns only the trackers the user is allowed to view
         return trackerlist_to_soap($atf->getArtifactTypes());
@@ -1278,14 +1278,14 @@ function trackerlist_to_soap($at_arr) {
         } else {
             $ath = new ArtifactType($at_arr[$i]->getGroup(), $at_arr[$i]->getID());
             if (!$ath || !is_object($ath)) {
-                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','ArtifactType could not be created');
+                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','');
             }
             if ($ath->isError()) {
-                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),$ath->getErrorMessage());
+                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),'');
             }
             // Check if this tracker is valid (not deleted)
             if ( !$ath->isValid() ) {
-                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','This tracker is no longer valid.');
+                return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','');
             }
             
             // Check if the user can view this tracker
@@ -1294,7 +1294,7 @@ function trackerlist_to_soap($at_arr) {
                 // get the reports description (light desc of reports)
                 $report_fact = new ArtifactReportFactory();
                 if (!$report_fact || !is_object($report_fact)) {
-                    return new soap_fault(get_artifact_type_fault,'getArtifactTypes', 'Could Not Get ArtifactReportFactory', 'Could Not Get ArtifactReportFactory');
+                    return new soap_fault(get_artifact_type_fault,'getArtifactTypes', 'Could Not Get ArtifactReportFactory', '');
                 }
                 $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], user_getid()));
                 
@@ -1353,19 +1353,19 @@ function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getArtifactType','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactType','Could Not Get Group','');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getArtifactType', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'getArtifactType', $group->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getArtifactType', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactType', 'Restricted user: permission denied.', '');
         }
         
         $at = new ArtifactType($group, $group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', 'Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', 'Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', $at->getErrorMessage(), $at->getErrorMessage());
+            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', $at->getErrorMessage(), '');
         }
         // The function getArtifactTypes returns only the trackers the user is allowed to view
         return artifacttype_to_soap($at);
@@ -1385,19 +1385,19 @@ function &getArtifactTypes($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getArtifactTypes','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactTypes','Could Not Get Group','');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', $group->getErrorMessage(),$group->getErrorMessage());
+            return new soap_fault(get_group_fault, 'getArtifactTypes', $group->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         
         $atf = new ArtifactTypeFactory($group);
         if (!$atf || !is_object($atf)) {
-            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactTypes', 'Could Not Get ArtifactTypeFactory','Could Not Get ArtifactTypeFactory');
+            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactTypes', 'Could Not Get ArtifactTypeFactory','');
         } elseif ($atf->isError()) {
-            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactTypes', $atf->getErrorMessage(), $atf->getErrorMessage());
+            return new soap_fault(get_artifact_type_factory_fault, 'getArtifactTypes', $atf->getErrorMessage(), '');
         }
         // The function getArtifactTypes returns only the trackers the user is allowed to view
         return artifacttypes_to_soap($atf->getArtifactTypes());
@@ -1434,23 +1434,23 @@ function artifacttype_to_soap($at) {
     $field_sets = array();
     $ath = new ArtifactType($at->getGroup(), $at->getID());
     if (!$ath || !is_object($ath)) {
-        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','ArtifactType could not be created');
+        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'ArtifactType could not be created','');
     }
     if ($ath->isError()) {
-        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),$ath->getErrorMessage());
+        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', $ath->getErrorMessage(),'');
     }
     // Check if this tracker is valid (not deleted)
     if ( !$ath->isValid() ) {
-        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','This tracker is no longer valid.');
+        return new soap_fault(get_artifact_type_fault, 'getArtifactTypes', 'This tracker is no longer valid.','');
     }
     // Check if the user can view this tracker
     if ($ath->userCanView($user_id)) {
     
         $art_fieldset_fact = new ArtifactFieldSetFactory($at);
         if (!$art_fieldset_fact || !is_object($art_fieldset_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', 'Could Not Get ArtifactFieldSetFactory','Could Not Get ArtifactFieldSetFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', 'Could Not Get ArtifactFieldSetFactory','');
         } elseif ($art_fieldset_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', $art_fieldset_fact->getErrorMessage(),$art_fieldset_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getFieldSets', $art_fieldset_fact->getErrorMessage(),'');
         }
         $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
     
@@ -1614,32 +1614,32 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifacts','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifacts','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifacts',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifacts',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifacts','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifacts','Could Not Get ArtifactType','');
         } elseif (! $at->userCanView()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifacts','Permission Denied','You are not granted sufficient permission to perform this operation.');
+            return new soap_fault(get_artifact_type_fault,'getArtifacts','Permission Denied: You are not granted sufficient permission to perform this operation.','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifacts',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifacts',$at->getErrorMessage(),'');
         }
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactTypes', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactTypes', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactTypes', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactTypes', $art_field_fact->getErrorMessage(),'');
         }
         $af = new ArtifactFactory($at);
         if (!$af || !is_object($af)) {
-            return new soap_fault(get_artifact_factory_fault,'getArtifacts','Could Not Get ArtifactFactory','Could Not Get ArtifactFactory');
+            return new soap_fault(get_artifact_factory_fault,'getArtifacts','Could Not Get ArtifactFactory','');
         } elseif ($af->isError()) {
-            return new soap_fault(get_artifact_factory_fault,'getArtifacts',$atf->getErrorMessage(),$atf->getErrorMessage());
+            return new soap_fault(get_artifact_factory_fault,'getArtifacts',$atf->getErrorMessage(),'');
         }
         $total_artifacts = 0;
         // the function getArtifacts returns only the artifacts the user is allowed to view
@@ -1667,37 +1667,37 @@ function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id)
     if (session_continue($sessionKey)){
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactById','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactById','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactById',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactById',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         
         $ath = new ArtifactType($grp, $group_artifact_id);
         if (!$ath || !is_object($ath)) {
-            return new soap_fault(get_artifact_type_fault, 'getArtifactById', 'ArtifactType could not be created','ArtifactType could not be created');
+            return new soap_fault(get_artifact_type_fault, 'getArtifactById', 'ArtifactType could not be created','');
         }
         if ($ath->isError()) {
-            return new soap_fault(get_artifact_type_fault, 'getArtifactById', $ath->getErrorMessage(),$ath->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault, 'getArtifactById', $ath->getErrorMessage(),'');
         }
         // Check if this tracker is valid (not deleted)
         if ( !$ath->isValid() ) {
-            return new soap_fault(get_artifact_type_fault, 'getArtifactById', 'This tracker is no longer valid.','This tracker is no longer valid.');
+            return new soap_fault(get_artifact_type_fault, 'getArtifactById', 'This tracker is no longer valid.','');
         }
         
         $art_field_fact = new ArtifactFieldFactory($ath);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', $art_field_fact->getErrorMessage(),'');
         }
         $a = new Artifact($ath, $artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault, 'getArtifactById', 'Could Not Get Artifact', 'Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault, 'getArtifactById', 'Could Not Get Artifact', '');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault, 'getArtifactById', $a->getErrorMessage(), $a->getErrorMessage());
+            return new soap_fault(get_artifact_fault, 'getArtifactById', $a->getErrorMessage(), '');
         }
         return artifact_to_soap($a);
     } else {
@@ -1862,36 +1862,36 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         
         $ath = new ArtifactType($grp, $group_artifact_id);
         if (!$ath || !is_object($ath)) {
-            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'ArtifactType could not be created','ArtifactType could not be created');
+            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'ArtifactType could not be created','');
         }
         if ($ath->isError()) {
-            return new soap_fault(get_artifact_type_fault, 'addArtifact', $ath->getErrorMessage(),$ath->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault, 'addArtifact', $ath->getErrorMessage(),'');
         }
         // Check if this tracker is valid (not deleted)
         if ( !$ath->isValid() ) {
-            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'This tracker is no longer valid.','This tracker is no longer valid.');
+            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'This tracker is no longer valid.','');
         }
 
         // check the user if he can submit artifacts for this tracker
         if (!$ath->userCanSubmit(session_get_userid())) {
-            return new soap_fault(permission_denied_fault, 'addArtifact', 'Permission Denied', 'You are not granted sufficient permission to perform this operation.');
+            return new soap_fault(permission_denied_fault, 'addArtifact', 'Permission Denied: You are not granted sufficient permission to perform this operation.', '');
         }
         
         $art_field_fact = new ArtifactFieldFactory($ath);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', $art_field_fact->getErrorMessage(),'');
         }
         
         // 1) The permissions check will be done in the Artifact create function
@@ -1948,9 +1948,9 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         
         $a = new Artifact($ath);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault, 'addArtifact', 'Could Not Get Artifact', 'Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault, 'addArtifact', 'Could Not Get Artifact', '');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault, 'addArtifact', $a->getErrorMessage(), $a->getErrorMessage());
+            return new soap_fault(get_artifact_fault, 'addArtifact', $a->getErrorMessage(), '');
         }
         
         $data = setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields);
@@ -1959,10 +1959,10 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         require_once('common/tracker/ArtifactRulesManager.class.php');
         $arm =& new ArtifactRulesManager();
         if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
-            return new soap_fault(invalid_field_dependency_fault, 'addArtifact', 'Invalid Field Dependency', 'Invalid Field Dependency');
+            return new soap_fault(invalid_field_dependency_fault, 'addArtifact', 'Invalid Field Dependency', '');
         }
         if (!$a->create($data)) {
-            return new soap_fault(create_artifact_fault,'addArtifact',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(create_artifact_fault,'addArtifact',$a->getErrorMessage(),'');
         } else {
             
             // Send the notification
@@ -2004,32 +2004,32 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         $at = new ArtifactType($grp, $group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'ArtifactType could not be created','ArtifactType could not be created');
+            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'ArtifactType could not be created','');
         }
         if ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault, 'addArtifact', $at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault, 'addArtifact', $at->getErrorMessage(),'');
         }
         // Check if this tracker is valid (not deleted)
         if ( !$at->isValid() ) {
-            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'This tracker is no longer valid.','This tracker is no longer valid.');
+            return new soap_fault(get_artifact_type_fault, 'addArtifact', 'This tracker is no longer valid.','');
         }
         
         $group_artifact_id = $at->getID();
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifact', $art_field_fact->getErrorMessage(),'');
         }
         
         // translate the field_name in field_id, in order to call the real addArtifact function
@@ -2040,7 +2040,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
                 $extra_field_id = $field->getID();
                 $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
             } else {
-                return new soap_fault(invalid_field_fault,'addArtifact','Invalid Field:'.$extra_field_name['field_name'],'addArtifact','Invalid Field:'.$extra_field_name['field_name']);
+                return new soap_fault(invalid_field_fault,'addArtifact','Invalid Field:'.$extra_field_name['field_name'],'addArtifact','');
             }
         }
         
@@ -2081,38 +2081,38 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'updateArtifact','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'updateArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'updateArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'updateArtifact',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         
         $ath = new ArtifactType($grp, $group_artifact_id);
         if (!$ath || !is_object($ath)) {
-            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'ArtifactType could not be created','ArtifactType could not be created');
+            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'ArtifactType could not be created','');
         }
         if ($ath->isError()) {
-            return new soap_fault(get_artifact_type_fault, 'updateArtifact', $ath->getErrorMessage(),$ath->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault, 'updateArtifact', $ath->getErrorMessage(),'');
         }
         // Check if this tracker is valid (not deleted)
         if ( !$ath->isValid() ) {
-            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'This tracker is no longer valid.','This tracker is no longer valid.');
+            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'This tracker is no longer valid.','');
         }
         
         $art_field_fact = new ArtifactFieldFactory($ath);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', $art_field_fact->getErrorMessage(),'');
         }
         ;
         $a = new Artifact($ath, $artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault, 'updateArtifact', 'Could Not Get Artifact', 'Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault, 'updateArtifact', 'Could Not Get Artifact', '');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault, 'updateArtifact', $a->getErrorMessage(), $a->getErrorMessage());
+            return new soap_fault(get_artifact_fault, 'updateArtifact', $a->getErrorMessage(), '');
         }
         
         $data = setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields);
@@ -2121,15 +2121,15 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
         require_once('common/tracker/ArtifactRulesManager.class.php');
         $arm =& new ArtifactRulesManager();
         if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
-            return new soap_fault(invalid_field_dependency_fault, 'updateArtifact', 'Invalid Field Dependency', 'Invalid Field Dependency');
+            return new soap_fault(invalid_field_dependency_fault, 'updateArtifact', 'Invalid Field Dependency', '');
         }
         
         if (! $a->handleUpdate($artifact_id_dependent, $canned_response, $changes, false, $data, true)) {
-            return new soap_fault(update_artifact_fault, 'updateArtifact', $a->getErrorMessage(), $a->getErrorMessage());
+            return new soap_fault(update_artifact_fault, 'updateArtifact', $a->getErrorMessage(), '');
         } else {
             
             if ($a->isError()) {
-                return new soap_fault(get_artifact_type_fault, 'updateArtifact', $a->getErrorMessage(),$a->getErrorMessage());
+                return new soap_fault(get_artifact_type_fault, 'updateArtifact', $a->getErrorMessage(),'');
             }
             
             // Send the notification
@@ -2177,32 +2177,32 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifact',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         $at = new ArtifactType($grp, $group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'ArtifactType could not be created','ArtifactType could not be created');
+            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'ArtifactType could not be created','');
         }
         if ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault, 'updateArtifact', $at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault, 'updateArtifact', $at->getErrorMessage(),'');
         }
         // Check if this tracker is valid (not deleted)
         if ( !$at->isValid() ) {
-            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'This tracker is no longer valid.','This tracker is no longer valid.');
+            return new soap_fault(get_artifact_type_fault, 'updateArtifact', 'This tracker is no longer valid.','');
         }
         
         $group_artifact_id = $at->getID();
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'updateArtifact', $art_field_fact->getErrorMessage(),'');
         }
         
         // translate the field_name in field_id, in order to call the real addArtifact function
@@ -2213,7 +2213,7 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
                 $extra_field_id = $field->getID();
                 $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
             } else {
-                return new soap_fault(invalid_field_fault,'updateArtifact','Invalid Field:'.$extra_field_name['field_name'],'updateArtifact','Invalid Field:'.$extra_field_name['field_name']);
+                return new soap_fault(invalid_field_fault,'updateArtifact','Invalid Field:'.$extra_field_name['field_name'],'updateArtifact','');
             }
         }
         
@@ -2243,33 +2243,33 @@ function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $arti
     if (session_continue($sessionKey)){
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactFollowups','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactFollowups','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactFollowups',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactFollowups',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactFollowups','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactFollowups','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactFollowups',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactFollowups',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactFollowups', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactFollowups', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactFollowups', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactFollowups', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at, $artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault, 'getArtifactFollowups', 'Could Not Get Artifact', 'Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault, 'getArtifactFollowups', 'Could Not Get Artifact', '');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault, 'getArtifactFollowups', $a->getErrorMessage(), $a->getErrorMessage());
+            return new soap_fault(get_artifact_fault, 'getArtifactFollowups', $a->getErrorMessage(), '');
         }
         $return  = artifactfollowups_to_soap($a->getFollowups());
         return new soapval('return', 'tns:ArrayOfArtifactFollowup', $return);        
@@ -2308,19 +2308,19 @@ function &getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id)
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactCannedResponses','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactCannedResponses','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactCannedResponses',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactCannedResponses',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactCannedResponses','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactCannedResponses','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactCannedResponses',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactCannedResponses',$at->getErrorMessage(),'');
         }
         return artifactcannedresponses_to_soap($at->getCannedResponses());
     } else {
@@ -2359,24 +2359,24 @@ function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_i
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactReports','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactReports','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactReports',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactReports',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
         
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactReports','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactReports','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactReports',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactReports',$at->getErrorMessage(),'');
         }
         
         $report_fact = new ArtifactReportFactory();
         if (!$report_fact || !is_object($report_fact)) {
-            return new soap_fault(get_report_factory_fault,'getArtifactReports', 'Could Not Get ArtifactReportFactory', 'Could Not Get ArtifactReportFactory');
+            return new soap_fault(get_report_factory_fault,'getArtifactReports', 'Could Not Get ArtifactReportFactory', '');
         }
         
         return artifactreports_to_soap($report_fact->getReports($group_artifact_id, user_getid()));
@@ -2443,35 +2443,35 @@ function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$art
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactAttachedFiles','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactAttachedFiles','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactAttachedFiles',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactAttachedFiles',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFiles','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFiles','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFiles',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFiles',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFiles', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFiles', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFiles', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFiles', $art_field_fact->getErrorMessage(),'');
         }
         
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles',$a->getErrorMessage(),'');
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFiles','Permissions denied','');
         }
         
         return artifactfiles_to_soap($a->getAttachedFiles(), $set_bin_data);
@@ -2507,41 +2507,41 @@ function &getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$arti
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactAttachedFile','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactAttachedFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactAttachedFile',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactAttachedFile',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFile','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFile','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFile',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactAttachedFile',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFile', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFile', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFile', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactAttachedFile', $art_field_fact->getErrorMessage(),'');
         }
         
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile',$a->getErrorMessage(),'');
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactAttachedFile','Permissions denied','');
         }
         $file = artifactfile_to_soap($file_id, $a->getAttachedFiles(), true);
         if ($file != null) {
         	   return $file;
         } else {
-        	   return new soap_fault(invalid_session_fault, 'getArtifactAttachedFile', 'Attached file '.$file_id.' not found', 'Attached file '.$file_id.' not found');
+        	   return new soap_fault(invalid_session_fault, 'getArtifactAttachedFile', 'Attached file '.$file_id.' not found', '');
         }
     } else {
         return new soap_fault(invalid_session_fault, 'getArtifactAttachedFile', 'Invalid Session', '');
@@ -2612,35 +2612,35 @@ function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artif
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactDependencies','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactDependencies',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactDependencies',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactDependencies','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactDependencies','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactDependencies',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactDependencies',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactDependencies', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactDependencies', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactDependencies', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactDependencies', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'getArtifactDependencies','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'getArtifactDependencies','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'getArtifactDependencies',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'getArtifactDependencies',$a->getErrorMessage(),'');
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactDependencies','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactDependencies','Permissions denied','');
         }
     
         return dependencies_to_soap($at, $a->getDependencies());
@@ -2698,35 +2698,35 @@ function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactInverseDependencies','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactInverseDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactInverseDependencies',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactInverseDependencies',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactInverseDependencies','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactInverseDependencies','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactInverseDependencies',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactInverseDependencies',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactInverseDependencies', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactInverseDependencies', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactInverseDependencies', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactInverseDependencies', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies',$a->getErrorMessage(),'');
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactInverseDependencies','Permissions denied','');
         }
     
         return inverse_dependencies_to_soap($at, $artifact_id, $a->getInverseDependencies());
@@ -2806,40 +2806,40 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifactFile','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifactFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifactFile',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifactFile',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactFile','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'addArtifactFile','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactFile',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'addArtifactFile',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFile', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFile', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFile', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFile', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'addArtifactFile','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'addArtifactFile','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'addArtifactFile',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'addArtifactFile',$a->getErrorMessage(),'');
         }
 
         $af = new ArtifactFile($a);
         if (!$af || !is_object($af)) {
-            return new soap_fault(get_artifact_file_fault,'addArtifactFile','Could Not Create File Object','Could Not Create File Object');
+            return new soap_fault(get_artifact_file_fault,'addArtifactFile','Could Not Create File Object','');
         } else if ($af->isError()) {
-            return new soap_fault(get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
+            return new soap_fault(get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),'');
         }
 
         $bin_data = addslashes(base64_decode($encoded_data));
@@ -2849,7 +2849,7 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
         $id = $af->create($filename,$filetype,$filesize,$bin_data,$description, $changes);
 
         if (!$id) {
-            return new soap_fault(get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
+            return new soap_fault(get_artifact_file_fault,'addArtifactFile',$af->getErrorMessage(),'');
         } else {
             // Send the notification
             if ($changes) {
@@ -2861,7 +2861,7 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
 
         return $id;
     } else {
-        return new soap_fault(invalid_session_fault, 'addArtifactFile', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'addArtifactFile', 'Invalid Session', '');
     }
 }
 
@@ -2908,49 +2908,49 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'deleteArtifactFile','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'deleteArtifactFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'deleteArtifactFile',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'deleteArtifactFile',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'deleteArtifactFile','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactFile','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'deleteArtifactFile',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactFile',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactFile', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactFile', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactFile', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactFile', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'deleteArtifactFile','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'deleteArtifactFile','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'deleteArtifactFile',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'deleteArtifactFile',$a->getErrorMessage(),'');
         }
 
         $af = new ArtifactFile($a, $file_id);
         if (!$af || !is_object($af)) {
-            return new soap_fault(get_artifact_file_fault,'deleteArtifactFile','Could Not Create File Object','Could Not Create File Object');
+            return new soap_fault(get_artifact_file_fault,'deleteArtifactFile','Could Not Create File Object','');
         } else if ($af->isError()) {
-            return new soap_fault(get_artifact_file_fault,'deleteArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
+            return new soap_fault(get_artifact_file_fault,'deleteArtifactFile',$af->getErrorMessage(),'');
         }
 
         if (!$af->delete()) {
-            return new soap_fault(get_artifact_file_fault,'deleteArtifactFile',$af->getErrorMessage(),$af->getErrorMessage());
+            return new soap_fault(get_artifact_file_fault,'deleteArtifactFile',$af->getErrorMessage(),'');
         }
 
         return $file_id;
     } else {
-        return new soap_fault(invalid_session_fault, 'deleteArtifactFile', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'deleteArtifactFile', 'Invalid Session', '');
     }
 }
 
@@ -2975,44 +2975,44 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifactDependencies','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifactDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifactDependencies',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifactDependencies',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactDependencies','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'addArtifactDependencies','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactDependencies',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'addArtifactDependencies',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactDependencies', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactDependencies', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactDependencies', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactDependencies', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'addArtifactDependencies','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'addArtifactDependencies','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'addArtifactDependencies',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'addArtifactDependencies',$a->getErrorMessage(),'');
         }
         
         if (!$a->addDependencies($is_dependent_on_artifact_ids,&$changes,false)) {
             if (!isset($changes) || !is_array($changes) || count($changes) == 0) {
-                return new soap_fault(add_dependency_fault, 'addArtifactDependencies', 'Dependencies addition for artifact #'.$a->getID().' failed', 'Dependencies addition for artifact #'.$a->getID().' failed');
+                return new soap_fault(add_dependency_fault, 'addArtifactDependencies', 'Dependencies addition for artifact #'.$a->getID().' failed', '');
             }
         } else {
                return new soapval('return', 'xsd:boolean', true);
         }
     } else {
-        return new soap_fault(invalid_session_fault, 'addArtifactDependencies', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'addArtifactDependencies', 'Invalid Session', '');
     }
 }
 
@@ -3045,43 +3045,43 @@ function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $a
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'deleteArtifactDependency','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'deleteArtifactDependency','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'deleteArtifactDependency',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'deleteArtifactDependency',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'deleteArtifactDependency','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactDependency','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'deleteArtifactDependency',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactDependency',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactDependency', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactDependency', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactDependency', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactDependency', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'deleteArtifactDependency','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'deleteArtifactDependency','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'deleteArtifactDependency',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'deleteArtifactDependency',$a->getErrorMessage(),'');
         }
 
         if (!$a->existDependency($dependent_on_artifact_id) || !$a->deleteDependency($dependent_on_artifact_id,$changes)) {
-            return new soap_fault(delete_dependency_fault, 'deleteArtifactDependency', 'Error deleting dependency'. $dependent_on_artifact_id, 'Error deleting dependency'. $dependent_on_artifact_id);
+            return new soap_fault(delete_dependency_fault, 'deleteArtifactDependency', 'Error deleting dependency'. $dependent_on_artifact_id, '');
         } else { 
             return $dependent_on_artifact_id;
         }
         
     } else {
-        return new soap_fault(invalid_session_fault, 'deleteArtifactDependency', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'deleteArtifactDependency', 'Invalid Session', '');
     }
 }
 
@@ -3113,36 +3113,36 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifactFollowup','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifactFollowup','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifactFollowup',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifactFollowup',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactFollowup','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'addArtifactFollowup','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactFollowup',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'addArtifactFollowup',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFollowup', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFollowup', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFollowup', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactFollowup', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'addArtifactFollowup','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'addArtifactFollowup','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'addArtifactFollowup',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'addArtifactFollowup',$a->getErrorMessage(),'');
         }
         if (!$a->addComment($body,false,&$changes)) {
-            return new soap_fault(create_followup_fault, 'addArtifactFollowup', 'Comment could not be saved', 'Comment could not be saved');
+            return new soap_fault(create_followup_fault, 'addArtifactFollowup', 'Comment could not be saved', '');
         } else {
             // Send notification
             $agnf =& new ArtifactGlobalNotificationFactory();
@@ -3151,7 +3151,7 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
             return new soapval('return', 'xsd:boolean', true);
         }
     } else {
-        return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', '');
     }
 }
 
@@ -3183,7 +3183,7 @@ function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
             return new soapval('return', 'xsd:int', -1);
         }
     } else {
-        return new soap_fault(invalid_session_fault, 'existArtifactSummary', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'existArtifactSummary', 'Invalid Session', '');
     }
 }
 
@@ -3212,35 +3212,35 @@ function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactCCList','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactCCList','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactCCList',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactCCList',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactCCList', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactCCList', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactCCList','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactCCList','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactCCList',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactCCList',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactCCList', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactCCList', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactCCList', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactCCList', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'getArtifactCCList','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'getArtifactCCList','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'getArtifactCCList',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'getArtifactCCList',$a->getErrorMessage(),'');
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactCCList','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactCCList','Permissions denied','');
         }
     
         return artifactCC_to_soap($group_id, $group_artifact_id, $a->getCCList());
@@ -3281,39 +3281,39 @@ function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id,
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'addArtifactCC','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'addArtifactCC','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'addArtifactCC',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'addArtifactCC',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'addArtifactCC', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'addArtifactCC', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactCC','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'addArtifactCC','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'addArtifactCC',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'addArtifactCC',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactCC', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactCC', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactCC', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'addArtifactCC', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'addArtifactCC','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'addArtifactCC','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'addArtifactCC',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'addArtifactCC',$a->getErrorMessage(),'');
         }
         if (!$a->addCC($cc_list,$cc_comment,&$changes,false)) {
-            return new soap_fault(add_cc_fault, 'addArtifactCC', 'CC could not be added', 'CC could not be added');
+            return new soap_fault(add_cc_fault, 'addArtifactCC', 'CC could not be added', '');
         }
     } else {
-        return new soap_fault(invalid_session_fault, 'addArtifactCC', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'addArtifactCC', 'Invalid Session', '');
     }
 }
 
@@ -3332,39 +3332,39 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'deleteArtifactCC','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'deleteArtifactCC','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'deleteArtifactCC',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'deleteArtifactCC',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'deleteArtifactCC', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'deleteArtifactCC', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'deleteArtifactCC','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactCC','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'deleteArtifactCC',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactCC',$at->getErrorMessage(),'');
         }
 
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactCC', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactCC', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactCC', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'deleteArtifactCC', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'deleteArtifactCC','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'deleteArtifactCC','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'deleteArtifactCC',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'deleteArtifactCC',$a->getErrorMessage(),'');
         }
         if (!$a->deleteCC($artifact_cc_id,&$changes,false)) {
-            return new soap_fault(delete_cc_fault, 'deleteArtifactCC', 'CC could not be deleted', 'CC could not be deleted');
+            return new soap_fault(delete_cc_fault, 'deleteArtifactCC', 'CC could not be deleted', '');
         }
     } else {
-        return new soap_fault(invalid_session_fault, 'deleteArtifactCC', 'Invalid Session', 'Invalid Session');
+        return new soap_fault(invalid_session_fault, 'deleteArtifactCC', 'Invalid Session', '');
     }
 }
 
@@ -3386,35 +3386,35 @@ function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_i
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
-            return new soap_fault(get_group_fault,'getArtifactHistory','Could Not Get Group','Could Not Get Group');
+            return new soap_fault(get_group_fault,'getArtifactHistory','Could Not Get Group','');
         } elseif ($grp->isError()) {
-            return new soap_fault(get_group_fault,'getArtifactHistory',$grp->getErrorMessage(),$grp->getErrorMessage());
+            return new soap_fault(get_group_fault,'getArtifactHistory',$grp->getErrorMessage(),'');
         }
         if (!checkRestrictedAccess($grp)) {
-            return new soap_fault(get_group_fault, 'getArtifactHistory', 'Restricted user: permission denied.', 'Restricted user: permission denied.');
+            return new soap_fault(get_group_fault, 'getArtifactHistory', 'Restricted user: permission denied.', '');
         }
 
         $at = new ArtifactType($grp,$group_artifact_id);
         if (!$at || !is_object($at)) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactHistory','Could Not Get ArtifactType','Could Not Get ArtifactType');
+            return new soap_fault(get_artifact_type_fault,'getArtifactHistory','Could Not Get ArtifactType','');
         } elseif ($at->isError()) {
-            return new soap_fault(get_artifact_type_fault,'getArtifactHistory',$at->getErrorMessage(),$at->getErrorMessage());
+            return new soap_fault(get_artifact_type_fault,'getArtifactHistory',$at->getErrorMessage(),'');
         }
         
         $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactHistory', 'Could Not Get ArtifactFieldFactory','Could Not Get ArtifactFieldFactory');
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactHistory', 'Could Not Get ArtifactFieldFactory','');
         } elseif ($art_field_fact->isError()) {
-            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactHistory', $art_field_fact->getErrorMessage(),$art_field_fact->getErrorMessage());
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactHistory', $art_field_fact->getErrorMessage(),'');
         }
 
         $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
-            return new soap_fault(get_artifact_fault,'getArtifactHistory','Could Not Get Artifact','Could Not Get Artifact');
+            return new soap_fault(get_artifact_fault,'getArtifactHistory','Could Not Get Artifact','');
         } elseif ($a->isError()) {
-            return new soap_fault(get_artifact_fault,'getArtifactHistory',$a->getErrorMessage(),$a->getErrorMessage());
+            return new soap_fault(get_artifact_fault,'getArtifactHistory',$a->getErrorMessage(),'');
         } elseif (! $a->userCanView()) {
-            return new soap_fault(get_artifact_fault,'getArtifactHistory','Permissions denied','Permissions denied');
+            return new soap_fault(get_artifact_fault,'getArtifactHistory','Permissions denied','');
         }
     
         return history_to_soap($group_id, $group_artifact_id, $a->getHistory());
