@@ -35,7 +35,7 @@ if (isset($_REQUEST['page'])) {
 if (($action_select=='activate')) {
 
     $shell="";
-    if ($action=='restricted_pending' || $status=='restricted') {
+    if ($action=='restricted_pending' && $status=='restricted') {
         $newstatus='R';
         $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
     } else $newstatus='A';
