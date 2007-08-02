@@ -38,37 +38,142 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * $clean = $hp->purify($crapy);
  * </pre>
  */
-class CodeX_HTMLPurifier 
-extends HTMLPurifier {
 
+define('CODEX_HP_NO_HTML',    0);
+define('CODEX_HP_BASIC',      5);
+define('CODEX_HP_LIGHT',     10);
+define('CODEX_HP_FULL',      15);
+define('CODEX_HP_DISABLED', 100);
+
+class CodeX_HTMLPurifier {
+    var $hpInstance;
+
+    /**
+     * Constructor
+     */
     function CodeX_HTMLPurifier() {
-        $config = $this->getCodeXConfig();
-        parent::HTMLPurifier($config);
+        $this->hpInstance = null;
     }
 
     /**
+     * Singleton access.
+     *
      * @access: static
+     */
+    function &getInstance() {
+        static $purifier;
+        if(!$purifier) {
+            $purifier = new CodeX_HtmlPurifier();
+        }
+        return $purifier;
+    }
+
+    /**
+     * Base configuration of HTML Purifier for codex.
      */
     function getCodeXConfig() {
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Core', 'Encoding', 'ISO-8859-1');
-        $config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
-        //$config->set('Cache', 'SerializerPath', $GLOBALS['codex_cache_dir'].'/htmlpurifier');
+        // $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
+        $config->set('Cache', 'SerializerPath', $GLOBALS['codex_cache_dir']);
         return $config;
     }
 
     /**
-     * @access: static
+     * Allow basic formatting markups.
+     *
+     * This function defines the markups allowed for a light
+     * formatting. This includes markups for lists, for paragraphs, hypertext
+     * links, and content-based text.
+     * Allowed makups:
+     * - 'p', 'br'
+     * - 'a[href]'
+     * - 'ul', 'ol', 'li'
+     * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre'
      */
-    function &getInstance($prototype = null) {
-        $purifier = null;
-        if($prototype === null) {
-            $config = CodeX_HtmlPurifier::getCodeXConfig();
-            $purifier =& parent::getInstance($config);
-        } else {
-            $purifier =& parent::getInstance($prototype);
+    function getLightConfig() {
+        $config = $this->getCodeXConfig();
+        
+        $eParagraph       = array('p', 'br');
+        $eLinks           = array('a[href]');
+        $eList            = array('ul', 'ol', 'li');
+        $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
+                                  'pre');
+        
+        $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt);
+        $allowed = implode(',', $aa);
+
+        $config->set('HTML', 'Allowed', $allowed);
+        return $config;
+    }
+
+    /**
+     * HTML Purifier configuration factory
+     */
+    function getHPConfig($level) {
+        $config = null;
+        switch($level) {
+        case CODEX_HP_LIGHT:
+            $config = $this->getLightConfig();
+            break;
+
+        case CODEX_HP_FULL:
+            $config = $this->getCodeXConfig();
+            break;
         }
-        return $purifier;
+        return $config;
+    }
+
+    /**
+     * Perform HTML purification depending of level purification required.
+     *
+     * There are 5 level of purification, from the most restrictive to most
+     * permissive:
+     * - CODEX_HP_NO_HTML (default)
+     *   Removes all html markups (transform it in entities).
+     *
+     * - CODEX_HP_BASIC (need $groupId to be set for automagic links)
+     *   Removes all user submitted html markups but: 
+     *    - transform typed URLs into clickable URLs.
+     *    - transform autmagic links.
+     *    - transform carrige return into HTML br markup.
+     *
+     * - CODEX_HP_LIGHT
+     *   First set of HTML formatting (@see getLightConfig() for allowed
+     *   markups) plus all what is allowed by CODEX_HP_BASIC.
+     *
+     * - CODEX_HP_FULL
+     *   Clean-up plain HTML using HTML Purifier rules (remove forms,
+     *   javascript, ...). Warning: there is no longer codex facilities
+     *   (neither automagic links nor carrige return to br transformation).
+     *
+     * - CODEX_HP_DISABLED
+     *   No filter at all.
+     */
+    function purify($html, $level, $groupId=0) {
+        $clean = '';
+        switch($level) {
+        case CODEX_HP_DISABLED:
+            $clean = $html;
+            break;
+
+        case CODEX_HP_LIGHT:
+            $html = nl2br(util_make_links($html, $groupId));
+        case CODEX_HP_FULL:
+            $hp =& HTMLPurifier::getInstance();
+            $clean = $hp->purify($html, $this->getHPConfig($level));
+            break;
+
+        case CODEX_HP_BASIC:
+            $clean = nl2br(util_make_links(htmlentities($html), $groupId));
+            break;
+
+        case CODEX_HP_NO_HTML:
+        default:
+            $clean = htmlentities($html);
+            break;
+        }
+        return $clean;
     }
 
 }
