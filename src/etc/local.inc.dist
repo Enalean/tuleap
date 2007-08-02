@@ -210,6 +210,8 @@ $sys_custompluginspath = "/customplugins";
 $sys_themeroot = $codex_dir . "/src/www/themes/";
 $sys_custom_themeroot = $sys_custom_dir . "/themes";
 
+// 3rd Party libraries
+$htmlpurifier_dir = "/usr/share/htmlpurifier";
 
 // Users
 $sys_http_user  = "codexadm"; // Unix user running the HTTP server
