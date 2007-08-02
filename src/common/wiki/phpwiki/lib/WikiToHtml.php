@@ -155,11 +155,6 @@ class WikiToHtml {
 function replace_rich_table($matched) {
   $plugin = $matched[1];
   
-  // External links
-  $pattern = '/\<a href\=\"(.*)\".*<img.*\/\>(.*)\<\/span\>(.*)\<\/a\>/Umsi';     
-  $replace_string = "[".'\2\3'."|".'\1'."]";
-  $plugin = preg_replace($pattern, $replace_string, $plugin) ;
-      
   $unknown_options = "/colspan|rowspan|width|height/";
   
   // if the plugin contains one of the options bellow
@@ -188,8 +183,11 @@ function replace_rich_table($matched) {
     
     // Put tables inside a div tag instead of span and change css class for it.
     $pattern = '/\<span class\=\"plugin.*\" id\=\"(RichTablePlugin.*)\"\>\<table.*\>(.*)\<\/span\>/Umsi';
-    $replace_string = '<table border="1">\2';
+    $replace_string = '<table border="1" class="wiki-dl-table" cellpadding="6" cellspacing="0">\2';
     $html_table = preg_replace($pattern, $replace_string, $html_table);
+    
+    // Decode html entities like for links and images.
+    $html_table = html_entity_decode($html_table);
     return $html_table;
   }
 }
