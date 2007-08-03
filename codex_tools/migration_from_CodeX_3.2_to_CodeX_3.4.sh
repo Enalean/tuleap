@@ -352,6 +352,14 @@ ALTER TABLE artifact_file MAX_ROWS = 1000000 AVG_ROW_LENGTH = 1000000;
 UPDATE user SET shell='/usr/lib/codex/bin/cvssh-restricted' WHERE shell='/usr/local/bin/cvssh-restricted';
 UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvssh';
 
+
+###############################################################################
+# This was forgotten in CodeX 3.2 migration script (see rev #5671 and SR #941)
+
+UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release';
+
+
+
 ###############################################################################
 # Personalizeable layout
 -- 
