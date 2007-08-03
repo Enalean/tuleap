@@ -47,6 +47,8 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   echo '
 <h3>'.$Language->getText('project_admin_editservice','s_conf').'</h3>';
   
+  $hp =& CodeX_HTMLPurifier::getInstance();
+
   echo '
 <form method="post" name="form_update" action="/project/admin/servicebar.php?group_id='.$group_id.'">
 <input type="hidden" name="func" VALUE="do_update">
@@ -70,19 +72,19 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
 <tr><td width="10%"><a href="#" title="'.$Language->getText('project_admin_editservice','s_name_in_bar').'">'.$Language->getText('project_admin_editservice','s_label').': </a><font color="red">*</font></td>
 <td>';
   if (!$ro) {
-    echo '<input type="text" name="label" size="30" maxlength="40" value="'.$service['label'].'">';
+    echo '<input type="text" name="label" size="30" maxlength="40" value="'.$hp->purify($service['label']).'">';
   } else {
     if ($service['label'] == "service_".$service['short_name']."_lbl_key") {
       echo $Language->getText('project_admin_editservice',$service['label']);
     } else {
-      echo $service['label'];
+      echo $hp->purify($service['label']);
     }
   }
   echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').':&nbsp;</a><font color="red">*</font></td>
 <td>';
   if (((!$ro)||($hp)) && (!$is_legacy_docman || $su)) {
-    echo '<input type="text" name="link" size="70" maxlength="255" value="'.$service['link'].'">';
+    echo '<input type="text" name="link" size="70" maxlength="255" value="'.$hp->purify($service['link']).'">';
   } else {
     echo $service['link'];
     echo '<input type="hidden" name="link" VALUE="'.$service['link'].'">';
@@ -100,12 +102,12 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a>:&nbsp;</td>
 <td>';
   if (!$ro) {
-    echo '<input type="text" name="description" size="70" maxlength="255" value="'.$service['description'].'">';
+    echo '<input type="text" name="description" size="70" maxlength="255" value="'.$hp->purify($service['description']).'">';
   } else {
     if ($service['description'] == "service_".$service['short_name']."_desc_key") {
       echo $Language->getText('project_admin_editservice',$service['description']);
     } else {
-      echo $service['description'];
+      echo $hp->purify($service['description']);
     }
   }
   echo '</td></tr>';
