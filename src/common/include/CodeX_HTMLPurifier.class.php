@@ -39,7 +39,8 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * </pre>
  */
 
-define('CODEX_HP_NO_HTML',    0);
+define('CODEX_HP_CONVERT_HTML', 0);
+define('CODEX_HP_STRIP_HTML', 1);
 define('CODEX_HP_BASIC',      5);
 define('CODEX_HP_LIGHT',     10);
 define('CODEX_HP_FULL',      15);
@@ -108,6 +109,15 @@ class CodeX_HTMLPurifier {
     }
 
     /**
+     *
+     */
+    function getStripConfig() {
+        $config = $this->getCodeXConfig();
+        $config->set('HTML', 'Allowed', '');
+        return $config;
+    }
+
+    /**
      * HTML Purifier configuration factory
      */
     function getHPConfig($level) {
@@ -120,6 +130,10 @@ class CodeX_HTMLPurifier {
         case CODEX_HP_FULL:
             $config = $this->getCodeXConfig();
             break;
+
+        case CODEX_HP_STRIP_HTML:
+            $config = $this->getStripConfig();
+            break;
         }
         return $config;
     }
@@ -129,11 +143,17 @@ class CodeX_HTMLPurifier {
      *
      * There are 5 level of purification, from the most restrictive to most
      * permissive:
-     * - CODEX_HP_NO_HTML (default)
-     *   Removes all html markups (transform it in entities).
+     * - CODEX_HP_CONVERT_HTML (default)
+     *   Transform HTML markups it in entities.
+     *
+     * - CODEX_HP_STRIP_HTML
+     *   Removes all HTML markups. Note: as we relly on HTML Purifier to
+     *   perform this operation this option is not considered as secure as
+     *   CONVERT_HTML. If you are looking for the most secure option please
+     *   consider CONVERT_HTML.
      *
      * - CODEX_HP_BASIC (need $groupId to be set for automagic links)
-     *   Removes all user submitted html markups but: 
+     *   Removes all user submitted HTML markups but: 
      *    - transform typed URLs into clickable URLs.
      *    - transform autmagic links.
      *    - transform carrige return into HTML br markup.
@@ -150,7 +170,7 @@ class CodeX_HTMLPurifier {
      * - CODEX_HP_DISABLED
      *   No filter at all.
      */
-    function purify($html, $level, $groupId=0) {
+    function purify($html, $level=0, $groupId=0) {
         $clean = '';
         switch($level) {
         case CODEX_HP_DISABLED:
@@ -159,16 +179,20 @@ class CodeX_HTMLPurifier {
 
         case CODEX_HP_LIGHT:
             $html = nl2br(util_make_links($html, $groupId));
+        case CODEX_HP_STRIP_HTML:
         case CODEX_HP_FULL:
             $hp =& HTMLPurifier::getInstance();
-            $clean = $hp->purify($html, $this->getHPConfig($level));
+            $config = $this->getHPConfig($level);
+            $clean = $hp->purify($html, $config);
+            // Quite big object, it's better to unset it (memory).
+            unset($config);
             break;
 
         case CODEX_HP_BASIC:
             $clean = nl2br(util_make_links(htmlentities($html), $groupId));
             break;
 
-        case CODEX_HP_NO_HTML:
+        case CODEX_HP_CONVERT_HTML:
         default:
             $clean = htmlentities($html);
             break;
