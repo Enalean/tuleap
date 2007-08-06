@@ -658,10 +658,12 @@ class WikiCloner {
   function cloneWikiPagesPermissions($array){
       $result = db_query("SELECT * FROM permissions where permission_type='WIKIPAGE_READ'");
       while($row = db_fetch_array($result)){
+          if ($this->getWikiPageCloneId($array, $row['object_id'])){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
 	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id'])
 				 , $this->getMappedUGroupId($row['ugroup_id'])
 				 ));
+	  }
       
       }
 
