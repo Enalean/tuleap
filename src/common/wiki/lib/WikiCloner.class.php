@@ -656,17 +656,18 @@ class WikiCloner {
    *
    */
   function cloneWikiPagesPermissions($array){
-      $result = db_query("SELECT * FROM permissions where permission_type='WIKIPAGE_READ'");
+      $result = db_query(sprintf("SELECT object_id, ugroup_id "
+                                ."FROM permissions perm, wiki_page wpg "
+			        ."WHERE perm.permission_type='WIKIPAGE_READ' "
+				."AND wpg.group_id=%d "
+			        ."AND perm.object_id=wpg.id", $this->template_id));
+
       while($row = db_fetch_array($result)){
-          if ($this->getWikiPageCloneId($array, $row['object_id'])){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
 	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id'])
 				 , $this->getMappedUGroupId($row['ugroup_id'])
 				 ));
-	  }
-      
       }
-
   }
   
  /**
