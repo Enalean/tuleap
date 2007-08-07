@@ -1805,7 +1805,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
     $data = array();
     // set standard fields data
     if (isset($status_id))       $data ['status_id']    =  $status_id;
-    if (isset($close_date))   $data ['close_date']   =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
+    if (isset($close_date) && $close_date!=0)   $data ['close_date']   =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
     if (isset($summary))      $data ['summary']      =  $summary;
     if (isset($details))      $data ['details']      =  $details;
     if (isset($severity))     $data ['severity']     =  $severity;
