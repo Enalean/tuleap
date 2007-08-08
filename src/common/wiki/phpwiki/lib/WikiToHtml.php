@@ -177,9 +177,8 @@ function replace_rich_table($matched) {
     $plugin = "<?plugin RichTable ".$plugin." ?>";
     
     require_once("lib/BlockParser.php");
-    $xmlcontent = TransformText($plugin, 2.0, $GLOBALS['request']->getArg('pagename')); 
+    $xmlcontent = TransformText($plugin, 2.0, $GLOBALS['request']->getArg('pagename'));
     $html_table = $xmlcontent->AsXML();
-    //print($html_table);
     
     // Put tables inside a div tag instead of span and change css class for it.
     $pattern = '/\<span class\=\"plugin.*\" id\=\"(RichTablePlugin.*)\"\>\<table.*\>(.*)\<\/span\>/Umsi';
@@ -188,6 +187,14 @@ function replace_rich_table($matched) {
     
     // Decode html entities like for links and images.
     $html_table = html_entity_decode($html_table);
+
+    //Fix for internal links
+    //Remove <a> tags from href attribute of other <a> tags
+    //this is due to WikiWords converted to ahrefs by Phpwiki TransformText prior call.
+    $pattern = '/\<a href\=\".*(\<a href\=\".*\" class\=\"wiki\"\>.*\<\/a\>).*\" class\=\"wiki\"\>.*\<\/a\>\<\/a\>/Umsi';
+    $replace_string = '\1';
+    $html_table = preg_replace($pattern, $replace_string, $html_table);
+    
     return $html_table;
   }
 }
