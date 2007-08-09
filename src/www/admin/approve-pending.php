@@ -92,7 +92,8 @@ if (db_numrows($res_grp) < 1) {
     while ($row_grp = db_fetch_array($res_grp)) {
     
         ?>
-        <H2><?php echo $row_grp['group_name']; ?></H2>
+        <fieldset>
+            <legend style="font-size:1.3em; font-weight: bold;"><?php echo $row_grp['group_name']; ?></legend>
         
 <?php
         $group = new Group($row_grp['group_id']);
@@ -109,35 +110,12 @@ if (db_numrows($res_grp) < 1) {
 ?>
     
         <p>
-        <A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_edit'); ?>]</H3></A>
+        <A href="/admin/groupedit.php?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_edit'); ?></b></A> | 
+        <A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_admin'); ?></b></A> | 
+        <A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><b><?php echo $Language->getText('admin_groupedit','proj_member'); ?></b></A>
     
         <p>
-        <A href="/project/admin/?group_id=<?php echo $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</H3></A>
-    
-        <P>
-        <A href="userlist.php?group_id=<?php print $row_grp['group_id']; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</H3></A>
-    
-        <p>
-            <TABLE WIDTH="70%">
-            <TR>
-            <TD>
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
-        <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
-        <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
-        </FORM>
-        </TD>
-    
-            <TD> 
-        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
-        <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
-        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
-        </FORM>
-            </TD>
-            </TR>
-            </TABLE>
-        <P>
+
         <B><?php 
         // Get project type label
         $template =& TemplateSingleton::instance(); 
@@ -155,8 +133,10 @@ if (db_numrows($res_grp) < 1) {
             . "group_category.group_id=$row_grp[group_id]");
         while ($row_cat = db_fetch_array($res_cat)) {
             print "<br>$row_cat[category_name] "
-            . "<A href=\"groupedit.php?group_id=$row_grp[group_id]&group_idrm=$row_grp[group_id]&form_catrm=$row_cat[category_id]\">"
-                . "[".$Language->getText('admin_approve_pending','remove_category')."]</A>";
+            . '<A href="groupedit.php?group_id='. $row_grp['group_id'] 
+            .'&amp;group_idrm='. $row_grp['group_id'] 
+            .'&amp;form_catrm='. $row_cat['category_id'] .'">'
+            . "[".$Language->getText('admin_approve_pending','remove_category')."]</A>";
         }
     
         // ########################## OTHER INFO
@@ -167,8 +147,44 @@ if (db_numrows($res_grp) < 1) {
         print "<br><u>".$Language->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";
     
         print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
-            
-        echo "<P><HR><P>";
+        
+        $sf =& new ServerFactory();
+        if (count($sf->getAllServers()) > 1) {
+            $p =& project_get_object($row_grp['group_id']);
+            if ($p->usesFile() || $p->usesSVN()) {
+                print '<br><u>'. $Language->getText('admin_approve_pending','distributed_services') .'</u>:<br><ul>';
+                if ($p->usesFile()) {
+                    $s =& $sf->getServerById($p->services['file']->getServerId());
+                    print '<li>'. $Language->getText('project_admin_editservice', 'service_file_lbl_key') .': '. $s->getName() .'</li>';
+                }
+                if ($p->usesSVN()) {
+                    print '<li>'. $Language->getText('project_admin_editservice', 'service_svn_lbl_key') .': '. $s->getName() .'</li>';
+                }
+                print '</ul>';
+            }
+        }
+        ?>
+                    <TABLE WIDTH="70%">
+            <TR>
+            <TD style="text-align:center">
+        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <INPUT TYPE="HIDDEN" NAME="action" VALUE="activate">
+        <INPUT TYPE="HIDDEN" NAME="list_of_groups" VALUE="<?php print $row_grp['group_id']; ?>">
+        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','approve'); ?>">
+        </FORM>
+        </TD>
+    
+            <TD> 
+        <FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+        <INPUT TYPE="HIDDEN" NAME="action" VALUE="delete">
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php print $row_grp['group_id']; ?>">
+        <INPUT type="submit" name="submit" value="<?php echo $Language->getText('admin_approve_pending','delete'); ?>">
+        </FORM>
+            </TD>
+            </TR>
+            </TABLE>
+        </fieldset><br />
+        <?php
     
     }
     

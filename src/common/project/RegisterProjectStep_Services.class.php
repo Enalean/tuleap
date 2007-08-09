@@ -77,7 +77,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
                 //{{{ server
                 if ($can_display_servers) {
                     echo '<td style="text-align:center">';
-                    if ($p->services[$key]->getLocation() == SERVICE_SATELLITE) {
+                    if ($short_name == 'svn' || $short_name == 'file') {
                         echo '<select name="services['. $id .'][server_id]">';
                         foreach($servers as $server_key => $nop) {
                             $selected = $servers[$server_key]->getId() == $p->services[$key]->getServerId() ? 'selected="selected"' : '';
