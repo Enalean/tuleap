@@ -190,11 +190,16 @@ function replace_rich_table($matched) {
 
     //Fix for internal links
     //Remove <a> tags from href attribute of other <a> tags
-    //this is due to WikiWords converted to ahrefs by Phpwiki TransformText prior call.
+    //this is due to WikiWords converted to ahrefs by Phpwiki TransformText() prior call.
     $pattern = '/\<a href\=\".*(\<a href\=\".*\" class\=\"wiki\"\>.*\<\/a\>).*\" class\=\"wiki\"\>.*\<\/a\>\<\/a\>/Umsi';
     $replace_string = '\1';
     $html_table = preg_replace($pattern, $replace_string, $html_table);
-    
+
+    // Fix for external links (namedurls). Urls inside 'href' attribute of  'a' tags 
+    // are converted with linkicons due to TransformText() prior call.
+    $pattern = '/\<a href\=\"\<a href\=.*\<\/a\>\" target\=\"\" class\=\"namedurl\"\>\<span.*\>\<img.*\/\>(\<a href\=.*\<\/span\>\<\/a\>)\<\/span\>\<\/a\>/';
+    $replace_string = '\1';
+    $html_table = preg_replace($pattern, $replace_string, $html_table);
     return $html_table;
   }
 }
