@@ -204,10 +204,15 @@ function replace_rich_table($matched) {
     // Fix for inline images. Displaying the images fails inside RichTable.
     // Some Raw Html + broken image appears instead of the expected image.
     // This is caused by converting the image uri into a named url by former TransformText()
-    // call wich lead to an href tag inside the src attribute of the img tag.    
+    // call wich lead to an href tag inside the src attribute of the img tag.
     //The bug only occurs in ST code.
     $pattern = '/\<img src\=\"\<a href\=.*\>\<span.*\>\<img.*\/\>(.*)\<\/span\>\<\/a\>\" (alt\=\".*\" title\=\".*\" class\=\".*\").*\/\>/';
     $replace_string = '<img src="\1"\2>';
+    $html_table = preg_replace($pattern, $replace_string, $html_table);
+    
+    // Fix for attachments links
+    $pattern = '/\<a href\=\"\<a href\=\".*\" target\=\"\" class\=\"namedurl\"\>.*\<img.*\>(.*)\<\/span\>\<\/a\>\" class\=\"interwiki\"\>.*Upload:.*\<\/a> class\=\"wikipage\"\>(.*)\<\/span\>\<\/a\>/';
+    $replace_string = '<a href="\1" class="interwiki">Upload:\2</a>';
     $html_table = preg_replace($pattern, $replace_string, $html_table);
     
     return $html_table;
