@@ -42,6 +42,7 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                             $res = db_query($sql);
                             echo db_error();
                             $column_id = db_result($res, 0, 'id');
+                            $column_id = $column_id ? $column_id : 0;
                             
                             //content_id
                             if ($widget->isUnique()) {
