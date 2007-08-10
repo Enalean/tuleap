@@ -14,7 +14,7 @@
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactCanned.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
+$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactTypeFactory extends Error {
 
