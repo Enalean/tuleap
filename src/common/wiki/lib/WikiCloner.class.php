@@ -137,14 +137,14 @@ class WikiCloner {
   function cloneWikiVersionTable($array){
       foreach($array as $key => $value){
           $tmpl_version_data = $this->getTemplateWikiVersionData($key);
-	  $result = db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key));
-	  while($row = db_fetch_array($result)){
-	      $num_ver = $row['version'];
-	      $res = db_query(sprintf("INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
-	                               ."VALUES(%d, %d, %d, %d, '%s', '%s')"
-		                       , $value, $num_ver, $row['mtime'], $row['minor_edit'], $this->escapeString($row['content'])
-				       , $this->_serialize($tmpl_version_data[$num_ver])));
-	  }
+	      $result = db_query(sprintf("select version, mtime, minor_edit, content FROM wiki_version WHERE id=%d", $key));
+	      while($row = db_fetch_array($result)){
+	          $num_ver = $row['version'];
+	          $res = db_query(sprintf("INSERT INTO wiki_version (id, version, mtime, minor_edit, content, versiondata)"
+									  ."VALUES(%d, %d, %d, %d, '%s', '%s')"
+		                              , $value, $num_ver, $row['mtime'], $row['minor_edit'], $this->escapeString($row['content'])
+				                      , $this->escapeString($this->_serialize($tmpl_version_data[$num_ver]))));
+	      } 
       }
   }
 
@@ -158,14 +158,14 @@ class WikiCloner {
    */
   function cloneWikiPageTable(){
       $ids = array();
-      $result = db_query(sprintf("SELECT pagename FROM wiki_page WHERE group_id=%d",$this->template_id));
+      $result = db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id));
       while($row = db_fetch_array($result)){
-          $pagename =  $this->escapeString($row[0]);
-	  $tmpl_page_id = $this->getTemplateWikiPageId($pagename);
-	  $page_data = $this->getTemplatePageData($pagename);
-	  $new_data = $this->createNewPageData($page_data);
-	  $id = $this->insertNewWikiPage($new_data, $pagename);
-	  $ids[$tmpl_page_id] = $id;
+	      $pagename =  $row['pagename'];
+		  $tmpl_page_id = $row['id'];
+	      $page_data = $this->getTemplatePageData($pagename);
+	      $new_data = $this->createNewPageData($page_data);
+	      $id = $this->insertNewWikiPage($new_data, $pagename);
+	      $ids[$tmpl_page_id] = $id;
       }
       return $ids;
       
@@ -190,7 +190,7 @@ class WikiCloner {
 	          $result = db_query(sprintf("INSERT INTO wiki_recent (id, latestversion, latestmajor)"
 	                                    ."VALUES(%d, %d, %d)", $new_id, $recent_infos['latestversion'], $recent_infos['latestmajor'])); 
 	      }
-          }
+      }
       }	
   }
 
@@ -456,23 +456,7 @@ class WikiCloner {
   
  /**
    *
-   *  Look for a given wiki page id.
-   *
-   *  @param string: pagename
-   *  @returrn int: wiki page id
-   *
-   */
-  function getTemplateWikiPageId($pagename){
-      $result = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->template_id));
-      while($row = db_fetch_array($result)){
-          return (int) $row[0];
-      }
-  }  
-
- /**
-   *
    *  Get pagedata information from wiki_page table.
-   *  isTemplatePageNonEmpty
    *
    *  @params pagename : name of any wiki page stored in the db.
    *  @return deserialized page data hash.
@@ -491,15 +475,15 @@ class WikiCloner {
    *  @params id : id of the template wiki page stored in the db.
    *  @return hash like:
    *  $key : version number
-   *  $value : derialised version data hash
+   *  $value : deserialised version data hash
    */
   function getTemplateWikiVersionData($id){
       $version = array();
       $result = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
       while($row = db_fetch_array($result)){
-	  $version_number = $row['version'];
+	      $version_number = $row['version'];
           $version_data = $this->_deserialize($row['versiondata']);
-	  $version[$version_number] = $version_data;
+	      $version[$version_number] = $version_data;
       }
       return $version;
   }
@@ -514,9 +498,9 @@ class WikiCloner {
    */
   function getWikiPageCloneId($array, $tmpl_page_id){
       foreach($array as $tmpl_id => $new_id){
-	  if ($tmpl_id == $tmpl_page_id) {
-	      return $new_id; 
-	  }
+	      if ($tmpl_id == $tmpl_page_id) {
+	          return $new_id; 
+	      }
       }
   }
   
@@ -544,7 +528,7 @@ class WikiCloner {
                   if(is_array($arr)){
 		      foreach($arr as $i => $j){
 		          // Do not copy monitoring data of user pages.
-		          if ($i == 'notifyPages') unset($arr[$i]);                
+		          if ($i == 'notifyPages') unset($arr[$i]);
 		      } 
 		  }
                   $data[$key] = $this->_serialize($arr);  
@@ -622,10 +606,10 @@ class WikiCloner {
 				 , $pagename, 0, $this->_serialize($data), $this->group_id));
       if(!empty ($result)){
           $res = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", $pagename, $this->group_id)); 
-	  while ($row = db_fetch_array($res)){ 
-	      $id = $row[0];
-	  }
-	  return $id;
+	      while ($row = db_fetch_array($res)){ 
+	          $id = $row[0];
+	      }
+	      return $id;
       }
   }
   
@@ -641,9 +625,7 @@ class WikiCloner {
       $result = db_query(sprintf("SELECT * FROM permissions where permission_type='WIKI_READ' and object_id=%d", $this->template_id));
       while($row = db_fetch_array($result)){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-	                         ."VALUES ('WIKI_READ', %d, %d)", $this->group_id
-				 , $this->getMappedUGroupId($row['ugroup_id'])
-				 ));
+	                             ."VALUES ('WIKI_READ', %d, %d)", $this->group_id, $this->getMappedUGroupId($row['ugroup_id'])));
       }
   }
   
@@ -658,15 +640,14 @@ class WikiCloner {
   function cloneWikiPagesPermissions($array){
       $result = db_query(sprintf("SELECT object_id, ugroup_id "
                                 ."FROM permissions perm, wiki_page wpg "
-			        ."WHERE perm.permission_type='WIKIPAGE_READ' "
-				."AND wpg.group_id=%d "
-			        ."AND perm.object_id=wpg.id", $this->template_id));
+			                    ."WHERE perm.permission_type='WIKIPAGE_READ' "
+				                ."AND wpg.group_id=%d "
+			                    ."AND perm.object_id=wpg.id", $this->template_id));
 
       while($row = db_fetch_array($result)){
           $res = db_query(sprintf("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-	                         ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id'])
-				 , $this->getMappedUGroupId($row['ugroup_id'])
-				 ));
+	                             ."VALUES ('WIKIPAGE_READ', %d, %d)", $this->getWikiPageCloneId($array, $row['object_id'])
+				                 , $this->getMappedUGroupId($row['ugroup_id'])));
       }
   }
   
