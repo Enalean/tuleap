@@ -14,6 +14,7 @@ require_once('common/tracker/ArtifactReportFactory.class.php');
 require_once('common/include/ReferenceManager.class.php');
 require_once('trove.php');
 require_once('common/event/EventManager.class.php');
+require_once('common/wiki/lib/WikiCloner.class.php');
 
 /**
 * create_project
@@ -279,6 +280,15 @@ function create_project($data) {
            }
         }
         
+	// Clone wiki from the template
+	$clone = new WikiCloner($template_id, $group_id);
+
+        // check if the template project has a wiki initialised
+        if ($clone->templateWikiExists() and $clone->newWikiIsUsed()){
+	    //clone wiki.  
+	    $clone->CloneWiki();
+	}
+	
         //Create project specific references if template is not default site template
         if (!$system_template) {
             $reference_manager =& ReferenceManager::instance();
