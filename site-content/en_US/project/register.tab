@@ -95,6 +95,7 @@ register_why	why_register	Why Register?
 # Script: src/common/project//template.php
 #
 register_template	choose	Choose A Project Template
+register_template	choose_admin	Or choose a project of which you are admin
 register_template	next_step	Step 4: Basic Project Information
 
 register_title	intro	Project Registration
