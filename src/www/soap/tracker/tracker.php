@@ -1596,7 +1596,8 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
             if ($a->isError()) {
                 return new soap_fault(get_artifact_type_fault, 'updateArtifact', $a->getErrorMessage(),$a->getErrorMessage());
             }
-            
+            // Update last_update_date field
+            $a->update_last_update_date();
             return $a->getID();
         }
         
@@ -2373,6 +2374,9 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
         if (!$a->addComment($body,false,&$changes)) {
             return new soap_fault(create_followup_fault, 'addArtifactFollowup', 'Comment could not be saved', 'Comment could not be saved');
         }
+        // Update last_update_date field
+        $a->update_last_update_date();
+
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', 'Invalid Session');
     }

@@ -1059,6 +1059,12 @@ function getUsedFields() {
         $agnf =& new ArtifactGlobalNotificationFactory();
         $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = true), $changes);
     }
+
+    if(count($changes)>0 || $add_cc || $comments_ok) {
+        // Update the 'last_update_date' artifact field
+        $res_last_up = $ah->update_last_update_date();
+    }      
+
   }  
   return true;
   }

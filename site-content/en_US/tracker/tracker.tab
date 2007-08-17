@@ -88,6 +88,8 @@ tracker_index	browser_not_supported	Sorry, your browser (Netscape 4.x) is not su
 tracker_index	a_tracker	a tracker
 tracker_index	an_artif	an artifact
 tracker_index	not_create_art	Artifact Could Not Be Created
+tracker_index	artifact_has_changed_title	WARNING: Your update has not been applied.
+tracker_index	artifact_has_changed	This item has been updated by someone else since you displayed it so your update could inadvertently delete their changes.<br> To proceed, you must use the browser back button and then get the other user's changes, either by: <ul><li><a href="$1" target="_blank">loading the updated artifact in a new window</a> and update your values there, </li><li>or by re-loading the form using the browser's refresh button (note that refresh will clear your changes and you will have to re-enter them; we recommend that you copy any lengthy changes before refresh).</li></ul>
 tracker_index	cc_list_invalid	Error - The CC list is invalid
 tracker_index	invalid_filename	Invalid filename
 tracker_index	not_create_file	Could Not Create File Object

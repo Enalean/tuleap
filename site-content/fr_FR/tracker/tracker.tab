@@ -93,6 +93,8 @@ tracker_index	browser_not_supported	Désolé, votre navigateur (Netscape 4.x) n'es
 tracker_index	a_tracker	un outil de suivi
 tracker_index	an_artif	un artefact
 tracker_index	not_create_art	L'artefact n'a pas pu être créé
+tracker_index	artifact_has_changed_title	ATTENTION: Votre mise à jour n'a pas été appliquée.
+tracker_index	artifact_has_changed	Cet artefact a été mis à jour par quelqu'un d'autre depuis que vous l'avez affiché. Vos modifications sont donc susceptibles d'effacer les leurs.<br> Pour continuer, vous devez utiliser le bouton Retour ("Back") de votre navigateur et récupérer la nouvelle version de l'artefact: <ul><li>soit en <a href="$1" target="_blank">chargeant l'artefact dans une nouvelle fenêtre</a> et en mettant vos nouvelles valeurs là, </li><li>soit en rechargeant le formulaire en utilisant le bouton "Rafraichir" de votre navigateur (Notez que cela va effacer les modifications que vous auriez pu faire; nous vous recommandons de copier vos changements importants avant de rafraichir).</li></ul>
 tracker_index	cc_list_invalid	Erreur&nbsp;: La liste de CC est invalide
 tracker_index	invalid_filename	Nom de fichier invalide
 tracker_index	not_create_file	L'objet fichier n'a pas pu être créé
