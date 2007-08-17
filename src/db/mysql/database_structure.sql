@@ -2565,6 +2565,7 @@ CREATE TABLE artifact (
 	submitted_by int(11) DEFAULT '100' NOT NULL,
 	open_date int(11) DEFAULT '0' NOT NULL,
 	close_date int(11) DEFAULT '0' NOT NULL,
+	last_update_date int(11) UNSIGNED DEFAULT '0' NOT NULL,
 	summary text NOT NULL,
 	details text NOT NULL,
 	severity int(11) DEFAULT '0' NOT NULL,

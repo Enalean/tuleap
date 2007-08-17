@@ -416,6 +416,14 @@ if ( $func == 'gotoid' ) {
                         if ( !user_isloggedin() && !$ath->allowsAnon() ) {
                             exit_not_logged_in();
                         }
+
+                        // Check timestamp
+                        if ( isset($_REQUEST['artifact_timestamp']) &&
+                             ($ah->getLastUpdateDate()>$_REQUEST['artifact_timestamp']) ) {
+                            // Artifact was updated between the time it was sent to the user, and the time it was submitted
+                            exit_error($Language->getText('tracker_index','artifact_has_changed_title'),$Language->getText('tracker_index','artifact_has_changed',"/tracker/?func=detail&aid=$aid&atid=$atid&group_id=$group_id"));
+                       }
+
                         // First check parameters
                         
                         // CC
@@ -471,7 +479,9 @@ if ( $func == 'gotoid' ) {
                             $ah->mailFollowupWithPermissions($addresses, $changes);
                         }
 
-        
+                        // Update the 'last_update_date' artifact field
+                        $res_last_up = $ah->update_last_update_date();
+    
                         //
                         //      Show just one feedback entry if no errors
                         //
@@ -571,6 +581,10 @@ if ( $func == 'gotoid' ) {
 		    if ($add_cc) {
 		      $changed |= $ah->addCC($add_cc,$cc_comment,$changes,true);
 		    }
+
+                    // Update the 'last_update_date' artifact field
+                    // Should check that the artifact was really modified?
+                    $res_last_up = $ah->update_last_update_date();
 
                 
 		  }

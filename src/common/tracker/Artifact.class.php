@@ -221,7 +221,16 @@ class Artifact extends Error {
         return $this->data_array['open_date'];
     }
 
-    /**
+     /**
+     *  getLastUpdateDate - get unix time of last artifact update.
+     *
+     *  @return int unix time.
+     */
+    function getLastUpdateDate() {
+        return $this->data_array['last_update_date'];
+    }
+
+   /**
      *  getCloseDate - get unix time of closure.
      *
      *  @return int unix time.
@@ -438,13 +447,13 @@ class Artifact extends Error {
 
 
         // Add all special fields that were not handled in the previous block
-        $fixed_cols = 'open_date,group_artifact_id,submitted_by';
+        $fixed_cols = 'open_date,last_update_date,group_artifact_id,submitted_by';
 	if ($import) {
 		if (!$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
 		else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
-		$fixed_values = "'".$open_date."','$group_artifact_id','$user'";
+		$fixed_values = "'".$open_date."','".time()."','$group_artifact_id','$user'";
 	} else {
-	        $fixed_values = "'".time()."','$group_artifact_id','$user'";
+	        $fixed_values = "'".time()."','".time()."','$group_artifact_id','$user'";
         }  
 
 
@@ -512,7 +521,7 @@ class Artifact extends Error {
 
         }
 
-        // All ok then reload the artifact dat to make sure it is cached
+        // All ok then reload the artifact data to make sure it is cached
         // correctly in memory
         $this->fetchData($artifact_id);
 
@@ -896,7 +905,7 @@ class Artifact extends Error {
                 
                 $res_upd=db_query($sql);
             }
-        
+
             if (!$res_upd) {
                 exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
                 return false;
@@ -2637,6 +2646,15 @@ class Artifact extends Error {
         
         }
 
+    /** Update the last_update_date field in the Artifact table to 'now'
+     */
+    function update_last_update_date() {
+        $sql="UPDATE artifact SET last_update_date=".time().
+            " WHERE artifact_id=".$this->getID();
+                
+        return db_query($sql);        
+    }
+        
 
 }
 

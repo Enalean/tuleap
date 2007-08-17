@@ -91,6 +91,7 @@ class ArtifactHtml extends Artifact {
                 echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="postmod">';
             }
             echo '
+            <INPUT TYPE="HIDDEN" NAME="artifact_timestamp" VALUE="'.time().'">
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
             <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">

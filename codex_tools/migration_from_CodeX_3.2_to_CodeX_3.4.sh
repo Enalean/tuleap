@@ -334,6 +334,10 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 DROP TABLE IF EXISTS trove_treesums;
 
 
+# Should verify that column does not already exist!!!!! (can have been updated in support branch)
+# fix for SR #923
+ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL default '0' AFTER close_date
+
 
 # SR #772 - Rename 'release' field from legacy tracker to 'release_name' to avoid conflict in MySQL 5
 ALTER TABLE bug CHANGE release release_name varchar(255) NOT NULL default '';

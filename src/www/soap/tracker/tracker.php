@@ -2131,7 +2131,8 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
             if ($a->isError()) {
                 return new soap_fault(get_artifact_type_fault, 'updateArtifact', $a->getErrorMessage(),'');
             }
-            
+            // Update last_update_date field
+            $a->update_last_update_date();
             // Send the notification
             if ($changes) {
                 $agnf =& new ArtifactGlobalNotificationFactory();
@@ -3150,6 +3151,9 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
             $a->mailFollowupWithPermissions($addresses, $changes);
             return new soapval('return', 'xsd:boolean', true);
         }
+        // Update last_update_date field
+        $a->update_last_update_date();
+
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactFollowup', 'Invalid Session', '');
     }
