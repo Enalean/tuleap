@@ -375,6 +375,7 @@ CREATE TABLE IF NOT EXISTS artifact (
   submitted_by int(11) NOT NULL default '100',
   open_date int(11) NOT NULL default '0',
   close_date int(11) NOT NULL default '0',
+  last_update_date int(11) UNSIGNED DEFAULT '0' NOT NULL,
   summary text NOT NULL,
   details text NOT NULL,
   severity int(11) NOT NULL default '0',
@@ -3691,7 +3692,7 @@ CREATE TABLE IF NOT EXISTS artifact_file (
   submitted_by int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY artifact_id (artifact_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) MAX_ROWS=1000000 AVG_ROW_LENGTH=1000000 ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
 -- Dumping data for table 'artifact_file'
@@ -5017,7 +5018,7 @@ CREATE TABLE IF NOT EXISTS bug (
   priority int(11) NOT NULL default '100',
   keywords varchar(255) NOT NULL default '',
   release_id int(11) NOT NULL default '100',
-  release varchar(255) NOT NULL default '',
+  release_name varchar(255) NOT NULL default '',
   originator_name varchar(255) NOT NULL default '',
   originator_email varchar(255) NOT NULL default '',
   originator_phone varchar(255) NOT NULL default '',
@@ -6909,7 +6910,7 @@ INSERT INTO group_type (type_id, name) VALUES (1, 'project'),
 DROP TABLE IF EXISTS groups;
 CREATE TABLE IF NOT EXISTS groups (
   group_id int(11) NOT NULL auto_increment,
-  group_name varchar(40) default NULL,
+  group_name varchar(255) default NULL,
   is_public int(11) NOT NULL default '0',
   `status` char(1) NOT NULL default 'A',
   unix_group_name varchar(30) NOT NULL default '',
@@ -12596,6 +12597,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   fontsize int(10) unsigned NOT NULL default '0',
   theme varchar(50) default NULL,
   language_id int(11) NOT NULL default '1',
+  last_pwd_update int(11) NOT NULL default '0',
   PRIMARY KEY  (user_id),
   KEY idx_user_user (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
