@@ -366,8 +366,10 @@ UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1'
 
 ###############################################################################
 # Personalizeable layout
+-- --------------------------------------------------------
+
 -- 
--- Table structure for table 'layouts'
+-- Structure de la table 'layouts'
 -- 
 
 DROP TABLE IF EXISTS layouts;
@@ -375,14 +377,14 @@ CREATE TABLE IF NOT EXISTS layouts (
   id int(11) unsigned NOT NULL auto_increment,
   name varchar(255) NOT NULL default '',
   description text NOT NULL,
-  scope varchar(1) NOT NULL default 'S',
+  scope char(1) NOT NULL default 'S',
   PRIMARY KEY  (id)
 );
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'layouts_rows'
+-- Structure de la table 'layouts_rows'
 -- 
 
 DROP TABLE IF EXISTS layouts_rows;
@@ -397,7 +399,7 @@ CREATE TABLE IF NOT EXISTS layouts_rows (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'layouts_rows_columns'
+-- Structure de la table 'layouts_rows_columns'
 -- 
 
 DROP TABLE IF EXISTS layouts_rows_columns;
@@ -412,7 +414,7 @@ CREATE TABLE IF NOT EXISTS layouts_rows_columns (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'user_layouts'
+-- Structure de la table 'user_layouts'
 -- 
 
 DROP TABLE IF EXISTS user_layouts;
@@ -420,13 +422,14 @@ CREATE TABLE IF NOT EXISTS user_layouts (
   user_id int(11) unsigned NOT NULL default '0',
   layout_id int(11) unsigned NOT NULL default '0',
   is_default tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (user_id, layout_id)
+  PRIMARY KEY  (user_id,layout_id),
+  KEY layout_id (layout_id)
 );
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'user_layouts_contents'
+-- Structure de la table 'user_layouts_contents'
 -- 
 
 DROP TABLE IF EXISTS user_layouts_contents;
@@ -434,12 +437,13 @@ CREATE TABLE IF NOT EXISTS user_layouts_contents (
   user_id int(11) unsigned NOT NULL default '0',
   layout_id int(11) unsigned NOT NULL default '0',
   column_id int(11) unsigned NOT NULL default '0',
-  name varchar(255) NOT NULL,
-  content_id int(11) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL default '',
   rank int(11) NOT NULL default '0',
-  is_minimzed tinyint(1) NOT NULL default '0',
-  KEY (user_id, layout_id, name, content_id),
-  KEY (name)
+  is_minimized tinyint(1) NOT NULL default '0',
+  is_removed tinyint(1) NOT NULL default '0',
+  display_preferences tinyint(1) NOT NULL default '0',
+  content_id int(11) unsigned NOT NULL default '0',
+  KEY user_id (user_id,layout_id,name,content_id)
 );
 
 
@@ -457,7 +461,7 @@ CREATE TABLE IF NOT EXISTS user_rss (
 
 INSERT INTO layouts (id, name, description, scope) VALUES (1, '2 columns', 'Standard layout', 'S');
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
-INSERT INTO layouts_rows_columns (id, layout_rows_id, width) VALUES (1, 1, 50), (2, 1, 50);
+INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
 
 INSERT INTO user_layouts (user_id, layout_id, is_default) 
 SELECT user_id, 1, 1 
