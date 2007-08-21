@@ -5065,7 +5065,7 @@ CREATE TABLE IF NOT EXISTS bug (
 -- Dumping data for table 'bug'
 -- 
 
-INSERT INTO bug (bug_id, group_id, status_id, severity, category_id, submitted_by, assigned_to, date, summary, details, close_date, bug_group_id, resolution_id, category_version_id, platform_version_id, reproducibility_id, size_id, fix_release_id, plan_release_id, hours, component_version, fix_release, plan_release, priority, keywords, release_id, release, originator_name, originator_email, originator_phone, custom_tf1, custom_tf2, custom_tf3, custom_tf4, custom_tf5, custom_tf6, custom_tf7, custom_tf8, custom_tf9, custom_tf10, custom_ta1, custom_ta2, custom_ta3, custom_ta4, custom_ta5, custom_ta6, custom_ta7, custom_ta8, custom_ta9, custom_ta10, custom_sb1, custom_sb2, custom_sb3, custom_sb4, custom_sb5, custom_sb6, custom_sb7, custom_sb8, custom_sb9, custom_sb10, custom_df1, custom_df2, custom_df3, custom_df4, custom_df5) VALUES (100, 100, 3, 1, 100, 100, 100, 1058260700, 'None', '', 0, 100, 100, 100, 100, 100, 100, 100, 100, 0.00, '', '', '', 100, '', 100, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0);
+INSERT INTO bug (bug_id, group_id, status_id, severity, category_id, submitted_by, assigned_to, date, summary, details, close_date, bug_group_id, resolution_id, category_version_id, platform_version_id, reproducibility_id, size_id, fix_release_id, plan_release_id, hours, component_version, fix_release, plan_release, priority, keywords, release_id, release_name, originator_name, originator_email, originator_phone, custom_tf1, custom_tf2, custom_tf3, custom_tf4, custom_tf5, custom_tf6, custom_tf7, custom_tf8, custom_tf9, custom_tf10, custom_ta1, custom_ta2, custom_ta3, custom_ta4, custom_ta5, custom_ta6, custom_ta7, custom_ta8, custom_ta9, custom_ta10, custom_sb1, custom_sb2, custom_sb3, custom_sb4, custom_sb5, custom_sb6, custom_sb7, custom_sb8, custom_sb9, custom_sb10, custom_df1, custom_df2, custom_df3, custom_df4, custom_df5) VALUES (100, 100, 3, 1, 100, 100, 100, 1058260700, 'None', '', 0, 100, 100, 100, 100, 100, 100, 100, 100, 0.00, '', '', '', 100, '', 100, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -13113,3 +13113,129 @@ CREATE TABLE IF NOT EXISTS wiki_version (
 -- Dumping data for table 'wiki_version'
 -- 
 
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table 'layouts'
+-- 
+
+DROP TABLE IF EXISTS layouts;
+CREATE TABLE IF NOT EXISTS layouts (
+  id int(11) unsigned NOT NULL auto_increment,
+  name varchar(255) NOT NULL default '',
+  description text NOT NULL,
+  scope char(1) NOT NULL default 'S',
+  PRIMARY KEY  (id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table 'layouts_rows'
+-- 
+
+DROP TABLE IF EXISTS layouts_rows;
+CREATE TABLE IF NOT EXISTS layouts_rows (
+  id int(11) unsigned NOT NULL auto_increment,
+  layout_id int(11) unsigned NOT NULL default '0',
+  rank int(11) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY layout_id (layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table 'layouts_rows_columns'
+-- 
+
+DROP TABLE IF EXISTS layouts_rows_columns;
+CREATE TABLE IF NOT EXISTS layouts_rows_columns (
+  id int(11) unsigned NOT NULL auto_increment,
+  layout_row_id int(11) unsigned NOT NULL default '0',
+  width int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY layout_row_id (layout_row_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table 'user_layouts'
+-- 
+
+DROP TABLE IF EXISTS user_layouts;
+CREATE TABLE IF NOT EXISTS user_layouts (
+  user_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  is_default tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (user_id,layout_id),
+  KEY layout_id (layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table 'user_layouts_contents'
+-- 
+
+DROP TABLE IF EXISTS user_layouts_contents;
+CREATE TABLE IF NOT EXISTS user_layouts_contents (
+  user_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  column_id int(11) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL default '',
+  rank int(11) NOT NULL default '0',
+  is_minimized tinyint(1) NOT NULL default '0',
+  is_removed tinyint(1) NOT NULL default '0',
+  display_preferences tinyint(1) NOT NULL default '0',
+  content_id int(11) unsigned NOT NULL default '0',
+  KEY user_id (user_id,layout_id,name,content_id)
+);
+
+
+
+DROP TABLE IF EXISTS user_rss;
+CREATE TABLE IF NOT EXISTS user_rss (
+  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+  user_id int(11) unsigned NOT NULL default '0',
+  title varchar(255) NOT NULL,
+  url TEXT NOT NULL,
+  KEY (user_id)
+);
+
+
+
+
+INSERT INTO layouts (id, name, description, scope) VALUES (1, '2 columns', 'Standard layout', 'S');
+INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
+INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
+
+INSERT INTO user_layouts (user_id, layout_id, is_default) 
+SELECT user_id, 1, 1 
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mysurveys', 4
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mymonitoredforums', 2
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'mybookmarks', 1
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 2, 'myartifacts', 0
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 2, 'mymonitoredfp', 1
+FROM user;
+
+INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
+SELECT user_id, 1, 1, 'myprojects', 0
+FROM user;
