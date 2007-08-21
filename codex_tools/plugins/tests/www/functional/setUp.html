@@ -29,16 +29,44 @@
 <br />
 <input type="text" id="codex_code" /><input type="button" id="codex_dounlock" value="Unlock" />
 <script type="text/javascript">
-if ($('codex_reset_db').innerHTML.match(/_TO_REMOVE_/)) {
-    var hash = Math.floor(Math.random()*10000);
-    document.write('<div>Please type the following code to reset your database : '+hash+'</div>');
-    Event.observe('codex_dounlock', 'click', function() {
-            if ($('codex_code').value == hash) {
-                $('codex_reset_db').innerHTML = $('codex_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
-                alert('Reset db should have been unlocked. Enjoy!');
-            }
-    });
+function setCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
 }
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+if ($('codex_reset_db').innerHTML.match(/_TO_REMOVE_/)) {
+    if (readCookie("codex_selenium") == "1") {
+        $('codex_reset_db').innerHTML = $('codex_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
+    } else {
+        var hash = Math.floor(Math.random()*10000);
+        document.write('<div>Please type the following code to reset your database : '+hash+'</div>');
+        Event.observe('codex_dounlock', 'click', function() {
+                if ($('codex_code').value == hash) {
+                    $('codex_reset_db').innerHTML = $('codex_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
+                    alert('Reset db should have been unlocked. Enjoy!');
+                    setCookie("codex_selenium", "1", 0);
+                }
+        });
+    }
+}
+Event.observe(window.top, 'unload', function() {
+        setCookie("codex_selenium", "0", 0);
+});
 </script>
 </body>
 </html>
