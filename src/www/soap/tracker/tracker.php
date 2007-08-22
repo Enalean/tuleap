@@ -1808,7 +1808,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
     if (isset($close_date) && $close_date!=0)   $data ['close_date']   =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
     if (isset($summary))      $data ['summary']      =  $summary;
     if (isset($details))      $data ['details']      =  $details;
-    if (isset($severity))     $data ['severity']     =  $severity;
+    if (isset($severity) && $severity!=0)     $data ['severity']     =  $severity;
     
     // set extra fields data
     if (is_array($extra_fields) && count($extra_fields) > 0) {
@@ -2272,20 +2272,22 @@ function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $arti
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault, 'getArtifactFollowups', $a->getErrorMessage(), '');
         }
-        $return  = artifactfollowups_to_soap($a->getFollowups());
+        $return  = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id);
         return new soapval('return', 'tns:ArrayOfArtifactFollowup', $return);        
     } else {
         return new soap_fault(invalid_session_fault,'getArtifactFollowups','Invalid Session ','');
     }
 }
 
-function artifactfollowups_to_soap($followups_res) {
+function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id) {
     $return = array();
     $rows = db_numrows($followups_res);
     for ($i=0; $i < $rows; $i++) {
+        $comment = util_make_links(db_result($followups_res, $i, 'old_value'),$group_id,$group_artifact_id);
+    
         $return[] = array (
             'artifact_id'          => db_result($followups_res, $i, 'artifact_id'),    
-            'comment'               => db_result($followups_res, $i, 'old_value'),
+            'comment'               => $comment, //db_result($followups_res, $i, 'old_value'),
             'date'                     => db_result($followups_res, $i, 'date'),
             'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id')            
