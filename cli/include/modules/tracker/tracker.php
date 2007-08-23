@@ -77,7 +77,7 @@ class CLI_Module_Tracker extends CLI_Module {
         foreach($params as $idx => $key_equals_value) {
             $passed_parameter = '';
             $passed_value = '';
-            if (preg_match("/^\\-\\-(.+)=(.+)/s",$key_equals_value,$res)) {	// something like "--username=john"
+            if (preg_match("/^\\-\\-([^=]+)=(.+)/s",$key_equals_value,$res)) {	// something like "--username=john"
                 $passed_parameter = $res[1];
                 $passed_value = $res[2];
             }
