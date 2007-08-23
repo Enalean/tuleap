@@ -1267,7 +1267,8 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis> : le
 		    nom de la bases de données correspond au nom court
-		    de votre projet qui vous a été donné à la fin du
+		    de votre projet préfixé par 'cx_'.
+                    Il vous a été donné à la fin du
 		    processus de génération de votre base (voir plus
 		    haut).</para>
 		  </listitem>

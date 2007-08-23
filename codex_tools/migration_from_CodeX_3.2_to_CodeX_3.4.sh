@@ -548,6 +548,7 @@ TODO revision #6419 (follow-up comments) : themes
 
 TODO "Add the SOAP API change in release notes (about function getArtifacts, about getAttachedFiles that does not return the content of the files anymore for performance reasons)"
 
+todo "Warn your users that use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
 todo "If you have custom themes:"
 todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed"
 todo "-----------------------------------------"

@@ -1163,7 +1163,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis>:
-		    the database name is your project shortname as
+		    the database name is your project shortname prefixed by 'cx_' as
 		    displayed by CodeX after you generated your
 		    project database (see above)</para>
 		  </listitem>
