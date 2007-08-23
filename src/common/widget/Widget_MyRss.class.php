@@ -24,7 +24,10 @@ class Widget_MyRss extends Widget {
         $content = '';
         if ($this->myrss_url) {
             require_once('common/rss/libs/SimplePie/simplepie.inc');
-            $rss =& new SimplePie($this->myrss_url, $GLOBALS['codex_cache_dir'], null, $GLOBALS['sys_proxy']);
+            if (!is_dir($GLOBALS['codex_cache_dir'] .'/rss')) {
+                mkdir($GLOBALS['codex_cache_dir'] .'/rss');
+            }
+            $rss =& new SimplePie($this->myrss_url, $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
             $rss->set_output_encoding('ISO-8859-1');
             $max_items = 10;
             $items = array_slice($rss->get_items(), 0, $max_items);
