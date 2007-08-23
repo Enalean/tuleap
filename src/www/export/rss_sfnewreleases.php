@@ -10,6 +10,7 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
+require_once('common/frs/FRSReleaseFactory.class.php');
 require('./rss_utils.inc');
 $Language->loadLanguageMsg('export/export');
 
@@ -62,10 +63,13 @@ print "  <webMaster>webmaster@".$host."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
 $outputtotal = 0;
+$frspf =& new FRSPackageFactory();
+$frsrf =& new FRSReleaseFactory();
+
 while ($row = db_fetch_array($res)) {
   if (!$G_RELEASE["$row[group_id]"]) {
-    if ((!permission_exist("PACKAGE_READ",$row['package_id'] ))&&
-	(!permission_exist("RELEASE_READ",$row['release_id'] ))) {
+    if ($frspf->userCanRead($row['group_id'], $row['package_id'], 100) &&
+        $frsrf->userCanRead($row['group_id'], $row['package_id'], $row_newrel['release_id'], 100)) {
       print "  <item>\n";
       print "   <title>".htmlspecialchars($row['group_name']." ". $row['release_version'])."</title>\n";
       print "   <link>".get_server_url()."/file/showfiles.php?group_id=$row[group_id]</link>\n";
