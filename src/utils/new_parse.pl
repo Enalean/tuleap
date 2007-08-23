@@ -318,11 +318,11 @@ while ($ln = pop(@groupdump_array)) {
 	# File service location
 	my ($file_location, $file_server_id) = split(",", $file_service);
 
+        $cvs_dir = "$cvs_prefix/$gname";
 	if($server_is_master) {
-	    if ( $gstatus eq 'A' && !(-e "$cvs_prefix/$gname")) {
+	    if ( $gstatus eq 'A' && !(-e "$cvs_dir")) {
 		print("Creating a CVS Repository for: $gname\n");
 		# Let's create a CVS repository for this group
-		$cvs_dir = "$cvs_prefix/$gname";
 
 		# First create the repository
 		mkdir $cvs_dir, 0775;
@@ -372,13 +372,20 @@ while ($ln = pop(@groupdump_array)) {
 		system("echo \"\" > $cvs_dir/CVSROOT/val-tags");
 		chmod 0664, "$cvs_dir/CVSROOT/val-tags";
 
+                if ($use_cvsnt) {
+                  # Create history file (not created by default by cvsnt)
+                  system("touch $cvs_dir/CVSROOT/history");
+                  # Must be writable
+                  chmod 0666, "$cvs_dir/CVSROOT/history";
+                }
+
 		# set group ownership, codex user
 		system("chown -R $cxname:$gid $cvs_dir");
 		system("chmod g+rw $cvs_dir");
 
 		# And finally add a user for this repository
                 # DEPRECATED: no longer create the login automatically: create it on demand only...
-		#push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_prefix/$gname:/bin/false\n";
+		#push @passwd_array, "anoncvs_$gname:x:$cvs_id:$gid:Anonymous CVS User for $gname:$cvs_dir:/bin/false\n";
 	    }
 	    if ( $gstatus eq 'A' && (! $use_cvsnt) && !(-e "$cvslock_prefix/$gname")) {
 		# Lockdir was deleted? Recreate it.
@@ -387,6 +394,13 @@ while ($ln = pop(@groupdump_array)) {
 		chmod 0777, "$lockdir"; # overwrite umask value
 	    }
 
+            if ( $gstatus eq 'A' && ($use_cvsnt) && !(-e "$cvs_dir/CVSROOT/history")) {
+              # history was deleted (or not created)? Recreate it.
+              system("touch $cvs_dir/CVSROOT/history");
+              # Must be writable
+              chmod 0666, "$cvs_dir/CVSROOT/history";
+              system("chown $cxname:$gid $cvs_dir/CVSROOT/history");
+            }
 
 	    # LJ if the CVS repo has just been created or the user list
 	    # in the group has been modified then update the CVS
@@ -397,7 +411,7 @@ while ($ln = pop(@groupdump_array)) {
 		# group members in writers file. Do not write anything
 		# in the CVS passwd file. The pserver protocol will fallback
 		# on /etc/passwd for user authentication
-		my $cvswriters_file = "$cvs_prefix/$gname/CVSROOT/writers";
+		my $cvswriters_file = "$cvs_dir/CVSROOT/writers";
 		open(WRITERS,"+>$cvswriters_file")
 		    or croak "Can't open CVS writers file $cvswriters_file: $!";  
 		print WRITERS join("\n",split(",",$userlist)),"\n";
@@ -406,7 +420,6 @@ while ($ln = pop(@groupdump_array)) {
 	    ## cvs backend
 	    if (($cvs_tracker) && ($gstatus eq 'A')){
 		# hook for commit tracking in cvs loginfo file
-		$cvs_dir = "$cvs_prefix/$gname";
 		# if $cvs_dir/CVSROOT/loginfo contains block break;
 		$filename = "$cvs_dir/CVSROOT/loginfo";
 		open (FD, $filename) ;
@@ -430,7 +443,6 @@ while ($ln = pop(@groupdump_array)) {
 		}
 
 		# hook for commit tracking in cvs commitinfo file
-		$cvs_dir = "$cvs_prefix/$gname";
 		# if $cvs_dir/CVSROOT/commitinfo contains block break;
 		$filename = "$cvs_dir/CVSROOT/commitinfo";
 		open (FD, $filename) ;
@@ -451,12 +463,11 @@ while ($ln = pop(@groupdump_array)) {
 	    }
 
 
-#
-#  CVS WATCH ON
-#
+            #
+            #  CVS WATCH ON
+            #
 	    # Add notify command if cvs_watch_mode is on
 	    if (($cvs_watch_mode) && ($gstatus eq 'A')){
-		$cvs_dir = "$cvs_prefix/$gname";
 		$filename = "$cvs_dir/CVSROOT/notify";
 
 		open (FD, $filename) ;
@@ -476,13 +487,10 @@ while ($ln = pop(@groupdump_array)) {
 		}
 	    }
 
-	    
-
 	    # Apply cvs watch on only if cvs_watch_mode changed to on 
 	    if (($cvs_watch_mode) && ($gstatus eq 'A')&& (! $blockispresent))
 	    {    
 		print("apply cvs watch on to the project : $gname\n");
-		$cvs_dir = "$cvs_prefix/$gname";
 		$id = getpgrp();                # You *must* use a shell that does setpgrp()!
 		&cvs_watch($cvs_dir,$gname,$id,1);
 		system("chown -R $cxname:$gid $cvs_dir");
@@ -490,13 +498,12 @@ while ($ln = pop(@groupdump_array)) {
 	    }
 
 
-#
-#  CVS WATCH OFF
-#
+            #
+            #  CVS WATCH OFF
+            #
 
 	    # Remove notify command if cvs_watch_mode is off.
 	    if ((! $cvs_watch_mode) && ($gstatus eq 'A')){
-		$cvs_dir = "$cvs_prefix/$gname";
 		$filename = "$cvs_dir/CVSROOT/notify";
 
 		open (FD, $filename) ;
@@ -527,7 +534,6 @@ while ($ln = pop(@groupdump_array)) {
 	    if ((!$cvs_watch_mode) && ($gstatus eq 'A') && ($blockispresent))
 	    {
         	print("apply cvs watch off to the project : $gname\n");
-		$cvs_dir = "$cvs_prefix/$gname";
 		$id = getpgrp();                # You *must* use a shell that does setpgrp()!
 		&cvs_watch($cvs_dir,$gname,"", "", $id,0);
 	    }
