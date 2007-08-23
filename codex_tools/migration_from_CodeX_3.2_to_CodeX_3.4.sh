@@ -513,6 +513,10 @@ substitute '/etc/codex/conf/local.inc' '\?\>' ''
 
 $CAT <<EOF >> /etc/codex/conf/local.inc
 
+//Proxy used to access to Internet. "host:port"
+\$sys_proxy = "";
+
+
 ?>
 EOF
 

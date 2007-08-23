@@ -23,15 +23,16 @@ class Widget_MyRss extends Widget {
     function getContent() {
         $content = '';
         if ($this->myrss_url) {
-            require_once('common/rss/libs/magpierss/rss_fetch.inc');
-            $rss = fetch_rss($this->myrss_url);
+            require_once('common/rss/libs/SimplePie/simplepie.inc');
+            $rss =& new SimplePie($this->myrss_url, $GLOBALS['codex_cache_dir'], null, $GLOBALS['sys_proxy']);
+            $rss->set_output_encoding('ISO-8859-1');
             $max_items = 10;
-            $items = array_slice($rss->items, 0, $max_items);
+            $items = array_slice($rss->get_items(), 0, $max_items);
             $content .= '<table width="100%">';
             $i = 0;
             foreach($items as $item) {
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
-                $content .= '<a href="'. $item['link'] .'">'. $item['title'] .'</a>';
+                $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
                 $content .= '</td></tr>';
             }
             $content .= '</table>';

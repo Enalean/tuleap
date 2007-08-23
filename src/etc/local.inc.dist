@@ -372,6 +372,8 @@ $sys_max_size_upload = 67108864;
 // in bytes. E.g. 16777216 for 16 MB
 $sys_max_size_attachment = 16777216;
 
+//Proxy used to access to Internet. "host:port"
+$sys_proxy = "";
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
