@@ -625,6 +625,13 @@ class SimplePie
 	var $strip_htmltags = array('base', 'blink', 'body', 'doctype', 'embed', 'font', 'form', 'frame', 'frameset', 'html', 'iframe', 'input', 'marquee', 'meta', 'noscript', 'object', 'param', 'script', 'style');
 
 	/**
+	 * @var string proxy used to fetch feeds
+	 * @see SimplePie::set_proxy()
+	 * @access private
+	 */
+	var $proxy = "";
+
+	/**
 	 * The SimplePie class contains feed level data and options
 	 *
 	 * There are two ways that you can create a new SimplePie object. The first
@@ -644,8 +651,9 @@ class SimplePie
 	 * @param string $feed_url This is the URL you want to parse.
 	 * @param string $cache_location This is where you want the cache to be stored.
 	 * @param int $cache_duration This is the number of seconds that you want to store the cache file for.
+	 * @param string $proxy This is the proxy "host:port" used to fetch feeds
 	 */
-	function SimplePie($feed_url = null, $cache_location = null, $cache_duration = null)
+	function SimplePie($feed_url = null, $cache_location = null, $cache_duration = null, $proxy = null)
 	{
 		// Other objects, instances created here so we can set options on them
 		$this->sanitize =& new SimplePie_Sanitize;
@@ -659,6 +667,11 @@ class SimplePie
 		if ($cache_duration !== null)
 		{
 			$this->set_cache_duration($cache_duration);
+		}
+
+		if ($proxy !== null)
+		{
+			$this->set_proxy($proxy);
 		}
 
 		// Only init the script if we're passed a feed URL
@@ -707,6 +720,18 @@ class SimplePie
 		{
 			$this->feed_url = SimplePie_Misc::fix_protocol($url, 1);
 		}
+	}
+
+	/**
+	 * This is the proxy used to fetch feeds
+	 *
+	 * @access public
+	 * @param string $proxy This is the URL of the proxy "host:port"
+	 */
+	function set_proxy($proxy)
+	{
+		$this->proxy = $proxy;
+		$this->sanitize->proxy = $proxy;
 	}
 
 	/**
@@ -980,6 +1005,7 @@ class SimplePie
 		if (SimplePie_Misc::is_subclass_of($class, 'SimplePie_Sanitize'))
 		{
 			$this->sanitize =& new $class;
+			$this->sanitize->proxy = $this->proxy;
 			return true;
 		}
 		return false;
@@ -1438,7 +1464,7 @@ function embed_wmedia(width, height, link) {
 								{
 									$headers['if-none-match'] = $this->data['headers']['etag'];
 								}
-								$file =& new $this->file_class($this->feed_url, $this->timeout/10, 5, $headers, $this->useragent, $this->force_fsockopen);
+								$file =& new $this->file_class($this->feed_url, $this->timeout/10, 5, $headers, $this->useragent, $this->force_fsockopen, $this->proxy);
 								if ($file->success)
 								{
 									if ($file->status_code == 304)
@@ -1479,7 +1505,7 @@ function embed_wmedia(width, height, link) {
 					}
 					else
 					{
-						$file =& new $this->file_class($this->feed_url, $this->timeout, 5, null, $this->useragent, $this->force_fsockopen);
+						$file =& new $this->file_class($this->feed_url, $this->timeout, 5, null, $this->useragent, $this->force_fsockopen, $this->proxy);
 					}
 				}
 				// If the file connection has an error, set SimplePie::error to that and quit
@@ -1806,7 +1832,7 @@ function embed_wmedia(width, height, link) {
 				}
 				else
 				{
-					$file =& new $this->file_class($favicon, $this->timeout / 10, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen);
+					$file =& new $this->file_class($favicon, $this->timeout / 10, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen, $this->proxy);
 
 					if ($file->success && ($file->status_code == 200 || ($file->status_code > 206 && $file->status_code < 300)) && strlen($file->body) > 0)
 					{
@@ -6498,7 +6524,7 @@ class SimplePie_File
 	var $error;
 	var $method;
 
-	function SimplePie_File($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false)
+	function SimplePie_File($url, $timeout = 10, $redirects = 5, $headers = null, $useragent = null, $force_fsockopen = false, $proxy = "")
 	{
 		if (class_exists('idna_convert'))
 		{
@@ -6544,6 +6570,10 @@ class SimplePie_File
 				{
 					curl_setopt($fp, CURLOPT_FOLLOWLOCATION, 1);
 					curl_setopt($fp, CURLOPT_MAXREDIRS, $redirects);
+				}
+				if ($proxy)
+				{
+					curl_setopt($fp, CURLOPT_PROXY, $proxy);
 				}
 
 				$this->headers = curl_exec($fp);
@@ -10004,14 +10034,16 @@ class SimplePie_Locator
 	var $base_location = 0;
 	var $checked_feeds = 0;
 	var $max_checked_feeds = 10;
+	var $proxy;
 
-	function SimplePie_Locator(&$file, $timeout = 10, $useragent = null, $file_class = 'SimplePie_File', $max_checked_feeds = 10)
+	function SimplePie_Locator(&$file, $timeout = 10, $useragent = null, $file_class = 'SimplePie_File', $max_checked_feeds = 10, $proxy = "")
 	{
 		$this->file =& $file;
 		$this->file_class = $file_class;
 		$this->useragent = $useragent;
 		$this->timeout = $timeout;
 		$this->max_checked_feeds = $max_checked_feeds;
+		$this->proxy = $proxy;
 	}
 
 	function find($type = SIMPLEPIE_LOCATOR_ALL)
@@ -10115,7 +10147,7 @@ class SimplePie_Locator
 				if (!in_array($href, $done) && in_array('feed', $rel) || (in_array('alternate', $rel) && !empty($link['attribs']['type']['data']) && in_array(strtolower(SimplePie_Misc::parse_mime($link['attribs']['type']['data'])), array('application/rss+xml', 'application/atom+xml'))))
 				{
 					$this->checked_feeds++;
-					$feed =& new $this->file_class($href, $this->timeout, 5, null, $this->useragent);
+					$feed =& new $this->file_class($href, $this->timeout, 5, null, $this->useragent, false, $this->proxy);
 					if ($this->is_feed($feed))
 					{
 						return $feed;
@@ -10180,7 +10212,7 @@ class SimplePie_Locator
 			if (in_array(strtolower(strrchr($value, '.')), array('.rss', '.rdf', '.atom', '.xml')))
 			{
 				$this->checked_feeds++;
-				$feed =& new $this->file_class($value, $this->timeout, 5, null, $this->useragent);
+				$feed =& new $this->file_class($value, $this->timeout, 5, null, $this->useragent, false, $this->proxy);
 				if ($this->is_feed($feed))
 				{
 					return $feed;
@@ -10205,7 +10237,7 @@ class SimplePie_Locator
 			if (preg_match('/(rss|rdf|atom|xml)/i', $value))
 			{
 				$this->checked_feeds++;
-				$feed =& new $this->file_class($value, $this->timeout, 5, null, $this->useragent);
+				$feed =& new $this->file_class($value, $this->timeout, 5, null, $this->useragent, false, $this->proxy);
 				if ($this->is_feed($feed))
 				{
 					return $feed;
@@ -10510,6 +10542,7 @@ class SimplePie_Sanitize
 	var $timeout = 10;
 	var $useragent = '';
 	var $force_fsockopen = false;
+	var $proxy = "";
 
 	var $replace_url_attributes = array(
 		'a' => 'href',
@@ -10745,7 +10778,7 @@ class SimplePie_Sanitize
 							}
 							else
 							{
-								$file =& new $this->file_class($image_url, $this->timeout, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen);
+								$file =& new $this->file_class($image_url, $this->timeout, 5, array('X-FORWARDED-FOR' => $_SERVER['REMOTE_ADDR']), $this->useragent, $this->force_fsockopen, $this->proxy);
 								$headers = $file->headers;
 
 								if ($file->success && ($file->status_code == 200 || ($file->status_code > 206 && $file->status_code < 300)))
