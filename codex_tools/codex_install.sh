@@ -378,6 +378,8 @@ do
     if [ "$yn" = "n" ]; then
 	$RM -f $current_name
     fi
+    # In order to prevent RedHat from reinstalling those files during an RPM update, re-create an empty file for each file deleted
+    $TOUCH $current_name
 done
 cd - > /dev/null
 
