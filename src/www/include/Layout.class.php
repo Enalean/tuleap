@@ -78,31 +78,26 @@ class Layout extends Response {
 
     
     function redirect($url) {
-        $redirect = true;
-        $timer    = true;
-        if (session_hash()) {
-            if (headers_sent()) {
-                $redirect = false;
-                $timer    = false;
-            } else {
-                $this->_serializeFeedback();
-            }
-        } else {
-            $redirect = false;
-        }
-        if ($redirect) {
-            header('Location: '. $url);
-        } else {
+       $is_anon = session_hash() ? false : true;
+       $fb = $GLOBALS['feedback'] || count($this->_feedback->logs);
+       if (($is_anon && (headers_sent() || $fb)) || (!$is_anon && headers_sent())) {
             $this->header(array('title' => 'Redirection'));
             echo '<p>'. $GLOBALS['Language']->getText('global', 'return_to', array($url)) .'</p>';
-            if ($timer) {
-                echo '<script type="text/javascript">';
+            echo '<script type="text/javascript">';
+            if (!$fb) {
                 echo 'setTimeout(function() {';
-                echo " location.href = '". $url ."';";
-                echo '}, 5000);';
-                echo '</script>';
             }
+            echo " location.href = '". $url ."';";
+            if (!$fb) {
+                echo '}, 5000);';
+            }
+            echo '</script>';
             $this->footer(array());
+        } else {
+            if (!$is_anon && !headers_sent() && $fb) {
+                $this->_serializeFeedback();
+            }
+            header('Location: '. $url);
         }
         exit();
     }
