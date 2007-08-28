@@ -202,6 +202,14 @@ $SERVICE smb stop
 # Now install/update CodeX specific RPMS 
 #
 
+echo "Installing Highlight RPMs for CodeX...."
+# -> highlight
+$RPM -e highlight 2>/dev/null
+echo "Installing highlight RPM for CodeX...."
+cd ${RPMS_DIR}/highlight
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/highlight-2*i?86.rpm
+
 
 # -> subversion
 # backup config file for apache
