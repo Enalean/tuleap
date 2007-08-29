@@ -54,6 +54,12 @@ if [ -z "$TMPDIR" ]; then
     TMPDIR=$TMP_DIR
 fi
 
+# honor archivename if defined
+if [ -z "$archivename" ]; then
+    cli_version=`grep '\$CLI_VERSION = ' $BASESRCDIR/codex.php | sed -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
+    archivename="codex_cli-${cli_version}"
+fi
+
 
 # Check arguments
 while	((1))	# look for options
@@ -96,14 +102,14 @@ fi
 # Check if the package exists. If not, we force the generation
 mkdir -p $DESTDIR
 cd $DESTDIR
-if [ ! -e $DESTDIR/CodeX_CLI.zip ]; then
+if [ ! -e $DESTDIR/$archivename.zip ]; then
     FORCE=1;
 fi
 
 if [ $FORCE != 1 ]
 then
     # check if need some update with CLI source code (and nusoap symbolic link too)
-    COUNT=`find $BASESRCDIR -newer $DESTDIR/CodeX_CLI.zip | wc -l`
+    COUNT=`find $BASESRCDIR -newer $DESTDIR/$archivename.zip | wc -l`
     if [ $COUNT == 0 ]
     then
         # No changes in the CLI source code
@@ -123,7 +129,7 @@ fi
 if [ $FORCE != 1 ]
 then
     # check if need some update with CLI documentation
-    COUNT=`find $BASEDOCDIR/cli/xml -newer $DESTDIR/CodeX_CLI.zip | wc -l`
+    COUNT=`find $BASEDOCDIR/cli/xml -newer $DESTDIR/$archivename.zip | wc -l`
     if [ $COUNT == 0 ]
     then
         # No changes in the CLI documentation
@@ -177,22 +183,21 @@ mv documentation/cli cli/documentation
 # We remove documentation (empty now)
 rmdir documentation
 # Rename the dir cli before creating the archive
-mv cli CodeX_CLI
+mv cli $archivename
 
 # zip the CLI package
 if [ $VERBOSE == 1 ]
 then
-    /usr/bin/zip -r CodeX_CLI_new.zip CodeX_CLI
+    /usr/bin/zip -r "${archivename}_new.zip" $archivename
 else
-    /usr/bin/zip -q -r CodeX_CLI_new.zip CodeX_CLI
+    /usr/bin/zip -q -r "${archivename}_new.zip" $archivename
 fi
 
 # Then permute the new archive with the former one
-if [ -f "$DESTDIR/CodeX_CLI.zip" ]; then
-    cp -f $DESTDIR/CodeX_CLI.zip $DESTDIR/CodeX_CLI_old.zip > /dev/null
+if [ -f "$DESTDIR/$archivename.zip" ]; then
+    cp -f $DESTDIR/$archivename.zip "$DESTDIR/${archivename}_old.zip" > /dev/null
 fi
-mv CodeX_CLI_new.zip $DESTDIR/CodeX_CLI.zip
-
+mv "${archivename}_new.zip" $DESTDIR/$archivename.zip
 
 if [ $? != 0 ]
 then
@@ -201,19 +206,19 @@ then
     exit 1
 fi
 
-# Fix SELinux context (it is set to 'user_u:object_r:tmp_t'
+# Fix SELinux context (it is set to 'user_u:object_r:tmp_t')
 SELINUX_ENABLED=1
 if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
    # SELinux not installed
    SELINUX_ENABLED=0
 fi
 if [ $SELINUX_ENABLED != 0 ]; then
-  chcon -h  root:object_r:httpd_sys_content_t $DESTDIR/CodeX_CLI.zip
+  chcon -h  root:object_r:httpd_sys_content_t $DESTDIR/$archivename.zip
 fi
 
 # Then delete the copied files needed to create the archive
-rm -r CodeX_CLI/*
-rmdir CodeX_CLI
+rm -r $archivename/*
+rmdir $archivename
 
 cd "$CURRENTDIR"
 exit 0
