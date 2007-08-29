@@ -535,6 +535,12 @@ echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
+
+##############################################
+# Update codex_aliases.conf
+#
+TODO Update codex_aliases.conf (FollowSymlinks dans /downloads/)
+
 ##############################################
 # Restarting some services
 #

@@ -25,7 +25,7 @@ Alias /documentation/ "/usr/share/codex/documentation/"
 Alias /downloads/ "/usr/share/codex/downloads/"
 
 <Directory "/usr/share/codex/downloads">
-    Options MultiViews
+    Options MultiViews FollowSymLinks
     AllowOverride None
     Order allow,deny
     Allow from all

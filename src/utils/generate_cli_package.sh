@@ -206,6 +206,11 @@ then
     exit 1
 fi
 
+if [ -f "$DESTDIR/CodeX_CLI.zip" ]; then
+   rm "$DESTDIR/CodeX_CLI.zip"
+fi
+ln -s $archivename.zip $DESTDIR/CodeX_CLI.zip
+
 # Fix SELinux context (it is set to 'user_u:object_r:tmp_t')
 SELINUX_ENABLED=1
 if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
@@ -214,6 +219,7 @@ if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=di
 fi
 if [ $SELINUX_ENABLED != 0 ]; then
   chcon -h  root:object_r:httpd_sys_content_t $DESTDIR/$archivename.zip
+  chcon -h  root:object_r:httpd_sys_content_t $DESTDIR/CodeX_CLI.zip
 fi
 
 # Then delete the copied files needed to create the archive
