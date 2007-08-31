@@ -786,7 +786,7 @@ proto.format_p = function(element) {
 proto.format_a = function(element) {
     var label = Wikiwyg.htmlUnescape(element.innerHTML);
     var href = element.getAttribute('href');
-
+    
     label = label.replace(/<[^>]*?>/g, ' ');
     label = label.replace(/\s+/g, ' ');
     label = label.replace(/^\s+/, '');
@@ -819,6 +819,9 @@ proto.format_a = function(element) {
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
 	}
+	else if(href.match(/^(www.).*/)){
+	    this.make_wikitext_link(label, "http://" + href, element);
+	}
 	else{
 	    this.make_wikitext_link(label, href, element);
 	}
@@ -844,10 +847,13 @@ proto.format_a = function(element) {
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
 	}
+	else if(href.match(/^(www.).*/)){
+	    this.make_wikitext_link(label, "http://" + href, element);
+	}
 	else{
 	    this.make_wikitext_link(label, href, element);
 	}
-    }        
+    }
 
 }
 
