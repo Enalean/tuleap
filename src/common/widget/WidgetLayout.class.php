@@ -42,6 +42,7 @@ class WidgetLayout {
                     dropOnEmpty: true,
                     constraint:  false,
                     tag:         'div',
+                    handle:      'widget_titlebar',
                     containment: cells,
                     onUpdate: function() {
                         new Ajax.Request('updatelayout.php?layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
