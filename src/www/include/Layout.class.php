@@ -146,9 +146,9 @@ class Layout extends Response {
         echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
         echo '<div class="widget_titlebar_close"><a href="updatelayout.php?action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'X')) .'</a></div>';
         if ($is_minimized) {
-            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_plus.png', array('alt' => '+')) .'</a></div>';
+            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getTogglePlusForWidgets(), array('alt' => '+')) .'</a></div>';
         } else {
-            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/toggle_minus.png', array('alt' => '-')) .'</a></div>';
+            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getToggleMinusForWidgets(), array('alt' => '-')) .'</a></div>';
         }
         if (strlen($widget->getPreferences())) {
             echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">Preferences</a></div>';
@@ -168,7 +168,13 @@ class Layout extends Response {
         echo $widget->getContent() .'</div>';
         echo '</div>';
     }
-    
+    function _getTogglePlusForWidgets() {
+        return 'ic/toggle_plus.png';
+    }
+    function _getToggleMinusForWidgets() {
+        return 'ic/toggle_minus.png';
+    }
+
 	// Box Top, equivalent to html_box1_top()
 	function box1_top($title,$echoout=1,$bgcolor='',$cols=2){
         	$return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
