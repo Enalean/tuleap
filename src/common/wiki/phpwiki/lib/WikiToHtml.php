@@ -177,9 +177,9 @@ function replace_rich_table($matched) {
     $plugin = "<?plugin RichTable ".$plugin." ?>";
     
     require_once("lib/BlockParser.php");
-    $xmlcontent = TransformText($plugin, 2.0, $GLOBALS['request']->getArg('pagename'));
+    $xmlcontent = TransformText($plugin, 2.0, $GLOBALS['request']->getArg('pagename')); 
     $html_table = $xmlcontent->AsXML();
-    
+	
     // Put tables inside a div tag instead of span and change css class for it.
     $pattern = '/\<span class\=\"plugin.*\" id\=\"(RichTablePlugin.*)\"\>\<table.*\>(.*)\<\/span\>/Umsi';
     $replace_string = '<table border="1" class="wiki-dl-table" cellpadding="6" cellspacing="0">\2';
@@ -187,14 +187,22 @@ function replace_rich_table($matched) {
     
     // Decode html entities like for links and images.
     $html_table = html_entity_decode($html_table);
-
-    //Fix for internal links
+    
+    // From here on, the content returned by TransformText() call becomes really a mess
+    // when viewed in wysiwyg edition mode. This is because of the active design mode on the 
+    // document which does extra conversion for links for instances. This lead to a not well
+    // Formed HTML.
+    //A lot of things need to be cleanned such as links (namedurls, wikipages, labeled urls,
+    // inline, images, automagic links, etc.)
+    // TODO: clean wikiunknown and automagic links.
+	
+	//Fix for internal links
     //Remove <a> tags from href attribute of other <a> tags
     //this is due to WikiWords converted to ahrefs by Phpwiki TransformText() prior call.
     $pattern = '/\<a href\=\".*(\<a href\=\".*\" class\=\"wiki\"\>.*\<\/a\>).*\" class\=\"wiki\"\>.*\<\/a\>\<\/a\>/Umsi';
     $replace_string = '\1';
     $html_table = preg_replace($pattern, $replace_string, $html_table);
-
+    
     // Fix for external links (namedurls). Urls inside 'href' attribute of  'a' tags 
     // are converted with linkicons due to TransformText() prior call.
     $pattern = '/\<a href\=\"\<a href\=.*\<\/a\>\" target\=\"\" class\=\"namedurl\"\>\<span.*\>\<img.*\/\>(\<a href\=.*\<\/span\>\<\/a\>)\<\/span\>\<\/a\>/';
@@ -204,7 +212,7 @@ function replace_rich_table($matched) {
     // Fix for inline images. Displaying the images fails inside RichTable.
     // Some Raw Html + broken image appears instead of the expected image.
     // This is caused by converting the image uri into a named url by former TransformText()
-    // call wich lead to an href tag inside the src attribute of the img tag.
+    // call wich lead to an href tag inside the src attribute of the img tag.    
     //The bug only occurs in ST code.
     $pattern = '/\<img src\=\"\<a href\=.*\>\<span.*\>\<img.*\/\>(.*)\<\/span\>\<\/a\>\" (alt\=\".*\" title\=\".*\" class\=\".*\").*\/\>/';
     $replace_string = '<img src="\1"\2>';
@@ -215,6 +223,11 @@ function replace_rich_table($matched) {
     $replace_string = '<a href="\1" class="interwiki">Upload:\2</a>';
     $html_table = preg_replace($pattern, $replace_string, $html_table);
     
+	// Clean links patterns that contain spaces
+	$pattern = '/\<a href\=\"\<a href\=\"(.*)\".*\>.*\<img.*\/\>.*\<img.*\/\>(.*)\<\/span\>(.*)\<\/a\>/Umsi';
+	$replace_string = '<a href="\1" target="" class="namedurl">\2\3</a>';
+	$html_table = preg_replace($pattern, $replace_string, $html_table);
+	
     return $html_table;
   }
 }
