@@ -228,6 +228,11 @@ function replace_rich_table($matched) {
 	$replace_string = '<a href="\1" target="" class="namedurl">\2\3</a>';
 	$html_table = preg_replace($pattern, $replace_string, $html_table);
 	
+	// Clean Wiki unknown page links
+	$pattern = '/\<span class\=\"wikiunknown\">\<u\>(.*)\<\/u\>\<a href.*\>.*\<\/a\>(.*)\<\/span\>/Umsi';
+	$replace_string = '\1\2';
+	$html_table = preg_replace($pattern, $replace_string, $html_table);
+
     return $html_table;
   }
 }
