@@ -232,6 +232,11 @@ function replace_rich_table($matched) {
 	$pattern = '/\<span class\=\"wikiunknown\">\<u\>(.*)\<\/u\>\<a href.*\>.*\<\/a\>(.*)\<\/span\>/Umsi';
 	$replace_string = '\1\2';
 	$html_table = preg_replace($pattern, $replace_string, $html_table);
+	
+	//Clean automagic links.
+	$pattern = '/\<a href\=\"(.*goto.*)\" title\=\"(.*)\"\>\<a href.*\>(.*)&lt\<\/a\>;\/a\>/';
+	$replace_string = '<a href="\1" title="\2">\3</a>';
+	$html_table = preg_replace($pattern, $replace_string, $html_table);
 
     return $html_table;
   }
