@@ -15,7 +15,6 @@ require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
-require_once('common/include/SimpleSanitizer.class.php');
 $Language->loadLanguageMsg('file/file');
 $request =& HTTPRequest::instance();
 
