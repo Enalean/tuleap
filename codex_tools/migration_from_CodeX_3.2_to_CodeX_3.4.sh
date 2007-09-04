@@ -370,53 +370,6 @@ UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvs
 
 UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release' AND reference_id='16';
 
-###############################################################################
-# Update plugin docman
-
-DROP TABLE IF EXISTS plugin_docman_report;
-CREATE TABLE plugin_docman_report (
-  report_id       int(11) NOT NULL auto_increment,
-  name            varchar(255) NULL,
-  title           varchar(255) NULL,
-  group_id        int(11) NOT NULL,
-  user_id         int(11) NOT NULL DEFAULT 100,
-  item_id         int(11) NULL,
-  scope           char(1) NOT NULL default 'I',
-  is_default      tinyint(1) NOT NULL default 0,
-  advanced_search tinyint(1) NOT NULL default 0,
-  description     text NULL,
-  image           int(11)NULL, 
-  PRIMARY KEY (report_id),
-  INDEX group_idx (group_id),
-  INDEX user_idx (user_id)
-);
-
-DROP TABLE IF EXISTS plugin_docman_report_filter;
-CREATE TABLE plugin_docman_report_filter (
-  report_id     INT(11) NOT NULL,
-  label         VARCHAR(255) NOT NULL,
-  value_love    INT(11) NULL,
-  value_string  VARCHAR(255) NULL,
-  value_date1   VARCHAR(32) NULL,
-  value_date2   VARCHAR(32) NULL,
-  value_date_op tinyint(2) NULL,
-  INDEX report_label_idx(report_id, label(10))
-);
-
-alter table plugin_docman_metadata_value add FULLTEXT fltxt (valueText, valueString);
-alter table plugin_docman_metadata_value add FULLTEXT fltxt_txt (valueText);
-alter table plugin_docman_metadata_value add FULLTEXT fltxt_str (valueString);
-
-alter table plugin_docman_item add FULLTEXT fltxt_title (title);
-alter table plugin_docman_item add FULLTEXT fltxt_description (description);
-alter table plugin_docman_item add FULLTEXT fltxt (title, description);
-
-alter table plugin_docman_version add FULLTEXT fltxt (label, changelog, filename);
-
-update plugin_docman_item set status = status + 100;
-alter table plugin_docman_item change column status status TINYINT(4) DEFAULT 100 NOT NULL;
-
-ALTER TABLE plugin_docman_metadata DROP PRIMARY KEY, ADD PRIMARY KEY  (field_id);
 
 
 ###############################################################################
