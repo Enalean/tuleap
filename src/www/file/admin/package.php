@@ -15,6 +15,7 @@ require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
+require_once('common/include/SimpleSanitizer.class.php');
 $Language->loadLanguageMsg('file/file');
 $request =& HTTPRequest::instance();
 
@@ -111,7 +112,7 @@ if ($request->exist('func')) {
                 if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
                     $package_data = $request->get('package');
                     // we check if the name already exist only if the name has changed
-                    if ($package_data['name'] == $package->getName() || !$frspf->isPackageNameExist($package_data['name'], $group_id)) { 
+                    if ($package_data['name'] == html_entity_decode($package->getName()) || !$frspf->isPackageNameExist($package_data['name'], $group_id)) {
                         if ($package_data['status_id'] != 1) {
                             //if hiding a package, refuse if it has releases under it
                             // LJ Wrong SQL statement. It should only check for the existence of
