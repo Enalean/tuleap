@@ -25,6 +25,12 @@ class Docman_View_Admin extends Docman_View_Extra {
 
         $html .= '<h3><a href="'. $this->buildUrl($params['default_url'], array('action' => 'admin_metadata')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_title') .'</a></h3>';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_descr') .'</p>';
+
+        $html .= '<h3><a href="'. $this->buildUrl($params['default_url'], array('action' => 'report_settings')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_report_title') .'</a></h3>';
+        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_report_descr') .'</p>';
+
+        $html .= '<h3><a href="'. $this->buildUrl($params['default_url'], array('action' => 'admin_obsolete')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_title') .'</a></h3>';
+        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_descr') .'</p>';
         
         echo $html;
     }

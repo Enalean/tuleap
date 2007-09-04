@@ -43,20 +43,36 @@ require_once('Docman_View_Docman.class.php');
         $urlParams = array_merge($this->dfltSortParams, 
                                  $this->dfltSearchParams);
         $urlParams['action'] = $urlAction;
-        echo '<div style="position:relative;" id="item_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
+        $html = '';
+        $html .= '<table border="0" width="100%">';
+        $html .= '<tr>';
+        $html .= '<td align="left">';
+        $html .= '<div id="item_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
         $parents = array_reverse($parents);
         foreach($parents as $parent) {
             $urlParams['id'] = $parent['id'];
             $url = $this->buildActionUrl($params, $urlParams);
-            echo '&nbsp;<a href="'.$url.'">'. $parent['title'] .'</a>&nbsp;/';
+            $html .= '&nbsp;<a href="'.$url.'">'. $parent['title'] .'</a>&nbsp;/';
         }
         $urlParams['id'] = $id;
         $url = $this->buildActionUrl($params, $urlParams);
-        echo '&nbsp;<a href="'.$url.'"><b>'. $current_item_title .'</b></a>';
+        $html .= '&nbsp;<a href="'.$url.'"><b>'. $current_item_title .'</b></a>';
         
-        echo $this->getItemMenu($current_item, $params, $bc = true);
-        echo '</div>';
+        $html .= $this->getItemMenu($current_item, $params, $bc = true);
+        $html .= '</div>';
+        $html .= '</td>';
+
+        echo $html;
     }
+
+    function  _mode($params) {
+        $html = '';
+         // Close table opened in method 'breadCrumbs'.
+        $html .= '</tr>';
+        $html .= '</table>';
+        echo $html;
+    }
+
 }
 
 ?>

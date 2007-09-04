@@ -105,12 +105,14 @@ class Docman_View_NewDocument extends Docman_View_New {
         $get_fields = new Docman_View_GetFieldsVisitor($metadataToSkip);
         $fields = $new_document->accept($get_fields, array('form_name'  => $params['form_name'],
                                                            'theme_path' => $params['theme_path']));
+        $html .= '<table>';
         foreach($fields as $field) {
-            $html .= '<p>';
-            $html .= '<label>'. $field->getLabel().'</label>';
-            $html .= $field->getField();
-            $html .= '</p>';
+            $html .= '<tr>';
+            $html .= '<td>'.$field->getLabel().'</td>';
+            $html .= '<td>'.$field->getField().'</td>';
+            $html .= '</tr>';
         }
+        $html .= '</table>';
 
         return $html;
     }

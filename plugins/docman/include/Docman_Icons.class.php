@@ -188,6 +188,11 @@ class Docman_Icons {
     function getIcon($icon) {
         return $this->images_path . $icon;
     }
+
+    function getThemeIcon($icon) {
+        return util_get_image_theme('ic/'.$icon);
+    }
+
 }
 
 ?>

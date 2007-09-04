@@ -32,11 +32,14 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
     function _title($params) {
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_title') .'</h2>';
     }
-    function _content($params) {
-        $mdIter =& $params['mdIter'];
+
+    /**
+     * List the available metadata
+     */
+    function getMetadataTable($mdIter, $groupId, $defaultUrl) {
         $content = '';
-        
-        $mdFactory = new Docman_MetadataFactory($params['group_id']);
+
+        $mdFactory = new Docman_MetadataFactory($groupId);
 
         $content .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_title').'</h3>'."\n";
 
@@ -61,7 +64,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
             $trclass = html_get_alt_row_color($altRowClass++);
             $content .= '<tr class="'.$trclass.'">';
 
-            $nameUrl  = $this->buildUrl($params['default_url'],
+            $nameUrl  = $this->buildUrl($defaultUrl,
                                         array('action' => 'admin_md_details',
                                               'md'     => $md->getLabel()));
             $nameHref = '<a href="'.$nameUrl.'">'.$md->getName().'</a>';
@@ -85,7 +88,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
             
             $trash = '-';
             if($canDelete) {
-                $link = $this->buildUrl($params['default_url'], 
+                $link = $this->buildUrl($defaultUrl, 
                                         array('action' => 'admin_delete_metadata',
                                               'md' => $md->getLabel()));
                 
@@ -103,13 +106,19 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
 
         $content .= '</table>'."\n";
 
-        $content .= '<hr />'."\n";
+        return $content;
+    }
 
+    /**
+     * Return form to create a new metadata
+     */
+    function getNewMetadataForm($groupId) {
+        $content = '';
         $content .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_title').'</h3>'."\n";
 
-        $content .= '<form name="admin_create_metadata" method="post" action="?group_id='.$params['group_id'].'&action=admin_create_metadata">';
+        $content .= '<form name="admin_create_metadata" method="post" action="?group_id='.$groupId.'&action=admin_create_metadata" class="docman_form">';
 
-        $content .= '<div class="docman_admin_metadata">';
+        $content .= '<table>';
         
         $md = new Docman_Metadata();       
         $md->setCanChangeName(true);
@@ -124,19 +133,49 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         $content .= $metaMdHtml->getName($sthCanChange);
         $content .= $metaMdHtml->getDescription($sthCanChange);
         $content .= $metaMdHtml->getType($sthCanChange);
-        //$content .= $metaMdHtml->getDefaultValue($sthCanChange);
         $content .= $metaMdHtml->getEmptyAllowed($sthCanChange);
         $content .= $metaMdHtml->getUseIt($sthCanChange);
-        //$content .= $metaMdHtml->getKeepHistory($sthCanChange);
         
+        $content .= '<tr>';
+        $content .= '<td colspan="2">';
         $content .= '<input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_submit').'" />';
+        $content .= '</td>';
+        $content .= '</tr>';
 
-        $content .= '</div>';        
+        $content .= '</table>';        
 
         $content .= '</form>';
 
+        return $content;
+    }
 
-        print $content;
+    /**
+     * Import metadata from a given project
+     */
+    function getImportForm($groupId) {
+        $content = '';
+        $content .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_title').'</h3>'."\n";
+        $content .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_desc').'</p>'."\n";
+        $content .= '<form name="admin_import_metadata" method="post" action="?group_id='.$groupId.'&action=admin_import_metadata_check">';
+        $content .= '<input name="import_group_id" type="text" value="" /><br />';
+        $content .= '<input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_submit').'" />';
+        $content .= '</form>';
+        return $content;
+    }
+
+    /**
+     * Build page
+     */
+    function _content($params) {
+        $content = '';
+        
+        $content .= $this->getMetadataTable($params['mdIter'], $params['group_id'], $params['default_url']);
+        $content .= '<hr />'."\n";
+        $content .= $this->getNewMetadataForm($params['group_id']);
+        $content .= '<hr />'."\n";
+        $content .= $this->getImportForm($params['group_id']);
+
+        echo $content;
     }
 }
 

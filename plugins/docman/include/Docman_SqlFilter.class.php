@@ -23,194 +23,313 @@
  * 
  */
 
+require_once('Docman_MetadataSqlQueryChunk.class.php');
+
 class Docman_SqlFilterFactory {
     function Docman_SqlFilterFactory() {
         
     }
 
-    function &getFromFilter(&$filter) {
+    function getFromFilter($filter) {
         $f = null;
        
-        if($filter->md->getLabel() == 'owner') {
+        if(is_a($filter, 'Docman_FilterDateAdvanced')) {
+            $f = new Docman_SqlFilterDateAdvanced($filter);
+        }
+        elseif(is_a($filter, 'Docman_FilterDate')) {
+            $f = new Docman_SqlFilterDate($filter);
+        } 
+        elseif(is_a($filter, 'Docman_FilterGlobalText')) {
+            $f = new Docman_SqlFilterGlobalText($filter);
+        }
+        elseif(is_a($filter, 'Docman_FilterOwner')) {
             $f = new Docman_SqlFilterOwner($filter);
         }
-        else {
-            switch($filter->md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $f = new Docman_SqlFilterDate($filter);
-                break;
-                
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $f = new Docman_SqlFilter($filter);
-                break;
+        elseif(is_a($filter, 'Docman_FilterText')) {
+            $f = new Docman_SqlFilterText($filter);
+        }
+        elseif(is_a($filter, 'Docman_FilterListAdvanced')) {
+            if(!in_array(0, $filter->getValue())) {
+                $f = new Docman_SqlFilterListAdvanced($filter); 
             }
         }
-        
+        elseif(is_a($filter, 'Docman_FilterList')) {
+            if($filter->getValue() >= 100) {
+                $f = new Docman_SqlFilter($filter);
+            }
+        }       
         return $f;
     }
-
 }
 
-class Docman_SqlFilter {
+/**
+ *
+ */
+class Docman_SqlFilter 
+extends Docman_MetadataSqlQueryChunk {
     var $filter;
     var $isRealMetadata;
 
-    function Docman_SqlFilter(&$filter) {
-        $this->filter =& $filter;
-        $this->isRealMetadata = Docman_MetadataFactory::isRealMetadata($this->filter->md->getLabel());
-
-        if($this->isRealMetadata) {
-            switch($filter->md->getType()) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-                $this->field = 'mdv.valueText';
-                break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                $this->field = 'mdv.valueString';
-                break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                $this->field = 'mdv.valueDate';
-                break;
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                $this->field = 'mdv.valueInt';
-                break;
-            }
-        }
-        else {
-            $this->field = 'i.'.$this->filter->md->getLabel();
-        }
+    function Docman_SqlFilter($filter) {
+        $this->filter = $filter;
+        parent::Docman_MetadataSqlQueryChunk($filter->md);
     }
 
-    function getFromClause() {
+    function getFrom() {
         $tables = array();
 
         if($this->isRealMetadata) {
-            if($this->filter->getValue() !== null) {
-                $tables[] = 'plugin_docman_metadata_value AS mdv';
-                $tables[] = 'plugin_docman_metadata AS md';
+            if($this->filter->getValue() !== null &&
+               $this->filter->getValue() != '') {
+                $tables[] = $this->_getMdvJoin();
             }
         }
         
         return $tables;
     }
-
-    
-    function _getCommonSearchChunk() {
-        $stmt = array();
-        
-        if($this->isRealMetadata) {
-            if($this->filter->getValue() !== null) {
-                $stmt[] = 'md.label = '.DataAccess::quoteSmart($this->filter->md->getLabel());
-                $stmt[] = 'mdv.field_id = md.field_id';
-                $stmt[] = 'mdv.item_id = i.item_id';
-            }
-        }
-        
-        return $stmt;
-    }
     
     function _getSpecificSearchChunk() {
         $stmt = array();
         
-        if($this->filter->getValue() !== null) {
+        if($this->filter->getValue() !== null &&
+           $this->filter->getValue() != '') {
             $stmt[] = $this->field.' = '.DataAccess::quoteSmart($this->filter->getValue());
         }
         
         return $stmt;
     }
 
-    function getWhereClause() {
+    function getWhere() {
         $where = '';
 
-        $whereArray = array_merge($this->_getCommonSearchChunk(), 
-                                  $this->_getSpecificSearchChunk());
+        $whereArray = $this->_getSpecificSearchChunk();
         $where = implode(' AND ', $whereArray);
         
         return $where;
     }
-
-    function getOrderClause() {
-        $sql = '';
-
-        $sort = $this->filter->getSort();
-        if($sort !== null) {
-            if($sort == '1') {
-                $sql = $this->field.' ASC';
-            }
-            else {
-                $sql = $this->field.' DESC';
-            }
-        }
-
-        return $sql;
-    }
 }
 
-class Docman_SqlFilterDate extends Docman_SqlFilter {
+/**
+ *
+ */
+class Docman_SqlFilterDate 
+extends Docman_SqlFilter {
 
-    function Docman_SqlFilterDate(&$filter) {
+    function Docman_SqlFilterDate($filter) {
         parent::Docman_SqlFilter($filter);
+    }
+
+    // '<'
+    function _getEndStatement($value) {
+        $stmt = '';
+        list($time, $ok) = util_date_to_unixtime($value);
+        if($ok) {
+            list($year,$month,$day) = util_date_explode($value);
+            $time_before = mktime(23, 59, 59, $month, $day-1, $year);
+            $stmt = $this->field." <= ".$time_before;
+        }
+        return $stmt;
+    }
+
+    // '=' means that day between 00:00 and 23:59
+    function _getEqualStatement($value) {
+        $stmt = '';
+        list($time, $ok) = util_date_to_unixtime($value);
+        if($ok) {
+            list($year,$month,$day) = util_date_explode($value);
+            $time_end = mktime(23, 59, 59, $month, $day, $year);
+            $stmt = $this->field." >= ".$time." AND ".$this->field." <= ".$time_end;
+        }
+        return $stmt;
+    }
+
+    // '>'
+    function _getStartStatement($value) {
+        $stmt = '';
+        list($time, $ok) = util_date_to_unixtime($value);
+        if($ok) {
+            list($year,$month,$day) = util_date_explode($value);
+            $time_after = mktime(0, 0, 0, $month, $day+1, $year);
+            $stmt = $this->field." >= ".$time_after;
+        }
+        return $stmt;
     }
 
     function _getSpecificSearchChunk() {
         $stmt = array();
 
-        $value = $this->filter->getValue();
-        list($time, $ok) = util_date_to_unixtime($value);
-
-        if($ok) {
-            list($year,$month,$day) = util_date_explode($value);
-            switch($this->filter->getOperator()) {
-            case '-1':
-                // '<'
-                $time_before = mktime(23, 59, 59, $month, $day-1, $year);
-                $stmt[] = $this->field." <= ".$time_before;
-                break;
-            case '0':
-                // '=' means that day between 00:00 and 23:59
-                $time_end = mktime(23, 59, 59, $month, $day, $year);
-                $stmt[] = $this->field." >= ".$time." AND ".$this->field." <= ".$time_end;
-                break;
-            case '1':
-            default:
-                // '>'
-                $time_after = mktime(0, 0, 0, $month, $day+1, $year);
-                $stmt[] = $this->field." >= ".$time_after;
-                break;
+        switch($this->filter->getOperator()) {
+        case '-1': // '<'
+            $s = $this->_getEndStatement($this->filter->getValue());
+            if($s != '') {
+                $stmt[] = $s;
             }
-            
+            break;
+        case '0': // '=' means that day between 00:00 and 23:59
+            $s = $this->_getEqualStatement($this->filter->getValue());
+            if($s != '') {
+                $stmt[] = $s;
+            }
+            break;
+        case '1': // '>'
+        default:
+            $s = $this->_getStartStatement($this->filter->getValue());
+            if($s != '') {
+                $stmt[] = $s;
+            }
+            break;
         }
-       
+
         return $stmt;
     }
 }
 
-class Docman_SqlFilterOwner extends Docman_SqlFilter {
+/**
+ *
+ */
+class Docman_SqlFilterDateAdvanced
+extends Docman_SqlFilterDate {
 
-    function Docman_SqlFilterOwner(&$filter) {
+    function Docman_SqlFilterDateAdvanced($filter) {
+        parent::Docman_SqlFilterDate($filter);
+    }
+
+    function _getSpecificSearchChunk() {
+        $stmt = array();
+
+        $startValue = $this->filter->getValueStart();
+        $endValue   = $this->filter->getValueEnd();
+        if($startValue != '') {
+            if($endValue == $startValue) {
+                // Equal
+                $s = $this->_getEqualStatement($startValue);
+                if($s != '') {
+                    $stmt[] = $s;
+                }
+            } else {
+                // Lower end
+                $s = $this->_getStartStatement($startValue);
+                if($s != '') {
+                    $stmt[] = $s;
+                }
+            }
+        }
+        if($endValue != '') {
+            if($endValue != $startValue) {
+                // Higher end
+                $s = $this->_getEndStatement($endValue);
+                if($s != '') {
+                    $stmt[] = $s;
+                }
+            }
+        }
+
+        return $stmt;
+    }
+}
+
+/**
+ *
+ */
+class Docman_SqlFilterOwner 
+extends Docman_SqlFilter {
+
+    function Docman_SqlFilterOwner($filter) {
         parent::Docman_SqlFilter($filter);
         $this->field = 'user.user_name';
     }
 
-    function getFromClause() {
+    function getFrom() {
         $tables = array();
-        if($this->filter->getSort() !== null) {
-            $tables[] = 'user';
+        if($this->filter->getValue() !== null
+           && $this->filter->getValue() != '') {
+            $tables[] = 'user ON (i.user_id = user.user_id)';
+        }
+        return $tables;
+    }
+}
+
+/**
+ *
+ */
+class Docman_SqlFilterText 
+extends Docman_SqlFilter {
+    var $matchMode;
+
+    function Docman_SqlFilterText($filter) {
+        parent::Docman_SqlFilter($filter);
+        $this->matchMode = 'IN BOOLEAN MODE';
+    }
+
+    function _getSpecificSearchChunk() {
+        $stmt = array();
+        if($this->filter->getValue() !== null &&
+           $this->filter->getValue() != '') {
+            $qv = DataAccess::quoteSmart($this->filter->getValue());
+            $stmt[] = 'MATCH ('.$this->field.') AGAINST ('.$qv.' '.$this->matchMode.')';
+        }
+        return $stmt;
+    }
+
+}
+
+class Docman_SqlFilterGlobalText
+extends Docman_SqlFilterText {
+    
+    function Docman_SqlFilterGlobalText($filter) {
+        parent::Docman_SqlFilterText($filter);
+    }
+
+    function getFrom() {
+        $tables = array();
+        if($this->filter->getValue() !== null &&
+           $this->filter->getValue() != '') {
+            foreach($this->filter->dynTextFields as $f) {
+                $tables[] = $this->_getMdvJoin($f);
+            }
         }
         return $tables;
     }
 
-     function getWhereClause() {
-        $where = '';
+    function _getSpecificSearchChunk() {
+        $stmt = array();
+        if($this->filter->getValue() !== null &&
+           $this->filter->getValue() != '') {
+            $qv = DataAccess::quoteSmart($this->filter->getValue());
 
-        if($this->filter->getSort() !== null) {
-            $whereArray = array();
-            $whereArray[] = 'user.user_id = i.user_id';
-            $where = implode(' AND ', $whereArray);
+            $matches[] = 'MATCH (i.title, i.description) AGAINST ('.$qv.' '.$this->matchMode.')';
+            $matches[] = 'MATCH (v.label, v.changelog, v.filename) AGAINST ('.$qv.' '.$this->matchMode.')';
+            foreach($this->filter->dynTextFields as $f) {
+                $matches[] = 'MATCH (mdv_'.$f.'.valueText, mdv_'.$f.'.valueString) AGAINST ('.$qv.' '.$this->matchMode.')';
+            }
+
+            $stmt[] = '('.implode(' OR ', $matches).')';
+        }
+        return $stmt;
+    }
+
+}
+
+class Docman_SqlFilterListAdvanced
+extends Docman_SqlFilter {
+
+    function Docman_SqlFilterListAdvanced($filter) {
+        parent::Docman_SqlFilter($filter);
+    }
+
+    function _getSpecificSearchChunk() {
+        $stmt = array();
+        
+        $v = $this->filter->getValue();
+        if($v !== null 
+           && (count($v) > 0 
+               || (count($v) == 1 && $v[0] != '')
+               )
+           ) {
+            $stmt[] = $this->field.' IN ('.implode(',', $this->filter->getValue()).')';
         }
         
-        return $where;
+        return $stmt;
     }
 }
 

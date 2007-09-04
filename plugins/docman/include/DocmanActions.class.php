@@ -28,9 +28,7 @@ require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 require_once('DocmanActionsDeleteVisitor.class.php');
-require_once('Docman_Folder.class.php');
-require_once('Docman_FolderBo.class.php');
-require_once('Docman_ItemFactory.class.php');
+require_once('Docman_FolderFactory.class.php');
 require_once('Docman_VersionFactory.class.php');
 require_once('Docman_FileStorage.class.php');
 require_once('Docman_MetadataValueFactory.class.php');
@@ -58,21 +56,21 @@ class DocmanActions extends Actions {
     }
     
     function expandFolder() {
-        $folderBo = new Docman_FolderBo();
-        $folderBo->expand($this->_getFolderFromRequest());
+        $folderFactory = new Docman_FolderFactory();
+        $folderFactory->expand($this->_getFolderFromRequest());
     }
     function expandAll($params) {
-        $params['hierarchy']->accept(new Docman_ExpandAllHierarchyVisitor(), array('folder_bo' => new Docman_FolderBo()));
+        $params['hierarchy']->accept(new Docman_ExpandAllHierarchyVisitor(), array('folderFactory' => new Docman_FolderFactory()));
     }
     function collapseFolder() {
-        $folderBo = new Docman_FolderBo();
-        $folderBo->collapse($this->_getFolderFromRequest());
+        $folderFactory = new Docman_FolderFactory();
+        $folderFactory->collapse($this->_getFolderFromRequest());
     }
     function &_getFolderFromRequest() {
         $request =& HTTPRequest::instance();
         $folder = new Docman_Folder();
-        $folder->setId($request->get('id'));
-        $folder->setGroupId($request->get('group_id'));
+        $folder->setId((int) $request->get('id'));
+        $folder->setGroupId((int) $request->get('group_id'));
         return $folder;
     }
 
@@ -391,8 +389,8 @@ class DocmanActions extends Actions {
             // Special handeling of obsolescence date
             if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != '') {
                     $d = explode('-',$data['obsolescence_date']);
-                    $data['obsolescence_date'] = mktime(0,0,0,
-                                                        $d[1], $d[2], $d[0]);
+                    $data['obsolescence_date'] = gmmktime(0,0,0,
+                                                          $d[1], $d[2], $d[0]);
             }
             else {
                 $data['obsolescence_date'] = 0;
@@ -496,9 +494,9 @@ class DocmanActions extends Actions {
         return $this->filestorage;
     }
     var $item_factory;
-    function &_getItemFactory() {
+    function &_getItemFactory($groupId=null) {
         if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory();
+            $this->item_factory =& new Docman_ItemFactory($groupId);
         }
         return $this->item_factory;
     }
@@ -719,7 +717,13 @@ class DocmanActions extends Actions {
     
     function change_view() {
         $request =& HTTPRequest::instance();
-        if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
+        $group_id = (int) $request->get('group_id');
+        if ($request->exist('selected_view')) {
+            if(is_numeric($request->get('selected_view'))) {
+                $this->_controler->setReportId($request->get('selected_view'));
+                $this->_controler->forceView('Table');
+            }
+            elseif(Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
             $item_factory =& $this->_getItemFactory();
             $folder = $item_factory->getItemFromDb($request->get('id'));
             if ($folder) {
@@ -729,6 +733,7 @@ class DocmanActions extends Actions {
                 );
                 $this->_controler->forceView($request->get('selected_view'));
             }
+            }
         }
     }
     
@@ -736,12 +741,12 @@ class DocmanActions extends Actions {
         $user =& $this->_controler->getUser();
         $request =& $this->_controler->request;
         
-        $item_factory =& $this->_getItemFactory();
+        $item_factory = new Docman_ItemFactory();
         $item =& $item_factory->getItemFromDb($request->get('id'));
+        $item_factory->setGroupId($item->getGroupId());
         if ($item) {
             if (!$item_factory->isRoot($item)) {
-                $item_bo =& new Docman_ItemBo($request->get('group_id'));
-                $item =& $item_bo->getItemSubTree($request->get('id'), array('user' => &$user));
+                $item =& $item_factory->getItemSubTree($request->get('id'), array('user' => &$user));
                 if ($item) {
                     $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
                     if ($item->accept($deletor, array('user' => &$user, 'parent' => $item_factory->getItemFromDb($item->getParentId())))) {
@@ -757,9 +762,11 @@ class DocmanActions extends Actions {
 
     function admin_change_view() {
         $request =& HTTPRequest::instance();
+        $group_id = (int) $request->get('group_id');
+
         if ($request->exist('selected_view') && Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
             require_once('Docman_SettingsBo.class.php');
-            $sBo =& Docman_SettingsBo::instance($request->get('group_id'));
+            $sBo =& Docman_SettingsBo::instance($group_id);
             if ($sBo->updateView($request->get('selected_view'))) {
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_settings_updated'));
             } else {
@@ -1043,6 +1050,22 @@ class DocmanActions extends Actions {
         }
     }
     
+    function admin_import_metadata() {
+        $groupId    = $this->_controler->_actionParams['sGroupId'];
+        $srcGroupId = $this->_controler->_actionParams['sSrcGroupId'];
+
+        $srcGo = group_get_object($srcGroupId);
+        if($srcGo != false &&
+           ($srcGo->isPublic() 
+            || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {
+            $dstMdFactory = new Docman_MetadataFactory($groupId);
+            $dstMdFactory->importMetadataFrom($srcGo->getGroupId());
+            $this->_controler->feedback->log('info', Docman::txt('admin_md_import_success', array($srcGo->getPublicName())));
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('error_perms_generic'));
+        }
+    }
+
     function monitor($params) {
         $user = $this->_controler->getUser();
         if (!$user->isAnonymous()) {
@@ -1125,92 +1148,26 @@ class DocmanActions extends Actions {
         $item        = $this->_controler->_actionParams['item'];
         $rank        = $this->_controler->_actionParams['rank'];
         $itemToPaste = $this->_controler->_actionParams['itemToPaste'];
+        $importMd    = $this->_controler->_actionParams['importMd'];
         $dataRoot    = $this->_controler->getProperty('docman_root');
         $mdMapping   = false;
 
+        $dstMdFactory = new Docman_MetadataFactory($item->getGroupId());
+
+        // Import metadata if asked
+        if($importMd) {
+            $dstMdFactory->importMetadataFrom($itemToPaste->getGroupId());
+        }
         
+        // Get mapping between the 2 definitions
+        $mdMapping = array();
+        $dstMdFactory->getMetadataMapping($itemToPaste->getGroupId(), $mdMapping);
+
+        // Permissions
         if($itemToPaste->getGroupId() != $item->getGroupId()) {
-            // Permissions
             $ugroupsMapping = false;
-
-            // Metadata
-            $mdMapping = array();
-            $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
-            $dstMdFactory = new Docman_MetadataFactory($item->getGroupId());
-
-            // Get the list of metadata in source project
-            $srcMda = $srcMdFactory->getRealMetadataList(true);
-            $srcMdIter = new ArrayIterator($srcMda);
-            while($srcMdIter->valid()) {
-                $srcMd = $srcMdIter->current();
-
-                // For each source metadata, try to find one in this project
-                // with the same name and the same type. By default take the
-                // first that match these 2 conditions.
-                $dstMda = array();
-                $dstMdFactory->_findRealMetadataByName($srcMd->getName(),
-                                                       $dstMda);
-                $dstMdIter = new ArrayIterator($dstMda);
-                $found = false;
-                while(!$found && $dstMdIter->valid()) {
-                    $dstMd = $dstMdIter->current();
-                    if($dstMd->getType() == $srcMd->getType() &&
-                       $dstMd->isUsed()) {
-                        $found = true;
-                    }
-                    $dstMdIter->next();
-                }
-                if($found) {
-                    $mdMapping['md'][$srcMd->getId()] = $dstMd->getId();
-                
-                    // Now for ListOfValues metadata, applies same approach for
-                    // values
-                    if($srcMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                        $srcLoveFactory = new Docman_MetadataListOfValuesElementFactory($srcMd->getId());
-                        $dstLoveFactory = new Docman_MetadataListOfValuesElementFactory($dstMd->getId());
-                        $srcLoveArray = $srcLoveFactory->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
-                        $srcLoveIter = new ArrayIterator($srcLoveArray);
-                        while($srcLoveIter->valid()) {
-                            $srcLove = $srcLoveIter->current();
-                            
-                            $dstLoveIter = $dstLoveFactory->getByName($srcLove->getName(),
-                                                                      $srcMd->getLabel());
-                            // Take the first one
-                            if($dstLoveIter->valid()) {
-                                $dstLove = $dstLoveIter->current();
-                                $mdMapping['love'][$srcLove->getId()] = $dstLove->getId();
-                            }
-                            $srcLoveIter->next();
-                        }
-                    }
-                }
-
-                $srcMdIter->next();
-            }
         } else {
-            // Permissions
             $ugroupsMapping = true;
-
-            // Metadata
-            $mdMapping = array();
-            $mdFactory = new Docman_MetadataFactory($item->getGroupId());
-            $mda = $mdFactory->getRealMetadataList(true);
-            $mdIter = new ArrayIterator($mda);
-            while($mdIter->valid()) {
-                $md = $mdIter->current();
-                $mdMapping['md'][$md->getId()] = $md->getId();
-                if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                    $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
-                    $loveArray = $loveFactory->getListByFieldId($md->getId(), $md->getLabel(), false);
-                    $loveIter = new ArrayIterator($loveArray);
-                    while($loveIter->valid()) {
-                        $love = $loveIter->current();
-                        $mdMapping['love'][$love->getId()] = $love->getId();
-                        $loveIter->next();
-                    }
-                }
-                $mdIter->next();
-            }
         }
 
         //
@@ -1372,6 +1329,112 @@ class DocmanActions extends Actions {
         }
     }
 
+    function report_del() {
+        $user      = $this->_controler->getUser();
+        $reportId  = $this->_controler->_actionParams['sReportId'];
+        $groupId   = $this->_controler->_actionParams['sGroupId'];
+
+        $reportFactory = new Docman_ReportFactory($groupId);
+        $r = $reportFactory->getReportById($reportId);
+        if($r == null) {
+            $this->_controler->feedback->log('error', Docman::txt('report_del_notfound'));
+        } else {
+            if($r->getScope() == 'I' && $r->getUserId() != $user->getId()) {
+                $this->_controler->feedback->log('error', Docman::txt('report_del_notowner'));
+            } else {
+                if($r->getScope() == 'P' && !$this->_controler->userCanAdmin()) {
+                    $this->_controler->feedback->log('error', Docman::txt('report_del_notadmin'));
+                } else {
+                    if($reportFactory->deleteReport($r)) {
+                        $this->_controler->feedback->log('info', Docman::txt('report_del_success'));
+                    } else {
+                        $this->_controler->feedback->log('warning', Docman::txt('report_del_failue'));
+                    }
+                }
+            }
+        }
+    }
+
+    function report_upd() {
+        $reportId = $this->_controler->_actionParams['sReportId'];
+        $groupId  = $this->_controler->_actionParams['sGroupId'];
+        $scope    = $this->_controler->_actionParams['sScope'];
+        $title    = $this->_controler->_actionParams['title'];
+        $description = $this->_controler->_actionParams['description'];
+        $image    = $this->_controler->_actionParams['sImage'];
+
+        
+        $reportFactory = new Docman_ReportFactory($groupId);
+        $r = $reportFactory->getReportById($reportId);
+        if($r == null) {
+            $this->_controler->feedback->log('error', Docman::txt('report_upd_notfound'));
+        } else {
+            if($r->getGroupId() != $groupId) {
+                $this->_controler->feedback->log('error', Docman::txt('report_upd_groupmismatch'));
+            } else {
+                if($this->_controler->userCanAdmin()) {
+                    $r->setScope($scope);
+                }
+                $r->setTitle($title);
+                $r->setDescription($description);
+                $r->setImage($image);
+                $reportFactory->updateReportSettings($r);
+            }
+        }
+    }
+
+    function report_import() {
+        $groupId        = $this->_controler->_actionParams['sGroupId'];
+        $importReportId = $this->_controler->_actionParams['sImportReportId'];
+        $importGroupId  = $this->_controler->_actionParams['sImportGroupId'];
+        $user           =& $this->_controler->getUser();
+
+        // Any user can importreports from any public projects and from
+        // Private projects he is member of.
+        $go = group_get_object($importGroupId);
+        if($go != false &&
+           ($go->isPublic() 
+            || (!$go->isPublic() && $go->userIsMember()))) {
+            $srcReportFactory = new Docman_ReportFactory($importGroupId);
+
+            // Get the mapping between src and current project.
+            $mdMap = array();
+            $srcMdFactory = new Docman_MetadataFactory($importGroupId);
+            $srcMdFactory->getMetadataMapping($groupId, $mdMap);
+
+            // If user is admin he can create 'P' report otherwise everything is 'I'
+            $forceScope = true;
+            if($this->_controler->userCanAdmin()) {
+                $forceScope = false;
+            }
+
+            if($importReportId !== null) {
+                // Import only one report                
+                $report = $srcReportFactory->getReportById($importReportId);
+                
+                if($report !== null) {
+                    // User can import Project wide reports or his own Individual reports.
+                    if($report->getScope() == 'P' ||
+                       ($report->getScope() == 'I' && $report->getUserId() == $user->getId())) {
+                        
+                        $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope);
+
+                        $this->_controler->feedback->log('info', Docman::txt('report_clone_success'));
+                    } else {
+                        $this->_controler->feedback->log('error', Docman::txt('report_err_clone_iorp'));
+                    }
+                } else {
+                    $this->_controler->feedback->log('error', Docman::txt('report_err_notfound', array($importReportId)));
+                }
+            } else {
+                // Import all personal and project reports from the given project.
+                $srcReportFactory->clone($groupId, $mdMap, $user, $forceScope);
+                $this->_controler->feedback->log('info', Docman::txt('report_clone_success'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('error_perms_generic'));
+        }
+    }
 }
 
 ?>

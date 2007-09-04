@@ -28,16 +28,29 @@ class Docman_View_Details extends Docman_View_Display {
     function _content($params, $view = null, $section = null) {
         $url = $params['default_url'];
         
-        $token = isset($params['token']) ? $params['token'] : null;
-        
+        $token = isset($params['token']) ? $params['token'] : null;        
+
         $user_can_manage = $this->_controller->userCanManage($params['item']->getId());
         $user_can_write = $user_can_manage || $this->_controller->userCanWrite($params['item']->getId());
         $user_can_read  = $user_can_write || $this->_controller->userCanRead($params['item']->getId());
+
+        $user_can_read_obsolete = false;
+        if($params['item']->isObsolete()) {
+            // Restrict access to non docman admin.
+            if(!$this->_controller->userCanAdmin()) {
+                $user_can_manage = false;
+                $user_can_write  = false;
+                // Save read value to let user (according to their rights) to see
+                // the properties.
+                $user_can_read_obsolete = $user_can_read;
+                $user_can_read   = false;
+            }
+        }
         
         $item_factory =& $this->_getItemFactory($params);
         $details      =& new Docman_View_ItemDetails($params['item'], $url);
         $sections     = array();
-        if ($user_can_read) {
+        if ($user_can_read || $user_can_read_obsolete) {
             if ($view && $section == 'properties') {
                 $props =& $view;
             } else {

@@ -94,6 +94,14 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
         if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
         
+	// Table Report
+	// No longer toogle table report on page load: the page is too long to
+	// load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
+        /*if (this.options.action == 'browse') {
+	    this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
+	    Event.observe(window, 'load', this.initTableReportEvent, true);
+	}*/
+
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);
         Event.observe(window, 'load', this.focusEvent, true);
@@ -104,12 +112,16 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         // NewItem
         Event.stopObserving(window, 'load', this.initNewItemEvent, true);
         $H(this.newItem.specificProperties).values().each(function (properties) {
-            Event.stopObserving(properties.checkbox, 'change', this.onNewItemCheckboxChangeEvent);
+	    Event.stopObserving(properties.checkbox, 'change', this.onNewItemCheckboxChangeEvent);
         });
         // Expand/Collapse
         Event.stopObserving(window, 'load', this.initExpandCollapseEvent, true);
         // ItemHighlight
         Event.stopObserving(window, 'load', this.initItemHighlightEvent, true);
+	// Table Report
+	if(this.initTableReportEvent) {
+	    Event.stopObserving(window, 'load', this.initTableReportEvent, true);
+	}
     },
     //{{{------------------------------ ItemHighlight
     focus: function() {
@@ -353,16 +365,16 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         $H(this.newItem.specificProperties).values().each(function (properties) {
             if (properties.panel) {
                 if (properties.checkbox.id == selected_checkbox.id) {
-                    //Element.show(properties.panel);
-                    new Effect.SlideDown(properties.panel, {
+                    Element.show(properties.panel);
+                    /*new Effect.SlideDown(properties.panel, {
                         duration:0.25
-                    });
+                    });*/
                 } else {
-                    //Element.hide(properties.panel);
                     if (Element.visible(properties.panel)) {
-                        new Effect.SlideUp(properties.panel, {
+			Element.hide(properties.panel);
+                        /*new Effect.SlideUp(properties.panel, {
                             duration:0.25
-                        });
+                        });*/
                     }
                 }
             }
@@ -454,6 +466,84 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 return false;
             }).bind(this));
         }).bind(this));
+    },
+    //}}}
+
+    //{{{----------------------------- Table report
+    initTableReport: function() {
+	if($('docman_filters_fieldset')) {
+	    var url = location.href.parseQuery();
+	    if(url['show_filters'] == '1') {
+		var icon = $('docman_toggle_filters');
+                icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
+		new Insertion.Before('docman_report_submit', '<input id="docman_report_show_filters" type="hidden" name="show_filters" value="1">');
+		Element.show('docman_filters_fieldset');
+	    } else {
+		Element.hide('docman_filters_fieldset');
+		var icon = $('docman_toggle_filters');
+		if (icon.src.indexOf('toggle_minus.png') != -1) {
+		    icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
+		}
+	    }
+	}
+    },
+    toggleReportImage: function() {
+	var icon = $('docman_toggle_filters');
+	if (icon.src.indexOf('toggle_plus.png') != -1) {
+	    icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
+	} else {
+	    icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
+	}
+    },
+    toggleReportParam: function() {
+	if($('docman_report_show_filters')) {
+	    var input = $('docman_report_show_filters');
+	    if(input.value == 1) {
+		input.value = 0;
+	    } else {
+		input.value = 1;
+	    }
+	} else {
+	    new Insertion.Before('docman_report_submit', '<input id="docman_report_show_filters" type="hidden" name="show_filters" value="1">');
+	}
+    },
+    toggleReport: function() {
+	// Toggle display
+	Element.toggle('docman_filters_fieldset');
+	this.toggleReportImage();
+	this.toggleReportParam();
+    },
+    reportSavedSearchChange: function(form) {
+	var select = form['report_id'];
+	if($F(select) != '-1') {
+	    form.submit();
+	}
+    },
+    reportFiltersOptionsChange: function(form) {
+	var select = form['add_filter'];
+	if($F(select) != '--') {
+	    form.submit();
+	}
+    },
+    reportSaveOptionsChange: function(form) {
+	var select = form['save_report'];
+	if(($F(select) == 'newp') || ($F(select) == 'newi')) {
+	    var name = window.prompt(this.options.language.report_name_new, '');
+	    if(name != null && name.strip() != '') {
+		new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name+'" />');
+		form.submit();
+	    }
+	}
+	else {
+	    var selectedValue = parseInt($F(select))
+	    if(selectedValue > 0) {
+		var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML);
+		if(name != null && name.strip() != '') {
+		    new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name+'" />');
+		    form.submit();
+		}
+	    }
+	}	
     }
     //}}}
 });

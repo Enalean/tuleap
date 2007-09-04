@@ -26,6 +26,10 @@ require_once('Docman_View_Header.class.php');
                     'new_view_change'          => $GLOBALS['Language']->getText('plugin_docman','new_view_change'),
                     'new_news_explaination'    => $GLOBALS['Language']->getText('plugin_docman','new_news_explain'),
                     'new_news_displayform'     => $GLOBALS['Language']->getText('plugin_docman','new_news_displayform'),
+                    'report_save_opt'          => $GLOBALS['Language']->getText('plugin_docman','report_save_opt'),
+                    'report_custom_fltr'       => $GLOBALS['Language']->getText('plugin_docman','report_custom_fltr'),
+                    'report_name_new'          => $GLOBALS['Language']->getText('plugin_docman','report_name_new'),
+                    'report_name_upd'          => $GLOBALS['Language']->getText('plugin_docman','report_name_upd'),
                 )
             ),
             $this->_getJSDocmanParameters($params)

@@ -82,7 +82,21 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
             $nb = count($parameters);
             foreach($parameters as $key => $value) {
                 $i++;
-                $url .= $key .'='. $value . ($i == $nb ? '' : $et);
+                if(is_array($value)) {
+                    $iVals  = 0;
+                    $nbVals = count($value);
+                    if($nbVals > 0) {
+                        foreach($value as $v) {
+                            $iVals++;
+                            $url .= $key.'[]='.$v . ($iVals == $nbVals ? '' : $et);
+                        }
+                    } else {
+                        $url .= $key.'[]=';
+                    }
+                } else {
+                    $url .= $key.'='.$value;
+                }
+                $url .= ($i == $nb ? '' : $et);
             }
         }
         return $url;
@@ -130,29 +144,48 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         return $output;
     }
 
+    /**
+     * This method build the paramater list of the current url for filters and
+     * sort.
+     */
     function _initSearchAndSortParams($params) {
         if($this->dfltSortParams === null) {
             $this->dfltSortParams = null;
             $this->dfltSearchParams = null;
 
             if(isset($params['filter']) && $params['filter'] !== null) {
-                $fi =& $params['filter']->getFilterIterator();
+                // Report paramters
+                $this->dfltSearchParams = $params['filter']->getUrlParameters();
+
+                // Filters paramters
+                $fi = $params['filter']->getFilterIterator();
                 if($fi !== null) {
                     $fi->rewind();
                     while($fi->valid()) {
-                        $f =& $fi->current();
+                        $f = $fi->current();
                         
                         if($f !== null) {
                             $this->dfltSearchParams = array_merge($this->dfltSearchParams,
                                                                   $f->getUrlParameters());
-
-                            $sort = $f->getSort();
-                            if($sort !== null) {
-                                $this->dfltSortParams[$f->getSortParam()] = $sort;
-                            }
                         }
 
                         $fi->next();
+                    }
+                }
+
+                // Columns (sort) paramters
+                $ci = $params['filter']->getColumnIterator();
+                if($ci !== null) {
+                    $ci->rewind();
+                    while($ci->valid()) {
+                        $c = $ci->current();
+                        if($c !== null) {
+                            $sort = $c->getSort();
+                            if($sort !== null) {
+                                $this->dfltSortParams[$c->getSortParameter()] = $sort;
+                            }
+                        }
+                        $ci->next();
                     }
                 }
             }
@@ -178,6 +211,21 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
                 $allowed = $this->_controller->userCanRead($item->getId());
                 break;
             case 'move':
+                // Permissions related stuff:
+                // There are 2 permissions to take in account to decide whether
+                // someone can move a file or not: 
+                // - the permission to 'remove' the file from a folder.
+                //   - user need to have 'write' perm on both item and parent
+                //     folder.
+                // - and the permission to 'add' the file in another folder.
+                //   - check if there is at least one folder writable in the
+                //     docman.
+                // But as the first step requires to have one folder writable,
+                // we don't need specific test for the second one.
+                // The only case we don't take in account is the possibility to
+                // have only one file in only one writable folder (so it
+                // shouldn't be movable). But this case is not worth the time
+                // to develop and compute that case.
                 $allowed = $if->isMoveable($item) && $this->_controller->userCanWrite($item->getId()) && $this->_controller->userCanWrite($item->getParentId());
                 break;
             case 'confirmDelete':

@@ -53,10 +53,12 @@ class Docman_NotificationsManager extends NotificationsManager {
         }
     }
     function &_getItemFactory() {
-        return new Docman_ItemFactory();
+        $if = new Docman_ItemFactory();
+        return $if;
     }
     function &_groupGetObject($group_id) {
-        return group_get_object($group_id);
+        $go = group_get_object($group_id);
+        return $go;
     }
     function &_getUserManager() {
         return UserManager::instance();

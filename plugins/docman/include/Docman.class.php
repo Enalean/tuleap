@@ -39,8 +39,11 @@ class Docman extends DocmanController {
 
     /* protected */ function _includeView() {
         $className = 'Docman_View_'. $this->view;
-        require_once('view/'. $className .'.class.php');
-        return $className;
+        if(file_exists(dirname(__FILE__).'/view/'. $className .'.class.php')) {
+            require_once('view/'. $className .'.class.php');
+            return $className;
+        }
+        return false;
     }
     /* protected */ function _set_deleteView_errorPerms() {
         $this->view = 'Details';
@@ -65,6 +68,56 @@ class Docman extends DocmanController {
             $this->view = 'NewFolder';
         } else {
             $this->view = 'NewDocument';
+        }
+    }
+
+    /**
+     * Get the list of all futur obsolete documents and warn document owner
+     * about this obsolescence.
+     */
+    function notifyFuturObsoleteDocuments() {
+        $itemFactory = new Docman_ItemFactory(0);
+
+        //require_once('common/mail/TestMail.class.php');
+        //$mail = new TestMail();
+        //$mail->_testDir = '/local/vm16/codev/servers/docman-2.0/var/spool/mail';
+        $mail = new Mail();
+
+        $itemIter = $itemFactory->findFuturObsoleteItems();
+        $itemIter->rewind();
+        while($itemIter->valid()) {
+            $item =& $itemIter->current();
+
+            // Users
+            $um    =& UserManager::instance();
+            $owner =& $um->getUserById($item->getOwnerId());
+            
+            // Project
+            $group = group_get_object($item->getGroupId());
+            
+            // Date
+            $obsoDate = util_timestamp_to_userdateformat($item->getObsolescenceDate(), true);
+            
+            // Urls
+            $baseUrl = get_server_url().$this->pluginPath.'/index.php?group_id='.$item->getGroupId().'&id='.$item->getId();
+            $directUrl = $baseUrl .'&action=show';
+            $detailUrl = $baseUrl .'&action=details';
+            
+            $subj = $this->txt('obso_warn_email_subject', array($GLOBALS['sys_name'],
+                                                                $item->getTitle()));
+            $body = $this->txt('obso_warn_email_body', array($item->getTitle(),
+                                                             $group->getPublicName(),
+                                                             $obsoDate,
+                                                             $directUrl,
+                                                             $detailUrl));
+            
+            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setTo($owner->getEmail());
+            $mail->setSubject($subj);
+            $mail->setBody($body);
+            $mail->send();
+            
+            $itemIter->next();
         }
     }
 }

@@ -25,7 +25,6 @@
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ParentsTree.class.php');
 
-require_once(dirname(__FILE__).'/../Docman_ItemBo.class.php');
 class Docman_View_ItemDetailsSectionMove extends Docman_View_ItemDetailsSectionActions {
     
     var $token;

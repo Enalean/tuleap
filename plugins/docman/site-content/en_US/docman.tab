@@ -78,10 +78,40 @@ plugin_docman	admin_md_detail_val_create_rank_after	After
 plugin_docman	admin_md_detail_val_create_dflt	Is default?
 plugin_docman	admin_md_detail_val_create_submit	Create
 plugin_docman	admin_md_details_title	"$1" Property details
-plugin_docman	admin_md_detupdlove_title	Update value '$2' in '$1' property
+plugin_docman	admin_md_detupdlove_title	Update value "$2" in "$1" property
 plugin_docman	admin_md_detupdlove_update	Update
 plugin_docman	admin_md_detupdlove_backtomenu	Back to property details
+
+plugin_docman	admin_md_import_title	Import "$1" properties
+plugin_docman	admin_md_import_desc	<p>The table below highlight the differences between $1 and $2 properties.</p><p>If there are differences, you can click on "Import" button at the bottom of the page. The properties of $1 will be modified match what is defined in $2.</p><p><strong>Note:</strong> this operation delete neither properties nor values in $1 and $2 won't be modified.</p>
+plugin_docman	admin_md_import_form_nothingtodo	The properties of the two projects are aligned. Nothing to do.
+plugin_docman	admin_md_import_form_submit	Import
+plugin_docman	admin_md_import_success	Properties successfully imported from '$1'
+plugin_docman	admin_md_import_tbl_prop	Property
+plugin_docman	admin_md_import_tbl_diff	Differences<br />in $1 vs. $2
+plugin_docman	admin_md_import_tbl_dstprj	Destination
+plugin_docman	admin_md_import_tbl_action	Import actions<br />in $1
+plugin_docman	admin_md_import_tbl_act_update_md	Will override <strong>$1</strong> settings in $2: $3
+plugin_docman	admin_md_import_tbl_act_import_md	Will create property <strong>$1</strong> with the same settings and values
+plugin_docman	admin_md_import_tbl_act_import_love	Will create value <strong>$1</strong>
+plugin_docman	admin_md_import_tbl_status_equals	Already up-to-date
+plugin_docman	admin_md_import_tbl_status_equivalent	Settings differ
+plugin_docman	admin_md_import_tbl_status_exists	Present
+plugin_docman	admin_md_import_tbl_status_missing	Doesn't exist
+plugin_docman	admin_md_import_tbl_status_onlydst	Present
+plugin_docman	admin_md_import_param_desc	Description: <strong><em>new text</em></strong>
+plugin_docman	admin_md_import_param_allowempty	Allow empty value: <strong>$1</strong>
+plugin_docman	admin_md_import_param_allowmultiplevalue	Allow multiple selection: <strong>$1</strong>
+plugin_docman	admin_md_import_param_useit	Usage: <strong>$1</strong>
+plugin_docman	admin_md_import_param_dfltvalue	Default value: <strong>$1</strong>
+plugin_docman	admin_md_import_param_0	Disabled
+plugin_docman	admin_md_import_param_1	Enabled
+
+
 plugin_docman	admin_metadata_title	Manage Properties
+plugin_docman	admin_metadata_import_desc	You can import properties from any public projects or private projects you are membre of.
+plugin_docman	admin_metadata_import_title	Import properties from another project
+plugin_docman	admin_metadata_import_submit	Check before import
 plugin_docman	admin_metadata_list_title	Available properties
 plugin_docman	admin_metadata_descr	Define the properties of your documents.
 plugin_docman	admin_metadata_instructions	<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>
@@ -91,9 +121,14 @@ plugin_docman	admin_metadata_list_status	Status
 plugin_docman	admin_metadata_list_delete	Delete
 plugin_docman	admin_metadata_new_title	Create a new property
 plugin_docman	admin_metadata_new_submit	Create
+plugin_docman	admin_obsolete_title	Manage Obsolete Documents
+plugin_docman	admin_obsolete_descr	View and update obsolete documents.
+plugin_docman	admin_obsolete_help	This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.
 plugin_docman	admin_permissions_title	Manage Permissions
 plugin_docman	admin_permissions_descr	Define who can administrate the document manager.
 plugin_docman	admin_permissions_instructions	Please select user groups that can administrate the document manager:
+plugin_docman	admin_report_title	Manage Search Report
+plugin_docman	admin_report_descr	Modify the scope of the reports.
 plugin_docman	admin_title	Administration
 plugin_docman	admin_view_title	Manage Display Preferences
 plugin_docman	admin_view_descr	Define the default view for the document manager.
@@ -102,6 +137,7 @@ plugin_docman	admin_view_instructions	Please select the default view for browsin
 plugin_docman	breadcrumbs_location	Location:
 
 plugin_docman	browse_viewas	-- View as:
+plugin_docman	browse_customreports	-- Custom reports:
 
 plugin_docman	clone_file_label	Copy from template
 plugin_docman	clone_file_changelog	Copy of <em>$1</em> in <em>$2</em> at version <em>$3</em>.
@@ -231,7 +267,11 @@ plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
 plugin_docman	details_notifications_cascade_sendemail	...and for the whole sub-hierarchy.
-plugin_docman	details_paste_paste_button	Paste
+plugin_docman	details_paste_importmd	Import properties from $1:
+plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> There are differences in properties definitions between $1 and $2. You <strong>may loose</strong> some <strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste anyway, so only properties that exists in both $1 and $2 will be copied.</li><li>Ask to a document manager admin to import $2 properties definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn't impact documents</strong> themselve. This only refers to properties.</p>
+plugin_docman	details_paste_mddiff_title	Document properties
+plugin_docman	details_paste_button_paste	Paste
+plugin_docman	details_paste_button_pasteanyway	Paste Anyway
 plugin_docman	details_paste_rank_after	After
 plugin_docman	details_paste_rank_beg	At the beginning
 plugin_docman	details_paste_rank_end	At the end
@@ -242,6 +282,8 @@ plugin_docman	details_permissions_perms	Access Permissions
 plugin_docman	details_permissions_recursive	recursive (apply same permissions to all sub-items of this folder)
 plugin_docman	details_properties	Properties
 plugin_docman	details_properties_edit	Edit properties
+plugin_docman	details_properties_view_doc_lbl	Direct link:
+plugin_docman	details_properties_view_doc_val	Click to open the document
 plugin_docman	details_title	Details of $1
 plugin_docman	details_update_title	Update $1
 
@@ -271,6 +313,7 @@ plugin_docman	error_perms_create	You do not have sufficient access rights to cre
 plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.
 plugin_docman	error_perms_delete	You do not have sufficient access rights to delete this item.
 plugin_docman	error_perms_delete_item	You do not have sufficient access rights to delete $1.
+plugin_docman	error_perms_generic	Your are not allowed to access this data.
 plugin_docman	error_perms_move	You do not have sufficient access rights to move this item.
 plugin_docman	error_perms_perms	You do not have sufficient access rights to set permissions for this item.
 plugin_docman	error_perms_view	You do not have sufficient access rights to view this item.
@@ -299,7 +342,12 @@ plugin_docman	field_obsolescence_date	Validity:
 plugin_docman	field_create_date	Creation date:
 plugin_docman	field_update_date	Last update date:
 
-plugin_docman	filters	Filters
+plugin_docman	filters	Search
+plugin_docman	filters_advsearch_0	(or use <a href="$1">Simple Search</a>)
+plugin_docman	filters_advsearch_1	(or use <a href="$1">Advanced Search</a>)
+plugin_docman	filters_global_txt	Global text search
+plugin_docman	filters_html_date_start	Start:
+plugin_docman	filters_html_date_end	End:
 plugin_docman	filters_date_end	End Date
 plugin_docman	filters_date_message	The date entered in field "$1" is not valid. Valid date format is YYYY-M-D (e.g. '$2' for today) or let the field blank.
 plugin_docman	filters_date_start	Start Date
@@ -378,6 +426,8 @@ plugin_docman	mdv_bo_errbadtype	Bad property type
 plugin_docman	mdv_bo_createerror	Error on creation of property '$1'
 plugin_docman	mdv_bo_createunknown	Try to create an unknown property
 
+plugin_docman	missing_param	Parameter $1 is missing
+
 plugin_docman	move	Move $1
 plugin_docman	move_actual	The item is in this folder.
 plugin_docman	move_after	After $1
@@ -418,6 +468,11 @@ plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 
+plugin_docman	obso_warn_email_subject	[$1] Document '$2' will be obsolete in one month
+plugin_docman	obso_warn_email_body	As document owner, you are notified of the obsolescense in one month of the\ndocument:\nTitle: $1\nProject: $2\nObsolescence date: $3\nDirect Link: <$4>\n\nThis document will dispear from your document manager in one month if you\ndo nothing. The document will remain accessible through the administration\ninterface though.\nYou can change the obsolescence date of your document or make it permanent with\nthe following link:\n<$5>\n\n--\nThis is an automatic message sent by a robot. Please do not reply to this email.\n
+
+plugin_docman	operation_canceled	Operation Canceled
+
 plugin_docman	permission_admin	Document Administrator
 plugin_docman	permission_admin_short	Administrator
 plugin_docman	permission_manage	Document Manager
@@ -428,6 +483,65 @@ plugin_docman	permission_write	Document Writer
 plugin_docman	permission_write_short	Writer
 
 plugin_docman	redirect	<div style="text-align:center"><p>Document Manager updated</p><p>You will be redirected <a href="$1"> to the document manager</a>.</p></div>
+
+plugin_docman	report_add_filter	Add
+plugin_docman	report_clear_filters	Clear all
+plugin_docman	report_clone_success	Report sucessfully cloned.
+plugin_docman	report_custom_fltr	Customize filters
+plugin_docman	report_del_failure	An error occured on report deletion
+plugin_docman	report_del_notadmin	Only admin can delete Project wide reports.
+plugin_docman	report_del_notfound	Report not found. Cancel deletion.
+plugin_docman	report_del_notowner	You can not delete report you do not own. Cancel deletion.
+plugin_docman	report_del_success	Report successfully deleted
+plugin_docman	report_err_notfound	The report you want to clone doesn't exists.
+plugin_docman	report_err_clone_iorp	You can only clone 'Project' wide reports or your 'Personal' reports.
+plugin_docman	report_filters_options	Search criteria:
+plugin_docman	report_image_not_readable	An image is associated to this report but you don't have the permission to see it.
+plugin_docman	report_name_new	Please enter a new search name:
+plugin_docman	report_name_upd	Update search:
+plugin_docman	report_new_filter_name	New filter name:
+plugin_docman	report_no_filters	There is no criteria selected yet. You can add a search criteria with the drop-down list below.
+plugin_docman	report_reports_options	Save options:
+plugin_docman	report_save_opt	Save options
+plugin_docman	report_save_report	Save as
+plugin_docman	report_save_new_report_i	New personal report...
+plugin_docman	report_save_new_report_p	New project report...
+plugin_docman	report_save_P_reports	-- Project reports:
+plugin_docman	report_save_I_reports	-- Personal reports:
+plugin_docman	report_saved_prjreports	-- Project saved search:
+plugin_docman	report_saved_persoreports	-- My saved search:
+
+plugin_docman	report_settings_delete	Are your sure you want to delete report \'$1\'?
+plugin_docman	report_settings_delete_alt	Delete report '$1'
+plugin_docman	report_settings_description	Description:
+plugin_docman	report_settings_import_intro	You can import in this project a report defined in another project (either your 'Personal' reports or any 'Project' wide). The import only works if properties and values are the same in the two projects (same name, case sensitive). The import will work as best by trying to import as much as possible.
+plugin_docman	report_settings_import_sel_prj	Project:
+plugin_docman	report_settings_import_sel_prj_id	Select by group_id
+plugin_docman	report_settings_import_sel_rpt	Report:
+plugin_docman	report_settings_import_sel_rpt_id	Select by report_id
+plugin_docman	report_settings_import_title	Import reports from another project.
+plugin_docman	report_settings_my	Show my saved search
+plugin_docman	report_settings_report_name	Report
+plugin_docman	report_settings_report_delete	Delete
+plugin_docman	report_settings_report_description	Description:
+plugin_docman	report_settings_report_info	You can customize your report by adding text and an image. Note: an image is just a reference on any valid image available in documention manager (across projects).
+plugin_docman	report_settings_report_image	Image Id:
+plugin_docman	report_settings_report_image_help	Refer to a document id available in the document manager (Warning: <strong>permissions apply</strong>).
+plugin_docman	report_settings_report_image_current	Current image:
+plugin_docman	report_settings_report_scope	Scope:
+plugin_docman	report_settings_report_title	Title:
+plugin_docman	report_settings_table_intro	You can modify the settings of the report you already saved for this project.
+plugin_docman	report_settings_table_title	Report list
+plugin_docman	report_settings_title	Search report administration
+
+plugin_docman	report_scope_I	Personal
+plugin_docman	report_scope_P	Project
+plugin_docman	report_toggle_tooltip	Toggle search criteria selection
+plugin_docman	report_upd_failure	An error occured on report update.
+plugin_docman	report_upd_notfound	Report not found. Cancel update.
+plugin_docman	report_upd_success	Report successfully updated.
+plugin_docman	report_upd_groupmismatch	Project ids mismatch. Cancel update.
+
 plugin_docman	resource_name_document	Document <a href="$1">$2</a>
 plugin_docman	resource_name_folder	Folder <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Project Documentation
@@ -453,6 +567,7 @@ plugin_docman	view_empty_docisempty	There is no data attached to this item.
 plugin_docman	view_empty_update	Update this document
 plugin_docman	view_documenttable_title	Title
 plugin_docman	view_documenttable_desc	Description
+plugin_docman	view_documenttable_docfound	Documents found
 plugin_docman	view_documenttable_owner	Owner
 plugin_docman	view_documenttable_subdate	Submission date
 plugin_docman	view_documenttable_location	Location
@@ -471,5 +586,6 @@ plugin_docman	view_Tree	Tree
 plugin_docman	warn_wiki_perms	<em>Warning: the <strong>permissions</strong> on the document you are creating <strong>may be different</strong> than the one set on the wiki page.</em>
 plugin_docman	warning_missingowner	Specified owner does not exist. You are now the item owner. You can change owner in Item properties.
 plugin_docman	warning_invalidowner	Specified owner is not a valid Codex user. You are now the item owner. You can change owner in Item properties.
+plugin_docman	warning_obsolete	The file is obsolete and no longer available in standard views (Tree, Table, ...)
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
 plugin_docman	warning_recursive_perms	you cannot change permissions for sub-item $1 since you do not have sufficient permissions.

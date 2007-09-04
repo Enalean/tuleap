@@ -149,14 +149,57 @@ a img {
         display:none;
 }
 
-fieldset.docman_filters { 
-  margin-bottom:1em;
+/*
+ * Filters
+ */
+
+.docman_filters {
+  clear:both; /* needed to clear 'location' and 'view selector' */
 }
 
-fieldset.docman_filters legend {
-  font-size:1.3em; 
+#docman_filters_title {
   font-weight:bold;
+  background-color: #DDDDDD;
+  padding: 2px; 
+  border: 1px solid #DDDDDD;
+  margin-bottom: 0.3em;
 }
+
+#docman_filters_title select {
+  font-family:monospace;
+  font-weight:normal;
+}
+
+#docman_filters_fieldset { 
+  border-left: 1px solid #DDDDDD;
+  border-right: 1px solid #DDDDDD; 
+  border-bottom: 1px solid #DDDDDD; 
+  padding: 0.2em; 
+  /* Linked to #docman_filters_title::margin-bottom */
+  margin-top: -0.3em;
+  /* Need to be the same value than #docman_filters_title::margin-bottom */
+  margin-bottom: 0.3em; 
+}
+
+#docman_report_filterlist {
+  display: inline;
+}
+
+#docman_report_options select {
+  font-family:monospace;
+}
+
+#docman_report_save select {
+  font-family:monospace;
+}
+
+#docman_report_submit {
+  display: inline;
+}
+
+/*
+ * fielderror
+ */
 
 .plugin_docman_fielderror input,
 .plugin_docman_fielderror select {
@@ -254,97 +297,12 @@ fieldset.docman_filters legend {
  */
 .docman_new_item fieldset legend {
   font-weight: bold;
+  font-size: larger;
 }
 
-.docman_new_item .properties { 
-  clear: both;
-}
-
-
-/* Metadata form row */
-.docman_new_item .properties fieldset.general_properties p { 
- clear: both;
- padding-left: 0px;
- padding-right: 0px;
- margin-left: 0px;
- margin-right: 0px;
-}
-
-/* Metadata form label */
-.docman_new_item .properties fieldset.general_properties label {
- float: left;
- width: 20%;
- text-align: left;
- margin: 0 0 0 0;
- padding: 0 0 0 0;
-}
-
-.docman_new_item .properties fieldset.general_properties textarea {
-  width: 75%; /* Warning: keep synchro with input.text_field */
-  height: 7em;
-}
-
-.docman_new_item .properties fieldset.general_properties input.text_field {
-  width: 75%;
-}
-
-.docman_new_item .properties fieldset.location { 
-}
-
-.docman_new_item .categorization {
-  clear: both;
-}
-
-.docman_new_item .docman_new_submit { 
-}
-
-/*
- * Details view. Edit properties and view properties
- * * Docman_View_ItemDetailsSectionProperties.class
- * * Docman_View_ItemDetailsSectionEditProperties.class
- */
-.docman_item_details_properties { 
-
-}
-
-.docman_item_details_properties td.label { 
-
-}
-
-.docman_item_details_properties td.value input.text_field { 
-  width: 30em;
-}
-
-.docman_item_details_properties td.value textarea { 
-  width: 40em;
-  height: 7em;
-}
-
-/* 
- * Metadata admin create 
- */
-.docman_admin_metadata p { 
-  clear: both;
-
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-bottom: 5px;
-  margin-top: 0px;
-}
-
-.docman_admin_metadata label {
- float: left;
- width: 20%;
- text-align: left;
-}
-
-.docman_admin_metadata textarea {
-  width: 50%; /* Warning: keep synchro with input.text_field */
-  height: 7em;
-}
-
-.docman_admin_metadata input.text_field {
-  width: 50%;
+.docman_new_item fieldset {
+  padding-left: 1em;
+  padding-bottom: 0.5em;
 }
 
 /* 
@@ -354,33 +312,19 @@ fieldset.docman_filters legend {
   font-weight: bold;
 }
 
-/* 
- * Metadata listofvalues create
+/*
+ * Metadata import
  */
-
-form.md_create_love p { 
-  clear: both;
-
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-bottom: 5px;
-  margin-top: 0px;
+.docman_md_missing, .docman_md_equivalent {
+    text-align:center;
+    /* This color is orange light */
+    background-color: rgb(253, 185, 111);
 }
 
-form.md_create_love label {
- float: left;
- width: 20%;
- text-align: left;
+.docman_md_equals {
+    text-align:center;
 }
 
-form.md_create_love textarea {
-  width: 50%; /* Warning: keep synchro with input.text_field */
-  height: 7em;
-}
-
-form.md_create_love .text_field {
-  width: 50%;
-}
 
 /*
  * Approval Table
@@ -396,33 +340,18 @@ tr.docman_approval_highlight {
   font-weight: bold;
 }
 
-/* Admin */
-.docman_approval_form p { 
-  clear: both;
-
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-bottom: 5px;
-  margin-top: 0px;
-}
-
-.docman_approval_form label {
- float: left;
- width: 20%;
- text-align: left;
-}
-
-.docman_approval_form textarea {
-  width: 50%; /* Warning: keep synchro with input.text_field */
-  height: 7em;
-}
-
-.docman_approval_form input.text_field {
-  width: 50%;
-}
-
 .docman_approval_email {
   font-family: courier, monospace;
   white-space: pre;
   background-color: #CCCCCC;
+}
+
+/* Generic */
+.docman_form textarea {
+  width: 50em;
+  height: 7em;
+}
+
+.docman_form input.text_field {
+  width: 40em;
 }

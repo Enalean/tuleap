@@ -120,6 +120,33 @@ class Docman_SettingsBo {
                          $this->getMetadataUsage('status'));
         }
     }
+
+    /**
+     * Import settings from $srcGroupId.
+     *
+     * For each metadata, if it's used in the source project but not in the
+     * current project, enable it.
+     * Note: this doesn't disable metadata not used in the source project but
+     * used in current project
+     *
+     * @access: public
+     */
+    function importMetadataUsageFrom($srcGroupId) {
+        $srcBo =& Docman_SettingsBo::instance($srcGroupId);
+        $this->_importMetadataUsage($srcBo, 'obsolescence_date');
+        $this->_importMetadataUsage($srcBo, 'status');
+    }
+    
+     /**
+      * @access: private
+      */
+    function _importMetadataUsage(&$srcBo, $label) {
+        if($srcBo->getMetadataUsage($label) == true &&
+           $this->getMetadataUsage($label) != true) {
+            $this->updateMetadataUsage($label, true);
+        }
+    }
+        
 }
 
 ?>

@@ -26,6 +26,10 @@ class HTTPRequest extends CodeX_Request {
         return isset($_REQUEST[$variable]);
     }
     
+    function existAndNonEmpty($variable) {
+        return (isset($_REQUEST[$variable]) && trim($_REQUEST[$variable]) != '') ;
+    }
+
     function &instance() {
         static $_httprequest_instance;
         if (!$_httprequest_instance) {

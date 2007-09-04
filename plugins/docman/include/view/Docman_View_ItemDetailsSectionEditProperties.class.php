@@ -33,12 +33,12 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     }
     function getContent() {
         $params = array('form_name' => 'update_metadata');
-        $html  = '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post">';
+        $html  = '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
         $html .= parent::getContent($params);
         $html .= '</form>';
         return $html;
     }
-    function _showField(&$field) {
+    function _showField($field) {
         return $field->getField();
     }
     function _getAdditionalRows() {

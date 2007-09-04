@@ -33,6 +33,7 @@ class Docman_PermissionsManager {
     var $cache_manage;
     var $cache_admin;
     var $dao;
+    var $currentUser;
 
     function Docman_PermissionsManager($groupId) {
         $this->groupId = $groupId;
@@ -42,6 +43,7 @@ class Docman_PermissionsManager {
         $this->cache_manage = array();
         $this->cache_admin = array();
         $this->dao = null;
+        $this->currentUser = null;
     }
 
     /**
@@ -162,6 +164,11 @@ class Docman_PermissionsManager {
         return $this->cache_admin[$user->getId()][$this->groupId];
     }
 
+    function currentUserCanAdmin() {
+        $user =& $this->getCurrentUser();
+        return $this->userCanAdmin($user);
+    }
+
     function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId) {
         $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
         $pm =& $this->_getPermissionManagerInstance();
@@ -241,6 +248,14 @@ class Docman_PermissionsManager {
         }
 
         return $oneWritable;
+    }
+
+    function &getCurrentUser() {
+        if($this->currentUser === null) {
+            $um =& UserManager::instance();
+            $this->currentUser = $um->getCurrentUser();
+        }
+        return $this->currentUser;
     }
 
 }

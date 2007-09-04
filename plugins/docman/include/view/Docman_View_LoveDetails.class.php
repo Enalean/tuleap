@@ -33,14 +33,12 @@ class Docman_View_LoveDetails {
     function getNameField($value='') {
         $html = '';
 
-        $html .=  '<p>';
-        $html .= "\n";
-        $html .=  '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_name').'</label>';
-        $html .= "\n";
+        $html .=  '<tr>';
+        $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_name').'</td>';
+        $html .=  '<td>';
         $html .=  '<input name="name" type="text" value="'.$value.'" class="text_field" />';
-        $html .= "\n";
-        $html .=  '</p>';
-        $html .= "\n";
+        $html .=  '</td>';
+        $html .=  '</tr>';
 
         return $html;
     }
@@ -48,14 +46,12 @@ class Docman_View_LoveDetails {
     function getDescriptionField($value='') {
         $html = '';
 
-        $html .=  '<p>';
-        $html .= "\n";
-        $html .=  '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_desc').'</label>';
-        $html .= "\n";
+        $html .=  '<tr>';
+        $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_desc').'</td>';
+        $html .=  '<td>';
         $html .=  '<textarea name="descr">'.$value.'</textarea>';
-        $html .= "\n";
-        $html .=  '</p>';
-        $html .= "\n";
+        $html .=  '</td>';
+        $html .=  '</tr>';
 
         return $html;
     }
@@ -63,10 +59,8 @@ class Docman_View_LoveDetails {
     function getRankField($value='end') {
         $html = '';
 
-        $html .=  '<p>';
-        $html .= "\n";
-        $html .=  '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank').'</label>';
-        $html .= "\n";
+        $html .=  '<tr>';
+        $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank').'</td>';
 
         $vals = array('beg', 'end', '--');
         $texts = array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank_beg'), 
@@ -88,10 +82,11 @@ class Docman_View_LoveDetails {
             }
                 
             $vIter->next();
-        }                           
+        }
+        $html .=  '<td>';
         $html .=  html_build_select_box_from_arrays($vals, $texts, 'rank', $value, false, ''); 
-        $html .=  '</p>';
-        $html .= "\n";
+        $html .=  '</td>';
+        $html .=  '</tr>';
 
         return $html;
     }
@@ -100,11 +95,9 @@ class Docman_View_LoveDetails {
         $html = '';
 
         $html .= '<input type="hidden" name="md" value="'.$this->md->getLabel().'" />';
-        $html .= "\n";
 
         if($loveId !== null) {
             $html .= '<input type="hidden" name="loveid" value="'.$loveId.'" />';
-            $html .= "\n";
         }
         
         return $html;

@@ -26,7 +26,7 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         $sBo =& Docman_SettingsBo::instance($params['group_id']);
         $actual = $sBo->getView();
 
-        $views  = Docman_View_Browse::getAllViews();
+        $views  = Docman_View_Browse::getDefaultViews();
         foreach($views as $view) {
             $html .= '<option value="'. $view .'" '. ($actual == $view ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'view_'.$view) .'</option>';
         }

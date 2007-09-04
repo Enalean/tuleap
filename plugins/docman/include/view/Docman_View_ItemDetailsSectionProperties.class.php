@@ -56,17 +56,32 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html .= '</table>';
         return $html;
     }
-    function _getFieldLabel(&$field) {
+    function _getFieldLabel($field) {
         return $field->getLabel(false);
     }
-    function _showField(&$field) {
-        return util_make_links($field->getValue(), $this->item->getGroupId());
+    function _showField($field) {
+        return $field->getValue();
     }
     function _getAdditionalRows() {
         $html = '';
+
+        $itemFactory = new Docman_ItemFactory();
+        if($itemFactory->getItemTypeForItem($this->item) != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+            $dpm =& Docman_PermissionsManager::instance($this->item->getGroupId());
+            $um =& UserManager::instance();
+            $user = $um->getCurrentUser();
+            if(!$this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
+                $html .= '<td class="label">'.$GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_lbl').'</td>';
+                $url = $this->url.'&action=show&id='.$this->item->getId();
+                $href = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_val').'</a>';
+                $html .= '<td class="value">'.$href.'</span></td>';
+            }
+        }
+
         if ($this->user_can_write) {
-            $html .= '<tr style="vertical-align:top;"><td>&nbsp;</td>';
-            $html .= '<td><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman','details_properties_edit') .'</a></td></tr>';
+            $html .= '<tr><td colspan="2">&nbsp;</td></tr>';
+            $html .= '<tr style="vertical-align:top;">';
+            $html .= '<td colspan="2"><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman','details_properties_edit') .'</a></td></tr>';
         }
         return $html;
     }

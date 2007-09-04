@@ -43,6 +43,9 @@ class Docman_Item {
         $this->ownerId     = null;
         $this->status      = null;
         $this->obsolescenceDate = null;
+        
+        // Cache
+        $this->isObsolete = null;
 
         $this->_actions    = array();
         $this->_metadata   = array();
@@ -167,9 +170,32 @@ class Docman_Item {
     var $obsolescenceDate;
     function setObsolescenceDate($v) {
         $this->obsolescenceDate = (int) $v;
+        $this->isObsolete = null; // Clear cache
     }
     function getObsolescenceDate() {
         return $this->obsolescenceDate;
+    }
+
+    /*
+     * Convenient accessors
+     */
+    var $isObsolete;
+    function isObsolete() {
+        if($this->isObsolete == null) {
+            $date = $this->getObsolescenceDate();
+            if($date > 0) {
+                $today = getdate();
+                $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
+                if($date < $time) {
+                    $this->isObsolete = true;
+                } else {
+                    $this->isObsolete = false;
+                }
+            } else {
+                $this->isObsolete = false;
+            }
+        }
+        return $this->isObsolete;
     }
 
     function initFromRow(&$row) {
@@ -209,8 +235,8 @@ class Docman_Item {
     }
 
     var $_metadata;
-    function _addMetadata(&$md) {
-        $this->_metadata[] =& $md;
+    function addMetadata(&$md) {
+        $this->_metadata[$md->getLabel()] =& $md;
     }
     function setMetadata(&$mda) {
         $this->_metadata =& $mda;
@@ -251,23 +277,11 @@ class Docman_Item {
         case 'status': 
             $st = $this->getStatus();
             if($st === null) {
-                $st = 0;
+                $st = 100;
             }
-            $e = new Docman_MetadataListOfValuesElement();
-            $e->setId($st);
-            $statusLabels = array(PLUGIN_DOCMAN_ITEM_STATUS_NONE     => 'none',
-                                  PLUGIN_DOCMAN_ITEM_STATUS_DRAFT    => 'draft',
-                                  PLUGIN_DOCMAN_ITEM_STATUS_APPROVED => 'approved',
-                                  PLUGIN_DOCMAN_ITEM_STATUS_REJECTED => 'rejected');
-            $statusLabel = $statusLabels[$st];
-            $e->setName($GLOBALS['Language']->getText('plugin_docman','md_love_status_'.$statusLabel.'_name'));
-            $e->setDescription($GLOBALS['Language']->getText('plugin_docman','md_love_status_'.$statusLabel.'_desc'));
-            $e->setRank($st);
-            $e->setStatus('P');
-            $mdv = new Docman_MetadataValueList();
-            $ea = array($e);
-            $mdv->setValue($ea);
-            $value = $mdv->getValue();
+            $status = Docman_MetadataListOfValuesElementFactory::getStatusList($st);
+            $ea = array($status);
+            $value = new ArrayIterator($ea);
             break;
 
         case 'obsolescence_date':
@@ -282,17 +296,20 @@ class Docman_Item {
         return $value;
     }
 
-    var $_categories;
-    function setCategories(&$mda) {
-        $this->_categories =& $mda;
-    }
-    function &getCategories() {
-        return $this->_categories;
-    }
-   
-    function &getCategoriesIterator() {        
-        $i = new ArrayIterator($this->_categories);
-        return $i;
+    /**
+     * 
+     */
+    function &getMetadataFromLabel($label) {
+        $md = null;
+        $mdv = $this->getHardCodedMetadataValue($label);
+        if($mdv !== null) {
+            $md = Docman_MetadataFactory::getHardCodedMetadataFromLabel($label, $mdv);
+        } else {
+            if(isset($this->_metadata[$label])) {
+                $md = $this->_metadata[$label];
+            }
+        }
+        return $md;
     }
 
     var $pathId;

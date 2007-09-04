@@ -44,12 +44,14 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra {
 
         $act_url = $this->buildUrl($params['default_url'], array('action' => 'admin_update_love'));
 
-        $html .= '<form name="md_update_love" method="POST" action="'.$act_url.'" class="md_create_love">';
-
+        $html .= '<form name="md_update_love" method="POST" action="'.$act_url.'" class="docman_form">';
+        $html .= $loveDetailsHtml->getHiddenFields($love->getId());
+        
+        $html .= '<table>';
         $html .= $loveDetailsHtml->getNameField($love->getName());
         $html .= $loveDetailsHtml->getDescriptionField($love->getDescription());
         $html .= $loveDetailsHtml->getRankField('--');
-        $html .= $loveDetailsHtml->getHiddenFields($love->getId());
+        $html .= '</table>';
             
         $html .= '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detupdlove_update').'" />';
 

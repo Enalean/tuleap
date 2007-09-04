@@ -60,6 +60,7 @@ class Docman_MetadataDao extends DataAccessObject {
                        .' WHERE group_id = %d'
                        .$where_clause
                        .' AND '.$this->notDeletedStmt
+                       .' ORDER BY label ASC'
                        , $id);
 
         return $this->retrieve($sql);
@@ -107,14 +108,14 @@ class Docman_MetadataDao extends DataAccessObject {
     }
 
     function create($groupId, $name, $type, $description, $isRequired,
-                    $isEmptyAllowed, $special, $defaultValue, $useIt) {
+                    $isEmptyAllowed, $mulValuesAllowed, $special, $defaultValue, $useIt) {
         $sql = sprintf('INSERT INTO plugin_docman_metadata('.
                        'group_id, name, data_type, description,'.
-                       'required, empty_ok, special,'.
+                       'required, empty_ok, mul_val_ok, special,'.
                        'default_value, use_it'.
                        ') VALUES ('.
                        '%d, %s, %d, %s,'.                       
-                       '%d, %d, %d,'.
+                       '%d, %d, %d, %d,'.
                        '%s, %d'.
                        ')',
                        $groupId,
@@ -123,6 +124,7 @@ class Docman_MetadataDao extends DataAccessObject {
                        $this->da->quoteSmart($description),
                        $isRequired,
                        $isEmptyAllowed,
+                       $mulValuesAllowed,
                        $special,
                        $this->da->quoteSmart($defaultValue),
                        $useIt);
@@ -178,6 +180,15 @@ class Docman_MetadataDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchValueById($fieldId, $itemId) {
+        $sql = sprintf('SELECT *'.
+                       ' FROM plugin_docman_metadata_value'.
+                       ' WHERE field_id = %d'.
+                       ' AND item_id = %d',
+                       $fieldId,
+                       $itemId);
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

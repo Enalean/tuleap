@@ -27,6 +27,7 @@ global	perm_denied	Permission Refusée
 global	error_perm_denied	Erreur - Permission Refusée
 global	back_home	Retour à la page d'accueil
 global	back	Retour
+global	btn_apply	Appliquer
 global	btn_delete	Détruire
 global	btn_cancel	Annuler
 global	btn_update	Mettre à jour

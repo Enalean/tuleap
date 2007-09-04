@@ -81,7 +81,37 @@ plugin_docman	admin_md_details_title	Détails de la propriété "$1"
 plugin_docman	admin_md_detupdlove_title	Modification de la valeur '$2' de la propriété '$1'
 plugin_docman	admin_md_detupdlove_update	Modifier
 plugin_docman	admin_md_detupdlove_backtomenu	Retour vers les détails de propriété
+
+plugin_docman	admin_md_import_title	Importer les propriétés de "$1"
+plugin_docman	admin_md_import_desc	<p>La table suivante souligne les différence entre les propriétes de $1 et $2.</p><p>Si il ya des différences, vous pouvez cliquer sur le bouton [Importer] à la fin de la page. Les propriétés de $1 seront modifiées pour correspondre à ce qui est défini dans $2.</p><p><strong>Note :</strong> cette opération supprime ni les propriétes ni les valeurs de $1 et $2.</p>
+plugin_docman	admin_md_import_form_nothingtodo	Les propriétés des deux projets correspondent. Rien n'est à faire.
+plugin_docman	admin_md_import_form_submit	Importer
+plugin_docman	admin_md_import_success	Propriétés importées avec succès de '$1'
+plugin_docman	admin_md_import_tbl_prop	Propriété
+plugin_docman	admin_md_import_tbl_diff	Différences<br />entre $1 et $2
+plugin_docman	admin_md_import_tbl_dstprj	Destination
+plugin_docman	admin_md_import_tbl_action	Actions d'import<br />dans $1
+plugin_docman	admin_md_import_tbl_act_update_md	Surchargera les paramètres de <strong>$1</strong> dans $2 : $3
+plugin_docman	admin_md_import_tbl_act_import_md	Créeara la propriété <strong>$1</strong> avec les mêmes paramètres et valeurs
+plugin_docman	admin_md_import_tbl_act_import_love	Créera la valeur <strong>$1</strong>
+plugin_docman	admin_md_import_tbl_status_equals	Déjà à jour
+plugin_docman	admin_md_import_tbl_status_equivalent	Les paramètres diffèrent
+plugin_docman	admin_md_import_tbl_status_exists	Présent
+plugin_docman	admin_md_import_tbl_status_missing	N'existe pas
+plugin_docman	admin_md_import_tbl_status_onlydst	Présent
+plugin_docman	admin_md_import_param_desc	Description : <strong><em>nouveau texte</em></strong>
+plugin_docman	admin_md_import_param_allowempty	Autoriser la valeur vide : <strong>$1</strong>
+plugin_docman	admin_md_import_param_allowmultiplevalue	Autoriser la sélection multiple : <strong>$1</strong>
+plugin_docman	admin_md_import_param_useit	Usage : <strong>$1</strong>
+plugin_docman	admin_md_import_param_dfltvalue	Valeur par défaut : <strong>$1</strong>
+plugin_docman	admin_md_import_param_0	Désactivé
+plugin_docman	admin_md_import_param_1	Activé
+
+
 plugin_docman	admin_metadata_title	Gérer les propriétés
+plugin_docman	admin_metadata_import_desc	Vous pouvez importer des propriétés de n'importe quel projet auquel vous avez accès.
+plugin_docman	admin_metadata_import_title	Importer les propriétés d'un projet
+plugin_docman	admin_metadata_import_submit	Vérification avant import
 plugin_docman	admin_metadata_list_title	Propriétés disponibles
 plugin_docman	admin_metadata_descr	Sélectionnez les propriétés que vous voulez pour vos documents.
 plugin_docman	admin_metadata_instructions	<p>Définissez quelles propriétés sont disponibles dans votre gestionnaire de documents. Chaque propriété sera remplie lors de la soumission d'un document et sera visible dans les propriétés du document.</p><p><strong>Permissions :</strong> les permissions sur les propriétés d'un document sont les mêmes que sur le document lui-même.</p>
@@ -91,9 +121,14 @@ plugin_docman	admin_metadata_list_status	Status
 plugin_docman	admin_metadata_list_delete	Supprimer
 plugin_docman	admin_metadata_new_title	Créer une nouvelle propriété
 plugin_docman	admin_metadata_new_submit	Créer
+plugin_docman	admin_obsolete_title	Gérer les documents obsolètes
+plugin_docman	admin_obsolete_descr	Afficher et modifier les documents obsolètes.
+plugin_docman	admin_obsolete_help	Ceci est la liste de tous les documents qui sont obsolètes. Si vous cliquez sur le titre d'un document, vous serez redirigé vers les propriétés du document où vous pourrez le rendre à nouveau disponible.
 plugin_docman	admin_permissions_title	Gérer les permissions
 plugin_docman	admin_permissions_descr	Définir qui peut administrer le gestionnaire de documents.
 plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
+plugin_docman	admin_report_title	Gérer les rapports de recherche
+plugin_docman	admin_report_descr	Modifier la portée des rapports.
 plugin_docman	admin_title	Administration
 plugin_docman	admin_view_title	Gérer les préférence d'affichage
 plugin_docman	admin_view_descr	Définir la vue par défaut pour le gestionnaire de documents.
@@ -102,6 +137,7 @@ plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le par
 plugin_docman	breadcrumbs_location	Chemin :
 
 plugin_docman	browse_viewas	-- Vue:
+plugin_docman	browse_customreports	-- Rapports personnalisés :
 
 plugin_docman	clone_file_label	Copier du modèle
 plugin_docman	clone_file_changelog	Copie de <em>$1</em> dans <em>$2</em> à la version <em>$3</em>.
@@ -231,7 +267,11 @@ plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
 plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiérarchie.
-plugin_docman	details_paste_paste_button	Coller
+plugin_docman	details_paste_importmd	Importer les propriétés de $1 :
+plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> Il y a des différences dans les définitions de propriétés entre $1 et $2. Vous <strong>pouvez perdre</strong> des <strong>informations</strong>.</p><p>Vous pouvez soit :<ul><li>Forcer la copie, alors seules les propriétés présentent à la fois dans $1 et dans $2 seront copiées.</li><li>Demander à un administrateur du gestionnaire de document d'importer les définitions des propriétés de $2</li></ul></p><p><strong>Note :</strong> Ceci <strong>n'impacte pas les documents</strong> eux-mêmes, ça ne s'applique qu'aux propriétés.</p>
+plugin_docman	details_paste_mddiff_title	Propriétés de document
+plugin_docman	details_paste_button_paste	Coller
+plugin_docman	details_paste_button_pasteanyway	Coller [force]
 plugin_docman	details_paste_rank_after	Après
 plugin_docman	details_paste_rank_beg	Au début
 plugin_docman	details_paste_rank_end	A la fin
@@ -242,6 +282,8 @@ plugin_docman	details_permissions_perms	Permissions d'accès
 plugin_docman	details_permissions_recursive	récursif (appliquer les mêmes permissions pour tous les sous-éléments de ce dossier)
 plugin_docman	details_properties	Propriétés
 plugin_docman	details_properties_edit	Editer les propriétés
+plugin_docman	details_properties_view_doc_lbl	Lien direct :
+plugin_docman	details_properties_view_doc_val	Cliquer pour ouvrir le document
 plugin_docman	details_title	Détails de $1
 plugin_docman	details_update_title	Mise à jour de $1
 
@@ -271,6 +313,7 @@ plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour crée
 plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.
 plugin_docman	error_perms_delete	Vous n'avez pas les droits suffisants pour supprimer cet élément.
 plugin_docman	error_perms_delete_item	Vous n'avez pas les droits suffisants pour supprimer $1.
+plugin_docman	error_perms_generic	Your are not allowed to access this data.
 plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour déplacer cet élément.
 plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour définir des permissions sur cet élément.
 plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet élément.
@@ -300,6 +343,11 @@ plugin_docman	field_create_date	Date de création :
 plugin_docman	field_update_date	Date de dernière mise à jour :
 
 plugin_docman	filters	Filtres
+plugin_docman	filters_advsearch_0	(ou utiliser <a href="$1">la recherche simple</a>)
+plugin_docman	filters_advsearch_1	(or utiliser <a href="$1">la recherche avancée</a>)
+plugin_docman	filters_global_txt	Recherche globale de texte
+plugin_docman	filters_html_date_start	Début :
+plugin_docman	filters_html_date_end	Fin :
 plugin_docman	filters_date_end	Date de fin
 plugin_docman	filters_date_message	La date entrée dans le champ "$1" n'est pas valide. Le format de date valide est YYYY-M-D (ex. '$2' pour aujourd'hui) ou alors laissez le champ vide.
 plugin_docman	filters_date_start	Date de début
@@ -378,6 +426,8 @@ plugin_docman	mdv_bo_errbadtype	Mauvais type de propriété
 plugin_docman	mdv_bo_createerror	Erreur de création de la propriété '$1'
 plugin_docman	mdv_bo_createunknown	Tentative de création d'une propriété inconnue
 
+plugin_docman	missing_param	Le paramètre $1 est manquant
+
 plugin_docman	move	Déplacement de $1
 plugin_docman	move_actual	L'élément est dans ce dossier.
 plugin_docman	move_after	Après $1
@@ -418,6 +468,11 @@ plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 
+plugin_docman	obso_warn_email_subject	[$1] Document '$2' sera obsolète dans un mois
+plugin_docman	obso_warn_email_body	En tant que propriétaire du document, vous êtes notifié de l'obsolescence du document:\nTitre : $1\nProjet : $2\nObsolescence : $3\nLien direct : <$4>\n\nCe document disparaîtra de votre gestionnaire de document dans un mois \nsi vous ne faites rien. Ce document restera accessible à travaers l'interface\nd'administration néanmoins.\nVous pouvez changer la date d'obsolescence de votre document à l'adresse suivante : \n<$5>\n\n--\nCeci est un message automatique. Merci de ne pas répondre à cet email.\n
+
+plugin_docman	operation_canceled	Operation annulée
+
 plugin_docman	permission_admin	Administrateur de document
 plugin_docman	permission_admin_short	Administrateur
 plugin_docman	permission_manage	Gestionnaire de document
@@ -428,6 +483,65 @@ plugin_docman	permission_write	Rédacteur de document
 plugin_docman	permission_write_short	Rédacteur
 
 plugin_docman	redirect	<div style="text-align:center"><p>Gestionnaire de documents mis à jour</p><p>Vous allez être redirigé <a href="$1">vers le gestionnaire de documents</a>.</p></div>
+
+plugin_docman	report_add_filter	Ajouter
+plugin_docman	report_clear_filters	Tout effacer
+plugin_docman	report_clone_success	Rapport cloné
+plugin_docman	report_custom_fltr	Personnaliser les filtres
+plugin_docman	report_del_failure	Une erreur est apparue lors de la suppression d'un rapport
+plugindocman	report_del_notadmin	Seuls les admins peuvent supprimer un rapport 'projet'.
+plugin_docman	report_del_notfound	Rapport non trouvé. Suppression annulée.
+plugin_docman	report_del_notowner	Vous ne pouvez pas supprimer un rapport que vous ne possédez pas. Suppression annulée.
+plugin_docman	report_del_success	Rapport supprimé
+plugin_docman	report_err_notfound	Le rapport que vous voulez clonner n'existe pas.
+plugin_docman	report_err_clone_iorp	Vous ne pouvez cloner que les rapports 'projet' ou personnels.
+plugin_docman	report_filters_options	Critères de recherche :
+plugin_docman	report_image_not_readable	Une image est associée à ce rapport mais vous n'avez pas les permissions de la voir.
+plugin_docman	report_name_new	Merci d'entrer un nom pour la nouvelle recherche :
+plugin_docman	report_name_upd	Mise à jour de la recherche :
+plugin_docman	report_new_filter_name	Nouveau nom de filtre :
+plugin_docman	report_no_filters	Il n'y a pas encore de critère sélectionné. Vous pouvez ajouter un critère de recherche avec la liste déroulante ci-dessous.
+plugin_docman	report_reports_options	Sauver les options:
+plugin_docman	report_save_opt	Sauver les options
+plugin_docman	report_save_report	Sauver en tant que
+plugin_docman	report_save_new_report_i	Nouveau rapport personnel...
+plugin_docman	report_save_new_report_p	Nouveau rapport projet...
+plugin_docman	report_save_P_reports	-- Rapports projet:
+plugin_docman	report_save_I_reports	-- Rapports personnels:
+plugin_docman	report_saved_prjreports	-- Recherche projet sauvegardée :
+plugin_docman	report_saved_persoreports	-- Mes recherches sauveagrdées :
+
+plugin_docman	report_settings_delete	Êtes vous sûrs de vouloir supprimer le rapport \'$1\'?
+plugin_docman	report_settings_delete_alt	Supprimer le rapport '$1'
+plugin_docman	report_settings_description	Description :
+plugin_docman	report_settings_import_intro	Vous pouvez importer dans ce projet un rapport défini dans un autre projet (parmis vos rapports personnels ou n'importe quel rapport 'projet'). L'import ne fonctionnera que si les propriétés et les valeurs sont les mêmes dans les deux projets (même nom, sensible à la casse). L'import fera de son mieux pour importer le plus de données possible.
+plugin_docman	report_settings_import_sel_prj	Projet :
+plugin_docman	report_settings_import_sel_prj_id	Selectionner par group_id
+plugin_docman	report_settings_import_sel_rpt	Rapport :
+plugin_docman	report_settings_import_sel_rpt_id	Selectionner par report_id
+plugin_docman	report_settings_import_title	Importer les rapports d'un autre projet.
+plugin_docman	report_settings_my	Afficher mes recherche sauvegardées
+plugin_docman	report_settings_report_name	Rapport
+plugin_docman	report_settings_report_delete	Supprimer
+plugin_docman	report_settings_report_description	Description :
+plugin_docman	report_settings_report_info	Vous pouvez personnaliser votre rapport en ajoutant un texte et une image. Note : une image est juste une reference sur une image valide disponible dans le gestionnaire de document (indépendamment des projets).
+plugin_docman	report_settings_report_image	Id de l'image :
+plugin_docman	report_settings_report_image_help	Se réfère à un id de document disponible dans le gestionnaire de document (Attention : <strong>les permissions s'appliquent</strong>).
+plugin_docman	report_settings_report_image_current	Image courrante :
+plugin_docman	report_settings_report_scope	Portée :
+plugin_docman	report_settings_report_title	Titre :
+plugin_docman	report_settings_table_intro	Vous pouvez modifier les paramêtres du rapport que vous avez créer pour ce projet.
+plugin_docman	report_settings_table_title	Liste des rapports
+plugin_docman	report_settings_title	Administration des rapports de recherche
+
+plugin_docman	report_scope_I	Personnel
+plugin_docman	report_scope_P	Projet
+plugin_docman	report_toggle_tooltip	Basculer la sélection des critères de recherche
+plugin_docman	report_upd_failure	Une erreur est apparue lors de la mise à jour d'un rapport.
+plugin_docman	report_upd_notfound	Rapport non trouvé. Mise à jour annulée.
+plugin_docman	report_upd_success	Rapport mis à jour.
+plugin_docman	report_upd_groupmismatch	Les ids de projet ne correspondent pas. Mise à jour annulée.
+
 plugin_docman	resource_name_document	Document <a href="$1">$2</a>
 plugin_docman	resource_name_folder	Dossier <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Documentation du projet
@@ -453,6 +567,7 @@ plugin_docman	view_empty_docisempty	Il n'y a pas de donnée pour cette élément
 plugin_docman	view_empty_update	Modifier ce document
 plugin_docman	view_documenttable_title	Titre
 plugin_docman	view_documenttable_desc	Description
+plugin_docman	view_documenttable_docfound	Documents trouvés
 plugin_docman	view_documenttable_owner	Propriétaire
 plugin_docman	view_documenttable_subdate	Date de soumission
 plugin_docman	view_documenttable_location	Chemin
@@ -471,5 +586,6 @@ plugin_docman	view_Tree	Arbre
 plugin_docman	warn_wiki_perms	<em>Attention : les <strong>permissions</strong> sur le document que vous allez créer <strong>peuvent être différent</strong>e que celles définies pour la page wiki.</em>
 plugin_docman	warning_missingowner	Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
 plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
+plugin_docman	warning_obsolete	Le fichier est obsolète et n'est plus disponible dans les vues standard (Arbre, Table, ...)
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
 plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.

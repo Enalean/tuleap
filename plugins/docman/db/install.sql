@@ -9,7 +9,7 @@ CREATE TABLE plugin_docman_item (
   update_date INT(11) UNSIGNED NULL,
   delete_date INT(11) UNSIGNED NULL,
   user_id INT(11) UNSIGNED NULL,
-  status TINYINT(4) DEFAULT 0 NOT NULL,
+  status TINYINT(4) DEFAULT 100 NOT NULL,
   obsolescence_date int(11) DEFAULT 0 NOT NULL,
   rank INT(11) DEFAULT 0 NOT NULL,
   item_type INT(11) UNSIGNED NULL,
@@ -19,7 +19,11 @@ CREATE TABLE plugin_docman_item (
   PRIMARY KEY(item_id),
   KEY idx_group_id (group_id),
   KEY parent_id (parent_id),
-  KEY rank (rank)
+  KEY rank (rank),
+  KEY search (group_id, delete_date, obsolescence_date),
+  FULLTEXT fltxt_title (title),
+  FULLTEXT fltxt_description (description),
+  FULLTEXT fltxt (title, description)
 );
 
 DROP TABLE IF EXISTS plugin_docman_version;
@@ -36,7 +40,8 @@ CREATE TABLE plugin_docman_version (
   filetype TEXT NULL,
   path TEXT NULL,
   PRIMARY KEY(id),
-  KEY item_id (item_id)
+  KEY item_id (item_id),
+  FULLTEXT fltxt (label, changelog, filename)
 );
 
 DROP TABLE IF EXISTS plugin_docman_log;
@@ -110,7 +115,7 @@ CREATE TABLE plugin_docman_metadata (
   special int(11) NOT NULL default '0',
   default_value text NOT NULL default '',
   use_it TINYINT(4)  NOT NULL default '0',
-  PRIMARY KEY  (field_id,group_id),
+  PRIMARY KEY  (field_id),
   KEY idx_name (name (10)),
   KEY idx_group_id (group_id)
 );
@@ -139,7 +144,10 @@ CREATE TABLE plugin_docman_metadata_value (
   valueText text,
   valueDate int(11),
   valueString text,
-  KEY idx_field_item_id (field_id, item_id)
+  KEY idx_field_item_id (field_id, item_id),
+  FULLTEXT fltxt (valueText, valueString),
+  FULLTEXT fltxt_txt (valueText),
+  FULLTEXT fltxt_str (valueString)
 );
 
 --
@@ -238,6 +246,54 @@ CREATE TABLE plugin_docman_approval_user (
   version INT(11) UNSIGNED NULL,
   PRIMARY KEY(item_id, reviewer_id),
   INDEX rank (rank)
+);
+
+--
+-- Table structure for table 'plugin_docman_report'
+--
+-- report_id         
+-- name             Name of the search (listed in 'Search' select box)
+-- title            Title of the report (if set, replace the default 
+--                  Prjname - Project Doc)
+-- group_id         (FK groups.group_id)
+-- user_id          Owner of the report (FK user.user_id)
+-- item_id          On witch item (folder) the report applies.
+-- scope            Scope of the report ('I' individual, 'P' project)
+-- is_default       Is the default report (not in use).
+-- advanced_search  Is this search 'Advanced' (for dates and list of values).
+-- description      Text that describe the report.
+-- image            Add an image (FK plugin_docman_item.item_id)
+DROP TABLE IF EXISTS plugin_docman_report;
+CREATE TABLE plugin_docman_report (
+  report_id       int(11) NOT NULL auto_increment,
+  name            varchar(255) NULL,
+  title           varchar(255) NULL,
+  group_id        int(11) NOT NULL,
+  user_id         int(11) NOT NULL DEFAULT 100,
+  item_id         int(11) NULL,
+  scope           char(1) NOT NULL default 'I',
+  is_default      tinyint(1) NOT NULL default 0,
+  advanced_search tinyint(1) NOT NULL default 0,
+  description     text NULL,
+  image           int(11)NULL, 
+  PRIMARY KEY (report_id),
+  INDEX group_idx (group_id),
+  INDEX user_idx (user_id)
+);
+
+--
+-- Table structure for table 'plugin_docman_report_metadata'
+--
+DROP TABLE IF EXISTS plugin_docman_report_filter;
+CREATE TABLE plugin_docman_report_filter (
+  report_id     INT(11) NOT NULL,
+  label         VARCHAR(255) NOT NULL,
+  value_love    INT(11) NULL,
+  value_string  VARCHAR(255) NULL,
+  value_date1   VARCHAR(32) NULL,
+  value_date2   VARCHAR(32) NULL,
+  value_date_op tinyint(2) NULL,
+  INDEX report_label_idx(report_id, label(10))
 );
 
 

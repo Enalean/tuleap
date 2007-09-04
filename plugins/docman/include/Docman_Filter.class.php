@@ -27,68 +27,73 @@ class Docman_Filter {
     var $name;     
     var $value;
     var $md;
-    var $sort;
 
     function Docman_Filter($md) {  
-        $this->value = null;
-        $this->md = $md;
-        $this->sort = null;
+        $this->value     = null;
+        $this->md        = $md;
     }
   
     function setValue($v) {
         $this->value = $v;
     }
-
     function getValue() {
         return $this->value;
     }
 
-    function setSort($s) {
-        $this->sort = $s;
-    }
-
-    function getSort() {
-        return $this->sort;
+    function initFromRow($row) {
+        //
     }
 
     function getUrlParameters() {
         $param = array();
-        if($this->value !== null) {
+        //if($this->value !== null) {
             $param[$this->md->getLabel()] = $this->value;
-        }
+            //}
         return $param;
     }
 
-    function getSortParam() {
-        $sortParam = null;
+    function _urlMatchDelete($request) {
+        if($request->exist('del_filter')
+           && $this->md->getLabel() == $request->get('del_filter')) {
+            return true;
+        }
+        return false;
+    }
+
+    function _urlMatchUpdate($request) {
+        if($request->exist($this->md->getLabel())) {
+            $this->setValue($request->get($this->md->getLabel()));
+            return true;
+        }
+        return false;
+    }
+
+    // Add new fields
+    function _urlMatchAdd($request) {
+        if($request->exist('add_filter')
+           && $this->md->getLabel() == $request->get('add_filter')) {
+            return true;
+        }
+        return false;
+    }
+
+    function initOnUrlMatch($request) {
         if($this->md !== null) {
-            $sortParam = 'sort_'.$this->md->getLabel();
+            if(!$this->_urlMatchDelete($request)) {
+                if($this->_urlMatchUpdate($request)) {
+                    return true;
+                } else {
+                    return $this->_urlMatchAdd($request);
+                }
+            }
         }
-        return $sortParam;
-    }
-
-    function _initSortFromRequest($request) {
-        $sortparam = $this->getSortParam();
-        if($request->exist($sortparam)) {
-            $this->setSort($request->get($sortparam));
-        }
-    }
-
-    function _initFilterFromRequest($request) {
-        $param = $this->md->getLabel();
-        if($request->exist($param)) {
-            $this->setValue($request->get($param));
-        }
-    }
-
-    function initFromRequest($request) {
-        if($this->md !== null) {
-            $this->_initSortFromRequest($request);
-            $this-> _initFilterFromRequest($request);
-        }
+        return false;
     }
 }
 
+/**
+ * Filter on date metadata
+ */
 class Docman_FilterDate extends Docman_Filter {
     var $operator;
     var $field_operator_name;
@@ -98,10 +103,14 @@ class Docman_FilterDate extends Docman_Filter {
         parent::Docman_Filter($md);
         $this->operator = null;
         if($md !== null) {
-            $label = $md->getLabel();
-            $this->field_operator_name  = $label.'_operator';
-            $this->field_value_name     = $label.'_value';
+            $this->field_operator_name  = $md->getLabel().'_operator';
+            $this->field_value_name     = $md->getLabel().'_value';
         }
+    }
+
+    function initFromRow($row) {
+        $this->setOperator($row['value_date_op']);
+        $this->setValue($row['value_date1']);
     }
 
     function getFieldOperatorName() {
@@ -122,23 +131,280 @@ class Docman_FilterDate extends Docman_Filter {
 
     function getUrlParameters() {
         $param = array();
-        if($this->value !== null) {
+        //if($this->value !== null) {
             $param[$this->field_value_name] = $this->value;
-            if($this->operator !== null) {
+            //if($this->operator !== null) {
                 $param[$this->field_operator_name] = $this->operator;
-            }
-        }
+                //}
+            //}
         return $param;
     }
-
-    function _initFilterFromRequest(&$request) {
-        if($request->exist($this->getFieldValueName()) && $request->get($this->getFieldValueName()) != '') {
-            $this->setValue($request->get($this->getFieldValueName()));
-            
+   
+    function _urlMatchUpdate($request) {
+        // Simple date
+        if($request->exist($this->getFieldValueName())) { 
+            if($request->get($this->getFieldValueName()) != '') {
+                $this->setValue($request->get($this->getFieldValueName()));
+            }
             if($request->exist($this->getFieldOperatorName())) {
                 $this->setOperator($request->get($this->getFieldOperatorName()));
             }
+            return true;
         }
+
+        // If no values found, try to get fields from advanced search
+        $advSearch = new Docman_FilterDateAdvanced($this->md);
+        if($request->exist($advSearch->getFieldStartValueName())) {
+            $startValue = $request->get($advSearch->getFieldStartValueName());
+            $endValue = '';
+            if($request->exist($advSearch->getFieldEndValueName())) {
+                $endValue = $request->get($advSearch->getFieldEndValueName());
+            }
+            if($startValue != '') {
+                if($endValue == $startValue) {
+                    // Both dates are equal -> = operator
+                    $this->setValue($startValue);
+                    $this->setOperator(0);
+                } elseif($endValue == '') {
+                    // No end date -> > operator
+                    $this->setValue($startValue);
+                    $this->setOperator(1);
+                }
+            } elseif($endValue != '') {
+                // No start date -> < operator
+                $this->setValue($endValue);
+                $this->setOperator(-1);
+            }
+            return true;
+        }
+        return false;
+    }
+}
+
+class Docman_FilterDateAdvanced
+extends Docman_FilterDate {
+    var $fieldNameStart;
+    var $fieldNameEnd;
+    var $valueStart;
+    var $valueEnd;
+
+    function Docman_FilterDateAdvanced($md) {
+        parent::Docman_FilterDate($md);
+
+        $base = $md->getLabel().'_value';
+        $this->fieldNameStart = $base.'_start';
+        $this->fieldNameEnd   = $base.'_end';
+        $this->valueStart = '';
+        $this->valueEnd   = '';
+    }
+
+    function setValueStart($v) {
+        $this->valueStart = $v;
+    }
+    function getValueStart() {
+        return $this->valueStart;
+    }
+
+    function setValueEnd($v) {
+        $this->valueEnd = $v;
+    }
+    function getValueEnd() {
+        return $this->valueEnd;
+    }
+
+    function initFromRow($row) {
+        $this->setValueStart($row['value_date1']);
+        $this->setValueEnd($row['value_date2']);
+    }
+
+    function getFieldStartValueName() {
+        return $this->fieldNameStart;
+    }
+    function getFieldEndValueName() {
+        return $this->fieldNameEnd;
+    }
+
+    function getUrlParameters() {
+        $param = array();
+        $param[$this->fieldNameStart] = $this->valueStart;
+        $param[$this->fieldNameEnd]   = $this->valueEnd;
+        return $param;
+    }
+
+    function _urlMatchUpdate($request) {
+        $fieldExist = false;
+
+        $startValue = false;
+        if($request->exist($this->fieldNameStart)) {
+            $fieldExist = true;
+            if($request->get($this->fieldNameStart) != '') {
+                $this->setValueStart($request->get($this->fieldNameStart));
+                $startValue = true;
+            }
+        }
+        $endValue = false;
+        if($request->exist($this->fieldNameEnd)) {
+            $fieldExist = true;
+            if($request->get($this->fieldNameEnd) != '') {
+                $this->setValueEnd($request->get($this->fieldNameEnd));
+                $endValue = true;
+            }
+        }
+            
+        // If no values found, try to get values from simple search
+        if(!$startValue && !$endValue) {
+            if($request->exist($this->getFieldOperatorName()) 
+               && $request->exist($this->getFieldValueName())) {
+                switch($request->get($this->getFieldOperatorName())) {
+                case '-1': // '<'
+                    $this->setValueEnd($request->get($this->getFieldValueName()));
+                    break;
+                case '0': // '='
+                    $this->setValueEnd($request->get($this->getFieldValueName()));
+                    $this->setValueStart($request->get($this->getFieldValueName()));
+                    break;
+                case '1': // '>'
+                default:
+                    $this->setValueStart($request->get($this->getFieldValueName()));
+                }
+                $fieldExist = true;
+            }
+        } 
+        return $fieldExist;
+    }
+}
+
+/**
+ * Filter on ListOfValues
+ */
+class Docman_FilterList extends Docman_Filter {
+
+    function Docman_FilterList($md) {
+        $mdFactory = new Docman_MetadataFactory($md->getGroupId());
+        $mdFactory->appendMetadataValueList($md, false);
+        parent::Docman_Filter($md);
+    }
+
+    function initFromRow($row) {
+        $this->setValue($row['value_love']);
+    }
+
+    function _urlMatchUpdate($request) {
+        if(parent::_urlMatchUpdate($request)) {
+            $v = $this->getValue();
+            
+            if(is_array($v)) {
+                // Convert advanced filter value to simple
+                if(count($v) == 1) {
+                    $this->setValue($v[0]);
+                } else {
+                    $this->setValue(0);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+}
+
+/**
+ * Advanced filter on ListOfValues: can select several values
+ */
+class Docman_FilterListAdvanced 
+extends Docman_FilterList {
+
+    function Docman_FilterListAdvanced($md) {
+        parent::Docman_FilterList($md);
+        $this->setValue(array());
+    }
+
+    function _urlMatchUpdate($request) {
+        if(Docman_Filter::_urlMatchUpdate($request)) {
+            if(!is_array($this->getValue())) {
+                if($this->getValue() !== null && $this->getValue() != '') {
+                    // Convert simple value to advanced
+                    $this->setValue(array($this->getValue()));
+                } else {
+                    $this->setValue(array());
+                }
+            } elseif(count($this->getValue()) == 1) {
+                // If empty value, clean-up
+                $v = $this->getValue();
+                if($v[0] == '') {
+                    $this->setValue(array(0));
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    function _urlMatchAdd($request) {
+        if(parent::_urlMatchAdd($request)) {
+            $this->setValue(array(0));
+            return true;
+        }
+        return false;
+    }
+
+    function addValue($val) {
+        $this->value[] = $val;
+    }
+
+    function initFromRow($row) {
+        $this->addValue($row['value_love']);
+    }
+}
+
+/**
+ * Filter on any textual values
+ */
+class Docman_FilterText extends Docman_Filter {
+
+    function Docman_FilterText($md) {
+        parent::Docman_Filter($md);
+    }
+
+    function initFromRow($row) {
+        $this->setValue($row['value_string']);
+    }
+}
+
+/**
+ * Filter on all the text fields
+ */
+class Docman_FilterGlobalText extends Docman_FilterText {
+    var $dynTextFields;
+
+    function Docman_FilterGlobalText($md, $dynTextFields) {
+        parent::Docman_FilterText($md);
+        $this->dynTextFields = $dynTextFields;
+    }
+
+    function initFromRow($row) {
+        $this->setValue($row['value_string']);
+    }
+}
+
+class Docman_FilterOwner extends Docman_Filter {
+
+    function Docman_FilterOwner($md) {
+        parent::Docman_Filter($md);
+    }
+
+    function initFromRow($row) {
+        $this->setValue($row['value_string']);
+    }
+
+    function _urlMatchUpdate($request) {
+        if(parent::_urlMatchUpdate($request)) {
+            $user = util_user_finder($this->getValue());
+            if($user != '') {
+                $this->setValue($user);
+            }
+            return true;
+        }
+        return false;
     }
 }
 

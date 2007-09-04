@@ -203,14 +203,18 @@ class Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 
+    function getValue() {
+        $value = nl2br(util_make_links(htmlentities($this->md->getValue()), $this->md->getGroupId()));
+        return $value;
+    }
+
     function _getField() {
         $name  = $this->_getFieldName();
         $value = $this->md->getValue();
         if($value === null) {
             $value = $this->md->getDefaultValue();
         }
-        $escapedValue = htmlentities($value, ENT_QUOTES);
-        $field = '<textarea name="'.$name.'">'.$escapedValue.'</textarea>';
+        $field = '<textarea name="'.$name.'" id="'.$this->md->getLabel().'">'.$value.'</textarea>';
         return $field;
     }
 }
@@ -218,22 +222,19 @@ class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 /**
  * HTML rendering for 'String' metadata
  */
-class Docman_MetadataHtmlString extends Docman_MetadataHtml {    
-    function _getHtmlValue() {
-        $value = htmlentities($this->md->getValue(), ENT_QUOTES);
+class Docman_MetadataHtmlString extends Docman_MetadataHtml {
+
+    function getValue() {
+        $value = util_make_links(htmlentities($this->md->getValue()), $this->md->getGroupId());
         return $value;
     }
 
     function _getField() {
-        $val = $this->md->getValue();
-        $value = '';
-        if($val === null) {
-            $value = htmlentities($this->md->getDefaultValue(), ENT_QUOTES);
+        $value = $this->md->getValue();
+        if($value === null) {
+            $value = $this->md->getDefaultValue();
         }
-        else {
-            $value = $this->_getHtmlValue();
-        }
-        $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$value.'" />';
+        $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$value.'" id="'.$this->md->getLabel().'" />';
         return $field;
     }
 }
@@ -283,11 +284,13 @@ class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlList extends Docman_MetadataHtml {
 
-    function _getElementName(&$e) {
+    function _getElementName(&$e, $hideNone=false) {
         $name = '';
         switch($e->getId()) {
         case 100:
-            $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+            if(!$hideNone) {
+                $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+            }
             break;
         default:
             $name = $e->getName();
@@ -308,7 +311,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
     }
     
 
-    function getValue() {
+    function getValue($hideNone=false) {
         $vIter = $this->md->getValue();
 
         $html = '';
@@ -320,7 +323,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             if(!$first) {
                 $html .= '<br>';
             }
-            $html .= $this->_getElementName($e);
+            $html .= $this->_getElementName($e, $hideNone);
 
             $first = false;
             $vIter->next();
@@ -356,7 +359,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             $multiple = ' multiple = "multiple" size = "6"';
         }
         
-        $html .= '<select name="'.$name.'"'.$multiple.'>'."\n";
+        $html .= '<select name="'.$name.'"'.$multiple.' id="'.$this->md->getLabel().'">'."\n";
 
         $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();
@@ -399,7 +402,7 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
             return $GLOBALS['Language']->getText('plugin_docman','md_html_validity_permanent');
             break;
         default:
-            return strftime("%e %b %Y", $v);
+            return util_timestamp_to_userdateformat($v, true);
         }
     }
 
@@ -427,7 +430,7 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml {
         $inputname = $this->_getFieldName();
      
         $field = '';
-        $field .= '<select name="'.$name.'" onchange="javascript:change_obsolescence_date(document.forms.'.$this->formParams['form_name'].')">'."\n";
+        $field .= '<select name="'.$name.'" onchange="javascript:change_obsolescence_date(document.forms.'.$this->formParams['form_name'].')" id="'.$this->md->getLabel().'">'."\n";
         foreach($labels as $value => $label) {
             $select = '';
             if($value == $selected) {

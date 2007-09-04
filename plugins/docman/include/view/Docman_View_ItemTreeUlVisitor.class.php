@@ -165,7 +165,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $this->html .= '</div>';
                 
                 if (trim($item->getDescription()) != '') {
-                    $this->html .= '<div class="docman_item_description">'. util_make_links($item->getDescription(), $item->getGroupId()) .'</div>';
+                    $this->html .= '<div class="docman_item_description">'. nl2br(util_make_links(htmlentities($item->getDescription()), $item->getGroupId())) .'</div>';
             }
                 $li_displayed = true;
             }

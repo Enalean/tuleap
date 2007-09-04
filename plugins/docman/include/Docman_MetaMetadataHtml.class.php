@@ -37,8 +37,9 @@ class Docman_MetaMetadataHtml {
 
     function getName(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_name').'</label>';
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_name').'</td>';
+        $mdContent .= '<td>';
         if($this->md->canChangeName()) {
             $sthCanChange = true;
             $mdContent .= '<input type="text" name="name" value="'.$this->md->getName().'" class="text_field" />';
@@ -46,15 +47,17 @@ class Docman_MetaMetadataHtml {
         else {
             $mdContent .= $this->md->getName();
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
 
     function getDescription(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_desc').'</label>';
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_desc').'</td>';
+        $mdContent .= '<td>';
         if($this->md->canChangeDescription()) {
             $sthCanChange = true;
             $mdContent .= '<textarea name="descr">'.$this->md->getDescription().'</textarea>';
@@ -62,15 +65,17 @@ class Docman_MetaMetadataHtml {
         else {
             $mdContent .= $this->md->getDescription();
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
 
     function getEmptyAllowed(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowempty').'</label>';
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowempty').'</td>';
+        $mdContent .= '<td>';
         if($this->md->canChangeIsEmptyAllowed()) {
             $sthCanChange = true;
             $selected = '';
@@ -87,15 +92,17 @@ class Docman_MetaMetadataHtml {
                 $mdContent .= $this->str_no;
             }
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
 
     function getMultipleValuesAllowed(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowmultiplevalue').'</label>';
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_allowmultiplevalue').'</td>';
+        $mdContent .= '<td>';
         if($this->md->canChangeIsMultipleValuesAllowed()) {
             $sthCanChange = true;
             $selected = '';
@@ -112,17 +119,18 @@ class Docman_MetaMetadataHtml {
                 $mdContent .= $this->str_no;
             }
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
 
     function getUseIt(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
+        $mdContent .= '<tr>';
 
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_useit').'</label>';
-
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_useit').'</td>';
+        $mdContent .= '<td>';
         if(!$this->md->isRequired()) {
             $sthCanChange = true;
             $selected = '';
@@ -139,32 +147,35 @@ class Docman_MetaMetadataHtml {
                 $mdContent .= $this->str_no;
             }
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
 
     function getKeepHistory(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_keephistory').'</label>';
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_keephistory').'</td>';
+        $mdContent .= '<td>';
         if($this->md->getKeepHistory()) {
             $mdContent .= $this->str_yes;
         }
         else {
             $mdContent .= $this->str_no;
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
 
     function getType(&$sthCanChange) {
         $mdContent = '';
-        $mdContent .= '<p>';
+        $mdContent .= '<tr>';
 
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type').'</label>';
-
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_type').'</td>';
+        $mdContent .= '<td>';
         if($this->md->canChangeType()) {
             $sthCanChange = true;
 
@@ -196,8 +207,8 @@ class Docman_MetaMetadataHtml {
                 break;
             }
         }
-
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }
@@ -205,8 +216,9 @@ class Docman_MetaMetadataHtml {
     function getDefaultValue(&$sthCanChange) {
         $mdContent = '';
 
-        $mdContent .= '<p>';
-        $mdContent .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_dfltvalue').'</label>';
+        $mdContent .= '<tr>';
+        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_dfltvalue').'</td>';
+        $mdContent .= '<td>';
         if($this->md->canChangeDefaultValue()) {
             $sthCanChange = true;
 
@@ -264,7 +276,8 @@ class Docman_MetaMetadataHtml {
         else {
             $mdContent .= $this->getDefaultValueLabel($this->md);
         }
-        $mdContent .= '</p>';
+        $mdContent .= '</td>';
+        $mdContent .= '</tr>';
 
         return $mdContent;
     }

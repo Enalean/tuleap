@@ -24,11 +24,22 @@
  */
 require_once('DocmanConstants.class.php');
 require_once('common/dao/include/DataAccessObject.class.php');
+require_once('Docman_SqlFilter.class.php');
+require_once('Docman_SqlReportColumn.class.php');
 
 class Docman_ItemDao extends DataAccessObject {
 
     function Docman_ItemDao(&$da) {
         DataAccessObject::DataAccessObject($da);
+    }
+    
+    /**
+     * Return the timestamp of the current day at 00:00
+     */
+    function getObsoleteToday() {
+        $today = getdate();
+        $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
+        return $time;
     }
 
     /**
@@ -54,12 +65,25 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->_searchWithCurrentVersion($where, '', $order);
     }
 
+    function searchObsoleteByGroupId($groupId) {
+        $sql = '';
+        $sql .= $this->_getItemSearchSelectStmt();
+        $sql .= $this->_getItemSearchFromStmt();
+        $sql .= sprintf(' WHERE i.group_id = %d'.
+                        ' AND (obsolescence_date > 0'.
+                        '  AND obsolescence_date < %d)'.
+                        ' ORDER BY obsolescence_date DESC',
+                        $groupId,
+                        $this->getObsoleteToday());
+        return $this->retrieve($sql);
+    }
+
     /**
      * Return the list of items for a given projet according to filters
      *
      * @return DataAccessResult
      */
-    function searchByGroupId($id, &$filters) {
+    function searchByGroupId($id, &$report, $params) {
         // Where clause        
         // Select on group_id
         $_id = (int) $id;
@@ -71,38 +95,49 @@ class Docman_ItemDao extends DataAccessObject {
 
 
         $fromStmts = array();
+
         //
-        // Filters
-        if($filters !== null) {
-            $fi =& $filters->getFilterIterator();
+        // Report 
+        if($report !== null) {
+            // Filters
+            $fi = $report->getFilterIterator();
             $fi->rewind();
             while($fi->valid()) {
-                $f =& $fi->current();
+                $f = $fi->current();
 
-                $sqlFilter =& Docman_SqlFilterFactory::getFromFilter($f);
-                
+                $sqlFilter = Docman_SqlFilterFactory::getFromFilter($f);
                 if($sqlFilter !== null) {   
                     // Handle 'from' clause
-                    $fromStmts = array_merge($fromStmts, $sqlFilter->getFromClause());                    
+                    $fromStmts = array_merge($fromStmts, $sqlFilter->getFrom());
 
                     // Handle 'where' clause
-                    $where = $sqlFilter->getWhereClause();
+                    $where = $sqlFilter->getWhere();
                     if($where != '') {
                         $sql_where .= ' AND '.$where;
                     }
+                }
 
-                    // Handle 'order' clause
-                    $order = $sqlFilter->getOrderClause();
+                $fi->next();
+            }
+
+            // Sort
+            $ci = $report->getColumnIterator();
+            $fi->rewind();
+            while($ci->valid()) {
+                $c = $ci->current();
+                
+                $sqlCol = Docman_SqlReportColumnFactory::getFromColumn($c);
+                if($sqlCol !== null) {
+                    $order = $sqlCol->getOrderBy();
                     if($order != '') {
                         if($sql_order != '') {
                             $sql_order .= ', ';
                         }
                         $sql_order .= $order;
                     }
-
                 }
-                
-                $fi->next();
+
+                $ci->next();
             }
         }
 
@@ -113,55 +148,99 @@ class Docman_ItemDao extends DataAccessObject {
         
         $from = array_unique($fromStmts);
              
-        return $this->_searchWithCurrentVersion($sql_where, '', $sql_order, $from);
-
+        return $this->_searchWithCurrentVersion($sql_where, '', $sql_order, $from, $params);
     }
    
+    function _getItemSearchSelectStmt() {
+        $sql = 'SELECT i.*, '.
+            ' v.id as version_id, v.number as version_number,'.
+            ' v.user_id as version_user_id, v.label as version_label,'.
+            ' v.changelog as version_changelog, v.date as version_date,'.
+            ' v.filename as version_filename, v.filesize as version_filesize,'.
+            ' v.filetype as version_filetype, v.path as version_path, '.
+            ' 1 as folder_nb_of_children ';
+        return $sql;
+    }
+
+    /**
+     * The 2 LEFT JOIN statements gives automaticaly the most recent version of
+     * each item because there is a 'v2.id IS NULL' in the WHERE part of the
+     * query.
+     */
+    function _getItemSearchFromStmt() {
+        $sql = 'FROM plugin_docman_item AS i'.
+            ' LEFT JOIN plugin_docman_version AS v'.
+            '  ON (i.item_id = v.item_id)'.
+            ' LEFT JOIN plugin_docman_version AS v2'.
+            '  ON (v2.item_id = v.item_id AND v.number < v2.number) ';
+        return $sql;
+    }
+
+    /**
+     * $params['ignore_deleted'] boolean By default the query *exclude* deleted items.
+     * $params['ignore_obsolete'] boolean By default the query *include* obsolete items.
+     */
     function _searchWithCurrentVersion($where, $group = '', $order = '', $from = array(), $params = array()) {
-        $sql = 'SELECT i.*, '
-            .' v.id as version_id, v.number as version_number, v.user_id as version_user_id, v.label as version_label, '
-            .' v.changelog as version_changelog, v.date as version_date, v.filename as version_filename, v.filesize as version_filesize, '
-            .' v.filetype as version_filetype, v.path as version_path, '
-            .' 1 as folder_nb_of_children '
-            .' FROM plugin_docman_item AS i LEFT JOIN plugin_docman_version AS v ON (i.item_id = v.item_id) '
-            .(count($from) > 0 ? ', '.implode(', ', $from) : '')
+        $sql = '';
+        $sql .= $this->_getItemSearchSelectStmt();
+        $sql .= $this->_getItemSearchFromStmt();
+        $sql .= (count($from) > 0 ? ' LEFT JOIN '.implode(' LEFT JOIN ', $from) : '')
             .' WHERE 1 AND ';
         if (!isset($params['ignore_deleted']) || !$params['ignore_deleted']) {
             $sql .= ' i.delete_date IS NULL AND ';
         }
+        if (isset($params['ignore_obsolete']) && $params['ignore_obsolete'] == true) {
+            $sql .= '(i.obsolescence_date = 0 OR ';
+            $sql .= ' i.obsolescence_date > '.$this->getObsoleteToday().') AND ';
+        }
+        if(isset($params['ignore_folders']) && $params['ignore_folders'] == true) {
+            $sql .= ' i.item_type <> '.PLUGIN_DOCMAN_ITEM_TYPE_FOLDER.' AND ';
+        }
+        // Related to the 2 LEFT JOIN on docman_version in _getItemSearchFromStmt()
+        $sql .= ' v2.id IS NULL AND ';
+
         $sql .= $where . $group . $order;
+        //print $sql."<br>";
         return $this->retrieve($sql);
     }
     
     /**
-     * Return the list of items that have children for givent group_id.
+     * Return filters widely use when looking for items.
      *
-     * @return DataAccessResult
+     * Those filters are:
+     * - ignore deleted items.
+     * - ignore obsolete items.
+     *
+     * @param $table The table name on which the filters applies.
+     * @param $ignoreDeleted Ignore delted items if true.
+     * @param $ignoreObsolete Ignore obsolete items if true.
+     * @return array An array of 'WHERE' statements.
      */
-    function searchAllParent($group_id) {
-        $sql = sprintf('SELECT parent_id'
-                       .' FROM plugin_docman_item'
-                       .' WHERE group_id=%d'
-                       .' GROUP BY parent_id',
-                       $group_id);
-
-        return $this->retrieve($sql);
+    function _getCommonItemFilters($table='i', $ignoreDeleted=true, $ignoreObsolete=true) {
+        $filters = array();
+        if($ignoreDeleted) {
+            $filters['del'] = $table.'.delete_date IS NULL';
+        }
+        if($ignoreObsolete) {
+            $filters['obs'] = '('.$table.'.obsolescence_date = 0 OR '.
+                $table.'.obsolescence_date > '.$this->getObsoleteToday().')';
+        }
+        return $filters;
     }
 
     /**
-     * Return the list of items for givent group and type.
+     * Create a string from an array of sql statements.
      *
-     * @return DataAccessResult
+     * @param $op Operator (AND, OR, LEFT JOIN, ...)
+     * @param $stmtArray Array of statements.
+     * @return string
      */
-    function searchAllByType($group_id, $type) {
-         $sql = sprintf('SELECT *'
-                        .' FROM plugin_docman_item'
-                        .' WHERE group_id=%d'
-                        .' AND item_type=%d',
-                        $group_id,
-                        $type);
-
-         return $this->retrieve($sql);
+    function _stmtArrayToString($op, $stmtArray) {
+        $str = '';
+        if(count($stmtArray) > 0) {
+            $str = ' '.$op.' '.implode(' '.$op.' ', $stmtArray);
+        }
+        return $str;
     }
 
     /**
@@ -261,6 +340,7 @@ class Docman_ItemDao extends DataAccessObject {
             .' VALUES ('.implode(', ', $values).')';
         return $this->_createAndReturnId($sql, $update_date);
     }
+
     function createFromRow($row) {
         $row['create_date'] = $row['update_date'] = time();
         $arg    = array();
@@ -281,6 +361,7 @@ class Docman_ItemDao extends DataAccessObject {
             return false;
         }
     }
+
     function _createAndReturnId($sql, $date) {
         $inserted = $this->update($sql);
         if ($inserted) {
@@ -397,6 +478,7 @@ class Docman_ItemDao extends DataAccessObject {
         }
         return $updated;
     }
+
     function _updateUpdateDateOfParent($item_id_quoted) {
         $sql = 'SELECT parent_id, update_date FROM plugin_docman_item WHERE item_id = '. $item_id_quoted;
         $dar = $this->retrieve($sql);
@@ -422,22 +504,26 @@ class Docman_ItemDao extends DataAccessObject {
     }
     
     /**
-    * @return boolean
-    */
-    function isItemTheOnlyChildOfRoot($group_id, $item_id) {
-        $sql = sprintf(' SELECT b.item_id '.
-                       ' FROM plugin_docman_item AS a '.
-                       '      INNER JOIN plugin_docman_item AS b '.
-                       '      ON ( a.item_id = b.parent_id ) '.
-                       ' WHERE a.parent_id = 0 '.
-                       '   AND b.group_id = %s '.
-                       '   AND b.item_id <> %s '.
-                       ' LIMIT 1 ',
-            $this->da->quoteSmart($group_id),
-            $this->da->quoteSmart($item_id)
-        );
+     * Check the number of children of root.
+     *
+     * This function count the number of children of root. Only the case of
+     * unique children matters because we need the item_id in this case
+     * otherwise, if more than one child exists is the only useful info (this
+     * is why there is a LIMIT 2).
+     */
+    function hasRootOnlyOneChild($groupId) {
+        $cFilters = $this->_stmtArrayToString('AND', $this->_getCommonItemFilters());
+        $sql = sprintf('SELECT i.item_id'.
+                       ' FROM plugin_docman_item i'.
+                       ' JOIN plugin_docman_item r'.
+                       '  ON (i.parent_id = r.item_id)'.
+                       ' WHERE r.parent_id = 0'.
+                       ' AND r.group_id = %d'.
+                       $cFilters.
+                       ' LIMIT 2',
+                       $groupId);
         $dar = $this->retrieve($sql);
-        return !$dar->valid();
+        return $dar;
     }
 
     /**
@@ -539,7 +625,7 @@ class Docman_ItemDao extends DataAccessObject {
     }
     
     function searchByParentsId($parents) {
-        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL ORDER BY rank',
+        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL AND (obsolescence_date = 0 OR obsolescence_date > '.$this->getObsoleteToday().') ORDER BY rank',
             implode(', ', $parents)
         );
         return $this->retrieve($sql);
@@ -559,14 +645,13 @@ class Docman_ItemDao extends DataAccessObject {
         return $id;
     }
 
-    function searchSubFolders($group_id, $parentIds = array()) {        
+    function searchSubFolders($parentIds = array()) {        
         if(is_array($parentIds) && count($parentIds) > 0) {           
-            $sql = sprintf('SELECT item_id'
+            $sql = sprintf('SELECT *'
                            .' FROM plugin_docman_item'
-                           .' WHERE group_id = %d'
+                           .' WHERE delete_date IS NULL'
                            .' AND parent_id IN (%s)'
                            .' AND item_type = %d'
-                           , $group_id
                            , implode(',', $parentIds)
                            , PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
             return $this->retrieve($sql);
@@ -590,6 +675,25 @@ class Docman_ItemDao extends DataAccessObject {
             $version = $row['version'];
         }
         return $version;
+    }
+
+    /*
+     * Return obsolete documents between the $tsStart and $tsEnd timestamps. It
+     * only concerns Active projects and non deleted documents. 
+     *
+     * @note: Cross-Project query.
+     */
+    function searchObsoleteAcrossProjects($tsStart, $tsEnd) {
+        $sql = sprintf('SELECT i.*'.
+                       ' FROM plugin_docman_item i, groups g'.
+                       ' WHERE delete_date IS NULL'.
+                       ' AND (i.obsolescence_date > %d'.
+                       '   AND i.obsolescence_date < %d)'.
+                       ' AND g.group_id = i.group_id'.
+                       ' AND g.status = "A"',
+                       $tsStart,
+                       $tsEnd);
+        return $this->retrieve($sql);
     }
 }
 

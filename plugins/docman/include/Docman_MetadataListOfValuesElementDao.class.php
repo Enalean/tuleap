@@ -75,6 +75,21 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    // Special query to get values in rank order.
+    function searchListValuesById($fieldId, $itemId) {
+        $sql = sprintf('SELECT love.*'.
+                       ' FROM plugin_docman_metadata_value as mdv'.
+                       '  INNER JOIN plugin_docman_metadata_love AS love '.
+                       '   ON (love.value_id = mdv.valueInt)'.
+                       ' WHERE mdv.field_id = %d'.
+                       ' AND mdv.item_id = %d'.
+                       ' AND love.status IN ("A", "P")'.
+                       ' ORDER BY love.rank',
+                       $fieldId,
+                       $itemId);
+        return $this->retrieve($sql);
+    }
+
     function prepareRanking($metadataId, $rank) {
         // Build the list of values needed in following queries.
         $sql = sprintf('SELECT value_id '.

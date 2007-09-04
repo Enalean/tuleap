@@ -37,7 +37,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
         $doc_params = array();
         if (isset($params['force_permissions'])) {
             $doc_params['newItem'] = array(
-                'hide_permissions'           => !$params['display_permissions'],
+               'hide_permissions'           => !$params['display_permissions'],
                 'hide_news'                  => !$params['display_news'],
                 'update_permissions_on_init' => false,
                 'default_position'           => $params['force_ordering']
@@ -53,7 +53,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
         $params['form_name'] = 'new_item';
 
         $html  = '<br />';
-        $html .= '<form name="'.$params['form_name'].'" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .'>';                
+        $html .= '<form name="'.$params['form_name'].'" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .' class="docman_form">';                
 
         $html .= '<div class="docman_new_item">'."\n";
 

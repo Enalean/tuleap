@@ -26,7 +26,7 @@ class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
     function visitFolder(&$item, $params = array()) {
         if ($item->getParentId()) {
             //No need to expand root
-            $params['folder_bo']->expand($item);
+            $params['folderFactory']->expand($item);
         }
         $items = $item->getAllItems();
         if ($items->size()) {

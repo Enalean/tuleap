@@ -25,32 +25,65 @@
 
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
+require_once(dirname(__FILE__).'/../Docman_MetadataComparator.class.php');
 require_once('common/include/UserManager.class.php');
 
 class Docman_View_ItemDetailsSectionPaste 
 extends Docman_View_ItemDetailsSectionActions {
-    var $force;
-    
+    var $itemToPaste;
+    var $srcGo;
+    var $dstGo;
+
     function Docman_View_ItemDetailsSectionPaste(&$item, $url, &$controller,
-                                                 $force) {
+                                                 $itemToPaste) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false,
                                                       true, $controller);
-        $this->force = $force;
+        $this->itemToPaste = $itemToPaste;
+        $this->srcGo = group_get_object($this->itemToPaste->getGroupId());
+        $this->dstGo = group_get_object($item->getGroupId());
+    }
+
+    function checkMdDifferences(&$mdDiffers) {
+        $html = '';
+
+        $mdCmp = new Docman_MetadataComparator($this->srcGo->getGroupId(),
+                                               $this->dstGo->getGroupId(),
+                                               $this->_controller->getThemePath());
+        $cmpTable = $mdCmp->getMetadataCompareTable($sthToImport);
+        if($sthToImport) {
+            $html .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_title') .'</h2>';
+            $dPm =& Docman_PermissionsManager::instance($this->dstGo->getGroupId());
+            if($dPm->currentUserCanAdmin()) {
+                $mdDiffers = 'admin';
+                $html .= $cmpTable;
+            } else {
+                $mdDiffers = 'user';
+                $docmanIcons = $this->_getDocmanIcons();
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_noadmin', array($this->srcGo->getPublicName(), $this->dstGo->getPublicName(), $docmanIcons->getThemeIcon('warning.png')));
+            }
+        }
+        
+        return $html;
     }
 
     function getContent() {
         return $this->item->accept($this);
     }
-    
+
     function visitFolder($item, $params = array()) {
+        $content = '';
+
+        // First Check metadata differences
+        $mdDiffers = false;
+        $content = $this->checkMdDifferences($mdDiffers);
+
+        // Paste
         $itemFactory =& Docman_ItemFactory::instance($item->getGroupId());
         $brotherIter = $itemFactory->getChildrenFromParent($this->item);
 
-        $selectedValue = 'beginning';
+        $selectedValue = 'beginning';        
 
-        $content = '';
-
-        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</dt><dd>';
+        $content .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</h2>';
         $content .= '<form name="select_paste_location" method="POST" action="?">';
         $content .= '<input type="hidden" name="action" value="paste" />';
         $content .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
@@ -91,14 +124,26 @@ extends Docman_View_ItemDetailsSectionActions {
             $content .= '<option value="'.$vals[$i].'"'.$selected.'>'.$texts[$i].'</option>'."\n";
         }
         $content .= '</select>';
-
         $content .= '</p>';
 
-        $content .= '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_paste_paste_button').'" />';
+        
+        if($mdDiffers == 'admin') {
+            $content .= '<p>';
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($this->srcGo->getPublicName()));
+            $content .= ' ';
+            $content .= '<input type="checkbox" checked="checked" name="import_md" value="1" />';
+            $content .= '</p>';
+        }
+
+        $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_paste');
+        if($mdDiffers == 'user') {
+            $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_pasteanyway');
+        }
+        $content .= '<input type="submit" name="submit" value="'.$buttonTxt.'" />';
+        $content .= ' ';
+        $content .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
 
         $content .= '</form>';
-        
-        $content .= '</dl>';
         
         return $content;
     }
@@ -125,6 +170,11 @@ extends Docman_View_ItemDetailsSectionActions {
 
     function visitEmpty($item, $params = array()) {
         return '';
+    }
+
+    function &_getDocmanIcons() {
+        $icons = new Docman_Icons($this->_controller->getThemePath().'/images/ic/');
+        return $icons;
     }
 
 }

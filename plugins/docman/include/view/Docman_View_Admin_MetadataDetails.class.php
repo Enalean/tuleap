@@ -42,7 +42,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
 
         $mdContent .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_title').'</h3>';
 
-        $mdContent .= '<div class="docman_admin_metadata">';
+        $mdContent .= '<table>';
 
         $metaMdHtml = new Docman_MetaMetadataHtml($md);
         
@@ -57,11 +57,11 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         $mdContent .= $metaMdHtml->getUseIt($sthCanChange);
         $mdContent .= $metaMdHtml->getKeepHistory($sthCanChange);
               
-        $mdContent .= '</div>';
+        $mdContent .= '</table>';
 
         if($sthCanChange) {
             $act_url = $this->buildUrl($params['default_url'], array());
-            echo '<form name="md_details_update" method="POST" action="'.$act_url.'">';
+            echo '<form name="md_details_update" method="POST" action="'.$act_url.'" class="docman_form">';
             echo '<input type="hidden" name="label" value="'.$md->getLabel().'" />';
             echo '<input type="hidden" name="action" value="admin_md_details_update" />';
             echo $mdContent;
@@ -93,6 +93,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             $dfltv = $md->getDefaultValue();
             $vIter =& $md->getListOfValueIterator();
             $vIter->rewind();
+            $rowColorIdx = 0;
             while($vIter->valid()) {
                 $e =& $vIter->current();
 
@@ -116,9 +117,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                 
                 if($displayed) {
 
-                    $class = '';
+                    $class = ' class="'.html_get_alt_row_color($rowColorIdx++).'"';
                     if($dfltv == $e->getId()) {
-                        $class = ' class="default_value"';
+                        $class .= ' style="font-weight: bold;"';
                     }
                     
                     echo '<tr'.$class.'>';
@@ -139,9 +140,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                     // Description
                     echo '<td>'.Docman_MetadataHtmlList::_getElementDescription($e).'</td>';
                     
-                    // Rank
-                    //echo '<td>'.$e->getRank().'</td>';
-                    
+                    // Status
                     echo '<td>'.$status.'</td>';
 
                     // Delete
@@ -170,12 +169,16 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                 
                 $loveDetailsHtml = new Docman_View_LoveDetails($md);
                 
-                echo '<form name="md_create_love" method="POST" action="?group_id='.$params['group_id'].'&action=admin_create_love" class="md_create_love">';
-                
+                echo '<form name="md_create_love" method="POST" action="?group_id='.$params['group_id'].'&action=admin_create_love" class="docman_form">';
+                echo $loveDetailsHtml->getHiddenFields();
+
+                echo '<table>';
+
                 echo $loveDetailsHtml->getNameField();
                 echo $loveDetailsHtml->getDescriptionField();
                 echo $loveDetailsHtml->getRankField();
-                echo $loveDetailsHtml->getHiddenFields();
+
+                echo '</table>';
                 
                 echo '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_submit').'" />';
                 

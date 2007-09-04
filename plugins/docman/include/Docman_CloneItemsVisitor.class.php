@@ -173,7 +173,6 @@ class Docman_CloneItemsVisitor {
         //   project metadata)
         // * for list of values change the values (use mapping as behind).
         $newMdvFactory =& $this->_getMetadataValueFactory($this->dstGroupId);
-        $oldMdvFactory =& $this->_getMetadataValueFactory($item->getGroupId());
         
         $oldMdFactory =& $this->_getMetadataFactory($item->getGroupId());
         $oldMdFactory->appendItemMetadataList($item);
@@ -184,18 +183,17 @@ class Docman_CloneItemsVisitor {
             $oldMd = $oldMdIter->current();
             
             if($oldMdFactory->isRealMetadata($oldMd->getLabel())) {
-                $oldMdv = $oldMdvFactory->getMetadataValue($item, $oldMd);
+                $oldValue = $oldMdFactory->getMetadataValue($item, $oldMd);
 
                 if(isset($metadataMapping['md'][$oldMd->getId()])) {
-                    $newMdv = $oldMdv;
+                    $newMdv = $newMdvFactory->createFromType($oldMd->getType());
                     $newMdv->setItemId($newItemId);
                     $newMdv->setFieldId($metadataMapping['md'][$oldMd->getId()]);
                     if($oldMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                         $ea = array();
-                        $eIter = $oldMdv->getValue();
-                        $eIter->rewind();
-                        while($eIter->valid()) {
-                            $e = $eIter->current();
+                        $oldValue->rewind();
+                        while($oldValue->valid()) {
+                            $e = $oldValue->current();
                             
                             // no maping for value `100` (shared by all lists).
                             if(($e->getId() != 100) && isset($metadataMapping['love'][$e->getId()])) {
@@ -204,7 +202,7 @@ class Docman_CloneItemsVisitor {
                                 $ea[] = $newE;
                             }
                             
-                            $eIter->next();
+                            $oldValue->next();
                         }
                         // No match found: set default value.
                         if(count($ea) == 0) {
@@ -216,6 +214,8 @@ class Docman_CloneItemsVisitor {
                             $ea[] = $e;
                         }
                         $newMdv->setValue($ea);
+                    } else {
+                        $newMdv->setValue($oldValue);
                     }
                     $newMdvFactory->create($newMdv);
                 }

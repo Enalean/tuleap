@@ -92,20 +92,39 @@ extends Docman_View_ItemDetailsSection {
 
             $user =& $this->_getCurrentUser();
 
-            $html .= '<div class="docman_approval_form">';
-            $html .= '<p><label>'.Docman::txt('details_approval_requester').'</label>';
-            $html .= user_getrealname($this->table->getOwner()).'</p>';
-            $html .= '<p><label>'.Docman::txt('details_approval_cycle_start_date').'</label>';
-            $html .= util_timestamp_to_userdateformat($this->table->getDate(), true).'</p>';
+            $html .= '<table>';
+
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_requester').'</td>';
+            $html .= '<td>';
+            $html .= user_getrealname($this->table->getOwner());
+            $html .= '</td>';
+            $html .= '</tr>';
+
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_cycle_start_date').'</td>';
+            $html .= '<td>';
+            $html .= util_timestamp_to_userdateformat($this->table->getDate(), true);
+            $html .= '</td>';
+            $html .= '</tr>';
+
             if($this->table->isClosed()) {
-                $html .= '<p><label>'.Docman::txt('details_approval_table_status').'</label>';
+                $html .= '<tr>';
+                $html .= '<td>'.Docman::txt('details_approval_table_status').'</td>';
+                $html .= '<td>';
                 $html .= Docman::txt('details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
-                $html .= '</p>';
+                $html .= '</td>';
+                $html .= '</tr>';
             }
-            $html .= '<p><label>'.Docman::txt('details_approval_owner_comment').'</label><br />';
-            $html .= '<em>'.$this->comment2Html($this->table->getDescription()).'</em>';
-            $html .= '</p>';
-            $html .= '</div>';
+
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_owner_comment').'</td>';
+            $html .= '<td>';
+            $html .= $this->comment2Html($this->table->getDescription());
+            $html .= '</td>';
+            $html .= '</tr>';
+
+            $html .= '</table>';
 
             $html .= html_build_list_table_top(array(Docman::txt('details_approval_reviewer'),
                                                      Docman::txt('details_approval_state'),
@@ -185,10 +204,13 @@ extends Docman_View_ItemDetailsSection {
         $itemCurrentVersion = $this->_getReviewCurrentVersion();
 
         $html .= '<h3>'.Docman::txt('details_approval_doc_review_title').'</h3>';
-        $html .= '<div class="docman_approval_form">';
+
+        $html .= '<table>';
         
         // Doc title
-        $html .= '<p><label>'.Docman::txt('details_approval_doc_review_name').'</label>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_doc_review_name').'</td>';
+        $html .= '<td>';
         $html .= $this->item->getTitle();
         if($itemCurrentVersion == null) {
             $url = Docman_View_View::buildUrl($this->url, 
@@ -197,39 +219,52 @@ extends Docman_View_ItemDetailsSection {
             $html .= ' - ';
             $html .= '<a href="'.$url.'">'.Docman::txt('details_approval_doc_review_link').'</a>';
         }
-        $html .= '</p>';
+        $html .= '</td>';
+        $html .= '</tr>';
 
         // Doc version
-        $html .= '<p><label>'.Docman::txt('details_approval_doc_review_version').'</label>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_doc_review_version').'</td>';
+        $html .= '<td>';
         if($itemCurrentVersion !== null) {
             $html .= $this->_getItemVersionLink($itemCurrentVersion);
-        }
-        else {
+        } else {
             $html .= Docman::txt('details_approval_doc_review_version_na');
         }
-        $html .= '</p>';
-
+        $html .= '</td>';
+        $html .= '</tr>';
         
         // Requester name
-        $html .= '<p><label>'.Docman::txt('details_approval_requester').'</label>';
-        $html .= user_getrealname($this->table->getOwner()).'</p>';
-
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_requester').'</td>';
+        $html .= '<td>';
+        $html .= user_getrealname($this->table->getOwner());
+        $html .= '</td>';
+        $html .= '</tr>';
+            
         // Cycle start date
-        $html .= '<p><label>'.Docman::txt('details_approval_cycle_start_date').'</label>';
-        $html .= util_timestamp_to_userdateformat($this->table->getDate(), true).'</p>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_cycle_start_date').'</td>';
+        $html .= '<td>';
+        $html .= util_timestamp_to_userdateformat($this->table->getDate(), true);
+        $html .= '</td>';
+        $html .= '</tr>';
 
         // Owner comment
-        $html .= '<p><label>'.Docman::txt('details_approval_owner_comment').'</label><br />';
-        $html .= '<em>'.$this->comment2Html($this->table->getDescription()).'</em>';
-        $html .= '</p>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_owner_comment').'</td>';
+        $html .= '<td>';
+        $html .= $this->comment2Html($this->table->getDescription());
+        $html .= '</td>';
+        $html .= '</tr>';
         
-        $html .= '</div>';
+        $html .= '</table>';
 
         $html .= '<h3>'.Docman::txt('details_approval_review_title').'</h3>';
 
         $reviewer = $this->atf->getReviewer($user->getId());
 
-        $html .= '<form name="docman_approval_review" method="POST" action="?" class="docman_approval_form">';
+        $html .= '<form name="docman_approval_review" method="POST" action="?" class="docman_form">';
         $html .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
         $html .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
         $html .= '<input type="hidden" name="action" value="approval_user_commit" />';
@@ -239,55 +274,81 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<input type="hidden" name="version" value="'.$itemCurrentVersion.'" />';
         }
 
-        $html .= '<p><label>'.Docman::txt('details_approval_review_table').'</label>';
+        $html .= '<table>';
+
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_review_table').'</td>';
         $url = Docman_View_View::buildUrl($this->url, 
                                           array('action'  => 'details',
                                                 'section' => 'approval',
                                                 'id'     => $this->item->getId()));
+        $html .= '<td>';
         $html .= '<a href="'.$url.'">'.Docman::txt('details_approval_review_table_link').'</a>';
-        $html .= '</p>';
+        $html .= '</td>';
+        $html .= '</tr>';
 
-
-        $html .= '<p><label>'.Docman::txt('details_approval_review_review').'</label>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_review_review').'</td>';
         $vals = array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
                       PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
         $txts = array(Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET),
                       Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED),
                       Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED));
+        $html .= '<td>';
         $html .= html_build_select_box_from_arrays($vals, $txts, 'state', $reviewer->getState(), false);
-        $html .= '</p>';
+        $html .= '</td>';
+        $html .= '</tr>';
 
         // If reviewer already approved or reject, display date
         if($reviewer->getReviewDate()) {
-            $html .= '<p><label>'.Docman::txt('details_approval_review_date').'</label>';
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_review_date').'</td>';
+            $html .= '<td>';
             $html .= util_timestamp_to_userdateformat($reviewer->getReviewDate(), true);
-            $html .= '</p>';
+            $html .= '</td>';
+            $html .= '</tr>';
         }   
 
         // Review version
         $reviewVersion = $reviewer->getVersion();
         if($reviewVersion) {
-            $html .= '<p><label>'.Docman::txt('details_approval_review_version').'</label>';
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_review_version').'</td>';
+            $html .= '<td>';
             $html .= $this->_getItemVersionLink($reviewVersion);
             if($reviewVersion != $itemCurrentVersion) {
                 $html .= ' <strong>'.Docman::txt('details_approval_review_version_not_upd').'</strong>';
             }
-            $html .= '</p>';
+            $html .= '</td>';
+            $html .= '</tr>';
         }
 
         // Comment
-        $html .= '<p><label>'.Docman::txt('details_approval_review_comment').'</label>';
-        $html .= '<textarea name="comment">'.$reviewer->getComment().'</textarea></p>';
-        
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_review_comment').'</td>';
+        $html .= '<td>';
+        $html .= '<textarea name="comment">'.$reviewer->getComment().'</textarea>';
+        $html .= '</td>';
+        $html .= '</tr>';
+
         // Notification
         $notifChecked  = !$user->isAnonymous() && $this->notificationsManager->exist($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
-        $html .= '<p><label>'.Docman::txt('details_approval_review_notif').'</label>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_review_notif').'</td>';
+        $html .= '<td>';
         $html .= '<input type="checkbox" name="monitor" value="1"'.$notifChecked.' />';
         $html .= Docman::txt('details_notifications_sendemail');
-        $html .= '</p>';
+        $html .= '</td>';
+        $html .= '</tr>';
 
+        $html .= '<tr>';
+        $html .= '<td colspan="2">';
         $html .= '<input type="submit" value="'.Docman::txt('details_approval_review_submit').'">';
+        $html .= '</td>';
+        $html .= '</tr>';
+
+        $html .= '</table>';
 
         $html .= '</form>';
 

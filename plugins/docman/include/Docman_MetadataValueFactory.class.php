@@ -67,6 +67,7 @@ class Docman_MetadataValueFactory extends Error {
             $mdv = new Docman_MetadataValueScalar();
             break;
         }
+        $mdv->setType($type);
         return $mdv;
     }
 
@@ -100,50 +101,6 @@ class Docman_MetadataValueFactory extends Error {
         }
           
         return $mdv;
-    }
-
-    /**
-     * Create and set-up a MetadataValue object from database.
-     */
-    function &getMetadataValue($item, $md) {
-        $mdv = null;
-        $dao =& $this->getDao();
-
-        $workOnLove = ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-
-        if($workOnLove) {
-            $dar = $dao->searchListValuesById($md->getId(), $item->getId());
-        }
-        else {
-            $dar = $dao->searchById($md->getId(), $item->getId());
-        }
-
-        if($dar && !$dar->isError()) {
-            $mdv =& $this->createFromType($md->getType());
-            
-            if($workOnLove) {
-                $mdv->setItemId($item->getId());
-                $mdv->setFieldId($md->getId());
-                $loveFactory = new Docman_MetadataListOfValuesElementFactory();
-                $ea = array();
-                while($dar->valid()) {
-                    $row =& $dar->current();
-
-                    $e = $loveFactory->getByElementId($row['valueInt']);
-                    $ea[] = $e;
-
-                    $dar->next();
-                }
-                $mdv->setValue($ea);
-            }
-            else {
-                $row =& $dar->current();
-                $mdv->initFromRow($row);
-            }
-
-        }
-
-        return $mdv;        
     }
 
     /**

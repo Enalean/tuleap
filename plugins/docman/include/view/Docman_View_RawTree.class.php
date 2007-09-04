@@ -11,15 +11,18 @@
 require_once('Docman_View_View.class.php');
 require_once('Docman_View_ItemTreeUlVisitor.class.php');
 
-require_once(dirname(__FILE__).'/../Docman_ItemBo.class.php');
+require_once(dirname(__FILE__).'/../Docman_ItemFactory.class.php');
 
 class Docman_View_RawTree extends Docman_View_View {
     
     /* protected */ function _content($params) {
         
-        $itemBo = new Docman_ItemBo($params['group_id']);
+        $itemFactory = new Docman_ItemFactory($params['group_id']);
 
-        $itemTree =& $itemBo->getItemSubTree($params['item']->getId(), array('user' => $params['user']));
+        $itemTree =& $itemFactory->getItemSubTree($params['item']->getId(), array(
+            'user' => $params['user'], 
+            'ignore_obsolete' => true,
+        ));
 
         $displayItemTreeVisitor = new Docman_View_ItemTreeUlVisitor($this, array(
             'theme_path'             => $params['theme_path'],

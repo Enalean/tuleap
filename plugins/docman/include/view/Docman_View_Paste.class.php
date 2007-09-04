@@ -33,9 +33,10 @@ class Docman_View_Paste extends Docman_View_Details {
     }
     
     function _content($params) {
-        $force = isset($params['force_item']) ? $params['force_item'] : null;
-
-        $vSection = new Docman_View_ItemDetailsSectionPaste($params['item'], $params['default_url'], $this->_controller, $force);
+        $vSection = new Docman_View_ItemDetailsSectionPaste($params['item'],
+                                                            $params['default_url'],
+                                                            $this->_controller,
+                                                            $params['itemToPaste']);
         parent::_content($params, $vSection, 'actions');
     }
 }

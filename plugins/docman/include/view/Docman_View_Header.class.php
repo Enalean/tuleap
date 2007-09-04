@@ -34,7 +34,22 @@ require_once('Docman_View_View.class.php');
     }
     
     /* protected */ function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman','title');
+        $title = '';
+        $gid = null;
+        if(isset($params['group_id'])) {
+            $gid = $params['group_id'];
+        }
+        elseif(isset($params['item']) && $params['item'] != null) {
+            $gid = $params['item']->getGroupId();
+        }
+        if($gid > 0) {
+            $go = group_get_object($gid);
+            if($go != false) {
+                $title .= $go->getPublicName().' - ';
+            }
+        }
+        $title .= $GLOBALS['Language']->getText('plugin_docman','title');
+        return $title;
     }
     
     /* protected */ function _footer($params) {

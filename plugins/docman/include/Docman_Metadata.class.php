@@ -300,6 +300,86 @@ class Docman_Metadata {
 
         $this->setCanChangeValue(true);
     }
+
+    /**
+     * Check if the metadata in argument can be the same.
+     */
+    function equivalent($md) {
+        return ($md->getName() == $this->getName() &&
+                $md->getType() == $this->getType());
+    }
+
+    /**
+     * Check if 2 metadata are the same.
+     * This check neither the 'label' nor the 'group_id'
+     */
+    function equals($md, $loveMap=array()) {
+        return ($this->equivalent($md) &&
+                $this->sameDescription($md) &&
+                $this->sameIsEmptyAllowed($md) &&
+                $this->sameIsMultipleValuesAllowed($md) &&
+                $this->sameDefaultValue($md, $loveMap) &&
+                $this->sameUseIt($md));
+    }
+
+    function sameDescription($md) {
+        return ($md->getDescription() == $this->getDescription());
+    }
+
+    function sameIsEmptyAllowed($md) {
+        return ($md->getIsEmptyAllowed() == $this->getIsEmptyAllowed());
+    }
+
+    function sameIsMultipleValuesAllowed($md) {
+        return ($md->getIsMultipleValuesAllowed() == $this->getIsMultipleValuesAllowed());
+    }
+
+    function sameUseIt($md) {
+        return ($md->getUseIt() == $this->getUseIt());
+    }
+
+    /**
+     * loveMap contains the mapping of love values with $md (parameter) indexes.
+     */
+    function sameDefaultValue($md, $loveMap) {
+        $defaultValueEquals = false;
+        if($this->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            if(isset($loveMap[$md->getDefaultValue()])) {
+                if($loveMap[$md->getDefaultValue()] == $this->getDefaultValue()) {
+                    $defaultValueEquals = true;
+                }
+            }
+        } else {
+            $defaultValueEquals = ($md->getDefaultValue() == $this->getDefaultValue());
+        }
+        return $defaultValueEquals;
+    }
+
+    /**
+     * Update current metadata based on the one passed in param
+     */
+    function update($md, $loveMap=array()) {
+        $this->setName($md->getName());
+        $this->setType($md->getType());
+        $this->setDescription($md->getDescription());
+        $this->setIsRequired($md->getIsRequired());
+        $this->setIsEmptyAllowed($md->getIsEmptyAllowed());
+        $this->setIsMultipleValuesAllowed($md->getIsMultipleValuesAllowed());
+        $this->setKeepHistory($md->getKeepHistory());
+        $this->setSpecial($md->getSpecial());
+        if($this->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            // Adapt the default value to the current context
+            // otherwise set to default
+            if(isset($loveMap[$md->getDefaultValue()])) {
+                $this->setDefaultValue($loveMap[$md->getDefaultValue()]);
+            } else {
+                $this->setDefaultValue(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+            }
+        } else {
+            $this->setDefaultValue($md->getDefaultValue());
+        }
+        $this->setUseIt($md->getUseIt());
+    }
 }
 
 /**

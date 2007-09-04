@@ -91,11 +91,13 @@ extends Docman_View_ItemDetailsSectionApproval {
         $atf = new Docman_ApprovalTableFactory($this->item->getId());
         $table = $atf->getTable();
         if($table !== null) {
-            $html .= '<form name="docman_approval_settings" method="post" action="?" class="docman_approval_form">';
+            $html .= '<form name="docman_approval_settings" method="post" action="?" class="docman_form">';
             $html .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
             $html .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
             $html .= '<input type="hidden" name="action" value="approval_update" />';
             
+            $html .= '<table>';
+
             // Settings
             $enableYesChecked = '';
             $enableNoChecked  = ' checked="checked"';
@@ -103,53 +105,81 @@ extends Docman_View_ItemDetailsSectionApproval {
                 $enableYesChecked = ' checked="checked"';
                 $enableNoChecked  = '';
             }
-            $html .= '<p><label>'.Docman::txt('details_approval_table_status').'</label>';
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_table_status').'</td>';
             $vals = array(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED,
                           PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED,
                           PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
             $txts = array(Docman::txt('details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED),
                           Docman::txt('details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED),
                           Docman::txt('details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED));
+            $html .= '<td>';
             $html .= html_build_select_box_from_arrays($vals, $txts, 'status', $table->getStatus(), false);
-            $html .= '</p>';
+            $html .= '</td>';
+            $html .= '</tr>';
 
-            $html .= '<p><label>'.Docman::txt('details_approval_table_description').'</label>';
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_table_description').'</td>';
+            $html .= '<td>';
             $html .= '<textarea name="description">'.$table->getDescription().'</textarea>';
-            $html .= '</p>';
+            $html .= '</td>';
+            $html .= '</tr>';
 
-            $html .= '<p><label>'.Docman::txt('details_approval_delete_table').'</label>';
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_delete_table').'</td>';
+            $html .= '<td>';
             $html .= '<a href="'.$this->url.'&action=approval_create&delete=confirm&id='.$this->item->getId().'">'.Docman::txt('details_approval_delete_table_act').'</a>';
-            $html .= '</p>';
+            $html .= '</td>';
+            $html .= '</tr>';
+
+            $html .= '</table>';
 
             // Notification
             $html .= '<h3>'.Docman::txt('details_approval_notif_title').'</h3>';
 
             $html .= '<p>'.Docman::txt('details_approval_notif_help', $GLOBALS['sys_name']).'</p>';
 
-            $html .= '<p><label>'.Docman::txt('details_approval_notif_type').'</label>';
+            $html .= '<table>';
+            
+            $html .= '<tr>';
+            $html .= '<td>'.Docman::txt('details_approval_notif_type').'</td>';
             $vals = array(PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED,
                           PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE,
                           PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL);
             $txts = array(Docman::txt('details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED),
                           Docman::txt('details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED),
                           Docman::txt('details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED));
+            $html .= '<td>';
             $html .= html_build_select_box_from_arrays($vals, $txts, 'notification', $table->getNotification(), false);
-            $html .= '</p>';
+            $html .= '</td>';
+            $html .= '</tr>';
 
             if($table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
                 if($table->isEnabled()) {
-                    $html .= '<p><label>'.Docman::txt('details_approval_notif_relaunch').'</label>';
+                    $html .= '<tr>';
+                    $html .= '<td>'.Docman::txt('details_approval_notif_relaunch').'</td>';
+                    $html .= '<td>';
                     $html .= '<a href="'.$this->url.'&action=approval_notif_resend&id='.$this->item->getId().'">'.Docman::txt('details_approval_notif_relaunch_act').'</a>';
-                    $html .= '</p>';
+                    $html .= '</td>';
+                    $html .= '</tr>';
                 }
                 
-                $html .= '<p><label>'.Docman::txt('details_approval_notif_email').'</label>';
+                $html .= '<tr>';
+                $html .= '<td>'.Docman::txt('details_approval_notif_email').'</td>';
+                $html .= '<td>';
                 $html .= '<a href="'.$this->url.'&action=approval_create&id='.$this->item->getId().'&section=view_notification_email">'.Docman::txt('details_approval_notif_email_act').'</a>';
-                $html .= '</p>';
+                $html .= '</td>';
+                $html .= '</tr>';
             }
 
-            $html .= '<p><input type="submit" value="'.Docman::txt('details_approval_notif_submit').'"></p>';
-                        
+            $html .= '<tr>';
+            $html .= '<td colspan="2">';
+            $html .= '<input type="submit" value="'.Docman::txt('details_approval_notif_submit').'">';
+            $html .= '</td>';
+            $html .= '</tr>';
+
+            $html .= '</table>';
+
             $html .= '</form>';
             
             $rIter = $table->getReviewerIterator();
@@ -219,21 +249,28 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         $html .= '<h3>'.Docman::txt('details_approval_create_reviewers_title').'</h3>';
 
-        $html .= '<form name="docman_approval_create" method="post" action="?" class="docman_approval_form">';
+        $html .= '<form name="docman_approval_create" method="post" action="?" class="docman_form">';
         $html .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
         $html .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
         $html .= '<input type="hidden" name="action" value="approval_add_user" />';
 
-        $html .= '<p><label>'.Docman::txt('details_approval_create_reviewers_hand').'</label>';
-        $html .= '<input type="text" name="user_list" value="" class="text_field"/>';
-        $html .= '</p>';
+        $html .= '<table>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_create_reviewers_hand').'</td>';
+        $html .= '<td><input type="text" name="user_list" value="" class="text_field"/></td>';
+        $html .= '</tr>';
 
         $ugroups = $atf->getUgroupsAllowedForTable($this->item->getGroupId());
-        $html .= '<p><label>'.Docman::txt('details_approval_create_reviewers_ugroup').'</label>';
-        $html .= html_build_select_box_from_arrays($ugroups['vals'], $ugroups['txts'], 'ugroup');
-        $html .= '</p>';
+        $html .= '<tr>';
+        $html .= '<td>'.Docman::txt('details_approval_create_reviewers_ugroup').'</td>';
+        $html .= '<td>'.html_build_select_box_from_arrays($ugroups['vals'], $ugroups['txts'], 'ugroup').'</td>';
+        $html .= '</tr>';
 
-        $html .= '<p><input type="submit" value="'.Docman::txt('details_approval_create_reviewers_submit').'"></p>';
+        $html .= '<tr>';
+        $html .= '<td colspan="2"><input type="submit" value="'.Docman::txt('details_approval_create_reviewers_submit').'"></td>';
+        $html .= '</tr>';
+        $html .= '</table>';
+
         $html .= '</form>';
 
         return $html;

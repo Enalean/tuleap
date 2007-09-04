@@ -1,3 +1,8 @@
+----
+<?plugin CreateToc jshide||=2 with_toclink||=1 ?>
+----
+!!! Document Overview
+
 This document aims to give major keys of the architecture of the plugin.
 
 This document can be found here:
@@ -6,111 +11,181 @@ This document can be found here:
 
 !!! Architecture
 
-Docman plugin is based on MVC (model/view/controler) pattern. This application
-layout is common and we won't detail it here. But we enhance this pattern with
-higher level approach toward Buisness Objects and Transport Objects.
+Docman plugin is based on MVC (model/view/controler) pattern. This application layout is common and we won't detail it here. 
+The docman uses also widely some other patterns:
+* Factories (aka Business Objects)
+* ~DataAccessObjects (DAO).
+* Visitor
 
-Bo: Buisness Object
-Dao: DataAccessObject
+!! Factories / Business Objects debate
+
+These two patterns are equivalent and both are used in Codex.
+
+However, we decided to only use Factory name for developments, new developments shouldn't add new '*Bo' classes. We migrate old code to new standard step by step.
+
+Note: the major change is to merge the 2 classes ItemFactory and ItemBo in only one class.
+
+!! Principles
+
+[Upload:DocmanImplementationClassDiagram.png]
 
 The main principle are:
 * SQL and/or Filesystem access are made in Dao and *only* in Dao.
-* Buisness Object offer an high level view of the model.
-* Data are travelling in the application encapsulated in Transport Objects (also known as Containers).
-* When Views and Actions are dealing with Model Layer, they only talk with
-Buisness Objects.
-* Controler job is to receive request from user, perform Actions and display
-Views following the request.
+* Factories offer an high level view of the model.
+* Data are travelling in the application encapsulated in Transport Objects (aka Containers).
+  * example: Docman_Item and subclasses, Docman_Metadata, ....
+  * a container is stupid, factory is the brain.
+* When Views and Actions are dealing with Model Layer, they only talk with Factories
+  * For instance an Action (new_document) create a new Container (Docman_Wiki) with data from user input and asks to the Factory (Docman_~ItemBo) to preform some actions (create it).
+* Controler job is to receive request from user, perform Actions and display Views following the request.
 * Views and Actions should never directly access to requests parameters.
+
+! Organization of documents
+
+* Documents are sorted in a tree.
+* Each node of this tree is an Item.
+* There are 2 main categories of Items: Folders and Documents.
+* A Document can be a Link, a Wiki, an Empty.
+* Items and Document are abstract classes.
+
+* We use Visitor pattern to walk trhough the Item hierarchy.
 
 !! Organisation of the code
 
 * Model
-  * FolderBo.class
-  * ItemBo.class
-  * FolderDao.class
-  * ItemDao.class
-  * NodeToRootVisitor.class
+ * High end
+  * ItemFactory
+  * ItemBo
+  * FolderBo
+  * ...
+  * *Factory
+
+ * Backend
+  * FolderDao
+  * ItemDao
+  * ...
+  * *Dao
 
 * Transport object
-  * Folder.class
-  * Item.class
-  * ItemFactory.class
-  * ItemNode.class
+  * Folder
+  * Item
 
 * View
-  * DisplayItemTreeUlVisitor.class
-  * DisplayItemTreeVisitor.class
-  * DocmanViews.class
-  * DocmanAdminViews.class
+  * DocmanViews
+  * views/*
 
 * Controler
   * Docman.class
-  * DocmanAdmin.class
+  * SOAPDocman.class.php
 
 * Action
   * DocmanActions.class
-  * DocmanAdminActions.class
 
 * Plugin
   * docmanPlugin.class
   * DocmanPluginDescriptor.class
   * DocmanPluginInfo.class
 
+!!! How does it work ?
+
+!! Display item tree.
+
+* DocmanController receive a request from the user to display the docman content:
+ * url: http://..../plugins/docman/index.php?group_id=101&action=show&id=134
+ * params: group_id of the project
+ * action: show ... shows (!) "something"
+ * id: id of the "something" to show, it refers to an item.
+
+* DocmanController (in request method) set-up the view to use to display the tree
+
+* The corresponding view (Docman_View_Tree for instance) set-up the tree to display
+ * $itemBo = new Docman_ItemBo(101); // group_id
+ * $itemTree = $itemBo->getItemSubTree(134); // id
+ * Note: for purists, this should be done by the Controller himself.
+
+* Once the tree is fetched, the view requires to display it with a visitor.
+ * we choose to display it with UlTreeViewVisitor:
+ * $visitor = new Docman_View_ItemTreeUlVisitor();
+ * $itemTree->accept($visitor);
+ * the visitor walk through the tree and build, node per node, the final view.
+
+* Last step is to display the view builded by the visitor:
+ * print $visitor->toHtml();
+
 
 !!! Metadata
 
-Note: there is a misunderstanding between Bo objects and Factories. We should merge in only one class.
+!! Note
+
+The current implementation of the metadata is rather complex and there is one rework to do. We have to remove the useage of MetadataValue object to handle metadata values.
+
+The Metadata object should both describe the metadata and store the values.
 
 !! Introduction & main concepts
 
+[Upload:docman_metadata.png]
+
 Metadata code is organized in 3 "categories" of classes:
 * Metadata
-* MetadataValue
-* MetadataListOfValueElement
+* ~MetadataValue
+* ~MetadataListOfValueElement
 
 Each category behaviour is splitted in 3 parts:
 * container (Green on class diagram).
 * data access object (Light grey on class diagram).
 * factory (Dark grey on class diagram).
 
-HTML output of the metadata is handled by MetadataHtml objects.
+HTML output of the metadata is handled by ~MetadataHtml objects.
 
 !! Metadata
-Metadata management is covered by Docman_Metadata* classes:
+Metadata management is covered by ~Docman_Metadata* classes:
 
-* Docman_Metadata is the container. It's used as an class abstraction of the table 'plugin_docman_metadata'. One record in this table correspond to one instance of Docman_Metadata class.
-  * Docman_ListMetadata is the container of metadata that provide a list of values in addition to the default metadata info.
+* ~Docman_Metadata is the container. It's used as an class abstraction of the table 'plugin_docman_metadata'. One record in this table correspond to one instance of ~Docman_Metadata class.
+  * ~Docman_ListMetadata is the container of metadata that provide a list of values in addition to the default metadata info.
 
-* Docman_MetadataDao is the access to database object. It perform all SQL queries to manipulate and fetch data in the DB. Related SQL tables:
+* ~Docman_MetadataDao is the access to database object. It perform all SQL queries to manipulate and fetch data in the DB. Related SQL tables:
   * plugin_docman_metadata
 
-* Docman_MetadataFactory is an high level interface to handle Docman_Metadata. All operation related to Metadata are available in this class.
+* ~Docman_MetadataFactory is an high level interface to handle ~Docman_Metadata. All operation related to Metadata are available in this class.
 
 !! MetadataValue
-MetadataValue* classes are used to handle values of metadata for a given item. MetadataValue (and related SQL tables) perfom the link between field definition (Metadata) and the item (Item).
+~MetadataValue* classes are used to handle values of metadata for a given item. ~MetadataValue (and related SQL tables) perfom the link between field definition (Metadata) and the item (Item).
 
-* Docman_MetadataValue is the container. This is the class that represent the SQL table 'plugin_metadata_value'. Docman_MetadataValue is an abstract class, the 2 concrete classes are:
-  * Docman_MetadataValueScalar when a metadata only accept one value per item.
-  * Docman_MetadataValueList when we can have several values for one metadata for a given item (for instance: multiple selection box).
+* ~Docman_MetadataValue is the container. This is the class that represent the SQL table 'plugin_metadata_value'. ~Docman_MetadataValue is an abstract class, the 2 concrete classes are:
+  * ~Docman_MetadataValueScalar when a metadata only accept one value per item.
+  * ~Docman_MetadataValueList when we can have several values for one metadata for a given item (for instance: multiple selection box).
 
-* Docman_MetadataValueDao handle all access to database related to metadata values management.
+* ~Docman_MetadataValueDao handle all access to database related to metadata values management.
 Related SQL tables:
   * plugin_docman_metadata_value
 
-* Docman_MetadataValueFactory is an high level interface to manipulate metadata values.
+* ~Docman_MetadataValueFactory is an high level interface to manipulate metadata values.
 
-!! MetadataListOfValueElement
+!! ~MetadataListOfValueElement
 
-MetadataListOfValueElement* classes handle access to ListOfValues metadata. ListOfValues metadata is a special type of metadata that provide a list of elements and user should pick up one (or many) in the list. 
+~MetadataListOfValueElement* classes handle access to ~ListOfValues metadata. ~ListOfValues metadata is a special type of metadata that provide a list of elements and user should pick up one (or many) in the list. 
 
 From the database point of view:
-* the ListOfValues elements are stored in 'plugin_docman_listofvalues'
+* the ~ListOfValues elements are stored in 'plugin_docman_listofvalues'
 * the link between 'plugin_docman_listofvalues' and  'plugin_docman_metadata' is stored in 'plugin_docman_listofvalues_metadata'.
 * the link between Item and chosen element for given metadata is stored in 'valueInt' field of 'plugin_docman_metadata_value'.
 
-* MetadataListOfValueElement is a container that represent the SQL table 'plugin_docman_listofvalues'. It represent one element of the list of choices.
+* ~MetadataListOfValueElement is a container that represent the SQL table 'plugin_docman_listofvalues'. It represent one element of the list of choices.
 
-* MetadataListOfValueElementDao handle access to database for 'plugin_docman_listofvalues'.
+* ~MetadataListOfValueElementDao handle access to database for 'plugin_docman_listofvalues'.
 
-* MetadataListOfValueElementFactory is an high level interface to manipulate list of values elements.
+* ~MetadataListOfValueElementFactory is an high level interface to manipulate list of values elements.
+
+!!! Ways of improvements
+
+!! Management of tree
+
+- We should use nested tree for better preformances in tree view. This will allows to retreive only a subtree directly.
+  - This approach requires to have an ACID compliant engine (Innodb)
+
+!! Management of list
+
+- To be more efficient in list view we should:
+  - have a dedicted SQL query that drop the folders and retreive only the number of documents wanted. This query needs to be joined on the permissions table to achieve that.
+
+  - once we get the list of files, we have to loop on the parent until root to be able to build the 'Location' part of the display. (~1 query per level-up).

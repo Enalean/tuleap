@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS plugin_docman_metadata;
 DROP TABLE IF EXISTS plugin_docman_metadata_value;
 DROP TABLE IF EXISTS plugin_docman_metadata_love;
 DROP TABLE IF EXISTS plugin_docman_metadata_love_md;
+DROP TABLE IF EXISTS plugin_docman_report;
+DROP TABLE IF EXISTS plugin_docman_report_filter;
 
 DELETE FROM service WHERE short_name='docman';
 
