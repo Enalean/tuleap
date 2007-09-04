@@ -162,6 +162,9 @@ class CLI_Module {
      * @param bool Specify if input shouldn't be shown (useful when asking for passwords)
      */
     function get_user_input($text, $hide=false) {
+        if ($hide && PHP_OS == 'WINNT') {
+            $hide = false;  // disable echo does not work in Windows
+        }
         if ($text) echo $text;
         if ($hide) @exec("stty -echo");        // disable echo of the input (only works in UNIX)
         $input = trim(fgets(STDIN));
