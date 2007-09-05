@@ -11,7 +11,5 @@
 
 // Redirect to showfiles.php when no script name is given.
 // Avoid listing content of the directory!
-
-header ("Location: /file/showfiles.php?group_id=$group_id");
-
+header ("Location: /file/showfiles.php?group_id=". (int)$_REQUEST['group_id']);
 ?>
