@@ -14,6 +14,9 @@ $Language->loadLanguageMsg('top/top');
 if (!isset($offset) || $offset < 0) {
 	$offset=0;
 }
+if (!isset($type) || $type != 'week') {
+    $type = '';
+}
 
 if ($type == 'week') {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_weekly_metric.ranking,project_weekly_metric.percentile ".
@@ -61,7 +64,7 @@ while ($row_top = db_fetch_array($res_top)) {
 		.'</TD><TD align="right">'.$row_top['percentile'].'</TD></TR>';
 }
 
-print '<TR class="'.$HTML->COLOR_LTBACK2.'"><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- '.$Language->getText('top_mostactive','more').'</B></A>':'&nbsp;').'</TD>
+print '<TR><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- '.$Language->getText('top_mostactive','more').'</B></A>':'&nbsp;').'</TD>
 	<TD>&nbsp;</TD>
 	<TD ALIGN="RIGHT"><A HREF="mostactive.php?type='.$type.'&offset='.($offset+50).'"><B>'.$Language->getText('top_mostactive','more').' --></B></A></TD></TR>';
 
