@@ -26,6 +26,11 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
             'description'    => '--message=<message>          The body message of the follow-up comment that will be added to the artifact.',
             'parameters'     => array('message'),
         ));
+        $this->addParam(array(
+            'name'           => 'comment_type_id',
+            'description'    => '--comment_type_id=<ID>       The ID of the comment type to include into the comment.',
+            'parameters'     => array('comment_type_id'),
+        ));
     }
     function validate_artifact_id(&$artifact_id) {
         if (!$artifact_id) {

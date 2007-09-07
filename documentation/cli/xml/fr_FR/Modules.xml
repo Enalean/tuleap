@@ -518,6 +518,9 @@ Array
                         <para>--message* : Message du commentaire.</para>
                     </listitem>
                     <listitem>
+                        <para>--comment_type_id: Type à ajouter au commentaire (optionnel).</para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
                         lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
                         une erreur sera affichée.

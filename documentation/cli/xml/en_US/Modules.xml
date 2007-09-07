@@ -494,6 +494,9 @@ Array
                         <para>--message*: Message to post.</para>
                     </listitem>
                     <listitem>
+                        <para>--comment_type_id: Comment type to add to the comment (optional).</para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
                     </listitem>
                 </itemizedlist>

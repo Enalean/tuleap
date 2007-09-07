@@ -386,7 +386,8 @@ $server->wsdl->addComplexType(
         'comment'           => array('name'=>'comment', 'type' => 'xsd:string'),
         'date'                     => array('name'=>'date', 'type' => 'xsd:int'),
         'by'               => array('name'=>'by', 'type' => 'xsd:string'),
-        'comment_type_id'     => array('name'=>'comment_type_id', 'type' => 'xsd:int'),    
+        'comment_type_id'     => array('name'=>'comment_type_id', 'type' => 'xsd:int'),
+        'comment_type'     => array('name'=>'comment_type', 'type' => 'xsd:string')
     )
 );
 
@@ -1101,14 +1102,16 @@ $server->register(
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
-        'body' => 'xsd:string'
+        'body' => 'xsd:string',
+        'comment_type_id' => 'xsd:int'
     ),
     array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addArtifactFollowup',
     'rpc',
     'encoded',
-    'Add a follow-up body to the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+    'Add a follow-up body to the artifact artifact_id of the tracker group_artifact_id of the project group_id,
+     with optionals comment type and canned response. If canned response is set, it will replace the body.
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the add failed.
@@ -2290,7 +2293,8 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
             'comment'               => $comment, //db_result($followups_res, $i, 'old_value'),
             'date'                     => db_result($followups_res, $i, 'date'),
             'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
-            'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id')            
+            'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
+            'comment_type'        => db_result($followups_res, $i, 'comment_type')
         );
     }
     return $return;
@@ -3098,20 +3102,19 @@ function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_
 /**
  * addArtifactFollowup - add a followup to the artifact $artifact_id
  *
- * NOTE : the mail notification system is implemented.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the follow-up
  * @param int $group_artifact_id the ID of the tracker we want to add the follow-up
  * @param int $artifact_id the ID of the artifact we want to add the follow-up
  * @param string $body the body of the follow-up
+ * @param int $comment_type_id the comment type ID if so, or 100 if comment type is not used 
  * @return boolean true if the add is ok or a soap fault if :
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  *              - the add failed
  */
-function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body) {
+function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $grp =& group_get_object($group_id);
@@ -3144,7 +3147,8 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault,'addArtifactFollowup',$a->getErrorMessage(),'');
         }
-        if (!$a->addComment($body,false,&$changes)) {
+        // add the follow up with 0 as canned_response_id. To set a canned response, just put the content in the body comment.
+        if (!$a->addFollowUpComment($body, $comment_type_id, 0, &$changes, &$feedback)) {
             return new soap_fault(create_followup_fault, 'addArtifactFollowup', 'Comment could not be saved', '');
         } else {
             // Send notification

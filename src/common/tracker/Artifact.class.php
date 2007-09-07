@@ -603,7 +603,10 @@ class Artifact extends Error {
 	if ( $field && isset($comment_type_id) && $comment_type_id) {
 	  $changes['comment']['type'] =
 	    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
-	}
+	} 
+    return true;
+      } else {
+          return false;
       }
     }
         
