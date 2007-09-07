@@ -141,13 +141,20 @@ function my_item_count($total, $new) {
 
 
 function my_header($params) {
-    site_header($params);
+    $request =& HTTPRequest::instance();
+    $pv = '';
+    if ($request->get('pv') == 2) {
+        $pv = '?pv=2';
+        $GLOBALS['Response']->pv_header($params);
+    } else {
+        site_header($params);
+    }
     echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')')) .'</h2>';
-    echo '<a href="/my/"><b>'. $GLOBALS['Language']->getText('include_menu','my_perso_page') .'</b></a>';
+    echo '<a href="/my/'. $pv .'"><b>'. $GLOBALS['Language']->getText('include_menu','my_perso_page') .'</b></a>';
     echo ' | ';
-    echo '<a href="/account/"><b>'. $GLOBALS['Language']->getText('include_menu','account_maintenance') .'</b></a>';
+    echo '<a href="/account/'. $pv .'"><b>'. $GLOBALS['Language']->getText('include_menu','account_maintenance') .'</b></a>';
     echo ' | ';
-    echo '<a href="/account/preferences.php"><b>'. $GLOBALS['Language']->getText('account_options', 'preferences') .'</b></a>';
+    echo '<a href="/account/preferences.php'. $pv .'"><b>'. $GLOBALS['Language']->getText('account_options', 'preferences') .'</b></a>';
     echo ' | ';
     echo help_button('LoginAndPersonalPage.html', false, $GLOBALS['Language']->getText('global','help'));
 }

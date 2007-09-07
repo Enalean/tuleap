@@ -1436,6 +1436,9 @@ function util_make_return_to_url($url) {
         else {
             $finaleUrl .= '?'.$rt;
         }
+	if (strstr($_REQUEST['return_to'],'pv=2')) {
+	    $finaleUrl .= '&pv=2';
+	}	
     }
     else {
         if(array_key_exists('query', $urlToken) && $urlToken['query']) {

@@ -27,7 +27,11 @@ require('pre.php');
 
 $Language->loadLanguageMsg('my/my');
 
-site_header(array('title' => $Language->getText('my_redirect', 'page_title')));
+if (isset($pv) && $pv == 2) {
+    $HTML->pv_header(array());
+} else {
+    site_header(array('title' => $Language->getText('my_redirect', 'page_title')));
+}
 
 if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
     // if return_to URL start with a protocol name then take as is
@@ -72,5 +76,5 @@ else {
 <p><big><?= $redirect; ?></big></p>
 
 <?
-site_footer(array());
+(isset($pv) && $pv == 2) ? $HTML->pv_footer(array()) : site_footer(array());
 ?>

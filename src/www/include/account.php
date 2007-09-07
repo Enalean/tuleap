@@ -329,6 +329,8 @@ function account_create_mypage($user_id) {
 }
 
 function account_redirect_after_login() {
+    global $pv;  
+    
     if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
         $returnToToken = parse_url($_REQUEST['return_to']);
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
@@ -339,7 +341,11 @@ function account_redirect_after_login() {
         }
     }
     else {
-        util_return_to('/my/index.php');
+        if (isset($pv) && $pv == 2) {
+            util_return_to('/my/index.php?pv=2');
+	} else {
+	    util_return_to('/my/index.php');
+        }
     }
 }
 

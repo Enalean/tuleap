@@ -86,8 +86,12 @@ if (user_isloggedin()) {
     ?>
     </span>
 <?php
-    site_footer(array());
-
+    $request =& HTTPRequest::instance();
+    if ($request->get('pv') == 2) {
+        $GLOBALS['Response']->pv_footer(array());
+    } else {
+        site_footer(array());
+    }
 } else {
 
     exit_not_logged_in();
