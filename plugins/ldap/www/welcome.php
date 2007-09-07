@@ -39,12 +39,14 @@ require_once('account.php');
 require_once('../include/UserLdap.class.php');
 
 function welcome_exit_error($title,$text) {
-    global $HTML,$Language;
+    global $HTML,$Language,$pv;
     $GLOBALS['feedback'] .= $title;
-    site_header(array('title'=>$Language->getText('include_exit','exit_error'),
-                      'registeration_process' => true));
+    if (isset($pv) && $pv == 2)  
+        $HTML->pv_header(array());
+    else site_header(array('title'=>$Language->getText('include_exit','exit_error'),
+                      'registeration_process' => true));		
     echo '<p>',$text,'</p>';
-	$HTML->footer(array('showfeedback' => false));
+	(isset($pv) && $pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array('showfeedback' => false));
 	exit;
 }
 
@@ -106,7 +108,10 @@ else {
 
     $star = '<span class="highlight"><big>*</big></span>';
 
-    $HTML->header(array('title'=>$Language->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName()))
+    if (isset($pv) && $pv == 2)  
+        $HTML->pv_header(array());
+    else	
+	$HTML->header(array('title'=>$Language->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName()))
                         ,'registeration_process' => true));
 
     print '<h2>';
@@ -132,6 +137,7 @@ else {
 <form name="welcome" action="/plugins/ldap/welcome.php" method="post">
 <input type="hidden" name="return_to" value="'.$return_to.'">
 <input type="hidden" name="action" value="update_reg">
+<input type="hidden" name="pv" value="'.$pv.'">
 
 <p>'.$star.' '.$Language->getText('plugin_ldap', 'welcome_tz').':';
 
@@ -170,6 +176,6 @@ else {
 
     print '</fieldset>';    
 
-    $HTML->footer(array());
+    (isset($pv) && $pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());
 }
 ?>

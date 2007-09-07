@@ -36,7 +36,12 @@ if ($cookie_manager->isCookie('session_hash') && $cookie_manager->getCookie('ses
     $cookie_manager->removeCookie('session_hash');
 	session_delete($cookie_manager->getCookie('session_hash'));
 }
-$HTML->header(array('title'=>$Language->getText('account_login', 'title')));
+
+if (isset($pv) && $pv == 2) {
+    $HTML->pv_header(array('title'=>$Language->getText('account_login', 'title')));
+} else {
+    $HTML->header(array('title'=>$Language->getText('account_login', 'title')));
+}
 
 if (isset($login) && $login && !$success) {
 
@@ -67,17 +72,18 @@ if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
 
 <p>
 <h2><?php 
-if(!isset($GLOBALS['sys_Name'])) {
-    $GLOBALS['sys_Name'] = "";
+if(!isset($GLOBALS['sys_name'])) {
+    $GLOBALS['sys_name'] = "";
  }
-print $Language->getText('account_login', 'title', array($GLOBALS['sys_Name'])); ?>
-<?php print ((isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != "") ? ' ('.$Language->getText('account_login', 'secure').')':''); ?>
+print $Language->getText('account_login', 'title', array($GLOBALS['sys_name']));
+print ((isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host'] != "") ? ' ('.$Language->getText('account_login', 'secure').')':''); ?>
 </h2>
 <p>
 <span class="highlight"><B><?php print $Language->getText('account_login', 'cookies'); ?>.</B></span>
 <P>
 <form action="<?php echo $form_url; ?>/account/login.php" method="post" name="form_login">
 <INPUT TYPE="HIDDEN" NAME="return_to" VALUE="<?php if (isset($return_to)) { echo htmlentities(strip_tags($return_to), ENT_QUOTES); } ?>">
+<INPUT TYPE="HIDDEN" NAME="pv" VALUE="<?php echo $pv; ?>">
 <p>
 <?php print $Language->getText('account_login', 'name'); ?>:
 <br><input type="text" name="form_loginname" VALUE="<?php if (isset($form_loginname)) { echo htmlentities($form_loginname, ENT_QUOTES); } ?>">
@@ -127,6 +133,11 @@ $em->processEvent('login_after_form', array());
 
 <?php
 
-$HTML->footer(array());
+if (isset($pv) && $pv == 2) {
+    $HTML->pv_footer(array());
+} else {
+    $HTML->footer(array());
+}
+
 
 ?>

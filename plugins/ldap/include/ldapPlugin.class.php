@@ -152,7 +152,7 @@ class LdapPlugin extends Plugin {
      *                 $params['auth_user_status']
      */
     function authenticate($params) {       
-        global $Language;
+        global $Language,$pv;
 
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             
@@ -187,7 +187,10 @@ class LdapPlugin extends Plugin {
                         $return_to_arg = '';;
                         if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
                             $return_to_arg ='?return_to='.urlencode($_REQUEST['return_to']);
-                        }
+			    if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
+                        } else {
+                            if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
+			}                        
                         $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
                     }
                     else {
