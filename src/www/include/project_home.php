@@ -49,7 +49,7 @@ if ($project->getStatus() == 'H') {
 
 // LJ Pointer to more detailed description added
 if ($project->getDescription()) {
-	print "<P>" . $project->getDescription();
+	print "<P>" . htmlentities($project->getDescription(), ENT_QUOTES);
 	$details_prompt = '['.$Language->getText('include_project_home','more_info').'...]';
 } else {
   print '<P>'.$Language->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id");
