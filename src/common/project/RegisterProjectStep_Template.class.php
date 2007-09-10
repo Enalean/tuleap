@@ -127,7 +127,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         print '
         <TD><input type="radio" name="built_from_template" value="'.$group_id.'" '.$check.'></TD>
         <TD>'.$title.'</td>
-        <TD rowspan="2" align="left" valign="top"><I>'. $short_description .'</I></TD>
+        <TD rowspan="2" align="left" valign="top"><I>'. htmlentities($short_description, ENT_QUOTES) .'</I></TD>
         </TR>
         ';
         
