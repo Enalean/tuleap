@@ -393,7 +393,7 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 	if ($row_grp && $viewthisrow) {
 		print '<TABLE border="0" cellpadding="0" width="100%"><TR valign="top"><TD colspan="2">';
 		print "$i_proj. <a href=\"/projects/". strtolower($row_grp['unix_group_name']) ."/\"><B>"
-			.htmlspecialchars($row_grp['group_name'])."</B></a> ";
+			.$row_grp['group_name']."</B></a> ";
 		if ($row_grp['short_description']) {
 			print "- " . $row_grp['short_description'];
 		}
