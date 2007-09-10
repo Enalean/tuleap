@@ -113,7 +113,7 @@ class DB_mysql extends DB_common
     {
         /// ++ MV add for CodeX: re-use codex DB connexion
         global $conn;
-        $this->_db = 'codex';
+        $this->_db = $GLOBALS['sys_dbname'];
         $this->dsn = $dsninfo;
         $this->connection = $conn;
         return DB_OK;
