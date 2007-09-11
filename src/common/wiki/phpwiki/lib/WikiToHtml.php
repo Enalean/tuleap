@@ -106,6 +106,13 @@ class WikiToHtml {
 	    $pattern = '/\<span class\=\"wikiunknown\"\>\<span\>\<a href\=\".*\"\>(.*)\<\/a\>\<\/span\>\<\/span\>/';
 	    $replace_string = '\1';
 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
+		
+		// This solves a link issue. It removes the style "white-space: nowrap" so that links can 
+		// be correctly appllied to strings that contain white spaces. Without it, it won't be possible to 
+		// show target url when trying to chage it using wysiwyg link tool.
+		$pattern = '/\<a href\=\"(.*)\" target\=\"\" class\=\"namedurl\"\>\<span style\=\"white-space: nowrap\"\>\<img(.*)\/\>(.*)\<\/span\>(.*)\<\/a\>/';
+		$replace_string = '<a href="\1" target="" class="namedurl"><span><img\2/>\3\4</span></a>';
+		$this->_html = preg_replace($pattern, $replace_string, $this->_html);
     }
 
     // Replace \n by <br> only in 
@@ -162,9 +169,9 @@ function replace_rich_table($matched) {
         $html_table = html_entity_decode($html_table);
     
         // From here on, the content returned by TransformText() call becomes really a mess
-        // when viewed in wysiwyg edition mode. This is because of the active design mode on the 
-        // document which does extra conversion for links for instances. This lead to a not well
-        // Formed HTML.
+        // when viewed in wysiwyg edition mode. This is because we called twice TransformText() 
+        // Once for wikitext conversion then another time to convert the table. This lead to extra conversions
+        // of links and generates a not well formed HTML.
         //A lot of things need to be cleanned such as links (namedurls, wikipages, labeled urls,
         // inline, images, automagic links, etc.)
 	
