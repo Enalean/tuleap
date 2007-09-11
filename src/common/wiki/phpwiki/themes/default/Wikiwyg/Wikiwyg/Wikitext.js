@@ -819,7 +819,7 @@ proto.format_a = function(element) {
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
 	}
-	else if(href.match(/^(www.).*/)){
+	else if(href.match(/^(www.|mail.).*/)){
 	    this.make_wikitext_link(label, "http://" + href, element);
 	}
 	else{
@@ -847,7 +847,7 @@ proto.format_a = function(element) {
             // Do not put urls into brackets. We display only the url instead
 	    this.appendOutput(label);
 	}
-	else if(href.match(/^(www.).*/)){
+	else if(href.match(/^(www.|mail.).*/)){
 	    this.make_wikitext_link(label, "http://" + href, element);
 	}
 	else{
