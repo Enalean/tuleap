@@ -387,9 +387,7 @@ proto.do_link = function() {
     else {
       // If gecko
       if(url_selection.focusNode.innerHTML) {
-	var reg_match = new RegExp('(href=\".*?\".*?'
-				    +unescape(selection)
-				    +').*?\/a\>','m');
+	var reg_match = new RegExp('(href=\".*?\".*?' + unescape(selection) + ').*?\/a\>','m');
 	var tmp_match = url_selection.focusNode.innerHTML.match(reg_match);
 	if(tmp_match!=null) {
 	  var toreplace = /.*href=\"(.*?)\".*/m;
@@ -402,6 +400,9 @@ proto.do_link = function() {
     if(url==null)
       return;
     else if (url) {
+	  if(url.match(/^(www.|mail.|irc.).*/)){
+	    url = url.replace(/^(www.|mail.|irc.)(.*)/, "http://" + '$1' + '$2');
+	  }
       this.exec_command('Unlink');
       this.exec_command('CreateLink',url);
       this.exec_command('ForeColor','blue');

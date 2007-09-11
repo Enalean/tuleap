@@ -794,65 +794,59 @@ proto.format_a = function(element) {
     
     if (Wikiwyg.is_ie) {
         if (href.match(/http(.+)goto\?key\=(.+)/)){
-	    this.appendOutput(label);
-	}
+	        this.appendOutput(label);
+	    }
         else if (href.match(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/)){
-	    href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/, '$2');
-	    this.make_wikitext_link(label, href, element);
-	}
-	else if (href.match(/http(.+)\/wiki\/uploads\/[0-9]+\/[0-9]+\/(.*)/)){
-	    file = href.replace(/http(.+)\/wiki\/uploads\/[0-9]+\/[0-9]+\/(.*)/, '$2');
-	    rev = href.replace(/http(.+)\/wiki\/uploads\/[0-9]+\/([0-9]+)\/.*/, '$2');
-	    attach_string = '[Upload:' + rev + '/' + file + ']';
+	        href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/, '$2');
+	        this.make_wikitext_link(label, href, element);
+	    }
+	    else if (href.match(/http(.+)\/wiki\/uploads\/[0-9]+\/[0-9]+\/(.*)/)){
+	        file = href.replace(/http(.+)\/wiki\/uploads\/[0-9]+\/[0-9]+\/(.*)/, '$2');
+	        rev = href.replace(/http(.+)\/wiki\/uploads\/[0-9]+\/([0-9]+)\/.*/, '$2');
+	        attach_string = '[Upload:' + rev + '/' + file + ']';
             this.appendOutput(attach_string);
-	}
-	else if (href.match(/http(.+)\/wiki\/uploads\/([0-9]+\/)(.*)/)){
-	    file = href.replace(/http(.+)\/wiki\/uploads\/([0-9]+\/)(.*)/, '$3');
-	    attach_string = '[Upload:' + file + ']';
+	    }
+	    else if (href.match(/http(.+)\/wiki\/uploads\/([0-9]+\/)(.*)/)){
+	        file = href.replace(/http(.+)\/wiki\/uploads\/([0-9]+\/)(.*)/, '$3');
+	        attach_string = '[Upload:' + file + ']';
             this.appendOutput(attach_string);
-	}
-	else if (href.match(/http(.+)\/wiki\/(.+)/)){
-	    href = href.replace(/http(.+)\/wiki\/(.+)/, '$2');
-	    this.make_wikitext_link(label, href, element);
-	}
-	else if (href.match(/(http|https|ftp).*/)){
+	    }
+	    else if (href.match(/http(.+)\/wiki\/(.+)/)){
+	        href = href.replace(/http(.+)\/wiki\/(.+)/, '$2');
+	        this.make_wikitext_link(label, href, element);
+	    }
+	    else if ((href.match(/(http|https|ftp).*/)) && (label == href)){
             // Do not put urls into brackets. We display only the url instead
-	    this.appendOutput(label);
-	}
-	else if(href.match(/^(www.|mail.).*/)){
-	    this.make_wikitext_link(label, "http://" + href, element);
-	}
-	else{
-	    this.make_wikitext_link(label, href, element);
-	}
-    }else{
-        if (href.match(/\/goto\?key=(.+)/)){
-	    this.appendOutput(label);
-	}
-	else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
-	    href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
+	        this.appendOutput(label);
+	    }
+	    else{
+	        this.make_wikitext_link(label, href, element);
+	    }
+	}else{
+        if (href.match(/goto\?key=(.+)/)){
+	        this.appendOutput(label);
+	    }
+	    else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
+	        href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
-	else if (href.match(/.+uploads\/[0-9]+\/[0-9]+\/.*/)){
-	    file = href.replace(/.+uploads\/[0-9]+\/[0-9]+\/(.*)/, '$1');
-	    rev = href.replace(/.+uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
-	    attach_string = '[Upload:' + rev + '/' + file + ']';
+	    else if (href.match(/.+uploads\/[0-9]+\/[0-9]+\/.*/)){
+	        file = href.replace(/.+uploads\/[0-9]+\/[0-9]+\/(.*)/, '$1');
+	        rev = href.replace(/.+uploads\/[0-9]+\/([0-9]+)\/.*/, '$1');
+	        attach_string = '[Upload:' + rev + '/' + file + ']';
             this.appendOutput(attach_string);
-	}else if (href.match(/.+uploads\/([0-9]+\/)(.*)/)){
-	    file = href.replace(/.+uploads\/([0-9]+\/)(.*)/, '$2');
-	    attach_string = '[Upload:' + file + ']';
+	    }else if (href.match(/.+uploads\/([0-9]+\/)(.*)/)){
+	        file = href.replace(/.+uploads\/([0-9]+\/)(.*)/, '$2');
+	        attach_string = '[Upload:' + file + ']';
             this.appendOutput(attach_string);
-	}
-	else if ((href.match(/(http|https|ftp).*/)) && (label == href)){
+	    }
+	    else if ((href.match(/(http|https|ftp).*/)) && (label == href)){
             // Do not put urls into brackets. We display only the url instead
-	    this.appendOutput(label);
-	}
-	else if(href.match(/^(www.|mail.).*/)){
-	    this.make_wikitext_link(label, "http://" + href, element);
-	}
-	else{
-	    this.make_wikitext_link(label, href, element);
-	}
+	        this.appendOutput(label);
+	    }
+	    else{
+	        this.make_wikitext_link(label, href, element);
+	    }
     }
 
 }
