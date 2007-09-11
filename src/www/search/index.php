@@ -101,7 +101,7 @@ if ($type_of_search == "soft") {
 		for ( $i = 0; $i < $rows; $i++ ) {
 			print	"<TR class=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/projects/".db_result($result, $i, 'unix_group_name')."/\">"
 				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'group_name')."</A></TD>"
-				. "<TD>".db_result($result,$i,'short_description')."</TD></TR>\n";
+				. "<TD>".htmlentities(db_result($result,$i,'short_description'), ENT_QUOTES)."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}
