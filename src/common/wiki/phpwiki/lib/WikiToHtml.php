@@ -48,8 +48,7 @@ class WikiToHtml {
         $this->replace_known_plugins();
         $this->replace_unknown_plugins();
 	    $this->color_pre_tags();
-	    //	$this->replace_tags();
-	    $this->clean_plugin();
+		$this->clean_plugin();
 	    if ($charset != 'utf-8'){
 		    if($charset == 'iso-8959-1'){
 	            $this->_html = utf8_decode($this->_html);
@@ -68,14 +67,14 @@ class WikiToHtml {
     function replace_known_plugins() {
         // If match a plugin
         $pattern = '/\&lt\;\?plugin\s+RichTable(.*)\?\&gt\;/Umsi';
-        $replace_string = "replace_rich_table";       
+        $replace_string = "replace_rich_table";
         $this->_html = preg_replace_callback($pattern, $replace_string, $this->_html);
     }
     
     // Replace unknown plugins by keyword Wikitext { tag }
     function replace_unknown_plugins() {
-        $pattern = '/(\&lt\;\?plugin[^?]*\?\&gt\;)/Usi';
-	    $replace_string = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {<br> \1 <br>}</div><br></p>';
+        $pattern = '/(\&lt\;\?plugin.*\?\&gt\;)/Umsi';
+	    $replace_string = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {<br>\1<br>}</div><br></p>';
 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
     }
     
@@ -84,7 +83,6 @@ class WikiToHtml {
         $pattern = '/\<pre class\=\".*\"\>/Usi';
         $replace_string = '<pre style="background-color:#FDFDF7">';
         $this->_html = preg_replace($pattern, $replace_string, $this->_html);
-    
     }
 
     // Clean links to keep only <a href="link">name</a>
@@ -109,28 +107,20 @@ class WikiToHtml {
 	    $replace_string = '\1';
 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
     }
-    
-    // Put unknown tags in Wikitext {}
-    function replace_tags() {
-        // Replace old table format ( non plugin )
-        $pattern = '/(\ {0,4}(?:\S.*)?\|\S+\s*$.*?\<\/p\>)/ms';
-        $replace_string = '<p><div style="background-color:#D3D3D3;font-size:smaller;">Wikitext {<br> \1 <br>}</div><br></p>';
-        $this->_html = preg_replace($pattern, $replace_string, $this->_html);
-    }
-    
+
     // Replace \n by <br> only in 
-    // <?plugin ? > tag to keep formatting
-    function clean_plugin() {
+    // < ?plugin ? > tag to keep formatting
+    function clean_plugin(){
         $pattern = '/(\&lt\;\?plugin.*\?\&gt\;)/Umsei';
 	    $replace_string = 'preg_replace("/\n/Ums","<br>","\1")';
-	    $this->_html = preg_replace($pattern, $replace_string, $this->_html) ; 
+	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
     }
     
-    function clean_plugin_name() {
+    function clean_plugin_name(){
 	    // Remove plugin name converted in a link
 	    $pattern = '/(\&lt\;\?plugin\s)\<span.*\>\<span\>\<a href=.*\>(\w+)\<\/a\><\/span\><\/span>([^?]*\?\&gt\;)/Umsi';
  	    $replace_string = '\1 \2 \3';
- 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html) ; 
+ 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
     } 
 }
 
