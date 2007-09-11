@@ -31,27 +31,50 @@ var nb_rows = 1;
 var nb_files = 0;
 var used_ftp_files = [];
 var available_ftp_files =[];
-		
+var selects = {};
+var current_select_number = 0;
+
+function build_select_file(number) {
+    /**/
+    while (selects[number].childNodes.length) {
+        selects[number].removeChild(selects[number].lastChild);
+    }
+    /**/
+    
+    //remove all ftp files aldready selected in the avalaible ftp file list (result in the non_used_ftp_files)
+    var non_used_ftp_files = available_ftp_files;
+    used_ftp_files.each(function(num){
+        non_used_ftp_files = non_used_ftp_files.without(num);
+    });
+    
+    //for each non used ftp files, add a corresponding option ligne (used in the select files)
+    var builder_node_files = [];
+    non_used_ftp_files.each(function(num){
+        if (num != ''){
+            builder_node_files.push(Builder.node('option', {value:num}, num));
+        }
+    });
+    var opts = [
+        Builder.node('option', {value:'-1'}, choose),
+        Builder.node('optgroup', {label:local_file}, 
+            [Builder.node('option', {value:'-2'}, browse)]),
+        Builder.node('optgroup', {label:scp_ftp_files}, 
+            builder_node_files)
+    ];
+    opts.each(function (opt) {
+        selects[number].appendChild(opt);
+    });
+    selects[number].options[0].selected = 'selected';
+}
+
 //function to add a new file by http or ftp/scp mode
 function add_new_file() {
 	nb_files ++;
 	var id = nb_rows++;
-	var builder_node_files = [];
+	
 	var builder_node_processor = [];
 	var builder_node_type = [];
-	var non_used_ftp_files = available_ftp_files;
 
-	//remove all ftp files aldready selected in the avalaible ftp file list (result in the non_used_ftp_files)
-	used_ftp_files.each(function(num){
-		non_used_ftp_files = non_used_ftp_files.without(num);
-	});
-			
-	//for each non used ftp files, add a corresponding option ligne (used in the select files)			
-	non_used_ftp_files.each(function(num){
-		if (num != ''){
-			builder_node_files.push(Builder.node('option', {value:num}, num));
-		}
-	});
 			
 	//TR tag construction		 	
 	var row = Builder.node('tr', {id:'row_'+id});
@@ -64,44 +87,16 @@ function add_new_file() {
 			
 	//TD tag constuction, add the select file boxe to this tag (used to choose the file)
 	var cell = Builder.node('td', {id:'td_file_'+id});
-	var select = Builder.node('select', {name:'ftp_file_list'}, 
-		[Builder.node('option', {value:'-1'}, choose),
-		Builder.node('optgroup', {label:local_file}, 
-		[Builder.node('option', {value:'-2'}, browse)]),
-		Builder.node('optgroup', {label:scp_ftp_files}, 
-		builder_node_files)
-		]);
-	select.options[0].selected = 'selected';
+	var select = Builder.node('select', {name:'ftp_file_list'});
+    selects[current_select_number] = select;
+    build_select_file(current_select_number);
 			
 	//add the onchange event on the select boxe
-	Event.observe(select, 'change', (function () {
-		if (this.options[this.selectedIndex].value == '-2') {
-			//the http mode was selected
-			Element.show('file_'+id);
-			//Element.hide(this);
-			Element.remove(this);
-			Element.remove('ftp_file_'+id);
-			$('processor_'+id).name='file_processor[]';
-			$('type_'+id).name='file_type[]';
-			cell_trash.appendChild(image);
-		}else if(this.options[this.selectedIndex].value != '-1'){
-			//the ftp/scp move was selected, wa change the select box to a readonly text field
-			//we add the file to the used_ftp_files list
-			//Element.hide(this);
-			Element.remove(this);
-			Element.remove('file_'+id);
-			Element.show('ftp_file_'+id);
-			$('ftp_file_'+id).value=this.options[this.selectedIndex].value;
-			used_ftp_files.push(this.options[this.selectedIndex].value);
-			$('processor_'+id).name='ftp_file_processor[]';
-			$('type_'+id).name='ftp_file_type[]';
-			cell_trash.appendChild(image);
-			$('td_file_'+id).innerHTML += this.options[this.selectedIndex].value;
-					
-		}
-	}).bindAsEventListener(select), true);
+	Event.observe(select, 'change', (function (evt, current_select_number, id, cell_trash, image) {
+        onselectchange(this, current_select_number, id, cell_trash, image);
+	}).bindAsEventListener(select, current_select_number, id, cell_trash, image), true);
 	cell.appendChild(select);
-
+    
 	//Browse file field creation
 	var file = Builder.node('input', {'type':'file', id:'file_'+id, name:'file[]'});
 	Element.hide(file);
@@ -142,14 +137,63 @@ function add_new_file() {
 	row.appendChild(cell);
 
 	$('files_body').appendChild(row);
+    current_select_number++;
 }
-		
+
+function onselectchange(select, number, id, cell_trash, image) {
+    if (select.options[select.selectedIndex].value == '-2') {
+        var h = {};
+        $H(selects).each(function (pair) {
+                if (pair.key != number) {
+                    h[pair.key] = pair.value;
+                }
+        });
+        selects = h;
+        //the http mode was selected
+        Element.show('file_'+id);
+        //Element.hide(select);
+        Element.remove(select);
+        Element.remove('ftp_file_'+id);
+        $('processor_'+id).name='file_processor[]';
+        $('type_'+id).name='file_type[]';
+        cell_trash.appendChild(image);
+    }else if(select.options[select.selectedIndex].value != '-1'){
+        var h = {};
+        $H(selects).each(function (pair) {
+                if (pair.key != number) {
+                    h[pair.key] = pair.value;
+                }
+        });
+        selects = h;
+        //the ftp/scp move was selected, wa change the select box to a readonly text field
+        //we add the file to the used_ftp_files list
+        //Element.hide(select);
+        Element.remove(select);
+        Element.remove('file_'+id);
+        Element.show('ftp_file_'+id);
+        $('ftp_file_'+id).value=select.options[select.selectedIndex].value;
+        used_ftp_files.push(select.options[select.selectedIndex].value);
+        $('processor_'+id).name='ftp_file_processor[]';
+        $('type_'+id).name='ftp_file_type[]';
+        cell_trash.appendChild(image);
+        $('td_file_'+id).innerHTML += select.options[select.selectedIndex].value;
+        
+        //remove entry from other select boxes
+        $H(selects).keys().each(function (number) {
+                build_select_file(number);
+        });
+    }
+}
+
 function delete_file(row_id, id){
 	nb_files --;
 	var file = $('file_'+id);
 	if($('file_'+id)==null){
 		// we remove the file from the used ftp files list
 		used_ftp_files = used_ftp_files.without($('ftp_file_'+id).value);
+        $H(selects).keys().each(function (number) {
+                build_select_file(number);
+        });
 	}
 	Element.remove(row_id);
 	if((release_mode == 'creation' && nb_files==0) || (release_mode == 'edition' && $('nb_files').value==0 && nb_files==0)){
@@ -212,8 +256,11 @@ function refresh_file_list(){
 	new Ajax.Request(url,
 			  {
 			    method:'get',
-			    onSuccess: (function(transport, json) {
-            		available_ftp_files = (json.msg).split(',');
+			    onSuccess: (function(transport) {
+                    available_ftp_files = (json.msg).split(',');
+                    $H(selects).keys().each(function (number) {
+                            build_select_file(number);
+                    });
         	   }).bind(this) 
 			  });
 }

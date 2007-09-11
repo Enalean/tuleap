@@ -8,11 +8,13 @@ require_once ('common/frs/FRSFileFactory.class.php');
 if ($_GET['action'] == 'permissions_frs_package') {
 
     permission_display_selection_frs("PACKAGE_READ", $_GET['package_id'], $_GET['group_id']);
-} else
+} else {
     if ($_GET['action'] == 'permissions_frs_release') {
 
         permission_display_selection_frs("RELEASE_READ", $_GET['release_id'], $_GET['group_id']);
-    } else
+    } else {
+        header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
         if ($_GET['action'] == 'validator_frs_create') {
             $validator = new frsValidator();
             $release = array (
@@ -31,7 +33,7 @@ if ($_GET['action'] == 'permissions_frs_package') {
                 header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
             }
 
-        } else
+        } else {
             if ($_GET['action'] == 'validator_frs_update') {
                 $validator = new frsValidator();
                 $release = array (
@@ -51,11 +53,15 @@ if ($_GET['action'] == 'permissions_frs_package') {
                     header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
                 }
 
-            } else
+            } else {
                 if ($_GET['action'] == 'refresh_file_list'){
                     $frsff = new FRSFileFactory();
                     $file_list = $frsff->getUploadedFileNames();
-                    $available_ftp_files = implode(", ", $file_list);
-                    header("X-JSON: ({valid:true, msg:'".$available_ftp_files."'})");
+                    $available_ftp_files = implode(",", $file_list);
+                    echo "{valid:true, msg:'".$available_ftp_files."'}";
                 }
+            }
+        }
+    }
+}
 ?>
