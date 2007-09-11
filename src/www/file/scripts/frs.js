@@ -257,6 +257,7 @@ function refresh_file_list(){
 			  {
 			    method:'get',
 			    onSuccess: (function(transport) {
+                    var json = eval('('+ transport.responseText +')');
                     available_ftp_files = (json.msg).split(',');
                     $H(selects).keys().each(function (number) {
                             build_select_file(number);
