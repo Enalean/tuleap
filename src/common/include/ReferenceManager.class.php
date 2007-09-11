@@ -35,6 +35,12 @@ class ReferenceManager {
     var $referenceDao;
     var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","git","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
+    
+    /**
+     * Not possible to give extra params to the call back function (_insertRefCallback in this case)
+     * so we use an class attribute to pass the value of the group_id
+     */
+    var $tmpGroupIdForCallbackFunction = null;
 
    
     function ReferenceManager() {
@@ -286,10 +292,11 @@ class ReferenceManager {
      * @param $html the string which may contain invalid 
      */
     function insertReferences(&$html,$group_id) {
-
+        $this->tmpGroupIdForCallbackFunction = $group_id;
         $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/&]+)+/',
                                       array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
                                       $html);
+        $this->tmpGroupIdForCallbackFunction = null;
     }
 
     /**
@@ -378,10 +385,14 @@ class ReferenceManager {
                 }
             }
         } else {
-            if (array_key_exists('group_id', $GLOBALS)) {
-                $ref_gid=$GLOBALS['group_id']; // might not be set
+            if ($this->tmpGroupIdForCallbackFunction) {
+                $ref_gid = $this->tmpGroupIdForCallbackFunction;
             } else {
-                $ref_gid = '';
+                if (array_key_exists('group_id', $GLOBALS)) {
+                    $ref_gid=$GLOBALS['group_id']; // might not be set
+                } else {
+                    $ref_gid = '';
+                }
             }
         }
 
