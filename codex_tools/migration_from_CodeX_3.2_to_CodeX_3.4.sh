@@ -357,6 +357,8 @@ ALTER TABLE groups CHANGE group_name group_name VARCHAR( 255 ) DEFAULT NULL;
 # Support for more than 4GB table in MySQL -> 1TB
 ALTER TABLE artifact_file MAX_ROWS = 1000000 AVG_ROW_LENGTH = 1000000;
 
+# Found in SR #904
+ALTER TABLE svn_commits ADD INDEX idx_search (group_id, whoid, id);
 
 ###############################################################################
 # This should have been done earlier. Nevertheless, fix remaining shells if any
