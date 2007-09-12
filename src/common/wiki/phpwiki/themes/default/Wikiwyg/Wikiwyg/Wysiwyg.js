@@ -244,20 +244,18 @@ proto.do_image = function() {
     
     // Prompt for filename and revision number
     img = prompt("Enter the image name", '');
+    if (img == null || img == '')
+	    return;
     rev = prompt("Enter the revision number", '');
     
     if(! Wikiwyg.is_ie){ // Fix for broken images in Firefox design mode
         var base = location.href.replace(/(.*?:\/\/.*?\/).*/, '$1');
-        if (img == null || img == '')
-	    return;
         if(rev){
             html = '<img src="' + base + 'wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
         }else{
             html = '<img src="' + base + 'wiki/uploads/' + groupid + '/' + img + '"></img>';
         }
     }else{
-        if (img == null || img == '')
-	    return;
         if(rev){
             html = '<img src="/wiki/uploads/' + groupid + '/' + rev + '/' + img + '"></img>';
         }else{
@@ -282,10 +280,10 @@ proto.do_attach = function(){
     
     // Prompt dor filename and revision number
     file = prompt("Enter file name", '');
-    rev = prompt("Enter the revision number", '');
-    
     if (file == null || file == '')
        return;
+    rev = prompt("Enter the revision number", '');
+    
     if(rev){
 	html = 'Upload:' + rev + '/' + file;
     }else {
