@@ -250,8 +250,13 @@ if ($func=='do_update') {
         $set_server_id = ", location = 'satellite', server_id = ". (int)$server_id .' ';
     }
     $is_in_iframe = $request->get('is_in_iframe') ? 1 : 0;
-    $sql = "UPDATE service SET label='$label', description='$description', link='$link', is_active=".($is_active?"1":"0").
-        ", is_used=".($is_used?"1":"0").", scope='$scope', rank='$rank' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=$service_id";
+    $admin_statement = '';
+    if (user_is_super_user()) { //is_active and scope can only be change by a siteadmin
+        $admin_statement = ", is_active=". ($is_active ? 1 : 0) .", scope='". $scope ."'";
+        
+    }
+    $sql = "UPDATE service SET label='$label', description='$description', link='$link' ". $admin_statement .
+        ", is_used=".($is_used?"1":"0").", rank='$rank' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=$service_id";
     $result=db_query($sql);
 
     if (!$result) {
