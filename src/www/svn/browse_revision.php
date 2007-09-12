@@ -153,8 +153,7 @@ if (!isset($group_id) || !$group_id) {
     }
 
     if (isset($_commiter) && $_commiter && ($_commiter != 100)) {
-        $commiter_str=" AND user.user_id=svn_commits.whoid ".
-            " AND user.user_name='$_commiter' ";
+        $commiter_str=" AND user.user_name='$_commiter' ";
     } else {
         //no assigned to was chosen, so don't add it to where clause
         $commiter_str='';
