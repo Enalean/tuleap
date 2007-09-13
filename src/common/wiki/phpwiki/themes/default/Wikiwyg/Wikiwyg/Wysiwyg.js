@@ -85,7 +85,7 @@ proto.enableThis = function() {
     this.fix_up_relative_imgs();
     this.get_edit_document().designMode = 'on';
     // XXX - Doing stylesheets in initializeObject might get rid of blue flash
-    //    this.apply_stylesheets();
+    this.apply_stylesheets();
     this.enable_keybindings();
     this.clear_inner_html();
 }
@@ -139,12 +139,11 @@ proto.apply_stylesheets = function(styles) {
 
     for (var i = 0; i < styles.length; i++) {
         var style = styles[i];
-
         if (style.href == location.href)
             this.apply_inline_stylesheet(style, head);
         else
-            if (this.should_link_stylesheet(style))
-                this.apply_linked_stylesheet(style, head);
+            //if (this.should_link_stylesheet(style)) // always false even with location.href !
+            this.apply_linked_stylesheet(style, head);
     }
 }
 
