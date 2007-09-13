@@ -117,11 +117,13 @@ class ArtifactFactory extends Error {
         
 		$artifacts = array();
 		if (is_array($criteria) && count($criteria) > 0) {
-            $sql = "SELECT a.*,afv.valueInt as assigned_to 
-                    FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv 
-                    WHERE a.group_artifact_id = ".$this->ArtifactType->getID()." AND 
-                          a.group_artifact_id = agl.group_artifact_id AND 
-                          af.group_artifact_id = agl.group_artifact_id";
+            
+            $sql_select = "SELECT a.* ";
+            $sql_from = " FROM artifact_group_list agl, artifact a ";
+            $sql_where = " WHERE a.group_artifact_id = ".$this->ArtifactType->getID()." AND 
+                          a.group_artifact_id = agl.group_artifact_id ";
+            
+            $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
 			foreach ($criteria as $c => $cr) {
 				$af = $art_field_fact->getFieldFromName($cr['field_name']);
 				if (!$af || !is_object($af)) {
@@ -137,24 +139,32 @@ class ArtifactFactory extends Error {
                     $cr['field_value'] = strtotime($cr['field_value']);
                 }
                 
+                $operator = "=";    // operator by default
+				if (isset($cr['operator']) && in_array($cr['operator'], $ACCEPTED_OPERATORS)) {
+                    $operator = $cr['operator'];
+                }
+                
 				if ($af->isStandardField()) {
-					if (isset($cr['operator']) && in_array($cr['operator'], $ACCEPTED_OPERATORS)) {
-						$sql .= " AND (a.".$cr['field_name']." ".$cr['operator']." '".$cr['field_value']."')";
-                    } else {
-						$sql .= " AND (a.".$cr['field_name']." = '".$cr['field_value']."')";
-                    }
+					$sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".$cr['field_value']."')";
 				} else {
-					if (isset($cr['operator']) && in_array($cr['operator'], $ACCEPTED_OPERATORS)) {
-						$sql .= " AND (af.field_name = '".$cr['field_name']."' AND afv.".$af->getValueFieldName()." ".$cr['operator']." '".$cr['field_value']."')";
-                    } else {
-						$sql .= " AND (af.field_name = '".$cr['field_name']."' AND afv.".$af->getValueFieldName()." = '".$cr['field_value']."')";
-                    }
+					$sql_select .= ", afv".$cpt_criteria.".valueInt ";
+                    $sql_from .= ", artifact_field af".$cpt_criteria.", artifact_field_value afv".$cpt_criteria." ";
+                    $sql_where .= " AND af".$cpt_criteria.".group_artifact_id = agl.group_artifact_id
+                                    AND (af".$cpt_criteria.".field_name = '".$cr['field_name']."' 
+                                    AND afv".$cpt_criteria.".".$af->getValueFieldName()." ".$operator." '".$cr['field_value']."') 
+                                    AND af".$cpt_criteria.".field_id = afv".$cpt_criteria.".field_id 
+                                    AND a.artifact_id = afv".$cpt_criteria.".artifact_id ";
 				}
+                $cpt_criteria += 1;
 			}
-			$sql .= " AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id" ;
+            
+			$sql = $sql_select . $sql_from . $sql_where;
+            
 		} else {
-			$sql = "SELECT a.artifact_id FROM artifact_group_list agl, artifact a WHERE ".
-			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id";
+			$sql = "SELECT a.artifact_id 
+                    FROM artifact_group_list agl, artifact a 
+                    WHERE a.group_artifact_id = ".$this->ArtifactType->getID()." AND 
+                          a.group_artifact_id = agl.group_artifact_id";
         }
         $offset = intval($offset);
         $max_rows = intval($max_rows);
