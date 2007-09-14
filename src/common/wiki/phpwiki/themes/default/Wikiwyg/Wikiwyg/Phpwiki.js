@@ -225,6 +225,7 @@ proto.markupRules = {
     h4: ['start_line', '! '],
     ordered: ['start_lines', '#'],
     unordered: ['start_lines', '*'],
+	blockquote: ['start_lines', '>'],
     indent: ['start_lines', ' '],
     hr: ['line_alone', '----'],
     link: ['bound_phrase', '[ ', '| Link ]'],
@@ -547,9 +548,9 @@ proto.format_p = function(element) {
 	this.assert_blank_line();
       } // end if(!is_ie) 
       else{
-	this.assert_blank_line();
-	this.walk(element);
-	this.assert_blank_line();   
+	    this.assert_blank_line();
+	    this.walk(element);
+	    this.assert_blank_line();   
       }
     }  // end if (style)   
     else {
@@ -858,6 +859,16 @@ proto.format_var = function(element) {
     this.appendOutput(this.config.markupRules.var_html[1]);
     this.walk(element);
     this.appendOutput(this.config.markupRules.var_html[2]);
+}
+
+/*==============================================================================
+Support for <blockquote> tag
+ =============================================================================*/
+proto.format_blockquote = function(element) {
+    this.appendOutput(this.config.markupRules.blockquote[1]);
+    // first child is a <p> tag. We walk through it to not break the mail-qute-style with blank line
+	// added by walk() for <p> tags.
+    this.walk(element.firstChild);
 }
 
 proto.do_verbatim = Wikiwyg.Wikitext.make_do('verbatim');
