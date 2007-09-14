@@ -58,7 +58,11 @@ class CLI_Action_Tracker_AddAttachedFile extends CLI_Action {
                 $contents = fread($fh, filesize($loaded_params['others']['file']));
                 $loaded_params['soap']['encoded_data'] = base64_encode($contents);
                 $loaded_params['soap']['filename']  = basename($loaded_params['others']['file']);
-                $loaded_params['soap']['filetype'] = mime_content_type($loaded_params['others']['file']);   // obsolete function to replace by fileinfo if we install pear one day.
+                if (function_exists('mime_content_type')) {
+                    $loaded_params['soap']['filetype'] = mime_content_type($loaded_params['others']['file']);   // obsolete function to replace by fileinfo if we install pear one day.
+                } else {
+                    $loaded_params['soap']['filetype'] = '';
+                }
                 fclose($fh);
             }
         }
