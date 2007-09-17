@@ -75,7 +75,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 
     //check user access rights
     $project = group_get_object($group_id); 
-    $root = $project->getUnixName();
+    $root = $project->getUnixName(false);
 
     $forbidden = svn_utils_get_forbidden_paths(user_getname(),$root);
 
