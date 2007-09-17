@@ -91,8 +91,8 @@ class ArtifactFile extends Error {
 		//	data validation
 		//
 		if (!$filename || !$filetype || !$filesize || !$bin_data) {
-			echo '<P>|'.$filename.'|'.$filetype.'|'.$filesize.'|'.$bin_data.'|';
-			$this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','name_requ'));
+			$GLOBALS['Response']->addFeedback('error', '<P>|'.$filename.'|'.$filetype.'|'.$filesize.'|'.$bin_data.'|');
+            $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','name_requ'));
 			return false;
 		}
 
