@@ -12,7 +12,7 @@ require_once('../svn/svn_data.php');
 $there_are_specific_permissions = true;
 if (isset($_REQUEST['group_id'])) {
     $obj                            = group_get_object($_REQUEST['group_id']);
-    $group_name                     = $obj->getUnixName();
+    $group_name                     = $obj->getUnixName(false);
  }
 
 

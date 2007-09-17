@@ -120,7 +120,7 @@ if (!isset($group_id) || !$group_id) {
 
     //check user access rights
     $project = group_get_object($group_id); 
-    $root = $project->getUnixName();
+    $root = $project->getUnixName(false);
     $forbidden = svn_utils_get_forbidden_paths(user_getname(),$root);
     if (!empty($forbidden)) {
       $from .= ",svn_dirs,svn_checkins ";
