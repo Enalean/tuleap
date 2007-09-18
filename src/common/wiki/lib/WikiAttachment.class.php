@@ -218,55 +218,11 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @param  string $name File name
      */
     function setFilename($name="") {
-        $disallowed_extensions = explode("\n",
-                                         "ad[ep]
-asd
-ba[st]
-chm
-cmd
-com
-cgi
-cpl
-crt
-dll
-eml
-exe
-hlp
-hta
-in[fs]
-isp
-jse?
-lnk
-md[betw]
-ms[cipt]
-nws
-ocx
-ops
-pcd
-p[ir]f
-php
-pl
-py
-reg
-sc[frt]
-sh[bsm]?
-swf
-url
-vb[esx]?
-vxd
-ws[cfh]");
 
-        if (preg_match("/(\." . join("|\.", $disallowed_extensions) . ")\$/",
-                       $name)) {
+        if (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
             $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_extension', join(", ", $disallowed_extensions)), E_USER_ERROR);
-            return false;
-        }
-        elseif (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
-            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
-
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', join(", ", $disallowed_extensions)), E_USER_ERROR);
+            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', array($name)), E_USER_ERROR);
         }
 
         $this->filename = $name;

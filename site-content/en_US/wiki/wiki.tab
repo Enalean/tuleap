@@ -46,7 +46,6 @@ wiki_views_wikiviews	not_empty_page	<p>You can set specific permissions on <stro
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiAttachment.class.php
 #
-wiki_lib_attachment	err_extension	Files with extension $1 are not allowed.
 wiki_lib_attachment	err_alpha	ERROR uploading $1: File names may only contain alphanumeric characters and dot, underscore or dash.
 wiki_lib_attachment	err_insert	Can not insert new attachment revision.
 wiki_lib_attachment	err_create_upload_dir	Unable to create project upload area
