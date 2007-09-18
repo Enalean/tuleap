@@ -2249,13 +2249,13 @@ class Artifact extends Error {
         }
 
         
-                /**
-         * Display the follow ups comments
+        /**
+         * Return the string to display the follow ups comments
          *
          * @param group_id: the group id
          * @param ascii: ascii mode
          *
-         * @return void
+         * @return string the follow-up comments to display in HTML or in ascii mode
          */
         function showFollowUpComments($group_id, $ascii=false) {
 
