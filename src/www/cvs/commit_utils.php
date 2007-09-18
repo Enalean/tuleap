@@ -615,7 +615,7 @@ function get_cvs_history($group_id, $period=false) {
   $query = "SELECT u.user_name, count(co.id) as commits ".
     "FROM cvs_commits co, user u, cvs_repositories repo, cvs_checkins ci ".
     "WHERE co.whoid=u.user_id ".
-    "AND repo.repository='/cvsroot/".$group->getUnixName()."' ".
+    "AND repo.repository='/cvsroot/".$group->getUnixName(false)."' ".
     "AND ci.repositoryid=repo.id ".
     "AND ci.whoid=co.whoid ".
     "AND ci.commitid=co.id ".
