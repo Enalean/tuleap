@@ -1,5 +1,5 @@
 <?php // -*-php-*-
-rcs_id('$Id: CreateToc.php,v 1.28 2005/10/12 06:15:25 rurban Exp $');
+rcs_id('$Id: CreateToc.php,v 1.36 2007/07/19 12:41:25 labbenes Exp $');
 /*
  Copyright 2004,2005 $ThePhpWikiProgrammingTeam
 
@@ -52,7 +52,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.28 $");
+                            "\$Revision: 1.36 $");
     }
 
     function getDefaultArguments() {
@@ -60,17 +60,18 @@ extends WikiPlugin
                       // or headers=1,2,3 is also possible.
                       'headers'   => "!!!,!!,!",   // "!!!"=>h1, "!!"=>h2, "!"=>h3
                       'noheader'  => 0,            // omit <h1>Table of Contents</h1>
-                      'align'     => 'left',
+                      'position'  => 'right',      // or left
                       'with_toclink' => 0,         // link back to TOC
                       'jshide'    => 0,            // collapsed TOC as DHTML button
-                      'liststyle' => 'dl',         // or 'ul' or 'ol'
-                      'indentstr' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+		      'extracollapse' => 1,        // provide an entry +/- link to collapse
+                      'liststyle' => 'dl',         // 'dl' or 'ul' or 'ol'
+                      'indentstr' => '&nbsp;&nbsp;&nbsp;&nbsp;',
 		      'with_counter' => 1,
                       );
     }
     // Initialisation of toc counter
     function _initTocCounter() {
-        $counter = array(1=>1, 2=>0, 3=>0);
+        $counter = array(1=>0, 2=>0, 3=>0);
         return $counter;
     }
 
@@ -112,11 +113,13 @@ extends WikiPlugin
     function _quote($heading) {
         if (TOC_FULL_SYNTAX ) {
             $theading = TransformInline($heading);
-            $qheading = preg_quote($theading->asXML(), "/");
+            if ($theading)
+                return preg_quote($theading->asXML(), "/");
+            else 
+                return XmlContent::_quote(preg_quote($heading, "/"));
         } else {
-            $qheading = XmlContent::_quote(preg_quote($heading, "/"));
+            return XmlContent::_quote(preg_quote($heading, "/"));
         }
-        return $qheading;
     }
     
     /*
@@ -124,7 +127,7 @@ extends WikiPlugin
      * @param $hend   id (in $content) of heading end
      */
     function searchHeader ($content, $start_index, $heading, 
-                           $level, &$hstart, &$hend) {
+                           $level, &$hstart, &$hend, $basepage=false) {
         $hstart = 0;
         $hend = 0;
     	$h = $this->_getHeader($level);
@@ -137,9 +140,10 @@ extends WikiPlugin
             }
             elseif (isa($content[$j], 'cached_link'))
             {
-		if (method_exists($content[$j],'asXML'))
+		if (method_exists($content[$j],'asXML')) {
+		    $content[$j]->_basepage = $basepage;
 		    $content[$j] = $content[$j]->asXML();
-		else
+		} else
 		    $content[$j] = $content[$j]->asString();
 		// shortcut for single wikiword or link headers
 		if ($content[$j] == $heading
@@ -162,7 +166,7 @@ extends WikiPlugin
 			        $joined .= $content[$k];
 			    elseif (method_exists($content[$k],'asXML'))
 		                $joined .= $content[$k]->asXML();
-		            else
+			    else
 		                $joined .= $content[$k]->asString();
 			    if (preg_match("/<$h>$qheading<\/$h>/",$joined)) {
 				$hend=$k;
@@ -228,7 +232,8 @@ extends WikiPlugin
                         /* Url for backlink */
                         $url = WikiURL(new WikiPageName($basepage,false,"TOC"));
                         $j = $this->searchHeader($markup->_content, $j, $s, 
-                                                 $match[1], $hstart, $hend);
+                                                 $match[1], $hstart, $hend, 
+                                                 $markup->_basepage);
                         if ($j and isset($markup->_content[$j])) {
                             $x = $markup->_content[$j];
 			    $qheading = $this->_quote($s);
@@ -290,6 +295,7 @@ extends WikiPlugin
     }
                 
     function run($dbi, $argstr, &$request, $basepage) {
+        global $WikiTheme;
         extract($this->getArgs($argstr, $request));
         if ($pagename) {
             // Expand relative page names.
@@ -313,7 +319,7 @@ extends WikiPlugin
 	    }
         }
         $content = $current->getContent();
-        $html = HTML::div(array('class' => 'toc','align' => $align));
+        $html = HTML::div(array('class' => 'toc', 'id'=>'toc'));
         if ($liststyle == 'dl')
             $list = HTML::dl(array('id'=>'toclist','class' => 'toc'));
         elseif ($liststyle == 'ul')
@@ -357,36 +363,77 @@ extends WikiPlugin
                         (str_repeat($indentstr,$indent)),$li));
             }
         }
-        if ($jshide) {
-            $list->setAttr('style','display:none;');
-            $html->pushContent(Javascript("
+	$list->setAttr('style','display:'.($jshide?'none;':'block;'));
+        $open = DATA_PATH.'/'.$WikiTheme->_findFile("images/folderArrowOpen.png");
+        $close = DATA_PATH.'/'.$WikiTheme->_findFile("images/folderArrowClosed.png");
+	$html->pushContent(Javascript("
 function toggletoc(a) {
-  toc=document.getElementById('toclist');
+  var toc=document.getElementById('toclist')
+  //toctoggle=document.getElementById('toctoggle')
+  var open='".$open."'
+  var close='".$close."'
   if (toc.style.display=='none') {
-    toc.style.display='block';
-    a.title='"._("Click to hide the TOC")."';
+    toc.style.display='block'
+    a.title='"._("Click to hide the TOC")."'
+    a.src = open
   } else {
     toc.style.display='none';
-    a.title='"._("Click to display")."';
+    a.title='"._("Click to display")."'
+    a.src = close
   }
 }"));
-            $html->pushContent(HTML::h4(HTML::a(array('name'=>'TOC',
-                                                      'class'=>'wikiaction',
-                                                      'title'=>_("Click to display"),
-                                                      'onclick'=>"toggletoc(this)"),
-                                                _("Table Of Contents"))));
-        } else {
-            if (!$noheader)
-                $html->pushContent(HTML::h2(HTML::a(array('name'=>'TOC'),_("Table Of Contents"))));
-            else 
-                $html->pushContent(HTML::a(array('name'=>'TOC'),""));
-        }
+	if ($extracollapse)
+	    $toclink = HTML(_("Table Of Contents"),
+			    " ",
+                            HTML::a(array('name'=>'TOC')),
+			    HTML::img(array(
+                                            'id'=>'toctoggle',
+                                            'class'=>'wikiaction',
+                                            'title'=>_("Click to display to TOC"),
+                                            'onClick'=>"toggletoc(this)",
+                                            'height' => 15,
+                                            'width' => 15,
+                                            'border' => 0,
+                                            'src' => $jshide ? $close : $open )));
+	else
+	    $toclink = HTML::a(array('name'=>'TOC',
+				     'class'=>'wikiaction',
+				     'title'=>_("Click to display"),
+				     'onclick'=>"toggletoc(this)"),
+			       _("Table Of Contents"),
+			       HTML::span(array('style'=>'display:none',
+						'id'=>'toctoggle')," "));
+	$html->pushContent(HTML::h4($toclink));
         $html->pushContent($list);
         return $html;
     }
 };
 
 // $Log: CreateToc.php,v $
+// Revision 1.36  2007/07/19 12:41:25  labbenes
+// Correct TOC numbering. It should start from '1' not from '1.1'.
+//
+// Revision 1.35  2007/02/17 14:17:48  rurban
+// declare vars for IE6
+//
+// Revision 1.34  2007/01/28 22:47:06  rurban
+// fix # back link
+//
+// Revision 1.33  2007/01/28 22:37:04  rurban
+// beautify +/- collapse icon
+//
+// Revision 1.32  2007/01/20 11:25:30  rurban
+// remove align
+//
+// Revision 1.31  2007/01/09 12:35:05  rurban
+// Change align to position. Add extracollapse. js now always active, jshide just denotes the initial state.
+//
+// Revision 1.30  2006/12/22 17:49:38  rurban
+// fix quoting
+//
+// Revision 1.29  2006/04/15 12:26:54  rurban
+// need basepage for subpages like /Remove (within CreateTOC)
+//
 // Revision 1.28  2005/10/12 06:15:25  rurban
 // just aesthetics
 //
