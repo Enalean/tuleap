@@ -10,12 +10,10 @@ php3_max_execution_time "1800"
 
 <IfModule mod_php4.c>
 php_value max_execution_time "1800"
-php_value memory_limit "64M"
 </IfModule>
 
 <IfModule sapi_apache2.c>
 php_value max_execution_time "1800"
-php_value memory_limit "64M"
 </IfModule>
 
 # Prevent IE7 from caching the tracker reports.
