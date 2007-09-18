@@ -61,7 +61,6 @@ wiki_lib_attachment_rev	err_too_big	Désolé, ce fichier est très volumineux.
 #-----------------------------------------------
 # Script: SF/common/wiki/lib/WikiAttachment.class.php
 #
-wiki_lib_attachment	err_extension	Les fichiers ayant les extensions $1 ne sont pas autorisés.
 wiki_lib_attachment	err_alpha	ERREUR chargement de $1&nbsp;: Les noms de fichier ne peuvent contenir que des caractères alphanumériques, ainsi que le point, le souligné et le tiret.
 wiki_lib_attachment	err_insert	Impossible d'insérer une nouvelle révision du fichier joint&nbsp;: $1
 wiki_lib_attachment	err_create_upload_dir	Impossible de créer la zone de stockage du projet
