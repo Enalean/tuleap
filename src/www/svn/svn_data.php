@@ -11,20 +11,15 @@
 
 require_once('svn_utils.php');
 
-function svn_data_get_technicians($group_id) {
+function svn_data_get_technicians($projectname) {
 
-    // FIXME: Ideally this should be a merge of the current project member list
-    // with the list of all people who once committed something in the CVS
-    // and may have been removed from the project since then.
-    // problem is: the structure of the cvs tracker does not allow for a quick 
-    // search. 
-    $sql="SELECT distinct user.user_name, user.user_name ".
-	"FROM user, user_group ".
-	"WHERE (user_group.group_id='$group_id' ".
-	"AND user.user_id=user_group.user_id) ".
-	"ORDER BY user.user_name ASC";
-
-	return db_query($sql);
+    // Get list of all people who once committed something in the CVS
+    // including those who may have been removed from the project since then.
+    $sql="SELECT DISTINCT user.user_name, user.user_name ".
+        "FROM svn_commits, svn_repositories, user ".
+        "WHERE (svn_repositories.repository like '%/".$projectname."') AND (svn_repositories.id = svn_commits.repositoryid) AND (svn_commits.whoid=user.user_id) ".
+        "ORDER BY user.user_name ASC";
+    return db_query($sql);
 }
 
 function svn_data_update_general_settings($group_id,$svn_tracked,$svn_preamble) {

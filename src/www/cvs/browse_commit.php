@@ -226,13 +226,7 @@ $totalrows = db_numrows($result1);
 	creating a custom technician box which includes "any"
 */
 
-$res_tech=commits_data_get_technicians ($group_id);	
-
-$rows=db_numrows($res_tech);
-
-$tech_name_arr=util_result_column_to_array($res_tech,1);
-
-$tech_box=commits_technician_box($group_id, '_commiter', $_commiter, 'Any');
+$tech_box=commits_technician_box($projectname, '_commiter', $_commiter, 'Any');
 
 
 

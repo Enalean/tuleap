@@ -191,12 +191,7 @@ if (!isset($group_id) || !$group_id) {
      creating a custom technician box which includes "any"
     */
 
-    $res_tech=svn_data_get_technicians($group_id);	
-
-    $rows=db_numrows($res_tech);
-
-    $tech_name_arr=util_result_column_to_array($res_tech,1);
-    $tech_box=svn_utils_technician_box($group_id, '_commiter', $_commiter, 'Any');
+    $tech_box=svn_utils_technician_box($root, '_commiter', $_commiter, 'Any');
 
 
 

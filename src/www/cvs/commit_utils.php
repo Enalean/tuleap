@@ -115,32 +115,27 @@ function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_10
 	}
 }
 
-function commits_data_get_technicians($group_id) {
+function commits_data_get_technicians($projectname) {
 
-    // FIXME: Ideally this should be a merge of the current project member list
-    // with the list of all people who once committed something in the CVS
-    // and may have been removed from the project since then.
-    // problem is: the structure of the cvs tracker does not allow for a quick 
-    // search. 
-    $sql="SELECT distinct user.user_name, user.user_name ".
-	//"FROM user, user_group, cvs_checkins, cvs_repositories ".
-	"FROM user, user_group ".
-	"WHERE (user_group.group_id='$group_id' ".
-	"AND user.user_id=user_group.user_id) ".
-	//"OR (cvs_repositories.repository='/cvsroot/".$projectname."' ".
-	//	"AND cvs_checkins.repositoryid=cvs_repositories.id ".
-	//"AND user.user_id=cvs_checkins.whoid) ". 
-	"ORDER BY user.user_name ASC";
-
+    // Get list of all people who once committed something in the CVS
+    // including those who may have been removed from the project since then.
+    $sql="SELECT DISTINCT user.user_name, user.user_name ".
+        "FROM cvs_checkins, cvs_repositories, user ".
+        "WHERE (cvs_repositories.repository like '%/".$projectname."') AND (cvs_repositories.id = cvs_checkins.repositoryid) AND (cvs_checkins.whoid=user.user_id) ".
+        "ORDER BY user.user_name ASC";
 	return db_query($sql);
 }
 
-function commits_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
+function commits_technician_box($projectname,$name='_commiter',$checked='xzxz',$text_100='None') {
     global $Language;
-	if (!$group_id) {
+	if (!$projectname) {
 		return $Language->getText('cvs_commit_utils', 'error_nogid');
 	} else {
-		$result=commits_data_get_technicians($group_id);
+		$result=commits_data_get_technicians($projectname);
+                if (!in_array($checked,util_result_column_to_array($result))) {
+                    // Selected 'my commits' but never commited
+                    $checked='xzxz';
+                }
 		return html_build_select_box($result,$name,$checked,true,$text_100);
 	}
 }

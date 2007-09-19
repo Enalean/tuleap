@@ -81,12 +81,16 @@ function svn_footer($params) {
 }
 
 
-function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
+function svn_utils_technician_box($projectname,$name='_commiter',$checked='xzxz',$text_100='None') {
   global $Language;
-	if (!$group_id) {
+	if (!$projectname) {
 		return $Language->getText('svn_utils','g_id_err');
 	} else {
-		$result=svn_data_get_technicians($group_id);
+		$result=svn_data_get_technicians($projectname);
+                if (!in_array($checked,util_result_column_to_array($result))) {
+                    // Selected 'my commits' but never commited
+                    $checked='xzxz';
+                }
 		return html_build_select_box($result,$name,$checked,true,$text_100);
 	}
 }
@@ -98,7 +102,7 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 		Accepts a result set from the svn_commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
 	*/
-    $url = $PHP_SELF.'?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
+    $url = $_SERVER['PHP_SELF'].'?func=browse&group_id='.$group_id.'&set='.$set.'&msort='.$msort;
 
     if ($set == 'custom')
      $url .= $pref_stg;
@@ -215,7 +219,7 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 	    
 	    echo '
 			<TR class="'. util_get_alt_row_color($i) .'">'.
-			'<TD class="small"><b><A HREF="'.$PHP_SELF.'?func=detailrevision&group_id='.$group_id.$id_link.$filter_string.'">'.$rev.
+			'<TD class="small"><b><A HREF="'.$_SERVER['PHP_SELF'].'?func=detailrevision&group_id='.$group_id.$id_link.$filter_str.'">'.$rev.
 		  '</b></A></TD>'.
 			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
 			'<TD class="small">'.format_date($sys_datefmt, db_result($result, $i, 'date')).'</TD>'.
@@ -432,9 +436,9 @@ function svn_utils_format_svn_history($group_id) {
 
 // read permission access file. The default settings part.
 function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
-    global $feedback;
+    global $feedback,$svn_prefix;
 
-    $filename = "/svnroot/$gname/.SVNAccessFile";
+    $filename = "$svn_prefix/$gname/.SVNAccessFile";
 
     $fd = @fopen("$filename", "r");
     $in_settings = false;
@@ -458,9 +462,9 @@ function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
 // read permission access file. The project specific part.
 function svn_utils_read_svn_access_file($gname) {
 
-    global $feedback,$Language;
+    global $feedback,$Language,$svn_prefix;
 
-    $filename = "/svnroot/$gname/.SVNAccessFile";
+    $filename = "$svn_prefix/$gname/.SVNAccessFile";
     $buffer = '';
 
     $fd = @fopen("$filename", "r");
@@ -482,9 +486,9 @@ function svn_utils_read_svn_access_file($gname) {
 
 function svn_utils_write_svn_access_file($gname, $contents) {
 
-    global $feedback,$Language;
+    global $feedback,$Language,$svn_prefix;
 
-    $filename = "/svnroot/$gname/.SVNAccessFile";
+    $filename = "$svn_prefix/$gname/.SVNAccessFile";
     $fd = fopen("$filename", "w+");
     if ($fd) {
 	if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
@@ -502,7 +506,8 @@ function svn_utils_write_svn_access_file($gname, $contents) {
 }
 
 function svn_utils_svn_repo_exists($gname) {
-    return is_dir("/svnroot/$gname");
+    global $svn_prefix;
+    return is_dir("$svn_prefix/$gname");
 }
 
 
@@ -524,8 +529,8 @@ $SVNGROUPS = "None";
  *    (see src/utils/svn/svnaccess.py)
  */
 function svn_utils_parse_access_file($gname) {
-  global $SVNACCESS, $SVNGROUPS,$Language;
-  $filename = "/svnroot/$gname/.SVNAccessFile";
+    global $SVNACCESS, $SVNGROUPS,$Language,$svn_prefix;
+  $filename = "$svn_prefix/$gname/.SVNAccessFile";
   $SVNACCESS = array();
   $SVNGROUPS = array();
 
@@ -546,7 +551,7 @@ function svn_utils_parse_access_file($gname) {
 
     $state = $ST_START;
 
-    $content = fread($f,filesize($filename));
+    $content = @fread($f,filesize($filename));
     $separator = "\n\t\r\0\x0B";
     $line = strtok($content,$separator);
     while ($line) {
