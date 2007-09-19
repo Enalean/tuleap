@@ -26,8 +26,8 @@ if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
 while(count($_REQUEST)) {
     array_pop($_REQUEST);
 }
-$g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
-$p_pos = strpos(strtolower(ini_get('variables_order')), 'p');
+$g_pos = strpos(strtolower(ini_get('gpc_order')), 'g');
+$p_pos = strpos(strtolower(ini_get('gpc_order')), 'p');
 if ($g_pos === FALSE) {
     if ($p_pos !== FALSE) {
         $_REQUEST = $_POST;
