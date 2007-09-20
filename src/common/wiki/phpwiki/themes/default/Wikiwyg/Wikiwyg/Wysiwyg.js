@@ -133,7 +133,7 @@ proto.set_inner_html = function(html) {
     this.get_edit_document().body.innerHTML = html;
 }
 
-proto.apply_stylesheets = function(styles) {
+proto.apply_stylesheets = function(styles) { //See IE
     var styles = document.styleSheets;
     var head   = this.get_edit_document().getElementsByTagName("head")[0];
 
@@ -518,6 +518,20 @@ proto.insert_html = function(html, caretpos) {
         range.moveEnd('character', - caretpos);
     }
     range.select();
+}
+
+proto.apply_stylesheets = function(styles) {
+    var styles = document.styleSheets;
+    var edit_doc   = this.get_edit_document();
+
+    for (var i = 0; i < styles.length; i++) {
+        var style = styles[i];
+        if (style.href == location.href)
+            this.apply_inline_stylesheet(style, edit_doc);
+        else
+            //if (this.should_link_stylesheet(style)) // always false !
+            this.apply_linked_stylesheet(style, edit_doc);
+    }
 }
 
 // Use IE's design mode default key bindings for now.
