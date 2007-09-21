@@ -37,6 +37,17 @@ $server->register('login', // method name
      Returns a soap fault if the login failed.' // documentation
 );
 
+$server->register('retrieveSession',
+    array('session_hash' => 'xsd:string'),
+    array('return'   => 'tns:Session'),
+    $uri,
+    $uri.'#retrieveSession',
+    'rpc',
+    'encoded',
+    'Retrieve a valid session with a given session_hash.
+     Returns a soap fault if the session is not valid.'
+);
+
 $server->register('logout',
     array('sessionKey' => 'xsd:string'),
     array(),
@@ -74,6 +85,28 @@ function login($loginname, $passwd) {
         return new soap_fault(login_fault, 'login', $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), '');
     }
 }
+
+/**
+ * retrieveSession : retrieve a valid CodeX session
+ *
+ * @global $Language
+ *
+ * @param string $session_hash the session hash that identify the session to retrieve
+ * @return array the SOAPSession if the session_hash identify a valid session, or a soap fault otherwise
+ */
+function retrieveSession($session_hash) {
+    global $Language;
+    if (session_continue($session_hash)) {
+        $return = array(
+            'user_id'  => session_get_userid(),
+            'session_hash' => $session_hash
+        );
+        return new soapval('return', 'tns:Session',$return);
+    } else {
+        return new soap_fault(invalid_session_fault, 'retrieveSession', 'Invalid Session.', '');
+    }
+}
+
 
 /**
  * logout : logout the CodeX server
