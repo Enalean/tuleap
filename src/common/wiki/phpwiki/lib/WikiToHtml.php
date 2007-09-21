@@ -103,7 +103,7 @@ class WikiToHtml {
 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
 	
 	    // Clean Wiki unknown
-	    $pattern = '/\<span class\=\"wikiunknown\"\>\<span\>\<a href\=\".*\"\>(.*)\<\/a\>\<\/span\>\<\/span\>/';
+	    $pattern = '/\<span class\=\"wikiunknown\"\>\<span\>\<a href\=\".*\" style\=\".*\"\>(.*)\<\/a\>\<\/span\>\<\/span\>/Umsi';
 	    $replace_string = '\1';
 	    $this->_html = preg_replace($pattern, $replace_string, $this->_html);
 		
