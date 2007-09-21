@@ -80,7 +80,6 @@ class Widget_MyRss extends Widget {
                 }
                 $rss =& new SimplePie($myrss['url'], $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
                 $rss->set_output_encoding('ISO-8859-1');
-                new dBug($rss);
                 $myrss['title'] = $rss->get_title();
             }
             $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. user_getid() .", 'u', '". db_escape_string($myrss['title']) ."', '". db_escape_string($myrss['url']) ."')";
