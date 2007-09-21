@@ -486,6 +486,21 @@ CREATE TABLE IF NOT EXISTS user_layouts (
 -- --------------------------------------------------------
 
 -- 
+-- Structure de la table 'group_layouts'
+-- 
+
+DROP TABLE IF EXISTS group_layouts;
+CREATE TABLE IF NOT EXISTS group_layouts (
+  group_id int(11) unsigned NOT NULL default '0',
+  layout_id int(11) unsigned NOT NULL default '0',
+  is_default tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (group_id,layout_id),
+  KEY layout_id (layout_id)
+);
+
+-- --------------------------------------------------------
+
+-- 
 -- Structure de la table 'layouts_contents'
 -- 
 
@@ -518,7 +533,10 @@ CREATE TABLE IF NOT EXISTS widget_rss (
 
 
 
-INSERT INTO layouts (id, name, description, scope) VALUES (1, '2 columns', 'Standard layout', 'S');
+INSERT INTO layouts (id, name, description, scope) VALUES 
+(1, '2 columns', 'Simple layout made of 2 columns', 'S'),
+(2, '2/1/2 columns', 'Complex layout made of 2 columns + 1 column + 2 columns', 'S');
+
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
 INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
 
@@ -549,6 +567,10 @@ FROM user;
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 1, 'myprojects', 0
 FROM user;
+
+INSERT INTO group_layouts (group_id, layout_id, is_default) 
+SELECT group_id, 2, 1 
+FROM groups;
 
 
 TODO plugins
