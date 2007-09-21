@@ -58,7 +58,7 @@ class Widget_MyRss extends Widget {
     }
     
     function loadContent($id) {
-        $sql = "SELECT * FROM widget_rss WHERE owner_id = ". user_getid() ." AND owner_type = 'u' id = ". $id;
+        $sql = "SELECT * FROM widget_rss WHERE owner_id = ". user_getid() ." AND owner_type = 'u' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
