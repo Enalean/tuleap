@@ -6628,7 +6628,18 @@ class SimplePie_File
 				{
 					$url_parts['port'] = 80;
 				}
-				$fp = fsockopen($url_parts['host'], $url_parts['port'], $errno, $errstr, $timeout);
+				if ($proxy) {
+					$proxy_parts = explode(':', $proxy);
+					if (!isset($proxy_parts[1])) {
+					    $proxy_parts[1] = 80;
+					}
+					$host = $proxy_parts[0];
+					$port = $proxy_parts[1];
+				} else {
+					$host = $url_parts['host'];
+					$port = $url_parts['port'];
+				}
+				$fp = fsockopen($host, $port, $errno, $errstr, $timeout);
 				if (!$fp)
 				{
 					$this->error = 'fsockopen error: ' . $errstr;
@@ -6644,20 +6655,24 @@ class SimplePie_File
 					{
 						socket_set_timeout($fp, $timeout);
 					}
-					if (isset($url_parts['path']))
-					{
-						if (isset($url_parts['query']))
+					if ($proxy) {
+						$get = $url;
+					} else {
+						if (isset($url_parts['path']))
 						{
-							$get = "$url_parts[path]?$url_parts[query]";
+							if (isset($url_parts['query']))
+							{
+								$get = "$url_parts[path]?$url_parts[query]";
+							}
+							else
+							{
+								$get = $url_parts['path'];
+							}
 						}
 						else
 						{
-							$get = $url_parts['path'];
+						    $get = '/';
 						}
-					}
-					else
-					{
-						$get = '/';
 					}
 					$out = "GET $get HTTP/1.0\r\n";
 					$out .= "Host: $url_parts[host]\r\n";
