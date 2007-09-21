@@ -58,7 +58,7 @@ class Widget_MyRss extends Widget {
     }
     
     function loadContent($id) {
-        $sql = 'SELECT * FROM user_rss WHERE user_id = '. user_getid() .' AND id = '. $id;
+        $sql = "SELECT * FROM widget_rss WHERE owner_id = ". user_getid() ." AND owner_type = 'u' id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -74,11 +74,16 @@ class Widget_MyRss extends Widget {
             $GLOBALS['Response']->addFeedback('error', "Can't add empty rss url");
         } else {
             if (!isset($myrss['title'])) {
-                require_once('common/rss/libs/magpierss/rss_fetch.inc');
-                $rss = fetch_rss($myrss['url']);
-                $myrss['title'] = $rss->channel['title'];
+                require_once('common/rss/libs/SimplePie/simplepie.inc');
+                if (!is_dir($GLOBALS['codex_cache_dir'] .'/rss')) {
+                    mkdir($GLOBALS['codex_cache_dir'] .'/rss');
+                }
+                $rss =& new SimplePie($myrss['url'], $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
+                $rss->set_output_encoding('ISO-8859-1');
+                new dBug($rss);
+                $myrss['title'] = $rss->get_title();
             }
-            $sql = 'INSERT INTO user_rss (user_id, title, url) VALUES ('. user_getid() .", '". db_escape_string($myrss['title']) ."', '". db_escape_string($myrss['url']) ."')";
+            $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. user_getid() .", 'u', '". db_escape_string($myrss['title']) ."', '". db_escape_string($myrss['url']) ."')";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -90,7 +95,7 @@ class Widget_MyRss extends Widget {
             $title = isset($myrss['title']) ? " title = '". db_escape_string($myrss['title']) ."' " : '';
             $url   = isset($myrss['url'])   ? " url   = '". db_escape_string($myrss['url'])   ."' " : '';
             if ($url || $title) {
-                $sql = "UPDATE user_rss SET ". $title .", ". $url ." WHERE user_id = ". user_getid() ." AND id = ". (int)$request->get('content_id');
+                $sql = "UPDATE widget_rss SET ". $title .", ". $url ." WHERE owner_id = ". user_getid() ." AND owner_type = 'u' AND id = ". (int)$request->get('content_id');
                 $res = db_query($sql);
                 $done = true;
             }
@@ -98,7 +103,7 @@ class Widget_MyRss extends Widget {
         return $done;
     }
     function destroy($id) {
-        $sql = 'DELETE FROM user_rss WHERE id = '. $id;
+        $sql = 'DELETE FROM widget_rss WHERE id = '. $id .' AND owner_id = '. user_getid() ." AND owner_type = 'u'";
         db_query($sql);
     }
     function isUnique() {

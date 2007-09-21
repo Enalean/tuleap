@@ -64,7 +64,7 @@ if (user_isloggedin()) {
             $req_cols = db_query($sql);
             while ($data = db_fetch_array($req_cols)) {
                 $col =& new WidgetLayout_Row_Column($data['id'], $data['width']);
-                $sql = 'SELECT * FROM user_layouts_contents WHERE user_id = '. user_getid() .' AND column_id = '. $col->id .' ORDER BY rank';
+                $sql = "SELECT * FROM layouts_contents WHERE owner_type = 'u' AND owner_id = ". user_getid() .' AND column_id = '. $col->id .' ORDER BY rank';
                 $req_content = db_query($sql);
                 while ($data = db_fetch_array($req_content)) {
                     $c =& Widget::getInstance($data['name']);

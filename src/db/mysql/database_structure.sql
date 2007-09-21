@@ -3341,12 +3341,13 @@ CREATE TABLE IF NOT EXISTS user_layouts (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'user_layouts_contents'
+-- Table structure for table 'layouts_contents'
 -- 
 
-DROP TABLE IF EXISTS user_layouts_contents;
-CREATE TABLE IF NOT EXISTS user_layouts_contents (
-  user_id int(11) unsigned NOT NULL default '0',
+DROP TABLE IF EXISTS layouts_contents;
+CREATE TABLE IF NOT EXISTS layouts_contents (
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   column_id int(11) unsigned NOT NULL default '0',
   name varchar(255) NOT NULL,
@@ -3354,12 +3355,12 @@ CREATE TABLE IF NOT EXISTS user_layouts_contents (
   rank int(11) NOT NULL default '0',
   is_minimzed tinyint(1) NOT NULL default '0',
   display_preferences tinyint(1) NOT NULL default '0',
-  KEY (user_id, layout_id, name, content_id),
+  KEY (user_id, owner_type, layout_id, name, content_id),
   KEY (name)
 );
 
-DROP TABLE IF EXISTS user_rss;
-CREATE TABLE IF NOT EXISTS user_rss (
+DROP TABLE IF EXISTS widget_rss;
+CREATE TABLE IF NOT EXISTS widget_rss (
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
   user_id int(11) unsigned NOT NULL default '0',
   title varchar(255) NOT NULL,

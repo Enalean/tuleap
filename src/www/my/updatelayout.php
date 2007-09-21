@@ -19,8 +19,9 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                     $instance_id = (int)$param[$name][$action];
                     switch($action) {
                         case 'remove':
-                            $sql = "DELETE FROM user_layouts_contents WHERE user_id = ". user_getid() ." AND layout_id = $layout_id AND name = '$name' AND content_id = $instance_id";
+                            $sql = "DELETE FROM layouts_contents WHERE owner_type = 'u' AND owner_id = ". user_getid() ." AND layout_id = $layout_id AND name = '$name' AND content_id = $instance_id";
                             db_query($sql);
+                            echo $sql;
                             if (!db_error()) {
                                 $widget->destroy($instance_id);
                             }
@@ -29,13 +30,14 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                         default:
                             //Search for the right column. (The first used)
                             $sql = "SELECT u.column_id AS id
-                            FROM user_layouts_contents AS u
+                            FROM layouts_contents AS u
                             LEFT JOIN (SELECT r.rank AS rank, c.id as id
                             FROM layouts_rows AS r INNER JOIN layouts_rows_columns AS c
                             ON (c.layout_row_id = r.id)
                             WHERE r.layout_id = $layout_id) AS col
                             ON (u.column_id = col.id)
-                            WHERE u.user_id = ". user_getid() ."
+                            WHERE u.owner_type = 'u' 
+                              AND u.owner_id = ". user_getid() ."
                               AND u.layout_id = $layout_id
                               AND u.column_id <> 0
                             ORDER BY col.rank, col.id";
@@ -53,33 +55,35 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                             }
                             
                             //See if it already exists but not used
-                            $sql = "SELECT column_id FROM user_layouts_contents 
-                            WHERE user_id = ". user_getid() ."
+                            $sql = "SELECT column_id FROM layouts_contents 
+                            WHERE owner_type = 'u'
+                              AND owner_id = ". user_getid() ."
                               AND layout_id = $layout_id 
                               AND name = '$name'";
                             $res = db_query($sql);
                             echo db_error();
                             if (db_numrows($res) && !$widget->isUnique() && db_result($res, 0, 'column_id') == 0) {
                                 //search for rank
-                                $sql = "SELECT min(rank) - 1 AS rank FROM user_layouts_contents WHERE user_id = ". user_getid() ." AND layout_id = $layout_id AND column_id = $column_id ";
+                                $sql = "SELECT min(rank) - 1 AS rank FROM layouts_contents WHERE owner_type = 'u' AND owner_id = ". user_getid() ." AND layout_id = $layout_id AND column_id = $column_id ";
                                 $res = db_query($sql);
                                 echo db_error();
                                 $rank = db_result($res, 0, 'rank');
                                 
                                 //Update
-                                $sql = "UPDATE user_layouts_contents
+                                $sql = "UPDATE layouts_contents
                                     SET column_id = ". $column_id .", rank = $rank
-                                    WHERE user_id = ". user_getid() ."
+                                    WHERE owner_type = 'u' 
+                                      AND owner_id = ". user_getid() ."
                                       AND name = '$name'
                                       AND layout_id = ". $layout_id;
                                 $res = db_query($sql);
                                 echo db_error();
                             } else {
                                 //Insert
-                                $sql = "INSERT INTO user_layouts_contents(user_id, layout_id, column_id, name, content_id, rank) 
-                                SELECT user_id, layout_id, column_id, '$name', $content_id, rank - 1 
-                                FROM user_layouts_contents 
-                                WHERE user_id = ". user_getid() ." AND layout_id = $layout_id AND column_id = $column_id 
+                                $sql = "INSERT INTO layouts_contents(owner_type, owner_id, layout_id, column_id, name, content_id, rank) 
+                                SELECT owner_type, owner_id, layout_id, column_id, '$name', $content_id, rank - 1 
+                                FROM layouts_contents 
+                                WHERE owner_type = 'u' AND owner_id = ". user_getid() ." AND layout_id = $layout_id AND column_id = $column_id 
                                 ORDER BY rank ASC
                                 LIMIT 1";
                                 db_query($sql);
@@ -92,21 +96,21 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
             break;
         case 'minimize':
             if ($name) {
-                $sql = 'UPDATE user_layouts_contents SET is_minimized = 1 WHERE user_id = '. user_getid() .' AND layout_id = '. $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+                $sql = "UPDATE layouts_contents SET is_minimized = 1 WHERE owner_type = 'u' AND owner_id = ". user_getid() .' AND layout_id = '. $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
                 db_query($sql);
                 echo db_error();
             }
             break;
         case 'maximize':
             if ($name) {
-                $sql = 'UPDATE user_layouts_contents SET is_minimized = 0 WHERE user_id = '. user_getid() .' AND layout_id = '. $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+                $sql = "UPDATE layouts_contents SET is_minimized = 0 WHERE owner_type = 'u' AND owner_id = ". user_getid() .' AND layout_id = '. $layout_id ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
                 db_query($sql);
                 echo db_error();
             }
             break;
         case 'preferences':
             if ($name) {
-                $sql = 'UPDATE user_layouts_contents SET display_preferences = 1, is_minimized = 0 WHERE user_id = '. user_getid() ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
+                $sql = "UPDATE layouts_contents SET display_preferences = 1, is_minimized = 0 WHERE owner_type = 'u' AND owner_id = ". user_getid() ." AND name = '". db_escape_string($name) ."' AND content_id = $instance_id";
                 db_query($sql);
                 echo db_error();
             }
@@ -142,7 +146,7 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                     
                     //Compute differences
                     $originals = array();
-                    $sql = 'SELECT * FROM user_layouts_contents WHERE user_id = '. user_getid() .' AND column_id = '. $column_id .' ORDER BY rank';
+                    $sql = "SELECT * FROM layouts_contents WHERE owner_type = 'u' AND owner_id = ". user_getid() .' AND column_id = '. $column_id .' ORDER BY rank';
                     echo $sql;
                     $res = db_query($sql);
                     echo db_error();
@@ -163,9 +167,10 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                             $_and .= " (name = '".$name[1]."' AND content_id = ". $name[0] .") ";
                         }
                         $_and .= ')';
-                        $sql = 'UPDATE user_layouts_contents
+                        $sql = "UPDATE layouts_contents
                             SET column_id = 0
-                            WHERE user_id = '. user_getid() .'
+                            WHERE owner_type = 'u' 
+                              AND owner_id = ". user_getid() .'
                               AND column_id = '. $column_id .
                               $_and;
                         $res = db_query($sql);
@@ -187,9 +192,10 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                         }
                         $_and .= ')';
                         //old and new column must be part of the same layout
-                        $sql = 'UPDATE user_layouts_contents
-                            SET column_id = '. $column_id .' 
-                            WHERE user_id = '. user_getid() .
+                        $sql = 'UPDATE layouts_contents
+                            SET column_id = '. $column_id ." 
+                            WHERE owner_type = 'u' 
+                              AND owner_id = ". user_getid() .
                               $_and ."
                               AND layout_id = ". $layout_id;
                         $res = db_query($sql);
@@ -202,7 +208,7 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                     $rank = 0;
                     $values = array();
                     foreach($names as $name) {
-                        $sql = 'UPDATE user_layouts_contents SET rank = '. ($rank++) .' WHERE user_id = '. user_getid() .' AND column_id = '. $column_id ." AND name = '".$name[1]."' AND content_id = ". $name[0];
+                        $sql = 'UPDATE layouts_contents SET rank = '. ($rank++) ." WHERE owner_type = 'u' AND owner_id = ". user_getid() .' AND column_id = '. $column_id ." AND name = '".$name[1]."' AND content_id = ". $name[0];
                     echo $sql;
                         db_query($sql);
                         echo db_error();

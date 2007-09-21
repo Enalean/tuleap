@@ -33,7 +33,7 @@ $layout_id = $request->get('layout_id');
 if (user_isloggedin() && $layout_id) {
     
     $used_widgets = array();
-    $sql = 'SELECT * FROM user_layouts_contents WHERE user_id = '. user_getid() .' AND layout_id = '. $layout_id .' AND content_id = 0 AND column_id <> 0';
+    $sql = "SELECT * FROM layouts_contents WHERE owner_type = 'u' AND owner_id = ". user_getid() .' AND layout_id = '. $layout_id .' AND content_id = 0 AND column_id <> 0';
     $res = db_query($sql);
     while($data = db_fetch_array($res)) {
         $used_widgets[] = $data['name'];

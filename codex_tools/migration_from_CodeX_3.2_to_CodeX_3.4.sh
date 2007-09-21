@@ -486,12 +486,13 @@ CREATE TABLE IF NOT EXISTS user_layouts (
 -- --------------------------------------------------------
 
 -- 
--- Structure de la table 'user_layouts_contents'
+-- Structure de la table 'layouts_contents'
 -- 
 
-DROP TABLE IF EXISTS user_layouts_contents;
-CREATE TABLE IF NOT EXISTS user_layouts_contents (
-  user_id int(11) unsigned NOT NULL default '0',
+DROP TABLE IF EXISTS layouts_contents;
+CREATE TABLE IF NOT EXISTS layouts_contents (
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   column_id int(11) unsigned NOT NULL default '0',
   name varchar(255) NOT NULL default '',
@@ -500,17 +501,18 @@ CREATE TABLE IF NOT EXISTS user_layouts_contents (
   is_removed tinyint(1) NOT NULL default '0',
   display_preferences tinyint(1) NOT NULL default '0',
   content_id int(11) unsigned NOT NULL default '0',
-  KEY user_id (user_id,layout_id,name,content_id)
+  KEY user_id (owner_id,owner_type,layout_id,name,content_id)
 );
 
 
-DROP TABLE IF EXISTS user_rss;
-CREATE TABLE IF NOT EXISTS user_rss (
+DROP TABLE IF EXISTS widget_rss;
+CREATE TABLE IF NOT EXISTS widget_rss (
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
-  user_id int(11) unsigned NOT NULL default '0',
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
   title varchar(255) NOT NULL,
   url TEXT NOT NULL,
-  KEY (user_id)
+  KEY (owner_id, owner_type)
 );
 
 
@@ -524,28 +526,28 @@ INSERT INTO user_layouts (user_id, layout_id, is_default)
 SELECT user_id, 1, 1 
 FROM user;
 
-INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-SELECT user_id, 1, 1, 'mysurveys', 4
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'mysurveys', 4
 FROM user;
 
-INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-SELECT user_id, 1, 1, 'mymonitoredforums', 2
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 2
 FROM user;
 
-INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-SELECT user_id, 1, 1, 'mybookmarks', 1
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'mybookmarks', 1
 FROM user;
 
-INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-SELECT user_id, 1, 2, 'myartifacts', 0
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 2, 'myartifacts', 0
 FROM user;
 
-INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-SELECT user_id, 1, 2, 'mymonitoredfp', 1
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 2, 'mymonitoredfp', 1
 FROM user;
 
-INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-SELECT user_id, 1, 1, 'myprojects', 0
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'myprojects', 0
 FROM user;
 
 
