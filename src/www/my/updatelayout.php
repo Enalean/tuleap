@@ -21,7 +21,6 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
                         case 'remove':
                             $sql = "DELETE FROM layouts_contents WHERE owner_type = 'u' AND owner_id = ". user_getid() ." AND layout_id = $layout_id AND name = '$name' AND content_id = $instance_id";
                             db_query($sql);
-                            echo $sql;
                             if (!db_error()) {
                                 $widget->destroy($instance_id);
                             }
