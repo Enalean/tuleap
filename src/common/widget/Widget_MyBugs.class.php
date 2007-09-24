@@ -1,6 +1,7 @@
 <?php
 
 require_once('Widget.class.php');
+require_once('www/my/my_utils.php');
 
 /**
 * Widget_MyBugs
