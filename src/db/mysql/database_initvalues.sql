@@ -2326,11 +2326,14 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 INSERT INTO layouts (id, name, description, scope) VALUES 
 (1, '2 columns', 'Simple layout made of 2 columns', 'S'),
 (2, '2/1/2 columns', 'Complex layout made of 2 columns + 1 column + 2 columns', 'S');
+
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
 INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
 
-INSERT INTO user_layouts (user_id, layout_id, is_default) 
-SELECT user_id, 1, 1 
+--
+
+INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
+SELECT user_id, 'u', 1, 1 
 FROM user;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
@@ -2357,8 +2360,10 @@ INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, 
 SELECT user_id, 'u', 1, 1, 'myprojects', 0
 FROM user;
 
-INSERT INTO group_layouts (group_id, layout_id, is_default) 
-SELECT group_id, 2, 1 
+--
+
+INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
+SELECT group_id, 'g', 2, 1 
 FROM groups;
 
 TODO plugins

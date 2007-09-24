@@ -471,31 +471,16 @@ CREATE TABLE IF NOT EXISTS layouts_rows_columns (
 -- --------------------------------------------------------
 
 -- 
--- Structure de la table 'user_layouts'
+-- Structure de la table 'owner_layouts'
 -- 
 
-DROP TABLE IF EXISTS user_layouts;
-CREATE TABLE IF NOT EXISTS user_layouts (
-  user_id int(11) unsigned NOT NULL default '0',
+DROP TABLE IF EXISTS owner_layouts;
+CREATE TABLE IF NOT EXISTS owner_layouts (
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   is_default tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (user_id,layout_id),
-  KEY layout_id (layout_id)
-);
-
--- --------------------------------------------------------
-
--- 
--- Structure de la table 'group_layouts'
--- 
-
-DROP TABLE IF EXISTS group_layouts;
-CREATE TABLE IF NOT EXISTS group_layouts (
-  group_id int(11) unsigned NOT NULL default '0',
-  layout_id int(11) unsigned NOT NULL default '0',
-  is_default tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (group_id,layout_id),
-  KEY layout_id (layout_id)
+  PRIMARY KEY  (user_id, layout_id)
 );
 
 -- --------------------------------------------------------
@@ -540,8 +525,10 @@ INSERT INTO layouts (id, name, description, scope) VALUES
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
 INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
 
-INSERT INTO user_layouts (user_id, layout_id, is_default) 
-SELECT user_id, 1, 1 
+##
+
+INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
+SELECT user_id, 'u', 1, 1 
 FROM user;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
@@ -568,8 +555,10 @@ INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, 
 SELECT user_id, 'u', 1, 1, 'myprojects', 0
 FROM user;
 
-INSERT INTO group_layouts (group_id, layout_id, is_default) 
-SELECT group_id, 2, 1 
+##
+
+INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
+SELECT group_id, 'g', 2, 1 
 FROM groups;
 
 

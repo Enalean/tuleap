@@ -3327,30 +3327,16 @@ CREATE TABLE IF NOT EXISTS layouts_rows_columns (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'user_layouts'
+-- Table structure for table 'owner_layouts'
 -- 
 
-DROP TABLE IF EXISTS user_layouts;
-CREATE TABLE IF NOT EXISTS user_layouts (
-  user_id int(11) unsigned NOT NULL default '0',
+DROP TABLE IF EXISTS owner_layouts;
+CREATE TABLE IF NOT EXISTS owner_layouts (
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   is_default tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (user_id, layout_id)
-);
-
--- --------------------------------------------------------
-
--- 
--- Structure de la table 'group_layouts'
--- 
-
-DROP TABLE IF EXISTS group_layouts;
-CREATE TABLE IF NOT EXISTS group_layouts (
-  group_id int(11) unsigned NOT NULL default '0',
-  layout_id int(11) unsigned NOT NULL default '0',
-  is_default tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (group_id,layout_id),
-  KEY layout_id (layout_id)
 );
 
 -- --------------------------------------------------------

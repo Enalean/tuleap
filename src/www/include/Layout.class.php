@@ -151,7 +151,7 @@ class Layout extends Response {
             echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getToggleMinusForWidgets(), array('alt' => '-')) .'</a></div>';
         }
         if (strlen($widget->getPreferences())) {
-            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">Preferences</a></div>';
+            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'">Preferences</a></div>';
         }
         if ($widget->hasRss()) {
             echo '<div class="widget_titlebar_rss"><a href="widget.php?action=rss&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">rss</a></div>';
@@ -163,7 +163,7 @@ class Layout extends Response {
         }
         echo '<div class="widget_content" style="'. $style .'">';
         if ($display_preferences) {
-            echo '<div class="widget_preferences">'. $widget->getPreferencesForm() .'</div>';
+            echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id) .'</div>';
         }
         echo $widget->getContent() .'</div>';
         echo '</div>';

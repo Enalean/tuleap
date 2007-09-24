@@ -46,9 +46,9 @@ require_once('common/widget/Widget_MyAdmin.class.php');
     function canBeDisplayed() {
         return true;
     }
-    function getPreferencesForm() {
+    function getPreferencesForm($layout_id) {
         $prefs  = '';
-        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name='. $this->id .'&amp;content_id='. $this->getInstanceId() .'">';
+        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
         $prefs .= '<fieldset><legend>Preferences</legend>';
         $prefs .= $this->getPreferences();
         $prefs .= '<br />';
