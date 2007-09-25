@@ -480,7 +480,7 @@ CREATE TABLE IF NOT EXISTS owner_layouts (
   owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   is_default tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (user_id, layout_id)
+  PRIMARY KEY  (owner_id, owner_type, layout_id)
 );
 
 -- --------------------------------------------------------
@@ -519,8 +519,7 @@ CREATE TABLE IF NOT EXISTS widget_rss (
 
 
 INSERT INTO layouts (id, name, description, scope) VALUES 
-(1, '2 columns', 'Simple layout made of 2 columns', 'S'),
-(2, '2/1/2 columns', 'Complex layout made of 2 columns + 1 column + 2 columns', 'S');
+(1, '2 columns', 'Simple layout made of 2 columns', 'S');
 
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
 INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
@@ -558,7 +557,7 @@ FROM user;
 ##
 
 INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
-SELECT group_id, 'g', 2, 1 
+SELECT group_id, 'g', 1, 1 
 FROM groups;
 
 

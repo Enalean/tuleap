@@ -2324,8 +2324,7 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 -- Layouts
 -- 
 INSERT INTO layouts (id, name, description, scope) VALUES 
-(1, '2 columns', 'Simple layout made of 2 columns', 'S'),
-(2, '2/1/2 columns', 'Complex layout made of 2 columns + 1 column + 2 columns', 'S');
+(1, '2 columns', 'Simple layout made of 2 columns', 'S');
 
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
 INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);

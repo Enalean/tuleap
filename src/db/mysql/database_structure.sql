@@ -3336,7 +3336,7 @@ CREATE TABLE IF NOT EXISTS owner_layouts (
   owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   is_default tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (user_id, layout_id)
+  PRIMARY KEY  (owner_id, owner_type, layout_id)
 );
 
 -- --------------------------------------------------------
