@@ -19,9 +19,11 @@ if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == '
         case 'widget':
             if ($name && $request->exist('layout_id')) {
                 if ($widget = Widget::getInstance($name)) {
+                    $action = array_pop(array_keys($param[$name]));
                     switch($action) {
                         case 'remove':
-                            $lm->removeWidget($owner_id, $owner_type, $layout_id, $name, $widget);
+                            $instance_id = (int)$param[$name][$action];
+                            $lm->removeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id, $widget);
                             break;
                         case 'add':
                         default:
