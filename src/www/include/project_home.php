@@ -14,8 +14,12 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
 require_once('common/wiki/lib/Wiki.class.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/event/EventManager.class.php');
+require_once('common/widget/WidgetLayoutManager.class.php');
 
 $Language->loadLanguageMsg('include/include');
+$em =& EventManager::instance();
+$em->processEvent('plugin_load_language_file', null);
 
 //make sure this project is NOT a foundry
 if ($project->isFoundry()) {
@@ -104,8 +108,12 @@ if (! $project->hideMembers()) {
 print '
 </TD></TR>
 </TABLE>
-<P>
 ';
+
+echo '<hr>';
+$lm =& new WidgetLayoutManager();
+$lm->displayLayout($project->getGroupId(), $lm->OWNER_TYPE_GROUP);
+echo '<hr>';
 
 
 // ############################# File Releases
