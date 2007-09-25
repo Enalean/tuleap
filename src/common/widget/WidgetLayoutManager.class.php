@@ -76,6 +76,7 @@ class WidgetLayoutManager {
     */
     function _currentUserCanUpdateLayout($owner_id, $owner_type) {
         $readonly = true;
+        $request =& HTTPRequest::instance();
         switch ($owner_type) {
             case $this->OWNER_TYPE_USER:
                 if (user_getid() == $owner_id) { //Current user can only update its own /my/ page
@@ -83,6 +84,9 @@ class WidgetLayoutManager {
                 }
                 break;
             case $this->OWNER_TYPE_GROUP:
+                if (user_is_super_user() || user_ismember($request->get('group_id'), 'A')) {
+                    $readonly = false;
+                }
                 //Only project admin
                 break;
             case $this->OWNER_TYPE_HOME:
