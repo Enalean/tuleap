@@ -10,6 +10,7 @@ require_once('common/widget/Widget_MySrs.class.php');
 require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
+require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
 /**
 * Widget
 * 
@@ -120,8 +121,10 @@ require_once('common/widget/Widget_MyAdmin.class.php');
                     $o =& new Widget_MyAdmin();
                 }
                 break;
+            case 'projectlatestfilereleases':
+                $o =& new Widget_ProjectLatestFileReleases();
+                break;
             default:
-                //TODO: handle portlets in plugins
                 $em =& EventManager::instance();
                 $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
                 break;
