@@ -33,9 +33,9 @@ require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
         $this->content_id = 0;
     }
     
-    function display($layout_id, $column_id, $is_minimized, $display_preferences) {
+    function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences) {
         if ($this->canBeDisplayed()) {
-            $GLOBALS['HTML']->widget($this, $layout_id, $column_id, $is_minimized, $display_preferences);
+            $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences);
         }
     }
     function getTitle() {
