@@ -27,5 +27,8 @@ class Widget_ProjectLatestFileReleases extends Widget {
     function getContent() {
         return $this->content['content'];
     }
+    function isAvailable() {
+        return isset($this->content['title']);
+    }
 }
 ?>

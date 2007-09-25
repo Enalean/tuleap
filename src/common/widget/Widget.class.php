@@ -74,6 +74,9 @@ require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
     function isUnique() {
         return true;
     }
+    function isAvailable() {
+        return true;
+    }
     function getInstanceId() {
         return $this->content_id;
     }
@@ -128,6 +131,9 @@ require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
                 $em =& EventManager::instance();
                 $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
                 break;
+        }
+        if (!$o || !is_a($o, 'Widget') || !$o->isAvailable()) {
+            $o = null;
         }
         return $o;
     }
