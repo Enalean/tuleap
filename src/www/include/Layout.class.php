@@ -140,18 +140,20 @@ class Layout extends Response {
         return $feedback;
     }
     
-    function widget(&$widget, $layout_id, $column_id, $is_minimized, $display_preferences) {
+    function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences) {
         echo '<div class="widget" id="widget_'. $widget->id .'-'. $widget->getInstanceId() .'">';
-        echo '<div class="widget_titlebar">';
+        echo '<div class="widget_titlebar '. ($readonly?'':'widget_titlebar_handle') .'">';
         echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
-        echo '<div class="widget_titlebar_close"><a href="updatelayout.php?action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'X')) .'</a></div>';
-        if ($is_minimized) {
-            echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getTogglePlusForWidgets(), array('alt' => '+')) .'</a></div>';
-        } else {
-            echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getToggleMinusForWidgets(), array('alt' => '-')) .'</a></div>';
-        }
-        if (strlen($widget->getPreferences())) {
-            echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'">Preferences</a></div>';
+        if (!$readonly) {
+            echo '<div class="widget_titlebar_close"><a href="updatelayout.php?action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'X')) .'</a></div>';
+            if ($is_minimized) {
+                echo '<div class="widget_titlebar_maximize"><a href="updatelayout.php?action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getTogglePlusForWidgets(), array('alt' => '+')) .'</a></div>';
+            } else {
+                echo '<div class="widget_titlebar_minimize"><a href="updatelayout.php?action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getToggleMinusForWidgets(), array('alt' => '-')) .'</a></div>';
+            }
+            if (strlen($widget->getPreferences())) {
+                echo '<div class="widget_titlebar_prefs"><a href="updatelayout.php?action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'">Preferences</a></div>';
+            }
         }
         if ($widget->hasRss()) {
             echo '<div class="widget_titlebar_rss"><a href="widget.php?action=rss&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">rss</a></div>';
@@ -162,7 +164,7 @@ class Layout extends Response {
             $style = 'display:none;';
         }
         echo '<div class="widget_content" style="'. $style .'">';
-        if ($display_preferences) {
+        if (!$readonly && $display_preferences) {
             echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id) .'</div>';
         }
         echo $widget->getContent() .'</div>';

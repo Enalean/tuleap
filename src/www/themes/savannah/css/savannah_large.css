@@ -319,10 +319,12 @@ table.release tr td img {
     text-align: center; 
     text-transform: capitalize; 
     color: #555;
-    cursor:move;
     height:1.2em;
     padding-left:40px;
     padding-right:4px;
+}
+.widget_titlebar_handle {
+    cursor:move;
 }
 .widget_titlebar_title {
     float:left;

@@ -24,10 +24,10 @@ class WidgetLayout_Row_Column {
     function add(&$c, $is_minimized, $display_preferences) {
         $this->contents[] = array('content' => &$c, 'is_minimized' => $is_minimized, 'display_preferences' => $display_preferences);
     }
-    function display() {
+    function display($readonly) {
         echo '<td style="width:'. $this->width .'%" id="'. $this->getColumnId() .'">';
         foreach ($this->contents as $key => $nop) {
-            $this->contents[$key]['content']->display($this->row->layout->id, $this->id, $this->contents[$key]['is_minimized'], $this->contents[$key]['display_preferences']);
+            $this->contents[$key]['content']->display($this->row->layout->id, $this->id, $readonly, $this->contents[$key]['is_minimized'], $this->contents[$key]['display_preferences']);
         }
         echo '</td>';
     }

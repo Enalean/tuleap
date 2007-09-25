@@ -28,35 +28,37 @@ class WidgetLayout {
         $this->rows[] =& $r;
         $r->setLayout($this);
     }
-    function display() {
+    function display($readonly) {
         foreach($this->rows as $key => $nop) {
-            $this->rows[$key]->display();
+            $this->rows[$key]->display($readonly);
         }
-        $cells = "['". implode("', '", $this->getColumnIds()) ."']";
-        echo <<<EOS
-        <script type="text/javascript">
-        var cells = $cells;
-        Event.observe(window, 'load', function() {
-            cells.each(function (cell_id) {
-                Sortable.create(cell_id, {
-                    dropOnEmpty: true,
-                    constraint:  false,
-                    tag:         'div',
-                    handle:      'widget_titlebar',
-                    containment: cells,
-                    onUpdate: function() {
-                        new Ajax.Request('updatelayout.php?layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
-                    }
+        if (!$readonly) {
+            $cells = "['". implode("', '", $this->getColumnIds()) ."']";
+            echo <<<EOS
+            <script type="text/javascript">
+            var cells = $cells;
+            Event.observe(window, 'load', function() {
+                cells.each(function (cell_id) {
+                    Sortable.create(cell_id, {
+                        dropOnEmpty: true,
+                        constraint:  false,
+                        tag:         'div',
+                        handle:      'widget_titlebar_handle',
+                        containment: cells,
+                        onUpdate: function() {
+                            new Ajax.Request('updatelayout.php?layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
+                        }
+                    });
                 });
             });
-        });
-        Event.observe(window, 'unload', function() {
-            cells.each(function (cell_id) {
-                Sortable.destroy(cell_id);
+            Event.observe(window, 'unload', function() {
+                cells.each(function (cell_id) {
+                    Sortable.destroy(cell_id);
+                });
             });
-        });
-        </script>
+            </script>
 EOS;
+        }
     }
     function getColumnIds() {
         $ret = array();
