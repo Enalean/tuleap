@@ -84,10 +84,9 @@ class WidgetLayoutManager {
                 }
                 break;
             case $this->OWNER_TYPE_GROUP:
-                if (user_is_super_user() || user_ismember($request->get('group_id'), 'A')) {
+                if (user_is_super_user() || user_ismember($request->get('group_id'), 'A')) { //Only project admin
                     $readonly = false;
                 }
-                //Only project admin
                 break;
             case $this->OWNER_TYPE_HOME:
                 //Only site admin
