@@ -148,7 +148,15 @@ proto.apply_stylesheets = function(styles) { //See IE
 }
 
 proto.apply_inline_stylesheet = function(style, head) {
-    // TODO: figure this out
+	this.get_edit_document().body.style.background = 'white';
+	this.get_edit_document().body.style.fontSize = "small";
+	this.get_edit_document().body.style.fontFamily = "helvetica,arial,verdana,sans-serif";
+	this.get_edit_document().body.style.marginTop = "1ex";
+	this.get_edit_document().body.style.marginBottom = "0.5ex";
+	this.get_edit_document().body.style.paddingLeft = "0.8em";
+	this.get_edit_document().body.style.paddingRight = "0.8em";
+	this.get_edit_document().body.style.paddingTop = "0.5ex";
+	this.get_edit_document().body.style.paddingBottom = "0.5ex";
 }
 
 proto.should_link_stylesheet = function(style, head) {
@@ -523,14 +531,11 @@ proto.insert_html = function(html, caretpos) {
 proto.apply_stylesheets = function(styles) {
     var styles = document.styleSheets;
     var edit_doc   = this.get_edit_document();
-
+	
     for (var i = 0; i < styles.length; i++) {
         var style = styles[i];
-        if (style.href == location.href)
-            this.apply_inline_stylesheet(style, edit_doc);
-        else
-            //if (this.should_link_stylesheet(style)) // always false !
-            this.apply_linked_stylesheet(style, edit_doc);
+        this.apply_inline_stylesheet(style, edit_doc);
+        this.apply_linked_stylesheet(style, edit_doc);
     }
 }
 
