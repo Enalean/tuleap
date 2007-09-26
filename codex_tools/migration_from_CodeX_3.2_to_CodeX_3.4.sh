@@ -560,6 +560,18 @@ INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default)
 SELECT group_id, 'g', 1, 1 
 FROM groups;
 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 1, 'projectpublicareas', 0
+FROM groups;
+
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 2, 'projectlatestfilereleases', 0
+FROM groups;
+
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 2, 'projectlatestnews', 1
+FROM groups;
+
 
 TODO plugins
 
