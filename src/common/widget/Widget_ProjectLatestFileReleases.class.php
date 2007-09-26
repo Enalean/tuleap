@@ -5,8 +5,6 @@ require_once('Widget.class.php');
 /**
 * Widget_ProjectLatestFileReleases
 * 
-* Personal bookmarks
-* 
 * Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
 *
 * @author  N. Terray

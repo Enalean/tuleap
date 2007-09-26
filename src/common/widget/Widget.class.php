@@ -11,6 +11,8 @@ require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
 require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
+require_once('common/widget/Widget_ProjectLatestNews.class.php');
+require_once('common/widget/Widget_ProjectPublicAreas.class.php');
 /**
 * Widget
 * 
@@ -126,6 +128,12 @@ require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
                 break;
             case 'projectlatestfilereleases':
                 $o =& new Widget_ProjectLatestFileReleases();
+                break;
+            case 'projectlatestnews':
+                $o =& new Widget_ProjectLatestNews();
+                break;
+            case 'projectpublicareas':
+                $o =& new Widget_ProjectPublicAreas();
                 break;
             default:
                 $em =& EventManager::instance();
