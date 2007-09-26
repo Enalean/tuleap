@@ -16,6 +16,7 @@ class Widget_ProjectLatestNews extends Widget {
         $request =& HTTPRequest::instance();
         $project =& project_get_object($request->get('group_id'));
         if ($project && $project->usesFile()) {
+            require_once('www/news/news_utils.php');
             $this->content = news_show_latest($request->get('group_id'),10,false);
         }
     }
@@ -32,7 +33,7 @@ class Widget_ProjectLatestNews extends Widget {
         return true;
     }
     function displayRss() {
-        die('here');
+        global $Language;
         include('www/export/rss_sfnews.php');
     }
 }
