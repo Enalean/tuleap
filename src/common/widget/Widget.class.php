@@ -35,9 +35,9 @@ require_once('common/widget/Widget_ProjectPublicAreas.class.php');
         $this->content_id = 0;
     }
     
-    function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences) {
+    function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences, $owner_id, $owner_type) {
         if ($this->canBeDisplayed()) {
-            $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences);
+            $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type);
         }
     }
     function getTitle() {
@@ -49,9 +49,9 @@ require_once('common/widget/Widget_ProjectPublicAreas.class.php');
     function canBeDisplayed() {
         return true;
     }
-    function getPreferencesForm($layout_id) {
+    function getPreferencesForm($layout_id, $owner_id, $owner_type) {
         $prefs  = '';
-        $prefs .= '<form method="POST" action="widget.php?action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
+        $prefs .= '<form method="POST" action="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
         $prefs .= '<fieldset><legend>Preferences</legend>';
         $prefs .= $this->getPreferences();
         $prefs .= '<br />';

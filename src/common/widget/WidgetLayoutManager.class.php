@@ -36,7 +36,7 @@ class WidgetLayoutManager {
         if ($data = db_fetch_array($req)) {
             $readonly = $this->_currentUserCanUpdateLayout($owner_id, $owner_type);
             if (!$readonly) {
-                echo '<a href="widgets.php?layout_id='. $data['id'] .'">[Add widget]</a>';
+                echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'">[Add widget]</a>';
             }
             $layout =& new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
             $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout->id .' ORDER BY rank';
@@ -63,7 +63,7 @@ class WidgetLayoutManager {
                 $layout->add($row);
                 unset($row);
             }
-            $layout->display($readonly);
+            $layout->display($readonly, $owner_id, $owner_type);
         }
     }
     
@@ -119,7 +119,7 @@ class WidgetLayoutManager {
             $used_widgets[] = $data['name'];
         }
         echo '<h3>Widgets</h3>';
-        echo '<form action="updatelayout.php?action=widget&amp;layout_id='. $layout_id .'" method="POST">';
+        echo '<form action="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;layout_id='. $layout_id .'" method="POST">';
         echo '<table cellpadding="0" cellspacing="0">';
         $this->_displayWidgetsSelectionForm('CodeX Widgets', Widget::getCodeXWidgets(), $used_widgets);
         echo '<tr><td>&nbsp;</td><td></td></tr>';
@@ -333,7 +333,7 @@ class WidgetLayoutManager {
                 
                 //Compute differences
                 $originals = array();
-                $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = ". $column_id .' ORDER BY rank';
+                $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND column_id = ". $column_id .' ORDER BY rank';
                 echo $sql;
                 $res = db_query($sql);
                 echo db_error();

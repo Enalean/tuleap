@@ -28,9 +28,9 @@ class WidgetLayout {
         $this->rows[] =& $r;
         $r->setLayout($this);
     }
-    function display($readonly) {
+    function display($readonly, $owner_id, $owner_type) {
         foreach($this->rows as $key => $nop) {
-            $this->rows[$key]->display($readonly);
+            $this->rows[$key]->display($readonly, $owner_id, $owner_type);
         }
         if (!$readonly) {
             $cells = "['". implode("', '", $this->getColumnIds()) ."']";
@@ -46,7 +46,7 @@ class WidgetLayout {
                         handle:      'widget_titlebar_handle',
                         containment: cells,
                         onUpdate: function() {
-                            new Ajax.Request('updatelayout.php?layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
+                            new Ajax.Request('/widgets/updatelayout.php?owner=$owner_type'+$owner_id+'&layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
                         }
                     });
                 });

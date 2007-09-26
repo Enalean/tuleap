@@ -26,11 +26,11 @@ class WidgetLayout_Row {
         $this->columns[] =& $c;
         $c->setRow($this);
     }
-    function display($readonly) {
+    function display($readonly, $owner_id, $owner_type) {
         echo '<table width="100%" border="0">';
         echo '<tr style="vertical-align:top;">';
         foreach($this->columns as $key => $nop) {
-            $this->columns[$key]->display($readonly);
+            $this->columns[$key]->display($readonly, $owner_id, $owner_type);
         }
         echo '</tr>';
         echo '</table>';
