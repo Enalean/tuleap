@@ -165,7 +165,7 @@ class Layout extends Response {
         }
         echo '<div class="widget_content" style="'. $style .'">';
         if (!$readonly && $display_preferences) {
-            echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id) .'</div>';
+            echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id, $owner_id, $owner_type) .'</div>';
         }
         echo $widget->getContent() .'</div>';
         echo '</div>';
