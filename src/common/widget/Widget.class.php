@@ -1,4 +1,6 @@
 <?php
+require_once('common/widget/WidgetLayoutManager.class.php');
+
 require_once('common/widget/Widget_MySurveys.class.php');
 require_once('common/widget/Widget_MyProjects.class.php');
 require_once('common/widget/Widget_MyBookmarks.class.php');
@@ -145,27 +147,59 @@ require_once('common/widget/Widget_ProjectPublicAreas.class.php');
         }
         return $o;
     }
-    /* static */ function getCodeXWidgets() {
-        $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
-            'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
-            'mytasks', 'mysrs'
-        );
+    /* static */ function getCodeXWidgets($owner_type) {
+        $lm = new WidgetLayoutManager();
+        switch ($owner_type) {
+            case $lm->OWNER_TYPE_USER:
+                $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
+                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
+                    'mytasks', 'mysrs'
+                );
+                break;
+            case $lm->OWNER_TYPE_GROUP:
+                $widgets = array('projectlatestfilereleases', 'projectlatestnews', 
+                    'projectpublicareas'
+                );
+                break;
+            case $lm->OWNER_TYPE_HOME:
+                $widgets = array();
+                break;
+            default:
+                $widgets = array();
+                break;
+        }
+        
         $plugins_widgets = array();
         $em =& EventManager::instance();
-        $em->processEvent('widgets', array('codex_widgets' => &$plugins_widgets));
+        $em->processEvent('widgets', array('codex_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
         
         if (is_array($plugins_widgets)) {
             $widgets = array_merge($widgets, $plugins_widgets);
         }
         return $widgets;
     }
-    /* static */ function getExternalWidgets() {
-        $widgets = array('myrss'
-        );
+    /* static */ function getExternalWidgets($owner_type) {
+        $lm = new WidgetLayoutManager();
+        switch ($owner_type) {
+            case $lm->OWNER_TYPE_USER:
+                $widgets = array('myrss'
+                );
+                break;
+            case $lm->OWNER_TYPE_GROUP:
+                $widgets = array(
+                );
+                break;
+            case $lm->OWNER_TYPE_HOME:
+                $widgets = array();
+                break;
+            default:
+                $widgets = array();
+                break;
+        }
         
         $plugins_widgets = array();
         $em =& EventManager::instance();
-        $em->processEvent('widgets', array('external_widgets' => &$plugins_widgets));
+        $em->processEvent('widgets', array('external_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
         
         if (is_array($plugins_widgets)) {
             $widgets = array_merge($widgets, $plugins_widgets);

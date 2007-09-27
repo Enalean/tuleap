@@ -225,7 +225,11 @@ class DocmanPlugin extends Plugin {
         }
     }
     function widgets($params) {
-        $params['codex_widgets'][] = 'mydocman';
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        $lm = new WidgetLayoutManager();
+        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
+            $params['codex_widgets'][] = 'mydocman';
+        }
     }
     /**
      * Hook: called by daily codex script.

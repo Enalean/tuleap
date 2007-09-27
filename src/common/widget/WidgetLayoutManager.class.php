@@ -120,10 +120,10 @@ class WidgetLayoutManager {
         }
         echo '<h3>Widgets</h3>';
         echo '<form action="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;layout_id='. $layout_id .'" method="POST">';
-        echo '<table cellpadding="0" cellspacing="0">';
-        $this->_displayWidgetsSelectionForm('CodeX Widgets', Widget::getCodeXWidgets(), $used_widgets);
+        echo '<table cellpadding="2" cellspacing="0">';
+        $this->_displayWidgetsSelectionForm('CodeX Widgets', Widget::getCodeXWidgets($owner_type), $used_widgets);
         echo '<tr><td>&nbsp;</td><td></td></tr>';
-        $this->_displayWidgetsSelectionForm('External Widgets', Widget::getExternalWidgets(), $used_widgets);
+        $this->_displayWidgetsSelectionForm('External Widgets', Widget::getExternalWidgets($owner_type), $used_widgets);
         echo '</table>';
         echo '</form>';
     }
